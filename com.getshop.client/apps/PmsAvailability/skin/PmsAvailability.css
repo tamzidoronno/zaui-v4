@@ -210,10 +210,10 @@
 
 .PmsAvailability .movetotype .bookingitem.canUse:hover {
     background: rgb(201,222,150); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(11,94,0,1) 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(11,94,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(11,94,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#0b5e00',GradientType=0 );
+    background: -moz-linear-gradient(top, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(11,94,0,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(11,94,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(11,94,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#0b5e00',GradientType=0 );
 }
 
 .PmsAvailability .movetotype .bookingitem.canNotUse {
@@ -224,9 +224,59 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', end
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
     color: #888;
 }
+
 .PmsAvailability .movetotype .bookingitem {
+    border: solid 1px transparent;
     display: inline-block;
     border-right: solid 1px #DDD;
     padding: 3px;
     border-top: solid 1px #DDD;
+}
+
+.PmsAvailability .gs_selected {
+    background: rgb(0,110,46) !important; /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(0,110,46,1) 0%, rgba(0,110,46,1) 100%) !important; /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0,110,46,1) 0%,rgba(0,110,46,1) 100%) !important; /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0,110,46,1) 0%,rgba(0,110,46,1) 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#006e2e', endColorstr='#006e2e',GradientType=0 ) !important;
+}
+
+.PmsAvailability .staytime {
+    background: rgb(255,168,76); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255,168,76,1) 0%, rgba(255,123,13,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
+    text-align: center;
+    padding: 5px;
+}
+
+.PmsAvailability .updater {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 30px;
+    color: #FFF;
+}
+
+.PmsAvailability .update_in_progress .updater {
+    display: block;
+}
+
+.PmsAvailability .itemview {
+    position: relative;
+}
+
+.PmsAvailability .movetotype .gs_selected.canNotUse {
+    background: rgb(169,3,41) !important; /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(169,3,41,1) 0%, rgba(143,2,34,1) 44%, rgba(109,0,25,1) 100%) !important; /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%) !important; /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=0 ) !important;
 }

@@ -330,6 +330,9 @@ public interface IPmsManager {
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter);
     
     @Administrator
+    public List<PmsRoomSimple> getSimpleRoomsForGroup(String bookingEngineId);
+    
+    @Administrator
     public void sendMessageToAllTodaysGuests(String message);
     
     @Administrator

@@ -21,6 +21,9 @@ class Verksgate12StavangerTheme extends \ThemeApplication implements \Applicatio
     public function getThemeClasses() {
         return ["frontbox", "frontbox_odd"];
     }
-    
+
+    public function isAllowingSideBar() {
+        return true;
+    }    
 }
 ?>

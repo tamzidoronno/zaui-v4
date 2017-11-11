@@ -35,6 +35,12 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         return $filter;
     }
     
+    public function showBookingInformationExternal($bookingEngineBooking, $pmsBooking) {
+        $this->currentBooking = $pmsBooking;
+        $this->currentBookingFromEngine = $bookingEngineBooking;
+        $this->includefile("movebooking");
+    }
+    
     public function showBookingInformation() {
         $this->setCurrentBooking();
         $this->setCurrentBookingFromBookingEngine();
@@ -142,6 +148,11 @@ class PmsAvailability extends \MarketingApplication implements \Application {
      */
     public function getCurrentBookingFromBookingEngine() {
         return $this->currentBookingFromEngine;
+    }
+    
+    public function loaditemview() {
+        $this->setCurrentBookingFromBookingEngine();
+        $this->includefile("itemview");
     }
 
 }

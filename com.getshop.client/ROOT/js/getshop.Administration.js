@@ -47,5 +47,14 @@ thundashop.Administration = {
             "orderid" : orderid
         });
         thundashop.Ajax.post(event);
+    },
+    
+    toggleSideBar: function(sidebarname) {
+        var postEvent = thundashop.Ajax.createEvent(null, "toggleSideBar", this, { name : sidebarname });
+        thundashop.Ajax.post(postEvent);
+    },
+    
+    toggleSideBarGetShopModules: function() {
+        this.toggleSideBar('leftsidebar');
     }
 }

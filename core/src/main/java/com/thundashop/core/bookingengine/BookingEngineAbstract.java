@@ -972,7 +972,28 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItem> retList2 = new ArrayList(retList);
         
+        removeItemIfCurrentAssignedBookingCanNoLongerBeOnTheItem(bookingId, start, end, retList2);
+        
         return retList2;
+    }
+
+    private void removeItemIfCurrentAssignedBookingCanNoLongerBeOnTheItem(String bookingId, Date start, Date end, List<BookingItem> retList2) {
+        if (bookingId != null && !bookingId.isEmpty()) {
+            Booking booking = getBooking(bookingId);
+            if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                try {
+                    Booking newBooking = deepClone(booking);
+                    newBooking.startDate = start;
+                    newBooking.endDate = end;
+                    ArrayList bookings = new ArrayList();
+                    bookings.add(newBooking);
+                    checkIfAssigningPossible(bookings);
+                } catch (BookingEngineException ex) {
+                    retList2.removeIf(i -> i.id.equals(booking.bookingItemId));
+                }
+
+            }
+        }
     }
 
     /**

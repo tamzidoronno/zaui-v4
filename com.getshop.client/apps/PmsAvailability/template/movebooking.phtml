@@ -1,41 +1,34 @@
 <?
 /* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
 $currentBooking = $this->getCurrentBookingFromBookingEngine();
-$types = $this->getTypes();
-$items = $this->getItems();
 
-$startDate = $this->convertToJavaDate(strtotime($currentBooking->startDate));
-$endDate = $this->convertToJavaDate(strtotime($currentBooking->endDate));
-$availableItems = $this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(), $startDate, $endDate, $currentBooking->id);
+$startDate = date('d.m.Y H:i', strtotime($currentBooking->startDate));
+$endDate = date('d.m.Y H:i', strtotime($currentBooking->endDate));
+?>
 
-function canUseItem($item, $availeableitems) {
-    foreach ($availeableitems as $available) {
-        if ($available->id == $item->id) {
-            return true;
+<div class="staytime">
+    <? echo $this->__f("Dates"); ?> 
+    <br/><input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo $startDate; ?>"/> - <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo $endDate; ?>"/> 
+</div>
+
+<div class="itemview" bookingid="<? echo $currentBooking->id; ?>">
+    <?
+    $this->includefile("itemview");
+    ?>
+</div>
+
+
+<script>
+    $('.PmsAvailability .startdate').datetimepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            app.PmsAvailability.updateAvailability();
         }
-    }
+    });
     
-    return false;
-}
-?>
-<?
-foreach ($types as $type) {
-?>
-    <div class='movetotype'>
-        <div class="headername"><? echo $type->name; ?></div>
-        <div>
-            <?
-            foreach ($items as $item) {
-                if ($item->bookingItemTypeId != $type->id) {
-                    continue;
-                }
-                
-                $useClass = canUseItem($item, $availableItems) ? "canUse" : "canNotUse";
-                echo "<div class='bookingitem $useClass'>".$item->bookingItemName."</div>";
-            }
-            ?>
-        </div>
-    </div>
-<?
-}
-?>
+    $('.PmsAvailability .enddate').datetimepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            app.PmsAvailability.updateAvailability();
+        }
+    });
+</script>
+    

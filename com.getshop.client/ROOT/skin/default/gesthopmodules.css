@@ -11,7 +11,8 @@ and open the template in the editor.
 body {
     font-family: 'Open Sans', sans-serif;
 }
-.Menu .entry  {
+
+.gsarea[area="header"] .Menu .entry  {
     text-align: center;
     border-right: solid 1px rgba(0,0,0,0.2);
     width: 60px;
@@ -20,20 +21,54 @@ body {
     padding-right: 10px;
 }
 
-.Menu .entry:last-child {
+.gsarea[area="header"] .Menu .entry:last-child {
     border: solid 0px;
 }
 
-.Menu .entry i {
+.gsarea[area="header"] .Menu .entry i {
     font-size: 30px;
     display: block;
     
     margin-top: 5px;
     margin-bottom: -7px;
+    color: #333;
 }
-.Menu .entry a {
+.gsarea[area="header"] .Menu .entry a {
     line-height: 40px;
     font-size: 11px;
+    
+    color: #EEE;
+}
+
+
+.gsarea[area="body"] .Menu {
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+    border-radius: 0px 5px 5px 0px;
+}
+
+.gsarea[area="body"] .Menu .menu_simple_menu {
+    display: none;
+}
+.gsarea[area="body"] .Menu .menuentries {
+    width: 100%;
+}
+.gsarea[area="body"] .Menu .entry  {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: solid 1px #DDD;
+
+}
+
+.gsarea[area="body"] .Menu div.entry:last-child {
+    border-bottom: solid 0px;
+}
+
+.gsarea[area="body"] .Menu .entry a {
+    line-height: 40px;
+    font-size: 14px;
     
     color: #222;
 }
@@ -45,25 +80,30 @@ body {
     border-left: solid 1px rgba(0,0,0,0.2);
 }
 
-.Menu {
- }
-
 .gsarea[area="header"] {
     border-bottom: solid 1px #DDD;
-    padding-left: 20px;
-    /*box-shadow: 0px 5px 5px rgba(0,0,0,0.2);*/
-    
-    background: rgb(252,255,244); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(252,255,244,1) 0%, rgba(233,233,206,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#e9e9ce',GradientType=0 );
+
+    background: rgb(201,222,150); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#398235',GradientType=0 );
 }
+
 .gsarea[area="body"] {
     padding-left: 50px;
     padding-right: 50px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.gsarea[area="body"].hasleftsidebar {
+    padding-left: 0px;
+}
+
+.gsarea[area="body"] .gs_main_column {
+    padding-top: 0px;
+    padding-left: 50px;
 }
 
 .gsarea[area="footer"] {
@@ -103,17 +143,36 @@ body {
     padding: 3px;
 }
 .GetShopModuleTable .datarow.odd {
-    background-color: #c7f4ff;
-    
+    background-color: #efefef;
+}
+
+.GetShopModuleTable .datarow_extended_content {
+    display: none;
+    padding: 20px;
 }
 
 .GetShopModuleTable .attributeheader {
-    background-color: #2885c0;
     color: #FFF;
+    background: rgb(167,199,220); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(167,199,220,1) 0%, rgba(133,178,211,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(167,199,220,1) 0%,rgba(133,178,211,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(167,199,220,1) 0%,rgba(133,178,211,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a7c7dc', endColorstr='#85b2d3',GradientType=0 )
 }
 
 .GetShopModuleTable .col {
     display: inline-block;
     vertical-align: top;
     width: 200px;
+    padding: 5px;
+}
+
+.shop_button {
+    border-radius: 0px;
+    color: #FFF;
+    background: rgb(201,222,150); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#398235',GradientType=0 );
 }

@@ -1,6 +1,55 @@
+<?
+/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+$filter = $this->getSelectedFilter();
+echo "<pre>";
+print_r($filter);
+echo "</pre>";
+$channels = (array)$this->getChannelMatrix();
+        
+$start = date('d.m.Y', strtotime($filter->startDate));
+$end = date('d.m.Y', strtotime($filter->endDate));
+?>
 
-<div class="filterbox">
-    Filter options goes here.
+<div class="filterbox" gstype="form" method="setFilter">
+    <div class="startdate"><input class="gsniceinput1" gsname="startdate" value="<? echo $start; ?>"></div>
+    <div class="enddate"><input class="gsniceinput1" gsname="enddate" value="<? echo $end; ?>"></div>
+    
+    <div class="dropdowns">
+        <select class="managementviewdropdowninput filterType gsniceselect1" gsname="filterType">
+                <option value="registered">Registered</option>
+                <option value="active"><? echo $this->__f("Active"); ?></option>
+                <option value="uncofirmed"><? echo $this->__f("Unconfirmed"); ?></option>
+                <option value="checkin"><? echo $this->__f("Checking in"); ?></option>
+                <option value="checkout"><? echo $this->__f("Checking out"); ?></option>
+                <option value="waiting"><? echo $this->__f("Waiting"); ?></option>
+                <option value="activecheckin"><? echo $this->__f("Checkin + stayover"); ?></option>
+                <option value="activecheckout"><? echo $this->__f("Checkout + stayover"); ?></option>
+                <option value="inhouse"><? echo $this->__f("Inhouse"); ?></option>
+                <option value="stats"><? echo $this->__f("Coverage"); ?></option>
+                <option value="summary"><? echo $this->__f("Summary"); ?></option>
+                <option value="orderstats"><? echo $this->__f("Income report"); ?></option>
+                <option value="afterstayorder"><? echo $this->__f("Order created after stay"); ?></option>
+                <option value="unsettled"><? echo $this->__f("Bookings with unsettled amounts"); ?></option>
+        </select>
+    
+    <?
+        if(sizeof($channels) > 0) { ?>
+            <select class="managementviewdropdowninput gsniceselect1" gsname='channel'>
+                <?php
+                echo "<option value=''>All channels</option>";
+                foreach($channels as $idx => $channel) {
+                    $selected = "";
+                    if($filter->channel == $idx) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$idx' $selected>$channel</option>";
+                }
+                ?>
+            </select>
+        <? } ?>
+    
+    </div>
+    
+    <div><? echo $this->__f("Or"); ?></div>
+    
 </div>
-    
-    

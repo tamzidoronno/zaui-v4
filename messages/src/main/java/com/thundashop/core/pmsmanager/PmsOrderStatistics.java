@@ -302,13 +302,8 @@ public class PmsOrderStatistics implements Serializable  {
                 if(PmsBookingRooms.isSameDayStatic(addonItem.date, cal.getTime())) {
                     if(addonItem.price != null && addonItem.count != null) {
                         double itemPriceInc = addonItem.price*addonItem.count;
-                        if(!order.isCreditNote) {
-                            price += itemPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
-                            priceInc += itemPriceInc;
-                        } else {
-                            price -= itemPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
-                            priceInc -= itemPriceInc;
-                        }
+                        price += itemPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                        priceInc += itemPriceInc;
                     }
                 }
             }

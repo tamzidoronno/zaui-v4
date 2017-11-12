@@ -1626,6 +1626,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
+        if(!filter.includeNonBookable && filter.typeFilter.isEmpty()) {
+            List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+            for(BookingItemType type : types) {
+                if(type.visibleForBooking) {
+                    filter.typeFilter.add(type.id);
+                }
+            }
+        }
+        
         convertTextDates(filter);
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);

@@ -238,6 +238,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
         }
+        $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
         return $filter;
     }
 

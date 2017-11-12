@@ -353,7 +353,9 @@ public class CartItem implements Serializable {
         if(diff > -0.1 && diff < 0.1) {
             if(itemsAdded != null) {
                 for(PmsBookingAddonItem item : itemsAdded) {
-                    item.price = item.price * -1;
+                    if (item != null && item.price != null && item.count != null) {
+                        item.price = item.price * -1;
+                    }
                 }
             }
             if(priceMatrix != null) {

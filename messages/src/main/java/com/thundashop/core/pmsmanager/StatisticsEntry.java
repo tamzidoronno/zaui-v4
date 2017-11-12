@@ -20,6 +20,7 @@ public class StatisticsEntry {
     public Double bugdet = 0.0;
     public HashMap<Integer, Integer> addonsCount = new HashMap();
     public HashMap<Integer, Double> addonsPrice = new HashMap();
+    public HashMap<String, Double> roomsPrice = new HashMap();
     public HashMap<Integer, Double> addonsPriceEx = new HashMap();
     
     public HashMap<String, Integer> uniqueGuests = new HashMap();

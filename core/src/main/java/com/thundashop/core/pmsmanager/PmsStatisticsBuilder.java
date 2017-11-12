@@ -111,7 +111,7 @@ class PmsStatisticsBuilder {
                         if(!pricesExTax) {
                             price /= 1 + (room.taxes/100);
                         }
-
+                        entry.roomsPrice.put(room.pmsBookingRoomId, price);
                         entry.totalPrice += price;
                         entry.roomsRentedOut++;
                         addGuests(entry, room, booking);

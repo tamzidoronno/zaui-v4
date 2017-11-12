@@ -1,0 +1,48 @@
+<?php
+/* @var $this \ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
+$filter = $this->getSelectedFilter();
+$views = array();
+$views['daily'] = "Daily";
+$views['monthly'] = "Monthly";
+$views['yearly'] = "Yearly";
+$checked = ($filter->includeNonBookableRooms) ? "CHECKED" : ""; 
+?>
+<div style='height: 38px; border-bottom: solid 1px #bbb;'>
+    <span type='coverage' class='pmsbutton tab <?php if($filter->type == "coverage") {echo "selected";}?>'><i class='fa fa-line-chart'></i> Coverage</span>
+    <span type='forecasted_coverage' class='pmsbutton tab <?php if($filter->type == "forecasted_coverage") {echo "selected";}?>'><i class='fa fa-tint'></i> Forcasted coverage</span>
+    <span type='incomereport' class='pmsbutton tab <?php if($filter->type == "incomereport") {echo "selected";}?>'><i class='fa fa-money'></i> Income report</span>
+    <span type='forecasted_incomereport' class='pmsbutton tab <?php if($filter->type == "forecasted_incomereport") {echo "selected";}?>'><i class='fa fa-dashboard'></i> Forecasted income report</span>
+</div>
+<div gstype="form" method="setReportFilter">
+<table>
+    <input type="hidden" id="coverageview" value="<?php echo $filter->type; ?>" gsname='type'>
+    <tr>
+        <td>
+            Start date<br>
+            <input type='text' value='<?php echo date("d.m.Y", strtotime($filter->start)); ?>' gsname="start" class='startcal gsniceinput1'>
+        </td>
+        <td>
+            End date<br>
+            <input type='text' value="<?php echo date("d.m.Y", strtotime($filter->end)); ?>" gsname="end" class='endcal gsniceinput1'>
+        </td>
+        <td>
+            View<br>
+            <?php
+            echo "<select gsname='view' class='gsniceselect1' style='height:37px'>";
+            foreach($views as $view => $name) {
+                $selected = ($filter->view == $view) ? "SELECTED" : "";
+                echo "<option value='$view' $selected>$name</option>";
+            }
+            echo "</select>";
+            ?>
+        </td>
+        <td><br><input type='button' value='Load report' gstype='submit' style='padding: 9px;'><bR>
+        </td>
+    </tr>
+</table>
+<input type='checkbox' gsname='includenonbookable' <?php echo $checked; ?>> Include non bookable rooms as well when calculating the coverage.
+</div>
+
+<script>
+$('.PmsReport .endcal,.PmsReport .startcal').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true});
+</script>

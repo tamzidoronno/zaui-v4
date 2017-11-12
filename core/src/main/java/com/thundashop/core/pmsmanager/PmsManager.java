@@ -1626,6 +1626,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
+        if(!filter.includeNonBookable && filter.typeFilter.isEmpty()) {
+            List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+            for(BookingItemType type : types) {
+                if(type.visibleForBooking) {
+                    filter.typeFilter.add(type.id);
+                }
+            }
+        }
+        
         convertTextDates(filter);
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
@@ -6961,6 +6970,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(StatisticsEntry statEntry : result.entries) {
                 if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
                     double total = 0.0;
+                    String offset = PmsBookingRooms.convertOffsetToString(entry.day);
+                    for(String roomId : statEntry.roomsPrice.keySet()) {
+                        Double price = 0.0;
+                        if(entry.priceExRoom.containsKey(roomId+"_"+offset)) {
+                            price = entry.priceExRoom.get(roomId+"_"+offset);
+                        }
+                        statEntry.roomsPrice.put(roomId, price);
+                    }
+                    
                     for(String productId : roomProductIds) {
                         Double productPrice = entry.priceEx.get(productId);
                         if(productPrice == null) {
@@ -7214,5 +7232,5 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .collect(Collectors.toList());
     }
 
-    
+
 }

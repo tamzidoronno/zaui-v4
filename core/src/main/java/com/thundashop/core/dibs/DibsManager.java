@@ -500,6 +500,10 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             Order order = orderManager.getOrderByincrementOrderId(new Integer(polledResult.get("orderid")));
             try {
                 order.payment.callBackParameters = polledResult;
+                
+                if(!polledResult.containsKey("statuscode")) {
+                    throw new Exception("Status code field not configured correctly in dibs, please make sure the statuscode is active as the return field in the dibs administration window");
+                }
 
                 Double amount = orderManager.getTotalAmount(order);
                 int result = new Integer(polledResult.get("statuscode"));
@@ -507,7 +511,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 if(toCapture != new Integer(polledResult.get("amount"))) {
                     throw new Exception("Invalid amount");
                 }
-                if(result != 2) {
+                if(result != 5) {
                     throw new Exception("Invalid response code from dibs code: " + result);
                 }
                 if(!polledResult.get("currency").equals("NOK")) {

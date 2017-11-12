@@ -175,6 +175,15 @@ class PmsReport extends \MarketingApplication implements \Application {
         foreach($products as $productId => $val) {
             $products[$productId] = round($val);
         }
+        $idx = 0;
+        $prodsInUse = array();
+        foreach($products as $productId => $val) {
+            $prodsInUse["product".$idx] = $productId;
+            $idx++;
+        }
+        $_SESSION['pmsreport_productsinuse'] = json_encode($prodsInUse);
+        $_SESSION['pmsreport_dataresult'] = json_encode($data);
+        
         //Creating daily rows.
         foreach($data->entries as $entry) {
             $row = new \stdClass();
@@ -218,7 +227,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $rows[] = $row;
         $attributes[] = array('total', 'Total', 'total',null);
         
-        $table = new \GetShopModuleTable($this, 'PmsManager', null, null, $attributes);
+        $table = new \GetShopModuleTable($this, 'PmsManager', 'loadIncomeReportCell', null, $attributes);
         $table->setData($rows);
         $table->render();
         
@@ -227,6 +236,40 @@ class PmsReport extends \MarketingApplication implements \Application {
         echo "</style>";
     }
 
+    public function PmsManager_loadIncomeReportCell() {
+        
+        $data = json_decode($_SESSION['pmsreport_dataresult']);
+        $products = json_decode($_SESSION['pmsreport_productsinuse'], true);
+        $date = $_POST['data']['date'];
+        $productId = $products[$_POST['data']['gscolumn']];
+        
+        echo "<table>";
+        echo "<tr>";
+        echo "<th>Order id</th>";
+        echo "<th>User</th>";
+        echo "<th>Amount</th>";
+        echo "<th>Created date</th>";
+        echo "</tr>";
+        
+        $total = 0;
+        foreach($data->entries as $entry) {
+            if(date("d.m.Y", strtotime($entry->day)) == $date) {
+               foreach($entry->priceExOrders->{$productId} as $orderId => $val) {
+                   $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                   $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+                   echo "<tr>";
+                   echo "<td>" . $order->incrementOrderId . "</td><td>" . $user->fullName . "</td><td align='center'>" . round($val) . "</td>";
+                   echo "<td>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . "</td>";
+                   echo "</td>";
+                   $total += $val;
+               }
+            }
+        }
+        echo "<tr><td colspan='10'>Total : " . round($total) . "</td></tr>";;
+        echo "</table>";
+
+    }
+    
     public function getCoverageFilter() {
         $selectedFilter = $this->getSelectedFilter();
         $filter = new \core_pmsmanager_PmsBookingFilter();

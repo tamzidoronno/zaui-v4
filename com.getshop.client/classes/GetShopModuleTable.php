@@ -52,7 +52,7 @@ class GetShopModuleTable {
                 foreach ($this->attributes as $attribute) {
                     $i++;
                     if ($attribute[1] !== "gs_hidden") {
-                        echo "<div class='col col_$i col_$attribute[0]'>$attribute[1]</div>";
+                        echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$attribute[1]</div>";
                     }
                     
                 }
@@ -79,7 +79,7 @@ class GetShopModuleTable {
                             $postArray[$attribute[0]] = $val;
 
                             if ($attribute[1] !== "gs_hidden") {
-                                echo "<div class='col col_$i col_$attribute[0]'>$val</div>";
+                                echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$val</div>";
                             }
                             $i++;
                         }
@@ -115,13 +115,15 @@ class GetShopModuleTable {
         ?>
 
         <script>
-            $('.GetShopModuleTable .datarow .datarow_inner').on('click', function() {
+            $('.GetShopModuleTable .datarow .datarow_inner').on('click', function(e) {
+                var target = $(e.target);
                 var base = $(this).closest('.datarow');
                 base.find('.datarow_extended_content').html("");
                 $('.GetShopModuleTable .datarow_extended_content').slideUp();
                 var rowNumber = $(base).attr('rownumber');
                 
                 var data = gs_modules_data_array['<? echo $this->getIdentifier(); ?>'][rowNumber];
+                data['gscolumn'] = target.attr('index');
                 base.find('.datarow_extended_content').slideDown();
                 
                 var event = thundashop.Ajax.createEvent(null, '<? echo $functionName; ?>', this, data);

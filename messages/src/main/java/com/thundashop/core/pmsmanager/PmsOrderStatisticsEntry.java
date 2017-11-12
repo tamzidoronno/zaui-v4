@@ -10,7 +10,10 @@ import java.util.List;
 public class PmsOrderStatisticsEntry implements Serializable {
     Date day;
     HashMap<String, Double> priceInc = new HashMap();
+    //productid, price
     HashMap<String, Double> priceEx = new HashMap();
+    //roomid_productid, price
+    HashMap<String, Double> priceExRoom = new HashMap();
     HashMap<String, Double> priceIncOnOrder = new HashMap();
     HashMap<Long, Double> orderInc = new HashMap();
     HashMap<Long, Double> orderEx = new HashMap();
@@ -25,6 +28,15 @@ public class PmsOrderStatisticsEntry implements Serializable {
         for(String productId : priceExOrders.keySet()) {
             result.addAll(priceExOrders.get(productId).keySet());
         }
-        return result;
+        
+        List<String> uniqueList = new ArrayList();
+        for(String orderId : result) {
+            if(uniqueList.contains(orderId)) {
+                continue;
+            }
+            uniqueList.add(orderId);
+        }
+        
+        return uniqueList;
     }
 }

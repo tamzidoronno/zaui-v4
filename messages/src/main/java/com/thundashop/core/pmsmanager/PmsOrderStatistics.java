@@ -102,6 +102,7 @@ public class PmsOrderStatistics implements Serializable  {
                         copy(priceInc, tmpEntry.priceInc);
                         copyMap(orderEx, tmpEntry.orderEx);
                         copyMap(orderInc, tmpEntry.orderInc);
+                        copy(entry.priceExRoom, tmpEntry.priceExRoom);
                         copyDoubleMap(entry.priceExOrders, tmpEntry.priceExOrders);
                         copyDoubleMap(entry.priceIncOrders, tmpEntry.priceIncOrders);
                     } else {
@@ -255,9 +256,6 @@ public class PmsOrderStatistics implements Serializable  {
 
     private boolean canUseNewCalculation(CartItem item, PmsOrderStatisticsEntry entry, Calendar cal,Order order) {
         int year = cal.get(Calendar.YEAR);
-        if(year < 2018) {
-            return false;
-        }
         if(!order.isMatrixAndItemsValid()) {
             return false;
         }
@@ -266,6 +264,9 @@ public class PmsOrderStatistics implements Serializable  {
         }
         if(item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
             return true;
+        }
+        if(year < 2018) {
+            return false;
         }
         return false;
     }
@@ -285,13 +286,14 @@ public class PmsOrderStatistics implements Serializable  {
             for(String key : item.priceMatrix.keySet()) {
                 if(key.equals(date)) {
                     double dayPriceInc = item.priceMatrix.get(key);
-                    if(!order.isCreditNote) {
-                        price += dayPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
-                        priceInc += dayPriceInc;
-                    } else {
-                        price -= dayPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
-                        priceInc -= dayPriceInc;
+                    double dayPriceEx = dayPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                    double existingDayPrice = 0.0;
+                    if(entry.priceExRoom.containsKey(item.getProduct().externalReferenceId + "_" + date)) {
+                        existingDayPrice = entry.priceExRoom.get(item.getProduct().externalReferenceId + "_" + date);
                     }
+                    price += dayPriceEx;
+                    priceInc += dayPriceInc;
+                    entry.priceExRoom.put(item.getProduct().externalReferenceId + "_" + date, (existingDayPrice+dayPriceEx));
                 }
             }
         }

@@ -35,6 +35,9 @@ class GetShopModuleTable {
     }
     
     private function loadData() {
+        if($this->data) {
+            return;
+        }
         $api = $this->application->getApi();
         $managerName = "get".$this->manangerName;
         $res = $api->$managerName();
@@ -149,6 +152,10 @@ class GetShopModuleTable {
         </script>
             
         <?
+    }
+
+    public function setData($data) {
+        $this->data = $data;
     }
 
 }

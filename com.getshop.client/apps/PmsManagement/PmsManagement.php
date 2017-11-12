@@ -3611,7 +3611,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $filter = $this->getOrderStatsFilter();
         $filter->includeVirtual = $this->getSelectedFilter()->includeVirtual;
-        
+
         $result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
         $_SESSION['currentOrderStatsResult'] = serialize($result);
         

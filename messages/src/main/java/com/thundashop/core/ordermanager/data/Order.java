@@ -116,6 +116,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         Double total = 0.0;
         boolean found = false;
         for(CartItem item : cart.getItems()) {
+            item.correctIncorrectCalculation();
             if(item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
                for(PmsBookingAddonItem pmsitem : item.itemsAdded) {
                    if (pmsitem == null ) {
@@ -145,9 +146,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         Double orderTotal = getTotalAmount();
         long ordertotalcheck = Math.round(orderTotal);
         long ordercheck = Math.round(total);
-        if(isCreditNote) {
-           ordercheck *= -1;
-        }
+
         if(found && ordercheck != ordertotalcheck) {
             return false;
         }

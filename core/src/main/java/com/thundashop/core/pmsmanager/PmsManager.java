@@ -6961,6 +6961,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(StatisticsEntry statEntry : result.entries) {
                 if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
                     double total = 0.0;
+                    String offset = PmsBookingRooms.convertOffsetToString(entry.day);
+                    for(String roomId : statEntry.roomsPrice.keySet()) {
+                        Double price = 0.0;
+                        if(entry.priceExRoom.containsKey(roomId+"_"+offset)) {
+                            price = entry.priceExRoom.get(roomId+"_"+offset);
+                        }
+                        statEntry.roomsPrice.put(roomId, price);
+                    }
+                    
                     for(String productId : roomProductIds) {
                         Double productPrice = entry.priceEx.get(productId);
                         if(productPrice == null) {
@@ -7214,5 +7223,5 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .collect(Collectors.toList());
     }
 
-    
+
 }

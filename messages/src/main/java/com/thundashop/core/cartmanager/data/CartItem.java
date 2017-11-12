@@ -43,6 +43,7 @@ public class CartItem implements Serializable {
     public List<PmsBookingAddonItem> itemsAdded;
     public HashMap<String, Double> priceMatrix;
     public boolean hideDates = false;
+    public String addedByGetShopModule = "";
     
     public CartItem() {
     }
@@ -336,7 +337,9 @@ public class CartItem implements Serializable {
         }
         if(itemsAdded != null) {
             for(PmsBookingAddonItem addonItem : itemsAdded) {
-                val += (addonItem.price * addonItem.count);
+                if (addonItem != null && addonItem.price != null && addonItem.count != null) {
+                    val += (addonItem.price * addonItem.count);
+                }
             }
         }
 
@@ -380,5 +383,29 @@ public class CartItem implements Serializable {
 
     private void dumpItem() {
         System.out.println(product.price + ";" + count);
+    }
+
+    public void recalculateMetaData() {
+        if (itemsAdded != null && !itemsAdded.isEmpty() && product != null) {
+            double totalPrice = itemsAdded.stream().mapToDouble(i -> i.price * i.count).sum();
+            int totalCount = itemsAdded.stream().mapToInt(i -> i.count).sum();
+            double average = totalPrice / totalCount;
+            this.product.price = average;
+            this.count = totalCount;
+        }
+        
+        if (priceMatrix != null && !priceMatrix.isEmpty() && product != null) {
+            double totalPrice = priceMatrix.values()
+                    .stream()
+                    .filter(d -> d != null)
+                    .mapToDouble(d -> d.doubleValue())
+                    .sum();
+            
+            double average = totalPrice / priceMatrix.size();
+            
+            product.price = average;
+            
+            count = priceMatrix.size();
+        }
     }
 }

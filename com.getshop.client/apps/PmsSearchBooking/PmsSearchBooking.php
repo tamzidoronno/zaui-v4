@@ -40,6 +40,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function render() {
+        $this->includefile("overlaybox");
+        
         if (!$this->isGroupBookingView()) {
             $this->renderFilterBox();
         }
@@ -86,17 +88,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
 
     public function getSelectedFilter() {
-        if(!isset($_POST['event'])) {
-            unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
-        }
-        if(isset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()])) {
-            $filter = unserialize($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
-            if($filter->searchWord) {
-                $filter->includeDeleted = true;
-            }
-            return $filter;
-        }
-
         $config = $this->getConfig();
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
@@ -197,6 +188,81 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         return $channels;
     }
 
+    public function showCheckins() {
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->filterType = "checkin";
+        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['day']." days", time()));
+        $filter->endDate = $this->convertToJavaDate(time());
+        $this->setCurrentFilter($filter);
+    }
+    
+    public function showCheckouts() {
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->filterType = "checkout";
+        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['day']." days", time()));
+        $filter->endDate = $this->convertToJavaDate(time());
+        $this->setCurrentFilter($filter);
+    }
+    
+    public function setCurrentFilter($filter) {
+        $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()] = serialize($filter);
+    }
+    
+    public function searchBooking() {
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->searchWord = $_POST['data']['searchtext'];
+        $this->setCurrentFilter($filter);
+    }
+
+    public function clearFilter() {
+        unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
+    }
+    
+    public function startPaymentProcess() {
+        $bookingId = $_POST['data']['pmsbookingid'];
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId);
+                
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->avoidOrderCreation = true;
+        $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
+                
+        
+        $this->getApi()->getCartManager()->clear();
+        $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);
+        
+        $result = new \stdClass();
+        $result->pmsbookingid = $bookingId;
+        
+        ob_start();
+        echo "<div class='SalesPointCartCheckout'>";
+        $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+        $salesPointCartCheckout->renderPreview();
+        $html = ob_get_contents();
+        echo "</div>";
+        ob_end_clean();
+        
+        $result->previewhtml = $html;
+        
+        echo json_encode($result);
+        
+        \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout::clearCheckout();
+        die();
+    }
+
+    public function subMenuChanged() {
+        $_SESSION['currentSubMenu'] = $_POST['data']['selectedTab'];
+    }
+
+    public function isTabActive($tabname) {
+        if (isset($_SESSION['currentSubMenu']) && $_SESSION['currentSubMenu'] == $tabname) {
+            echo "active";
+        }
+        
+        echo "";
+    }
 
 }
 ?>

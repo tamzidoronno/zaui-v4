@@ -222,14 +222,14 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
             echo "<div class='gs_framework_modules'>";
 
             foreach ($modules as $module) {
-                $pageToUse = $module->id == "cms" ? "" : "&page=home";
                 $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
                 $activeModule = $factory->getPage()->javapage->getshopModule == $module->id ? $module : $activeModule;
                 if (!$activeModule && $module->id == "cms") {
                     $activeModule = $module;
                 }
                 $icon = "<i class='fa $module->fontAwesome'></i>";
-                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id$pageToUse'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
+                $scopeId = $_POST['scopeid'];
+                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
             }
             
             echo "</div>";

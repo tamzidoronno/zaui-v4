@@ -215,11 +215,15 @@ class ApplicationBase extends FactoryBase {
         $this->includefile('applicationdescription', 'Common');
     }
 
-    public function renderApplication() {
+    public function renderApplication($appNotAddedToPage=false) {
         
         $changeable = '';
         $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
         $id = isset($this->configuration) ? $this->configuration->id : "";
+        
+        if ($appNotAddedToPage) {
+            $id = get_class($this);
+        }
         
         if (isset($_GET['onlyShowApp']) && isset($id) && $id != $_GET['onlyShowApp']) {
             return;
@@ -278,7 +282,6 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function hasWriteAccess() {
-        
         if($this->getFactory()->getStore()->id == "f2d0c13c-a0f7-41a7-8584-3c6fa7eb68d1") {
             return $this->isEditorMode();
         }
@@ -288,7 +291,7 @@ class ApplicationBase extends FactoryBase {
         }
         $accesslist = $this->getUser()->applicationAccessList;
         $type = -1;
-        if(isset($accesslist->{$this->applicationSettings->id})) {
+        if(isset($this->applicationSettings) && isset($accesslist->{$this->applicationSettings->id})) {
             $type = $accesslist->{$this->applicationSettings->id};
         }
         if(sizeof($accesslist) == 0 || $type == 0 || $type == 2) {
@@ -671,6 +674,11 @@ class ApplicationBase extends FactoryBase {
     
     public function getSelectedMultilevelDomainName() {
         return "default";
+    }
+    
+    public function setGetShopTableRowId() {
+        $_SESSION['gs_moduletable_'.$_POST['data']['functionName']] = $_POST['data'];
+        die();
     }
 }
 ?>

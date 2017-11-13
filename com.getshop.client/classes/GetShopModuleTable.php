@@ -35,9 +35,10 @@ class GetShopModuleTable {
     }
     
     private function loadData() {
-        if($this->data) {
+        if(isset($this->data) && $this->data) {
             return;
         }
+        
         $api = $this->application->getApi();
         $managerName = "get".$this->manangerName;
         $res = $api->$managerName();
@@ -86,7 +87,15 @@ class GetShopModuleTable {
 
                         $this->printJavaScriptData($postArray, $j);
                     echo "</div>";
-                    echo "<div class='datarow_extended_content'></div>";
+                    
+                    if ($this->shouldShowRow($j)) {
+                        echo "<div class='datarow_extended_content' style='display:block;'>";
+                        $this->renderTableContent($postArray, $j);
+                        echo "</div>";    
+                    } else {
+                        echo "<div class='datarow_extended_content'></div>";    
+                    }
+                    
                 echo "</div>";
                 $j++;
             }
@@ -131,8 +140,16 @@ class GetShopModuleTable {
                 
                 thundashop.Ajax.post(event, function(res) {
                     base.find('.datarow_extended_content').html(res);
-
                 });
+                
+                var data = {
+                    functionName : '<? echo $functionName; ?>',
+                    rownumber : rowNumber,
+                    index : target.attr('index')
+                }
+                
+                var event = thundashop.Ajax.createEvent(null, "setGetShopTableRowId", this, data);
+                thundashop.Ajax.post(event, null, null, true);
             });
             
         </script>
@@ -158,6 +175,31 @@ class GetShopModuleTable {
 
     public function setData($data) {
         $this->data = $data;
+    }
+    
+    private function shouldShowRow($rownumber) {
+        if (!isset($_SESSION['gs_moduletable_'.$this->getIdentifier()])) {
+            return false;
+        }
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        
+        if ($sessionData['rownumber'] == $rownumber) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private function renderTableContent($attribute, $rownumber) {
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        $_POST['data'] = $attribute;
+        
+        if (isset($sessionData['index'])) {
+            $_POST['data']['gscolumn'] = $sessionData['index'];
+        }
+        
+        $functioName = $this->getIdentifier();
+        $this->application->$functioName();
     }
 
 }

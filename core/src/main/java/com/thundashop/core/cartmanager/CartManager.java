@@ -539,5 +539,10 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
 
+    public void setCreateByGetShopModule(String getshopModuleName) {
+        Cart cart = this.getCart();
+        cart.createByGetShopModule = getshopModuleName;
+    }
+
     
 }

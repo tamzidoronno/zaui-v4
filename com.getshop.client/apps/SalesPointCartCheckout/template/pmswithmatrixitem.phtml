@@ -1,0 +1,19 @@
+<?/* @var $this \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout */
+$item = $this->getCurrentItem();
+$i = 0;
+$roomNumber = $item->product->additionalMetaData;
+
+
+echo "<b>".$item->count." x ".$item->product->name." ( $roomNumber )</b>";
+foreach ($item->priceMatrix as $date => $value) {
+    $i++;
+    $oddClass = $i % 2 ? "even" : "odd";
+    ?>
+    <div class='pricematrix_row <? echo $oddClass; ?> '>
+        <input type='checkbox' checked='true' class='matrix_input gsnicecheckbox1'> 
+        <span><? echo trim($date);?></span>
+        <input type='textfield' class='gsniceinput1 matrix_item' value="<? echo $value; ?>">
+    </div>
+    <?
+}
+?>

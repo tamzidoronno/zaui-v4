@@ -1,0 +1,14 @@
+<?
+/* @var $this \ns_34143422_f8af_4b46_9473_8cf86ca1a1a6\SalesPointSelectPayment */
+$paymentApps = $this->getPaymentApps();
+$cart = $this->getApi()->getCartManager()->getCart();
+
+echo "<input type='hidden' id='createByGetShopModule' value='$cart->createByGetShopModule'/>";
+
+foreach ($paymentApps as $paymentApp) {
+    $id = $paymentApp->getApplicationSettings()->id;
+    ?>
+    <div class='paymentmethod' gs_callback='app.SalesPointSelectPayment.orderCreated' gsclick='paymentMethodSelected' paymentmethod='<? echo $id; ?>'><? echo $paymentApp->getName(); ?></div>
+    <?
+}
+?>

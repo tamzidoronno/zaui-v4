@@ -83,6 +83,14 @@ public class StoreHandler {
         return rest;
     }
     
+    public synchronized void setGetShopModule(String sessionId, String moduleId) {
+        Session session = getSession(sessionId);
+        if (session != null) {
+            moduleId = moduleId == null || moduleId.isEmpty() ? "cms" : moduleId;
+            session.put("currentGetShopModule", moduleId);
+        }
+    }
+    
     public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         Session session = getSession(inObject.sessionId);
         initMultiLevels(storeId, session); 

@@ -290,6 +290,16 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     @Override
+    public Store initializeStoreWithModuleId(String webAddress, String initSessionId, String moduleId) throws ErrorException {
+        Store store = storePool.initialize(storeId, initSessionId);
+        if (getSession() != null) {
+            moduleId = moduleId == null || moduleId.isEmpty() ? "cms" : moduleId;
+            getSession().put("currentGetShopModule", moduleId);
+        }
+        return store; 
+    }
+    
+    @Override
     public void setImageIdToFavicon(String id) {
         Store store = getMyStore();
         store.favicon = id;
@@ -458,4 +468,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public String getCurrentSession() throws Exception {
         return getSession().id;
     }
+
+    
 }

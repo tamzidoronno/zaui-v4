@@ -289,8 +289,12 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
     return notified;
 };
 thundashop.common.lastPushId = null;
-thundashop.common.goToPage = function(id, callback) {
+thundashop.common.goToPage = function(id, callback, other) {
     var link = "/?page="+id;
+    
+    if (typeof (other) !== "undefined" && other) {
+        link = "/"+other;
+    }
     
     if(avoidjavascriptnavigation) {
         window.location.href=link;

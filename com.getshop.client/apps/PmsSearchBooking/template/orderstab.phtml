@@ -1,0 +1,19 @@
+<?
+/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+$this->bookingEngineBooking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+
+if (!count($this->pmsBooking->orderIds)) {
+    echo "<div class='no_orders_created'>";
+    echo "<i class='fa fa-warning'></i>";
+    echo $this->__f("No orders created yet, start a payment process to add orders");
+    echo "</div>";
+    return;
+}
+
+foreach ($this->pmsBooking->orderIds as $orderId) {
+    $orderPrinter = new ns_f22e70e7_7c31_4c83_a8c1_20ae882853a7\OrderSimplePrinter();
+    $orderPrinter->setOrderId($orderId);
+    $orderPrinter->renderApplication(true);
+}
+?>

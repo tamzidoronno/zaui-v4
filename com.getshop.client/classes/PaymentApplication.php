@@ -81,6 +81,39 @@ class PaymentApplication extends ApplicationBase {
     public function getExtendedPaymentForm(\PaymentMethod $paymentMethod) {
         return "";
     }
+    
+    /**
+     * Creates order and process payment
+     */
+    public function processPayment($address, $managerReference) {
+        $order = $this->getApi()->getOrderManager()->createOrder($address);
+        $order->createByManager = $managerReference;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
+    public function canChangePaymentMethod($order) {
+        if (isset($order->closed) && $order->closed) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function canDeleteOrder($order) {
+        if (isset($order->closed) && $order->closed) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function isAllowedToManuallyMarkAsPaid($order) {
+        if (isset($order->closed) && $order->closed) {
+            return false;
+        }
+        
+        return true;
+    }
 }
 
 ?>

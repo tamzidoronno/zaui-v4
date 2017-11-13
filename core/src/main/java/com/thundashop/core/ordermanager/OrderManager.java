@@ -30,6 +30,7 @@ import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
@@ -63,6 +64,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
+    
+    private List<OrderManagerEvents> eventListeners = new ArrayList();
     
     @Autowired
     public MailFactory mailFactory;
@@ -245,7 +248,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             markAsPaidInternal(order, new Date());
         }
         saveObject(order);
+        boolean newOrder = !orders.containsKey(order.id);
         orders.put(order.id, order);
+        
+        if (newOrder) {
+            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
+                o.orderCreated(order.id);
+            });
+        } else {
+            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
+                o.orderChanged(order.id);
+            });
+        }
     }
 
     @Override
@@ -2043,6 +2057,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
             }
         }
+    }
+
+    public void addListener(PmsManager listener) {
+        eventListeners.add(listener);
     }
 
 

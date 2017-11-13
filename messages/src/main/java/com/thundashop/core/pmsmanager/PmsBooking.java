@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import javax.xml.ws.soap.Addressing;
+import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBooking extends DataCommon {
  
@@ -82,6 +83,18 @@ public class PmsBooking extends DataCommon {
     public boolean ignoreNoShow = false;
     boolean quickReservation = false;
     public String latestwubookreservationid = "";
+    
+    /**
+     * First startdate of all rooms
+     */
+    @Transient
+    public Date startDate;
+    
+    /**
+     * Last enddate of all rooms
+     */
+    @Transient
+    public Date endDate;
     
     public Double getTotalPrice() {
         return totalPrice;

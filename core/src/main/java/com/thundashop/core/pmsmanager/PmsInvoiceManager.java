@@ -322,7 +322,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
-            if(order == null || order.createByManager == null || !order.createByManager.equals("PmsDailyOrderGeneration")) {
+            if(order == null || order.createByManager == null || (!order.createByManager.equals("PmsDailyOrderGeneration") && !order.createByManager.equals("SalesPoint"))) {
                 return false;
             }
         }

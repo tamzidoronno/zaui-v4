@@ -84,6 +84,10 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
                 } else {
                     cars.put(car.id, car);
                 }
+                
+                if (car.updateRequestedLastTimeSms()) {
+                    saveObject(car);
+                }
             }
         }
         
@@ -155,6 +159,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             throw new NullPointerException("Why is there cars created without connections to a fleet?");
         }
         
+        car.updateRequestedLastTimeSms();
         saveObject(car);
         finalize(car);
         cars.put(car.id, car);
@@ -636,6 +641,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         messageManager.sendSms("sveve", car.cellPhone, message, getStoreDefaultPrefix());
         
         car.requestKilomters.markAsSentSmsNotification();
+        
+        saveObject(car);
     }
     
     @Override

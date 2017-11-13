@@ -165,4 +165,6 @@ public interface ICartManager {
     public void addMetaDataToProduct(String cartItemId, String metaData);
     
     public void updateCartItem(CartItem item);
+    
+    public void recalculateMetaData();
 }

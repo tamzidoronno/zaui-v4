@@ -129,6 +129,13 @@ class ApplicationModulePool {
         apac.faIcon = "fa-calendar";
         apac.description = "GetShop Module.";
         modules.put(booking.id, apac);
+        
+        ApplicationModule salespoint = new ApplicationModule();
+        salespoint.moduleName = "GetShop Module - SALESPOINT";
+        salespoint.id = "salespoint";
+        salespoint.faIcon = "fa-money";
+        salespoint.description = "GetShop Module.";
+        modules.put(booking.id, salespoint);
     }
     
     public ApplicationModule getModule(String id) {

@@ -531,5 +531,13 @@ public class CartManager extends ManagerBase implements ICartManager {
         cart.removeItem(cartItemId);
     }
 
+    @Override
+    public void recalculateMetaData() {
+        Cart cart = getCart();
+        if (cart != null) {
+            cart.getItems().stream().forEach(i -> i.recalculateMetaData());
+        }
+    }
+
     
 }

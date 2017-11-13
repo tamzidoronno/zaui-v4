@@ -89,7 +89,7 @@ public class MecaCarRequestKilomters implements Serializable {
             
             Date date2 = getDateInFuture(requestedLastTimeSms, 0, 7);
             
-            if (date2.before(toDay) && requestedLastTimeSms == null) {
+            if (date2.before(toDay)) {
                 return true;
             }
         }
@@ -111,6 +111,15 @@ public class MecaCarRequestKilomters implements Serializable {
         cal.setTime(new Date());
         cal.add(Calendar.MINUTE, 1);
         requestedLastTime = cal.getTime();
+    }
+
+    boolean updateRequestedLastTimeSms() {
+        if (requestedLastTimeSms == null) {
+            requestedLastTimeSms = new Date();
+            return true;
+        }
+        
+        return false;
     }
     
 }

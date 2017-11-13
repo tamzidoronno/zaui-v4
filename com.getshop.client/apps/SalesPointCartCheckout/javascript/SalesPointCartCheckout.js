@@ -69,7 +69,7 @@ app.SalesPointCartCheckout = {
         matrixRows.each(function() {
             var row = {};
             row['enabled'] = $(this).find('input[type="checkbox"]').is(':checked');
-            row['value'] = $(this).find('input[type="textfield"]').val();
+            row['value'] = $(this).find('.matrix_price').val();
             row['date'] = $(this).find('span').html();
             matrix.push(row);
         });

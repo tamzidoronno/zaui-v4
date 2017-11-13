@@ -12,7 +12,7 @@ foreach ($item->priceMatrix as $date => $value) {
     <div class='pricematrix_row <? echo $oddClass; ?> '>
         <input type='checkbox' checked='true' class='matrix_input gsnicecheckbox1'> 
         <span><? echo trim($date);?></span>
-        <input type='textfield' class='gsniceinput1 matrix_item' value="<? echo $value; ?>">
+        <input type='textfield' class='gsniceinput1 matrix_item matrix_price' value="<? echo $value; ?>">
     </div>
     <?
 }

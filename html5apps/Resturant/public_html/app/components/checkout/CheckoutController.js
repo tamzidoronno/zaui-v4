@@ -235,7 +235,7 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
             var item = items[i];
             if (item.tablePersonNumber === tablePersonNumber) {
                 var product = datarepository.getProductById(item.productId);
-                if (!$scope.contains(retItems, product)) {
+                if (!$scope.contains(retItems, product) && product !== null) {
                     retItems.push(product);
                 }
                 

@@ -59,7 +59,7 @@ public class ViewSmsHistory {
         Database database = context.getBean(Database.class);
         
         // 1 = januar
-        int month = 7;
+        int month = 10;
         int year = 2017;
         
         Date start = getDate(year, month,1);
@@ -80,8 +80,9 @@ public class ViewSmsHistory {
         hist.view(database, "Fasthotel - svolvær", "917 533 555");
         hist.view(database, "Fasthotel - havna", "818 772 092");
         hist.view(database, "Jernbaneplassen", "");
-        hist.view(database, "Trysilhotell", "");
+        hist.view(database, "Trysilhotell", "Wassgren Consult AS");
         hist.view(database, "Ilandtunet", "");
+        hist.view(database, "Haugesund - Banken hotell", "");
         
         System.exit(0);
     }
@@ -145,6 +146,10 @@ public class ViewSmsHistory {
         
         if (storeName.equals("Jernbaneplassen")) {
             return "c6778306-0e3c-48c9-aa5a-3325460d0d1d";
+        }
+        
+        if (storeName.equals("Haugesund - Banken hotell")) {
+            return "fcaa6625-17da-447e-b73f-5c07b9b7d382";
         }
         
         throw new NullPointerException("Not a known store");

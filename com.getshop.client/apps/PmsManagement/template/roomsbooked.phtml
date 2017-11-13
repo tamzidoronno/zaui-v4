@@ -435,7 +435,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 <? 
                                 if($room->addedToWaitingList) {
                                     echo "On wait";
-                                } else if($room->deleted) {
+                                } else if($room->deleted && $room->overbooking) {
                                     echo "Overbooking";
                                 } else {
                                     echo round($room->price);

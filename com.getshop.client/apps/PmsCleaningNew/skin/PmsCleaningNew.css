@@ -1,0 +1,39 @@
+.PmsCleaningNew .roomNotReady { cursor:pointer; color: #35280d; font-weight: bold; }
+.PmsCleaningNew .roomIsReady { color: green; font-weight: bold; }
+.PmsCleaningNew .guestname { display:inline-block; width: 50px; overflow:hidden;  text-overflow: ellipsis; white-space: nowrap; height: 12px; line-height: 12px;
+ }
+.PmsCleaningNew .stepbox { border: solid 1px #ddd; border-radius : 5px; padding: 20px; background-color:#efefef; padding-top: 0px; }
+ 
+.PmsCleaningNew th {
+	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
+	sans-serif;
+	color: #6D929B;
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	border-top: 1px solid #C1DAD7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	padding: 6px 6px 6px 12px;
+	background: #CAE8EA url(images/bg_header.jpg) no-repeat;
+}
+
+.PmsCleaningNew td {
+	border-right: 1px solid #C1DAD7;
+	border-bottom: 1px solid #C1DAD7;
+	background: #fff;
+	padding: 6px 6px 6px 12px;
+	color: #000;
+}
+.PmsCleaningNew td:nth-child(1) {
+    border-left: 1px solid #C1DAD7;
+}
+
+.PmsCleaningNew tr:nth-child(2) {
+	background: #F5FAFA;
+	color: #B4AA9D;
+}
+
+.PmsCleaningNew .roombox {  color:#fff; display: inline-block; margin: 3px; padding: 3px; border: solid 1px #bbb; width: 60px; text-align: center; }
+.PmsCleaningNew .notclean { background-color: #35280d; }
+.PmsCleaningNew .inUse { background-color: purple; }
+.PmsCleaningNew .clean { background-color: green; }

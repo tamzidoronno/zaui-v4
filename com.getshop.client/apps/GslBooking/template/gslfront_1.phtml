@@ -44,65 +44,6 @@ EOD;
             <input id='coupon_input' onfocus="this.placeholder =''" onblur="this.placeholder ='Discount coupon?'" placeholder="Discount coupon?">
         </div><div class="fa_box gsl_button" id="search_rooms" onclick="showProductList()">Search</div>
     </div>
-<!--    <div class="productentry" style="min-height: 295px;">
-        <div class='roomimg'>
-            <div class="feature">
-		<figure class="featured-item image-holder r-3-2 transition"></figure>
-	</div>
-	<div class="gallery-wrapper">
-            <div class="gallery">
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 active transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-                <div class="item-wrapper">
-                        <figure class="gallery-item image-holder r-3-2 transition"></figure>
-                </div>
-            </div>
-	</div>
-	<div class="controls"><button class="move-btn left">&rarr;</button><button class="move-btn right">&larr;</button></div>
-        </div>
-
-        <div class="productentry_main">
-            <div class="productentry_header">
-                <div>` + room.name + `</div>
-                <div style="float:right;">starting at NOK `+ room.pricesByGuests[1] +`,-</div>
-                <div class="product_availablerooms" value="`+ room.availableRooms +`"></div>
-            </div>
-
-            <div class="productentry_body">
-                <div>`+ room.description + `</div>
-            </div>
-            <div class="productentry_footer">
-            `+ utilities +`
-            </div>
-        </div>
-        <div style="clear:both;"></div>
-    </div>-->
-    <div class="show_body_footer">
     <div class="gslbookingBody">
         <div class="productoverview">
             <div id="productentry"></div>
@@ -251,7 +192,6 @@ EOD;
             </div>
         </div>
     </div>
-    </div>
 </div>
 
 <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
@@ -270,7 +210,7 @@ function loadGallery(){
     var left;
 
     $(document).on('click', '.gallery-item', function(e){
-        var featured = $(this).closest('.roomimg');
+        var featured = $(this).closest('.productentry_gallery');
         featured.find('.gallery-item').removeClass('active');
         if (!$(this).hasClass('active')){
             $(this).addClass('active');
@@ -279,7 +219,7 @@ function loadGallery(){
     });
     $(document).on('mouseenter', '.move-btn.left' ,function(){
         left = left || 0;
-        var thisGallery = $(this).closest('.roomimg').find('.gallery'); 
+        var thisGallery = $(this).closest('.productentry_gallery').find('.gallery'); 
         leftInterval = setInterval(function() {
             thisGallery.css('left', left + '%');
             if (left > -itemWidth) {
@@ -304,7 +244,7 @@ function loadGallery(){
         }, 1);
     });
     $(document).on('mouseenter', '.move-btn.right', function(){
-        var thisGallery = $(this).closest('.roomimg').find('.gallery'); 
+        var thisGallery = $(this).closest('.productentry_gallery').find('.gallery'); 
         if (left > -itemWidth && left < 0) {
             left = left  - itemWidth;
             
@@ -463,7 +403,7 @@ function loadGallery(){
         });
     }
     function showProductList(){
-        $('.show_body_footer').fadeIn('400');
+        $('.gslbookingBody').fadeIn('400');
         $('.overview').hide();
         $('.addons_guests').fadeOut('400', function(){
             $('.productoverview').fadeIn('400');
@@ -520,11 +460,9 @@ function loadGallery(){
         $('.destinationInfoBox').hide();
     });
     $(document).ready(function(){
-        var currentDate = new Date();
-        currentDate.setDate(currentDate.getDate()-1);
-        
-        var endDate = new Date();
-        endDate.setDate(endDate.getDate()+1);
+        var date = new Date();
+        var currentDate = date.setDate(date.getDate()-1);
+        var endDate = date.setDate(date.getDate()+1);
         
         $('#date_picker').daterangepicker({
             "autoApply":true,
@@ -641,7 +579,7 @@ function loadGallery(){
                         }
                         var roomBox = `
                         <div class="productentry">
-                            <div class='roomimg'>
+                            <div class='productentry_gallery'>
                                 <div class="feature">
                                     <i class="fa fa-search"></i>
                                     <figure class="featured-item image-holder r-3-2 transition" style="background-image:url(https://wilhelmsenhouse.getshop.com/displayImage.php?id=`+ firstFile +`)"></figure>

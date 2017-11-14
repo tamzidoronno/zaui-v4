@@ -15,11 +15,13 @@ class MecaFleetCarCreate extends \MarketingApplication implements \Application {
     }
     
     public function saveCar() {
-        $newCar = false;
         $mecaCar = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
         
+        if (isset($_POST['data']['createnewcaronfleet'])) {
+            $mecaCar = new \core_mecamanager_MecaCar();
+        }
+        
         if (!$mecaCar) {
-            $newCar = true;
             $mecaCar = new \core_mecamanager_MecaCar();
         }
 
@@ -30,7 +32,14 @@ class MecaFleetCarCreate extends \MarketingApplication implements \Application {
         $mecaCar->licensePlate = $_POST['data']['regnr'];
         $mecaCar->prevControll = $this->convertToJavaDate(strtotime($_POST['data']['eukontroll'] . " - 2 year"));
         
-        $car = $this->getApi()->getMecaManager()->saveFleetCar($this->getPage()->getId(), $mecaCar);
+        if (isset($_POST['data']['createnewcaronfleet'])) {
+            $oldCar = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
+            $fleet = $this->getApi()->getMecaManager()->getFleetByCar($oldCar);
+            $car = $this->getApi()->getMecaManager()->saveFleetCar($fleet->pageId, $mecaCar);
+        } else {
+            $car = $this->getApi()->getMecaManager()->saveFleetCar($this->getPage()->getId(), $mecaCar);
+        }
+        
         echo $car->pageId;
         die();
     }

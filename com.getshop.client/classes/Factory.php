@@ -338,8 +338,16 @@ class Factory extends FactoryBase {
         }
     }
 
+    private function getCurrentModuleId() {
+        if (isset($_SESSION['getshop_current_module_id'])) {
+            return $_SESSION['getshop_current_module_id'];
+        }
+        
+        return "cms";
+    }
+    
     public function initialize() {
-        $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
+        $this->store = $this->getApi()->getStoreManager()->initializeStoreWithModuleId($_SERVER['HTTP_HOST'], session_id(), $this->getCurrentModuleId());
         if(!$this->store) {
             $this->store = $this->getApi()->getStoreManager()->getMyStore();
         }
@@ -353,12 +361,8 @@ class Factory extends FactoryBase {
     function __construct() {
         @session_start();
         header('Content-Type: text/html; charset=UTF-8');
+        $this->setCurrentModuleId();
         $this->initialize();
-        
-        if (isset($_GET['changeGetShopModule'])) {
-            $this->getApi()->getPageManager()->changeModule($_GET['changeGetShopModule']);
-        }
-        
         $this->applicationPool = new ApplicationPool($this);
         $this->pageManager = $this->getApi()->getPageManager();
     }
@@ -1054,6 +1058,12 @@ class Factory extends FactoryBase {
     
     public function isCmsMode() {
         return (!$this->page->javapage->getshopModule || $this->page->javapage->getshopModule == "cms");
+    }
+
+    public function setCurrentModuleId() {
+        if (isset($_GET['changeGetShopModule'])) {
+            $_SESSION['getshop_current_module_id'] = $_GET['changeGetShopModule'];
+        }
     }
 
 }

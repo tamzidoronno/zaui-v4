@@ -616,12 +616,20 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         checkIfCanGetOptimalLines(booking, itemId, bookingItem);
         
-        Booking newBooking = deepClone(booking);
-        newBooking.bookingItemId = itemId;
-        if (bookingItem != null)
-            newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        bookings.remove(bookingId);
         
-        validateChange(newBooking);
+        try {
+            Booking newBooking = deepClone(booking);
+            newBooking.bookingItemId = itemId;
+            if (bookingItem != null)
+                newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+
+            validateChange(newBooking);
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            bookings.put(bookingId, booking);
+        }
         
         booking.bookingItemId = itemId;
         if (bookingItem != null)
@@ -972,7 +980,28 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItem> retList2 = new ArrayList(retList);
         
+        removeItemIfCurrentAssignedBookingCanNoLongerBeOnTheItem(bookingId, start, end, retList2);
+        
         return retList2;
+    }
+
+    private void removeItemIfCurrentAssignedBookingCanNoLongerBeOnTheItem(String bookingId, Date start, Date end, List<BookingItem> retList2) {
+        if (bookingId != null && !bookingId.isEmpty()) {
+            Booking booking = getBooking(bookingId);
+            if (booking != null && booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                try {
+                    Booking newBooking = deepClone(booking);
+                    newBooking.startDate = start;
+                    newBooking.endDate = end;
+                    ArrayList bookings = new ArrayList();
+                    bookings.add(newBooking);
+                    checkIfAssigningPossible(bookings);
+                } catch (BookingEngineException ex) {
+                    retList2.removeIf(i -> i.id.equals(booking.bookingItemId));
+                }
+
+            }
+        }
     }
 
     /**

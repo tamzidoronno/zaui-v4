@@ -371,7 +371,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     <span gstype='form' method="checkOutGuest">
                           <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                           <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                          <span class='pmsbutton' gstype='submitToInfoBox' method='checkinguest' gsname='id' style='padding:3px; width:80px; text-align: center;'>Check out</span>
+                          <span class='pmsbutton' gstype='submitToInfoBox' method='checkOutGuest' gsname='id' style='padding:3px; width:80px; text-align: center;'>Check out</span>
                     </span>
                     <?php
                 } else { 
@@ -435,7 +435,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 <? 
                                 if($room->addedToWaitingList) {
                                     echo "On wait";
-                                } else if($room->deleted) {
+                                } else if($room->deleted && $room->overbooking) {
                                     echo "Overbooking";
                                 } else {
                                     echo round($room->price);

@@ -56,6 +56,7 @@ class GetShopLockSystem extends \WebshopApplication implements \Application {
         if ($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_menuaction'] == "editgroup") {
             return "editgroup";
         }
+        
         if ($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_menuaction'] == "editslot") {
             return "editslot";
         }

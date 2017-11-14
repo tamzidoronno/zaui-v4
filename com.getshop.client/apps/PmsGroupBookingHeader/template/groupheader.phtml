@@ -1,0 +1,48 @@
+<?
+/* @var $this \ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
+$pmsBooking = $this->getCurrentBooking();
+$rooms = count($pmsBooking->rooms);
+$orderCount = count($pmsBooking->orderIds);
+$user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
+$guestcount = 0;
+
+foreach($pmsBooking->rooms as $room) {
+    $guestcount += count($room->guests);
+}
+?>
+
+<div>
+    <div class="top_box">
+        <div class="title">Guests</div>
+        <i class="fa fa-user"></i> <? echo $guestcount; ?>
+    </div>
+    
+    <div class="top_box">
+        <div class="title">Rooms</div>
+        <i class="fa fa-building"></i> <? echo $rooms; ?>
+    </div>
+    
+    <div class="top_box">
+        <div class="title">Orders</div>
+        <i class="fa fa-shopping-bag"></i> <? echo $rooms; ?>
+    </div>
+</div>
+
+<div class="booker_main_user">
+    <div class="title"><? echo $this->__("BOOKER OWNER"); ?></div>
+    <div class="row">
+        <div class="col col1"><? echo $this->__("Name"); ?></div>
+        <div class="col col2"><? echo $user->fullName; ?></div>
+    </div>
+    
+    <div class="row">
+        <div class="col col1"><? echo $this->__("Email"); ?></div>
+        <div class="col col2"><? echo $user->emailAddress ?></div>
+    </div>
+    
+    <div class="row">
+        <div class="col col1"><? echo $this->__("Phone number"); ?></div>
+        <div class="col col2"><? echo $user->cellPhone ?></div>
+    </div>
+    
+</div>

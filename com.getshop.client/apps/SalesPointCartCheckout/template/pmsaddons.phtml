@@ -1,0 +1,27 @@
+<?/* @var $this \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout */
+$item = $this->getCurrentItem();
+$roomNumber = $item->product->additionalMetaData;
+?>
+
+<div class='pmsaddonsrow'>
+    <b><? echo $item->count; ?> x <? echo $item->product->name; ?> ( <? echo $roomNumber; ?> ) </b>
+    <?
+    $i = 0;
+    foreach ($item->itemsAdded as $addon) {
+        $i++;
+        $oddClass = $i % 2 ? "even" : "odd";
+        $date = $addon->date;
+
+        ?>
+        <div class='addonlist_row <? echo $oddClass; ?> ' addonid='<? echo $addon->addonId; ?>'>
+            <input type='checkbox' checked='true' class='addon_checked gsnicecheckbox1'> 
+            <span><? echo $date; ?></span>
+            <div class='addon_inputs'>
+                <input type='textfield' class='gsniceinput1 addon_count' value="<? echo $addon->count; ?>">
+                x <input type='textfield' class='gsniceinput1 addon_price' value="<? echo $addon->price; ?>">    
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

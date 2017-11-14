@@ -22,7 +22,7 @@ public interface IMecaManager {
     @Editor
     public MecaFleet createFleet(MecaFleet fleet);
     
-    @Editor
+    @Customer
     public List<MecaFleet> getFleets();
     
     @Customer
@@ -49,7 +49,7 @@ public interface IMecaManager {
     @Customer
     public MecaCar getCarByPageId(String pageId);
         
-    @Editor
+    @Customer
     public MecaFleet getFleetByCar(MecaCar car);
     
     @Editor

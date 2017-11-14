@@ -35,10 +35,15 @@ thundashop.handleAjaxError = function(error, textstatus, status, content) {
 thundashop.Ajax = {
     init: function() {
         $(document).on('click','*[gsclick]', thundashop.Ajax.postgeneral);
+        $(document).on('click','*[gslick]', thundashop.Ajax.showFunnyMessage);
         $(document).on('change','*[gschange]', thundashop.Ajax.postgeneral);
         $(document).on('click','*[gs_downloadExcelReport]', thundashop.Ajax.createExcelFile);
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
         $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
+    },
+    
+    showFunnyMessage: function() {
+        alert("HAHAHAHA, you wrote gslick instead of gsclick!");
     },
     
     closeModal: function() {
@@ -106,6 +111,8 @@ thundashop.Ajax = {
         
         var data = {};
         
+        var javascriptCallback = $(this).attr('gs_callback');
+        
         if ($(this).attr('gschange')) {
             method = $(this).attr('gschange');
             data.gsvalue = $(this).val();
@@ -143,10 +150,22 @@ thundashop.Ajax = {
                 window.scroll(0,0);
             }
         } else {
-            thundashop.Ajax.simplePost(this, method, data);
             
-            if ($(this).attr('gs_scrollToTop')) {
-                window.scroll(0,0);
+            if (javascriptCallback) {
+                var callbackFunction = function(res, javascriptCallbackFunction) {
+                    var funtionBody = javascriptCallbackFunction[0] + "(res);";
+                    var toExecute = new Function("res", funtionBody);
+                    toExecute(res);
+                }
+                
+                thundashop.Ajax.post(event, callbackFunction, [javascriptCallback]);
+            
+            } else {
+                thundashop.Ajax.simplePost(this, method, data);
+
+                if ($(this).attr('gs_scrollToTop')) {
+                    window.scroll(0,0);
+                }
             }
         }   
     },

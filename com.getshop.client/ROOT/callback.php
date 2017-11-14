@@ -3,6 +3,9 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $data = http_build_query($_GET);
+if(!$data) {
+    header("location:/");
+}
 
 if (!isset($_GET['app'])) {
     return;

@@ -29,7 +29,7 @@ echo "What store?";
 cat $serverQuestion | while read line
 do
   array=(${line//;/ })
-  echo ${array[0]}"="${array[2]};
+  echo ${array[0]}"="${array[2]} ${array[3]} ${array[4]} ${array[5]} ${array[6]} ${array[7]};
 done
 read storeQuestion;
 

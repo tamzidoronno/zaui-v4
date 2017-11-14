@@ -2,14 +2,18 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +37,46 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
     
     @Autowired
     MessageManager messageManager;
+    
+    
+    List<CareTakeRepeatingData> repeatingDataList = new ArrayList();
+    
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataCommon : data.data) {
+            if(dataCommon instanceof CareTakeRepeatingData) {
+                repeatingDataList.add((CareTakeRepeatingData)dataCommon);
+            }
+        }
+        createScheduler("caretakerprocessor", "1 1 08 * *", CareTakerDailyProcessor.class);
+    }
+    
+    public void checkForTasksToCreate() {
+        TimeRepeater repeater = new TimeRepeater();
+        List<PmsCareTaker> careTakerJobs = pmsManager.getCareTakerJobs();
+        for(CareTakeRepeatingData repeating : repeatingDataList) {
+            LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(repeating.repeaterData);
+            for(TimeRepeaterDateRange range : ranges) {
+                if(range.start.after(new Date())) {
+                    continue;
+                }
+                boolean found = false;
+                System.out.println("This needs to be created");
+                for(PmsCareTaker taker : careTakerJobs) {
+                    if(taker.repeatingTaskId.equals(repeating.id) && taker.rowCreatedDate.equals(range.start)) {
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    PmsCareTaker newJob = new PmsCareTaker();
+                    newJob.description = repeating.text;
+                    newJob.rowCreatedDate = range.start;
+                    newJob.repeatingTaskId = repeating.id;
+                    newJob.roomId = repeating.roomId;
+                    pmsManager.saveCareTakerJob(newJob);
+                }
+            }
+        }
+    }
     
     @Override
     public void assignTask(String taskId, String userId) {
@@ -63,7 +107,7 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
             roomView.itemId = item.id;
             roomView.roomName = item.bookingItemName;
             for(PmsCareTaker task : tasks.values()) {
-                if(task.roomId.equals(item.id)) {
+                if(task.roomId != null && task.roomId.equals(item.id)) {
                     roomView.total++;
                     if(task.completed) {
                         roomView.completed++;
@@ -95,9 +139,31 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
         HashMap<String, PmsCareTaker> tasks = pmsManager.getCareTakerTasks();
         List<CareTakerRoomList> res = new ArrayList();
         
+
+        CareTakerRoomList toAdd = new CareTakerRoomList();
+        toAdd.name = "General";
+        toAdd.itemId = "";        
+        for(PmsCareTaker task : tasks.values()) {
+            if(task.roomId == null || task.roomId.isEmpty()) {
+                if(filter.view.equals("unassigned") && (task.assignedTo == null || task.assignedTo.isEmpty()) && !task.completed) {
+                    toAdd.jobs.add(task);
+                }
+                if(filter.view.equals("completed") && task.completed) {
+                    toAdd.jobs.add(task);
+                }
+                if(filter.view.equals("assigned") && (task.assignedTo != null && !task.assignedTo.isEmpty()) && !task.completed) {
+                    toAdd.jobs.add(task);
+                }
+            }
+        }
+        if(!toAdd.jobs.isEmpty()) {
+            res.add(toAdd);
+        }
+                
+        
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(BookingItem item : items) {
-            CareTakerRoomList toAdd = new CareTakerRoomList();
+            toAdd = new CareTakerRoomList();
             toAdd.name = item.bookingItemName;
             toAdd.itemId = item.id;
             
@@ -105,7 +171,7 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
             roomView.itemId = item.id;
             roomView.roomName = item.bookingItemName;
             for(PmsCareTaker task : tasks.values()) {
-                if(task.roomId.equals(item.id)) {
+                if(task.roomId != null && task.roomId.equals(item.id)) {
                     if(filter.view.equals("unassigned") && (task.assignedTo == null || task.assignedTo.isEmpty()) && !task.completed) {
                         toAdd.jobs.add(task);
                     }
@@ -145,5 +211,33 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
         task.dateCompleted = new Date();
         pmsManager.saveCareTakerJob(task);
     }
+
+    @Override
+    public void addRepeatingTask(CareTakeRepeatingData repeatingData) {
+        saveObject(repeatingData);
+        repeatingDataList.add(repeatingData);
+        checkForTasksToCreate();
+    }
+
+    @Override
+    public List<CareTakeRepeatingData> getRepeatingTasks() {
+        return repeatingDataList;
+    }
+
+    @Override
+    public void deleteRepeatingTask(String id) {
+        CareTakeRepeatingData toRemove = null;
+        for(CareTakeRepeatingData data : repeatingDataList) {
+            if(data.id.equals(id)) {
+                toRemove = data;
+            }
+        }
+        if(toRemove != null) {
+            deleteObject(toRemove);
+            repeatingDataList.remove(toRemove);
+        }
+    }
+    
+    
     
 }

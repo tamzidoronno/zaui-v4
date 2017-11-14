@@ -7,8 +7,6 @@ package com.thundashop.core.databasemanager;
 
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -28,15 +26,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,10 +65,6 @@ public class DatabaseRemote extends StoreComponent {
     public void activateSandBox() {
         sandbox = true;
     }
-
-    public Mongo getMongo() {
-        return mongo;
-    }
     
     private String[] readLines(String filename) {
         FileReader fileReader;
@@ -102,6 +92,13 @@ public class DatabaseRemote extends StoreComponent {
             ex.printStackTrace();
         }
         
+        
+        morphia = new Morphia();
+        morphia.map(DataCommon.class);
+
+    }
+
+    private void connect() throws UnknownHostException {
         String connectionString = "mongodb://getshopreadonly:readonlypassword@clients.getshop.com/admin";
         
         if (GetShopLogHandler.isDeveloper) {
@@ -112,12 +109,8 @@ public class DatabaseRemote extends StoreComponent {
         }
         
         mongo = new MongoClient(
-            new MongoClientURI(connectionString)
+                new MongoClientURI(connectionString)
         );
-        
-        morphia = new Morphia();
-        morphia.map(DataCommon.class);
-
     }
 
 //    public void dropTables(Credentials credentials) throws SQLException {
@@ -175,9 +168,13 @@ public class DatabaseRemote extends StoreComponent {
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
         try {
+            connect();
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
+            mongo.close();
         } catch (com.mongodb.CommandFailureException ex) {
             ex.printStackTrace();
+        } catch (UnknownHostException ex) {
+            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -379,9 +376,18 @@ public class DatabaseRemote extends StoreComponent {
 //    }
 
     public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
-        DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId + "_" + moduleName);
-        return col.find().toArray().stream()
-                .map(o -> morphia.fromDBObject(DataCommon.class, o));
+        try {
+            connect();
+            DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId + "_" + moduleName);
+            Stream<DataCommon> retlist = col.find().toArray().stream()
+                    .map(o -> morphia.fromDBObject(DataCommon.class, o));
+            mongo.close();
+            return retlist;
+        } catch (UnknownHostException ex) {
+            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
 
 //    public void refreshDatabase(List<DataCommon> datas) {

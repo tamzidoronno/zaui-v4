@@ -1,6 +1,7 @@
 <?php
 $fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->getId());
 $followup = $fleet->followup;
+$isAdmin = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
 if($followup == "true"){
     $followuptext = "manuell";
     $directtext = "<span class='directfollowup'>Automatisk oppfølging</span>";
@@ -15,6 +16,9 @@ if($followup == "true"){
 
 ?>
 <div class='title'><? echo $fleet->name ."<br><span style='font-size:16px;font-style:italic;'>En ".$followuptext." oppfølgingsflåte.</span>";?></div>
+<?
+if ($isAdmin) {
+?>
 <div class="editmecafleetform" gstype="form" method="updateFleet">
     <div class="leftFleetbox">
         <div id="createfleetfollowup">
@@ -25,11 +29,11 @@ if($followup == "true"){
             </div>
             <?echo $manualtext; ?>
         </div>
+        
         <div class="fleetfield">Navn på flåteavtalen <input class="gsniceinput1" gsname="fleetName" placeholder="Navn på flåteavtalen" value="<? echo $fleet->name; ?>"/></div>
         <div class="fleetfield">Kontaktperson <input class="gsniceinput1" gsname="contactName" placeholder="Kontaktperson" value="<? echo $fleet->contactName; ?>"/></div>
         <div class="fleetfield">E-post <input class="gsniceinput1" gsname="contactEmail" placeholder="E-post" value="<? echo $fleet->contactEmail; ?>"/></div>
         <div class="fleetfield">Telefon <input class="gsniceinput1" gsname="contactPhone" placeholder="Telefon" value="<? echo $fleet->contactPhone; ?>"/></div><br>
-        
     </div>
     <div class="rightFleetbox">
         <div class="fleetfield">Rabatt<input class="gsniceinput1" gsname="discount" placeholder="Rabatt" value="<? echo $fleet->discount; ?>"/></div>
@@ -46,3 +50,6 @@ if($followup == "true"){
     </div>
     
 </div>
+<?
+}
+?>

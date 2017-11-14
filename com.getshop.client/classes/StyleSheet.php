@@ -148,7 +148,6 @@ class StyleSheet {
                     if (!strstr($cssFile, ".css")) {
                         continue;
                     }
-//                    echo "asdfasdf : ".$cssFile."<br/>";
                     $cssFile = file_get_contents($cssFile);
                     $cssFile = str_replace("{IMAGEFOLDER}", "/showApplicationImages.php?appNamespace=" . urlencode($appId) . "&image=skin/images/", $cssFile);
                     $cssFile = str_replace("{FOOTERHEIGHT}", $this->getFooterHeight(), $cssFile);

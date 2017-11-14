@@ -34,6 +34,14 @@ public interface IStoreManager {
      * @return
      * @throws ErrorException 
      */
+    public Store initializeStoreWithModuleId(String webAddress, String initSessionId, String moduleId) throws ErrorException;
+    
+    /**
+     * Initializing this api. This will identify the webshop and will act as the root for everything in this api.
+     * @param initSessionId The session id to identify to this user.
+     * @return
+     * @throws ErrorException 
+     */
     public Store initializeStoreByStoreId(String storeId, String initSessionId) throws ErrorException;
     
     /**

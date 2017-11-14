@@ -1,0 +1,11 @@
+<?/* @var $this \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout */
+$item = $this->getCurrentItem();
+?>
+
+<div class='normalrow'>
+    <b><? echo $item->product->name; ?></b>
+    <div class='textfields'>
+        <input type='textfield' class='gsniceinput1 itemcount' value='<? echo $item->count; ?>'/>
+        x <input type='textfield' class='gsniceinput1 itemprice' value='<? echo $item->product->price; ?>'/>    
+    </div>
+</div>

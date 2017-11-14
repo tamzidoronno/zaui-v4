@@ -3,14 +3,32 @@
 $mecaCar = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
 $inviteSentClass = $mecaCar->inivitationSent != null ? "inviteSent" : "";
 $fleet = $this->getApi()->getMecaManager()->getFleetByCar($mecaCar);
-
+$isAdmin = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
 if (!$mecaCar) {
     echo "Did not find the car";
     return;
 }
+
+if ($isAdmin) {
 ?>
 
+<div class="fleetinformation">
+    Flåte: <? echo $this->getApi()->getMecaManager()->getFleetByCar($mecaCar)->name; ?>
+    <br/> 
+    <?
+    if ($fleet->followup) {
+        echo "Dette er en manuell flåte";
+    } else {
+        echo "Dette er en automatisk flåte";
+    }
+    ?>
+    <br/>
+    
+    <div class="shop_button" gs_show_modal="newcar" createnewcaronfleet="<? echo $fleet->id; ?>">Opprett nytt kjøretøy i flåten</div>
+</div>
+
 <?
+}
 if ($fleet->followup) {
     return;
 }
@@ -28,8 +46,10 @@ Her ser du status&nbsp;på om bruker av kjøreøy har tatt i bruk MECA Fleet app
             Kontroller informasjonen under "Bilkonfigurasjon". <br/>
             Når du er sikker på at denne er riktg trykker du på "Send invitasjon". 
         </div>
-            
-        <div class="shop_button <? echo $inviteSentClass; ?>" gsclick="sendInvitation" carid="<? echo $mecaCar->id; ?>">
+        <?
+        $click = $isAdmin ? 'gsclick="sendInvitation"' : "";
+        ?>
+        <div class="shop_button <? echo $inviteSentClass; ?>" <? echo $click; ?>  carid="<? echo $mecaCar->id; ?>">
             <? 
             if ($inviteSentClass) { 
                 echo "Invitasjon sendt <br/> ".date("d/m-Y H:i", strtotime($mecaCar->inivitationSent))."";

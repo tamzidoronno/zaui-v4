@@ -1,0 +1,83 @@
+.SalesPointCartCheckout .cartsummary .col {
+    display: inline-block;
+    padding: 5px;
+    padding-right: 0px;
+}
+
+
+.SalesPointCartCheckout .cartsummary .row { border-bottom: solid 1px #DDD;}
+.SalesPointCartCheckout .cartsummary .row.row_last { border-bottom: solid 0px #DDD;}
+.SalesPointCartCheckout .cartsummary .col1 { width: 30px; text-align: right; }
+.SalesPointCartCheckout .cartsummary .col2 { width: calc(100% - 200px); }
+.SalesPointCartCheckout .cartsummary .col3 { width: 100px; }
+
+.SalesPointCartCheckout .matrix_item {
+    margin-left: 50px;
+}
+
+.SalesPointCartCheckout .row {
+    position: relative;
+}
+.SalesPointCartCheckout .pricematrix_row {
+    height: 35px;
+    padding-top: 12px;
+    position: relative;
+    
+}
+.SalesPointCartCheckout .pricematrix_row.odd {
+    background-color: #EEE;
+}
+
+.SalesPointCartCheckout .pricematrix_row .matrix_item {
+    position: absolute; 
+    right: 10px;
+    top: 5px;
+}
+
+.SalesPointCartCheckout .addonlist_row {
+    height: 35px;
+    padding-top: 12px;
+    position: relative;
+}
+
+.SalesPointCartCheckout .addonlist_row .addon_inputs {
+    position: absolute; 
+    right: 10px;
+    top: 5px;
+}
+
+.SalesPointCartCheckout .addonlist_row .addon_count {
+    width: 20px;
+    text-align: center;
+}
+
+.SalesPointCartCheckout .addonlist_row.odd {
+    background-color: #EEE;
+}
+
+.SalesPointCartCheckout .normalrow {
+    border-bottom: solid 1px #DDD;
+    line-height: 45px;
+    padding-bottom: 5px;
+}
+
+.SalesPointCartCheckout .last_row .normalrow {
+    border-bottom: solid 0px;
+}
+
+.SalesPointCartCheckout .normalrow .textfields {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+.SalesPointCartCheckout .summary {
+    text-align: right;
+    font-size: 30px;
+    margin-top: 50px;
+    margin-right: 10px;
+}
+
+.SalesPointCartCheckout .normalrow .itemcount {
+    width: 30px;
+    text-align: center;
+}

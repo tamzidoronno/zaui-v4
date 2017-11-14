@@ -27,4 +27,15 @@ public interface ICareTakerManager {
     @Administrator
     public void completeTask(String taskId);
     
+    @Administrator
+    public void addRepeatingTask(CareTakeRepeatingData repeatingData);
+    
+    @Administrator
+    public List<CareTakeRepeatingData> getRepeatingTasks();
+    
+    @Administrator
+    public void deleteRepeatingTask(String id);
+    
+    @Administrator
+    public void checkForTasksToCreate();
 }

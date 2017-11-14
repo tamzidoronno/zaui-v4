@@ -6,8 +6,8 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         
         
         this.setConnectionDetails = function(identifier) {
-            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
-//            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
+//            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
+            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
 //            this.api = new GetShopApiWebSocket('192.168.10.190', '31330', identifier, true);
 //            this.api = new GetShopApiWebSocket('trackandtrace.3.0.mpal.getshop.com', '31330', identifier, true);
 
@@ -24,7 +24,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     }
                     
                     this.lastShownError = new Date().getTime();
-                    alert("Did not find the company you specified, please check your details.");
+                    me.showErrorMessage("Did not find the company you specified, please check your details.");
                     me.$state.transitionTo('base.login');
                     $('.loginbutton').find('.login-shower').remove();
                     this.lastShownError = new Date().getTime();
@@ -37,7 +37,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     
                     
                     this.lastShownError = new Date().getTime();
-                    alert("Wrong username or password, please try again.");
+                    me.showErrorMessage("Wrong username or password, please try again.");
                     
                     me.$state.transitionTo('base.login');
                     $('.loginbutton').find('.login-shower').remove();
@@ -46,7 +46,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     if (error != null && error.errorCode  != null && error.errorCode == 26 && !localStorage.getItem('username')) {
                         return;
                     }
-                    alert(errorTextMatrix[error.errorCode]);
+                    this.showErrorMessage(errorTextMatrix[error.errorCode]);
                 }
             });
             
@@ -63,6 +63,16 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             this.api.addListener("com.thundashop.core.trackandtrace.Route", this.refreshRoute, me);
             this.api.addListener("com.thundashop.core.trackandtrace.DriverMessage", this.messageReceived, me);
             this.api.addListener("com.thundashop.core.trackandtrace.DriverRemoved", this.driverRemoved, me);
+        },
+              
+        this.showErrorMessage = function(msg) {
+            $('.gs_header_error_field').html(msg);
+            $('.gs_header_error_field').show();
+            
+            setTimeout(function() {
+                $('.gs_header_error_field').hide();
+            }, 3000);
+
         },
                 
         this.refreshRoute = function(route) {
@@ -97,7 +107,8 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             $getShopApi = this.getApi();
             var me = this;
             
-            $getShopApi.UserManager.logOn(username, password).done(function(user) {
+            var deffered = $getShopApi.UserManager.logOn(username, password);
+            deffered.done(function(user) {
                 if($getShopApi) {
                     $getShopApi.sendUnsentMessages();
                 }
@@ -142,7 +153,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             
             if (!username || !password) {
                 if (fromLogin) {
-                    alert("Wrong username or password, please try again .");
+                    this.showErrorMessage("Wrong username or password, please try again .");
                 }
              
                 $('.loginbutton').find('.login-shower').remove();

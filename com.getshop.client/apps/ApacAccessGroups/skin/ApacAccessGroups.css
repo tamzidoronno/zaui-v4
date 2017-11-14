@@ -1,0 +1,26 @@
+.ApacAccessGroups .createnewlockgroup {
+    background-color: #EEE;
+    padding: 50px;
+    margin-top: 50px;
+}
+
+
+.ApacAccessGroups .locks {
+    display: inline-block;
+    width: 200px;
+    background-color: #EEE;
+    border: solid 1px #DDD;
+    padding: 50px;
+    vertical-align: top;
+}
+
+.ApacAccessGroups .codes {
+    display: inline-block;
+    width: calc(100% - 400px);
+    vertical-align: top;
+    margin-left: 50px;
+}
+
+.ApacAccessGroups .codes .userslotrow div {
+    display: inline-block;
+}

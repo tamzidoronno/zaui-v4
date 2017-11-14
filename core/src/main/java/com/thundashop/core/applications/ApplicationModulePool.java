@@ -118,10 +118,31 @@ class ApplicationModulePool {
         
         ApplicationModule pms = new ApplicationModule();
         pms.moduleName = "GetShop Module - Property Management";
-        pms.id = "pm";
+        pms.id = "pms";
         pms.faIcon = "fa-calendar";
         pms.description = "GetShop Module.";
-        modules.put(booking.id, pms);
+        modules.put(pms.id, pms);
+        
+        ApplicationModule apac = new ApplicationModule();
+        apac.moduleName = "GetShop Module - APAC";
+        apac.id = "apac";
+        apac.faIcon = "fa-calendar";
+        apac.description = "GetShop Module.";
+        modules.put(apac.id, apac);
+        
+        ApplicationModule salespoint = new ApplicationModule();
+        salespoint.moduleName = "GetShop Module - SALESPOINT";
+        salespoint.id = "salespoint";
+        salespoint.faIcon = "fa-money";
+        salespoint.description = "GetShop Module.";
+        modules.put(salespoint.id, salespoint);
+        
+        ApplicationModule ecommerce = new ApplicationModule();
+        ecommerce.moduleName = "GetShop Module - ECOMMERCE";
+        ecommerce.id = "ecommerce";
+        ecommerce.faIcon = "fa-shopping-cart";
+        ecommerce.description = "GetShop Module.";
+        modules.put(ecommerce.id, ecommerce);
     }
     
     public ApplicationModule getModule(String id) {

@@ -24,11 +24,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import static java.lang.System.in;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
@@ -304,8 +306,11 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         if(frameworkConfig.productionMode) {
             pollKey += "-prod";
         } else {
-            pollKey = "90069173-debug";
+            pollKey = "90069171-debug";
         }
+        
+        String useFlexWin = dibsApp.getSetting("useflexwin");
+        
         try {
             //First check for polls.
             long start = System.currentTimeMillis();
@@ -315,33 +320,10 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             for(PullMessage msg : messages) {
                 try {
                     LinkedHashMap<String,String> polledResult = gson.fromJson(msg.postVariables, LinkedHashMap.class);
-                    if(!polledResult.containsKey("orderId")) {
-                        messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed prosessing message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                    if(useFlexWin != null && useFlexWin.equals("true")) {
+                        processFlexWinResponse(polledResult, msg);
                     } else {
-                        Order order = orderManager.getOrderByincrementOrderId(new Integer(polledResult.get("orderId")));
-                        try {
-                            order.payment.callBackParameters = polledResult;
-
-                            Double amount = orderManager.getTotalAmount(order);
-                            int toCapture = new Double(amount*100).intValue();
-                            order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to capture this order");
-                            
-                            String createTicket = order.payment.callBackParameters.get("createTicket");
-                            if(createTicket != null && !createTicket.isEmpty()) {
-                                saveTicket(order);
-                            } else {
-                                captureOrder(order, toCapture);
-                            }
-                            if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                                messageManager.sendInvoiceForOrder(order.id);
-                            }
-                            
-                            orderManager.saveOrder(order);
-                        }catch(Exception d) {
-                            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
-                            order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
-                            logPrintException(d);
-                        }
+                        processOrderPolledResult(polledResult,msg);
                     }
                 }catch(Exception ex) {
                     messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
@@ -476,5 +458,139 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             order.status = Order.Status.WAITING_FOR_PAYMENT;
             orderManager.saveOrder(order);
         }
+    }
+
+    private void processOrderPolledResult(LinkedHashMap<String, String> polledResult, PullMessage msg) {
+        Gson gson = new Gson();
+        if(!polledResult.containsKey("orderId")) {
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed prosessing message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+        } else {
+            Order order = orderManager.getOrderByincrementOrderId(new Integer(polledResult.get("orderId")));
+            try {
+                order.payment.callBackParameters = polledResult;
+
+                Double amount = orderManager.getTotalAmount(order);
+                int toCapture = new Double(amount*100).intValue();
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to capture this order");
+
+                String createTicket = order.payment.callBackParameters.get("createTicket");
+                if(createTicket != null && !createTicket.isEmpty()) {
+                    saveTicket(order);
+                } else {
+                    captureOrder(order, toCapture);
+                }
+                if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                    messageManager.sendInvoiceForOrder(order.id);
+                }
+
+                orderManager.saveOrder(order);
+            }catch(Exception d) {
+                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
+                logPrintException(d);
+            }
+        }    
+    }
+
+    private void processFlexWinResponse(LinkedHashMap<String, String> polledResult, PullMessage msg) {
+        Gson gson = new Gson();
+        if(!polledResult.containsKey("orderid")) {
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed prosessing message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+        } else {
+            Order order = orderManager.getOrderByincrementOrderId(new Integer(polledResult.get("orderid")));
+            try {
+                order.payment.callBackParameters = polledResult;
+                
+                if(!polledResult.containsKey("statuscode")) {
+                    throw new Exception("Status code field not configured correctly in dibs, please make sure the statuscode is active as the return field in the dibs administration window");
+                }
+
+                Double amount = orderManager.getTotalAmount(order);
+                int result = new Integer(polledResult.get("statuscode"));
+                int toCapture = new Double(amount*100).intValue();
+                if(toCapture != new Integer(polledResult.get("amount"))) {
+                    throw new Exception("Invalid amount");
+                }
+                if(result != 5) {
+                    throw new Exception("Invalid response code from dibs code: " + result);
+                }
+                if(!polledResult.get("currency").equals("NOK")) {
+                    throw new Exception("Invalid currency");
+                }
+                if(!validmd5(polledResult, amount.intValue())) {
+                    throw new Exception("Invalid MD5");
+                }
+
+                String createTicket = order.payment.callBackParameters.get("createTicket");
+                if(createTicket != null && !createTicket.isEmpty()) {
+                    saveTicket(order);
+                } else {
+                    order.status = Order.Status.PAYMENT_COMPLETED;
+                    orderManager.saveOrder(order);
+                }
+                
+                if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                    messageManager.sendInvoiceForOrder(order.id);
+                }
+
+                orderManager.saveOrder(order);
+            }catch(Exception d) {
+                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
+                logPrintException(d);
+            }
+        }
+    }
+
+    private boolean validmd5(LinkedHashMap<String, String> msg, Integer amount) {
+        
+        Application dibsApp = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8");
+        
+        String key1 = dibsApp.getSetting("md5k1");
+        String key2 = dibsApp.getSetting("md5k2");
+        
+        String toCheck = "";
+        toCheck += "transact=" + msg.get("transact") + "&";
+        toCheck += "amount=" + msg.get("amount")  + "&";
+        toCheck += "currency=578";
+        
+        
+        String firstMd5 = key1 + toCheck;
+        try {
+            MessageDigest m = MessageDigest.getInstance("MD5");
+            m.reset();
+            m.update(firstMd5.getBytes());
+            byte[] digest = m.digest();
+            BigInteger bigInt = new BigInteger(1,digest);
+            String hashtext = bigInt.toString(16);
+            
+            while(hashtext.length() < 32 ){
+              hashtext = "0"+hashtext;
+            }
+
+            
+            String secondMd5 = key2 + hashtext;
+            m = MessageDigest.getInstance("MD5");
+            m.reset();
+            m.update(secondMd5.getBytes());
+            digest = m.digest();
+            bigInt = new BigInteger(1,digest);
+            hashtext = bigInt.toString(16);
+            
+            while(hashtext.length() < 32 ){
+              hashtext = "0"+hashtext;
+            }
+            
+            return msg.get("authkey").equals(hashtext);
+        }catch(Exception e) {
+            return false;
+        }
+    }
+    
+    public static void main(String[] args) {
+        DibsManager testing = new DibsManager();
+        String k1 = "bBEp;-+intW?wM:eXesp0-i~}gUYj]NS";
+        String k2 = "~eV$82QYm%~-{[_2j-Cg;vCoT1^p2m_Z";
+        testing.validmd5(new LinkedHashMap(), 208);
     }
 }

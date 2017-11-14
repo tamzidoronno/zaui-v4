@@ -222,6 +222,17 @@ thundashop.framework = {
         $(document).on('keyup', '[gstype="clicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('click', '[gstype="forceClicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+        $(document).on('click', '.gs_framework_modules_icon', this.showModuleMenu);
+        
+    
+    },
+    
+    showModuleMenu: function() {
+        if ($('.gs_framework_modules').is(':visible')) {
+            $('.gs_framework_modules').slideUp();
+        } else {
+            $('.gs_framework_modules').slideDown();
+        }
     },
     setHeightOnCell : function() {
         var cellid = $('.gsresizingpanel').attr('cellid');
@@ -1935,6 +1946,10 @@ thundashop.framework = {
             if (!value || value === undefined) {
                 value = $(this).val();
             }
+            
+            if ($(this).attr('gstype') === "select") {
+                value = $(this).find('.gs_selected').attr('gs_value');
+            }
 
             if ($(this).is(':checkbox')) {
                 value = $(this).is(':checked');
@@ -1962,8 +1977,16 @@ thundashop.framework = {
         form.callback = element.callback;
         
         
+        var localUpdateOnly = $(element).attr('gs_local_update_only');
         var javascriptCallback = $(element).attr('gs_callback');
         var event = thundashop.Ajax.createEvent("", method, element, args);
+        
+        if (localUpdateOnly) {
+            event['synchron'] = true;
+            thundashop.Ajax.post(event, function(res) {
+                $(form[0]).replaceWith(res);
+            });
+        } 
         
         if (javascriptCallback) {
             var callbackFunction = function(res, javascriptCallbackFunction) {
@@ -1972,12 +1995,15 @@ thundashop.framework = {
                 toExecute(res);
             }
             
-            event['synchron'] = true;
-            thundashop.Ajax.post(event, callbackFunction, [javascriptCallback]);
+            if (!localUpdateOnly) {
+                event['synchron'] = true;
+                thundashop.Ajax.post(event, callbackFunction, [javascriptCallback]);
+            }
         } else {
-            thundashop.framework.postToChannel(event, form);
+            if (!localUpdateOnly) {
+                thundashop.framework.postToChannel(event, form);
+            }
         }
-        
     },
     reprintPage: function () {
         var event = thundashop.Ajax.createEvent("", "systemReloadPage", null, null);

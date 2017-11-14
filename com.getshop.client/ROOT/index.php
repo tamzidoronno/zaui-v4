@@ -216,15 +216,30 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         
         $modules = $factory->getApi()->getPageManager()->getModules();
         if (count($modules) > 1) {
-            echo "<div class='gs_framework_modules'>";
             
+            $activeModule = null;
+            
+            echo "<div class='gs_framework_modules'>";
+
             foreach ($modules as $module) {
-                $pageToUse = $module->id == "cms" ? "" : "&page=home";
                 $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
+                $activeModule = $factory->getPage()->javapage->getshopModule == $module->id ? $module : $activeModule;
+                if (!$activeModule && $module->id == "cms") {
+                    $activeModule = $module;
+                }
                 $icon = "<i class='fa $module->fontAwesome'></i>";
-                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id$pageToUse'><div class='gs_framework_module $moduleActiveClass'>$icon <br/> $module->name</div></a>";
+                $scopeId = $_POST['scopeid'];
+                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
             }
+            
             echo "</div>";
+            
+            echo "<div class='gs_framework_modules_icon'>";
+                echo "<i class='fa $activeModule->fontAwesome'></i>";
+                echo $activeModule->name;
+            echo "</div>";
+            
+            
         }
         
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->showLoguotCounter) {

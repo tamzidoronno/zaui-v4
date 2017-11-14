@@ -11,6 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 class PmsBookingMessageFormatter { 
 
@@ -285,7 +291,7 @@ class PmsBookingMessageFormatter {
         message = message.replace("{bookinginformation}", bookinginfo);
         message = message.replace("{totalcost}", total + "");
         message = message.replace("{nightprice}", nightPrice + "");
-        
+        message = formatSpecifics(message, booking);
         return message;
     }
     
@@ -314,6 +320,54 @@ class PmsBookingMessageFormatter {
 
     void setConfig(PmsConfiguration configurationSecure) {
         this.config = configurationSecure;
+    }
+
+    String formatHtml(String message) {
+        
+        Pattern httpLinkPattern = Pattern.compile("(http[s]?)://(www\\.)?([\\S&&[^.@]]+)(\\.[\\S&&[^@]]+)");
+
+        Pattern wwwLinkPattern = Pattern.compile("(?<!http[s]?://)(www\\.+)([\\S&&[^.@]]+)(\\.[\\S&&[^@]]+)");
+
+        Pattern mailAddressPattern = Pattern.compile("[\\S&&[^@]]+@([\\S&&[^.@]]+)(\\.[\\S&&[^@]]+)");
+        if (Objects.nonNull(message)) {
+
+          Matcher httpLinksMatcher = httpLinkPattern.matcher(message);
+          message = httpLinksMatcher.replaceAll("<a href=\"$0\" target=\"_blank\">$0</a>");
+
+          final Matcher wwwLinksMatcher = wwwLinkPattern.matcher(message);
+          message = wwwLinksMatcher.replaceAll("<a href=\"http://$0\" target=\"_blank\">$0</a>");
+
+          final Matcher mailLinksMatcher = mailAddressPattern.matcher(message);
+          message = mailLinksMatcher.replaceAll("<a href=\"mailto:$0\">$0</a>");
+        }
+        return message;
+    }
+
+    private String formatSpecifics(String message, PmsBooking booking) {
+        Document doc = Jsoup.parse(message);
+        for (Element specific : doc.select("specific")){
+            boolean show = false;
+            String channel = specific.attr("channel");
+            String type = specific.attr("type");
+            String text = specific.attr("text");
+            
+            if(channel != null && channel.equals(booking.channel)) {
+                show = true;
+            }
+            
+            if(type != null && booking.containsType(type)) {
+                show = true;
+            }
+            
+            if(!show) {
+               message = message.replace(specific.toString() + "<br>", "");
+               message = message.replace(specific.toString(), "");
+            } else {
+               message = message.replace(specific.toString(), text);
+            }
+            
+        }
+        return message;
     }
 
 }

@@ -752,7 +752,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function resendConfirmation() {
         $email = $_POST['data']['email'];
         $bookingId = $_POST['data']['bookingid'];
-        $this->getApi()->getPmsManager()->sendConfirmation($this->getSelectedName(), $email, $bookingId);
+        $this->getApi()->getPmsManager()->sendConfirmation($this->getSelectedName(), $email, $bookingId, "");
         echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
         echo "<i class='fa fa-info'></i> Confirmation has been sent.";
         echo "</div>";
@@ -1017,7 +1017,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function sendInvoice() {
-        $email = $_POST['data']['email'];
+        $email = $_POST['data']['bookerEmail'];
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
         $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
@@ -3611,7 +3611,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $filter = $this->getOrderStatsFilter();
         $filter->includeVirtual = $this->getSelectedFilter()->includeVirtual;
-        
+
         $result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
         $_SESSION['currentOrderStatsResult'] = serialize($result);
         

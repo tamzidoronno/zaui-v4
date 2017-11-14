@@ -29,10 +29,16 @@ class GetShopModuleTable {
 
     public function render() {
         $this->loadData();
+        $this->clearJavaScriptData();
         $this->renderTable();
+        $this->printJavaScript();
     }
     
     private function loadData() {
+        if(isset($this->data) && $this->data) {
+            return;
+        }
+        
         $api = $this->application->getApi();
         $managerName = "get".$this->manangerName;
         $res = $api->$managerName();
@@ -46,33 +52,154 @@ class GetShopModuleTable {
                 $i = 1;
                 foreach ($this->attributes as $attribute) {
                     $i++;
-                    echo "<div class='col col_$i col_$attribute[0]'>$attribute[1]</div>";
+                    if ($attribute[1] !== "gs_hidden") {
+                        echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$attribute[1]</div>";
+                    }
+                    
                 }
             echo "</div>";
 
             $j = 1;
             foreach ($this->data as $data) {
                 $odd = $j % 2 ? "odd" : "even";
-                echo "<div class='datarow $odd'>";
-                
-                $i = 1;
-                foreach ($this->attributes as $attribute) {
+                echo "<div class='datarow $odd' rownumber='$j'>";
+                    echo "<div class='datarow_inner'>";
+                        $i = 1;
+                        $postArray = array();
 
-                    $val = "";
-                    if (!isset($attribute[3])) {
-                        $val = $data->{$attribute[2]};
+                        foreach ($this->attributes as $attribute) {
+
+                            $val = "";
+                            if (!isset($attribute[3])) {
+                                $val = $data->{$attribute[2]};
+                            } else {
+                                $functionName = $attribute[3];
+                                $val = $this->application->$functionName($data);
+                            }
+
+                            $postArray[$attribute[0]] = $val;
+
+                            if ($attribute[1] !== "gs_hidden") {
+                                echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$val</div>";
+                            }
+                            $i++;
+                        }
+
+                        $this->printJavaScriptData($postArray, $j);
+                    echo "</div>";
+                    
+                    if ($this->shouldShowRow($j)) {
+                        echo "<div class='datarow_extended_content' style='display:block;'>";
+                        $this->renderTableContent($postArray, $j);
+                        echo "</div>";    
                     } else {
-                        $functionName = $attribute[3];
-                        $val = $this->application->$functionName($data);
+                        echo "<div class='datarow_extended_content'></div>";    
                     }
-
-                    echo "<div class='col col_$i col_$attribute[0]'>$val</div>";
-                    $i++;
-                }
+                    
                 echo "</div>";
                 $j++;
             }
         echo "</div>";
+    }
+    
+    private function printJavaScriptData($data, $rowNumber) {
+        $functionName = $this->getIdentifier();
+        
+        if (!method_exists($this->application, $functionName)) {
+            return;
+        }
+        ?>
+        <script>
+            gs_modules_data_array['<? echo $this->getIdentifier(); ?>']['<? echo $rowNumber; ?>'] = <? echo json_encode($data); ?>
+        </script>
+        <?
+    }
+    
+    private function printJavaScript() {
+        $functionName = $this->getIdentifier();
+        
+        if (!method_exists($this->application, $functionName)) {
+            return;
+        }
+        ?>
+
+        <script>
+            $('.GetShopModuleTable .datarow .datarow_inner').on('click', function(e) {
+                var target = $(e.target);
+                var base = $(this).closest('.datarow');
+                base.find('.datarow_extended_content').html("");
+                $('.GetShopModuleTable .datarow_extended_content').slideUp();
+                var rowNumber = $(base).attr('rownumber');
+                
+                var data = gs_modules_data_array['<? echo $this->getIdentifier(); ?>'][rowNumber];
+                data['gscolumn'] = target.attr('index');
+                base.find('.datarow_extended_content').slideDown();
+                
+                var event = thundashop.Ajax.createEvent(null, '<? echo $functionName; ?>', this, data);
+                event['synchron'] = true;
+                
+                thundashop.Ajax.post(event, function(res) {
+                    base.find('.datarow_extended_content').html(res);
+                });
+                
+                var data = {
+                    functionName : '<? echo $functionName; ?>',
+                    rownumber : rowNumber,
+                    index : target.attr('index')
+                }
+                
+                var event = thundashop.Ajax.createEvent(null, "setGetShopTableRowId", this, data);
+                thundashop.Ajax.post(event, null, null, true);
+            });
+            
+        </script>
+        <?
+    }
+    
+    private function getIdentifier() {
+        return $this->manangerName."_".$this->functionName;
+    }
+
+    public function clearJavaScriptData() {
+        ?>
+        <script>
+            if (typeof(gs_modules_data_array) === "undefined") {
+                gs_modules_data_array = {};
+            }
+            
+            gs_modules_data_array['<? echo $this->getIdentifier(); ?>'] = {};
+        </script>
+            
+        <?
+    }
+
+    public function setData($data) {
+        $this->data = $data;
+    }
+    
+    private function shouldShowRow($rownumber) {
+        if (!isset($_SESSION['gs_moduletable_'.$this->getIdentifier()])) {
+            return false;
+        }
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        
+        if ($sessionData['rownumber'] == $rownumber) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private function renderTableContent($attribute, $rownumber) {
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        $_POST['data'] = $attribute;
+        
+        if (isset($sessionData['index'])) {
+            $_POST['data']['gscolumn'] = $sessionData['index'];
+        }
+        
+        $functioName = $this->getIdentifier();
+        $this->application->$functioName();
     }
 
 }

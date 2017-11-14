@@ -55,7 +55,8 @@ public class GenerateJavascriptApi {
     private String getHeader() throws URISyntaxException, IOException {
         String total = "";
         
-        List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptApiHeader"));
+        List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptApiHeader2"));
+//        List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptApiHeader"));
 
         for (String line : lines) {
             total += line + "\n";

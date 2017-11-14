@@ -40,13 +40,18 @@ class Dibs extends \PaymentApplication implements \Application {
     }
     
     public function paymentCallback() {
-        $orderId = $_GET['orderId'];
+        if(isset($_GET['orderId'])) {
+            $orderId = $_GET['orderId'];
+        }
+        if(isset($_GET['orderid'])) {
+            $orderId = $_GET['orderid'];
+        }
         $nextPage = $_GET['nextpage'];
         
         $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
         $paymentfailed = $this->getConfigurationSetting("paymentfailed");
         
-        if (isset($_GET['orderId'])) {
+        if ($orderId) {
             if($nextPage == "payment_success") {
                 $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
                 $order->status = 9;
@@ -67,6 +72,7 @@ class Dibs extends \PaymentApplication implements \Application {
         
         $merchid = $this->getConfigurationSetting("merchantid");
         $hasssl = $this->getConfigurationSetting("hasssl");
+        $useflexwin = $this->getConfigurationSetting("useflexwin");
         $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
         $order = $this->getOrder();
         $orderId = $order->incrementOrderId;
@@ -90,7 +96,7 @@ class Dibs extends \PaymentApplication implements \Application {
         if($this->getApi()->getStoreManager()->isProductMode()) {
             $key .= "-prod";
         } else {
-            $key .= "-debug";
+            $key = "90069171-debug";
         }
         
         $protocol = "http";
@@ -102,25 +108,51 @@ class Dibs extends \PaymentApplication implements \Application {
         $callBack = "http://pullserver_".$key."_".$store->id.".nettmannen.no";
         $redirect_url = $protocol."://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
         
-        echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
-            <input value="' . $merchid . '" name="merchant" type="hidden" />
-            <input value="' . $currency . '" name="currency" type="hidden" />
-            <input value="' . $orderId . '" name="orderId" type="hidden" />
-            <input value="' . $amount . '" name="amount" type="hidden" />
-            <input value="EN" name="language" type="hidden" />
-            <input value="' . $redirect_url . 'payment_success" name="acceptReturnUrl" type="hidden" />
-            <input value="' . $redirect_url . 'payment_failed" name="cancelReturnUrl" type="hidden" />
-            <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';
-            if($this->saveCard()) {
-                echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';
-            }
+        if($useflexwin == "true") {
+            $redirect_url = $protocol."://" . $_SERVER["HTTP_HOST"] . "/callback.php";
+            echo '<form method="post" id="dibsform" action="https://payment.architrade.com/paymentweb/start.action">
+                <input value="' . $merchid . '" name="merchant" type="hidden" />
+                <input value="' . $currency . '" name="currency" type="hidden" />
+                <input value="' . $orderId . '" name="orderid" type="hidden" />
+                <input value="' . $amount . '" name="amount" type="hidden" />
+                <input value="en" name="lang" type="hidden" />
+                <input value="'.$this->applicationSettings->id.'" name="app" type="hidden" />
+                <input value="payment_success" name="nextpage" type="hidden" />
+                <input value="responsive" name="decorator" type="hidden" />
+                <input value="yes" name="capturenow" type="hidden" />
+                <input value="' . $redirect_url . '" name="accepturl" type="hidden" />
+                <input value="' . $callBack . '" name="callbackurl" type="hidden" />';
+                if($this->saveCard()) {
+                    echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';
+                }
 
-            
-        if($this->isTestMode()) {
-                echo '<input type="hidden" name="test" value="1"/>';
-                echo "This is in test mode...";
-            }
-        echo '</form>';
+
+            if($this->isTestMode()) {
+                    echo '<input type="hidden" name="test" value="1"/>';
+                    echo "This is in test mode...";
+                }
+            echo '</form>';
+        } else {
+            echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
+                <input value="' . $merchid . '" name="merchant" type="hidden" />
+                <input value="' . $currency . '" name="currency" type="hidden" />
+                <input value="' . $orderId . '" name="orderId" type="hidden" />
+                <input value="' . $amount . '" name="amount" type="hidden" />
+                <input value="EN" name="language" type="hidden" />
+                <input value="' . $redirect_url . 'payment_success" name="acceptReturnUrl" type="hidden" />
+                <input value="' . $redirect_url . 'payment_failed" name="cancelReturnUrl" type="hidden" />
+                <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';
+                if($this->saveCard()) {
+                    echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';
+                }
+
+
+            if($this->isTestMode()) {
+                    echo '<input type="hidden" name="test" value="1"/>';
+                    echo "This is in test mode...";
+                }
+            echo '</form>';
+        }
 
         echo "<script>";
         echo "$('#dibsform').submit();";
@@ -156,6 +188,9 @@ class Dibs extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("savecard", $_POST['savecard']);
         $this->setConfigurationSetting("testmode", $_POST['testmode']);
         $this->setConfigurationSetting("hasssl", $_POST['hasssl']);
+        $this->setConfigurationSetting("useflexwin", $_POST['useflexwin']);
+        $this->setConfigurationSetting("md5k1", $_POST['md5k1']);
+        $this->setConfigurationSetting("md5k2", $_POST['md5k2']);
     }
     
     public function saveCard() {

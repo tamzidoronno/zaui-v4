@@ -1,0 +1,45 @@
+<?
+/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+$currentBooking = $this->getCurrentBooking();
+?>
+
+<div class="generalinformation">
+    <?
+    $user = $this->getApi()->getUserManager()->getUserById($currentBooking->userId);
+    ?>
+    <div>
+        <div><? echo $user->fullName; ?></div>
+    </div>
+    <?
+    foreach ($currentBooking->rooms as $room) {
+        if ($room->deleted)
+            continue;
+        
+        if ($room->booking->id !== $_POST['data']['bookingid']) {
+            continue;
+        }
+        
+        $roomName = $this->__f("Forecasted");
+        
+        if ($room->bookingItemId) {
+            $bookingItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+            $roomName = $bookingItem->bookingItemName;
+        }
+        
+        echo $this->__f("Room").": ".$roomName;
+        ?>
+        <div class="guestinfo">
+            <?
+            foreach ($room->guests as $guest) {
+            ?>
+                <div class="guestname"><? echo $guest->name; ?></div>
+                <div class="from"><? echo date('d.m.Y', strtotime($room->booking->startDate)); ?></div>
+                <div class="to"><? echo date('d.m.Y', strtotime($room->booking->endDate)); ?></div>
+            <?
+            }
+            ?>
+        </div>
+        <?
+    }
+    ?>
+</div>

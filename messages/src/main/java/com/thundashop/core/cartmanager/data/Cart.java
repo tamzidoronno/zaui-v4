@@ -27,6 +27,7 @@ public class Cart extends DataCommon {
     public boolean isShippingFree = false;
     public TaxGroup shippingTax = null;
     public String reference = "";
+    public String createByGetShopModule = "";
     
     public Address address;
     public Coupon coupon;

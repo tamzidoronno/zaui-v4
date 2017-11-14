@@ -83,6 +83,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         currentFilter = filter;
         makeSureEndStartDateIsCorrect();
         
+        if (currentBooking != null) {
+            cartManager.setReference(bookingId);
+            cartManager.setCreateByGetShopModule("pms");
+        }
         
         calculateRoomPrices();
         updateCart();
@@ -91,6 +95,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     private void addCartItem(CartItem cartItem) {
         if(cartItem != null) {
+            cartItem.addedByGetShopModule = "pms";
             generatedCartItems.add(cartItem);
         }
     }

@@ -34,6 +34,7 @@ GetShop.prototype.init = function (config) {
         domainname : config.bookingname,
         ip : config.ip
      };
+     console.log(getshopconfig);
 };
 
 GetShop.prototype.stop = function () {
@@ -48,12 +49,11 @@ GetShop.prototype.stop = function () {
 // --- Module methods
 // ----------------------------------------------------------------------------
 
-
 GetShop.prototype.lockStatusChanged = function(eDvc) {
      var state = eDvc.get("metrics:level");
-
-     if (eDvc.get("deviceType") !== "doorlock" ) {
-           return;
+    
+     if (state !== "open" && state !== "close") {
+        return;
      }
 
      var newId = eDvc.get('id').split('_');
@@ -62,7 +62,7 @@ GetShop.prototype.lockStatusChanged = function(eDvc) {
      newId = newId[0];
      var deviceId = newId;
      var lastFetchMatch = deviceId + "_open";
-
+     
      var found = false;
      for (var i in devicesInitted) {
          var devId = devicesInitted[i];
@@ -70,7 +70,7 @@ GetShop.prototype.lockStatusChanged = function(eDvc) {
              found = true;
          }
      }
-   
+
      if (!found) {
          devicesInitted.push(deviceId);
          return;
@@ -84,24 +84,9 @@ GetShop.prototype.lockStatusChanged = function(eDvc) {
           zway.devices[deviceId].DoorLockLogging.Get(4);
           zway.devices[deviceId].DoorLockLogging.Get(5);
           zway.devices[deviceId].DoorLockLogging.Get(6);
-          zway.devices[deviceId].DoorLockLogging.Get(7);
-          zway.devices[deviceId].DoorLockLogging.Get(8);
-          zway.devices[deviceId].DoorLockLogging.Get(9);
-          zway.devices[deviceId].DoorLockLogging.Get(10);
-          zway.devices[deviceId].DoorLockLogging.Get(11);
-          zway.devices[deviceId].DoorLockLogging.Get(12);
-          zway.devices[deviceId].DoorLockLogging.Get(13);
-          zway.devices[deviceId].DoorLockLogging.Get(14);
-          zway.devices[deviceId].DoorLockLogging.Get(15);
-          zway.devices[deviceId].DoorLockLogging.Get(16);
-          zway.devices[deviceId].DoorLockLogging.Get(17);
-          zway.devices[deviceId].DoorLockLogging.Get(18);
-          zway.devices[deviceId].DoorLockLogging.Get(19);
-          zway.devices[deviceId].DoorLockLogging.Get(20);
 
           if (getshopconfig.url) {
               var address = getshopconfig.url+"/scripts/lockActivity.php?deviceId="+deviceId+"&domainname="+getshopconfig.domainname+"&ip="+getshopconfig.ip;
-
               var req = {
                   url: address,
                   method: "GET"
@@ -110,6 +95,5 @@ GetShop.prototype.lockStatusChanged = function(eDvc) {
               req.headers = {};
               http.request(req);
           }
-     }       
+     }
 }
-

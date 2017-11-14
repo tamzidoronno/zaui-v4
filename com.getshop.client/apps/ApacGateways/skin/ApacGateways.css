@@ -1,0 +1,39 @@
+.ApacGateways .createServer {
+    background-color: #EEE;
+    margin-top: 50px;
+    padding: 50px;
+}
+
+.ApacGateways .col_editbutton { 
+    width: 50px !important;
+    text-align: center;
+}
+
+.ApacGateways .locklist {
+    position: relative;
+    min-height: 330px;
+    margin-top: 30px;
+}
+
+.ApacGateways .serverdetails {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    text-align: center;
+    background-color: #EEE;
+}
+
+.ApacGateways .locklist .menuarea {
+    margin-bottom: 30px;
+}
+.ApacGateways .locklist .lockrow {
+    padding: 3px;
+}
+.ApacGateways .locklist .lockrow div {
+    display: inline-block;
+}
+
+.ApacGateways .locklist div.lockrow:nth-child(odd) {
+    background-color: #EEE;
+}

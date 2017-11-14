@@ -531,5 +531,18 @@ public class CartManager extends ManagerBase implements ICartManager {
         cart.removeItem(cartItemId);
     }
 
+    @Override
+    public void recalculateMetaData() {
+        Cart cart = getCart();
+        if (cart != null) {
+            cart.getItems().stream().forEach(i -> i.recalculateMetaData());
+        }
+    }
+
+    public void setCreateByGetShopModule(String getshopModuleName) {
+        Cart cart = this.getCart();
+        cart.createByGetShopModule = getshopModuleName;
+    }
+
     
 }

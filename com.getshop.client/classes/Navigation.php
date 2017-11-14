@@ -19,6 +19,11 @@ class Navigation {
      */
     static function getNavigation() {
         $scope = $_POST['scopeid'];
+        
+        if (isset($_SESSION['getshop_current_module_id']) && $_SESSION['getshop_current_module_id'] != "cms") {
+            $scope .= "_".$_SESSION['getshop_current_module_id'];
+        }
+        
         if (!isset($_SESSION[$scope])) {
             $nav = new Navigation();
             $nav->saveToSession();
@@ -29,6 +34,11 @@ class Navigation {
     
     public function saveToSession() {
         $scope = $_POST['scopeid'];
+        
+        if (isset($_SESSION['getshop_current_module_id']) && $_SESSION['getshop_current_module_id'] != "cms") {
+            $scope .= "_".$_SESSION['getshop_current_module_id'];
+        }
+        
         $_SESSION[$scope] = serialize($this);
     }
 }

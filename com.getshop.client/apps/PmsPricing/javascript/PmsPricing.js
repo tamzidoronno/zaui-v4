@@ -9,8 +9,8 @@ app.PmsPricing = {
         $(document).on('keyup', '.PmsPricing .priceinputsetter', app.PmsPricing.priceinput);
         $(document).on('click', '.PmsPricing .loadcouponmoredates', app.PmsPricing.loadMoreDates);
         $(document).on('click', '.PmsPricing .loadaddonstoinclude', app.PmsPricing.loadAddonsToInclude);
-        $(document).on('click','.PmsPricing .togglerepeatbox', app.PmsConfiguration.closeTheRepeatBox);
-        $(document).on('change','.PmsPricing .repeat_type', app.PmsConfiguration.changeRepeatType);
+        $(document).on('click','.PmsPricing .togglerepeatbox', app.PmsPricing.closeTheRepeatBox);
+        $(document).on('change','.PmsPricing .repeat_type', app.PmsPricing.changeRepeatType);
     },
 
     closeTheRepeatBox : function() {

@@ -622,6 +622,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
             return null;
         }
+        orderId = orderId.replaceAll(",", "");
+        orderId = orderId.replaceAll(".", "");
+        
         User user = getSession().currentUser;
         boolean foundOrder = false;
         long foundOrderIncId = -1;

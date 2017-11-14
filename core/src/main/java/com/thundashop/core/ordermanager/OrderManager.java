@@ -623,7 +623,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return null;
         }
         orderId = orderId.replaceAll(",", "");
-        orderId = orderId.replaceAll(".", "");
+        orderId = orderId.replaceAll("\\.", "");
         
         User user = getSession().currentUser;
         boolean foundOrder = false;

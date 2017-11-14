@@ -11,7 +11,23 @@ class PmsConfigurationInstructions extends \PaymentApplication implements \Appli
     }
 
     public function render() {
+        $this->includefile("instructions");
+    }
+    
+    public function saveContent() {
+        $from = $_POST['data']['fromid'];
+        
+        $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        if($from == "otherinstructionsfiled") {
+            $notificationSettings->otherinstructions = $_POST['data']['content'];
+        } else {
+            $notificationSettings->fireinstructions = $_POST['data']['content'];
+        }
+        
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notificationSettings);
+        
         
     }
+    
 }
 ?>

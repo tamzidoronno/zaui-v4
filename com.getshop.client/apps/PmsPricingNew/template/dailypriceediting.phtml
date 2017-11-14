@@ -1,0 +1,93 @@
+<?php
+/* @var $this ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
+$itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$priceObject = $this->getPrices();
+$prices = $priceObject->dailyPrices;
+?>
+<h2>Price day by day</h2>
+<div class='pricetableview'>
+<table cellspacing='0' cellpadding='0'>
+    <tr>
+        <th align='left' style="position:absolute;left:20px;">Item</th>
+        <th>Default</th>
+        <?php
+        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+            $weekday = date("w", $i);
+            $weekend = '';
+            if($weekday == 6 || $weekday == 0) {
+                $weekend = "weeked";
+            }
+            echo "<td class='$weekend'>".date("d.m.y", $i)."</td>";
+        }
+        ?>
+    </tr>
+    <?
+    foreach($itemTypes as $type) {
+        if(isset($prices->{$type->id}->{'default'})) {
+            $price = $prices->{$type->id}->{'default'};
+        }
+        echo "<tr itemtype='".$type->id."'>";
+        echo "<td class='fixedpricerow'><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td>";
+        echo "<td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
+        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+            $date = date("d-m-Y", $i);
+            $weekday = date("w", $i);
+            $price = "";
+            if(isset($prices->{$type->id}->{$date})) {
+                $price = $prices->{$type->id}->{$date};
+            }
+            $weekend = '';
+            if($weekday == 6 || $weekday == 0) {
+                $weekend = "weeked";
+            }
+            echo "<td class='$weekend'><input type='text' weekday='$weekday' date='$date' value='".$price."' class='priceinput'></td>";
+        }
+        echo "</tr>";
+    }
+    ?>
+</table>
+</div>
+<span style='cursor:pointer;' onclick='$(".additionalguestprices").toggle()'>Show more options</span>
+<div style='display:none;' class='additionalguestprices'>
+    <h1>Additional guest price</h1>
+    <table>
+    <?php
+    $maxCount = 0;
+    foreach($itemTypes as $type) {
+        if($maxCount < $type->size) {
+            $maxCount = $type->size;
+        }
+    }
+    echo "<tr>";
+    echo "<td></td>";
+    for($i = 2; $i <= $maxCount; $i++) {
+        echo "<th>Guest $i</th>";
+    }
+    ?>
+    <?php
+    $derivedPrices = $priceObject->derivedPrices;
+
+    foreach($itemTypes as $type) {
+            echo "<tr>";
+            echo "<td>" . $type->name . "</td>";
+            for($i = 2; $i <= $type->size; $i++) {
+                
+                $toSet = 0.0;
+                if(isset($derivedPrices->{$type->id})) {
+                    $curPrices = $derivedPrices->{$type->id};
+                    if(isset($derivedPrices) && isset($curPrices->{$i})) {
+                        $toSet = $curPrices->{$i};
+                    }
+                }
+
+                echo "<td><input type='txt' class='derivedprices' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
+            }
+            echo "</tr>";
+        }
+    ?>
+    </table>
+</div>
+
+<div style='text-align: right;'>
+<span class='pmsbutton setnewprices'>Save prices</span>
+</div>

@@ -1,0 +1,23 @@
+
+<br><br>
+    <?php
+/* @var $this ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
+$channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
+$priceObject = $this->getPrices();
+$prices = $priceObject->dailyPrices;
+
+if(sizeof($channels) == 0) {
+    return;
+}
+echo "<h2>Discount for channels (percentage discount)</h2>";
+echo "<table>";
+foreach($channels as $chan => $name) {
+    $discount = 0;
+    if(isset($priceObject->channelDiscount->{$chan})) {
+        $discount = $priceObject->channelDiscount->{$chan};
+    }
+    echo "<tr><td>$name</td><td><input type='txt' class='discountprice' value='$discount' channel='$chan'></td></tr>";
+}
+echo "</table>";
+?>
+<br>

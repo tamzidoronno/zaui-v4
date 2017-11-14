@@ -256,7 +256,9 @@ public class StorePool {
         } else if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStoreWithModuleId")) {
             res = storePool.initialize((String) argumentValues[0], (String) argumentValues[1]);
             StoreHandler handler = getStoreHandler(object.sessionId);
-            handler.setGetShopModule((String) argumentValues[1], (String) argumentValues[2]);
+            if(handler != null) {
+                handler.setGetShopModule((String) argumentValues[1], (String) argumentValues[2]);
+            }
         } else if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("createStore")) {
             res = storePool.createStoreObject((String) argumentValues[0], (String) argumentValues[1], (String) argumentValues[2], (boolean) argumentValues[3]);
         } else if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("autoCreateStore")) {

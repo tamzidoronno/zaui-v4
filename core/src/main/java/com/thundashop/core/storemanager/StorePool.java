@@ -308,7 +308,7 @@ public class StorePool {
             }
         }
         
-        if(store.configuration.configurationFlags == null) {
+        if(store.configuration != null && store.configuration.configurationFlags == null) {
             store.configuration.configurationFlags = new HashMap();
         }
         

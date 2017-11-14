@@ -1,0 +1,68 @@
+
+.PmsPricingNew .pmsbutton {
+      background-color: #44c767;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #18ab29;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 17px;
+  padding: 6px 20px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #2f6627;
+}
+.PmsPricingNew .editcomment { position:absolute; display:none; padding: 5px; border: solid 1px; background-color:#fff; }
+.PmsPricingNew .stepbox { border: solid 1px #ddd; border-radius : 5px; padding: 20px; min-height: 300px; background-color:#efefef; padding-top: 0px; }
+.PmsPricingNew .weeked { border: solid 1px red; }
+.PmsPricingNew .priceinput { width: 50px; }
+.PmsPricingNew .pricetableview { width: 80%; overflow: auto;margin-left:20%;}
+.PmsPricingNew .selectedpriceplan { color: #000; }
+.PmsPricingNew .fixedpricerow{
+    position:absolute;
+    left:20px;
+    width: 20%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.PmsPricingNew .addmoredates { color:blue; cursor:pointer; }
+.PmsPricingNew .title { display:inline-block; width: 110px; text-align: left; font-size: 12px; padding: 2px; float:left;}
+.PmsPricingNew .optionbox { width: 200px; display: inline-block; min-height: 30px; float:left; }
+.PmsPricingNew .eventrow { clear:both; }
+.PmsPricingNew .addMoredatesPanel, 
+.PmsPricingNew .addaddonsinludepanel { 
+    padding: 5px; 
+    border: solid 1px #bbb; 
+    display:none; 
+    position:absolute; 
+    left: 0px; 
+    top: 5px; 
+    background-color:#fff; 
+    box-shadow: 0px 0px 5px 1px #bbb; 
+    width: 330px; 
+    z-index: 2;
+    height: 400px;
+    overflow-y: auto;
+}
+
+.PmsPricingNew .addMoredatesPanel .fa-close { right: 5px; top: 3px; position:absolute; font-size: 10px; color:#bbb; cursor:pointer; }
+.PmsPricingNew .addMoredatesPanel .optionbox { padding-left: 5px; }
+.PmsPricingNew .addMoredatesPanel .optionbox select,
+.PmsPricingNew .addMoredatesPanel .optionbox input
+{ border: solid 1px #bbb; background-color:#fff; font-size: 12px; width: 100%; box-sizing: border-box; }
+.PmsPricingNew .addMoredatesPanel .fa-caret-up { position:absolute; top: -10px; color:#bbb; left:0px; }
+.PmsPricingNew .addMoredatesPanel .repeatoption { display:none; }
+.PmsPricingNew .addMoredatesPanel .repeatoption.repeat_0 { display:inline-block; }
+.PmsPricingNew .addMoredatesPanel .optionbox input[type="button"] {width: 100%; float:left; cursor:pointer; }
+.PmsPricingNew .addMoredatesPanel .optionbox input[type="checkbox"] {width: inherit; cursor:pointer; }
+.PmsPricingNew .addMoredatesPanel .optionbox input[type="radio"] {width: inherit; cursor:pointer; }
+.PmsPricingNew .addMoredatesPanel .optionbox input[type="button"]:hover { background-color:#eaeaea; }
+.PmsPricingNew .addMoredatesPanel .repeatrow { display:none; }
+.PmsPricingNew .adddatetype { margin-bottom: 15px; display:inline-block; padding: 2px; cursor:pointer; background-color:#efefef; width: 115px; text-align: center;border: solid 1px #bbb; }
+.PmsPricingNew .adddatetype.selected { background-color:#fff;   border: solid 1px #bbb; }
+.PmsPricingNew .addMoredatesPanel .datetypepanel { display:none; }
+.PmsPricingNew .addMoredatesPanel .datetypepanel.repeat { display:inherit;}

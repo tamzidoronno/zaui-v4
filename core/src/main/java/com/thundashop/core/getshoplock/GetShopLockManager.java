@@ -976,7 +976,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String host = getHostname(toSet.serverSource);
                 boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
                 
-                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck);
+                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck, storeId);
                 mgr.start();
             }
         }

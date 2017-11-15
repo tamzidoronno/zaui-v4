@@ -554,11 +554,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
-        if(!tmpFixed) {
-            tmpFixed = true;
-            tmpFixOrdersWuBook();
-        }
-
         gsTiming("start");
         if(!getConfigurationSecure().exposeUnsecureBookings) {
             if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
@@ -7279,32 +7274,4 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 //                });
     }
 
-    private void tmpFixOrdersWuBook() {
-        PmsBookingFilter filter = new PmsBookingFilter();
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -1);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        
-        filter.startDate = cal.getTime();
-        filter.endDate = new Date();
-
-        List<PmsBooking> allBooking = getAllBookings(filter);
-        
-        for(PmsBooking booking : allBooking) {
-            if(booking.channel != null && !booking.channel.isEmpty() && booking.channel.contains("wubook")) {
-                NewOrderFilter newOrderFilter = new NewOrderFilter();
-                newOrderFilter.createNewOrder = false;
-                newOrderFilter.prepayment = true;
-                newOrderFilter.endInvoiceAt = booking.getEndDate();
-                newOrderFilter.startInvoiceAt = booking.getStartDate();
-                pmsInvoiceManager.clearOrdersOnBooking(booking);
-                if(!booking.hasOverBooking()) {
-                    pmsInvoiceManager.createOrder(booking.id, newOrderFilter);
-                }
-            }
-        }
-        
-    }
 }

@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSchedulerBase;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.pmsmanager.PmsLockServer;
 import java.net.URLEncoder;
@@ -104,7 +105,7 @@ public class GetShopLockRazberryLogFetcher extends GetShopSchedulerBase {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+            GetShopLogHandler.logStack(ex, getStoreId());
             return new ArrayList();
         }
         return results;

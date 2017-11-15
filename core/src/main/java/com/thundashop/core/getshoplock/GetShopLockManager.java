@@ -11,6 +11,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopHotelLockCodeResult;
@@ -227,8 +228,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             try {
                 httpLoginRequest(address, dev.serverSource);
             } catch (Exception ex) {
-                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
-                ex.printStackTrace();
+                logPrintException(ex);
             }
 
        
@@ -487,6 +487,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         private List<BookingItem> items;
         private boolean stopUpdatesOnLock;
         private final boolean useNewQueueCheck;
+        private final String storeId;
 
         public GetshopLockCodeManagemnt(GetShopDevice device, 
                 String username, 
@@ -494,12 +495,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String hostname, 
                 List<BookingItem> items, 
                 boolean stopUpdatesOnLock,
-                boolean useNewQueueCheck) {
+                boolean useNewQueueCheck,
+                String storeId) {
             this.device = device;
             this.hostname = hostname;
             this.password = password;
             this.username = username;
             this.items = items;
+            this.storeId = storeId;
             this.stopUpdatesOnLock = stopUpdatesOnLock;
             this.useNewQueueCheck = useNewQueueCheck;
         }
@@ -514,7 +517,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String addr = "http://"+hostname+":8083/" + URLEncoder.encode("ZWaveAPI/Run/devices["+device.zwaveid+"].UserCode.Set("+offset+","+code+","+doUpdate+")", "UTF-8");
                 GetshopLockCom.httpLoginRequest(addr,username,password);
             } catch (Exception ex) {
-                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+                GetShopLogHandler.logStack(ex, storeId);
             }
             
         }
@@ -522,15 +525,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         @Override
         public void run() {
             if(hasConnectivity()) {
-                if(device.oldBatteryStatus()) {
-                    try {
-                        checkBatteryStatus();
-                        device.batteryLastUpdated = new Date();
-                        device.needSaving = true;
-                    }catch(Exception e) {
-                        logPrintException(e);
-                    }
-                }
                 int codesAdded = 0;
                 List<Integer> offsets = new ArrayList(device.codes.keySet());
                 offsets = Lists.reverse(offsets);
@@ -629,7 +623,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 GetShopHotelLockCodeResult result = gson.fromJson(res, GetShopHotelLockCodeResult.class);
                 return result;
             } catch (Exception ex) {
-                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+                GetShopLogHandler.logStack(ex, storeId);
             }
             return null;
         }
@@ -662,20 +656,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 }
                 return true;
             } catch (Exception ex) {
-                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+                GetShopLogHandler.logStack(ex, storeId);
             }
             return false;
         }
-
-        private void checkBatteryStatus() throws Exception {
-            logPrint("Checking for battery for " + device.name + " (" + device.zwaveid + ")");
-            String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].instances[0].commandClasses[128].Get()";
-            postfix = URLEncoder.encode(postfix, "UTF-8");
-            String address = "http://"+hostname+":8083/" + postfix;
-            GetshopLockCom.httpLoginRequest(address,username,password);
-            waitForEmptyQueue();
-        }
-
         
         public boolean isDoneProcessingQueue(String queue) {
             Gson gson = new Gson();
@@ -893,8 +877,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             try {
                 httpLoginRequest(address, dev.serverSource);
             } catch (Exception ex) {
-                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
-                ex.printStackTrace();
+                logPrintException(ex);
             }
         }
     }

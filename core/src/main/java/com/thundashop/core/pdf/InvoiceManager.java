@@ -157,25 +157,25 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     }
 
     public static byte[] loadFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
+        try (InputStream is = new FileInputStream(file)) {
+            long length = file.length();
+            if (length > Integer.MAX_VALUE) {
+            }
 
-        long length = file.length();
-        if (length > Integer.MAX_VALUE) {
-        }
-        
-        byte[] bytes = new byte[(int)length];
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-            offset += numRead;
-        }
+            byte[] bytes = new byte[(int)length];
+            int offset = 0;
+            int numRead = 0;
+            while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+                offset += numRead;
+            }
 
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file "+file.getName());
-        }
+            if (offset < bytes.length) {
+                throw new IOException("Could not completely read file "+file.getName());
+            }
 
-        is.close();
-        return bytes;
+            is.close();
+            return bytes;
+        }
     } 
 
     public void generateKidOnOrder(Order order) {

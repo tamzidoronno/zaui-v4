@@ -28,10 +28,10 @@ public class ArxConnection {
             hostName += "&value=off";
         }
         GetShopLogHandler.logPrintStatic(hostName, null);
-        httpLoginRequest(hostName, username, password, "");
+        httpLoginRequest(hostName, username, password, "", null);
     }
     
-    public String httpLoginRequest(String address, String username, String password, String content) throws Exception {
+    public String httpLoginRequest(String address, String username, String password, String content, String storeId) throws Exception {
         if(address == null || address.isEmpty() || !address.startsWith("http") || address.contains("://:50")) {
             GetShopLogHandler.logPrintStatic("Tried accessing arx with empty host: " + address, null);
             return "";
@@ -72,7 +72,6 @@ public class ArxConnection {
                 httpResponse = client.execute(request);
             }catch(Exception e) {
                 GetShopLogHandler.logPrintStatic("Failed lookup on address: " + address + " : " + e.getMessage(), null);
-                e.printStackTrace();
                 throw e;
             }
 

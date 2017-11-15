@@ -130,9 +130,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
                 String tmpFile = "/tmp/"+UUID.randomUUID().toString();
                 byte[] data = Base64.decodeBase64(attachments.get(fileName));
                 
-                FileOutputStream fos = new FileOutputStream(tmpFile);
-                fos.write(data);
-                fos.close();
+                try(FileOutputStream fos = new FileOutputStream(tmpFile)) {
+                    fos.write(data);
+                }
                 
                 files.put(tmpFile, fileName);
             }

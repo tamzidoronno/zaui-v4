@@ -102,11 +102,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxDatabankMailAccount = context.getBean(MailFactoryImpl.class);
     }
 
-    static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
-
     @Override
     public synchronized void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {

@@ -28,6 +28,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private String username;
     private String multiLevelName;
     private String webAddress;
+    private String storeId;
     
     public String getUsername() {
         return username;
@@ -52,6 +53,10 @@ public abstract class GetShopSchedulerBase implements Runnable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 
     public void setUsername(String username) {
@@ -133,5 +138,9 @@ public abstract class GetShopSchedulerBase implements Runnable {
         int Result = r.nextInt(High-Low) + Low;
         
         try { Thread.sleep(Result); } catch (Exception ex) {}
+    }
+    
+    public String getStoreId() {
+        return storeId;
     }
 }

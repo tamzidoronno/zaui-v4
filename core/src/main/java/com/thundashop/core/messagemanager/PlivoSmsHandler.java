@@ -51,16 +51,20 @@ public class PlivoSmsHandler extends SmsHandlerAbstract implements SmsHandler, R
 
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                int ch;
-                StringBuilder sb = new StringBuilder();
-                while ((ch = instream.read()) != -1) {
-                    sb.append((char) ch);
-                }
-                String result = sb.toString();
-                if (result.contains("error")) {
-                    logMessage("failed", result);
-                } else {
-                    logMessage("delivered", result);
+                try {
+                    int ch;
+                    StringBuilder sb = new StringBuilder();
+                    while ((ch = instream.read()) != -1) {
+                        sb.append((char) ch);
+                    }
+                    String result = sb.toString();
+                    if (result.contains("error")) {
+                        logMessage("failed", result);
+                    } else {
+                        logMessage("delivered", result);
+                    }
+                } finally {
+                    instream.close();
                 }
             } 
 

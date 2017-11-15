@@ -347,7 +347,6 @@ public class ManagerSubBase {
           ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
           ObjectInputStream ois = new ObjectInputStream(bais);
           
-          
           T res = (T) ois.readObject();
           baos.close();
           oos.close();
@@ -405,12 +404,14 @@ public class ManagerSubBase {
                 base.setUsername(user.username);
                 base.setPassword(user.internalPassword);
                 base.setMultiLevelName(gsscheduler.multilevelName);
+                base.setStoreId(storeId);
                 new Thread(base).start();
             } else {
                 Class<?> clazz = Class.forName(gsscheduler.schedulerClassName.getCanonicalName());
                 Constructor<?> ctor = clazz.getConstructor(String.class,String.class,String.class,String.class, String.class);
                 GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, user.internalPassword, gsscheduler.scheduler, gsscheduler.multilevelName);
-
+                ret.setStoreId(storeId);
+                
                 schedulersBases.put(gsscheduler.id, ret);
                 schedulers.put(gsscheduler.id, gsscheduler);
             }

@@ -42,7 +42,6 @@ public class GetShopLogHandler {
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("Cant log... check log access etc");
-            System.exit(1);
         }
         
     }

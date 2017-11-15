@@ -29,7 +29,7 @@ public class GetShopLogHandler {
         
         try {
             createLogPath();
-            String storeIdToUse = storeId == null ? "all" : storeId;           
+            String storeIdToUse = storeId == null || storeId.isEmpty() ? "all" : storeId;           
             String fileName = "log/"+storeIdToUse+".log";
             
             File logFileName = new File(fileName);

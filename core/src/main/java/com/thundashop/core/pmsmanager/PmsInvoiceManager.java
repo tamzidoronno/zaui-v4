@@ -950,6 +950,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             setNonRef = true;
             booking.nonrefundable = false;
         }
+        List<Order> ordersToSave = new ArrayList();
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order.closed) {
@@ -961,7 +962,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
             }
             order.cart.clear();
-            orderManager.saveOrder(order);
+            ordersToSave.add(order);
+        }
+        for(Order save : ordersToSave) {
+            orderManager.saveOrder(save);
         }
         booking.nonrefundable = setNonRef;
     }

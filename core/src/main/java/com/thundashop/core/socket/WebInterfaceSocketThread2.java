@@ -72,22 +72,23 @@ public class WebInterfaceSocketThread2 implements Runnable {
 
     private void sendMessage(Object result) {
         try {
-            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            String json = "";
-            try {
-                GsonBuilder builder = new GsonBuilder();
-                builder.serializeNulls();
-                builder.disableInnerClassSerialization();
-                builder.serializeSpecialFloatingPointValues();
-                builder.setExclusionStrategies(new AnnotationExclusionStrategy(null));
-                Gson gson = builder.create();
-                json = gson.toJson((Object) result);
-            }catch(Exception e) {
-                GetShopLogHandler.logPrintStatic(result, null);
-                e.printStackTrace();
+            try (DataOutputStream dos = new DataOutputStream(socket.getOutputStream())) {
+                String json = "";
+                try {
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.serializeNulls();
+                    builder.disableInnerClassSerialization();
+                    builder.serializeSpecialFloatingPointValues();
+                    builder.setExclusionStrategies(new AnnotationExclusionStrategy(null));
+                    Gson gson = builder.create();
+                    json = gson.toJson((Object) result);
+                }catch(Exception e) {
+                    GetShopLogHandler.logPrintStatic(result, null);
+                    e.printStackTrace();
+                }
+                dos.write((json + "\n").getBytes("UTF8"));
+                dos.flush();
             }
-            dos.write((json + "\n").getBytes("UTF8"));
-            dos.flush();
         } catch (Exception d) {
             d.printStackTrace();
         }

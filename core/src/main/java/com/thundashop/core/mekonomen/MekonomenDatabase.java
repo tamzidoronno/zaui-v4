@@ -76,25 +76,26 @@ public class MekonomenDatabase {
     }
 
     private void loadUsers() throws FileNotFoundException, IOException {
-        FileInputStream fileInputStream = new FileInputStream("/datafiles/promeister/users.xlsx");
+        try (FileInputStream fileInputStream = new FileInputStream("/datafiles/promeister/users.xlsx")) {
         
-        XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
-        XSSFSheet worksheet = workbook.getSheet("Blad1");
-        
-        for (Row myrow : worksheet) {
-            if (myrow == null || myrow.getCell(0) == null || myrow.getCell(0).getStringCellValue().equals("Förnamn"))
-                continue;
-            
-            MekonomenUser user = new MekonomenUser();
-            user.firstName = getStringValue(myrow, 0);
-            user.sureName = getStringValue(myrow, 1);
-            user.groupName = getStringValue(myrow, 2);
-            user.befattning = getStringValue(myrow, 3);
-            user.managerLogin = getStringValue(myrow, 4);
-            user.username = getStringValue(myrow, 5);
-            user.email = getStringValue(myrow, 6);
+            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+            XSSFSheet worksheet = workbook.getSheet("Blad1");
 
-            users.add(user);
+            for (Row myrow : worksheet) {
+                if (myrow == null || myrow.getCell(0) == null || myrow.getCell(0).getStringCellValue().equals("Förnamn"))
+                    continue;
+
+                MekonomenUser user = new MekonomenUser();
+                user.firstName = getStringValue(myrow, 0);
+                user.sureName = getStringValue(myrow, 1);
+                user.groupName = getStringValue(myrow, 2);
+                user.befattning = getStringValue(myrow, 3);
+                user.managerLogin = getStringValue(myrow, 4);
+                user.username = getStringValue(myrow, 5);
+                user.email = getStringValue(myrow, 6);
+
+                users.add(user);
+            }
         }
                      
     }
@@ -112,60 +113,62 @@ public class MekonomenDatabase {
     }
 
     private void loadEvents() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("/datafiles/promeister/events.xlsx");
+        try (FileInputStream fileInputStream = new FileInputStream("/datafiles/promeister/events.xlsx")) {
         
-        XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
-        XSSFSheet worksheet = workbook.getSheet("Blad1");
-        
-        int i  = 0;
-        for (Row myrow : worksheet) {
-            i++;
-            
-            if (myrow == null || myrow.getCell(0) == null || i == 1)
-                continue;
-            
-            String category = getStringValue(myrow, 2);
-            
-            if (category != null && category.toLowerCase().equals("")) {
-                continue;
+            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+            XSSFSheet worksheet = workbook.getSheet("Blad1");
+
+            int i  = 0;
+            for (Row myrow : worksheet) {
+                i++;
+
+                if (myrow == null || myrow.getCell(0) == null || i == 1)
+                    continue;
+
+                String category = getStringValue(myrow, 2);
+
+                if (category != null && category.toLowerCase().equals("")) {
+                    continue;
+                }
+
+                MekonomenEvent event = new MekonomenEvent();
+                event.eventName = getStringValue(myrow, 1);
+                event.nodeId = getStringValue(myrow, 0).trim().toLowerCase();
+                event.category = category;
+
+                events.put(event.nodeId, event);
             }
-            
-            MekonomenEvent event = new MekonomenEvent();
-            event.eventName = getStringValue(myrow, 1);
-            event.nodeId = getStringValue(myrow, 0).trim().toLowerCase();
-            event.category = category;
-            
-            events.put(event.nodeId, event);
-        }
+        } 
     }
 
     private void loadConnections() throws FileNotFoundException, IOException, ParseException {
-        FileInputStream fileInputStream = new FileInputStream("/datafiles/promeister/users_events.xlsx");
+        try (FileInputStream fileInputStream = new FileInputStream("/datafiles/promeister/users_events.xlsx")) {
         
-        XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
-        XSSFSheet worksheet = workbook.getSheet("Blad1");
-        
-        int i = 0;
-        for (Row myrow : worksheet) {
-            i++;
-            
-            if (i == 1)
-                continue;
-            
-            
-            MekonomenEventParticipant participant = new MekonomenEventParticipant();
-            participant.username = getStringValue(myrow, 0);
-            participant.nodeId = getStringValue(myrow, 1);
-            participant.startDate = getDateValue(myrow, 3);
-            participant.endDate = getDateValue(myrow, 4);
-            participant.status = getStringValue(myrow, 5);
-            
-            
-            if (participant.isCompleted() && events.containsKey(participant.nodeId)) {
-                if (participant.username.equals("be") && (participant.nodeId.trim().equals("2248") || participant.nodeId.trim().equals("2249") || participant.nodeId.trim().equals("2237") || participant.nodeId.trim().equals("2424"))) {
-                    System.out.println(i);
+            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+            XSSFSheet worksheet = workbook.getSheet("Blad1");
+
+            int i = 0;
+            for (Row myrow : worksheet) {
+                i++;
+
+                if (i == 1)
+                    continue;
+
+
+                MekonomenEventParticipant participant = new MekonomenEventParticipant();
+                participant.username = getStringValue(myrow, 0);
+                participant.nodeId = getStringValue(myrow, 1);
+                participant.startDate = getDateValue(myrow, 3);
+                participant.endDate = getDateValue(myrow, 4);
+                participant.status = getStringValue(myrow, 5);
+
+
+                if (participant.isCompleted() && events.containsKey(participant.nodeId)) {
+                    if (participant.username.equals("be") && (participant.nodeId.trim().equals("2248") || participant.nodeId.trim().equals("2249") || participant.nodeId.trim().equals("2237") || participant.nodeId.trim().equals("2424"))) {
+                        System.out.println(i);
+                    }
+                    participants.add(participant);
                 }
-                participants.add(participant);
             }
         }
     }

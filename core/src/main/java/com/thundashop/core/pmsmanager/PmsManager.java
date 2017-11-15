@@ -59,7 +59,6 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.wubook.WubookManager;
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2239,8 +2238,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
         HashMap<String, String> attachments = new HashMap();
         try {
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-
             String str = Biweekly.write(ical).go();
             byte[] encoded = Base64.encodeBase64(str.getBytes());
             String encodedString = new String(encoded);

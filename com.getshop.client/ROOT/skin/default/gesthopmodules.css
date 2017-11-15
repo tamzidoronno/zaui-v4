@@ -160,6 +160,9 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a7c7dc', endColorstr='#85b2d3',GradientType=0 )
 }
 
+.GetShopModuleTable .datarow.active {
+    box-shadow: inset 1px 0px 10px rgba(0, 0, 0, 0.5);
+}
 .GetShopModuleTable .col {
     display: inline-block;
     vertical-align: top;

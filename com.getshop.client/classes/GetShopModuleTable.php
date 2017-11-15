@@ -62,7 +62,10 @@ class GetShopModuleTable {
             $j = 1;
             foreach ($this->data as $data) {
                 $odd = $j % 2 ? "odd" : "even";
-                echo "<div class='datarow $odd' rownumber='$j'>";
+                $active = $this->shouldShowRow($j);
+                $activeClass = $active? "active" : "";
+                
+                echo "<div class='datarow $odd $activeClass' rownumber='$j'>";
                     echo "<div class='datarow_inner'>";
                         $i = 1;
                         $postArray = array();
@@ -88,7 +91,7 @@ class GetShopModuleTable {
                         $this->printJavaScriptData($postArray, $j);
                     echo "</div>";
                     
-                    if ($this->shouldShowRow($j)) {
+                    if ($active) {
                         echo "<div class='datarow_extended_content' style='display:block;'>";
                         $this->renderTableContent($postArray, $j);
                         echo "</div>";    
@@ -125,6 +128,9 @@ class GetShopModuleTable {
 
         <script>
             $('.GetShopModuleTable .datarow .datarow_inner').on('click', function(e) {
+                $(this).closest('.GetShopModuleTable').find('.datarow.active').removeClass('active');
+                $(this).closest('.datarow').addClass('active');
+                
                 var target = $(e.target);
                 var base = $(this).closest('.datarow');
                 base.find('.datarow_extended_content').html("");

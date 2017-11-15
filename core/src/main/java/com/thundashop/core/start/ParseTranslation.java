@@ -88,39 +88,42 @@ public class ParseTranslation {
         FileInputStream fstream = new FileInputStream(filePath);
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        if(filePath.contains("com.getshop.client/ROOT/js/ace")) {
-            return;
-        }
-        String strLine;
-        int linenumber = 0;
+        try {
+            if(filePath.contains("com.getshop.client/ROOT/js/ace")) {
+                return;
+            }
+            String strLine;
+            int linenumber = 0;
 
-        while ((strLine = br.readLine()) != null) {
-            //Check if there is more translation at the same line
-            int offset = 0;
-            do {
-                offset = strLine.indexOf("__", offset);
-                if(offset >= 0) {
-                    strLine = strLine.substring(offset);
-                    offset = 3;
-                    String key = "";
-                    // Print the content on the console
-                    if (strLine.contains("__(")) {
-                        key = getTranslationKey(strLine);
-                        addTranslationKey(key, filePath, linenumber, "framework");
-                    } else if (strLine.contains("__w(")) {
-                        key = getTranslationKey(strLine);
-                        addTranslationKey(key, filePath, linenumber, "webshop");
-                    } else if (strLine.contains("__f(")) {
-                        key = getTranslationKey(strLine);
-                        addTranslationKey(key, filePath, linenumber, "framework");
+            while ((strLine = br.readLine()) != null) {
+                //Check if there is more translation at the same line
+                int offset = 0;
+                do {
+                    offset = strLine.indexOf("__", offset);
+                    if(offset >= 0) {
+                        strLine = strLine.substring(offset);
+                        offset = 3;
+                        String key = "";
+                        // Print the content on the console
+                        if (strLine.contains("__(")) {
+                            key = getTranslationKey(strLine);
+                            addTranslationKey(key, filePath, linenumber, "framework");
+                        } else if (strLine.contains("__w(")) {
+                            key = getTranslationKey(strLine);
+                            addTranslationKey(key, filePath, linenumber, "webshop");
+                        } else if (strLine.contains("__f(")) {
+                            key = getTranslationKey(strLine);
+                            addTranslationKey(key, filePath, linenumber, "framework");
+                        }
+                        linenumber++;
                     }
-                    linenumber++;
-                }
-            } while (offset >= 0);
+                } while (offset >= 0);
+            }
+        } finally {
+            br.close();
+            in.close();
+            fstream.close();
         }
-        br.close();
-        in.close();
-        fstream.close();
     }
 
     private String getTranslationKey(String strLine) {

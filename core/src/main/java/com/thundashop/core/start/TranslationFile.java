@@ -56,17 +56,23 @@ public class TranslationFile {
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-        String strLine;
-        while ((strLine = br.readLine()) != null) {
-            String[] lineArgs = strLine.split(";-;");
-            if(lineArgs[0].startsWith("#####")) {
-                continue;
+        try {
+            String strLine;
+            while ((strLine = br.readLine()) != null) {
+                String[] lineArgs = strLine.split(";-;");
+                if(lineArgs[0].startsWith("#####")) {
+                    continue;
+                }
+                if (lineArgs.length == 2) {
+                    translationMatrix.put(lineArgs[0], lineArgs[1]);
+                } else if (lineArgs.length == 1) {
+                    translationMatrix.put(lineArgs[0], "");
+                }
             }
-            if (lineArgs.length == 2) {
-                translationMatrix.put(lineArgs[0], lineArgs[1]);
-            } else if (lineArgs.length == 1) {
-                translationMatrix.put(lineArgs[0], "");
-            }
+        } finally {
+           br.close();
+           in.close();
+           fstream.close();
         }
     }
 

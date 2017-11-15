@@ -74,24 +74,29 @@ public class TranslationComparor {
         FileInputStream fstream = new FileInputStream(path + oldFile + ".csv");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
-        String strLine;
-        HashMap<String, String> toMerge = new HashMap();
-        while ((strLine = br.readLine()) != null) {
-            String key = strLine.substring(0, strLine.indexOf(","));
-            String trans = strLine.substring(strLine.indexOf(",") + 1);
-            toMerge.put(key, trans);
-        }
-        int count = 0;
-        ArrayList<String> result = new ArrayList();
-        for (String key : baseKeys) {
-            if (toMerge.get(key) == null) {
-                result.add(key + ";-;");
-                count++;
-            } else {
-                result.add(key + ";-;" + toMerge.get(key));
+        try {
+            String strLine;
+            HashMap<String, String> toMerge = new HashMap();
+            while ((strLine = br.readLine()) != null) {
+                String key = strLine.substring(0, strLine.indexOf(","));
+                String trans = strLine.substring(strLine.indexOf(",") + 1);
+                toMerge.put(key, trans);
             }
+            int count = 0;
+            ArrayList<String> result = new ArrayList();
+            for (String key : baseKeys) {
+                if (toMerge.get(key) == null) {
+                    result.add(key + ";-;");
+                    count++;
+                } else {
+                    result.add(key + ";-;" + toMerge.get(key));
+                }
+            }
+            return result;
+        } finally {
+           br.close();
+           in.close();
+           fstream.close();
         }
-        return result;
     }
 }

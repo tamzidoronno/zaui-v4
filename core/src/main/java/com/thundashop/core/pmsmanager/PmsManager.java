@@ -180,6 +180,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     
     private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
     private String messageToSend;
+    private boolean tmpFixed = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -286,10 +287,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "1,5,10,15,20,25,30,35,40,45,50,55 * * * *", CheckPmsFiveMin.class);
-        
-        if(applicationPool.getAvailableApplications().contains(applicationPool.getApplication("66b4483d-3384-42bb-9058-2ac915c77d80"))) {
-            createScheduler("amestosync", "00 08 * * *", AmestoSync.class);
-        }
     }
 
     @Override
@@ -557,6 +554,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        if(!tmpFixed) {
+            tmpFixed = true;
+            tmpFixOrdersWuBook();
+        }
+
         gsTiming("start");
         if(!getConfigurationSecure().exposeUnsecureBookings) {
             if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
@@ -7261,19 +7263,48 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public void orderChanged(String orderId) {
-        Order order = orderManager.getOrderSecure(orderId);
+//        Order order = orderManager.getOrderSecure(orderId);
+//        
+//        if (!order.cart.getItems().isEmpty()) {
+//            return;
+//        }
+//        
+//        bookings.values()
+//                .stream()
+//                .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
+//                .forEach(booking -> {
+//                    if (order.cart.getItems().isEmpty()) {
+//                        booking.orderIds.remove(orderId);
+//                    }
+//                });
+    }
+
+    private void tmpFixOrdersWuBook() {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
         
-        if (!order.cart.getItems().isEmpty()) {
-            return;
+        filter.startDate = cal.getTime();
+        filter.endDate = new Date();
+
+        List<PmsBooking> allBooking = getAllBookings(filter);
+        
+        for(PmsBooking booking : allBooking) {
+            if(booking.channel != null && !booking.channel.isEmpty() && booking.channel.contains("wubook")) {
+                NewOrderFilter newOrderFilter = new NewOrderFilter();
+                newOrderFilter.createNewOrder = false;
+                newOrderFilter.prepayment = true;
+                newOrderFilter.endInvoiceAt = booking.getEndDate();
+                newOrderFilter.startInvoiceAt = booking.getStartDate();
+                pmsInvoiceManager.clearOrdersOnBooking(booking);
+                if(!booking.hasOverBooking()) {
+                    pmsInvoiceManager.createOrder(booking.id, newOrderFilter);
+                }
+            }
         }
         
-        bookings.values()
-                .stream()
-                .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
-                .forEach(booking -> {
-                    if (order.cart.getItems().isEmpty()) {
-                        booking.orderIds.remove(orderId);
-                    }
-                });
     }
 }

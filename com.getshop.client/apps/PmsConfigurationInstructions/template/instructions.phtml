@@ -1,0 +1,16 @@
+<?php
+/* @var $this ns_78b6ce1d_95df_4972_b530_e08a89e09c46\PmsConfigurationInstructions */
+$notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+?>
+<h1>Other instructions</h1>
+<div id="otherinstructionsfiled" gsname='otherinstructions' style="border: solid 1px; min-height: 400px;"><?
+    if(isset($notificationSettings->otherinstructions)) {
+        echo $notificationSettings->otherinstructions;
+    }
+?></div>
+<h1>Fire instructions</h1>
+<div id="fireinstructions" gsname='fireinstructions' style="border: solid 1px; min-height: 400px;"><?
+    if(isset($notificationSettings->fireinstructions)) {
+        echo $notificationSettings->fireinstructions;
+    }
+?></div>

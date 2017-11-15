@@ -1,0 +1,59 @@
+<?php
+ /* @var $this ns_ae42328b_3726_4875_8546_212cd8cc3cde\PmsCleaning */
+$time = strtotime($this->getCleaningDate());
+?> 
+
+<div gstype="form" method="changeDate">
+    <input type='text' gsname="date" value='<? echo $this->getCleaningDate(); ?>'>
+    <input gstype="submit" type="button" value='Change date'>
+</div>
+
+<div class='stepbox'>
+    <h1>Guests arriving today</h1>
+
+    <i class="fa fa-clock-o" style="color:red"></i>  Early check in, priority room. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <i class="fa fa-clock-o" style="color:green"></i> Late check out, can leave later &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <i class="fa fa-user-plus"></i> Additional bed request &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <i class="fa fa-bed"></i> Addition bed for children requested&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div style='height:10px;'></div>
+    <?php
+    $this->print_guests_table($time, true);
+    ?>
+</div>
+<br>
+<div class='stepbox'>
+    <h1>Need cleaning today</h1>
+    <?php
+    $this->print_interval_cleaning($time);
+    ?>
+</div>
+<?php
+    if(date("N", time()) == 1) {
+        echo "<br>"; 
+        echo "<div class='stepbox'>";
+        echo "<h1>Sunday cleaning program</h1>";
+        $this->printUncleanedRooms();
+        echo "</div>";
+    }
+?>
+<br>    
+<div class='stepbox'>
+    <h1>Guests arriving tomorrow</h1>
+    <?php
+    $this->print_guests_table($time+86400, true);
+    ?>
+</div>
+<br>
+<div class='stepbox'>
+    <h1>Cleaning table</h1>
+    <?php
+    $this->printCleaningTable($time);
+    ?>
+</div>
+<br>
+<div class='stepbox'>
+    <h1>Total room overview</h1>
+    <?php
+    $this->printRoomOverview();
+    ?>
+</div>

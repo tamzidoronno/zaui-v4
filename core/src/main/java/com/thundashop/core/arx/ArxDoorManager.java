@@ -448,7 +448,7 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
             if (accessLog != null) {
                 returnResult.put(door.externalId, accessLog);
             } else {
-                GetShopLogHandler.logPrintStatic("Warning, was not able to fetch accesslog from ARX", result);
+                GetShopLogHandler.logPrintStatic("Warning, was not able to fetch accesslog from ARX: \n result: \n " + result, storeManager.getStoreId());
             }
         }
         return returnResult;

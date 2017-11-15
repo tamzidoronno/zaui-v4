@@ -6,14 +6,12 @@ package com.getshop.scope;
 
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.common.StoreComponent;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
@@ -27,11 +25,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class GetShopSessionScope implements Scope {
     
-    private Map<Long, String> threadStoreIds = Collections.synchronizedMap(new HashMap<Long, String>());
-    private Map<Long, String> threadSessionBeanNames = Collections.synchronizedMap(new HashMap<Long, String>());
-    private Map<Long, Session> threadSessions = Collections.synchronizedMap(new HashMap<Long, Session>());
-    private Map<String, Object> objectMap = Collections.synchronizedMap(new HashMap<String, Object>());
-    private Map<String, Object> namedSessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
+    private Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
+    private Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
+    private Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
+    private Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
+    private Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
 
     public <T> T getNamedSessionBean(String multiLevelName, Class className) {
         if (multiLevelName == null || multiLevelName.isEmpty()) {
@@ -161,9 +159,18 @@ public class GetShopSessionScope implements Scope {
 
     public void setStoreId(String storeId, String multiLevelName, Session session) {
         long threadId = Thread.currentThread().getId();
-        threadStoreIds.put(threadId, storeId);
-        threadSessions.put(threadId, session);
-        threadSessionBeanNames.put(threadId, multiLevelName);
+        
+        if (storeId != null) {
+            threadStoreIds.put(threadId, storeId);
+        }
+        
+        if (session != null) {
+            threadSessions.put(threadId, session);
+        }
+        
+        if (multiLevelName != null) {
+            threadSessionBeanNames.put(threadId, multiLevelName);
+        }
     }
 
     public void clearStore(String storeId) {

@@ -108,10 +108,10 @@ public class WebManager extends ManagerBase implements IWebManager {
         
         if(data != null && !data.isEmpty()) {
             connection.setDoOutput(true);
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(new String(data.getBytes(), encoding));
-            outputStream.flush();
-            outputStream.close();
+            try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
+                outputStream.writeBytes(new String(data.getBytes(), encoding));
+                outputStream.flush();    
+            }
         } else {
             connection.setRequestProperty("Content-Length", "0");
         }

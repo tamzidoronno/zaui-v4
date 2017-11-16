@@ -57,11 +57,12 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        SyncronizedMethodCountDownThread timerThread = new SyncronizedMethodCountDownThread(inObject.interfaceName, inObject.method, storeId);
-        timerThread.start();
+       
         long start = System.currentTimeMillis();
         GetShopTimer.start();
-        Object rest = executeMethod(inObject, types, argumentValues);
+        
+        Object rest = executeMethodWithTiming(inObject, types, argumentValues);
+        
         GetShopTimer.timeEntry("Finished", "StoreHandler");
         String timing = GetShopTimer.getPrintedTiming();
         timing += "\n\n" + inObject.getPrettyPrinted();
@@ -77,10 +78,23 @@ public class StoreHandler {
             }
         }
         
-        timerThread.printFinishedMessage();
-        timerThread.terminate();
-        
+       
         return rest;
+    }
+
+    private Object executeMethodWithTiming(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+        SyncronizedMethodCountDownThread timerThread = new SyncronizedMethodCountDownThread(inObject.interfaceName, inObject.method, storeId);
+        timerThread.start();
+        
+        try {
+            Object rest = executeMethod(inObject, types, argumentValues);
+            return rest;
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            timerThread.printFinishedMessage();
+            timerThread.terminate();
+        }
     }
     
     public synchronized void setGetShopModule(String sessionId, String moduleId) {

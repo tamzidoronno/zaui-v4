@@ -235,9 +235,10 @@ public class EpayManager extends ManagerBase implements IEpayManager {
                 order.captured = true;
                 result= true;
             } else {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                soapResponse.writeTo(out);
-                order.payment.transactionLog.put(System.currentTimeMillis(), out.toString());
+                try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                    soapResponse.writeTo(out);
+                    order.payment.transactionLog.put(System.currentTimeMillis(), out.toString());
+                }
             }
             orderManager.saveOrder(order);
             soapConnection.close();

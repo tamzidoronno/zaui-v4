@@ -62,14 +62,18 @@ public class PkkControlManager extends ManagerBase implements IPkkControlManager
     private PkkControlData getDataCarInformation(String licensePlateNumber) throws MalformedURLException, IOException, SAXException, ParserConfigurationException {
         URL url = new URL("http://www.vegvesen.no/Kjoretoy/Kjop+og+salg/Kjøretøyopplysninger?registreringsnummer="+licensePlateNumber);
         InputStream is = url.openStream();  // throws an IOException
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
+        
         String line = "";
         String table = "";
         
         String all = "";
-        while ((line = br.readLine()) != null) {
-            all += line;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                all += line;
+            }
+        } finally { 
+            is.close();
         }
 //        
         if (all.indexOf("<table") < 0) {

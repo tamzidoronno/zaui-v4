@@ -118,48 +118,49 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             connection.setRequestMethod("POST");
 
             // Initiate output stream for connection and post message
-            OutputStream out = connection.getOutputStream();
-            out.write("request=".getBytes(Charset.forName("UTF-8")));
-            Gson gson = new Gson();
-            String json = gson.toJson(parameters);
-            out.write(json.getBytes(Charset.forName("UTF-8")));
-            out.flush();
-            out.close();
+            try (OutputStream out = connection.getOutputStream()) {
+                out.write("request=".getBytes(Charset.forName("UTF-8")));
+                Gson gson = new Gson();
+                String json = gson.toJson(parameters);
+                out.write(json.getBytes(Charset.forName("UTF-8")));
+                out.flush();
+                out.close();
 
-            if(debug) {
-                logPrint("-------------- Debug ----------");
-                logPrint("Endpoint: " + endpoint);
-                for(String key : parameters.keySet()) {
-                    logPrint("\t" + key + " : " + parameters.get(key));
-                }
-
-                logPrint("Writing to stream: " + json);
-            }
-            
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                InputStreamReader is = new InputStreamReader(connection.getInputStream());
-                StringBuilder sb = new StringBuilder();
-                BufferedReader br = new BufferedReader(is);
-                String read = br.readLine();
-
-                while (read != null) {
-                    sb.append(read);
-                    read = br.readLine();
-                }
-
-                String result = sb.toString();
-
-                Map<String, String> response = gson.fromJson(result, Map.class);
                 if(debug) {
-                    logPrint("Response code: " + connection.getResponseCode());
-                    logPrint("Response message: " + result);
                     logPrint("-------------- Debug ----------");
+                    logPrint("Endpoint: " + endpoint);
+                    for(String key : parameters.keySet()) {
+                        logPrint("\t" + key + " : " + parameters.get(key));
+                    }
+
+                    logPrint("Writing to stream: " + json);
                 }
-                return response;
-            } else {
-                // Server returned HTTP error code.
-                logPrint("HTTP error!" + connection.getResponseCode());
-                return null;
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    InputStreamReader is = new InputStreamReader(connection.getInputStream());
+                    StringBuilder sb = new StringBuilder();
+                    BufferedReader br = new BufferedReader(is);
+                    String read = br.readLine();
+
+                    while (read != null) {
+                        sb.append(read);
+                        read = br.readLine();
+                    }
+
+                    String result = sb.toString();
+
+                    Map<String, String> response = gson.fromJson(result, Map.class);
+                    if(debug) {
+                        logPrint("Response code: " + connection.getResponseCode());
+                        logPrint("Response message: " + result);
+                        logPrint("-------------- Debug ----------");
+                    }
+                    return response;
+                } else {
+                    // Server returned HTTP error code.
+                    logPrint("HTTP error!" + connection.getResponseCode());
+                    return null;
+                }
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();

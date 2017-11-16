@@ -29,7 +29,7 @@ public class GetShopLogHandler {
         
         try {
             createLogPath();
-            String storeIdToUse = storeId == null ? "all" : storeId;           
+            String storeIdToUse = storeId == null || storeId.isEmpty() ? "all" : storeId;           
             String fileName = "log/"+storeIdToUse+".log";
             
             File logFileName = new File(fileName);
@@ -42,7 +42,6 @@ public class GetShopLogHandler {
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("Cant log... check log access etc");
-            System.exit(1);
         }
         
     }

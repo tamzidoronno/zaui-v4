@@ -91,7 +91,7 @@ public class ArxDoorManager implements IDoorManager {
 //        GetShopLogHandler.logPrintStatic("Executing:" + address, null);
 //        GetShopLogHandler.logPrintStatic("Username:" + username, null);
 //        GetShopLogHandler.logPrintStatic("Password:" + password, null);
-        return connection.httpLoginRequest(address, username, password, content);
+        return connection.httpLoginRequest(address, username, password, content, pmsManager.getStoreId());
     }
     
     @Override
@@ -115,6 +115,8 @@ public class ArxDoorManager implements IDoorManager {
             doors = recursiveFindDoors(nodeList, 0);
         }catch(SAXParseException e) {
             GetShopLogHandler.logPrintStatic("Failed to parse for adress:" + hostName, e.getMessage());
+        } finally {
+            is.close();
         }
         
         return doors;
@@ -138,19 +140,24 @@ public class ArxDoorManager implements IDoorManager {
         Schema schema = sf.newSchema(new File("integration.xsd"));
         unmarsh.setSchema(schema);
         //unmarshall the xml file
-        Arxdata obj;
-        obj = (Arxdata) unmarsh.unmarshal(is);
-        PersonListType persons = obj.getPersons();
         
-        List<Person> personlist = new ArrayList();
-        List<Card> cards = createCardList(result);
-        
-        for(PersonType person : persons.getPerson()) {
-            Person tmpPerson = createPerson(person);
-            tmpPerson.cards.addAll(filterCards(cards, tmpPerson));
-            personlist.add(tmpPerson);
+        try {
+            Arxdata obj = (Arxdata) unmarsh.unmarshal(is);
+            PersonListType persons = obj.getPersons();
+       
+            List<Person> personlist = new ArrayList();
+            List<Card> cards = createCardList(result);
+
+            for(PersonType person : persons.getPerson()) {
+                Person tmpPerson = createPerson(person);
+                tmpPerson.cards.addAll(filterCards(cards, tmpPerson));
+                personlist.add(tmpPerson);
+            }
+            return personlist;
+        } finally {
+            is.close();
         }
-        return personlist;
+        
     }
 
     @Override
@@ -169,18 +176,22 @@ public class ArxDoorManager implements IDoorManager {
         unmarsh.setSchema(schema);
         //unmarshall the xml file
         AccessCategoryList obj;
-        JAXBElement resultret = (JAXBElement) unmarsh.unmarshal(is);
-        com.assaabloy.arxdata.access.AccessCategoryList types = (com.assaabloy.arxdata.access.AccessCategoryList) resultret.getValue();
-        List<AccessCategory> returnresult = new ArrayList();
-        for(com.assaabloy.arxdata.access.AccessCategoryType categories : types.getAccessCategory()) {
-            AccessCategory cat = new AccessCategory();
-            cat.accessId = categories.getId();
-            cat.name = categories.getName();
-            cat.description = categories.getDescription();
-            returnresult.add(cat);
+        try {
+            JAXBElement resultret = (JAXBElement) unmarsh.unmarshal(is);
+            com.assaabloy.arxdata.access.AccessCategoryList types = (com.assaabloy.arxdata.access.AccessCategoryList) resultret.getValue();
+            List<AccessCategory> returnresult = new ArrayList();
+            for(com.assaabloy.arxdata.access.AccessCategoryType categories : types.getAccessCategory()) {
+                AccessCategory cat = new AccessCategory();
+                cat.accessId = categories.getId();
+                cat.name = categories.getName();
+                cat.description = categories.getDescription();
+                returnresult.add(cat);
+            }
+
+            return returnresult;
+        } finally {
+            is.close();
         }
-        
-        return returnresult;
     }
 
     @Override
@@ -381,7 +392,11 @@ public class ArxDoorManager implements IDoorManager {
 
         //unmarshall the xml file
         Arxdata obj;
-        obj = (Arxdata) unmarsh.unmarshal(is);
+        try {
+            obj = (Arxdata) unmarsh.unmarshal(is);
+        } finally {
+            is.close();
+        }
         
         Person person = createPerson(obj.getPersons().getPerson().get(0));
         person.cards.addAll(createCardList(result));
@@ -429,7 +444,12 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         HashMap<String, List<AccessLog>> returnResult = new HashMap();
         
         for(Door door : allDoors) {
-            returnResult.put(door.externalId, generateDoorAccessLogFromResult(result, door.externalId));
+            List<AccessLog> accessLog = generateDoorAccessLogFromResult(result, door.externalId);
+            if (accessLog != null) {
+                returnResult.put(door.externalId, accessLog);
+            } else {
+                GetShopLogHandler.logPrintStatic("Warning, was not able to fetch accesslog from ARX: \n result: \n " + result, storeManager.getStoreId());
+            }
         }
         return returnResult;
     }
@@ -557,9 +577,15 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(is);
-        NodeList nodeList = document.getDocumentElement().getChildNodes();
-        return recursiveFindCards(nodeList, 0);
+        try {
+            Document document = builder.parse(is);
+            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            return recursiveFindCards(nodeList, 0);
+        } finally {
+            is.close();
+        }
+        
+        
     }
     
     private List<Card> recursiveFindCards(NodeList nodeList, int depth) throws UnsupportedEncodingException {
@@ -669,20 +695,26 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
     private List<AccessLog> generateDoorAccessLogFromResult(String result, String externalId) throws Exception {
         InputStream is = new ByteArrayInputStream( result.getBytes() );
         
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(is);
-        NodeList nodeList = document.getDocumentElement().getChildNodes();
-        List<AccessLog> retresult = recursiveFindDoorLogEntry(nodeList, externalId);
-        
-        Collections.sort(retresult, new Comparator<AccessLog>(){
-            public int compare(AccessLog o1, AccessLog o2){
-                return o1.timestamp > o2.timestamp ? -1 : 1;
-            }
-       });
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(is);
+            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            List<AccessLog> retresult = recursiveFindDoorLogEntry(nodeList, externalId);
 
-        
-        return retresult;
+            Collections.sort(retresult, new Comparator<AccessLog>(){
+                public int compare(AccessLog o1, AccessLog o2){
+                    return o1.timestamp > o2.timestamp ? -1 : 1;
+                }
+           });
+
+
+            return retresult;
+        } catch (SAXParseException sa) {
+            return null;
+        } finally {
+            is.close();
+        }
     }
 
     private List<Card> filterCards(List<Card> cards, Person tmpPerson) {

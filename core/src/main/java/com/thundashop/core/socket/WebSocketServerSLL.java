@@ -38,24 +38,25 @@ public class WebSocketServerSLL extends WebSocketServer {
 
         WebSocketServerSLL chatserver = new WebSocketServerSLL(8887); // Firefox does allow multible ssl connection only via port 443 //tested on FF16
         
-        InputStream is = new FileInputStream("/etc/nginx/ssl/getshop_com.crt");
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        X509Certificate caCert = (X509Certificate)cf.generateCertificate(is);
+        try (InputStream is = new FileInputStream("/etc/nginx/ssl/getshop_com.crt")) {
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            X509Certificate caCert = (X509Certificate)cf.generateCertificate(is);
 
-        TrustManagerFactory tmf = TrustManagerFactory
-            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-        ks.load(null); // You don't need the KeyStore instance to come from a file.
-        ks.setCertificateEntry("caCert", caCert);
+            TrustManagerFactory tmf = TrustManagerFactory
+                .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
+            ks.load(null); // You don't need the KeyStore instance to come from a file.
+            ks.setCertificateEntry("caCert", caCert);
 
-        tmf.init(ks);
+            tmf.init(ks);
 
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, tmf.getTrustManagers(), null);
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, tmf.getTrustManagers(), null);
 
-        chatserver.setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
+            chatserver.setWebSocketFactory(new DefaultSSLWebSocketServerFactory(sslContext));
 
-        chatserver.start();
+            chatserver.start();
+        }
     }
 
     private WebSocketServerSLL(int i) {

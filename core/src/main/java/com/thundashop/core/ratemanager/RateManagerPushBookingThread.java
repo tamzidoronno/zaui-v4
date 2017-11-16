@@ -41,11 +41,11 @@ public class RateManagerPushBookingThread extends Thread {
             connection.setRequestProperty("Accept", "application/xml");
 
             connection.setDoOutput(true);
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(new String(data.getBytes(), encoding));
-            outputStream.flush();
-            outputStream.close();
-
+            try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
+                outputStream.writeBytes(new String(data.getBytes(), encoding));
+                outputStream.flush();
+            }
+            
             try {
                 BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 

@@ -51,14 +51,15 @@ public class GetshopLockCom {
             entity = httpResponse.getEntity();
 
             if (entity != null) {
-                InputStream instream = entity.getContent();
-                int ch;
-                StringBuilder sb = new StringBuilder();
-                while ((ch = instream.read()) != -1) {
-                    sb.append((char) ch);
+                try (InputStream instream = entity.getContent()) {
+                    int ch;
+                    StringBuilder sb = new StringBuilder();
+                    while ((ch = instream.read()) != -1) {
+                        sb.append((char) ch);
+                    }
+                    String result = sb.toString();
+                    return result.trim();
                 }
-                String result = sb.toString();
-                return result.trim();
             }
         } catch (Exception x) {
             throw x;

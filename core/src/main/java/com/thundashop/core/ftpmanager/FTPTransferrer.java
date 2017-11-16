@@ -45,31 +45,34 @@ public class FTPTransferrer extends Thread {
     @Override
     public void run() {
         try {
-            Thread.sleep(minutesToSleep * (60*1000));
+            Thread.sleep(minutesToSleep * (60 * 1000));
             /**
-            * CAREFUL HERE... By exposing this public, you give access to upload whatever file to whoever, DO NOT MAKE THIS AS A PUBLIC API CALL.....
-            * THIS IS A MAJOR SECURITY RISK! FILEPATH IS NOT SECURE!!!!!!!
-            */
-           FTPClient client = new FTPClient();
-           client.connect(hostname, port);
-           client.login(username, password);
-           if(!useActiveMode) {
-               client.enterLocalPassiveMode();
-           }
-           client.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-           int reply = client.getReplyCode();
-           if (!FTPReply.isPositiveCompletion(reply)) {
-               GetShopLogHandler.logPrintStatic("Failed to connect to ftp server: " + hostname + " with username: " + username, storeId);
-           }
+             * CAREFUL HERE... By exposing this public, you give access to
+             * upload whatever file to whoever, DO NOT MAKE THIS AS A PUBLIC API
+             * CALL..... THIS IS A MAJOR SECURITY RISK! FILEPATH IS NOT
+             * SECURE!!!!!!!
+             */
+            FTPClient client = new FTPClient();
+            client.connect(hostname, port);
+            client.login(username, password);
+            if (!useActiveMode) {
+                client.enterLocalPassiveMode();
+            }
+            client.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+            int reply = client.getReplyCode();
+            if (!FTPReply.isPositiveCompletion(reply)) {
+                GetShopLogHandler.logPrintStatic("Failed to connect to ftp server: " + hostname + " with username: " + username, storeId);
+            }
 
-           File file = new File(filePath);
-           InputStream inputStream = new FileInputStream(file);
-           location = location.replaceAll(":", "_");
-           client.changeWorkingDirectory(location);
-           boolean done = client.storeFile(file.getName(), inputStream);
-           inputStream.close();
-           client.disconnect();
-        }catch(Exception e) {
+            File file = new File(filePath);
+            try (InputStream inputStream = new FileInputStream(file)) {
+                location = location.replaceAll(":", "_");
+                client.changeWorkingDirectory(location);
+                client.storeFile(file.getName(), inputStream);
+            } 
+            
+            client.disconnect();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

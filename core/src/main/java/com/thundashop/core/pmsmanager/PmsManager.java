@@ -59,7 +59,6 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.wubook.WubookManager;
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -181,6 +180,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     
     private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
     private String messageToSend;
+    private boolean tmpFixed = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -287,10 +287,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "1,5,10,15,20,25,30,35,40,45,50,55 * * * *", CheckPmsFiveMin.class);
-        
-        if(applicationPool.getAvailableApplications().contains(applicationPool.getApplication("66b4483d-3384-42bb-9058-2ac915c77d80"))) {
-            createScheduler("amestosync", "00 08 * * *", AmestoSync.class);
-        }
     }
 
     @Override
@@ -2239,8 +2235,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
         HashMap<String, String> attachments = new HashMap();
         try {
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-
             String str = Biweekly.write(ical).go();
             byte[] encoded = Base64.encodeBase64(str.getBytes());
             String encodedString = new String(encoded);
@@ -7264,19 +7258,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public void orderChanged(String orderId) {
-        Order order = orderManager.getOrderSecure(orderId);
-        
-        if (!order.cart.getItems().isEmpty()) {
-            return;
-        }
-        
-        bookings.values()
-                .stream()
-                .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
-                .forEach(booking -> {
-                    if (order.cart.getItems().isEmpty()) {
-                        booking.orderIds.remove(orderId);
-                    }
-                });
+//        Order order = orderManager.getOrderSecure(orderId);
+//        
+//        if (!order.cart.getItems().isEmpty()) {
+//            return;
+//        }
+//        
+//        bookings.values()
+//                .stream()
+//                .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
+//                .forEach(booking -> {
+//                    if (order.cart.getItems().isEmpty()) {
+//                        booking.orderIds.remove(orderId);
+//                    }
+//                });
     }
+
 }

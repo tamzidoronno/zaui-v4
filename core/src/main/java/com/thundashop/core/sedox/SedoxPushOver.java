@@ -61,9 +61,9 @@ public class SedoxPushOver implements Runnable {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
 
-            OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-            out.write(data);
-            out.close();
+            try (OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream())) {
+                out.write(data);
+            }
             
             InputStreamReader inputStreamReader = new InputStreamReader(conn.getInputStream());
             inputStreamReader.close();

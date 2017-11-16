@@ -450,10 +450,10 @@ public class UserStoreCollection {
         
         for (String companyId : user.company) {
             Company comp = userManager.getCompany(companyId);
-            if (comp != null && comp.name.toLowerCase().contains(searchCriteria.toLowerCase())) {
+            if (comp != null && comp.name != null && searchCriteria != null && comp.name.toLowerCase().contains(searchCriteria.toLowerCase())) {
                 return true;
             }
-            if (comp != null && comp.reference != null && comp.reference.contains(searchCriteria.toLowerCase())) {
+            if (comp != null && comp.reference != null && searchCriteria != null && comp.reference.contains(searchCriteria.toLowerCase())) {
                 return true;
             }
         }

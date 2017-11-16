@@ -114,13 +114,17 @@ public abstract class LockServerBase extends DataCommon {
 
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                int ch;
-                StringBuilder sb = new StringBuilder();
-                while ((ch = instream.read()) != -1) {
-                    sb.append((char) ch);
+                try {
+                    int ch;
+                    StringBuilder sb = new StringBuilder();
+                    while ((ch = instream.read()) != -1) {
+                        sb.append((char) ch);
+                    }
+                    String result = sb.toString();
+                    return result.trim();
+                } finally {
+                    instream.close();
                 }
-                String result = sb.toString();
-                return result.trim();
             }
             successfullyMadeRequest();
         } catch (Exception x) {

@@ -137,12 +137,13 @@ Error      : #de5353; red
 
 /*-----------------BODY-----------------*/
 .GslBooking .gslfront_1 .gslbookingBody{border-top:1px solid #ddd;display:none;}
+.GslBooking .gslfront_1 #productoverview_footer{display:none;}
 .GslBooking .gslfront_1 .productentry{background-color: #f9f9f9;position:relative;}
-.GslBooking .gslfront_1 #productentry{max-height: 800px;overflow: auto;}
-.GslBooking .gslfront_1 .productentry_main{width: 70%;float: right;min-height: 295px;}
+.GslBooking .gslfront_1 #productentry{max-height: 800px;overflow-y: auto;}
+.GslBooking .gslfront_1 .productentry_main{width: 70%;float: right;min-height: 292px;}
 
 /*Gallery*/
-.GslBooking .gslfront_1 .productentry_gallery{width: 30%;position: absolute;min-height: 100%;background-position: center;background-size: cover;}
+.GslBooking .gslfront_1 .productentry_gallery{width: 30%;position: absolute;overflow: hidden;}
 .GslBooking .gslfront_1 .productentry_gallery .image-holder{
     background-size: cover;
     background-position: center center;
@@ -151,29 +152,29 @@ Error      : #de5353; red
     padding-bottom: 66.667%;}
 .GslBooking .gslfront_1 .productentry_gallery .gallery {position: relative;white-space: nowrap;font-size: 0;}
 .GslBooking .gslfront_1 .productentry_gallery .gallery-wrapper {position: relative;overflow: hidden;}
-.GslBooking .gslfront_1 .productentry_gallery .gallery-item{opacity: 0.5;}
-.GslBooking .gslfront_1 .productentry_gallery .gallery-item.active{opacity: 1;}
-.GslBooking .gslfront_1 .productentry_gallery .item-wrapper{cursor: pointer;width: 23%;display: inline-block;}
+.GslBooking .gslfront_1 .productentry_gallery .gallery-image{opacity: 0.5;}
+.GslBooking .gslfront_1 .productentry_gallery .gallery-image.active{opacity: 1;}
+.GslBooking .gslfront_1 .productentry_gallery .image-wrapper{cursor: pointer;width: 25%;display: inline-block;}
 .GslBooking .gslfront_1 .productentry_gallery .controls{font-size: 26px;border-top: none;}
+.GslBooking .gslfront_1 .productentry_gallery .move-btn:hover{background-color:rgba(255,255,255,.4);color:rgba(0, 0, 0, 0.7) !important}
 .GslBooking .gslfront_1 .productentry_gallery .move-btn{
     display: inline-block;
     position: absolute;
-    width: 8%;
+    width: 6%;
     border: none;
-    color: #000;
+    color: transparent;
     background-color: transparent;
-    padding: 9px 0;
+    padding: 11px 0;
     bottom: 0;
-    cursor:pointer;
+    cursor:w-resize;
     text-align:center;}
-.GslBooking .gslfront_1 .productentry_gallery .move-btn.left{right: 0;}
-.GslBooking .gslfront_1 .feature .fa-search:hover{opacity: 0.4;}
+.GslBooking .gslfront_1 .productentry_gallery .move-btn.right{right: 0;cursor:e-resize}
+.GslBooking .gslfront_1 .feature .fa-search:hover{opacity: 0.5;}
 .GslBooking .gslfront_1 .feature .fa-search{
     position: absolute;
     width: 100%;
     text-align: center;
-    padding-top: 25%;
-    height: 240px;
+    padding: 23%;
     font-size: 80px;
     cursor: pointer;
     color:#000;

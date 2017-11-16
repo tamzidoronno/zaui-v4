@@ -1195,6 +1195,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         List<Route> retRoutes = routes.values().stream()
                 .filter(r -> r.completedInfo != null)
                 .filter(r -> r.completedInfo.completed)
+                .filter(r -> r.completedInfo.completedTimeStamp != null)
                 .filter(r -> r.completedInfo.completedTimeStamp.after(hoursAgo))
                 .collect(Collectors.toList());
         

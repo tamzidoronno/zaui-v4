@@ -33,7 +33,8 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeederImpl;
-import com.thundashop.core.common.GrafanaManager;
+import com.thundashop.
+        core.common.GrafanaManager;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;

@@ -24,9 +24,8 @@ if(isset($_GET['configid'])) {
     if(!is_array($ids)) {
         $ids = array();
     }
-    print_r($ids);
-    $file = $factory->getApi()->getAccountingManager()->transferSingleOrders($_GET['singleids'], $ids);
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($_GET['singleids']);
+    $file = $factory->getApi()->getAccountingManager()->transferSingleOrders($_GET['singleids'], $ids);
 }
 
 if(!$file) {

@@ -10,4 +10,5 @@ public interface AccountingTransferInterface {
     public void setOrders(List<Order> orders);
     public void setConfig(AccountingTransferConfig config);
     public SavedOrderFile generateFile();
+    public List<String> getLogEntries();
 }

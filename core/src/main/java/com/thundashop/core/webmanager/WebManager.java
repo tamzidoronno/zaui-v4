@@ -13,6 +13,7 @@ import com.thundashop.core.common.ManagerBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -115,9 +116,9 @@ public class WebManager extends ManagerBase implements IWebManager {
         } else {
             connection.setRequestProperty("Content-Length", "0");
         }
-        
-        try {
-            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+        try (InputStream stream = connection.getInputStream()) {
+            BufferedReader responseStream = new BufferedReader(new InputStreamReader(stream));
         
             String responseLine;
             StringBuilder responseBuffer = new StringBuilder();
@@ -139,20 +140,23 @@ public class WebManager extends ManagerBase implements IWebManager {
             }
             
             return responseBuffer.toString();
-        }catch(IOException ex) {
-            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-        
-            String responseLine;
-            StringBuilder responseBuffer = new StringBuilder();
+        } catch(IOException ex) {
+            try (InputStream errorStream = connection.getErrorStream()) {
+                BufferedReader responseStream = new BufferedReader(new InputStreamReader(errorStream));
 
-            while((responseLine = responseStream.readLine()) != null) {
-                responseBuffer.append(responseLine);
+                String responseLine;
+                StringBuilder responseBuffer = new StringBuilder();
+
+                while((responseLine = responseStream.readLine()) != null) {
+                    responseBuffer.append(responseLine);
+                }
+                String res = responseBuffer.toString();
+                logPrintException(ex);
+                logPrint(res);
+                
+                throw ex;
             }
-            String res = responseBuffer.toString();
-            System.out.println(res);
-            
-            throw ex;
-        }    
+        }
     }
     
     public HashMap<String, String> getLatestResponseHeader() {

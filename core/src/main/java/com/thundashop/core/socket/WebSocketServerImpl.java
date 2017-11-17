@@ -14,6 +14,7 @@ import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.WebSocketReturnMessage;
 import com.thundashop.core.common.WebSocketWrappedMessage;
 import com.thundashop.core.websocket.WebSocketClient;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
@@ -85,11 +86,16 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
 
     @Override
     public void onError(WebSocket ws, Exception excptn) {
-        try {
-            ws.close(0);
-        } finally {
+        if (excptn instanceof IOException) {
             clients.remove(ws);
+        } else {
+            try {
+                ws.close(0);
+            } finally {
+                clients.remove(ws);
+            }    
         }
+        
     }
 
     @Override

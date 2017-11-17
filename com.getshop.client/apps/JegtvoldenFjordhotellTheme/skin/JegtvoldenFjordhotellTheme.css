@@ -1,0 +1,65 @@
+.gsarea[area="header"]{background-color:#fff;}
+.gsarea[area="body"] {min-height:560px;}
+.gsarea[area="body"] .gs_page_width{max-width:1100px;margin:auto;}
+.gsarea[area="footer"]{background-color:#333;min-height:150px;}
+body{color:#111;font-size:13px;}
+.ContentManager a {color:#b14560;}
+.ContentManager h1, .PmsConfiguration h1{font-weight:500;}
+.ContentManager h2{font-weight:500;}
+.ContentManager strong{font-weight:600;font-size:15px;line-height:1.5;}
+.shop_button{
+    color:#fff;
+    border-radius:0px;
+    height:auto !important;
+    line-height:1;
+    padding:10px 30px;
+}
+.footerprovidedtext, .footerprovidedtext a{background-color:#272729;color:#fff;}
+.Menu .entry:first-child{box-shadow:inset 1px 0px 0px 0px #13619b;border-left:1px solid #2092ea;}
+.Menu .entry a div{
+    color:#fff;
+    padding:30px 16px;
+    font-size:18px;
+    box-shadow:1px 0px 0px 0px #13619b;
+    border-right:1px solid #2092ea;
+    transition:0.4s;
+}
+.Menu .entry .entries:hover{background-color:#1979c2;}
+.Menu .entry .entries{background-color:#1979c2;top:80px;width:100%;}
+.Menu .entry .entries a div{border:0;box-shadow:0 0 0;padding:10px;font-size:14px;}
+.Menu .entry .entries .entry:first-child{border:0;box-shadow:0 0 0;}
+.GoogleMaps .googlemapcanvas{height:150px;}
+
+/*PMSbooking*/
+.PmsBooking {float:right;}
+.PmsBooking .inputblock{margin:0;}
+.PmsBooking .pmsfront .dates .dates_inner{border:1px solid #1979c2;}
+.PmsBooking .pmsfront .end_date.dates .dates_inner{border-left:0;}
+.PmsBooking .pmsfront .dates input{padding:10px 0;}
+.PmsBooking .pmsfront .fa-calendar{background-color:#1979c2;padding:11px;position:relative;left:1px}
+.PmsBooking .pmsfront .fa-bed{display:none;}
+
+.shop_button:hover,
+.Menu .entry a div:hover,
+.PmsBooking .pmsfront .check_available_button:hover,
+.PmsBooking .pmsfront .fa-calendar:hover{background-color:#295396;}
+
+.PmsBooking .pmsfront .check_available_button{
+    margin-top:18px;
+    padding:8px;
+    font-size:18px;
+    border-left:1px solid #fff;
+    background-color:#1979c2;
+}
+
+.PmsBooking .inputhelpertext {
+    text-transform: uppercase;
+    color: #1a79c2;
+    letter-spacing: 2px;
+    padding-left: 2px;
+}
+.shop_button,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected{background:#1979c2;background-color:#1979c2;border-color:#1979c2;}

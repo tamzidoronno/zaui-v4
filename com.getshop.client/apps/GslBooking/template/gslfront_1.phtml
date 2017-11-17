@@ -47,7 +47,7 @@ EOD;
     <div class="gslbookingBody">
         <div class="productoverview">
             <div id="productentry"></div>
-            <div style="position: relative;">
+            <div id="productoverview_footer" style="position: relative;">
                 <div class="productentry_total">Total 0 rooms with a cost of NOK 0,-</div><div id="productentry_confirm" class="gsl_button">Continue <i class="fa fa-arrow-right"></i></div>
             </div>
         </div>
@@ -201,85 +201,58 @@ EOD;
 <script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
 
 <script>
-function loadGallery(){
-    var gallery = document.querySelector('.gallery');
-    var itemWidth = 23;
-    var leftInterval;
-    var rightInterval;
-    var scrollRate = 0.2;
-    var left;
-
-    $(document).on('click', '.gallery-item', function(e){
-        var featured = $(this).closest('.productentry_gallery');
-        featured.find('.gallery-item').removeClass('active');
+    $(document).on('mouseenter','.image-wrapper', function(){
+        var buttons = $(this).closest('.productentry_gallery').find('.move-btn');
+        buttons.css('color','rgba(0, 0, 0, 0.7)');
+    });
+    $(document).on('mouseleave','.image-wrapper', function(){
+        var buttons = $(this).closest('.productentry_gallery').find('.move-btn');
+        buttons.css('color','transparent');
+    });
+    $(document).on('click', '.gallery-image', function(e){
+        var featuredImage = $(this).closest('.productentry_gallery');
+        featuredImage.find('.gallery-image').removeClass('active');
         if (!$(this).hasClass('active')){
             $(this).addClass('active');
-            featured.find('.featured-item').css('backgroundImage', e.target.style.backgroundImage);
+            featuredImage.find('.featured-image').css('backgroundImage', e.target.style.backgroundImage);
         }
     });
-    $(document).on('mouseenter', '.move-btn.left' ,function(){
-        left = left || 0;
-        var thisGallery = $(this).closest('.productentry_gallery').find('.gallery'); 
-        leftInterval = setInterval(function() {
-            thisGallery.css('left', left + '%');
-            if (left > -itemWidth) {
-                left -= scrollRate;
-            } else {
-                left = 0;
-                
-                //Change to jquery var 4 lines under!
-                var first = gallery.children[0];
-                gallery.removeChild(first);
-                gallery.style.left = -itemWidth + '%';
-                gallery.appendChild(first);
-                gallery.style.left = '0%';
-                
-//                var first = $('.gallery item-wrapper:first-child');
-//                first.detach();
-//                thisGallery.css('left',-itemWidth + '%');
-//                thisGallery.append(first);
-//                thisGallery.css('left', '0%');
-//                console.log(first);
-            }
-        }, 1);
-    });
-    $(document).on('mouseenter', '.move-btn.right', function(){
-        var thisGallery = $(this).closest('.productentry_gallery').find('.gallery'); 
-        if (left > -itemWidth && left < 0) {
-            left = left  - itemWidth;
-            
-            //Change to jquery var 3 lines under!
-            var last = gallery.children[gallery.children.length - 1];
-            gallery.removeChild(last);
-            gallery.insertBefore(last, gallery.children[0]);
-            
-            thisGallery.css('left', left + '%');
-        }
-        left = left || 0;
-        leftInterval = setInterval(function() {
-            thisGallery.css('left', left + '%');
-
-            if (left < 0) {
-                left += scrollRate;
-            } else {
-                left = -itemWidth;
-                
-                //Change to jquery var 4 lines under!
-                var last = gallery.children[gallery.children.length - 1];
-                gallery.removeChild(last);
-                gallery.insertBefore(last, gallery.children[0]);
-                gallery.style.left = '-23%';
+    var leftInterval;
+    $(document).on('mouseenter', '.move-btn', function(){
+        var target = $(this);
+        var imageWidth = 25;
+        var scrollRate = 0.15;
+        var gallery = target.closest('.productentry_gallery').find('.gallery');
+        var left = gallery.position().left / 3.5 || 0;
+        
+        leftInterval = setInterval(function(){
+            gallery.css('left', left + '%');
+            if(target.is('.move-btn.right')){
+                if(left > -imageWidth){
+                    left -= scrollRate;
+                }else{
+                    left = 0;
+                    var firstImage = gallery.find('.image-wrapper:first-child').detach();
+                    gallery.css('left',-imageWidth + '%');
+                    firstImage.appendTo(gallery);
+                    gallery.css('left', '0%');
+                }
+            }else if(target.is('.move-btn.left')){
+                if(left < 0){
+                    left += scrollRate;
+                }else{
+                    //contains a bug creating lag in the image gallery
+                    left = -imageWidth;
+                    var lastImage = gallery.find('.image-wrapper:last-child').detach();
+                    lastImage.prependTo(gallery);
+                    gallery.css('left','25%');
+                }
             }
         }, 1);
     });
     $(document).on('mouseleave', '.move-btn',function(){
         clearInterval(leftInterval);
-        clearInterval(rightInterval);
     });
-}
-</script>
-
-<script>
     $('#guest_zipcode').on('keyup', function(){
         var val = $(this).val();
         if(val.length !== 4) {
@@ -460,9 +433,11 @@ function loadGallery(){
         $('.destinationInfoBox').hide();
     });
     $(document).ready(function(){
-        var date = new Date();
-        var currentDate = date.setDate(date.getDate()-1);
-        var endDate = date.setDate(date.getDate()+1);
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate()-1);
+        
+        var endDate = new Date();
+        endDate.setDate(endDate.getDate()+1);
         
         $('#date_picker').daterangepicker({
             "autoApply":true,
@@ -522,6 +497,7 @@ function loadGallery(){
         var multipleRooms = ' rooms ';
         if(totalSelectedRooms == 1){multipleRooms = ' room '}
         $('.productentry_total').html('Total '+ totalSelectedRooms + multipleRooms + 'with a cost of NOK '+ totalCost + ',-');
+        $('#productoverview_footer').slideDown('slow');
     });
     $('#search_rooms').on('click', function(){
         var time = new Date().toLocaleTimeString('en-us');
@@ -572,7 +548,7 @@ function loadGallery(){
                         for(var i = 0; i <= room.images.length -1;i++){
                             var active = "";
                             if(i == 0){active = " active";}
-                            currentImages += '<div class="item-wrapper"><figure class="gallery-item image-holder r-3-2'+ active +' transition" style="background-image:url(https://wilhelmsenhouse.getshop.com/displayImage.php?id='+ room.images[i].fileId +')"></figure></div>';
+                            currentImages += '<div class="image-wrapper"><figure class="gallery-image image-holder'+ active +'" style="background-image:url(https://wilhelmsenhouse.getshop.com/displayImage.php?id='+ room.images[i].fileId +')"></figure></div>';
                         }
                         for(var utility in room.utilities){
                             utilities += '<i class="fa fa-'+ utility +'" title="'+room.utilities[utility]+'"></i>';
@@ -582,14 +558,14 @@ function loadGallery(){
                             <div class='productentry_gallery'>
                                 <div class="feature">
                                     <i class="fa fa-search"></i>
-                                    <figure class="featured-item image-holder r-3-2 transition" style="background-image:url(https://wilhelmsenhouse.getshop.com/displayImage.php?id=`+ firstFile +`)"></figure>
+                                    <figure class="featured-image image-holder" style="background-image:url(https://wilhelmsenhouse.getshop.com/displayImage.php?id=`+ firstFile +`)"></figure>
                                 </div>
                                 <div class="gallery-wrapper">
                                     <div class="gallery">
                                         `+ currentImages +`
                                     </div>
                                 </div>
-                                <div class="controls"><div class="move-btn left"><i class="fa fa-angle-right"></i></div><div class="move-btn right"><i class="fa fa-angle-left"></i></div></div>
+                                <div class="controls"><div class="move-btn left"><i class="fa fa-caret-left"></i></div><div class="move-btn right"><i class="fa fa-caret-right"></i></div></div>
                             </div>
                             <div class="productentry_main">
                                 <div class="productentry_header">
@@ -609,10 +585,8 @@ function loadGallery(){
                         </div>`;
 
                         $('#productentry').append(roomBox);
-//                        console.log(room);
                     }
                 }
-                loadGallery();
             }
         });
     });

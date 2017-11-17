@@ -207,7 +207,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (order.isVirtual) {
                     continue;
                 }
-                doubleCheckPriceMatrixAndItemsAdded(order);
+                order.isMatrixAndItemsValid();
                 orders.put(order.id, order);
             }
         }
@@ -2010,12 +2010,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return null;
-    }
-
-    public void doubleCheckPriceMatrixAndItemsAdded(Order order) {
-        if(!order.isMatrixAndItemsValid()) {
-            System.out.println("Order is incorrect: " + order.incrementOrderId);
-        }
     }
 
     private void emptyPullServerQueue() {

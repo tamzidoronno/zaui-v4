@@ -89,8 +89,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     }
     
     public String htmlPost(String url, String data)  throws Exception {
-        RateManagerPushBookingThread pusher = new RateManagerPushBookingThread(url, data);
-        pusher.start();
+       // This probablu breaks the system as resources are not handled properly
+//        RateManagerPushBookingThread pusher = new RateManagerPushBookingThread(url, data);
+//        pusher.start();
         return "";
     }
     

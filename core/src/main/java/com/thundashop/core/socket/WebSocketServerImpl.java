@@ -86,16 +86,7 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
 
     @Override
     public void onError(WebSocket ws, Exception excptn) {
-        if (excptn instanceof IOException) {
-            clients.remove(ws);
-        } else {
-            try {
-                ws.close(0);
-            } finally {
-                clients.remove(ws);
-            }    
-        }
-        
+//        clients.remove(ws);
     }
 
     @Override

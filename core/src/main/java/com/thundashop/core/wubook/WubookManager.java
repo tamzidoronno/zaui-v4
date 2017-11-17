@@ -350,8 +350,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if (!result.get(0).equals(0)) {
             logText("0:" + result.get(0));
             logText("1:" + result.get(1));
-            Exception ex = new Exception();
-            logPrintException(ex);
         } else {
             Vector bookings = (Vector) result.get(1);
             for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {

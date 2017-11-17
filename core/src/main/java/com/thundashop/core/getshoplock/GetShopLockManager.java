@@ -391,13 +391,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         GetShopDevice device = getDeviceForServer(server.serverSource, deviceId);
         
-        if (device == null) {
-            throw new RuntimeException("Could not start fetching of code, did not find device for deviceId: " + deviceId);
+        if (device != null) {
+            GetShopLockRazberryLogFetcher fetch = new GetShopLockRazberryLogFetcher(server, device);
+            createProcessor(fetch);
         }
-        
-        GetShopLockRazberryLogFetcher fetch = new GetShopLockRazberryLogFetcher(server, device);
-        createProcessor(fetch);
-        
     }
 
     @Override

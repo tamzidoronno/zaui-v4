@@ -156,6 +156,12 @@ public class WebManager extends ManagerBase implements IWebManager {
                 
                 throw ex;
             }
+        } finally {
+            try {
+                connection.disconnect();
+            } catch (Exception ex) {
+                logPrintException(ex);
+            }
         }
     }
     

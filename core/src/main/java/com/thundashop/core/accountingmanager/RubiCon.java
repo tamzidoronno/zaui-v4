@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @ForAccountingSystem(accountingSystem="rubicon")
-public class RubiCon implements AccountingTransferInterface {
+public class RubiCon extends AccountingTransferOptions implements AccountingTransferInterface {
 
     private List<User> users;
     private AccountingManagers managers;

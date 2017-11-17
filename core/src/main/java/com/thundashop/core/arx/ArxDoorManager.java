@@ -258,6 +258,21 @@ public class ArxDoorManager implements IDoorManager {
             }
         }
         
+        //This is another solution for haugerud idrettsforening, if it alos works... rewrite it :P
+        if(code.equals("543211")) {
+            try {
+                if(type.equalsIgnoreCase("open")) {
+                    doorAction("H1001 HIF 1.etg Hovedinngang", "forceOpenOn");
+                } else {
+                    doorAction("H1001 HIF 1.etg Hovedinngang", "forceOpenOff");
+                }
+                return "success";
+            }catch(Exception e) {
+                e.printStackTrace();
+                return "Unable to connect to server";
+            }
+        }
+        
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR, 0);
         cal.set(Calendar.MINUTE, 0);

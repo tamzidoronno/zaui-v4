@@ -145,6 +145,8 @@
 "1040","Destination can not be pooled, it has been marked as arrived or serviced."
 "1041","Can not setup this, lock does not have enough userslots for this group. Check log for more information"
 "1042","The LockGroup does not exists"
+"1043","Its not specified a forskningsperiode for the given periode of time, please check the start and end date that it has periodes."
+"1044","Invalid webadress"
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

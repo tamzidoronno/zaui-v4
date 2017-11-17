@@ -531,7 +531,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(minstay == null) {
                     return "";
                 }
-                System.out.println(cal.getTime() + " : " + minstay + " : " + rdata.bookingEngineTypeId);
+                logText(cal.getTime() + " : " + minstay + " : " + rdata.bookingEngineTypeId);
                 Hashtable dayEntry = new Hashtable();
                 dayEntry.put("min_stay", minstay);
                 list.add(dayEntry);

@@ -734,6 +734,11 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 continue;
         
             C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start, end);
+            
+            if (forskningsPeriode == null) {
+                throw new ErrorException(1043);
+            }
+            
             Date toCalclateFrom = getHighestDate(start, periode.from);
             Date toCalculateTo = getLowestDate(end, periode.to);
             double days = daysBetween(toCalclateFrom, toCalculateTo);

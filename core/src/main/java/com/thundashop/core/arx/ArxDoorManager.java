@@ -114,7 +114,11 @@ public class ArxDoorManager implements IDoorManager {
             NodeList nodeList = document.getDocumentElement().getChildNodes();
             doors = recursiveFindDoors(nodeList, 0);
         }catch(SAXParseException e) {
-            GetShopLogHandler.logPrintStatic("Failed to parse for adress:" + hostName, e.getMessage());
+            if (pmsManager != null) {
+                GetShopLogHandler.logStack(e, pmsManager.getStoreId());
+            } else {
+                GetShopLogHandler.logStack(e, null);
+            }
         } finally {
             is.close();
         }
@@ -224,7 +228,12 @@ public class ArxDoorManager implements IDoorManager {
             hostName += "pulseOpen";
         }
         
-        GetShopLogHandler.logPrintStatic(hostName, null);
+        if (pmsManager != null) {
+            GetShopLogHandler.logPrintStatic(hostName, pmsManager.getStoreId());
+        } else {
+            GetShopLogHandler.logPrintStatic(hostName, null);
+        }
+        
         httpLoginRequest(hostName,"");
     }
 

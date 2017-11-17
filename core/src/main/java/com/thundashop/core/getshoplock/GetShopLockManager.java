@@ -629,6 +629,18 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
 
         private boolean hasConnectivity() {
+            if (hostname == null || hostname.isEmpty()) {
+                return false;
+            }
+            
+            if (username == null || username.isEmpty()) {
+                return false;
+            }
+            
+            if (password == null || password.isEmpty()) {
+                return false;
+            }
+            
              try {
                 logPrint("Checking for connectivity for " + device.name + " (" + device.zwaveid + ")");
                 String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].SendNoOperation()";
@@ -749,15 +761,27 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
     
     public String getUsername(String serverSource) {
-        return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxUsername;
+        if (pmsManager != null && pmsManager.getConfigurationSecure() != null && pmsManager.getConfigurationSecure().getLockServer(serverSource) != null) {
+            return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxUsername;
+        }
+        
+        return null;
     }
     
     public String getHostname(String serverSource) {
-        return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxHostname;
+        if (pmsManager != null && pmsManager.getConfigurationSecure() != null && pmsManager.getConfigurationSecure().getLockServer(serverSource) != null) {
+            return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxHostname;
+        }
+        
+        return null;
     }
     
     public String getPassword(String serverSource) {
-        return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxPassword;
+        if (pmsManager != null && pmsManager.getConfigurationSecure() != null && pmsManager.getConfigurationSecure().getLockServer(serverSource) != null) {
+            return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxPassword;
+        }
+        
+        return null;
     }
     
     private String httpLoginRequest(String address, String serverSource) throws Exception {
@@ -974,7 +998,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String user = getUsername(toSet.serverSource);
                 String pass = getPassword(toSet.serverSource);
                 String host = getHostname(toSet.serverSource);
-                boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
+                boolean useNewQueueCheck = pmsManager.getConfigurationSecure() != null ? pmsManager.getConfigurationSecure().useNewQueueCheck : false;
                 
                 GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck, storeId);
                 mgr.start();

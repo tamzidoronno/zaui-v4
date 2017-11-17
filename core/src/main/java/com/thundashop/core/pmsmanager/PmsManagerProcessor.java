@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 public class PmsManagerProcessor {
 
@@ -732,6 +734,14 @@ public class PmsManagerProcessor {
             if(booking.hasForcedAccessedRooms()) {
                 forceSend = true;
             }
+            if(manager.getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay > 0) {
+                Date start = booking.getStartDate();
+                int daysBetween = (int)( (start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                if(daysBetween >= manager.getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay) {
+                    forceSend = true;
+                }
+            }
+            
             
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;

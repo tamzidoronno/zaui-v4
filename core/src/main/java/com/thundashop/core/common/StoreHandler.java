@@ -598,7 +598,7 @@ public class StoreHandler {
         clearSessionObject();
     }
 
-    public synchronized void sessionRemoved(String sessionId) {
+    public void sessionRemoved(String sessionId) {
         sessions.remove(sessionId);
     }
 }

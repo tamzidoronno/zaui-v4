@@ -262,9 +262,9 @@ public class ArxDoorManager implements IDoorManager {
         if(code.equals("543211")) {
             try {
                 if(type.equalsIgnoreCase("open")) {
-                    doorAction("H1001 HIF 1.etg Hovedinngang", "forceOpenOn");
+                    doorAction("H1001_HIF_1", "forceOpenOn");
                 } else {
-                    doorAction("H1001 HIF 1.etg Hovedinngang", "forceOpenOff");
+                    doorAction("H1001_HIF_1", "forceOpenOff");
                 }
                 return "success";
             }catch(Exception e) {

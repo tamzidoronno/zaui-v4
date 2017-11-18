@@ -188,9 +188,6 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                     order.dateTransferredToAccount = new Date();
                     managers.orderManager.saveOrder(order);
                     
-//                    PowerOfficeGoPoster poster = new PowerOfficeGoPoster(resp.data, token);
-//                    poster.start();
-                    
                     return resp.data;
                 }
             } else {

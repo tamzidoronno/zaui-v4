@@ -16,7 +16,7 @@ import java.util.List;
  * @author ktonder
  */
 public class GetShopModules {
-    private HashMap<String, GetShopModule> modules = new HashMap();
+    private static HashMap<String, GetShopModule> modules = new HashMap();
 
     public GetShopModules() {
         addModule("pms", "PMS", true, 2, "0f70b6b0-97a6-4cd1-9b22-cc30332054b5", "fa-building"); //GetShopThemePms
@@ -28,6 +28,10 @@ public class GetShopModules {
     }
 
     private void addModule(String nameAndId, String displayName, boolean externalPageTemplate, int sequence, String themeApplicationId, String fontAwesome) {
+        if (GetShopModules.modules.containsKey(nameAndId)) {
+            return;
+        }
+        
         GetShopModule module = new GetShopModule();
         module.name = displayName;
         module.id = nameAndId;
@@ -36,13 +40,11 @@ public class GetShopModules {
         module.themeApplicationId = themeApplicationId;
         module.fontAwesome = fontAwesome;
         
-        modules.put(module.id, module);
-        
-        
+        GetShopModules.modules.put(module.id, module);
     }
 
     public List<GetShopModule> getModules() {
-        ArrayList retListe = new ArrayList(modules.values());
+        ArrayList retListe = new ArrayList(GetShopModules.modules.values());
         
         Collections.sort(retListe, (GetShopModule m1, GetShopModule m2) -> {
             return m1.sequence.compareTo(m2.sequence);
@@ -52,7 +54,7 @@ public class GetShopModules {
     }
 
     public boolean shouldStoreRemote(String shopModule) {
-        GetShopModule module = modules.get(shopModule);
+        GetShopModule module = GetShopModules.modules.get(shopModule);
         
         if (module == null) {
             return false;
@@ -62,7 +64,7 @@ public class GetShopModules {
     }
 
     public String getThemApplicationId(String currentGetShopModule) {
-        GetShopModule module = modules.get(currentGetShopModule);
+        GetShopModule module = GetShopModules.modules.get(currentGetShopModule);
         
         if (module == null) {
             return "";

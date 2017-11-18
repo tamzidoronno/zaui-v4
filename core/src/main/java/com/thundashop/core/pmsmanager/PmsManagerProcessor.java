@@ -210,7 +210,6 @@ public class PmsManagerProcessor {
                 if (room.notificationsSent.contains(key)) {
                     continue;
                 }
-                System.out.println("fdsaf");
                 booking = manager.finalize(booking);
                 save = true;
                 manager.doNotification(key, booking, room);

@@ -80,6 +80,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Autowired
     OrderManager orderManager;
     private int tokenCount;
+    private Date availabiltyyHasBeenChangedEnd;
+    private Date availabiltyyHasBeenChangedStart;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -1368,10 +1370,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return newbooking;
     }
 
-    public void setAvailabilityChanged() {
-        if(availabilityHasBeenChanged == null) {
-            availabilityHasBeenChanged = new Date();
+    public void setAvailabilityChanged(Date start, Date end) {
+        if(availabiltyyHasBeenChangedStart == null || (start != null && start.before(availabiltyyHasBeenChangedStart))) {
+            availabiltyyHasBeenChangedStart = start;
         }
+        if(availabiltyyHasBeenChangedEnd == null || (end != null && end.after(availabiltyyHasBeenChangedEnd))) {
+            availabiltyyHasBeenChangedEnd = end;
+        }
+        logPrint("Avialability changed at : " + start + " - " + end);
+        availabilityHasBeenChanged = new Date();
     }
 
     private boolean updateAvailabilityInternal(int numberOfDays) throws Exception {
@@ -1464,7 +1471,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private String sparseUpdateAvailabilityInternal() throws Exception {
 
-        if(!frameworkConfig.productionMode) { return ""; }
+//        if(!frameworkConfig.productionMode) { return ""; }
         
         if(!connectToApi()) {
             return "Faield to connect to api"; 
@@ -1484,6 +1491,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 Date start = startcal.getTime();
                 endCal.add(Calendar.DAY_OF_YEAR, 1);
                 Date end = endCal.getTime();
+                
+                if(availabiltyyHasBeenChangedEnd != null && (end.after(availabiltyyHasBeenChangedEnd) &&
+                        !PmsBookingRooms.isSameDayStatic(availabiltyyHasBeenChangedEnd, end))) {
+                    startcal.add(Calendar.DAY_OF_YEAR, 1);
+                    continue;
+                }
+                
+                if(availabiltyyHasBeenChangedStart != null && (start.before(availabiltyyHasBeenChangedStart) &&
+                        !PmsBookingRooms.isSameDayStatic(availabiltyyHasBeenChangedStart, start))) {
+                    startcal.add(Calendar.DAY_OF_YEAR, 1);
+                    continue;
+                }
+                
+                System.out.println("Checking: " + start + " - " + end);
+                
                 int count = 0;
                 try {
                     count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end, false);
@@ -1510,6 +1532,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 fieldsUpdated.add(field);
                 startcal.add(Calendar.DAY_OF_YEAR, 1);
             }
+            System.out.println("-----");
         }
 
         boolean found = false;
@@ -1547,17 +1570,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
             params.addElement(tosend);
             
-            Vector result = executeClient("update_sparse_rooms_values", params);
-            if ((Integer)result.get(0) != 0) {
-                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
-            } else {
-                lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
-                saveObject(lastAvailability);
-                logText("Availability successfully updated.");
-            }
+//            Vector result = executeClient("update_sparse_rooms_values", params);
+//            if ((Integer)result.get(0) != 0) {
+//                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
+//            } else {
+//                lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
+//                saveObject(lastAvailability);
+//                logText("Availability successfully updated.");
+//            }
             
         }
         availabilityHasBeenChanged = null;
+        availabiltyyHasBeenChangedEnd = null;
+        availabiltyyHasBeenChangedStart = null;
         return "";    
     }
 
@@ -1567,7 +1592,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "";
         }
         if(availabilityHasBeenChanged == null) {
-            return "";
+//            return "";
         }
 
         return sparseUpdateAvailabilityInternal();
@@ -1736,7 +1761,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(field.roomId.equals(rid) && field.dateAsString.equals(roomDateString)) {
                     logPrint("Update availability for room: " + field.dateAsString + " for room : " + rid);
                     field.availability = -1;
-                    setAvailabilityChanged();
+                    setAvailabilityChanged(room.date.start, room.date.end);
                     forceUpdateDone = true;
                 }
             }

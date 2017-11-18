@@ -1471,7 +1471,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private String sparseUpdateAvailabilityInternal() throws Exception {
 
-//        if(!frameworkConfig.productionMode) { return ""; }
+        if(!frameworkConfig.productionMode) { return ""; }
         
         if(!connectToApi()) {
             return "Faield to connect to api"; 
@@ -1504,7 +1504,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     continue;
                 }
                 
-                System.out.println("Checking: " + start + " - " + end);
+                logPrint("Checking: " + start + " - " + end);
                 
                 int count = 0;
                 try {
@@ -1532,7 +1532,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 fieldsUpdated.add(field);
                 startcal.add(Calendar.DAY_OF_YEAR, 1);
             }
-            System.out.println("-----");
         }
 
         boolean found = false;
@@ -1570,14 +1569,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
             params.addElement(tosend);
             
-//            Vector result = executeClient("update_sparse_rooms_values", params);
-//            if ((Integer)result.get(0) != 0) {
-//                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
-//            } else {
-//                lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
-//                saveObject(lastAvailability);
-//                logText("Availability successfully updated.");
-//            }
+            Vector result = executeClient("update_sparse_rooms_values", params);
+            if ((Integer)result.get(0) != 0) {
+                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
+            } else {
+                lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
+                saveObject(lastAvailability);
+                logText("Availability successfully updated.");
+            }
             
         }
         availabilityHasBeenChanged = null;
@@ -1592,7 +1591,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "";
         }
         if(availabilityHasBeenChanged == null) {
-//            return "";
+            return "";
         }
 
         return sparseUpdateAvailabilityInternal();

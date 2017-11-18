@@ -10,12 +10,9 @@ import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -177,16 +174,7 @@ public class StoreHandler {
             throw gex;
         }
     }
-
-    private Class loadCacheClass(String objectName) throws ErrorException {
-        try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            return classLoader.loadClass("com.thundashop." + objectName + "Cache");
-        } catch (ClassNotFoundException ex) {
-        }
-        return null;
-    }
-
+    
     private Method getMethodToExecute(Class aClass, String method, Class[] types, Object[] argumentValues) throws ErrorException {
         try {
             for (Method emethod : aClass.getMethods()) {
@@ -238,62 +226,6 @@ public class StoreHandler {
         }
     }
     
-    private Object invokeMethodUtsiktenDebug(Method executeMethod, Class aClass, Object[] argObjects, Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
-        String scopedStoreId = "ALL";
-        try {
-            ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
-            scopedStoreId = manager.getStoreId();
-            
-            List<String> roomsWithPriceMatrixBefore = new ArrayList();
-            GetShopSessionScope sessionScope = AppContext.appContext.getBean(GetShopSessionScope.class);
-            PmsManager pmsManager = sessionScope.getNamedSessionBean("default", PmsManager.class);
-            if(inObject.interfaceName != null && inObject.interfaceName.toLowerCase().contains("pmsmanager")) {
-                roomsWithPriceMatrixBefore = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
-            }
-
-            Object result = executeMethod.invoke(manager, argObjects);
-            result = manager.preProcessMessage(result, executeMethod);
-            
-            List<String> roomsWithPriceMatrixAfter = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
-            roomsWithPriceMatrixBefore.removeAll(roomsWithPriceMatrixAfter);
-
-            if (!roomsWithPriceMatrixBefore.isEmpty()) {
-                System.out.println("===================================================================================");
-                System.out.println("Missing pricematrix after: " + executeMethod);
-                System.out.println("Rooms: " + roomsWithPriceMatrixBefore);
-                for(String roomId : roomsWithPriceMatrixBefore) {
-                    PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
-                    System.out.println(booking.rowCreatedDate);
-                }
-                System.out.println("===================================================================================");
-            }
-            
-            TranslationHandler handle = new TranslationHandler();
-            updateLanguage(manager, handle, result);
-            return result;
-        } catch (IllegalAccessException ex) {
-            throw new ErrorException(84);
-        } catch (IllegalArgumentException ex) {
-            throw new ErrorException(85);
-        } catch (InvocationTargetException ex) {
-            Throwable cause = ex.getCause();
-            
-            if (cause instanceof ErrorException) {
-                throw (ErrorException) cause;
-            } else {
-                printStack(cause, scopedStoreId);
-                ex.printStackTrace();
-            }
-
-            ErrorException aex = new ErrorException(86);
-            aex.additionalInformation = cause.getLocalizedMessage() + " <br> " + stackTraceToString(cause);
-            throw aex;
-        } catch (Exception ex) {
-            printStack(ex, scopedStoreId);
-            throw ex;
-        }
-    }
-
     private void updateLanguage(ManagerSubBase manager, TranslationHandler handle, Object result) {
         if (manager.getSession() == null)
             return;
@@ -664,5 +596,9 @@ public class StoreHandler {
             manager.logout();
         }
         clearSessionObject();
+    }
+
+    public synchronized void sessionRemoved(String sessionId) {
+        sessions.remove(sessionId);
     }
 }

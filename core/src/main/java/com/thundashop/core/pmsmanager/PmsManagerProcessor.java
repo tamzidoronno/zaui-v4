@@ -24,48 +24,88 @@ public class PmsManagerProcessor {
     private Date lastProcessed;
     private List<PmsBooking> cachedResult;
     private List<PmsBooking> cachedResult_includepaidfor;
+    private long start;
 
     PmsManagerProcessor(PmsManager manager) {
         this.manager = manager;
     }
 
     public void doProcessing() {
+        start = System.currentTimeMillis();
         clearCachedObject();
+        checkTimer("Cleared cache");
         try { runAutoPayWithCard(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("Autopay cards");
         clearCachedObject();
+        checkTimer("Clear cache 2");
         try { autoMarkBookingsAsPaid(); }catch(Exception e) {manager.logPrintException(e); }
+        checkTimer("autoMarkBookingsAsPaid");
         clearCachedObject(); 
+        checkTimer("Clear cache 2");
         try { pingServers(); } catch(Exception e) {}
+        checkTimer("pingServers");
         try { processAutoAssigning(); }catch(Exception e) { manager.logPrintException(e); }
-        try { processStarting(-4, 0, false); }catch(Exception e) { manager.logPrintException(e); }
-        try { processStarting(0, 4, false); }catch(Exception e) { manager.logPrintException(e); }
-        try { processStarting(4, 12, false); }catch(Exception e) { manager.logPrintException(e); }
-        try { processStarting(12, 12 * 2, false); }catch(Exception e) { manager.logPrintException(e);  }
-        try { processStarting(24, 24 * 2, false); }catch(Exception e) { manager.logPrintException(e); }
-        try { processStarting(48, 24 * 3, false); }catch(Exception e) { manager.logPrintException(e); }
-        try { processStarting(0, 12, true); }catch(Exception e) { manager.logPrintException(e);  }
-        try { processStarting(12, 12 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
-        try { processStarting(24, 24 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
-        try { processStarting(48, 24 * 3, true); }catch(Exception e) { manager.logPrintException(e); }
-        try { processEndings(0, 24 * 1); }catch(Exception e) { manager.logPrintException(e);  }
-        try { processEndings(24, 24 * 2); }catch(Exception e) { manager.logPrintException(e); }
-        try { processEndings(48, 24 * 3); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processAutoAssigning");
         try { processAutoDeletion(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processAutoDeletion");
         try { processLockSystem(); }catch(Exception e) {manager.logPrintException(e); }
+        checkTimer("processLockSystem");
         try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("sendPaymentLinkOnUnpaidBookings");
     }
     
     public void hourlyProcessor() {
+        start = System.currentTimeMillis();
         try { processAutoExtend(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processAutoExtend");
         try { processIntervalCleaning(false); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processIntervalCleaning(false)");
         try { processIntervalCleaning(true); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processIntervalCleaning(true)");
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("makeSureCleaningsAreOkey");
         try { checkForIncosistentBookings(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("checkForIncosistentBookings");
         try { checkForRoomToClose(); }catch(Exception e) {manager.logPrintException(e); }
+        checkTimer("checkForRoomToClose");
         try { updateInvoices(); }catch(Exception e) {manager.logPrintException(e); }
+        checkTimer("updateInvoices");
         try { checkForDeadCodes(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("checkForDeadCodes");
         try { warnOrderNotPaidFor(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("warnOrderNotPaidFor");
     }
+    
+    public void processStartEndings() {
+        checkTimer("processAutoAssigning");
+        try { processStarting(-4, 0, false); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processStarting (-4,0)");
+        try { processStarting(0, 4, false); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processStarting (0,4)");
+        try { processStarting(4, 12, false); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processStarting (4,12)");
+        try { processStarting(12, 12 * 2, false); }catch(Exception e) { manager.logPrintException(e);  }
+        checkTimer("processStarting (12,24)");
+        try { processStarting(24, 24 * 2, false); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processStarting (24,48)");
+        try { processStarting(48, 24 * 3, false); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processStarting (48,72)");
+        try { processStarting(0, 12, true); }catch(Exception e) { manager.logPrintException(e);  }
+        checkTimer("processStarting (0,12,true)");
+        try { processStarting(12, 12 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
+        checkTimer("processStarting (12,24,true)");
+        try { processStarting(24, 24 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
+        checkTimer("processStarting (24,48,true)");
+        try { processStarting(48, 24 * 3, true); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processStarting (48,72,true)");
+        try { processEndings(0, 24 * 1); }catch(Exception e) { manager.logPrintException(e);  }
+        checkTimer("processEndings (0,24,true)");
+        try { processEndings(24, 24 * 2); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processEndings (24,48,true)");
+        try { processEndings(48, 24 * 3); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processEndings (48,72,true)");
+    }
+    
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
         int hoursAheadCheck = hoursAhead;
@@ -103,7 +143,6 @@ public class PmsManagerProcessor {
                 if (room.isEnded()) {
                     continue;
                 }
-                booking = manager.finalize(booking);
                 String key = "room_starting_" + maxAhead + "_hours";
                 if(started) {
                     key = "room_started_" + maxAhead + "_hours";
@@ -111,6 +150,7 @@ public class PmsManagerProcessor {
                 if (room.notificationsSent.contains(key)) {
                     continue;
                 }
+                booking = manager.finalize(booking);
                 save = true;
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
@@ -166,11 +206,12 @@ public class PmsManagerProcessor {
                 if (!room.isEnded()) {
                     continue;
                 }
-                booking = manager.finalize(booking);
                 String key = "room_ended_" + hoursAhead + "_hours";
                 if (room.notificationsSent.contains(key)) {
                     continue;
                 }
+                System.out.println("fdsaf");
+                booking = manager.finalize(booking);
                 save = true;
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
@@ -947,7 +988,7 @@ public class PmsManagerProcessor {
         
         List<PmsBooking> bookingsCheckingIn = manager.getAllBookings(filter);
         List<PmsBooking> nonRefBookings = getLatestNonRefBookings();
-        
+        checkTimer("Get all bookings to check for non paid");
         bookingsCheckingIn.addAll(nonRefBookings);
         
         for(PmsBooking book : bookingsCheckingIn) {
@@ -1187,5 +1228,19 @@ public class PmsManagerProcessor {
                 }
             }
         }
+    }
+
+    private void checkTimer(String text) {
+        long diff = System.currentTimeMillis() - start;
+        if(diff > 50) {
+            manager.logPrint("Processor:" + diff + " : " + text);
+        }
+        start = System.currentTimeMillis();
+    }
+    
+    private void checkTimerInner(String text) {
+        long diff = System.currentTimeMillis() - start;
+        manager.logPrint("\t Processor inner:" + diff + " : " + text);
+        start = System.currentTimeMillis();
     }
 }

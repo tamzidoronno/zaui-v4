@@ -287,7 +287,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         createScheduler("pmsmailstats", "1 23 * * *", PmsMailStatistics.class);
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
-        createScheduler("pmsprocessor3", "1,5,10,15,20,25,30,35,40,45,50,55 * * * *", CheckPmsFiveMin.class);
+        createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
     }
 
     @Override
@@ -4716,6 +4716,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 }
             }
         }
+        PmsManagerProcessor processor = new PmsManagerProcessor(this);
+        processor.processStartEndings();
     }
 
     private void markAsArrived(String card) {

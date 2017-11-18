@@ -712,7 +712,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         if (forWorkPackageId != null) {
             User user = userManager.getUserById(userId);
             if (user == null || user.companyObject == null) {
-                throw new RuntimeException("Generating a report with users that are not connected to a company");
+                throw new ErrorException(1046);
             }
             
             double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, start, end);
@@ -734,6 +734,11 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 continue;
         
             C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start, end);
+            
+            if (forskningsPeriode == null) {
+                throw new ErrorException(1043);
+            }
+            
             Date toCalclateFrom = getHighestDate(start, periode.from);
             Date toCalculateTo = getLowestDate(end, periode.to);
             double days = daysBetween(toCalclateFrom, toCalculateTo);
@@ -1130,7 +1135,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         if (retObjects.size() > 1) {
-            throw new RuntimeException("The system does not support that a user has multiple periodes within an active periode.");
+            throw new ErrorException(1045);
         }
         
         if (retObjects.isEmpty())

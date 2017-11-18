@@ -1232,14 +1232,14 @@ public class PmsManagerProcessor {
     private void checkTimer(String text) {
         long diff = System.currentTimeMillis() - start;
         if(diff > 50) {
-            manager.logPrint("Processor:" + diff + " : " + text);
+//            manager.logPrint("Processor:" + diff + " : " + text);
         }
         start = System.currentTimeMillis();
     }
     
     private void checkTimerInner(String text) {
         long diff = System.currentTimeMillis() - start;
-        manager.logPrint("\t Processor inner:" + diff + " : " + text);
+//        manager.logPrint("\t Processor inner:" + diff + " : " + text);
         start = System.currentTimeMillis();
     }
 }

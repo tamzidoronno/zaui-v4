@@ -1,6 +1,17 @@
-.PmsBookingProductList .productentry { border: solid 1px; min-height: 80px; margin-bottom:10px; background-color:#f5f5f5; border-color:#efefef; padding: 10px; position:relative; }
+.PmsBookingProductList .productentry { border: solid 1px; min-height: 80px; margin-bottom:10px; background-color:#f5f5f5; border-color:#efefef; padding: 10px; position:relative;}
 .PmsBookingProductList .productentry.imgdisplayed { padding-left: 170px; }
 
+.PmsBookingProductList .group .productentry{display: none;}
+.PmsBookingProductList .group {margin-bottom: 10px;box-shadow: 0px 1px 3px 0px #bcbcbc;}
+.PmsBookingProductList .groupheader:hover{color:orange;}
+.PmsBookingProductList .group.active .groupheader{color:orange;}
+.PmsBookingProductList .groupheader{
+    font-size: 20px;
+    cursor: pointer;
+    padding: 20px 10px;
+    margin-bottom: 10px;
+    height:30px;
+}
 .PmsBookingProductList .productentry .select_button { float:right; cursor:pointer; background-color:#595959; width: 100px; text-align: center; display:inline-block; color:#fff; padding: 10px;}
 .PmsBookingProductList .productentry .name { font-size: 20px; font-weight: bold; }
 .PmsBookingProductList .productentry .price { font-size: 20px; font-weight: bold; position:absolute; right: 10px; bottom: 10px; }

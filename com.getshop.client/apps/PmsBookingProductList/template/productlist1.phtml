@@ -8,155 +8,169 @@ $singleSelection = ($this->getText("onlyoneselectionallowed") == "true");
 $selectedText = $this->__w("Selected");
 $prefixtext = $this->getText("prefixText");
 
-foreach($rooms as $room) {
-    /* @var $room core_pmsmanager_Room */
-    $selected = "";
-    $bookedCount = 0;
-    $selectedRow = false;
-    foreach($booking->rooms as $bookedroom) {
-        /* @var $product core_pmsmanager_PmsBookingRooms */
-        if($bookedroom->bookingItemTypeId == $room->type->id) {
-            $bookedCount++;
-        }
-    }
-    if($numberSelected < $bookedCount) {
-        $numberSelected = $bookedCount;
-         if($singleSelection) {
-            $selected = "selected";
-            $selectedRow = true;
-         }
-    }
+foreach($rooms as $room){
+    $groups[$room->type->group] = $room->type->group;
+}
 
-    $start = $this->convertToJavaDate($this->getStartDate());
-    $end = $this->convertToJavaDate($this->getEndDate());
-    $availability = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
-    if($this->getText("ignorefullybooked") == "true") {
-        $availability = 10;
+foreach($groups as $group => $name) {
+    if(array_filter($groups)){
+        echo "<div class='group'><div class='groupheader'>".$name."<i class='fa fa-caret-down' style='float:right;padding-right:20px;font-size:27px;'></i></div>";
     }
-    $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $room->type->id);
-    $imgDisplayed = "";
-    if($this->getText("hideimages") != "true") {
-        $imgDisplayed = "imgdisplayed";
-    }
-    ?>
-    <div class='productentry <? echo $selected . " " . $imgDisplayed; ?>' typeid='<?php echo $room->type->id; ?>'>
-        <?php
-        if($this->getText("hideimages") != "true") {
-            if(sizeof((array)$additional->images) > 0) {
-                $index = 1;
-                $defaultIndex = 1;
-                $tmpIndex = 1;
-                foreach($additional->images as $img) {
-                    if($img->isDefault) {
-                        $defaultIndex = $tmpIndex;
-                    }
-                    $tmpIndex++;
-                }
-               
-                echo "<span class='gsgalleryroot'>";
-                foreach($additional->images as $img) {
-                    $size = getimagesize("../uploadedfiles/" . $img->fileId);
-                    $display = "style='display:none;'";
-                    if($defaultIndex == $index) {
-                        $display = "";
-                    }
-                    echo "<span class='imgcontainer'>";
-                    echo "<img $display class='roomimg gsgallery' src='/displayImage.php?id=" . $img->fileId."&width=400' img='/displayImage.php?id=" . $img->fileId."' width='".$size[0]."' height='".$size[1]."' index='$index'>";
-                    echo "</span>";
-                    $index++;
-                }
-                echo "</span>";
-           } else {
-                $imgs = $this->getImagesFromPage($room->type->pageId);
-                $first = true;
-                foreach($imgs as $img) {
-                    if($first) {
-                        $first = false;
-                        continue;
-                    }
-                    echo "<span class='imgcontainer'>";
-                    echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
-                    echo "</span>";
-                    break;
-                }
-            }
+    foreach($rooms as $room) {
+        /* @var $room core_pmsmanager_Room */
+        if($room->type->group != $group) {
+            continue;
         }
         
-        $text = "";
-        if($availability == 0) {
-            $text = $this->__w("No rooms are available.");
-            if(!$text) {
-                $text = $this->__w("Out of stock.");
+        $selected = "";
+        $bookedCount = 0;
+        $selectedRow = false;
+        foreach($booking->rooms as $bookedroom) {
+            /* @var $product core_pmsmanager_PmsBookingRooms */
+            if($bookedroom->bookingItemTypeId == $room->type->id) {
+                $bookedCount++;
             }
         }
-        if(!$singleSelection) {
-            ?>
-            <span class='roomtypeselection'>
-                <?php
-                if($text) {
-                    echo $text;
-                } else {
-                    ?>
-                    <span style='font-size: 10px;'>Max antall ledige rom: <?php echo $availability; ?></span>
-                    <div class='roomtypeselectioncount'>
-                        <i class='fa fa-minus'></i><input type='text' class='productcount' value='<?php echo $bookedCount; ?>' max='<?php echo $availability; ?>' style='width: 25px; height: 20px; font-size: 20px;text-align: center;margin-left: 5px;'> <i class='fa fa-plus'></i>
-                    </div>
-                <?php } ?>
-            </span>
-        <?php } else {
-            if($availability) {
-                if(!$selectedRow) {
-                    ?>
-                    <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->__w("Select"); ?></span>
-                    <?php
-                } else {
-                    echo "<span class='selectedtext'>".$selectedText."</span>";
-                }
-            } else {
-                ?>
-                <span class='outofstocktext'>
-                    <?php echo $text; ?>
-                </span>
-                <?php
-            }
-        } ?>
-    <span class='name'>
-        <? echo $room->type->name; ?>
-        <?php 
-            if($this->isEditorMode()) {
-                echo "  <span style='position:absolute; top: 35px;left:170px;font-size: 12px;' class='configurebookingproduct'><a href='?page=".$room->type->pageId."'>Configure</a></span>";
-            }
-            if($room->type->description && !$this->getFactory()->isMobileIgnoreDisabled()) {
-                echo "<div class='roomdesc'>" . $room->type->description . "</div>";
-            }
-        ?>
-    </span>
-    <?php if($room->price > 0 && $booking->priceType != 8) { ?>
-        <span class='price <?php if($singleSelection) { echo "withselectbtn"; } ?>'>
-            <?php if(isset($room->priceWithoutDiscount) && $room->priceWithoutDiscount && round($room->priceWithoutDiscount) != round($room->price)) {
-                    echo '<span class="oringialprice">'.round($room->priceWithoutDiscount).'</span>';
-            }
-            ?>
-        <? echo round($room->price) . $prefixtext; ?></span>
-    <?php } ?>
-    <?php if($booking->priceType == 8) { 
-        $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(),$this->convertToJavaDate(time()),$this->convertToJavaDate(time()));
-        $progPrice = $prices->progressivePrices->{$room->type->id};
-        echo "<span class='price'>";
-        echo "Første " . (($progPrice[0]->numberOfTimeSlots)/7)." uker ". $progPrice[0]->price . " kr per dag.";
-        if($progPrice[2]->price) {
-            echo "<br>Mellom " . ($progPrice[0]->numberOfTimeSlots/7) . " og " . (($progPrice[0]->numberOfTimeSlots+$progPrice[1]->numberOfTimeSlots))/7 . " uker " . $progPrice[1]-> price. " kr per dag.";
-            echo "<br>Over " . (($progPrice[0]->numberOfTimeSlots+$progPrice[1]->numberOfTimeSlots))/7 . " uker " . $progPrice[2]->price . " kr per dag.";
+        if($numberSelected < $bookedCount) {
+            $numberSelected = $bookedCount;
+             if($singleSelection) {
+                $selected = "selected";
+                $selectedRow = true;
+             }
         }
-        echo "</span>";
-        ?>
-    <?php } ?>
-    </div>
-    <?php
-    if($room->type->description && $this->getFactory()->isMobileIgnoreDisabled()) {
-        echo "<div class='mobileroomdesc'>" . $room->type->description . "</div>";
-    }
-    echo "<div class='productroomspacing'></div>";
 
+        $start = $this->convertToJavaDate($this->getStartDate());
+        $end = $this->convertToJavaDate($this->getEndDate());
+        $availability = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedName(), $room->type->id, $start, $end);
+        if($this->getText("ignorefullybooked") == "true") {
+            $availability = 10;
+        }
+        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $room->type->id);
+        $imgDisplayed = "";
+        if($this->getText("hideimages") != "true") {
+            $imgDisplayed = "imgdisplayed";
+        }
+        ?>
+        <div class='productentry <? echo $selected . " " . $imgDisplayed; ?>' typeid='<?php echo $room->type->id; ?>'>
+            <?php
+            if($this->getText("hideimages") != "true") {
+                if(sizeof((array)$additional->images) > 0) {
+                    $index = 1;
+                    $defaultIndex = 1;
+                    $tmpIndex = 1;
+                    foreach($additional->images as $img) {
+                        if($img->isDefault) {
+                            $defaultIndex = $tmpIndex;
+                        }
+                        $tmpIndex++;
+                    }
+
+                    echo "<span class='gsgalleryroot'>";
+                    foreach($additional->images as $img) {
+                        $size = getimagesize("../uploadedfiles/" . $img->fileId);
+                        $display = "style='display:none;'";
+                        if($defaultIndex == $index) {
+                            $display = "";
+                        }
+                        echo "<span class='imgcontainer'>";
+                        echo "<img $display class='roomimg gsgallery' src='/displayImage.php?id=" . $img->fileId."&width=400' img='/displayImage.php?id=" . $img->fileId."' width='".$size[0]."' height='".$size[1]."' index='$index'>";
+                        echo "</span>";
+                        $index++;
+                    }
+                    echo "</span>";
+               } else {
+                    $imgs = $this->getImagesFromPage($room->type->pageId);
+                    $first = true;
+                    foreach($imgs as $img) {
+                        if($first) {
+                            $first = false;
+                            continue;
+                        }
+                        echo "<span class='imgcontainer'>";
+                        echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
+                        echo "</span>";
+                        break;
+                    }
+                }
+            }
+
+            $text = "";
+            if($availability == 0) {
+                $text = $this->__w("No rooms are available.");
+                if(!$text) {
+                    $text = $this->__w("Out of stock.");
+                }
+            }
+            if(!$singleSelection) {
+                ?>
+                <span class='roomtypeselection'>
+                    <?php
+                    if($text) {
+                        echo $text;
+                    } else {
+                        ?>
+                        <span style='font-size: 10px;'>Max antall ledige rom: <?php echo $availability; ?></span>
+                        <div class='roomtypeselectioncount'>
+                            <i class='fa fa-minus'></i><input type='text' class='productcount' value='<?php echo $bookedCount; ?>' max='<?php echo $availability; ?>' style='width: 25px; height: 20px; font-size: 20px;text-align: center;margin-left: 5px;'> <i class='fa fa-plus'></i>
+                        </div>
+                    <?php } ?>
+                </span>
+            <?php } else {
+                if($availability) {
+                    if(!$selectedRow) {
+                        ?>
+                        <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->__w("Select"); ?></span>
+                        <?php
+                    } else {
+                        echo "<span class='selectedtext'>".$selectedText."</span>";
+                    }
+                } else {
+                    ?>
+                    <span class='outofstocktext'>
+                        <?php echo $text; ?>
+                    </span>
+                    <?php
+                }
+            } ?>
+        <span class='name'>
+            <? echo $room->type->name; ?>
+            <?php 
+                if($this->isEditorMode()) {
+                    echo "  <span style='position:absolute; top: 35px;left:170px;font-size: 12px;' class='configurebookingproduct'><a href='?page=".$room->type->pageId."'>Configure</a></span>";
+                }
+                if($room->type->description && !$this->getFactory()->isMobileIgnoreDisabled()) {
+                    echo "<div class='roomdesc'>" . $room->type->description . "</div>";
+                }
+            ?>
+        </span>
+        <?php if($room->price > 0 && $booking->priceType != 8) { ?>
+            <span class='price <?php if($singleSelection) { echo "withselectbtn"; } ?>'>
+                <?php if(isset($room->priceWithoutDiscount) && $room->priceWithoutDiscount && round($room->priceWithoutDiscount) != round($room->price)) {
+                        echo '<span class="oringialprice">'.round($room->priceWithoutDiscount).'</span>';
+                }
+                ?>
+            <? echo round($room->price) . $prefixtext; ?></span>
+        <?php } ?>
+        <?php if($booking->priceType == 8) { 
+            $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(),$this->convertToJavaDate(time()),$this->convertToJavaDate(time()));
+            $progPrice = $prices->progressivePrices->{$room->type->id};
+            echo "<span class='price'>";
+            echo "Første " . (($progPrice[0]->numberOfTimeSlots)/7)." uker ". $progPrice[0]->price . " kr per dag.";
+            if($progPrice[2]->price) {
+                echo "<br>Mellom " . ($progPrice[0]->numberOfTimeSlots/7) . " og " . (($progPrice[0]->numberOfTimeSlots+$progPrice[1]->numberOfTimeSlots))/7 . " uker " . $progPrice[1]-> price. " kr per dag.";
+                echo "<br>Over " . (($progPrice[0]->numberOfTimeSlots+$progPrice[1]->numberOfTimeSlots))/7 . " uker " . $progPrice[2]->price . " kr per dag.";
+            }
+            echo "</span>";
+            ?>
+        <?php } ?>
+        </div>
+        <?php
+        if($room->type->description && $this->getFactory()->isMobileIgnoreDisabled()) {
+            echo "<div class='mobileroomdesc'>" . $room->type->description . "</div>";
+        }
+        echo "<div class='productroomspacing'></div>";
+    }
+    echo "</div>";
 }
+
 ?>

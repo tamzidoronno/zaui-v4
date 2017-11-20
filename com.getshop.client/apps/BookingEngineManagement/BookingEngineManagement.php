@@ -293,6 +293,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         if(isset($_POST['data']['size'])) { $item->size = $_POST['data']['size']; }
         if(isset($_POST['data']['name'])) { $item->name = $_POST['data']['name']; }
         if(isset($_POST['data']['description'])) { $item->description = $_POST['data']['description']; }
+        if(isset($_POST['data']['group'])) { $item->group = $_POST['data']['group']; }
         if(isset($_POST['data']['capacity'])) { $item->capacity = $_POST['data']['capacity']; }
         if(isset($_POST['data']['minStay'])) { $item->minStay = $_POST['data']['minStay']; }
         

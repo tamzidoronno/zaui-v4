@@ -53,6 +53,10 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
         <td width="50%">Description</td>
         <td width="50%"><textarea type="text" gsname="description" style='width:100%;'><? echo $item->description; ?></textarea></td>
     </tr>
+    <tr>
+        <td width="50%"><?echo $this->__w("Group")?></td>
+        <td width="50%"><input type="text" gsname="group" style='width:50%;' value="<? echo $item->group; ?>"></td>
+    </tr>
     <?php if($config->bookingProfile == "subscription") {
         ?>
         <tr>

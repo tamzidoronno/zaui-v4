@@ -211,8 +211,6 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                 takenRooms.setCount(BigInteger.valueOf(roomSize - numberOfAvailable));
                 invCountList.add(takenRooms);
                 
-                System.out.println((roomSize - numberOfAvailable) + ":" + tmpType.name + ":" + roomSize + ":" + numberOfAvailable);
-                
                 for(int j = 5; j <= 8; j++) {
                     if(j == 7) {
                         continue;

@@ -68,7 +68,10 @@ public class GetShopSessionScope implements Scope {
         
         String nameWithStoreId = name + "_" + storeId;
         
-        
+        if (namedSessionObjects.containsKey(name+"_"+storeId+"_"+sessionBeanName)) {
+            return namedSessionObjects.get(name+"_"+storeId+"_"+sessionBeanName);
+        }
+
         if (!objectMap.containsKey(nameWithStoreId)) {
             try {
                 Object object = objectFactory.getObject();

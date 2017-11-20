@@ -13,6 +13,7 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.webmanager.WebManager;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -59,6 +60,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     BookingEngine bookingEngine;
     
     @Autowired
+    StoreManager StoreManager;
+    
+    @Autowired
     public WebManager webManager;
     
     public BookingComRateManagerManager() {
@@ -89,9 +93,8 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     }
     
     public String htmlPost(String url, String data)  throws Exception {
-       // This probablu breaks the system as resources are not handled properly
-//        RateManagerPushBookingThread pusher = new RateManagerPushBookingThread(url, data);
-//        pusher.start();
+        RateManagerPushBookingThread pusher = new RateManagerPushBookingThread(url, data);
+        pusher.start();
         return "";
     }
     
@@ -146,8 +149,12 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         Calendar startcal = getCalendar(true);
         Calendar endCal = getCalendar(false);
         
+        int days = 365;
         if(startCheck != null) {
             startcal.setTime(startCheck);
+        } else {
+            days = 720;
+            startcal.setTime(StoreManager.getMyStore().rowCreatedDate);
         }
         
         startcal.set(Calendar.HOUR_OF_DAY, 16);
@@ -157,7 +164,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             itemSize.put(t.id, bookingEngine.getBookingItemsByType(t.id).size());
         }
         
-        for (int i = 0; i < 365; i++) {
+        for (int i = 0; i < days; i++) {
             Date start = startcal.getTime();
             endCal.add(Calendar.DAY_OF_YEAR, 1);
             System.out.println(start + " : " + endCal.getTime());

@@ -10,7 +10,7 @@ $user = $this->getApi()->getUserManager()->getUserById($filter->userId);
 $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->userId = $user->id;
 $filter->sorting = "regdate";
-$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$bookings = (array)$this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
 $new = array();
 foreach($bookings as $book) {
     $new[strtotime($book->rowCreatedDate)] = $book;

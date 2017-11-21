@@ -33,7 +33,8 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeederImpl;
-import com.thundashop.core.common.GrafanaManager;
+import com.thundashop.
+        core.common.GrafanaManager;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -286,7 +287,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         createScheduler("pmsmailstats", "1 23 * * *", PmsMailStatistics.class);
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
-        createScheduler("pmsprocessor3", "1,5,10,15,20,25,30,35,40,45,50,55 * * * *", CheckPmsFiveMin.class);
+        createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
     }
 
     @Override
@@ -2042,7 +2043,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         for(Booking remove : bookingsToDelete) {
             bookingEngine.deleteBooking(remove.id);
-            wubookManager.setAvailabilityChanged();
+            wubookManager.setAvailabilityChanged(remove.startDate, remove.endDate);
         }
         
         changeCheckoutTimeForGuestOnRoom(itemId);
@@ -3196,7 +3197,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 return 0;
             }
         }
-        
+
         try {
             return bookingEngine.getNumberOfAvailableWeakButFaster(itemType, start, end);
         }catch(BookingEngineException e) {
@@ -3895,6 +3896,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             result = combineExistingAddons(room.addons, result);
             room.addons.addAll(result);
             for(PmsBookingAddonItem toReturn : room.addons) {
+                if(!toReturn.productId.equals(addonConfig.productId)) {
+                    continue;
+                }
+                
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
                     toReturn.count = room.numberOfGuests;
                 }
@@ -4715,6 +4720,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 }
             }
         }
+        PmsManagerProcessor processor = new PmsManagerProcessor(this);
+        processor.processStartEndings();
     }
 
     private void markAsArrived(String card) {
@@ -4860,7 +4867,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         
         bookingEngine.addBookings(toAdd);
-        wubookManager.setAvailabilityChanged();
+        wubookManager.setAvailabilityChanged(booking.startDate, booking.endDate);
 
         return true;
     }
@@ -5364,6 +5371,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 room.forceUpdateLocks = true;
             }
         }
+        bookingUpdated(getBookingFromRoom(room.pmsBookingRoomId).id, "date_changed", room.pmsBookingRoomId);
         if(room.bookingId != null && !room.bookingId.isEmpty()) {
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
         }
@@ -5995,8 +6003,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     private void bookingUpdated(String bookingId, String type, String roomId) {
         virtualOrdersCreated = null;
+        PmsBooking booking = getBookingUnsecure(bookingId);
         try {
-            PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
                 bookingComRateManagerManager.pushBooking(booking, "Commit", true);
             } else if(type.equals("room_removed") || 
@@ -6015,7 +6023,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                     type.equals("date_changed") ||
                     type.equals("booking_undeleted") ||
                     type.equals("created")) {
-                wubookManager.setAvailabilityChanged();
+                wubookManager.setAvailabilityChanged(booking.getStartDate(), booking.getEndDate());
             }
         }catch(Exception e) {
             e.printStackTrace();

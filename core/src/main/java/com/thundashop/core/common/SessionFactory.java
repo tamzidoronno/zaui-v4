@@ -72,6 +72,9 @@ public class SessionFactory extends DataCommon {
     
     public void removeFromSession(String sessionId) {
         synchronized(sessions) {
+            if (AppContext.storePool != null) {
+                AppContext.storePool.sessionRemoved(sessionId);
+            }
             sessions.remove(sessionId);
         }
     }
@@ -96,6 +99,9 @@ public class SessionFactory extends DataCommon {
         }
         
         for (String sessionId : removeSessions) {
+            if (AppContext.storePool != null) {
+                AppContext.storePool.sessionRemoved(sessionId);
+            }
             sessions.remove(sessionId);
         }
     }

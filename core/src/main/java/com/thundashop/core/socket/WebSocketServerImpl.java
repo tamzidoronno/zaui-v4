@@ -11,32 +11,16 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.JsonObject2;
-import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.WebSocketReturnMessage;
 import com.thundashop.core.common.WebSocketWrappedMessage;
 import com.thundashop.core.websocket.WebSocketClient;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.java_websocket.server.WebSocketServer;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -102,7 +86,7 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
 
     @Override
     public void onError(WebSocket ws, Exception excptn) {
-        excptn.printStackTrace();
+//        clients.remove(ws);
     }
 
     @Override

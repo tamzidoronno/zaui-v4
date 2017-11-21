@@ -26,6 +26,10 @@ class AccountingTransferOptions {
         logEntries.add(text);
     }
     
+    public List<String> getLogEntries() {
+        return logEntries;
+    }
+    
     public Integer getAccountingId(String userId) {
         Integer idToUse = 0;
         if(config.startCustomerCodeOffset != null && config.startCustomerCodeOffset > 0) {

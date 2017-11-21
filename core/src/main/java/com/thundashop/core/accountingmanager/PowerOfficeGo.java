@@ -88,7 +88,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         
         for(User user : users.values()) {
             if(!createUpdateUser(user)) {
-                addToLog("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
+                addToLog("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", getshop customerid " + user.customerId);
                 return null;
             }
         }
@@ -136,6 +136,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             } else {
                 /* @TODO HANDLE PROPER WARNING */
                 addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
+                addToLog(resp.summary + " : accounting id: " + user.accountingId + ", powerofficego id: " + user.externalAccountingId);
             }
         }catch(Exception e) {
             /* @TODO HANDLE PROPER WARNING */
@@ -186,9 +187,6 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                     order.transferredToAccountingSystem = true;
                     order.dateTransferredToAccount = new Date();
                     managers.orderManager.saveOrder(order);
-                    
-//                    PowerOfficeGoPoster poster = new PowerOfficeGoPoster(resp.data, token);
-//                    poster.start();
                     
                     return resp.data;
                 }

@@ -114,7 +114,11 @@ public class ArxDoorManager implements IDoorManager {
             NodeList nodeList = document.getDocumentElement().getChildNodes();
             doors = recursiveFindDoors(nodeList, 0);
         }catch(SAXParseException e) {
-            GetShopLogHandler.logPrintStatic("Failed to parse for adress:" + hostName, e.getMessage());
+            if (pmsManager != null) {
+                GetShopLogHandler.logStack(e, pmsManager.getStoreId());
+            } else {
+                GetShopLogHandler.logStack(e, null);
+            }
         } finally {
             is.close();
         }
@@ -224,7 +228,12 @@ public class ArxDoorManager implements IDoorManager {
             hostName += "pulseOpen";
         }
         
-        GetShopLogHandler.logPrintStatic(hostName, null);
+        if (pmsManager != null) {
+            GetShopLogHandler.logPrintStatic(hostName, pmsManager.getStoreId());
+        } else {
+            GetShopLogHandler.logPrintStatic(hostName, null);
+        }
+        
         httpLoginRequest(hostName,"");
     }
 
@@ -241,6 +250,21 @@ public class ArxDoorManager implements IDoorManager {
                     doorAction("Lindeberglokalet", "forceOpenOn");
                 } else {
                     doorAction("Lindeberglokalet", "forceOpenOff");
+                }
+                return "success";
+            }catch(Exception e) {
+                e.printStackTrace();
+                return "Unable to connect to server";
+            }
+        }
+        
+        //This is another solution for haugerud idrettsforening, if it alos works... rewrite it :P
+        if(code.equals("543211")) {
+            try {
+                if(type.equalsIgnoreCase("open")) {
+                    doorAction("H1001_HIF_1", "forceOpenOn");
+                } else {
+                    doorAction("H1001_HIF_1", "forceOpenOff");
                 }
                 return "success";
             }catch(Exception e) {

@@ -206,9 +206,17 @@ public class AcculogixDataImporter {
                 destination.taskIds.add(task.id);
                 task.completed = false;
             } else {
-                task.orders.addAll(deliveryOrders);
-                task.completed = false;
-                destination.unStart();
+                boolean added = false;
+                for (DeliveryOrder delivery : deliveryOrders) {
+                    if (!inOrders(task.orders, delivery)) {
+                        task.orders.add(delivery);
+                        added = true;
+                    }
+                }
+                if (added) {
+                    task.completed = false;
+                    destination.unStart();
+                }
             }
             
             trackAndTraceManager.saveTaskGeneralDirect(task);
@@ -288,9 +296,18 @@ public class AcculogixDataImporter {
                 task.podBarcode = pickupTasksDatas.get(0)[34];
                 destination.taskIds.add(task.id);
             } else {
-                task.orders.addAll(pickupOrders);
-                task.completed = false;
-                destination.unStart();
+                boolean added = false;
+                for (PickupOrder pickupOrder : pickupOrders) {
+                    if (!inOrders(task.orders, pickupOrder)) {
+                        task.orders.add(pickupOrder);
+                        added = true;
+                    }
+                }
+                
+                if (added) {
+                    task.completed = false;
+                    destination.unStart();
+                }
             }
             
             trackAndTraceManager.saveTaskGeneralDirect(task);
@@ -332,5 +349,26 @@ public class AcculogixDataImporter {
         id = id.replaceAll("\n", "");
         id = id.replaceAll("\t", "");
         return id;
+    }
+
+    private boolean inOrders(List<DeliveryOrder> orders, DeliveryOrder delivery) {
+        for (DeliveryOrder or : orders) {
+            if ( or.referenceNumber != null && or.referenceNumber.equals(delivery.referenceNumber)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    private boolean inOrders(List<PickupOrder> orders, PickupOrder pickupOrder) {
+        
+        for (PickupOrder or : orders) {
+            if ( or.referenceNumber != null && or.referenceNumber.equals(pickupOrder.referenceNumber)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

@@ -96,6 +96,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             if (common instanceof Task) {
                 Task task = (Task)common;
                 tasks.put(task.id, task);
+                removeDuplicatedReferences(task);
             }
             
             if (common instanceof PooledDestionation) {
@@ -1194,6 +1195,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         List<Route> retRoutes = routes.values().stream()
                 .filter(r -> r.completedInfo != null)
                 .filter(r -> r.completedInfo.completed)
+                .filter(r -> r.completedInfo.completedTimeStamp != null)
                 .filter(r -> r.completedInfo.completedTimeStamp.after(hoursAgo))
                 .collect(Collectors.toList());
         
@@ -1406,6 +1408,15 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         message.driverName = getCurrentDriverName();
         message.dateFromDevice = date;
         return message;
+    }
+
+    private void removeDuplicatedReferences(Task task) {
+        if (task instanceof PickupTask) {
+            ((PickupTask)task).removeDuplicatedReferences();
+        }
+        if (task instanceof DeliveryTask) {
+            ((DeliveryTask)task).removeDuplicatedReferences();
+        }
     }
 
 

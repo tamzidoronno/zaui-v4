@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -74,6 +75,7 @@ public class ManagerSubBase {
     
     private HashMap<String, GetShopScheduler> schedulers = new HashMap();
     private HashMap<String, GetShopSchedulerBase> schedulersBases = new HashMap();
+    private boolean anyDataRetreived = false;
 
     public Database getDatabase() {
         return database;
@@ -164,6 +166,8 @@ public class ManagerSubBase {
             }
     
             dataFromDatabase(dataRetreived);
+            
+            anyDataRetreived = anyNormalDataObject(dataRetreived.data);
             
             for (DataCommon common : dataRetreived.data) {
                 if (common instanceof GetShopScheduler) {
@@ -379,6 +383,10 @@ public class ManagerSubBase {
             return;
         }
         
+        if (!anyDataRetreived) {
+            return;
+        }
+        
         try {
             UserManager userManager = null;
 
@@ -491,6 +499,16 @@ public class ManagerSubBase {
             
         if (currentModule.isEmpty() || currentModule.equals("cms")) {
             return true;
+        }
+        
+        return false;
+    }
+
+    private boolean anyNormalDataObject(List<DataCommon> data) {
+        for (DataCommon i : data) {
+            if (!(i instanceof GetShopScheduler)) {
+                return true;
+            }
         }
         
         return false;

@@ -6,7 +6,9 @@
 package com.thundashop.core.trackandtrace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +53,14 @@ public class DeliveryTask extends Task {
             }
         }
 
+    }
+
+    void removeDuplicatedReferences() {
+        Map<String, DeliveryOrder> newSet = new HashMap();
+        orders.stream().forEach(o -> {
+            newSet.put(o.referenceNumber, o);
+        });
+        orders = new ArrayList(newSet.values());
     }
 
 }

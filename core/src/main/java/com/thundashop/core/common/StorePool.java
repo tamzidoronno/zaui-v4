@@ -393,4 +393,11 @@ public class StorePool {
         StoreHandler handler = getStoreHandler(sessionId);
         handler.executeMethodGetShopThread(thread, sessionId);
     }
+
+    public void sessionRemoved(String sessionId) {
+        storeHandlers.values().stream()
+                .forEach(handler -> {
+                    handler.sessionRemoved(sessionId);
+                });
+    }
 }

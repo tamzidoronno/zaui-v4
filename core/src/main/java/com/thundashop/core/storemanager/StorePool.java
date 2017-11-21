@@ -145,6 +145,9 @@ public class StorePool {
         getSessionFactory().removeFromSession(sessionId);
         Store store = getStoreByWebaddress(webAddress);
         
+        if (webAddress == null) {
+            throw new ErrorException(1044);
+        }
         if (store == null) {
             webAddress = webAddress.replace(".3.0.local.", ".3.0.");
             webAddress = webAddress.replace(".3.0.mpal.", ".3.0.");

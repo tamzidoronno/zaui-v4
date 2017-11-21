@@ -15,7 +15,6 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.getshop.pullserver.PullMessage;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
@@ -23,7 +22,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import static java.lang.System.in;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -137,29 +135,36 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 }
 
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    InputStreamReader is = new InputStreamReader(connection.getInputStream());
-                    StringBuilder sb = new StringBuilder();
-                    BufferedReader br = new BufferedReader(is);
-                    String read = br.readLine();
+                    try (InputStreamReader is = new InputStreamReader(connection.getInputStream())) {
+                        StringBuilder sb = new StringBuilder();
+                        BufferedReader br = new BufferedReader(is);
+                        String read = br.readLine();
 
-                    while (read != null) {
-                        sb.append(read);
-                        read = br.readLine();
+                        while (read != null) {
+                            sb.append(read);
+                            read = br.readLine();
+                        }
+
+                        String result = sb.toString();
+
+                        Map<String, String> response = gson.fromJson(result, Map.class);
+                        if(debug) {
+                            logPrint("Response code: " + connection.getResponseCode());
+                            logPrint("Response message: " + result);
+                            logPrint("-------------- Debug ----------");
+                        }
+                        return response;
                     }
-
-                    String result = sb.toString();
-
-                    Map<String, String> response = gson.fromJson(result, Map.class);
-                    if(debug) {
-                        logPrint("Response code: " + connection.getResponseCode());
-                        logPrint("Response message: " + result);
-                        logPrint("-------------- Debug ----------");
-                    }
-                    return response;
                 } else {
                     // Server returned HTTP error code.
                     logPrint("HTTP error!" + connection.getResponseCode());
                     return null;
+                }
+            } finally {
+                try {
+                    connection.disconnect();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         } catch (MalformedURLException e) {

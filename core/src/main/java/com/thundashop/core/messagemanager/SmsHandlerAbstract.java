@@ -265,7 +265,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
     
     public void sendMessage() {
         if (productionMode) {
-            new Thread((Runnable) this).run();
+            new Thread((Runnable) this).start();
         } else {
             GetShopLogHandler.logPrintStatic("SMS Sent with " + getName() + " [to:  " + to + ", from: " +from + ", prefix: " + prefix + ", msg: " + message +" ]", null);
         }

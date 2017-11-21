@@ -1032,6 +1032,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         transfer.setConfig(configToUse);
         
         SavedOrderFile res = transfer.generateFile();
+        logEntries.addAll(transfer.getLogEntries());
         return res;
     }
 

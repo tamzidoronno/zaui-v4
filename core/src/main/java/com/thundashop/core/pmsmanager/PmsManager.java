@@ -3896,6 +3896,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             result = combineExistingAddons(room.addons, result);
             room.addons.addAll(result);
             for(PmsBookingAddonItem toReturn : room.addons) {
+                if(!toReturn.productId.equals(addonConfig.productId)) {
+                    continue;
+                }
+                
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
                     toReturn.count = room.numberOfGuests;
                 }

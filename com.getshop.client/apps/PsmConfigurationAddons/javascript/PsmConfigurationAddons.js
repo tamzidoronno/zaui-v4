@@ -1,6 +1,6 @@
 app.PsmConfigurationAddons = {
     init : function() {
-        $(document).on('click', app.PsmConfigurationAddons.saveSettings);
+        $(document).on('click', '.PsmConfigurationAddons', app.PsmConfigurationAddons.saveSettings);
     },
     saveSettings : function() {
         var data = {};

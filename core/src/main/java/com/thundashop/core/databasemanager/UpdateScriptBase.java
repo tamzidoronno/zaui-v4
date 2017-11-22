@@ -92,13 +92,18 @@ public abstract class UpdateScriptBase implements ApplicationContextAware {
         Map<Store, List<DataCommon>> retData = new HashMap();
         
         for (Store store : stores) {
-            Stream<DataCommon> dataStream = database.getAll(dbName, store.id);
-            List<DataCommon> dataObjects = dataStream.collect(Collectors.toList());
+            List<DataCommon> dataObjects = getAllDataForStoreAndManager(dbName, store);
             
             retData.put(store, dataObjects);
         }
         
         return retData;
+    }
+
+    public List<DataCommon> getAllDataForStoreAndManager(String dbName, Store store) {
+        Stream<DataCommon> dataStream = database.getAll(dbName, store.id);
+        List<DataCommon> dataObjects = dataStream.collect(Collectors.toList());
+        return dataObjects;
     }
     
     

@@ -279,7 +279,7 @@ public class StorePool {
                     throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
                 }
                 
-                res = handler.executeMethod(object, types, argumentValues);
+                res = handler.executeMethod(object, types, argumentValues, false);
             } else {
                 res = handler.executeMethodSync(object, types, argumentValues);
             }

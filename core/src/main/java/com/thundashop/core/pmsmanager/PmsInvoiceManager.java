@@ -937,8 +937,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room != null) { 
             price = addDerivedPrices(booking, room, price);
         }
-        price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
         price = calculateLongTermDiscount(booking, price, room);
+        price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
         price = getUserPrice(bookingEngineTypeId, price, count);
         
         return price;

@@ -65,6 +65,26 @@ foreach($config->lockServerConfigs as $id => $server) {
         <div style="float: right;">
             <i class="fa fa-plus-square" title="Reserve a room"></i>
         </div>
+        <div style="float: right; position:relative;" gstype='form' method='createNewUser'>
+            <i class="fa fa-user-plus" title="Create a new user" onclick='$(".createnewuserbox").toggle();'></i>
+            <div class="createnewuserbox" style="display:none; border: solid 1px #bbb; background-color:#efefef; position:absolute; left: -200px;z-index: 5; top: 30px; padding: 10px;">
+                <i class="fa fa-close" style='float:right; cursor:pointer;' onclick='$(".createnewuserbox").toggle();'></i>
+                <div style="padding-top: 10px;">Name</div>
+                <input type="txt" class="gsniceinput1" style="width: 200px;" gsname='name'>
+                <div style="padding-top: 10px;">Orgid (Empty for private person)</div>
+                <input type="txt" class="gsniceinput1" style="width: 200px;" gsname='orgid'>
+                <div style="padding-top: 10px;">Email</div>
+                <input type="txt" class="gsniceinput1" style="width: 200px;" gsname='email'>
+                <div style="padding-top: 10px;">Password</div>
+                <input type="txt" class="gsniceinput1" style="width: 200px;" gsname='password'>
+                <div style="padding-top: 10px;">Userlevel</div>
+                <div>
+                    <input type="radio" gsname="userlevel" name='userlevel' checked value='customer'> Customer
+                    <input type="radio" gsname="userlevel" name='userlevel' value='admin'> Administrator
+                </div>
+                <input type="button" value="Create new user" style="margin-top: 10px; width: 200px;" gstype='submit'>
+            </div>
+        </div>
     </div>
     <?php
         $selectedFilter = $this->getSelectedFilter();

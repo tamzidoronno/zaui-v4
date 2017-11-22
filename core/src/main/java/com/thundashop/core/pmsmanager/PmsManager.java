@@ -3899,6 +3899,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             result = combineExistingAddons(room.addons, result);
             room.addons.addAll(result);
             for(PmsBookingAddonItem toReturn : room.addons) {
+                if(!toReturn.productId.equals(addonConfig.productId)) {
+                    continue;
+                }
+                
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
                     toReturn.count = room.numberOfGuests;
                 }
@@ -7279,6 +7283,67 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 //                        booking.orderIds.remove(orderId);
 //                    }
 //                });
+    }
+
+    @Override
+    public User createUser(PmsNewUser newUser) {
+        User user = new User();
+        user.emailAddress = "";
+        /* Fields found in FieldGenerator.php */
+        user.fullName = newUser.name;
+        user.emailAddress = newUser.email;
+        
+        user.address = new Address();
+        user.address.address = "";
+        user.address.postCode = "";
+        user.address.city = "";
+        user.address.countrycode = "";
+        user.address.countryname = "";
+        
+        if(newUser.userlevel.equals("admin")) {
+            user.type = User.Type.ADMINISTRATOR;
+        }
+        
+        user = userManager.createUser(user);
+        
+        if(newUser.orgId != null && !newUser.orgId.isEmpty()) {
+            
+            Company company = null;
+            if(newUser.orgId != null) {
+                newUser.orgId = newUser.orgId.trim();
+                List<Company> companies = userManager.getCompaniesByVatNumber(newUser.orgId);
+                if(!companies.isEmpty()) {
+                    company = companies.get(0);
+                }
+            }
+            
+            if(company == null) {
+                company = new Company();
+                company.vatNumber = newUser.orgId;
+                company.name = newUser.name;
+                company.vatRegisterd = true;
+
+                company.address = new Address();
+                company.address.address = "";
+                company.address.postCode = "";
+                company.address.city = "";
+                company.address.countrycode = "";
+                company.address.countryname = "";
+
+                company.invoiceAddress = new Address();
+                company.invoiceAddress.address = "";
+                company.invoiceAddress.postCode = "";
+                company.invoiceAddress.city = "";
+                company.invoiceAddress.countrycode = "";
+                company.invoiceAddress.countryname = "";
+                userManager.saveCompany(company);
+            }
+            user.company.add(company.id);
+            userManager.saveUser(user);
+        }
+        
+        return user;
+        
     }
 
 }

@@ -116,7 +116,7 @@ public class PmsManagerProcessor {
         
         int maxAheadCheck = maxAhead;
         if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification && !started) {
-            hoursAheadCheck = -12;
+            hoursAheadCheck = -24;
         }
         List<PmsBooking> bookings = null;
         if(manager.getConfigurationSecure().sendMessagesRegardlessOfPayments) {

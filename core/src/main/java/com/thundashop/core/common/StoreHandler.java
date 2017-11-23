@@ -201,7 +201,7 @@ public class StoreHandler {
             result = manager.preProcessMessage(result, executeMethod);
             
             if (isFromSynchronizedCall) {
-                fireEvents();
+//                fireEvents();
             }
             
             TranslationHandler handle = new TranslationHandler();

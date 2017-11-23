@@ -769,7 +769,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             try {
-                room.maxNumberOfGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                if (type != null) {
+                    room.maxNumberOfGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
+                }
             }catch(Exception e) {
                 logPrintException(e);
             }

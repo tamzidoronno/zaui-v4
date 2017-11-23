@@ -81,7 +81,9 @@ public class StoreHandler {
     }
 
     private Object executeMethodWithTiming(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        SyncronizedMethodCountDownThread timerThread = new SyncronizedMethodCountDownThread(inObject.interfaceName, inObject.method, storeId);
+        long currentThreadId = Thread.currentThread().getId();
+        
+        SyncronizedMethodCountDownThread timerThread = new SyncronizedMethodCountDownThread(inObject.interfaceName, inObject.method, storeId, currentThreadId);
         timerThread.start();
         
         try {
@@ -201,7 +203,7 @@ public class StoreHandler {
             result = manager.preProcessMessage(result, executeMethod);
             
             if (isFromSynchronizedCall) {
-//                fireEvents();
+                fireEvents();
             }
             
             TranslationHandler handle = new TranslationHandler();

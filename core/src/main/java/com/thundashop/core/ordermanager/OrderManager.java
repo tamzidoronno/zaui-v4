@@ -67,6 +67,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     private List<OrderManagerEvents> eventListeners = new ArrayList();
     
+    private Set<String> ordersChanged = new TreeSet();
+    
+    private Set<String> ordersCreated = new TreeSet();
+    
     @Autowired
     public MailFactory mailFactory;
     
@@ -145,12 +149,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order creditOrder(String orderId) {
+        Order credited = createCreatditOrder(orderId, "");
+        return credited;
+    }
+
+    private Order createCreatditOrder(String orderId, String newReference) throws ErrorException {
         Order order = getOrderSecure(orderId);
         Order credited = order.jsonClone();
         for(CartItem item : credited.cart.getItems()) {
             item.setCount(item.getCount() * -1);
         }
-        
         incrementingOrderId++;
         credited.incrementOrderId = incrementingOrderId;
         credited.isCreditNote = true;
@@ -160,13 +168,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         credited.closed = false;
         order.creditOrderId.add(credited.id);
         order.doFinalize();
-        saveOrder(credited);
-        saveOrder(order);
+        
+        if (!newReference.isEmpty() && order.cart != null) {
+            credited.cart.reference = newReference;
+        }
         
         if (!order.createdBasedOnOrderIds.isEmpty()) {
             resetMergedOrders(order.id);
         }
         
+        saveOrder(credited);
+        saveOrder(order);
         return credited;
     }
     
@@ -252,14 +264,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         orders.put(order.id, order);
         
         if (newOrder) {
-            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
-                o.orderCreated(order.id);
-            });
+            ordersCreated.add(order.id);
         } else {
-            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
-                o.orderChanged(order.id);
-            });
+            ordersChanged.add(order.id);
+            
         }
+    }
+    
+    public void fireEvents() {
+        ordersCreated.stream().forEach(orderId -> {
+            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
+                o.orderCreated(orderId);
+            });
+        });
+        
+        ordersChanged.stream().forEach(orderId -> {
+            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
+                o.orderChanged(orderId);
+            });
+        });
+        
+        ordersChanged.clear();
+        ordersCreated.clear();
     }
 
     @Override
@@ -1951,8 +1977,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
        
         orderIds.stream().forEach(orderId -> { 
             Order order = getOrder(orderId);
-            creditOrder(orderId); 
+            Order creditedOrder = createCreatditOrder(orderId, "ordermanager_merged_order"); 
             markAsPaid(orderId, new Date()); 
+            markAsPaid(creditedOrder.id, new Date()); 
             order.closed = true;
             saveObject(order);
         });
@@ -1969,6 +1996,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder.payment = createPayment(paymentMethod);
         newOrder.invoiceNote = note;
         newOrder.createdBasedOnOrderIds = orderIds;
+        
+        if (newOrder.cart != null) {
+            newOrder.cart.reference = "ordermanager_merged_order";
+        }
         
         setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(newOrder, userId);
         

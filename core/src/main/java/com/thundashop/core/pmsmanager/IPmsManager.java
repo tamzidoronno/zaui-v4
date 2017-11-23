@@ -148,6 +148,9 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBookingRooms> getWorkSpaceRooms();
     
+    @Administrator
+    public User createUser(PmsNewUser newUser);
+    
     public Date getEarliestEndDate(String pmsBookingRoomId);
     
     @Editor

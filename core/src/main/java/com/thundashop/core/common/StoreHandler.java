@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -84,7 +85,7 @@ public class StoreHandler {
         timerThread.start();
         
         try {
-            Object rest = executeMethod(inObject, types, argumentValues);
+            Object rest = executeMethod(inObject, types, argumentValues, true);
             return rest;
         } catch (Exception ex) {
             throw ex;
@@ -102,7 +103,7 @@ public class StoreHandler {
         }
     }
     
-    public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+    public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues, boolean isFromSynchronizedCall) throws ErrorException {
         Session session = getSession(inObject.sessionId);
         initMultiLevels(storeId, session); 
         
@@ -122,7 +123,7 @@ public class StoreHandler {
 //            if (storeId != null && storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
 //                result = invokeMethodUtsiktenDebug(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
 //            } else {
-                result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
+                result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject, isFromSynchronizedCall);
 //            }
             
             clearSessionObject();
@@ -191,7 +192,7 @@ public class StoreHandler {
         }
     }
 
-    private Object invokeMethod(Method executeMethod, Class aClass, Object[] argObjects, Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
+    private Object invokeMethod(Method executeMethod, Class aClass, Object[] argObjects, Class getShopInterfaceClass, JsonObject2 inObject, boolean isFromSynchronizedCall) throws ErrorException {
         String scopedStoreId = "ALL";
         try {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
@@ -199,6 +200,9 @@ public class StoreHandler {
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             
+            if (isFromSynchronizedCall) {
+                fireEvents();
+            }
             
             TranslationHandler handle = new TranslationHandler();
             updateLanguage(manager, handle, result);
@@ -600,5 +604,12 @@ public class StoreHandler {
 
     public void sessionRemoved(String sessionId) {
         sessions.remove(sessionId);
+    }
+
+    /**
+     * We need to fire the events at the end.
+     */
+    private void fireEvents() {
+        AppContext.appContext.getBean(OrderManager.class).fireEvents();
     }
 }

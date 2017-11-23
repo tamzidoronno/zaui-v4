@@ -1294,6 +1294,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function createNewUser() {
+        $newUser = new \core_pmsmanager_PmsNewUser();
+        $newUser->name = $_POST['data']['name'];
+        $newUser->email = $_POST['data']['email'];
+        $newUser->orgId = $_POST['data']['orgid'];
+        $newUser->password = $_POST['data']['password'];
+        $newUser->userlevel = $_POST['data']['userlevel'];
+        if(!$newUser->name || !$newUser->email) {
+            return;
+        }
+        $user = $this->getApi()->getPmsManager()->createUser($this->getSelectedName(), $newUser);        
+        
+        $_POST['data']['type'] = "subtype_accountoverview";
+        $_POST['data']['userid'] = $user->id;
+        $this->setQuickFilter();
+    }
+    
     public function addAddon() {
         $type = $_POST['data']['type'];
         $bookingId = $_POST['data']['bookingid'];

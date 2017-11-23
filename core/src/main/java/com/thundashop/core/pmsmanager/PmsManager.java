@@ -1124,6 +1124,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             
             if(split) { 
                 room = splitBookingIfNesesary(booking, room);
+                start = room.date.start;
+                end = room.date.end;
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
@@ -3737,7 +3739,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         PmsBookingRooms newRoom = gson.fromJson(copy, PmsBookingRooms.class);
         newRoom.clear();
         
-        addBookingToBookingEngine(booking, newRoom);
+        String res = addBookingToBookingEngine(booking, newRoom);
+        if(res.isEmpty()) {
+            removeAddonsByDate(room);
+            removeAddonsByDate(newRoom);
+        }
         
         return newRoom;
     }
@@ -7341,6 +7347,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         return user;
         
+    }
+
+    private void removeAddonsByDate(PmsBookingRooms room) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem addon : room.addons) {
+            Date addonDate = addon.date;
+            boolean remove = false;
+            if(addonDate.after(room.date.end)) {
+                remove = true;
+            }
+            if(addonDate.before(room.date.start) && !room.isSameDay(addonDate, room.date.start)) {
+                remove = true;
+            }
+            
+            if(remove) {
+                toRemove.add(addon);
+            }
+        }
+        room.addons.removeAll(toRemove);
     }
 
 }

@@ -96,11 +96,12 @@ public class PmsBookingRooms implements Serializable {
         date.start = new Date();
         addedToArx = false;
         canBeAdded = true;
-        bookingId = "";
+        bookingId = null;
         bookingItemId = "";
         code = "";
         invoicedFrom = null;
         invoicedTo = null;
+        booking = null;
     }
     
     public static String getOffsetKey(Calendar calStart, Integer priceType) {

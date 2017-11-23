@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class PmsConfigurationInstructions extends UpdateScriptBase implements UpdateScript {
+public class PsmConfigurationAddons extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
-        return getDate("14/11-2017");
+        return getDate("17/11-2017");
     }
     
     @Override
     public String getId() {
-        return "b7c0d837-92af-4f96-a6fe-fc2d963a2dca";
+        return "ad5ff05e-7fb1-4f42-8365-44259c888ba7";
     }
 
     @SuppressWarnings("empty-statement")
@@ -49,7 +49,7 @@ public class PmsConfigurationInstructions extends UpdateScriptBase implements Up
     }
     
     public static void main(String[] args) {
-        new PmsConfigurationInstructions().runSingle();
+        new PsmConfigurationAddons().runSingle();
     }
     
     @Override
@@ -66,16 +66,16 @@ public class PmsConfigurationInstructions extends UpdateScriptBase implements Up
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        Application PmsConfigurationInstructions = createSettings("PmsConfigurationInstructions",
-        "78b6ce1d-95df-4972-b530-e08a89e09c46",
+        Application PsmConfigurationAddons = createSettings("PsmConfigurationAddons",
+        "c5a4b5bf-365c-48d1-aeef-480c62edd897",
         allowed2,
         " ",
-        Application.Type.Payment, true);
-        PmsConfigurationInstructions.isPublic = true;
-        PmsConfigurationInstructions.isFrontend = true;
-        PmsConfigurationInstructions.moduleId = "pms";
-        PmsConfigurationInstructions.defaultActivate = true;
-        PmsConfigurationInstructions.storeId = "all";
-        database.save(PmsConfigurationInstructions, credentials);
+        Application.Type.Webshop, true);
+        PsmConfigurationAddons.isPublic = true;
+        PsmConfigurationAddons.isFrontend = true;
+        PsmConfigurationAddons.moduleId = "pms";
+        PsmConfigurationAddons.defaultActivate = true;
+        PsmConfigurationAddons.storeId = "all";
+        database.save(PsmConfigurationAddons, credentials);
     }
 }

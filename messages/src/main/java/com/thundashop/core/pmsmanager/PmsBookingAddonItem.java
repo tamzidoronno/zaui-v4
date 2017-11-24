@@ -39,7 +39,9 @@ public static class AddonTypes {
     public boolean dependsOnGuestCount = false;
     public boolean isIncludedInRoomPrice = false;
     public String channelManagerAddonText = "";
+    public String bookingicon = "";
     public List<String> includedInBookingItemTypes = new ArrayList();
+    public List<String> displayInBookingProcess = new ArrayList();
     public String addedBy;
     public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();
     public boolean atEndOfStay;

@@ -46,6 +46,52 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
     
     public function saveProductConfig() {
         
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        
+        foreach($_POST['data']['products'] as $productId => $res) {
+            $found = false;
+            foreach($config->addonConfiguration as $addon) {
+                /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+                if($addon->productId == $productId) {
+                    $found = true;
+                    $addon->isSingle = $res['daily'] != "true";
+                    $addon->price = $res['price'];
+                    $addon->dependsOnGuestCount = $res['perguest'] == "true";
+                    $addon->noRefundable = $res['nonrefundable'] == "true";
+                    
+                    $isIncluded = array();
+                    foreach($res as $id => $isSelected) {
+                        if(stristr($id, "includeinroom_") && $isSelected == "true") {
+                            $isIncluded[] = str_replace("includeinroom_", "", $id);
+                        }
+                    }
+                    
+                    $displayInBookingProcess = array();
+                    foreach($res as $id => $isSelected) {
+                        if(stristr($id, "sellonroom_") && $isSelected == "true") {
+                            $displayInBookingProcess[] = str_replace("sellonroom_", "", $id);
+                        }
+                    }
+                    $addon->includedInBookingItemTypes = $isIncluded;
+                    $addon->descriptionWeb = $res['descriptionWeb'];
+                    $addon->bookingicon = $res['bookingicon'];
+                    $addon->displayInBookingProcess = $displayInBookingProcess;
+                    $addon->channelManagerAddonText = $res['channelManagerAddonText'];
+                }
+                
+            }
+            if(!$found) {
+                echo "Not found: " . $productId;
+            }
+            
+            $product = $this->getApi()->getProductManager()->getProduct($productId);
+            $product->price = $res['price'];
+            $product->taxgroup = $res['taxgroup'];
+            $this->getApi()->getProductManager()->saveProduct($product);
+        }
+        
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+        
     }
     
 }

@@ -97,6 +97,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     private HashMap<String, PmsPricing> priceMap = new HashMap();
     private HashMap<String, ConferenceData> conferenceDatas = new HashMap();
     private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap();
+    private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
@@ -4475,7 +4476,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     @Override
     public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception {
         for(PmsAdditionalTypeInformation add : additionDataForTypes) {
-            if(add.typeId.equals(typeId)) {
+            if(add != null && add.typeId != null && add.typeId.equals(typeId)) {
                 return add;
             }
         }
@@ -7369,6 +7370,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         room.addons.removeAll(toRemove);
+    }
+
+    @Override
+    public PmsRoomTypeAccessory saveAccessory(PmsRoomTypeAccessory accessory) {
+        saveObject(accessory);
+        accesories.put(accessory.id, accessory);
+        return accessory;
+    }
+
+    @Override
+    public List<PmsRoomTypeAccessory> getAccesories() {
+        return new ArrayList(accesories.values());
     }
 
 }

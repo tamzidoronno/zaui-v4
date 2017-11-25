@@ -449,4 +449,8 @@ public interface IPmsManager {
     
     public LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data);
     
+    @Administrator
+    public PmsRoomTypeAccessory saveAccessory(PmsRoomTypeAccessory accessory);
+    
+    public List<PmsRoomTypeAccessory> getAccesories();
 }

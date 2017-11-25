@@ -149,6 +149,7 @@ body {
 .GetShopModuleTable .datarow_extended_content {
     display: none;
     padding: 20px;
+    border-top: solid 1px #bbb;
 }
 
 .GetShopModuleTable .attributeheader {

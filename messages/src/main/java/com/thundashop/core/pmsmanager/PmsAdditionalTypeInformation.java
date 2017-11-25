@@ -14,6 +14,7 @@ public class PmsAdditionalTypeInformation extends DataCommon {
     public Integer numberOfAdults = 2;
     public List<PmsTypeImages> images = new ArrayList();
     public String dependsOnTypeId = "";
+    public List<String> accessories = new ArrayList();
 
     void update(PmsAdditionalTypeInformation info) {
         defaultNumberOfChildBeds = info.defaultNumberOfChildBeds;

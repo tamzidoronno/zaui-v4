@@ -1,0 +1,46 @@
+<?php 
+/* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
+?>
+<span style="float:right;" gstype='form' method='createType'>
+    <input type="txt" class="gsniceinput1" placeholder='Double room' gsname='name'>
+    <input type="button" value="Create a new room type" style="padding:9px;" gstype='submit'>
+</span>
+<h2>Room types</h2>
+<?php
+    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+    
+    $rows = array();
+    $rowNumber = 0;
+    foreach($types as $type) {
+        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $type->id);
+        $additional->rowNumber = $rowNumber;
+        $additional->name = $type->name;
+        $additional->guests = $type->size;
+        $additional->description = $type->description;
+        $additional->rowCreatedDate = $type->rowCreatedDate;
+        $rows[$rowNumber] = $additional;
+        $rowNumber++;
+    }
+    
+    $attributes = array(
+        array('id', 'gs_hidden', 'typeId'),
+        array('date', 'Date', null, 'formatDate'),
+        array('description', 'Description', null, "formatDescription"),
+        array('guests', 'Guests', 'guests', null),
+        array('children', 'Children', 'numberOfChildren', null),
+        array('adults', 'Adults', 'numberOfAdults', null),
+        array('beds', 'Beds', 'defaultNumberOfBeds', null),
+        array('bedsforchildren', 'Beds for children', 'defaultNumberOfChildBeds', null),
+        array('maxbeds', 'Max beds', 'maxNumberOfBeds', null),
+        array('maxchildbeds', 'Max childbeds', 'numberOfChildren', null),
+    );
+    
+    $table = new \GetShopModuleTable($this, 'PmsRoomConfiguration', 'loadTypeResult', null, $attributes);
+    $table->setData($rows);
+    $table->render();
+?>
+
+<style>
+    .GetShopModuleTable .col { width: 5%; text-align: center; }
+    .GetShopModuleTable .col.col_3 { width: 53%; text-align: left; }
+</style>

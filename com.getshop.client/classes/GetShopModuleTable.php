@@ -51,10 +51,10 @@ class GetShopModuleTable {
             echo "<div class='attributeheader datarow'>";
                 $i = 1;
                 foreach ($this->attributes as $attribute) {
-                    $i++;
                     if ($attribute[1] !== "gs_hidden") {
                         echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$attribute[1]</div>";
                     }
+                    $i++;
                     
                 }
             echo "</div>";
@@ -128,9 +128,13 @@ class GetShopModuleTable {
 
         <script>
             $('.GetShopModuleTable .datarow .datarow_inner').on('click', function(e) {
+                if($(this).closest('.datarow').hasClass('active')) {
+                    $(this).closest('.datarow').removeClass('active');
+                    $('.GetShopModuleTable .datarow_extended_content').slideUp();
+                    return;
+                }
                 $(this).closest('.GetShopModuleTable').find('.datarow.active').removeClass('active');
                 $(this).closest('.datarow').addClass('active');
-                
                 var target = $(e.target);
                 var base = $(this).closest('.datarow');
                 base.find('.datarow_extended_content').html("");

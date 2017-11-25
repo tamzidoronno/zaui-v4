@@ -214,6 +214,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             if (dataCommon instanceof PmsBookingAutoIncrement) {
                 autoIncrement = (PmsBookingAutoIncrement) dataCommon;
             }
+            if (dataCommon instanceof PmsRoomTypeAccessory) {
+               accesories.put(dataCommon.id, (PmsRoomTypeAccessory)dataCommon);
+            }
             if (dataCommon instanceof PmsPricing) {
                 PmsPricing price = (PmsPricing) dataCommon;
                 if(price.code.isEmpty()) {

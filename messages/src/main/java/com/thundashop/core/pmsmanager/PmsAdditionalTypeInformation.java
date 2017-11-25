@@ -25,5 +25,6 @@ public class PmsAdditionalTypeInformation extends DataCommon {
         maxNumberOfChildBeds = info.maxNumberOfChildBeds;
         images = info.images;
         dependsOnTypeId = info.dependsOnTypeId;
+        accessories = info.accessories;
     }
 }

@@ -4,8 +4,19 @@ app.PmsRoomConfiguration = {
         $(document).on('click', '.PmsRoomConfiguration .deleteimage', app.PmsRoomConfiguration.deleteimage);
         $(document).on('click', '.PmsRoomConfiguration .uploadTypeImage', app.PmsRoomConfiguration.uploadBoxClick);
         $(document).on('click', '.PmsRoomConfiguration .setdefaultimg', app.PmsRoomConfiguration.selectDefaultImage);
+        $(document).on('click', '.PmsRoomConfiguration .changeicon', app.PmsRoomConfiguration.changeIcon);
     },
-    
+    changeIcon : function() {
+        var newIcon = window.prompt("Enter name on icon (example: bed for fa-bed)");
+        var event = thundashop.Ajax.createEvent(null, 'changeIcon', $(this), {
+            "id" : $(this).attr('data-id'),
+            "icon" : newIcon
+        });
+        var icon = $(this);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            icon.addClass('fa-'+newIcon);
+        });
+    },
     uploadBoxClick: function () {
         $('#getshop_select_files_link').remove();
         $('#your-files').remove();

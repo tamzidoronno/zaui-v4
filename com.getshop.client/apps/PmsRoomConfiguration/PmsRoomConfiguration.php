@@ -7,7 +7,11 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
     
     public function getAccessories() {
-        return array();
+        if(isset($this->acc)) {
+            return $this->acc;
+        }
+        $this->acc = $this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
+        return $this->acc;
     }
     
 
@@ -21,9 +25,22 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
     
     public function formatDescription($row) {
-//        print_r($row);
+        $accessories = $this->getAccessories();
+        
         $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $row->typeId);
-        $res = "<b>" . $row->name . "</b><br>" . $row->description . "<bR><b>Accessorier: <i class='fa fa-car'></i> <i class='fa fa-calculator'></i> <i class='fa fa-bell'></i></b>";
+        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $type->id);
+        
+        $res = "<b>" . $row->name . "</b><br>" . $row->description . "<bR>";
+        $res .= "<b>Accessorier:</b> ";
+        foreach($accessories as $acc) {
+            if(in_array($acc->id, $additional->accessories)) {
+                $icon = "briefcase";
+                if($acc->icon) {
+                    $icon = $acc->icon;
+                }
+                $res .= "<i class='fa fa-$icon' title='".$acc->title."'></i> ";
+            }
+        }
         if($type->visibleForBooking) {
             $res .= "<i class='fa fa-eye' style='color:green; float:right;' title='This room is visible for booking'></i>";
         } else {
@@ -43,65 +60,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
     
     public function PmsRoomConfiguration_loadTypeResult() {
-        $id = $_POST['data']['id'];
-        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $id);
-        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $id);
-        $notVisible = !$type->visibleForBooking ? "SELECTED" : "";
-        $images = $additional->images;
-        $accessories = $this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
-        
-        echo "<div gstype='form'>";
-        echo "<b>Name:</b><br>";
-        echo "<input type='txt' value='" . $type->name . "' class='gsniceinput1' style='width:100%;box-sizing:border-box;' gsname='name'><br><br>";
-        echo "<b>Description:</b><br>";
-        echo "<textarea style='width: 100%; height: 90px;border:solid 1px #dcdcdc;box-sizing:border-box; padding: 10px;' gsname='description'>" . $type->description . "</textarea>";
-        
-        echo "<table width='100%'>";
-        echo "<tr>";
-        echo "<th>Guests</th>";
-        echo "<th>Children</th>";
-        echo "<th>Adults</th>";
-        echo "<th>Beds</th>";
-        echo "<th>Beds for children</th>";
-        echo "<th>Max beds</th>";
-        echo "<th>Max beds for children</th>";
-        echo "<th>Visible for booking</th>";
-        echo "</tr>";
-        echo "<tr style='text-align:center;'>";
-        echo "<td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='".$type->size."' gsname='size'></td>";
-        echo "<td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='".$additional->numberOfChildren."' gsname='numberOfChildren'></td>";
-        echo "<td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='".$additional->numberOfAdults."' gsname='numberOfAdults'></td>";
-        echo "<td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='".$additional->defaultNumberOfBeds."' gsname='defaultNumberOfBeds'></td>";
-        echo "<td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='".$additional->defaultNumberOfChildBeds."' gsname='defaultNumberOfChildBeds'></td>";
-        echo "<td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='".$additional->maxNumberOfBeds."' gsname='maxNumberOfBeds'></td>";
-        echo "<td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='".$additional->maxNumberOfChildBeds."' gsname='maxNumberOfChildBeds'></td>";
-        echo "<td><select class='gsniceselect1' gsname='visibleForBooking'><option value='yes'>Yes</option><option value='no' $notVisible>No</option></select></td>";
-        echo "</tr>";
-        echo "</table>";
-        echo "<b>Accesories: <span class='createnewaccessory' style='cursor:pointer;'>(create new)</span></b><br>";
-        echo "<table width='100%'>";
-        echo "<tr>";
-        $i = 1;
-        foreach($accessories as $accessory) {
-            echo "<td><input type='checkbox' gsname='accessory_".$accessory->id."'> <i class='fa fa-briefcase'></i> ". $accessory->title . "</td>";
-            if($i % 8 == 0) {
-                echo "</tr><tr>";
-            }
-            $i++;
-        }
-        echo "</tr>";
-        echo "</table>";
-        echo "<div style='text-align:right;padding-top: 20px;'>";
-        echo "<input type='button' style='padding:9px; width: 200px;' gstype='submit' value='Save'>";
-        echo "</div>";
-        echo "</div>";
-        
-        echo "<br><br>";
-        echo "<b>Images: <input type='button' class='uploadTypeImage' value='Upload an image' typeid='".$type->id."'></b><br>";
-        echo "<div class='imagearea'>";
-        $_POST['data']['typeId'] = $type->id;
-        $this->printImagesForType();
-        echo "</div>";
+        $this->includefile("roomtypeconfigurationpanel");
     }
     
     public function printImagesForType() {
@@ -115,6 +74,46 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
             echo "<i class='fa fa-trash-o deleteimage' title='Delete image' data-id='".$img->fileId."' data-typeid='".$id."'></i>";
             echo "<img src='displayImage.php?id=".$img->fileId."&width=80&height=80' class='setdefaultimg' data-fileid='".$img->fileId."' data-typeid='".$id."'>";
             echo "</span>";
+        }
+    }
+    
+    public function saveTypeSettings() {
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $type->id);
+        
+        $type->size = $_POST['data']['size'];
+        $type->name = $_POST['data']['name'];
+        $type->description = $_POST['data']['description'];
+        $additional->numberOfChildren = $_POST['data']['numberOfChildren'];
+        $additional->numberOfAdults = $_POST['data']['numberOfAdults'];
+        $additional->defaultNumberOfBeds = $_POST['data']['defaultNumberOfBeds'];
+        $additional->defaultNumberOfChildBeds = $_POST['data']['defaultNumberOfChildBeds'];
+        $additional->maxNumberOfBeds = $_POST['data']['maxNumberOfBeds'];
+        $additional->maxNumberOfChildBeds = $_POST['data']['maxNumberOfChildBeds'];
+        $additional->accessories = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "accessory_") && $val == "true") {
+                $additional->accessories[] = str_replace("accessory_", "", $key);
+            }
+        }
+        
+        if($_POST['data']['visibleForBooking'] == "yes") {
+            $type->visibleForBooking = true;
+        } else {
+            $type->visibleForBooking = "false";
+        }
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
+        $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedMultilevelDomainName(), $additional);
+    }
+    
+    public function changeIcon() {
+        $accessories = $this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
+        foreach($accessories as $acc) {
+            if($acc->id == $_POST['data']['id']) {
+                $acc->icon = $_POST['data']['icon'];
+                $this->getApi()->getPmsManager()->saveAccessory($this->getSelectedMultilevelDomainName(), $acc);
+                return;
+            }
         }
     }
     

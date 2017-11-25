@@ -1,0 +1,70 @@
+<?php
+$id = $_POST['data']['id'];
+$type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $id);
+$additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $id);
+$notVisible = $type->visibleForBooking ? "" : "SELECTED";
+$images = $additional->images;
+$accessories = $this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
+?>
+<div gstype='form' method='saveTypeSettings'>
+    <input type='hidden' gsname='id' value='<?php echo $id; ?>'>
+    <b>Name:</b><br>
+    <input type='txt' value='<?php echo $type->name; ?>' class='gsniceinput1' style='width:100%;box-sizing:border-box;' gsname='name'><br><br>
+    <b>Description:</b><br>
+    <textarea style='width: 100%; height: 90px;border:solid 1px #dcdcdc;box-sizing:border-box; padding: 10px;' gsname='description'><?php echo $type->description; ?></textarea>
+
+    <table width='100%'>
+        <tr>
+            <th>Guests</th>
+            <th>Children</th>
+            <th>Adults</th>
+            <th>Beds</th>
+            <th>Beds for children</th>
+            <th>Max beds</th>
+            <th>Max beds for children</th>
+            <th>Visible for booking</th>
+        </tr>
+        <tr style='text-align:center;'>
+            <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $type->size; ?>' gsname='size'></td>
+            <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->numberOfChildren; ?>' gsname='numberOfChildren'></td>
+            <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->numberOfAdults; ?>' gsname='numberOfAdults'></td>
+            <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->defaultNumberOfBeds; ?>' gsname='defaultNumberOfBeds'></td>
+            <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->defaultNumberOfChildBeds; ?>' gsname='defaultNumberOfChildBeds'></td>
+            <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->maxNumberOfBeds; ?>' gsname='maxNumberOfBeds'></td>
+            <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->maxNumberOfChildBeds; ?>' gsname='maxNumberOfChildBeds'></td>
+            <td><select class='gsniceselect1' gsname='visibleForBooking'><option value='yes'>Yes</option><option value='no' <?php echo $notVisible; ?>>No</option></select></td>
+        </tr>
+    </table>
+    <b>Accesories: <span class='createnewaccessory' style='cursor:pointer;'>(create new)</span></b><br>
+    <table width='100%'>
+        <tr>
+            <?php
+            $i = 1;
+            foreach ($accessories as $accessory) {
+                $checked = in_array($accessory->id, $additional->accessories) ? "CHECKED" : "";
+                $icon = "briefcase";
+                if($accessory->icon) {
+                    $icon = $accessory->icon;
+                }
+                echo "<td><input type='checkbox' gsname='accessory_" . $accessory->id . "' $checked> <i class='fa fa-$icon changeicon' data-id='".$accessory->id."'></i> " . $accessory->title . "</td>";
+                if ($i % 8 == 0) {
+                    echo "</tr><tr>";
+                }
+                $i++;
+            }
+            ?>
+        </tr>
+    </table>
+    <div style='text-align:right;padding-top: 20px;'>
+        <input type='button' style='padding:9px; width: 200px;' gstype='submit' value='Save'>
+    </div>
+</div>
+
+<br><br>
+<b>Images: <input type='button' class='uploadTypeImage' value='Upload an image' typeid='<?php echo $type->id; ?>'></b><br>
+<div class='imagearea'>
+    <?php
+        $_POST['data']['typeId'] = $type->id;
+        $this->printImagesForType();
+    ?>
+</div>

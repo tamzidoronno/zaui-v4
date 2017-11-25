@@ -7259,7 +7259,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         Order order = orderManager.getOrderSecure(orderId);
         
         if (order != null && order.cart != null && order.cart.reference != null && !order.cart.reference.isEmpty()) {
-            PmsBooking booking = getBooking(order.cart.reference);
+            PmsBooking booking = getBookingUnsecure(order.cart.reference);
             if (booking == null) {
                 return;
             }

@@ -30,7 +30,12 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $row->typeId);
         $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $type->id);
         
-        $res = "<b>" . $row->name . "</b><br>" . $row->description . "<bR>";
+        if($type->visibleForBooking) {
+            $res = "<i class='fa fa-eye' style='color:green; float:right;' title='This room is visible for booking'></i>";
+        } else {
+            $res = "<i class='fa fa-eye' style='color:gray; float:right;' title='This room is not visible for booking'></i>";
+        }
+        $res .= " <b>" . $row->name . "</b><br>" . $row->description . "<bR>";
         $res .= "<b>Accessorier:</b> ";
         foreach($accessories as $acc) {
             if(in_array($acc->id, $additional->accessories)) {
@@ -41,20 +46,35 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
                 $res .= "<i class='fa fa-$icon' title='".$acc->title."'></i> ";
             }
         }
-        if($type->visibleForBooking) {
-            $res .= "<i class='fa fa-eye' style='color:green; float:right;' title='This room is visible for booking'></i>";
-        } else {
-            $res .= "<i class='fa fa-eye' style='color:gray; float:right;' title='This room is not visible for booking'></i>";
-        }
         return $res;
+    }
+    
+    public function saveRoomSettings() {
+        $itemId = $_POST['data']['id'];
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $itemId);
+        $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $itemId);
+        
+        $item->bookingItemName = $_POST['data']['name'];
+        $item->description = $_POST['data']['description'];
+        $additional->hideFromCleaningProgram = $_POST['data']['hideFromCleaningProgram'] == "true";
+        $additional->squareMetres = $_POST['data']['squareMetres'];
+        $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedMultilevelDomainName(), $item);
+        $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedMultilevelDomainName(), $additional);
+        if($_POST['data']['itemtype'] != $item->bookingItemTypeId) {
+            $this->getApi()->getBookingEngine()->changeBookingItemType($this->getSelectedMultilevelDomainName(), $item->id, $_POST['data']['itemtype']);
+        }
     }
     
     public function formatDate($row) {
         return date("d.m.Y", strtotime($row->rowCreatedDate));
     }
     public function formatName($row) {
-        $res = "<b>" . $row->name . "</b>" . "<br>";
-        $res .= $row->textMessageDescription;
+        $res = "";
+        if($row->hideFromCleaningProgram) {
+            $res .= "<i class='fa fa-eye' style='color:gray; float:right;' title='Not visible in cleaning program'></i>";
+        }
+        $res .= "<b>" . $row->name . "</b><bR>";
+        $res .= $row->description;
         return $res;
     }
     public function createRoom() {
@@ -64,6 +84,20 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $item->bookingItemName = $name;
         $item->bookingItemTypeId = $types[0]->id;
         $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedMultilevelDomainName(), $item);
+    }
+    
+    public function setNewTypeSorting() {
+        $i = 1;
+        foreach($_POST['data']['sortlist'] as $typeid) {
+            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $typeid);
+            $type->order = $i;
+            $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
+            $i++;
+       }
+    }    
+    
+    public function loadSortingTypes() {
+        $this->includefile("typesorting");
     }
     
     public function formatCleanedDate($row) {

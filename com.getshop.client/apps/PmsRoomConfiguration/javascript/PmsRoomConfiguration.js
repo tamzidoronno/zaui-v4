@@ -5,7 +5,28 @@ app.PmsRoomConfiguration = {
         $(document).on('click', '.PmsRoomConfiguration .uploadTypeImage', app.PmsRoomConfiguration.uploadBoxClick);
         $(document).on('click', '.PmsRoomConfiguration .setdefaultimg', app.PmsRoomConfiguration.selectDefaultImage);
         $(document).on('click', '.PmsRoomConfiguration .changeicon', app.PmsRoomConfiguration.changeIcon);
+        $(document).on('click', '.PmsRoomConfiguration .opentypesorting', app.PmsRoomConfiguration.opentypesorting);
+        $(document).on('click', '.PmsRoomConfiguration .savetypesorting', app.PmsRoomConfiguration.savetypesorting);
+     },
+    opentypesorting : function() {
+        var event = thundashop.Ajax.createEvent('','loadSortingTypes', $(this), {});
+        thundashop.common.showInformationBoxNew(event, "Sorting");
     },
+    savetypesorting: function() {
+        var counter = 0;
+        var result = [];
+        $('#sortable li').each(function() {
+            result.push($(this).attr('typeid'));
+            counter++;
+        });
+        var data = {
+            "sortlist" : result
+        }
+        thundashop.Ajax.simplePost($(this), 'setNewTypeSorting', data);
+        thundashop.common.hideInformationBox();
+    },
+    
+    
     changeIcon : function() {
         var newIcon = window.prompt("Enter name on icon (example: bed for fa-bed)");
         if(!newIcon) {

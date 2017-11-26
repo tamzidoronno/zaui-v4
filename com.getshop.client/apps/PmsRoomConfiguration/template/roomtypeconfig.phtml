@@ -5,9 +5,21 @@
     <input type="txt" class="gsniceinput1" placeholder='Double room' gsname='name'>
     <input type="button" value="Create a new room type" style="padding:9px;" gstype='submit'>
 </span>
-<h2>Room types</h2>
+<h2>Room types <span class='opentypesorting' style='cursor:pointer;'>(open sorting)</span></h2>
 <?php
     $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+    
+    foreach($types as $type) {
+        if($type->order == 0) {
+            $unsorted[] = $type;
+        } else {
+            $sortList[$type->order] = $type;
+        }
+    }
+
+    ksort($sortList);
+    
+    $types = $sortList;
     
     $rows = array();
     $rowNumber = 0;
@@ -39,10 +51,15 @@
     $table->setData($rows);
     echo "<div class='roomtypeconfigtable'>";
     $table->render();
-    echo "</div>";    
+    echo "</div>";
 ?>
 
 <style>
     .roomtypeconfigtable .GetShopModuleTable .col { width: 5%; text-align: center; }
     .roomtypeconfigtable .GetShopModuleTable .col.col_3 { width: 53%; text-align: left; }
 </style>
+
+<script>
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+</script>

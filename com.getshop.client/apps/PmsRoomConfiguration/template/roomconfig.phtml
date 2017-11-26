@@ -20,11 +20,14 @@ foreach($rooms as $room) {
     $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $room->id);
     $additional->name = $room->bookingItemName;
     $additional->typeName = $types[$room->bookingItemTypeId]->name;
+    $additional->description = $room->description;
     $rows[] = $additional;
             
 }
 $attributes = array(
     array('id', 'gs_hidden', 'itemId'),
+    array('description', 'gs_hidden', 'description'),
+    array('hideFromCleaningProgram', 'gs_hidden', 'hideFromCleaningProgram'),
     array('date', 'Date', null, 'formatDate'),
     array('bookingItemName', 'Name', 'name', 'formatName'),
     array('squareMetres', 'Square<br>metres', 'squareMetres', null),
@@ -42,6 +45,6 @@ echo "</div>";
 
 <style>
     .roomconfigtable .GetShopModuleTable .col { width: 10%; text-align: center; }
-    .roomconfigtable .GetShopModuleTable .col.col_3 { width: 50%; text-align: left; }
-    .roomconfigtable .GetShopModuleTable .col.col_6 { text-align: left; }
+    .roomconfigtable .GetShopModuleTable .col.col_5 { width: 50%; text-align: left; }
+    .roomconfigtable .GetShopModuleTable .col.col_8 { text-align: left; }
 </style>

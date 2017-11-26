@@ -1,0 +1,9 @@
+.PmsRateManagerConfiguration .configurationpanel {
+    border: solid 1px #bbb;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    background-color: #efefef;
+    padding: 10px;
+}
+.PmsRateManagerConfiguration .pmsbutton { border: solid 1px #bbb; padding: 5px; cursor:pointer; margin-top: 5px; display:inline-block; }

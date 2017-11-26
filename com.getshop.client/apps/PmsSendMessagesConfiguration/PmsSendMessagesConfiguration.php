@@ -9,9 +9,16 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
     public function getName() {
         return "PmsSendMessagesConfiguration";
     }
+    
+    public function updateRoomMessage() {
+        $item = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        $item->textMessageDescription = $_POST['data']['textMessageDescription'];
+        $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedMultilevelDomainName(), $item);
+    }
 
     public function render() {
         $this->includefile("addmessage");
+        $this->includefile("roomspecificmessages");
     }
     
     public function changeLanguage() {

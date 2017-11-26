@@ -1,0 +1,41 @@
+<?php
+/* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+
+$ignoreSorting = false;
+$sortList = array();
+$unsorted = array();
+foreach($items as $item) {
+    if($item->order == 0) {
+        $unsorted[] = $item;
+    } else {
+        $sortList[$item->order] = $item;
+    }
+}
+
+ksort($sortList);
+
+foreach($unsorted as $item) {
+    $sortList[] = $item;
+}
+
+?>
+
+<ul id="sortable">
+<?php foreach($sortList as $item) { ?>
+  <li class="ui-state-default" itemid="<?php echo $item->id; ?>"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><?php echo $item->bookingItemName; ?></li>
+<?php } ?>
+</ul>
+  <style>
+  #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+  #sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  
+  <div style='text-align: right'>
+      <input type='button' class="saveitemsorting" style='padding: 8px;' value='Save sorting'>
+  </div>
+<script>
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+</script>

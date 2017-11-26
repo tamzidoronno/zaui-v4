@@ -100,6 +100,20 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $this->includefile("typesorting");
     }
     
+    public function loadSortingItems() {
+        $this->includefile("itemsorting");
+    }
+    
+    public function setNewSorting() {
+        $i = 1;
+        foreach($_POST['data']['sortlist'] as $itemid) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $itemid);
+            $item->order = $i;
+            $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedMultilevelDomainName(), $item);
+            $i++;
+       }
+    }
+    
     public function formatCleanedDate($row) {
         if(!$row->lastCleaned) {
             return "N/A";

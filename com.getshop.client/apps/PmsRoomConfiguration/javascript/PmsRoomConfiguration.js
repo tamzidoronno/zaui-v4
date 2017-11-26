@@ -6,12 +6,32 @@ app.PmsRoomConfiguration = {
         $(document).on('click', '.PmsRoomConfiguration .setdefaultimg', app.PmsRoomConfiguration.selectDefaultImage);
         $(document).on('click', '.PmsRoomConfiguration .changeicon', app.PmsRoomConfiguration.changeIcon);
         $(document).on('click', '.PmsRoomConfiguration .opentypesorting', app.PmsRoomConfiguration.opentypesorting);
+        $(document).on('click', '.PmsRoomConfiguration .openitemsorting', app.PmsRoomConfiguration.openitemsorting);
         $(document).on('click', '.PmsRoomConfiguration .savetypesorting', app.PmsRoomConfiguration.savetypesorting);
+        $(document).on('click', '.PmsRoomConfiguration .saveitemsorting', app.PmsRoomConfiguration.saveitemsorting);
      },
     opentypesorting : function() {
         var event = thundashop.Ajax.createEvent('','loadSortingTypes', $(this), {});
         thundashop.common.showInformationBoxNew(event, "Sorting");
     },
+    openitemsorting : function() {
+        var event = thundashop.Ajax.createEvent('','loadSortingItems', $(this), {});
+        thundashop.common.showInformationBoxNew(event, "Sorting");
+    },
+    saveitemsorting: function() {
+        var counter = 0;
+        var result = [];
+        $('#sortable li').each(function() {
+            result.push($(this).attr('itemid'));
+            counter++;
+        });
+        var data = {
+            "sortlist" : result
+        }
+        thundashop.Ajax.simplePost($(this), 'setNewSorting', data);
+        thundashop.common.hideInformationBox();
+    },
+    
     savetypesorting: function() {
         var counter = 0;
         var result = [];

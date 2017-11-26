@@ -4,7 +4,7 @@ $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelect
 $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $id);
 $notVisible = $type->visibleForBooking ? "" : "SELECTED";
 $images = $additional->images;
-$accessories = $this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
+$accessories = (array)$this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
 ?>
 <div gstype='form' method='saveTypeSettings'>
     <input type='hidden' gsname='id' value='<?php echo $id; ?>'>

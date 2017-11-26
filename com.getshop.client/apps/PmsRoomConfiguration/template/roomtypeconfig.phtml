@@ -37,10 +37,12 @@
     
     $table = new \GetShopModuleTable($this, 'PmsRoomConfiguration', 'loadTypeResult', null, $attributes);
     $table->setData($rows);
+    echo "<div class='roomtypeconfigtable'>";
     $table->render();
+    echo "</div>";    
 ?>
 
 <style>
-    .GetShopModuleTable .col { width: 5%; text-align: center; }
-    .GetShopModuleTable .col.col_3 { width: 53%; text-align: left; }
+    .roomtypeconfigtable .GetShopModuleTable .col { width: 5%; text-align: center; }
+    .roomtypeconfigtable .GetShopModuleTable .col.col_3 { width: 53%; text-align: left; }
 </style>

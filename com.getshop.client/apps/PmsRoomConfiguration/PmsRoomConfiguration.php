@@ -8,10 +8,10 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     
     public function getAccessories() {
         if(isset($this->acc)) {
-            return $this->acc;
+            return (array)$this->acc;
         }
         $this->acc = $this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
-        return $this->acc;
+        return (array)$this->acc;
     }
     
 
@@ -52,6 +52,26 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     public function formatDate($row) {
         return date("d.m.Y", strtotime($row->rowCreatedDate));
     }
+    public function formatName($row) {
+        $res = "<b>" . $row->name . "</b>" . "<br>";
+        $res .= $row->textMessageDescription;
+        return $res;
+    }
+    public function createRoom() {
+        $name = $_POST['data']['name'];
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $item = new \core_bookingengine_data_BookingItem();
+        $item->bookingItemName = $name;
+        $item->bookingItemTypeId = $types[0]->id;
+        $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedMultilevelDomainName(), $item);
+    }
+    
+    public function formatCleanedDate($row) {
+        if(!$row->lastCleaned) {
+            return "N/A";
+        }
+        return date("d.m.Y", strtotime($row->lastCleaned));
+    }
     
     public function createAccesory() {
         $accessory = new \core_pmsmanager_PmsRoomTypeAccessory();
@@ -61,6 +81,10 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     
     public function PmsRoomConfiguration_loadTypeResult() {
         $this->includefile("roomtypeconfigurationpanel");
+    }
+    
+    public function PmsRoomConfiguration_loadRoomConfiguration() {
+        $this->includefile("roomconfigurationpanel");
     }
     
     public function printImagesForType() {

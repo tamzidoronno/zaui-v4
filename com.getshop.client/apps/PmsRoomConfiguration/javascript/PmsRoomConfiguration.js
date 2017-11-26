@@ -8,6 +8,9 @@ app.PmsRoomConfiguration = {
     },
     changeIcon : function() {
         var newIcon = window.prompt("Enter name on icon (example: bed for fa-bed)");
+        if(!newIcon) {
+            return;
+        }
         var event = thundashop.Ajax.createEvent(null, 'changeIcon', $(this), {
             "id" : $(this).attr('data-id'),
             "icon" : newIcon

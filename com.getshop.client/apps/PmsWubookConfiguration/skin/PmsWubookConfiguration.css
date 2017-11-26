@@ -1,14 +1,5 @@
-.PmsRateManagerConfiguration .configurationpanel {
-    border: solid 1px #bbb;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-    border-radius: 3px;
-    background-color: #efefef;
-    padding: 10px;
-}
-.PmsRateManagerConfiguration .pmsbutton {
-
-padding: 8px;
+.PmsWubookConfiguration .gsmodulebutton { 
+    padding: 8px;
     cursor: pointer;
     margin-top: 5px;
     display: inline-block;
@@ -28,4 +19,15 @@ padding: 8px;
         -webkit-appearance: push-button;
     user-select: none;
     white-space: pre;
+    
+}
+
+.PmsWubookConfiguration .section {
+        border: solid 1px #bbb;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    background-color: #efefef;
+    padding: 10px;
+    margin-top: 10px;
 }

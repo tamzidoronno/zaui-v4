@@ -74,22 +74,46 @@ foreach($config->addonConfiguration as $item) {
         $addonItem = $addonItems[$product->id];
         $selectedDaily = $addonItem->isSingle ? "" : "CHECKED";
         $includedInRoomPrice = array_values($addonItem->includedInBookingItemTypes);
+        $displayInBookingProcess = array_values($addonItem->displayInBookingProcess);
         $perGuest = $addonItem->dependsOnGuestCount ? "CHECKED" : "";
         $noRefundable = $addonItem->noRefundable ? "CHECKED" : "";
     ?>
     <tr class='settingsForProduct' productid='<?php echo $product->id; ?>'>
-        <td style="width:300px;text-align: left;">
-            <i class="fa fa-info-circle" style="color:green; cursor:pointer;"></i> 
-            <?php echo $product->name . " " . $addonItem->descriptionWeb; ?>
+        <td style="width:300px;text-align: left;position:relative;">
+            <i class="fa fa-info-circle" style="color:green; cursor:pointer;" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();"></i> 
+            <?php echo $product->name . " <span style='color:#bbb; font-weight:bold;'>" . $addonItem->descriptionWeb . "</span>"; ?>
+            <?php 
+            if($addonItem->bookingicon) {
+                echo "<i class='fa fa-".$addonItem->bookingicon."' style='float:right; color:#bbb; padding-right: 5px;'></i>";
+            }
+            ?>
+            <span class="extendedinformation">
+                <div class="extendedinforow">
+                    Description on web page <input type="txt" class="settings" gsname="descriptionWeb" value="<?php echo $addonItem->descriptionWeb; ?>">
+                </div>
+                <div class="extendedinforow">
+                    Booking process icon <input type="txt" class="settings" gsname="bookingicon" value="<?php echo $addonItem->bookingicon; ?>">
+                </div>
+                <div class="extendedinforow">
+                    Text to identify addon in the channel manager <input type="txt" class="settings" gsname="channelManagerAddonText" value="<?php echo $addonItem->channelManagerAddonText; ?>">
+                </div>
+                <div class="extendedinforow">
+                    <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">
+                    Hide, <b>remember to save settings</b> in<br> bottom of page to save this changes.
+                </div>
+                
+            </span>
+            
         </td>
         <td><input type="checkbox" <?php echo $selectedDaily; ?> gsname='daily'></td>
         <td><input type="txt" style="width:30px" value='<?php echo $product->price; ?>' gsname='price'></td>
         <td><?php echo round($product->priceExTaxes); ?></td>
-        <td><select gsname='taxgroup'>
+        <td style="text-align: left;">
+            <select gsname='taxgroup'>
             <?php
             foreach($taxgroups as $group) {
                 if($group->taxRate > 0) {
-                    $selectedTax = $prod->taxGroupObject->groupNumber == $group->groupNumber ? "SELECTED" : "";
+                    $selectedTax = ($product->taxGroupObject->groupNumber == $group->groupNumber) ? "SELECTED" : "";
                     echo "<option value='".$group->groupNumber."' $selectedTax>" . $group->taxRate . "%</option>";
                 }
             }
@@ -110,7 +134,10 @@ foreach($config->addonConfiguration as $item) {
         <td></td>
         <?php
         foreach($types as $type) {
-            echo "<td class='rotate sellonroom'><div><span><input type='checkbox' gsname='sellonroom_".$type->id."'></span></div></td>";
+            if(in_array($type->id, $displayInBookingProcess)) {
+                $selected = "CHECKED";
+            }
+            echo "<td class='rotate sellonroom'><div><span><input type='checkbox' gsname='sellonroom_".$type->id."' $selected></span></div></td>";
         }
         ?>
     </tr>

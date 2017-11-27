@@ -2,12 +2,25 @@
 /* @var $this ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura */
 $orders = $this->getApi()->getOrderManager()->getAllUnpaid("ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura");
 $groupedOrders = $this->groupOrdersByUserId($orders);
+if (!count($orders)) {
+    return;
+}
+
 
 ?>
 <div gstype='form' method='showSelectUser'>
 <?
 foreach ($groupedOrders as $userId => $orders) {
     $user = $this->getApi()->getUserManager()->getUserById($userId);
+    $total = 0;
+    foreach ($orders as $order) {
+        $total += $this->getApi()->getOrderManager()->getTotalAmount($order);
+    }
+    if (!$total)
+        continue;
+    
+    //119525 119858 119524
+    
     ?>
     <div class='groupedbyuser'>
         <div class='userinfo'>
@@ -19,11 +32,17 @@ foreach ($groupedOrders as $userId => $orders) {
         <?
         foreach ($orders as $order) {
             $incremental = $order->incrementOrderId;
-            $name = $order->cart->address ? $order->cart->address->fullName : "";
+            
+            $name = $order->cart->address && isset($order->cart->address->fullName) ? $order->cart->address->fullName : "";
+            if (!$name) {
+                $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+                $name = $user->fullName;
+            }
+            
             $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
             $date = date("d/m-Y", strtotime($order->rowCreatedDate));
             
-            if ($total === 0) {
+            if ($total == 0) {
                 continue;
             }
             ?> 

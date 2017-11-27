@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class PmsConfigurationInstructions extends UpdateScriptBase implements UpdateScript {
+public class PmsWubookConfiguration extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
-        return getDate("14/11-2017");
+        return getDate("26/11-2017");
     }
     
     @Override
     public String getId() {
-        return "b7c0d837-92af-4f96-a6fe-fc2d963a2dca";
+        return "3144996a-a3a1-4687-a26c-09771cec9145";
     }
 
     @SuppressWarnings("empty-statement")
@@ -49,7 +49,7 @@ public class PmsConfigurationInstructions extends UpdateScriptBase implements Up
     }
     
     public static void main(String[] args) {
-        new PmsConfigurationInstructions().runSingle();
+        new PmsWubookConfiguration().runSingle();
     }
     
     @Override
@@ -66,16 +66,16 @@ public class PmsConfigurationInstructions extends UpdateScriptBase implements Up
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        Application PmsConfigurationInstructions = createSettings("PmsConfigurationInstructions",
-        "78b6ce1d-95df-4972-b530-e08a89e09c46",
+        Application PmsWubookConfiguration = createSettings("PmsWubookConfiguration",
+        "2b4a865c-6aed-416e-bf52-ab6e2428bd1f",
         allowed2,
         " ",
-        Application.Type.Payment, true);
-        PmsConfigurationInstructions.isPublic = true;
-        PmsConfigurationInstructions.isFrontend = true;
-        PmsConfigurationInstructions.moduleId = "pms";
-        PmsConfigurationInstructions.defaultActivate = true;
-        PmsConfigurationInstructions.storeId = "all";
-        database.save(PmsConfigurationInstructions, credentials);
+        Application.Type.Webshop, true);
+        PmsWubookConfiguration.isPublic = true;
+        PmsWubookConfiguration.isFrontend = true;
+        PmsWubookConfiguration.moduleId = "pms";
+        PmsWubookConfiguration.defaultActivate = true;
+        PmsWubookConfiguration.storeId = "all";
+        database.save(PmsWubookConfiguration, credentials);
     }
 }

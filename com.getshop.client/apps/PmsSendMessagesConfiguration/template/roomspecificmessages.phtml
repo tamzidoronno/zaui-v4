@@ -1,0 +1,19 @@
+<div style="clear:both;"></div>
+<h1>Room specific text (included in text above by using {roomDescription})</h1>
+<?php
+/* @var $this ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
+$items = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedMultilevelDomainName());
+$bookingitems = $this->indexList($this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName()));
+foreach($items as $item) {
+    ?>
+        <div class="messagebox-outer" gstype="form" method="updateRoomMessage">
+            <input type="hidden" gsname="id" value="<?php echo $item->itemId; ?>">
+            <div class='messagebox'>
+                <div class='heading'>Room <?php echo $bookingitems[$item->itemId]->bookingItemName; ?> </div>
+                <div class='body'><textarea gsname="textMessageDescription"><?php echo $item->textMessageDescription; ?></textarea></div>
+                <div class="footer"><input type="button" value="Save" gstype="submit"></div>
+            </div>
+        </div>
+    <?php
+}
+?>

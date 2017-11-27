@@ -1,0 +1,25 @@
+<br>
+<div gstype='form' method='saveBudget'>
+    <?php
+    /* @var $this ns_bb158014_c205_4d6a_a191_3315bdaa78dc\PmsBudgetConfiguration */
+    $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Month</th>";
+    echo "<th>Coverage %</th>";
+    echo "<th>Amount</th>";
+    echo "</tr>";
+    for($i = 1; $i <= 12; $i++) {
+        $perc = $config->budget->{$i}->coverage_percentage;
+        $amunt = $config->budget->{$i}->budget_amount;
+        echo "<tr>";
+        echo "<td>".date("M", strtotime("2012-$i-01"))."</td>";
+        echo "<td style='text-align:center;'><input type='txt' style='width:50px;' gsname='budget_percentage_$i' value='$perc' class='gsniceinput1'></td>";
+        echo "<td><input type='txt' gsname='budget_amount_$i' value='$amunt' class='gsniceinput1'><td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    ?>
+    <br>
+    <input type='button' gstype='submit' value='Save' style='padding: 8px; width: 200px;'>
+</div>

@@ -17,11 +17,13 @@ public class SyncronizedMethodCountDownThread extends Thread {
     private boolean terminate = false;
     private boolean warningMessagePrinted = false;
     private final String storeId;
+    private final long methodThread;
 
-    public SyncronizedMethodCountDownThread(String managerName, String methodName, String storeId) {
+    public SyncronizedMethodCountDownThread(String managerName, String methodName, String storeId, long methodThread) {
         this.managerName = managerName;
         this.methodName = methodName;
         this.storeId = storeId;
+        this.methodThread = methodThread;
     }
     
     public void terminate() {
@@ -41,6 +43,16 @@ public class SyncronizedMethodCountDownThread extends Thread {
         }
         
         System.out.println(new Date() + " | !!!!!!!!!!!!!!!!!! " + getDetails() + " !!!! Did not finish within 60seconds");
+        System.out.println("============== DEBUG STACK, WHAT IS HANGING? ==================");
+        for (Thread t : Thread.getAllStackTraces().keySet()) {
+            if (t.getId() == this.methodThread) {
+                for (StackTraceElement el : t.getStackTrace()) {
+                    System.out.println(el.toString());
+                }
+            }
+        }
+        System.out.println("============== END WHAT IS HANGING? ==================");
+        
         warningMessagePrinted = true;
     }
     

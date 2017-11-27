@@ -1,0 +1,30 @@
+.gs_page_width{max-width:1100px;margin:auto;}
+.gsarea[area="header"] {background-color:#308dc9;height:50px;}
+.gsarea[area="body"] {background-color:#f9f9f9;min-height:700px;padding:50px 0;}
+.gsarea[area="body"] .gs_page_width{background-color:#fff;padding:20px;box-shadow:0px 2px 2px 0px #ddd;}
+.gsarea[area="footer"] {background-color:#308dc9;color:#fff;min-height:150px;}
+.shop_button{border-radius:4px;color:#fff;}
+.ContentManager h1{font-weight:500;color:#444;letter-spacing:1px;}
+
+/*Menu*/
+.Menu .entry a div{padding:16px;font-size:18px;color:#fff;}
+.Menu .entry.active a div{background-color:#f9f9f9;color:#308dc9;}
+
+/*end to menu*/
+
+.shop_button,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected{background:#308dc9;background-color:#308dc9; border-color:#308dc9;}
+.PmsBookingProductList .continue_button.disabled{border-color:#bbb;}
+
+.footerprovidedtext, .footerprovidedtext a{background-color: #f9f9f9;color: #308dc9;}
+@media only all and (max-width:800px){
+    .Menu .menuentries.horizontal{background-color:#308dc9;}
+    .mobilenavigatemenu{
+        padding: 10px;
+        font-size: 26px;
+        color: #fff;
+    }
+}

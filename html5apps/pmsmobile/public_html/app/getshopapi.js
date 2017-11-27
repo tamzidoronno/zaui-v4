@@ -7146,6 +7146,16 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'checkForOrdersFailedCollecting' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'checkForOrdersFailedCollecting',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'checkForOrdersToAutoPay' : function(daysToTryAfterOrderHasStarted, gs_silent) {
         var data = {
             args : {

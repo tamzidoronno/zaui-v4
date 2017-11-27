@@ -1,0 +1,34 @@
+<?php
+/* @var $this \ns_f29c2731_2574_4ddf_80d1_0bb9ecee3979\PmsNotificationConfiguration */
+$types = array();
+$types["report"] = "Emails to send statistics report to";
+$types["applogentry"] = "Emails to send app log entries to";
+$types["creditorder"] = "When orders are credited";
+$types["caretaker"] = "When caretaker tasks are added";
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+
+?>
+<div gstype="form" method="saveNotifications">
+    <?
+    foreach($types as $type => $heading) {
+        echo "<div style='display:inline-block; float:left;font-family:Times New Roman; margin-right: 20px;'>";
+        echo "<h3>$heading</h3>";
+        for($i = 1; $i <= 10; $i++) {
+            $value = "";
+            if(isset($config->emailsToNotify->{$type}[$i-1])) {
+                $value = $config->emailsToNotify->{$type}[$i-1];
+            }
+            if($i < 10) {
+                $idx = "0" . $i;
+            } else {
+                $idx = $i;
+            }
+            echo "$idx. <input type='txt' gsname='emailtonotify_".$type."_$i' value='$value' class='gsniceinput1'><br>";
+        }
+        echo "</div>";
+    }
+    ?>
+    <div style='clear:both;'></div>
+    <br>
+    <input type="button" value="Save" style="padding: 8px; width: 200px;" gstype="submit">
+</div>

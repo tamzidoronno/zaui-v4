@@ -97,6 +97,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     private HashMap<String, PmsPricing> priceMap = new HashMap();
     private HashMap<String, ConferenceData> conferenceDatas = new HashMap();
     private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap();
+    private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
@@ -212,6 +213,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
             if (dataCommon instanceof PmsBookingAutoIncrement) {
                 autoIncrement = (PmsBookingAutoIncrement) dataCommon;
+            }
+            if (dataCommon instanceof PmsRoomTypeAccessory) {
+               accesories.put(dataCommon.id, (PmsRoomTypeAccessory)dataCommon);
             }
             if (dataCommon instanceof PmsPricing) {
                 PmsPricing price = (PmsPricing) dataCommon;
@@ -1127,6 +1131,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             
             if(split) { 
                 room = splitBookingIfNesesary(booking, room);
+                start = room.date.start;
+                end = room.date.end;
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
@@ -3740,7 +3746,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         PmsBookingRooms newRoom = gson.fromJson(copy, PmsBookingRooms.class);
         newRoom.clear();
         
-        addBookingToBookingEngine(booking, newRoom);
+        String res = addBookingToBookingEngine(booking, newRoom);
+        if(res.isEmpty()) {
+            removeAddonsByDate(room);
+            removeAddonsByDate(newRoom);
+        }
         
         return newRoom;
     }
@@ -4469,7 +4479,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     @Override
     public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception {
         for(PmsAdditionalTypeInformation add : additionDataForTypes) {
-            if(add.typeId.equals(typeId)) {
+            if(add != null && add.typeId != null && add.typeId.equals(typeId)) {
                 return add;
             }
         }
@@ -7344,6 +7354,37 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         return user;
         
+    }
+
+    private void removeAddonsByDate(PmsBookingRooms room) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem addon : room.addons) {
+            Date addonDate = addon.date;
+            boolean remove = false;
+            if(addonDate.after(room.date.end)) {
+                remove = true;
+            }
+            if(addonDate.before(room.date.start) && !room.isSameDay(addonDate, room.date.start)) {
+                remove = true;
+            }
+            
+            if(remove) {
+                toRemove.add(addon);
+            }
+        }
+        room.addons.removeAll(toRemove);
+    }
+
+    @Override
+    public PmsRoomTypeAccessory saveAccessory(PmsRoomTypeAccessory accessory) {
+        saveObject(accessory);
+        accesories.put(accessory.id, accessory);
+        return accessory;
+    }
+
+    @Override
+    public List<PmsRoomTypeAccessory> getAccesories() {
+        return new ArrayList(accesories.values());
     }
 
 }

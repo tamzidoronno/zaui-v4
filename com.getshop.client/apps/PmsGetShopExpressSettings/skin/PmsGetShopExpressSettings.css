@@ -1,0 +1,10 @@
+.PmsGetShopExpressSettings .productview { position:absolute; display: none; overflow-y: auto; overflow-x: hidden; max-height: 250px; padding-right: 20px !important; border: solid 1px; padding: 5px; border-radius: 3px; z-index: 3; background-color:#fff; }
+.PmsGetShopExpressSettings .section { 
+    border: solid 1px #bbb;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    background-color: #efefef;
+    padding: 10px;
+    margin-top: 10px;
+}

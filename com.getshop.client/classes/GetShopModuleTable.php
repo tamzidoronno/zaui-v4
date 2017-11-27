@@ -46,15 +46,15 @@ class GetShopModuleTable {
     }
 
     private function renderTable() {
-        echo "<div class='GetShopModuleTable'>";
+        echo "<div class='GetShopModuleTable' identifier='".$this->getIdentifier()."' method='".$this->manangerName."_".$this->functionName."'>";
         
             echo "<div class='attributeheader datarow'>";
                 $i = 1;
                 foreach ($this->attributes as $attribute) {
-                    $i++;
                     if ($attribute[1] !== "gs_hidden") {
                         echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$attribute[1]</div>";
                     }
+                    $i++;
                     
                 }
             echo "</div>";
@@ -124,42 +124,6 @@ class GetShopModuleTable {
         if (!method_exists($this->application, $functionName)) {
             return;
         }
-        ?>
-
-        <script>
-            $('.GetShopModuleTable .datarow .datarow_inner').on('click', function(e) {
-                $(this).closest('.GetShopModuleTable').find('.datarow.active').removeClass('active');
-                $(this).closest('.datarow').addClass('active');
-                
-                var target = $(e.target);
-                var base = $(this).closest('.datarow');
-                base.find('.datarow_extended_content').html("");
-                $('.GetShopModuleTable .datarow_extended_content').slideUp();
-                var rowNumber = $(base).attr('rownumber');
-                
-                var data = gs_modules_data_array['<? echo $this->getIdentifier(); ?>'][rowNumber];
-                data['gscolumn'] = target.attr('index');
-                base.find('.datarow_extended_content').slideDown();
-                
-                var event = thundashop.Ajax.createEvent(null, '<? echo $functionName; ?>', this, data);
-                event['synchron'] = true;
-                
-                thundashop.Ajax.post(event, function(res) {
-                    base.find('.datarow_extended_content').html(res);
-                });
-                
-                var data = {
-                    functionName : '<? echo $functionName; ?>',
-                    rownumber : rowNumber,
-                    index : target.attr('index')
-                }
-                
-                var event = thundashop.Ajax.createEvent(null, "setGetShopTableRowId", this, data);
-                thundashop.Ajax.post(event, null, null, true);
-            });
-            
-        </script>
-        <?
     }
     
     private function getIdentifier() {

@@ -2191,3 +2191,44 @@ $(window).on('resize', function() {
         thundashop.framework.loadHeight($(this).attr('cellid'));
     });
 });
+
+$(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e) {
+    var table = $(this).closest('.GetShopModuleTable');
+    var identifier = table.attr('identifier');
+    if($(this).closest('.datarow').hasClass('active')) {
+        $(this).closest('.datarow').removeClass('active');
+        table.find('.datarow_extended_content').slideUp();
+        var event = thundashop.Ajax.createEvent(null, 'clearSessionOnIdentifierForTable', this, {
+            "identifier" : identifier
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {});
+        return;
+    }
+    table.find('.datarow.active').removeClass('active');
+    $(this).closest('.datarow').addClass('active');
+    var target = $(e.target);
+    var base = $(this).closest('.datarow');
+    base.find('.datarow_extended_content').html("");
+    table.find('.datarow_extended_content').slideUp();
+    var rowNumber = $(base).attr('rownumber');
+
+    var data = gs_modules_data_array[identifier][rowNumber];
+    data['gscolumn'] = target.attr('index');
+    base.find('.datarow_extended_content').slideDown();
+
+    var event = thundashop.Ajax.createEvent(null, table.attr('method'), this, data);
+    event['synchron'] = true;
+
+    thundashop.Ajax.post(event, function(res) {
+        base.find('.datarow_extended_content').html(res);
+    });
+
+    var data = {
+        functionName : table.attr('method'),
+        rownumber : rowNumber,
+        index : target.attr('index')
+    }
+
+    var event = thundashop.Ajax.createEvent(null, "setGetShopTableRowId", this, data);
+    thundashop.Ajax.post(event, null, null, true);
+});

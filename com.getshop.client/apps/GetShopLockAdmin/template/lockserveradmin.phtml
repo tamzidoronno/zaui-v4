@@ -1,6 +1,6 @@
 <?php
 /* @var $this ns_99d42f8c_e446_40fe_a038_af9f316dfb3a\GetShopLockAdmin */
-$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $lockservers = $config->lockServerConfigs;
 
 $locktype = array();

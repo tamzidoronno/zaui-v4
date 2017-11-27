@@ -1,0 +1,3 @@
+.PmsRoomConfiguration .imagecontainer { position:relative; }
+.PmsRoomConfiguration .imagecontainer .fa-check { position:absolute; left: 0px; background-color:#fff; padding: 2px; cursor:pointer; border-bottom: solid 1px #bbb; border-right: solid 1px #bbb; border-left: solid 1px #bbb; }
+.PmsRoomConfiguration .imagecontainer .fa-trash-o { position:absolute; right: 0px; background-color:#fff; padding: 2px; cursor:pointer; border-bottom: solid 1px #bbb; border-left: solid 1px #bbb; }

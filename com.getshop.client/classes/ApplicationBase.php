@@ -20,6 +20,11 @@ class ApplicationBase extends FactoryBase {
         return false;
     }
     
+    public function clearSessionOnIdentifierForTable() {
+        $identifier = $_POST['data']['identifier'];
+        unset($_SESSION['gs_moduletable_'.$identifier]);
+    }
+    
     public function indexList($list) {
         $list2 = array();
         foreach($list as $l) {

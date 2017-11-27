@@ -1,0 +1,50 @@
+<?php 
+/* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
+?>
+<br>
+<br>
+<br>
+<span style="float:right;" gstype='form' method='createRoom'>
+    <input type="txt" class="gsniceinput1" placeholder='101' gsname='name'>
+    <input type="button" value="Create a new room" style="padding:9px;" gstype='submit'>
+</span>
+<h2>Rooms <span class='openitemsorting' style='cursor:pointer;'>(open sorting)</span></h2>
+
+
+<?php
+$rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName()));
+
+$rows = array();
+foreach($rooms as $room) {
+    $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $room->id);
+    $additional->name = $room->bookingItemName;
+    $additional->typeName = $types[$room->bookingItemTypeId]->name;
+    $additional->description = $room->description;
+    $rows[] = $additional;
+            
+}
+$attributes = array(
+    array('id', 'gs_hidden', 'itemId'),
+    array('description', 'gs_hidden', 'description'),
+    array('hideFromCleaningProgram', 'gs_hidden', 'hideFromCleaningProgram'),
+    array('date', 'Date', null, 'formatDate'),
+    array('bookingItemName', 'Name', 'name', 'formatName'),
+    array('squareMetres', 'Square<br>metres', 'squareMetres', null),
+    array('squareMetres', 'Last<br>cleaned', 'lastCleaned', 'formatCleanedDate'),
+    array('squareMetres', 'Type', 'typeName', null),
+);
+
+$table = new \GetShopModuleTable($this, 'PmsRoomConfiguration', 'loadRoomConfiguration', null, $attributes);
+$table->setData($rows);
+echo "<div class='roomconfigtable'>";
+$table->render();
+echo "</div>";
+?>
+
+
+<style>
+    .roomconfigtable .GetShopModuleTable .col { width: 10%; text-align: center; }
+    .roomconfigtable .GetShopModuleTable .col.col_5 { width: 50%; text-align: left; }
+    .roomconfigtable .GetShopModuleTable .col.col_8 { text-align: left; }
+</style>

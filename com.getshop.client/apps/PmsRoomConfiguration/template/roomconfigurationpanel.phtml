@@ -1,0 +1,45 @@
+<?php
+/* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
+//echo "<pre>";
+//print_r($_POST);
+$itemId = $_POST['data']['id'];
+$item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $itemId);
+$additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $itemId);
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$hideFromCleaning = $additional->hideFromCleaningProgram ? "CHECKED" : "";
+?>
+<div gstype="form" method="saveRoomSettings">
+    <input type='hidden' gsname='id' value='<?php echo $itemId; ?>'>
+    <table width="100%">
+        <tr>
+            <td width="45%">
+                Name<br>
+                <input type="txt" class="gsniceinput1" style="width:100%;box-sizing: border-box;" value="<?php echo $item->bookingItemName; ?>" gsname='name'>
+            </td>
+            <td width="45%">
+                Type<br>
+                <select type="txt" class="gsniceselect1" style="width:100%;box-sizing: border-box;height: 38px;" gsname='itemtype'>
+                    <?php
+                    foreach($types as $type) {
+                        $selected = $item->bookingItemTypeId == $type->id ? "SELECTED" : "";
+                        echo "<option value='" .$type->id. "' $selected>" . $type->name . "</option>";
+                    }
+                    ?>
+                </select>
+            </td>
+            <td width="10%">
+                Square metres<br>
+                <input type="txt" class="gsniceinput1" style="width:100%;box-sizing: border-box;" value="<?php echo $additional->squareMetres; ?>" gsname='squareMetres'>
+            </td>
+        </tr>
+    </table>
+    <bR>
+    <input type="checkbox" value="<?php echo $item->bookingItemName; ?>" gsname='hideFromCleaningProgram' <?php echo $hideFromCleaning; ?>> Hidden from cleaning program
+    <bR>
+    <bR>
+    Description:<br>
+    <textarea gsname='description' style="width:100%;box-sizing: border-box;height: 80px; border: solid 1px #bbb; padding: 10px;"><?php echo $item->description; ?></textarea>
+    <div style="text-align:right">
+        <input type="button" value="Save" style="padding: 8px; width: 200px;" gstype="submit">
+    </div>
+</div>

@@ -1,0 +1,139 @@
+<?php
+ /* @var $this \ns_4a282640_6f2c_4f64_acf2_a92f9c06e2d9\PmsGetShopExpressSettings */
+$viewtypes = array();
+$viewtypes[1] = "Daily";
+$viewtypes[2] = "All active";
+
+$sortType = array();
+$sortType[1] = "By room";
+$sortType[2] = "By owner";
+echo "<div class='section'>";
+?>
+<h1>
+    <span gstype='form' method='createPmsView' style='float:right;'>
+        <input class='createPmsViewinput gsniceinput1' type='txt' placeholder='Name' gsname='name'><input type='button' gstype='submit' value='Create view' style='padding: 8px; width: 200px;'>
+    </span>
+    Mobile views
+</h1>
+<?php
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$views = (array)$config->mobileViews;
+echo "<span class='productview'></span>";
+if(!$views || sizeof($views) == 0) {
+    echo "No views created yet.";
+} else {
+    echo "<table width='100%' cellspacing='1' cellpadding='1'>";
+    echo "<tr>";
+    echo "<th></th>";
+    echo "<th align='left' width='10'>Paid</th>";
+    echo "<th align='left' width='10'>Name</th>";
+    echo "<th align='left' width='10'>Type</th>";
+    echo "<th align='left' width='10'>Icon</th>";
+    echo "<th align='left' width='10'>Sort</th>";
+    echo "<th align='left' width='10'>Delay</th>";
+    echo "<th align='left'>Products</th>";
+    echo "<th align='left' width='10'></th>";
+    echo "</tr>";
+    foreach($views as $view) {
+        $paidFor = $view->paidFor ? "checked" : "";
+        echo "<tr viewid='".$view->id."' gstype='form' method='updateMobileView'>";
+        echo "<input type='hidden' value='".$view->id."' gsname='viewid'>";
+        echo "<td width='10'><i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsvalue='". $view->id . "' method='removePmsView' gsname='id'></i></id>";
+        echo "<td align='center'><input type='checkbox'  gsname='paidFor' title='Only display items paid for' $paidFor></td>";
+        echo "<td><input type='txt' value='" . $view->name . "' gsname='name' class='gsniceinput1'></td>";
+        echo "<td>";
+        echo "<select gsname='viewtype' class='gsniceselect' style='height: 38px'>";
+        foreach($viewtypes as $id => $val) {
+            $selected = ($id == $view->viewType) ? "SELECTED" : "";
+            echo "<option value='$id' $selected>$val</option>";
+        }
+        echo "</select>";
+        echo "</td>";
+        echo "<td>";
+        echo "<input type='txt' value='".$view->icon."' gsname='icon' class='gsniceinput1'>";
+        echo "</td>";
+        
+        echo "<td>";
+        echo "<select gsname='sortType' class='gsniceselect' style='height: 38px'>";
+        foreach($sortType as $id => $val) {
+            $selected = ($id == $view->sortType) ? "SELECTED" : "";
+            echo "<option value='$id' $selected>$val</option>";
+        }
+        echo "</select>";
+        echo "</td>";
+
+        echo "<td>";
+        echo "<input type='txt' value='".$view->daysDisplacement."' gsname='daysDisplacement' style='width: 40px;' title='Days delayed' class='gsniceinput1'>";
+        echo "</td>";
+        echo "<td>";
+        echo "<span class='productsadded'>";
+        $this->printProductsAdded($view->id);
+        echo "</span>";
+        echo "<i class='fa fa-plus-circle loadproducts' style='cursor:pointer;'></i>";
+        echo "</td>";
+        echo "<td><input type='button' value='Save' gstype='submit' style='padding:8px;'></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+$users = $this->getApi()->getUserManager()->getAllUsers();
+
+$vareas = array();
+$vareas['userdata'] = "<i class='fa fa-user' title='Deny access to user data'></i>";
+$vareas['otherinstruction'] = "Instructions";
+$vareas['findguest'] = "Guests";
+$vareas['fire'] = "Fire";
+$vareas['sms'] = "Sms";
+$vareas['log'] = "Log";
+$vareas['doors'] = "Doors";
+$vareas['cleaning'] = "Cleaning";
+$vareas['caretaker'] = "Caretaker";
+$vareas['timeregistering'] = "Time registering";
+
+foreach($views as $area) {
+    $vareas[$area->name] = $area->name;
+}
+echo "<br><br>";
+echo "</div>";
+echo "<div class='section'>";
+echo "<h1>User restriction on mobile view</h1>";
+echo "<div gstype='form' method='updateMobileViewRestriction'>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th>User</th>";
+foreach($vareas as $area) {
+    echo "<th>" . $area . "</th>";
+}
+echo "</tr>";
+
+
+foreach($users as $user) {
+    if($user->type != 100) {
+        continue;
+    }
+    if($user->id == ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id) {
+//        continue;
+    }
+    echo "<tr>";
+    echo "<td>" . $user->fullName . " (" . $user->emailAddress . ")". "</td>";
+    foreach($vareas as $id => $area) {
+        $checked = "";
+        if($id == "userdata" && in_array("ExcludePersonalInformation", (array)$user->annotionsAdded)) {
+            $checked = "CHECKED";
+        }
+        if(isset($config->mobileViewRestrictions->{$user->id}) && in_array($id, $config->mobileViewRestrictions->{$user->id})) {
+            $checked = "CHECKED";
+        }
+
+        echo "<td align='center'><input type='checkbox' gsname='".$user->id."_".$id."' $checked></td>";
+    }
+    echo "</tr>";
+}
+echo "</table>";
+echo "<div style='text-align:right;'>";
+echo "<input type='button' value='Save restrictions' gstype='submit' style='padding:8px;'>";
+echo "</div>";
+echo "</div>";
+echo "</div>";
+?>

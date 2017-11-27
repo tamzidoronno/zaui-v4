@@ -727,14 +727,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 echo "<td><input type='checkbox' class='selectalladdons'></td>";
                 echo "<td colspan='3'>" . $this->getApi()->getProductManager()->getProduct($id)->name . "</td>";
                 echo "</tr>";
+                $result = array();
                 foreach($room->addons as $addon) {
                     if($addon->productId == $id) {
-                        echo "<tr>";
-                        echo "<td><input type='checkbox' class='addontoremove' addonid='".$addon->addonId."'></td>";
-                        echo "<td> ".date("d.m.Y", strtotime($addon->date))."</td>";
-                        echo "<td><input type='text' value='" . $addon->count . "' style='width:30px' gsname='".$addon->addonId."_count'></td>";
-                        echo "<td><input type='text' value='" . $addon->price . "' style='width:50px' gsname='".$addon->addonId."_price'></td>";
-                        echo "</tr>";
+                        $row = "";
+                        $row .= "<tr>";
+                        $row .= "<td><input type='checkbox' class='addontoremove' addonid='".$addon->addonId."'></td>";
+                        $row .= "<td> ".date("d.m.Y", strtotime($addon->date))."</td>";
+                        $row .= "<td><input type='text' value='" . $addon->count . "' style='width:30px' gsname='".$addon->addonId."_count'></td>";
+                        $row .= "<td><input type='text' value='" . $addon->price . "' style='width:50px' gsname='".$addon->addonId."_price'></td>";
+                        $row .= "</tr>";
+                        $result[strtotime($addon->date)][] = $row;
+                    }
+                }
+                ksort($result);
+                foreach($result as $row) {
+                    foreach($row as $res) {
+                        echo $res;
                     }
                 }
                 echo "<tr>";

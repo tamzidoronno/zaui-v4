@@ -1,7 +1,7 @@
 /*Colors:
 Input      : #ffffff; white
 Background1: #f9f9f9; white
-Background2: #efefef; gray
+Background2: #f1f1f1; gray
 Borders1   : #dddddd; gray
 Borders2   : #ececec; gray
 Shadows    : #aaaaaa; gray
@@ -235,9 +235,10 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .unavailableRooms{color:#ddd;}
 
 /*Addons and guest information*/
-.GslBooking .gslfront_1 .addons_overview{background-color:#efefef;}
+.GslBooking .gslfront_1 .addons_overview{background-color:#f1f1f1;}
+.GslBooking .gslfront_1 .addonsentry{padding-bottom:20px;}
 
-.GslBooking .gslfront_1 .overview{background-color:#efefef;display: none;}
+.GslBooking .gslfront_1 .overview{background-color:#f1f1f1;display: none;}
 .GslBooking .gslfront_1 .overview_article{width:70%;padding:10px;background-color:#f9f9f9;box-shadow: inset -1px 0 0 #ddd;}
 .GslBooking .gslfront_1 .overview_room_info{float:right;width: 30%;padding:10px;}
 .GslBooking .gslfront_1 .overview_confirmation{clear: both;position:absolute;right:0;bottom:10px;width:30%;}
@@ -245,15 +246,17 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .overview_addons .addButton{padding: 4px 0;background-color:#83b0dc;}
 .GslBooking .gslfront_1 .overview_addons .addButton.added_addon{background-color:#de5353;}
 .GslBooking .gslfront_1 .overview_addons .addButton.added_addon:hover{background-color:#de5353;}
-.GslBooking .gslfront_1 .overview_addons .addButton:hover,
+.GslBooking .gslfront_1 .overview_addons .addButton:hover{background-color:#91bfec;}
 
-.GslBooking .gslfront_1 .overview_addons .addon{    background-color: #eaf5ff;
+.GslBooking .gslfront_1 .overview_addons .addon{
+    background-color: #eaf5ff;
     padding: 8px;
     margin: 10px 0;
     border-radius: 0 20px 20px 0;
-    border-left: 6px solid #3776b3;
+    border-left: 6px solid #83b0dc;
     box-shadow: inset 0px 0px 0px 1px rgba(55, 118, 179, 0.12);
     color: #232323;}
+.GslBooking .gslfront_1 .roomentryframe{position:relative;}
 .GslBooking .gslfront_1 .roomentry{padding:20px 0;}
 .GslBooking .gslfront_1 .guestentry{padding-top:10px;}
 .GslBooking .gslfront_1 .guestentry div{display:inline-block;width: 25%;}
@@ -262,11 +265,12 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .guestentry input{padding:8px;width:100%;border:1px solid #ddd;border-right:0;}
 .GslBooking .gslfront_1 .guest_phone{width:25% !important;background-color:#f9f9f9;color: #3776b3;text-align: center;padding: 8px 0;}
 .GslBooking .gslfront_1 .guest_addon{border: 1px solid #ddd;padding: 8px;width:100% !important;position: relative;border-radius:0 20px 20px 0;}
-.GslBooking .gslfront_1 .addguest{padding: 4px 10px;}
+.GslBooking .gslfront_1 .addroom {position: absolute;right: 0;bottom: 0;}
+.GslBooking .gslfront_1 .addroom ,.GslBooking .gslfront_1 .addguest{padding: 4px 10px;margin-top:10px;background-color:#f9f9f9;color:#3776b3}
+.GslBooking .gslfront_1 .addroom:hover ,.GslBooking .gslfront_1 .addguest:hover{background-color:#f9f9f9;color:#91bfec;}
 .GslBooking .gslfront_1 .removeguest{
     background-color: #de5353;
     position: absolute;
-    border-radius:50%;
     right: 0;
     top: 0;
     padding: 11px !important;

@@ -163,12 +163,20 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public void removeAllUnusedLocks(String serverSource) throws Exception {
         List<GetShopDevice> toremove = new ArrayList();
+        List<BookingItem> items = bookingEngine.getBookingItems();
         for(GetShopDevice dev : devices.values()) {
             if(dev.zwaveid == 1) {
                 continue;
             }
             boolean inuse = false;
             for(GetShopLockCode code : dev.codes.values()) {
+                if(dev.isSubLock()) {
+                    inuse = true;
+                }
+                BookingItem connected = connectedToBookingEngineItem(dev, items);
+                if(connected != null) {
+                    inuse = true;
+                }
                 if(code.canUse()) {
                     inuse = true;
                 }

@@ -1,0 +1,33 @@
+/* Colors
+#f9f9f9 white
+#f3f3f3 white
+*/
+body{font-family: 'Montserrat', sans-serif;color: #464343;font-size:14px;}
+.gs_page_width{max-width:1100px;margin:auto;}
+.shop_button{background:orange;border-radius:2px;color:#fff;}
+.ContentManager h2{font-weight:500;font-size:22px;}
+.ContentManager h3{font-weight:500;font-size:18px;}
+.ContentManager a{color:#b1a18a;font-weight:bold;}
+.GoogleMaps .googlemapcanvas{height:150px;}
+.footerprovidedtext, .footerprovidedtext a{background-color:#333;color:#fff;}
+
+.gsarea[area="header"]{background-color:#f9f9f9;}
+.gsarea[area="body"]{background-color:#f9f9f9;min-height:600px;padding:20px;}
+.gsarea[area="footer"]{background-color:#b1a18a;color:#fff;padding:20px 0;line-height:1.5;}
+.gsarea[area="footer"] .ContentManager a{color:#fff;font-weight:500}
+
+/*Menu*/
+.Menu {text-align:center;padding:16px 0;border-bottom:1px solid #ddd;}
+.Menu .entry.active a div{font-weight:bold;}
+.Menu .entry a div{
+    padding:4px 20px;
+    font-size:16px;
+    border-right:1px solid #ddd;
+    letter-spacing:1px;
+    color: #464343;
+}
+.Menu .entry:last-child a div{border:0;}
+.Menu .entry .entries{background:#464343;border-radius:10px;width:100%;}
+.Menu .entry .entries .entry{padding:4px 0;}
+.Menu .entry.active .entries .entry a div{font-weight:500;}
+.Menu .entry .entries .entry a div{border:0;color:#fff;padding:10px 0;}

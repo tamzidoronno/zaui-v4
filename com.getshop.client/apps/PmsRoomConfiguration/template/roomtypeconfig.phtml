@@ -8,7 +8,8 @@
 <h2>Room types <span class='opentypesorting' style='cursor:pointer;'>(open sorting)</span></h2>
 <?php
     $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
-    
+    $unsorted = array();
+    $sortList = array();
     foreach($types as $type) {
         if($type->order == 0) {
             $unsorted[] = $type;
@@ -16,7 +17,8 @@
             $sortList[$type->order] = $type;
         }
     }
-
+    $sortList = array_merge($unsorted, $sortList);
+    
     ksort($sortList);
     
     $types = $sortList;
@@ -47,7 +49,7 @@
         array('maxchildbeds', 'Max childbeds', 'numberOfChildren', null),
     );
     
-    $table = new \GetShopModuleTable($this, 'PmsRoomConfiguration', 'loadTypeResult', null, $attributes);
+    $table = new \GetShopModuleTable($this, 'PmsManager', 'loadTypeResult', null, $attributes);
     $table->setData($rows);
     echo "<div class='roomtypeconfigtable'>";
     $table->render();

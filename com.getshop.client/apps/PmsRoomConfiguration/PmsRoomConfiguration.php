@@ -127,7 +127,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->saveAccessory($this->getSelectedMultilevelDomainName(), $accessory);
     }
     
-    public function PmsRoomConfiguration_loadTypeResult() {
+    public function PmsManager_loadTypeResult() {
         $this->includefile("roomtypeconfigurationpanel");
     }
     

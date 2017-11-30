@@ -1585,7 +1585,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         if(!configuration.sendAdminTo.isEmpty()) {
             email = configuration.sendAdminTo;
         }
-        
+        logEntry("Notified admin :" + message, booking.id, null);
         messageManager.sendMail(email, "Administrator", "Notification", message, getFromEmail(), getFromName());
         messageManager.sendSms("sveve", phone, message, "47");
     }

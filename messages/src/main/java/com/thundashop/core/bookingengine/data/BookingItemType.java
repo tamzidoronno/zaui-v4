@@ -39,6 +39,7 @@ public class BookingItemType extends DataCommon {
     public Integer order = 0;
     @Translation
     public String description = "";
+    public String group = "";
     public Integer capacity = 0;
     public Integer minStay = 0;
     public String eventItemGroup = "";

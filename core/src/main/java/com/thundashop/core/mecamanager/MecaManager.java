@@ -636,6 +636,10 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             return;
         }
         
+        if (!car.requestKilomters.canSendSmsNotification()) {
+            return;
+        }
+        
         String message = getMailContent("smsRequestKilomters");
         message = replaceContactVariables(car, message, car.cellPhone, "");
         messageManager.sendSms("sveve", car.cellPhone, message, getStoreDefaultPrefix());

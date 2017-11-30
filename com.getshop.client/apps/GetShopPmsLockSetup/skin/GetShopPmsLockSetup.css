@@ -1,0 +1,14 @@
+.GetShopPmsLockSetup .row .col2,
+.GetShopPmsLockSetup .row .col1 {
+    display: inline-block;
+}
+
+.GetShopPmsLockSetup .row {
+    border-bottom: solid 1px #DDD;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.GetShopPmsLockSetup .row .col1 {
+    width: 300px;
+}

@@ -206,7 +206,7 @@ public abstract class LockServerBase extends DataCommon {
     }
 
     public void syncGroupSlot(LockGroup group, int slotId) {
-        MasterUserSlot groupCode = group.groupLockCodes.get(slotId);
+        MasterUserSlot groupCode = group.getGroupLockCodes().get(slotId);
         groupCode.subSlots.stream().forEach(slot -> { 
             Lock lock = getLock(slot.connectedToLockId);
 
@@ -219,7 +219,7 @@ public abstract class LockServerBase extends DataCommon {
     }
     
     public void syncGroup(LockGroup group) {
-        group.groupLockCodes.values().stream().forEach(groupCode -> {
+        group.getGroupLockCodes().values().stream().forEach(groupCode -> {
             syncGroupSlot(group, groupCode.slotId);
         });
         

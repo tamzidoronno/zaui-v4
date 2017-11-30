@@ -28,6 +28,18 @@ if ($slot->belongsToGroupId) {
         if (!$slot->code) {
             $state = "<i class='fa fa-close' title='Not in use'></i>";
         }
+        
+        if ($inUseClass) {
+            $state = "<i class='fa fa-warning' title='In use'></i>";
+        } 
+        
+        if (isset($slot->allCodesAdded) && !$slot->allCodesAdded) {
+            $state = "<i class='fa fa-info' title='This code has not been updated on all locks, can not be used yet'></i>";
+        }
+        
+        if (isset($slot->allCodesAdded) && $slot->allCodesAdded) {
+            $state = "<i class='fa fa-check' title='All good'></i>";
+        }
         ?>
         <div class="userslotrow"> 
             <?

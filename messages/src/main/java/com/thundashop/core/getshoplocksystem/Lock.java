@@ -199,4 +199,15 @@ public class Lock {
         cal.add(Calendar.MINUTE, 5);
         dontUpdateUntil = cal.getTime();
     }
+    
+    public UserSlot getUserSlot(int slotId) {
+        UserSlot slot = userSlots.get(slotId);
+        
+        if (slot != null) {
+            slot.finalize();
+            return slot;
+        }
+        
+        return null;
+    }
 }

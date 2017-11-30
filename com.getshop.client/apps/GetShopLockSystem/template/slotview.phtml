@@ -3,6 +3,7 @@
 $slot = $this->getSlot();
 $group = $this->getGroup();
 
+
 $inUseClass = $slot->takenInUseDate ? "inUse" : "";
 $connectedToGroup = "";
 
@@ -10,9 +11,8 @@ if ($slot->belongsToGroupId) {
     $connectedToGroup = " ( Group: ".$this->getApi()->getGetShopLockSystemManager()->getNameOfGroup($slot->belongsToGroupId). " ) "; 
 }
 
-    
 ?>
-<div class="userrow <? echo $inUseClass; ?>"> 
+<div class="userrow"> 
         <?
         $state = "unkown";
         if ($slot->toBeAdded && !$slot->toBeRemoved) {
@@ -27,6 +27,13 @@ if ($slot->belongsToGroupId) {
         
         if (!$slot->code) {
             $state = "<i class='fa fa-close' title='Not in use'></i>";
+        }
+        if ($inUseClass) {
+            $state = "<i class='fa fa-warning' title='In use'></i>";
+        } else {
+            if (isset($slot->allCodesAdded) && !$slot->allCodesAdded) {
+                $state = "<i class='fa fa-info' title='This code has not been updated on all locks, can not be used yet'></i>";
+            }
         }
         ?>
         <div class="userslotrow"> 

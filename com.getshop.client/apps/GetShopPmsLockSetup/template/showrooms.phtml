@@ -1,0 +1,41 @@
+<?
+/* @var $this ns_4b10210b_5da3_4b01_9bd9_1e6f0a2c7cfc\GetShopPmsLockSetup */
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$groups = $this->getApi()->getGetShopLockSystemManager()->getAllGroups();
+echo "<div gstype='form' method='saveGroupConnection'>";
+    ?>
+    <div class="shop_button" gstype="submit">Save</div>
+    <?
+    foreach ($types as $type) {
+        echo "<div class='bookingitemtype'>";
+        echo "<h2>".$type->name."</h2>";
+        foreach ($items as $item) {
+            if ($item->bookingItemTypeId == $type->id) {
+                ?>
+                <div class="row">
+                    <div class="col1"><? echo $item->bookingItemName; ?></div>
+                    <div class="col2">
+                        <select gsname='<? echo $item->id ?>' class="gsniceselect1">
+                        <?
+                            echo "<option value=''>Not selected</option>";
+                            foreach ($groups as $group) {
+                                $selected = $group->id == $item->lockGroupId ? "selected='true'" : "";
+                                echo "<option $selected value='$group->id'>$group->name</option>";
+                            }
+                        ?>
+                        </select>
+                    </div>
+                </div>
+                <?
+            }
+        }    
+        echo "</div>";
+        ?>
+        <?
+    }
+    ?>
+    <div class="shop_button" gstype="submit">Save</div>
+    <?
+echo "</div>";
+?>

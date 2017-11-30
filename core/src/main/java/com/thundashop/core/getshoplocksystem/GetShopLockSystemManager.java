@@ -47,6 +47,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
     }
     
+    private HashMap<String, LockGroup> getFinalizedGroups() {
+        groups.values().stream()
+                .forEach(g -> {
+                    g.finalize(lockServers);
+                });
+        return groups;
+    }
+    
     @Override
     public void createServer(String type, String hostname, String userName, String password, String givenName) {
         if (type.equals("zwaveserver")) {
@@ -164,12 +172,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         group.name = name;
         group.numberOfSlotsInGroup = maxUsersInGroup;
         saveObject(group);
-        groups.put(group.id, group);
+        getFinalizedGroups().put(group.id, group);
     }
 
     @Override
     public void setLocksToGroup(String groupId, Map<String, List<String>> servers) {
-        LockGroup group = groups.get(groupId);
+        LockGroup group = getFinalizedGroups().get(groupId);
         
         releaseSlotsNotConnectedToGroup(group, servers);
         checkIfEnoughSlotsOnAllLocks(servers, group);
@@ -188,12 +196,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public LockGroup getGroup(String groupId) {
-        return groups.get(groupId);
+        return getFinalizedGroups().get(groupId);
     }
 
     @Override
     public List<LockGroup> getAllGroups() {
-        return new ArrayList(groups.values());
+        return new ArrayList(getFinalizedGroups().values());
     }
 
     private LockServer getLockServer(String serverId) {
@@ -271,7 +279,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (group != null) {
             Map<String, List<String>> servers = new HashMap();
             releaseSlotsNotConnectedToGroup(group, servers);
-            groups.remove(group.id);
+            getFinalizedGroups().remove(group.id);
             deleteObject(group);
         }
     }
@@ -298,15 +306,16 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     @Override
-    public LockCode getNextUnusedCode(String groupId) {
-        LockGroup group = groups.get(groupId);
+    public LockCode getNextUnusedCode(String groupId, String reference, String managerName, String textReference) {
+        LockGroup group = getFinalizedGroups().get(groupId);
         if (group == null) {
             throw new ErrorException(1042);
         }
         
-        MasterUserSlot slot = group.groupLockCodes.values()
+        MasterUserSlot slot = group.getGroupLockCodes().values()
                 .stream()
                 .filter(s -> s.takenInUseDate == null)
+                .filter(s -> s.allCodesAdded)
                 .findAny()
                 .orElse(null);
         
@@ -314,10 +323,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             return null;
         
         slot.takenInUseDate = new Date();
+        slot.takenInUseReference = reference;
+        slot.takenInUseManagerName = managerName;
+        slot.takenInUseTextReference = textReference;
         saveObject(group);
         
         return slot.code;
     }
+    //358047
     
     @Override
     public void renewCodeForSlot(String groupId, int slotId) {

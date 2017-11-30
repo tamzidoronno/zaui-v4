@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import javax.xml.ws.soap.Addressing;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -566,6 +567,20 @@ public class PmsBooking extends DataCommon {
                 return true;
             }
         }
+        return false;
+    }
+
+    /**
+     * This function is only working
+     * @return 
+     */
+    boolean hasActiveApacCodes() {
+        for (PmsBookingRooms room : rooms) {
+            if (room.codeObject != null) {
+                return true;
+            }
+        }
+        
         return false;
     }
 

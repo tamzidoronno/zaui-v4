@@ -55,6 +55,9 @@ public class UserSlot implements Serializable {
         if (needToBeRemoved && code.removedDate == null) {
             toBeRemoved = true;
         }
+        if (code != null) {
+            code.slotId = slotId;
+        }
     }
 
     public void remove() {

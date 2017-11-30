@@ -1,0 +1,43 @@
+<?
+/* @var $this \ns_1a2cdcce_6ee0_4852_ab78_ba68a4911873\SmsSettings */
+$from = isset($_SESSION['SmsSettings_from']) ? $_SESSION['SmsSettings_from'] : "";
+$to = isset($_SESSION['SmsSettings_from']) ? $_SESSION['SmsSettings_to'] : "";
+$prefix = isset($_SESSION['SmsSettings_prefix']) ? $_SESSION['SmsSettings_prefix'] : "";
+$number = isset($_SESSION['SmsSettings_number']) ? $_SESSION['SmsSettings_number'] : "";
+
+$activeSimple = $from ? "active" :"";
+$activeAdvanced = $number ? "active" : "";
+?>
+
+
+
+<div class="searchbox">
+        <div class="tabs">
+            <div class="tab <? echo $activeSimple; ?>" tab="simple">Date </div>
+            <div class="tab <? echo $activeAdvanced; ?>" tab="advanced">Numbers</div>
+        </div>
+        
+        <div class="tab_content <? echo $activeSimple; ?>" tab="simple">
+            <h2>Date range</h2>
+            <div class="filterbox" gstype="form" method="setFilter">
+                <br/><input id="from" class="gsniceinput1" id="from" gsname="from" value="<? echo $from; ?>" /> - <input class="gsniceinput1" id="to" gsname="to" value="<? echo $to; ?>"/> 
+                <br/> <div class="shop_button" gstype="submit">Search</div>
+            </div>
+        </div>
+    
+        <div class="tab_content <? echo $activeAdvanced; ?>" tab="advanced">
+            <h2>Enter number</h2>
+            <div class="filterbox" gstype="form" method="searchByNumber">
+                <br/><input id="prefix" class="gsniceinput1" id="prefix" gsname="prefix" value="<? echo $prefix; ?>" placeholder="47" /> - <input id="number" class="gsniceinput1" id="number" gsname="number" value="<? echo $number; ?>" />
+                <br/> <div class="shop_button" gstype="submit">Search</div>
+            </div>
+        </div>
+
+    </div>
+<script>
+    $('#from').datepicker();
+    $('#to').datepicker();
+</script>
+    
+    
+    

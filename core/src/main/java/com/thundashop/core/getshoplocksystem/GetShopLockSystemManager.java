@@ -45,6 +45,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 lockServers.put(iData.id, server);
             }
         }
+        
+        lockServers.values().stream().forEach(l -> {
+            triggerCheckOfCodes(l.getId());
+        });
     }
     
     private HashMap<String, LockGroup> getFinalizedGroups() {

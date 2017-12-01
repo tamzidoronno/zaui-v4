@@ -6,12 +6,16 @@ $this->setLock($lock);
 ?>
 <div class='lock'>
 <?
-    if ($lock->zwaveDeviceId) {
+    if (isset($lock->zwaveDeviceId)) {
         $this->includefile('zwavelock');
     }
 
     ?>
 
+    <div style='margin-top: 40px;'>
+        Serverid: <? echo $this->getServer()->id; ?>
+        <br/>Lockid: <? echo $lock->id; ?>
+    </div>
     <div class='slots'>
         <h2>Codes and slots</h2>
         <?

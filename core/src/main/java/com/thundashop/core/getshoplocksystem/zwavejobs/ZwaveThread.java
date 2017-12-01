@@ -8,6 +8,7 @@ package com.thundashop.core.getshoplocksystem.zwavejobs;
 import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveThreadExecption;
 import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
@@ -49,6 +50,10 @@ public abstract class ZwaveThread implements Runnable {
 
     @Override
     public void run() {
+        if (AppContext.devMode) {
+            return;
+        }
+        
         for (int i = 0; i < attempts; i++) {
             if (shouldStop) {
                 break;

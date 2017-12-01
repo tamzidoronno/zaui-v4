@@ -8,11 +8,12 @@ $lock = $factory->getApi()->getGetShopLockSystemManager()->getLock($_GET['server
 $factory->getApi()->getUserManager()->logout();
 
 $codes = array();
+
 echo ",";
 
 foreach($lock->userSlots as $slot) {
     if ($slot->code) {
-        $ $slot->code->pinCode . ",";
+        echo $slot->code->pinCode . ",";
     }
 }
 

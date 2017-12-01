@@ -213,8 +213,8 @@ public abstract class LockServerBase extends DataCommon {
             Lock lock = getLock(slot.connectedToLockId);
 
             if (lock != null && groupCode.code != null) {
-                slot.markCodeForResending();
                 lock.setCodeObject(slot.slotId, groupCode.code);
+                lock.markCodeForResending(slotId);
             }
         });
         

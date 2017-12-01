@@ -81,7 +81,10 @@ class ApacLocks extends \MarketingApplication implements \Application {
     }
     
     public function resendCodes() {
-        // TODO
+        $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($_POST['data']['serverid'], $_POST['data']['lockid']);
+        foreach ($lock->userSlots as $slot) {
+            $this->getApi()->getGetShopLockSystemManager()->markCodeForResending($_POST['data']['serverid'], $_POST['data']['lockid'], $slot->slotId);
+        }
     }
 }
 ?>

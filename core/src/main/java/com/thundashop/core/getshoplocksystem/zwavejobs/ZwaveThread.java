@@ -50,7 +50,7 @@ public abstract class ZwaveThread implements Runnable {
 
     @Override
     public void run() {
-        if (AppContext.devMode) {
+        if (GetShopLogHandler.isDeveloper) {
             return;
         }
         

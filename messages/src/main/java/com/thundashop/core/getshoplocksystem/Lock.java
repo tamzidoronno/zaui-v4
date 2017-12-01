@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -183,6 +184,9 @@ public class Lock {
     }
 
     public void setCodeObject(int slotId, LockCode code) {
+        Gson gson = new Gson();
+        code = gson.fromJson(gson.toJson(code), LockCode.class);
+        
         if (userSlots.get(slotId) != null) {
             userSlots.get(slotId).setCodeObject(code);
         }

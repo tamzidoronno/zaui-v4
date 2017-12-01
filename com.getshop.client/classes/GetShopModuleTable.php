@@ -30,6 +30,7 @@ class GetShopModuleTable {
     }
 
     public function render() {
+        $this->uuid = uniqid();
         $this->loadData();
         $this->clearJavaScriptData();
         $this->renderTable();
@@ -112,7 +113,7 @@ class GetShopModuleTable {
     }
     
     private function printJavaScriptData($data, $rowNumber) {
-        $functionName = $this->getIdentifier();
+        $functionName = $this->getFunctionName();
         
         if (!method_exists($this->application, $functionName)) {
             return;
@@ -133,7 +134,7 @@ class GetShopModuleTable {
     }
     
     private function getIdentifier() {
-        return $this->manangerName."_".$this->functionName;
+        return $this->manangerName."_".$this->functionName."_".$this->uuid;
     }
 
     public function clearJavaScriptData() {
@@ -154,10 +155,10 @@ class GetShopModuleTable {
     }
     
     private function shouldShowRow($rownumber) {
-        if (!isset($_SESSION['gs_moduletable_'.$this->getIdentifier()])) {
+        if (!isset($_SESSION['gs_moduletable_'.$this->getFunctionName()])) {
             return false;
         }
-        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getFunctionName()];
         
         if ($sessionData['rownumber'] == $rownumber) {
             return true;
@@ -167,15 +168,19 @@ class GetShopModuleTable {
     }
 
     private function renderTableContent($attribute, $rownumber) {
-        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getFunctionName()];
         $_POST['data'] = $attribute;
         
         if (isset($sessionData['index'])) {
             $_POST['data']['gscolumn'] = $sessionData['index'];
         }
         
-        $functioName = $this->getIdentifier();
+        $functioName = $this->getFunctionName();
         $this->application->$functioName();
+    }
+
+    public function getFunctionName() {
+        return $this->manangerName."_".$this->functionName;
     }
 
 }

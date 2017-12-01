@@ -142,6 +142,8 @@ public abstract class LockServerBase extends DataCommon {
         if (getShopLockSystemManager != null) {
             getShopLockSystemManager.saveObject(this);
         }
+        
+        startUpdatingOfLocks();
     }
     
     public void setDetails(String hostname, String userName, String password, String givenName) {
@@ -224,5 +226,9 @@ public abstract class LockServerBase extends DataCommon {
         });
         
         saveMe(); 
+    }
+    
+    public void startUpdatingOfLocks() {
+        
     }
 }

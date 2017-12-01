@@ -21,8 +21,8 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
     private final UserSlot slot;
     private final boolean silent;
 
-    public ZwaveRemoveCodeThread(ZwaveLockServer server, UserSlot slot, LocstarLock lock, boolean silent) {
-        super(server, lock, 10);
+    public ZwaveRemoveCodeThread(ZwaveLockServer server, UserSlot slot, LocstarLock lock, boolean silent, String storeId) {
+        super(server, lock, 10, storeId);
         this.silent = silent;
         this.slot = slot;
     }

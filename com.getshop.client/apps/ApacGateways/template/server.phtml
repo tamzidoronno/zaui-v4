@@ -3,6 +3,10 @@
 
 $server = $this->getServer();
 $isUpdating = true;
+$numberOfLocks = 0;
+foreach ($server->locks as $lock) {
+    $numberOfLocks++;
+}
 ?>
 
 
@@ -17,6 +21,7 @@ $isUpdating = true;
                 <i class='fa fa-play'></i> Toggle update ( currently not updating )
             <? } ?>
         </div>
+        <div class='shop_button' gsclick='runCheck' serverid='<? echo $server->id; ?>'><i class='fa fa-play'></i> Run check</div>
         
         <div class="serverdetails" gstype="form" method="saveConnectionDetails">
             <input type="hidden" gsname="serverid" value="<? echo $server->id; ?>"/>
@@ -28,25 +33,5 @@ $isUpdating = true;
         </div>
     </div>
     
-    <?
-        foreach ($server->locks as $id => $lock) {
-            ?>
-            <div class="lockrow">
-                <div class="icon"><i class="fa fa-moon-o"></i></div>
-                <div class="name"><? echo $lock->name; ?></div>
-                <div class="gs_shop_small_icon" gsclick="editSettingsForLock" serverid="<? echo $server->id; ?>" lockid="<? echo $lock->id; ?>">
-                    <i class="fa fa-gears"></i> Edit settings
-                </div>
-
-                <div class="inforow">
-                    To update: <? echo count($lock->toUpdate); ?> | To remove: <? echo count($lock->toRemove); ?> | In use: <? echo count($lock->inUse); ?> | Total codes: <? echo $lock->maxnumberOfCodes; ?>
-                </div>
-                <div class="inforow">
-                    Conneted to groups: -
-                </div>
-
-            </div>
-            <?
-        }
-        ?>
+    <i class="fa fa-lock"></i> <? echo $this->__f("Number of locks in this gateway").": $numberOfLocks"; ?>
 </div>

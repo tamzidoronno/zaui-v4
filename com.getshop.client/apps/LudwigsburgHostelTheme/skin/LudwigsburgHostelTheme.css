@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,600');
+
+/*COLOR GREEN : #4eb575*/
+body{font-family: 'Montserrat', sans-serif;font-size:15px;font-weight:300;}
+.gsbody_inner.gscanchangelayout{position:relative;}/*Makes it possible for 100% width absolute header*/
+.gs_page_width{max-width:1100px;margin:auto;}
+.shop_button{height:30px;line-height:30px;margin:2px;}
+.gsarea[area="header"]{position:absolute;width:100%;}
+.gsarea[area="body"] {background-color:#fff;min-height:900px;}
+.gsarea[area="body"] .gs_page_width{background-color:transparent;}
+.gsarea[area="body"] .ContentManager a{color:#b58d4e;font-weight:600;}
+.gsarea[area="footer"] {
+    background-repeat : no-repeat;
+ 	background-position : center;
+ 	background-size : cover;
+ 	background-image : url("/displayImage.php?id=319cc92f-9e52-4652-ba4e-101ccd62cbee");
+    color:#fff;
+    line-height:1.8;
+}
+.shop_button{border-radius:4px;color:#fff;}
+.ContentManager h1, .PmsConfiguration h1{font-weight:300;color:#000;letter-spacing:1px;}
+.ContentManager h2{font-weight:400;color:#b58d4e;}
+.ContentManager h3{font-weight:700;font-size:20px;}
+/*Menu*/
+.Menu{padding-top:10px;text-align:right;}
+.Menu .entry a div{margin:16px;padding:6px 0;font-size:18px;color:#fff;}
+.Menu .entry.active a div{box-shadow:0px 1px 0px 0px #fff;}
+
+.Menu .entry .entries .entry div{color:#000;font-size:18px;margin:16px;}
+.Menu .entry .entries:before{
+    content:"";
+    background-color:#fff;
+    height:10px;
+    width:10px;
+    z-index:-1;
+    position:absolute;
+    top:-5px;left:20%;
+    -webkit-transform: scaleX(1) rotate(45deg); 
+    -ms-transform: scaleX(1) rotate(45deg);
+    transform: scaleX(1) rotate(45deg); 
+}
+.Menu .entry .entries .entry.active div{box-shadow:0px 1px 0px 0px #000;}
+.Menu .entry .entries{
+    background-color:#fff;
+    text-align:center;
+    border-radius:10px;
+    box-shadow:0px 0px 10px 0px #222;
+    white-space:nowrap;
+}
+
+/*end to menu*/
+
+.shop_button,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected{background:#2792c7;background-color:#2792c7; border-color:#2792c7;}
+.PmsBookingProductList .continue_button.disabled{border-color:#bbb;}
+
+.gs_language_selection{border:0;right:0;}
+.gs_language_selection a{font-size:0;}
+.gs_language_code.active{color:#4eb575;cursor:default;}
+.gs_language_code{
+    color:#000;
+    background-color:#fff;
+    border-radius:50%;
+    padding:10px;
+    font-weight:600;
+    margin:4px 4px 0 4px;
+    font-size:12px;
+}
+.gs_language_code.gs_lang_code_de:after{content:"DE";}
+.gs_language_selection .gs_lang_code_en_en:after{content:"EN";font-size:12px;}
+.gs_language_selection .gs_lang_code_en_en{content:"EN";font-size: 0px;}
+.footerprovidedtext, .footerprovidedtext a{color: #000;font-weight:600;padding:20px 0 !important;}
+
+.gscarouseldots .fa{text-shadow:0 0 0;color: rgba(0, 0, 0, 0.3);font-size:14px;}
+.gscarouseldots .fa.activecarousel{color:#fff;text-shadow: 0px 1px 1px #000;}
+
+.PmsBooking .pmsfront2 .fa-bed,
+.PmsBooking .pmsfront .fa-calendar,
+.PmsBooking .inputhelpertext{display:none;}
+.PmsBooking .pmsfront .dates input{
+    width:100%;
+    padding:22px 0;
+    text-align:center;
+    font-size:22px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight:300;
+}
+.PmsBooking{text-align:center;margin:200px auto;max-width:900px;padding:0 20px;}
+.PmsBooking:before{content:"Book - Your - Stay";font-size:30px;color:#fff;font-weight:300;}
+.PmsBooking .inputblock{margin:0;width:46%;}
+.PmsBooking .pmsfront{padding-top:20px;}
+.PmsBooking .pmsfront .dates .dates_inner{border:0;padding:0;width:100%;background-color:transparent;}
+.PmsBooking .pmsfront .dates.start_date{float:none !important;}
+.PmsBooking .pmsfront .start_date_input{box-shadow:inset -1px 0px 0px 0px #ddd;border-radius: 10px 0px 0px 10px !important;}
+.PmsBooking .pmsfront .bookingbuttonblock{width:8%;}
+.PmsBooking .pmsfront .check_available_button:after{content:"\f002";font-size:20px;font-family:fontawesome;}
+.PmsBooking .pmsfront .check_available_button{
+    margin:0;
+    padding:0;
+    font-size:0;
+    width:100%;
+    height:71px;
+    line-height:71px;
+    background-color:#4eb575;
+    border-radius:0px 10px 10px 0;
+    box-sizing:border-box;
+}
+
+/*Home_page*/
+.gscell_1.gsuicell{z-index:3;padding-top:30px;}
+.gscell_3.gsuicell{position:absolute;padding-left:20px;}
+/*.gscell_42.gsucell{top:-130px;}*/
+.gscell_55.gsucell{top:360px;color:#fff;}
+.gscell_55.gsuicell{max-width:900px;padding:0 20px;}
+.gscell_55.gsuicell,
+.gscell_45.gsuicell{background-color:transparent !important;}
+.gscell_55.gsucell,
+.gscell_45.gsucell{
+    position:absolute;
+    z-index:2;
+    width:100%;
+}
+
+/*BANNERS*/
+.gscell_89.gsuicell,
+.gscell_90.gsuicell,
+.gscell_91.gsuicell,
+.gscell_92.gsuicell,
+.gscell_93.gsuicell,
+.gscell_109.gsuicell,
+.gscell_110.gsuicell,
+.gscell_114.gsuicell,
+.gscell_115.gsuicell,
+.gscell_116.gsuicell,
+.gscell_117.gsuicell,
+.gscell_118.gsuicell,
+.gscell_119.gsuicell{
+    max-width:100%;
+ 	height:110px;
+ 	background: rgba(50, 61, 70, 0.93) !important;
+}
+.gscell_89.gsucell,
+.gscell_90.gsucell,
+.gscell_91.gsucell,
+.gscell_92.gsucell,
+.gscell_93.gsucell,
+.gscell_109.gsucell,
+.gscell_110.gsucell,
+.gscell_114.gsucell,
+.gscell_115.gsucell,
+.gscell_116.gsucell,
+.gscell_117.gsucell,
+.gscell_118.gsucell,
+.gscell_119.gsucell{
+    /*top:-130px;*/
+    height:110px;
+	background-repeat : no-repeat;
+ 	background-position : center;
+ 	background-size : cover;
+}
+.gscell_89 .gsaddcontent,
+.gscell_90 .gsaddcontent,
+.gscell_91 .gsaddcontent,
+.gscell_92 .gsaddcontent,
+.gscell_93 .gsaddcontent,
+.gscell_109 .gsaddcontent,
+.gscell_110 .gsaddcontent,
+.gscell_114 .gsaddcontent,
+.gscell_115 .gsaddcontent,
+.gscell_116 .gsaddcontent,
+.gscell_117 .gsaddcontent,
+.gscell_118 .gsaddcontent,
+.gscell_119 .gsaddcontent{
+    display:none;
+}
+.gscell_89.gsucell,
+.gscell_90.gsucell,
+.gscell_91.gsucell,
+.gscell_92.gsucell{background-image : url("/displayImage.php?id=8c9f5c89-5b65-446c-b944-5bc4757dbacb");}
+.gscell_93.gsucell,
+.gscell_109.gsucell,
+.gscell_110.gsucell,
+.gscell_114.gsucell,
+.gscell_115.gsucell,
+.gscell_116.gsucell,
+.gscell_117.gsucell,
+.gscell_118.gsucell,
+.gscell_119.gsucell{background-image: url(/displayImage.php?id=7410657e-0373-4dfb-a9ab-c29e6d3c95ec);}
+/*end of banners*/
+
+@media only all and (max-width:600px){
+    .gscell_55.gsuicell{
+        font-size:8px;
+    }
+    /*PMSBOOKING*/
+    .PmsBooking:before{font-size:20px;}
+    .PmsBooking .inputblock{width:40%;}
+    .PmsBooking .pmsfront .dates input{font-size:14px;}
+    .PmsBooking .pmsfront .check_available_button{height: 62px;line-height: 62px;}
+    .PmsBooking .pmsfront .bookingbuttonblock{width:20%;}
+}
+@media only all and (max-width:800px){
+    .gsarea[area="footer"]{text-align:center;}
+    .Menu .menuentries .entry{padding:7px 10px;}
+    .Menu .mobilenavigatemenu i{font-size:0;padding:15px 15px 0 0;}
+    .Menu .mobilenavigatemenu i:before{font-size:34px;color:#fff;}
+    .Menu .entry a div{color:#000;margin:10px;}
+    .Menu .entry.active a div{box-shadow: 0px 1px 0px 0px #000;}
+    .Menu .menuentries.horizontal:before{
+        content: "";
+        background-color: #fff;
+        height: 10px;
+        width: 10px;
+        z-index: -1;
+        position: absolute;
+        top: -5px;
+        right: 10%;
+        -webkit-transform: scaleX(1) rotate(45deg);
+        -ms-transform: scaleX(1) rotate(45deg);
+        transform: scaleX(1) rotate(45deg);
+    }
+    .Menu .menuentries.horizontal{
+        top:80px;
+        width:100%;
+        max-width:250px;
+        right:0;
+        left:auto;
+        background-color:#fff;
+        text-align:center;
+        box-shadow: 0px 0px 10px 0px #222;
+    }
+    .Menu .entry .entries:before{background-color: #dcdcdc;left: 47%;}
+    .Menu .entry .entries{background-color: #dcdcdc;border-radius:0;box-shadow:0 0 0;}
+    
+    .gsrotating[cellid='4cb2e44d-9ba9-4504-a124-192e6caebff0'],
+    .gsrotating[cellid='4cb2e44d-9ba9-4504-a124-192e6caebff0'] .gscell.gsdepth_1{
+        min-height:450px !important;
+        height:450px !important;
+    }
+    .gscell_3.gsucell{margin-rigt:72px;}
+    .gscell_4.gsucell{margin-left:0 !important;width: 100% !important;}
+    /*.gscell_63.gsuicell{padding-top:50px;}*/
+    .gscell_55.gsuicell .gsucell{
+        width:20%;
+        float:left;
+    }
+}

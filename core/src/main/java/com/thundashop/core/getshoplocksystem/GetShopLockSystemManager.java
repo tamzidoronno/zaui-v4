@@ -371,4 +371,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
     }
 
+    @Override
+    public void triggerCheckOfCodes(String serverId) {
+        LockServer server = getLockServer(serverId);
+        if (server instanceof ZwaveLockServer) {
+            ((ZwaveLockServer)server).startUpdatingOfLocks();
+        }
+    }
+
 }

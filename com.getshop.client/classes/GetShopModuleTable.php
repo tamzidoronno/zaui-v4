@@ -16,14 +16,16 @@ class GetShopModuleTable {
     private $manangerName; 
     private $functionName;
     private $attributes;
+    private $extraData;
     private $args;
     
-    function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes) {
+    function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes, $extraData = null) {
         $this->attributes = $attributes;
         $this->application = $application;
         $this->manangerName = $managerName;
         $this->functionName = $functionName;
         $this->attributes = $attributes;
+        $this->extraData = $extraData;
         $this->args = $args;
     }
 
@@ -86,6 +88,10 @@ class GetShopModuleTable {
                                 echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$val</div>";
                             }
                             $i++;
+                        }
+                        
+                        if ($this->extraData != null) {
+                            $postArray = array_merge($postArray, $this->extraData);
                         }
 
                         $this->printJavaScriptData($postArray, $j);

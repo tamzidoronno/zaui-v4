@@ -23,10 +23,5 @@ public class MasterUserSlot extends UserSlot {
     public boolean allCodesAdded = false;
     
     public List<UserSlot> subSlots = new ArrayList();    
-    public String takenInUseTextReference = "";
-    public String takenInUseManagerName = "";
-    public String takenInUseReference = "";
-
-
-    
+   
 }

@@ -1,0 +1,33 @@
+.ApacLocks .lock {
+    position: relative;
+}
+.ApacLocks .device_specific {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    padding: 20px;
+    border: solid 1px #DDD;
+}
+
+.ApacLocks .userslotrow {
+    position: relative;
+    min-height: 33px;
+    padding-bottom: 5px;
+}
+.ApacLocks .slotActions {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+}
+.ApacLocks .slots {
+    margin-top: 50px;
+}
+
+.ApacLocks .userrow {
+    padding-left: 19px;
+    min-height: 45px;
+}
+
+.ApacLocks .userrow:nth-child(odd) {
+    background: #DDD;
+}

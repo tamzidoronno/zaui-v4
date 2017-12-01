@@ -44,6 +44,7 @@ public class Lock {
     public String name;
 
     public List<UserSlot> getUserSlots() {
+        finalize();
         return new ArrayList(userSlots.values());
     }
 
@@ -92,11 +93,14 @@ public class Lock {
                 if (s.takenInUseDate != null) {
                     inUse.add(s);
                 }
+                
+                s.connectedToLockId = id;
+                s.connectedToServerId = connectedToServerId;
         });
     }
 
     void generateNewCodes() {
-        userSlots.values().stream()
+        getUserSlots().stream()
                 .forEach(s -> s.generateNewCode());
     }
 
@@ -151,14 +155,14 @@ public class Lock {
     }
 
     public List<UserSlot> getAllUnusedUserSlots(String lockGroupId) {
-        return userSlots.values()
+        return getUserSlots()
                 .stream()
                 .filter(userslot -> !userslot.isUserSlotTakenByGroup() || userslot.belongsToGroup(lockGroupId))
                 .collect(Collectors.toList());
     }
     
     public List<UserSlot> getAllSlotsAssignedToGroup(String lockGroupId) {
-        return userSlots.values()
+        return getUserSlots()
                 .stream()
                 .filter(userslot -> userslot.belongsToGroup(lockGroupId))
                 .collect(Collectors.toList());
@@ -171,7 +175,7 @@ public class Lock {
     }
 
     public void releaseAllSlotsForGroup(String groupId) {
-        userSlots.values().stream().forEach(slot -> {
+        getUserSlots().stream().forEach(slot -> {
             if (slot.belongsToGroup(groupId)) {
                 slot.reaseFromGroup();
             }

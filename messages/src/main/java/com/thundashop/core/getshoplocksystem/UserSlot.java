@@ -29,12 +29,18 @@ public class UserSlot implements Serializable {
     public String connectedToServerId;
     public String connectedToLockId;
     
+    public String takenInUseTextReference = "";
+    public String takenInUseManagerName = "";
+    public String takenInUseReference = "";
     
 
     public void generateNewCode() {
         code = new LockCode();
         code.generateRandomCode();
         takenInUseDate = null;
+        takenInUseTextReference = "";
+        takenInUseManagerName = "";
+        takenInUseReference = "";
     }
 
     public void finalize() {

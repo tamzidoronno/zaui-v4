@@ -182,6 +182,11 @@ public class PmsManagerProcessor {
         }catch(Exception e) {
             e.printStackTrace();
         }
+        
+        if (isApacSolutionActivated()) {
+            return handleGetShopLockSystemCodes(room, deleted);
+        } 
+        
         if (config.getDefaultLockServer().locktype.isEmpty() || config.getDefaultLockServer().locktype.equals("arx")) {
             if(!deleted) {
                 //Make sure everything is 100% updated.
@@ -248,7 +253,9 @@ public class PmsManagerProcessor {
     }
 
     private void processLockSystem() {
-        if (manager.getConfigurationSecure().getDefaultLockServer().arxHostname == null || manager.getConfigurationSecure().getDefaultLockServer().arxHostname.isEmpty()) { 
+        boolean oldLockSystemActive = manager.getConfigurationSecure().getDefaultLockServer().arxHostname != null && !manager.getConfigurationSecure().getDefaultLockServer().arxHostname.isEmpty();
+        
+        if (!oldLockSystemActive && !isApacSolutionActivated()) { 
             return;
         }
         try {
@@ -868,20 +875,18 @@ public class PmsManagerProcessor {
             manager.logPrint("Not able to fetch code from getshop hotel lock, no lock is connected to the room");
             return false;
         }
-        if (isApacSolutionActivated() && item.lockGroupId != null && !item.lockGroupId.isEmpty()) {
-            handleGetShopLockSystemCodes(room, deleted, item);
+        
+        if(deleted) {
+            manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room);
         } else {
-            if(deleted) {
-                manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room);
-            } else {
-                room.code = "";
-                room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
-                room.addedToArx = true;
-                PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
-                manager.saveBooking(booking);
-            }
-            manager.getShopLockManager.checkAndUpdateSubLocks();
+            room.code = "";
+            room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
+            room.addedToArx = true;
+            PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
+            manager.saveBooking(booking);
         }
+        manager.getShopLockManager.checkAndUpdateSubLocks();
+        
         return true;
     }
 
@@ -1257,12 +1262,23 @@ public class PmsManagerProcessor {
         start = System.currentTimeMillis();
     }
 
-    private void handleGetShopLockSystemCodes(PmsBookingRooms room, boolean deleted, BookingItem item) {
+    private boolean handleGetShopLockSystemCodes(PmsBookingRooms room, boolean deleted) {
+        if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+            return false;
+        }
         
+        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+        
+        if (item.lockGroupId == null || item.lockGroupId.isEmpty()) {
+            return false;
+        }
+        
+        boolean updated = false;
         if(deleted) {
             room.removeCode();    
             if (room.codeObject != null) {
                 manager.getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
+                updated = true;
             }
         } else {        
             LockCode nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
@@ -1270,20 +1286,21 @@ public class PmsManagerProcessor {
                 room.code = ""+nextUnusedCode.pinCode;
                 room.addedToArx = true;
                 room.codeObject = nextUnusedCode;
+                updated = true;
             }
         }
         
         PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
         manager.saveBooking(booking);
         
-        
+        return updated;
     }
 
     private boolean isApacSolutionActivated() {
-//        List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
-//        if (groups.size() > 0) {
-//            return true;
-//        }
+        List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
+        if (groups.size() > 0) {
+            return true;
+        }
        
         return false;
     }

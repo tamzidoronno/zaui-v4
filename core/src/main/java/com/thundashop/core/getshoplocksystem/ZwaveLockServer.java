@@ -106,7 +106,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                             }
                         
                         LocstarLock lock = new LocstarLock();
-                        lock.maxnumberOfCodes = userCode.get("maxUsers").getAsJsonObject().get("value").getAsInt();
+                        if (userCode.get("maxUsers").getAsJsonObject().get("value").isJsonNull()) {
+                            lock.maxnumberOfCodes = 20;
+                        } else {
+                            lock.maxnumberOfCodes = userCode.get("maxUsers").getAsJsonObject().get("value").getAsInt();
+                        }
                         lock.zwaveDeviceId = Integer.parseInt(deviceId);
                         lock.name = name;
                         lock.connectedToServerId  = id;
@@ -171,6 +175,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         } 
     }
     
+    @Override
     public synchronized void startUpdatingOfLocks() {
         startNextThread();
     }
@@ -236,11 +241,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         lockToWorkWith.finalize();
         
         if (!lockToWorkWith.getToRemove().isEmpty()) {
-            return new ZwaveRemoveCodeThread(this, lockToWorkWith.getToRemove().get(0), lockToWorkWith, false);
+            return new ZwaveRemoveCodeThread(this, lockToWorkWith.getToRemove().get(0), lockToWorkWith, false, storeId);
         }
         
         if (!lockToWorkWith.getToUpdate().isEmpty()) {
-            return new ZwaveAddCodeThread(this, lockToWorkWith.getToUpdate().get(0), lockToWorkWith);
+            return new ZwaveAddCodeThread(this, lockToWorkWith.getToUpdate().get(0), lockToWorkWith, storeId);
         }
         
         return null;

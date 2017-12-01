@@ -79,6 +79,9 @@ public interface IGetShopLockSystemManager {
     @Administrator
     public void deactivatePrioritingOfLock(String serverId);
     
+    @Administrator
+    public void triggerCheckOfCodes(String serverId);
+    
     /***** Group code stuff *****/
     @Administrator
     public void changeCode(String groupId, int slotId, int pinCode, String cardId);

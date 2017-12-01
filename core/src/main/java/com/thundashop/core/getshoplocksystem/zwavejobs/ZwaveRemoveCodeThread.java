@@ -34,7 +34,12 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
         waitForEmptyQueue();
         
         if (!isCodeAdded()) {
-            logEntry("Code was successfully removd, code: " + slot.code + ", slotId: " + slot.slotId);
+            if (slot.previouseCode != null) {
+                logEntry("Code was successfully removed, code: " + slot.previouseCode.pinCode + " : " + slot.slotId + ". Its been on the lock since: " + slot.previouseCode.addedDate);
+            } else {
+                logEntry("Code was successfully removed, slotId: " + slot.slotId);
+            }
+            
             if (!silent) {
                 server.codeRemovedFromLock(lock.id, slot);
             }

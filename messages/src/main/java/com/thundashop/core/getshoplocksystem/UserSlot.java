@@ -24,6 +24,8 @@ public class UserSlot implements Serializable {
     public int slotId;
     public LockCode code = null;
     
+    public LockCode previouseCode = null;
+    
     private String belongsToGroupId = "";
     
     public String connectedToServerId;
@@ -35,6 +37,8 @@ public class UserSlot implements Serializable {
     
 
     public void generateNewCode() {
+        previouseCode = code;
+        
         code = new LockCode();
         code.generateRandomCode();
         takenInUseDate = null;
@@ -79,6 +83,7 @@ public class UserSlot implements Serializable {
     }
 
     void markCodeForDeletion() {
+        previouseCode = code;
         
         if (code != null && code.addedDate == null) {
             code = null;

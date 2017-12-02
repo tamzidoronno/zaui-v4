@@ -142,7 +142,9 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     }
     
     public void threadDone(ZwaveThread thread) {
-        currentThread = null;
+        if (currentThread == null) {
+            return;
+        }
         
         if (!thread.successfullyCompleted) {
             threadFailed(thread);
@@ -154,7 +156,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
             }
         }
         
-        startNextThread();
+        startNextThread(true);
     }
     
     public void stopCurrentJob() {
@@ -163,7 +165,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
     }
 
-    private synchronized void startNextThread() {
+    private synchronized void startNextThread(boolean stopOldThread) {
+        if (stopOldThread) {
+            currentThread = null;
+        }
+        
         if (currentThread == null) {
             ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList(locks.values()));
             LocstarLock lockToWorkWith = jobMaker.getNextLock();
@@ -182,7 +188,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     
     @Override
     public void startUpdatingOfLocks() {
-        startNextThread();
+        startNextThread(false);
     }
  
     @Override
@@ -197,7 +203,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         
         LocstarLock lock = locks.get(lockId);
         lock.prioritizeLockUpdate = true;
-        startNextThread();
+        startNextThread(false);
         saveMe();
     }
 
@@ -214,20 +220,20 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     public void codeRemovedFromLock(String id, UserSlot slot) {
         super.codeRemovedFromLock(id, slot); 
         LocstarLock lock = (LocstarLock) getLock(id);
-        startNextThread();
+        startNextThread(false);
     }
 
     @Override
     public void markCodeForDeletion(String lockId, int slotId) {
         super.markCodeForDeletion(lockId, slotId);
-        startNextThread();
+        startNextThread(false);
         saveMe();
     }
 
     @Override
     public void markCodeForResending(String lockId, int slotId) {
         super.markCodeForResending(lockId, slotId);
-        startNextThread();
+        startNextThread(false);
         saveMe();
     }
 

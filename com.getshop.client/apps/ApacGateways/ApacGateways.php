@@ -73,5 +73,8 @@ class ApacGateways extends \MarketingApplication implements \Application {
         }
     }
 
+    public function runCheck() {
+        $this->getApi()->getGetShopLockSystemManager()->triggerCheckOfCodes($_POST['data']['serverid']);
+    }
 }
 ?>

@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +45,7 @@ public class Lock {
     public String name;
 
     public List<UserSlot> getUserSlots() {
+        finalize();
         return new ArrayList(userSlots.values());
     }
 
@@ -92,11 +94,14 @@ public class Lock {
                 if (s.takenInUseDate != null) {
                     inUse.add(s);
                 }
+                
+                s.connectedToLockId = id;
+                s.connectedToServerId = connectedToServerId;
         });
     }
 
     void generateNewCodes() {
-        userSlots.values().stream()
+        getUserSlots().stream()
                 .forEach(s -> s.generateNewCode());
     }
 
@@ -151,14 +156,14 @@ public class Lock {
     }
 
     public List<UserSlot> getAllUnusedUserSlots(String lockGroupId) {
-        return userSlots.values()
+        return getUserSlots()
                 .stream()
                 .filter(userslot -> !userslot.isUserSlotTakenByGroup() || userslot.belongsToGroup(lockGroupId))
                 .collect(Collectors.toList());
     }
     
     public List<UserSlot> getAllSlotsAssignedToGroup(String lockGroupId) {
-        return userSlots.values()
+        return getUserSlots()
                 .stream()
                 .filter(userslot -> userslot.belongsToGroup(lockGroupId))
                 .collect(Collectors.toList());
@@ -171,7 +176,7 @@ public class Lock {
     }
 
     public void releaseAllSlotsForGroup(String groupId) {
-        userSlots.values().stream().forEach(slot -> {
+        getUserSlots().stream().forEach(slot -> {
             if (slot.belongsToGroup(groupId)) {
                 slot.reaseFromGroup();
             }
@@ -179,6 +184,9 @@ public class Lock {
     }
 
     public void setCodeObject(int slotId, LockCode code) {
+        Gson gson = new Gson();
+        code = gson.fromJson(gson.toJson(code), LockCode.class);
+        
         if (userSlots.get(slotId) != null) {
             userSlots.get(slotId).setCodeObject(code);
         }
@@ -198,5 +206,16 @@ public class Lock {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, 5);
         dontUpdateUntil = cal.getTime();
+    }
+    
+    public UserSlot getUserSlot(int slotId) {
+        UserSlot slot = userSlots.get(slotId);
+        
+        if (slot != null) {
+            slot.finalize();
+            return slot;
+        }
+        
+        return null;
     }
 }

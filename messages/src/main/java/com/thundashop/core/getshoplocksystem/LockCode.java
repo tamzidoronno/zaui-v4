@@ -30,6 +30,8 @@ public class LockCode implements Serializable {
     @Administrator
     public int pinCode = 123456;
     
+    public int slotId;
+    
     void generateRandomCode() {
         Random rnd = new Random();
         pinCode = 100000 + rnd.nextInt(900000);

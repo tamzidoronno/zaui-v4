@@ -41,6 +41,9 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
+import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
+import com.thundashop.core.getshoplocksystem.LockCode;
+import com.thundashop.core.getshoplocksystem.LockGroup;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -150,6 +153,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Autowired
     GetShopLockManager getShopLockManager;
+    
+    @Autowired
+    GetShopLockSystemManager getShopLockSystemManager;
     
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
@@ -874,8 +880,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 room.taxes = productManager.getProduct(room.bookingItemTypeId).taxGroupObject.taxRate;
             }
             if(room.code == null || room.code.isEmpty()) {
-                room.code = generateCode();
-            }
+                    room.code = generateCode();
+                }
             if(room.date != null) {
                 if(room.date.start != null) {
                     room.date.startTimeStamp = room.date.start.getTime();

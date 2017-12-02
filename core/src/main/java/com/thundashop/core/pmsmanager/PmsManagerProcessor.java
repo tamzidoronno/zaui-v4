@@ -9,6 +9,12 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopLockCode;
+import com.thundashop.core.getshoplocksystem.Lock;
+import com.thundashop.core.getshoplocksystem.LockCode;
+import com.thundashop.core.getshoplocksystem.LockGroup;
+import com.thundashop.core.getshoplocksystem.LockServer;
+import com.thundashop.core.getshoplocksystem.MasterUserSlot;
+import com.thundashop.core.getshoplocksystem.UserSlot;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -19,7 +25,6 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
 public class PmsManagerProcessor {
-
     private final PmsManager manager;
     private Date lastProcessed;
     private List<PmsBooking> cachedResult;
@@ -177,6 +182,11 @@ public class PmsManagerProcessor {
         }catch(Exception e) {
             e.printStackTrace();
         }
+        
+        if (isApacSolutionActivated()) {
+            return handleGetShopLockSystemCodes(room, deleted);
+        } 
+        
         if (config.getDefaultLockServer().locktype.isEmpty() || config.getDefaultLockServer().locktype.equals("arx")) {
             if(!deleted) {
                 //Make sure everything is 100% updated.
@@ -243,7 +253,9 @@ public class PmsManagerProcessor {
     }
 
     private void processLockSystem() {
-        if (manager.getConfigurationSecure().getDefaultLockServer().arxHostname == null || manager.getConfigurationSecure().getDefaultLockServer().arxHostname.isEmpty()) { 
+        boolean oldLockSystemActive = manager.getConfigurationSecure().getDefaultLockServer().arxHostname != null && !manager.getConfigurationSecure().getDefaultLockServer().arxHostname.isEmpty();
+        
+        if (!oldLockSystemActive && !isApacSolutionActivated()) { 
             return;
         }
         try {
@@ -863,6 +875,7 @@ public class PmsManagerProcessor {
             manager.logPrint("Not able to fetch code from getshop hotel lock, no lock is connected to the room");
             return false;
         }
+        
         if(deleted) {
             manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room);
         } else {
@@ -873,6 +886,7 @@ public class PmsManagerProcessor {
             manager.saveBooking(booking);
         }
         manager.getShopLockManager.checkAndUpdateSubLocks();
+        
         return true;
     }
 
@@ -1093,6 +1107,11 @@ public class PmsManagerProcessor {
     }
 
     private void checkForDeadCodes() {
+        if (isApacSolutionActivated()) {
+            checkForDeadCodesApac();
+            return;
+        }
+        
         if(!manager.getConfigurationSecure().isGetShopHotelLock()) {
             return;
         }
@@ -1242,4 +1261,89 @@ public class PmsManagerProcessor {
 //        manager.logPrint("\t Processor inner:" + diff + " : " + text);
         start = System.currentTimeMillis();
     }
+
+    private boolean handleGetShopLockSystemCodes(PmsBookingRooms room, boolean deleted) {
+        if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+            return false;
+        }
+        
+        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+        
+        if (item.lockGroupId == null || item.lockGroupId.isEmpty()) {
+            return false;
+        }
+        
+        boolean updated = false;
+        if(deleted) {
+            room.removeCode();    
+            if (room.codeObject != null) {
+                manager.getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
+                updated = true;
+            }
+        } else {        
+            LockCode nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
+            if (nextUnusedCode != null) {
+                room.code = ""+nextUnusedCode.pinCode;
+                room.addedToArx = true;
+                room.codeObject = nextUnusedCode;
+                updated = true;
+            }
+        }
+        
+        PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
+        manager.saveBooking(booking);
+        
+        return updated;
+    }
+
+    private boolean isApacSolutionActivated() {
+        List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
+        if (groups.size() > 0) {
+            return true;
+        }
+       
+        return false;
+    }
+
+    private void checkForDeadCodesApac() {
+        List<PmsBooking> bookings = manager.getAllBookingsFlat();
+        
+        List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
+        
+        groups.stream().forEach(group -> {
+            group.getGroupLockCodes().values()
+                .stream()
+                .filter(masterUserSlot -> masterUserSlot.takenInUseDate != null)
+                .forEach(masterUserSlot -> {
+                    boolean isSlotInUse = isMasterUserSlotInUse(group, masterUserSlot, bookings);
+                    if (!isSlotInUse) {
+                        manager.getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
+                    }
+                });
+        });
+       
+    }
+
+    private boolean isMasterUserSlotInUse(LockGroup group, MasterUserSlot masterUserSlot, List<PmsBooking> bookings) {
+        for (PmsBooking booking : bookings) {
+            
+            if (booking.isDeleted) {
+                continue;
+            }
+            
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.isDeleted() || room.isEnded() || room.codeObject == null)
+                    continue;
+                
+                if (masterUserSlot.takenInUseReference.equals(room.pmsBookingRoomId) && room.codeObject.slotId == masterUserSlot.slotId) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+
+
 }

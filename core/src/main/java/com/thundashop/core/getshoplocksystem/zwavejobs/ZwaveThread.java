@@ -8,6 +8,8 @@ package com.thundashop.core.getshoplocksystem.zwavejobs;
 import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveThreadExecption;
 import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.common.AppContext;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
 import java.util.ArrayList;
@@ -29,8 +31,10 @@ public abstract class ZwaveThread implements Runnable {
     protected final LocstarLock lock;
     private List<String> logEntries = new ArrayList();
     private int attempts;
+    public final String storeId;
 
-    public ZwaveThread(ZwaveLockServer server, LocstarLock lock, int attempts) {
+    public ZwaveThread(ZwaveLockServer server, LocstarLock lock, int attempts, String storeId) {
+        this.storeId =  storeId;
         this.server = server;
         this.lock = lock;
         this.attempts = attempts;
@@ -46,6 +50,10 @@ public abstract class ZwaveThread implements Runnable {
 
     @Override
     public void run() {
+        if (GetShopLogHandler.isDeveloper) {
+            return;
+        }
+        
         for (int i = 0; i < attempts; i++) {
             if (shouldStop) {
                 break;
@@ -141,7 +149,7 @@ public abstract class ZwaveThread implements Runnable {
         Date date = new Date();
         String logString = date + " | Server: " + server.hostname + ", Lock: " + lock.zwaveDeviceId + ", Description: " + string;
         logEntries.add(logString);
-        System.out.println(logString);
+        GetShopLogHandler.logPrintStatic(logString, storeId);
     }
 
     public List<String> getLogEntries() {

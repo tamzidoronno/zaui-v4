@@ -54,6 +54,7 @@ echo "8. Property Management";
 echo "9. Apac";
 echo "10. Salespoint";
 echo "11. Ecommerce";
+echo "12. GetShop Settings";
 read moduleNumber
 
 module=other
@@ -90,6 +91,10 @@ if [ $moduleNumber = "10" ]; then
 fi
 if [ $moduleNumber = "11" ]; then 
     module=ecommerce
+    defaultActivated=true
+fi
+if [ $moduleNumber = "12" ]; then 
+    module=settings
     defaultActivated=true
 fi
 

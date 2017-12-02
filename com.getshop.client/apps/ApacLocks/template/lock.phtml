@@ -1,0 +1,30 @@
+<?
+/* @var $this \ns_01b8bd0c_0375_42fa_a44e_d177485db704\ApacLocks */
+$lock = $this->getApi()->getGetShopLockSystemManager()->getLock($_POST['data']['serverid'], $_POST['data']['lockid']);
+
+$this->setLock($lock);
+?>
+<div class='lock'>
+<?
+    if (isset($lock->zwaveDeviceId)) {
+        $this->includefile('zwavelock');
+    }
+
+    ?>
+
+    <div style='margin-top: 40px;'>
+        Serverid: <? echo $this->getServer()->id; ?>
+        <br/>Lockid: <? echo $lock->id; ?>
+    </div>
+    <div class='slots'>
+        <h2>Codes and slots</h2>
+        <?
+
+        foreach ($lock->userSlots as $slot) {
+            /* @var $slot \core_getshoplocksystem_UserSlot */
+            $this->setSlot($slot);
+            $this->includefile('slotview');
+        }
+        ?>
+    </div>
+</div>

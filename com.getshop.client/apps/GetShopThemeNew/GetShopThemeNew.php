@@ -22,6 +22,9 @@ class GetShopThemeNew extends \ThemeApplication implements \Application {
     public function addScripts() {
         echo "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>";
     }
-
+    
+    public function isAllowingSideBar() {
+        return true;
+    }
 }
 ?>

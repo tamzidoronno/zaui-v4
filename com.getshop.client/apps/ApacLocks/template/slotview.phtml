@@ -1,0 +1,62 @@
+<?
+/* @var $this \ns_01b8bd0c_0375_42fa_a44e_d177485db704\ApacLocks */
+$slot = $this->getSlot();
+
+
+$inUseClass = $slot->takenInUseDate ? "inUse" : "";
+$connectedToGroup = "";
+
+if ($slot->belongsToGroupId) {
+    $connectedToGroup = " ( Group: ".$this->getApi()->getGetShopLockSystemManager()->getNameOfGroup($slot->belongsToGroupId). " ) "; 
+}
+
+?>
+<div class="userrow"> 
+        <?
+        $state = "unkown";
+        if ($slot->toBeAdded && !$slot->toBeRemoved) {
+            $state = "<i class='fa fa-upload' title='Waiting for being uploaded to lock'></i>";
+        }
+        if (!$slot->toBeAdded && $slot->toBeRemoved) {
+            $state = "<i class='fa fa-trash' title='Waiting to be removed from lock'></i>";
+        }
+        if (!$slot->toBeAdded && !$slot->toBeRemoved) {
+            $state = "<i class='fa fa-check' title='All good'></i>";
+        }
+        
+        if (!$slot->code) {
+            $state = "<i class='fa fa-close' title='Not in use'></i>";
+        }
+        if ($inUseClass) {
+            $state = "<i class='fa fa-warning' title='In use'></i>";
+        } else {
+            if (isset($slot->allCodesAdded) && !$slot->allCodesAdded) {
+                $state = "<i class='fa fa-info' title='This code has not been updated on all locks, can not be used yet'></i>";
+            }
+        }
+        ?>
+        <div class="userslotrow"> 
+            <?
+            echo $state. " Slot: ". $slot->slotId. " ".$connectedToGroup. "<br/>";
+            
+            if (!$slot->code) {
+                echo "No code activated for this slot";
+            } else {
+                ?>
+                
+                    Pincode: <? echo $slot->code->pinCode; ?>, CardId: <? echo $slot->code->cardId; ?>
+                
+                <?
+                if ($slot->code->validFrom && $slot->code->validTo) {
+                    echo "<br/> Valid from: ".$slot->code->validFrom.", to: ".$slot->code->validTo;
+                }
+                
+            }
+            ?>    
+            <div class="slotActions">
+                <div class="gs_shop_small_icon" slotid="<? echo $slot->slotId; ?>" gsclick="markCodeForResend" title="Resend code to lock"><i class="fa fa-upload"></i></div>
+            </div>
+
+        </div>
+        
+    </div>

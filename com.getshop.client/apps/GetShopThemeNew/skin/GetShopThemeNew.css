@@ -116,3 +116,20 @@ div[pageId="24f0f03e-8790-4f42-ad90-4fbd91053750"] .GoogleMaps {
     margin-top: 50px;
     margin-bottom: 50px;
 }
+
+.gsarea[area="body"] .Menu  { 
+    border-right: solid 1px #DDD;
+    border-top: solid 1px #DDD;
+    
+}
+
+.gsarea[area="body"] .Menu .menuentries { 
+    width: 100%;
+}
+.gsarea[area="body"] .Menu .entry {
+    display: block;
+    width: 100%;
+    line-height: 50px;
+    border-bottom: solid 1px #DDD;
+    padding-left: 20px;
+}

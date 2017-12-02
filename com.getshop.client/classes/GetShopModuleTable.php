@@ -16,18 +16,21 @@ class GetShopModuleTable {
     private $manangerName; 
     private $functionName;
     private $attributes;
+    private $extraData;
     private $args;
     
-    function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes) {
+    function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes, $extraData = null) {
         $this->attributes = $attributes;
         $this->application = $application;
         $this->manangerName = $managerName;
         $this->functionName = $functionName;
         $this->attributes = $attributes;
+        $this->extraData = $extraData;
         $this->args = $args;
     }
 
     public function render() {
+        $this->uuid = uniqid();
         $this->loadData();
         $this->clearJavaScriptData();
         $this->renderTable();
@@ -87,6 +90,10 @@ class GetShopModuleTable {
                             }
                             $i++;
                         }
+                        
+                        if ($this->extraData != null) {
+                            $postArray = array_merge($postArray, $this->extraData);
+                        }
 
                         $this->printJavaScriptData($postArray, $j);
                     echo "</div>";
@@ -106,7 +113,7 @@ class GetShopModuleTable {
     }
     
     private function printJavaScriptData($data, $rowNumber) {
-        $functionName = $this->getIdentifier();
+        $functionName = $this->getFunctionName();
         
         if (!method_exists($this->application, $functionName)) {
             return;
@@ -127,7 +134,7 @@ class GetShopModuleTable {
     }
     
     private function getIdentifier() {
-        return $this->manangerName."_".$this->functionName;
+        return $this->manangerName."_".$this->functionName."_".$this->uuid;
     }
 
     public function clearJavaScriptData() {
@@ -148,10 +155,10 @@ class GetShopModuleTable {
     }
     
     private function shouldShowRow($rownumber) {
-        if (!isset($_SESSION['gs_moduletable_'.$this->getIdentifier()])) {
+        if (!isset($_SESSION['gs_moduletable_'.$this->getFunctionName()])) {
             return false;
         }
-        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getFunctionName()];
         
         if ($sessionData['rownumber'] == $rownumber) {
             return true;
@@ -161,15 +168,19 @@ class GetShopModuleTable {
     }
 
     private function renderTableContent($attribute, $rownumber) {
-        $sessionData = $_SESSION['gs_moduletable_'.$this->getIdentifier()];
+        $sessionData = $_SESSION['gs_moduletable_'.$this->getFunctionName()];
         $_POST['data'] = $attribute;
         
         if (isset($sessionData['index'])) {
             $_POST['data']['gscolumn'] = $sessionData['index'];
         }
         
-        $functioName = $this->getIdentifier();
+        $functioName = $this->getFunctionName();
         $this->application->$functioName();
+    }
+
+    public function getFunctionName() {
+        return $this->manangerName."_".$this->functionName;
     }
 
 }

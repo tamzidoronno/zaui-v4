@@ -18,7 +18,7 @@ import java.util.Map;
  * @author ktonder
  */
 public class LockGroup extends DataCommon {
-    public HashMap<Integer, MasterUserSlot> groupLockCodes = new HashMap();
+    private HashMap<Integer, MasterUserSlot> groupLockCodes = new HashMap();
     public Map<String, List<String>> connectedToLocks = new HashMap();
     
     public int numberOfSlotsInGroup = 5;
@@ -78,5 +78,48 @@ public class LockGroup extends DataCommon {
         slot.setDates(validFrom, validTo);
     }
 
+    public HashMap<Integer, MasterUserSlot> getGroupLockCodes() {
+        
+        groupLockCodes.values().stream()
+                .forEach(slot -> {
+                    slot.finalize();
+                });
+        
+        return groupLockCodes;
+    }
+
     
+    public void finalize(HashMap<String, LockServer> lockServers) {
+        groupLockCodes.values().stream()
+                .forEach(masterGroup -> {
+                    checkIfAllSlotsHasBeenUpdated(masterGroup, lockServers);
+                });
+    }
+
+    private void checkIfAllSlotsHasBeenUpdated(MasterUserSlot masterUserSlot, HashMap<String, LockServer> lockServers) {
+        if (masterUserSlot.subSlots.isEmpty()) {
+            masterUserSlot.allCodesAdded = false;
+            return;
+        }
+        
+        masterUserSlot.allCodesAdded = true;
+        masterUserSlot.slotsNotOk.clear();
+        
+        for (UserSlot subSlot : masterUserSlot.subSlots) {
+            LockServer server = lockServers.get(subSlot.connectedToServerId);
+            if (server != null) {
+                Lock lock = server.getLock(subSlot.connectedToLockId);
+                if (lock != null) {
+                    UserSlot slot = lock.getUserSlot(subSlot.slotId);
+                    
+                    if (slot.needToBeRemoved || slot.toBeAdded || slot.toBeRemoved ) {
+                        masterUserSlot.slotsNotOk.add(slot);
+                        masterUserSlot.allCodesAdded = false;
+                        masterUserSlot.connectedToLockId = lock.id;
+                        masterUserSlot.connectedToServerId = server.getId();
+                    }
+                }
+            }
+        }
+    }
 }

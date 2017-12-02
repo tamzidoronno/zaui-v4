@@ -7,6 +7,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -46,6 +47,10 @@ public class PmsBookingRooms implements Serializable {
     
     @Editor
     public String code = "";
+    
+    @Editor
+    public LockCode codeObject = null;
+    
     public String cardformat = "";
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;
@@ -74,6 +79,9 @@ public class PmsBookingRooms implements Serializable {
     public boolean inWorkSpace = false;
     public boolean addedToWaitingList = false;
     public boolean overbooking = false;
+    
+    @Transient
+    public Boolean isUsingNewBookingEngine = null;
     
     /**
      * Finalized entries
@@ -746,4 +754,38 @@ public class PmsBookingRooms implements Serializable {
             }
         }
     }
+
+    boolean needToGenerateCode() {
+        Date now = new Date();
+        if (isActiveOnDay(now)) {
+            if (codeObject == null)
+                return true;
+            
+            if (code == null || code.isEmpty())
+                return true;
+            
+        }
+        
+        return false;
+    }
+    
+    boolean needToRemoveCode() {
+        Date now = new Date();
+        if (!isActiveOnDay(now)) {
+            if (codeObject != null)
+                return true;
+
+            if (code != null && !code.isEmpty()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public void removeCode() {
+        code = "";
+        codeObject = null;
+    }
+
 }

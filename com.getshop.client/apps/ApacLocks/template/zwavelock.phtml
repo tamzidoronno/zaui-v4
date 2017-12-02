@@ -1,0 +1,29 @@
+
+<?
+/* @var $this \ns_01b8bd0c_0375_42fa_a44e_d177485db704\ApacLocks */
+$lock = $this->getLock();
+?>
+
+<h2><? echo "Device id: " .$lock->zwaveDeviceId .", Name: ".$lock->name; ?></h2>
+
+<div class="commandArea">
+    <div class="shop_button" gsclick='resendCodes' serverid="<? echo $this->getServer()->id; ?>" lockid="<? echo $lock->id; ?>" title="This function will not make new codes, only mark all as need to be updated.">Resend all codes</div>
+    <?
+    if (!$lock->prioritizeLockUpdate) {
+    ?>
+    <div class="shop_button" gsclick='activateForceUpdate' serverid="<? echo $this->getServer()->id; ?>" lockid="<? echo $lock->id; ?>" title="Activating this will force the lock to update the lock, prioritize it.">Priority update of this lock</div>
+    <?
+    } else {
+    ?>
+    <div class="shop_button" gsclick='deactivateForceUpdate' serverid="<? echo $this->getServer()->id; ?>" lockid="<? echo $lock->id; ?>" title="Deactivate priority update.">Deactivate priority update of lock</div>
+    <?
+    }
+    ?>
+</div>
+
+
+<div class="device_specific" gstype="form" method="saveZwaveLockSettings">
+    <b>Device id: </b><br/>
+    <input type="text" class="gsniceinput1" value="<? echo $lock->zwaveDeviceId; ?>" gsname="updateDeviceId"/>
+    <br/><div class="shop_button" gstype="submit">Save</div>
+</div>

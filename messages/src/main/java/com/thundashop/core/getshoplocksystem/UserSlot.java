@@ -24,17 +24,27 @@ public class UserSlot implements Serializable {
     public int slotId;
     public LockCode code = null;
     
+    public LockCode previouseCode = null;
+    
     private String belongsToGroupId = "";
     
     public String connectedToServerId;
     public String connectedToLockId;
     
+    public String takenInUseTextReference = "";
+    public String takenInUseManagerName = "";
+    public String takenInUseReference = "";
     
 
     public void generateNewCode() {
+        previouseCode = code;
+        
         code = new LockCode();
         code.generateRandomCode();
         takenInUseDate = null;
+        takenInUseTextReference = "";
+        takenInUseManagerName = "";
+        takenInUseReference = "";
     }
 
     public void finalize() {
@@ -55,6 +65,9 @@ public class UserSlot implements Serializable {
         if (needToBeRemoved && code.removedDate == null) {
             toBeRemoved = true;
         }
+        if (code != null) {
+            code.slotId = slotId;
+        }
     }
 
     public void remove() {
@@ -70,6 +83,7 @@ public class UserSlot implements Serializable {
     }
 
     void markCodeForDeletion() {
+        previouseCode = code;
         
         if (code != null && code.addedDate == null) {
             code = null;

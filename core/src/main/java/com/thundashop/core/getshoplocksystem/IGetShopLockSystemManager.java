@@ -79,6 +79,12 @@ public interface IGetShopLockSystemManager {
     @Administrator
     public void deactivatePrioritingOfLock(String serverId);
     
+    @Administrator
+    public void triggerCheckOfCodes(String serverId);
+    
+    @Administrator
+    public void triggerCronTab();
+    
     /***** Group code stuff *****/
     @Administrator
     public void changeCode(String groupId, int slotId, int pinCode, String cardId);
@@ -87,7 +93,7 @@ public interface IGetShopLockSystemManager {
     public void renewCodeForSlot(String groupId, int slotId);
     
     @Administrator
-    public LockCode getNextUnusedCode(String groupId);
+    public LockCode getNextUnusedCode(String groupId, String reference, String managerName, String textReference);
     
     @Administrator
     public void changeDatesForSlot(String groupId, int slotId, Date startDate, Date endDate);

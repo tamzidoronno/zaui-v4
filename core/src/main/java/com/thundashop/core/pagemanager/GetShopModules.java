@@ -25,6 +25,7 @@ public class GetShopModules {
         addModule("ecommerce", "Ecommerce", true, 4, "f599c0a6-6f76-49af-ba15-7d496dd4387b", "fa-shopping-cart"); // EcommerceModuleTheme
         addModule("crm", "CRM", true, 5, "14d46706-d524-4d3c-abde-7fb1a56ca2b9", "fa-users"); 
         addModule("apac", "APAC", true, 6, "affd0624-7311-480c-93bc-06b72459b45d", "fa-key"); // GetShopModuleApacTheme
+        addModule("settings", "SETTINGS", true, 7, "75f4dc38-a356-4d04-866c-c8bc4e11d7ab", "fa-gears"); // GetShopModuleApacTheme
     }
 
     private void addModule(String nameAndId, String displayName, boolean externalPageTemplate, int sequence, String themeApplicationId, String fontAwesome) {

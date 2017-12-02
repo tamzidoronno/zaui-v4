@@ -15,13 +15,30 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
         $this->includefile("addlockgroup");
     }
     
+    public function formatStatus($lockGroup) {
+        $ret = "";
+        
+        foreach ($lockGroup->groupLockCodes as $serverId => $masterSlot) {
+            if (count($masterSlot->slotsNotOk)) {
+                if ($ret) {
+                    $ret .= " | ";
+                }
+                $title = $this->generateTitle($serverId, $masterSlot);
+                $ret .= "<span title='$title'>".count($masterSlot->slotsNotOk)."</span>";
+            }
+        }
+        
+        return $ret;
+    }
+    
     public function showList() {
         $args = array();
         
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
             array('name', 'Group Name', 'name'),
-            array('numberOfSlotsInGroup', 'Slotsize', 'numberOfSlotsInGroup')
+            array('numberOfSlotsInGroup', 'Slotsize', 'numberOfSlotsInGroup'),
+            array(null, 'Status', null, 'formatStatus'),
         );
         
         $table = new \GetShopModuleTable($this, 'GetShopLockSystemManager', 'getAllGroups', $args, $attributes);
@@ -65,5 +82,26 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
         $this->getApi()->getGetShopLockSystemManager()->setLocksToGroup($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'], $_POST['data']['servers']);
     }
     
+    public function deleteGroup() {
+        $this->getApi()->getGetShopLockSystemManager()->deleteGroup($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid']);
+    }
+    
+    public function changeSlotCode() {
+        $this->getApi()->getGetShopLockSystemManager()->changeCode($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'], $_POST['data']['slotid'], $_POST['data']['code'], "");
+    }
+
+    public function generateTitle($serverId, $masterSlot) {
+        
+        $ret = "";
+        $ret .= "Slot: ".$masterSlot->slotId;
+        $ret .= "<br/><br/><b>The following locks has not been updated</b>";
+        foreach ($masterSlot->slotsNotOk as $slotNotOk) {
+            $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($slotNotOk->connectedToServerId, $slotNotOk->connectedToLockId);
+            $ret .= "<br/>Lockname: ".$lock->name;
+        }
+        
+        return $ret;
+    }
+
 }
 ?>

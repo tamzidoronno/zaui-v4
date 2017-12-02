@@ -142,6 +142,8 @@ public abstract class LockServerBase extends DataCommon {
         if (getShopLockSystemManager != null) {
             getShopLockSystemManager.saveObject(this);
         }
+        
+        startUpdatingOfLocks();
     }
     
     public void setDetails(String hostname, String userName, String password, String givenName) {
@@ -206,12 +208,13 @@ public abstract class LockServerBase extends DataCommon {
     }
 
     public void syncGroupSlot(LockGroup group, int slotId) {
-        MasterUserSlot groupCode = group.groupLockCodes.get(slotId);
+        MasterUserSlot groupCode = group.getGroupLockCodes().get(slotId);
         groupCode.subSlots.stream().forEach(slot -> { 
             Lock lock = getLock(slot.connectedToLockId);
 
             if (lock != null && groupCode.code != null) {
                 lock.setCodeObject(slot.slotId, groupCode.code);
+                lock.markCodeForResending(slotId);
             }
         });
         
@@ -219,10 +222,14 @@ public abstract class LockServerBase extends DataCommon {
     }
     
     public void syncGroup(LockGroup group) {
-        group.groupLockCodes.values().stream().forEach(groupCode -> {
+        group.getGroupLockCodes().values().stream().forEach(groupCode -> {
             syncGroupSlot(group, groupCode.slotId);
         });
         
         saveMe(); 
+    }
+    
+    public void startUpdatingOfLocks() {
+        
     }
 }

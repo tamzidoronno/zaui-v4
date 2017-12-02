@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.thundashop.core.common.ExcludeFromJson;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveJobPriotizer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +107,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                             }
                         
                         LocstarLock lock = new LocstarLock();
-                        lock.maxnumberOfCodes = userCode.get("maxUsers").getAsJsonObject().get("value").getAsInt();
+                        if (userCode.get("maxUsers").getAsJsonObject().get("value").isJsonNull()) {
+                            lock.maxnumberOfCodes = 20;
+                        } else {
+                            lock.maxnumberOfCodes = userCode.get("maxUsers").getAsJsonObject().get("value").getAsInt();
+                        }
                         lock.zwaveDeviceId = Integer.parseInt(deviceId);
                         lock.name = name;
                         lock.connectedToServerId  = id;
@@ -136,8 +141,10 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                 .forEach(l -> l.finalize());
     }
     
-    public synchronized void threadDone(ZwaveThread thread) {
-        currentThread = null;
+    public void threadDone(ZwaveThread thread) {
+        if (currentThread == null) {
+            return;
+        }
         
         if (!thread.successfullyCompleted) {
             threadFailed(thread);
@@ -149,14 +156,20 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
             }
         }
         
-        startNextThread();
+        startNextThread(true);
     }
     
-    public synchronized void stopCurrentJob() {
-        currentThread.stop();
+    public void stopCurrentJob() {
+        if (currentThread != null) {
+            currentThread.stop();
+        }
     }
 
-    private synchronized void startNextThread() {
+    private synchronized void startNextThread(boolean stopOldThread) {
+        if (stopOldThread) {
+            currentThread = null;
+        }
+        
         if (currentThread == null) {
             ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList(locks.values()));
             LocstarLock lockToWorkWith = jobMaker.getNextLock();
@@ -167,12 +180,15 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                     currentThread = nextThread; 
                     new Thread(nextThread).start();
                 }            
+            } else {
+                GetShopLogHandler.logPrintStatic("No more jobs to do, or waiting because of failed locks.", storeId);
             }
         } 
     }
     
-    public synchronized void startUpdatingOfLocks() {
-        startNextThread();
+    @Override
+    public void startUpdatingOfLocks() {
+        startNextThread(false);
     }
  
     @Override
@@ -187,7 +203,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         
         LocstarLock lock = locks.get(lockId);
         lock.prioritizeLockUpdate = true;
-        startNextThread();
+        startNextThread(false);
         saveMe();
     }
 
@@ -197,26 +213,27 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         if (lock != null) {
             lock.delayUpdateForFiveMinutes();
         }
+        saveMe();
     }
 
     @Override
     public void codeRemovedFromLock(String id, UserSlot slot) {
         super.codeRemovedFromLock(id, slot); 
         LocstarLock lock = (LocstarLock) getLock(id);
-        startNextThread();
+        startNextThread(false);
     }
 
     @Override
     public void markCodeForDeletion(String lockId, int slotId) {
         super.markCodeForDeletion(lockId, slotId);
-        startNextThread();
+        startNextThread(false);
         saveMe();
     }
 
     @Override
     public void markCodeForResending(String lockId, int slotId) {
         super.markCodeForResending(lockId, slotId);
-        startNextThread();
+        startNextThread(false);
         saveMe();
     }
 
@@ -236,11 +253,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         lockToWorkWith.finalize();
         
         if (!lockToWorkWith.getToRemove().isEmpty()) {
-            return new ZwaveRemoveCodeThread(this, lockToWorkWith.getToRemove().get(0), lockToWorkWith, false);
+            return new ZwaveRemoveCodeThread(this, lockToWorkWith.getToRemove().get(0), lockToWorkWith, false, storeId);
         }
         
         if (!lockToWorkWith.getToUpdate().isEmpty()) {
-            return new ZwaveAddCodeThread(this, lockToWorkWith.getToUpdate().get(0), lockToWorkWith);
+            return new ZwaveAddCodeThread(this, lockToWorkWith.getToUpdate().get(0), lockToWorkWith, storeId);
         }
         
         return null;

@@ -736,7 +736,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start, end);
             
             if (forskningsPeriode == null) {
-                throw new ErrorException(1043);
+                ErrorException ex = new ErrorException(1043);
+                ex.additionalInformation = "User with problem: " + userManager.getUserById(userId).fullName;
+                throw ex;
             }
             
             Date toCalclateFrom = getHighestDate(start, periode.from);

@@ -20,6 +20,8 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
 
     @Override
     public List<Lock> getLocks() {
+        setAllCodesAdded();
+        
         return new ArrayList(locks.values());
     }
 
@@ -33,6 +35,12 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
     @Override
     public void save() {
         saveMe();
+    }
+
+    @Override
+    protected void saveMe() {
+        setAllCodesAdded();
+        super.saveMe(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -52,6 +60,7 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
 
     @Override
     public Lock getLock(String id) {
+        setAllCodesAdded();
         return locks.get(id);
     }
 
@@ -77,6 +86,17 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
 
     @Override
     public void finalizeServer() {
+        setAllCodesAdded();
+    }
+
+    private void setAllCodesAdded() {
+        locks.values().stream().forEach(l -> {
+            l.getUserSlots().stream().forEach(slot -> {
+                if (slot.code != null) {
+                    slot.codeAddedSuccesfully();
+                }
+            });
+        });
     }
     
 }

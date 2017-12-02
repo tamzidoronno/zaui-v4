@@ -21,7 +21,6 @@ $locktype['arx'] = "Arx";
 $locktype['getshop'] = "GetShop";
 $locktype['getshophotellock'] = "GetShop hotel lock";
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-$hasArx = $config->arxHostname;
 
 $profiles = array();
 $profiles['dining'] = "Dining";
@@ -57,10 +56,9 @@ if($notificationSettings->runAutoPayWithCard) {
     $notifications['order_unabletopaywithsavecardwarning_'.$langauge] = "Warning sent 3 days before order expire (unable to pay with saved card)";
     $notifications['order_unabletopaywithsavecard_'.$langauge] = "Message sent when the order has expired and payment has not been completed.";
 }
-if($hasArx) {
-    $notifications['room_added_to_arx_'.$langauge] = "When code is active on door";
-    $notifications['room_removed_from_arx_'.$langauge] = "When code is removed from door";
-}
+$notifications['room_added_to_arx_'.$langauge] = "When code is active on door";
+$notifications['room_removed_from_arx_'.$langauge] = "When code is removed from door";
+
 if($hasEventCalendar) {
     $notifications['booking_eventcalendar_'.$langauge] = "Message to send to event helder in the event calendar";
 }

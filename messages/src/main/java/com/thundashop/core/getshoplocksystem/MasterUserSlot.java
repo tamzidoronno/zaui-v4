@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplocksystem;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,5 +20,14 @@ import java.util.List;
  * @author ktonder
  */
 public class MasterUserSlot extends UserSlot {
+    public boolean allCodesAdded = false;
+    
     public List<UserSlot> subSlots = new ArrayList();    
+    
+    /**
+     * The slots added to this array has one not
+     * yet been updated on the locks
+     */
+    public List<UserSlot> slotsNotOk = new ArrayList();    
+   
 }

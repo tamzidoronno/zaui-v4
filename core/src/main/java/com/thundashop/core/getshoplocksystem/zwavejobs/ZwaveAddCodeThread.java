@@ -20,13 +20,14 @@ import java.util.Date;
 public class ZwaveAddCodeThread extends ZwaveThread {
     private UserSlot slot;
     
-    public ZwaveAddCodeThread(ZwaveLockServer server, UserSlot slot, LocstarLock lock) {
-        super(server, lock, 20);
+    public ZwaveAddCodeThread(ZwaveLockServer server, UserSlot slot, LocstarLock lock, String storeId) {
+        super(server, lock, 30, storeId);
         this.slot = slot;
     }
 
     @Override
     public boolean execute(int attempt) throws ZwaveThreadExecption {
+
         boolean codeAlreadyAdded = isCodeAdded();
         
         if (codeAlreadyAdded && !removeCodeFromSlot()) {
@@ -43,7 +44,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
             server.codeAddedSuccessfully(lock.id, slot.slotId);
             return true;
         } else {
-            logEntry("Failed to add code on attempt: " + attempt + ", code information: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
+            logEntry("Failed to add code on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
         }
         
         return false;
@@ -115,7 +116,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
     }
 
     private boolean removeCodeFromSlot() {
-        ZwaveRemoveCodeThread removeJob = new ZwaveRemoveCodeThread(server, slot, lock, true);
+        ZwaveRemoveCodeThread removeJob = new ZwaveRemoveCodeThread(server, slot, lock, true, storeId);
         return removeJob.execute(20);
     }
 }

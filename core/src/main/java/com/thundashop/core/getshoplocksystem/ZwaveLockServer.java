@@ -163,7 +163,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
     }
 
-    private void startNextThread() {
+    private synchronized void startNextThread() {
         if (currentThread == null) {
             ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList(locks.values()));
             LocstarLock lockToWorkWith = jobMaker.getNextLock();

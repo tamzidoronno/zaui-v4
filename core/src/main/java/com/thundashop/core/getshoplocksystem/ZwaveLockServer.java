@@ -202,6 +202,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         if (lock != null) {
             lock.delayUpdateForFiveMinutes();
         }
+        startNextThread();
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.thundashop.core.common.ExcludeFromJson;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveJobPriotizer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,7 +141,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                 .forEach(l -> l.finalize());
     }
     
-    public synchronized void threadDone(ZwaveThread thread) {
+    public void threadDone(ZwaveThread thread) {
         currentThread = null;
         
         if (!thread.successfullyCompleted) {
@@ -156,11 +157,13 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         startNextThread();
     }
     
-    public synchronized void stopCurrentJob() {
-        currentThread.stop();
+    public void stopCurrentJob() {
+        if (currentThread != null) {
+            currentThread.stop();
+        }
     }
 
-    private synchronized void startNextThread() {
+    private void startNextThread() {
         if (currentThread == null) {
             ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList(locks.values()));
             LocstarLock lockToWorkWith = jobMaker.getNextLock();
@@ -171,12 +174,14 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                     currentThread = nextThread; 
                     new Thread(nextThread).start();
                 }            
+            } else {
+                GetShopLogHandler.logPrintStatic("No more jobs to do, or waiting because of failed locks.", storeId);
             }
         } 
     }
     
     @Override
-    public synchronized void startUpdatingOfLocks() {
+    public void startUpdatingOfLocks() {
         startNextThread();
     }
  
@@ -202,8 +207,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         if (lock != null) {
             lock.delayUpdateForFiveMinutes();
         }
-        currentThread = null;
-        startNextThread();
+        saveMe();
     }
 
     @Override

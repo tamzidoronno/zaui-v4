@@ -49,6 +49,8 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         lockServers.values().stream().forEach(l -> {
             triggerCheckOfCodes(l.getId());
         });
+        
+        createScheduler("checkCronGetShopLockSystemManager", "*/5 * * * *", ZwaveTriggerCheckCron.class);
     }
     
     private HashMap<String, LockGroup> getFinalizedGroups() {
@@ -383,4 +385,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
     }
 
+    @Override
+    public void triggerCronTab() {
+        lockServers.values().stream()
+                .forEach(s -> triggerCheckOfCodes(s.getId()));
+    }
+
+    
 }

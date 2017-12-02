@@ -82,6 +82,9 @@ public interface IGetShopLockSystemManager {
     @Administrator
     public void triggerCheckOfCodes(String serverId);
     
+    @Administrator
+    public void triggerCronTab();
+    
     /***** Group code stuff *****/
     @Administrator
     public void changeCode(String groupId, int slotId, int pinCode, String cardId);

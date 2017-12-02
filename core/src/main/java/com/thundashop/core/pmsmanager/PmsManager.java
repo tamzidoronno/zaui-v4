@@ -1322,8 +1322,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }catch(Exception e) {
             logPrintException(e);
         }
-        
-        key = key + "_" + booking.language;
+     
+        if(storeId.equals("b7951dc0-0387-4b67-87c2-ce4e183ef6b7")) {
+            key = key + "_en_en";
+        } else {
+            key = key + "_" + booking.language;
+        }
         String message = notify(key, booking, "sms", room);
         List<String> smsRecp = repicientList;
         String repssms = "";

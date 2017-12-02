@@ -5,7 +5,16 @@ body{font-family: 'Montserrat', sans-serif;font-size:15px;font-weight:300;}
 .gsbody_inner.gscanchangelayout{position:relative;}/*Makes it possible for 100% width absolute header*/
 .gs_page_width{max-width:1100px;margin:auto;}
 .shop_button{height:30px;line-height:30px;margin:2px;}
-.gsarea[area="header"]{position:absolute;width:100%;}
+
+.gsarea[area="header"] {
+    background-image : url("/displayImage.php?id=8c9f5c89-5b65-446c-b944-5bc4757dbacb");
+    height: 110px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+        background: rgba(50, 61, 70, 0.93) !important;
+}
+
 .gsarea[area="body"] {background-color:#fff;min-height:900px;}
 .gsarea[area="body"] .gs_page_width{background-color:transparent;}
 .gsarea[area="body"] .ContentManager a{color:#b58d4e;font-weight:600;}
@@ -176,10 +185,7 @@ body{font-family: 'Montserrat', sans-serif;font-size:15px;font-weight:300;}
 .gscell_119 .gsaddcontent{
     display:none;
 }
-.gscell_89.gsucell,
-.gscell_90.gsucell,
-.gscell_91.gsucell,
-.gscell_92.gsucell{background-image : url("/displayImage.php?id=8c9f5c89-5b65-446c-b944-5bc4757dbacb");}
+
 .gscell_93.gsucell,
 .gscell_109.gsucell,
 .gscell_110.gsucell,

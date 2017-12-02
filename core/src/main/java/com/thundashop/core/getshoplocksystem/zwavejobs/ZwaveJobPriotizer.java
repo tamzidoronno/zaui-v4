@@ -36,6 +36,7 @@ public class ZwaveJobPriotizer {
         
         List<LocstarLock> toUpdate = locks.stream()
                 .filter(l -> l.canUpdate())
+                .filter(l -> l.getJobSize() > 0)
                 .collect(Collectors.toList());
         
         // Make sure that all has atleast 10 codes set on door before

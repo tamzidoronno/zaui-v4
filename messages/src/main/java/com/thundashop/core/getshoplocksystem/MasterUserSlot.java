@@ -23,5 +23,11 @@ public class MasterUserSlot extends UserSlot {
     public boolean allCodesAdded = false;
     
     public List<UserSlot> subSlots = new ArrayList();    
+    
+    /**
+     * The slots added to this array has one not
+     * yet been updated on the locks
+     */
+    public List<UserSlot> slotsNotOk = new ArrayList();    
    
 }

@@ -103,6 +103,7 @@ public class LockGroup extends DataCommon {
         }
         
         masterUserSlot.allCodesAdded = true;
+        masterUserSlot.slotsNotOk.clear();
         
         for (UserSlot subSlot : masterUserSlot.subSlots) {
             LockServer server = lockServers.get(subSlot.connectedToServerId);
@@ -110,9 +111,12 @@ public class LockGroup extends DataCommon {
                 Lock lock = server.getLock(subSlot.connectedToLockId);
                 if (lock != null) {
                     UserSlot slot = lock.getUserSlot(subSlot.slotId);
+                    
                     if (slot.needToBeRemoved || slot.toBeAdded || slot.toBeRemoved ) {
+                        masterUserSlot.slotsNotOk.add(slot);
                         masterUserSlot.allCodesAdded = false;
-                        return;
+                        masterUserSlot.connectedToLockId = lock.id;
+                        masterUserSlot.connectedToServerId = server.getId();
                     }
                 }
             }

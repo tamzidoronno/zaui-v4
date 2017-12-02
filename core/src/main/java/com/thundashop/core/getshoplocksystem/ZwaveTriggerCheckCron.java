@@ -15,7 +15,7 @@ public class ZwaveTriggerCheckCron extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-        
+        getApi().getGetShopLockSystemManager().triggerCronTab();
     }
     
 }

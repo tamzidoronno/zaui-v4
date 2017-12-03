@@ -161,6 +161,7 @@ public class GeneratePhpApi {
     }
 
     static String createPhpFileContent(Class entry, String classname, String filename, String filePath) {
+        System.out.println(filename);
         Class superClassName = entry.getSuperclass();
         String extendsstring = "";
 
@@ -195,6 +196,21 @@ public class GeneratePhpApi {
 
         phpResult += "?>";
         return phpResult;
+    }
+    
+    private static void createEmptyClassFile(String classname, String filePath, String filename) throws IOException {
+        String phpResult = "<?php\r\n";
+        phpResult += "class " + classname + " {\r\n";
+        phpResult += "}\r\n";
+        phpResult += "?>";
+        
+        File phpfile = new File(filePath + "/" + filename + ".php");
+
+        FileWriter fstream = new FileWriter(phpfile);
+        BufferedWriter out = new BufferedWriter(fstream);
+        out.write(phpResult);
+        out.flush();
+        out.close();
     }
 
     public static void Generate(List<Class> list) throws IOException {
@@ -252,6 +268,8 @@ public class GeneratePhpApi {
         result += "\t###############################################*/\r\n";
         result += app;
         writePHPApi(result);
+        
+        createEmptyClassFile("core_getshoplocksystem_LockGroup", "../com.getshop.client/events/core/getshoplocksystem", "LockGroup");
     }
 
     private static String getFileName(Class entry) {

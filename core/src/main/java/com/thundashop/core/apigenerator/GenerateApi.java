@@ -210,6 +210,10 @@ public class GenerateApi {
         }
     }
 
+    void makeEmptyFile(String eventsPath, String core_getshoplocksystem_LockGroup, String coregetshoplocksystem, String lockGroup) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
     public class ApiMethod {
 

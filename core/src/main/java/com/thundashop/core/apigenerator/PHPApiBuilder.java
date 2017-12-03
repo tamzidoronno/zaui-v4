@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -148,6 +149,7 @@ public class PHPApiBuilder {
             generator.writeFile(content, dataPath);
         }
 
+        makeEmptyFile(eventsPath + "/core/getshoplocksystem/" , "core_getshoplocksystem_LockGroup", "LockGroup" );
         
     }
 
@@ -320,5 +322,22 @@ public class PHPApiBuilder {
         }
 
         return phpClass;
+    }
+
+    private void makeEmptyFile(String eventsPath, String classname, String filename) throws IOException {
+            
+    
+        String phpResult = "<?php\r\n";
+        phpResult += "class " + classname + " {\r\n";
+        phpResult += "}\r\n";
+        phpResult += "?>";
+        
+        File phpfile = new File(eventsPath + "/" + filename + ".php");
+
+        FileWriter fstream = new FileWriter(phpfile);
+        BufferedWriter out = new BufferedWriter(fstream);
+        out.write(phpResult);
+        out.flush();
+        out.close();
     }
 }

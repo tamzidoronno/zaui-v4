@@ -27,10 +27,15 @@ public class ZwaveAddCodeThread extends ZwaveThread {
 
     @Override
     public boolean execute(int attempt) throws ZwaveThreadExecption {
-
-        boolean codeAlreadyAdded = isCodeAdded();
+        String codeAlreadyAdded = isCodeAdded();
         
-        if (codeAlreadyAdded && !removeCodeFromSlot()) {
+        if (codeAlreadyAdded.equals("unkown")) {
+            logEntry("Unkown status of added code on attempt, not added: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
+            return false;
+        }
+        
+        if (codeAlreadyAdded.equals("yes") && !removeCodeFromSlot()) {
+            logEntry("Code was already added but was not able to remove it from slot on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
             return false;
         }
 
@@ -38,7 +43,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         server.httpLoginRequestZwaveServer(getAddressForSettingCode());
         waitForEmptyQueue();
 
-        if (isCodeAdded()) {
+        if (isCodeAdded().equals("yes")) {
             logEntry("Successfully added code on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
             successfullyCompleted = true;
             server.codeAddedSuccessfully(lock.id, slot.slotId);
@@ -55,7 +60,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
      * Check if code is already added, if it is throw an exception. If its not able to check this properly due
      * to server connection etc, return false.
      */
-    private boolean isCodeAdded() {
+    private String isCodeAdded() {
         String result = server.httpLoginRequestZwaveServer(getAddressForFetchingLog());
         int lastUpdatedTime = 0;
         
@@ -85,12 +90,17 @@ public class ZwaveAddCodeThread extends ZwaveThread {
             if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
                 JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
                 if (hasCodeElement.getAsJsonObject() != null ) {
-                    return hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
+                    boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
+                    if (added) {
+                        return "yes";
+                    } else {
+                        return "no";
+                    }
                 }
             }
         }
         
-        return false;
+        return "unkown";
     }
 
     private int getLastUpdatedTime(String result) throws JsonSyntaxException {

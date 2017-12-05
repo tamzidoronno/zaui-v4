@@ -161,6 +161,7 @@ public class GeneratePhpApi {
     }
 
     static String createPhpFileContent(Class entry, String classname, String filename, String filePath) {
+        System.out.println(filename);
         Class superClassName = entry.getSuperclass();
         String extendsstring = "";
 

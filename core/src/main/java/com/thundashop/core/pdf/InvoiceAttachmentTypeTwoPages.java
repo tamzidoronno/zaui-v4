@@ -39,7 +39,7 @@ public class InvoiceAttachmentTypeTwoPages  {
         
         items = groupedItems(items);
 
-        int pageSize = 60;
+        int pageSize = 58;
         int ret = items.size() % pageSize;
 
         for (int i = 0; i < ret; i++) {

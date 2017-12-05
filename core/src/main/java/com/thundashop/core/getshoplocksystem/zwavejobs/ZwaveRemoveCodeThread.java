@@ -33,7 +33,7 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
         server.httpLoginRequestZwaveServer(getAddressForRemovingCode());
         waitForEmptyQueue();
         
-        if (!isCodeAdded()) {
+        if (isCodeAdded().equals("no")) {
             if (slot.previouseCode != null) {
                 logEntry("Code was successfully removed, code: " + slot.previouseCode.pinCode + " : " + slot.slotId + ". Its been on the lock since: " + slot.previouseCode.addedDate);
             } else {
@@ -53,7 +53,11 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
      * Check if code is already added, if it is throw an exception. If its not able to check this properly due
      * to server connection etc, return false.
      */
-    private boolean isCodeAdded() {
+    /**
+     * Check if code is already added, if it is throw an exception. If its not able to check this properly due
+     * to server connection etc, return false.
+     */
+    private String isCodeAdded() {
         String result = server.httpLoginRequestZwaveServer(getAddressForFetchingLog());
         int lastUpdatedTime = 0;
         
@@ -83,12 +87,17 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
             if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
                 JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
                 if (hasCodeElement.getAsJsonObject() != null ) {
-                    return hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
+                    boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
+                    if (added) {
+                        return "yes";
+                    } else {
+                        return "no";
+                    }
                 }
             }
         }
         
-        return false;
+        return "unkown";
     }
     
     private int getLastUpdatedTime(String result) throws JsonSyntaxException {

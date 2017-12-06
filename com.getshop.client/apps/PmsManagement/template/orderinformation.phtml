@@ -319,6 +319,9 @@ if($booking->orderIds) {
         
         if(@!$order->closed) {
             echo "<div>";
+            if(!$order->payment->paymentType) {
+                echo "<i class='fa fa-edit changepaymenttypebutton' title='Change payment type'></i> ";
+            }
             foreach($instances as $id => $app) {
                 if($this->isPaymentType($order->payment->paymentType, $app)) {
                     $name = $app->appName;

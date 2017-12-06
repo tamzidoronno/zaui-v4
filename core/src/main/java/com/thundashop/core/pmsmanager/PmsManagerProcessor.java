@@ -800,7 +800,6 @@ public class PmsManagerProcessor {
                 if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
                     if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
                         manager.doNotification("booking_completed", booking.id);
-                        booking.notificationsSent.add("booking_completed");
                         needSaving = true;
                     }
                 }
@@ -844,7 +843,6 @@ public class PmsManagerProcessor {
                         String key = order.id + "_order_unabletopaywithsavecardwarning";
                         if(!booking.notificationsSent.contains(key)) {
                             manager.doNotification("order_unabletopaywithsavecardwarning", booking.id);
-                            booking.notificationsSent.add(key);
                             needSaving = true;
                         }
                     }
@@ -852,7 +850,6 @@ public class PmsManagerProcessor {
                         String key = order.id + "_order_unabletopaywithsavecard";
                         if(!booking.notificationsSent.contains(key)) {
                             manager.doNotification("order_unabletopaywithsavecard", booking.id);
-                            booking.notificationsSent.add(key);
                             needSaving = true;
                         }
                     }
@@ -1073,7 +1070,6 @@ public class PmsManagerProcessor {
                     continue;
                 }
 
-                book.notificationsSent.add(key);
                 manager.sendMissingPayment(orderId, book.id);
                 manager.saveBooking(book);
             }

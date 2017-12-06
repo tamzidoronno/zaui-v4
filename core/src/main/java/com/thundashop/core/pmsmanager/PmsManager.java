@@ -473,6 +473,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         addPrintablePrice(result);
         
+        result.calculateTotalCost();
+        
         return result;
     }
 
@@ -1317,6 +1319,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         repicientList.clear();
+        String addNotificationSent = key;
         try {
             feedGrafanaNotificationDone(key);
         }catch(Exception e) {
@@ -1354,6 +1357,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             logEntry("Email notification: " + key + " Message: " + message2 + " recipients: " + repemail, booking.id, null);
         }
         emailToSendTo = null;
+        booking.notificationsSent.add(addNotificationSent);
     }
 
     public String getMessage(String bookingId, String key) {

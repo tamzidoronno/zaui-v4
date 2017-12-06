@@ -77,6 +77,12 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         $this->includefile("summary");
     }
     
+    public function includeTripTease() {
+        $tease = new \ns_c844b3fe_84b0_4d26_a8e2_8aa361ed82c4\TripTease();
+        $tease->renderPriceWidget();
+    }
+    
+    
     public function toggleAddon() {
         $this->getApi()->getPmsManager()->toggleAddon($this->getSelectedName(), $_POST['data']['item']);
     }

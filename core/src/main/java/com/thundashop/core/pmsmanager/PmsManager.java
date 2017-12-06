@@ -473,6 +473,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         addPrintablePrice(result);
         
+        result.calculateTotalCost();
+        
         return result;
     }
 

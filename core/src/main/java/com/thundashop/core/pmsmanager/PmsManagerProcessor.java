@@ -1070,7 +1070,7 @@ public class PmsManagerProcessor {
                     continue;
                 }
 
-                manager.sendMissingPayment(orderId, book.id);
+//                manager.sendMissingPayment(orderId, book.id);
                 manager.saveBooking(book);
             }
         }

@@ -3328,7 +3328,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         
-        return bookingEngine.canAdd(toCheck);
+        boolean anyBookingWithId = toCheck.stream()
+                .filter(o -> o.id != null && !o.id.isEmpty())
+                .count() > 0;
+        
+        if (anyBookingWithId) {
+            return bookingEngine.canAdd(toCheck);
+        } 
+        
+        if (toCheck.isEmpty()) {
+            return true;
+        }
+        
+        for(Booking book : toCheck) {
+            List<BookingItem> items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
+            if (items.isEmpty()) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     private String getFromEmail() {

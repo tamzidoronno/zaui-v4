@@ -51,8 +51,8 @@ class TripTease extends \WebshopApplication implements \Application {
                     data-pf-direct-price="<?php echo date("Y-m-d", strtotime($room->totalCost)); ?>"
                     data-pf-room-rate="<?php echo date("Y-m-d", strtotime($room->price)); ?>"
                     data-pf-adults="<?php echo date("Y-m-d", strtotime($room->numberOfGuests)); ?>"
-                    data-pf-children="0"
-                    data-pf-children-ages="0"
+                    data-pf-children="1"
+                    data-pf-children-ages="7"
                     data-pf-currency="NOK"
                     data-pf-language="<?php echo $booking->language; ?>">
                 </div>

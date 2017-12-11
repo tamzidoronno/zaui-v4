@@ -98,7 +98,7 @@ class CommunicationHelper {
             else
                 $obj->$key = $val;
 
-            if ($val == null)
+            if ($val === null)
                 unset($obj->$key);
         }
         return $obj;

@@ -166,12 +166,14 @@ class Menu extends \SystemApplication implements \Application {
         $entry = $this->getApi()->getListManager()->getListEntry($entryId);
         $storeConfig = $this->getApi()->getStoreManager()->getMyStore();
         $storeConfig->homePage = $entry->pageId;
+        print_r($storeConfig);
         $this->getApi()->getStoreManager()->saveStore($storeConfig);
     }
     
     public function setPageHomePage() {
         $pageName = $_POST['data']['pageName'];
-        $storeConfig = $this->getApi()->getStoreManager()->getMyStore();
+        $store = $this->getApi()->getStoreManager()->getMyStore();
+        $storeConfig = $store->configuration;
         $storeConfig->homePage = $pageName;
         $this->getApi()->getStoreManager()->saveStore($storeConfig);
     }

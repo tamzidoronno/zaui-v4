@@ -1,0 +1,7 @@
+.AccountingPaymentConfiguration .col1 {
+    width: 50px !important;
+}
+
+.AccountingPaymentConfiguration .col2 {
+    width: calc(100% - 100px) !important;
+}

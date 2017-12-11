@@ -1,0 +1,16 @@
+<?
+/* @var $this \ns_c3f32e06_365b_4c7f_995a_79012b9ea0fe\AccountingGeneralSettings */
+$config = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig();
+$offset = $config->accountingCustomerOffset;
+?>
+<br/>
+<br/>
+<br/>
+<h2> Other settings </h2>
+<div gstype='form' method="saveGeneral" >
+    <? 
+    echo $this->__f("Should customers be transferred to accounting with a special offset?");
+    ?>
+    <br/> <input gsname="customeroffset" class="gsniceinput1" value="<? echo $offset; ?>"/> <div gstype="submit" class="shop_button"><? echo $this->__f("Save"); ?></div>
+</div>
+    

@@ -21,6 +21,7 @@ import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ftpmanager.FtpManager;
+import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -94,6 +95,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Autowired
     FrameworkConfig frameworkConfig;
+    
+    @Autowired
+    private GetShopAccountingManager newAccountingManager;
     
     private List<AccountingInterface> interfaces = new ArrayList();
     private AccountingManagerConfig config = new AccountingManagerConfig();
@@ -1244,6 +1248,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 orderManager.saveOrder(order);
             }
         });
+    }
+
+    @Override
+    public void transferAllToNewSystem() {
+        newAccountingManager.transferOldFiles(otherFiles.values());
     }
 
 }

@@ -4,6 +4,9 @@ namespace ns_f22e70e7_7c31_4c83_a8c1_20ae882853a7;
 class OrderSimplePrinter extends \MarketingApplication implements \Application {
     private $orderId;
     
+    private $compactView = false;
+    public $printHeader = false;
+    
     /**
      * @var \core_ordermanager_data_Order
      */
@@ -18,7 +21,11 @@ class OrderSimplePrinter extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("order");
+        if ($this->compactView) {
+            $this->includefile("compactview");
+        } else {
+            $this->includefile("order");
+        }
     }
     
     public function setOrderId($orderId) {
@@ -53,6 +60,19 @@ class OrderSimplePrinter extends \MarketingApplication implements \Application {
         $paymentType = $this->getApi()->getStoreApplicationPool()->getApplication($order->payment->paymentId);
         $paymentInstance = $this->getFactory()->getApplicationPool()->createInstace($paymentType);
         return $paymentInstance;
+    }
+
+    public function setCompactView() {
+        $this->compactView = true;
+    }
+    
+    public function setPrintHeader() {
+        $this->printHeader = true;
+    }
+
+    public function formatPaymentType($paymentType) {
+        $payment = explode("\\", $paymentType);
+        return $payment[1];
     }
 
 }

@@ -1,0 +1,55 @@
+<?
+/* @var $this ns_95a508d1_e382_468f_a515_677e6adbc6e8\AccountingPaymentConfiguration */
+$config = $this->getApi()->getPaymentManager()->getConfig($_POST['data']['id']);
+$checked_isAllowedToManuallyMarkAsPaid = $config && $config->isAllowedToManuallyMarkAsPaid ? "checked='true'" : "";
+$checked_automaticallyCloseOrderWhenPaid = $config && $config->automaticallyCloseOrderWhenPaid ? "checked='true'" : "";
+$checked_transferToAccountingBasedOnCreatedDate = $config && $config->transferToAccountingBasedOnCreatedDate ? "checked='true'" : "";
+$checked_transferToAccountingBasedOnPaymentDate = $config && $config->transferToAccountingBasedOnPaymentDate ? "checked='true'" : "";
+$checked_transferCreditNoteToAccountingBasedOnPaymentDate = $config && $config->transferCreditNoteToAccountingBasedOnPaymentDate ? "checked='true'" : "";
+$checked_transferCreditNoteToAccountingBasedOnCreatedDate = $config && $config->transferCreditNoteToAccountingBasedOnCreatedDate ? "checked='true'" : "";
+
+?>
+
+<div gstype="form" method="saveSettings">
+    <input type="hidden" gsname="id" value="<? echo $_POST['data']['id']; ?>" />
+    <b> <? echo $this->__f("Orders"); ?></b>
+    
+    <div class="row">
+        <div class="col col1"><input <? echo $checked_transferToAccountingBasedOnCreatedDate; ?> type="checkbox" gsname="transferToAccountingBasedOnCreatedDate"/></div>
+        <div class="col col2">Transfer to accounting based on created date.</div>
+    </div>
+    
+    <div class="row">
+        <div class="col col1"><input <? echo $checked_transferToAccountingBasedOnPaymentDate; ?> type="checkbox" gsname="transferToAccountingBasedOnPaymentDate"/></div>
+        <div class="col col2">Transfer to accounting based on payment date.</div>
+    </div>
+    <br/><b> <? echo $this->__f("Credit note"); ?></b>
+    <br/>
+    <div class="row">
+        <div class="col col1"><input <? echo $checked_transferCreditNoteToAccountingBasedOnCreatedDate; ?> type="checkbox" gsname="transferCreditNoteToAccountingBasedOnCreatedDate"/></div>
+        <div class="col col2">Transfer to accounting based on created date.</div>
+    </div>
+    <div class="row">
+        <div class="col col1"><input <? echo $checked_transferCreditNoteToAccountingBasedOnPaymentDate; ?> type="checkbox" gsname="transferCreditNoteToAccountingBasedOnPaymentDate"/></div>
+        <div class="col col2">Transfer to accounting based on payment date.</div>
+    </div>
+    
+    <br/><b> <? echo $this->__f("Other"); ?></b>
+    <div class="row">
+        <div class="col col1"><input <? echo $checked_isAllowedToManuallyMarkAsPaid; ?> type="checkbox" gsname="isAllowedToManuallyMarkAsPaid"/></div>
+        <div class="col col2">Is allowed to manually mark as paid?</div>
+    </div>
+    
+    <div class="row">
+        <div class="col col1"><input <? echo $checked_automaticallyCloseOrderWhenPaid; ?> type="checkbox" gsname="automaticallyCloseOrderWhenPaid"/></div>
+        <div class="col col2">Automatically mark as closed when order is paid?</div>
+    </div>
+    
+    <hr/>
+    
+    <? echo $this->__f("When transferring to account, transfer all orders to this customer number"); ?>:
+    <br/><input class="gsniceinput1" value=""/>
+    <br/>
+    <br/>
+    <div class="shop_button" gstype="submit"><? echo $this->__f("Save"); ?></div>
+</div>

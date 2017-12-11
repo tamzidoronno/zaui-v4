@@ -1,0 +1,24 @@
+<?
+/* @var $this \ns_1674e92d_feb5_4a78_9dba_1e5ba05a6a31\AccountingDownload */
+
+$logEntries = $this->getApi()->getGetShopAccountingManager()->getLogEntries();
+
+if ($logEntries) {
+    echo "<h2> Errors accurd: </h2>";
+    foreach ($logEntries as $entry) {
+        echo "<div>$entry</div>";
+    }
+} else {
+    $data = array();
+    foreach ($_SESSION['AccountingDownload_filesCreated'] as $fileId) {
+       $data[] = $this->getApi()->getGetShopAccountingManager()->getOrderFile($fileId);
+    }
+    echo "<h2>Files created now</h2>";
+    $this->printFileTable($data);
+}
+?>
+
+<br/>
+<div>
+    <div gsclick="clearSession" class="shop_button"><? echo $this->__f("Finished"); ?></div>
+</div>

@@ -35,7 +35,8 @@ public class Order extends DataCommon implements Comparable<Order> {
      * This variable is wrong and should be removed. The one above is the corrent one.
      */
     private Boolean transferedToAccountingSystem = false;
-        
+    public Date transferToAccountingDate = null;
+    public Date shouldHaveBeenTransferredToAccountingOnDate = null;
     
     public Date needCollectingDate = null;
     public String paymentTransactionId = "";
@@ -580,6 +581,30 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean sentToCustomer() {
         return shipmentLog.size() > 0;
     }
+
+    public boolean isNullOrder() {
+        if (cart == null) {
+            return true;
+        }
+        
+        return cart.isNullCart();
+    }
+
+    public String getPaymentApplicationId() {
+        if (payment == null || payment.paymentType.isEmpty()) {
+            return null;
+        }
+        
+        String paymentId = payment.paymentType.replace("ns_", "");
+        String[] splitted = paymentId.split("\\\\");
+        if (splitted.length > 0) {
+            paymentId = splitted[0];
+            paymentId = paymentId.replace("_", "-");
+            return paymentId;
+        }
+        
+        return null;
+    }
     
     public static class Status  {
         public static int CREATED = 1;
@@ -729,5 +754,17 @@ public class Order extends DataCommon implements Comparable<Order> {
         long toL = to.getTime();
         
         return (fromL <= inDate &&  inDate <= toL);
+    }
+    
+    public boolean isTransferBefore(Date end) {
+        if (transferToAccountingDate != null && transferToAccountingDate.before(end)) {
+            return true;
+        }
+        
+        if (transferToAccountingDate != null && transferToAccountingDate.equals(end)) {
+            return true;
+        }
+        
+        return false;
     }
 } 

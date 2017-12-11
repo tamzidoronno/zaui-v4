@@ -4,6 +4,12 @@ namespace ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73;
 class PmsSearchBooking extends \MarketingApplication implements \Application {
     private $channels;
     
+    /* @var \core_pmsmanager_PmsBooking */
+    public $pmsBooking = null;
+    
+    /* @var \core_bookingengine_data_Booking */
+    public $bookingEngineBooking = null;
+    
     function __construct() {
         $this->formatter = new PmsSearchBookingColumnFormatters($this);
     }
@@ -61,7 +67,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $this->includefile('bookingoverview');
     }
     
-    private function renderDataTable() {    
+    private function renderDataTable() {   
+        $this->setData();
         $filter = $this->getSelectedFilter();
         $domainName = $this->getSelectedMultilevelDomainName();
         $args = array($domainName, $filter);
@@ -262,6 +269,35 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         
         echo "";
+    }
+
+    public function setData() {
+        if (isset($_POST['data']['id']) && !$this->bookingEngineBooking) {
+            $this->bookingEngineBooking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        }
+        
+        if (isset($_POST['data']['id']) && !$this->pmsBooking) {
+            $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        }
+
+    }
+
+    /**
+     * 
+     * @return \core_pmsmanager_PmsBooking
+     */
+    public function getPmsBooking() {
+        $this->setData();
+        return $this->pmsBooking;
+    }
+    
+    /**
+     * 
+     * @return \core_bookingengine_data_Booking
+     */
+    public function getBookingEngineBooking() {
+        $this->setData();
+        return $this->bookingEngineBooking;
     }
 
 }

@@ -1,0 +1,36 @@
+.AccountingDownload .col_10,
+.AccountingDownload .col_9,
+.AccountingDownload .col_8,
+.AccountingDownload .col_6,
+.AccountingDownload .col_7 { width: 150px !important; }
+
+.AccountingDownload .col_5 { width: 50px !important; }
+
+.AccountingDownload .preview .row .col {
+    display: inline-block;
+}
+
+.AccountingDownload .preview .row .col1 { width: 100px; }
+.AccountingDownload .preview .row .col2 { width: 200px; }
+.AccountingDownload .preview .row .col3 { width: 300px; }
+
+.AccountingDownload .informationbox {
+    border: solid 1px #DDD;
+    padding: 20px;
+    background-color: #FEFEFE;
+}
+
+.AccountingDownload .askForTransformation .shop_button {
+    margin-top: 20px;
+}
+
+.AccountingDownload .askForTransformation i {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.AccountingDownload .askForTransformation {
+    background-color: #EEE;
+    text-align: center;
+    padding: 20px;
+}

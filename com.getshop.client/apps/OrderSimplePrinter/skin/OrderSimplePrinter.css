@@ -1,7 +1,21 @@
-.OrderSimplePrinter {
+.OrderSimplerPrinter_inner {
     box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
     margin-bottom: 20px;
 }
+.OrderSimplePrinter .compactorderheader {
+    font-size: 0px;
+}
+.OrderSimplePrinter .compactorderheader div {
+    display: inline-block;
+    width: 20%;
+    box-sizing: border-box;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: solid 1px #DDD;
+    padding: 10px;
+    vertical-align: top;    
+}
+
 .OrderSimplePrinter .orderheader div {
     display: inline-block;
     width: 25%;

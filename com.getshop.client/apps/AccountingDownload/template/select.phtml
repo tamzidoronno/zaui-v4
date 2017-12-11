@@ -1,0 +1,20 @@
+<?
+/* @var $this \ns_1674e92d_feb5_4a78_9dba_1e5ba05a6a31\AccountingDownload */
+$prevDate = $this->getApi()->getGetShopAccountingManager()->getPreviouseEndDate();
+$date = isset($_SESSION['AccountingDownload_endDate']) ? $_SESSION['AccountingDownload_endDate'] : "";
+?>
+
+<div gstype='form' method='setEndDate'>
+    <h1>1. <? echo $this->__f("Select end date"); ?> </h1>
+    <br/> <? echo $prevDate." ".$this->__f("to")." "; ?> <input gsname='endDate' class='gsniceinput1' id='endDate' value='<? echo $date; ?>'/> <div class='shop_button' gstype='submit'><? echo $this->__f("Select"); ?></div>
+    <br/>
+    <hr/>
+    <br/>    
+</div>
+
+<script>
+    var date = new Date();
+    var minDate = new Date('<? echo $prevDate; ?>');
+    date.setDate(date.getDate() - 1);
+    $('#endDate').datepicker({ maxDate: date, minDate: minDate});
+</script>

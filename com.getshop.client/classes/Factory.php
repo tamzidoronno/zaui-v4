@@ -489,6 +489,11 @@ class Factory extends FactoryBase {
 
     private function getHomePageName() {
         $homePage = @$this->getStoreConfiguration()->homePage;
+        
+        if ($this->getCurrentModuleId() && $this->getCurrentModuleId() != "cms") {
+            $homePage = @$this->getStoreConfiguration()->moduleHomePages->homePages->{$this->getCurrentModuleId()};
+        }
+        
         if (!$homePage) {
             $homePage = "home";
         }

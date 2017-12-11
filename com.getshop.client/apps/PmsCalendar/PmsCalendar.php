@@ -250,7 +250,9 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     function getDates($year) {
         $dates = array();
 
-        for ($i = 1; $i <= 365; $i++) {
+        $totalDays = date("z", mktime(0,0,0,12,31,$year)) + 1;
+        
+        for ($i = 1; $i <= $totalDays; $i++) {
             $month = date('m', mktime(0, 0, 0, 1, $i, $year));
             $wk = date('W', mktime(0, 0, 0, 1, $i, $year));
             $wkDay = date('N', mktime(0, 0, 0, 1, $i, $year));

@@ -1,10 +1,6 @@
-/* Colors
-#f9f9f9 white
-#f3f3f3 white
-*/
 body{font-family: 'Montserrat', sans-serif;color: #464343;font-size:14px;}
 .gs_page_width{max-width:1100px;margin:auto;}
-.shop_button{background:orange;border-radius:2px;color:#fff;}
+.shop_button{background:#353132;border-radius:2px;color:#fff;}
 .ContentManager h2{font-weight:500;font-size:22px;}
 .ContentManager h3{font-weight:500;font-size:18px;}
 .ContentManager a{color:#b1a18a;font-weight:bold;}
@@ -31,3 +27,37 @@ body{font-family: 'Montserrat', sans-serif;color: #464343;font-size:14px;}
 .Menu .entry .entries .entry{padding:4px 0;}
 .Menu .entry.active .entries .entry a div{font-weight:500;}
 .Menu .entry .entries .entry a div{border:0;color:#fff;padding:10px 0;}
+
+
+@media only all and (max-width:800px){
+    .gsarea[area="footer"]{text-align:center;}
+    .gsarea[area="header"] {border-bottom:1px solid #ddd;}
+    .gsarea[area="header"] img{max-height:100px !important;}
+    /*Menu*/
+    .Menu {border:0;}
+    .Menu .fa{font-size:0px;}
+    .Menu .fa:before{font-size:30px;padding:20px;}
+    .Menu .mobilenavigatemenu{text-align:left;}
+    .Menu .menuentries.horizontal{top:85px;background-color:#ddd;}
+    .Menu .menuentries.horizontal .entries .entries {
+        background-color: #d2d1d1;
+        border-radius: 0;
+        border-bottom: 3px solid #f9f9f9;
+    }
+    .Menu .menuentries .entry{padding:0;}
+    .Menu .entry .entries{background-color:transparent;}
+    .Menu .entry a div{
+        border-bottom:3px solid #f9f9f9;
+        padding:4px 0;
+        color:#464343 !important;
+    }
+    /*Menu position box*/
+    .gscell_25.gsucell{
+        position:absolute;
+        top:20px;
+        left:0;
+        width:200px;
+    }
+    .gscell_21.gsuicell{padding:0;}
+    .gscell_92.gsuicell img{height:auto !important;}
+}

@@ -159,7 +159,7 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
         }
         if (isset($_POST['data']['deliveryServiceDate'])) {
             $deliveryServiceDate = $this->convertToJavaDate(strtotime($_POST['data']['deliveryServiceDate']));
-            $route->deliveryServiceDate = $deliveryServiceDate;
+//            $route->deliveryServiceDate = $deliveryServiceDate;
         }
         $this->getApi()->getTrackAndTraceManager()->saveRoute($route);
     }

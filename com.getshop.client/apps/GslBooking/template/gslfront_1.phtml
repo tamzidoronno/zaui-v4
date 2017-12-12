@@ -1,49 +1,41 @@
-<?php
-$guestInfoBox = <<<EOD
-<div class="guestInfoBox">
-    <div class='guestInfoBox_left'>
-        <div>Rooms</div>
-        <div>Adults </div>
-        <div style='top:-6px;'>Children <br><span style="font-size:12px;position:absolute;left:0;">Ages 2-12</span></div>
-    </div>
-    <div class='guestInfoBox_right'>
-        <div class="count_line">
-            <i id="subtract_room" class="fa fa-minus disabled"></i><input type="txt" class="count" id="count_room" value="1" readonly><i id="add_room" class="fa fa-plus"></i>
-        </div>
-        <div class="count_line">
-            <i id="subtract_adult" class="fa fa-minus disabled"></i><input type="txt" class="count" id="count_adult" value="1" readonly><i id="add_adult" class="fa fa-plus"></i>
-        </div>
-        <div class="count_line">
-            <i id="subtract_child" class="fa fa-minus disabled "></i><input type="txt" class="count" id="count_child" value="0" readonly><i id="add_child" class="fa fa-plus"></i>
-        </div>
-    </div>
-    <div class="guestInfoBox_footer">
-        <div onclick="confirmGuestInfoBox()">Apply</div>
-    </div>
-</div>
-EOD;
-
-$destinationInfoBox = <<<EOD
-<div class="destinationInfoBox">
-    <div class='destination_line'><img class="destination_image" src="https://www.visitoslo.com/Images/Bilder%20Oslo/Attraksjoner/Akrobaten%20mot%20Barcode_Leif%20Harald%20Ruud.jpg?t=ScaleToFill%7C1450x720&ts=ajCYo6pTmf0Mfh7RGfLmeiDlLmE%3D">Getshop Hotel, Oslo</div>
-    <div class='destination_line'><img class="destination_image" src="https://media.newmindmedia.com/TellUs/image/?file=3F59853038189DAC967CB6AB12EE7B4F977148CA.jpg&dh=392&dw=526">Getshop Hotel, Tønsberg</div>
-</div>
-EOD;
-?>
 <div class='gslfront_1'>
     <div class='gslbookingHeader'>
         <div class="fa_box destination">
             <input id="destination" placeholder="Destination?" onfocus="this.placeholder =''" onblur="this.placeholder ='Destination?'" style="border-right:1px solid #ddd;" readonly>
-                <? echo $destinationInfoBox; ?>
+            <div class="destinationInfoBox">
+                <div class='destination_line'><img class="destination_image" src="https://www.visitoslo.com/Images/Bilder%20Oslo/Attraksjoner/Akrobaten%20mot%20Barcode_Leif%20Harald%20Ruud.jpg?t=ScaleToFill%7C1450x720&ts=ajCYo6pTmf0Mfh7RGfLmeiDlLmE%3D">Getshop Hotel, Oslo</div>
+                <div class='destination_line'><img class="destination_image" src="https://media.newmindmedia.com/TellUs/image/?file=3F59853038189DAC967CB6AB12EE7B4F977148CA.jpg&dh=392&dw=526">Getshop Hotel, Tønsberg</div>
+            </div>
         </div><div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
         </div><div class="fa_box guests">
             <input id="guests" value="1 room, 1 guest" style="border-right:1px solid #ddd;" readonly>
-                <? echo $guestInfoBox;?>
+            <div class="guestInfoBox">
+                <div class='guestInfoBox_left'>
+                    <div>Rooms</div>
+                    <div>Adults </div>
+                    <div style='top:-6px;'>Children <br><span style="font-size:12px;position:absolute;left:0;">Ages 2-12</span></div>
+                </div>
+                <div class='guestInfoBox_right'>
+                    <div class="count_line">
+                        <i id="subtract_room" class="fa fa-minus disabled"></i><input type="txt" class="count" id="count_room" value="1" readonly><i id="add_room" class="fa fa-plus"></i>
+                    </div>
+                    <div class="count_line">
+                        <i id="subtract_adult" class="fa fa-minus disabled"></i><input type="txt" class="count" id="count_adult" value="1" readonly><i id="add_adult" class="fa fa-plus"></i>
+                    </div>
+                    <div class="count_line">
+                        <i id="subtract_child" class="fa fa-minus disabled "></i><input type="txt" class="count" id="count_child" value="0" readonly><i id="add_child" class="fa fa-plus"></i>
+                    </div>
+                </div>
+                <div class="guestInfoBox_footer">
+                    <div onclick="confirmGuestInfoBox()">Apply</div>
+                </div>
+            </div>
         </div><div class="fa_box coupon">
             <input id='coupon_input' onfocus="this.placeholder =''" onblur="this.placeholder ='Discount coupon?'" placeholder="Discount coupon?">
         </div><div class="fa_box gsl_button" id="search_rooms" onclick="showProductList()">Search</div>
     </div>
+    
     <div class="gslbookingBody">
         <div class="productoverview">
             <div id="productentry"></div>
@@ -177,9 +169,20 @@ EOD;
     $(document).on('keyup', '.GslBooking [gsname="visitor_prefix_1"]', function() { $('[gsname="user_prefix"]').val($(this).val());  });
     $(document).on('keyup', '.GslBooking [gsname="visitor_phone_1"]', function() { $('[gsname="user_cellPhone"]').val($(this).val());  });
 
+    $(document).on('click', '.GslBooking .productentry_gallery .fa-search', function(){
+        $(this).closest('.productentry').css('overflow','visible');
+        $(this).closest('.productentry_gallery').addClass('active');
+    });
+    $(document).on('click', '.GslBooking .productentry_gallery .fa-times', function(){
+        $(this).closest('.productentry_gallery').removeClass('active');
+        $(this).closest('.productentry').css('overflow','hidden');
+    });
+    $(document).on('click', '.GslBooking .productentry_gallery .fa-expand', function(){
+        $(this).closest('.productentry_gallery').toggleClass('fullscreenview');
+    });
     $(document).on('mouseenter','.image-wrapper', function(){
         var buttons = $(this).closest('.productentry_gallery').find('.move-btn');
-        buttons.css('color','rgba(0, 0, 0, 0.7)');
+        buttons.css('color','rgba(0, 0, 0, 1)');
     });
     $(document).on('mouseleave','.image-wrapper', function(){
         var buttons = $(this).closest('.productentry_gallery').find('.move-btn');
@@ -196,7 +199,7 @@ EOD;
     var leftInterval;
     $(document).on('mouseenter', '.move-btn', function(){
         var target = $(this);
-        var imageWidth = 25;
+        var imageWidth = 22;
         var scrollRate = 0.15;
         var gallery = target.closest('.productentry_gallery').find('.gallery');
         var left = gallery.position().left / 3.5 || 0;
@@ -221,7 +224,7 @@ EOD;
                     left = -imageWidth;
                     var lastImage = gallery.find('.image-wrapper:last-child').detach();
                     lastImage.prependTo(gallery);
-                    gallery.css('left','25%');
+                    gallery.css('left','22%');
                 }
             }
         }, 1);
@@ -567,6 +570,8 @@ EOD;
                         var roomBox = `
                         <div class="productentry">
                             <div class='productentry_gallery'>
+                                <i class="fa fa-times"></i>
+                                <i class="fa fa-expand"></i>
                                 <div class="feature">
                                     <i class="fa fa-search"></i>
                                     <figure class="featured-image image-holder" style="background-image:url(https://wilhelmsenhouse.getshop.com/displayImage.php?id=`+ firstFile +`)"></figure>

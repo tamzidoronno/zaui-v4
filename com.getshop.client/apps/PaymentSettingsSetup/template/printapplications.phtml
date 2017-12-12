@@ -2,6 +2,12 @@
 /* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
 
 $applications = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
+$activated = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$res = array();
+foreach($activated as $active) {
+    $res[] = $active->id;
+}
+
 foreach($applications as $app) {
     if($app->type == "PaymentApplication") {
         $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
@@ -9,6 +15,9 @@ foreach($applications as $app) {
             continue;
         }
         if(!$instance->isPublicPaymentApp()) {
+            continue;
+        }
+        if(in_array($app->id, $res)) {
             continue;
         }
         if(method_exists($instance, "getName")) {

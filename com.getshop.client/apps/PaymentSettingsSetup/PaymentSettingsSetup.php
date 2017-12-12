@@ -12,6 +12,7 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
 
     public function render() {
         $this->includefile("printapplications");
+        $this->includefile("activatedpaymentmethods");
     }
 }
 ?>

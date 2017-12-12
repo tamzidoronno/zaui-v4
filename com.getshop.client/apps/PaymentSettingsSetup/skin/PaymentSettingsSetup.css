@@ -10,7 +10,7 @@
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	background-color: #efefef;
 }
-    
+
     
 .PaymentSettingsSetup .paymentappactivation .description::-webkit-scrollbar {
    width: 7px;
@@ -43,4 +43,30 @@
 }
 .PaymentSettingsSetup .paymentappactivation .footer:hover {
     font-weight: bold;
+}
+
+
+.PaymentSettingsSetup .activatedpaymentappcontainer {
+    width: 50%;
+    float:left;
+    display:inline-block;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.PaymentSettingsSetup .activatedpaymentappcontainer .inner {
+    border: solid 1px;
+    height: 400px;
+}
+.PaymentSettingsSetup .gss_settings_header .gss_settings_header_description { max-width: 80%; }
+.PaymentSettingsSetup .gss_setting input,
+.PaymentSettingsSetup .gss_setting input[type=text]:focus, .PaymentSettingsSetup .gss_setting input[type=textfield]:focus
+{
+    padding: 10px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+    position:absolute;
+    right: 10px;
+    top: 10px;
+    width: 250px;
 }

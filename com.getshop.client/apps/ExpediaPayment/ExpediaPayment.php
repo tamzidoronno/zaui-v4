@@ -47,7 +47,6 @@ class ExpediaPayment extends \PaymentApplication implements \Application  {
      * Should display you configuration page.
      */
     public function renderConfig() {
-        $this->includefile("paypalconfig");
     }
 
     public function getMode() {

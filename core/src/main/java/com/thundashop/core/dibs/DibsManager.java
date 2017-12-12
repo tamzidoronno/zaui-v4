@@ -332,7 +332,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                         processOrderPolledResult(polledResult,msg);
                     }
                 }catch(Exception ex) {
-                    messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                    messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server: " + ex.getMessage(), gson.toJson(msg), "post@getshop.com", "post@getshop.com");
                     logPrintException(ex);
                 }
                 getShopPullService.markMessageAsReceived(msg.id, storeId);
@@ -491,7 +491,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
                 orderManager.saveOrder(order);
             }catch(Exception d) {
-                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server: " + d.getMessage(), gson.toJson(msg), "post@getshop.com", "post@getshop.com");
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
                 logPrintException(d);
             }
@@ -541,7 +541,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
                 orderManager.saveOrder(order);
             }catch(Exception d) {
-                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server" + d.getMessage(), gson.toJson(msg), "post@getshop.com", "post@getshop.com");
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
                 logPrintException(d);
             }

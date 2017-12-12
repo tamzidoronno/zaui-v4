@@ -8,12 +8,14 @@ import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.KeyData;
+import com.thundashop.core.storemanager.data.ModuleHomePages;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.usermanager.data.User;
@@ -66,7 +68,11 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     private HashMap<String, KeyData> keyDataStore = new HashMap();
     
     public String currentSecretId;
+    
+    private GetShopModules modules = new GetShopModules();
 
+    private ModuleHomePages moduleHomePages = new ModuleHomePages();
+    
     @PostConstruct
     public void init() {
         initialize();
@@ -81,18 +87,24 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             }
         }
         
-        GetShopLogHandler.logPrintStatic("====================== Initialized store ======================", storeId);
+        modules.getModules().stream().forEach(m -> {
+            databaseRemote.getAll("StoreManager", "all", m.id).forEach(o -> {
+                if (o instanceof ModuleHomePages) {
+                    moduleHomePages = (ModuleHomePages)moduleHomePages;
+                }
+            });
+        });
     }
 
     @Override
     public Store initializeStore(String webAddress, String sessionId) throws ErrorException {
         // This function is not in use, please modify the code in the function below.
-        return storePool.initialize(webAddress, sessionId);
+        return finalize(storePool.initialize(webAddress, sessionId));
     }
 
     @Override
     public Store getMyStore() throws ErrorException {
-        return storePool.getStoreBySessionId(getSession().id);
+        return finalize(storePool.getStoreBySessionId(getSession().id));
     }
 
     @Override
@@ -102,6 +114,11 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         
         Store store = getMyStore();
+        
+        if (!isCmsModule()) {
+            saveModuleHomePage(config.homePage);
+            return store;
+        }
 
         store.configuration = config;
         store.registrationUser = null;
@@ -467,6 +484,25 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public String getCurrentSession() throws Exception {
         return getSession().id;
+    }
+
+    private void saveModuleHomePage(String homePage) {
+        String moduleName = getCurrentGetShopModule();
+        moduleHomePages.homePages.put(moduleName, homePage);
+        Credentials cred = new Credentials();
+        cred.storeid = "all";
+        cred.manangerName = "StoreManager";
+        
+        moduleHomePages.storeId = "all";
+        databaseRemote.save(moduleHomePages, cred);
+    }
+
+    private Store finalize(Store store) {
+        if (store != null && store.configuration != null) {
+            store.configuration.moduleHomePages = moduleHomePages;
+        }
+        
+        return store;
     }
 
     

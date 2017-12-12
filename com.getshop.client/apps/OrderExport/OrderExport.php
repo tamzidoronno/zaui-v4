@@ -22,7 +22,12 @@ class OrderExport extends \WebshopApplication implements \Application {
     }
     
     public function renderConfig() {
-        $this->includefile("orderexportconfig");
+        $newOrderFiles = $this->getApi()->getGetShopAccountingManager()->getOrderFiles();
+        if (count($newOrderFiles)) {
+            echo "You have started to use the new order system, you need to use the new one from now on";
+        } else {
+            $this->includefile("orderexportconfig");
+        }
     }
     public function removeTransferConfig() {
         $this->getApi()->getAccountingManager()->removeTransferConfig($_POST['data']['configid']);

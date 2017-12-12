@@ -1,0 +1,42 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.thundashop.core.getshopaccounting;
+
+import com.thundashop.core.accountingmanager.SavedOrderFile;
+import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
+import java.util.List;
+
+/**
+ *
+ * @author ktonder
+ */
+@GetShopApi
+public interface IGetShopAccountingManager {
+    
+    @Administrator
+    public List<String> createNextOrderFile(Date endDate);
+    
+    @Administrator
+    public List<SavedOrderFile> getOrderFiles();
+    
+    @Administrator
+    public SavedOrderFile getOrderFile(String fileId);
+    
+    @Administrator
+    public Date getPreviouseEndDate();
+    
+    @Administrator
+    public List<String> getOrdersToIncludeForNextTransfer(Date endDate);
+    
+    @Administrator
+    public void deleteFile(String fileId, String password);
+    
+    @Administrator
+    public List<String> getLogEntries();
+    
+}

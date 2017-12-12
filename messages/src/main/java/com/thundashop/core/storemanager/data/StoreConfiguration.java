@@ -9,6 +9,7 @@ import com.thundashop.core.common.Translation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -48,4 +49,7 @@ public class StoreConfiguration extends DataCommon {
     
     public boolean hasSMSPriviliges = false;
     public boolean hasSelectedDesign = false;
+    
+    @Transient
+    public ModuleHomePages moduleHomePages;
 }

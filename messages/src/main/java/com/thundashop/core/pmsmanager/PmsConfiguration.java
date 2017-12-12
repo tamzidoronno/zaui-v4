@@ -188,6 +188,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean usePricesFromChannelManager = false;
     public boolean useGetShopPricesOnExpedia = false;
     public boolean ignoreNoShow = false;
+    
+    public String tripTeaseHotelId = "";
 
     
     public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();

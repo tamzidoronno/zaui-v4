@@ -18,13 +18,13 @@ class GetShopModuleTable {
     private $attributes;
     private $extraData;
     private $args;
+    private $avoidAutoExpanding = false;
     
     function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes, $extraData = null) {
         $this->attributes = $attributes;
         $this->application = $application;
         $this->manangerName = $managerName;
         $this->functionName = $functionName;
-        $this->attributes = $attributes;
         $this->extraData = $extraData;
         $this->args = $args;
     }
@@ -80,7 +80,8 @@ class GetShopModuleTable {
                                 $val = $data->{$attribute[2]};
                             } else {
                                 $functionName = $attribute[3];
-                                $val = $this->application->$functionName($data);
+                                $colVal = @$data->{$attribute[2]};
+                                $val = $this->application->$functionName($data, $colVal);
                             }
 
                             $postArray[$attribute[0]] = $val;
@@ -155,6 +156,10 @@ class GetShopModuleTable {
     }
     
     private function shouldShowRow($rownumber) {
+        if ($this->avoidAutoExpanding) {
+            return false;
+        }
+        
         if (!isset($_SESSION['gs_moduletable_'.$this->getFunctionName()])) {
             return false;
         }
@@ -181,6 +186,10 @@ class GetShopModuleTable {
 
     public function getFunctionName() {
         return $this->manangerName."_".$this->functionName;
+    }
+
+    public function avoidAutoExpanding() {
+        $this->avoidAutoExpanding = true;
     }
 
 }

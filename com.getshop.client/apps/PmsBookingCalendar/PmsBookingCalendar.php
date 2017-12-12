@@ -48,9 +48,12 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
             }
         }
         
+        if(isset($_GET['coupon'])) {
+            $booking->couponCode = $_GET['coupon'];
+        }
+        
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
     }
-    
     
     function getDates($year) {
         $dates = array();

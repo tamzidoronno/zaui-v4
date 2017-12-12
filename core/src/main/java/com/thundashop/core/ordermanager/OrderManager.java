@@ -27,6 +27,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
+import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
@@ -125,8 +126,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private GetShopPullService getShopPullService; 
     private boolean queuedEmptied = false;
+    
+    @Autowired
+    private PaymentManager paymentManager;
 
-   
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
         Order order = getOrder(orderId);
@@ -2089,6 +2092,32 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void addListener(PmsManager listener) {
         eventListeners.add(listener);
+    }
+
+    public List<Order> getOrdersToTransferToAccount(Date endDate) {
+        updateTransferToAccountingDate();
+        
+        List<Order> retOrders = orders.values()
+                .stream()
+                .filter(order -> order.transferredToAccountingSystem == null || !order.transferredToAccountingSystem)
+                .filter(order -> order.transferToAccountingDate != null)
+                .filter(order -> order.isTransferBefore(endDate))
+                .collect(Collectors.toList());
+        
+        return retOrders;
+    }
+
+    private void updateTransferToAccountingDate() {
+        orders.values()
+                .stream()
+                .filter(order -> order.transferToAccountingDate == null || !order.transferredToAccountingSystem)
+                .filter(order -> order.transferToAccountingDate == null)
+                .forEach(order -> {
+                    boolean orderChanged = paymentManager.handleOrder(order);
+                    if (orderChanged) {
+                        saveObject(order);
+                    }
+                });
     }
 
 

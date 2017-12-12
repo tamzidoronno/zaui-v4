@@ -2193,6 +2193,10 @@ $(window).on('resize', function() {
 });
 
 $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e) {
+    if ($(e.target).hasClass('dontExpand')) {
+        return;
+    }
+    
     var table = $(this).closest('.GetShopModuleTable');
     var identifier = table.attr('identifier');
     if($(this).closest('.datarow').hasClass('active')) {

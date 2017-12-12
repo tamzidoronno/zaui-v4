@@ -1,0 +1,58 @@
+<?
+/* @var $this \ns_1674e92d_feb5_4a78_9dba_1e5ba05a6a31\AccountingDownload */
+$time = $this->convertToJavaDate(strtotime($_SESSION['AccountingDownload_endDate']));
+$orders = $this->getApi()->getGetShopAccountingManager()->getOrdersToIncludeForNextTransfer($time);
+$groupedOrders = array();
+?>
+
+<h2>2. Verify content</h2>
+<div class="informationbox">
+    The following transactions will be added to the to the next batch to be transferred.
+    <br/> <br/> <i class="fa fa-exclamation-circle"></i> You find the button to craete this batch at the bottom.
+</div>
+<?
+foreach ($orders as $orderId) {
+    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+    $order->totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+    $order->totalForOrderExTaxes = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+    
+    $time=strtotime($order->shouldHaveBeenTransferredToAccountingOnDate);
+    $index=date("F",$time)." ".date("Y",$time);
+    if (!isset($groupedOrders[$index])) {
+        $groupedOrders[$index] = array();
+    }
+    $groupedOrders[$index][] = $order;
+}
+?>
+<div class="preview">
+<?
+foreach ($groupedOrders as $month => $orders) {
+    $monthTotal = 0;
+    $monthTotalExTaxes = 0;
+    ?>
+    <h2><? echo $month; ?></h2>
+    <div class="row">
+        <div class="col col1"><b><? echo $this->__f("Order id"); ?></b></div>
+        <div class="col col2"><b><? echo $this->__f("Will be in file for periode"); ?></b></div>
+        <div class="col col3"><b><? echo $this->__f("Should have been in file for periode"); ?></b></div>
+    </div>
+    <?
+    foreach ($orders as $order) {
+        $monthTotal += $order->totalForOrder;
+        $monthTotalExTaxes += $order->totalForOrderExTaxes;
+    ?>
+        <div class="row">
+            <div class="col col1"><? echo $order->incrementOrderId; ?></div>
+            <div class="col col2"><? echo $order->transferToAccountingDate; ?></div>
+            <div class="col col3"><? echo $order->shouldHaveBeenTransferredToAccountingOnDate; ?></div>
+        </div>
+    <?
+    }
+    
+    echo "<br/><b>Total inc taxes:</b> $monthTotal <br/> <b>Total ex taxes :</b> $monthTotalExTaxes ex taxes";
+}
+?>
+</div>
+<br/>
+<div class='shop_button' gsclick="cancelOverview"><? echo $this->__f("Cancel"); ?></div>
+<div class='shop_button' gsclick="createFiles"><? echo $this->__f("Create files"); ?></div>

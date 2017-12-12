@@ -142,7 +142,6 @@ public class StorePool {
     }
     
     public synchronized Store initialize(String webAddress, String sessionId) throws ErrorException {
-        getSessionFactory().removeFromSession(sessionId);
         Store store = getStoreByWebaddress(webAddress);
         
         if (webAddress == null) {

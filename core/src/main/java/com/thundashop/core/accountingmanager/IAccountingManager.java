@@ -79,4 +79,7 @@ public interface IAccountingManager {
     @Administrator
     public void resetAllAccounting();
     
+    @Administrator
+    public void transferAllToNewSystem();
+    
 }

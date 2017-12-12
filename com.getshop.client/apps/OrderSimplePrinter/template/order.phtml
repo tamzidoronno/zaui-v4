@@ -2,60 +2,61 @@
 /* @var $this ns_f22e70e7_7c31_4c83_a8c1_20ae882853a7\OrderSimplePrinter */
 $order = $this->getOrder();
 $totalAmount = $this->getApi()->getOrderManager()->getTotalAmount($order);
-
 $paymentInstance = $this->getPaymentApplication();
 
-
 ?>
-<div class='orderheader'>
-    <div class='orderid'><i class='fa fa-asterisk'></i> <? echo $order->incrementOrderId; ?></div>
-    <div class='cost'><i class='fa fa-money'></i> <? echo $totalAmount ; ?></div>
-    <div class='createdby'><i class='fa fa-calendar'></i> <? echo date('d/m-Y h:i', strtotime($order->createdDate)); ?></div>
-    
-    <div class='actions'>
-        <?
-        if ($paymentInstance->canDeleteOrder($order)) {
-        ?>
-            <div class='gs_shop_small_icon' gsclick='deleteOrder' orderid='<? echo $order->id; ?>'>
-                <i class='fa fa-trash'></i> <? echo $this->__f("Delete"); ?>
-            </div>
-        <? 
-        }
-        ?>
-        
-        <?
-        if ($paymentInstance->isAllowedToManuallyMarkAsPaid($order)) {
-        ?>
-            <div class='gs_shop_small_icon'>
-                <i class='fa fa-check-circle'></i> <? echo $this->__f("Mark as paid"); ?>
-            </div>
-        <?
-        }
-        ?>
-    </div>
-    
-    <div class='payment'>
-        PaymentType: <? echo $paymentInstance->getName(); ?>
-        <?
-        if ($paymentInstance->canChangePaymentMethod($order)) {
-            ?>
-                <i class='fa fa-edit inlineactionbutton'></i>
+<div class='OrderSimplerPrinter_inner'>
+    <div class='orderheader'>
+        <div class='orderid'><i class='fa fa-asterisk'></i> <? echo $order->incrementOrderId; ?></div>
+        <div class='cost'><i class='fa fa-money'></i> <? echo $totalAmount ; ?></div>
+        <div class='createdby'><i class='fa fa-calendar'></i> <? echo date('d/m-Y h:i', strtotime($order->createdDate)); ?></div>
+
+        <div class='actions'>
             <?
-        }
-        ?>
-    </div>
-</div>
+            if ($paymentInstance->canDeleteOrder($order)) {
+            ?>
+                <div class='gs_shop_small_icon' gsclick='deleteOrder' orderid='<? echo $order->id; ?>'>
+                    <i class='fa fa-trash'></i> <? echo $this->__f("Delete"); ?>
+                </div>
+            <? 
+            }
+            ?>
 
-<?
-    foreach($order->cart->items as $item) {
-?>
-<div class='cartitemrow'>
-    <div class='productname'><? echo $item->product->name; ?></div>
-    <div class='priceandcount'>
-        <div class='count'><? echo $item->count; ?></div> x <div class='price'><? echo $item->product->price; ?></div>
+            <?
+            if ($paymentInstance->isAllowedToManuallyMarkAsPaid($order)) {
+            ?>
+                <div class='gs_shop_small_icon'>
+                    <i class='fa fa-check-circle'></i> <? echo $this->__f("Mark as paid"); ?>
+                </div>
+            <?
+            }
+            ?>
+        </div>
+
+        <div class='payment'>
+            PaymentType: <? echo $paymentInstance->getName(); ?>
+            <?
+            if ($paymentInstance->canChangePaymentMethod($order)) {
+                ?>
+                    <i class='fa fa-edit inlineactionbutton'></i>
+                <?
+            }
+            ?>
+        </div>
     </div>
-    
+
+    <?
+        foreach($order->cart->items as $item) {
+    ?>
+    <div class='cartitemrow'>
+        <div class='productname'><? echo $item->product->name; ?></div>
+        <div class='priceandcount'>
+            <div class='count'><? echo $item->count; ?></div> x <div class='price'><? echo $item->product->price; ?></div>
+        </div>
+
+    </div>
+    <?
+        }
+    ?>
+
 </div>
-<?
-    }
-?>

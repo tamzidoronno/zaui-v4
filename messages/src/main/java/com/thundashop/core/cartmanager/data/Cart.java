@@ -270,4 +270,14 @@ public class Cart extends DataCommon {
             items.add(item);
         }
     }
+
+    public boolean isNullCart() {
+        double value = getItems().stream()
+                .filter(item -> item != null)
+                .mapToDouble(item -> item.getTotalAmount())
+                .sum();
+        
+        return value == 0D;
+                
+    }
 }

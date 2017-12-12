@@ -1,0 +1,30 @@
+.TripTease .configurationpanel {
+    border: solid 1px #bbb;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    background-color: #efefef;
+    padding: 10px;
+}
+.TripTease .pmsbutton {
+    padding: 8px;
+    cursor: pointer;
+    margin-top: 5px;
+    display: inline-block;
+    
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+    cursor:pointer;
+    
+        -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+}

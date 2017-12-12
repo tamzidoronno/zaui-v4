@@ -13,5 +13,9 @@ class DeltakerNo extends \PaymentApplication implements \Application {
     public function render() {
         
     }
+    
+    public function isPublicPaymentApp() {
+        return false;
+    }
 }
 ?>

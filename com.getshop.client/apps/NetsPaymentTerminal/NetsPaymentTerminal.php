@@ -3,7 +3,7 @@ namespace ns_e6cf029b_0b96_4cf8_9a88_8db2755c0062;
 
 class NetsPaymentTerminal extends \PaymentApplication implements \Application {
     public function getDescription() {
-        
+        return "If you have a payment terminal that is not connected to our booking system. This application can be used to keep the orders apart.";
     }
     
     public function addPaymentMethods() {
@@ -18,7 +18,7 @@ class NetsPaymentTerminal extends \PaymentApplication implements \Application {
     }
 
     public function getName() {
-        return "NetsPaymentTerminal";
+        return "Payment terminal";
     }
 
     public function render() {

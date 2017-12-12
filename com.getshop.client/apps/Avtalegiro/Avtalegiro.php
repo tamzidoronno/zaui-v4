@@ -6,6 +6,10 @@ class Avtalegiro extends \PaymentApplication implements \Application {
         return $this->__w("Setup for norwegian avtalegiro.");
     }
 
+    public function isPublicPaymentApp() {
+        return false;
+    }
+    
     public function getName() {
         return "Avtalegiro";
     }

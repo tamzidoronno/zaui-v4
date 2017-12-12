@@ -7,5 +7,6 @@ class WebshopApplication extends ApplicationBase {
      */
     function ___autocomplete() {
     }
+    
 }
 ?>

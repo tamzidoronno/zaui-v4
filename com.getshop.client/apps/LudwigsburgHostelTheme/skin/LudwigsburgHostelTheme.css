@@ -106,13 +106,11 @@ body{font-family: 'Montserrat', sans-serif;font-size:15px;font-weight:300;}
 
 .gscell_1.gsuicell{z-index:3;padding-top:30px;}
 .gscell_3.gsuicell{position:absolute;padding-left:20px;}
-.gscell_127.gsucell{top:360px;color:#fff;}
-.gscell_127.gsuicell{max-width:900px;padding:0 20px;margin:auto;text-align:center;font-size:18px;line-height:1.5;}
-.gscell_127.gsuicell,
-.gscell_126.gsuicell{background-color:transparent !important;}
-.gscell_127.gsucell,
-.gscell_126.gsucell{
+.gscell_164.gsuicell{max-width:900px;padding:0 20px;margin:auto;text-align:center;font-size:18px;line-height:1.5;}
+.gscell_164.gsucell{
     position:absolute;
+    top:0px;
+    color:#fff;
     z-index:2;
     width:100%;}
 
@@ -151,11 +149,9 @@ body{font-family: 'Montserrat', sans-serif;font-size:15px;font-weight:300;}
         float:left;
         font-size:14px;
         line-height:2;}
-    .gscell_3.gsucell{margin-rigt:72px;}
+    .gscell_3.gsucell{margin-right:72px;}
     .gscell_4.gsucell{margin-left:0 !important;width: 100% !important;}
-    .gscell_128.gsuicell .gsucell .fa{font-size:18px !important;}
-    .gsrotating[cellid='ec1d2e94-e1e0-4212-8999-60b659d19f37'],
-    .gsrotating[cellid='ec1d2e94-e1e0-4212-8999-60b659d19f37'] .gscell.gsdepth_1{min-height:450px !important;height:450px !important;}
+    .gscell_167.gsuicell .gsucell .fa{font-size:18px !important;}
 }
 @media only all and (max-width:600px){
     .PmsBooking:before{font-size:20px;}
@@ -165,5 +161,5 @@ body{font-family: 'Montserrat', sans-serif;font-size:15px;font-weight:300;}
     .PmsBooking .pmsfront .bookingbuttonblock{width:20%;}
 }
 @media only all and (max-width:400px){
-    .gscell_128.gsuicell .gsucell{font-size:8px;}
+    .gscell_167.gsuicell .gsucell{font-size:8px;}
 }

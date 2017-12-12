@@ -1,0 +1,16 @@
+<?php
+/* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
+$apps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+?>
+
+<div style="clear:both;"></div>
+<h1>Activated payment methods</h1>
+<?php
+foreach($apps as $app) {
+    $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+    if(method_exists($instance, "renderConfig")) {
+        $instance->renderConfig();
+    }
+}
+ 
+?>

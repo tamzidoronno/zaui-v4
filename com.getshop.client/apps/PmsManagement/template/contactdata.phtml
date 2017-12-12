@@ -79,9 +79,13 @@ $config = $this->getConfigurationToUse();
                 if($field->type == "select"){
                     if(!$isselect) {
                         echo "<select class='contactdatadropdown' field='".$key."'>";
+                        echo "<option value='$value'>$value</option>";
                     }
                     $isselect = true;
-                    $selected = $field->title == $value ? "SELECTED" : "";
+                    $selected = $field->title == $value ? true : false;
+                    if($selected) {
+                        continue;
+                    }
                     echo "<option value='" . $field->title . "' $selected>".$field->title."</option>";
                     continue;
                 }

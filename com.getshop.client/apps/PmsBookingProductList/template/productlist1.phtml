@@ -7,16 +7,21 @@ $numberSelected = 0;
 $singleSelection = ($this->getText("onlyoneselectionallowed") == "true");
 $selectedText = $this->__w("Selected");
 $prefixtext = $this->getText("prefixText");
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 foreach($rooms as $room){
     $groups[$room->type->group] = $room->type->group;
 }
+
+$tease = new \ns_c844b3fe_84b0_4d26_a8e2_8aa361ed82c4\TripTease();
 
 foreach($groups as $group => $name) {
     if(array_filter($groups)){
         echo "<div class='group'><div class='groupheader'>".$name."<i class='fa fa-caret-down' style='float:right;padding-right:20px;font-size:27px;'></i></div>";
     }
     foreach($rooms as $room) {
+        $tease->renderPriceWidget($room, $booking, $config->tripTeaseHotelId);
+
         /* @var $room core_pmsmanager_Room */
         if($room->type->group != $group) {
             continue;

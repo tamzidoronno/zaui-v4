@@ -26,6 +26,11 @@ class PaymentApplication extends ApplicationBase {
         return $this->order;
     }
     
+    
+    public function isPublicPaymentApp() {
+        return true;
+    }
+    
     public function getSavedCards($userId) {
     }
     

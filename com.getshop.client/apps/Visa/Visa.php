@@ -13,5 +13,9 @@ class Visa extends \PaymentApplication implements \Application {
     public function render() {
         
     }
+    
+    public function isPublicPaymentApp() {
+        return false;
+    }
 }
 ?>

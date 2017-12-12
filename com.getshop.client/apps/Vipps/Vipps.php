@@ -3,7 +3,7 @@ namespace ns_f1c8301d_9900_420a_ad71_98adb44d7475;
 
 class Vipps extends \PaymentApplication implements \Application {
     public function getDescription() {
-        
+        return "Recieve payments using vipps payments. Vipps is by experience unstable, expect bugs and startup problems using this application.";
     }
 
     public function getSavedCards($userId) {

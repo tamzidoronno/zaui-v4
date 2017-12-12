@@ -189,13 +189,13 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                                 orderManager.saveOrder(order);
                             }
                         }catch(Exception d) {
-                            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server (vipps)", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server (vipps)" + d.getMessage(), gson.toJson(msg), "post@getshop.com", "post@getshop.com");
                             order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
                             logPrintException(d);
                         }
                     }
                 }catch(Exception ex) {
-                    messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server (vipps)", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+                    messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server (vipps)" + ex.getMessage(), gson.toJson(msg), "post@getshop.com", "post@getshop.com");
                     logPrintException(ex);
                 }
                 getShopPullService.markMessageAsReceived(msg.id, storeId);

@@ -13,7 +13,7 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
     }
 
     public function getDescription() {
-        return $this->__f("Allows your customers to specify that they will pay on delivery.");
+        return $this->__f("Allows you to charge users by paying cash and keep track of those.");
     }
 
     public function getAvailablePositions() {
@@ -21,7 +21,7 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
     }
 
     public function getName() {
-        return $this->__w("Pay on pickup");
+        return $this->__w("Cash payment");
     }
 
     public function postProcess() {

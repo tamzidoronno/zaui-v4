@@ -154,7 +154,13 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
     
     public function saveRoute() {
         $route = $this->getRoute();
-        $route->instruction = $_POST['data']['instruction'];
+        if (isset($_POST['data']['instruction'])) {
+            $route->instruction = $_POST['data']['instruction'];
+        }
+        if (isset($_POST['data']['deliveryServiceDate'])) {
+            $deliveryServiceDate = $this->convertToJavaDate(strtotime($_POST['data']['deliveryServiceDate']));
+            $route->deliveryServiceDate = $deliveryServiceDate;
+        }
         $this->getApi()->getTrackAndTraceManager()->saveRoute($route);
     }
     

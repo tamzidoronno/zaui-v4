@@ -6,6 +6,8 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.usermanager.UserManager;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +40,9 @@ public class AcculogixVirtualRoutesImporter {
 
     private void importRoutes() {
         
+         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        
+        
         // This is set because it should automatically be deleted after two days
         
         for (String[] data : datas) {
@@ -49,6 +54,13 @@ public class AcculogixVirtualRoutesImporter {
             route.userIds.add(data[3].replace("\n", ""));
             route.isVritual = false;
             route.originalId = data[0];
+            
+            try {
+                route.deliveryServiceDate = sdf.parse(data[4].replace("\"", "").split(" ")[1]);
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
+            
             trackAndTraceManager.saveRoute(route);
         }
         

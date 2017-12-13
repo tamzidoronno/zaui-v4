@@ -49,7 +49,7 @@ class TripTease extends \WebshopApplication implements \Application {
                 data-pf-checkin="<?php echo date("Y-m-d", strtotime($booking->sessionStartDate)); ?>"
                 data-pf-checkout="<?php echo date("Y-m-d", strtotime($booking->sessionEndDate)); ?>"  
                 data-pf-direct-price="<?php echo $selectedRoom->price; ?>"
-                data-pf-room-rate="<?php echo $selectedRoom->priceWithoutDiscount; ?>"
+                data-pf-room-rate="<?php echo $selectedRoom->type->name; ?>"
                 data-pf-adults="1"
                 data-pf-children="1"
                 data-pf-children-ages="7"

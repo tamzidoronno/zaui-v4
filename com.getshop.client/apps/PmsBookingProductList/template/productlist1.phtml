@@ -19,8 +19,17 @@ foreach($groups as $group => $name) {
     if(array_filter($groups)){
         echo "<div class='group'><div class='groupheader'>".$name."<i class='fa fa-caret-down' style='float:right;padding-right:20px;font-size:27px;'></i></div>";
     }
+    
+    $lowestRoom = null;
     foreach($rooms as $room) {
-        $tease->renderPriceWidget($room, $booking, $config->tripTeaseHotelId);
+        if($lowestRoom == null || $lowestRoom->price > $room->price) {
+            $lowestRoom = $room;
+        }
+    }
+    $tease->renderPriceWidget($lowestRoom, $booking, $config->tripTeaseHotelId);
+    
+    
+    foreach($rooms as $room) {
 
         /* @var $room core_pmsmanager_Room */
         if($room->type->group != $group) {

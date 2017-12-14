@@ -2,6 +2,10 @@
 /* @var $this ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement */
 
 $route = $this->getRoute();
+$deldate = $route->deliveryServiceDate;
+if ($deldate) {
+    $deldate = date("m/d/Y", strtotime($deldate));
+}
 ?>
 <div class="topmenu">
     <div class="shop_button" gsclick="backToRoutes"><i class="fa fa-backward"></i> Back to routes</div>
@@ -10,6 +14,7 @@ $route = $this->getRoute();
 <div>
     <div class="routebox" gstype='form' method='saveRoute'>
         Route name: <input class='gsniceinput1' gsname='routename' type='textfield' value='<? echo $route->name; ?>'>
+        <br/> Depature date: <input gsname="deliveryServiceDate" value="<? echo $deldate; ?>" class="gsniceinput1" id="depaturedate" />
         <br/>
         <div class='shop_button' style="margin-top: 20px" gstype='submit'>Save</div>
     </div>
@@ -92,3 +97,7 @@ $route = $this->getRoute();
     </div>
 </div>
 
+<script>
+    $('.TrackAndTraceRouteManagement #depaturedate').datepicker();
+</script>
+    

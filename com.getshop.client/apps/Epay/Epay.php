@@ -3,8 +3,9 @@ namespace ns_8f5d04ca_11d1_4b9d_9642_85aebf774fee;
 
 class Epay extends \PaymentApplication implements \Application {
     public $singleton = true;
+    
     public function getDescription() {
-        
+        return "Epay is a historical payment solution. Epay where bought by bambora in 2016 and converted to bambora payments.";
     }
 
     public function getName() {

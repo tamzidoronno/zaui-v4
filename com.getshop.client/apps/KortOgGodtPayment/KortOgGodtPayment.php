@@ -13,5 +13,10 @@ class KortOgGodtPayment extends \PaymentApplication implements \Application {
     public function render() {
         
     }
+    
+    public function isPublicPaymentApp() {
+        return false;
+    }
+    
 }
 ?>

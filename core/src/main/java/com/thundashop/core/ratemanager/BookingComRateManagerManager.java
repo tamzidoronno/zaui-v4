@@ -249,7 +249,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
 "    </wsse:Security>\n" +
 "    <wsa:MessageID>"+uuid+"</wsa:MessageID>\n" +
 "    <wsa:CorrelationID>9e0205ce-e16b-4131-a44e-d2765cf76a76</wsa:CorrelationID>\n" +
-"    <wsa:To>https://api.pricematch.travel/htng_message</wsa:To>\n" +
+"    <wsa:To>https://ratemanager.booking.com/api/htng_message</wsa:To>\n" +
 "  </soap:Header>");
         
         body = body.replace("<envelope SOAP-ENV:encodingStyle=\"http://www.w3.org/2001/12/soap-encoding\" xmlns:ns2=\"http://www.opentravel.org/OTA/2003/05\">",
@@ -309,7 +309,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             toPush += "</OTA_HotelResNotifRQ>";
             toPush += "</Body>";
             toPush += "</Envelope>";
-            htmlPost("https://api.pricematch.travel/htng_message", toPush);
+            htmlPost("https://ratemanager.booking.com/api/htng_message", toPush);
         }catch(Exception e) {
             System.out.println(toPush);
             e.printStackTrace();
@@ -535,7 +535,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             body = body.replace("<soap:Body>", "<soap:Body><OTA_HotelInvCountNotifRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\">");
             body = body.replace("</soap:Body>", "</OTA_HotelInvCountNotifRQ></soap:Body>");
 
-            String url = "https://api.pricematch.travel/htng_message";
+            String url = "https://ratemanager.booking.com/api/htng_message";
             String result = htmlPost(url, body);
          }catch(Exception e) {
              e.printStackTrace();

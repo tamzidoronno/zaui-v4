@@ -35,29 +35,28 @@ class TripTease extends \WebshopApplication implements \Application {
         return $config->tripTeaseHotelId;
     }
         
-    public function renderPriceWidget() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-        $id = $config->tripTeaseHotelId;
+    /**
+     * @param \core_pmsmanager_Room $room
+     */
+    public function renderPriceWidget($selectedRoom, $booking, $id) {
         if($id) {
             $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
             $_SESSION['tripteasebookingid'] = $booking->id;
             $_SESSION['tripteasebookingbookingvalue'] = $booking->totalPrice;
-            foreach($booking->rooms as $room) {
-                ?>
-                <div class="price-fighter-widget"
-                    data-pf-hotelkey="<?php echo $this->getHotelKey(); ?>"
-                    data-pf-checkin="<?php echo date("Y-m-d", strtotime($room->date->start)); ?>"
-                    data-pf-checkout="<?php echo date("Y-m-d", strtotime($room->date->end)); ?>"  
-                    data-pf-direct-price="<?php echo date("Y-m-d", strtotime($room->totalCost)); ?>"
-                    data-pf-room-rate="<?php echo date("Y-m-d", strtotime($room->price)); ?>"
-                    data-pf-adults="<?php echo date("Y-m-d", strtotime($room->numberOfGuests)); ?>"
-                    data-pf-children="1"
-                    data-pf-children-ages="7"
-                    data-pf-currency="NOK"
-                    data-pf-language="<?php echo $booking->language; ?>">
-                </div>
-                <?php
-            }
+            ?>
+            <div class="price-fighter-widget"
+                data-pf-hotelkey="<?php echo $this->getHotelKey(); ?>"
+                data-pf-checkin="<?php echo date("Y-m-d", strtotime($booking->sessionStartDate)); ?>"
+                data-pf-checkout="<?php echo date("Y-m-d", strtotime($booking->sessionEndDate)); ?>"  
+                data-pf-direct-price="<?php echo $selectedRoom->price; ?>"
+                data-pf-room-rate="<?php echo $selectedRoom->type->name; ?>"
+                data-pf-adults="1"
+                data-pf-children="1"
+                data-pf-children-ages="7"
+                data-pf-currency="NOK"
+                data-pf-language="<?php echo $booking->language; ?>">
+            </div>
+            <?php
         }
     }
     

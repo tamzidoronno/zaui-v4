@@ -3,11 +3,11 @@ namespace ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2;
 
 class VerifoneTerminal extends \PaymentApplication implements \Application {
     public function getDescription() {
-        
+        return "We have a terminal connected directly to our booking system. Whenever paying with a verifone payment terminal you will automatically mark payments and completed. This integration is complex and needs a getshop expert to complete.";
     }
 
     public function getName() {
-        return "PmsTerminal";
+        return "Verifone terminal";
     }
 
     /**

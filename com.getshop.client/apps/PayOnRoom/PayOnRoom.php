@@ -7,7 +7,7 @@ class PayOnRoom extends \PaymentApplication implements \Application {
     }
 
     public function getName() {
-        return "PayOnRoom";
+        return "Pay on room";
     }
 
     public function render() {
@@ -21,5 +21,10 @@ class PayOnRoom extends \PaymentApplication implements \Application {
     public function saveSettings() {
         $this->setConfigurationSetting("bookingengine", $_POST['bookingengine']);
     }
+    
+    public function isPublicPaymentApp() {
+        return false;
+    }
+
 }
 ?>

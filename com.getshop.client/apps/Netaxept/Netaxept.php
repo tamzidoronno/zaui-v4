@@ -16,7 +16,7 @@ class Netaxept extends \PaymentApplication implements \Application {
     }
 
     public function getDescription() {
-        return "Netaxept";
+        return "NexAxept is a online payment processor for handling online payments. Whenever a customer pay with this application they are transferred to the netaxept payment window to handle visa / mastercard / bankaxept";
     }
 
     public function getAvailablePositions() {
@@ -152,7 +152,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $amount = (int)($this->getApi()->getOrderManager()->getTotalAmount($this->getOrder()) * 100);
         
         /* var $order \core_ordermanager_data_Order */
-        $result = $this->processPayment($amount, $order->paymentTransactionId, $orderId, "CAPTURE");
+        $result = $this->processPaymentExtended($amount, $order->paymentTransactionId, $orderId, "CAPTURE");
         if (!$result) {
             $settings = $this->getSettings();
             $user = $this->getApi()->getUserManager()->getUserById($this->order->userId);
@@ -195,7 +195,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         }
         $found = false;
         if ($code == "OK") {
-            $authing = $this->processPayment($this->getAmount(), $_GET['transactionId'], $orderId, "AUTH");
+            $authing = $this->processPaymentExtended($this->getAmount(), $_GET['transactionId'], $orderId, "AUTH");
             if (!$authing) {
                 $this->saveOrderStatus(3);
                 if ($paymentfailed) {
@@ -296,7 +296,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $this->orderId = $orderId;
     }
 
-    public function processPayment($transactionAmount, $transactionId, $orderId, $operation) {
+    public function processPaymentExtended($transactionAmount, $transactionId, $orderId, $operation) {
 
         ####  PROCESS OBJECT  ####
         $ProcessRequest = new ProcessRequest();

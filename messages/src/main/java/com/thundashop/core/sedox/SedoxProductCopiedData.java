@@ -90,6 +90,9 @@ public class SedoxProductCopiedData extends DataCommon {
     public String printableName = "";
     
     void populate(SedoxSharedProduct sharedProduct) {
+        if (sharedProduct == null)
+            return;
+        
         this.binaryFiles = sharedProduct.binaryFiles;
         this.filedesc = sharedProduct.filedesc;
         this.brand = sharedProduct.brand;

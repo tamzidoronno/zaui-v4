@@ -8,6 +8,9 @@ if ($routes) {
     echo "<div class='routelist'>";
     echo "<h1>All routes:</h1>";
     foreach ($routes as $route) {
+        $started = $route->startInfo != null && $route->startInfo->started ? "started" : "";
+        $completedClass = $route->completedInfo != null && $route->completedInfo->completedTimeStamp ? "completed" : "";
+        
         $completed = "";
         if ($route->completedInfo->completedTimeStamp) {
             $future = strtotime($route->completedInfo->completedTimeStamp);
@@ -18,16 +21,31 @@ if ($routes) {
             $completedInfo = $route->completedInfo->completed ? "Completed, " : "";
             $completed = " ( $completedInfo will be deleted in $hours hours ) ";
         }
-        echo "<div class='routeview'> "
+        echo "<div class='routeview $started $completedClass'> "
         . "<div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> ";
         if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-            echo  "<div gsclick='deleteRoute' gs_confirm='are you sure you want to delete the route?' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> "
+            $confirmText = "Are you sure you want to delete the route?";
+            if ($started) {
+                $confirmText = "Are you sure you want to delete.  This route is Started In Progress";
+            }
+            if ($completedClass) {
+                $confirmText = "Are you sure you want to delete.  This route is Completed";
+            }
+            if (!$started && $completedClass) {
+                $confirmText = "Are you sure you want to delete.  This route is Relief Route";
+            }
+            echo  "<div gsclick='deleteRoute' gs_confirm='$confirmText' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> "
                 . " ";
         }
         echo $route->name." $completed";
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             echo ", Depot: ". $route->depotId;
         }
+        
+        if ($started && !$completedClass) {
+            echo ", <span style='font-weight: bold;'> ( Started ) </span>";
+        }
+        
         echo "</div>";
     }
     echo "</div>";

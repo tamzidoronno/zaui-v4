@@ -24,6 +24,14 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
     public function doAction() {
         
     }
+    
+    public function saveCredentials() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->wubookusername = $_POST['data']['username'];
+        $config->wubookpassword = $_POST['data']['password'];
+        $config->wubooklcode = $_POST['data']['lcode'];
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
 
     public function updateRoomData() {
         $curData = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedMultilevelDomainName());

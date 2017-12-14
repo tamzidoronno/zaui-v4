@@ -10,7 +10,7 @@
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	background-color: #efefef;
 }
-
+.PaymentSettingsSetup .paymentappactivation .footer.deactivate { background-color: #000; color:#fff; }
     
 .PaymentSettingsSetup .paymentappactivation .description::-webkit-scrollbar {
    width: 7px;

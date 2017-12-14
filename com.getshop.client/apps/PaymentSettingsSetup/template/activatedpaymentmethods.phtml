@@ -9,7 +9,9 @@ $apps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplicati
 foreach($apps as $app) {
     $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
     if(method_exists($instance, "renderConfig")) {
+        echo "<div class='paymentsetupconfig' appid='".$instance->applicationSettings->id."'>";
         $instance->renderConfig();
+        echo "</div>";
     }
 }
  

@@ -7,14 +7,22 @@ app.PmsBookingProductList = {
         $(document).on('keyup', '.PmsBookingProductList .productcount', app.PmsBookingProductList.updateProductCount);
         $(document).on('change', '.PmsBookingProductList .roomcountselection', app.PmsBookingProductList.selectRoomCount);
         $(document).on('click', '.PmsBookingProductList continue_button.nightWarning', app.PmsBookingProductList.nightWarningPrompt);
-        $(document).on('click', '.PmsBookingProductList .group', app.PmsBookingProductList.showGroupedList);
+        $(document).on('click', '.PmsBookingProductList .groupheader', app.PmsBookingProductList.showGroupedList);
     },
     nightWarningPrompt : function(){
         
     },
     showGroupedList : function(){
-        $(this).find('.productentry').toggle();
+        var group = $(this).closest('.group');
+        var entries = group.find('.productentry');
+        entries.toggle();
         $(this).toggleClass('active');
+        var groupName = group.attr('groupname');
+        if(entries.is(":visible")) {
+            localStorage.setItem("groupOpen_"+groupName,"true");
+        } else {
+            localStorage.setItem("groupOpen_"+groupName,null);
+        }
     },
     updateProductCount : function() {
         if(app.PmsBookingProductList.setRoomCountTimeout) {

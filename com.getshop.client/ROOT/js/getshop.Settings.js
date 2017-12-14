@@ -31,7 +31,33 @@ getshop.Settings = {
     gssShowFragment: function (field) {
         this.post({}, "gs_show_fragment", field);
     },
+    savePaymentSettings : function(field) {
+        var method = $(field).attr('gss_method');
+        var form = $(field).closest('.paymentsetupconfig');
+        var model = {};
+        
+        form.find('[gs_model_attr]').each(function() {
+            if($(this).hasClass('gss_onoff')) {
+                if($(this).find('.fa').hasClass('fa-toggle-on')) {
+                    model[$(this).attr('gs_model_attr')] = true;
+                } else {
+                    model[$(this).attr('gs_model_attr')] = false;
+                }
+            } else {
+                model[$(this).attr('gs_model_attr')] = $(this).val();
+            }
+        });
+        
+        localStorage.setItem("currentApp", form.attr('appid'));
+        
+        this.post(model, method, field);
+        thundashop.common.Alert('Success','Saved successfully',false);
+    },
     gssMethodInvoke: function (field) {
+        if($(field).closest('.paymentsetupconfig').length > 0) {
+            getshop.Settings.savePaymentSettings(field);
+            return;
+        } 
         var method = $(field).attr('gss_method');
         var model = {};
         if ($(field).attr('gss_model')) {

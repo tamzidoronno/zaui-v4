@@ -1,4 +1,7 @@
-<?php /* @var $this \ns_2b4a865c_6aed_416e_bf52_ab6e2428bd1f\PmsWubookConfiguration */ ?>
+<?php /* @var $this \ns_2b4a865c_6aed_416e_bf52_ab6e2428bd1f\PmsWubookConfiguration */
+
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+?>
 <br>
 <div class='section'>
     <h2>Actions available</h2>
@@ -19,28 +22,66 @@
 <br>
 <br>
 <div class='section'>
-    <h2>Booking actions</h2>
-    <div gstype='form' method="doAction">
-        <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
-        <input type="hidden" gsname="type" value='addBooking' class='gsniceinput1'>
-        <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Add booking to GetShop</span>
-    </div>
+    <table width="100%">
+        <tr>
+            <td width="50%" valign="top">
+                <h2>Booking actions</h2>
+                <div gstype='form' method="doAction">
+                    <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
+                    <input type="hidden" gsname="type" value='addBooking' class='gsniceinput1'>
+                    <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Add booking to GetShop</span>
+                </div>
+                <div gstype='form' method="doAction">
+                    <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
+                    <input type="hidden" gsname="type" value='markCCInvalid' class='gsniceinput1'>
+                    <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Mark credit card as invalid</span>
+                </div>
+                <div gstype='form' method="doAction">
+                    <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
+                    <input type="hidden" gsname="type" value='markNoShow' class='gsniceinput1'>
+                    <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Mark booking as no show</span>
+                </div>
+                <div gstype='form' method="doAction">
+                    <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
+                    <input type="hidden" gsname="type" value='removeFromBooking' class='gsniceinput1'>
+                    <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Remove from getshop pms</span>
+                </div>
+           </td>
+            <td valign="top">
+                <h2>Wubook credentials</h2>
+                <div gstype='form' method="saveCredentials">
+                    <table>
+                        <tr>
+                            <td>Username
+                            </td>
+                            <td><input type="text" class='gsniceinput1' placeholder='Username' gsname="username" value="<?php echo $config->wubookusername; ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Password
+                            </td>
+                            <td><input type="text" class='gsniceinput1' placeholder='Password' gsname="password" value="<?php echo $config->wubookpassword; ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lcode
+                            </td>
+                            <td><input type="text" class='gsniceinput1' placeholder='lcode' gsname="lcode" value="<?php echo $config->wubooklcode; ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td><span class='gsmodulebutton' gstype="submit" style='width:190px;'>Save Credentials</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+            </td>
+        </tr>
+    </table>
 
-    <div gstype='form' method="doAction">
-        <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
-        <input type="hidden" gsname="type" value='markCCInvalid' class='gsniceinput1'>
-        <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Mark credit card as invalid</span>
-    </div>
-    <div gstype='form' method="doAction">
-        <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
-        <input type="hidden" gsname="type" value='markNoShow' class='gsniceinput1'>
-        <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Mark booking as no show</span>
-    </div>
-    <div gstype='form' method="doAction">
-        <input type="text" gsname="id" class='gsniceinput1' placeholder='Wubook rcode'>
-        <input type="hidden" gsname="type" value='removeFromBooking' class='gsniceinput1'>
-        <span class='gsmodulebutton' gstype="submit" style='width:190px;'>Remove from getshop pms</span>
-    </div>
 </div>
 <br><br>
 <div class='section'>

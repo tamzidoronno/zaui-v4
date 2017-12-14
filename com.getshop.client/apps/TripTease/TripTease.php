@@ -43,6 +43,13 @@ class TripTease extends \WebshopApplication implements \Application {
             $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
             $_SESSION['tripteasebookingid'] = $booking->id;
             $_SESSION['tripteasebookingbookingvalue'] = $booking->totalPrice;
+            $lang = $booking->language;
+            if($booking->language == "nb_NO") {
+                if(stristr($lang, "_")) {
+                    $splitted = explode("_", $lang);
+                    $lang = $splitted[0];
+                }
+            }
             ?>
             <div class="price-fighter-widget"
                 data-pf-hotelkey="<?php echo $this->getHotelKey(); ?>"
@@ -51,10 +58,10 @@ class TripTease extends \WebshopApplication implements \Application {
                 data-pf-direct-price="<?php echo $selectedRoom->price; ?>"
                 data-pf-room-rate="<?php echo $selectedRoom->type->name; ?>"
                 data-pf-adults="1"
-                data-pf-children="1"
+                data-pf-children="0"
                 data-pf-children-ages="7"
                 data-pf-currency="NOK"
-                data-pf-language="<?php echo $booking->language; ?>">
+                data-pf-language="<?php echo $lang; ?>">
             </div>
             <?php
         }

@@ -228,7 +228,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/jcrop/js/jquery.Jcrop.min.js");
         $this->addJavascriptFile("js/colresize.js");
         $this->addJavascriptFile("js/moments.js");
-        $this->addJavascriptFile("js/photoswipe/photoswipe.min.js");
+        $this->addJavascriptFile("js/photoswipe/photoswipe.js");
         $this->addJavascriptFile("js/photoswipe/photoswipe-ui-default.min.js");
         $this->addJavascriptFile("js/getshop.photoswipe.js");
         $this->addJavascriptFile("js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js");

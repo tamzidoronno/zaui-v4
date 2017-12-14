@@ -109,6 +109,13 @@ $products=$products2;
             <td valign='top' width='50%'>
                 <h3>Booking items</h3>
                 <div gstype="form" method="addBookingItem" class='addGroupOptions'>
+                    <select gsname="type" style="padding: 9px;">
+                    <?php
+                    foreach($bookingtypes as $type) {
+                        echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
+                    }
+                    ?>
+                    </select>
                     <input gsname="name" gstype="submitenter" value="" class='newitemfield'>
                     <span gstype="submit" class="pmsbutton addGroupOptions"><? echo $this->__w("Create a booking item"); ?></span>
                 </div>

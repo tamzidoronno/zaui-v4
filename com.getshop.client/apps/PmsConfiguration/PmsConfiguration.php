@@ -465,8 +465,8 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $notifications->budget->{$i} = new \core_pmsmanager_PmsBudget();
             }
             $notifications->budget->{$i}->month = $i;
-            $notifications->budget->{$i}->coverage_percentage = $_POST['data']['budget_percentage_'.$i];
-            $notifications->budget->{$i}->budget_amount = $_POST['data']['budget_amount_'.$i];
+            $notifications->budget->{$i}->coverage_percentage = (int)$_POST['data']['budget_percentage_'.$i];
+            $notifications->budget->{$i}->budget_amount = (int)$_POST['data']['budget_amount_'.$i];
         }
         
         $translationMatrix = array();

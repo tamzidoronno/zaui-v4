@@ -17,7 +17,7 @@ $tease = new \ns_c844b3fe_84b0_4d26_a8e2_8aa361ed82c4\TripTease();
 
 foreach($groups as $group => $name) {
     if(array_filter($groups)){
-        echo "<div class='group'><div class='groupheader'>".$name."<i class='fa fa-caret-down' style='float:right;padding-right:20px;font-size:27px;'></i></div>";
+        echo "<div class='group' groupname='$name'><div class='groupheader'>".$name."<i class='fa fa-caret-down' style='float:right;padding-right:20px;font-size:27px;'></i></div>";
     }
     
     $lowestRoom = null;
@@ -188,3 +188,16 @@ foreach($groups as $group => $name) {
 }
 
 ?>
+
+<script>
+<?php
+foreach($groups as $group => $name) {
+    ?>
+    if(localStorage.getItem('groupOpen_<?php echo $name; ?>') == "true") {
+        $('.group[groupname="<?php echo $name; ?>"]').find('.productentry').toggle();
+    }
+    <?php
+}
+?>
+</script>
+    

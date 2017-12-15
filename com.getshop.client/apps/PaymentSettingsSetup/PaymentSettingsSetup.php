@@ -9,6 +9,14 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
     public function getName() {
         return "PaymentSettingsSetup";
     }
+    
+    public function deactivateApp() {
+        $this->getApi()->getStoreApplicationPool()->deactivateApplication($_POST['data']['id']);
+    }
+    
+    public function activateApp() {
+        $this->getApi()->getStoreApplicationPool()->activateApplication($_POST['data']['id']);
+    }
 
     public function render() {
         $this->includefile("printapplications");

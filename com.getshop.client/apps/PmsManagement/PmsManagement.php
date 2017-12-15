@@ -35,6 +35,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
         $currentBooking->userId = "quickreservation";
         $currentBooking->quickReservation = true;
+        $currentBooking->avoidCreateInvoice = true;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $currentBooking);
         $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
         if(!$res) {

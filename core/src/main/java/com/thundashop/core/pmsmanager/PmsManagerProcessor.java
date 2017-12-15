@@ -1346,7 +1346,7 @@ public class PmsManagerProcessor {
     private void processGreetingMessage() {
         Calendar cal = Calendar.getInstance();
         int hourofday = cal.get(Calendar.HOUR_OF_DAY);
-        if(hourofday != 11) {
+        if(hourofday != 7) {
             return;
         }
         

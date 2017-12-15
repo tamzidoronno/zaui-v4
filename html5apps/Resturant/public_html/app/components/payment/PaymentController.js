@@ -212,8 +212,34 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
                 if(a.room > b.room) return 1;
                 return 0;
             });
+            
+            $scope.removeRoomsNotCheckedInYet();
             $scope.$evalAsync();
         });
+    }
+    
+    $scope.removeRoomsNotCheckedInYet = function() {
+        if (!$scope.rooms)
+            return;
+        
+        var now = new Date();
+        
+        var newArray = new Array();
+        for (var i in $scope.rooms) {
+            var room = $scope.rooms[i];
+            var start = new Date(room.start);
+            start.setMinutes(0);
+            start.setSeconds(0);
+            start.setHours(5);
+            
+            if (start > now) {
+                // Ignoring
+            } else {
+                newArray.push(room);
+            }
+        }
+        
+        $scope.rooms = newArray;
     }
     
     $scope.askForPincode = function(room) {

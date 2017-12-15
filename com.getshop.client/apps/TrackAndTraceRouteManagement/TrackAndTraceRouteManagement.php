@@ -198,5 +198,8 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
         }
     }
     
+    public function toggleSortByDeliveryDate() {
+        $this->getApi()->getTrackAndTraceManager()->setSortingOfRoutes("deliveryDate");
+    }
 }
 ?>

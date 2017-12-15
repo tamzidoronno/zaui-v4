@@ -12,6 +12,7 @@ import com.thundashop.core.bookingengine.CheckConsistencyCron;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
@@ -286,7 +287,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         List<Route> retList = new ArrayList(routes.values());
         retList = filterListByDepotId(retList); 
         retList.stream().forEach(route -> finalize(route));
-        retList.sort(Route.getSortedById());
+        sortRouteList(retList);
         return retList;
     }
 
@@ -1419,8 +1420,28 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
     }
 
+    @Override
+    public void setSortingOfRoutes(String sortingName) {
+        Session session = getSession();
+        
+        if (session != null) {
+            if (sortingName.equals(session.get("currentRouteSorting"))) {
+                session.put("currentRouteSorting", null);
+            } else {
+                session.put("currentRouteSorting", sortingName);
+            }
+        }
+    }
 
-    
-    
-
+    private void sortRouteList(List<Route> retList) {
+        Session session = getSession();
+        if (session != null && session.get("currentRouteSorting") != null) {
+            if (session.get("currentRouteSorting").equals("deliveryDate")) {
+                retList.sort(Route.getSortedByDeliveryDate());    
+            }
+            
+        } else {
+            retList.sort(Route.getSortedById());
+        }
+    }
 }

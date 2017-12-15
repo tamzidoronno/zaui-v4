@@ -7,6 +7,18 @@ if ($routes) {
    
     echo "<div class='routelist'>";
     echo "<h1>All routes:</h1>";
+    ?>
+    
+    <div class="sortings">
+        Sorting:
+        <br/><div class="shop_button" gsclick="toggleSortByDeliveryDate">Delivery date descending</div>
+    </div>
+
+    <div class="routeview" style="background-color: #FFF; font-weight: bold;">
+        Information
+        <div class="servicedate">Service Date</div>
+    </div>
+    <?
     foreach ($routes as $route) {
         $started = $route->startInfo != null && $route->startInfo->started ? "started" : "";
         $completedClass = $route->completedInfo != null && $route->completedInfo->completedTimeStamp ? "completed" : "";
@@ -44,6 +56,12 @@ if ($routes) {
         
         if ($started && !$completedClass) {
             echo ", <span style='font-weight: bold;'> ( Started ) </span>";
+        }
+        
+        if (!$route->deliveryServiceDate) {
+            echo "<div class='servicedate'> N /A </div>";
+        } else {
+            echo "<div class='servicedate'>".date('m/d-Y', strtotime($route->deliveryServiceDate))."</div>";
         }
         
         echo "</div>";

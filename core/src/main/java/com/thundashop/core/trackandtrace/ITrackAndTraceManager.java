@@ -192,5 +192,6 @@ public interface ITrackAndTraceManager {
     @Administrator
     public List<ReplyMessage> getReplyMessages();
     
-
+    @Administrator
+    public void setSortingOfRoutes(String sortingName);
 }

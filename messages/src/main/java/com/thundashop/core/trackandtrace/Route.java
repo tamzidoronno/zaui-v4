@@ -150,6 +150,13 @@ public class Route extends DataCommon {
             return o1.id.compareTo(o2.id);
         };
     }
+    
+    static Comparator<? super Route> getSortedByDeliveryDate() {
+        
+        return (Route o1, Route o2) -> {
+            return Comparator.nullsLast(Date::compareTo).compare(o1.deliveryServiceDate, o2.deliveryServiceDate);
+        };
+    }
 
     public boolean serviceDateToDayOrInPast() {
         Date today = new Date();

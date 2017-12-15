@@ -3481,14 +3481,14 @@ var _historyUpdateTimeout,
 		if( _supportsPushState ) {
 
 			if('#' + newHash !== window.location.hash) {
-				history[_historyChanged ? 'replaceState' : 'pushState']('', document.title, newURL);
+//				history[_historyChanged ? 'replaceState' : 'pushState']('', document.title, newURL);
 			}
 
 		} else {
 			if(_historyChanged) {
-				_windowLoc.replace( newURL );
+//				_windowLoc.replace( newURL );
 			} else {
-				_windowLoc.hash = newHash;
+//				_windowLoc.hash = newHash;
 			}
 		}
 		
@@ -3621,18 +3621,18 @@ _registerModule('History', {
 			// Delay the update of URL, to avoid lag during transition, 
 			// and to not to trigger actions like "refresh page sound" or "blinking favicon" to often
 			
-			_cleanHistoryTimeouts();
-			
-
-			if(_hashChangedByHistory) {
-				return;
-			}
-
-			if(!_historyChanged) {
-				_updateHash(); // first time
-			} else {
-				_historyUpdateTimeout = setTimeout(_updateHash, 800);
-			}
+//			_cleanHistoryTimeouts();
+//			
+//
+//			if(_hashChangedByHistory) {
+//				return;
+//			}
+//
+//			if(!_historyChanged) {
+//				_updateHash(); // first time
+//			} else {
+//				_historyUpdateTimeout = setTimeout(_updateHash, 800);
+//			}
 		}
 	
 	}

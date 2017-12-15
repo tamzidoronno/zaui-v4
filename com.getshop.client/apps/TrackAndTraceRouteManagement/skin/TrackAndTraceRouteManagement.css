@@ -2,9 +2,24 @@
     padding: 5px;
 }
 
+.TrackAndTraceRouteManagement .routelist .routeview.started:not(.completed) {
+    background-color: #a6ffa7 !important;
+    border-bottom: solid 1px #9aee9c;
+}
+
+.TrackAndTraceRouteManagement .routelist .routeview.completed.started {
+    color: red;
+    background-color: #fbff85;
+}
+
 .TrackAndTraceRouteManagement .routelist .routeview:nth-child(odd) {
     background-color: #EFEFEF;
 }
+
+.TrackAndTraceRouteManagement .routelist .routeview:nth-child(odd).completed.started { 
+    background-color: #eaf07c;
+}
+
 
 .TrackAndTraceRouteManagement .addUserRow {
     border-bottom: solid 1px #DDD;

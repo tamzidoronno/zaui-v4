@@ -27,6 +27,11 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 h4{font-size: 18px;margin: 12px 0;font-family: inherit;font-weight: 500;line-height: 1.1;color: inherit;}
 .GslBooking .gslfront_1 button{font-weight:500 !important;}
 
+.GslBooking #addnewguest, 
+.GslBooking #productentrybox, 
+.GslBooking #addnewguest, 
+.GslBooking #addnewroom { display:none; }
+
 .GslBooking .gslfront_1 .productentry_gallery.active{
     width:100%;
     height:100%;
@@ -38,6 +43,7 @@ Error      : #de5353; red
     padding-top:2%;
     z-index: 99;
 }
+.GslBooking .roomdescription { padding-top: 10px; padding-left: 10px; }
 .GslBooking .gslfront_1 .productentry_gallery.active .gallery-wrapper{width: 100%;position: absolute;bottom:0;overflow:visible;}
 .GslBooking .gslfront_1 .productentry_gallery.active .feature{max-width:58%;max-height:50%;margin:auto;}
 .GslBooking .gslfront_1 .productentry_gallery.active .feature .image-holder{padding-bottom: 60%;}
@@ -183,7 +189,7 @@ Error      : #de5353; red
 /*-----------------BODY-----------------*/
 .GslBooking .gslfront_1 .gslbookingBody{display: none;border-top:1px solid #ddd;}
 .GslBooking .gslfront_1 #productoverview_footer{display:none;}
-.GslBooking .gslfront_1 #productentry{max-height: 800px;overflow-y: auto;}
+.GslBooking .gslfront_1 #productentry{overflow-y: auto;}
 
 /*css scrollbar is not supported in Mozilla firefox, and Edge*/
 .GslBooking .gslfront_1 #productentry::-webkit-scrollbar-track{box-shadow: inset 1px 0px 2px #ddd;background-color:#f1f1f1;}
@@ -270,6 +276,12 @@ Error      : #de5353; red
     cursor: default;}
 .GslBooking .gslfront_1 .product_availablerooms{font-size: 12px !important;}
 .GslBooking .gslfront_1 .unavailableRooms{color:#ddd;}
+.GslBooking .ordersummary { background-color:#efefef; padding: 10px; display:none; }
+.GslBooking .ordersummary .selectedguests { padding-bottom: 10px; }
+.GslBooking .ordersummary .bottomspacer { clear:both; padding-bottom: 10px;height: 50px; }
+.GslBooking .gslfront_1 .ordersummary .gsl_button.continue { float:right; width: 200px; }
+.GslBooking #priceoffertable { width: 100%; }
+.GslBooking #priceoffertable td { font-size: 16px; }
 
 /*Addons and guest information*/
 .GslBooking .gslfront_1 .addons_overview{display: none;background-color:#f1f1f1;}

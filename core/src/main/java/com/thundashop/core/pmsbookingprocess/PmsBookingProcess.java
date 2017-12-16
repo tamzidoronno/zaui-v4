@@ -8,12 +8,20 @@ package com.thundashop.core.pmsbookingprocess;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsStartBooking;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +47,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
+        
+        if(arg.adults < arg.rooms) {
+            return null;
+        }
         
         arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
         arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);
@@ -84,9 +96,106 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             result.rooms.add(room);
         }
         
+        selectMostSuitableRooms(result, arg);
+        
+        
         result.totalAmount = existing.getTotalPrice();
         
         return result;
+    }
+
+    private void selectMostSuitableRooms(StartBookingResult result, StartBooking arg) {
+        System.out.println("Need to find: " + arg.rooms + " rooms for :" + arg.adults);
+        
+        List<PmsBookingProcessorCalculator> toUse = new ArrayList();
+        
+        
+        for(BookingProcessRooms room : result.rooms) {
+            for(Integer guest : room.pricesByGuests.keySet()) {
+                Double price = room.pricesByGuests.get(guest);
+                PmsBookingProcessorCalculator res = new PmsBookingProcessorCalculator();
+                res.room = room;
+                res.guests = guest;
+                res.price = price;
+                res.guestPrice = price/guest;
+                res.maxRooms = room.availableRooms;
+                toUse.add(res);
+            }
+        }
+        
+        Collections.sort(toUse, new Comparator<PmsBookingProcessorCalculator>(){
+            public int compare(PmsBookingProcessorCalculator o1, PmsBookingProcessorCalculator o2){
+                if(o1.guestPrice == o2.guestPrice)
+                    return 0;
+                return o1.guestPrice < o2.guestPrice ? -1 : 1;
+            }
+        });
+       
+        List<PmsBookingProcessorCalculator> listOfRooms = new ArrayList();
+        int guestLeft = arg.adults;
+        int roomsLeft = arg.rooms;
+        int breaker = 0;
+        while(true) {
+            for(Integer roomIdx = 0; roomIdx < arg.rooms; roomIdx++) {
+                for(PmsBookingProcessorCalculator lowest : toUse) {
+                    if(lowest.maxRooms == 0) {
+                        continue;
+                    }
+                    if(lowest.guests <= guestLeft) {
+                        if(lowest.guests == guestLeft && roomsLeft > 1) {
+                            continue;
+                        }
+                        lowest.maxRooms--;
+                        listOfRooms.add(lowest);
+                        guestLeft -= lowest.guests;
+                        roomsLeft--;
+                        break;
+                    }
+                }
+                if(guestLeft <= 0) {
+                    break;
+                }
+            }
+            if(guestLeft <= 0) {
+                break;
+            }
+            boolean roomsleft = false;
+            for(PmsBookingProcessorCalculator lowest : toUse) {
+                if(lowest.maxRooms > 0) {
+                    roomsleft = true;
+                }
+            }
+            if(!roomsleft) {
+                break;
+            }
+            
+            breaker++;
+            if(breaker >= 1000) {
+                break;
+            }
+        }
+        
+        if(guestLeft > 0) {
+            logPrint("################ WARNING ################");
+            logPrint("Not all guests where assigned a room");
+            logPrint("################ WARNING ################");
+        }
+        if(roomsLeft > 0) {
+            logPrint("################ WARNING ################");
+            logPrint("Not all rooms where assigned");
+            logPrint("################ WARNING ################");
+        }
+        
+        logPrint("---------------: " + guestLeft + "-----------");
+        for(PmsBookingProcessorCalculator check : listOfRooms) {
+                logPrint(check.guests + " : "+ check.room.availableRooms + " : " + check.price + " : " + check.room.name);
+                Integer current = check.room.roomsSelectedByGuests.get(check.guests);
+                if(current == null) {
+                    current = 0;
+                }
+                current++;
+                check.room.roomsSelectedByGuests.put(check.guests, current);
+        }
     }
     
 }

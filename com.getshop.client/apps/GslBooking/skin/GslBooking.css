@@ -63,7 +63,6 @@ Error      : #de5353; red
 }
 
 /*gsniceradiobutton*/
-.GslBooking .gslfront_1 input[type=radio]{display: none;}
 .GslBooking .gslfront_1 input[type=radio] ~ label{position: relative;padding:0 20px;cursor: pointer;font-weight: 500;color: #3776b3;}
 .GslBooking .gslfront_1 input[type=radio] ~ label:hover{opacity: 0.75;}
 .GslBooking .gslfront_1 input[type=radio] ~ label::before{content: "";position: absolute;top:2px;border: 2px solid #3776b3;border-radius: 100%;padding: 5px;left: 0;background-color: #3776b3;}

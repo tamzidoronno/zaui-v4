@@ -55,8 +55,7 @@
                     <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay</h4>
                     <div class='yourstaysummary'></div>
                     <div style="position:absolute;bottom:10px;right:0; width:30%;">
-                        <div class="gsl_button return" onclick="showProductList()"><i class="fa fa-arrow-left"></i> Return</div>
-                        <div class="gsl_button continue" onclick="showOverviewPage()">Continue <i class="fa fa-arrow-right"></i></div>
+                        <div class="gsl_button continue" onclick="showOverviewPage()" style='float:right;margin-right: 10px;'>Continue <i class="fa fa-arrow-right"></i></div>
                     </div>
                 </div>
             </div>
@@ -66,7 +65,7 @@
                     Add addons for all guests, or add individual addons under guest info.
                     <div class="overview_addons">
                         <div class="addon" id='addon' style='display:none;'>
-                            <div style="width:60%;"><span class='text'></span></div><div>NOK <span class='price'></span>,-</div><div id="addon_earlyCheckin" class="addButton gsl_button">Add</div>
+                            <div style="width:60%;"><span class='icon'></span> <span class='text'></span></div><div>NOK <span class='price'></span>,-</div><div id="addon_earlyCheckin" class="addButton gsl_button">Add</div>
                         </div>
                     </div>
                 </div>
@@ -97,7 +96,7 @@
                         <div class='guestRows'></div>
                         <div class="addguest gsl_button"><i class="fa fa-plus"></i> Add guest</div>
                     </div>
-                    <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>
+<!--                    <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>-->
                 </div>
             </div>
         </div>
@@ -115,32 +114,88 @@
                     This is used for contacting regarding your stay. Be sure to pick private or organization.
                     <br><br>
                     <div class="overview_contact_tab">
-                        <input type="radio" id="private" name="user" checked="checked">
-                        <label for="private">Private</label>
-                        <input type="radio" id="organization"name="user">
-                        <label for="organization">Organization</label>
-                        <input type="radio" id="gotAccount"name="user">
-                        <label for="gotAccount">Already got an Account?</label>
+                        <label for="private" id="private" class='selectedusertype'>
+                            <input type="radio" name="user" checked="checked"> Private
+                        </label>
+                        <label for="organization" id="organization" class='selectedusertype'>
+                            <input type="radio" name="user"> Organization
+                        </label>
+                        <label for="gotAccount" id="gotAccount" class='selectedusertype'>
+                            <input type="radio" name="user"> Already got an Account?
+                        </label>
                     </div>
                     <br>
-                    <div class="private_fields">
-                        <div class="guestentry">
-                            <div style="width: 33.33%;">Name<br><input type="txt" gsname="user_fullName">
-                            </div><div style="width: 33.33%;">E-mail<br><input type="txt" gsname="user_emailAddress">
-                            </div><div style="width: 33.33%;">Phone<br><input type="txt" class="guest_phone" value="+47" gsname="user_prefix"><input type="text" style="width:75%;border-right: 1px solid #ddd;"gsname="user_cellPhone">
-                            </div><div style="width: 50%;">Street Adress<br><input type="txt">
-                            </div><div style="width: 50%;">Zip Code<br><input id="guest_zipcode" type="txt"  class="guest_phone" value=""><input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;">
+                    <div class="private_fields" type='user'>
+                        <div class="guestentry guesttypeselection" type='private'>
+                            <div style="width: 33.33%;float: left;">
+                                Name<br>
+                                <input type="txt" gsname="user_fullName">
                             </div>
+                            <div style="width: 33.33%;float: left;">
+                                E-mail<br>
+                                <input type="txt" gsname="user_emailAddress">
+                            </div>
+                            <div style="width: 33.33%;float: left;">
+                                Phone<br>
+                                <input type="txt" class="guest_phone" value="+47" gsname="user_prefix" style='float:left;'>
+                                <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="user_cellPhone">
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Street Adress<br>
+                                <input type="txt">
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Zip Code<br>
+                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;">
+                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="company_fields guesttypeselection" style='display:none;' type='organization'>
+                                          <div class="guestentry">
+                            <div style="width: 25%;float: left;">
+                                Company name<br>
+                                <input type="txt" gsname="user_fullName">
+                            </div>
+                            <div style="width: 25%;float: left;">
+                                Vat number<br>
+                                <input type="txt" gsname="user_emailAddress">
+                            </div>
+                            <div style="width: 25%;float: left;">
+                                E-mail<br>
+                                <input type="txt" gsname="user_emailAddress">
+                            </div>
+                            <div style="width: 25%;float: left;">
+                                Phone<br>
+                                <input type="txt" class="guest_phone" value="+47" gsname="user_prefix" style='float:left;'>
+                                <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="user_cellPhone">
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Street Adress<br>
+                                <input type="txt">
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Zip Code<br>
+                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;">
+                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="login_fields guesttypeselection" style='display:none;' type='gotAccount'>
+                        <div class="guestentry">
+                            <div style="width: 50%; float:left;">Username / email<br><input type="txt" gsname="username"></div>
+                            <div style="width: 50%; float:left;">Password<br><input type="txt" gsname="password"></div>
                         </div>
                     </div>
                     <div style="clear: both;"></div>
                 </div>
-                <div style="padding:10px;">
+                <div style="padding:10px;" class='agreetotermsbox'>
                     <input id="agreeTerms" type="checkbox">
                     <label for="agreeTerms">I agree to terms</label>
                     <div><a style="cursor:pointer;">Read terms of use</a></div>
                     <div><a style="cursor:pointer;">Download terms of use</a></div>
                 </div>
+                <div style="clear: both;"></div>
             </div>
         </div>
     </div>
@@ -207,3 +262,6 @@
 <link rel="stylesheet" type="text/css" media="all" href="/js/daterangepicker/daterangepicker.css" />
 <script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
 <script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
+<script>
+    localStorage.setItem('gslcurrentpage','');
+</script>

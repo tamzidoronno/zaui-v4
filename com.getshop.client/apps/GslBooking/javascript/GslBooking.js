@@ -114,9 +114,17 @@ function loadAddonsAndGuestSummaryByResult(res) {
         for(var k in res.items) {
             var item = res.items[k];
             var entry = template.clone();
+            
+            var icon = addon.icon;
+            if(!icon) {
+                icon = "fa-question-circle";
+            }
+            var fontawesomeicon = $('<i class="fa '+icon+'" title="'+addon.name+'"></i>');
+            
             entry.attr('id','');
             entry.attr('productid', item.productId);
             entry.addClass('addonprinted');
+            entry.find('.icon').html(fontawesomeicon);
             entry.find('.text').html(item.name);
             entry.find('.price').html(item.price);
             if(item.isAdded) {
@@ -145,12 +153,11 @@ function loadRooms(res) {
         var newRoom = roomContainer.clone();
         newRoom.addClass('roomrowadded');
         var room = res.rooms[k];
-        console.log(room);
-        
+        console.log(room.maxGuests);
         var guestTemplateRow = newRoom.find('#guestentryrow');
-        guestTemplateRow.attr('id','');
         for(var i = 0; i < room.guestCount;i++) {
             var guestRow = guestTemplateRow.clone();
+            guestRow.attr('id','');
             guestRow.show();
             var guestObject = room.guestInfo[i];
             if(guestObject) {
@@ -167,6 +174,9 @@ function loadRooms(res) {
         newRoom.find('.roomname').html(room.roomName);
         newRoom.find('.startdate').html(js_yyyy_mm_dd_hh_mm_ss(room.start));
         newRoom.find('.enddate').html(js_yyyy_mm_dd_hh_mm_ss(room.end));
+        if(room.maxGuests <= room.guestCount) {
+            newRoom.find('.addguest').hide();
+        }
         $('.roomentryframe').append(newRoom);
         
         for(var addonKey in room.addonsAvailable) {
@@ -175,7 +185,12 @@ function loadRooms(res) {
             if(!icon) {
                 icon = "fa-question-circle";
             }
-            newRoom.find('.guest_addon').append('<i class="fa '+icon+'" title="'+addon.name+'"></i>');
+            var fontawesomeicon = $('<i class="fa guestaddonicon '+icon+'" title="'+addon.name+'"></i>');
+            fontawesomeicon.attr('productid', addon.productId);
+            if(addon.isAdded) {
+                fontawesomeicon.addClass('active_addon');
+            }
+            newRoom.find('.guest_addon').append(fontawesomeicon);
         }
         newRoom.find('.guest_addon').append('<i class="fa fa-times removeguest" title="Remove guest"></i>');
         newRoom.show();
@@ -203,13 +218,24 @@ $(document).on('click', '.GslBooking .ordersummary .continue', function () {
     });
 });
 $(document).on('mousedown', '.GslBooking .addButton', function () {
+    addRemoveAddon($(this));
+});
+
+
+function addRemoveAddon(btn) {
     var saving = saveGuestInformation();
-    var btn = $(this);
     saving.done(function() {
-        var body = {
-            "productId" : btn.closest('.addon').attr('productid')
-        };
-        if (btn.hasClass('added_addon')) {
+        var body = {};
+        
+        if(btn.hasClass('guestaddonicon')) {
+            body['roomId'] = btn.closest('.roomrowadded').attr('roomid');
+            body['productId'] = btn.attr('productid');
+        } else {
+            body["productId"] = btn.closest('.addon').attr('productid');
+        }
+        console.log(body);
+        
+        if (btn.hasClass('added_addon') || btn.hasClass('active_addon')) {
            $.ajax(endpoint + '/scripts/bookingprocess.php?method=removeAddons', {
                 dataType: 'jsonp',
                 data: { body: body },
@@ -218,7 +244,6 @@ $(document).on('mousedown', '.GslBooking .addButton', function () {
                 }
             });
         } else {
-
             $.ajax(endpoint + '/scripts/bookingprocess.php?method=addAddons', {
                 dataType: 'jsonp',
                 data: { body: body },
@@ -227,8 +252,22 @@ $(document).on('mousedown', '.GslBooking .addButton', function () {
                 }
             });
         }
-    })
+    });
+}
+
+$(document).on('mousedown','.GslBooking .selectedusertype', function() {
+    var type = $(this).attr('id');
+    $('.agreetotermsbox').hide();
+    $('.overview_confirmation').hide();
+    $('.guesttypeselection').hide();
+    $('.guesttypeselection[type="'+type+'"]').show();
+    $(this).find('input').click();
+    if(type !== "gotAccount") {
+        $('.agreetotermsbox').show();
+        $('.overview_confirmation').show();
+    }
 });
+
 $(document).on('mousedown', '.GslBooking .destination_line', function () {
     var destination = $(this).text();
     if (destination !== "") {
@@ -299,9 +338,11 @@ $(document).on('change', '.GslBooking #coupon_input', function () {//Do not use 
     }
 });
 function showAddonsPage() {
+    localStorage.setItem('gslcurrentpage','summary');
     $('.overview').hide();
     $('.productoverview').fadeOut('400', function () {
         $('.addons_overview').fadeIn('400');
+        loadAddonsAndGuestSumaryView();
     });
 }
 
@@ -356,6 +397,8 @@ function showProductList() {
     });
 }
 function showOverviewPage() {
+    localStorage.setItem('gslcurrentpage','overview');
+
     $('.addons_overview').fadeOut('400', function () {
         $('.overview').fadeIn('400');
     });
@@ -411,21 +454,33 @@ function updateOrderSummary(res) {
 }
 
 $(document).on('mousedown', '.GslBooking .addguest', function () {
-    var addNewGuest = $('#addnewguest');
-    $(this).before(addNewGuest);
+    var room = $(this).closest('.roomrowadded');
+    var guestTemplateRow = $('#guestentryrow');
+    var guestRow = guestTemplateRow.clone();
+    guestRow.attr('id','');
+    guestRow.show();
+    room.find('.guestRows').append(guestRow);    
+    var saving = saveGuestInformation();
+    saving.done(function(res) {
+        loadAddonsAndGuestSummaryByResult(res);
+    });
 });
 $(document).on('mousedown', '.GslBooking .addroom', function () {
     var addNewRoom = $('#addnewroom');
     $(this).before(addNewRoom);
 });
-$(document).on('mousedown', '.GslBooking .guestentry i', function () {
-    if ($(this).is('.removeguest')) {
-        var removeGuest = confirm('Are you sure u want to remove this guest?');
-        if (removeGuest === true) {
-            $(this).closest('.guestentry').remove();
-        }
-    } else {
-        $(this).toggleClass('active_addon');
+$(document).on('mousedown', '.GslBooking .guestentry .guestaddonicon', function () {
+    addRemoveAddon($(this));
+});
+
+$(document).on('mousedown', '.GslBooking .guestentry .removeguest', function () {
+    var removeGuest = confirm('Are you sure u want to remove this guest?');
+    if (removeGuest === true) {
+        $(this).closest('.guestentry').remove();
+        var saving = saveGuestInformation();
+        saving.done(function(res) {
+            loadAddonsAndGuestSummaryByResult(res);
+        });
     }
 });
 $(document).on('mousedown', '.GslBooking', function (e) {
@@ -514,7 +569,25 @@ $(document).on('change', '.GslBooking .numberof_rooms', function () {
 
 var gslbookingcurresult = null;
 
+function goToOverviewPage() {
+    $('.gslbookingBody').show();
+    $('.addons_overview').show();
+    gslbookingcurresult = JSON.parse(localStorage.getItem('gslcurrentbooking'));
+    showOverviewPage();
+    loadAddonsAndGuestSumaryView();
+}
+
+function goToAddonsPage() {
+    $('.gslbookingBody').show();
+    $('.addons_overview').show();
+    gslbookingcurresult = JSON.parse(localStorage.getItem('gslcurrentbooking'));
+    loadAddonsAndGuestSumaryView();
+}
+
+
+
 $(document).on('click', '.GslBooking #search_rooms', function () {
+    localStorage.setItem('gslcurrentpage','search');
     $('.GslBooking .ordersummary').hide();
     $(this).html('<i class="fa fa-spin fa-spinner"></i>');
     var btn = $(this);
@@ -545,6 +618,7 @@ $(document).on('click', '.GslBooking #search_rooms', function () {
             btn.html("Search");
             $('#productentry').html('');
             gslbookingcurresult = res;
+            localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             updateOrderSummary(res);
             for (var k in res.rooms) {
                 var room = res.rooms[k];
@@ -628,3 +702,17 @@ $(document).on('click', '.GslBooking #search_rooms', function () {
         }
     });
 });
+
+var lastSelectedPage = localStorage.getItem('gslcurrentpage');
+if(lastSelectedPage === "summary") {
+    $(function() {
+        goToAddonsPage();
+        console.log('going to summary');
+    });
+}
+if(lastSelectedPage === "overview") {
+    $(function() {
+        goToOverviewPage();
+        console.log('going to overview');
+    });
+}

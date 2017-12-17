@@ -105,14 +105,12 @@
                 <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay</h4>
                 <div class='yourstaysummary'></div>
                 <div class="overview_confirmation">
-                    <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i> Return</div><div class="gsl_button continue">Go to payment</div>
+                    <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i> Return</div><div class="gsl_button continue go_to_payment_button">Go to payment</div>
                 </div>
             </div>
             <div class="overview_article">
                 <div class="overview_contact">
                     <h3>Contact information</h3>
-                    This is used for contacting regarding your stay. Be sure to pick private or organization.
-                    <br><br>
                     <div class="overview_contact_tab">
                         <label for="private" id="private" class='selectedusertype'>
                             <input type="radio" name="user" checked="checked"> Private
@@ -142,12 +140,12 @@
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
                                 Street Adress<br>
-                                <input type="txt">
+                                <input type="txt" gsname='user_address_address'>
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
                                 Zip Code<br>
-                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;">
-                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;">
+                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='user_address_postCode'>
+                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;" gsname='user_address_city'>
                             </div>
                         </div>
                     </div>
@@ -155,29 +153,29 @@
                                           <div class="guestentry">
                             <div style="width: 25%;float: left;">
                                 Company name<br>
-                                <input type="txt" gsname="user_fullName">
+                                <input type="txt" gsname="company_name">
                             </div>
                             <div style="width: 25%;float: left;">
                                 Vat number<br>
-                                <input type="txt" gsname="user_emailAddress">
+                                <input type="txt" gsname="company_vatNumber">
                             </div>
                             <div style="width: 25%;float: left;">
                                 E-mail<br>
-                                <input type="txt" gsname="user_emailAddress">
+                                <input type="txt" gsname="company_email">
                             </div>
                             <div style="width: 25%;float: left;">
                                 Phone<br>
-                                <input type="txt" class="guest_phone" value="+47" gsname="user_prefix" style='float:left;'>
-                                <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="user_cellPhone">
+                                <input type="txt" class="guest_phone" value="+47" gsname="company_prefix" style='float:left;'>
+                                <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="company_phone">
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
                                 Street Adress<br>
-                                <input type="txt">
+                                <input type="txt" gsname='company_address_address'>
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
                                 Zip Code<br>
-                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;">
-                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;">
+                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='company_address_postCode'>
+                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;" gsname='company_address_city'>
                             </div>
                         </div>
                     </div>
@@ -186,6 +184,7 @@
                             <div style="width: 50%; float:left;">Username / email<br><input type="txt" gsname="username"></div>
                             <div style="width: 50%; float:left;">Password<br><input type="txt" gsname="password"></div>
                         </div>
+                        <input type='button' value='Sign in' style='padding-left: 20px; padding-right:20px; float:right; margin-top:10px;'>
                     </div>
                     <div style="clear: both;"></div>
                 </div>

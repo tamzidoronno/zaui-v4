@@ -23,4 +23,6 @@ public interface IPmsBookingProcess {
     public GuestAddonsSummary removeAddons(AddAddons arg);
     public GuestAddonsSummary saveGuestInformation(List<RoomInformation> arg);
     public GuestAddonsSummary removeRoom(String roomId);
+    public GuestAddonsSummary setGuestInformation(BookerInformation bookerInfo);
+    public BookingResult completeBooking();
 }

@@ -277,6 +277,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void addRoomSummary(GuestAddonsSummary result) {
         PmsBooking booking = pmsManager.getCurrentBooking();
+        result.fields = booking.registrationData.resultAdded;
+        result.profileType = booking.registrationData.profileType;
         for(PmsBookingRooms room : booking.rooms) {
             RoomInfo returnroom = new RoomInfo();
             returnroom.start = room.date.start;
@@ -284,6 +286,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             returnroom.guestCount = room.numberOfGuests;
             returnroom.roomId = room.pmsBookingRoomId;
             returnroom.roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            returnroom.maxGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
             
             for(PmsGuests guest : room.guests) {
                 GuestInfo info = new GuestInfo();
@@ -304,17 +307,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 AddonItem toAddAddon = new AddonItem();
                 toAddAddon.setAddon(item);
                 toAddAddon.name = productManager.getProduct(item.productId).name;
+                checkIsAddedToRoom(toAddAddon, room, item);
                 returnroom.addonsAvailable.put(toAddAddon.productId, toAddAddon);
             }
             
-            addons = pmsManager.getAddonsForRoom(room.pmsBookingRoomId);
-            returnroom.addonsAdded.clear();
-            for(PmsBookingAddonItem item : addons) {
-                AddonItem toAddAddon = new AddonItem();
-                toAddAddon.setAddon(item);
-                toAddAddon.name = productManager.getProduct(item.productId).name;
-                returnroom.addonsAdded.put(toAddAddon.productId, toAddAddon);
-            }
             result.rooms.add(returnroom);
         }
     }
@@ -326,7 +322,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             AddonItem toAddAddon = new AddonItem();
             toAddAddon.setAddon(item);
             toAddAddon.name = productManager.getProduct(item.productId).name;
-            toAddAddon.isAdded = isAdded(booking, item);
+            isAddedToBooking(toAddAddon, booking, item);
             result.items.add(toAddAddon);
         }
     }
@@ -366,9 +362,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 pmsManager.addProductToRoomDefaultCount(arg.productId, room.pmsBookingRoomId);
             }
-           
         } else {
-            pmsManager.addProductToRoomDefaultCount(arg.productId, storeId);
+            pmsManager.addProductToRoomDefaultCount(arg.productId, arg.roomId);
         }
         
         return generateSummary();
@@ -425,6 +420,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 updatedGuestInfo.add(newGuest);
             }
             room.guests = updatedGuestInfo;
+            pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
         }
         try {
             pmsManager.setBooking(booking);
@@ -448,15 +444,49 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         return result;
     }
 
-    private boolean isAdded(PmsBooking booking, PmsBookingAddonItem item) {
+    private void isAddedToBooking(AddonItem toAddAddon, PmsBooking booking, PmsBookingAddonItem item) {
+        int addedCount = 0;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             for(PmsBookingAddonItem tmp : room.addons) {
                 if(tmp.productId.equals(item.productId)) {
-                    return true;
+                    addedCount++;
                 }
             }
         }
-        return false;
+        if(addedCount > 0) {
+            toAddAddon.isAdded = true;
+            toAddAddon.addedCount = addedCount;
+        }
     }
-    
+
+    private void checkIsAddedToRoom(AddonItem toAddAddon, PmsBookingRooms room, PmsBookingAddonItem item) {
+        int addedCount = 0;
+        for(PmsBookingAddonItem tmp : room.addons) {
+            if(tmp.productId.equals(item.productId)) {
+                addedCount++;
+            }
+        }
+        if(addedCount > 0) {
+            toAddAddon.isAdded = true;
+            toAddAddon.addedCount = addedCount;
+        }
+    }
+
+    @Override
+    public GuestAddonsSummary setGuestInformation(BookerInformation bookerInfo) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        booking.registrationData.resultAdded = bookerInfo.fields;
+        booking.registrationData.profileType = bookerInfo.profileType;
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrint(e);
+        }
+        return generateSummary();
+    }
+
+    @Override
+    public BookingResult completeBooking() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

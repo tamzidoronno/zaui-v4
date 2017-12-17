@@ -137,6 +137,14 @@ function loadAddonsAndGuestSummaryByResult(res) {
    
     loadRooms(res);
     loadTextualSummary(res);
+    loadBookerInformation(res);
+}
+
+function loadBookerInformation(res) {
+    for(var field in res.fields) {
+        $('.overview_article [gsname="'+field+'"]').val(res.fields[field]);
+    }
+    $('.selectedusertype[id="'+res.profileType+'"]').mousedown();
 }
 
 function loadTextualSummary(res) {
@@ -281,6 +289,10 @@ $(document).on('focus', '.GslBooking #guests', function () {
 $(document).on('focus', '.GslBooking #destination', function () {
     $('.destinationInfoBox').show();
 });
+$(document).on('mousedown', '.GslBooking .go_to_payment_button', function () {
+    saveBookerInformation();
+});
+
 $(document).on('mousedown', '.GslBooking .guestInfoBox .fa', function () {
     var minusButton = $(this).closest('.count_line').find('.fa-minus'); //Closest minusbutton
     var plusButton = $(this).closest('.count_line').find('.fa-plus'); //Closest plusbutton
@@ -325,6 +337,7 @@ $(document).on('mousedown', '.GslBooking .guestInfoBox .fa', function () {
         }
     }
 });
+
 $(document).on('change', '.GslBooking #coupon_input', function () {//Do not use this live, as it is visible in the browser
     if ($('#coupon_input').val() === 'code' || $('#coupon_input').val() === 'Code') {
         $(this).addClass('validCode');
@@ -337,7 +350,32 @@ $(document).on('change', '.GslBooking #coupon_input', function () {//Do not use 
         $(this).addClass('non-validCode');
     }
 });
+
+function saveBookerInformation() {
+    var fields = {};
+    $('.overview_article [gsname]').each(function() {
+        var field = $(this).attr('gsname');
+        var val = $(this).val();
+        fields[field] = val;
+    });
+    var type = $("input[name='user']:checked").closest('label').attr('id');
+    var data = {
+        "profileType" : type,
+        "fields" : fields
+    };
+    $.ajax(endpoint + '/scripts/bookingprocess.php?method=setGuestInformation', {
+        dataType: 'jsonp',
+        data: {
+            "body": data
+        },
+        success: function (res) {
+            localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
+        }
+    });
+}
+
 function showAddonsPage() {
+    saveBookerInformation();
     localStorage.setItem('gslcurrentpage','summary');
     $('.overview').hide();
     $('.productoverview').fadeOut('400', function () {

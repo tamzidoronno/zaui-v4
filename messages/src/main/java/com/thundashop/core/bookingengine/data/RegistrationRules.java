@@ -11,4 +11,5 @@ public class RegistrationRules implements Serializable {
     public boolean displayContactsList = false;
     public LinkedHashMap<String, RegistrationRulesField> data = new LinkedHashMap();
     public List<Contacts> contactsList = new ArrayList();
+    public String profileType = "";
 }

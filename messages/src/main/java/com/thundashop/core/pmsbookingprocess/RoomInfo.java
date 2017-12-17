@@ -9,9 +9,9 @@ public class RoomInfo {
     public String roomId = "";
     public List<GuestInfo> guestInfo = new ArrayList();
     public Integer guestCount = 1;
+    public Integer maxGuests = 0;
     public Date start;
     public Date end;
     public String roomName = "";
-    public HashMap<String, AddonItem> addonsAdded = new HashMap();
     public HashMap<String, AddonItem> addonsAvailable = new HashMap();
 }

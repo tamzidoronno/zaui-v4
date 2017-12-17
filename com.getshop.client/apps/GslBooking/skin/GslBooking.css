@@ -181,7 +181,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .destination_image{width: 40px;height: 40px;border-radius: 10%;margin-right: 10px;}
 
 /*-----------------BODY-----------------*/
-.GslBooking .gslfront_1 .gslbookingBody{display: none;border-top:1px solid #ddd;}
+.GslBooking .gslfront_1 .gslbookingBody{/*display: none;*/border-top:1px solid #ddd;}
 .GslBooking .gslfront_1 #productoverview_footer{display:none;}
 .GslBooking .gslfront_1 #productentry{max-height: 800px;overflow-y: auto;}
 
@@ -272,7 +272,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .unavailableRooms{color:#ddd;}
 
 /*Addons and guest information*/
-.GslBooking .gslfront_1 .addons_overview{display: none;background-color:#f1f1f1;}
+.GslBooking .gslfront_1 .addons_overview{/*display: none;*/background-color:#f1f1f1;}
 .GslBooking .gslfront_1 .addonsentry{padding-bottom:20px;}
 
 .GslBooking .gslfront_1 .overview{background-color:#f1f1f1;display: none;}
@@ -292,6 +292,16 @@ Error      : #de5353; red
     box-shadow: inset 0px 1px 0px 0px #ededed;}
 .GslBooking .gslfront_1 .roomentryframe{position:relative;}
 .GslBooking .gslfront_1 .roomentry{padding:20px 0;}
+.GslBooking .gslfront_1 .roomentry .fa-paw{font-size:13px;}
+.GslBooking .gslfront_1 .roomentry .fa-paw input{width:12%;border:0;border-right:2px solid #3776b3;background:transparent;text-align: center;}
+.GslBooking .gslfront_1 .roomentry .addroombox{display: none;position:absolute;background-color:#f9f9f9;width:100%;box-shadow: 0px 1px 1px 0px #222;padding:12px;bottom:0;z-index: 1;}
+.GslBooking .gslfront_1 .roomentry .addroombox div{text-align: center;}
+.GslBooking .gslfront_1 .roomentry .addroombox div,
+.GslBooking .gslfront_1 .roomentry .addroombox input,
+.GslBooking .gslfront_1 .roomentry .addroombox select{width: 14%;display: inline-block;padding:0;margin:0;line-height: 30px;}
+.GslBooking .gslfront_1 .roomentry .addroombox input{border: 1px solid #ddd;}
+.GslBooking .gslfront_1 .roomentry .addroombox select{height: 30px;}
+.GslBooking .gslfront_1 .roomentry .addroombox #addroom{float: right;background-color:#3776b3;color:#fff;}
 .GslBooking .gslfront_1 .guestentry{padding-top:10px;}
 .GslBooking .gslfront_1 .guestentry div{display:inline-block;width: 25%;}
 .GslBooking .gslfront_1 .guestentry i{padding:0 2px;cursor:pointer;color:#aaa;}

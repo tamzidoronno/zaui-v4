@@ -85,11 +85,51 @@ $(document).on('keyup', '.GslBooking #guest_zipcode', function () {
         }
     });
 });
+
+function loadAddonsAndGuestSumaryView() {
+    var toPush = [];
+    for(var k in gslbookingcurresult.rooms) {
+        var room = gslbookingcurresult.rooms[k];
+        var obj = {};
+        obj.id = room.id;
+        obj.roomsSelectedByGuests = room.roomsSelectedByGuests;
+        toPush.push(obj);
+    }
+    
+    $.ajax(endpoint + '/scripts/bookingprocess.php?method=getAddonsSummary', {
+        dataType: 'jsonp',
+        data: {
+            "body": toPush
+        },
+        success: function (res) {
+            loadAddonsAndGuestSummaryByResult(res);
+        }
+    });
+}
+
+function loadAddonsAndGuestSummaryByResult(res) {
+    $('.addonprinted').remove();
+    var template = $('.addonsentry #addon');
+    for(var k in res.items) {
+        var item = res.items[k];
+        console.log(item);
+        var entry = template.clone();
+        entry.attr('id','');
+        entry.addClass('addonprinted');
+        entry.find('.text').html(item.name);
+        entry.find('.price').html(item.price);
+        entry.show();
+        $('.addonsentry .overview_addons').append(entry);
+        console.log(item.name);
+    }
+}
+
 $(document).on('click', '.GslBooking .ordersummary .continue', function () {
     $('.productoverview').fadeOut('400', function () {
         $('.addons_overview').fadeIn('400');
         $('.GslBooking .ordersummary').slideUp();
         $('.GslBooking .gslbookingHeader').slideUp();
+        loadAddonsAndGuestSumaryView();
     });
 });
 $(document).on('mousedown', '.GslBooking .addButton', function () {

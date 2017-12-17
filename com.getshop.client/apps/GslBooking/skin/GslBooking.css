@@ -323,4 +323,5 @@ Error      : #de5353; red
     color: #f9f9f9 !important;}
 .GslBooking .gslfront_1 .active_addon{color:#3776b3 !important;}
 .GslBooking .gslfront_1 .gsl_button.goToPayment{width:68%;padding:8px 0;}
+.GslBooking .gslfront_1 .ordersummary .gsl_button { background-color:#69a70e;}
 /*End of gslfront 1*/

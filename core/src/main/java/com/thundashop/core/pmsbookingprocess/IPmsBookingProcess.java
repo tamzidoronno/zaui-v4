@@ -7,6 +7,7 @@ package com.thundashop.core.pmsbookingprocess;
 
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.util.List;
 
 
 /**
@@ -17,4 +18,5 @@ import com.thundashop.core.common.GetShopMultiLayerSession;
 @GetShopMultiLayerSession
 public interface IPmsBookingProcess {
     public StartBookingResult startBooking(StartBooking arg);
+    public GuestAddonsSummary getAddonsSummary(List<RoomsSelected> arg);
 }

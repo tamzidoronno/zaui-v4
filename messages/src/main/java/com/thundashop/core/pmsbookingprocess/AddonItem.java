@@ -10,6 +10,7 @@ public class AddonItem {
     public Integer count;
     public String productId;
     public Date date;
+    public boolean isAdded = false;
 
     void setAddon(PmsBookingAddonItem item) {
         count = item.count;

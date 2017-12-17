@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
@@ -224,11 +225,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public GuestAddonsSummary getAddonsSummary(List<RoomsSelected> arg) {
         updateRoomsOnCurrentBooking(arg);
-        GuestAddonsSummary result = new GuestAddonsSummary();
-        addRoomSummary(result);
-        addItemSupported(result);
-        addTextualSummary(result);
-        return result;
+        return generateSummary();
     }
 
     private void updateRoomsOnCurrentBooking(List<RoomsSelected> result) {
@@ -329,6 +326,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             AddonItem toAddAddon = new AddonItem();
             toAddAddon.setAddon(item);
             toAddAddon.name = productManager.getProduct(item.productId).name;
+            toAddAddon.isAdded = isAdded(booking, item);
             result.items.add(toAddAddon);
         }
     }
@@ -358,6 +356,107 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         result.textualSummary.add("Total price : " + booking.getTotalPrice());
         
+    }
+
+    @Override
+    public GuestAddonsSummary addAddons(AddAddons arg) {
+        if(arg.roomId == null || arg.roomId.isEmpty()) {
+            PmsBooking booking = null;
+            booking = pmsManager.getCurrentBooking();
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                pmsManager.addProductToRoomDefaultCount(arg.productId, room.pmsBookingRoomId);
+            }
+           
+        } else {
+            pmsManager.addProductToRoomDefaultCount(arg.productId, storeId);
+        }
+        
+        return generateSummary();
+    }
+
+    @Override
+    public GuestAddonsSummary removeAddons(AddAddons arg) {
+        List<String> roomsToRemoveFrom = new ArrayList();
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        if(arg.roomId == null || arg.roomId.isEmpty()) {
+            for(PmsBookingRooms r : booking.getActiveRooms()) {
+                roomsToRemoveFrom.add(r.pmsBookingRoomId);
+            }
+        } else {
+            roomsToRemoveFrom.add(arg.roomId);
+        }
+        
+        for(PmsBookingRooms r : booking.getActiveRooms()) {
+            if(!roomsToRemoveFrom.contains(r.pmsBookingRoomId)) {
+                continue;
+            }
+            
+            List<PmsBookingAddonItem> remove = new ArrayList();
+            for(PmsBookingAddonItem item : r.addons) {
+                if(item.productId.equals(arg.productId)) {
+                    remove.add(item);
+                }
+            }
+            r.addons.removeAll(remove);
+        }
+        
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return generateSummary();
+    }
+
+    @Override
+    public GuestAddonsSummary saveGuestInformation(List<RoomInformation> arg) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        for(RoomInformation info : arg) {
+            PmsBookingRooms room = booking.getRoom(info.roomId);
+            room.numberOfGuests = info.numberOfGuests;
+            List<PmsGuests> updatedGuestInfo = new ArrayList();
+            for(GuestInfo ginfo : info.guests) {
+                PmsGuests newGuest = new PmsGuests();
+                newGuest.email = ginfo.email;
+                newGuest.phone = ginfo.phone;
+                newGuest.prefix = ginfo.prefix;
+                newGuest.name = ginfo.name;
+                updatedGuestInfo.add(newGuest);
+            }
+            room.guests = updatedGuestInfo;
+        }
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return generateSummary();
+    }
+
+    @Override
+    public GuestAddonsSummary removeRoom(String roomId) {
+        return generateSummary();
+    }
+
+    private GuestAddonsSummary generateSummary() {
+        GuestAddonsSummary result = new GuestAddonsSummary();
+        addRoomSummary(result);
+        addItemSupported(result);
+        addTextualSummary(result);
+        return result;
+    }
+
+    private boolean isAdded(PmsBooking booking, PmsBookingAddonItem item) {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            for(PmsBookingAddonItem tmp : room.addons) {
+                if(tmp.productId.equals(item.productId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
 }

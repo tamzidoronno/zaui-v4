@@ -88,7 +88,6 @@ $(document).on('keyup', '.GslBooking #guest_zipcode', function () {
 
 function loadAddonsAndGuestSumaryView() {
     var toPush = [];
-    console.log(gslbookingcurresult);
     for(var k in gslbookingcurresult.rooms) {
         var room = gslbookingcurresult.rooms[k];
         var obj = {};
@@ -116,9 +115,13 @@ function loadAddonsAndGuestSummaryByResult(res) {
             var item = res.items[k];
             var entry = template.clone();
             entry.attr('id','');
+            entry.attr('productid', item.productId);
             entry.addClass('addonprinted');
             entry.find('.text').html(item.name);
             entry.find('.price').html(item.price);
+            if(item.isAdded) {
+                entry.find('.addButton').addClass('added_addon').html('Remove');
+            }
             entry.show();
             $('.addonsentry .overview_addons').append(entry);
         }
@@ -142,16 +145,25 @@ function loadRooms(res) {
         var newRoom = roomContainer.clone();
         newRoom.addClass('roomrowadded');
         var room = res.rooms[k];
+        console.log(room);
         
         var guestTemplateRow = newRoom.find('#guestentryrow');
         guestTemplateRow.attr('id','');
         for(var i = 0; i < room.guestCount;i++) {
             var guestRow = guestTemplateRow.clone();
             guestRow.show();
+            var guestObject = room.guestInfo[i];
+            if(guestObject) {
+                guestRow.find('[gsname="name"]').val(guestObject.name);
+                guestRow.find('[gsname="prefix"]').val(guestObject.prefix);
+                guestRow.find('[gsname="email"]').val(guestObject.email);
+                guestRow.find('[gsname="phone"]').val(guestObject.phone);
+            }
+            
             newRoom.find('.guestRows').append(guestRow);
         }
-        
         newRoom.attr('id','');
+        newRoom.attr('roomid',room.roomId);
         newRoom.find('.roomname').html(room.roomName);
         newRoom.find('.startdate').html(js_yyyy_mm_dd_hh_mm_ss(room.start));
         newRoom.find('.enddate').html(js_yyyy_mm_dd_hh_mm_ss(room.end));
@@ -165,8 +177,9 @@ function loadRooms(res) {
             }
             newRoom.find('.guest_addon').append('<i class="fa '+icon+'" title="'+addon.name+'"></i>');
         }
-        newRoom.fadeIn();
-    }    
+        newRoom.find('.guest_addon').append('<i class="fa fa-times removeguest" title="Remove guest"></i>');
+        newRoom.show();
+    }
 }
 
 
@@ -178,7 +191,6 @@ function js_yyyy_mm_dd_hh_mm_ss(now) {
   var hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
   var minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
   var second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
-//  return year + "-" + month + "-" + day + " " + hour + ":" + minute;
   return day + "." + month + "." + year + " " + hour + "." + minute;
 }
 
@@ -191,29 +203,31 @@ $(document).on('click', '.GslBooking .ordersummary .continue', function () {
     });
 });
 $(document).on('mousedown', '.GslBooking .addButton', function () {
-    if ($(this).hasClass('added_addon')) {
-        $(this).removeClass('added_addon').html('Add');
-        if ($(this).is('#addon_earlyCheckin')) {
-            $('.guestentry .fa-sign-in').removeClass('active_addon');
-        } else if ($(this).is('#addon_breakfast')) {
-            $('.guestentry .fa-cutlery').removeClass('active_addon');
-        } else if ($(this).is('#addon_coat')) {
-            $('.guestentry .fa-black-tie').removeClass('active_addon');
-        } else if ($(this).is('#addon_lateCheckout')) {
-            $('.guestentry .fa-sign-out').removeClass('active_addon');
+    var saving = saveGuestInformation();
+    var btn = $(this);
+    saving.done(function() {
+        var body = {
+            "productId" : btn.closest('.addon').attr('productid')
+        };
+        if (btn.hasClass('added_addon')) {
+           $.ajax(endpoint + '/scripts/bookingprocess.php?method=removeAddons', {
+                dataType: 'jsonp',
+                data: { body: body },
+                success: function (res) {
+                    loadAddonsAndGuestSummaryByResult(res);
+                }
+            });
+        } else {
+
+            $.ajax(endpoint + '/scripts/bookingprocess.php?method=addAddons', {
+                dataType: 'jsonp',
+                data: { body: body },
+                success: function (res) {
+                    loadAddonsAndGuestSummaryByResult(res);
+                }
+            });
         }
-    } else {
-        $(this).addClass('added_addon').html('Remove');
-        if ($(this).is('#addon_earlyCheckin')) {
-            $('.guestentry .fa-sign-in').addClass('active_addon');
-        } else if ($(this).is('#addon_breakfast')) {
-            $('.guestentry .fa-cutlery').addClass('active_addon');
-        } else if ($(this).is('#addon_coat')) {
-            $('.guestentry .fa-black-tie').addClass('active_addon');
-        } else if ($(this).is('#addon_lateCheckout')) {
-            $('.guestentry .fa-sign-out').addClass('active_addon');
-        }
-    }
+    })
 });
 $(document).on('mousedown', '.GslBooking .destination_line', function () {
     var destination = $(this).text();
@@ -290,6 +304,46 @@ function showAddonsPage() {
         $('.addons_overview').fadeIn('400');
     });
 }
+
+function saveGuestInformation() {
+    var toSave = [];
+    $('.roomrowadded').each(function() {
+        var guestCount = 0;
+        var room = $(this);
+        var roomId = room.attr('roomid');
+        var roomInfo = {};
+        roomInfo.roomId = roomId;
+        
+        var guests = [];
+        $(this).find('.guestRows').find('.guestentry').each(function() {
+            guestCount++;
+            var info = {
+                "prefix" : $(this).find('[gsname="prefix"]').val(),
+                "phone" : $(this).find('[gsname="phone"]').val(),
+                "name" : $(this).find('[gsname="name"]').val(),
+                "email" : $(this).find('[gsname="email"]').val()
+            }
+            guests.push(info);
+            
+        });
+        roomInfo.guests = guests;
+        roomInfo.numberOfGuests = guestCount;
+        toSave.push(roomInfo);
+    });
+    
+    var dfd = jQuery.Deferred();
+    $.ajax(endpoint + '/scripts/bookingprocess.php?method=saveGuestInformation', {
+        dataType: 'jsonp',
+        data: {
+            "body": toSave
+        },
+        success: function (res) {
+            dfd.resolve(res);
+        }
+    });
+    return dfd;
+}
+
 function showProductList() {
     $('.gslbookingBody').fadeIn('400');
     $('.overview').hide();

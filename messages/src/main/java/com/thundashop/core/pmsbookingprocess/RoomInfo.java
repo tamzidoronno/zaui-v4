@@ -11,6 +11,7 @@ public class RoomInfo {
     public Integer guestCount = 1;
     public Date start;
     public Date end;
+    public String roomName = "";
     public HashMap<String, AddonItem> addonsAdded = new HashMap();
     public HashMap<String, AddonItem> addonsAvailable = new HashMap();
 }

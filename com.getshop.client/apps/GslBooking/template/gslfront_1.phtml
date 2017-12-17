@@ -38,7 +38,7 @@
     
     <div class="gslbookingBody">
         <div class="ordersummary">
-            <h3>You are in luck, we have rooms available for you!</h3>
+            <h3><i class='fa fa-smile-o'></i> You are in luck, we have rooms available for you! <i class='fa fa-smile-o'></i></h3>
             <div class="selectedguests"></div>
             This is the best value deal we can offer you total: <span class='totalprice'></span>
             <span class='gsl_button continue active'>Continue</span>
@@ -52,15 +52,8 @@
         <div class="addons_overview">
             <div style="width:30%;float:right;">
                 <div style="padding:10px;">
-                    <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay at GetShop Hotel</h4>
-                    <div>
-                        2 nights, Oct 20 - Oct 22<br>
-                        Room 1, 2 guests - Suite<br><br>
-                        1 x double room<br>
-                        1 x single room<br>
-                        3 x Breakfast<br>
-                    </div>
-                    <h4>Total</h4><p>NOK 1599,-</p>
+                    <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay</h4>
+                    <div class='yourstaysummary'></div>
                     <div style="position:absolute;bottom:10px;right:0; width:30%;">
                         <div class="gsl_button return" onclick="showProductList()"><i class="fa fa-arrow-left"></i> Return</div>
                         <div class="gsl_button continue" onclick="showOverviewPage()">Continue <i class="fa fa-arrow-right"></i></div>
@@ -80,22 +73,28 @@
                 <h3>Guest info</h3>
                 It's important to enter the correct e-mail and phone number for each guest. It will be used for door codes and useful information.
                 <div class="roomentryframe">
-                    <div class="roomentry">
-                        <h4>Room 1 - Double Room</h4>
+                    <div class="roomentry" id='roomentrycontainer' style='display:none;'>
+                        <h4><span class='roomname'></span> 
+                            <span class='secondary_text'>
+                                checkin <span class='startdate'></span>, checkout <span class='enddate'></span>
+                            </span>
+                        </h4>
+                        
                         <div class="guestentry">
-                            <div>Name<br><input type="txt" gsname="visitor_name_1">
-                            </div><div>E-mail<br><input type="txt" gsname="visitor_email_1">
-                            </div><div>Phone<br><input type="txt" class="guest_phone" value="+47" gsname="visitor_prefix_1"><input type="text" style="width:75%;" gsname="visitor_phone_1">
-                            </div><div>Addons<br>
-                                <div class="guest_addon">
-                                    <i class="fa fa-sign-in" title="Early check in"></i>
-                                    <i class="fa fa-cutlery" title="Breakfast"></i>
-                                    <i class="fa fa-black-tie" title="Coat for one person"></i>
-                                    <i class="fa fa-sign-out" title="Late check out"></i>
-                                    <i class="fa fa-times removeguest" title="Remove guest"></i>
-                                </div>
+                            <div>Name</div>
+                            <div>E-mail</div>
+                            <div>Phone</div>
+                            <div>Addons</div>
+                        </div>
+                        <div class="guestentry" id='guestentryrow' style='display:none;'>
+                            <div><input type="txt" gsname="visitor_name_1"></div>
+                            <div><input type="txt" gsname="visitor_email_1"></div>
+                            <div><input type="txt" class="guest_phone" value="+47" gsname="visitor_prefix_1"><input type="text" style="width:75%;" gsname="visitor_phone_1"></div>
+                            <div>
+                                <div class="guest_addon"></div>
                             </div>
                         </div>
+                        <div class='guestRows'></div>
                         <div class="addguest gsl_button"><i class="fa fa-plus"></i> Add guest</div>
                     </div>
                     <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>
@@ -104,15 +103,8 @@
         </div>
         <div class="overview">
             <div class="overview_room_info">
-                <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay at GetShop Hotel</h4>
-                <div>
-                    2 nights, Oct 20 - Oct 22<br>
-                    Room 1, 2 guests - Suite<br><br>
-                    1 x double room<br>
-                    1 x single room<br>
-                    3 x Breakfast<br>
-                </div>
-                <h4>Total</h4><p>NOK 1599,-</p>
+                <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay</h4>
+                <div class='yourstaysummary'></div>
                 <div class="overview_confirmation">
                     <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i> Return</div><div class="gsl_button continue">Go to payment</div>
                 </div>

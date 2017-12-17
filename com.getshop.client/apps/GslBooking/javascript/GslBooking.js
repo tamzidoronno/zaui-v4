@@ -88,6 +88,7 @@ $(document).on('keyup', '.GslBooking #guest_zipcode', function () {
 
 function loadAddonsAndGuestSumaryView() {
     var toPush = [];
+    console.log(gslbookingcurresult);
     for(var k in gslbookingcurresult.rooms) {
         var room = gslbookingcurresult.rooms[k];
         var obj = {};
@@ -110,18 +111,75 @@ function loadAddonsAndGuestSumaryView() {
 function loadAddonsAndGuestSummaryByResult(res) {
     $('.addonprinted').remove();
     var template = $('.addonsentry #addon');
-    for(var k in res.items) {
-        var item = res.items[k];
-        console.log(item);
-        var entry = template.clone();
-        entry.attr('id','');
-        entry.addClass('addonprinted');
-        entry.find('.text').html(item.name);
-        entry.find('.price').html(item.price);
-        entry.show();
-        $('.addonsentry .overview_addons').append(entry);
-        console.log(item.name);
+    if(typeof(res) !== "undefined" || typeof(res.items) !== "undefined") {
+        for(var k in res.items) {
+            var item = res.items[k];
+            var entry = template.clone();
+            entry.attr('id','');
+            entry.addClass('addonprinted');
+            entry.find('.text').html(item.name);
+            entry.find('.price').html(item.price);
+            entry.show();
+            $('.addonsentry .overview_addons').append(entry);
+        }
     }
+   
+    loadRooms(res);
+    loadTextualSummary(res);
+}
+
+function loadTextualSummary(res) {
+    $('.yourstaysummary').html('');
+    for(var k in res.textualSummary) {
+        $('.yourstaysummary').append(res.textualSummary[k] + "<br>");
+    }
+}
+
+function loadRooms(res) {
+    var roomContainer = $('#roomentrycontainer');
+    $('.roomrowadded').remove();
+    for(var k in res.rooms) {
+        var newRoom = roomContainer.clone();
+        newRoom.addClass('roomrowadded');
+        var room = res.rooms[k];
+        
+        var guestTemplateRow = newRoom.find('#guestentryrow');
+        guestTemplateRow.attr('id','');
+        for(var i = 0; i < room.guestCount;i++) {
+            var guestRow = guestTemplateRow.clone();
+            guestRow.show();
+            newRoom.find('.guestRows').append(guestRow);
+        }
+        
+        newRoom.attr('id','');
+        newRoom.find('.roomname').html(room.roomName);
+        newRoom.find('.startdate').html(js_yyyy_mm_dd_hh_mm_ss(room.start));
+        newRoom.find('.enddate').html(js_yyyy_mm_dd_hh_mm_ss(room.end));
+        $('.roomentryframe').append(newRoom);
+        
+        for(var addonKey in room.addonsAvailable) {
+            var addon = room.addonsAvailable[addonKey];
+            var icon = addon.icon;
+            if(!icon) {
+                icon = "fa-question-circle";
+            }
+            newRoom.find('.guest_addon').append('<i class="fa '+icon+'" title="'+addon.name+'"></i>');
+        }
+        newRoom.fadeIn();
+    }    
+}
+
+
+function js_yyyy_mm_dd_hh_mm_ss(now) {
+  var now = new Date(now);
+  var year = "" + now.getFullYear();
+  var month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+  var day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+  var hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+  var minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+  var second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+//  return year + "-" + month + "-" + day + " " + hour + ":" + minute;
+  return day + "." + month + "." + year + " " + hour + "." + minute;
 }
 
 $(document).on('click', '.GslBooking .ordersummary .continue', function () {
@@ -269,7 +327,6 @@ function confirmGuestInfoBox() {
     $('#guests').val(room + roomText + ', ' + guest + guestText);
     $('.guestInfoBox').hide();
 }
-
 function updateOrderSummary(res) {
     $('.GslBooking .ordersummary .selectedguests').html('');
     var total = 0;
@@ -291,7 +348,6 @@ function updateOrderSummary(res) {
                 row += "<td>" + (room.pricesByGuests[guest] * count) + "</td>";
                 row += "</tr>";
                 total += (room.pricesByGuests[guest] * count);
-                console.log("inner: " + total);
             }
         }
     }

@@ -19,8 +19,10 @@ import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -203,13 +205,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 current++;
                 check.room.roomsSelectedByGuests.put(check.guests, current);
                 
-                
                 PmsBookingRooms toAddToCurrentBooking = new PmsBookingRooms();
                 toAddToCurrentBooking.bookingItemTypeId = check.room.id;
                 toAddToCurrentBooking.numberOfGuests = check.guests;
                 toAddToCurrentBooking.date = new PmsBookingDateRange();
-                toAddToCurrentBooking.date.start = arg.start;
-                toAddToCurrentBooking.date.end = arg.end;
+                toAddToCurrentBooking.date.start = normalizeDate(arg.start, true);
+                toAddToCurrentBooking.date.end = normalizeDate(arg.end, false);
                 
                 booking.addRoom(toAddToCurrentBooking);
         }
@@ -223,13 +224,70 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public GuestAddonsSummary getAddonsSummary(List<RoomsSelected> arg) {
         updateRoomsOnCurrentBooking(arg);
-        PmsBooking booking = pmsManager.getCurrentBooking();
         GuestAddonsSummary result = new GuestAddonsSummary();
+        addRoomSummary(result);
+        addItemSupported(result);
+        addTextualSummary(result);
+        return result;
+    }
+
+    private void updateRoomsOnCurrentBooking(List<RoomsSelected> result) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        HashMap<String, Integer> typesCount = new HashMap();
+        HashMap<String, Integer> currentBookingTypesCount = new HashMap();
+        
+        for(RoomsSelected room : result) {
+            for(Integer guests : room.roomsSelectedByGuests.keySet()) {
+                if(room.roomsSelectedByGuests.get(guests) > 0) {
+                    Integer count = typesCount.get(room.id);
+                    if(count == null) {
+                        count = 0;
+                    }
+                    count++;
+                    typesCount.put(room.id, count);
+                }
+            }
+        }
+        
+        for(PmsBookingRooms room : booking.rooms) {
+            Integer count = currentBookingTypesCount.get(room.bookingItemTypeId);
+            if(count == null) {
+                count = 0;
+            }
+            count++;
+            currentBookingTypesCount.put(room.bookingItemTypeId, count);
+        }
+    }
+
+    private Date normalizeDate(Date date, boolean isStart) {
+        String[] defaultStart = pmsManager.getConfigurationSecure().defaultStart.split(":");
+        String[] defaultEnd = pmsManager.getConfigurationSecure().defaultEnd.split(":");
+        if(isStart) {
+            Calendar calStart = Calendar.getInstance();
+            calStart.setTime(date);
+            calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultStart[0]));
+            calStart.set(Calendar.MINUTE, new Integer(defaultStart[1]));
+            date = calStart.getTime();
+        } else {
+            Calendar calEnd = Calendar.getInstance();
+            calEnd.setTime(date);
+            calEnd.set(Calendar.HOUR_OF_DAY, new Integer(defaultEnd[0]));
+            calEnd.set(Calendar.MINUTE, new Integer(defaultEnd[1]));
+            date = calEnd.getTime();
+        }
+        return date;
+    }
+
+    private void addRoomSummary(GuestAddonsSummary result) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
         for(PmsBookingRooms room : booking.rooms) {
             RoomInfo returnroom = new RoomInfo();
             returnroom.start = room.date.start;
             returnroom.end = room.date.end;
             returnroom.guestCount = room.numberOfGuests;
+            returnroom.roomId = room.pmsBookingRoomId;
+            returnroom.roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            
             for(PmsGuests guest : room.guests) {
                 GuestInfo info = new GuestInfo();
                 info.name = guest.name;
@@ -262,7 +320,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             result.rooms.add(returnroom);
         }
-        
+    }
+
+    private void addItemSupported(GuestAddonsSummary result) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
         List<PmsBookingAddonItem> addonsOnBooking = pmsManager.getAddonsWithDiscountForBooking(booking.rooms.get(0).pmsBookingRoomId);
         for(PmsBookingAddonItem item : addonsOnBooking) {
             AddonItem toAddAddon = new AddonItem();
@@ -270,37 +331,33 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             toAddAddon.name = productManager.getProduct(item.productId).name;
             result.items.add(toAddAddon);
         }
-        
-        
-        return result;
     }
 
-    private void updateRoomsOnCurrentBooking(List<RoomsSelected> result) {
+    private void addTextualSummary(GuestAddonsSummary result) {
         PmsBooking booking = pmsManager.getCurrentBooking();
-        HashMap<String, Integer> typesCount = new HashMap();
-        HashMap<String, Integer> currentBookingTypesCount = new HashMap();
+        int numberOfNights = 0;
+        int numberOfRooms = 0;
+        int numberOfGuests = 0;
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            numberOfGuests += room.numberOfGuests;
+        }
+        result.textualSummary.add(numberOfGuests + " x guests");
+        result.textualSummary.add(booking.getActiveRooms().size() + " x rooms");
         
-        for(RoomsSelected room : result) {
-            for(Integer guests : room.roomsSelectedByGuests.keySet()) {
-                if(room.roomsSelectedByGuests.get(guests) > 0) {
-                    Integer count = typesCount.get(room.id);
-                    if(count == null) {
-                        count = 0;
+        for(AddonItem item : result.items) {
+            int added = 0;
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                for(PmsBookingAddonItem tmp : room.addons) {
+                    if(tmp.productId.equals(item.productId)) {
+                        added += tmp.count;
                     }
-                    count++;
-                    typesCount.put(room.id, count);
                 }
             }
+            result.textualSummary.add(added + " x " + productManager.getProduct(item.productId).name);
         }
         
-        for(PmsBookingRooms room : booking.rooms) {
-            Integer count = currentBookingTypesCount.get(room.bookingItemTypeId);
-            if(count == null) {
-                count = 0;
-            }
-            count++;
-            currentBookingTypesCount.put(room.bookingItemTypeId, count);
-        }
+        result.textualSummary.add("Total price : " + booking.getTotalPrice());
+        
     }
     
 }

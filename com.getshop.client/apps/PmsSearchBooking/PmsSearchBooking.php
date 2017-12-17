@@ -10,6 +10,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     /* @var \core_bookingengine_data_Booking */
     public $bookingEngineBooking = null;
     
+    public $selectedRoom = null;
+    
     function __construct() {
         $this->formatter = new PmsSearchBookingColumnFormatters($this);
     }
@@ -23,6 +25,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
 
     public function formatRoom($room) {
         return $this->formatter->formatRoom($room);
+    }
+    
+    public function formatRoomId($room) {
+        return $room->pmsRoomId;
     }
     
     public function formatVistior($room) {
@@ -46,6 +52,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function render() {
+        $this->setDefaults();
         $this->includefile("overlaybox");
         
         if (!$this->isGroupBookingView()) {
@@ -60,6 +67,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
 
     public function PmsManager_getSimpleRooms() {
+        $this->setDefaults();
         $this->includefile('bookingoverview');
     }
     
@@ -75,6 +83,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $attributes = array(
             array('id', 'gs_hidden', 'bookingEngineId'),
+            array('roomId', 'gs_hidden', 'roomId', 'formatRoomId'),
             array('reg', 'REG', 'regDate', 'formatRegDate'),
             array('periode', 'PERIODE', null, 'formatStartPeriode'),
             array('visitor', 'VISTOR', null, 'formatVistior'),
@@ -139,8 +148,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         return null;
     }
     public function updateGuestInformation() {
+        $this->setData();
         $selectedRoom = $this->getPmsRoom();
+        $this->updateGuests($selectedRoom);
         $this->setStay($selectedRoom);
+        $this->setData(true);
         $this->includefile("bookingoverview");
         die();
     }
@@ -271,15 +283,25 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         echo "";
     }
 
-    public function setData() {
-        if (isset($_POST['data']['id']) && !$this->bookingEngineBooking) {
+    public function setData($reload = false) {
+        if (isset($_POST['data']['roomid'])) {
+            $_POST['data']['roomId'] = $_POST['data']['roomid'];
+        }
+        if ((isset($_POST['data']['id']) && !$this->bookingEngineBooking) || $reload) {
             $this->bookingEngineBooking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
         }
         
-        if (isset($_POST['data']['id']) && !$this->pmsBooking) {
+        if ((isset($_POST['data']['id']) && !$this->pmsBooking) || $reload) {
             $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
         }
-
+        
+        if ((isset($_POST['data']['roomId']) && !$this->selectedRoom) || $reload) {
+            foreach ($this->pmsBooking->rooms as $room) {
+                if ($room->pmsBookingRoomId == $_POST['data']['roomId']) {
+                    $this->selectedRoom = $room;
+                }
+            }
+        }
     }
 
     /**
@@ -298,6 +320,126 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public function getBookingEngineBooking() {
         $this->setData();
         return $this->bookingEngineBooking;
+    }
+
+    public function setDefaults() {
+        if (!isset($_SESSION['currentSubMenu'])) {
+            $_SESSION['currentSubMenu'] = "bookinginformation";
+        }
+    }
+
+    
+    /**
+     * @return \core_usermanager_data_User 
+     */
+    public function getUserForBooking() {
+        if (!isset($this->currentUserForBooking)) {
+            $this->currentUserForBooking = $this->getApi()->getUserManager()->getUserById($this->pmsBooking->userId);
+        }
+
+        return $this->currentUserForBooking;
+    }
+
+    /**
+     * 
+     * @return \core_pmsmanager_PmsRoomSimple
+     */
+    public function getSelectedRoom() {
+        $this->setData();
+        return $this->selectedRoom;
+    }
+
+    public function hasAccountingTransfer() {
+        return false;
+    }
+
+    public function saveUser() {
+        $this->setData();
+         
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->fullName = $_POST['data']['fullName'];
+        $user->prefix = $_POST['data']['prefix'];
+        $user->emailAddress = $_POST['data']['emailAddress'];
+        $user->cellPhone = $_POST['data']['cellPhone'];
+        if(!$user->address) {
+            $user->address = new \core_usermanager_data_Address();
+        }
+        $user->address->address = $_POST['data']['address.address'];
+        $user->address->postCode = $_POST['data']['address.postCode'];
+        $user->address->city = $_POST['data']['address.city'];
+        $user->address->countrycode = $_POST['data']['countryCode'];
+        $user->birthDay = $_POST['data']['birthDay'];
+        $user->relationship = $_POST['data']['relationship'];
+        $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+        $booking = $this->getPmsBooking();
+        $booking->countryCode = $user->address->countrycode;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        
+        $this->setData(true);
+        $this->includefile("edituser");
+        die();
+    }
+    
+       
+    public function createNewUser(){
+        $name = $_POST['data']['name'];
+        $bookingId = $this->getPmsBooking()->id;
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, "");
+        
+        $this->setData(true);
+        $this->includefile("edituser");
+        die();
+    }
+    
+    public function searchForUsers() {
+        $this->includefile("searchusers");
+        die();
+    }
+    
+    public function changeUser() {
+        $this->setData();
+        $booking = $this->getPmsBooking();
+        $booking->userId = $_POST['data']['userid'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        
+        $this->setData(true);
+        $this->includefile("edituser");
+        die();
+    }
+    
+    public function createCompany() {
+        $name = $_POST['data']['companyname'];
+        $vat = $_POST['data']['vatnumber'];
+        $bookingId = $this->getPmsBooking()->id;
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, $vat);
+        
+        $this->setData(true);
+        $this->includefile("edituser");
+        die();
+    }
+
+    private function updateGuests($selectedRoom) {
+        $guests = array();
+        
+        foreach ($_POST['data'] as $key => $value) {
+            $rowDel = explode("_", $key);
+            if (count($rowDel) === 3 && $rowDel[0] === "guestinfo") {
+                $guests[$rowDel[1]][$rowDel[2]] = $value;
+            }
+        }
+        
+        $guestsToUse = array();
+        foreach ($guests as $count => $guest) {
+            $guestsToUse[] = $guest;
+        }
+        
+        $pmsBooking = $this->getPmsBooking();
+        $this->getApi()->getPmsManager()->setGuestOnRoom($this->getSelectedMultilevelDomainName(), $guestsToUse, $pmsBooking->id, $selectedRoom->pmsBookingRoomId);
+        
     }
 
 }

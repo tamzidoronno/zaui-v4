@@ -65,7 +65,7 @@ class PmsSearchBookingColumnFormatters {
             $vistorText .= "<br>";
         }
         
-        $vistorText .= "<div class='secondary_text'>" . $room->owner . "</div>";
+        $vistorText .= "<div class='secondary_text booked_for'>" . $room->owner . "</div>";
         
         $vistorText .= "<div></div><span class='secondary_text'>" .$room->numberOfGuests  . " guests";
         if($room->checkedIn) {

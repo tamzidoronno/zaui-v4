@@ -11,10 +11,6 @@ $this->setData();
     
     
     <div class="workarea">
-        
-        <div class="guestinformation <? echo $this->isTabActive('guestinformation'); ?>" tab='guestinformation'>
-            GUEST INFO
-        </div>
  
         <div class="guestinformation <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'>
             <?
@@ -55,7 +51,6 @@ $this->setData();
     <div class="menuarea">
         <div class="menuentry" ><b><? echo $this->__f("Menu"); ?></b></div>
         <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <? echo $this->__f("Booking information"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('guestinformation'); ?>" tab='guestinformation'><i class="fa fa-user"></i> <? echo $this->__f("Guest(s) information"); ?></div>
         <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <? echo $this->__f("Stay"); ?></div>
         <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <? echo $this->__f("Addons"); ?></div>
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <? echo $this->__f("Access codes"); ?></div>

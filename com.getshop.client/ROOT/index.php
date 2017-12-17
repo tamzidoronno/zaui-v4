@@ -215,7 +215,9 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <?
         
         $modules = $factory->getApi()->getPageManager()->getModules();
-        if (count($modules) > 1) {
+        $isLoggedInEditorOrAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
+        
+        if (count($modules) > 1 && $isLoggedInEditorOrAdministrator) {
             
             $activeModule = null;
             

@@ -1,16 +1,113 @@
 <?
 /* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
 $pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+$user = $this->getUserForBooking();
+
 ?>
 <div class="bookinginformation">
     <div class=" row">
-        <div class="col col1"><i class="fa fa-key"></i><? echo $this->__f("GetShop booking id"); ?></div>
+        <div class="col col1"><i class="fa fa-key"></i> <? echo $this->__f("GetShop booking id"); ?></div>
         <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
     </div>
     
     <div class=" row">
-        <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
-        <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
+        <div class="col col1"><i class="fa fa-calendar"></i> <? echo $this->__f("Date created"); ?></div>
+        <div class="col col2"><? echo $pmsBooking->rowCreatedDate; ?></div>    
     </div>
     
+    <div class=" row">
+        <div class="col col1"><i class="fa fa-user"></i> <span><? echo $this->__f("Booked for"); ?></span></div>
+        <div class="col col2">
+            <span class="booked_for"><? echo $user->fullName; ?></span>
+            <div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
+            <div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
+        </div>    
+    </div>
+    
+    <div class="edit_details_of_user">
+        <?
+        $this->includefile("edituser");
+        ?>
+    </div>
+    
+    <div class="change_user">
+        <?
+        $this->includefile("changeuser");
+        ?>
+    </div>
+
+    <div class="guestinfo">
+        <h2><? echo $this->__f("Guests"); ?></h2>
+        
+        <div class="guest_row header">
+            <div class="guest_col guest_col1"> 
+                
+            </div>
+
+            <div class="guest_col guest_col2">
+                <b><? echo $this->__f("Name"); ?></b>
+            </div>
+
+            <div class="guest_col guest_col3">
+                <b><? echo $this->__f("Email"); ?></b>
+            </div>
+
+            <div class="guest_col guest_col4">
+                <b><? echo $this->__f("Phone"); ?></b>
+            </div>
+        </div>
+        
+        <div  class="guest_row row_template" style='display: none'>
+            <div class="guest_col guest_col1">      
+                <div class="gs_shop_small_icon remove_guest"><i class="fa fa-trash"></i></div>
+            </div>
+
+            <div class="guest_col guest_col2">
+                <input temp_gsname="guestinfo_name" class="gsniceinput1" value=""/>
+            </div>
+
+            <div class="guest_col guest_col3">
+                <input temp_gsname="guestinfo_email" class="gsniceinput1" value=""/>
+            </div>
+
+            <div class="guest_col guest_col4">
+                <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value=""/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
+            </div>
+        </div>
+
+        <?
+        $room = $pmsSelectedRoom;
+            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+            $roomType = $type->name;
+            $roomName = $room->item ? $room->item->bookingItemName : "Floating";
+
+            $i = 0;
+            foreach ($room->guests as $guest) {
+                $i++;
+                ?>
+                <div class="guest_row" counter='<? echo $i; ?>'>
+                    <div class="guest_col guest_col1">      
+                        <div class="gs_shop_small_icon remove_guest"><i class="fa fa-trash"></i></div>
+                    </div>
+
+                    <div class="guest_col guest_col2">
+                        <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" value="<? echo $guest->name; ?>"/>
+                    </div>
+
+                    <div class="guest_col guest_col3">
+                        <input gsname="guestinfo_<? echo $i; ?>_email" class="gsniceinput1" value="<? echo $guest->email; ?>"/>
+                    </div>
+
+                    <div class="guest_col guest_col4">
+                        <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $guest->prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
+                    </div>
+                </div>
+            <?
+            }
+        ?>
+    </div>
+    
+    <br/>
+    <div class="gs_shop_small_icon add_more_guests"><i class="fa fa-plus"></i> <? echo $this->__f("Add new guest"); ?></div>
 </div>

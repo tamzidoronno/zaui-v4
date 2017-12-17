@@ -1974,8 +1974,8 @@ thundashop.framework = {
         if(element.attr('gsvalue')) {
             args['submit'] = element.attr('gsvalue');
         }
-        form.callback = element.callback;
         
+        form.callback = element.callback;
         
         var localUpdateOnly = $(element).attr('gs_local_update_only');
         var javascriptCallback = $(element).attr('gs_callback');

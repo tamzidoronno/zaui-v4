@@ -1,0 +1,45 @@
+<?
+/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+$pmsBooking = $this->getPmsBooking();
+$bookingEngineBooking = $this->getBookingEngineBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+$user = $this->getUserForBooking();
+
+
+if (!isset($_POST['data']['searchvalue'])) {
+    return;
+}
+
+$searchvalue = $_POST['data']['searchvalue'];
+
+
+if (strlen($searchvalue) < 3) {
+    echo $this->__f("Minimum 3 letters");
+    return;
+}
+    
+
+$users = $this->getApi()->getUserManager()->findUsers($searchvalue);
+
+foreach ($users as $user) {
+    ?>
+    <div class="row usersearchrow">
+        <div class="user_col user_col1"><? echo $user->fullName; ?></div>
+        <div class="user_col user_col2"><? echo $user->emailAddress; ?></div>
+        <div class="user_col user_col3"><? echo $user->cellPhone; ?></div>
+        <div class="user_col user_col4">
+            <div class="gs_shop_small_icon" 
+                userid="<? echo $user->id; ?>" 
+                id="<? echo $bookingEngineBooking->id; ?>" 
+                roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>"
+                gsclick="changeUser"
+                gs_callback="app.PmsSearchBooking.userChanged"
+                synchron="true"
+                >
+                    <? echo $this->__f("Select"); ?> <i class="fa fa-arrow-right"></i>
+            </div>
+        </div>
+    </div>
+    <?
+}
+?>

@@ -232,3 +232,130 @@
 .PmsSearchBooking .workarea div[tab].active {
     display: block;
 }
+
+.PmsSearchBooking .bookinginformation .prefix {
+    width: 30px;
+}
+
+.PmsSearchBooking .bookinginformation .col1 {
+    width: 150px;
+}
+.PmsSearchBooking .bookinginformation .col2 {
+    width: calc(100% - 230px);
+}
+.PmsSearchBooking .bookinginformation .guestheader {
+    padding: 5px;
+    background-color: #EFEFEF;
+    margin-top: 20px;
+}
+.PmsSearchBooking .colbox {
+    width: 400px;
+    display: inline-block;
+    vertical-align: top;
+}
+.PmsSearchBooking .warning {
+    margin-bottom: 30px;
+    background-color: #e8ffc8;
+    padding: 20px;
+}
+
+.PmsSearchBooking .change_user_form, 
+.PmsSearchBooking .edit_details_of_user {
+    position: absolute;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+    z-index: 1;
+    width: 843px;
+    background-color: #FFF;
+    padding: 20px;
+    display: none;
+    min-height: 150px;
+}
+
+.PmsSearchBooking .change_user_form .tabs .tab i {
+    display: none;
+}
+
+.PmsSearchBooking .change_user_form .tabs .tab.tab_active i {
+    display: inline-block;
+}
+.PmsSearchBooking .change_user_form .tabs .tab {
+    display: inline-block;   
+}
+
+.PmsSearchBooking .change_user_form .tab_contents .tab_content {
+    display: none;
+    padding-top: 20px;
+}
+
+.PmsSearchBooking .change_user_form .chosen-container {
+    width: 100%;
+}
+
+.PmsSearchBooking .change_user_form .tab_contents .tab_content[tab_content="newuser"] {
+    display: block;
+}
+
+
+.PmsSearchBooking .usersearchrow {
+    border-bottom: solid 1px #DDD;
+}
+
+.PmsSearchBooking .usersearchrow:hover {
+    background-color: #EFEFEF;
+}
+
+.PmsSearchBooking .searchresult {
+    margin-top: 30px;
+}
+
+.PmsSearchBooking .usersearchrow .user_col {
+    display: inline-block;
+    padding: 5px;
+}
+
+.PmsSearchBooking .usersearchrow .user_col1 { width: 150px; }
+.PmsSearchBooking .usersearchrow .user_col2 { width: 250px; }
+.PmsSearchBooking .usersearchrow .user_col3 { width: 100px; }
+
+
+.PmsSearchBooking .bookinginformation .header .guest_col {
+    border-bottom: solid 1px #DDD;
+    padding-bottom: 5px;
+}
+
+.PmsSearchBooking .bookinginformation .guest_row {
+    font-size: 0px;
+}
+
+
+.PmsSearchBooking .bookinginformation .guest_col {
+    display: inline-block;
+    padding-right: 10px;
+    border-right: solid 1px #DDD;
+    font-size: 13px;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+.PmsSearchBooking .bookinginformation .guest_col1 {
+    border-right: 0px;
+    border-bottom: solid 0px !important;
+}
+
+.PmsSearchBooking .bookinginformation .guest_col input {
+    width: 100%;
+    box-sizing: border-box;
+} 
+
+.PmsSearchBooking .bookinginformation .guest_col .gsniceinput1.prefix {
+    width:50px;
+}
+
+.PmsSearchBooking .bookinginformation .guest_col .gsniceinput1.cellnumber {
+    width: calc(100% - 61px);
+}
+
+.PmsSearchBooking .bookinginformation .guest_col1 { width: 35px; }
+.PmsSearchBooking .bookinginformation .guest_col2 { width: 150px; }
+.PmsSearchBooking .bookinginformation .guest_col3 { width: 200px; }
+.PmsSearchBooking .bookinginformation .guest_col4 { width: 200px; }

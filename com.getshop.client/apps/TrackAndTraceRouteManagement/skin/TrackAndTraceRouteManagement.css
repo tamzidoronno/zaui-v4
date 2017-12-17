@@ -1,4 +1,11 @@
+.TrackAndTraceRouteManagement .routelist .routeview .servicedate {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
 .TrackAndTraceRouteManagement .routelist .routeview {
+    position: relative;
     padding: 5px;
 }
 
@@ -60,4 +67,10 @@
 .TrackAndTraceRouteManagement .tasklist .taskrow {
     border-bottom: solid 1px #DDD;
     padding: 5px;
+}
+
+.TrackAndTraceRouteManagement .sortings {
+    padding: 20px;
+    border: solid 1px #DDD;
+    margin-bottom: 20px;
 }

@@ -82,6 +82,8 @@ public class PmsManagerProcessor {
     }
     
     public void processStartEndings() {
+        try { processGreetingMessage(); }catch(Exception e) { manager.logPrintException(e); }
+        
         checkTimer("processAutoAssigning");
         try { processStarting(-4, 0, false); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("processStarting (-4,0)");
@@ -1339,6 +1341,35 @@ public class PmsManagerProcessor {
         }
         
         return false;
+    }
+
+    private void processGreetingMessage() {
+        Calendar cal = Calendar.getInstance();
+        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+        if(hourofday != 7) {
+            return;
+        }
+        
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        for (PmsBooking booking : bookings) {
+            if(booking.isEnded()) {
+                continue;
+            }
+            boolean save = false;
+            String key = "room_morning_message";
+            
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
+                String greetingMessage = "room_morning_message";
+                if(room.isStartingToday() && !room.notificationsSent.contains(greetingMessage)) {
+                    manager.doNotification(key, booking, room);
+                    room.notificationsSent.add(key);
+                    save = true;
+                }
+            }
+            if(save) {
+                manager.saveBooking(booking);
+            }
+        }
     }
 
 

@@ -37,27 +37,25 @@
     </div>
     
     <div class="gslbookingBody">
+        <div class="ordersummary">
+            <h3><i class='fa fa-smile-o'></i> You are in luck, we have rooms available for you! <i class='fa fa-smile-o'></i></h3>
+            <div class="selectedguests"></div>
+            This is the best value deal we can offer you total: <span class='totalprice'></span>
+            <span class='gsl_button continue active'>Continue</span>
+            <div class='bottomspacer'></div>
+        </div>
         <div class="productoverview">
             <div id="productentry"></div>
             <div id="productoverview_footer" style="position: relative;">
-                <div class="productentry_total">Total 0 rooms with a cost of NOK 0,-</div><div class="gsl_button continue">Continue <i class="fa fa-arrow-right"></i></div>
             </div>
         </div>
         <div class="addons_overview">
             <div style="width:30%;float:right;">
                 <div style="padding:10px;">
-                    <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay at GetShop Hotel</h4>
-                    <div>
-                        2 nights, Oct 20 - Oct 22<br>
-                        Room 1, 2 guests - Suite<br><br>
-                        1 x double room<br>
-                        1 x single room<br>
-                        3 x Breakfast<br>
-                    </div>
-                    <h4>Total</h4><p>NOK 1599,-</p>
+                    <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay</h4>
+                    <div class='yourstaysummary'></div>
                     <div style="position:absolute;bottom:10px;right:0; width:30%;">
-                        <div class="gsl_button return" onclick="showProductList()"><i class="fa fa-arrow-left"></i> Return</div>
-                        <div class="gsl_button continue" onclick="showOverviewPage()">Continue <i class="fa fa-arrow-right"></i></div>
+                        <div class="gsl_button continue" onclick="showOverviewPage()" style='float:right;margin-right: 10px;'>Continue <i class="fa fa-arrow-right"></i></div>
                     </div>
                 </div>
             </div>
@@ -66,17 +64,8 @@
                     <h3>Addons</h3>
                     Add addons for all guests, or add individual addons under guest info.
                     <div class="overview_addons">
-                        <div class="addon">
-                            <div style="width:60%;">Early check in. Check in 12:00  in the morning</div><div>NOK 149,-</div><div id="addon_earlyCheckin" class="addButton gsl_button">Add</div>
-                        </div>
-                        <div class="addon">
-                            <div style="width:60%;">Breakfast for all guests in the mornings</div><div>NOK 99,-</div><div id="addon_breakfast" class="addButton gsl_button">Add</div>
-                        </div>
-                        <div class="addon">
-                            <div style="width:60%;">Coat for one person. Keeps you warm in the morning</div><div>NOK 299,-</div><div id="addon_coat" class="addButton gsl_button">Add</div>
-                        </div>
-                        <div class="addon">
-                            <div style="width:60%;">Late check out, from 11:00 in the morning, to 16:00 in the evening</div><div>NOK 249,-</div><div id="addon_lateCheckout" class="addButton gsl_button">Add</div>
+                        <div class="addon" id='addon' style='display:none;'>
+                            <div style="width:60%;"><span class='icon'></span> <span class='text'></span></div><div>NOK <span class='price'></span>,-</div><div id="addon_earlyCheckin" class="addButton gsl_button">Add</div>
                         </div>
                         <div class="addon">
                             <div style="width:60%;">Pets</div><div>NOK 249,-</div><div id="addon_lateCheckout" class="addButton gsl_button">Add</div>
@@ -86,541 +75,198 @@
                 <h3>Guest info</h3>
                 It's important to enter the correct e-mail and phone number for each guest. It will be used for door codes and useful information.
                 <div class="roomentryframe">
-                    <div class="roomentry">
-                        <h4>Room 1 - Double Room</h4>
-                        <i class="fa fa-paw"> Pets on this room: <input type="number" value="0"></i>
+                    <div class="roomentry" id='roomentrycontainer' style='display:none;'>
+                        <h4><span class='roomname'></span> 
+                            <span class='secondary_text'>
+                                checkin <span class='startdate'></span>, checkout <span class='enddate'></span>
+                            </span>
+                        </h4>
+                        
                         <div class="guestentry">
-                            <div>Name<br><input type="txt" gsname="visitor_name_1">
-                            </div><div>E-mail<br><input type="txt" gsname="visitor_email_1">
-                            </div><div>Phone<br><input type="txt" class="guest_phone" value="+47" gsname="visitor_prefix_1"><input type="text" style="width:75%;" gsname="visitor_phone_1">
-                            </div><div>Addons<br>
-                                <div class="guest_addon">
-                                    <i class="fa fa-sign-in" title="Early check in"></i>
-                                    <i class="fa fa-cutlery" title="Breakfast"></i>
-                                    <i class="fa fa-black-tie" title="Coat for one person"></i>
-                                    <i class="fa fa-sign-out" title="Late check out"></i>
-                                    <i class="fa fa-times removeguest" title="Remove guest"></i>
-                                </div>
+                            <div>Name</div>
+                            <div>E-mail</div>
+                            <div>Phone</div>
+                            <div>Addons</div>
+                        </div>
+                        <div class="guestentry" id='guestentryrow' style='display:none;'>
+                            <div><input type="txt" gsname="name"></div>
+                            <div><input type="txt" gsname="email"></div>
+                            <div><input type="txt" class="guest_phone" value="+47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone"></div>
+                            <div>
+                                <div class="guest_addon"></div>
                             </div>
                         </div>
+                        <div class='guestRows'></div>
                         <div class="addguest gsl_button"><i class="fa fa-plus"></i> Add guest</div>
                         <div class="addroombox">
                             <div>Roomtype:</div><select><option>Small Room</option><option>Medium Room</option><option>Big Room</option></select><div>Checkin:</div><input class="checkin"><div>Checkout:</div><input class="checkout"><div id="addroom"><i class="fa fa-plus"></i> Add</div>
                         </div>
                     </div>
-                    <div class="addroom gsl_button" onclick="showaddroombox()"style="float:right;"><i class="fa fa-plus"></i> Add room</div>
+<!--                    <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>-->
                 </div>
             </div>
         </div>
         <div class="overview">
             <div class="overview_room_info">
-                <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay at GetShop Hotel</h4>
-                <div>
-                    2 nights, Oct 20 - Oct 22<br>
-                    Room 1, 2 guests - Suite<br><br>
-                    1 x double room<br>
-                    1 x single room<br>
-                    3 x Breakfast<br>
-                </div>
-                <h4>Total</h4><p>NOK 1599,-</p>
+                <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;">Your stay</h4>
+                <div class='yourstaysummary'></div>
                 <div class="overview_confirmation">
-                    <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i> Return</div><div class="gsl_button continue">Go to payment</div>
+                    <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i> Return</div><div class="gsl_button continue go_to_payment_button">Go to payment</div>
                 </div>
             </div>
             <div class="overview_article">
                 <div class="overview_contact">
                     <h3>Contact information</h3>
-                    This is used for contacting regarding your stay. Be sure to pick private or organization.
-                    <br><br>
                     <div class="overview_contact_tab">
-                        <input type="radio" id="private" name="user" checked="checked">
-                        <label for="private">Private</label>
-                        <input type="radio" id="organization"name="user">
-                        <label for="organization">Organization</label>
-                        <input type="radio" id="gotAccount"name="user">
-                        <label for="gotAccount">Already got an Account?</label>
+                        <label for="private" id="private" class='selectedusertype'>
+                            <input type="radio" name="user" checked="checked"> Private
+                        </label>
+                        <label for="organization" id="organization" class='selectedusertype'>
+                            <input type="radio" name="user"> Organization
+                        </label>
+                        <label for="gotAccount" id="gotAccount" class='selectedusertype'>
+                            <input type="radio" name="user"> Already got an Account?
+                        </label>
                     </div>
                     <br>
-                    <div class="private_fields">
-                        <div class="guestentry">
-                            <div style="width: 33.33%;">Name<br><input type="txt" gsname="user_fullName">
-                            </div><div style="width: 33.33%;">E-mail<br><input type="txt" gsname="user_emailAddress">
-                            </div><div style="width: 33.33%;">Phone<br><input type="txt" class="guest_phone" value="+47" gsname="user_prefix"><input type="text" style="width:75%;border-right: 1px solid #ddd;"gsname="user_cellPhone">
-                            </div><div style="width: 50%;">Street Adress<br><input type="txt">
-                            </div><div style="width: 50%;">Zip Code<br><input id="guest_zipcode" type="txt"  class="guest_phone" value=""><input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;">
+                    <div class="private_fields" type='user'>
+                        <div class="guestentry guesttypeselection" type='private'>
+                            <div style="width: 33.33%;float: left;">
+                                Name<br>
+                                <input type="txt" gsname="user_fullName">
+                            </div>
+                            <div style="width: 33.33%;float: left;">
+                                E-mail<br>
+                                <input type="txt" gsname="user_emailAddress">
+                            </div>
+                            <div style="width: 33.33%;float: left;">
+                                Phone<br>
+                                <input type="txt" class="guest_phone" value="+47" gsname="user_prefix" style='float:left;'>
+                                <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="user_cellPhone">
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Street Adress<br>
+                                <input type="txt" gsname='user_address_address'>
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Zip Code<br>
+                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='user_address_postCode'>
+                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;" gsname='user_address_city'>
                             </div>
                         </div>
                     </div>
+                    <div class="company_fields guesttypeselection" style='display:none;' type='organization'>
+                                          <div class="guestentry">
+                            <div style="width: 25%;float: left;">
+                                Company name<br>
+                                <input type="txt" gsname="company_name">
+                            </div>
+                            <div style="width: 25%;float: left;">
+                                Vat number<br>
+                                <input type="txt" gsname="company_vatNumber">
+                            </div>
+                            <div style="width: 25%;float: left;">
+                                E-mail<br>
+                                <input type="txt" gsname="company_email">
+                            </div>
+                            <div style="width: 25%;float: left;">
+                                Phone<br>
+                                <input type="txt" class="guest_phone" value="+47" gsname="company_prefix" style='float:left;'>
+                                <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="company_phone">
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Street Adress<br>
+                                <input type="txt" gsname='company_address_address'>
+                            </div>
+                            <div style="width: 50%;float:left; padding-top: 10px;">
+                                Zip Code<br>
+                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='company_address_postCode'>
+                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;" gsname='company_address_city'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="login_fields guesttypeselection" style='display:none;' type='gotAccount'>
+                        <div class="guestentry">
+                            <div style="width: 50%; float:left;">Username / email<br><input type="txt" gsname="username"></div>
+                            <div style="width: 50%; float:left;">Password<br><input type="txt" gsname="password"></div>
+                        </div>
+                        <input type='button' value='Sign in' style='padding-left: 20px; padding-right:20px; float:right; margin-top:10px;'>
+                    </div>
                     <div style="clear: both;"></div>
                 </div>
-                <div style="padding:10px;">
+                <div style="padding:10px;" class='agreetotermsbox'>
                     <input id="agreeTerms" type="checkbox">
                     <label for="agreeTerms">I agree to terms</label>
                     <div><a style="cursor:pointer;">Read terms of use</a></div>
                     <div><a style="cursor:pointer;">Download terms of use</a></div>
                 </div>
+                <div style="clear: both;"></div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="roomentry" id="addnewroom">
+    <h4>Room 1 - Double Room</h4>
+    <div class="guestentry">
+        <div>Name<br><input type="txt">
+        </div><div>E-mail<br><input type="txt">
+        </div><div>Phone<br><input type="txt" class="guest_phone" value="+47"><input type="text" style="width:75%;">
+        </div><div>Addons<br>
+            <div class="guest_addon">
+            </div>
+        </div>
+    </div>
+    <div class="addguest gsl_button"><i class="fa fa-plus"></i> Add guest</div>
+</div>
+
+
+<div class="productentry" id="productentrybox">
+    <div class='productentry_gallery gsgalleryroot'>
+        <i class="fa fa-times"></i>
+        <div class="feature">
+            <figure class="featured-image image-holder gsgallery" galidx="" width="300" height="300" index="0"></figure>
+        </div>
+        <span class="photoswipecontainer"></span>
+        <div class="gallery-wrapper">
+            <div class="gallery"></div>
+        </div>
+    </div>
+    <div class="productentry_main">
+        <div class="productentry_header">
+            <div class="roomname"></div>
+            <div style="float:right;">Starting at NOK <span class='lowpricedisplayer'></span>,-</div>
+            <div class="product_availablerooms" value="">Available rooms: <span class='availableroomcontainer'></span></div>
+        </div>
+        <div class="productentry_body">
+            <div class="guestselection"></div>
+            <div class="roomdescription"></div>
+            <div></div>
+        </div>
+        <div class="productentry_footer">
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+
+<div class="guestentry" id="addnewguest">
+    <div><input type="text">
+    </div><div><input type="text">
+    </div><div><input type="text"  class="guest_phone" value="+47"><input type="text" style="width:75%;">
+    </div><div><div class="guest_addon">
+        <i class="fa fa-sign-in" title="Early check in"></i>
+        <i class="fa fa-cutlery" title="Breakfast"></i>
+        <i class="fa fa-black-tie" title="Coat for one person"></i>
+        <i class="fa fa-sign-out" title="Late check out"></i><i class="fa fa-times removeguest" title="Remove guest"></i>
+    </div></div>
+</div>
+
 
 <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" media="all" href="/js/daterangepicker/daterangepicker.css" />
 <script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
 <script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
-
 <script>
-    function showaddroombox(){
-        $('.addroombox').slideToggle();
-    }
-    $(document).on('keyup', '.GslBooking [gsname="visitor_name_1"]', function() { $('[gsname="user_fullName"]').val($(this).val());  });
-    $(document).on('keyup', '.GslBooking [gsname="visitor_email_1"]', function() { $('[gsname="user_emailAddress"]').val($(this).val());  });
-    $(document).on('keyup', '.GslBooking [gsname="visitor_prefix_1"]', function() { $('[gsname="user_prefix"]').val($(this).val());  });
-    $(document).on('keyup', '.GslBooking [gsname="visitor_phone_1"]', function() { $('[gsname="user_cellPhone"]').val($(this).val());  });
-
-    $(document).on('click', '.GslBooking .productentry_gallery .fa-times', function(){
-        $(this).closest('.productentry_gallery').removeClass('active');
-        $(this).closest('.productentry').css('overflow','hidden');
-    });
-    $(document).on('mouseover','.gallery-wrapper', function(){
-        var buttons = $(this).closest('.productentry_gallery').find('.move-btn');
-        buttons.css('color','rgba(0, 0, 0, 0.7);');
-    });
-    $(document).on('mouseleave','.image-wrapper', function(){
-        var buttons = $(this).closest('.productentry_gallery').find('.move-btn');
-        buttons.css('color','transparent');
-    });
-    $(document).on('click', '.gallery-image', function(e){
-        var featuredImage = $(this).closest('.productentry_gallery');
-        featuredImage.find('.gallery-image').removeClass('active');
-        if (!$(this).hasClass('active')){
-            $(this).addClass('active');
-            featuredImage.find('.featured-image').css('backgroundImage', e.target.style.backgroundImage);
-        }
-    });
-    var leftInterval;
-    $(document).on('mouseenter', '.move-btn', function(){
-        var target = $(this);
-        var imageWidth = 22;
-        var scrollRate = 0.15;
-        var gallery = target.closest('.productentry_gallery').find('.gallery');
-        var left = gallery.position().left / 3.5 || 0;
-        
-        leftInterval = setInterval(function(){
-            gallery.css('left', left + '%');
-            if(target.is('.move-btn.right')){
-                if(left > -imageWidth){
-                    left -= scrollRate;
-                }else{
-                    left = 0;
-                    var firstImage = gallery.find('.image-wrapper:first-child').detach();
-                    gallery.css('left',-imageWidth + '%');
-                    firstImage.appendTo(gallery);
-                    gallery.css('left', '0%');
-                }
-            }else if(target.is('.move-btn.left')){
-                if(left < 0){
-                    left += scrollRate;
-                }else{
-                    //contains a bug creating lag in the image gallery
-                    left = -imageWidth;
-                    var lastImage = gallery.find('.image-wrapper:last-child').detach();
-                    lastImage.prependTo(gallery);
-                    gallery.css('left','22%');
-                }
-            }
-        }, 1);
-    });
-    $(document).on('mouseleave', '.move-btn',function(){
-        clearInterval(leftInterval);
-    });
-    $('#guest_zipcode').on('keyup', function(){
-        var val = $(this).val();
-        if(val.length !== 4) {
-            return;
-        }
-        $.ajax({
-            "dataType" : "jsonp",
-            "url": "https://api.bring.com/shippingguide/api/postalCode.json?clientUrl=insertYourClientUrlHere&country=no&pnr=" + val,
-            "success": function (data) {
-                if(data.valid) {
-                    $('#guest_zipname').val(data.result);
-                }
-            }
-        });
-    });
-    $('.productoverview .continue').on('click', function(){
-        if($('.productoverview .continue').hasClass('active')){
-            $('.productoverview').fadeOut('400', function(){
-                $('.addons_overview').fadeIn('400');
-            });
-        }
-    });
-    $('.addButton').on('mousedown',function(){
-        if($(this).hasClass('added_addon')){
-            $(this).removeClass('added_addon').html('Add');
-            if($(this).is('#addon_earlyCheckin')){
-                $('.guestentry .fa-sign-in').removeClass('active_addon');
-            }else if($(this).is('#addon_breakfast')){
-                $('.guestentry .fa-cutlery').removeClass('active_addon');
-            }else if($(this).is('#addon_coat')){
-                $('.guestentry .fa-black-tie').removeClass('active_addon');
-            }else if($(this).is('#addon_lateCheckout')){
-                $('.guestentry .fa-sign-out').removeClass('active_addon');
-            }
-        }else{
-            $(this).addClass('added_addon').html('Remove');
-            if($(this).is('#addon_earlyCheckin')){
-                $('.guestentry .fa-sign-in').addClass('active_addon');
-            }else if($(this).is('#addon_breakfast')){
-                $('.guestentry .fa-cutlery').addClass('active_addon');
-            }else if($(this).is('#addon_coat')){
-                $('.guestentry .fa-black-tie').addClass('active_addon');
-            }else if($(this).is('#addon_lateCheckout')){
-                $('.guestentry .fa-sign-out').addClass('active_addon');
-            }
-        }
-    });
-    $('.destination_line').on('mousedown', function(){
-        var destination = $(this).text();
-        if(destination !== ""){
-            $('#destination').val(destination);
-            $('.destinationInfoBox').hide();
-        }
-    });
-    $('#guests').on('focus',function(){
-        $('.guestInfoBox').show();
-    });
-    $('#destination').on('focus',function(){
-        $('.destinationInfoBox').show();
-    });
-    $('.guestInfoBox .fa').on('mousedown', function(){
-        var minusButton = $(this).closest('.count_line').find('.fa-minus'); //Closest minusbutton
-        var plusButton = $(this).closest('.count_line').find('.fa-plus'); //Closest plusbutton
-        var count = $(this).closest('.count_line').find('.count'); //Closest numbercount for adding guests or room
-        if($(this).is('.fa-plus')){
-            if(count.val() < 10){
-                count.val(function(i,val){
-                    return (+val + 1);
-                });
-            }
-            if($(this).is('#add_child') && count.val() >= 1){
-                minusButton.removeClass('disabled');
-            }else if(count.val() >= 2){
-                minusButton.removeClass('disabled');
-            }
-            if(count.val() >= 10){
-                plusButton.addClass('disabled');
-            }
-        }
-        if($(this).is('.fa-minus')){
-            if($(this).is('#subtract_child')){
-                if(count.val() > 0){
-                    count.val(function(i,val){
-                        return (+val - 1);
-                    });
-                }
-                if(count.val() <=0){
-                    minusButton.addClass('disabled');
-                }
-            }else{
-                if(count.val() > 1){
-                    count.val(function(i,val){
-                        return (+val - 1);
-                    });
-                }
-                if(count.val() <=1){
-                    minusButton.addClass('disabled');
-                }
-            }
-            if(count.val() <= 9){
-                plusButton.removeClass('disabled'); 
-           }
-        }
-    });
-    $('#coupon_input').on('change', function(){//Do not use this live, as it is visible in the browser
-        if($('#coupon_input').val() === 'code' || $('#coupon_input').val() === 'Code'){
-            $(this).addClass('validCode');
-            $(this).removeClass('non-validCode');
-        }else if($('#coupon_input').val() === ""){
-            $(this).removeClass('validCode');
-            $(this).removeClass('non-validCode');
-        }else{
-            $(this).removeClass('validCode');
-            $(this).addClass('non-validCode');
-        }
-    });
-    function showAddonsPage(){
-        $('.overview').hide();
-        $('.productoverview').fadeOut('400', function(){
-            $('.addons_overview').fadeIn('400');
-        });
-    }
-    function showProductList(){
-        $('.gslbookingBody').fadeIn('400');
-        $('.overview').hide();
-        $('.addons_overview').fadeOut('400', function(){
-            $('.productoverview').fadeIn('400');
-        });
-    }
-    function showOverviewPage(){
-        $('.addons_overview').fadeOut('400', function(){
-            $('.overview').fadeIn('400');
-        });
-    }
-    function previusPage(){
-        $('.overview').fadeOut('400', function(){
-            $('.productoverview').fadeIn('400');
-        });
-    }
-    function confirmGuestInfoBox(){
-        var room = $('#count_room').val();
-        var adult = $('#count_adult').val();
-        var child = $('#count_child').val();
-        var guest = +adult + +child;
-        var roomText = ' room';
-        var guestText = ' guest ';
-        if(room > 1){roomText = ' rooms';}
-        if(guest > 1){guestText = ' guests ';}
-        $('#guests').val(room + roomText +', ' + guest + guestText);
-        $('.guestInfoBox').hide();
-    }
-    $(document).on('mousedown', '.addguest', function(){
-        var addNewGuest =`
-            <div class="guestentry">
-                <div><input type="text">
-                </div><div><input type="text">
-                </div><div><input type="text"  class="guest_phone" value="+47"><input type="text" style="width:75%;">
-                </div><div><div class="guest_addon">
-                    <i class="fa fa-sign-in" title="Early check in"></i>
-                    <i class="fa fa-cutlery" title="Breakfast"></i>
-                    <i class="fa fa-black-tie" title="Coat for one person"></i>
-                    <i class="fa fa-sign-out" title="Late check out"></i><i class="fa fa-times removeguest" title="Remove guest"></i>
-                </div></div>
-            </div>`;
-        $(this).before(addNewGuest);
-    });
-    $(document).on('mousedown','#addroom', function(){
-        var roomtype = $(this).closest('.addroombox').find('select :selected').text();
-        var checkin =  $(this).closest('.addroombox').find('.checkin').val();
-        var checkout = $(this).closest('.addroombox').find('.checkout').val();
-        console.log(roomtype);
-        var addNewRoom = `
-            <div class="roomentry">
-                <h4>Room 1`+roomtype+` (`+checkin +` - `+ checkout+`)</h4>
-                <i class="fa fa-paw"> Pets not allowed</i>
-                <div class="guestentry">
-                    <div>Name<br><input type="txt">
-                    </div><div>E-mail<br><input type="txt">
-                    </div><div>Phone<br><input type="txt" class="guest_phone" value="+47"><input type="text" style="width:75%;">
-                    </div><div>Addons<br>
-                        <div class="guest_addon">
-                            <i class="fa fa-sign-in" title="Early check in"></i>
-                            <i class="fa fa-cutlery" title="Breakfast"></i>
-                            <i class="fa fa-black-tie" title="Coat for one person"></i>
-                            <i class="fa fa-sign-out" title="Late check out"></i>
-                            <i class="fa fa-times removeguest" title="Remove guest"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="addguest gsl_button"><i class="fa fa-plus"></i> Add guest</div>
-            </div>`;
-       $(this).closest('.addroombox').before(addNewRoom).hide();
-    });
-    $(document).on('mousedown', '.guestentry i', function(){
-        if($(this).is('.removeguest')){
-            var removeGuest = confirm('Are you sure u want to remove this guest?');
-            if(removeGuest === true){
-                $(this).closest('.guestentry').remove();
-            }
-        }else{
-            $(this).toggleClass('active_addon');
-        }
-    });
-    $(document).on('mousedown', function(e){
-        var target =  $(e.target);
-        if(target.is('#guests') || target.hasClass('guestInfoBox') || target.closest('.guestInfoBox').length >= 1) {
-            return;
-        }
-        confirmGuestInfoBox();
-    });
-    $(document).on('mousedown', function(e){
-        var target =  $(e.target);
-        if(target.is('#destination') || target.hasClass('destinationInfoBox') || target.closest('.destinationInfoBox').length >= 1) {
-            return;
-        }
-        $('.destinationInfoBox').hide();
-    });
-    $(document).ready(function(){
-        var currentDate = new Date();
-        currentDate.setDate(currentDate.getDate()-1);
-        
-        var endDate = new Date();
-        endDate.setDate(endDate.getDate()+1);
-        
-        $('#date_picker').daterangepicker({
-            "autoApply":true,
-            "showWeekNumbers": true,
-            "minDate": currentDate,
-            "endDate": endDate,
-            "locale":{
-                "direction":"ltr",
-                "format": "DD MMM",
-                "firstDay": 1
-            }
-        });
-    });
-    $(document).on('change', '.numberof_rooms', function(){
-        var target =  $(this);
-        var totalCost = 0;
-        var selectedRooms = 0;
-        var totalSelectedRooms = 0;
-        var allContainers = target.closest('#productentry');
-        var mainContainer = target.closest('.productentry_main');
-        var availableRooms = parseInt(mainContainer.find('.product_availablerooms').attr('value'));
-        
-        allContainers.find('.numberof_rooms').each(function(){
-            var loopdropdown = $(this);
-            var selected = parseInt(loopdropdown.val());
-            var price = $('option:selected', this).attr('data-price');
-            var priced = parseInt(price);
-            totalSelectedRooms += selected;
-            totalCost += priced;
-        });
-        mainContainer.find('.numberof_rooms').each(function(){
-            var loopdropdown = $(this);
-            var selected = parseInt(loopdropdown.val());
-            selectedRooms += selected;
-        });
-        var totalLeft = availableRooms-selectedRooms;
-        mainContainer.find('.numberof_rooms').each(function(){
-            var loopdropdown = $(this);
-            loopdropdown = parseInt(loopdropdown.val());
-            var thisIsWhatShouldBeHere = (loopdropdown + totalLeft);
-            var roomsToRemove = availableRooms - thisIsWhatShouldBeHere;
-            for(var i = 1; i <= roomsToRemove; i++){
-                var optionValue = (availableRooms +1) - i;
-                var thisOption = $(this).find('option[value="'+optionValue+'"]');
-                thisOption.addClass('unavailableRooms').prop('disabled', true);
-            }
-            for(var i = 1; i <= thisIsWhatShouldBeHere; i++){
-                var thisOption = $(this).find('option[value="'+i+'"]');
-                thisOption.removeClass('unavailableRooms').prop('disabled', false);
-            }
-        });
-        if(totalSelectedRooms > 0){
-            $('.productoverview .continue').addClass('active');
-        }else{
-            $('.productoverview .continue').removeClass('active');
-        }
-        var multipleRooms = ' rooms ';
-        if(totalSelectedRooms == 1){multipleRooms = ' room '}
-        $('.productentry_total').html('Total '+ totalSelectedRooms + multipleRooms + 'with a cost of NOK '+ totalCost + ',-');
-        $('#productoverview_footer').slideDown('slow');
-    });
-    $('#search_rooms').on('click', function(){
-        var time = new Date().toLocaleTimeString('en-us');
-        var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
-        var endDate = $('#date_picker').data('daterangepicker').endDate.format('MMM DD, YYYY ') + time;
-        var rooms = $('#count_room').val();
-        var adults = $('#count_adult').val();
-        var children = $('#count_child').val();
-        var discountCode = $('#coupon_input').val();
-        var data = {
-            "start" : startDate,
-            "end" : endDate,
-            "rooms" : rooms,
-            "adults" : adults,
-            "children" : children,
-            "discountCode" : discountCode,
-            "bookingId" : ""
-        };
-        
-        $.ajax('http://wilhelmsenhouse.3.0.local.getshop.com/scripts/bookingprocess.php?method=startBooking', {
-            dataType: 'jsonp',
-            data : {
-                "body" : data
-            },
-            success: function(res) {
-                $('#productentry').html('');
-
-                for(var k in res.rooms) {
-                    var room = res.rooms[k];
-                    var firstFile = 'https://wilhelmsenhouse.getshop.com/displayImage.php?id='+ room.images[0].fileId;
-                    var productentry = '';
-                    var utilities = '';
-                    var user_icon = '';
-                    
-                    if(room.availableRooms != 0){
-                        for(var guest in room.pricesByGuests){
-                            var numberofrooms = '';
-                            var currentImages = '';
-                            var photoswipe = '';
-                            var height= '574'; //Got to get the width and height from the array/room.images
-                            var width = '1000';
-                            var index = 1;
-                            var controller = '';
-                            var multipleGuests = ' guests';
-                            if(guest == 1){multipleGuests = ' guest'}
-                            user_icon += '<i class="fa fa-user"></i>';
-                            for(var i = 1; i <= room.availableRooms; i++){
-                                var price = room.pricesByGuests[guest] * i;
-                                numberofrooms += '<option value="'+ i +'" data-price="'+price+'">'+ i +'&nbsp;&nbsp; (NOK '+ price +')</option>';
-                            }
-                            productentry += '<div class="productentry_itemlist">'+ user_icon +'<div>' + room.name + ', ' + guest + multipleGuests +' NOK ' + room.pricesByGuests[guest] + ',-</div><div style="float:right;padding:0;"><span>Choose rooms</span><select class="numberof_rooms"><option value="0" data-price="0">0</option>'+ numberofrooms +'</select></div></div>';
-                        }
-                        for(var i = 0; i <= room.images.length -1;i++){
-                            var active = '';
-                            var imgsrc = 'https://wilhelmsenhouse.getshop.com/displayImage.php?id='+ room.images[i].fileId;
-                            if(i == 0){active = ' active';}
-                            else{
-                                photoswipe += '<img class="roomimg gsgallery" style="display:none;" src="'+imgsrc+'" img="'+imgsrc+'"width="'+width+'" height="'+height+'" index="'+ index +'">';
-                            }
-                            currentImages += '<div class="image-wrapper"><figure class="gallery-image image-holder'+ active +'" style="background-image:url('+imgsrc+')"></figure></div>';
-                        }
-                        console.log(imgsrc.clientHeight);
-                        if(room.images.length > 4){
-                            controller = '<div class="controls"><div class="move-btn left"><i class="fa fa-caret-left"></i></div><div class="move-btn right"><i class="fa fa-caret-right"></i></div></div>'
-                        }
-                        for(var utility in room.utilities){
-                            utilities += '<i class="fa fa-'+ utility +'" title="'+room.utilities[utility]+'"></i>';
-                        }
-                        var roomBox =`
-                            <div class="productentry">
-                                <div class='productentry_gallery gsgalleryroot'>
-                                    <i class="fa fa-times"></i>
-                                    <div class="feature">
-                                        <figure class="featured-image image-holder gsgallery" style="background-image:url(`+ firstFile +`)" img="`+firstFile+`" width="1000" height="700"></figure>
-                                    </div>
-                                    <span>`+ photoswipe+`</span>
-                                    <div class="gallery-wrapper">
-                                        <div class="gallery">
-                                            `+ currentImages +`
-                                        </div>
-                                    </div>
-                                    `+ controller +`
-                                </div>
-                                <div class="productentry_main">
-                                    <div class="productentry_header">
-                                        <div>` + room.name + `</div>
-                                        <div style="float:right;">starting at NOK `+ room.pricesByGuests[1] +`,-</div>
-                                        <div class="product_availablerooms" value="`+ room.availableRooms +`">Available rooms: `+ room.availableRooms +`</div>
-                                    </div>
-                                    `+ productentry + `
-                                    <div class="productentry_body">
-                                        <div>`+ room.description + `</div>
-                                    </div>
-                                    <div class="productentry_footer">
-                                    `+ utilities +`
-                                    </div>
-                                </div>
-                                <div style="clear:both;"></div>
-                            </div>`;
-                        $('#productentry').append(roomBox);
-                    }
-                }
-            }
-        });
-    });
+    localStorage.setItem('gslcurrentpage','');
 </script>

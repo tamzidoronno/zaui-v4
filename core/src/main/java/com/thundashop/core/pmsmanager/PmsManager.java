@@ -4946,6 +4946,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     }
 
     
+    public void addProductToRoomDefaultCount(String productId, String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        
+        HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
+        int size = 1;
+        for(PmsBookingAddonItem item : addons.values()) {
+            if(!item.productId.equals(productId)) {
+                continue;
+            }
+            if(item.dependsOnGuestCount) {
+                size = room.numberOfGuests;
+            }
+        }
+        addProductToRoom(productId, room.pmsBookingRoomId, size);
+    }
+    
     @Override
     public void addProductToRoom(String productId, String pmsRoomId, Integer count) {
         PmsBooking booking = getBookingFromRoom(pmsRoomId);

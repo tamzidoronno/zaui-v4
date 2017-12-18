@@ -1,5 +1,67 @@
 
 var endpoint = "http://wilhelmsenhouse.3.0.local.getshop.com";
+var leftInterval;
+
+function setBookingTranslation() {
+    var translations = getBookingTranslations();
+    for(var key in translations) {
+        $('[gstype="bookingtranslation"][gstranslationfield="'+key+'"]').html(translations[key]);
+    }
+}
+
+function getBookingTranslations() {
+    return {
+        "gsHotelOs" : "Getshop Hotel, Oslo",
+        "gsHotelTb" : "Getshop Hotel, Tønsberg",
+        "rooms" : "Rooms",
+        "adults" : "Adults",
+        "children" : "Children",
+        "apply" : "Apply",
+        "search" : "Search",
+        "inLuckAvailable" : "You are in luck, we have rooms available for you!",
+        "bestValue" : "This is the best value deal we can offer you total:",
+        "continue" : "Continue",
+        "addons" : "Addons",
+        "addAddonsOr" : "Add addons for all guests, or add individual addons under guest info.",
+        "NOK" : "NOK",
+        "add" : "Add",
+        "guestInfo" : "Guest info",
+        "correctEmailforGuest" : "It's important to enter the correct e-mail and phone number for each guest. It will be used for door codes and useful information.",
+        "checkin" : "checkin",
+        "checkout" : "checkout",
+        "name" : "Name",
+        "e-mail" : "E-mail",
+        "phone" : "Phone",
+        "addGuest" : "Add guest",
+        "yourStay" : "Your stay",
+        "return" : "Return",
+        "goToPayment" : "Go to payment",
+        "contactInformation" : "Contact information",
+        "private" : "Private",
+        "organization" : "Organization",
+        "alreadyGotanAccount" : "Already got an Account?",
+        "streetAdress" : "Street adress",
+        "zipCode" : "Zip Code",
+        "companyName" : "Company name",
+        "vatNumber" : "Vat number",
+        "userOrEmail" : "Username / email",
+        "password" : "Password",
+        "agreeTerms" : "I agree to term",
+        "readTerms" : "Read terms of use",
+        "downloadTerms" : "Download terms of use",
+        "roomExample1" : "Room 1 - Double Room",
+        "downloadTerms" : "Download terms of use",
+        "startingAt" : "Starting at NOK ",
+        "availableRooms: " : "Available rooms: ",
+        
+        
+        
+        
+        
+        
+        "agestwototwelve" : "Ages 2-12"
+    };
+}
 
 $(document).on('keyup', '.GslBooking [gsname="visitor_name_1"]', function () {
     $('[gsname="user_fullName"]').val($(this).val());
@@ -34,7 +96,6 @@ $(document).on('click', '.GslBooking .gallery-image', function (e) {
     }
 });
 
-var leftInterval;
 $(document).on('mouseenter', '.GslBooking .move-btn', function () {
     var target = $(this);
     var imageWidth = 22;
@@ -230,6 +291,19 @@ $(document).on('mousedown', '.GslBooking .addButton', function () {
 });
 
 
+function createSticky(sticky) {
+    if (typeof sticky !== "undefined") {
+        var pos = sticky.offset().top;
+        var win = $(window);
+        var paddingBox = $('.productoverview');
+
+        win.on("scroll", function(){
+        win.scrollTop() >= pos ? sticky.addClass("fixed") : sticky.removeClass("fixed");
+        win.scrollTop() >= pos ? paddingBox.css('padding-top', sticky.height()+'px') : $('.productoverview').css('padding-top', '0px');
+        console.log(sticky.height());
+        });
+    }
+}
 function addRemoveAddon(btn) {
     var saving = saveGuestInformation();
     saving.done(function() {
@@ -489,6 +563,7 @@ function updateOrderSummary(res) {
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable'>" + row + "</table>");
     $('.GslBooking .ordersummary .totalprice').html(total);
     $('.GslBooking .ordersummary').slideDown();
+    $(function(){createSticky($("#orderSum"));});
 }
 
 $(document).on('mousedown', '.GslBooking .addguest', function () {

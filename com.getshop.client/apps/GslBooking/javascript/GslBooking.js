@@ -53,12 +53,7 @@ function getBookingTranslations() {
         "downloadTerms" : "Download terms of use",
         "startingAt" : "Starting at NOK ",
         "availableRooms: " : "Available rooms: ",
-        
-        
-        
-        
-        
-        
+        "gotToPayment" : "Go to payment",
         "agestwototwelve" : "Ages 2-12"
     };
 }
@@ -283,6 +278,7 @@ $(document).on('click', '.GslBooking .ordersummary .continue', function () {
         $('.addons_overview').fadeIn('400');
         $('.GslBooking .ordersummary').slideUp();
         $('.GslBooking .gslbookingHeader').slideUp();
+        localStorage.setItem('gslcurrentpage','summary');
         loadAddonsAndGuestSumaryView();
     });
 });
@@ -610,7 +606,8 @@ $(document).on('mousedown', '.GslBooking', function (e) {
     }
     $('.destinationInfoBox').hide();
 });
-$(document).ready(function () {
+
+function setDatePicker() {
     var currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);
 
@@ -627,8 +624,9 @@ $(document).ready(function () {
             "format": "DD MMM",
             "firstDay": 1
         }
-    });
-});
+    });    
+}
+
 $(document).on('change', '.GslBooking .numberof_rooms', function () {
     var index = $(this).closest('.productentrybox').attr('index');
     var guest = $(this).attr('guests');
@@ -691,9 +689,11 @@ function goToOverviewPage() {
 }
 
 function goToAddonsPage() {
+    console.log('gotoaddonspage');
     $('.gslbookingBody').show();
     $('.addons_overview').show();
     gslbookingcurresult = JSON.parse(localStorage.getItem('gslcurrentbooking'));
+    console.log(gslbookingcurresult);
     loadAddonsAndGuestSumaryView();
 }
 
@@ -820,12 +820,10 @@ var lastSelectedPage = localStorage.getItem('gslcurrentpage');
 if(lastSelectedPage === "summary") {
     $(function() {
         goToAddonsPage();
-        console.log('going to summary');
     });
 }
 if(lastSelectedPage === "overview") {
     $(function() {
         goToOverviewPage();
-        console.log('going to overview');
     });
 }

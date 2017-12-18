@@ -1,0 +1,34 @@
+<?php
+$timePeriodeType = array();
+$timePeriodeType[1] = "Closed";
+$timePeriodeType[2] = "Min stay";
+$timePeriodeType[3] = "Max stay";
+$timePeriodeType[4] = "Deny same day booking";
+$timePeriodeType[6] = "Force confirmation same day booking";
+$curdate = date("d.m.Y", time());
+?>
+<span class='createrestricitonarea'>
+    <h3>What kind of restriction would you like to create?</h3>
+    <select class='gsniceselect1' style='width:100%;'>
+        <?php
+        foreach($timePeriodeType as $idx => $val) {
+            echo "<option value='$idx'>$val</option>";
+        }
+        ?>
+    </select>
+
+    <h3>Restrict for periode</h3>
+    <div> * When <b>booking</b> in this periode</div>
+      <input type='txt' class='gsniceinput1' value='<?php echo $curdate; ?>' style='width: 90px;'>
+      <input type='txt' class='gsniceinput1' style='width:40px;' value='00:00'>
+      <input type='txt' class='gsniceinput1' style='width:40px;' value='23:59'>
+      <h3>Repeat</h3>
+    <select class="repeat_type gsniceselect1" style='width:100%;'>
+        <option value="0" title="Daily"><? echo $this->__w("Daily"); ?></option>
+        <option value="1" title="Weekly"><? echo $this->__w("Weekly"); ?></option>
+        <option value="2" title="Monthly"><? echo $this->__w("Monthly"); ?></option>
+    </select><br><br>
+    Ending at<br>
+    <input type='txt' class='gsniceinput1' value='<?php echo $curdate; ?>' style='width: 90px;'>
+    <input type='button' style='padding:9px;float:right;' value='Create restriction'>
+</span>

@@ -9,6 +9,11 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function removeRestriction() {
+        $this->getApi()->getWubookManager()->deleteRestriction($this->getSelectedName(), $_POST['data']['id']);
+        $this->loadCloseRoomBox();
+    }
+    
     public function unassignFutureBookings() {
         $this->getApi()->getBookingEngine()->forceUnassignBookingInfuture($this->getSelectedName());
     }

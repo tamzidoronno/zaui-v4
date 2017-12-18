@@ -51,6 +51,7 @@ function getBookingTranslations() {
         "downloadTerms" : "Download terms of use",
         "roomExample1" : "Room 1 - Double Room",
         "downloadTerms" : "Download terms of use",
+        "noRoomsMessage" : "Sorry, your current selection could not be given.",
         "startingAt" : "Starting at NOK ",
         "availableRooms: " : "Available rooms: ",
         "gotToPayment" : "Go to payment",
@@ -171,8 +172,8 @@ function loadAddonsAndGuestSummaryByResult(res) {
             var item = res.items[k];
             var entry = template.clone();
             
-            var icon = addon.icon;
-            if(!icon) {
+            var icon = "fa-" + item.icon;
+            if(icon === "fa-") {
                 icon = "fa-question-circle";
             }
             var fontawesomeicon = $('<i class="fa '+icon+'" title="'+addon.name+'"></i>');
@@ -245,8 +246,8 @@ function loadRooms(res) {
         
         for(var addonKey in room.addonsAvailable) {
             var addon = room.addonsAvailable[addonKey];
-            var icon = addon.icon;
-            if(!icon) {
+            var icon = "fa-" + addon.icon;
+            if(icon === "fa-") {
                 icon = "fa-question-circle";
             }
             var fontawesomeicon = $('<i class="fa guestaddonicon '+icon+'" title="'+addon.name+'"></i>');
@@ -732,7 +733,13 @@ $(document).on('click', '.GslBooking #search_rooms', function () {
             $('#productentry').html('');
             gslbookingcurresult = res;
             localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
-            updateOrderSummary(res);
+            $('.noroomsfound').hide();
+            if(!res || (parseInt(data.rooms) !== parseInt(res.roomsSelected))) {
+                $('.noroomsfound').show();
+                return;
+            } else {
+                updateOrderSummary(res);
+            }
             for (var k in res.rooms) {
                 var room = res.rooms[k];
                 var firstFile = room.images[0].fileId;

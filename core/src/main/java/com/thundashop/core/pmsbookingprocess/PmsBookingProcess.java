@@ -212,7 +212,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 toAddToCurrentBooking.date = new PmsBookingDateRange();
                 toAddToCurrentBooking.date.start = normalizeDate(arg.start, true);
                 toAddToCurrentBooking.date.end = normalizeDate(arg.end, false);
-                
+                result.roomsSelected++;
                 booking.addRoom(toAddToCurrentBooking);
         }
         try {
@@ -307,6 +307,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 AddonItem toAddAddon = new AddonItem();
                 toAddAddon.setAddon(item);
                 toAddAddon.name = productManager.getProduct(item.productId).name;
+                toAddAddon.icon = item.bookingicon;
                 checkIsAddedToRoom(toAddAddon, room, item);
                 returnroom.addonsAvailable.put(toAddAddon.productId, toAddAddon);
             }
@@ -321,6 +322,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for(PmsBookingAddonItem item : addonsOnBooking) {
             AddonItem toAddAddon = new AddonItem();
             toAddAddon.setAddon(item);
+            toAddAddon.icon = item.bookingicon;
             toAddAddon.name = productManager.getProduct(item.productId).name;
             isAddedToBooking(toAddAddon, booking, item);
             result.items.add(toAddAddon);

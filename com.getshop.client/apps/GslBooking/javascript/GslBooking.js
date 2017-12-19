@@ -14,6 +14,7 @@ function getBookingTranslations() {
         "gsHotelOs" : "Getshop Hotel, Oslo",
         "gsHotelTb" : "Getshop Hotel, Tønsberg",
         "rooms" : "Rooms",
+        "sameasguest" : "Same as guest",
         "adults" : "Adults",
         "children" : "Children",
         "apply" : "Apply",
@@ -62,7 +63,27 @@ function getBookingTranslations() {
         "agestwototwelve" : "Ages 2-12"
     };
 }
-
+$(document).on('click', '.GslBooking #sameasguestselection', function() {
+    var container = $('.roomrowadded');
+    var checkbox = $(this);
+    $('.guestRows').each(function() {
+        var name = $(this).find("[gsname='name']").val();
+        if(name) {
+            if(checkbox.is(':checked')) {
+                $('[gsname="user_fullName"]').val(name);
+                $('[gsname="user_emailAddress"]').val($(this).find("[gsname='email']").val());
+                $('[gsname="user_cellPhone"]').val($(this).find("[gsname='phone']").val());
+                $('[gsname="user_prefix"]').val($(this).find("[gsname='prefix']").val());
+            } else {
+                $('[gsname="user_fullName"]').val("");
+                $('[gsname="user_emailAddress"]').val("");
+                $('[gsname="user_cellPhone"]').val("");
+                $('[gsname="user_prefix"]').val("");
+            }
+        }
+    });
+    console.log(container.find('[gsname="name"]').val());
+});
 $(document).on('keyup', '.GslBooking [gsname="visitor_name_1"]', function () {
     $('[gsname="user_fullName"]').val($(this).val());
 });

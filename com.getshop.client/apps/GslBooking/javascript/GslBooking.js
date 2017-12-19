@@ -5,7 +5,12 @@ var leftInterval;
 function setBookingTranslation() {
     var translations = getBookingTranslations();
     for(var key in translations) {
-        $('[gstype="bookingtranslation"][gstranslationfield="'+key+'"]').html(translations[key]);
+        var field = $('[gstype="bookingtranslation"][gstranslationfield="'+key+'"]');
+        if(field.is(':button')) {
+            field.attr('value', translations[key]);
+        } else {
+            field.html(translations[key]);
+        }
     }
 }
 
@@ -13,12 +18,16 @@ function getBookingTranslations() {
     return {
         "gsHotelOs" : "Getshop Hotel, Oslo",
         "gsHotelTb" : "Getshop Hotel, Tønsberg",
+        "failedlogon" : "Sorry, wrong username or password",
         "rooms" : "Rooms",
         "sameasguest" : "Same as guest",
+        "loggedonas" : "Logged on as ",
         "adults" : "Adults",
         "children" : "Children",
         "apply" : "Apply",
         "search" : "Search",
+        "logout" : "Logout",
+        "signinbutton" : "Sign in",
         "inLuckAvailable" : "You are in luck, we have rooms available for you!",
         "bestValue" : "This is the best value deal we can offer you total:",
         "continue" : "Continue",
@@ -38,9 +47,10 @@ function getBookingTranslations() {
         "return" : "Return",
         "successfulbooking" : "Congratulation, your room has been reserved now.",
         "errorcompleted" : "An uknown error occured, please contact us.",
-        "goToPayment" : "Go to payment",
+        "goToPayment" : "Continue",
         "contactInformation" : "Contact information",
         "private" : "Private",
+        "ordertext" : "Text on order",
         "organization" : "Organization",
         "alreadyGotanAccount" : "Already got an Account?",
         "streetAdress" : "Street adress",
@@ -59,7 +69,7 @@ function getBookingTranslations() {
         "noRoomsMessage" : "Sorry, your current selection could not be given.",
         "startingAt" : "Starting at NOK ",
         "availableRooms: " : "Available rooms: ",
-        "gotToPayment" : "Go to payment",
+        "gotToPayment" : "Continue",
         "agestwototwelve" : "Ages 2-12"
     };
 }
@@ -82,7 +92,6 @@ $(document).on('click', '.GslBooking #sameasguestselection', function() {
             }
         }
     });
-    console.log(container.find('[gsname="name"]').val());
 });
 $(document).on('keyup', '.GslBooking [gsname="visitor_name_1"]', function () {
     $('[gsname="user_fullName"]').val($(this).val());
@@ -220,6 +229,21 @@ function loadAddonsAndGuestSummaryByResult(res) {
     loadRooms(res);
     loadTextualSummary(res);
     loadBookerInformation(res);
+    loadLoggedOn(res);
+}
+
+function loadLoggedOn(res) {
+    $('.overview_hide').show();
+    $('.overview_contact').hide();
+    $('.overview_loggedon').hide();
+    if(res.isLoggedOn) {
+        $('.overview_loggedon').show();
+        $('.loggedonusername').html(res.loggedOnName);
+        $('.overview_confirmation').show();
+        $('.agreetotermsbox').show();
+    } else {
+        $('.overview_contact').show();
+    }
 }
 
 function loadBookerInformation(res) {
@@ -356,6 +380,41 @@ function addRemoveAddon(btn) {
     });
 }
 
+function getshopLogon() {
+    $.ajax(endpoint + '/scripts/bookingprocess.php?method=logOn', {
+        dataType: 'jsonp',
+        data : {
+            body : {
+                "username" : $("input[gsname='username']").val(),
+                "password" : $("input[gsname='password']").val()
+            }
+        },
+        success: function (res) {
+            $('.failedlogon').hide();
+            loadAddonsAndGuestSummaryByResult(res);
+            if(!res.isLoggedOn) {
+                $('.failedlogon').slideDown();
+            }
+        },
+        error: function(res) {
+        }
+    });
+}
+
+function getshopLogout() {
+    $.ajax(endpoint + '/scripts/bookingprocess.php?method=logOut', {
+        dataType: 'jsonp',
+        success: function (res) {
+            loadAddonsAndGuestSummaryByResult(res);
+            $('.overview_confirmation').hide();
+        },
+        error: function(res) {
+        }
+    });
+}
+
+$(document).on('mousedown','.GslBooking .gssigninbutton', function() { getshopLogon(); });
+$(document).on('mousedown','.GslBooking .gssignoutbutton', function() { getshopLogout(); });
 $(document).on('mousedown','.GslBooking .selectedusertype', function() {
     $('.errormessage').hide();
     $('.invalidinput').removeClass('invalidinput');
@@ -512,6 +571,7 @@ function saveBookerInformation() {
     var data = {
         "profileType" : type,
         "fields" : fields,
+        "ordertext" : $('[gsname="ordertext"]').val(),
         "agreeToTerms" : $('#agreeTerms').is(':checked')
     };
     var dfr = $.Deferred();

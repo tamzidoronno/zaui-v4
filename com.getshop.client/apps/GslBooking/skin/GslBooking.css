@@ -28,11 +28,15 @@ Error      : #de5353; red
     padding:0 0 6px 0;
     border-bottom: 2px solid #3776b3;}
 .GslBooking .errormessage, .GslBooking .agreetotermserrormessage { color: red; font-weight: bold; display:none; }
+.GslBooking .gssigninbutton { padding-left: 20px; padding-right:20px; float:right; margin-top:10px; }
+.GslBooking .overview_loggedon { min-height: 200px; }
 
 .GslBooking .gslfront_1 h4{font-size: 18px;margin: 12px 0;font-family: inherit;font-weight: 500;line-height: 1.1;color: inherit;}
 .GslBooking .gslfront_1 button{font-weight:500 !important;}
 .GslBooking .successcompleted { display:none; text-align: center; padding: 20px; font-size: 28px; }
 .GslBooking .errorcompleted { display:none; text-align: center; padding: 20px; font-size: 28px; color:red; }
+.GslBooking .failedlogon { display:none; text-align: left; padding: 20px; font-size: 28px; color:red; }
+.GslBooking .ordertext { width: 100%; border: solid 1px #bbb; margin-top: 5px; height: 100px; }
 
 .GslBooking .noroomsfound {
     display:none;

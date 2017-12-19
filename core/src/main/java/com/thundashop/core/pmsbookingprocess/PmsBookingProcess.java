@@ -19,6 +19,8 @@ import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,6 +53,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     ProductManager productManager;
+    
+    @Autowired
+    UserManager userManager;
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
@@ -103,10 +108,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             } catch (Exception ex) {
                 Logger.getLogger(PmsBookingProcess.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            room.utilities.put("wifi", "Wifi");
-            room.utilities.put("shield", "Silent room");
-            room.utilities.put("desktop", "Tv");
             
             result.rooms.add(room);
         }
@@ -449,6 +450,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addRoomSummary(result);
         addItemSupported(result);
         addTextualSummary(result);
+        addLoggedOnInformation(result);
         validateFields(result);
         return result;
     }
@@ -487,6 +489,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         booking.registrationData.resultAdded = bookerInfo.fields;
         booking.registrationData.profileType = bookerInfo.profileType;
         booking.agreedToTermsAndConditions = bookerInfo.agreeToTerms;
+        booking.invoiceNote = bookerInfo.ordertext;
         
         try {
             pmsManager.setBooking(booking);
@@ -545,18 +548,45 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
-        String type = result.profileType;
-        String prefix = "user_";
-        if(type.equals("organization")) {
-            prefix = "company_";
-        }
-        for(String key : result.fields.keySet()) {
-            String value = result.fields.get(key);
-            if(key.startsWith(prefix) && (value == null || value.trim().isEmpty())) {
-                result.fieldsValidation.put(key, "Field is required");
-                result.isValid = false;
+        if(!result.isLoggedOn) {
+            String type = result.profileType;
+            String prefix = "user_";
+            if(type.equals("organization")) {
+                prefix = "company_";
+            }
+            for(String key : result.fields.keySet()) {
+                String value = result.fields.get(key);
+                if(key.startsWith(prefix) && (value == null || value.trim().isEmpty())) {
+                    result.fieldsValidation.put(key, "Field is required");
+                    result.isValid = false;
+                }
             }
         }
         
+    }
+
+    private void addLoggedOnInformation(GuestAddonsSummary result) {
+        User loggedOnUser = userManager.getLoggedOnUser();
+        if(loggedOnUser == null) {
+            result.loggedOnName = "";
+            result.isLoggedOn = false;
+        } else {
+            result.loggedOnName = loggedOnUser.fullName;
+            result.isLoggedOn = true;
+        }
+    }
+
+    @Override
+    public GuestAddonsSummary logOn(BookingLogonData logindata) {
+        try {
+            userManager.logOn(logindata.username, logindata.password);
+        }catch(ErrorException e) {}
+        return generateSummary();
+    }
+
+    @Override
+    public GuestAddonsSummary logOut() {
+        userManager.logout();
+        return generateSummary();
     }
 }

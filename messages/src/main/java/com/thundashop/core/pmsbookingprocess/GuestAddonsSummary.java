@@ -13,4 +13,6 @@ public class GuestAddonsSummary {
     public String profileType = "";
     public boolean isValid = false;
     public boolean agreedToTerms = false;
+    public boolean isLoggedOn = false;
+    public String loggedOnName = "";
 }

@@ -58,7 +58,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         if(arg.adults < arg.rooms) {
             return null;
         }
-        pmsManager.startBooking();
+        PmsBooking booking = pmsManager.startBooking();
+        booking.couponCode = arg.discountCode;
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         
         arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
         arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);
@@ -443,6 +449,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addRoomSummary(result);
         addItemSupported(result);
         addTextualSummary(result);
+        validateFields(result);
         return result;
     }
 
@@ -479,6 +486,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsBooking booking = pmsManager.getCurrentBooking();
         booking.registrationData.resultAdded = bookerInfo.fields;
         booking.registrationData.profileType = bookerInfo.profileType;
+        booking.agreedToTermsAndConditions = bookerInfo.agreeToTerms;
+        
         try {
             pmsManager.setBooking(booking);
         }catch(Exception e) {
@@ -489,6 +498,60 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public BookingResult completeBooking() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PmsBooking booking = pmsManager.completeCurrentBooking();
+        BookingResult res = new BookingResult();
+        res.success = 1;
+        if(res == null) {
+            res.success = 0;
+        } else {
+            res.bookingid = booking.id;
+            res.continuetopayment = 1;
+        }
+        return res;
+    }
+
+    private void validateFields(GuestAddonsSummary result) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        result.isValid = true;
+        if(!booking.agreedToTermsAndConditions) {
+            result.fieldsValidation.put("agreeterms", "Need to agree to terms and contiditions");
+            result.isValid = false;
+        }
+        
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            for(int i = 0; i < room.numberOfGuests; i++) {
+                PmsGuests guest = new PmsGuests();
+                if(room.guests.size() > i) {
+                    guest = room.guests.get(i);
+                }
+                if(guest.email == null || guest.email.trim().isEmpty() || !guest.email.contains("@")) {
+                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_email", "Invalid email");
+                    result.isValid = false;
+                }
+                if(guest.name == null || guest.name.trim().isEmpty()) {
+                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_name", "Invalid name");
+                    result.isValid = false;
+                }
+                if(guest.phone == null || guest.phone.trim().isEmpty()) {
+                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_phone", "Invalid phone");
+                    result.isValid = false;
+                }
+                break;
+            }
+        }
+        
+        String type = result.profileType;
+        String prefix = "user_";
+        if(type.equals("organization")) {
+            prefix = "company_";
+        }
+        for(String key : result.fields.keySet()) {
+            String value = result.fields.get(key);
+            if(key.startsWith(prefix) && (value == null || value.trim().isEmpty())) {
+                result.fieldsValidation.put(key, "Field is required");
+                result.isValid = false;
+            }
+        }
+        
     }
 }

@@ -9,5 +9,8 @@ public class GuestAddonsSummary {
     public List<RoomInfo> rooms = new ArrayList();
     public List<String> textualSummary = new ArrayList();
     public LinkedHashMap<String, String> fields = new LinkedHashMap();
+    public LinkedHashMap<String, String> fieldsValidation = new LinkedHashMap();
     public String profileType = "";
+    public boolean isValid = false;
+    public boolean agreedToTerms = false;
 }

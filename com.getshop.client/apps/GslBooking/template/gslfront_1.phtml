@@ -95,6 +95,7 @@
                             </div>
                         </div>
                         <div class='guestRows'></div>
+                        <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
                         <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
                     </div>
 <!--                    <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>-->
@@ -190,11 +191,16 @@
                     <div style="clear: both;"></div>
                 </div>
                 <div style="padding:10px;" class='agreetotermsbox'>
-                    <input id="agreeTerms" type="checkbox">
-                    <label for="agreeTerms">s<span gstype='bookingtranslation' gstranslationfield='agreeTerms'></span></label>
+                    <label for="agreeTerms">
+                        <input id="agreeTerms" type="checkbox">
+                        <span gstype='bookingtranslation' gstranslationfield='agreeTerms'></span>
+                    </label>
                     <div><a style="cursor:pointer;"><span gstype='bookingtranslation' gstranslationfield='readTerms'></span></a></div>
                     <div><a style="cursor:pointer;"><span gstype='bookingtranslation' gstranslationfield='downloadTerms'></span></a></div>
                 </div>
+                <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
+                <div class='agreetotermserrormessage'><span gstype='bookingtranslation' gstranslationfield='agreetotermserrormessage'></span></div>
+                
                 <div style="clear: both;"></div>
             </div>
         </div>
@@ -265,9 +271,9 @@
 <script>
     
 //Reset page on load.
-//    localStorage.setItem('gslcurrentpage','');
-//    $('.gslbookingBody').hide();
-//    $('.addons_overview').hide();
+    localStorage.setItem('gslcurrentpage','');
+    $('.gslbookingBody').hide();
+    $('.addons_overview').hide();
     
     setBookingTranslation();
     setDatePicker();

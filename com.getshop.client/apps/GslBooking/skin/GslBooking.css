@@ -18,7 +18,7 @@ Error      : #de5353; red
 /*-----------------gslfront_1-----------------*/
 
 
-
+.GslBooking .invalidinput { border-color: red; border: solid 1px red !important; }
 .GslBooking .gslfront_1{background-color: #f9f9f9;padding: 0px;font-size: 16px;position: relative;cursor:default;color:#222;font-family: sans-serif;}
 .GslBooking .gslfront_1 *,.GslBooking .gslfront_1 *::before,.GslBooking .gslfront_1 *::after{box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
 .GslBooking .gslfront_1 h3{font-size: 18px;
@@ -27,6 +27,8 @@ Error      : #de5353; red
     color: #3776b3;
     padding:0 0 6px 0;
     border-bottom: 2px solid #3776b3;}
+.GslBooking .errormessage, .GslBooking .agreetotermserrormessage { color: red; font-weight: bold; display:none; }
+
 .GslBooking .gslfront_1 h4{font-size: 18px;margin: 12px 0;font-family: inherit;font-weight: 500;line-height: 1.1;color: inherit;}
 .GslBooking .gslfront_1 button{font-weight:500 !important;}
 
@@ -80,7 +82,6 @@ Error      : #de5353; red
 /*----------------*/
 
 /*gsnicecheckbox*/
-.GslBooking .gslfront_1 input[type=checkbox]{display:none;}
 .GslBooking .gslfront_1 input[type=checkbox] ~ label{position: relative;cursor:pointer;padding: 4px 20px;font-size: 12px;color: #3776b3;border-bottom: 1px solid #ddd;}
 .GslBooking .gslfront_1 input[type=checkbox] ~ label:hover{opacity: 0.75;}
 .GslBooking .gslfront_1 input[type=checkbox] ~ label::before{content: "";position: absolute;border: 2px solid #3776b3;left: 0;padding: 5px;background-color: #3776b3;}

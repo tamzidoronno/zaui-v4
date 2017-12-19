@@ -4,9 +4,13 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $method = $_GET['method'];
-$data = json_encode($_GET['body']);
 $domain = "default";
-$result = $factory->getApi()->getPmsBookingProcess()->$method($domain, $_GET['body']);
+if(isset($_GET['body'])) {
+    $data = json_encode($_GET['body']);
+    $result = $factory->getApi()->getPmsBookingProcess()->$method($domain, $_GET['body']);
+} else {
+    $result = $factory->getApi()->getPmsBookingProcess()->$method($domain);
+}
 if(isset($_GET['dump'])) {
     echo "<pre>";
     print_r($result);

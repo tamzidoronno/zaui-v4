@@ -35,6 +35,8 @@ function getBookingTranslations() {
         "addGuest" : "Add guest",
         "yourStay" : "Your stay",
         "return" : "Return",
+        "successfulbooking" : "Congratulation, your room has been reserved now.",
+        "errorcompleted" : "An uknown error occured, please contact us.",
         "goToPayment" : "Go to payment",
         "contactInformation" : "Contact information",
         "private" : "Private",
@@ -382,14 +384,24 @@ $(document).on('mousedown', '.GslBooking .go_to_payment_button', function () {
             $('.agreetotermserrormessage').slideDown();
         }
         if(res.isValid) {
+            $('.successcompleted').hide();
             if(btn.hasClass('fa-spin')) {
                 return;
             }
             var completing = completeBooking();
             btn.html('<i class="fa fa-spin fa-spinner"></i>');
             completing.done(function(res) {
-                console.log(res);
+                if(res.continuetopayment == 1) {
+                    window.location.href = endpoint + "/?page=cart&payorder=" + res.orderid;
+                } else {
+                    $('.gslbookingBody').hide();
+                    $('.successcompleted').show();
+                }
             });
+            completing.fail(function() {
+                $('.gslbookingBody').hide();
+                $('.errorcompleted').show();
+            })
         }
     });
 });
@@ -398,8 +410,12 @@ function completeBooking() {
    var def = $.Deferred();
    $.ajax(endpoint + '/scripts/bookingprocess.php?method=completeBooking', {
         dataType: 'jsonp',
+        body : "",
         success: function (res) {
             def.resolve(res);
+        },
+        error: function(res) {
+            def.fail(res);
         }
     });
     return def;
@@ -527,8 +543,10 @@ function saveGuestInformation() {
         roomInfo.numberOfGuests = guestCount;
         toSave.push(roomInfo);
     });
-    
     var dfd = jQuery.Deferred();
+    if(toSave.length == 0) {
+        return dfd;
+    }
     $.ajax(endpoint + '/scripts/bookingprocess.php?method=saveGuestInformation', {
         dataType: 'jsonp',
         data: {

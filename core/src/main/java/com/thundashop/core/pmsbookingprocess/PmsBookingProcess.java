@@ -505,7 +505,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             res.success = 0;
         } else {
             res.bookingid = booking.id;
-            res.continuetopayment = 1;
+            if(booking.orderIds.size() == 1) {
+                res.continuetopayment = 1;
+                res.orderid = booking.orderIds.get(0);
+            } else {
+                res.continuetopayment = 0;
+            }
         }
         return res;
     }

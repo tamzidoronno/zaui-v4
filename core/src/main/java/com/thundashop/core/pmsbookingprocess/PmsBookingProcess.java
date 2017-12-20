@@ -19,6 +19,8 @@ import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -52,13 +54,22 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Autowired
     ProductManager productManager;
     
+    @Autowired
+    UserManager userManager;
+    
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
         
         if(arg.adults < arg.rooms) {
             return null;
         }
-        pmsManager.startBooking();
+        PmsBooking booking = pmsManager.startBooking();
+        booking.couponCode = arg.discountCode;
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         
         arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
         arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);
@@ -97,10 +108,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             } catch (Exception ex) {
                 Logger.getLogger(PmsBookingProcess.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            room.utilities.put("wifi", "Wifi");
-            room.utilities.put("shield", "Silent room");
-            room.utilities.put("desktop", "Tv");
             
             result.rooms.add(room);
         }
@@ -212,7 +219,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 toAddToCurrentBooking.date = new PmsBookingDateRange();
                 toAddToCurrentBooking.date.start = normalizeDate(arg.start, true);
                 toAddToCurrentBooking.date.end = normalizeDate(arg.end, false);
-                
+                result.roomsSelected++;
                 booking.addRoom(toAddToCurrentBooking);
         }
         try {
@@ -307,6 +314,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 AddonItem toAddAddon = new AddonItem();
                 toAddAddon.setAddon(item);
                 toAddAddon.name = productManager.getProduct(item.productId).name;
+                toAddAddon.icon = item.bookingicon;
                 checkIsAddedToRoom(toAddAddon, room, item);
                 returnroom.addonsAvailable.put(toAddAddon.productId, toAddAddon);
             }
@@ -321,6 +329,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for(PmsBookingAddonItem item : addonsOnBooking) {
             AddonItem toAddAddon = new AddonItem();
             toAddAddon.setAddon(item);
+            toAddAddon.icon = item.bookingicon;
             toAddAddon.name = productManager.getProduct(item.productId).name;
             isAddedToBooking(toAddAddon, booking, item);
             result.items.add(toAddAddon);
@@ -441,6 +450,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addRoomSummary(result);
         addItemSupported(result);
         addTextualSummary(result);
+        addLoggedOnInformation(result);
+        validateFields(result);
         return result;
     }
 
@@ -477,6 +488,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsBooking booking = pmsManager.getCurrentBooking();
         booking.registrationData.resultAdded = bookerInfo.fields;
         booking.registrationData.profileType = bookerInfo.profileType;
+        booking.agreedToTermsAndConditions = bookerInfo.agreeToTerms;
+        booking.invoiceNote = bookerInfo.ordertext;
+        
         try {
             pmsManager.setBooking(booking);
         }catch(Exception e) {
@@ -487,6 +501,106 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public BookingResult completeBooking() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        User loggedOn = userManager.getLoggedOnUser();
+        PmsBooking booking = null;
+        if(loggedOn != null) {
+            booking = pmsManager.getCurrentBooking();
+            if(booking.userId == null || booking.userId.trim().isEmpty()) {
+                booking.userId = loggedOn.id;
+                try {
+                    pmsManager.setBooking(booking);
+                }catch(Exception e) {
+                    logPrint(e);
+                }
+            }
+        }
+        
+        booking = pmsManager.completeCurrentBooking();
+        BookingResult res = new BookingResult();
+        res.success = 1;
+        if(res == null) {
+            res.success = 0;
+        } else {
+            res.bookingid = booking.id;
+            if(booking.orderIds.size() == 1) {
+                res.continuetopayment = 1;
+                res.orderid = booking.orderIds.get(0);
+            } else {
+                res.continuetopayment = 0;
+            }
+        }
+        return res;
+    }
+
+    private void validateFields(GuestAddonsSummary result) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        result.isValid = true;
+        if(!booking.agreedToTermsAndConditions) {
+            result.fieldsValidation.put("agreeterms", "Need to agree to terms and contiditions");
+            result.isValid = false;
+        }
+        
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            for(int i = 0; i < room.numberOfGuests; i++) {
+                PmsGuests guest = new PmsGuests();
+                if(room.guests.size() > i) {
+                    guest = room.guests.get(i);
+                }
+                if(guest.email == null || guest.email.trim().isEmpty() || !guest.email.contains("@")) {
+                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_email", "Invalid email");
+                    result.isValid = false;
+                }
+                if(guest.name == null || guest.name.trim().isEmpty()) {
+                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_name", "Invalid name");
+                    result.isValid = false;
+                }
+                if(guest.phone == null || guest.phone.trim().isEmpty()) {
+                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_phone", "Invalid phone");
+                    result.isValid = false;
+                }
+                break;
+            }
+        }
+        
+        if(!result.isLoggedOn) {
+            String type = result.profileType;
+            String prefix = "user_";
+            if(type.equals("organization")) {
+                prefix = "company_";
+            }
+            for(String key : result.fields.keySet()) {
+                String value = result.fields.get(key);
+                if(key.startsWith(prefix) && (value == null || value.trim().isEmpty())) {
+                    result.fieldsValidation.put(key, "Field is required");
+                    result.isValid = false;
+                }
+            }
+        }
+        
+    }
+
+    private void addLoggedOnInformation(GuestAddonsSummary result) {
+        User loggedOnUser = userManager.getLoggedOnUser();
+        if(loggedOnUser == null) {
+            result.loggedOnName = "";
+            result.isLoggedOn = false;
+        } else {
+            result.loggedOnName = loggedOnUser.fullName;
+            result.isLoggedOn = true;
+        }
+    }
+
+    @Override
+    public GuestAddonsSummary logOn(BookingLogonData logindata) {
+        try {
+            userManager.logOn(logindata.username, logindata.password);
+        }catch(ErrorException e) {}
+        return generateSummary();
+    }
+
+    @Override
+    public GuestAddonsSummary logOut() {
+        userManager.logout();
+        return generateSummary();
     }
 }

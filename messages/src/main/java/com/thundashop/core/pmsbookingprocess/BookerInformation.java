@@ -6,4 +6,6 @@ import java.util.LinkedHashMap;
 public class BookerInformation {
     public String profileType = "";
     public LinkedHashMap<String, String> fields = new LinkedHashMap();
+    public boolean agreeToTerms = false;
+    public String ordertext = "";
 }

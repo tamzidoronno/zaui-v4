@@ -3968,6 +3968,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 toReturn.productId = product.id;
             } 
             toReturn.date = date;
+            toReturn.bookingicon = addonConfig.bookingicon;
             toReturn.descriptionWeb = addonConfig.descriptionWeb;
             toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
             toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;

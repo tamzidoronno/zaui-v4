@@ -37,6 +37,7 @@
     </div>
     
     <div class="gslbookingBody">
+        <div id="orderSum" class="noroomsfound"><span gstype='bookingtranslation' gstranslationfield='noRoomsMessage'></span></div>
         <div id="orderSum" class="ordersummary">
             <h3><i class='fa fa-smile-o'></i><span gstype='bookingtranslation' gstranslationfield='inLuckAvailable'></span><i class='fa fa-smile-o'></i></h3>
             <div class="selectedguests"></div>
@@ -94,6 +95,7 @@
                             </div>
                         </div>
                         <div class='guestRows'></div>
+                        <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
                         <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
                     </div>
 <!--                    <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>-->
@@ -109,6 +111,15 @@
                 </div>
             </div>
             <div class="overview_article">
+                <div class="overview_loggedon">
+                    <h3>
+                        <span gstype='bookingtranslation' gstranslationfield='loggedonas'></span><span class='loggedonusername'></span>
+                        <input class='gssignoutbutton' type="button" style="float:right;" gstype='bookingtranslation' gstranslationfield='logout'>
+                    </h3>
+                    <b><span gstype='bookingtranslation' gstranslationfield='ordertext'></span></b><br>
+                    <textarea gsname='ordertext' class="ordertext"></textarea>
+                </div>
+                
                 <div class="overview_contact">
                     <h3><span gstype='bookingtranslation' gstranslationfield='contactInformation'></span></h3>
                     <div class="overview_contact_tab">
@@ -125,6 +136,8 @@
                     <br>
                     <div class="private_fields" type='user'>
                         <div class="guestentry guesttypeselection" type='private'>
+                            <div><input type='checkbox' id='sameasguestselection' style='width:16px; padding:initial;'> <span gstype='bookingtranslation' gstranslationfield='sameasguest'></span></div>
+                            <div style='clear:both;'></div><br>
                             <div style="width: 33.33%;float: left;">
                                 <div><span gstype='bookingtranslation' gstranslationfield='name'></span></div><br>
                                 <input type="txt" gsname="user_fullName">
@@ -182,22 +195,32 @@
                     <div class="login_fields guesttypeselection" style='display:none;' type='gotAccount'>
                         <div class="guestentry">
                             <div style="width: 50%; float:left;"><span gstype='bookingtranslation' gstranslationfield='userOrEmail'></span><br><input type="txt" gsname="username"></div>
-                            <div style="width: 50%; float:left;"><span gstype='bookingtranslation' gstranslationfield='password'></span><br><input type="txt" gsname="password"></div>
+                            <div style="width: 50%; float:left;"><span gstype='bookingtranslation' gstranslationfield='password'></span><br><input type="password" gsname="password"></div>
                         </div>
-                        <input type='button' value='Sign in' style='padding-left: 20px; padding-right:20px; float:right; margin-top:10px;'>
+                        <input type='button' class='gssigninbutton' gstype='bookingtranslation' gstranslationfield='signinbutton'>
+                        
+                        <div class='failedlogon'><span gstype='bookingtranslation' gstranslationfield='failedlogon'></span></div>
+                        
                     </div>
                     <div style="clear: both;"></div>
                 </div>
                 <div style="padding:10px;" class='agreetotermsbox'>
-                    <input id="agreeTerms" type="checkbox">
-                    <label for="agreeTerms"><span gstype='bookingtranslation' gstranslationfield='agreeTerms'></span></label>
+                    <label for="agreeTerms">
+                        <input id="agreeTerms" type="checkbox">
+                        <span gstype='bookingtranslation' gstranslationfield='agreeTerms'></span>
+                    </label>
                     <div><a style="cursor:pointer;"><span gstype='bookingtranslation' gstranslationfield='readTerms'></span></a></div>
                     <div><a style="cursor:pointer;"><span gstype='bookingtranslation' gstranslationfield='downloadTerms'></span></a></div>
                 </div>
+                <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
+                <div class='agreetotermserrormessage'><span gstype='bookingtranslation' gstranslationfield='agreetotermserrormessage'></span></div>
+                
                 <div style="clear: both;"></div>
             </div>
         </div>
     </div>
+    <div class='successcompleted'><span gstype='bookingtranslation' gstranslationfield='successfulbooking'></span></div>
+    <div class='errorcompleted'><span gstype='bookingtranslation' gstranslationfield='errorcompleted'></span></div>
 </div>
 
 <div class="roomentry" id="addnewroom">
@@ -262,6 +285,12 @@
 <script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
 <script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
 <script>
+    
+//Reset page on load.
     localStorage.setItem('gslcurrentpage','');
+    $('.gslbookingBody').hide();
+    $('.addons_overview').hide();
+    
     setBookingTranslation();
+    setDatePicker();
 </script>

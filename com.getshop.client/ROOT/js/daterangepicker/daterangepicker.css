@@ -2,7 +2,7 @@
   position: absolute;
   color: inherit;
   background-color: #f9f9f9;
-  width: 278px;
+  width: 100%;
   padding: 4px;
   top: 100px;
   left: 20px;
@@ -68,7 +68,7 @@
   .daterangepicker .calendar {
     display: none;
     max-width: 270px;
-    margin: 4px; }
+    margin: auto; }
     .daterangepicker .calendar.single .calendar-table {
       border: none; }
     .daterangepicker .calendar th, .daterangepicker .calendar td {
@@ -203,7 +203,7 @@
 /*  Larger Screen Styling */
 @media (min-width: 564px) {
   .daterangepicker {
-    width: auto; }
+    width: 100%; }
     .daterangepicker .ranges ul {
       width: 160px; }
     .daterangepicker.single .ranges ul {

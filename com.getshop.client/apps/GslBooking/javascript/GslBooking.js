@@ -48,7 +48,7 @@ function getBookingTranslations() {
         "return" : "Return",
         "successfulbooking" : "Congratulation, your room has been reserved now.",
         "errorcompleted" : "An uknown error occured, please contact us.",
-        "goToPayment" : "Continue",
+        "goToPayment" : "Go to payment",
         "contactInformation" : "Contact information",
         "private" : "Private",
         "ordertext" : "Text on order",
@@ -66,14 +66,15 @@ function getBookingTranslations() {
         "readTerms" : "Read terms of use",
         "downloadTerms" : "Download terms of use",
         "roomExample1" : "Room 1 - Double Room",
-        "downloadTerms" : "Download terms of use",
         "noRoomsMessage" : "Sorry, your current selection could not be given.",
         "startingAt" : "Starting at NOK ",
-        "availableRooms: " : "Available rooms: ",
-        "gotToPayment" : "Continue",
-        "agestwototwelve" : "Ages 2-12"
+        "availableRooms: " : "Available rooms: "
     };
 }
+$(document).click(function(){
+    var height = $('.image-holder').height();
+    console.log(height);
+});
 $(document).on('click', '.GslBooking #sameasguestselection', function() {
     var container = $('.roomrowadded');
     var checkbox = $(this);
@@ -344,11 +345,12 @@ function createSticky(sticky) {
         var paddingBox = $('.productoverview');
 
         win.on("scroll", function () {
-            console.log(pos);
-            console.log(win.scrollTop());
+//            console.log(pos);
+//            console.log(win.scrollTop());
             var stopPos = stopperbox.offset().top - sticky.height();
             var yPos = stopPos - 444;
             if(win.scrollTop() > pos && win.scrollTop() < stopPos) {
+                sticky.addClass('sticky');
                 sticky.css({
                     position: 'fixed',
                     top: 0
@@ -362,6 +364,7 @@ function createSticky(sticky) {
                 });
             } 
             else {
+                sticky.removeClass('sticky');
                 sticky.css({
                     position: 'relative',
                     top: '0'

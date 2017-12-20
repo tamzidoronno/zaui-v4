@@ -1,1 +1,2 @@
-.PmsRestrictions .createrestricitonarea { padding: 10px; border: solid 1px #bbb; display:inline-block; background-color:#ddd; }
+.PmsRestrictions .createrestricitonarea { padding: 10px; border: solid 1px #bbb; display:none; background-color:#ddd; position:absolute; }
+.PmsRestrictions .repeatoption { display:none; }

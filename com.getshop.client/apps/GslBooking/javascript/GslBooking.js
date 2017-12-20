@@ -71,7 +71,8 @@ function getBookingTranslations() {
         "startingAt" : "Starting at NOK ",
         "availableRooms: " : "Available rooms: ",
         "gotToPayment" : "Continue",
-        "agestwototwelve" : "Ages 2-12"
+        "agestwototwelve" : "Ages 2-12",
+        "chooseroom" : "Choose room"
     };
 }
 $(document).on('click', '.GslBooking #sameasguestselection', function() {
@@ -750,9 +751,11 @@ function updateOrderSummary(res) {
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable'>" + row + "</table>");
     $('.GslBooking .ordersummary .totalprice').html(total);
 //    $('.GslBooking .ordersummary').css('visibility','visible').css('height','auto');
-    $('.GslBooking .ordersummary').slideDown('slow', function(){
-        $(function(){createSticky($(".ordersummary"));});
-    });
+    if(!$('.GslBooking .ordersummary').is(":visible")) {
+        $('.GslBooking .ordersummary').slideDown('slow', function(){
+            $(function(){createSticky($(".ordersummary"));});
+        });
+    }
     
 }
 
@@ -961,7 +964,8 @@ $(document).on('click', '.GslBooking #search_rooms', function () {
                             var price = room.pricesByGuests[guest] * i;
                             numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';
                         }
-                        productentry = $('<div class="productentry_itemlist">' + user_icon + '<div>' + room.name + ', ' + guest + multipleGuests + ' NOK ' + room.pricesByGuests[guest] + ',-</div><div style="float:right;padding:0;"><span gstype="bookingtranslation" gstranslationfield="chooseRooms"></span><select class="numberof_rooms" guests="'+guest+'"><option value="0" data-price="0">0</option>' + numberofrooms + '</select></div></div>');
+                        var trans = getBookingTranslations();
+                        productentry = $('<div class="productentry_itemlist">' + user_icon + '<div>' + room.name + ', ' + guest + multipleGuests + ' NOK ' + room.pricesByGuests[guest] + ',-</div><div style="float:right;padding:0;">'+trans['chooseroom']+'<select class="numberof_rooms" guests="'+guest+'"><option value="0" data-price="0">0</option>' + numberofrooms + '</select></div></div>');
                         productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
                         roomBox.find('.guestselection').append(productentry);
                     }

@@ -154,6 +154,10 @@ public class Route extends DataCommon {
     static Comparator<? super Route> getSortedByDeliveryDate() {
         
         return (Route o1, Route o2) -> {
+            if (o1.sameDeliveryDay(o2)) {
+                return o2.id.compareTo(o1.id);
+            }
+            
             return Comparator.nullsLast(Date::compareTo).compare(o1.deliveryServiceDate, o2.deliveryServiceDate);
         };
     }
@@ -185,5 +189,18 @@ public class Route extends DataCommon {
         driverLogs.add(log);
     }
 
-
+    private boolean sameDeliveryDay(Route o2) {
+        if (o2.deliveryServiceDate == null || deliveryServiceDate == null) {
+            return false;
+        }
+        
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(deliveryServiceDate);
+        cal2.setTime(o2.deliveryServiceDate);
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                          cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        
+        return sameDay;
+    }
 }

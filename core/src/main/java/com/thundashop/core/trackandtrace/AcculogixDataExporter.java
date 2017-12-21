@@ -59,6 +59,7 @@ public class AcculogixDataExporter {
         exports.stream().forEach(exp -> { exp.createMd5Sum(); });
         
         exports.removeIf(exp -> trackAndTraceManager.alreadyExported(exp));
+        exports.removeIf(exp -> trackAndTraceManager.afInArray(exp, exports));
         
         exports.stream().forEach(exp -> {
             startId++;
@@ -215,6 +216,9 @@ public class AcculogixDataExporter {
             }
             
             exp.ORPieceCorrect = "NO";
+            if (exp.PODBarcodeID.equals("AC.20.17.2187408")) {
+                System.out.println("Found one");
+            }
         }
         
         return toAdd;

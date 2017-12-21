@@ -190,6 +190,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         sortExportedData();
         
+        if (afInArray(inExp, sortedExports)) {
+            return true;
+        }
+        
         for (AcculogixExport exp : sortedExports) {
             if (exp.routeId != null && exp.routeId.equals(inExp.routeId) && exp.PODBarcodeID != null &&  exp.PODBarcodeID.equals(inExp.PODBarcodeID) &&  exp.ORReferenceNumber != null && exp.ORReferenceNumber.equals(inExp.ORReferenceNumber) && exp.md5sum != null && !exp.md5sum.equals(md5Sum)) {
                 return false;
@@ -1443,5 +1447,30 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         } else {
             retList.sort(Route.getSortedById());
         }
+    }
+
+
+    public boolean afInArray(AcculogixExport toCheck, List<AcculogixExport> allExports) {
+        if (!toCheck.isAFRecord()) {
+            return false;
+        }
+        
+        String a = toCheck.getAllFieldsToConsider();
+        List<AcculogixExport> listToCheck = allExports.stream()
+                .filter(o -> o.routeId.equals(toCheck.routeId))
+                .filter(o -> o.PODBarcodeID.equals(toCheck.PODBarcodeID))
+                .collect(Collectors.toList());
+        
+        for (AcculogixExport exp : listToCheck) {
+            if (toCheck.equals(exp)) {
+                continue;
+            }
+            
+            if (exp.getAllFieldsToConsider().equals(a)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

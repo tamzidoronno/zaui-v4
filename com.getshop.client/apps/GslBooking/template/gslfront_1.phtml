@@ -1,10 +1,10 @@
 <div class='gslfront_1'>
     <div class='gslbookingHeader'>
-        <div class="fa_box destination">
+        <div class="fa_box destination" style="display: none;">
             <input id="destination" placeholder="Destination?" onfocus="this.placeholder =''" onblur="this.placeholder ='Destination?'" style="border-right:1px solid #ddd;" readonly>
             <div class="destinationInfoBox">
-                <div class='destination_line'><img class="destination_image" src="https://www.visitoslo.com/Images/Bilder%20Oslo/Attraksjoner/Akrobaten%20mot%20Barcode_Leif%20Harald%20Ruud.jpg?t=ScaleToFill%7C1450x720&ts=ajCYo6pTmf0Mfh7RGfLmeiDlLmE%3D"><span gstype='bookingtranslation' gstranslationfield='gsHotelOs'></span></div>
-                <div class='destination_line'><img class="destination_image" src="https://media.newmindmedia.com/TellUs/image/?file=3F59853038189DAC967CB6AB12EE7B4F977148CA.jpg&dh=392&dw=526"><span gstype='bookingtranslation' gstranslationfield='gsHotelTb'></span></div>
+                <div class='destination_line'><img class="destination_image" src=""><span gstype='bookingtranslation' gstranslationfield='gsHotelOs'></span></div>
+                <div class='destination_line'><img class="destination_image" src=""><span gstype='bookingtranslation' gstranslationfield='gsHotelTb'></span></div>
             </div>
         </div><div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="addons_overview">
-            <div style="width:30%;float:right;">
+            <div class="addons_overview_right">
                 <div style="padding:10px;">
                     <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                     <div class='yourstaysummary'></div>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div style="width:70%;background-color:#f9f9f9;padding:20px;box-shadow: inset -1px 0 0 #ddd;">
+            <div class="addons_overview_left">
                 <div class="addonsentry">
                     <h3><span gstype='bookingtranslation' gstranslationfield='addons'></span></h3>
                     <span gstype='bookingtranslation' gstranslationfield='addAddonsOr'></span>
@@ -87,9 +87,9 @@
                             <div><span gstype='bookingtranslation' gstranslationfield='addons'></span></div>
                         </div>
                         <div class="guestentry" id='guestentryrow' style='display:none;'>
-                            <div><input type="txt" gsname="name"></div>
-                            <div><input type="txt" gsname="email"></div>
-                            <div><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone"></div>
+                            <div><input type="txt" gsname="name" placeholder="Name"></div>
+                            <div><input type="txt" gsname="email"placeholder="E-mail"></div>
+                            <div><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"></div>
                             <div>
                                 <div class="guest_addon"></div>
                             </div>
@@ -107,7 +107,7 @@
                 <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                 <div class='yourstaysummary'></div>
                 <div class="overview_confirmation">
-                    <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i><span gstype='bookingtranslation' gstranslationfield='return'></span></div><div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
+                    <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"> </i><span gstype='bookingtranslation' gstranslationfield='return'></span></div><div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
                 </div>
             </div>
             <div class="overview_article">
@@ -139,24 +139,24 @@
                             <div><input type='checkbox' id='sameasguestselection' style='width:16px; padding:initial;'> <span gstype='bookingtranslation' gstranslationfield='sameasguest'></span></div>
                             <div style='clear:both;'></div><br>
                             <div style="width: 33.33%;float: left;">
-                                <div><span gstype='bookingtranslation' gstranslationfield='name'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='name'></span></div><br>
                                 <input type="txt" gsname="user_fullName">
                             </div>
                             <div style="width: 33.33%;float: left;">
-                                <div><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div><br>
                                 <input type="txt" gsname="user_emailAddress">
                             </div>
                             <div style="width: 33.33%;float: left;">
-                                <div><span gstype='bookingtranslation' gstranslationfield='phone'></span></div><br>
-                                <input type="txt" class="guest_phone" value="   47" gsname="user_prefix" style='float:left;'>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='phone'></span></div><br>
+                                <input type="txt" class="guest_phone" value="47" gsname="user_prefix" style='float:left;'>
                                 <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="user_cellPhone">
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
-                                <div><span gstype='bookingtranslation' gstranslationfield='streetAdress'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='streetAdress'></span></div><br>
                                 <input type="txt" gsname='user_address_address'>
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
-                                <div><span gstype='bookingtranslation' gstranslationfield='zipCode'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='zipCode'></span></div><br>
                                 <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='user_address_postCode'>
                                 <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;" gsname='user_address_city'>
                             </div>
@@ -252,8 +252,9 @@
     <div class="productentry_main">
         <div class="productentry_header">
             <div class="roomname"></div>
-            <div style="float:right;"><span gstype='bookingtranslation' gstranslationfield='startingAt'></span><span class='lowpricedisplayer'></span>,-</div>
             <div class="product_availablerooms" value=""><span gstype='bookingtranslation' gstranslationfield='availableRooms'></span><span class='availableroomcontainer'></span></div>
+            <div class="lowpricediv"><span gstype='bookingtranslation' gstranslationfield='startingAt'></span><span class='lowpricedisplayer'></span>,-</div>
+            
         </div>
         <div class="productentry_body">
             <div class="guestselection"></div>

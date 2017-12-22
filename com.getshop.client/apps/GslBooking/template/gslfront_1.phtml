@@ -5,6 +5,7 @@
             <div class="destinationInfoBox">
                 <div class='destination_line'><img class="destination_image" src=""><span gstype='bookingtranslation' gstranslationfield='gsHotelOs'></span></div>
                 <div class='destination_line'><img class="destination_image" src=""><span gstype='bookingtranslation' gstranslationfield='gsHotelTb'></span></div>
+                
             </div>
         </div><div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
@@ -41,7 +42,7 @@
         <div id="orderSum" class="ordersummary">
             <h3><i class='fa fa-smile-o'></i><span gstype='bookingtranslation' gstranslationfield='inLuckAvailable'></span><i class='fa fa-smile-o'></i></h3>
             <div class="selectedguests"></div>
-            <span gstype='bookingtranslation' gstranslationfield='bestValue'></span><span class='totalprice'></span>
+            <div class="bestValue"><span gstype='bookingtranslation' gstranslationfield='bestValue'></span> <span class='totalprice'></span></div>
             <span class='gsl_button continue active'><span gstype='bookingtranslation' gstranslationfield='continue'></span></span>
             <div class='bottomspacer'></div>
         </div>
@@ -66,7 +67,7 @@
                     <span gstype='bookingtranslation' gstranslationfield='addAddonsOr'></span>
                     <div class="overview_addons">
                         <div class="addon" id='addon' style='display:none;'>
-                            <div style="width:60%;"><span class='icon'></span> <span class='text'></span></div><div><span gstype='bookingtranslation' gstranslationfield='NOK'></span><span class='price'></span>,-</div><div id="addon_earlyCheckin" class="addButton gsl_button"><span gstype='bookingtranslation' gstranslationfield='add'></span></div>
+                            <div style="width:50%;"><span class='icon'></span> <span class='text'></span></div><div><span gstype='bookingtranslation' gstranslationfield='NOK'></span><span class='price'></span>,-</div><div id="addon_earlyCheckin" class="addButton gsl_button"><span gstype='bookingtranslation' gstranslationfield='add'></span></div>
                         </div>
                     </div>
                 </div>
@@ -76,7 +77,7 @@
                     <div class="roomentry" id='roomentrycontainer' style='display:none;'>
                         <h4><span class='roomname'></span> 
                             <span class='secondary_text'>
-                                <span gstype='bookingtranslation' gstranslationfield='checkin'></span><span class='startdate'></span>, <span gstype='bookingtranslation' gstranslationfield='checkout'></span><span class='enddate'></span>
+                                (<span gstype='bookingtranslation' gstranslationfield='checkin'></span><span class='startdate'></span>, <span gstype='bookingtranslation' gstranslationfield='checkout'></span><span class='enddate'></span>)
                             </span>
                         </h4>
                         
@@ -114,7 +115,7 @@
                 <div class="overview_loggedon">
                     <h3>
                         <span gstype='bookingtranslation' gstranslationfield='loggedonas'></span><span class='loggedonusername'></span>
-                        <input class='gssignoutbutton' type="button" style="float:right;" gstype='bookingtranslation' gstranslationfield='logout'>
+                        <input class='gssignoutbutton gsl_button' type="button" style="float:right;border:0;" gstype='bookingtranslation' gstranslationfield='logout'>
                     </h3>
                     <b><span gstype='bookingtranslation' gstranslationfield='ordertext'></span></b><br>
                     <textarea gsname='ordertext' class="ordertext"></textarea>
@@ -197,14 +198,14 @@
                             <div style="width: 50%; float:left;"><span gstype='bookingtranslation' gstranslationfield='userOrEmail'></span><br><input type="txt" gsname="username"></div>
                             <div style="width: 50%; float:left;"><span gstype='bookingtranslation' gstranslationfield='password'></span><br><input type="password" gsname="password"></div>
                         </div>
-                        <input type='button' class='gssigninbutton' gstype='bookingtranslation' gstranslationfield='signinbutton'>
+                        <input type='button' class='gssigninbutton gsl_button' gstype='bookingtranslation' gstranslationfield='signinbutton'>
                         
                         <div class='failedlogon'><span gstype='bookingtranslation' gstranslationfield='failedlogon'></span></div>
                         
                     </div>
                     <div style="clear: both;"></div>
                 </div>
-                <div style="padding:10px;" class='agreetotermsbox'>
+                <div class='agreetotermsbox'>
                     <label for="agreeTerms">
                         <input id="agreeTerms" type="checkbox">
                         <span gstype='bookingtranslation' gstranslationfield='agreeTerms'></span>
@@ -252,12 +253,15 @@
     <div class="productentry_main">
         <div class="productentry_header">
             <div class="roomname"></div>
-            <div class="product_availablerooms" value=""><span gstype='bookingtranslation' gstranslationfield='availableRooms'></span><span class='availableroomcontainer'></span></div>
-            <div class="lowpricediv"><span gstype='bookingtranslation' gstranslationfield='startingAt'></span><span class='lowpricedisplayer'></span>,-</div>
-            
+            <div class="product_availablerooms"><span gstype='bookingtranslation' gstranslationfield='availableRooms'></span><span class='availableroomcontainer'></span></div>
+            <!--<div class="lowpricediv"><span gstype='bookingtranslation' gstranslationfield='startingAt'></span><span class='lowpricedisplayer'></span>,-</div>-->
         </div>
         <div class="productentry_body">
-            <div class="guestselection"></div>
+            <table class="guestselection">
+                <tr style="font-weight: bold;">
+                    <td><span gstype='bookingtranslation' gstranslationfield='numberofguests'></span></td><td><span gstype='bookingtranslation' gstranslationfield='price'></span></td><td style="text-align: right;"><span gstype='bookingtranslation' gstranslationfield='numberofrooms'></span></td>
+                </tr>
+            </table>
             <div class="roomdescription"></div>
             <div></div>
         </div>

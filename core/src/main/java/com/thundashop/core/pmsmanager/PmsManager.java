@@ -3287,16 +3287,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         
         TimeRepeater repeater = new TimeRepeater();
+        boolean isBetween = false;
         for(TimeRepeaterData res : openingshours) {
             LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
             for(TimeRepeaterDateRange range : ranges) {
-                if(range.isBetweenTime(start) || range.isBetweenTime(end)) {
+                if(isBetween) {
+                    continue;
+                }
+                if((periodeType.equals(TimeRepeaterData.TimePeriodeType.max_stay) ||
+                        periodeType.equals(TimeRepeaterData.TimePeriodeType.min_stay))) {
+                    isBetween = range.isBetweenTime(start);
+                    if(isBetween) {
+                        System.out.println("Is between: " + start + " : " + range.start + " - " + range.end);
+                    }
+                } else {
+                    isBetween = range.isBetweenTime(start) || range.isBetweenTime(end);
+                }
+                
+                if(isBetween) {
                     if(periodeType.equals(TimeRepeaterData.TimePeriodeType.min_stay)) {
                         Integer daysInRestrioction = 1;
                         try {
                             daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
                         }catch(Exception e) {
-                            
+
                         }
                         if(daysInRestrioction > days) {
                             return true;
@@ -3306,7 +3320,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                         try {
                             daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
                         }catch(Exception e) {
-                            
+
                         }
                         if(daysInRestrioction < days) {
                             return true;
@@ -3314,7 +3328,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                     } else {
                         return true;
                     }
-                }
+                }                
             }
         }
         

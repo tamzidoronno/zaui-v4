@@ -7,9 +7,12 @@ $timePeriodeType[4] = "Deny same day booking";
 $timePeriodeType[6] = "Force confirmation same day booking";
 $curdate = date("d.m.Y", time());
 ?>
-<span class='createrestricitonarea'>
+
+<input type='button' value='Create a restriction' onclick='$(".createrestricitonarea").toggle();' style='cursor:pointer;'>
+<div style='height: 10px;'></div>
+<span class='createrestricitonarea' gstype="form" method="createRestriction">
     <h3>What kind of restriction would you like to create?</h3>
-    <select class='gsniceselect1' style='width:100%;'>
+    <select class='gsniceselect1 restrictiontype' style='width:100%;' gsname='timeperiodetype'>
         <?php
         foreach($timePeriodeType as $idx => $val) {
             echo "<option value='$idx'>$val</option>";
@@ -17,18 +20,51 @@ $curdate = date("d.m.Y", time());
         ?>
     </select>
 
-    <h3>Restrict for periode</h3>
-    <div> * When <b>booking</b> in this periode</div>
-      <input type='txt' class='gsniceinput1' value='<?php echo $curdate; ?>' style='width: 90px;'>
-      <input type='txt' class='gsniceinput1' style='width:40px;' value='00:00'>
-      <input type='txt' class='gsniceinput1' style='width:40px;' value='23:59'>
+    <h3>Start restriction at</h3>
+    <div class="whenbooking" style="display:none;"> * When <b>booking</b> in this periode</div>
+    <div class="whenstaying"> * When <b>staying</b> in this periode</div>
+      <input type='txt' class='gsniceinput1 startdate' gsname='eventStartsAt' value='<?php echo $curdate; ?>' style='width: 90px;'>
+      <input type='txt' class='gsniceinput1 starteventtime' style='width:40px;display:none;' value='00:00' gsname='starttime'>
+      <input type='txt' class='gsniceinput1 endeventtime' style='width:40px;display:none;' value='23:59' gsname='endtime'>
+      <input type="txt" class='gsniceinput1 mindays' placeholder='Days' style='width:40px; display:none;float:right;' gsname='timePeriodeTypeAttribute'>
       <h3>Repeat</h3>
-    <select class="repeat_type gsniceselect1" style='width:100%;'>
-        <option value="0" title="Daily"><? echo $this->__w("Daily"); ?></option>
-        <option value="1" title="Weekly"><? echo $this->__w("Weekly"); ?></option>
-        <option value="2" title="Monthly"><? echo $this->__w("Monthly"); ?></option>
-    </select><br><br>
-    Ending at<br>
-    <input type='txt' class='gsniceinput1' value='<?php echo $curdate; ?>' style='width: 90px;'>
-    <input type='button' style='padding:9px;float:right;' value='Create restriction'>
+        <select class="repeat_type gsniceselect1" style='width:100%;'  gsname='repeat_periode'>
+            <option value="0" title="Daily"><? echo $this->__w("Daily"); ?></option>
+            <option value="1" title="Weekly"><? echo $this->__w("Weekly"); ?></option>
+            <option value="2" title="Monthly"><? echo $this->__w("Monthly"); ?></option>
+        </select>
+
+    <span class='optionbox'>
+        <span class='repeat_0 repeatoption'></span>
+        <span class='repeat_1 repeatoption'>
+            <table>
+                <tr>
+                    <td><input type='checkbox' gsname='repeatMonday'><? echo $this->__w("Mon"); ?></td>
+                    <td><input type='checkbox' gsname='repeatTuesday'><? echo $this->__w("Tue"); ?></td>
+                    <td><input type='checkbox' gsname='repeatWednesday'><? echo $this->__w("Wed"); ?></td>
+                    <td><input type='checkbox' gsname='repeatThursday'><? echo $this->__w("Thu"); ?></td>
+                </tr>
+                <tr>
+                    <td><input type='checkbox' gsname='repeatFriday'><? echo $this->__w("Fri"); ?></td>
+                    <td><input type='checkbox' gsname='repeatSaturday'><? echo $this->__w("Sat"); ?></td>
+                    <td><input type='checkbox' gsname='repeatSunday'><? echo $this->__w("Sun"); ?></td>
+                </tr>
+            </table>
+        </span>
+        <span class='repeat_2 repeatoption' style='padding-bottom: 10px;'>
+            <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofmonth'><? echo $this->__w("day of the month"); ?><br>
+            <input type='radio' name='repeatmonthtype' gsname='repeatmonthtype' value='dayofweek'><? echo $this->__w("day of the week"); ?>
+        </span>
+    </span>
+    <h3>Ending at</h3>
+    <input type='txt' class='gsniceinput1 enddate' value='<?php echo $curdate; ?>' style='width: 90px;' gsname='endingAt'>
+    <input type='button' style='padding:9px;float:right;' value='Create restriction' gstype='submit'>
 </span>
+
+<script>
+    $('.startdate').datepicker({ dateFormat: "dd.mm.yy"});
+    $('.enddate').datepicker({ dateFormat: "dd.mm.yy"});
+</script>
+<style>
+    .GetShopModuleTable .col_1 { width: 100%; }
+</style>

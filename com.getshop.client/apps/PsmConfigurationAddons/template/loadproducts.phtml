@@ -86,6 +86,9 @@ foreach($config->addonConfiguration as $item) {
             if($addonItem->bookingicon) {
                 echo "<i class='fa fa-".$addonItem->bookingicon."' style='float:right; color:#bbb; padding-right: 5px;'></i>";
             }
+            if($addonItem->count > 1) {
+                echo "(max: " . $addonItem->count . ")";
+            }
             ?>
             <span class="extendedinformation">
                 <div class="extendedinforow">
@@ -96,6 +99,9 @@ foreach($config->addonConfiguration as $item) {
                 </div>
                 <div class="extendedinforow">
                     Text to identify addon in the channel manager <input type="txt" class="settings" gsname="channelManagerAddonText" value="<?php echo $addonItem->channelManagerAddonText; ?>">
+                </div>
+                <div class="extendedinforow">
+                    Count (max selection) <input type="txt" class="settings" gsname="count" value="<?php echo $addonItem->count; ?>">
                 </div>
                 <div class="extendedinforow">
                     <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">

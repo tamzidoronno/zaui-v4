@@ -67,7 +67,18 @@
                     <span gstype='bookingtranslation' gstranslationfield='addAddonsOr'></span>
                     <div class="overview_addons">
                         <div class="addon" id='addon' style='display:none;'>
-                            <div style="width:50%;"><span class='icon'></span> <span class='text'></span></div><div><span gstype='bookingtranslation' gstranslationfield='NOK'></span><span class='price'></span>,-</div><div id="addon_earlyCheckin" class="addButton gsl_button"><span gstype='bookingtranslation' gstranslationfield='add'></span></div>
+                            <div style="width:50%;">
+                                <span class='icon'></span> 
+                                <span class='text'></span>
+                            </div>
+                            <div>
+                                <span gstype='bookingtranslation' gstranslationfield='currency'></span> 
+                                <span class='price'></span>
+                            </div>
+                                <select class='addonsSelectionCount'><option value='-1'>-1</option></select>
+                            <div class="addButton gsl_button addaddonsonallroombutton">
+                                <span gstype='bookingtranslation' gstranslationfield='add'></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -268,7 +279,7 @@
 <script>
     
 //Reset page on load.
-    localStorage.setItem('gslcurrentpage','');
+//    localStorage.setItem('gslcurrentpage','');
     $('.gslbookingBody').hide();
     $('.addons_overview').hide();
     

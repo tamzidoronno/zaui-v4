@@ -387,11 +387,19 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             booking = pmsManager.getCurrentBooking();
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(canAddToRoom(arg.productId, room)) {
-                    pmsManager.addProductToRoomDefaultCount(arg.productId, room.pmsBookingRoomId);
+                    if(arg.count > 0) {
+                        pmsManager.addProductToRoom(arg.productId, room.pmsBookingRoomId, arg.count);
+                    } else {
+                        pmsManager.addProductToRoomDefaultCount(arg.productId, room.pmsBookingRoomId);
+                    }
                 }
             }
         } else {
-            pmsManager.addProductToRoomDefaultCount(arg.productId, arg.roomId);
+            if(arg.count > 0) {
+                pmsManager.addProductToRoom(arg.productId, arg.roomId, arg.count);
+            } else {
+                pmsManager.addProductToRoomDefaultCount(arg.productId, arg.roomId);
+            }
         }
         
         return generateSummary();

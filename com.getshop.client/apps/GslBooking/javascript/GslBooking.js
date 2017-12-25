@@ -33,8 +33,8 @@ function getBookingTranslations() {
         "bestValue" : "This is the best value deal we can offer you total:",
         "continue" : "Continue",
         "addons" : "Addons",
-        "addAddonsOr" : "Add addons for all guests, or add individual addons under guest info.",
-        "NOK" : "NOK",
+        "addAddonsOr" : "Add addons for all guests, or add individual addons under room information.",
+        "currency" : "NOK",
         "add" : "Add",
         "guestInfo" : "Guest info",
         "correctEmailforGuest" : "It's important to enter the correct e-mail and phone number for each guest. It will be used for door codes and useful information.",
@@ -209,6 +209,15 @@ function loadAddonsAndGuestSummaryByResult(res) {
             var item = res.items[k];
             var entry = template.clone();
             
+            var select = entry.find('.addonsSelectionCount');
+            if(item.maxAddonCount > 1) {
+                select.html('');
+                for(var i = 1; i <= item.maxAddonCount; i++) {
+                    select.append("<option value='" + i + "'>" + i + "</option>");
+                }
+            }
+
+            
             var icon = "fa-" + item.icon;
             if(icon === "fa-") {
                 icon = "fa-question-circle";
@@ -223,6 +232,8 @@ function loadAddonsAndGuestSummaryByResult(res) {
             entry.find('.price').html(item.price);
             if(item.isAdded) {
                 entry.find('.addButton').addClass('added_addon').html('Remove');
+            } else if(item.maxAddonCount > 1) {
+                select.show();
             }
             entry.show();
             $('.addonsentry .overview_addons').append(entry);
@@ -387,8 +398,6 @@ function createSticky(sticky) {
                 });
                 $('.productoverview').css('padding-top', '0px');
             }
-//            console.log(yPos);
-//            console.log(stopPos);
         });
     }
 }
@@ -402,6 +411,7 @@ function addRemoveAddon(btn) {
             body['productId'] = btn.attr('productid');
         } else {
             body["productId"] = btn.closest('.addon').attr('productid');
+            body["count"] = btn.closest('.addon').find('.addonsSelectionCount').val()
         }
         
         if (btn.hasClass('added_addon') || btn.hasClass('active_addon')) {

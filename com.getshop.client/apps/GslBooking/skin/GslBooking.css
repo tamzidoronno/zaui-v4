@@ -324,6 +324,9 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .overview_room_info{float:right;width: 30%;padding:10px;}
 .GslBooking .gslfront_1 .overview_confirmation{clear: both;position:absolute;right:0;bottom:10px;width:30%;}
 .GslBooking .gslfront_1 .overview_addons{margin-top:12px;}
+.GslBooking .gslfront_1 .overview_addons .addonprinted {position:relative; }
+.GslBooking .gslfront_1 .overview_addons .addaddonsonallroombutton {position:absolute; right: 0px; width: 120px !important; }
+.GslBooking .gslfront_1 .overview_addons .addonsSelectionCount {height: 30px;width: 40px;border: solid 1px #bbb;background-color: #fff; display:none;}
 .GslBooking .gslfront_1 .overview_addons .addon div{width: 25%;display: inline-block;}
 .GslBooking .gslfront_1 .overview_addons .addButton{padding: 4px 0;background-color:#83b0dc;}
 .GslBooking .gslfront_1 .overview_addons .addButton.added_addon{background-color:#de5353;}

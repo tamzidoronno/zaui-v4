@@ -12,6 +12,7 @@ public class AddonItem {
     public Date date;
     public boolean isAdded = false;
     public Integer addedCount = 0;
+    public Integer maxAddonCount = 0;
     public String icon = "";
 
     void setAddon(PmsBookingAddonItem item) {
@@ -20,5 +21,6 @@ public class AddonItem {
         price = item.price;
         productId = item.productId;
         date = item.date;
+        maxAddonCount = item.count;
     }
 }

@@ -12,5 +12,6 @@ package com.thundashop.core.pmsbookingprocess;
 public class AddAddons {
     public String roomId;
     public String productId;
+    public Integer count = -1;
     
 }

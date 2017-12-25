@@ -261,6 +261,9 @@ function loadTextualSummary(res) {
     for(var k in res.textualSummary) {
         $('.yourstaysummary').append(res.textualSummary[k] + "<br>");
     }
+    
+    $('[gstranslationfield="readTerms"]').attr('onclick',"window.open('"+endpoint+"/scripts/loadContractPdf.php?readable=true&engine=default')");
+    $('[gstranslationfield="downloadTerms"]').attr('onclick',"window.open('"+endpoint+"/scripts/loadContractPdf.php?engine=default')");
 }
 
 function loadRooms(res) {
@@ -302,6 +305,7 @@ function loadRooms(res) {
         }
         $('.roomentryframe').append(newRoom);
         
+        var added = false;
         for(var addonKey in room.addonsAvailable) {
             var addon = room.addonsAvailable[addonKey];
             var icon = "fa-" + addon.icon;
@@ -314,7 +318,14 @@ function loadRooms(res) {
                 fontawesomeicon.addClass('active_addon');
             }
             newRoom.find('.guest_addon').append(fontawesomeicon);
+            added = true;
         }
+        
+        if(!added) {
+            newRoom.find('.guest_addon').hide();
+            newRoom.find('[gstranslationfield="addons"]').hide();
+        }
+        
         newRoom.show();
     }
 }

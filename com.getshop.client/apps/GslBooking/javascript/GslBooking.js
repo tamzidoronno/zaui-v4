@@ -662,7 +662,7 @@ function getshop_showProductList() {
     $('.addons_overview').fadeOut('400', function () {
         $('.productoverview').fadeIn('400');
         if(gslbookingcurresult) {
-            getshop_updateOrderSummary(gslbookingcurresult);
+            getshop_updateOrderSummary(gslbookingcurresult, false);
             $('.GslBooking .gslbookingHeader').show();
         }
     });
@@ -717,7 +717,7 @@ function getshop_confirmGuestInfoBox() {
     $('#guests').val(room + roomText + ', ' + guest + guestText);
     $('.guestInfoBox').hide();
 }
-function getshop_updateOrderSummary(res) {
+function getshop_updateOrderSummary(res, isSearch) {
     $('.GslBooking .ordersummary .selectedguests').html('');
     var total = 0;
     var totalRooms = 0;
@@ -750,10 +750,12 @@ function getshop_updateOrderSummary(res) {
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + totalAmount + "</table>");
     $('.GslBooking .ordersummary .totalprice').html(total);
 //    $('.GslBooking .ordersummary').css('visibility','visible').css('height','auto');
-    if(!$('.GslBooking .ordersummary').is(":visible")) {
-        $('.GslBooking .ordersummary').slideDown('slow', function(){
-            $(function(){getshop_createSticky($(".ordersummary"));});
-        });
+    if(isSearch) {
+        if(!$('.GslBooking .ordersummary').is(":visible")) {
+            $('.GslBooking .ordersummary').slideDown('slow', function(){
+                $(function(){getshop_createSticky($(".ordersummary"));});
+            });
+        }
     }
     
 }
@@ -897,7 +899,7 @@ function getshop_changeNumberOfRooms() {
                 }
             });
 
-            getshop_updateOrderSummary(gslbookingcurresult);
+            getshop_updateOrderSummary(gslbookingcurresult, false);
         }
     });
 }
@@ -921,11 +923,14 @@ function getshop_goToAddonsPage() {
 
 
 function getshop_searchRooms() {
+    if($(this).find('.fa-spin').length > 0) {
+        return;
+    }
     localStorage.setItem('gslcurrentpage','search');
     $('.GslBooking .ordersummary').hide();
     var btn = $(this);
     var btnText = btn.html();
-    btn.html('<i class="fa fa-pulse fa-spinner"></i>');
+    btn.html('<i class="fa fa-spin fa-spinner"></i>');
     $('.productentrybox').remove();
     var time = new Date().toLocaleTimeString('en-us');
     var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
@@ -957,8 +962,9 @@ function getshop_searchRooms() {
             $('.noroomsfound').hide();
             if(!res || (parseInt(res.roomsSelected) === 0)) {
                 $('.noroomsfound').show();
+                $('.GslBooking .hide').hide();
             } else {
-                getshop_updateOrderSummary(res);
+                getshop_updateOrderSummary(res, true);
             }
 
             for (var k in res.rooms) {
@@ -1073,24 +1079,24 @@ function getshop_removeRoom() {
     }
 }
 
-$(document).on('click', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
-$(document).on('click', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
-$(document).on('click','.GslBooking .gssigninbutton', getshop_logon);
-$(document).on('click','.GslBooking .gssignoutbutton', getshop_logout);
-$(document).on('click','.GslBooking .selectedusertype', getshop_changeBookingType);
-$(document).on('click','.GslBooking .removeroom', getshop_removeRoom);
-$(document).on('click', '.GslBooking .destination_line', getshop_changedestination);
-$(document).on('focus', '.GslBooking #guests', getshop_showGuestBox);
-$(document).on('focus', '.GslBooking #destination', getshop_showDesitinationBox);
-$(document).on('click', '.GslBooking .go_to_payment_button', getshop_gotopayment);
-$(document).on('click', '.GslBooking #search_rooms', getshop_searchRooms);
-$(document).on('click', '.GslBooking .addguest', getshop_addGuest);
-$(document).on('click', '.GslBooking .addroom', getshop_addRoom);
-$(document).on('click', '.GslBooking .guestentry .guestaddonicon', getshop_addRemoveAddon);
-$(document).on('click', '.GslBooking .guestentry .removeguest', getshop_removeGuest);
+$(document).on('mousedown touchstart', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
+$(document).on('mousedown touchstart', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
+$(document).on('mousedown touchstart','.GslBooking .gssigninbutton', getshop_logon);
+$(document).on('mousedown touchstart','.GslBooking .gssignoutbutton', getshop_logout);
+$(document).on('mousedown touchstart','.GslBooking .selectedusertype', getshop_changeBookingType);
+$(document).on('mousedown touchstart','.GslBooking .removeroom', getshop_removeRoom);
+$(document).on('mousedown touchstart', '.GslBooking .destination_line', getshop_changedestination);
+$(document).on('mousedown touchstart', '.GslBooking #guests', getshop_showGuestBox);
+$(document).on('mousedown touchstart', '.GslBooking #destination', getshop_showDesitinationBox);
+$(document).on('mousedown touchstart', '.GslBooking .go_to_payment_button', getshop_gotopayment);
+$(document).on('mousedown touchstart', '.GslBooking #search_rooms', getshop_searchRooms);
+$(document).on('mousedown touchstart', '.GslBooking .addguest', getshop_addGuest);
+$(document).on('mousedown touchstart', '.GslBooking .addroom', getshop_addRoom);
+$(document).on('mousedown touchstart', '.GslBooking .guestentry .guestaddonicon', getshop_addRemoveAddon);
+$(document).on('mousedown touchstart', '.GslBooking .guestentry .removeguest', getshop_removeGuest);
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
-$(document).on('click', '.GslBooking .ordersummary .continue', getshop_continueToSummary);
-$(document).on('click', '.GslBooking .addButton', getshop_addRemoveAddon);
+$(document).on('mousedown touchstart', '.GslBooking .ordersummary .continue', getshop_continueToSummary);
+$(document).on('mousedown touchstart', '.GslBooking .addButton', getshop_addRemoveAddon);
 
 var lastSelectedPage = localStorage.getItem('gslcurrentpage');
 if(lastSelectedPage === "summary") {

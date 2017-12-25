@@ -328,6 +328,14 @@ function loadRooms(res) {
             if(addon.isAdded) {
                 fontawesomeicon.addClass('active_addon');
             }
+            
+            if(addon.maxAddonCount > 1 && !addon.isAdded) {
+                var countselection = $('<span class="countselections"></span>');
+                for(var j = 1; j <= addon.maxAddonCount; j++) {
+                    countselection.append($("<span class='countselection' count='"+j+"'>" + j + "</span>"));
+                }
+                fontawesomeicon.html(countselection);
+            }
             newRoom.find('.guest_addon').append(fontawesomeicon);
             added = true;
         }
@@ -407,8 +415,17 @@ function addRemoveAddon(btn) {
         var body = {};
         
         if(btn.hasClass('guestaddonicon')) {
+            if(btn.find('.countselections').length > 0) {
+               btn.find('.countselections').toggle();
+               return;
+            }
+            
             body['roomId'] = btn.closest('.roomrowadded').attr('roomid');
             body['productId'] = btn.attr('productid');
+        } else if(btn.hasClass('countselection')) {
+            body['roomId'] = btn.closest('.roomrowadded').attr('roomid');
+            body['productId'] = btn.closest('.guestaddonicon').attr('productid');
+            body['count'] = btn.attr('count');
         } else {
             body["productId"] = btn.closest('.addon').attr('productid');
             body["count"] = btn.closest('.addon').find('.addonsSelectionCount').val()
@@ -809,8 +826,8 @@ $(document).on('mousedown', '.GslBooking .addroom', function () {
     var addNewRoom = $('#addnewroom');
     $(this).before(addNewRoom);
 });
-$(document).on('mousedown', '.GslBooking .guestentry .guestaddonicon', function () {
-    addRemoveAddon($(this));
+$(document).on('mousedown', '.GslBooking .guestentry .guestaddonicon', function (e) {
+    addRemoveAddon($(e.target));
 });
 
 $(document).on('mousedown', '.GslBooking .guestentry .removeguest', function () {

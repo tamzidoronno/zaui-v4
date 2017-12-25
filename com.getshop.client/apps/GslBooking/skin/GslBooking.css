@@ -23,6 +23,10 @@ Error      : #de5353; red
 .GslBooking .guestentry { position:relative; }
 .GslBooking .gslfront_1{background-color: #f9f9f9;padding: 0px;font-size: 16px;position: relative;cursor:default;color:#222;font-family: sans-serif;}
 .GslBooking .gslfront_1 *,.GslBooking .gslfront_1 *::before,.GslBooking .gslfront_1 *::after{box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
+.GslBooking .gslfront_1 .guestaddonicon { position: relative; }
+.GslBooking .gslfront_1 .countselections { position:absolute; border: solid 1px #bbb; background-color:#fff; display: none; top: 20px; left:0px;z-index: 99999999; }
+.GslBooking .gslfront_1 .countselections .countselection { font-size: 28px; border-right: solid 1px #bbb; text-align: center; width: 28px; display:inline-block; } 
+.GslBooking .gslfront_1 .countselections .countselection:hover { color:#000; }
 .GslBooking .gslfront_1 h3{font-size: 18px;
     margin:0 0 20px 0;
     text-align: center;
@@ -352,7 +356,6 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .guestentry .entryfield {display:inline-block;width: 24%;float:left;}
 .GslBooking .gslfront_1 .guestentry div span{white-space: nowrap;text-overflow:ellipsis;overflow: hidden;}
 .GslBooking .gslfront_1 .guestentry i{padding:0 2px;cursor:pointer;color:#aaa;}
-.GslBooking .gslfront_1 .guestentry i:hover{color:#555;}
 .GslBooking .gslfront_1 .guestentry input{padding:8px;width:100%;border:0;box-shadow: 0px 0px 0px 1px #ddd;}
 .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#fff;}
 .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#fff !important;}

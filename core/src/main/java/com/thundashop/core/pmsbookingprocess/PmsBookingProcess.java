@@ -76,16 +76,31 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         StartBookingResult result = new StartBookingResult();
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        
+        Collections.sort(types, new Comparator<BookingItemType>() {
+            public int compare(BookingItemType o1, BookingItemType o2) {
+                return o1.order.compareTo(o2.order);
+            }
+        });
+
+        
         PmsBooking existing = pmsManager.getCurrentBooking();
         
+        boolean isAdministrator = false;
+        
+        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
+            isAdministrator = true;
+        }
+        
         for(BookingItemType type : types) {
-            if(!type.visibleForBooking) {
+            if(!type.visibleForBooking && !isAdministrator) {
                 continue;
             }
             BookingProcessRooms room = new BookingProcessRooms();
             room.description = type.description;
             room.availableRooms = bookingEngine.getNumberOfAvailable(type.id, arg.start, arg.end);
             room.id = type.id;
+            room.visibleForBooker = type.visibleForBooking;
             result.totalRooms += room.availableRooms;
             try {
                 PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
@@ -127,6 +142,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsBooking booking = pmsManager.getCurrentBooking();
         
         for(BookingProcessRooms room : result.rooms) {
+            if(!room.visibleForBooker) {
+                continue;
+            }
             for(Integer guest : room.pricesByGuests.keySet()) {
                 Double price = room.pricesByGuests.get(guest);
                 PmsBookingProcessorCalculator res = new PmsBookingProcessorCalculator();

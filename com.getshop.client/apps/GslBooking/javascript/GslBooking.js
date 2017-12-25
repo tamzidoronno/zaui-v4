@@ -1,5 +1,5 @@
 
-var endpoint = "http://wilhelmsenhouse.3.0.local.getshop.com";
+var endpoint = "";
 var leftInterval;
 
 function setBookingTranslation() {
@@ -67,7 +67,7 @@ function getBookingTranslations() {
         "downloadTerms" : "Download terms of use",
         "roomExample1" : "Room 1 - Double Room",
         "downloadTerms" : "Download terms of use",        
-        "noRoomsMessage" : "Sorry, your current selection could not be given.",
+        "noRoomsMessage" : "Sorry, we are sold out for your specified selection.",
         "startingAt" : "Starting at NOK ",
         "numberofguests" : "Guests",
         "numberofrooms" : "Number of rooms",
@@ -935,90 +935,98 @@ $(document).on('click', '.GslBooking #search_rooms', function () {
             gslbookingcurresult = res;
             localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             $('.noroomsfound').hide();
-            if(!res || (parseInt(data.rooms) !== parseInt(res.roomsSelected))) {
+            if(!res || (parseInt(res.roomsSelected) === 0)) {
                 $('.noroomsfound').show();
-                return;
             } else {
                 updateOrderSummary(res);
             }
+
             for (var k in res.rooms) {
                 var room = res.rooms[k];
-                var firstFile = room.images[0].fileId;
+                var firstFile = "";
+                if(room.images.length > 0) {
+                    firstFile = room.images[0].fileId;
+                }
                 var productentry = '';
                 var utilities = '';
                 var user_icon = 1;
-                if (room.availableRooms != 0) {
-                    var roomBox = $('#productentrybox').clone();
-                    roomBox.attr('id',null);
-                    roomBox.addClass('productentrybox');
-                    
-                    roomBox.find('.roomname').html(room.name);
-                    roomBox.find('.product_availablerooms').val(room.availableRooms);
-                    roomBox.find('.availableroomcontainer').html(room.availableRooms);
-                    roomBox.find('.lowpricedisplayer').html(room.pricesByGuests[1]);
-                    roomBox.find('.roomdescription').html(room.description);
-                    roomBox.find('.featured-image').css('background-image','url(https://wilhelmsenhouse.getshop.com/displayImage.php?id='+ firstFile);
-                    roomBox.attr('index', k);
-                    for (var guest in room.pricesByGuests) {
-                        var numberofrooms = '';
-                        var index = 1;
-                        var multipleGuests = ' guests';
-                        if (guest == 1) {
-                            multipleGuests = ' guest'
-                        }
+                var roomBox = $('#productentrybox').clone();
+                roomBox.attr('id',null);
+                roomBox.addClass('productentrybox');
+
+                roomBox.find('.roomname').html(room.name);
+                roomBox.find('.product_availablerooms').val(room.availableRooms);
+                roomBox.find('.availableroomcontainer').html(room.availableRooms);
+                roomBox.find('.lowpricedisplayer').html(room.pricesByGuests[1]);
+                roomBox.find('.roomdescription').html(room.description);
+                roomBox.find('.featured-image').css('background-image','url('+endpoint+'/displayImage.php?id='+ firstFile);
+                roomBox.attr('index', k);
+                for (var guest in room.pricesByGuests) {
+                    var numberofrooms = '';
+                    var index = 1;
+                    var multipleGuests = ' guests';
+                    if (guest == 1) {
+                        multipleGuests = ' guest'
+                    }
 //                        user_icon += '<i class="fa fa-user"></i>';
-                        for (var i = 1; i <= room.availableRooms; i++) {
-                            var price = room.pricesByGuests[guest] * i;
-                            numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';
-                        }
-                        productentry = $('<tr class="productentry_itemlist"><td><i class="fa fa-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td> NOK ' + room.pricesByGuests[guest] + ',-</td><td style="text-align:right;padding-right:25px;"><select class="numberof_rooms" guests="'+guest+'"><option value="0" data-price="0">0</option>' + numberofrooms + '</select></td></tr>');
-                        productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
-                        roomBox.find('.guestselection').append(productentry);
-                        user_icon++;
+                    for (var i = 1; i <= room.availableRooms; i++) {
+                        var price = room.pricesByGuests[guest] * i;
+                        numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';
                     }
-
-                    var controller = '';
-                    if (room.images.length > 4) {
-                        controller = '<div class="controls"><div class="move-btn left"><i class="fa fa-caret-left"></i></div><div class="move-btn right"><i class="fa fa-caret-right"></i></div></div>'
-                    }
-                    for (var utility in room.utilities) {
-                        utilities += '<i class="fa fa-' + utility + '" title="' + room.utilities[utility] + '"></i>';
-                    }
-
-                    $('#productentry').append(roomBox);
-                    roomBox.find('.gsgalleryroot').prepend(controller);
-                    roomBox.show();
                     
-                    for (var i = 0; i <= room.images.length - 1; i++) {
-                        var active = "";
-                        if (i == 0) {
-                            active = ' active';
-                        }
-                        var imgaddr = endpoint + '/displayImage.php?id=' + room.images[i].fileId;
-                        var img = $("<img>");
-                        img.attr('index', k);
-                        img.attr("src", imgaddr);
-                        img.attr('innerindex', i);
-                        img.load(function () {
-                            
-                            var idx = $(this).attr('index');
-                            var inneridx = $(this).attr('innerindex');
-                            var realWidth = this.width;
-                            var realHeight = this.height;
-                            var img = $(this).attr('src');
-                            var roomBox = $('.productentrybox[index="'+idx+'"]');
-                            var width = realWidth;
-                            var height = realHeight;
-                            var image = '<img class="roomimg gsgallery" style="display:none;" src="' + img + '" img="' + img + '" width="' + width + '" height="' + height + '" index="' + inneridx + '">';
-                            roomBox.find('.gallery').append('<div class="image-wrapper"><figure class="gallery-image image-holder' + active + '" style="background-image:url(\'' + img + '\')"></figure></div>');
-                            roomBox.find('.photoswipecontainer').append(image);
-                            if (inneridx === "0") {
-                                roomBox.find('.featured-image').attr("img", img);
-                                roomBox.find('.featured-image').attr("height", height);
-                                roomBox.find('.featured-image').attr("width", width);
-                            }
-                        });
+                    roomBox.find('.guestselection').show();
+                    if(numberofrooms) {
+                        numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
+                        productentry = $('<tr class="productentry_itemlist"><td><i class="fa fa-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td> NOK ' + room.pricesByGuests[guest] + ',-</td><td style="text-align:right;padding-right:25px;"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></td></tr>');
+                        productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
+                    } else {
+                        roomBox.find('.guestselection').hide();
                     }
+                    roomBox.find('.guestselection').append(productentry);
+                    user_icon++;
+                }
+
+                var controller = '';
+                if (room.images.length > 4) {
+                    controller = '<div class="controls"><div class="move-btn left"><i class="fa fa-caret-left"></i></div><div class="move-btn right"><i class="fa fa-caret-right"></i></div></div>'
+                }
+                for (var utility in room.utilities) {
+                    utilities += '<i class="fa fa-' + utility + '" title="' + room.utilities[utility] + '"></i>';
+                }
+
+                $('#productentry').append(roomBox);
+                roomBox.find('.gsgalleryroot').prepend(controller);
+                roomBox.show();
+
+                for (var i = 0; i <= room.images.length - 1; i++) {
+                    var active = "";
+                    if (i == 0) {
+                        active = ' active';
+                    }
+                    var imgaddr = endpoint + '/displayImage.php?id=' + room.images[i].fileId;
+                    var img = $("<img>");
+                    img.attr('index', k);
+                    img.attr("src", imgaddr);
+                    img.attr('innerindex', i);
+                    img.load(function () {
+
+                        var idx = $(this).attr('index');
+                        var inneridx = $(this).attr('innerindex');
+                        var realWidth = this.width;
+                        var realHeight = this.height;
+                        var img = $(this).attr('src');
+                        var roomBox = $('.productentrybox[index="'+idx+'"]');
+                        var width = realWidth;
+                        var height = realHeight;
+                        var image = '<img class="roomimg gsgallery" style="display:none;" src="' + img + '" img="' + img + '" width="' + width + '" height="' + height + '" index="' + inneridx + '">';
+                        roomBox.find('.gallery').append('<div class="image-wrapper"><figure class="gallery-image image-holder' + active + '" style="background-image:url(\'' + img + '\')"></figure></div>');
+                        roomBox.find('.photoswipecontainer').append(image);
+                        if (inneridx === "0") {
+                            roomBox.find('.featured-image').attr("img", img);
+                            roomBox.find('.featured-image').attr("height", height);
+                            roomBox.find('.featured-image').attr("width", width);
+                        }
+                    });
                 }
             }
         }

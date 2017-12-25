@@ -14,4 +14,5 @@ public class BookingProcessRooms {
     public String id = "";
     public LinkedList<PmsTypeImages> images = new LinkedList();
     public HashMap<String, String> utilities = new HashMap();
+    public boolean visibleForBooker = false;
 }

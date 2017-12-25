@@ -134,6 +134,7 @@ foreach($config->addonConfiguration as $item) {
         <td></td>
         <?php
         foreach($types as $type) {
+            $selected = "";
             if(in_array($type->id, $displayInBookingProcess)) {
                 $selected = "CHECKED";
             }

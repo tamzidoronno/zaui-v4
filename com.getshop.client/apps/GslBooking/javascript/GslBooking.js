@@ -271,6 +271,7 @@ function loadRooms(res) {
         newRoom.addClass('roomrowadded');
         var room = res.rooms[k];
         var guestTemplateRow = newRoom.find('#guestentryrow');
+        var addedAddons = false;
         for(var i = 0; i < room.guestCount;i++) {
             var guestRow = guestTemplateRow.clone();
             guestRow.attr('id','');
@@ -283,6 +284,12 @@ function loadRooms(res) {
                 guestRow.find('[gsname="phone"]').val(guestObject.phone);
             }
             
+            if(addedAddons) {
+                guestRow.find('.guest_addon').hide();
+            }
+            guestRow.append('<i class="fa fa-times removeguest" title="Remove guest"></i>');
+            
+            addedAddons = true;
             newRoom.find('.guestRows').append(guestRow);
         }
         newRoom.attr('id','');
@@ -308,7 +315,6 @@ function loadRooms(res) {
             }
             newRoom.find('.guest_addon').append(fontawesomeicon);
         }
-        newRoom.find('.guest_addon').append('<i class="fa fa-times removeguest" title="Remove guest"></i>');
         newRoom.show();
     }
 }

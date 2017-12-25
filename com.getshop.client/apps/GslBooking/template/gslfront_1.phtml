@@ -82,24 +82,27 @@
                         </h4>
                         
                         <div class="guestentry">
-                            <div><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
-                            <div><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
-                            <div><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
-                            <div><span gstype='bookingtranslation' gstranslationfield='addons'></span></div>
+                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
+                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
+                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
+                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='addons'></span></div>
+                            <div style="clear:both;"></div>
                         </div>
                         <div class="guestentry" id='guestentryrow' style='display:none;'>
-                            <div><input type="txt" gsname="name" placeholder="Name"></div>
-                            <div><input type="txt" gsname="email"placeholder="E-mail"></div>
-                            <div><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"></div>
-                            <div>
+                            <div class='entryfield'><input type="txt" gsname="name" placeholder="Name"></div>
+                            <div class='entryfield'><input type="txt" gsname="email"placeholder="E-mail"></div>
+                            <div class='entryfield'><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"></div>
+                            <div class='entryfield'>
                                 <div class="guest_addon"></div>
                             </div>
+                            <div style="clear:both;"></div>
                         </div>
                         <div class='guestRows'></div>
                         <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
                         <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
                     </div>
 <!--                    <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>-->
+                    <div style="clear:both;"></div>
                 </div>
             </div>
         </div>
@@ -224,20 +227,6 @@
     <div class='errorcompleted'><span gstype='bookingtranslation' gstranslationfield='errorcompleted'></span></div>
 </div>
 
-<div class="roomentry" id="addnewroom">
-    <h4><span gstype='bookingtranslation' gstranslationfield='roomExample1'></span></h4>
-    <div class="guestentry">
-        <div><span gstype='bookingtranslation' gstranslationfield='name'></span><br><input type="txt">
-        </div><div><span gstype='bookingtranslation' gstranslationfield='e-mail'></span><br><input type="txt">
-        </div><div><span gstype='bookingtranslation' gstranslationfield='phone'></span><br><input type="txt" class="guest_phone" value="+47"><input type="text" style="width:75%;">
-        </div><div><span gstype='bookingtranslation' gstranslationfield='addons'></span><br>
-            <div class="guest_addon">
-            </div>
-        </div>
-    </div>
-    <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
-</div>
-
 
 <div class="productentry" id="productentrybox">
     <div class='productentry_gallery gsgalleryroot'>
@@ -270,19 +259,6 @@
     </div>
     <div style="clear:both;"></div>
 </div>
-
-<div class="guestentry" id="addnewguest">
-    <div><input type="text">
-    </div><div><input type="text">
-    </div><div><input type="text"  class="guest_phone" value="+47"><input type="text" style="width:75%;">
-    </div><div><div class="guest_addon">
-        <i class="fa fa-sign-in" title="Early check in"></i>
-        <i class="fa fa-cutlery" title="Breakfast"></i>
-        <i class="fa fa-black-tie" title="Coat for one person"></i>
-        <i class="fa fa-sign-out" title="Late check out"></i><i class="fa fa-times removeguest" title="Remove guest"></i>
-    </div></div>
-</div>
-
 
 <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>

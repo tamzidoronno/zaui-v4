@@ -5723,7 +5723,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         return null;
     }
 
-    private void addDefaultAddons(PmsBooking booking) {
+    public void addDefaultAddons(PmsBooking booking) {
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             for(PmsBookingAddonItem item : addons.values()) {
@@ -5736,6 +5736,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                         if(item.dependsOnGuestCount) {
                             size = room.numberOfGuests;
                         }
+                        removeProductFromRoom(room.pmsBookingRoomId, item.productId);
                         addProductToRoom(item.productId, room.pmsBookingRoomId, size);
                     }
                 }

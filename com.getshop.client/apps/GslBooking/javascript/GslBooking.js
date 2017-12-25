@@ -472,7 +472,11 @@ function getshop_showDesitinationBox() {
 }
 
 function getshop_gotopayment() {
-var btn = $(this);
+    var btn = $(this);
+    if(btn.hasClass('fa-spin')) {
+        return;
+    }
+
     var saving = getshop_saveBookerInformation();
     $('.errormessage').hide();
     $('.agreetotermserrormessage').hide();
@@ -814,7 +818,7 @@ function getshop_setDatePicker() {
         }
     });    
     
-    $('#date_picker_start').on('change blur', function() {
+    $('#date_picker_start').on('blur', function() {
         var start = new Date($(this).val());
         $("#date_picker").data('daterangepicker').setStartDate(start);
         
@@ -826,7 +830,7 @@ function getshop_setDatePicker() {
         }
     });
     
-    $('#date_picker_end').on('change blur', function() {
+    $('#date_picker_end').on('blur', function() {
         var end = new Date($(this).val());
         var start = new Date($('#date_picker_start').val());
         
@@ -1079,7 +1083,7 @@ function getshop_removeRoom() {
     }
 }
 
-$(document).on('mousedown touchstart', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
+$(document).on('click touchstart', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
 $(document).on('mousedown touchstart', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
 $(document).on('mousedown touchstart','.GslBooking .gssigninbutton', getshop_logon);
 $(document).on('mousedown touchstart','.GslBooking .gssignoutbutton', getshop_logout);

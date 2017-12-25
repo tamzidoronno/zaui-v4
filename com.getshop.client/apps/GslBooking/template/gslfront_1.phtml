@@ -7,9 +7,16 @@
                 <div class='destination_line'><img class="destination_image" src=""><span gstype='bookingtranslation' gstranslationfield='gsHotelTb'></span></div>
                 
             </div>
-        </div><div class="fa_box date">
+        </div>
+        <div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
-        </div><div class="fa_box guests">
+        </div>
+        <div class='datepickermobile'>
+            <input id="date_picker_start" type='date'>
+            <input id="date_picker_end" type='date'>
+        </div>
+
+        <div class="fa_box guests">
             <input id="guests" value="1 room, 1 guest" style="border-right:1px solid #ddd;" readonly>
             <div class="guestInfoBox">
                 <div class='guestInfoBox_left'>
@@ -29,12 +36,12 @@
                     </div>
                 </div>
                 <div class="guestInfoBox_footer">
-                    <div onclick="confirmGuestInfoBox()"><span gstype='bookingtranslation' gstranslationfield='apply'></span></div>
+                    <div onclick="getshop_confirmGuestInfoBox()"><span gstype='bookingtranslation' gstranslationfield='apply'></span></div>
                 </div>
             </div>
         </div><div class="fa_box coupon">
-            <input id='coupon_input' onfocus="this.placeholder =''" onblur="this.placeholder ='Discount coupon?'" placeholder="Discount coupon?">
-        </div><div class="fa_box gsl_button" id="search_rooms" onclick="showProductList()"><span gstype='bookingtranslation' gstranslationfield='search'></span></div>
+            <input id='coupon_input' onfocus="this.placeholder =''" placeholder="" gstype='bookingtranslation_placeholder' gstranslationfield='discountcode'>
+        </div><div class="fa_box gsl_button" id="search_rooms" onclick="getshop_showProductList()"><span gstype='bookingtranslation' gstranslationfield='search'></span></div>
     </div>
     
     <div class="gslbookingBody">
@@ -57,7 +64,7 @@
                     <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                     <div class='yourstaysummary'></div>
                     <div style="position:absolute;bottom:10px;right:0; width:30%;">
-                        <div class="gsl_button continue" onclick="showOverviewPage()" style='float:right;margin-right: 10px;'><span gstype='bookingtranslation' gstranslationfield='continue'></span><i class="fa fa-arrow-right"></i></div>
+                        <div class="gsl_button continue" onclick="getshop_showOverviewPage()" style='float:right;margin-right: 10px;'><span gstype='bookingtranslation' gstranslationfield='continue'></span><i class="fa fa-arrow-right"></i></div>
                     </div>
                 </div>
             </div>
@@ -71,7 +78,7 @@
                                 <span class='icon'></span> 
                                 <span class='text'></span>
                             </div>
-                            <div>
+                            <div class='pricebox'>
                                 <span gstype='bookingtranslation' gstranslationfield='currency'></span> 
                                 <span class='price'></span>
                             </div>
@@ -122,7 +129,7 @@
                 <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                 <div class='yourstaysummary'></div>
                 <div class="overview_confirmation">
-                    <div class="gsl_button return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"> </i><span gstype='bookingtranslation' gstranslationfield='return'></span></div><div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
+                    <div class="gsl_button return" onclick="getshop_showAddonsPage()"><i class="fa fa-arrow-left"> </i><span gstype='bookingtranslation' gstranslationfield='return'></span></div><div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
                 </div>
             </div>
             <div class="overview_article">

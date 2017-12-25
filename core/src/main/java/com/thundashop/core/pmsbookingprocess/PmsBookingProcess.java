@@ -469,6 +469,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public GuestAddonsSummary removeRoom(String roomId) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        PmsBookingRooms room = booking.findRoom(roomId);
+        booking.rooms.remove(room);
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         return generateSummary();
     }
 

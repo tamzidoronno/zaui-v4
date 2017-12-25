@@ -339,7 +339,9 @@ function getshop_createSticky(sticky) {
         var yPos = stopPos - (sticky.height()*2) -14;/*should only be stopPos, but sets yPos wrong*/
 
         $('.GslBooking .ordersummary').css('width', $('.GslBooking .ordersummary').outerWidth());
-
+        if(!$('.GslBooking .ordersummary').is(':visible')) {
+            return;
+        }
         win.on("scroll", function () {
             if(win.scrollTop() > pos && win.scrollTop() < stopPos) {
                 sticky.addClass('sticky');

@@ -812,7 +812,7 @@ function getshop_setDatePicker() {
         }
     });    
     
-    $('#date_picker_start').on('change', function() {
+    $('#date_picker_start').on('change blur', function() {
         var start = new Date($(this).val());
         $("#date_picker").data('daterangepicker').setStartDate(start);
         
@@ -824,7 +824,7 @@ function getshop_setDatePicker() {
         }
     });
     
-    $('#date_picker_end').on('change', function() {
+    $('#date_picker_end').on('change blur', function() {
         var end = new Date($(this).val());
         var start = new Date($('#date_picker_start').val());
         

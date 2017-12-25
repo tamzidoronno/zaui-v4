@@ -834,52 +834,65 @@ function setDatePicker() {
 $(document).on('change', '.GslBooking .numberof_rooms', function () {
     var index = $(this).closest('.productentrybox').attr('index');
     var guest = $(this).attr('guests');
-    gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = $(this).val();
+    var count = $(this).val();
+    var time = new Date().toLocaleTimeString('en-us');
+    var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
+    var endDate = $('#date_picker').data('daterangepicker').endDate.format('MMM DD, YYYY ') + time;
     
-    var target = $(this);
-    var totalCost = 0;
-    var selectedRooms = 0;
-    var totalSelectedRooms = 0;
-    var allContainers = target.closest('#productentry');
-    var mainContainer = target.closest('.productentry_main');
-    var availableRooms = parseInt(mainContainer.find('.product_availablerooms').attr('value'));
+    $.ajax(endpoint + '/scripts/bookingprocess.php?method=changeNumberOnType', {
+        dataType: 'jsonp',
+        data: { 
+            "body" :  {
+                "id": $(this).closest('.productentry').attr('roomid'),
+                "numberOfRooms" : $(this).val(),
+                "guests" : $(this).attr('guests'),
+                "start" : startDate,
+                "end" : endDate
+            }
+        },
+        success: function (res) {
+            gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = count;            
+            var target = $(this);
+            var totalCost = 0;
+            var selectedRooms = 0;
+            var totalSelectedRooms = 0;
+            var allContainers = target.closest('#productentry');
+            var mainContainer = target.closest('.productentry_main');
+            var availableRooms = parseInt(mainContainer.find('.product_availablerooms').attr('value'));
 
-    allContainers.find('.numberof_rooms').each(function () {
-        var loopdropdown = $(this);
-        var selected = parseInt(loopdropdown.val());
-        var price = $('option:selected', this).attr('data-price');
-        var priced = parseInt(price);
-        totalSelectedRooms += selected;
-        totalCost += priced;
-    });
-    mainContainer.find('.numberof_rooms').each(function () {
-        var loopdropdown = $(this);
-        var selected = parseInt(loopdropdown.val());
-        selectedRooms += selected;
-    });
-    var totalLeft = availableRooms - selectedRooms;
-    mainContainer.find('.numberof_rooms').each(function () {
-        var loopdropdown = $(this);
-        loopdropdown = parseInt(loopdropdown.val());
-        var thisIsWhatShouldBeHere = (loopdropdown + totalLeft);
-        var roomsToRemove = availableRooms - thisIsWhatShouldBeHere;
-        for (var i = 1; i <= roomsToRemove; i++) {
-            var optionValue = (availableRooms + 1) - i;
-            var thisOption = $(this).find('option[value="' + optionValue + '"]');
-            thisOption.addClass('unavailableRooms').prop('disabled', true);
+            allContainers.find('.numberof_rooms').each(function () {
+                var loopdropdown = $(this);
+                var selected = parseInt(loopdropdown.val());
+                var price = $('option:selected', this).attr('data-price');
+                var priced = parseInt(price);
+                totalSelectedRooms += selected;
+                totalCost += priced;
+            });
+            mainContainer.find('.numberof_rooms').each(function () {
+                var loopdropdown = $(this);
+                var selected = parseInt(loopdropdown.val());
+                selectedRooms += selected;
+            });
+            var totalLeft = availableRooms - selectedRooms;
+            mainContainer.find('.numberof_rooms').each(function () {
+                var loopdropdown = $(this);
+                loopdropdown = parseInt(loopdropdown.val());
+                var thisIsWhatShouldBeHere = (loopdropdown + totalLeft);
+                var roomsToRemove = availableRooms - thisIsWhatShouldBeHere;
+                for (var i = 1; i <= roomsToRemove; i++) {
+                    var optionValue = (availableRooms + 1) - i;
+                    var thisOption = $(this).find('option[value="' + optionValue + '"]');
+                    thisOption.addClass('unavailableRooms').prop('disabled', true);
+                }
+                for (var i = 1; i <= thisIsWhatShouldBeHere; i++) {
+                    var thisOption = $(this).find('option[value="' + i + '"]');
+                    thisOption.removeClass('unavailableRooms').prop('disabled', false);
+                }
+            });
+
+            updateOrderSummary(gslbookingcurresult);
         }
-        for (var i = 1; i <= thisIsWhatShouldBeHere; i++) {
-            var thisOption = $(this).find('option[value="' + i + '"]');
-            thisOption.removeClass('unavailableRooms').prop('disabled', false);
-        }
     });
-    
-//    var multipleRooms = ' rooms ';
-//    if (totalSelectedRooms == 1) {
-//        multipleRooms = ' room '
-//    }
-//    $('#productoverview_footer').slideDown('slow');
-    updateOrderSummary(gslbookingcurresult);
 });
 
 var gslbookingcurresult = null;
@@ -953,6 +966,7 @@ $(document).on('click', '.GslBooking #search_rooms', function () {
                 var roomBox = $('#productentrybox').clone();
                 roomBox.attr('id',null);
                 roomBox.addClass('productentrybox');
+                roomBox.attr('roomid', room.id);
 
                 roomBox.find('.roomname').html(room.name);
                 roomBox.find('.product_availablerooms').val(room.availableRooms);

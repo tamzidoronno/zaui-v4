@@ -334,6 +334,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 toAddAddon.name = productManager.getProduct(item.productId).name;
                 toAddAddon.icon = item.bookingicon;
                 checkIsAddedToRoom(toAddAddon, room, item);
+                if(!item.displayInBookingProcess.isEmpty() && !item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
+                    continue;
+                }
                 returnroom.addonsAvailable.put(toAddAddon.productId, toAddAddon);
             }
             
@@ -342,16 +345,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void addItemSupported(GuestAddonsSummary result) {
-        PmsBooking booking = pmsManager.getCurrentBooking();
-        List<PmsBookingAddonItem> addonsOnBooking = pmsManager.getAddonsWithDiscountForBooking(booking.rooms.get(0).pmsBookingRoomId);
-        for(PmsBookingAddonItem item : addonsOnBooking) {
-            AddonItem toAddAddon = new AddonItem();
-            toAddAddon.setAddon(item);
-            toAddAddon.icon = item.bookingicon;
-            toAddAddon.name = productManager.getProduct(item.productId).name;
-            isAddedToBooking(toAddAddon, booking, item);
-            result.items.add(toAddAddon);
+        HashMap<String, AddonItem> itemsMap = new HashMap();
+        for(RoomInfo r : result.rooms) {
+            for(AddonItem item : r.addonsAvailable.values()) {
+                itemsMap.put(item.productId, item);
+            }
         }
+        result.items = new ArrayList(itemsMap.values());
     }
 
     private void addTextualSummary(GuestAddonsSummary result) {
@@ -619,6 +619,49 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public GuestAddonsSummary logOut() {
         userManager.logout();
+        return generateSummary();
+    }
+
+    @Override
+    public GuestAddonsSummary changeNumberOnType(BookingTypeChange change) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        int current = 0;
+        List<PmsBookingRooms> roomsAdded = new ArrayList();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(!room.bookingItemTypeId.equals(change.id)) {
+                continue;
+            }
+            if(room.numberOfGuests.equals(change.guests)) {
+                roomsAdded.add(room);
+                current++;
+            }
+        }
+        
+        if(current > change.numberOfRooms) {
+            //Remove rooms.
+            List<PmsBookingRooms> toRemove = new ArrayList();
+            for(int i = 0; i < current-change.numberOfRooms;i++) {
+                toRemove.add(roomsAdded.get(i));
+            }
+            booking.rooms.removeAll(toRemove);
+        } else {
+            //Add rooms
+            for(int i = 0; i < change.numberOfRooms-current;i++) {
+                PmsBookingRooms toAddToCurrentBooking = new PmsBookingRooms();
+                toAddToCurrentBooking.bookingItemTypeId = change.id;
+                toAddToCurrentBooking.numberOfGuests = change.guests;
+                toAddToCurrentBooking.date = new PmsBookingDateRange();
+                toAddToCurrentBooking.date.start = normalizeDate(change.start, true);
+                toAddToCurrentBooking.date.end = normalizeDate(change.end, false);
+                booking.rooms.add(toAddToCurrentBooking);
+            }
+        }
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         return generateSummary();
     }
 }

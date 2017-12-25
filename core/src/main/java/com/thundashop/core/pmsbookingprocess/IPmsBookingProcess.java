@@ -19,6 +19,7 @@ import java.util.List;
 public interface IPmsBookingProcess {
     public StartBookingResult startBooking(StartBooking arg);
     public GuestAddonsSummary getAddonsSummary(List<RoomsSelected> arg);
+    public GuestAddonsSummary changeNumberOnType(BookingTypeChange change);
     public GuestAddonsSummary addAddons(AddAddons arg);
     public GuestAddonsSummary removeAddons(AddAddons arg);
     public GuestAddonsSummary saveGuestInformation(List<RoomInformation> arg);

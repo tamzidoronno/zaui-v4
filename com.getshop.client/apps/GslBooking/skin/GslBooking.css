@@ -67,6 +67,7 @@ Error      : #de5353; red
     padding-top:2%;
     z-index: 99;
 }
+.GslBooking .removeroom { cursor:pointer; }
 .GslBooking .roomdescription { padding-top: 10px; padding-left: 10px; }
 .GslBooking .gslfront_1 .productentry_gallery.active .gallery-wrapper{width: 100%;position: absolute;bottom:0;overflow:visible;}
 .GslBooking .gslfront_1 .productentry_gallery.active .feature{max-width:58%;max-height:50%;margin:auto;}

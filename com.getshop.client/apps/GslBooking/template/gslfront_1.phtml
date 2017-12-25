@@ -86,7 +86,7 @@
                 <span gstype='bookingtranslation' gstranslationfield='correctEmailforGuest'></span>
                 <div class="roomentryframe">
                     <div class="roomentry" id='roomentrycontainer' style='display:none;'>
-                        <h4><span class='roomname'></span> 
+                        <h4><i class="fa fa-trash-o removeroom"></i> <span class='roomname'></span> 
                             <span class='secondary_text'>
                                 (<span gstype='bookingtranslation' gstranslationfield='checkin'></span><span class='startdate'></span>, <span gstype='bookingtranslation' gstranslationfield='checkout'></span><span class='enddate'></span>)
                             </span>
@@ -283,6 +283,6 @@
     $('.gslbookingBody').hide();
     $('.addons_overview').hide();
     
-    setBookingTranslation();
-    setDatePicker();
+    getshop_setBookingTranslation();
+    getshop_setDatePicker();
 </script>

@@ -8,6 +8,10 @@ $channels = $this->getChannelMatrix();
 $searchtypes = $this->getSearchTypes();
 
 foreach($config->lockServerConfigs as $id => $server) {
+    if(!$server->arxHostname) {
+        continue;
+    }
+    
     if($server->beenWarned) {
         echo "<div style='color:red;' class='warnnotconnectedtoserver'>";
         echo "<i class='fa fa-warning'></i> Connection lost with server: " . $server->arxHostname . " ($id), getshop has been informed about this issue and will handle it, connection where lost at ".date("d.m.Y H:i", strtotime($server->lastPing))."<br>";

@@ -1,0 +1,63 @@
+body {
+    font-family: 'Barlow Semi Condensed', sans-serif;
+    font-size: 16px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+}
+.shop_button{
+    width:100%;
+    border-radius:2px;
+    background:#9abd2a;
+    font-size:20px;
+}
+a:hover{text-decoration:none;}
+.gs_page_width{background-color:rgba(0,0,0,0); max-width: 1200px; margin:auto;}
+
+.gsarea[area="header"]{text-align:center;background-color:#f3f3f3;padding:10px 0;}
+.gsarea[area="body"]{min-height:1100px;}
+.gsarea[area="footer"]{background-color:#111;}
+.footerprovidedtext{line-height:140px;background:#111;font-size:20px;}
+.footerprovidedtext, .footerprovidedtext a{color:#efefef;}
+
+.Menu{padding-top:28px;font-family: 'Barlow Semi Condensed', sans-serif;}
+.Menu div .fa:before{color:#ddd;font-size:26px;position:relative;top:2px;padding:0 2px;}
+.Menu .entry div:hover{position:relative;top:2px;color:#aaa;}
+.gscell_1.gsuicell:after{
+    content:"";
+    background-color:#f3f3f3;
+    height:30px;
+    width:30px;
+    z-index:1;
+    position:absolute;
+    top:92px;
+    left:10%;
+    -webkit-transform: scaleX(1) rotate(45deg); 
+    -ms-transform: scaleX(1) rotate(45deg);
+    transform: scaleX(1) rotate(45deg);
+}
+.Menu .entry div{
+    padding:20px;
+    color:#999;
+    font-size:20px;
+    line-height:30px;
+    z-index:2;
+}
+
+/*LANGUAGE*/
+.gs_language_selection{right:0;border:0;z-index:3;}
+.gs_language_selection .gs_language_code.active{cursor:default;}
+.gs_language_selection .gs_lang_code_en_en:after{content:"EN";font-size:14px;}
+.gs_language_selection .gs_lang_code_nb_NO:after{content:"NO";font-size:14px;}
+.gs_language_code.active{background-color:#329ad6;color:#f3f3f3;}
+.gs_language_code{
+    color: #999;
+    background-color: #fff;
+    width:40px;
+    height:40px;
+    border-radius: 50%;
+    padding: 10px;
+    margin: 4px 4px 0 4px;
+    font-size: 0px;
+}
+/*END OF LANGUAGE*/

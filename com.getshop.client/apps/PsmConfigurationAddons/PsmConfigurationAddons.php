@@ -75,6 +75,7 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
                     $addon->includedInBookingItemTypes = $isIncluded;
                     $addon->descriptionWeb = $res['descriptionWeb'];
                     $addon->bookingicon = $res['bookingicon'];
+                    $addon->count = $res['count'];
                     $addon->displayInBookingProcess = $displayInBookingProcess;
                     $addon->channelManagerAddonText = $res['channelManagerAddonText'];
                 }

@@ -84,6 +84,7 @@ public class PmsBooking extends DataCommon {
     public boolean ignoreNoShow = false;
     boolean quickReservation = false;
     public String latestwubookreservationid = "";
+    public boolean agreedToTermsAndConditions = false;
     
     /**
      * First startdate of all rooms

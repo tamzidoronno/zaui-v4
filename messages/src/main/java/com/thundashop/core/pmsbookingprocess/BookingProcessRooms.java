@@ -11,6 +11,8 @@ public class BookingProcessRooms {
     public Integer maxGuests = 0;
     public String description = "";
     public String name = "";
+    public String id = "";
     public LinkedList<PmsTypeImages> images = new LinkedList();
     public HashMap<String, String> utilities = new HashMap();
+    public boolean visibleForBooker = false;
 }

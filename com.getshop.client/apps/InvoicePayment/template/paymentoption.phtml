@@ -1,0 +1,27 @@
+<?
+$expDate = date('m/d/Y', strtotime("+14 days"));
+?>
+<div>
+    <div class="paymentinfo">
+        <? 
+        echo $this->__f("By using this payment you will be able to create a invoice that you can send to your customers");
+        ?>    
+    </div>
+    
+    <br/>
+    <br/>
+    <?
+    echo $this->__f("Specify expiry date");
+    ?>
+    <br/> <input gsname="expirydate" class='gsniceinput1 expirydate' value='<? echo $expDate; ?>'/>
+    <br/>
+    <br/>
+    <textarea gsname="invoicenote" class='invoicenote'></textarea>
+    <br/>
+    <br/>
+    <br/> <? echo $this->renderPaymentButtons(); ?>
+</div>
+
+<script>
+    $('.expirydate').datepicker();
+</script>

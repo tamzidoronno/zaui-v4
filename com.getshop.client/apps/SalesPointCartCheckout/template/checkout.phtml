@@ -1,11 +1,12 @@
 <?
 /* @var $this \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout */
 $originalCart = $this->getOriginalCartFromSession();
-$currentCart = $this->getApi()->getCartManager()->getCart();
-$total = $this->getApi()->getCartManager()->getCartTotalAmount();
+$currentCart = $this->getCurrentCart();
+$total = $this->getApi()->getCartManager()->getCartTotal($currentCart);
 
 $items = $originalCart->items;
 $i = 0;
+
 foreach ($items as $item) {
     $i++;
     $lastItem = count($items) == $i ? "last_row" : "";
@@ -14,14 +15,14 @@ foreach ($items as $item) {
     echo '<div class="cartitem row '.$lastItem.'" cartItemId="'.$item->cartItemId.'">';
     
     if ($item->addedByGetShopModule == "pms") {
-        if ($item->priceMatrix && count($item->priceMatrix)) {
+        if (isset($item->priceMatrix) && $item->priceMatrix && count($item->priceMatrix)) {
             $this->includefile("pmswithmatrixitem");
-        } else if($item->itemsAdded && count($item->itemsAdded)) {
+        } else if(isset($item->itemsAdded) && $item->itemsAdded && count($item->itemsAdded)) {
             $this->includefile("pmsaddons");
         } else {
             $this->includefile("pmsnormalcartitem");
         }
-    }
+    } 
     
     echo "</div>";
 }
@@ -31,7 +32,3 @@ foreach ($items as $item) {
     <? echo $this->__f("Total"); ?>: <span><? echo $total; ?></span>
 </div>
 
-<div style='text-align: right; margin-top: 30px;'>
-    <div class='shop_button'><i class='fa fa-magic'></i> <? echo $this->__f("Reset"); ?></div>
-    <a href='/?page=selectPayment'><div class='shop_button'><? echo $this->__f("Select payment method"); ?> <i class='fa fa-arrow-right'></i></div></a>
-</div>

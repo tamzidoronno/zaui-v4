@@ -13,18 +13,32 @@ app.SalesPointCartCheckout = {
         var data = {};
         
         data.cartItems = [];
+        data.roomId = $(this).closest('.SalesPointCartCheckout').attr('roomid');
         
-        $('.SalesPointCartCheckout .cartitem.row').each(function() {
-            var cartItem = app.SalesPointCartCheckout.createCartItem(this);
-            data.cartItems.push(cartItem);
-        });
+        if (data.roomId) {
+            $('.SalesPointCartCheckout[roomid="'+data.roomId+'"] .cartitem.row').each(function() {
+                var cartItem = app.SalesPointCartCheckout.createCartItem(this);
+                data.cartItems.push(cartItem);
+            });
+        } else {
+            $('.SalesPointCartCheckout .cartitem.row').each(function() {
+                var cartItem = app.SalesPointCartCheckout.createCartItem(this);
+                data.cartItems.push(cartItem);
+            });
+        }
         
         var event = thundashop.Ajax.createEvent(null, "updateCartAndPrice", this, data);
         event['synchron'] = true;
         
-        thundashop.Ajax.post(event, function(res) {
-            $('.SalesPointCartCheckout .summary span').html(res);
-        });
+        thundashop.Ajax.post(event, function(res, args) {
+            if (args && typeof(args.roomId) !== "undefined")  {
+                $('.SalesPointCartCheckout[roomid="'+args.roomId+'"] .summary span').html(res);
+            } else {
+                $('.SalesPointCartCheckout .summary span').html(res);
+            }
+            
+            
+        }, data);
         
     },
     

@@ -5,6 +5,7 @@ class OrderSimplePrinter extends \MarketingApplication implements \Application {
     private $orderId;
     
     private $compactView = false;
+    public $lastOrderInTable = false;
     public $printHeader = false;
     
     /**
@@ -57,7 +58,11 @@ class OrderSimplePrinter extends \MarketingApplication implements \Application {
 
     public function getPaymentApplication() {
         $order = $this->getOrder();
-        $paymentType = $this->getApi()->getStoreApplicationPool()->getApplication($order->payment->paymentId);
+        $payArr = explode("\\", $order->payment->paymentType);
+        $paymentId = str_replace("_", "-", $payArr[0]);
+        $paymentId = str_replace("ns-", "", $paymentId);
+        
+        $paymentType = $this->getApi()->getStoreApplicationPool()->getApplication($paymentId);
         $paymentInstance = $this->getFactory()->getApplicationPool()->createInstace($paymentType);
         return $paymentInstance;
     }
@@ -73,6 +78,11 @@ class OrderSimplePrinter extends \MarketingApplication implements \Application {
     public function formatPaymentType($paymentType) {
         $payment = explode("\\", $paymentType);
         return $payment[1];
+    }
+
+    public function setLastOrderInTable() {
+        $this->lastOrderInTable = true;
+        
     }
 
 }

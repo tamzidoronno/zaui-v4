@@ -57,7 +57,6 @@ class PmsSearchBookingColumnFormatters {
         
         $vistorText .= $this->createAddonText($room) . " ";
         
-        
         foreach($room->guest as $guest) {
             $vistorText .= $guest->name;
             if($guest->email) { $vistorText .= " - " . $guest->email; }
@@ -85,6 +84,26 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatState($room) {
+        if ($room->progressState == "waitingforlock") {
+            $waiting = $this->pmsSearchBooking->__f("Receiving code from lock...");
+            return "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-hourglass fa-stack-1x'></i> <i style='color: #FFF' class='fa fa-lock  fa-stack-3x'></i></span>";
+        }
+        
+        if ($room->progressState == "notpaid") {
+            $waiting = $this->pmsSearchBooking->__f("Room not paid");
+            return "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-usd fa-stack-1x'></i> <i class='fa fa-ban fa-stack-2x'></i></span>";
+        }
+        
+        if ($room->progressState == "ended") {
+            $waiting = $this->pmsSearchBooking->__f("Ended");
+            return "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-check fa-stack-1x'></i> <i class='fa fa-calendar fa-stack-2x'></i></span>";
+        }
+        
+        if ($room->progressState == "active") {
+            $waiting = $this->pmsSearchBooking->__f("All good (active)");
+            return "<span title='$waiting' class='fa-stack fa-lg'> <i class='fa fa-check fa-stack-2x'></i></span>";
+        }
+        
         return $room->progressState;
     }
     

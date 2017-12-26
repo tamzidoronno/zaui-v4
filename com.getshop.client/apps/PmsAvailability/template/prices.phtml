@@ -1,0 +1,47 @@
+<?
+/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+$currentBooking = $this->getCurrentBookingFromBookingEngine();
+$pmsBooking = $this->getCurrentBooking();
+$room = $this->getCurrentRoom();
+$types = $this->getTypes();
+$items = $this->getItems();
+
+$start = $room->date->start;
+$end = $room->date->end;
+
+if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
+    $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+    $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+    $typeid = isset($_POST['data']['typeId']) ? $_POST['data']['typeId'] : $room->bookingItemTypeId;
+    $room = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $typeid, $start, $end);
+}
+
+$priceMatrix = (array)$room->priceMatrix;
+uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability','sortByDate'))
+
+?>
+
+<div class="item_prices">
+    <h2>Prices</h2>
+    <br/>
+    <?
+    $total = 0;
+    foreach ($priceMatrix as $date => $price) {
+        $total += $price;
+        echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2'><input class='gsniceinput1 unitprice_changed' gsname='room_price_$date' value='$price'></div> </div>";
+    }
+    ?>
+    
+    <div class='totalrow'>
+        <?
+        echo $this->__f("Total").": <span>".$total."</span>";
+        ?>
+        <div class='extrainfo'>
+            <i class='fa fa-info-circle'></i>
+            <?
+            echo $this->__f("The total here is only for the rooms itselfs, it does not contain addons unless they are included in the roomprice");
+            ?>
+        </div>
+    </div>
+</div>
+    

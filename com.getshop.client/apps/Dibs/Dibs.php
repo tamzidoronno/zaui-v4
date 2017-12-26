@@ -3,6 +3,7 @@ namespace ns_d02f8b7a_7395_455d_b754_888d7d701db8;
 
 class Dibs extends \PaymentApplication implements \Application {
     public $singleton = true;
+    private $options = null;
     
     public function getDescription() {
         return $this->__("dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.");
@@ -205,6 +206,9 @@ class Dibs extends \PaymentApplication implements \Application {
         return $this->getConfigurationSetting("testmode") == "true";
     }
 
+    public function renderPaymentOption() {
+        $this->includefile("paymentoption");
+    }
+    
 }
-
 ?>

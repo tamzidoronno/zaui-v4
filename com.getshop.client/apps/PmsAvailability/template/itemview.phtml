@@ -24,45 +24,55 @@ function canUseItem($item, $availeableitems) {
     return false;
 }
 ?>
+<div class='itemview_inner'>
+    <div class='explenation_header'>
+        <div class="bookingitemhead canUse"></div> <? echo $this->__f("Can be selected"); ?>
+        <br/><div class="bookingitemhead canNotUse"></div> <? echo $this->__f("Not available"); ?>
+        <br/><div class="bookingitemhead canNotUseGs_selected"></div> <? echo $this->__f("Currently selected, but not valid with given timeframe"); ?>
+    </div>
+    <div class='updater'>
+        <i class='fa fa-spin fa-spinner'></i> Updating.. please wait..
+    </div>
+    <div gstype="select" gsname="itemid"><?
+        foreach ($types as $type) {
+        ?>
+            <div class='movetotype' typeid='<? echo $type->id; ?>'>
+                <div class="headername"><? echo $type->name; ?></div>
+                <div class="itemselector">
+                    <?
+                    $useClass = "canNotUse";
 
-<div class='updater'>
-    <i class='fa fa-spin fa-spinner'></i> Updating.. please wait..
-</div>
-<div gstype="select" gsname="itemid"><?
-    foreach ($types as $type) {
-    ?>
-        <div class='movetotype'>
-            <div class="headername"><? echo $type->name; ?></div>
-            <div>
-                <?
-                $useClass = "canNotUse";
+                    foreach ($items as $item) {
+                        if ($item->bookingItemTypeId != $type->id) {
+                            continue;
+                        }
 
-                foreach ($items as $item) {
-                    if ($item->bookingItemTypeId != $type->id) {
-                        continue;
+                        if (canUseItem($item, $availableItems)) {
+                            $useClass = "canUse";
+                        }
                     }
 
-                    if (canUseItem($item, $availableItems)) {
-                        $useClass = "canUse";
+                    $currentlyUsing = !$currentBooking->bookingItemId  && $currentBooking->bookingItemTypeId == $type->id ? "gs_selected" : "";
+                    ?>
+                    <div class='bookingitem <? echo $useClass." ".$currentlyUsing; ?>' gs_value='<? echo $type->id; ?>'><? echo $this->__f("Floating"); ?></div>
+                    <?
+                    foreach ($items as $item) {
+                        if ($item->bookingItemTypeId != $type->id) {
+                            continue;
+                        }
+                        $currentlyUsing = $item->id == $currentBooking->bookingItemId ? "gs_selected" : "";
+                        $useClass = canUseItem($item, $availableItems) ? "canUse" : "canNotUse";
+                        echo "<div class='bookingitem $useClass $currentlyUsing' gs_value='".$type->id."_".$item->id."'>".$item->bookingItemName."</div>";
                     }
-                }
-
-                $currentlyUsing = !$currentBooking->bookingItemId  && $currentBooking->bookingItemTypeId == $type->id ? "gs_selected" : "";
-                ?>
-                <div class='bookingitem <? echo $useClass." ".$currentlyUsing; ?>' gs_value='<? echo $type->id; ?>'><? echo $this->__f("Floating"); ?></div>
-                <?
-                foreach ($items as $item) {
-                    if ($item->bookingItemTypeId != $type->id) {
-                        continue;
-                    }
-                    $currentlyUsing = $item->id == $currentBooking->bookingItemId ? "gs_selected" : "";
-                    $useClass = canUseItem($item, $availableItems) ? "canUse" : "canNotUse";
-                    echo "<div class='bookingitem $useClass $currentlyUsing' gs_value='".$type->id."_".$item->id."'>".$item->bookingItemName."</div>";
-                }
-                ?>
+                    ?>
+                </div>
             </div>
-        </div>
-    <?
-    }
-    ?>
+        <?
+        }
+        ?>
+    </div>
+</div>
+
+<div class='pricesview'>
+    <? $this->includefile("prices"); ?>
 </div>

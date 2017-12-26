@@ -53,7 +53,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     
     public function render() {
         $this->setDefaults();
-        $this->includefile("overlaybox");
         
         if (!$this->isGroupBookingView()) {
             $this->renderFilterBox();
@@ -104,6 +103,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
 
     public function getSelectedFilter() {
+        
+        if (isset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()])) {
+            return unserialize($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
+        }
+        
         $config = $this->getConfig();
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
@@ -117,6 +121,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         if(isset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]) && $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]) {
             $filter->includeDeleted = true;
         }
+        
         return $filter;
     }
 
@@ -147,11 +152,12 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         return null;
     }
-    public function updateGuestInformation() {
+    public function updateBooking() {
         $this->setData();
         $selectedRoom = $this->getPmsRoom();
         $this->updateGuests($selectedRoom);
         $this->setStay($selectedRoom);
+        $this->updateUnitPrices($selectedRoom);
         $this->setData(true);
         $this->includefile("bookingoverview");
         die();
@@ -162,6 +168,22 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $av->loaditemview();
     }
 
+    public function hasUnsettledAmount() {
+        $booking = $this->getPmsBooking();
+        $this->setData();
+        
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->avoidOrderCreation = true;
+        $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
+
+        $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $this->getPmsBooking()->id, $filter);    
+
+        $itemCount = count($this->getApi()->getCartManager()->getCart()->items);
+        
+        echo $itemCount > 0 ? "YES" : "NO";
+        die();
+    }
+    
     public function setStay($selectedRoom) {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
@@ -241,38 +263,49 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function startPaymentProcess() {
-        $bookingId = $_POST['data']['pmsbookingid'];
+        if (isset($_SESSION['payment_process_cart_'.$this->getSelectedRoom()->pmsBookingRoomId])) {
+            $this->includefile("paymentprocess_started_for_room");
+            return false;
+        }
+        
+        $bookingId = $this->getPmsBooking()->id;
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId);
-                
+
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->avoidOrderCreation = true;
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
-                
-        
+
         $this->getApi()->getCartManager()->clear();
-        $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);
+        $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);    
+
+        $itemCount = count($this->getApi()->getCartManager()->getCart()->items);
+        if (!$itemCount) {
+            return false;
+        }
         
-        $result = new \stdClass();
-        $result->pmsbookingid = $bookingId;
-        
-        ob_start();
         echo "<div class='SalesPointCartCheckout'>";
         $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
-        $salesPointCartCheckout->renderPreview();
-        $html = ob_get_contents();
+        $salesPointCartCheckout->setOriginalCart();
+        $salesPointCartCheckout->render();
         echo "</div>";
-        ob_end_clean();
         
-        $result->previewhtml = $html;
         
-        echo json_encode($result);
-        
-        \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout::clearCheckout();
-        die();
+        return true;
+    }
+    
+    public function renderPaymentProcess() {
+        $this->includefile("paymentprocess");
     }
 
+    public function updateCartAndPrice() {
+        $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+        $salesPointCartCheckout->updateCartAndPrice();
+    }
+    
     public function subMenuChanged() {
         $_SESSION['currentSubMenu'] = $_POST['data']['selectedTab'];
+        $this->renderTabContent();
+        die();
     }
 
     public function isTabActive($tabname) {
@@ -342,7 +375,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
 
     /**
      * 
-     * @return \core_pmsmanager_PmsRoomSimple
+     * @return \core_pmsmanager_PmsBookingRooms
      */
     public function getSelectedRoom() {
         $this->setData();
@@ -440,6 +473,111 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $pmsBooking = $this->getPmsBooking();
         $this->getApi()->getPmsManager()->setGuestOnRoom($this->getSelectedMultilevelDomainName(), $guestsToUse, $pmsBooking->id, $selectedRoom->pmsBookingRoomId);
         
+    }
+
+    public function renderTabContent() {
+        if ($_SESSION['currentSubMenu'] == "log") {
+            $this->includefile("log");
+        }
+        if ($_SESSION['currentSubMenu'] == "orders") {
+            $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+            $this->includefile("orderstab");
+        } 
+    }
+
+    public function addCurrentCartForPaymentProcess() {
+        $this->setData();
+        $roomId = $this->getSelectedRoom()->pmsBookingRoomId;
+        $salespoint = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+        $salespoint->addCurrentCartForPaymentProcess($roomId);
+        
+        $this->includefile("orderstab");
+        die();
+    }
+    
+    public function cancelPaymentProcess() {
+        $this->setData();
+        $roomId = $this->getSelectedRoom()->pmsBookingRoomId;
+        $salespoint = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+        $salespoint->cancelPaymentProcessForRoom($roomId);
+        
+        $this->includefile("orderstab");
+        die();
+    }
+    
+    public function cancelAllPaymentProcesses() {
+        $salespoint = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+        $salespoint->cancelAllPaymentProcesses();
+        die();
+    }
+
+    public function getCartsForPaymentProcess() {
+        $carts = array();
+        foreach ($_SESSION as $key => $value) {
+            if (strstr($key, "payment_process_cart_") > -1) {
+                try {
+                    $cart = json_decode($_SESSION[$key]);
+                } catch (Exception $ex) {
+                    continue;
+                }
+                @$keyArr = explode("_", $key);
+                @$cart->roomId = $keyArr[3];
+                $carts[] = $cart;
+            }
+        }
+        return $carts;
+    }
+
+    public function doPaymentNormal() {
+        $this->setData();
+        
+        $salesPoint = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+        $cart = $salesPoint->getTmpCartForRoom($_POST['data']['roomid']);
+        
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication($_POST['data']['paymentid']);
+        $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $order = $instance->doPayment($cart);
+        $order->createByManager = "SalesPoint";
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        
+        $this->sendPaymentLinkIfNeeded($order);
+        $this->setData(true);
+    }
+
+    public function sendPaymentLinkIfNeeded($order) {
+        if (isset($_POST['data']['sendPaymentLink']) && $_POST['data']['sendPaymentLink'] !== "true") {
+            return;
+        }        
+        
+        $pmsBooking = $this->getPmsBooking();
+        $email = $_POST['data']['email'];
+        $prefix = $_POST['data']['prefix'];
+        $phone = $_POST['data']['cellphone'];
+        $smsText = $_POST['data']['textMessage'];
+        
+        $this->getApi()->getPmsManager()->sendPaymentLinkWithText($this->getSelectedMultilevelDomainName(), $order->id, $pmsBooking->id, $email, $prefix, $phone, $smsText);
+    }
+
+    public function updateUnitPrices($selectedRoom) {
+        $priceMatrix = array();
+        
+        foreach ($_POST['data'] as $key => $value) {
+            if (strpos($key, "room_price_") > -1) {
+                $arr = explode("_", $key);
+                $date = $arr[2];
+                $priceMatrix[$date] = $value;
+            }
+        }
+        
+        $this->setData(true);
+        $pmsBooking = $this->getPmsBooking();
+        foreach ($pmsBooking->rooms as $room) {
+            if ($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
+                $room->priceMatrix = $priceMatrix;
+            }
+        }
+        
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $pmsBooking);
     }
 
 }

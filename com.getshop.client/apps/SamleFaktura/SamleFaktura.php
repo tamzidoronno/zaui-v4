@@ -70,5 +70,9 @@ class SamleFaktura extends \PaymentApplication implements \Application {
         unset($_SESSION['samlefaktura_orders']);
         unset($_SESSION['samlefaktura_order_id']);
     }
+    
+    public function renderPaymentOption() {
+        $this->includefile("paymentoption");
+    }
 }
 ?>

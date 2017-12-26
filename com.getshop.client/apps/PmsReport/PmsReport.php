@@ -208,7 +208,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $index = 0;
         foreach($products as $productId => $total) {
             if($productId == "total") { continue; }
-            $attributes[] = array("product".$index, $allProducts[$productId]->name, "product". $index, null);
+            $attributes[] = array("product".$index, @$allProducts[$productId]->name, "product". $index, null);
             $index++;
         }
         

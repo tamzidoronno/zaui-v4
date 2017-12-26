@@ -6,23 +6,25 @@ $user = $this->getUserForBooking();
 
 ?>
 <div class="bookinginformation">
-    <div class=" row">
-        <div class="col col1"><i class="fa fa-key"></i> <? echo $this->__f("GetShop booking id"); ?></div>
-        <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
-    </div>
-    
-    <div class=" row">
-        <div class="col col1"><i class="fa fa-calendar"></i> <? echo $this->__f("Date created"); ?></div>
-        <div class="col col2"><? echo $pmsBooking->rowCreatedDate; ?></div>    
-    </div>
-    
-    <div class=" row">
-        <div class="col col1"><i class="fa fa-user"></i> <span><? echo $this->__f("Booked for"); ?></span></div>
-        <div class="col col2">
-            <span class="booked_for"><? echo $user->fullName; ?></span>
-            <div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
-            <div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
-        </div>    
+    <div class='guestinfobox'>
+        <div class=" row">
+            <div class="col col1"><i class="fa fa-key"></i> <? echo $this->__f("GetShop booking id"); ?></div>
+            <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
+        </div>
+
+        <div class=" row">
+            <div class="col col1"><i class="fa fa-calendar"></i> <? echo $this->__f("Date created"); ?></div>
+            <div class="col col2"><? echo $pmsBooking->rowCreatedDate; ?></div>    
+        </div>
+
+        <div class=" row">
+            <div class="col col1"><i class="fa fa-user"></i> <span><? echo $this->__f("Booked for"); ?></span></div>
+            <div class="col col2">
+                <span class="booked_for"><? echo $user->fullName; ?></span>
+                <div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
+                <div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
+            </div>    
+        </div>
     </div>
     
     <div class="edit_details_of_user">
@@ -37,8 +39,9 @@ $user = $this->getUserForBooking();
         ?>
     </div>
 
+    <h2><? echo $this->__f("Guests"); ?></h2>
+    
     <div class="guestinfo">
-        <h2><? echo $this->__f("Guests"); ?></h2>
         
         <div class="guest_row header">
             <div class="guest_col guest_col1"> 
@@ -106,8 +109,9 @@ $user = $this->getUserForBooking();
             <?
             }
         ?>
+        <br/>
+        <div class="gs_shop_small_icon add_more_guests"><i class="fa fa-plus"></i> <? echo $this->__f("Add new guest"); ?></div>
     </div>
     
-    <br/>
-    <div class="gs_shop_small_icon add_more_guests"><i class="fa fa-plus"></i> <? echo $this->__f("Add new guest"); ?></div>
+    
 </div>

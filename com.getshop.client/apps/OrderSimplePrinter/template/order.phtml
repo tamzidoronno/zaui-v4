@@ -3,9 +3,10 @@
 $order = $this->getOrder();
 $totalAmount = $this->getApi()->getOrderManager()->getTotalAmount($order);
 $paymentInstance = $this->getPaymentApplication();
+$lastInTableClass = $this->lastOrderInTable ? "lastrow" : "";
 
 ?>
-<div class='OrderSimplerPrinter_inner'>
+<div class='OrderSimplerPrinter_inner <? echo $lastInTableClass; ?>'>
     <div class='orderheader'>
         <div class='orderid'><i class='fa fa-asterisk'></i> <? echo $order->incrementOrderId; ?></div>
         <div class='cost'><i class='fa fa-money'></i> <? echo $totalAmount ; ?></div>
@@ -38,25 +39,45 @@ $paymentInstance = $this->getPaymentApplication();
             <?
             if ($paymentInstance->canChangePaymentMethod($order)) {
                 ?>
-                    <i class='fa fa-edit inlineactionbutton'></i>
+                    
+                    <div class='gs_shop_small_icon'>
+                        <i class='fa fa-edit'></i> <? echo $this->__f("Change payment method"); ?>
+                    </div>
                 <?
             }
             ?>
         </div>
-    </div>
-
-    <?
-        foreach($order->cart->items as $item) {
-    ?>
-    <div class='cartitemrow'>
-        <div class='productname'><? echo $item->product->name; ?></div>
-        <div class='priceandcount'>
-            <div class='count'><? echo $item->count; ?></div> x <div class='price'><? echo $item->product->price; ?></div>
+        <?
+        if ($order->closed) {
+        ?>
+        | <div class="payment_closed" title="<? echo $this->__f("You cant change closed orders. This is because they are in a state where they either are completed, or sent to customer awaiting payment etc."); ?>">
+            <i class="fa fa-lock"></i>
+            <? 
+            echo $this->__f("Order closed");
+            ?>
         </div>
-
-    </div>
-    <?
+        <?  
         }
-    ?>
+        ?>
+        <div class="extrainformation">
+            <?
+            echo $paymentInstance->getExtraInformation($order);
+            ?>
+        </div>
+    </div>
 
+    <div class="cartitemrows">
+        <?
+            foreach($order->cart->items as $item) {
+        ?>
+        <div class='cartitemrow <? echo lastrow; ?>'>
+            <div class='productname'><? echo $item->product->name; ?></div>
+            <div class='priceandcount'>
+                <div class='count'><? echo $item->count; ?></div> x <div class='price'><? echo $item->product->price; ?></div>
+            </div>
+        </div>
+        <?
+            }
+        ?>
+    </div>
 </div>

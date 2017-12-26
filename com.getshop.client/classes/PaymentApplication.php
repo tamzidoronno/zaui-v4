@@ -14,6 +14,7 @@ class PaymentApplication extends ApplicationBase {
     /* @var $order core_ordermanager_data_Order */
     public $order;
     
+    private $paymentOptions = null;
     /**
      * @var PaymentMethod[]
      */
@@ -118,6 +119,63 @@ class PaymentApplication extends ApplicationBase {
         }
         
         return true;
+    }
+    
+    public function renderPaymentOption() {
+    }
+    
+    public function canCreateOrderAfterStay() {
+        return true;
+    }
+    
+    public function renderPayment($options=false) {
+        $this->paymentOptions = $options;
+        $classname = get_class($this);
+        $arr = explode("\\", $classname);
+        $class = $arr[1];
+        $paymentid = $this->applicationSettings->id;
+        $postMethod = isset($this->paymentOptions->postMethod) ? $this->paymentOptions->postMethod : "doPayment";
+        $callback = isset($this->paymentOptions->gscallback) ? "gs_callback='".$this->paymentOptions->gscallback."' synchron='true'" : "";
+        
+        echo "<div class='$class' gstype='form' method='$postMethod' $callback>";
+        
+        if (isset($this->paymentOptions->extraArgs)) {
+            foreach ($this->paymentOptions->extraArgs as $key => $val) {
+                echo "<input type='hidden' value='$val' gsname='$key'/>";
+            }
+        }
+        
+        echo "<input type='hidden' value='$paymentid' gsname='paymentid'/>";
+        $this->renderPaymentOption();
+        echo "</div>";
+    }
+    
+    function getPaymentOptions() {
+        return $this->paymentOptions;
+    }
+    
+    function renderPaymentButtons() {
+        echo '<div class="shop_button" gstype="submit">'.$this->__f("Create order").'</div>';
+        
+        if ($this->paymentOptions->canCreateOrderAfterStay && $this->canCreateOrderAfterStay()) {
+            echo ' <div class="shop_button">'.$this->__f("Create order after stay").'</div>';
+        }
+    }
+    
+    public function doPayment($cart=false) {
+        if ($cart) {
+            $this->getApi()->getCartManager()->setCart($cart);
+        }
+        
+        $this->order = $this->getApi()->getOrderManager()->createOrder(null);
+        $this->initPaymentMethod();
+        $this->order->payment->paymentId = $this->getApplicationSettings()->id;
+        $this->getApi()->getOrderManager()->saveOrder($this->order);
+        return $this->order;
+    }
+
+    public function getExtraInformation($order) {
+        return "";
     }
 }
 

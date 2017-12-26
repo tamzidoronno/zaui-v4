@@ -1,0 +1,16 @@
+<?
+/* @var $this ns_e6cf029b_0b96_4cf8_9a88_8db2755c0062\NetsPaymentTerminal */
+?>
+
+<div class="paymentinfo">
+    <?
+    echo $this->__f("This payment method is used for systems that has a NETS Payment Terminal and collecting money by the terminal");
+    ?>
+</div>
+
+<br/>
+<br/> 1. <? echo $this->__f("Enter the total amount on the terminal"); ?>
+<br/> 2. <? echo $this->__f("Once the payment has been approved, hit the button below"); ?>
+<br/>
+<br/>
+<br/><? $this->renderPaymentButtons(); ?>

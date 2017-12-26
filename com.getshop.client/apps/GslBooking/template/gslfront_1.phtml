@@ -17,7 +17,7 @@
         </div>
 
         <div class="fa_box guests">
-            <input id="guests" value="1 room, 1 guest" style="border-right:1px solid #ddd;" readonly>
+            <input id="guests" value="" style="border-right:1px solid #ddd;" readonly>
             <div class="guestInfoBox">
                 <div class='guestInfoBox_left'>
                     <div><span gstype='bookingtranslation' gstranslationfield='rooms'></span></div>
@@ -146,39 +146,39 @@
                     <h3><span gstype='bookingtranslation' gstranslationfield='contactInformation'></span></h3>
                     <div class="overview_contact_tab">
                         <label for="private" id="private" class='selectedusertype'>
-                            <input type="radio" name="user" checked="checked"><span gstype='bookingtranslation' gstranslationfield='private'></span>
+                            <input type="radio" name="user" checked="checked"> <span gstype='bookingtranslation' gstranslationfield='private'></span>
                         </label>
                         <label for="organization" id="organization" class='selectedusertype'>
-                            <input type="radio" name="user"><span gstype='bookingtranslation' gstranslationfield='organization'></span>
+                            <input type="radio" name="user"> <span gstype='bookingtranslation' gstranslationfield='organization'></span>
                         </label>
                         <label for="gotAccount" id="gotAccount" class='selectedusertype'>
-                            <input type="radio" name="user"><span gstype='bookingtranslation' gstranslationfield='alreadyGotanAccount'></span>
+                            <input type="radio" name="user"> <span gstype='bookingtranslation' gstranslationfield='alreadyGotanAccount'></span>
                         </label>
                     </div>
                     <br>
                     <div class="private_fields" type='user'>
                         <div class="guestentry guesttypeselection" type='private'>
                             <div><input type='checkbox' id='sameasguestselection' style='width:16px; padding:initial;'> <span gstype='bookingtranslation' gstranslationfield='sameasguest'></span></div>
-                            <div style='clear:both;'></div><br>
+                            <div style='clear:both;'></div>
                             <div style="width: 33.33%;float: left;">
-                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='name'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
                                 <input type="txt" gsname="user_fullName">
                             </div>
                             <div style="width: 33.33%;float: left;">
-                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
                                 <input type="txt" gsname="user_emailAddress">
                             </div>
                             <div style="width: 33.33%;float: left;">
-                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='phone'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
                                 <input type="txt" class="guest_phone" value="47" gsname="user_prefix" style='float:left;'>
                                 <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="user_cellPhone">
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
-                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='streetAdress'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='streetAdress'></span></div>
                                 <input type="txt" gsname='user_address_address'>
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
-                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='zipCode'></span></div><br>
+                                <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='zipCode'></span></div>
                                 <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='user_address_postCode'>
                                 <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;" gsname='user_address_city'>
                             </div>
@@ -286,7 +286,7 @@
 <script>
     
 //Reset page on load.
-    localStorage.setItem('gslcurrentpage','');
+//    localStorage.setItem('gslcurrentpage','');
     $('.gslbookingBody').hide();
     $('.addons_overview').hide();
     

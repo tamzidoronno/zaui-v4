@@ -358,8 +358,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             numberOfGuests += room.numberOfGuests;
         }
-        result.textualSummary.add(numberOfGuests + " x guests");
-        result.textualSummary.add(booking.getActiveRooms().size() + " x rooms");
+        if(numberOfGuests == 1) {
+            result.textualSummary.add(numberOfGuests + " x {guest}");
+        } else {
+            result.textualSummary.add(numberOfGuests + " x {guests}");
+        }
+        result.textualSummary.add(booking.getActiveRooms().size() + " x {rooms}");
         
         List<PmsBookingAddonItem> addons = pmsManager.getAddonsAvailable();
         for(PmsBookingAddonItem item : addons) {
@@ -376,7 +380,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
-        result.textualSummary.add("Total price : " + booking.getTotalPrice());
+        result.textualSummary.add("{totalprice} : " + booking.getTotalPrice());
         
     }
 

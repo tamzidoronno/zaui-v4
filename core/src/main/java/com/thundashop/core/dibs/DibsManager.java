@@ -514,7 +514,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 Double amount = orderManager.getTotalAmount(order);
                 int result = new Integer(polledResult.get("statuscode"));
                 int toCapture = new Double(amount*100).intValue();
-                int diff = toCapture-new Integer(polledResult.get("amount");
+                int diff = toCapture-new Integer(polledResult.get("amount"));
                 if(diff > 5 || diff < -5) {
                     throw new Exception("Invalid amount amount: " + toCapture + " - " + (amount*100));
                 }

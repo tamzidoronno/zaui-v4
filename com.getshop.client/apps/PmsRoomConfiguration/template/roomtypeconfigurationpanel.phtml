@@ -1,18 +1,40 @@
 <?php
+/* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
 $id = $_POST['data']['id'];
 $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $id);
 $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $id);
 $notVisible = $type->visibleForBooking ? "" : "SELECTED";
 $images = $additional->images;
 $accessories = (array)$this->getApi()->getPmsManager()->getAccesories($this->getSelectedMultilevelDomainName());
+$languages = $this->getFactory()->getLanguageCodes();
+$languages[] = $this->getFactory()->getCurrentLanguage();
+$readable = $this->getFactory()->getLanguageReadable();
 ?>
 <div gstype='form' method='saveTypeSettings'>
     <input type='hidden' gsname='id' value='<?php echo $id; ?>'>
-    <b>Name:</b><br>
-    <input type='txt' value='<?php echo $type->name; ?>' class='gsniceinput1' style='width:100%;box-sizing:border-box;' gsname='name'><br><br>
-    <b>Description:</b><br>
-    <textarea style='width: 100%; height: 90px;border:solid 1px #dcdcdc;box-sizing:border-box; padding: 10px;' gsname='description'><?php echo $type->description; ?></textarea>
-
+    <?php
+    foreach($languages as $lang) {
+        $text = $type->name;
+        if(isset($type->translationStrings->{$lang."_name"})) {
+            $text = json_decode($type->translationStrings->{$lang."_name"});
+        }
+        echo "<b>" . $readable[$lang] . " title</b><br>";
+    ?>
+        <input type='txt' value='<?php echo $text; ?>' class='gsniceinput1' style='width:100%;box-sizing:border-box;' gsname='<?php echo $lang; ?>_name'><br><br>
+    <?php
+    }
+    
+    foreach($languages as $lang) {
+        $text = $type->description;
+        if(isset($type->translationStrings->{$lang."_description"})) {
+            $text = json_decode($type->translationStrings->{$lang."_description"});
+        }
+        ?>
+        <b>Description <?php echo $readable[$lang]; ?>:</b><br>
+        <textarea style='width: 100%; height: 90px;border:solid 1px #dcdcdc;box-sizing:border-box; padding: 10px;' gsname='<?php echo $lang; ?>_description'><?php echo $text; ?></textarea>
+        <?php
+    }?>
+            
     <table width='100%'>
         <tr>
             <th>Guests</th>

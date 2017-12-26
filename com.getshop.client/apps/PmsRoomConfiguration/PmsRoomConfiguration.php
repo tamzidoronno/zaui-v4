@@ -152,10 +152,20 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     public function saveTypeSettings() {
         $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
         $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $type->id);
+        $languages = $this->getFactory()->getLanguageCodes();
+        $languages[] = $this->getFactory()->getCurrentLanguage();
+        $current = $this->getFactory()->getCurrentLanguage();
         
         $type->size = $_POST['data']['size'];
-        $type->name = $_POST['data']['name'];
-        $type->description = $_POST['data']['description'];
+        $type->name = $_POST['data'][$current.'_name'];
+        $type->description = $_POST['data'][$current.'_description'];
+        
+        foreach($languages as $key) {
+            $type->translationStrings->{$key. "_name"} = json_encode($_POST['data'][$key.'_name']);
+            $type->translationStrings->{$key. "_description"} = json_encode($_POST['data'][$key.'_description']);
+        }
+        
+        
         $additional->numberOfChildren = $_POST['data']['numberOfChildren'];
         $additional->numberOfAdults = $_POST['data']['numberOfAdults'];
         $additional->defaultNumberOfBeds = $_POST['data']['defaultNumberOfBeds'];

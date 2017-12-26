@@ -5,6 +5,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.Address;
@@ -167,4 +168,13 @@ public interface ICartManager {
     public void updateCartItem(CartItem item);
     
     public void recalculateMetaData();
+    
+    @Editor
+    public Cart recalculateMetaDataCart(Cart cart);
+    
+    @Editor
+    public void setCart(Cart cart);
+    
+    @Editor
+    public Double getCartTotal(Cart cart);
 }

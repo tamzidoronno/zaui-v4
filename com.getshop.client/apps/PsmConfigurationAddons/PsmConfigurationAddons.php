@@ -18,6 +18,33 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         $this->includefile("loadproducts");
     }
     
+    public function loadTranslationText() {
+        $this->includefile("translations");
+    }
+    
+    public function savetranslationforproduct() {
+        
+        $notifications = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $productId = $_POST['data']['productid'];
+
+        $languages = $this->getFactory()->getLanguageCodes();
+        $selected = $this->getFactory()->getSelectedLanguage();
+        $languages[] = $this->getFactory()->getSelectedLanguage();
+
+        foreach($notifications->addonConfiguration as $tmpaddon) {
+            if($tmpaddon->productId == $productId) {
+                foreach($languages as $language) {
+                    $tmpaddon->translationStrings->{$language."_descriptionWeb"} = json_encode($_POST['data'][$language."_descriptionWeb"]);
+                }
+                $tmpaddon->descriptionWeb = $_POST['data'][$selected."_descriptionWeb"];
+            }
+        }
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notifications);
+        
+        //Avoid reloading addons page hack.
+        echo "done";
+    }
+    
     public function createProduct() {
         $product = $this->getApi()->getProductManager()->createProduct();
         $product->name = $_POST['data']['productname'];

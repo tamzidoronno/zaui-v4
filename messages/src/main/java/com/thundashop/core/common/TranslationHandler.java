@@ -26,7 +26,28 @@ public class TranslationHandler implements Serializable {
         
         return saved;
     }
+    
+    public void setTranslationStrings(HashMap<String, String> translations) {
+        translationStrings = translations;
+    }
 
+    public String getTranslationsByKey(String key, String lang) {
+        HashMap<String, String> translations = getTranslations();
+        String text = "";
+        if(translations.containsKey(lang + "_" +key)) {
+            String translation = translations.get(lang + "_" + key);
+            if(translation != null && !translation.isEmpty()) {
+                Gson gson = new Gson();
+                text = gson.fromJson(translation, String.class);
+            }
+        }
+        return text;
+    }
+    
+    public HashMap<String, String> getTranslations() {
+        return translationStrings;
+    }
+    
     public void validateTranslationMatrix() {
         try {
             Set<TranslationHandler> handlers = getAllTranslationHandlers(this);

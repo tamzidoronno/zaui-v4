@@ -18,41 +18,49 @@
 .SalesPointCartCheckout .row {
     position: relative;
 }
+.SalesPointCartCheckout .addonlist_row,
 .SalesPointCartCheckout .pricematrix_row {
-    height: 35px;
-    padding-top: 12px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     position: relative;
+    background-color: #EFEFEF;
     
 }
+
+.SalesPointCartCheckout .addonlist_row.odd,
 .SalesPointCartCheckout .pricematrix_row.odd {
-    background-color: #EEE;
+    background-color: #FFF;
 }
 
 .SalesPointCartCheckout .pricematrix_row .matrix_item {
     position: absolute; 
-    right: 10px;
-    top: 5px;
+    right: 0px;
+    top: 0px;
+    padding: 7px;
+    padding-bottom: 6px;
 }
 
-.SalesPointCartCheckout .addonlist_row {
-    height: 35px;
-    padding-top: 12px;
-    position: relative;
+.SalesPointCartCheckout .pmsaddonsrow {
+    margin-top: 20px;
+}
+
+
+.SalesPointCartCheckout .addonlist_row .addon_inputs input {
+    padding: 7px;
+    padding-bottom: 6px;
 }
 
 .SalesPointCartCheckout .addonlist_row .addon_inputs {
     position: absolute; 
-    right: 10px;
-    top: 5px;
+    right: 0px;
+    top: 0px;
 }
 
 .SalesPointCartCheckout .addonlist_row .addon_count {
     width: 20px;
     text-align: center;
-}
-
-.SalesPointCartCheckout .addonlist_row.odd {
-    background-color: #EEE;
+    padding: 7px;
+    padding-bottom: 6px;
 }
 
 .SalesPointCartCheckout .normalrow {
@@ -71,7 +79,6 @@
     top: 5px;
 }
 .SalesPointCartCheckout .summary {
-    text-align: right;
     font-size: 30px;
     margin-top: 50px;
     margin-right: 10px;

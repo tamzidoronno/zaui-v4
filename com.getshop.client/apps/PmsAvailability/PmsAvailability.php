@@ -6,6 +6,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     private $items = null;
     private $currentBooking = null;
     private $currentBookingFromEngine = null;
+    private $currentPmsRoom = null;
     
     public function getDescription() {
         
@@ -35,15 +36,15 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         return $filter;
     }
     
-    public function showBookingInformationExternal($bookingEngineBooking, $pmsBooking) {
+    public function showBookingInformationExternal($bookingEngineBooking, $pmsBooking, $pmsRoom) {
         $this->currentBooking = $pmsBooking;
         $this->currentBookingFromEngine = $bookingEngineBooking;
+        $this->currentPmsRoom = $pmsRoom;
         $this->includefile("movebooking");
     }
     
     public function showBookingInformation() {
-        $this->setCurrentBooking();
-        $this->setCurrentBookingFromBookingEngine();
+        $this->setData();
         
         $this->includefile("generalinformation");
         
@@ -151,8 +152,46 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     }
     
     public function loaditemview() {
-        $this->setCurrentBookingFromBookingEngine();
+        $this->setData();
         $this->includefile("itemview");
+    }
+
+    /**
+     * 
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getCurrentRoom() {
+        return $this->currentPmsRoom;
+    }
+
+    public static function sortByDate($a, $b) {
+        $ad = strtotime($a);
+        $bd = strtotime($b);
+        
+        if ($ad == $bd) {
+            return 0;
+        }
+
+        return $ad < $bd ? -1 : 1;
+    }
+    
+    public function setCurrentRoom() {
+        if (!isset($_POST['data']['roomId'])) {
+            return;
+        }
+        
+        $booking = $this->getCurrentBooking();
+        foreach ($booking->rooms as $room) {
+            if ($room->pmsBookingRoomId == $_POST['data']['roomId']) {
+                $this->currentPmsRoom = $room;
+            }
+        }
+    }
+
+    public function setData() {
+        $this->setCurrentBooking();
+        $this->setCurrentBookingFromBookingEngine();
+        $this->setCurrentRoom();
     }
 
 }

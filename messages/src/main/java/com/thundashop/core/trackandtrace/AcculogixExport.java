@@ -107,4 +107,36 @@ public class AcculogixExport implements Serializable {
             Logger.getLogger(AcculogixExport.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    String getAllFieldsToConsider() {
+        return PODBarcodeID
+            +Latitude
+            +Longitude
+            +ReceiverName
+            +TaskStatus
+            +TotalPieces
+            +SignatureObtained
+            +BarcodeValidated
+            +RDDriver$ID
+            +SignatureFile
+            +ArrivalDateTime
+            +TaskType
+            +TaskComments
+            +TaskContainerCount
+            +taskSource
+            +ORReferenceNumber
+            +ORStatus
+            +ORPieceCount
+            +ORComments
+            +ORPieceCorrect
+            +routeId
+            +RTRouteStopSeq
+            +signatureBase64
+            +signatureUuid;
+
+    }
+
+    boolean isAFRecord() {
+        return TaskStatus != null && TaskStatus.toLowerCase().equals("af");
+    }
 }

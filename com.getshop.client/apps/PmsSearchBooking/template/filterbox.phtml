@@ -4,11 +4,24 @@ $filter = $this->getSelectedFilter();
 $channels = (array)$this->getChannelMatrix();
 $start = date('d.m.Y', strtotime($filter->startDate));
 $end = date('d.m.Y', strtotime($filter->endDate));
-
-
+$carts = $this->getCartsForPaymentProcess();
+$hidden = count($carts) < 1 ? "style='display: none'" : "";
 ?>
 
+<div class="paymentprocess_icon_outer">
+    <div class="paymentprocess_icon" <? echo $hidden; ?>>
+        <i class="fa fa-tasks"></i>
+        <div><? echo $this->__f("Payment process"); ?></div>
+    </div>
+    
+    <div class="payment_process_summary">
+        <?
+        $this->includefile("paymentprocess");
+        ?>
+    </div>
+</div>
 
+ 
 <div class="filterbox" gstype="form" method="setFilter">
 
     <div class='quickfilters'>

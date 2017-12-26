@@ -1974,8 +1974,9 @@ thundashop.framework = {
         if(element.attr('gsvalue')) {
             args['submit'] = element.attr('gsvalue');
         }
-        form.callback = element.callback;
+        var target = element;
         
+        form.callback = element.callback;
         
         var localUpdateOnly = $(element).attr('gs_local_update_only');
         var javascriptCallback = $(element).attr('gs_callback');
@@ -1990,14 +1991,14 @@ thundashop.framework = {
         
         if (javascriptCallback) {
             var callbackFunction = function(res, javascriptCallbackFunction) {
-                var funtionBody = javascriptCallbackFunction[0] + "(res);";
-                var toExecute = new Function("res", funtionBody);
-                toExecute(res);
+                var funtionBody = javascriptCallbackFunction[0] + "(res, target);";
+                var toExecute = new Function("res", "target", funtionBody);
+                toExecute(res, target);
             }
             
             if (!localUpdateOnly) {
                 event['synchron'] = true;
-                thundashop.Ajax.post(event, callbackFunction, [javascriptCallback]);
+                thundashop.Ajax.post(event, callbackFunction, [javascriptCallback, target]);
             }
         } else {
             if (!localUpdateOnly) {

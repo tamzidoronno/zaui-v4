@@ -1,17 +1,18 @@
 <?
 /* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
 $currentBooking = $this->getCurrentBookingFromBookingEngine();
+$room = $this->getCurrentRoom();
 
 $startDate = date('d.m.Y H:i', strtotime($currentBooking->startDate));
 $endDate = date('d.m.Y H:i', strtotime($currentBooking->endDate));
 ?>
 
 <div class="staytime">
-    <? echo $this->__f("Dates"); ?> 
-    <br/><input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo $startDate; ?>"/> - <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo $endDate; ?>"/> 
+    <? echo $this->__f("Dates"); ?>: <input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo $startDate; ?>"/> - <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo $endDate; ?>"/> 
 </div>
 
-<div class="itemview" bookingid="<? echo $currentBooking->id; ?>">
+
+<div class="itemview" bookingid="<? echo $currentBooking->id; ?>" roomid='<? echo $room->pmsBookingRoomId; ?>'>
     <?
     $this->includefile("itemview");
     ?>

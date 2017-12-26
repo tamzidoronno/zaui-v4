@@ -10,7 +10,6 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsRepeatingData;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
@@ -19,7 +18,6 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -544,5 +542,28 @@ public class CartManager extends ManagerBase implements ICartManager {
         cart.createByGetShopModule = getshopModuleName;
     }
 
+    @Override
+    public void setCart(Cart cart) {
+        Session session = getSession();
+        if (session != null) {
+            carts.put(session.id, cart);
+        }
+    }
+
+    @Override
+    public Cart recalculateMetaDataCart(Cart cart) {
+        cart.getItems().stream().forEach(i -> i.recalculateMetaData());
+        return cart;
+    }
     
+    @Override
+    public Double getCartTotal(Cart cart) {
+        orderManager.finalizeCart(cart);
+        
+        Double total = cart.getTotal(false);
+        if(total == null || total.isNaN()) {
+            total = 0.0;
+        }
+        return total;
+    }    
 }

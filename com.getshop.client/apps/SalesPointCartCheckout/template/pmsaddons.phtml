@@ -1,13 +1,17 @@
 <?/* @var $this \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout */
 $item = $this->getCurrentItem();
 $roomNumber = $item->product->additionalMetaData;
+
+$itemsAdded = (array)$item->itemsAdded;
+usort($itemsAdded, array('ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout','sortByDate'));
+
 ?>
 
 <div class='pmsaddonsrow'>
     <b><? echo $item->count; ?> x <? echo $item->product->name; ?> ( <? echo $roomNumber; ?> ) </b>
     <?
     $i = 0;
-    foreach ($item->itemsAdded as $addon) {
+    foreach ($itemsAdded as $addon) {
         $i++;
         $oddClass = $i % 2 ? "even" : "odd";
         $date = $addon->date;

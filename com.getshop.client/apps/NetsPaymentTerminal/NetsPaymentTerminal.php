@@ -24,5 +24,13 @@ class NetsPaymentTerminal extends \PaymentApplication implements \Application {
     public function render() {
         
     }
+    
+    public function renderPaymentOption() {
+        $this->includefile("paymentoptions");
+    }
+    
+    public function canCreateOrderAfterStay() {
+        return false;
+    }
 }
 ?>

@@ -143,6 +143,10 @@ thundashop.Ajax = {
         
         var event = thundashop.Ajax.createEvent(null, method, this, data);
         
+        if ($(this).attr('synchron')) {
+            event['synchron'] = true;
+        }
+        
         if ($(this).attr('gssilent') == "true") {
             thundashop.Ajax.post(event, null, true, true, true);
             

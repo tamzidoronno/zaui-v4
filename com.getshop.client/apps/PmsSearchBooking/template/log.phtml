@@ -1,0 +1,43 @@
+<?
+/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+$booking = $this->getBookingEngineBooking();
+$filter = new \core_pmsmanager_PmsLog();
+$filter->bookingId = $pmsBooking->id;
+$filter->roomId = $pmsSelectedRoom->pmsBookingRoomId;
+
+$logentries = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedMultilevelDomainName(), $filter);
+
+$arrays = array_chunk($logentries, 20);
+
+$length = count($arrays);
+
+$startIndex = isset($_POST['data']['index']) ? $_POST['data']['index'] : 0;
+if ($startIndex > ($length-1)) {
+    $startIndex = $length - 1;
+}
+//echo count($arrays);
+?>
+<div class="log_pages">
+    <?
+    
+    for ($i = 0; $i < $length; $i++) {
+        $pageNumber = $i + 1;
+        $active = $i == $startIndex ? "active" : "";
+        echo "<div class='pagenumber $active' index='$i'>$pageNumber</div>";
+    }
+    ?>
+</div>
+<?
+foreach ($arrays[$startIndex] as $entry) {
+    ?>
+    <div class="logentry">
+        <div class="date"><? echo date('d/m-Y h:i:s', strtotime($entry->dateEntry)); ?></div>
+        <div class="by"><? echo $entry->userName; ?></div>
+        <div class="logtext"><? echo $entry->logText; ?></div>
+    </div>
+    <?
+}
+?>
+

@@ -1,0 +1,67 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 17, 2017, 6:10:46 PM
+    Author     : ktonder
+*/
+
+.PmsSearchBooking .paymentprocess_icon_outer {
+    position: fixed;
+    top: 80px;
+    right: 80px;
+    z-index: 3;
+}
+
+.paymentprocess_icon_outer_cover {
+    top: 0px !important;
+    right: 0px !important;
+    bottom: 0px !important;
+    left: 0px !important;
+    background-color: #FFF;
+}
+
+.PmsSearchBooking .paymentprocess_icon {
+    text-align: center;
+    background-color: #EFEFEF;
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.PmsSearchBooking .paymentprocess_icon i {
+    font-size: 30px;
+    display: none;
+}
+
+.PmsSearchBooking .paymentprocess_icon_outer .payment_process_summary {
+    display: none;
+    padding: 20px;
+}
+
+.PmsSearchBooking .paymentprocess_icon_outer.paymentprocess_icon_outer_cover .payment_process_summary {
+    display: block;
+    overflow-y: scroll;
+    height: calc(100% - 110px);
+}
+
+
+.PmsSearchBooking .option_content {
+    width: calc(100% - 287px);
+    border: solid 1px #DDD;
+    min-height: 300px;
+}
+.PmsSearchBooking .payment_content {
+    display: none;
+    background-color: #EFEFEF;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.PmsSearchBooking .payment_content.active {
+    display: block;
+}

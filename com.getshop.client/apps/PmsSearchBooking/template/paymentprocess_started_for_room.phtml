@@ -1,0 +1,19 @@
+<?
+/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+$booking = $this->getBookingEngineBooking();
+$cart = json_decode($_SESSION['payment_process_cart_'.$this->getSelectedRoom()->pmsBookingRoomId]);
+
+$total = 0;
+if ($cart) {
+    $total = $this->getApi()->getCartManager()->getCartTotal($cart);
+}
+?>
+
+<div class="payment_process_started">
+    <? echo $this->__f("Payment process started for")." ".$total; ?>
+    <br/> <? echo $this->__f("To complete the process, go to the payment gateway in the top right corner"); ?>
+    <br/> 
+    <br/> <div class="gs_shop_small_icon" synchron="true" gs_callback="app.PmsSearchBooking.ordersTabChanged"  gsclick="cancelPaymentProcess" id="<? echo $booking->id; ?>" roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>"><i class="fa fa-close"></i> <? echo $this->__f("Cancel"); ?></div>
+</div>

@@ -288,7 +288,9 @@ public class BookingItemAssignerOptimal {
                 ex.printStackTrace();
                 return new ArrayList();
             }
-
+            booking.startDate = start;
+            booking.endDate = end;
+            
             bookings.removeIf(book -> book.id.equals(bookingToConsider));
             bookings.add(booking);    
         }

@@ -58,5 +58,25 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $this->setConfigurationSetting("swift", $_POST['swift']);
         $this->setConfigurationSetting("language", $_POST['language']);
     }
+    
+    public function renderPaymentOption() {
+        $this->includefile("paymentoption");
+    }
+    
+    public function doPayment($cart = false) {
+        $order = parent::doPayment($cart);
+        $order->expiryDate = $this->convertToJavaDate(strtotime($_POST['data']['expirydate']));
+        $order->invoiceNote = $_POST['data']['invoicenote']; 
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        return $order;
+    }
+    
+    public function getExtraInformation($order) {
+        $expdate = $this->__f("Expiry date").": ".date('d/m-Y', strtotime($order->expiryDate));
+        if ($order->invoiceNote) {
+            $expdate .= "<div style='display: block;'><b>".$this->__f("Note")."</b>:<br/>".nl2br($order->invoiceNote)."</div>";
+        }
+        return $expdate;
+    }
 }
 ?>

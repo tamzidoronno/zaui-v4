@@ -7349,20 +7349,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public void orderChanged(String orderId) {
-//        Order order = orderManager.getOrderSecure(orderId);
-//        
-//        if (!order.cart.getItems().isEmpty()) {
-//            return;
-//        }
-//        
-//        bookings.values()
-//                .stream()
-//                .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
-//                .forEach(booking -> {
-//                    if (order.cart.getItems().isEmpty()) {
-//                        booking.orderIds.remove(orderId);
-//                    }
-//                });
+        Order order = orderManager.getOrderSecure(orderId);
+        
+        if (!order.cart.getItems().isEmpty()) {
+            return;
+        }
+        
+        bookings.values()
+                .stream()
+                .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
+                .forEach(booking -> {
+                    if (order.cart.getItems().isEmpty()) {
+                        booking.orderIds.remove(orderId);
+                    }
+                });
     }
 
     @Override
@@ -7455,6 +7455,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     @Override
     public List<PmsRoomTypeAccessory> getAccesories() {
         return new ArrayList(accesories.values());
+    }
+
+    @Override
+    public PmsBookingRooms getPrecastedRoom(String roomId, String bookingItemTypeId, Date from, Date to) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.rooms.stream()
+                .filter(r -> r.pmsBookingRoomId.equals(roomId))
+                .findFirst()
+                .orElse(null);
+
+        if (room == null) {
+            return null;
+        }
+        
+        Gson gson = new Gson();
+        booking = gson.fromJson(gson.toJson(booking), PmsBooking.class);
+        room = gson.fromJson(gson.toJson(room), PmsBookingRooms.class);
+        
+        room.date.start = from;
+        room.date.end = to;
+        room.bookingItemTypeId = bookingItemTypeId;
+        
+        pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
+        return room;
     }
 
 }

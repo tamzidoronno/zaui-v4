@@ -188,16 +188,27 @@
     vertical-align: top;
 }
 
+.PmsAvailability .movetotype .itemselector {
+    
+}
+
+.PmsAvailability .movetotype .itemselector div:first-child {
+    border-left: solid 1px;
+}
+
 .PmsAvailability .movetotype {
-    border-bottom: solid 1px #DDD;
+    border: solid 1px #DDD;
+    margin-top: 10px;
 }
 
 .PmsAvailability .movetotype .headername {
-    padding: 5px;
-    text-align: center;
-    background-color: #DDD;
+    padding: 10px;
+    padding-left: 20px;
+    background-color: #EEE;
+    font-weight: bold;
 }
 
+.PmsAvailability .explenation_header .bookingitemhead.canUse,
 .PmsAvailability .movetotype .bookingitem.canUse {
     background: rgb(201,222,150); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%); /* FF3.6-15 */
@@ -216,6 +227,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#0b5e00',GradientType=0 );
 }
 
+.PmsAvailability .explenation_header .bookingitemhead.canNotUse,
 .PmsAvailability .movetotype .bookingitem.canNotUse {
     background: rgb(255,255,255); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
@@ -225,12 +237,18 @@
     color: #888;
 }
 
+.PmsAvailability .explenation_header .bookingitemhead {
+    width: 20px;
+    height: 20px;
+}
+.PmsAvailability .explenation_header .bookingitemhead,
 .PmsAvailability .movetotype .bookingitem {
     border: solid 1px transparent;
     display: inline-block;
     border-right: solid 1px #DDD;
     padding: 3px;
     border-top: solid 1px #DDD;
+    line-height: 25px;
 }
 
 .PmsAvailability .gs_selected {
@@ -242,13 +260,10 @@
 }
 
 .PmsAvailability .staytime {
-    background: rgb(255,168,76); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(255,168,76,1) 0%, rgba(255,123,13,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
-    text-align: center;
-    padding: 5px;
+    background-color: #EEE;
+    padding: 19px;
+    font-weight: bold;
+    border-bottom: solid 1px #CCC;
 }
 
 .PmsAvailability .updater {
@@ -273,10 +288,62 @@
     position: relative;
 }
 
+.PmsAvailability .canNotUseGs_selected,
 .PmsAvailability .movetotype .gs_selected.canNotUse {
     background: rgb(169,3,41) !important; /* Old browsers */
     background: -moz-linear-gradient(top, rgba(169,3,41,1) 0%, rgba(143,2,34,1) 44%, rgba(109,0,25,1) 100%) !important; /* FF3.6-15 */
     background: -webkit-linear-gradient(top, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%) !important; /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=0 ) !important;
+}
+
+.PmsAvailability .itemview {
+    font-size: 0px;
+}
+
+.PmsAvailability .pricesview, 
+.PmsAvailability .itemview_inner {
+    display: inline-block;
+    font-size: inherit;
+    box-sizing: border-box;
+    vertical-align: top;
+    
+    font-size: 14px;
+    padding: 20px;
+}
+
+.PmsAvailability .itemview_inner {
+    border-right: solid 1px #CCC;
+    padding-top: 10px;
+    width: 70%;
+}
+
+.PmsAvailability .pricerow {
+    border-bottom: solid 1px #EEE
+}
+.PmsAvailability .pricerow .col2,
+.PmsAvailability .pricerow .col2 input { 
+    width: 50px;
+}
+
+.PmsAvailability .pricerow .col1 {
+    width: 100px;
+    line-height: 35px;
+}
+.PmsAvailability .pricerow .col {
+    display: inline-block;
+}
+
+.PmsAvailability .pricesview {
+    width: 30%;
+}
+
+.PmsAvailability .totalrow {
+    font-size: 16px;
+    margin-top: 20px;
+}
+.PmsAvailability .extrainfo {
+    font-style: italic;
+    margin-top: 10px;
+    font-size: 13px;
 }

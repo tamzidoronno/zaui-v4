@@ -3,9 +3,11 @@ $item = $this->getCurrentItem();
 $i = 0;
 $roomNumber = $item->product->additionalMetaData;
 
+$priceMatrix = (array)$item->priceMatrix;
+uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability','sortByDate'));
 
 echo "<b>".$item->count." x ".$item->product->name." ( $roomNumber )</b>";
-foreach ($item->priceMatrix as $date => $value) {
+foreach ($priceMatrix as $date => $value) {
     $i++;
     $oddClass = $i % 2 ? "even" : "odd";
     ?>

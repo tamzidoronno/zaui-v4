@@ -1,88 +1,49 @@
+.OrderSimplerPrinter_inner .orderheader div {
+    display: inline-block;
+}
+
+.OrderSimplerPrinter_inner .cartitemrow {
+    display: block;
+    padding-left: 20px;
+}
+.OrderSimplerPrinter_inner .cartitemrow .priceandcount,
+.OrderSimplerPrinter_inner .cartitemrow .productname {
+    display: inline-block;
+}
+
+.OrderSimplerPrinter_inner .cartitemrow .priceandcount .price,
+.OrderSimplerPrinter_inner .cartitemrow .priceandcount .count {
+    display: inline-block;
+}
+
 .OrderSimplerPrinter_inner {
-    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
-}
-.OrderSimplePrinter .compactorderheader {
-    font-size: 0px;
-}
-.OrderSimplePrinter .compactorderheader div {
-    display: inline-block;
-    width: 20%;
-    box-sizing: border-box;
-    font-size: 14px;
-    text-align: left;
-    border-bottom: solid 1px #DDD;
-    padding: 10px;
-    vertical-align: top;    
+    padding-top: 5px;
+    border-bottom: solid 1px #CCC;
+    padding-bottom: 5px;
 }
 
-.OrderSimplePrinter .orderheader div {
-    display: inline-block;
-    width: 25%;
-    box-sizing: border-box;
-    font-size: 18px;
-    text-align: center;
-    border: solid 1px #DDD;
-    padding: 10px;
-    vertical-align: top;
+.OrderSimplerPrinter_inner.lastrow { 
+    border: solid 0px;
 }
 
-.OrderSimplePrinter .orderheader {
-    font-size: 0px;
-    position: relative;
-    height: 91px;
-    border-bottom: solid 1px #DDD;
+.OrderSimplerPrinter_inner .cartitemrows {
+    display: none;
 }
 
-.OrderSimplePrinter .cartitemrow .productname,
-.OrderSimplePrinter .cartitemrow .priceandcount {
-    display: inline-block;
+.OrderSimplerPrinter_inner .orderheader .orderid {
+    width: 100px;
 }
 
-.OrderSimplePrinter .cartitemrow .priceandcount {
-    position: absolute;
-    right: 20px;
-}
-.OrderSimplePrinter .cartitemrow {
-    position: relative;
-    padding: 10px;
-    border-bottom: solid 1px #DDD;
+.OrderSimplerPrinter_inner .orderheader .cost {
+    width: 100px; 
 }
 
-.OrderSimplePrinter .actions {
-    text-align: right !important;
-    padding: 0px  !important;    
+.OrderSimplerPrinter_inner .orderheader .createdby {
+    width: 150px; 
 }
 
-.OrderSimplePrinter .inlineactionbutton {
-    border: solid 1px #DDD;
-    border-radius: 5px;
-    padding: 5px;
-    margin-left: 20px;
-    cursor: pointer;
-    
-    background: rgb(255,255,255);
-    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%);
-    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
-    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
-}
-
-.OrderSimplePrinter .payment {
-    height: 46px;
-    position: absolute;
-    top: 46px;
-    left: 0px;
-    border: solid 0px !important;
-    width: auto !important;
-}
-
-.OrderSimplePrinter .actions .gs_shop_small_icon {
-    line-height: 23px !important;
-    width: inherit !important;
-    width: 100% !important;
-}
-
-.OrderSimplePrinter .cartitemrow .priceandcount div {
-    display: inline-block;
+.OrderSimplerPrinter_inner .extrainformation {
+    display: block !important;
+    padding-left: 40px;
+    font-style: italic;
 }

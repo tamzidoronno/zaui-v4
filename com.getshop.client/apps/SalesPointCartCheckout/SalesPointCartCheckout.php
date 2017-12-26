@@ -23,6 +23,17 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
         $this->currentItem = $item;
     }
     
+    public static function sortByDate($a, $b) {
+        $ad = strtotime($a->date);
+        $bd = strtotime($b->date);
+        
+        if ($ad == $bd) {
+            return 0;
+        }
+
+        return $ad < $bd ? -1 : 1;
+    }
+        
     /**
      * @return \core_cartmanager_data_CartItem;
      */

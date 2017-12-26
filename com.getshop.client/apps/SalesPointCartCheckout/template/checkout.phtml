@@ -4,7 +4,7 @@ $originalCart = $this->getOriginalCartFromSession();
 $currentCart = $this->getCurrentCart();
 $total = $this->getApi()->getCartManager()->getCartTotal($currentCart);
 
-$items = $originalCart->items;
+$items = (array)$originalCart->items;
 $i = 0;
 
 foreach ($items as $item) {

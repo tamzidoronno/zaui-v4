@@ -453,4 +453,7 @@ public interface IPmsManager {
     public PmsRoomTypeAccessory saveAccessory(PmsRoomTypeAccessory accessory);
     
     public List<PmsRoomTypeAccessory> getAccesories();
+    
+    @Administrator
+    public PmsBookingRooms getPrecastedRoom(String roomId, String bookingItemTypeId, Date from, Date to);
 }

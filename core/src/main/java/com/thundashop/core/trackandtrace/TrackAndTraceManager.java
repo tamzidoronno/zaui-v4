@@ -8,7 +8,6 @@ package com.thundashop.core.trackandtrace;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.thundashop.core.utils.ImageManager;
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.bookingengine.CheckConsistencyCron;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
@@ -25,9 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -1212,6 +1208,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Route route = getRouteById(routeId);
         if (route == null) {
             return;
+        }
+        
+        if (getSession() == null || getSession().currentUser == null)
+            return;
+        
+        if (getSession().currentUser.type < 50 && !route.userIds.contains(getSession().currentUser.id)) {
+            throw new ErrorException(26);
         }
         
         route.startInfo.started = true;

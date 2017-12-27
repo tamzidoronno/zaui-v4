@@ -1637,7 +1637,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 List<CartItem> changes = getChangesForBooking(booking.id, filter);
                 items.addAll(changes);
                 
-                //@TODO Make it global for all.
+                //@TODO Make it global for all, not only for kongsvingerbudghotell
                 if(storeId.equals("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0")) {
                     List<CartItem> getLostItems = getLostItems(booking);
                     items.addAll(getLostItems);
@@ -1686,7 +1686,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             logPrint("Trying to create cart item with infinite or NaN price");
             price = 0.0;
         }
-        if(price.intValue() == 0) {
+        
+        Double total = price * count;
+        
+        if(total.intValue() == 0) {
             return null;
         }
         BookingItem bookingitem = null;
@@ -2729,10 +2732,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Calendar cal2 = Calendar.getInstance();
         Gson gson = new Gson();
         
+        String productIdInner = "90621fc2-f584-4443-9918-9c4f87e59dd7";
+        String productIdOuter = "2f7a5b3d-cd5d-4f9c-83ba-b8e7dbad9256";
         
         List<CartItem> newItems = new ArrayList();
         List<CartItem> toRemove = new ArrayList();
         for(CartItem item : items) {
+            try {
+                if(item.getProduct().id.equals(productIdInner)) {
+                    continue;
+                }
+                if(item.getProduct().id.equals(productIdOuter)) {
+                    continue;
+                }
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+            
             if(item.startDate == null || item.endDate == null) {
                 continue;
             }

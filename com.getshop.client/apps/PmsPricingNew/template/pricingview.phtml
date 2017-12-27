@@ -41,6 +41,9 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
     <input type='button' gstype='clicksubmitforce' gsvalue='<?php echo $priceObject->code; ?>' gsname='code' value='Delete price plan' style='float:right;padding:9px;' method='deletePricePlan'>
     <div method='changepricetype' gstype='form'>
         <?php
+        $checkedExTaxes = $priceObject->pricesExTaxes ? "CHECKED" : "";
+       
+        echo "<input type='checkbox' gsname='pricesExTaxes' $checkedExTaxes> Is prices ex taxes?<br>";
         echo "<input type='text' class='gsniceinput1' gsname='code' value='".$priceObject->code."'>";
         echo "<select gsname='pricetype' class='gsniceselect1' style='display:none;'>";
         foreach($pricetypes as $id => $type) {

@@ -18,6 +18,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author ktonder
  */
 public class ViewSmsHistory {
+    public class SmsCounter {
+        public Integer inner;
+        public Integer outer;
+    }
     
     private int month;
     private int year;
@@ -27,13 +31,11 @@ public class ViewSmsHistory {
         this.year = year;
     }
     
-    public void view(Database database, String storeName, String orgNr) {
-        List<DataCommon> datas = null;
-        
+    public SmsCounter viewByStoreId(Database database, String storeId, String storeName) {
         Date start = getDate(year, month,1);
         Date end = getDate(year, (month + 1),1);
         
-        datas = database.find("col_"+getStoreId(storeName)+"_log", start, end, MessageManager.class.getSimpleName(), null);
+        List<DataCommon> datas = database.find("col_"+storeId+"_log", start, end, MessageManager.class.getSimpleName(), null);
         
         int utlandet = 0;
         int norge = 0;
@@ -51,7 +53,17 @@ public class ViewSmsHistory {
             }
         }
         
-        System.out.println("Norge: " + String.format("%10s", norge)  + " Utlandet: " + String.format("%10s", utlandet) + " (" + storeName + ")" + " (orgnr: " + orgNr + ")");
+        System.out.println("Norge: " + String.format("%10s", norge)  + " Utlandet: " + String.format("%10s", utlandet) + " (" + storeName + ")");
+        
+        SmsCounter counter = new SmsCounter();
+        counter.inner = norge;
+        counter.outer = utlandet;
+        return counter;
+    }
+    
+    public void view(Database database, String storeName, String orgNr) {
+        String storeId = getStoreId(storeName);
+        viewByStoreId(database, storeId,storeName);
     }
     
     public static void main(String[] args) {
@@ -59,7 +71,7 @@ public class ViewSmsHistory {
         Database database = context.getBean(Database.class);
         
         // 1 = januar
-        int month = 10;
+        int month = 11;
         int year = 2017;
         
         Date start = getDate(year, month,1);

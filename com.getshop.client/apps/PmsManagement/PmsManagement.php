@@ -2034,7 +2034,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 echo "<b>$r</b><br>";
             }
         }
-        
     }
     
     public function deleteDefinedFilter() {

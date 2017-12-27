@@ -4,6 +4,7 @@ $showBookingData = false;
 if(isset($this->showBookersData)) {
     $showBookingData = $this->showBookersData;
 }
+$this->getApi()->getSmsHistoryManager()->generateSmsUsage($this->getSelectedName());
 $orders = (array)$this->getCreatedOrders($showBookingData);
 $i = 1;
 if(sizeof($orders) <= 1) {

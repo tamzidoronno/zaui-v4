@@ -7481,4 +7481,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         return room;
     }
 
+    PmsBookingAddonItem getAddonByProductId(String productId) {
+        List<PmsBookingAddonItem> addons = getAddonsAvailable();
+        for(PmsBookingAddonItem addon : addons) {
+            if(addon.productId.equals(productId)) {
+                return addon;
+            }
+        }
+        return null;
+    }
+
 }

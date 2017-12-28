@@ -3993,6 +3993,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             toReturn.noRefundable = addonConfig.noRefundable;
             toReturn.displayInBookingProcess = addonConfig.displayInBookingProcess;
             toReturn.includedInBookingItemTypes = addonConfig.includedInBookingItemTypes;
+            toReturn.setTranslationStrings(addonConfig.getTranslations());
             
             if(addonConfig.price != null && addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;

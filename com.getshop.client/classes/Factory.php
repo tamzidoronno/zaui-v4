@@ -1071,5 +1071,17 @@ class Factory extends FactoryBase {
         }
     }
 
+    public function getLanguageReadable() {
+        $states = array();
+        $states['nb_NO'] = "Norwegian";
+        $states['se'] = "Swedish";
+        $states['dk'] = "Danish";
+        $states['en_en'] = "English";
+        $states['nl_NL'] = "Dutch";
+        $states['de'] = "Germany";
+        $states['fi_FI'] = "Finish";
+        return $states;
+    }
+
 }
 ?>

@@ -15,6 +15,8 @@ function getshop_setBookingTranslation() {
             var field = $('[gstype="bookingtranslation_placeholder"][gstranslationfield="'+key+'"]');
             field.attr('placeholder', translations[key]);
         }
+        var guestInput = $('#guests');
+        guestInput.val('1 '+translations['room'].toLowerCase()+', 1 ' + translations['guest'].toLowerCase());
     });
 }
 
@@ -225,8 +227,14 @@ function getshop_loadBookerInformation(res) {
 
 function getshop_loadTextualSummary(res) {
     $('.yourstaysummary').html('');
+    var translation = getshop_getBookingTranslations();
     for(var k in res.textualSummary) {
-        $('.yourstaysummary').append(res.textualSummary[k] + "<br>");
+        var text = res.textualSummary[k];
+        text = text.replace("{guests}", translation['numberofguests'].toLowerCase());
+        text = text.replace("{guest}", translation['guest'].toLowerCase());
+        text = text.replace("{rooms}", translation['rooms'].toLowerCase());
+        text = text.replace("{totalprice}", translation['totalprice']);
+        $('.yourstaysummary').append(text + "<br>");
     }
     
     $('[gstranslationfield="readTerms"]').attr('onclick',"window.open('"+getshop_endpoint+"/scripts/loadContractPdf.php?readable=true&engine=default')");
@@ -710,13 +718,15 @@ function getshop_confirmGuestInfoBox() {
     var adult = $('#count_adult').val();
     var child = $('#count_child').val();
     var guest = +adult + +child;
-    var roomText = ' room';
-    var guestText = ' guest ';
+    var translation = getshop_getBookingTranslations();
+    
+    var roomText = ' ' + translation['room'].toLowerCase();
+    var guestText = ' ' + translation['guest'].toLowerCase() + ' ';
     if (room > 1) {
-        roomText = ' rooms';
+        roomText = ' ' + translation['rooms'].toLowerCase();
     }
     if (guest > 1) {
-        guestText = ' guests ';
+        guestText = ' '+translation['numberofguests'].toLowerCase()+' ';
     }
     $('#guests').val(room + roomText + ', ' + guest + guestText);
     $('.guestInfoBox').hide();
@@ -730,6 +740,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     
     var header = "<tr style='font-weight:bold;'><td style='text-align:left;'>"+chosenRoomText['chosenRoom']+"</td><td>"+chosenRoomText['numberofguests']+"</td><td>"+chosenRoomText['price']+"</td></tr>";
     var row = "";
+    var translationMatrix = getshop_getBookingTranslations();
     for(var k in res.rooms) {
         var room = res.rooms[k];
         for(var guest in room.roomsSelectedByGuests) {
@@ -737,9 +748,11 @@ function getshop_updateOrderSummary(res, isSearch) {
             if(count > 0) {
                 row += "<tr><td style='text-align:left;'>"+ room.name +"</td>";
                 row += "<td>" + (guest*count);
-                row += " (" + count + " room";
+                row += " (" + count + " ";
                 if(count > 1) {
-                    row += "s";
+                    row += translationMatrix['rooms'].toLowerCase();
+                } else {
+                    row += translationMatrix['room'].toLowerCase();
                 }
                 row += ")</td>";
                 row += "<td>" + (room.pricesByGuests[guest] * count) + "</td>";
@@ -750,7 +763,7 @@ function getshop_updateOrderSummary(res, isSearch) {
             }
         }
     }
-    var totalAmount = "<tr class='totalAmountline'><td>Total</td><td>"+totalGuests+"("+ totalRooms +" rooms) </td><td>"+total+"</td></tr>";
+    var totalAmount = "<tr class='totalAmountline'><td>Total</td><td>"+totalGuests+"("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ") </td><td>"+total+"</td></tr>";
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + totalAmount + "</table>");
     $('.GslBooking .ordersummary .totalprice').html(total);
 //    $('.GslBooking .ordersummary').css('visibility','visible').css('height','auto');
@@ -787,7 +800,9 @@ function getshop_addRemoveAddon(e) {
 }
 
 function getshop_removeGuest() {
-var removeGuest = confirm('Are you sure u want to remove this guest?');
+    var translation = getshop_getBookingTranslations();
+    
+var removeGuest = confirm(translation['sureremoveguest']);
     if (removeGuest === true) {
         $(this).closest('.guestentry').remove();
         var saving = getshop_saveGuestInformation();
@@ -992,12 +1007,15 @@ function getshop_searchRooms() {
                 roomBox.find('.roomdescription').html(room.description);
                 roomBox.find('.featured-image').css('background-image','url('+getshop_endpoint+'/displayImage.php?id='+ firstFile);
                 roomBox.attr('index', k);
+                
+                var translation = getshop_getBookingTranslations();
+                
                 for (var guest in room.pricesByGuests) {
                     var numberofrooms = '';
                     var index = 1;
-                    var multipleGuests = ' guests';
+                    var multipleGuests = ' ' + translation['numberofguests'].toLowerCase();
                     if (guest == 1) {
-                        multipleGuests = ' guest'
+                        multipleGuests = ' ' + translation['guest'].toLowerCase();
                     }
 //                        user_icon += '<i class="fa fa-user"></i>';
                     for (var i = 1; i <= room.availableRooms; i++) {
@@ -1065,7 +1083,8 @@ function getshop_searchRooms() {
 }
 
 function getshop_removeRoom() {
-    var confirmed = confirm("Are you sure you want to remove this room?");
+    var translation = getshop_getBookingTranslations();
+    var confirmed = confirm(translation['sureremoveroom']);
     if(confirmed) {
         var id = $(this).closest('.roomrowadded').attr('roomid');
         var saving = getshop_saveGuestInformation();

@@ -7,6 +7,7 @@ package com.thundashop.core.pmsbookingprocess;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ErrorException;
@@ -98,6 +99,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             BookingProcessRooms room = new BookingProcessRooms();
             room.description = type.description;
+            String translatedName = type.getTranslationsByKey("description", getSession().language);
+            if(translatedName != null && !translatedName.isEmpty()) {
+                room.description = translatedName;
+            }
+
+            
             room.availableRooms = bookingEngine.getNumberOfAvailable(type.id, arg.start, arg.end);
             room.id = type.id;
             room.visibleForBooker = type.visibleForBooking;
@@ -106,6 +113,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
                 room.images.addAll(typeInfo.images);
                 room.name = type.name;
+                translatedName = type.getTranslationsByKey("name", getSession().language);
+                if(translatedName != null && !translatedName.isEmpty()) {
+                    room.name = translatedName;
+                }
                 room.maxGuests = type.size;
                 
                 for(int i = 1; i <= type.size;i++) {
@@ -324,10 +335,18 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             List<PmsBookingAddonItem> addons = pmsManager.getAddonsWithDiscount(room.pmsBookingRoomId);
             
             returnroom.addonsAvailable.clear();
+            String curLang = getSession().language;
             for(PmsBookingAddonItem item : addons) {
                 AddonItem toAddAddon = new AddonItem();
                 toAddAddon.setAddon(item);
-                toAddAddon.name = productManager.getProduct(item.productId).name;
+                toAddAddon.name = item.descriptionWeb;
+                String translation = item.getTranslationsByKey("descriptionWeb", curLang);
+                if(translation != null && !translation.isEmpty()) {
+                    toAddAddon.name = translation;
+                }
+                if(toAddAddon.name == null || toAddAddon.name.isEmpty()) {
+                    toAddAddon.name = productManager.getProduct(item.productId).name;
+                }
                 toAddAddon.icon = item.bookingicon;
                 checkIsAddedToRoom(toAddAddon, room, item);
                 if(!item.displayInBookingProcess.isEmpty() && !item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
@@ -355,11 +374,16 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     private void addTextualSummary(GuestAddonsSummary result) {
         PmsBooking booking = pmsManager.getCurrentBooking();
         int numberOfGuests = 0;
+        String curLang = getSession().language;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             numberOfGuests += room.numberOfGuests;
         }
-        result.textualSummary.add(numberOfGuests + " x guests");
-        result.textualSummary.add(booking.getActiveRooms().size() + " x rooms");
+        if(numberOfGuests == 1) {
+            result.textualSummary.add(numberOfGuests + " x {guest}");
+        } else {
+            result.textualSummary.add(numberOfGuests + " x {guests}");
+        }
+        result.textualSummary.add(booking.getActiveRooms().size() + " x {rooms}");
         
         List<PmsBookingAddonItem> addons = pmsManager.getAddonsAvailable();
         for(PmsBookingAddonItem item : addons) {
@@ -372,11 +396,16 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 }
             }
             if(added > 0) {
-                result.textualSummary.add(added + " x " + productManager.getProduct(item.productId).name);
+                String text = item.name;
+                String translation = item.getTranslationsByKey("descriptionWeb", curLang);
+                if(translation != null && !translation.isEmpty()) {
+                    text = translation;
+                }
+                result.textualSummary.add(added + " x " + text);
             }
         }
         
-        result.textualSummary.add("Total price : " + booking.getTotalPrice());
+        result.textualSummary.add("{totalprice} : " + booking.getTotalPrice());
         
     }
 

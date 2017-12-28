@@ -1,6 +1,10 @@
 {
     "failedlogon" : "Sorry, wrong username or password",
     "rooms" : "Rooms",
+    "room" : "Room",
+    "totalprice" : "Total price",
+    "sureremoveroom" : "Are you sure you want to remove this room?",
+    "sureremoveguest" : "Are you sure you want to remove this guest?",
     "sameasguest" : "Same as guest",
     "loggedonas" : "Logged on as ",
     "adults" : "Adults",
@@ -54,8 +58,9 @@
     "noRoomsMessage" : "Sorry, we are sold out for your specified selection.",
     "startingAt" : "Starting at NOK ",
     "numberofguests" : "Guests",
+    "guest" : "guest",
     "numberofrooms" : "Number of rooms",
     "price" : "Price",
     "availableRooms" : "Available rooms: ",
-    "chosenRoom" : "Valgte rom"
+    "chosenRoom" : "Rooms chosen"
 }

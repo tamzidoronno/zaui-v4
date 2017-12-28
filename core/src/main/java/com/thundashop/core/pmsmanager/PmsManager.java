@@ -6856,7 +6856,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     }
 
     @Override
-    public void addAddonToRoom(String productId, String pmsRoomId, Integer count, Date date, Double price) {
+    public void addAddonToRoom(PmsBookingAddonItem addonToAdd, String pmsRoomId) {
+        
+        String productId = addonToAdd.productId;
+        Date date = addonToAdd.date;
         
         PmsBooking booking = getBookingFromRoom(pmsRoomId);
         PmsBookingRooms room = booking.getRoom(pmsRoomId);
@@ -6875,8 +6878,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             room.addons.add(toAdd);
         }
         
-        toAdd.count = count;
-        toAdd.price = price;
+        toAdd.count = addonToAdd.count;
+        toAdd.price = addonToAdd.price;
+        toAdd.name = addonToAdd.name;
         
         saveBooking(booking);
     }

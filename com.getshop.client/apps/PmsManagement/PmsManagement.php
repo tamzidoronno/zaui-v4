@@ -300,11 +300,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         foreach($_POST['data'] as $key => $val) {
             if(stristr($key, "rowindex_") && $val == "true") {
+                $addon = new \core_pmsmanager_PmsBookingAddonItem();
                 $index = str_replace("rowindex_", "", $key);
-                $count = $_POST['data']['count_'.$index];
-                $price = $_POST['data']['price_'.$index];
-                $date = $this->convertToJavaDate(strtotime($_POST['data']['date_'.$index]));
-                $this->getApi()->getPmsManager()->addAddonToRoom($this->getSelectedName(), $addonToUse->productId, $pmsRoomId, $count, $date, $price);
+                $addon->count = $_POST['data']['count_'.$index];
+                $addon->date = $this->convertToJavaDate(strtotime($_POST['data']['date_'.$index]));
+                $addon->price = $_POST['data']['price_'.$index];
+                $addon->name = $_POST['data']['name'];
+                $addon->productId = $addonToUse->productId;
+                
+                $this->getApi()->getPmsManager()->addAddonToRoom($this->getSelectedName(), $addon, $pmsRoomId);
             }
         }
         
@@ -727,6 +731,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 echo "<tr>";
                 echo "<td><input type='checkbox' class='selectalladdons'></td>";
                 echo "<td colspan='3'>" . $this->getApi()->getProductManager()->getProduct($id)->name . "</td>";
+                echo "<td></td>";
                 echo "</tr>";
                 $result = array();
                 foreach($room->addons as $addon) {
@@ -737,6 +742,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                         $row .= "<td> ".date("d.m.Y", strtotime($addon->date))."</td>";
                         $row .= "<td><input type='text' value='" . $addon->count . "' style='width:30px' gsname='".$addon->addonId."_count'></td>";
                         $row .= "<td><input type='text' value='" . $addon->price . "' style='width:50px' gsname='".$addon->addonId."_price'></td>";
+                        $row .= "<td>".$addon->name."</td>";
                         $row .= "</tr>";
                         $result[strtotime($addon->date)][] = $row;
                     }
@@ -752,6 +758,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 echo "<td></td>";
                 echo "<td align='center' onclick='$(this).closest(\".addonsadded\").fadeOut()' style='cursor:pointer;'>Close</td>";
                 echo "<td align='center' gstype='submitToInfoBox' style='cursor:pointer;'>Save</td>";
+                echo "<td></td>";
                 echo "</tr>";
                 echo "</table>";
             }

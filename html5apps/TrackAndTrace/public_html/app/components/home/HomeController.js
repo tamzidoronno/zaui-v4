@@ -47,6 +47,7 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         if (!conf)
             return;
         
+        localStorage.setItem("loggedInUserId", "");
         localStorage.setItem("username", "");
         localStorage.setItem("password", "");
         $api.reconnect();

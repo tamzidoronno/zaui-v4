@@ -78,6 +78,10 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         this.refreshRoute = function(route) {
             if (this.api.sessionId === route.sentFromSessionId)
                 return;
+            
+            if (!localStorage.getItem("username")) {
+                return;
+            }
   
             $rootScope.$broadcast("refreshRouteEven1", route);
             $rootScope.$apply();
@@ -87,6 +91,10 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         this.messageReceived = function(msg) {
             if (this.api.sessionId === msg.sentFromSessionId)
                 return;
+            
+            if (!localStorage.getItem("username")) {
+                return;
+            }
   
             $rootScope.$broadcast("messageReceived", msg);
             $rootScope.$apply();
@@ -95,6 +103,11 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         this.driverRemoved = function(msg) {
             if (this.api.sessionId === msg.sentFromSessionId)
                 return;
+            
+            if (!localStorage.getItem("username")) {
+                return;
+            }
+ 
   
             $rootScope.$broadcast("driverRemoved", msg);
             $rootScope.$apply();
@@ -130,6 +143,10 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         },
         
         this.getLoggedOnUser = function() {
+            if (!localStorage.getItem("loggedInUserId")) {
+                return null;
+            }
+            
             return JSON.parse(localStorage.getItem("loggedInUserId"));
         },
         

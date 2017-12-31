@@ -6,7 +6,7 @@
 
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
-controllers.LoginController = function($scope, $api) {
+controllers.LoginController = function($scope, $api, datarepository) {
     $scope.username = localStorage.getItem("username");
     $scope.password = localStorage.getItem("password");
     $scope.company = localStorage.getItem("company");
@@ -17,6 +17,8 @@ controllers.LoginController = function($scope, $api) {
             return;
         }
         
+        datarepository.clear();
+                
         $('.loginbutton').prepend('<i class="fa fa-spin fa-spinner login-shower"></i>');
         localStorage.setItem("company", $scope.company);
         localStorage.setItem("username", $scope.username);

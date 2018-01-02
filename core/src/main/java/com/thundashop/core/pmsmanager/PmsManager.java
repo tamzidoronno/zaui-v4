@@ -946,6 +946,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             booking.endDate = booking.getEndDate();
         }
         
+        booking.makeUniqueIds();
+        
         return booking;
     }
     

@@ -588,6 +588,18 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    void makeUniqueIds() {
+        if(orderIds == null) {
+            orderIds = new ArrayList();
+        }
+        
+        HashMap<String,Integer> ids = new HashMap();
+        for(String id : orderIds) {
+            ids.put(id, 1);
+        }
+        orderIds = new ArrayList(ids.keySet());
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

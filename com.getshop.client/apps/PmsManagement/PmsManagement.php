@@ -3019,7 +3019,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             if(date("d.m.Y", $booking->end/1000) == date("d.m.Y", strtotime($day))) {
                 continue;
             }
-            $price = $booking->price / 1.1;
+            $price = $booking->price;
             $totalprice += $price;
             echo "<tr class='moreinformationaboutbooking' style='cursor:pointer;' bookingid='".$booking->bookingId."'>";
             echo "<td>" . $booking->room . "</td>";
@@ -3726,7 +3726,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 if(!isset($sumBottom[$idx])) {
                     $sumBottom[$idx] = 0;
                 }
-                $sumBottom[$idx] += $field;
+                if(is_numeric($field)) {
+                    $sumBottom[$idx] += $field;
+                }
             }
         }
         $tmpSum= array();

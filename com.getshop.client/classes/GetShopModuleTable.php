@@ -93,13 +93,13 @@ class GetShopModuleTable {
                                     $val = $data->{$attribute[2]};
                                 } else {
                                     $functionName = $attribute[3];
-                                    $colVal = @$data->{$attribute[2]};
+                                    $colVal = isset($attribute[2]) ? @$data->{$attribute[2]} : "" ;
                                     $val = $this->application->$functionName($data, $colVal);
                                 }
 
                                 $postArray[$attribute[0]] = $val;
 
-                                if ($attribute[1] !== "gs_hidden") {
+                                if (isset($attribute[1]) && $attribute[1] !== "gs_hidden") {
                                     echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$val</div>";
                                 }
                                 $i++;

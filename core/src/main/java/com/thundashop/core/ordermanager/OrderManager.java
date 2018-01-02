@@ -228,12 +228,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        
-        int ordersCorrected = correctOrdersThatHasToBeChangedTaxesOn();
-        if(ordersCorrected > 0) {
-            storeManager.informStoreOwnerAboutCriticalInformation("Hi, we just wanted to inform you that we have updated " + ordersCorrected + " orders to use the new tax rate (12%) for 2018. And that you don't need to do anything to support 2018. -GetShop Support");
-        }
-
     }
 
     @Override

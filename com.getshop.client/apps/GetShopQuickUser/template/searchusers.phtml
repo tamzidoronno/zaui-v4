@@ -1,9 +1,6 @@
 <?
-/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
-$pmsBooking = $this->getPmsBooking();
-$bookingEngineBooking = $this->getBookingEngineBooking();
-$pmsSelectedRoom = $this->getSelectedRoom();
-$user = $this->getUserForBooking();
+/* @var $this \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser */
+$user = $this->user;
 
 
 if (!isset($_POST['data']['searchvalue'])) {
@@ -17,7 +14,13 @@ if (strlen($searchvalue) < 3) {
     echo $this->__f("Minimum 3 letters");
     return;
 }
-    
+
+$extra = "";
+foreach ($_POST['data'] as $key => $value) {
+    if($key != "userid") {
+        $extra .= $key."='".$value."' ";
+    }
+}
 
 $users = $this->getApi()->getUserManager()->findUsers($searchvalue);
 
@@ -27,14 +30,13 @@ foreach ($users as $user) {
         <div class="user_col user_col1"><? echo $user->fullName; ?></div>
         <div class="user_col user_col2"><? echo $user->emailAddress; ?></div>
         <div class="user_col user_col3"><? echo $user->cellPhone; ?></div>
-        <div class="user_col user_col4">
-            <div class="gs_shop_small_icon" 
-                userid="<? echo $user->id; ?>" 
-                id="<? echo $bookingEngineBooking->id; ?>" 
-                roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>"
+        <div class="user_col user_col4"> 
+           <div class="gs_shop_small_icon" 
+                <? echo $extra; ?>
                 gsclick="changeUser"
-                gs_callback="app.PmsSearchBooking.userChanged"
+                gs_callback="app.GetShopQuickUser.userChanged"
                 synchron="true"
+                userid="<? echo $user->id; ?>"
                 >
                     <? echo $this->__f("Select"); ?> <i class="fa fa-arrow-right"></i>
             </div>

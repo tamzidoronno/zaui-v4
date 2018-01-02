@@ -382,37 +382,16 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         return $this->selectedRoom;
     }
 
-    public function hasAccountingTransfer() {
-        return false;
-    }
-
-    public function saveUser() {
+    public function saveUser($user) {
         $this->setData();
-         
-        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
-        $user->fullName = $_POST['data']['fullName'];
-        $user->prefix = $_POST['data']['prefix'];
-        $user->emailAddress = $_POST['data']['emailAddress'];
-        $user->cellPhone = $_POST['data']['cellPhone'];
-        if(!$user->address) {
-            $user->address = new \core_usermanager_data_Address();
+
+        if ($user->address->countrycode) {
+            $booking = $this->getPmsBooking();
+            $booking->countryCode = $user->address->countrycode;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         }
-        $user->address->address = $_POST['data']['address.address'];
-        $user->address->postCode = $_POST['data']['address.postCode'];
-        $user->address->city = $_POST['data']['address.city'];
-        $user->address->countrycode = $_POST['data']['countryCode'];
-        $user->birthDay = $_POST['data']['birthDay'];
-        $user->relationship = $_POST['data']['relationship'];
-        $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
-        $this->getApi()->getUserManager()->saveUser($user);
-        
-        $booking = $this->getPmsBooking();
-        $booking->countryCode = $user->address->countrycode;
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         
         $this->setData(true);
-        $this->includefile("edituser");
-        die();
     }
     
        
@@ -421,26 +400,18 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $bookingId = $this->getPmsBooking()->id;
         
         $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, "");
-        
         $this->setData(true);
-        $this->includefile("edituser");
-        die();
+        return $this->getUserForBooking();
     }
+   
     
-    public function searchForUsers() {
-        $this->includefile("searchusers");
-        die();
-    }
-    
-    public function changeUser() {
+    public function changeUser($user) {
         $this->setData();
         $booking = $this->getPmsBooking();
-        $booking->userId = $_POST['data']['userid'];
+        $booking->userId = $user->id;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         
         $this->setData(true);
-        $this->includefile("edituser");
-        die();
     }
     
     public function createCompany() {
@@ -451,8 +422,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, $vat);
         
         $this->setData(true);
-        $this->includefile("edituser");
-        die();
+        return $this->getUserForBooking();
     }
 
     private function updateGuests($selectedRoom) {
@@ -579,6 +549,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $pmsBooking);
     }
+
 
 }
 ?>

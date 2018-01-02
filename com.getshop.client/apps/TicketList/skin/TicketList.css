@@ -1,0 +1,60 @@
+.TicketList .ticketview {
+    font-size: 0px;
+}
+.TicketList .dialog,
+.TicketList .ticket_actions {
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: top;
+    box-sizing: border-box;
+}
+
+.TicketList .dialog { width: 70%; border-right: solid 1px #DDD; padding-right: 20px;}
+.TicketList .ticket_actions { width: 30%; padding-left: 20px; }
+
+.TicketList .ticket_actions select,
+.TicketList .ticket_actions input {
+    box-sizing: border-box;
+    width: 100%;
+}
+.TicketList textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #CCC;
+    height: 200px;
+    padding: 10px;
+}
+
+
+.TicketList .dialog .event .content {
+    border: solid 1px #DDD;
+    padding: 20px;
+}
+
+.TicketList .dialog .event .createdBy {
+    font-style: italic;
+    font-size: 13px;
+    background-color: #DDD;
+    padding: 5px;
+}
+.TicketList .dialog .event {
+    margin-bottom: 20px;
+}
+
+.TicketList .col_2 { width: 60px !important; }
+.TicketList .col_4 { width: 400px !important; }
+.TicketList .col_6 { width: 100px !important; }
+.TicketList .col_7 { width: 100px !important; }
+
+.TicketList .filterbox {
+    margin-bottom: 30px;
+}
+
+.TicketList .filterbox i {
+    margin-right: 5px;
+    display: none;
+}
+
+.TicketList .filterbox .selected i {
+    display: inline-block;
+}

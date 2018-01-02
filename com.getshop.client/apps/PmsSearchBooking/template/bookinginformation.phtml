@@ -2,9 +2,16 @@
 /* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
+$bookingEngineBooking = $this->getBookingEngineBooking();
 $user = $this->getUserForBooking();
 
+$extraArgs = array();
+$extraArgs['userid'] = $user->id;
+$extraArgs['id'] = $bookingEngineBooking->id;
+$extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
+
 ?>
+
 <div class="bookinginformation">
     <div class='guestinfobox'>
         <div class=" row">
@@ -20,25 +27,16 @@ $user = $this->getUserForBooking();
         <div class=" row">
             <div class="col col1"><i class="fa fa-user"></i> <span><? echo $this->__f("Booked for"); ?></span></div>
             <div class="col col2">
-                <span class="booked_for"><? echo $user->fullName; ?></span>
-                <div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
-                <div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
+                <?
+                $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+                $quser->setUser($user);
+                $quser->setExtraArgs($extraArgs);
+                $quser->renderApplication(true, $this);
+                ?>
             </div>    
         </div>
     </div>
     
-    <div class="edit_details_of_user">
-        <?
-        $this->includefile("edituser");
-        ?>
-    </div>
-    
-    <div class="change_user">
-        <?
-        $this->includefile("changeuser");
-        ?>
-    </div>
-
     <h2><? echo $this->__f("Guests"); ?></h2>
     
     <div class="guestinfo">

@@ -1,0 +1,21 @@
+<?
+/* @var $this \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser */
+$name = $this->user ? $this->user->fullName : "N/A";
+?>
+
+<span class="booked_for"><? echo $name; ?></span>
+<div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
+<div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
+
+
+<div class="edit_details_of_user">
+    <?
+    $this->includefile("edituser");
+    ?>
+</div>
+
+<div class="change_user">
+    <?
+    $this->includefile("changeuser");
+    ?>
+</div>

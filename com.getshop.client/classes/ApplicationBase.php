@@ -21,7 +21,7 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function clearSessionOnIdentifierForTable() {
-        $identifier = $_POST['data']['identifier'];
+        $identifier = $_POST['data']['functioname'];
         unset($_SESSION['gs_moduletable_'.$identifier]);
     }
     
@@ -220,14 +220,20 @@ class ApplicationBase extends FactoryBase {
         $this->includefile('applicationdescription', 'Common');
     }
 
-    public function renderApplication($appNotAddedToPage=false) {
+    public function renderApplication($appNotAddedToPage=false, $fromApplication=false) {
         
         $changeable = '';
         $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
         $id = isset($this->configuration) ? $this->configuration->id : "";
+        $callbackInstance = "";
         
         if ($appNotAddedToPage) {
             $id = get_class($this);
+        }
+        
+        if ($fromApplication) {
+            $fromId = isset($fromApplication->configuration) ? $fromApplication->configuration->id : "";
+            $callbackInstance = " fromapplication='$fromId' ";
         }
         
         if (isset($_GET['onlyShowApp']) && isset($id) && $id != $_GET['onlyShowApp']) {
@@ -239,7 +245,7 @@ class ApplicationBase extends FactoryBase {
             $className = substr($className, strrpos($className, "\\")+1);
         }
         
-        echo "<div appid='$id' ".$this->getExtraAttributesToAppArea()." app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
+        echo "<div $callbackInstance appid='$id' ".$this->getExtraAttributesToAppArea()." app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         if($this->isEditorMode() && !$this->getFactory()->isMobile()) {
             echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
             echo "<div class='order_mask'>";
@@ -685,5 +691,16 @@ class ApplicationBase extends FactoryBase {
         $_SESSION['gs_moduletable_'.$_POST['data']['functionName']] = $_POST['data'];
         die();
     }
+    
+    public function getCallBackApp() {
+        if (!isset($_POST['core']['fromappid'])) {
+            return null;
+        }
+        
+        $callbackApp = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($_POST['core']['fromappid']);
+        $instance = $this->getFactory()->getApplicationPool()->createAppInstance($callbackApp);
+        return $instance;
+    }
+
 }
 ?>

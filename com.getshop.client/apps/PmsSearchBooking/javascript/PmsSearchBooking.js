@@ -1,13 +1,9 @@
 app.PmsSearchBooking = {
     init: function() {
-        $(document).on('click', '.PmsSearchBooking .searchbox .tab', this.changeTab);
         $(document).on('click', '.PmsSearchBooking .orderpreview .close', this.closePreview);
         $(document).on('click', '.PmsSearchBooking .orderpreview .closebutton', this.closePreview);
         $(document).on('click', '.PmsSearchBooking .orderpreview .continue', this.continueToBooking);
         $(document).on('click', '.PmsSearchBooking .menuarea .menuentry', this.menuClicked);
-        $(document).on('click', '.PmsSearchBooking .bookinginformation .show_edit_user', this.toggleEditUser);
-        $(document).on('click', '.PmsSearchBooking .bookinginformation .show_change_user', this.toggleShowChangeUser);
-        $(document).on('click', '.PmsSearchBooking .bookinginformation .change_user_form [tab]', this.toggleTabClicked);
         $(document).on('click', '.PmsSearchBooking .bookinginformation .remove_guest', this.removeGuest);
         $(document).on('click', '.PmsSearchBooking .bookinginformation .add_more_guests', this.addGuest);
         $(document).on('click', '.PmsSearchBooking .payment_option_choice', this.paymentSelected);
@@ -77,51 +73,7 @@ app.PmsSearchBooking = {
         $(this).closest('.guest_row').remove();
         app.PmsSearchBooking.formChanged();
     },
-    
-    toggleTabClicked: function() {
-        $('.PmsSearchBooking .bookinginformation .change_user_form .tab_active').removeClass('tab_active');
-        $(this).addClass('tab_active');
-        var tab = $(this).attr('tab');
-        $('.PmsSearchBooking .change_user_form .tab_contents .tab_content').hide();
-        $('.PmsSearchBooking .change_user_form .tab_contents .tab_content[tab_content="'+tab+'"]').show();
-    },
-    
-    userCreated: function(result) {
-        app.PmsSearchBooking.updateFieldsAfterUserChangedOrCreated(result);
-        app.PmsSearchBooking.closeChangeUser();
-        $('.PmsSearchBooking .bookinginformation .edit_details_of_user').slideDown();
-    },
-    
-    toggleShowChangeUser: function() {
-        $('.PmsSearchBooking .bookinginformation .edit_details_of_user').hide();
-        var div = $('.PmsSearchBooking .bookinginformation .change_user_form');
-        if (div.is(':visible')) {
-            app.PmsSearchBooking.closeChangeUser();
-        } else {
-            div.slideDown();
-        }
-    },
    
-    closeChangeUser: function() {
-        $('.PmsSearchBooking .bookinginformation .change_user_form').slideUp();
-        $('.PmsSearchBooking .searchresult').html("");
-    },
-    
-    toggleEditUser: function() {
-        app.PmsSearchBooking.closeChangeUser();
-        var div = $('.PmsSearchBooking .bookinginformation .edit_details_of_user');
-        if (div.is(':visible')) {
-            div.slideUp();
-        } else {
-            div.slideDown();
-        }
-    },
-    
-    userSearchResult: function(result) {
-        $('.PmsSearchBooking .change_user_form .searchresult').html(result);
-        return false;
-    },
-    
     contentSaved: function(res, target) {
         var scope = $(target).closest('.datarow_extended_content');
         scope.find('.bookingoverview_content_row').replaceWith(res);
@@ -145,33 +97,13 @@ app.PmsSearchBooking = {
             }
         });
     },
-    
-    userChanged: function(result) {
-        app.PmsSearchBooking.updateFieldsAfterUserChangedOrCreated(result);
-        app.PmsSearchBooking.closeChangeUser();
-        return false;
-    },
-    
-    updateFieldsAfterUserChangedOrCreated: function(result) {
-        $('.PmsSearchBooking .bookinginformation .edit_details_of_user').html(result);
-        
-        var name = $(result).find('.fullName').val();
-        $('.PmsSearchBooking .bookinginformation span.booked_for').html(name);
-        $('.PmsSearchBooking .bookinginformation').closest('.datarow').find('.booked_for').html(name);
-        
-    },
-    
-    userUpdated: function(result) {
-        app.PmsSearchBooking.updateFieldsAfterUserChangedOrCreated(result);
-        app.PmsSearchBooking.toggleEditUser();
-        return false;
-    },
-    
+   
     menuClicked: function() {
     
         var tab = $(this).attr('tab');
+        var needAllSaved = $(this).attr('needAllSaved');
         
-        if (tab === "orders" && !$('.PmsSearchBooking .datarow.active [gstype="submit"]').hasClass('disabled')) {
+        if (needAllSaved === "true" && !$('.PmsSearchBooking .datarow.active [gstype="submit"]').hasClass('disabled')) {
             alert(__f("Please save your changes before you go to payment"));
             return;
         }
@@ -211,15 +143,6 @@ app.PmsSearchBooking = {
     
     closePreview: function() {
         $('.PmsSearchBooking .orderpreview').fadeOut();
-    },
-    
-    changeTab: function() {
-        var tabName = $(this).attr('tab');
-        $('.PmsSearchBooking .searchbox .tab').removeClass('active');
-        $('.PmsSearchBooking .searchbox .tab_content').removeClass('active');
-        
-        $('.PmsSearchBooking .searchbox .tab[tab="'+tabName+'"]').addClass('active');
-        $('.PmsSearchBooking .searchbox .tab_content[tab="'+tabName+'"]').addClass('active');
     }
 }
 

@@ -228,7 +228,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        correctOrdersThatHasToBeChangedTaxesOn();
     }
 
     @Override

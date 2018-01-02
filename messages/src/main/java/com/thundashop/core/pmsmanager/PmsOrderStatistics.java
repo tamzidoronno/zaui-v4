@@ -282,11 +282,20 @@ public class PmsOrderStatistics implements Serializable  {
             return entry;
         }
         
+        Double taxRate = 1.0;
+        if(item.getProduct() == null) {
+           System.out.println("Null product on item: " + item);
+        } else if(item.getProduct().taxGroupObject == null) {
+           System.out.println("Null tax object on product: " + item.getProduct().name);
+        } else {
+            taxRate = item.getProduct().taxGroupObject.taxRate;
+        }
         if(item.priceMatrix != null) {
             for(String key : item.priceMatrix.keySet()) {
                 if(key.equals(date)) {
                     double dayPriceInc = item.priceMatrix.get(key);
-                    double dayPriceEx = dayPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                        
+                    double dayPriceEx = dayPriceInc / ((100 + taxRate)/100);
                     double existingDayPrice = 0.0;
                     if(entry.priceExRoom.containsKey(item.getProduct().externalReferenceId + "_" + date)) {
                         existingDayPrice = entry.priceExRoom.get(item.getProduct().externalReferenceId + "_" + date);
@@ -302,7 +311,7 @@ public class PmsOrderStatistics implements Serializable  {
                 if(PmsBookingRooms.isSameDayStatic(addonItem.date, cal.getTime())) {
                     if(addonItem.price != null && addonItem.count != null) {
                         double itemPriceInc = addonItem.price*addonItem.count;
-                        price += itemPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                        price += itemPriceInc / ((100 + taxRate)/100);
                         priceInc += itemPriceInc;
                     }
                 }

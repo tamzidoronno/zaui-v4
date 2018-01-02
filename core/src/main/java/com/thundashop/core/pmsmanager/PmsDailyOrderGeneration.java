@@ -208,22 +208,26 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             
             if(isNegated(priceOne,priceTwo)) {
                 CartItem item = createCartItemForRoom(count, total, room, startDate, nextDay, null);
-                addCartItem(item);
-                addPriceMatrix(item, priceMatrix);
-                count = 0;
-                total = 0.0;
-                startDate = null;
-                nextDay = null;
+                if(item != null) {
+                    addCartItem(item);
+                    addPriceMatrix(item, priceMatrix);
+                    count = 0;
+                    total = 0.0;
+                    startDate = null;
+                    nextDay = null;
+                }
             }
             
             if(nextDay != null && !room.isSameDay(nextDay, dayToIterate)) {
                 CartItem item = createCartItemForRoom(count, total, room, startDate, nextDay, null);
-                addCartItem(item);
-                addPriceMatrix(item, priceMatrix);
-                startDate = null;
-                nextDay = null;
-                count = 0;
-                total = 0.0;
+                if(item != null) {
+                    addCartItem(item);
+                    addPriceMatrix(item, priceMatrix);
+                    startDate = null;
+                    nextDay = null;
+                    count = 0;
+                    total = 0.0;
+                }
             }
             daysInPriceMatrix.add(PmsBookingRooms.convertOffsetToString(dayToIterate));
             
@@ -240,8 +244,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         if(count > 0 && total != 0.0) {
             CartItem item = createCartItemForRoom(count, total, room,startDate, nextDay, null);
-            addPriceMatrix(item, priceMatrix);
-            addCartItem(item);
+            if(item != null) {
+                addPriceMatrix(item, priceMatrix);
+                addCartItem(item);
+            }
         }
     }
     
@@ -347,16 +353,18 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         CartItem item = createCartItem(productId, count, avg);
-        item.startDate = start;
-        item.endDate = end;
-        item.getProduct().externalReferenceId = room.pmsBookingRoomId;
-        item.getProduct().metaData = guestName;
-        item.getProduct().additionalMetaData = roomName;
-        if(isAddon) {
-            item.groupedById = room.pmsBookingRoomId;
-        }
-        if(useTypeName) {
-            item.getProduct().name = type.name;
+        if(item != null) {
+            item.startDate = start;
+            item.endDate = end;
+            item.getProduct().externalReferenceId = room.pmsBookingRoomId;
+            item.getProduct().metaData = guestName;
+            item.getProduct().additionalMetaData = roomName;
+            if(isAddon) {
+                item.groupedById = room.pmsBookingRoomId;
+            }
+            if(useTypeName) {
+                item.getProduct().name = type.name;
+            }
         }
         return item;
     }
@@ -602,9 +610,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 newPriceMatrix.put(offset, priceMatrix.get(offset));
             }
         }
-        if(item != null) {
-            item.priceMatrix = newPriceMatrix;
-        }
+        item.priceMatrix = newPriceMatrix;
         item.correctIncorrectCalculation();
         daysInPriceMatrix.clear();
     }

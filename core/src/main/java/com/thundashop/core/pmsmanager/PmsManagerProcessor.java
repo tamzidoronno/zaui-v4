@@ -639,6 +639,9 @@ public class PmsManagerProcessor {
     }
 
     private void makeSureCleaningsAreOkey() {
+        if(manager.getConfigurationSecure().cleaningInterval == 0) {
+            return;
+        }
         manager.makeSureCleaningsAreOkay();
     }
 

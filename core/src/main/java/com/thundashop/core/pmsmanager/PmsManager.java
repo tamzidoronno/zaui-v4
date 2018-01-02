@@ -946,6 +946,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             booking.endDate = booking.getEndDate();
         }
         
+        booking.makeUniqueIds();
+        
         return booking;
     }
     
@@ -7061,45 +7063,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 }
             }
         }
-        
-        PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
-        PmsOrderStatistics incomeReportResult = pmsInvoiceManager.generateStatistics(orderFilterToUse);
-        for(PmsOrderStatisticsEntry entry : incomeReportResult.entries) {
-            boolean modified = false;
-            for(StatisticsEntry statEntry : result.entries) {
-                if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
-                    double total = 0.0;
-                    String offset = PmsBookingRooms.convertOffsetToString(entry.day);
-                    for(String roomId : statEntry.roomsPrice.keySet()) {
-                        Double price = 0.0;
-                        if(entry.priceExRoom.containsKey(roomId+"_"+offset)) {
-                            price = entry.priceExRoom.get(roomId+"_"+offset);
-                        }
-                        statEntry.roomsPrice.put(roomId, price);
-                    }
-                    
-                    for(String productId : roomProductIds) {
-                        Double productPrice = entry.priceEx.get(productId);
-                        if(productPrice == null) {
-                            productPrice = 0.0;
-                        }
-                        total += productPrice;
-                    }
-                    modified = true;
-                    statEntry.totalPrice = (double)Math.round(total);
-                    if(statEntry.roomsRentedOut == 0) {
-                        statEntry.avgPrice = 0.0;
-                    } else {
-                        statEntry.avgPrice = (double)Math.round(statEntry.totalPrice / statEntry.roomsRentedOut);
-                    }
-                    statEntry.ordersUsed.addAll(entry.getOrderIds());
-                    break;
-                }
-                statEntry.finalize();
-            }
-            if(!modified) {
-                System.out.println(entry.day + " : not modified");
-            }
+        Date now = new Date();
+        //In the midle of the periode selection.
+        if(now.before(filter.endDate) && now.after(filter.startDate)) {
+            PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
+            orderFilterToUse.end = getEndOfToday();
+            setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+            orderFilterToUse.start = getEndOfToday();
+            orderFilterToUse.end = filter.endDate;
+            orderFilterToUse.includeVirtual = true;
+            setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+        } else if(now.after(filter.endDate)) {
+            //Before the selected periode.
+            PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
+            setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+        } else {
+            //After the selected periode
+            PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
+            orderFilterToUse.includeVirtual = true;
+            setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
         }
     }
 
@@ -7493,6 +7475,50 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         return null;
+    }
+
+    private void setResultFromIncomeReportByFilter(PmsStatistics result, PmsOrderStatsFilter orderFilterToUse, List<String> roomProductIds) {
+        PmsOrderStatistics incomeReportResult = pmsInvoiceManager.generateStatistics(orderFilterToUse);
+        for(PmsOrderStatisticsEntry entry : incomeReportResult.entries) {
+            for(StatisticsEntry statEntry : result.entries) {
+                if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
+                    double total = 0.0;
+                    String offset = PmsBookingRooms.convertOffsetToString(entry.day);
+                    for(String roomId : statEntry.roomsPrice.keySet()) {
+                        Double price = 0.0;
+                        if(entry.priceExRoom.containsKey(roomId+"_"+offset)) {
+                            price = entry.priceExRoom.get(roomId+"_"+offset);
+                        }
+                        statEntry.roomsPrice.put(roomId, price);
+                    }
+                    
+                    for(String productId : roomProductIds) {
+                        Double productPrice = entry.priceEx.get(productId);
+                        if(productPrice == null) {
+                            productPrice = 0.0;
+                        }
+                        total += productPrice;
+                    }
+                    statEntry.totalPrice = (double)Math.round(total);
+                    if(statEntry.roomsRentedOut == 0) {
+                        statEntry.avgPrice = 0.0;
+                    } else {
+                        statEntry.avgPrice = (double)Math.round(statEntry.totalPrice / statEntry.roomsRentedOut);
+                    }
+                    statEntry.ordersUsed.addAll(entry.getOrderIds());
+                    break;
+                }
+                statEntry.finalize();
+            }
+        }
+    }
+
+    private Date getEndOfToday() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
     }
 
 }

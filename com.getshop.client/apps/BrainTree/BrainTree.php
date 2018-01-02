@@ -52,7 +52,7 @@ class BrainTree extends \PaymentApplication implements \Application {
         $this->addPaymentMethod("BrainTree", "/showApplicationImages.php?appNamespace=$namespace&image=BrainTree.png", "braintree", "");
     }
     
-    private function doPayment($orderId = false) {
+    public function doPayment($orderId = false) {
         $useOrderId = $orderId ? $orderId : $this->getOrder()->id;
         return $this->getApi()->getBrainTreeManager()->pay($_POST['payment_method_nonce'], $useOrderId);
     }

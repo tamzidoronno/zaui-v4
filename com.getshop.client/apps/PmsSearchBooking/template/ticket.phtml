@@ -1,0 +1,18 @@
+<?
+/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+$booking = $this->getBookingEngineBooking();
+
+$user = $this->getUserForBooking();
+$ticket = new ns_9c29f94a_6c42_4590_aa1c_7736c58ff0a5\TicketCreateNew();
+$ticket->setUser($user);
+$ticket->renderApplication(true, $this);
+echo "<br/>";
+$filter = new \core_ticket_Ticket();
+$filter->userId = $user->id;
+
+$ticketList = new ns_419c41e7_1dd5_4c96_b820_c1b77a2fffa3\TicketList();
+$ticketList->setFilter($filter);
+$ticketList->renderApplication(true, $this);
+?>

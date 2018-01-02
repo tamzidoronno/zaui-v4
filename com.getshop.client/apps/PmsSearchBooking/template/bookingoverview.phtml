@@ -26,8 +26,9 @@ $pmsSelectedRoom = $this->getSelectedRoom();
         <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <? echo $this->__f("Addons"); ?></div>
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <? echo $this->__f("Access codes"); ?></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <? echo $this->__f("Messages"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <? echo $this->__f("Payments"); ?></div>
+        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <? echo $this->__f("Payments"); ?></div>
         <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <? echo $this->__f("Log"); ?></div>
+        <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <? echo $this->__f("Tickets"); ?></div>
     </div>
     
     <div class="workarea">
@@ -53,6 +54,12 @@ $pmsSelectedRoom = $this->getSelectedRoom();
         <div class="guestinformation <? echo $this->isTabActive('orders'); ?>" tab='orders'>
             <? 
             $this->includefile("orderstab");
+            ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('ticket'); ?>" tab='ticket'>
+            <? 
+            $this->includefile("ticket");
             ?>
         </div>
         

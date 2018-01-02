@@ -1,0 +1,92 @@
+<?
+/* @var $this \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser */
+$user = $this->user;
+$extraArgs = $this->getExtraArgs();
+
+$extra = "";
+foreach ($extraArgs as $key => $value) {
+    $extra .= "$key,";
+}
+?>
+
+<div class="change_user_form">
+    <div class="tabs">
+        <div class="tab gs_shop_small_icon tab_active" tab="existinguser"><i class="fa fa-check"></i> <? echo $this->__f("Existing user"); ?></div>
+        <div class="tab gs_shop_small_icon" tab="newuser"><i class="fa fa-check"></i> <? echo $this->__f("New user"); ?></div>
+        <div class="tab gs_shop_small_icon" tab="company"><i class="fa fa-check"></i> <? echo $this->__f("Company"); ?></div>
+    </div>
+    
+    <div class="tab_contents">
+        
+        <div class='tab_content' tab_content="newuser" gstype="form" method="createNewUser">
+            <div class="warning">
+                <i class="fa fa-info"></i> <? echo $this->__f("Simply enter the name of the booker and press create user"); ?>
+            </div>
+              <?
+            foreach ($extraArgs as $key => $value) {
+                ?>
+                <input type="hidden" gsname="<? echo $key; ?>" value="<? echo $value; ?>"/>
+                <?
+            }
+            
+            echo $this->__f("Name").":"
+            ?>
+            <input gsname="name" class="gsniceinput1">
+            <input type="hidden" gsname="gs_extras" value="<? echo $extra; ?>"/>
+            <br/>
+            <br/>
+            <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+            <div class="shop_button" gstype="submit" gs_callback="app.GetShopQuickUser.userCreated"><i class="fa fa-save"></i> <? echo $this->__f("Create user"); ?></div>
+        </div>
+        
+        <div class='tab_content' tab_content="existinguser">
+            <div class="warning">
+                <i class="fa fa-info"></i> <? echo $this->__f("Enter a search criteria in the box below and hit Search. Then select the user you wish to set this booking to."); ?>
+            </div>
+            <div gstype="form" method="searchForUsers" callback="app.GetShopQuickUser.userSearchResult" gs_callback="app.GetShopQuickUser.userSearchResult">
+                <?
+                foreach ($extraArgs as $key => $value) {
+                    ?>
+                    <input type="hidden" gsname="<? echo $key; ?>" value="<? echo $value; ?>"/>
+                    <?
+                }
+                ?>
+                <input type="hidden" gsname="gs_extras" value="<? echo $extra; ?>"/>
+                <input gs_callback="app.GetShopQuickUser.userSearchResult" gsname='searchvalue' gstype="submitenter" class="gsniceinput1" value="" placeholder="<? echo $this->__f("Name / Phone / Email / etc"); ?>"/> 
+                <div gs_callback="app.GetShopQuickUser.userSearchResult" gstype="submit" class="shop_button"><i class="fa fa-search"></i> <? echo $this->__f("Search"); ?></div>
+            </div>
+            
+            <div class="searchresult">
+                <? 
+                $this->includefile("searchusers");
+                ?>
+            </div>
+            
+            <br/>
+            <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+        </div>
+       
+        <div class='tab_content' tab_content="company">
+            <div gstype="form" method="createCompany" callback="app.GetShopQuickUser.userCreated" gs_callback="app.GetShopQuickUser.userCreated">
+                <div class="warning">
+                    <i class="fa fa-info"></i> <? echo $this->__f("You can create a new company here."); ?>
+                </div>
+                
+                <?
+                foreach ($extraArgs as $key => $value) {
+                    ?>
+                    <input type="hidden" gsname="<? echo $key; ?>" value="<? echo $value; ?>"/>
+                    <?
+                }
+                ?>
+
+                <input type="hidden" gsname="gs_extras" value="<? echo $extra; ?>"/>
+                <? echo $this->__f("Company name"); ?><br/> <input gs_callback="app.GetShopQuickUser.userCreated" gsname='companyname' gstype="submitenter" class="gsniceinput1" value="" />
+                <br/><br/><? echo $this->__f("Vat Number"); ?><br/> <input gs_callback="app.GetShopQuickUser.userCreated" gsname='vatnumber' gstype="submitenter" class="gsniceinput1" value="" /> 
+                <br/><br/>
+                <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+                <div gs_callback="app.GetShopQuickUser.userCreated" gstype="submit" class="shop_button"><i class="fa fa-building"></i> <? echo $this->__f("Create"); ?></div>
+            </div>
+        </div>
+    </div>
+</div>

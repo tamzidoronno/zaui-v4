@@ -1,0 +1,29 @@
+<?
+/* @var $this ns_419c41e7_1dd5_4c96_b820_c1b77a2fffa3\TicketList */
+$instate = isset($_SESSION['ns_419c41e7_1dd5_4c96_b820_c1b77a2fffa3_statefilter']) ? $_SESSION['ns_419c41e7_1dd5_4c96_b820_c1b77a2fffa3_statefilter'] : "";
+$intype = isset($_SESSION['ns_419c41e7_1dd5_4c96_b820_c1b77a2fffa3_typefilter']) ? $_SESSION['ns_419c41e7_1dd5_4c96_b820_c1b77a2fffa3_typefilter'] : "";
+?>
+
+<div class='filterbox'>
+    <?
+    echo $this->__f("Select state").":<br/>";
+    $selected = $instate == "" ? "selected" : "";
+    echo " <div class='gs_shop_small_icon $selected' gsclick='setFilterState' state=''><i class='fa fa-check'></i>".$this->__f("All")."</div>";
+    foreach ($this->states as $state) {
+        $selected = $state == $instate ? "selected" : "";
+        $readable = ucwords($this->__f($state));
+        echo " <div class='gs_shop_small_icon $selected' gsclick='setFilterState' state='$state'><i class='fa fa-check'></i>$readable</div>";
+    }
+    ?>
+    
+    <?
+    echo "<br/><br/>".$this->__f("Select type").":<br/>";
+    $selected = $intype == "" ? "selected" : "";
+    echo " <div class='gs_shop_small_icon $selected' gsclick='setFilterType' type=''><i class='fa fa-check'></i>".$this->__f("All")."</div>";
+    foreach ($this->tickettype as $type) {
+        $readable = ucwords($this->__f($type));
+        $selected = $intype == $type ? "selected" : "";
+        echo " <div class='gs_shop_small_icon $selected' gsclick='setFilterType' type='$type'><i class='fa fa-check'></i>$readable</div>";
+    }
+    ?>
+</div>

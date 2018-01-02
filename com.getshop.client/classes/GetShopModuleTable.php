@@ -62,53 +62,57 @@ class GetShopModuleTable {
                 }
             echo "</div>";
 
-            $j = 1;
-            foreach ($this->data as $data) {
-                $odd = $j % 2 ? "odd" : "even";
-                $active = $this->shouldShowRow($j);
-                $activeClass = $active? "active" : "";
-                
-                echo "<div class='datarow $odd $activeClass' rownumber='$j'>";
-                    echo "<div class='datarow_inner'>";
-                        $i = 1;
-                        $postArray = array();
+            if (!$this->data || count($this->data) < 1) {
+                echo "<div class='nodata'>No data found</div>";
+            } else {
+                $j = 1;
+                foreach ($this->data as $data) {
+                    $odd = $j % 2 ? "odd" : "even";
+                    $active = $this->shouldShowRow($j);
+                    $activeClass = $active? "active" : "";
 
-                        foreach ($this->attributes as $attribute) {
+                    echo "<div class='datarow $odd $activeClass' rownumber='$j'>";
+                        echo "<div class='datarow_inner'>";
+                            $i = 1;
+                            $postArray = array();
 
-                            $val = "";
-                            if (!isset($attribute[3])) {
-                                $val = $data->{$attribute[2]};
-                            } else {
-                                $functionName = $attribute[3];
-                                $colVal = @$data->{$attribute[2]};
-                                $val = $this->application->$functionName($data, $colVal);
+                            foreach ($this->attributes as $attribute) {
+
+                                $val = "";
+                                if (!isset($attribute[3])) {
+                                    $val = $data->{$attribute[2]};
+                                } else {
+                                    $functionName = $attribute[3];
+                                    $colVal = @$data->{$attribute[2]};
+                                    $val = $this->application->$functionName($data, $colVal);
+                                }
+
+                                $postArray[$attribute[0]] = $val;
+
+                                if ($attribute[1] !== "gs_hidden") {
+                                    echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$val</div>";
+                                }
+                                $i++;
                             }
 
-                            $postArray[$attribute[0]] = $val;
-
-                            if ($attribute[1] !== "gs_hidden") {
-                                echo "<div class='col col_$i col_$attribute[0]' index='".$attribute[0]."'>$val</div>";
+                            if ($this->extraData != null) {
+                                $postArray = array_merge($postArray, $this->extraData);
                             }
-                            $i++;
-                        }
-                        
-                        if ($this->extraData != null) {
-                            $postArray = array_merge($postArray, $this->extraData);
+
+                            $this->printJavaScriptData($postArray, $j);
+                        echo "</div>";
+
+                        if ($active) {
+                            echo "<div class='datarow_extended_content' style='display:block;'>";
+                            $this->renderTableContent($postArray, $j);
+                            echo "</div>";    
+                        } else {
+                            echo "<div class='datarow_extended_content'></div>";    
                         }
 
-                        $this->printJavaScriptData($postArray, $j);
                     echo "</div>";
-                    
-                    if ($active) {
-                        echo "<div class='datarow_extended_content' style='display:block;'>";
-                        $this->renderTableContent($postArray, $j);
-                        echo "</div>";    
-                    } else {
-                        echo "<div class='datarow_extended_content'></div>";    
-                    }
-                    
-                echo "</div>";
-                $j++;
+                    $j++;
+                }
             }
         echo "</div>";
     }

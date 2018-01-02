@@ -346,6 +346,7 @@ thundashop.Ajax = {
             retevent.core.apparea = $(fromDomElement).closest('.applicationarea').attr('area');
             retevent.core.appname = $(fromDomElement).closest('.app').attr('app');
             retevent.core.appid = $(fromDomElement).closest('.app').attr('appid');
+            retevent.core.fromappid = $(fromDomElement).closest('.app').attr('fromapplication');
         }
         return retevent;
     },

@@ -307,65 +307,6 @@
     padding: 20px;
 }
 
-.PmsSearchBooking .change_user_form, 
-.PmsSearchBooking .edit_details_of_user {
-    position: absolute;
-    box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
-    z-index: 1;
-    width: 843px;
-    background-color: #FFF;
-    padding: 20px;
-    display: none;
-    min-height: 150px;
-}
-
-.PmsSearchBooking .change_user_form .tabs .tab i {
-    display: none;
-}
-
-.PmsSearchBooking .change_user_form .tabs .tab.tab_active i {
-    display: inline-block;
-}
-.PmsSearchBooking .change_user_form .tabs .tab {
-    display: inline-block;   
-}
-
-.PmsSearchBooking .change_user_form .tab_contents .tab_content {
-    display: none;
-    padding-top: 20px;
-}
-
-.PmsSearchBooking .change_user_form .chosen-container {
-    width: 100%;
-}
-
-.PmsSearchBooking .change_user_form .tab_contents .tab_content[tab_content="newuser"] {
-    display: block;
-}
-
-
-.PmsSearchBooking .usersearchrow {
-    border-bottom: solid 1px #DDD;
-}
-
-.PmsSearchBooking .usersearchrow:hover {
-    background-color: #EFEFEF;
-}
-
-.PmsSearchBooking .searchresult {
-    margin-top: 30px;
-}
-
-.PmsSearchBooking .usersearchrow .user_col {
-    display: inline-block;
-    padding: 5px;
-}
-
-.PmsSearchBooking .usersearchrow .user_col1 { width: 150px; }
-.PmsSearchBooking .usersearchrow .user_col2 { width: 250px; }
-.PmsSearchBooking .usersearchrow .user_col3 { width: 100px; }
-
-
 .PmsSearchBooking .bookinginformation .header .guest_col {
     border-bottom: solid 1px #DDD;
     padding-bottom: 5px;
@@ -566,3 +507,11 @@
     font-size: 0px;
 }
 
+
+.PmsSearchBooking .guestinformation[tab="ticket"] {
+    padding: 20px;
+}
+
+.PmsSearchBooking .TicketList .datarow_extended_content {
+    padding: 20px;
+}

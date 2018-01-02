@@ -2200,11 +2200,13 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
     
     var table = $(this).closest('.GetShopModuleTable');
     var identifier = table.attr('identifier');
+    var functioname = table.attr('method');
     if($(this).closest('.datarow').hasClass('active')) {
         $(this).closest('.datarow').removeClass('active');
         table.find('.datarow_extended_content').slideUp();
         var event = thundashop.Ajax.createEvent(null, 'clearSessionOnIdentifierForTable', this, {
-            "identifier" : identifier
+            "identifier" : identifier,
+            "functioname" : functioname
         });
         thundashop.Ajax.postWithCallBack(event, function() {});
         return;
@@ -2227,11 +2229,14 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
     thundashop.Ajax.post(event, function(res) {
         base.find('.datarow_extended_content').html(res);
     });
+    
+    var identifier = table.attr('identifier');
 
     var data = {
         functionName : table.attr('method'),
         rownumber : rowNumber,
-        index : target.attr('index')
+        index : target.attr('index'),
+        identified : identifier
     }
 
     var event = thundashop.Ajax.createEvent(null, "setGetShopTableRowId", this, data);

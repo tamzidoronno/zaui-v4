@@ -217,10 +217,18 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         $modules = $factory->getApi()->getPageManager()->getModules();
         $isLoggedInEditorOrAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
         
+        if($isLoggedInEditorOrAdministrator) {
+            $msg = $factory->getApi()->getStoreManager()->getCriticalMessage();
+            if($msg) {
+                echo "<div style='background-color:red; color:white; padding: 10px; text-align:center;' class='criticalMessageArea'>" . $msg->message . "<br>";
+                echo "<input type='button' value='Remove this message' gstype='clicksubmitforce' method='removeCriticalMessage' gsvalue='".$msg->id."' gsname='id' onclick='$(\".criticalMessageArea\").slideUp();'><br>";
+                echo "</div>";
+            }
+        }
+        
+        
         if (count($modules) > 1 && $isLoggedInEditorOrAdministrator) {
-            
             $activeModule = null;
-            
             echo "<div class='gs_framework_modules'>";
 
             foreach ($modules as $module) {

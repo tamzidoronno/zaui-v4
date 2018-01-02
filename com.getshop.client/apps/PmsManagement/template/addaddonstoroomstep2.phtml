@@ -59,9 +59,9 @@ $addPeriodeTypes['alldays'] = "All days";
     <input type='hidden' gsname='bookingid' value='<?php echo $this->getSelectedBooking()->id; ?>'>
     <input type='hidden' gsname='roomid' value='<?php echo $_POST['data']['roomId']; ?>'>
     <input type='hidden' gsname='addonId' value='<?php echo $_POST['data']['addonId']; ?>'>
-    <div class='addonpreview'>
-    </div>
+    <div class='addonpreview'></div>
     <br>
+    <input type="text" placeholder="Title" gsname='name' style="width:100%;box-sizing: border-box;margin-bottom:2px;"><br>
     <input type='button' value='Add addon' style='width:100%' gstype='submitToInfoBox'>
 </div>
 

@@ -10,6 +10,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import com.thundashop.core.storemanager.data.StoreCriticalMessage;
 import java.util.List;
 
 /**
@@ -195,4 +196,10 @@ public interface IStoreManager {
     
     @Administrator
     public void setStoreIdentifier(String identifier);
+    
+    @Administrator
+    public StoreCriticalMessage getCriticalMessage();
+    
+    @Administrator
+    public void seenCriticalMessage(String id);
 }

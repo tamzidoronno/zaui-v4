@@ -479,6 +479,9 @@ public class PmsBooking extends DataCommon {
     }
 
     void calculateTotalCost() {
+        if(!priceType.equals(PmsBooking.PriceType.daily)) {
+            return;
+        }
         double total = 0.0;
         for(PmsBookingRooms room : rooms) {
             if(room.deletedByChannelManagerForModification) {

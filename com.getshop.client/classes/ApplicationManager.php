@@ -15,6 +15,10 @@ class ApplicationManager extends FactoryBase {
         $this->app = $app;
     }
 
+    function removeCriticalMessage() {
+        $this->getApi()->getStoreManager()->seenCriticalMessage($_POST['data']['id']);
+    }
+    
     function dndAddCell() {
         $egde = $_POST['data']['edge'];
         $pageId = $this->getPage()->javapage->id;

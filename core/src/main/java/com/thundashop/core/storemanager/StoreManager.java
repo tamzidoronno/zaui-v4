@@ -18,6 +18,7 @@ import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.ModuleHomePages;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import com.thundashop.core.storemanager.data.StoreCriticalMessage;
 import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -30,6 +31,7 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -73,6 +75,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     private ModuleHomePages moduleHomePages = new ModuleHomePages();
     
+    public List<StoreCriticalMessage> messages = new ArrayList();
+    
     @PostConstruct
     public void init() {
         initialize();
@@ -84,6 +88,10 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             if(dcommon instanceof KeyData) {
                 KeyData kdata = (KeyData) dcommon;
                 keyDataStore.put(kdata.datakey, kdata);
+            }
+            if(dcommon instanceof StoreCriticalMessage) {
+                StoreCriticalMessage msg = (StoreCriticalMessage) dcommon;
+                messages.add(msg);
             }
         }
         
@@ -503,6 +511,37 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         
         return store;
+    }
+
+    public void informStoreOwnerAboutCriticalInformation(String message) {
+        StoreCriticalMessage msg = new StoreCriticalMessage();
+        msg.message = message;
+        saveObject(msg);
+        messages.add(msg);
+    }
+
+    @Override
+    public StoreCriticalMessage getCriticalMessage() {
+        for(StoreCriticalMessage msg : messages) {
+            if(msg.seenWhen == null) {
+                return msg;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void seenCriticalMessage(String id) {
+        StoreCriticalMessage msg = null;
+        for(StoreCriticalMessage tmp : messages) {
+            if(tmp.id.equals(id)) {
+                msg = tmp;
+            }
+        }
+        
+        msg.seenByUser = getSession().currentUser.id;
+        msg.seenWhen = new Date();
+        saveObject(msg);
     }
 
     

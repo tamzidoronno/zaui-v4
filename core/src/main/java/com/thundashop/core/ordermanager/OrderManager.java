@@ -39,6 +39,7 @@ import com.thundashop.core.printmanager.Printer;
 import com.thundashop.core.printmanager.StorePrintManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
@@ -2118,6 +2119,56 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         saveObject(order);
                     }
                 });
+    }
+
+    /**
+     * A temporary function that can be removed whenever you want.
+     */
+    private Integer correctOrdersThatHasToBeChangedTaxesOn() {
+        int count = 0;
+        try {
+            boolean changeTaxes = false;
+            List<TaxGroup> taxes = productManager.getTaxes();
+            for(TaxGroup tax : taxes) {
+                if(tax.taxRate.intValue() == 10) {
+                    tax.taxRate = 12.0;
+                    changeTaxes = true;
+                }
+            }
+            if(changeTaxes) {
+                productManager.setTaxes(taxes);
+            } else {
+                return count;
+            }
+
+            for(Order order : orders.values()) {
+                Date start = order.getStartDateByItems();
+                if(start == null) {
+                    continue;
+                }
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(start);
+                Integer year = cal.get(Calendar.YEAR);
+                boolean save = false;
+                if(year >= 2018) {
+                    for(CartItem item : order.cart.getItems()) {
+                        Double rate = item.getProduct().taxGroupObject.taxRate;
+                        if(rate.intValue() == 10) {
+                            item.getProduct().taxGroupObject.taxRate = 12.0;
+                            save = true;
+                        }
+                    }
+                }
+                if(save) {
+                    saveObject(order);
+                    count++;
+                }
+            }
+        }catch(Exception e) {
+            messageManager.sendErrorNotification("Failed to correct ordes for this store.", e);
+        }
+        
+        return count;
     }
 
 

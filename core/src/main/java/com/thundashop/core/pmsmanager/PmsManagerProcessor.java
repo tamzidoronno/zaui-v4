@@ -846,6 +846,8 @@ public class PmsManagerProcessor {
                         if(!booking.notificationsSent.contains(key)) {
                             manager.doNotification("order_unabletopaywithsavecardwarning", booking.id);
                             needSaving = true;
+                            booking.notificationsSent.add(key);
+                            manager.saveBooking(booking);
                         }
                     }
                     if(new Date().after(item.startDate)) {
@@ -853,6 +855,8 @@ public class PmsManagerProcessor {
                         if(!booking.notificationsSent.contains(key)) {
                             manager.doNotification("order_unabletopaywithsavecard", booking.id);
                             needSaving = true;
+                            booking.notificationsSent.add(key);
+                            manager.saveBooking(booking);
                         }
                     }
                 }

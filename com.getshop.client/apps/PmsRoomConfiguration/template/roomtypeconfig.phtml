@@ -10,6 +10,11 @@
     $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
     $unsorted = array();
     $sortList = array();
+    
+    if (!is_array($types)) {
+        $types = array();
+    }
+    
     foreach($types as $type) {
         if($type->order == 0) {
             $unsorted[] = $type;

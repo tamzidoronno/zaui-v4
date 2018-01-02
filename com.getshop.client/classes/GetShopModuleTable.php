@@ -44,7 +44,17 @@ class GetShopModuleTable {
         
         $api = $this->application->getApi();
         $managerName = "get".$this->manangerName;
+        
+        if (!method_exists($api, $managerName)) {
+            return;
+        }
+        
         $res = $api->$managerName();
+        
+        if (!method_exists($res, $this->functionName)) {
+            return;
+        }
+        
         $this->data = call_user_func_array(array($res, $this->functionName), $this->args);
     }
 

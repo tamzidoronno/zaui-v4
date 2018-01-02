@@ -15,6 +15,10 @@
 $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName()));
 
+if (!is_array($rooms)) {
+    $rooms = array();
+}
+
 $rows = array();
 foreach($rooms as $room) {
     $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $room->id);

@@ -709,7 +709,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date getStartDateByItems() {
         Date start = null;
         for(CartItem item : cart.getItems()) {
-            if(item != null && item.getStartingDate() != null && (start == null || start.before(item.getStartingDate()))) {
+            if(item != null && item.getStartingDate() != null && (start == null || start.after(item.getStartingDate()))) {
                 start = item.getStartingDate();
             }
         }

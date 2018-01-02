@@ -228,6 +228,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
+        correctOrdersThatHasToBeChangedTaxesOn();
     }
 
     @Override
@@ -2127,20 +2128,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private Integer correctOrdersThatHasToBeChangedTaxesOn() {
         int count = 0;
         try {
-            boolean changeTaxes = false;
-            List<TaxGroup> taxes = productManager.getTaxes();
-            for(TaxGroup tax : taxes) {
-                if(tax.taxRate.intValue() == 10) {
-                    tax.taxRate = 12.0;
-                    changeTaxes = true;
-                }
-            }
-            if(changeTaxes) {
-                productManager.setTaxes(taxes);
-            } else {
-                return count;
-            }
-
             for(Order order : orders.values()) {
                 Date start = order.getStartDateByItems();
                 if(start == null) {
@@ -2150,11 +2137,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 cal.setTime(start);
                 Integer year = cal.get(Calendar.YEAR);
                 boolean save = false;
-                if(year >= 2018) {
+                if(year == 2017) {
                     for(CartItem item : order.cart.getItems()) {
                         Double rate = item.getProduct().taxGroupObject.taxRate;
-                        if(rate.intValue() == 10) {
-                            item.getProduct().taxGroupObject.taxRate = 12.0;
+                        if(rate.intValue() == 12) {
+                            item.getProduct().taxGroupObject.taxRate = 10.0;
                             save = true;
                         }
                     }

@@ -47,7 +47,7 @@ class TripTease extends \WebshopApplication implements \Application {
             if($booking->language == "nb_NO") {
                 if(stristr($lang, "_")) {
                     $splitted = explode("_", $lang);
-                    $lang = $splitted[0];
+                    $lang = $splitted[1];
                 }
             }
             ?>

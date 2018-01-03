@@ -612,8 +612,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             CartItem itemToReturn = createCartItem(item.productId, null, room, item.date, item.date, item.price, item.count, null);
             if(itemToReturn != null) {
                 
-                if(item.name != null && !item.name.isEmpty()) {
-                    itemToReturn.getProduct().name = item.name;
+                if(item.getName() != null && !item.getName().isEmpty()) {
+                    itemToReturn.getProduct().name = item.getName();
                 }
                 itemToReturn.startDate = null;
                 itemToReturn.endDate = null;
@@ -2616,7 +2616,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 for(PmsBookingAddonItem item : room.addons) {
                     PmsBookingAddonItem base = pmsManager.getBaseAddon(item.productId);
                     if(base != null && base.noRefundable) {
-                        CartItem addonToAdd = createCartItem(item.productId, item.name, room, room.date.start, room.date.end, item.price, item.count, "");
+                        CartItem addonToAdd = createCartItem(item.productId, item.getName(), room, room.date.start, room.date.end, item.price, item.count, "");
                         if(addonToAdd != null) {
                             returnresult.add(addonToAdd);
                         }

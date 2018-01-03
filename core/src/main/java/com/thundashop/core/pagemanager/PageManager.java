@@ -961,7 +961,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public List<GetShopModule> getModules() {
-        if (storeId.equals("a45072e5-92e4-4be8-90de-aa08771d6fb6")) {
+        if (storeId.equals("a45072e5-92e4-4be8-90de-aa08771d6fb6") || storeId.equals("b703b793-c7f4-4803-83bb-106cab891d6c")) {
             return modules.getModules();
         }
         

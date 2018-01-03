@@ -7,8 +7,12 @@ $booking = $this->getBookingEngineBooking();
 $user = $this->getUserForBooking();
 $ticket = new ns_9c29f94a_6c42_4590_aa1c_7736c58ff0a5\TicketCreateNew();
 $ticket->setUser($user);
+$ticket->setExternalId($pmsSelectedRoom->pmsBookingRoomId);
 $ticket->renderApplication(true, $this);
 echo "<br/>";
+
+echo "<div style='border-top: solid 1px #DDD; padding-top: 20px; margin-top: 20px; padding-bottom: 20px; font-weight: bold;'>".$this->__f("Filters")."</div>";
+
 $filter = new \core_ticket_Ticket();
 $filter->userId = $user->id;
 

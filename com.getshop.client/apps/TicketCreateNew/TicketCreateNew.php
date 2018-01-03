@@ -2,6 +2,8 @@
 namespace ns_9c29f94a_6c42_4590_aa1c_7736c58ff0a5;
 
 class TicketCreateNew extends \MarketingApplication implements \Application, \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUserCallback {
+    public $externalId = "";
+    
     public function getDescription() {
         
     }
@@ -54,12 +56,18 @@ class TicketCreateNew extends \MarketingApplication implements \Application, \ns
         $ticket->title = $_POST['data']['title'];
         $ticket->userId = $_POST['data']['userid'];
         $ticket->type = $_POST['data']['type'];
+        $ticket->externalId = $_POST['data']['externalid'];
+        
         $this->getApi()->getTicketManager()->saveTicket($ticket);
     }
     
     public function setUser($user) {
         $this->user = $user;
     }
-    
+
+    public function setExternalId($externalId) {
+        $this->externalId = $externalId;
+    }
+
 }
 ?>

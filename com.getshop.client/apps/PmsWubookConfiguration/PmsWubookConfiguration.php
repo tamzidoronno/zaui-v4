@@ -61,6 +61,7 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
         echo "<th align='left'>Departure</th>";
         echo "<th>Modified</th>";
         echo "<th>Deleted</th>";
+        echo "<th>Added</th>";
         echo "<th>Number of rooms</th>";
         echo "<th>Action</th>";
         echo "</tr>";
@@ -73,6 +74,9 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
             echo "<td align='center'>" . $r->wasModified . "</td>";
             echo "<td>";
             echo $r->delete ? "yes" : "no"; 
+            echo "</td>";
+            echo "<td>";
+            echo $r->isAddedToPms ? "yes" : "no"; 
             echo "</td>";
             echo "<td align='center'>" . sizeof($r->rooms) . "</td>";
             echo "<td align='center'><span gstype='clicksubmit' method='addReservation' gsname='id' gsvalue='".$r->reservationCode."'>add</span> / delete</td>";

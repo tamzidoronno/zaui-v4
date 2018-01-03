@@ -97,6 +97,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         entry.title = result.registrationData.resultAdded.get("title");
         entry.shortdesc = result.registrationData.resultAdded.get("shortdesc");
         entry.bookingId = id;
+        logPrint("Creating event:" + entry.title + " : " + entry.id);
         setRooms(entry, result, false);
         entries.put(entry.id, entry);
         saveEntry(entry, "");

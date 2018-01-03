@@ -515,7 +515,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
         boolean canAdd = canAdd(bookingsToAdd);
-        if (!canAdd && !configuration.deleteAllWhenAdded) {
+        if (!canAdd && !configuration.deleteAllWhenAdded && !booking.getActiveRooms().isEmpty()) {
             return -2;
         }
         if(canAdd) {
@@ -3363,7 +3363,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         for(Booking book : toCheck) {
             List<BookingItem> items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
-            if (items.isEmpty()) {
+            if (items.isEmpty() || items.size() < toCheck.size()) {
                 return false;
             }
         }
@@ -3410,58 +3410,59 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 cal.add(Calendar.YEAR, 100);
                 room.date.end = cal.getTime();
             }
-            
-            gsTiming("got configuration");
-            if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
+            if(!room.isDeleted() && room.canBeAdded) {
+                bookingsToAdd.add(bookingToAdd);
+            }
+        }
+        
+        if (!bookingEngine.canAdd(bookingsToAdd) || doAllDeleteWhenAdded()) {
+            String text = "";
+            for(PmsBookingRooms room : booking.rooms) {
                 if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
                     room.canBeAdded = false;
                     room.delete();
                     if(booking.isWubook()) {
                         room.overbooking = true;
                     }
-                }
-                BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                String name = "";
-                if (item != null) {
-                    name = item.name;
-                }
-                String text = "Removed room: " + name + " since it can't be added: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
-                text += "<br>";
-                text += "<br>";
-                text += booking.createSummary(bookingEngine.getBookingItemTypes());
-                if(booking.userId != null) {
-                    User user = userManager.getUserById(booking.userId);
-                    if(user != null) {
-                        text += "User : " + userManager.getUserById(booking.userId).fullName;
-                    }
-                }
-                logEntry(text, booking.id, null);
-                gsTiming("logged entry");
-            
-                if(!getConfigurationSecure().supportRemoveWhenFull) {
-                    boolean hasBeenWarned = false;
-                    if(booking.wubookreservationid != null && !booking.wubookreservationid.isEmpty()) {
-                        if(failedWubooks.containsKey(booking.wubookreservationid)) {
-                            hasBeenWarned = true;
-                        } else {
-                            markSentErrorMessageForWubookId(booking.wubookreservationid);
-                        }
-                    }
                     
-                    if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
-                        messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
+                    BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                    String name = "";
+                    if (item != null) {
+                        name = item.name;
+                    }
+                    text = "Removed room: " + name + " since it can't be added: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
+                }
+            }
+            
+            text += "<br>";
+            text += "<br>";
+            text += booking.createSummary(bookingEngine.getBookingItemTypes());
+            if(booking.userId != null) {
+                User user = userManager.getUserById(booking.userId);
+                if(user != null) {
+                    text += "User : " + userManager.getUserById(booking.userId).fullName;
+                }
+            }
+            logEntry(text, booking.id, null);
+            gsTiming("logged entry");
+
+            if(!getConfigurationSecure().supportRemoveWhenFull) {
+                boolean hasBeenWarned = false;
+                if(booking.wubookreservationid != null && !booking.wubookreservationid.isEmpty()) {
+                    if(failedWubooks.containsKey(booking.wubookreservationid)) {
+                        hasBeenWarned = true;
+                    } else {
+                        markSentErrorMessageForWubookId(booking.wubookreservationid);
                     }
                 }
-                gsTiming("removed when full maybe");
-            
+
+                if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
+                    messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
+                }
             }
-            
-            if(!room.isDeleted() && room.canBeAdded) {
-                bookingsToAdd.add(bookingToAdd);
-            }
-            gsTiming("added booking");
-            
+            gsTiming("removed when full maybe");
         }
+
         return bookingsToAdd;
     }
 

@@ -169,6 +169,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         logPrint("Verifying all bookings");
         List<WubookBooking> toReturn = fetchBookings(daysBack, true);
+        
+        for(WubookBooking book : toReturn) {
+            PmsBooking correlated = findCorrelatedBooking(book);
+            if(correlated != null) {
+                book.isAddedToPms = true;
+            }
+        }
+        
         return toReturn;
     }
 
@@ -757,186 +765,191 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private String addBookingToPms(WubookBooking booking) throws Exception {
-        PmsBooking newbooking = null; 
-
-        long start = System.currentTimeMillis();
-        boolean isUpdate = false;
-        if(booking.modifiedReservation.size() > 0 && !booking.delete) {
-            newbooking = findCorrelatedBooking(booking);
-            if(newbooking == null) {
-                sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
-            } else {
-                pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
-                for(PmsBookingRooms room : newbooking.getActiveRooms()) {
-                    room.deletedByChannelManagerForModification = true;
-                    pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
-                }
-                isUpdate = true;
-            }
-        } else if(booking.delete) {
-            newbooking = findCorrelatedBooking(booking);
-            if(newbooking == null) {
-                sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
-                return "Did not find booking to delete.";
-            } else {
-                pmsManager.deleteBooking(newbooking.id);
-            }
-            
-            NewOrderFilter filter = new NewOrderFilter();
-            filter.avoidOrderCreation = false;
-            filter.createNewOrder = false;
-            filter.prepayment = true;
-            filter.endInvoiceAt = newbooking.getEndDate();
-            pmsInvoiceManager.createOrder(newbooking.id,filter);
-            
-            return "";
-        }
-        
-        if(newbooking == null) {
-            newbooking = pmsManager.startBooking();
-        }
-        
-        newbooking.channel = "wubook_" + booking.channelId;
-        newbooking.wubookchannelreservationcode = booking.channel_reservation_code;
-        if(!isUpdate) {
-            newbooking.wubookreservationid = booking.reservationCode;
-        }
-        newbooking.latestwubookreservationid = booking.reservationCode;
-        newbooking.countryCode = booking.countryCode;
-        if(booking.customerNotes != null && !booking.customerNotes.isEmpty()) {
-            PmsBookingComment comment = new PmsBookingComment();
-            comment.userId = "";
-            comment.comment = booking.customerNotes;
-            comment.added = new Date();
-            newbooking.comments.put(System.currentTimeMillis(), comment);
-        }
-        
-        newbooking.registrationData.resultAdded.put("user_fullName", booking.name);
-        newbooking.registrationData.resultAdded.put("user_cellPhone", booking.phone);
-        newbooking.registrationData.resultAdded.put("user_address_address", booking.address);
-        newbooking.registrationData.resultAdded.put("user_address_city", booking.city);
-        newbooking.registrationData.resultAdded.put("user_emailAddress", booking.email);
-        newbooking.registrationData.resultAdded.put("user_address_postCode", booking.postCode);
-        newbooking.nonrefundable = booking.isNonRefundable;
-        
-        Calendar calStart = Calendar.getInstance();
-        
-        HashMap<String,HashMap<Date, Double>> pricestoset = new HashMap();
-        
-        for(WubookBookedRoom r : booking.rooms) {
-            PmsBookingRooms room = new PmsBookingRooms();
-            room.date = new PmsBookingDateRange();
-            room.date.start = setCorrectTime(booking.arrivalDate, true);
-            room.date.end = setCorrectTime(booking.depDate, false);
-            room.numberOfGuests = r.guest;
-            room.bookingItemTypeId = getTypeFromWubookRoomId(r.roomId);
-            if(room.bookingItemTypeId == null) {
-                logText("Failed to find room for booking: " + booking.reservationCode);
-                sendErrorForReservation(booking.reservationCode, "Failed to find room for reservation");
-            }
-            pricestoset.put(room.pmsBookingRoomId, r.priceMatrix);
-            PmsGuests guest = new PmsGuests();
-            guest.email = booking.email;
-            guest.name = booking.name;
-            guest.phone = booking.phone;
-            
-            if(r.guestName != null && !r.guestName.isEmpty()) {
-                guest.name = r.guestName;
-            }
-            room.guests.add(guest);
-            newbooking.addRoom(room);
-        }
-        if(booking.isExpediaCollect) {
-            newbooking.paymentType = "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
-        }
-        if(booking.isBookingComVirtual) {
-            newbooking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
-        }
-        pmsManager.setBooking(newbooking);
-        int i = 0;
-        for(PmsBookingRooms room : newbooking.getActiveRooms()) {
-            WubookBookedRoom r = booking.rooms.get(i);
-            if(r.breakfasts > 0) {
-                boolean add = true;
-                for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
-                    if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
-                        //If this is a default addon, it will be included anyway.
-                        add = false;
-                    }
-                }
-                if(add) {
-                    pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
-                }
-            }
-            i++;
             try {
-                for(String productId : r.addonsToAdd.keySet()) {
+            PmsBooking newbooking = null; 
+
+            long start = System.currentTimeMillis();
+            boolean isUpdate = false;
+            if(booking.modifiedReservation.size() > 0 && !booking.delete) {
+                newbooking = findCorrelatedBooking(booking);
+                if(newbooking == null) {
+                    sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
+                } else {
+                    pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
+                    for(PmsBookingRooms room : newbooking.getActiveRooms()) {
+                        room.deletedByChannelManagerForModification = true;
+                        pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
+                    }
+                    isUpdate = true;
+                }
+            } else if(booking.delete) {
+                newbooking = findCorrelatedBooking(booking);
+                if(newbooking == null) {
+                    sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
+                    return "Did not find booking to delete.";
+                } else {
+                    pmsManager.deleteBooking(newbooking.id);
+                }
+
+                NewOrderFilter filter = new NewOrderFilter();
+                filter.avoidOrderCreation = false;
+                filter.createNewOrder = false;
+                filter.prepayment = true;
+                filter.endInvoiceAt = newbooking.getEndDate();
+                pmsInvoiceManager.createOrder(newbooking.id,filter);
+
+                return "";
+            }
+
+            if(newbooking == null) {
+                newbooking = pmsManager.startBooking();
+            }
+
+            newbooking.channel = "wubook_" + booking.channelId;
+            newbooking.wubookchannelreservationcode = booking.channel_reservation_code;
+            if(!isUpdate) {
+                newbooking.wubookreservationid = booking.reservationCode;
+            }
+            newbooking.latestwubookreservationid = booking.reservationCode;
+            newbooking.countryCode = booking.countryCode;
+            if(booking.customerNotes != null && !booking.customerNotes.isEmpty()) {
+                PmsBookingComment comment = new PmsBookingComment();
+                comment.userId = "";
+                comment.comment = booking.customerNotes;
+                comment.added = new Date();
+                newbooking.comments.put(System.currentTimeMillis(), comment);
+            }
+
+            newbooking.registrationData.resultAdded.put("user_fullName", booking.name);
+            newbooking.registrationData.resultAdded.put("user_cellPhone", booking.phone);
+            newbooking.registrationData.resultAdded.put("user_address_address", booking.address);
+            newbooking.registrationData.resultAdded.put("user_address_city", booking.city);
+            newbooking.registrationData.resultAdded.put("user_emailAddress", booking.email);
+            newbooking.registrationData.resultAdded.put("user_address_postCode", booking.postCode);
+            newbooking.nonrefundable = booking.isNonRefundable;
+
+            Calendar calStart = Calendar.getInstance();
+
+            HashMap<String,HashMap<Date, Double>> pricestoset = new HashMap();
+
+            for(WubookBookedRoom r : booking.rooms) {
+                PmsBookingRooms room = new PmsBookingRooms();
+                room.date = new PmsBookingDateRange();
+                room.date.start = setCorrectTime(booking.arrivalDate, true);
+                room.date.end = setCorrectTime(booking.depDate, false);
+                room.numberOfGuests = r.guest;
+                room.bookingItemTypeId = getTypeFromWubookRoomId(r.roomId);
+                if(room.bookingItemTypeId == null) {
+                    logText("Failed to find room for booking: " + booking.reservationCode);
+                    sendErrorForReservation(booking.reservationCode, "Failed to find room for reservation");
+                }
+                pricestoset.put(room.pmsBookingRoomId, r.priceMatrix);
+                PmsGuests guest = new PmsGuests();
+                guest.email = booking.email;
+                guest.name = booking.name;
+                guest.phone = booking.phone;
+
+                if(r.guestName != null && !r.guestName.isEmpty()) {
+                    guest.name = r.guestName;
+                }
+                room.guests.add(guest);
+                newbooking.addRoom(room);
+            }
+            if(booking.isExpediaCollect) {
+                newbooking.paymentType = "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
+            }
+            if(booking.isBookingComVirtual) {
+                newbooking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
+            }
+            pmsManager.setBooking(newbooking);
+            int i = 0;
+            for(PmsBookingRooms room : newbooking.getActiveRooms()) {
+                WubookBookedRoom r = booking.rooms.get(i);
+                if(r.breakfasts > 0) {
                     boolean add = true;
                     for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
-                        if(item.productId != null && item.productId.equals(productId) && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                        if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
                             //If this is a default addon, it will be included anyway.
                             add = false;
                         }
                     }
                     if(add) {
-                        pmsManager.addProductToRoom(productId, room.pmsBookingRoomId, r.addonsToAdd.get(productId));
+                        pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
                     }
                 }
-            }catch(Exception e) {
-                messageManager.sendErrorNotification("Stack failure in new code change for wubook (when adding)", e);
-            }
-        }
-        pmsInvoiceManager.clearOrdersOnBooking(newbooking);
-        newbooking = pmsManager.doCompleteBooking(newbooking);
-        if(newbooking == null) {
-            messageManager.sendErrorNotification("Failed to add new booking in wubook: " + booking.reservationCode, null);
-        }
-        boolean doNormalPricing = true;
-        if(newbooking.channel != null && newbooking.channel.equals("wubook_1")) {
-           if(pmsManager.getConfigurationSecure().useGetShopPricesOnExpedia) {
-               doNormalPricing = false;
-           }
-        }
-        
-        if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null && doNormalPricing) {
-            Date end = new Date();
-            for(String pmsId : pricestoset.keySet()) {
-                PmsBookingRooms pmsroom = newbooking.findRoom(pmsId);
-                if(pmsroom.date.end.after(end)) {
-                    end = pmsroom.date.end;
+                i++;
+                try {
+                    for(String productId : r.addonsToAdd.keySet()) {
+                        boolean add = true;
+                        for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
+                            if(item.productId != null && item.productId.equals(productId) && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                                //If this is a default addon, it will be included anyway.
+                                add = false;
+                            }
+                        }
+                        if(add) {
+                            pmsManager.addProductToRoom(productId, room.pmsBookingRoomId, r.addonsToAdd.get(productId));
+                        }
+                    }
+                }catch(Exception e) {
+                    messageManager.sendErrorNotification("Stack failure in new code change for wubook (when adding)", e);
                 }
-                HashMap<Date, Double> priceMatrix = pricestoset.get(pmsId);
-                double total = 0.0;
-                int count = 0;
-                for(Date daydate : priceMatrix.keySet()) {
-                    calStart.setTime(daydate);
-                    String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBooking.PriceType.daily);
-                    pmsroom.priceMatrix.put(offset, priceMatrix.get(daydate));
-                    total += priceMatrix.get(daydate);
-                    count++;
-                }
-                pmsroom.price = (total / (double)count);
             }
-            pmsManager.saveBooking(newbooking);
-            NewOrderFilter filter = new NewOrderFilter();
-            filter.createNewOrder = false;
-            filter.prepayment = true;
-            filter.endInvoiceAt = end;
             pmsInvoiceManager.clearOrdersOnBooking(newbooking);
-            if(!newbooking.hasOverBooking()) {
-                pmsInvoiceManager.createOrder(newbooking.id, filter);
+            newbooking = pmsManager.doCompleteBooking(newbooking);
+            boolean doNormalPricing = true;
+            if(newbooking == null) {
+                messageManager.sendErrorNotification("Failed to add new booking in wubook: " + booking.reservationCode, null);
             } else {
-                newbooking.rowCreatedDate = new Date();
-                String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>" + pmsManager.dumpBooking(newbooking);
-                String email = getStoreEmailAddress();
-                String content = "Possible overbooking happened:<br>" + text;
-                messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
-
+                if(newbooking.channel != null && newbooking.channel.equals("wubook_1")) {
+                   if(pmsManager.getConfigurationSecure().useGetShopPricesOnExpedia) {
+                       doNormalPricing = false;
+                   }
+                }
             }
-        }
-        
-        logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
-        return "";
+
+            if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null && doNormalPricing) {
+                Date end = new Date();
+                for(String pmsId : pricestoset.keySet()) {
+                    PmsBookingRooms pmsroom = newbooking.findRoom(pmsId);
+                    if(pmsroom.date.end.after(end)) {
+                        end = pmsroom.date.end;
+                    }
+                    HashMap<Date, Double> priceMatrix = pricestoset.get(pmsId);
+                    double total = 0.0;
+                    int count = 0;
+                    for(Date daydate : priceMatrix.keySet()) {
+                        calStart.setTime(daydate);
+                        String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBooking.PriceType.daily);
+                        pmsroom.priceMatrix.put(offset, priceMatrix.get(daydate));
+                        total += priceMatrix.get(daydate);
+                        count++;
+                    }
+                    pmsroom.price = (total / (double)count);
+                }
+                pmsManager.saveBooking(newbooking);
+                NewOrderFilter filter = new NewOrderFilter();
+                filter.createNewOrder = false;
+                filter.prepayment = true;
+                filter.endInvoiceAt = end;
+                pmsInvoiceManager.clearOrdersOnBooking(newbooking);
+                if(!newbooking.hasOverBooking()) {
+                    pmsInvoiceManager.createOrder(newbooking.id, filter);
+                } else {
+                    newbooking.rowCreatedDate = new Date();
+                    String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>" + pmsManager.dumpBooking(newbooking);
+                    String email = getStoreEmailAddress();
+                    String content = "Possible overbooking happened:<br>" + text;
+                    messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
+
+                }
+            }
+
+            logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
+            }catch(Exception e) {
+                messageManager.sendErrorNotification("Outer wubook catch, booking failed to be added: " +booking.reservationCode, e);
+            }
+            return "";
     }
 
     private String getTypeFromWubookRoomId(int roomId) {

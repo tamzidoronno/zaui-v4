@@ -27,6 +27,11 @@ class ApplicationBase extends FactoryBase {
     
     public function indexList($list) {
         $list2 = array();
+        
+        if (!is_array($list)) {
+            $list = array();
+        }
+        
         foreach($list as $l) {
             $list2[$l->id] = $l;
         }

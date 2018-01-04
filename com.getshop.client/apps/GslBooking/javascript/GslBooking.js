@@ -17,6 +17,12 @@ function getshop_setBookingTranslation() {
         }
         var guestInput = $('#guests');
         guestInput.val('1 '+translations['room'].toLowerCase()+', 1 ' + translations['guest'].toLowerCase());
+        
+        var hash = window.location.hash.substr(1);
+        if(hash) {
+            
+        }
+        
     });
 }
 
@@ -814,10 +820,27 @@ var removeGuest = confirm(translation['sureremoveguest']);
 
 function getshop_setDatePicker() {
     var currentDate = new Date();
-    currentDate.setDate(currentDate.getDate());
-
     var endDate = new Date();
     endDate.setTime(endDate.getTime() + (86400*1000)); 
+    
+    var hash = window.location.hash.substr(1);
+    var result = hash.split('&').reduce(function (result, item) {
+        var parts = item.split('=');
+        result[parts[0]] = parts[1];
+        return result;
+    }, {});
+    
+    if(result.start) {
+        var tmpDate = new Date(result.start);
+        currentDate.setTime(tmpDate.getTime());
+        console.log('change start date: ' + result.start);
+    }
+    if(result.end) {
+        var tmpDate = new Date(result.end);
+        endDate.setTime(tmpDate.getTime());
+    }
+    
+
     $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
     $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
 
@@ -857,6 +880,12 @@ function getshop_setDatePicker() {
         
         $("#date_picker").data('daterangepicker').setEndDate(end);
     });
+    
+    if(result.start) {
+        $(function() {
+            $('.GslBooking #search_rooms').mousedown();
+        });
+    }
 }
 
 function getshop_changeNumberOfRooms() {
@@ -949,8 +978,10 @@ function getshop_searchRooms() {
     localStorage.setItem('gslcurrentpage','search');
     $('.GslBooking .ordersummary').hide();
     var btn = $(this);
-    var btnText = btn.html();
-    btn.html('<i class="fa fa-spin fa-spinner"></i>');
+    var btnText = btn.text();
+    if(btnText) {
+        btn.html('<i class="fa fa-spin fa-spinner"></i>');
+    }
     $('.productentrybox').remove();
     var time = new Date().toLocaleTimeString('en-us');
     var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
@@ -975,7 +1006,9 @@ function getshop_searchRooms() {
             "body": data
         },
         success: function (res) {
-            btn.html(btnText);
+            if(btnText) {
+                btn.html(btnText);
+            }
             $('.gslbookingBody').show();
             $('#productentry').html('');
             gslbookingcurresult = res;
@@ -1048,8 +1081,6 @@ function getshop_searchRooms() {
                 $('#productentry').append(roomBox);
                 roomBox.find('.gsgalleryroot').prepend(controller);
                 roomBox.show();
-                console.log('loading images');
-                console.log(roomBox);
 
                 for (var i = 0; i <= room.images.length - 1; i++) {
                     var active = "";

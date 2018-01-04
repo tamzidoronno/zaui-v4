@@ -7,7 +7,6 @@ A confirmation email has been sent to your email.;-;En bekreftelse er sendt til 
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add;-;Legg til
 Add a button to your page. This button can be a add to cart button, go to page button, etc;-;Legg til en knapp på websiden din. Knapper som legg i handlekurv, gå til en annen side, osv.
-Add an opening hour;-;Legg til en åpningstid
 Add another slide;-;Legg til en til slider
 Add another slider;-;Legg inn til slider
 Add another tab;-;Legg inn en til tab
@@ -399,7 +398,6 @@ Password does not match confirmed password.;-;Passordet stemmer ikke overens med
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
 Password missmatch;-;Passordene stemmer ikke oversens
 Pay;-;Betal
-Pay on pickup;-;Betal ved levering
 Payment;-;Betaling
 Payment completed;-;Betaling gjennomført
 Payment failed;-;Betaling feilet
@@ -585,6 +583,7 @@ The email already exists, please log on to continue.;-;Eposten eksisterer allere
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.;-;Denne nyhetsbrev applikasjonen gjør det mulig for deg å sende epost til alle dine kunder. Opprett et nyhetsbrev og send det til dine registrerte kunder.
 The passwords does not match.;-;Passordet stemmer ikke overens.
+The time is {time}, if you need to check in tonight, you need to specify yesterday as your check in date!;-;Tiden er {time}, hvis du ønsker å bo her i natt må du bestille rom fra igår til idag.
 The vat number;-;Orgnummer
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
 This event has already been passed;-;Dette kurset har allerede passert

@@ -3361,9 +3361,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             return true;
         }
         
+        HashMap<String, Integer> count = getCountedTypes(toCheck);
+        
         for(Booking book : toCheck) {
             List<BookingItem> items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
-            if (items.isEmpty() || items.size() < toCheck.size()) {
+            if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
                 return false;
             }
         }
@@ -3415,7 +3417,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         
-        if (!bookingEngine.canAdd(bookingsToAdd) || doAllDeleteWhenAdded()) {
+        boolean canAdd = bookingEngine.canAdd(bookingsToAdd);
+        
+        if (!canAdd || doAllDeleteWhenAdded()) {
             String text = "";
             for(PmsBookingRooms room : booking.rooms) {
                 if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
@@ -7588,5 +7592,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             
             return hours + " timer og " + minutes + " minutter";
         }
+
+    private HashMap<String, Integer> getCountedTypes(List<Booking> toCheck) {
+        HashMap<String, Integer> result = new HashMap();
+        for(Booking book : toCheck) {
+            String typeId = book.bookingItemTypeId;
+            Integer count = 0;
+            if(result.containsKey(typeId)) {
+                count = result.get(typeId);
+            }
+            count++;
+            result.put(typeId, count);
+        }
+        return result;
+    }
 
 }

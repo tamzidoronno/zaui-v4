@@ -30,7 +30,6 @@ import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
-import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;

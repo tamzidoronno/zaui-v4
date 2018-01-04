@@ -396,7 +396,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 }
             }
             if(added > 0) {
-                String text = item.name;
+                String text = item.getName();
                 String translation = item.getTranslationsByKey("descriptionWeb", curLang);
                 if(translation != null && !translation.isEmpty()) {
                     text = translation;

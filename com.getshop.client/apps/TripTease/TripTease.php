@@ -25,7 +25,7 @@ class TripTease extends \WebshopApplication implements \Application {
             $value = $this->getBookingValue();
             $bookingId = $this->getBookingId();
             ?>
-            <script defer src="https://static.triptease.io/paperboy/confirm?hotelkey=<?php echo $id; ?>&bookingValue=<?php echo $value; ?>&bookingCurrency=NOK&bookingReference=<?php echo $bookingId; ?>"></script>
+            <script src="https://static.triptease.io/paperboy/confirm?hotelkey=<?php echo $id; ?>&bookingValue=<?php echo $value; ?>&bookingCurrency=NOK&bookingReference=<?php echo $bookingId; ?>" defer></script>
             <?php
         }
     }
@@ -47,7 +47,7 @@ class TripTease extends \WebshopApplication implements \Application {
             if($booking->language == "nb_NO") {
                 if(stristr($lang, "_")) {
                     $splitted = explode("_", $lang);
-                    $lang = $splitted[0];
+                    $lang = $splitted[1];
                 }
             }
             ?>

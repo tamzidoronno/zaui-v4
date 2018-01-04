@@ -13,9 +13,12 @@ $endTime = "05";
 
 if($this->getText("displaytopcontinue") == "true") {
     if($time > $startTime && $time < $endTime){
+        $time = date("H:i");
+        $nightWarning = $this->__w("The time is {time}, if you need to check in tonight, you need to specify yesterday as your check in date!");
+        $nightWarning = str_replace("{time}", $time, $nightWarning);
         ?>
         <div class='continue_button_outer'>
-            <div class='continue_button nightWarning' title="<? echo "Klokken er ".date('H:i')." Om du skal sjekke inn i natt må du sørge for å booke fra i går til i dag!";?> " next_page="<? echo $next; ?>"><? echo "<i class='fa fa-exclamation-triangle'></i> ".$this->__w("Continue")." <i class='fa fa-exclamation-triangle'></i>"; ?></div>
+            <div class='continue_button nightWarning' title="<?php echo $nightWarning; ?>" next_page="<? echo $next; ?>"><? echo "<i class='fa fa-exclamation-triangle'></i> ".$this->__w("Continue")." <i class='fa fa-exclamation-triangle'></i>"; ?></div>
         </div>
     <?
     }else{

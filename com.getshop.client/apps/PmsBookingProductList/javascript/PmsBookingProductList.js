@@ -86,10 +86,8 @@ app.PmsBookingProductList = {
         }
         if($(this).hasClass('nightWarning')){
          
-            var date = new Date();
-            var hour = ("0" + date.getHours()).slice(-2);
-            var minutes = ("0" + date.getMinutes()).slice(-2);
-            var confirmed = confirm('Klokken er '+hour+":"+minutes+' Om du skal sjekke inn i natt må du sørge for å booke fra i går til i dag! Trykk ok for å fortsette bookingen.');
+            var msg = $(this).attr('title');
+            var confirmed = confirm(msg);
             if(confirmed === true){
                 var attr = $(this).attr('next_page');
                 thundashop.common.goToPageLink(attr);

@@ -944,7 +944,8 @@ function getshop_goToAddonsPage() {
 function getshop_searchRooms() {
     if($(this).find('.fa-spin').length > 0) {
         return;
-    }
+    }    
+    
     localStorage.setItem('gslcurrentpage','search');
     $('.GslBooking .ordersummary').hide();
     var btn = $(this);
@@ -975,6 +976,7 @@ function getshop_searchRooms() {
         },
         success: function (res) {
             btn.html(btnText);
+            $('.gslbookingBody').show();
             $('#productentry').html('');
             gslbookingcurresult = res;
             localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
@@ -985,7 +987,7 @@ function getshop_searchRooms() {
             } else {
                 getshop_updateOrderSummary(res, true);
             }
-
+        
             for (var k in res.rooms) {
                 var room = res.rooms[k];
                 var firstFile = "";
@@ -1046,6 +1048,8 @@ function getshop_searchRooms() {
                 $('#productentry').append(roomBox);
                 roomBox.find('.gsgalleryroot').prepend(controller);
                 roomBox.show();
+                console.log('loading images');
+                console.log(roomBox);
 
                 for (var i = 0; i <= room.images.length - 1; i++) {
                     var active = "";

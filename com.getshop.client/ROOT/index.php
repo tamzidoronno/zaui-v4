@@ -217,7 +217,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         $modules = $factory->getApi()->getPageManager()->getModules();
         $isLoggedInEditorOrAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
         
-        if($isLoggedInEditorOrAdministrator) {
+        if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             $msg = $factory->getApi()->getStoreManager()->getCriticalMessage();
             if($msg) {
                 echo "<div style='background-color:red; color:white; padding: 10px; text-align:center;' class='criticalMessageArea'>" . $msg->message . "<br>";

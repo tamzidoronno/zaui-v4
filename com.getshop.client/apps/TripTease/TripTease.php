@@ -25,7 +25,7 @@ class TripTease extends \WebshopApplication implements \Application {
             $value = $this->getBookingValue();
             $bookingId = $this->getBookingId();
             ?>
-            <script defer src="https://static.triptease.io/paperboy/confirm?hotelkey=<?php echo $id; ?>&bookingValue=<?php echo $value; ?>&bookingCurrency=NOK&bookingReference=<?php echo $bookingId; ?>"></script>
+            <script src="https://static.triptease.io/paperboy/confirm?hotelkey=<?php echo $id; ?>&bookingValue=<?php echo $value; ?>&bookingCurrency=NOK&bookingReference=<?php echo $bookingId; ?>" defer></script>
             <?php
         }
     }

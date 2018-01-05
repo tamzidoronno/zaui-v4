@@ -385,7 +385,7 @@ public class SFIExcelReport {
         
         if (segreate && shouldTransferToOtherWp11(wpId)) {
             double post11RemovalTotal = sumtotal * 0.01;
-            double post11RemovalTotalNfr = sumnfr * 0.01;
+            double post11RemovalTotalNfr = 0;
             double post11RemovalTotalInkind = suminkind * 0.01;
 
             
@@ -506,7 +506,7 @@ public class SFIExcelReport {
         
         if (segreate && shouldTransferToOtherWp11(wpId)) {
             double post11RemovalTotal = sumtotal * 0.01;
-            double post11RemovalTotalNfr = sumnfr * 0.01;
+            double post11RemovalTotalNfr = 0;
             double post11RemovalTotalInkind = suminkind * 0.01;
                     
             sumtotal -= (int)post11RemovalTotal;
@@ -612,7 +612,7 @@ public class SFIExcelReport {
         
         if (segreate && shouldTransferToOtherWp11(wpId)) {
             double post11RemovalTotal = sumtotal * 0.01;
-            double post11RemovalTotalNfr = sumnfr * 0.01;
+            double post11RemovalTotalNfr = 0;
             double post11RemovalTotalInkind = suminkind * 0.01;
                     
             sumtotal -= (int)post11RemovalTotal;

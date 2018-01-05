@@ -1,5 +1,6 @@
 .daterangepicker {
   position: absolute;
+  display: none;
   color: inherit;
   background-color: #f9f9f9;
   width: 100%;
@@ -88,6 +89,7 @@
     border-radius: 4px;
     border: 1px solid transparent;
     white-space: nowrap;
+    box-sizing: border-box;
     cursor: pointer; }
     .daterangepicker td.available:hover, .daterangepicker th.available:hover {
       background-color: #329ad6;

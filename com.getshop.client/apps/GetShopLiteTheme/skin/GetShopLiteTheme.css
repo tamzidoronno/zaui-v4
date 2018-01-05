@@ -11,7 +11,7 @@ body {
     background:#9abd2a;
     font-size:20px;
 }
-a:hover{text-decoration:none;}
+/*a:hover{text-decoration:none;}*/
 .gs_page_width{background-color:rgba(0,0,0,0); max-width: 1200px; margin:auto;}
 
 .gsarea[area="header"]{text-align:center;background-color:#f3f3f3;padding:10px 0;}
@@ -22,7 +22,7 @@ a:hover{text-decoration:none;}
 
 .Menu{padding-top:28px;font-family: 'Barlow Semi Condensed', sans-serif;}
 .Menu div .fa:before{color:#ddd;font-size:26px;position:relative;top:2px;padding:0 2px;}
-.Menu .entry div:hover{position:relative;top:2px;color:#aaa;}
+.Menu .entry a div:hover{color:#aaa;}
 .gscell_1.gsuicell:after{
     content:"";
     background-color:#f3f3f3;
@@ -56,6 +56,7 @@ a:hover{text-decoration:none;}
     width:40px;
     height:40px;
     border-radius: 50%;
+    box-sizing: border-box;
     padding: 10px;
     margin: 4px 4px 0 4px;
     font-size: 0px;

@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
+import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,7 +14,13 @@ import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
-public static class AddonTypes {
+
+    void setOverrideName(String overrideName) {
+        this.name = overrideName;
+        this.overrideName = overrideName;
+    }
+
+    public static class AddonTypes {
         public static Integer BREAKFAST = 1;
         public static Integer PARKING = 2;
         public static Integer LATECHECKOUT = 3;
@@ -25,6 +32,7 @@ public static class AddonTypes {
     
     public String addonId = UUID.randomUUID().toString();
     public Date date;
+    private String overrideName = "";
     public Double price;
     public Double priceExTaxes;
     public String productId;
@@ -54,7 +62,8 @@ public static class AddonTypes {
     public String descriptionWeb = "";
     
     @Transient
-    public String name = "";
+    private String name = "";
+    
     boolean addedToRoom = false;
 
     
@@ -88,6 +97,27 @@ public static class AddonTypes {
         return false;
     }
 
+    void setName(String name) {
+        this.name = name;
+        
+        if (overrideName != null && !overrideName.isEmpty()) {
+            name = overrideName;
+        }
+    }
+    
+    void setName(Product product) {
+        if (product != null) {
+            name = product.name;
+        }
+        
+        if (overrideName != null && !overrideName.isEmpty()) {
+            name = overrideName;
+        }
+    }
 
+    public String getName() {
+        return name;
+    }
+    
     
 }

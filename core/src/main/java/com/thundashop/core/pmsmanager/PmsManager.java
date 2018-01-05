@@ -56,6 +56,8 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.ratemanager.BookingComRateManagerManager;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.ticket.Ticket;
+import com.thundashop.core.ticket.TicketManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
@@ -180,6 +182,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     
     @Autowired
     BrRegEngine brRegEngine;
+    
+    @Autowired
+    private TicketManager ticketManager;
     
     @Autowired
     Database dataBase;
@@ -3356,9 +3361,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             return true;
         }
         
+        HashMap<String, Integer> count = getCountedTypes(toCheck);
+        
         for(Booking book : toCheck) {
             List<BookingItem> items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
-            if (items.isEmpty() || items.size() < toCheck.size()) {
+            if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
                 return false;
             }
         }
@@ -3410,7 +3417,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         
-        if (!bookingEngine.canAdd(bookingsToAdd) || doAllDeleteWhenAdded()) {
+        boolean canAdd = bookingEngine.canAdd(bookingsToAdd);
+        
+        if (!canAdd || doAllDeleteWhenAdded()) {
             String text = "";
             for(PmsBookingRooms room : booking.rooms) {
                 if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
@@ -4961,7 +4970,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             if(item.productId != null && !item.productId.isEmpty()) {
                 Product product = productManager.getProduct(item.productId);
                 product.updateTranslation(getSession().language);
-                item.name = product.name;
+                item.setName(product);
             }
         }
         return room.addons;
@@ -5041,7 +5050,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 Product product = productManager.getProduct(item.productId);
                 if(product != null) {
                     product.updateTranslation(getSession().language);
-                    item.name = product.name;
+                    item.setName(product);
                     result.add(item);
                 }
             }
@@ -6817,7 +6826,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         res = gson.fromJson(copy, listType);
         for(PmsBookingAddonItem item : res) {
-            item.name = productManager.getProduct(item.productId).name;
+            item.setName(productManager.getProduct(item.productId));
             item.addedToRoom = false;
             for(PmsBookingAddonItem addonOnRoom : room.addons) {
                 if(addonOnRoom.productId.equals(item.productId)) {
@@ -6883,7 +6892,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         toAdd.count = addonToAdd.count;
         toAdd.price = addonToAdd.price;
-        toAdd.name = addonToAdd.name;
+        toAdd.setName(addonToAdd.getName());
         
         saveBooking(booking);
     }
@@ -7520,6 +7529,82 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         return cal.getTime();
+    }
+
+    @Override
+    public void transferTicketsAsAddons() {
+        List<Ticket> tickets = ticketManager.getTicketsToTransferToAccounting();
+
+        tickets.stream().forEach(ticket -> {
+            Product ticketProduct = productManager.getProduct("TICKET-"+ticket.type);
+            if (ticketProduct == null) {
+                ticketProduct = new Product();
+                ticketProduct.id = "TICKET-"+ticket.type;
+                ticketProduct.price = 800;
+                productManager.saveProduct(ticketProduct);
+            }
+            
+            double totalPrice = (ticketProduct.price * ticket.timeInvoice);
+            PmsBookingAddonItem addon = new PmsBookingAddonItem();
+            addon.productId = ticketProduct.id;
+            addon.count = 1;
+            addon.price = (double)Math.round(totalPrice);
+            addon.isSingle = true;
+            addon.priceExTaxes = ticketProduct.priceExTaxes;
+            addon.variations = ticketProduct.variationCombinations;
+            addon.date = ticket.getAddonInvoiceDate();
+            addon.addedBy = "TICKET_SYSTEM";
+            
+            int seconds = (int)(ticket.timeInvoice * 60 * 60);
+            String timeSpent = timeConversion(seconds);
+            
+            addon.setOverrideName(timeSpent + " | Ticket: " + ticket.incrementalId + " - " + ticket.title);
+            
+            if(addon.date == null) {
+                addon.date = new Date();
+            }
+            
+            addAddonToRoom(ticket.externalId, addon);
+            
+            ticketManager.markTicketAsTransferredToAccounting(ticket.id);
+        });
+        
+    }
+    
+    private String timeConversion(int seconds) {
+
+            final int MINUTES_IN_AN_HOUR = 60;
+            final int SECONDS_IN_A_MINUTE = 60;
+
+            int minutes = seconds / SECONDS_IN_A_MINUTE;
+            seconds -= minutes * SECONDS_IN_A_MINUTE;
+
+            int hours = minutes / MINUTES_IN_AN_HOUR;
+            minutes -= hours * MINUTES_IN_AN_HOUR;
+
+            if (hours < 1) {
+                return minutes + " minutter";
+            }
+            
+            if (minutes < 1) {
+                return hours + " timer";
+            }
+            
+            return hours + " timer og " + minutes + " minutter";
+        }
+
+    private HashMap<String, Integer> getCountedTypes(List<Booking> toCheck) {
+        HashMap<String, Integer> result = new HashMap();
+        for(Booking book : toCheck) {
+            String typeId = book.bookingItemTypeId;
+            Integer count = 0;
+            if(result.containsKey(typeId)) {
+                count = result.get(typeId);
+            }
+            count++;
+            result.put(typeId, count);
+        }
+        return result;
     }
 
 }

@@ -14,8 +14,10 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +53,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             ticket.incrementalId = getNextIncrementalId();
         }
         
+        ticket.setCompletedDate();
         saveObject(ticket);
         tickets.put(ticket.id, ticket);
     }
@@ -101,9 +104,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         
         if (event.eventType.equals(TicketEventType.OUTGOING_EMAIL)) {
             sendMail(ticket, event);
-            ticket.currentState = event.state;
         }
         
+        ticket.currentState = event.state;
+        
+        ticket.setCompletedDate();
         ticket.events.add(event);
         
         saveObject(ticket);
@@ -122,10 +127,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     }
 
     private void sendMail(Ticket ticket, TicketEvent event) {
-        User user = userManager.getUserById(ticket.userId);
-        if (user != null) {
-            messageManager.sendMail(user.emailAddress, user.fullName, "Respond to ticket: " + ticket.incrementalId, event.content, "GetShop", "post@getshop.com");
-        }   
+//        We wait with this until we are its more finished.
+//        User user = userManager.getUserById(ticket.userId);
+//        if (user != null) {
+//            messageManager.sendMail(user.emailAddress, user.fullName, "Respond to ticket: " + ticket.incrementalId, event.content, "GetShop", "post@getshop.com");
+//        }   
     }
 
     private int getNextIncrementalId() {
@@ -147,6 +153,24 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         Ticket ticket = tickets.remove(ticketId);
         if (ticket != null) {
             deleteObject(ticket);
+        }
+    }
+
+    public List<Ticket> getTicketsToTransferToAccounting() {
+        List<Ticket> ticketsToTransfer = tickets.values().stream()
+                .filter(ticket -> !ticket.transferredToAccounting)
+                .filter(ticket -> ticket.currentState.equals(TicketState.COMPLETED))
+                .filter(ticket -> ticket.timeInvoice > 0)
+                .collect(Collectors.toList());
+        
+        return ticketsToTransfer;
+    }
+    
+    public void markTicketAsTransferredToAccounting(String ticketId) {
+        Ticket ticket = tickets.get(ticketId);
+        if (ticket != null) {
+            ticket.transferredToAccounting = true;
+            saveObject(ticket);
         }
     }
     

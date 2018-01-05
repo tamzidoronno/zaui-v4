@@ -50,7 +50,7 @@ public class ESAReport {
         this.workPackages = this.workPackages.stream().sorted(WorkPackage.getComperator()).collect(Collectors.toList());
         this.endDate = endDate;
        
-        transferCostsToWp11(totalCosts);
+//        transferCostsToWp11(totalCosts);
         transferCostsToWp11(inKind);
         
         mergeOus(totalCosts, inKind);

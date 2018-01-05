@@ -17,7 +17,7 @@ public class AddonItem {
 
     void setAddon(PmsBookingAddonItem item) {
         count = item.count;
-        name = item.name;
+        name = item.getName();
         price = item.price;
         productId = item.productId;
         date = item.date;

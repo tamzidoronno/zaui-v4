@@ -3361,10 +3361,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             return true;
         }
         
-        HashMap<String, Integer> count = getCountedTypes(toCheck);
         
         for(Booking book : toCheck) {
             List<BookingItem> items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
+            HashMap<String, Integer> count = getCountedTypes(toCheck, book.startDate, book.endDate);
             if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
                 return false;
             }
@@ -7593,7 +7593,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             return hours + " timer og " + minutes + " minutter";
         }
 
-    private HashMap<String, Integer> getCountedTypes(List<Booking> toCheck) {
+    private HashMap<String, Integer> getCountedTypes(List<Booking> toCheck, Date start, Date end) {
         HashMap<String, Integer> result = new HashMap();
         for(Booking book : toCheck) {
             String typeId = book.bookingItemTypeId;
@@ -7601,7 +7601,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             if(result.containsKey(typeId)) {
                 count = result.get(typeId);
             }
-            count++;
+            boolean isSame = start.equals(book.startDate) && end.equals(book.endDate);
+            if(book.interCepts(start, end) || isSame) {
+                count++;
+            }
             result.put(typeId, count);
         }
         return result;

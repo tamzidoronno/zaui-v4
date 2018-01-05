@@ -4006,6 +4006,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             toReturn.displayInBookingProcess = addonConfig.displayInBookingProcess;
             toReturn.includedInBookingItemTypes = addonConfig.includedInBookingItemTypes;
             toReturn.setTranslationStrings(addonConfig.getTranslations());
+            toReturn.onlyForBookingItems = addonConfig.onlyForBookingItems;
             
             if(addonConfig.price != null && addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
@@ -5068,7 +5069,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
             messageManager.sendErrorNotification("Booking completed.", null);
         }
-        if(booking.getActiveRooms().isEmpty()) {
+        if(booking.getActiveRooms().isEmpty() && !booking.hasWaitingRooms()) {
             logPrint("COMPLETECURRENTBOOKING : No rooms active on booking." + booking.id);
             return null;
         }
@@ -5120,6 +5121,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                         gsTiming("Notified booking confirmed");
                     }
                 }
+                checkIfNeedToBeAssignedToRoomWithSpecialAddons(booking);
                 bookingUpdated(booking.id, "created", null);
                 gsTiming("Booking confirmed");
                 return booking;
@@ -7608,6 +7610,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             result.put(typeId, count);
         }
         return result;
+    }
+
+    private void checkIfNeedToBeAssignedToRoomWithSpecialAddons(PmsBooking booking) {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            for(PmsBookingAddonItem item : room.addons) {
+                if(!item.onlyForBookingItems.isEmpty()) {
+                    List<BookingItem> items = bookingEngine.getAvailbleItems(room.bookingItemTypeId, room.date.start, room.date.end);
+                    BookingItem bookingItem = null;
+                    for(BookingItem tmpItem : items) {
+                        if(item.onlyForBookingItems.contains(tmpItem.id)) {
+                            bookingItem = tmpItem;
+                            break;
+                        }
+                    }
+                    if(bookingItem == null) {
+                        messageManager.sendErrorNotification("Booking failed to autoassigned ot special addons room, no rooms to give", null);
+                    } else {
+                        room.bookingItemId = bookingItem.id;
+                        room.bookingItemTypeId = bookingItem.bookingItemTypeId;
+
+                        if (room.bookingId != null) {
+                            try {
+                                bookingEngine.changeBookingItemOnBooking(room.bookingId, bookingItem.id);
+                            }catch(Exception e) {
+                                messageManager.sendErrorNotification("Booking failed to autoassigned ot special addons room, no rooms to give (2)", e);
+                            }
+                        }
+                        saveBooking(booking);
+                        logEntry("Autoassigned due to special addon", booking.id, room.bookingItemId);
+                    }
+                }
+            }
+        }
     }
 
 }

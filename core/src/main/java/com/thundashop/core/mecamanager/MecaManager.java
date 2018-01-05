@@ -396,7 +396,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     private void notifyByPushToCar(MecaCar car, String message) {
         if (car != null) {
             for (String token : car.tokens) {
-                mobileManager.sendMessage(token, message);
+//                mobileManager.sendMessage(token, message);
             }
         }
     }

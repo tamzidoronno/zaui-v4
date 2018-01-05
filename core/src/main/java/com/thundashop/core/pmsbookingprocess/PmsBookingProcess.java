@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
@@ -57,6 +58,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     UserManager userManager;
+    private ArrayList itemsTaken;
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
@@ -315,6 +317,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsBooking booking = pmsManager.getCurrentBooking();
         result.fields = booking.registrationData.resultAdded;
         result.profileType = booking.registrationData.profileType;
+        itemsTaken = new ArrayList();
         for(PmsBookingRooms room : booking.rooms) {
             RoomInfo returnroom = new RoomInfo();
             returnroom.start = room.date.start;
@@ -352,7 +355,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 if(!item.displayInBookingProcess.isEmpty() && !item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
                     continue;
                 }
-                if(item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
+                if(isAvailableForRoom(item, room)) {
                     returnroom.addonsAvailable.put(toAddAddon.productId, toAddAddon);
                 }
             }
@@ -414,6 +417,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         if(arg.roomId == null || arg.roomId.isEmpty()) {
             PmsBooking booking = null;
             booking = pmsManager.getCurrentBooking();
+            itemsTaken = new ArrayList();
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(canAddToRoom(arg.productId, room)) {
                     if(arg.count > 0) {
@@ -719,9 +723,30 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             if(!item.productId.equals(productId)) {
                 continue;
             }
-            if(item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
+            if(isAvailableForRoom(item, room)) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private boolean isAvailableForRoom(PmsBookingAddonItem item,PmsBookingRooms room) {
+        
+        if(!item.onlyForBookingItems.isEmpty()) {
+            List<BookingItem> items = bookingEngine.getAvailbleItems(room.bookingItemTypeId, room.date.start, room.date.end);
+            for(BookingItem tmpItem : items) {
+            String key = item.productId + "_" + tmpItem.id;
+                if(item.onlyForBookingItems.contains(tmpItem.id) && !itemsTaken.contains(key)) {
+                    itemsTaken.add(key);
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        if(item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
+            return true;
         }
         return false;
     }

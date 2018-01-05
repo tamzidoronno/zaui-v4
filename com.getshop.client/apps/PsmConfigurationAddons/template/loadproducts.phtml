@@ -3,7 +3,7 @@
 $products = $this->getApi()->getProductManager()->getAllProducts();
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-
+$allItems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 $sortedList = array();
 foreach($products as $prod) {
     $sortedList[$prod->name] = $prod;
@@ -107,7 +107,10 @@ foreach($config->addonConfiguration as $item) {
                 echo "<i class='fa fa-".$addonItem->bookingicon."' style='float:right; color:#bbb; padding-right: 5px;'></i>";
             }
             if($addonItem->count > 1) {
-                echo "(max: " . $addonItem->count . ")";
+                echo "(max: " . $addonItem->count . ") ";
+            }
+            if(sizeof($addonItem->onlyForBookingItems) > 0) {
+                echo "(limited to " . sizeof($addonItem->onlyForBookingItems) . " rooms) ";
             }
             ?>
             <span class="extendedinformation">
@@ -127,6 +130,17 @@ foreach($config->addonConfiguration as $item) {
                     <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">
                     Hide, <b>remember to save settings</b> in<br> bottom of page to save this changes.
                 </div>
+                
+                <?php
+                echo "Only available for the following rooms:<br>";
+                foreach($allItems as $item) {
+                    $selectedItem = "";
+                    if(in_array($item->id, $addonItem->onlyForBookingItems)) {
+                        $selectedItem = "selectedItem";
+                    }
+                    echo "<span class='onlyavailableforitem $selectedItem' itemid='".$item->id."'>".$item->bookingItemName."</span>";
+                }
+                ?>
                 
             </span>
             

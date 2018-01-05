@@ -80,6 +80,11 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             foreach($config->addonConfiguration as $addon) {
                 /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
                 if($addon->productId == $productId) {
+                    $addon->onlyForBookingItems = array();
+                    if(isset($res['onlyForItems'])) {
+                        $addon->onlyForBookingItems = $res['onlyForItems'];
+                    }
+                    
                     $found = true;
                     $addon->isSingle = $res['daily'] != "true";
                     $addon->price = $res['price'];

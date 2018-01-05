@@ -49,6 +49,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public String channelManagerAddonText = "";
     public String bookingicon = "";
     public List<String> includedInBookingItemTypes = new ArrayList();
+    public List<String> onlyForBookingItems = new ArrayList();
     public List<String> displayInBookingProcess = new ArrayList();
     public String addedBy;
     public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();

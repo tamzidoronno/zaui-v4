@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -79,6 +78,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         StartBookingResult result = new StartBookingResult();
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        result.numberOfDays = pmsInvoiceManager.getNumberOfDays(arg.start, arg.end);
         
         Collections.sort(types, new Comparator<BookingItemType>() {
             public int compare(BookingItemType o1, BookingItemType o2) {
@@ -749,5 +749,28 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return true;
         }
         return false;
+    }
+
+    @Override
+    public GuestAddonsSummary removeGroupedRooms(RemoveGroupedRoomInput arg) {
+        String roomId = arg.roomId;
+        Integer guests = arg.guestCount;
+        
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        List<PmsBookingRooms> toRemove = new ArrayList();
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.bookingItemTypeId.equals(roomId) && room.numberOfGuests.equals(guests)) {
+                toRemove.add(room);
+            }
+        }
+        
+        booking.rooms.removeAll(toRemove);
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return generateSummary();
     }
 }

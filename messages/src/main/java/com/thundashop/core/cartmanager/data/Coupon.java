@@ -27,4 +27,16 @@ public class Coupon extends DataCommon {
     public String priceCode = "default";
     public int minDays = 0;
     public int maxDays = 0;
+
+    public boolean containsAddonProductToInclude(String productId) {
+        if(addonsToInclude == null) {
+            return false;
+        }
+        for(AddonsInclude inc : addonsToInclude) {
+            if(inc.productId != null && inc.productId.equals(productId)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

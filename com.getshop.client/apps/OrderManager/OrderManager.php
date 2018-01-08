@@ -9,6 +9,14 @@ class OrderManager extends GSTableCommon implements \Application {
         
     }
     
+    public function changeOrderDate() {
+        $newDate = $_POST['data']['date'];
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['id']);
+        $order->rowCreatedDate = $this->convertToJavaDate(strtotime($newDate));
+        $order->createdDate = $this->convertToJavaDate(strtotime($newDate));
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function updatePaidDate( ){
         $date = $this->convertToJavaDate(strtotime($_POST['newDate']));
         $orderId = $_POST['value'];

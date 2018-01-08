@@ -75,5 +75,9 @@ public class GetShopModules {
         
         return module.themeApplicationId;
     }
+
+    public GetShopModule getModule(String moduleId) {
+        return modules.get(moduleId);
+    }
     
 }

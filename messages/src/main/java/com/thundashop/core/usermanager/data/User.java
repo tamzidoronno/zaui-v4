@@ -38,6 +38,8 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean primaryCompanyUser = false;
     public boolean showExTaxes = false;
     
+    public List<String> hasAccessToModules = new ArrayList();
+    
     public List<String> userRoleIds = new ArrayList();
     
     /**

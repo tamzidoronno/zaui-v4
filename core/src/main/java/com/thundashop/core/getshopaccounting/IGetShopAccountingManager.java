@@ -9,6 +9,7 @@ import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,4 +40,18 @@ public interface IGetShopAccountingManager {
     @Administrator
     public List<String> getLogEntries();
     
+    @Administrator
+    public HashMap<String, String> getListOfSystems();
+    
+    @Administrator
+    public String getCurrentSystemInvoices();
+    
+    @Administrator
+    public String getCurrentSystemOther();
+    
+    @Administrator
+    public void setSystemTypeInvoice(String systemType);
+    
+    @Administrator
+    public void setSystemTypeOther(String systemType);
 }

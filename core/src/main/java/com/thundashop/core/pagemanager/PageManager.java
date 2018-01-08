@@ -965,6 +965,15 @@ public class PageManager extends ManagerBase implements IPageManager {
             return modules.getModules();
         }
         
+        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.emailAddress.equals("post@getshop.com")) {
+            return modules.getModules();
+        }
+        
+        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.emailAddress.equals("vebjorn@getshop.com")) {
+            return modules.getModules();
+        }
+        
+        
         if (!GetShopLogHandler.isDeveloper) {
             return new ArrayList();
         }

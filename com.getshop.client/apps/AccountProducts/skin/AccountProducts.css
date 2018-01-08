@@ -1,0 +1,15 @@
+.AccountProducts .product_row {
+    border-bottom: solid 1px #DDD;
+    font-size: 0px;
+}
+.AccountProducts .product_row div {
+    display: inline-block;
+    width: 20%;
+    font-size: 15px;
+}
+
+.AccountProducts {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 50px;
+}

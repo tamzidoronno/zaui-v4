@@ -16,6 +16,8 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -24,8 +26,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -33,12 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author ktonder
  */
 public abstract class AccountingSystemBase extends ManagerBase {
-
-    public enum SystemType {
-        GBAT10,
-        XLEDGER
-    }
-    
+ 
     private List<String> logEntries = new ArrayList();
      
     @Autowired
@@ -49,6 +48,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     @Autowired
     private PaymentManager paymentManager;
+    
+    @Autowired
+    public ProductManager productManager;
     
     public HashMap<String, SavedOrderFile> files = new HashMap();
     
@@ -66,7 +68,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
         }
     }
     
-    public abstract List<SavedOrderFile> createFiles(List<Order> orders);
+    public abstract List<SavedOrderFile> createFiles(List<Order> orders, String subType);
     
     public abstract SystemType getSystemType();
     
@@ -82,16 +84,47 @@ public abstract class AccountingSystemBase extends ManagerBase {
             orderManager.saveObject(order);
         });
         
-        
         saveObject(file);
         files.put(file.id, file);
     }
     
-    public List<String> createNextOrderFile(Date endDate) {
+    private boolean checkTaxCodes(List<Order> orders) {
+        boolean hasFail = false;
+        for(Order order : orders) {
+            for(CartItem item : order.cart.getItems()) {
+                Product prod = productManager.getProduct(item.getProduct().id);
+                if(prod == null) {
+                    prod = productManager.getDeletedProduct(item.getProduct().id);
+                }
+                if(prod == null) {
+                    addToLog("Product does not exists anymore on order, regarding order: " + order.incrementOrderId);
+                    hasFail = true;
+                } else if(prod.sku == null || prod.sku.trim().isEmpty()) {
+                    if(prod.deleted != null && (prod.name == null || prod.name.trim().isEmpty())) {
+                        prod.name = item.getProduct().name;
+                        productManager.saveProduct(prod);
+                    }
+                    addToLog("Tax code not set for product: " + prod.name + ", regarding order: " + order.incrementOrderId);
+                    hasFail = true;
+                }
+            }
+        }
+        
+        return hasFail;
+    }
+    
+    public List<String> createNextOrderFile(Date endDate, String subType) {
         logEntries.clear();
         
         List<Order> orders = orderManager.getOrdersToTransferToAccount(endDate);
-        List<SavedOrderFile> newFiles = createFiles(orders);
+        
+        boolean hasFail = checkTaxCodes(orders);
+        
+        if(hasFail) {
+            return null;
+        }
+        
+        List<SavedOrderFile> newFiles = createFiles(orders, subType);
         
         if (newFiles == null) {
             return new ArrayList();
@@ -150,6 +183,15 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     void deleteFile(String fileId) {
         SavedOrderFile file = files.remove(fileId);
+        
+        if (file != null && file.orders != null) {
+            file.orders.stream().forEach(orderId -> {
+                Order order = orderManager.getOrder(orderId);
+                order.resetTransferToAccounting();
+            });    
+        }
+        
+        
         if (file != null) {
             deleteObject(file);
         }
@@ -307,20 +349,86 @@ public abstract class AccountingSystemBase extends ManagerBase {
         finalizeFile(res);
     }
     
-    void createMegaFile() {
-        TreeSet<String> set = new TreeSet<String>();
+    public Map<String, List<Order>> groupOrders(List<Order> orders) {
+        Map<String, List<Order>> retMap = new HashMap();
         
-        files.values().stream()
-                .forEach(ok -> {
-                    set.addAll(ok.orders);
-                });
+        for (Order order : orders) {
+            String paymentId = order.getPaymentApplicationId();
+            String subType = getSubType(paymentId);
+            if (retMap.get(subType) == null) {
+                retMap.put(subType, new ArrayList());
+            }
+            retMap.get(subType).add(order);
+        }
+
+        return retMap;
+    }
+    
+    private String getSubType(String paymentId) {
+        // InvoicePayment
+        if (paymentId.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
+            return "invoice";
+        }
         
-        List<Order> toProcessOrder = set.stream()
-                .map(orderId -> orderManager.getOrder(orderId))
-                .collect(Collectors.toList());
+        // EhfPayment
+        if (paymentId.equals("bd13472e-87ee-4b8d-a1ae-95fb471cedce")) {
+            return "invoice";
+        }
         
-        createFiles(toProcessOrder);
+        return "other";
+    }
+    
+    public String createLineText(CartItem item) {
+        String lineText = "";
+        String startDate = "";
+        if(item.startDate != null) {
+            DateTime start = new DateTime(item.startDate);
+            startDate = start.toString("dd.MM.yy");
+        }
+
+        String endDate = "";
+        if(item.endDate != null) {
+            DateTime end = new DateTime(item.endDate);
+            endDate = end.toString("dd.MM.yy");
+        }
         
+        String startEnd = "";
+        if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
+            startEnd = " (" + startDate + " - " + endDate + ")";
+        }
+        
+        if(!item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + startEnd;
+        } else {
+            String mdata = item.getProduct().metaData;
+            mdata = ", " + mdata;
+            lineText = item.getProduct().name + mdata + startEnd;
+        }
+        
+        lineText = lineText.trim();
+        lineText = nullAndCsvCheck(lineText);
+        return lineText;
+    }
+    
+    public String nullAndCsvCheck(String text) {
+        if(text == null) {
+            return "";
+        }
+        return text.replaceAll(",", " ");
+    }
+
+    public abstract String getSystemName();
+
+    void markTransferred() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getPreviouseEndDate());
+        cal.add(Calendar.MINUTE, 2);
+        List<Order> orders = orderManager.getOrdersToTransferToAccount(cal.getTime());
+        
+        orders.stream().forEach(order -> { 
+            order.transferredToAccountingSystem = true;
+            orderManager.saveObject(order);
+        });
     }
 
 }

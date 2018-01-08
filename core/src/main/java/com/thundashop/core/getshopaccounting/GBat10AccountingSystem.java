@@ -34,38 +34,33 @@ import org.springframework.stereotype.Component;
 public class GBat10AccountingSystem extends AccountingSystemBase {
    
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> inOrders) {
-        boolean hasFail = checkTaxCodes(inOrders);
-        
-        if(hasFail) {
-            return null;
-        }
-        
+    public List<SavedOrderFile> createFiles(List<Order> inOrders, String subType) {
         Map<String, List<Order>> allOrders = groupOrders(inOrders);
-        
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
         
-        for (String subType : allOrders.keySet()) {
-            List<Order> orders = allOrders.get(subType);
-            
-            SavedOrderFile file = new SavedOrderFile();
-            List<String> toPrint = new ArrayList();
-            file.orders = new ArrayList();
-            file.subtype = subType;
-            
-            for(Order order : orders) {
-                file.orders.add(order.id);
-                List<HashMap<Integer, String>> lines = generateLine(order);
-                for(HashMap<Integer, String> toConvert : lines) {
-                    String line = makeLine(toConvert);
-                    toPrint.add(line);
-                }
-            }
+        List<Order> orders = allOrders.get(subType);
 
-            file.result = toPrint;
-            retFiles.add(file);
+        if (orders == null) {
+            return new ArrayList();
         }
         
+        SavedOrderFile file = new SavedOrderFile();
+        List<String> toPrint = new ArrayList();
+        file.orders = new ArrayList();
+        file.subtype = subType;
+
+        for(Order order : orders) {
+            file.orders.add(order.id);
+            List<HashMap<Integer, String>> lines = generateLine(order);
+            for(HashMap<Integer, String> toConvert : lines) {
+                String line = makeLine(toConvert);
+                toPrint.add(line);
+            }
+        }
+
+        file.result = toPrint;
+        retFiles.add(file);
+
         return retFiles;
     }
 
@@ -73,9 +68,6 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
     public SystemType getSystemType() {
         return SystemType.GBAT10;
     }
-    
-    @Autowired
-    private ProductManager productManager;
     
     @Autowired
     private InvoiceManager invoiceManager;
@@ -145,11 +137,11 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         line.put(8, df.format(total)+"");
         line.put(9, customerId+"");
         line.put(10, "");
-        line.put(11, makeSureIsOkay(user.fullName));
+        line.put(11, nullAndCsvCheck(user.fullName));
         if(user.address != null) {
-            line.put(12, makeSureIsOkay(user.address.address));
-            line.put(13, makeSureIsOkay(user.address.postCode));
-            line.put(14, makeSureIsOkay(user.address.city));
+            line.put(12, nullAndCsvCheck(user.address.address));
+            line.put(13, nullAndCsvCheck(user.address.postCode));
+            line.put(14, nullAndCsvCheck(user.address.city));
         } else {
             line.put(12, "");
             line.put(13, "");
@@ -219,102 +211,14 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         
         return lines;
     }
-    
-     private String createLineText(CartItem item) {
-        String lineText = "";
-        String startDate = "";
-        if(item.startDate != null) {
-            DateTime start = new DateTime(item.startDate);
-            startDate = start.toString("dd.MM.yy");
-        }
-
-        String endDate = "";
-        if(item.endDate != null) {
-            DateTime end = new DateTime(item.endDate);
-            endDate = end.toString("dd.MM.yy");
-        }
-        
-        String startEnd = "";
-        if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
-            startEnd = " (" + startDate + " - " + endDate + ")";
-        }
-        
-        if(!item.getProduct().additionalMetaData.isEmpty()) {
-            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + startEnd;
-        } else {
-            String mdata = item.getProduct().metaData;
-            mdata = ", " + mdata;
-            lineText = item.getProduct().name + mdata + startEnd;
-        }
-        
-        lineText = lineText.trim();
-        lineText = makeSureIsOkay(lineText);
-        return lineText;
-    }
-
-    private boolean checkTaxCodes(List<Order> orders) {
-        boolean hasFail = false;
-        for(Order order : orders) {
-            for(CartItem item : order.cart.getItems()) {
-                Product prod = productManager.getProduct(item.getProduct().id);
-                if(prod == null) {
-                    prod = productManager.getDeletedProduct(item.getProduct().id);
-                }
-                if(prod == null) {
-                    logError("Product does not exists anymore on order, regarding order: " + order.incrementOrderId);
-                    hasFail = true;
-                } else if(prod.sku == null || prod.sku.trim().isEmpty()) {
-                    if(prod.deleted != null && (prod.name == null || prod.name.trim().isEmpty())) {
-                        prod.name = item.getProduct().name;
-                        productManager.saveProduct(prod);
-                    }
-                    logError("Tax code not set for product: " + prod.name + ", regarding order: " + order.incrementOrderId);
-                    hasFail = true;
-                }
-            }
-        }
-        
-        return hasFail;
-    }
 
     private void logError(String string) {
         addToLog(string);
     }
 
-    private String makeSureIsOkay(String text) {
-        if(text == null) {
-            return "";
-        }
-        return text.replaceAll(",", " ");
-    }
-
-    private Map<String, List<Order>> groupOrders(List<Order> orders) {
-        Map<String, List<Order>> retMap = new HashMap();
-        
-        for (Order order : orders) {
-            String paymentId = order.getPaymentApplicationId();
-            String subType = getSubType(paymentId);
-            if (retMap.get(subType) == null) {
-                retMap.put(subType, new ArrayList());
-            }
-            retMap.get(subType).add(order);
-        }
-
-        return retMap;
-    }
-
-    private String getSubType(String paymentId) {
-        // InvoicePayment
-        if (paymentId.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
-            return "invoice";
-        }
-        
-        // EhfPayment
-        if (paymentId.equals("bd13472e-87ee-4b8d-a1ae-95fb471cedce")) {
-            return "invoice";
-        }
-        
-        return "other";
+    @Override
+    public String getSystemName() {
+        return "GBAT10";
     }
 
 }

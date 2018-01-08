@@ -10,7 +10,9 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
+import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.data.GetShopModule;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
@@ -66,6 +68,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private LoginHistory loginHistory = new LoginHistory();
     
     private Map<String, UserRole> roles = new HashMap();
+    
+    private GetShopModules modules = new GetShopModules();
     
     @Autowired
     private PageManager pageManager;
@@ -2044,5 +2048,48 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return result;
+    }
+
+    public List<GetShopModule> getModulesForUser(String userId) {
+        User user = getUserByIdUnfinalized(userId);
+        if (user == null) {
+            return new ArrayList();
+        }
+        
+        if (user.emailAddress != null && user.emailAddress.toLowerCase().endsWith("@getshop.com")) {
+            return modules.getModules();
+        }
+        
+        Map<String, GetShopModule> retModulesMap = new HashMap();
+        
+        user.hasAccessToModules.stream().forEach(moduleId -> {
+            GetShopModule mod = modules.getModule(moduleId);
+            retModulesMap.put(mod.id, mod);
+        });
+        
+        if (!retModulesMap.isEmpty()) {
+            retModulesMap.put("cms", modules.getModule("cms"));
+        }
+        
+        return new ArrayList(retModulesMap.values());
+    }
+
+    @Override
+    public void toggleModuleForUser(String moduleId, String password) {
+        if (password == null || !password.equals("apsdf902j45askdflasndf")) {
+            return;
+        }
+        
+        User user = getSession().currentUser;
+        
+        if (user != null) {
+            if (user.hasAccessToModules.contains(moduleId)) {
+                user.hasAccessToModules.removeIf(o -> o.equals(moduleId));
+            } else {
+                user.hasAccessToModules.add(moduleId);
+            }
+            
+            saveUser(user);
+        }
     }
 }

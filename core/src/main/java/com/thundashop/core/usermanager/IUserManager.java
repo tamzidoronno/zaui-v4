@@ -477,4 +477,7 @@ public interface IUserManager {
     
     @Administrator
     public void undoSuspension(String userId, String suspensionId);
+    
+    @Administrator
+    public void toggleModuleForUser(String moduleId, String password);
 }

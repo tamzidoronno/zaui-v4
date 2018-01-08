@@ -8,6 +8,15 @@ $boxes["GUEST COMMENTS"] = "Number of comments from the guests";
 $boxes["ECONOMY"] = "Total value of income generated today and tomorrow (ex taxes)";
 $boxes["Coverage"] = "Total coverage for the specified day";
 $boxes["Janitor"] = "Number of tasks in queue for the janitor";
+
+$colors["Arrivals"] = "green";
+$colors["DEPARTURES"] = "orange";
+$colors["NEW_BOOKINGS"] = "pink";
+$colors["CLEANING"] = "lightblue";
+$colors["GUEST_COMMENTS"] = "pink";
+$colors["ECONOMY"] = "lightgreen";
+$colors["Coverage"] = "yellow";
+$colors["Janitor"] = "green";
 ?>
 
 <div class='dashboard_main'>
@@ -15,40 +24,47 @@ $boxes["Janitor"] = "Number of tasks in queue for the janitor";
     foreach($boxes as $title => $desc) {
         $field = str_replace(" ", "_", $title);
     ?>
-    <div class="statistics <?php echo $field; ?>">
-        <div class='header'>
-            <i class='fa fa-info-circle' title='<?php echo $desc; ?>'></i> 
-            <?php echo $title; ?>
-            <i class='fa fa-arrow-right'></i> 
-        </div>
-        <div class='inner'>
-            <div class='dayheader'><?php
-            if($field == "Janitor") {
-                echo "In queue";
-            } else {
-                echo "Today";
-            }
-            ?>
+    <div class="statistics_outer <?php echo $field; ?>">
+        <div class="statistics <?php echo $field; ?>">
+            <div class='header'>
+                <?php echo $title; ?>
+                <i class='fa fa-info-circle' title='<?php echo $desc; ?>'></i> 
             </div>
-            <div class="statiticbox counter1">
-                <div class="filecount boldFont"><i class='fa fa-spin fa-spinner'></i></div>
-            </div>
-
-            <div class='dayheader'>
-            <?php
-            if($field == "NEW_BOOKINGS") {
-                echo "Yesterday";
-            } else if($field == "Janitor") {
-                echo "Completed";
-            } else {
-                echo "Tomorrow";
-            }
-            ?>
-            </div>
-            <div class="statiticbox counter2">
-                <div class="filecount boldFont"><i class='fa fa-spin fa-spinner'></i></div>
+            <div class='inner'>
+                <? $color = $colors[$field]; ?>
+                <div class="statiticbox counter <? echo $color; ?> counter1">
+                    <div class="filecount boldFont">
+                        <i class='fa fa-spin fa-spinner'></i>
+                    </div>
+                    
+                    <div class="box_explainer">
+                    <?php
+                        if($field == "Janitor") {
+                            echo $this->__f("In queue");
+                        } else {
+                            echo $this->__f("Today");
+                        }
+                    ?>
+                    </div>
+                </div>
+                
+                <div class="statiticbox counter grey counter2">
+                    <div class="filecount boldFont"><i class='fa fa-spin fa-spinner'></i></div>
+                    
+                    <div class="box_explainer">
+                         <?php
+                            if($field == "NEW_BOOKINGS") {
+                                echo $this->__f("Yesterday");
+                            } else if($field == "Janitor") {
+                                echo $this->__f("Completed");
+                            } else {
+                                echo $this->__f("Tomorrow");
+                            }
+                        ?>
+                    </div>
+                </div>    
             </div>    
-        </div>    
+        </div>
     </div>
     <script>
         var event = thundashop.Ajax.createEvent('','lazyLoadOverviewData',$('.PmsChartOverview'), {
@@ -78,19 +94,6 @@ $boxes["Janitor"] = "Number of tasks in queue for the janitor";
                     }
                     
                     todayContainer.html(countertoday);
-                    
-                    if(countertoday > 1000) {
-                        todayContainer.css('font-size',43);
-                        todayContainer.css('padding-top',42);
-                    }
-                    if(countertoday > 10000) {
-                        todayContainer.css('font-size',35);
-                        todayContainer.css('padding-top',47);
-                    }
-                    if(countertoday > 100000) {
-                        todayContainer.css('font-size',30);
-                        todayContainer.css('padding-top',51);
-                    }
                     
                 }, (20*timerCounter));
                 timerCounter++;
@@ -130,18 +133,6 @@ $boxes["Janitor"] = "Number of tasks in queue for the janitor";
                     
                     tomorrowContainer.html(counterTomorrow);
                     
-                    if(counterTomorrow > 1000) {
-                        tomorrowContainer.css('font-size',43);
-                        tomorrowContainer.css('padding-top',42);
-                    }
-                    if(counterTomorrow > 10000) {
-                        tomorrowContainer.css('font-size',35);
-                        tomorrowContainer.css('padding-top',47);
-                    }
-                    if(counterTomorrow > 100000) {
-                        tomorrowContainer.css('font-size',30);
-                        tomorrowContainer.css('padding-top',51);
-                    }
                     
                 }, (20*timerCounter));
                 timerCounter++;

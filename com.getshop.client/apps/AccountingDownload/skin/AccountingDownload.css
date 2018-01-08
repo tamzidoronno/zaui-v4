@@ -1,10 +1,15 @@
-.AccountingDownload .col_10,
-.AccountingDownload .col_9,
-.AccountingDownload .col_8,
-.AccountingDownload .col_6,
-.AccountingDownload .col_7 { width: 150px !important; }
+.AccountingDownload .col_startDate,
+.AccountingDownload .col_endDate,
+.AccountingDownload .col_rowCreatedDate {
+    width: 90px !important;
+}
 
-.AccountingDownload .col_5 { width: 50px !important; }
+.AccountingDownload .col_amountEx,
+.AccountingDownload .col_amountInc,
+.AccountingDownload .col_amountExDebet,
+.AccountingDownload .col_orders {
+    width: 80px !important;
+}
 
 .AccountingDownload .preview .row .col {
     display: inline-block;
@@ -33,4 +38,10 @@
     background-color: #EEE;
     text-align: center;
     padding: 20px;
+}
+
+.AccountingDownload .OrderSimplePrinter .compactorderheader div {
+    display: inline-block;
+    width: 200px;
+    border-bottom: solid 1px #DDD;
 }

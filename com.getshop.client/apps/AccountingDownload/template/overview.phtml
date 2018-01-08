@@ -35,6 +35,7 @@ foreach ($groupedOrders as $month => $orders) {
         <div class="col col1"><b><? echo $this->__f("Order id"); ?></b></div>
         <div class="col col2"><b><? echo $this->__f("Will be in file for periode"); ?></b></div>
         <div class="col col3"><b><? echo $this->__f("Should have been in file for periode"); ?></b></div>
+        <div class="col col4"><b><? echo $this->__f("Order total"); ?></b></div>
     </div>
     <?
     foreach ($orders as $order) {
@@ -45,6 +46,7 @@ foreach ($groupedOrders as $month => $orders) {
             <div class="col col1"><? echo $order->incrementOrderId; ?></div>
             <div class="col col2"><? echo $order->transferToAccountingDate; ?></div>
             <div class="col col3"><? echo $order->shouldHaveBeenTransferredToAccountingOnDate; ?></div>
+            <div class="col col3"><? echo $order->totalForOrder; ?></div>
         </div>
     <?
     }

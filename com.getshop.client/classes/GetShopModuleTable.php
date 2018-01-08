@@ -205,5 +205,12 @@ class GetShopModuleTable {
     public function avoidAutoExpanding() {
         $this->avoidAutoExpanding = true;
     }
+    
+    public static function formatDate($date) {
+        if (is_numeric($date)) {
+            return "<div class='rowdate1'>".date("d.m.y", $date/1000)."</div><div class='rowdate2'>".date("H:i", $date/1000)."</div>";
+        }
+        return "<div class='rowdate1'>".date("d.m.y", strtotime($date))."</div><div class='rowdate2'>".date("H:i", strtotime($date))."</div>";
+    }
 
 }

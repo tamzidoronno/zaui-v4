@@ -7,6 +7,16 @@ $file = $factory->getApi()->getGetShopAccountingManager()->getOrderFile($_GET['f
 
 $name = $file->subtype . "_".date("d.m.Y", strtotime($file->startDate)) . "-" . date("d.m.Y", strtotime($file->endDate));
 
+if ($file->base64Excel) {
+    header("Content-type: application/vnd.ms-excel");
+    header("Content-Disposition: attachment; filename=$name.xls");
+    header("Pragma: no-cache");
+    header("Expires: 0");    
+    
+    echo base64_decode($file->base64Excel);
+    return;
+}
+
 header("Content-type: text/csv");
 header("Content-Disposition: attachment; filename=$name.csv");
 header("Pragma: no-cache");

@@ -1,17 +1,116 @@
+.PmsSearchBooking {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.PmsSearchBooking .GetShopModuleTable .col_expandbutton i {
+   font-size: 30px;
+   color: #82cdf3;
+}
+
+.PmsSearchBooking .GetShopModuleTable .col_price .pricetagright {
+    background-image: url('{IMAGEFOLDER}/pricetagright.png');
+    width: 10px;
+    height: 20px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.PmsSearchBooking .GetShopModuleTable .col_price .price {
+    background-color: #82cdf3;
+    color: #FFF;
+    display: inline-block;
+    padding: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px 0px 0px 3px;
+    display: inline-block;
+    vertical-align: top;
+}
+
 .PmsSearchBooking .GetShopModuleTable .secondary_text {
     color: #888;
+}
+
+.PmsSearchBooking .GetShopModuleTable .guestname {
+    font-weight: bold;
+}
+    
+.PmsSearchBooking .GetShopModuleTable .col_state i {
+    font-size: 30px;
+    color: #82cdf3;
+}
+
+.PmsSearchBooking .GetShopModuleTable .guestname,
+.PmsSearchBooking .GetShopModuleTable .guestphone,
+.PmsSearchBooking .GetShopModuleTable .guestemail {
+    display: inline-block;
+    vertical-align: top;
+    width: 33%;
+    overflow: hidden;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
+.PmsSearchBooking .GetShopModuleTable .guestinfo2 {
+    display: inline-block;
+    width: calc(100% - 50px);
+    vertical-align: top;
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+.PmsSearchBooking .GetShopModuleTable .numberofguests {
+    border-radius: 1000px;
+    height: 40px;
+    width: 40px;
+    border: solid 2px #82cdf3;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.PmsSearchBooking .GetShopModuleTable .numberofguests .guesticon {
+    border-radius: 20px;
+    width: 20px;
+    height: 20px;
+    background-color: #82cdf3;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 12px;
+    color: #FFF;
+    line-height: 20px;
 }
 
 .PmsSearchBooking .GetShopModuleTable .col_visitor {
     width: 500px;
 }
+.PmsSearchBooking .GetShopModuleTable .col_checkin i {
+    position: absolute;
+    right: 10px;
+    color: #82cdf3;
+    top: 20px;
+}
+.PmsSearchBooking .GetShopModuleTable .col_checkin {
+    position: relative;
+    width: 80px;
+}
 
 .PmsSearchBooking .GetShopModuleTable .col_reg { width: 100px; }
-.PmsSearchBooking .GetShopModuleTable .col_periode { width: 100px; }
+.PmsSearchBooking .GetShopModuleTable .col_checkout { width: 100px; }
 .PmsSearchBooking .GetShopModuleTable .col_price { width: 50px; }
 .PmsSearchBooking .GetShopModuleTable .col_state { width: 45px; }
+.PmsSearchBooking .GetShopModuleTable .col_totalprice { width: 50px; }
+.PmsSearchBooking .GetShopModuleTable .col_expandbutton { width: 50px; }
+.PmsSearchBooking .GetShopModuleTable .col_bookedfor { width: 144px; }
 .PmsSearchBooking .GetShopModuleTable .col_room { width: 144px; }
-.PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 500px); }
+.PmsSearchBooking .GetShopModuleTable .col_addons { width: 60px; }
+.PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 933px); }
 
 .PmsSearchBooking .filterbox .dropdowns,
 .PmsSearchBooking .filterbox .enddate,
@@ -81,14 +180,6 @@
 .PmsSearchBooking .bookingoverview_content_row .workarea {
     width: calc(100% - 64px);
     box-sizing: border-box;
-}
-
-.PmsSearchBooking .datarow.active .datarow_inner{
-    
-    background-color: #EFEFEF;
-    color: #000;
-    border-bottom: solid 1px #CCC;
-    
 }
 
 .PmsSearchBooking .bookingoverview_content_row .menuarea {
@@ -423,16 +514,26 @@
     color: green;
 }
 
-.gsbody_inner[pageId="a90a9031-b67d-4d98-b034-f8c201a8f496"] .datarow.active{
-    box-shadow: 0px 5px 10px rgba(0,0,0,0.4), 0px -5px 10px rgba(0,0,0,0.4);
-    padding: 0px;
-}
-
 .gsbody_inner[pageId="a90a9031-b67d-4d98-b034-f8c201a8f496"] .datarow_extended_content {
     padding: 0px;
     border-top: 0px;
 }
 
+
+.PmsSearchBooking .datarow {
+    line-height: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+} 
+
+.PmsSearchBooking .datarow .rowdate1 {
+    font-weight: bold;
+} 
+
+.PmsSearchBooking .datarow .rowdate2 {
+    color: #666;
+    font-weight: bold;
+} 
 
 .PmsSearchBooking .guestinfo, 
 .PmsSearchBooking .guestinfobox {

@@ -1079,5 +1079,9 @@ class ApplicationManager extends FactoryBase {
     public function logLogout() {
         $this->getApi()->getUserManager()->logLogout();
     }
+    
+    public function toggleAccessToModule() {
+        $this->getApi()->getUserManager()->toggleModuleForUser($_POST['data']['moduleId'], $_POST['data']['password']);
+    }
 }
 ?>

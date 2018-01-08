@@ -29,6 +29,14 @@ thundashop.Administration = {
         });
         thundashop.Ajax.post(event);
     },
+    toggleAccessToModule: function(moduleId, password) {
+        var event = thundashop.Ajax.createEvent('','toggleAccessToModule',$(this),{
+            "moduleId" : moduleId,
+            "password" : password
+        });
+        
+        thundashop.Ajax.post(event);
+    },
     upgradeUserToGetShopAdmin: function(password) {
         var event = thundashop.Ajax.createEvent('','upgradeToGetShopAdmin',$(this),{
             "password" : password

@@ -767,4 +767,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return false;
     }
+    
+    public void resetTransferToAccounting() {
+        transferredToAccountingSystem = false;
+    }
 } 

@@ -198,6 +198,12 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 
         <title class='pagetitle'></title>
         <?
+        if (!$factory->isProductionMode()) {
+            echo '<link rel="stylesheet" href="https://i.icomoon.io/public/c0c7faf535/GetShopIcons/style.css">';
+        } else {
+            echo '<link rel="stylesheet" type="text/css" href="skin/default/icomoon/style.css" />';
+        }
+        
         if (!$isCmsLayout) {
             echo '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">';
             echo '<link rel="stylesheet" type="text/css" href="skin/default/gesthopmodules.css" />';
@@ -245,11 +251,12 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
             echo "</div>";
             
             echo "<div class='gs_framework_modules_icon'>";
-                echo "<i class='fa $activeModule->fontAwesome'></i>";
-                echo $activeModule->name;
+                echo "<i class='fa icon-menu'></i>";
             echo "</div>";
             
-            
+            if (!$isCmsLayout) {
+                echo "<div class='getshop_logo_icon'><i class='icon-gs-logo'></i> GetShop</div>";
+            }
         }
         
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->showLoguotCounter) {

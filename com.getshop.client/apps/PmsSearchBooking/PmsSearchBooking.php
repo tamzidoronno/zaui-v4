@@ -51,11 +51,31 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         return $this->formatter->formatStartPeriode($room);
     }
     
+    public function formatEndPeriode($room) {
+        return $this->formatter->formatEndPeriode($room);
+    }
+    
+    public function formatExpandButton($room) {
+        return $this->formatter->formatExpandButton($room);
+    }
+    
+    public function formatBookedFor($room) {
+        return $this->formatter->formatBookedFor($room);
+    }
+    
+    public function formatAddons($room) {
+        return $this->formatter->formatAddons($room);
+    }
+    
+    public function formatTotalPrice($room) {
+        return $this->formatter->formatTotalPrice($room);
+    }
+    
     public function render() {
         $this->setDefaults();
         
         if (!$this->isGroupBookingView()) {
-            $this->renderFilterBox();
+//            $this->renderFilterBox();
         }
         
         return $this->renderDataTable();
@@ -82,13 +102,18 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $attributes = array(
             array('id', 'gs_hidden', 'bookingEngineId'),
+            array('state', 'STATE', null, 'formatState'),            
             array('roomId', 'gs_hidden', 'roomId', 'formatRoomId'),
             array('reg', 'REG', 'regDate', 'formatRegDate'),
-            array('periode', 'PERIODE', null, 'formatStartPeriode'),
-            array('visitor', 'VISTOR', null, 'formatVistior'),
+            array('checkin', 'CHECKIN', null, 'formatStartPeriode'),
+            array('checkout', 'CHECKOUT', null, 'formatEndPeriode'),
+            array('visitor', 'VISITORS', null, 'formatVistior'),
+            array('addons', 'ADDONS', null, 'formatAddons'),
+            array('bookedfor', 'BOOKED FOR', null, 'formatBookedFor'),
             array('room', 'ROOM', null, 'formatRoom'),
             array('price', 'PRICE', null, 'formatPrice'),
-            array('state', 'STATE', null, 'formatState')
+            array('totalprice', 'TOTAL', null, 'formatTotalPrice'),
+            array('expandbutton', '', null, 'formatExpandButton')
         );
         
         $functionToUse = "getSimpleRooms";

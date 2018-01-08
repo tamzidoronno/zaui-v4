@@ -69,7 +69,14 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public int taxgroup = -1;
     public boolean privateExcluded = false;
     
+    /**
+     * This is the product id reflected in the accounting-system
+     */
     public String accountingSystemId;
+    
+    /**
+     * This is the accounting-number in the accounting-system.
+     */
     public String accountingAccount;
     
     public HashMap<String, AttributeItem> addedAttributes = new HashMap();

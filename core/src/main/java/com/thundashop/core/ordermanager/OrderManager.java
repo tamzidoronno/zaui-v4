@@ -2107,6 +2107,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(order -> order.isTransferBefore(endDate))
                 .collect(Collectors.toList());
         
+        if (retOrders == null) {
+            return new ArrayList();
+        }
+        
         return retOrders;
     }
 

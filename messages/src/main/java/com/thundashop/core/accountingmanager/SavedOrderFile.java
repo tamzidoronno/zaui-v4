@@ -31,6 +31,7 @@ public class SavedOrderFile extends DataCommon {
     public String transferId;
     public ArrayList ordersNow = new ArrayList();
     Date lastFinalized;
+    public String base64Excel;
     
     public boolean needFinalize() {
         if(lastFinalized == null) {

@@ -30,7 +30,11 @@ class PmsSearchBookingColumnFormatters {
         return $roomText;
     }
     
-    public function formatVistior($room) {
+    public function formatBookedFor($room) { 
+        return "<div class='secondary_text booked_for'>" . $room->owner . "</div>";
+    }
+    
+    public function formatAddons($room) {
         $comments = "";
         if(isset($room->bookingComments)) {
             foreach($room->bookingComments as $time => $val) {
@@ -40,7 +44,7 @@ class PmsSearchBookingColumnFormatters {
                 $comments .= $val->comment . "<br>";
             }
         }
-        
+       
         $vistorText = "";
         if($room->nonrefundable) {
             $vistorText .= "<i class='fa fa-usd' title='Non refundable'></i> ";
@@ -56,29 +60,38 @@ class PmsSearchBookingColumnFormatters {
         }
         
         $vistorText .= $this->createAddonText($room) . " ";
+        return $vistorText;
+    }
+    
+    public function formatVistior($room) {
         
-        foreach($room->guest as $guest) {
-            $vistorText .= $guest->name;
-            if($guest->email) { $vistorText .= " - " . $guest->email; }
-            if($guest->phone) { $vistorText .= "<span class='secondary_text'>+" . $guest->prefix . $guest->phone . "</span>"; }
-            $vistorText .= "<br>";
-        }
-        
-        $vistorText .= "<div class='secondary_text booked_for'>" . $room->owner . "</div>";
-        
-        $vistorText .= "<div></div><span class='secondary_text'>" .$room->numberOfGuests  . " guests";
+        $checkedIn = "";
         if($room->checkedIn) {
-            $vistorText .= " <i class='fa fa-smile-o' title='Guest has checked in'></i>";
-        }
-        $vistorText .= "</span>";
-        
-        if($room->requestedEndDate) {
-            $vistorText .= "<div class='secondary_text'> Requested end date <span >" . date("d.m.Y", strtotime($room->requestedEndDate)) . "</span></div>";
+            $checkedIn = "<div class='guesticon checkedin'><i class='fa fa-smile-o' title='Guest has checked in'></i></div>";
         }
         
-        if(@$filter->groupByBooking && $room->numberOfRoomsInBooking > 1) {
-            $vistorText .=  '<div>+ ' . ($room->numberOfRoomsInBooking-1) . " addititional entries.</div>";
-        }
+        $vistorText = "";
+        $vistorText = "<div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='icon-user'></i></div>$checkedIn</div>";
+        
+        $vistorText .= "<div class='guestinfo2'>";
+            foreach($room->guest as $guest) {
+                $vistorText .= "<div class='guestname'>".$guest->name."</div>";
+                if($guest->email) { $vistorText .= "<div class='guestemail'>" . $guest->email."</div>"; }
+                if($guest->phone) { $vistorText .= "<div class='guestphone'>+" . $guest->prefix . $guest->phone . "</div>"; }
+                $vistorText .= "<br>";
+            }
+
+            $vistorText .= "<div></div><span class='secondary_text'>";
+            $vistorText .= "</span>";
+
+            if($room->requestedEndDate) {
+                $vistorText .= "<div class='secondary_text'> Requested end date <span >" . date("d.m.Y", strtotime($room->requestedEndDate)) . "</span></div>";
+            }
+
+            if(@$filter->groupByBooking && $room->numberOfRoomsInBooking > 1) {
+                $vistorText .=  '<div>+ ' . ($room->numberOfRoomsInBooking-1) . " addititional entries.</div>";
+            }
+        $vistorText .= "</div>";
         
         return $vistorText;
     }
@@ -89,38 +102,39 @@ class PmsSearchBookingColumnFormatters {
             return "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-hourglass fa-stack-1x'></i> <i style='color: #FFF' class='fa fa-lock  fa-stack-3x'></i></span>";
         }
         
+        if ($room->progressState == "confirmed") {
+            $waiting = $this->pmsSearchBooking->__f("Booking is confirmed");
+            return "<span title='$waiting' ><i class='icon-clipboard-check'></i></span>";
+        }
+        
         if ($room->progressState == "notpaid") {
             $waiting = $this->pmsSearchBooking->__f("Room not paid");
-            return "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-usd fa-stack-1x'></i> <i class='fa fa-ban fa-stack-2x'></i></span>";
+            return "<span title='$waiting'><i class='icon-bag-dollar' style='color: red'></i></span>";
         }
         
         if ($room->progressState == "ended") {
             $waiting = $this->pmsSearchBooking->__f("Ended");
-            return "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-check fa-stack-1x'></i> <i class='fa fa-calendar fa-stack-2x'></i></span>";
+            return "<span title='$waiting'><i class='icon-checkered-flag'></i style='color: green'></span>";
         }
         
         if ($room->progressState == "active") {
             $waiting = $this->pmsSearchBooking->__f("All good (active)");
-            return "<span title='$waiting' class='fa-stack fa-lg'> <i class='fa fa-check fa-stack-2x'></i></span>";
+            return "<span title='$waiting'> <i class='icon-list'></i></span>";
         }
         
         return $room->progressState;
     }
     
     public function formatPrice($room) {
-        $priceData = round($room->price);
-        if($room->totalCost) {
-            $priceData = round($room->price) . "<div style='color:#aaa' title='Total cost for this room'>(" . round($room->totalCost) . ")</div>";
-        }
-        if(isset($filter->filterType) && $filter->filterType == "unsettled") {
-            $priceData = $room->totalUnsettledAmount;
-        }
+        $priceData = "<div><div class='price'>".round($room->price)."</div><div class='pricetagright'></div></div>";
         
         return $priceData;
     }
     
     public function formatRegDate($room) {
-        $date = date("d.m.y H:i", strtotime($room->regDate));
+        
+        $date = \GetShopModuleTable::formatDate($room->regDate);
+        $date = "<div class='rowdate1'>".date("d.m.y", strtotime($room->regDate))."</div><div class='rowdate2'>".date("H:i", strtotime($room->regDate))."</div>";
         if(!$room->bookingEngineId) {
             $date .= "<i class='fa fa-warning' title='Booking not added to booking engine' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
         }
@@ -128,12 +142,22 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatStartPeriode($room) {
-        $diff = ($room->end - $room->start)/1000;
-        if($diff < 40000) {
-            return date("d.m.Y H:i", $room->start/1000) . " - " . date("H:i", $room->end/1000);
-        } else {
-            return date("d.m.y H:i", $room->start/1000) . "<br>" . date("d.m.y H:i", $room->end/1000);
-        }
+        $date = \GetShopModuleTable::formatDate($room->start);
+        $date .= "<i class='fa fa-arrows-h'></i>";
+        return $date;
+    }
+    
+    public function formatTotalPrice($room) {
+        return $priceData = "<div title='Total cost for this room'>" . round($room->totalCost) . "</div>";
+    }
+    
+    public function formatEndPeriode($room) {
+        $date = \GetShopModuleTable::formatDate($room->end);
+        return $date;
+    }
+    
+    public function formatExpandButton() {
+        return "<i class='icon-chevrons-expand-vertical'></i>";
     }
     
     private function createAddonText($room) {

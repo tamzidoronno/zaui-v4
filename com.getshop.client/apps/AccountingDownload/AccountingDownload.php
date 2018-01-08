@@ -9,7 +9,6 @@ class AccountingDownload extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("select");
         
         if (isset($_SESSION['AccountingDownload_filesCreated'])) {
             $this->includefile("filescreated");
@@ -98,13 +97,25 @@ class AccountingDownload extends \MarketingApplication implements \Application {
         return number_format($colVal, 0, ",", ' ');
     }
     
+    public function formatStartDate($row) {
+        return \GetShopModuleTable::formatDate($row->startDate);
+    }
+    
+    public function formatEndDate($row) {
+        return \GetShopModuleTable::formatDate($row->endDate);
+    }
+    
+    public function formatCreatedDate($row) {
+        return \GetShopModuleTable::formatDate($row->rowCreatedDate);
+    }
+    
     public function printFileTable($data) {
         
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
-            array('rowCreatedDate', 'Date crated', 'rowCreatedDate'),
-            array('startDate', 'From', 'startDate'),
-            array('endDate', 'To', 'endDate'),
+            array('rowCreatedDate', 'Date crated', 'rowCreatedDate', 'formatCreatedDate'),
+            array('startDate', 'From', 'startDate', 'formatStartDate'),
+            array('endDate', 'To', 'endDate', 'formatEndDate'),
             array('orders', 'Orders', 'orders', 'formatOrderCount'),
             array('amountEx', 'Total ex taxes', 'amountEx', 'formatNumber'),
             array('amountInc', 'Total inc taxes', 'amountInc', 'formatNumber'),

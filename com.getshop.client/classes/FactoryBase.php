@@ -107,6 +107,10 @@ class FactoryBase {
     }
 
     public function isEditorMode() {
+        if ($this->getFactory()->isProductionMode() && !$this->getFactory()->isCmsMode()) {
+            return false;
+        }
+        
         $disabledDuToEditor = IocContainer::getFactorySingelton()->isAccessToBackedForEditorDisabled();
         if ($disabledDuToEditor)
             return false;

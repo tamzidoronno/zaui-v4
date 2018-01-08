@@ -6,7 +6,7 @@ app.AccountingDownload = {
     
     downloadFile : function() {
         var fileid = $(this).attr('fileid');
-        window.open('/scripts/gbat10download.php?fileid=' + fileid);
+        window.open('/scripts/accountingFileDownload.php?fileid=' + fileid);
     },
     
     deleteFile: function() {

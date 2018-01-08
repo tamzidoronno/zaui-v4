@@ -233,8 +233,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if(total < 0) {
                         List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
                         String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
-                        try {
-                            User user = userManager.getUserById(order.userId);
+                        try { 
+                           User user = userManager.getUserById(order.userId);
                             message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
                             message += "Other orders connected to booking:<br>";
                             for(String orderId : booking.orderIds) {

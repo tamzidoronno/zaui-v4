@@ -964,6 +964,17 @@ public class PageManager extends ManagerBase implements IPageManager {
         if (storeId.equals("a45072e5-92e4-4be8-90de-aa08771d6fb6") || storeId.equals("b703b793-c7f4-4803-83bb-106cab891d6c")) {
             return modules.getModules();
         }
+        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.emailAddress != null) {
+            String email = getSession().currentUser.emailAddress;
+            if(email.equals("post@getshop.com")) {
+                return modules.getModules();
+            }
+
+            if(email.toLowerCase().endsWith("@getshop.com")) {
+                return modules.getModules();
+            }
+        }
+        
         
         if (!GetShopLogHandler.isDeveloper) {
             return new ArrayList();

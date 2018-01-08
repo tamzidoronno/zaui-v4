@@ -90,12 +90,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function addRooms() {
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        
         $number = $_POST['data']['numberofrooms'];
         for($i = 0; $i < $number; $i++) {
             $room = new \core_pmsmanager_PmsBookingRooms();
             $room->date = new \core_pmsmanager_PmsBookingDateRange();
-            $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-            $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+            $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']. " " . $config->defaultStart));
+            $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']. " " . $config->defaultEnd));
             $currentBooking->rooms[] = $room;
         }
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $currentBooking);

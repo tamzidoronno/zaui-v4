@@ -10,6 +10,7 @@ public class StartBookingResult {
     public Integer totalRooms = 0;
     public Integer roomsSelected = 0;
     public Double totalAmount = 0.0;
+    public Integer numberOfDays = 0;
     
     public List<RoomsSelected> getRoomsSelected() {
         List<RoomsSelected> res = new ArrayList();

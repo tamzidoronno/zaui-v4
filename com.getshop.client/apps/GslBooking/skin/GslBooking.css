@@ -218,7 +218,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 #productoverview_footer{height:0px;background:red;}/*Stops fixed header*/
 /*.GslBooking .gslfront_1 #productentry{overflow-y: auto;}*/
 .GslBooking .gslfront_1 .productentry table{width: 100%;}
-.GslBooking .gslfront_1 .productentry table td{padding:12px 6px;font-size: 14px;}
+.GslBooking .gslfront_1 .productentry table td{padding:0px 6px;font-size: 14px;}
 
 /*css scrollbar is not supported in Mozilla firefox, and Edge*/
 .GslBooking .gslfront_1 #productentry::-webkit-scrollbar-track{box-shadow: inset 1px 0px 2px #ddd;background-color:#f1f1f1;}
@@ -235,7 +235,7 @@ Error      : #de5353; red
     background-position: center center;
     background-repeat: no-repeat;
     transition: all 350ms ease-in-out;
-    padding-bottom: 64%;}
+    padding-bottom: 64%; width:100%; }
 .GslBooking .gslfront_1 .productentry_gallery .gallery {position: relative;white-space: nowrap;font-size: 0;}
 .GslBooking .gslfront_1 .productentry_gallery .featured-image:hover{opacity:0.7;}
 .GslBooking .gslfront_1 .productentry_gallery .gallery-wrapper {position: relative;overflow: hidden;}

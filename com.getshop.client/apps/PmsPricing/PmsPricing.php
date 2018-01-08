@@ -42,7 +42,7 @@ class PmsPricing extends \WebshopApplication implements \Application {
         foreach($_POST['data'] as $key => $val) {
             if((stristr($key, "_toinclude") || stristr($key, "_includedinroomprice")) && $val == "true") {
                 $productId = str_replace("_toinclude", "", $key);
-                $productId = str_replace("_includedinroomprice", "", $key);
+                $productId = str_replace("_includedinroomprice", "", $productId);
                 $includedInRoomPrice = $_POST['data'][$productId.'_includedinroomprice'];
                 $toAdd = new \core_cartmanager_data_AddonsInclude();
                 $toAdd->productId = $productId;

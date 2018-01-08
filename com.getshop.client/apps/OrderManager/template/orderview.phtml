@@ -322,6 +322,21 @@ echo "<div class='gss_button' style='float:right;' onclick='$(\".gshiddenlogpara
         <br/>
         <div class="gss_button" gss_value="<? echo $order->id; ?>" gss_method="lockOrder" gss_model="ordermodel" gss_fragment="orderview" gss_view="gss_orderview">
             <? echo $this->__f("Manually lock/unlock order"); ?>
-        </div>    
+        </div>
+        <span class="gss_button changeorderdate" orderid="<? echo $order->id; ?>">Change order date</span>
     </div>
 </div>
+
+<script>
+    $('.changeorderdate').on('click', function() {
+        var date = prompt("New date");
+        var event = thundashop.Ajax.createEvent('','changeOrderDate', "ns_27716a58_0749_4601_a1bc_051a43a16d14\\OrderManager", {
+            "date" : date,
+            "id" : $(this).attr('orderid')
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            alert('changed');
+        });
+    });
+</script>

@@ -848,7 +848,7 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function displayColorPickers() {
-        $this->includefile("GetShopColorPicker");
+//        $this->includefile("GetShopColorPicker");
     }
 
     public function deleteApplication() {

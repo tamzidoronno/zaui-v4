@@ -71,7 +71,7 @@ class TripTease extends \WebshopApplication implements \Application {
         $id = $this->getHotelKey();
         if($id) {
             ?>
-            <script defer src="https://static.triptease.io/paperboy/paperboy.js?hotelkey=<?php echo $id; ?>"></script>
+            <script src="https://static.triptease.io/paperboy/paperboy.js?hotelkey=<?php echo $id; ?>" defer></script>
             <?php
         }
     }

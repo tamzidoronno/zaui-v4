@@ -13,5 +13,13 @@ class GetShopLiteTheme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    
+    public function addScripts() {
+        echo "<link href='https://fonts.googleapis.com/css?family=Barlow+Condensed:400,700' rel='stylesheet'>";
+    }
+    
+    public function isAllowingSideBar() {
+        return true;
+    }
 }
 ?>

@@ -1216,6 +1216,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
         prices.channelDiscount = newPrices.channelDiscount;
         prices.derivedPrices = newPrices.derivedPrices;
+        prices.derivedPricesChildren = newPrices.derivedPricesChildren;
         prices.productPrices = newPrices.productPrices;
         prices.longTermDeal = newPrices.longTermDeal;
         prices.coveragePrices = newPrices.coveragePrices;

@@ -156,6 +156,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         $pricingObject->pricesExTaxes = $_POST['data']['prices_ex_taxes'] == "true";
         $pricingObject->privatePeopleDoNotPayTaxes = $_POST['data']['privatePeopleDoNotPayTaxes'] == "true";
         $pricingObject->derivedPrices = $_POST['data']['derivedPrices'];
+        $pricingObject->derivedPricesChildren = $_POST['data']['derivedPricesChildren'];
         if(isset($_POST['data']['priceType'])) {
             $pricingObject->defaultPriceType = $_POST['data']['priceType'];
         }

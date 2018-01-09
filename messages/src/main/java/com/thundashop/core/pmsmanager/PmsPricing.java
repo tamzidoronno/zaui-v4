@@ -20,6 +20,7 @@ public class PmsPricing extends DataCommon {
     public HashMap<String, Integer> channelDiscount = new HashMap();
     /* ItemtypeId, Map<NumberOfGuests, Price>> */
     public HashMap<String, HashMap<Integer, Double>> derivedPrices = new HashMap();
+    public HashMap<String, HashMap<Integer, Double>> derivedPricesChildren = new HashMap();
     public Double price_mon;
     public Double price_tue;
     public Double price_wed;

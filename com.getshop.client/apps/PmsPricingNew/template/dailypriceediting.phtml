@@ -49,42 +49,91 @@ $prices = $priceObject->dailyPrices;
 </div>
 <span style='cursor:pointer;' onclick='$(".additionalguestprices").toggle()'>Show more options</span>
 <div style='display:none;' class='additionalguestprices'>
-    <h1>Additional guest price</h1>
     <table>
-    <?php
-    $maxCount = 0;
-    foreach($itemTypes as $type) {
-        if($maxCount < $type->size) {
-            $maxCount = $type->size;
-        }
-    }
-    echo "<tr>";
-    echo "<td></td>";
-    for($i = 2; $i <= $maxCount; $i++) {
-        echo "<th>Guest $i</th>";
-    }
-    ?>
-    <?php
-    $derivedPrices = $priceObject->derivedPrices;
-
-    foreach($itemTypes as $type) {
-            echo "<tr>";
-            echo "<td>" . $type->name . "</td>";
-            for($i = 2; $i <= $type->size; $i++) {
-                
-                $toSet = 0.0;
-                if(isset($derivedPrices->{$type->id})) {
-                    $curPrices = $derivedPrices->{$type->id};
-                    if(isset($derivedPrices) && isset($curPrices->{$i})) {
-                        $toSet = $curPrices->{$i};
+        <tr>
+            <td>
+                <div style='overflow: auto;max-width: 800px; min-width: 520px;padding: 20px; margin-right: 20PX;'>
+                    <h1>Additional guest price per adult</h1>
+                    <table>
+                    <?php
+                    $maxCount = 0;
+                    foreach($itemTypes as $type) {
+                        if($maxCount < $type->size) {
+                            $maxCount = $type->size;
+                        }
                     }
-                }
+                    echo "<tr>";
+                    echo "<td></td>";
+                    for($i = 2; $i <= $maxCount; $i++) {
+                        echo "<th>Guest $i</th>";
+                    }
+                    ?>
+                    <?php
+                    $derivedPrices = $priceObject->derivedPrices;
 
-                echo "<td><input type='txt' class='derivedprices' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
-            }
-            echo "</tr>";
-        }
-    ?>
+                    foreach($itemTypes as $type) {
+                            echo "<tr>";
+                            echo "<td>" . $type->name . "</td>";
+                            for($i = 2; $i <= $type->size; $i++) {
+
+                                $toSet = 0.0;
+                                if(isset($derivedPrices->{$type->id})) {
+                                    $curPrices = $derivedPrices->{$type->id};
+                                    if(isset($derivedPrices) && isset($curPrices->{$i})) {
+                                        $toSet = $curPrices->{$i};
+                                    }
+                                }
+
+                                echo "<td><input type='txt' class='derivedprices' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
+                            }
+                            echo "</tr>";
+                        }
+                    ?>
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div style='overflow: auto;max-width: 800px; min-width: 520px;padding: 20px; margin-right: 20PX;'>
+                    <h1>Additional guest price per child</h1>
+                    <table>
+                    <?php
+                    $maxCount = 0;
+                    foreach($itemTypes as $type) {
+                        if($maxCount < $type->size) {
+                            $maxCount = $type->size;
+                        }
+                    }
+                    echo "<tr>";
+                    echo "<td></td>";
+                    for($i = 2; $i <= $maxCount; $i++) {
+                        echo "<th>Guest $i</th>";
+                    }
+                    ?>
+                    <?php
+                    $derivedPrices = $priceObject->derivedPricesChildren;
+
+                    foreach($itemTypes as $type) {
+                            echo "<tr>";
+                            echo "<td>" . $type->name . "</td>";
+                            for($i = 2; $i <= $type->size; $i++) {
+
+                                $toSet = 0.0;
+                                if(isset($derivedPrices->{$type->id})) {
+                                    $curPrices = $derivedPrices->{$type->id};
+                                    if(isset($derivedPrices) && isset($curPrices->{$i})) {
+                                        $toSet = $curPrices->{$i};
+                                    }
+                                }
+
+                                echo "<td><input type='txt' class='derivedPricesChildren' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
+                            }
+                            echo "</tr>";
+                        }
+                    ?>
+                    </table>
+                </div>
+            </td>
+        </tr>
     </table>
 </div>
 

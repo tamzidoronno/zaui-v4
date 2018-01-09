@@ -146,9 +146,18 @@ app.PmsPricingNew = {
             derivedPrices[$(this).attr('bookingtype')][$(this).attr('guestcount')] = $(this).val();
         });
         
+        var derivedPricesChildren = {};
+        $('.derivedPricesChildren').each(function() {
+            if(typeof(derivedPricesChildren[$(this).attr('bookingtype')]) === "undefined") {
+                derivedPricesChildren[$(this).attr('bookingtype')] = {};
+            }
+            derivedPricesChildren[$(this).attr('bookingtype')][$(this).attr('guestcount')] = $(this).val();
+        });
+        
         data['channeldiscount'] = discountedPrices;
         data['prices'] = prices;
         data['derivedPrices'] = derivedPrices;
+        data['derivedPricesChildren'] = derivedPricesChildren;
         data['prices_ex_taxes'] = $('.pricesextaxes').is(':checked');
         data['privatePeopleDoNotPayTaxes'] = $('.privatePeopleDoNotPayTaxes').is(':checked');
         data['pricetype'] = $('.pricetypeselection').val();

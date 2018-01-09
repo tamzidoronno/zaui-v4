@@ -6,6 +6,7 @@ body {
     background-color: #fff;}
 a {color:inherit;}
 .content a{color:#329ad6;}
+.content a:hover{opacity:0.7;}
 h3 {
     text-transform: uppercase;
     color:#696969;

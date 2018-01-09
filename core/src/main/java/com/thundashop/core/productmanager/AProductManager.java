@@ -62,6 +62,7 @@ public abstract class AProductManager extends ManagerBase {
         } else {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
+        checkIncrementalProductId(product);
         
         setOriginalPriceIfNull(product);
         setGroupPrice(product);
@@ -128,6 +129,7 @@ public abstract class AProductManager extends ManagerBase {
         for (DataCommon object : data.data) {
             if (object instanceof Product) {
                 Product product = (Product) object;
+                finalize(product);
                 products.put(product.id, product);
             }
             if (object instanceof ProductList) {
@@ -137,6 +139,9 @@ public abstract class AProductManager extends ManagerBase {
             if (object instanceof ProductCategory) {
                 ProductCategory cat = (ProductCategory) object;
                 categories.put(cat.id, cat);
+            }
+            if (object instanceof ProductConfiguration) {
+                productConfiguration = (ProductConfiguration)object;
             }
             if (object instanceof TaxGroup) {
                 TaxGroup group = (TaxGroup) object;
@@ -329,6 +334,15 @@ public abstract class AProductManager extends ManagerBase {
             Product iproduct = products.get(subProductId);
             finalize(iproduct);
             product.subProducts.add(iproduct);
+        }
+    }
+
+    private void checkIncrementalProductId(Product product) {
+        if(product.incrementalProductId == null) {
+            productConfiguration.incrementalProductId++;
+            product.incrementalProductId = productConfiguration.incrementalProductId;
+            saveObject(productConfiguration);
+            saveObject(product);
         }
     }
 }

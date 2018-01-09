@@ -79,7 +79,7 @@ foreach($config->addonConfiguration as $item) {
         $noRefundable = $addonItem->noRefundable ? "CHECKED" : "";
         $states = $this->getFactory()->getLanguageReadable();
     ?>
-    <tr class='settingsForProduct' productid='<?php echo $product->id; ?>'>
+    <tr class='settingsForProduct' productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
         <td style="width:300px;text-align: left;position:relative;">
             <i class="fa fa-info-circle" style="color:green; cursor:pointer;" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();"></i>
             <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gstype="forceClicksubmitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>

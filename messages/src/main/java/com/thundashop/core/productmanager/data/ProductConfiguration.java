@@ -7,4 +7,5 @@ import java.util.LinkedHashMap;
 
 public class ProductConfiguration extends DataCommon  {
     public LinkedHashMap<String, Boolean> productTabs = new LinkedHashMap();
+    public Integer incrementalProductId = 0;
 }

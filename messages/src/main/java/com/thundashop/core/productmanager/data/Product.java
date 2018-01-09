@@ -68,6 +68,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public boolean hideShippingPrice = false;
     public int taxgroup = -1;
     public boolean privateExcluded = false;
+    public Integer incrementalProductId = null;
+    
     
     /**
      * This is the product id reflected in the accounting-system

@@ -338,7 +338,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .overview_addons .addButton.added_addon{background-color:#de5353;}
 .GslBooking .gslfront_1 .overview_addons .addButton.added_addon:hover{background-color:#de5353;}
 .GslBooking .gslfront_1 .overview_addons .addButton:hover{background-color:#91bfec;}
-.GslBooking .secondary_text { color:#bbb; font-size:14px;}
+.GslBooking .secondary_text { text-align: right; color:#bbb; font-size:14px; }
 
 .GslBooking .gslfront_1 .overview_addons .addon{
     padding: 12px 0;

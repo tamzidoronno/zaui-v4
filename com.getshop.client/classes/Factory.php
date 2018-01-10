@@ -248,7 +248,7 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.ImportApplication.js");
         $this->addJavascriptFile("js/getshop.Toolbox.js");
         $this->addJavascriptFile("js/datatables/jquery.dataTables.min.js");
-        $this->addJavascriptFile("js/colorpicker/js/colorpicker.js");
+//        $this->addJavascriptFile("js/colorpicker/js/colorpicker.js");
         $this->addJavascriptFile("js/jquery.applicationPicker.js");
         $this->addJavascriptFile("js/imagesloaded.pkgd.min.js");
         $this->addJavascriptFile("js/getshop.doImageUpload.js");
@@ -572,7 +572,7 @@ class Factory extends FactoryBase {
     public function showCssFiles() {
         if ($this->isEditorMode()) {
             $this->addCssFile("skin/default/ckeditor.css");
-            $this->addCssFile("js/colorpicker/css/colorpicker.css");
+//            $this->addCssFile("js/colorpicker/css/colorpicker.css");
         }
         
         

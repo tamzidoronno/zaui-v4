@@ -1,13 +1,13 @@
 <?php
-namespace ns_cf1cbe7b_9aed_4d00_b67f_40be9b43a11d;
+namespace ns_ed3e3855_ea9d_4f2c_a8ef_c880938a97e4;
 
-class GetShopLiteTheme extends \ThemeApplication implements \Application {
+class FinsnesgaardTheme extends \ThemeApplication implements \Application {
     public function getDescription() {
         
     }
 
     public function getName() {
-        return "GetShopLiteTheme";
+        return "FinsnesgaardTheme";
     }
 
     public function render() {
@@ -16,10 +16,6 @@ class GetShopLiteTheme extends \ThemeApplication implements \Application {
     
     public function addScripts() {
         echo "<link href='https://fonts.googleapis.com/css?family=Barlow+Condensed:400,700' rel='stylesheet'>";
-    }
-    
-    public function isAllowingSideBar() {
-        return true;
     }
 }
 ?>

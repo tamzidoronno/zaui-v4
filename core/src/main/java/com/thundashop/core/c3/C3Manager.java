@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -744,7 +745,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             Date toCalclateFrom = getHighestDate(start, periode.from);
             Date toCalculateTo = getLowestDate(end, periode.to);
             double days = daysBetween(toCalclateFrom, toCalculateTo);
-            double priceEachDay = (double)roundSumForYear.sum / (double)365;
+            double priceEachDay = (double)roundSumForYear.sum / getHowManyDaysInYear(start);
             double fullPrice = (priceEachDay * days);
             totalForPeriode += fullPrice * ((double)forskningsPeriode.percents/(double)100) * ((double)periode.percent/(double)100);
         }
@@ -752,7 +753,14 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         if (totalForPeriode > 0)
             System.out.println(totalForPeriode);
         
-        return totalForPeriode;
+        return Math.round(totalForPeriode);
+    }
+    
+    private double getHowManyDaysInYear(Date start) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        int numOfDays = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+        return (double)numOfDays;
     }
     
     @Override
@@ -763,21 +771,28 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         int year = getYear(periode.from);
         C3RoundSum roundSumForYear = getRoundSum(year);
         double days = daysBetween(periode.from, periode.to);
-        double priceEachDay = (double)roundSumForYear.sum / (double)365;
+        double priceEachDay = (double)roundSumForYear.sum / getHowManyDaysInYear(periode.from);
         double factor = periode.percent / 100;
         double fullPrice = (priceEachDay * days) *  factor;
         
         if (forskningsPeriode != null)
             fullPrice = fullPrice * ((double)forskningsPeriode.percents/(double)100);
         
-        return (int)fullPrice;
+        return (int)Math.round(fullPrice);
     }
     
     private int daysBetween(Date d1, Date d2){
         Calendar cal = Calendar.getInstance();
         cal.setTime(d2);
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
         d2 = cal.getTime();
-        return (int)( ((d2.getTime() + 1) - d1.getTime()) / (1000 * 60 * 60 * 24));
+
+        long diff = d2.getTime() - d1.getTime();
+      
+        return (int) (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) + 1);
+
     }
 
     private int getYear(Date start) {

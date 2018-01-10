@@ -153,7 +153,7 @@ public class TripleTexExcel extends AccountingSystemBase {
         row.createCell(getCellNumber("ORDER LINE - VAT CODE")).setCellValue(product.sku);
         
         // Product Name
-        row.createCell(getCellNumber("ORDER LINE - PROD NO")).setCellValue(product.accountingSystemId);
+        row.createCell(getCellNumber("ORDER LINE - PROD NO")).setCellValue(product.incrementalProductId);
         row.createCell(getCellNumber("ORDER LINE - PROD NAME")).setCellValue(nullAndCsvCheck(product.name));
     }
 

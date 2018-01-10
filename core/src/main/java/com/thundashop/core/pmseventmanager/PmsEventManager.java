@@ -2,6 +2,7 @@ package com.thundashop.core.pmseventmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -62,7 +63,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         cachedList = null;
 
         if(day != null && !day.isEmpty()) {
-            PmsBookingEventEntry oldentry = getEntry(entry.id, "");
+            PmsBookingEventEntry oldentry = getEntryClearOverrides(entry.id, "",false);
             oldentry.saveDay(entry, day);
             saveObject(oldentry);
         } else {
@@ -106,20 +107,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Override
     public PmsBookingEventEntry getEntry(String entryId, String day) {
-        if(entries.get(entryId) == null) {
-            createEvent(entryId);
-        }
-        
-        PmsBookingEventEntry entry = finalize(entries.get(entryId), false);
-        if(day != null && !day.isEmpty()) {
-            entry = entry.getDay(day);
-            entry.id = entryId;
-        }
-        
-        entry.roomNames = new ArrayList();
-        entry.overrideEntries = new HashMap();
-
-        return entry;
+        return getEntryClearOverrides(entryId, day, true);
     }
 
     @Override
@@ -312,6 +300,28 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             }
         }
         return false;
+    }
+
+    private PmsBookingEventEntry getEntryClearOverrides(String entryId, String day, boolean clear) {
+        if(entries.get(entryId) == null) {
+            createEvent(entryId);
+        }
+        
+        PmsBookingEventEntry entry = finalize(entries.get(entryId), false);
+        if(day != null && !day.isEmpty()) {
+            entry = entry.getDay(day);
+            entry.id = entryId;
+        }
+        
+        if(clear) {
+            Gson gson = new Gson();
+            String txt = gson.toJson(entry);
+            entry = gson.fromJson(txt, PmsBookingEventEntry.class);
+            entry.roomNames = new ArrayList();
+            entry.overrideEntries = new HashMap();
+        }
+
+        return entry;
     }
     
 }

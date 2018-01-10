@@ -1,0 +1,148 @@
+<?php
+/* @var $this \ns_9cea7eba_7807_4e4c_8d60_e7d58fbad13a\PmsGlobalSettings */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+?>
+<h1>Global settings</h1>
+<div class='settingsform' style='padding-right: 50px;' method='saveSettings' gstype='form'>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='forceRequiredFieldsForEditors' <?php if($config->forceRequiredFieldsForEditors) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Force required fields, when an editor / admin registers, does it need to fill in required fields?
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='avoidRandomRoomAssigning' <?php if($config->avoidRandomRoomAssigning) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Avoid random assigning of room, use sorted list instead.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='autoDeleteUnpaidBookings' <?php if($config->autoDeleteUnpaidBookings) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Automatically delete unpaid bookings
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='forceRequiredFieldsForEditors' <?php if($config->forceRequiredFieldsForEditors) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Make sure the customers agree to the terms and conditions
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='hourOfDayToStartBoarding' value='<?php echo $config->hourOfDayToStartBoarding; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Start boarding at hour of day<br>
+            * At what hour of the day would like to grant access to the room if it has been cleaned?
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='defaultStart' value='<?php echo $config->defaultStart; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Default start<br>
+            * Default check in time.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='defaultEnd' value='<?php echo $config->defaultEnd; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Default end<br>
+            * Default check out time.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='childMaxAge' value='<?php echo $config->childMaxAge; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Children age<br>
+            * At what age does a child become an adult?
+        </span>
+    </div>
+    
+    <h1>Payment and order creation</h1>
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='numberOfDaysToSendPaymentLinkAheadOfStay' value='<?php echo $config->numberOfDaysToSendPaymentLinkAheadOfStay; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Number of days to autosend payment requirements to.<br>
+            Automatically send the payment link of type "If order has not been paid" the specified days ahead of the check in date.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='autoSendPaymentReminder' <?php if($config->autoSendPaymentReminder) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            When payment are missing, automatically send payment link to booker.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='autoSendInvoice' <?php if($config->autoSendInvoice) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Automatically send invoices when they are created.
+        </span>
+    </div>
+    
+    
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='ignorePaymentWindowDaysAheadOfStay' value='<?php echo $config->ignorePaymentWindowDaysAheadOfStay; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            If stay is booked number of days before stay, do not show payment window.<br>
+            Set to 0 if you always want to display the payment window.
+        </span>
+    </div>
+    
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='automarkInvoicesAsPaid' <?php if($config->automarkInvoicesAsPaid) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Automark invoices as paid for.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='autoSumarizeCartItems' <?php if($config->autoSumarizeCartItems) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Automatically summarize items in cart when create order (credits and debets).
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='markBookingsWithNoOrderAsUnpaid' <?php if($config->markBookingsWithNoOrderAsUnpaid) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            If a booking has no order, mark it as unpaid.
+        </span>
+    </div>
+    <div style='text-align: right;'>
+        <input type='button' style='padding: 9px; width:200px; cursor:pointer;' value='save' gstype='submit'>
+    </div>
+</div>
+
+
+
+
+
+
+

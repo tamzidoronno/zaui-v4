@@ -110,6 +110,7 @@ public class PmsConfiguration extends DataCommon {
     public String defaultEnd = "12:00";
     public String extraField = "";
     public String smsName = "GetShop";
+    public Integer childMaxAge = 6;
     
     //Lock system
     public HashMap<String, PmsLockServer> lockServerConfigs = new HashMap();

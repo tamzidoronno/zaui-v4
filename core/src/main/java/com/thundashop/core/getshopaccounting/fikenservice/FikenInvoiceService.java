@@ -68,8 +68,12 @@ public class FikenInvoiceService extends FikenServiceBase {
 
         String invoiceServiceUrl = company.getLink("https://fiken.no/api/v1/rel/create-invoice-service").getHref();
         HttpEntity<FikenInvoiceCreateRequest> request = new HttpEntity<>(invoice, headers);
-        ResponseEntity<FikenInvoiceCreateRequest> response = restTemplate.exchange(invoiceServiceUrl, HttpMethod.POST, request, FikenInvoiceCreateRequest.class);
-        return response.getStatusCode().equals(HttpStatus.CREATED);
+        try {
+            ResponseEntity<FikenInvoiceCreateRequest> response = restTemplate.exchange(invoiceServiceUrl, HttpMethod.POST, request, FikenInvoiceCreateRequest.class);
+            return response.getStatusCode().equals(HttpStatus.CREATED);
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     private void createOrderLine(Resource<FikenCompany> company, Order order, FikenInvoiceCreateRequest invoice) {

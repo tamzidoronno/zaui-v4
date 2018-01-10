@@ -59,11 +59,7 @@ public class FikenInvoiceService extends FikenServiceBase {
         invoice.setInvoiceText(order.invoiceNote);
         invoice.setIssueDate(new Date());
         invoice.setOurReference(""+order.incrementOrderId);
-        
-        if (order.kid != null && order.kid.isEmpty()) {
-            invoice.setKid(order.kid);
-        }
-        
+ 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON_UTF8 }));
         headers.set("X-Request-ID", getRequestId());

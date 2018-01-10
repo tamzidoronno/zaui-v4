@@ -9,4 +9,5 @@ public class PmsGuests implements Serializable {
     public String email;
     public String prefix = "47";
     public String guestId = UUID.randomUUID().toString();
+    public boolean isChild = false;
 }

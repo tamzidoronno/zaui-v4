@@ -38,6 +38,8 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
     private void traceResponse(ClientHttpResponse response) throws IOException {
         StringBuilder inputStringBuilder = new StringBuilder();
         
+        HttpHeaders headers = response.getHeaders();
+        
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getBody(), "UTF-8"));
         String line = bufferedReader.readLine();
         while (line != null) {

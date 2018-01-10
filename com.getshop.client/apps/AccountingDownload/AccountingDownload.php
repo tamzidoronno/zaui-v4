@@ -120,9 +120,8 @@ class AccountingDownload extends \MarketingApplication implements \Application {
             array('amountEx', 'Total ex taxes', 'amountEx', 'formatNumber'),
             array('amountInc', 'Total inc taxes', 'amountInc', 'formatNumber'),
             array('amountExDebet', 'Total ex debet', 'amountExDebet', 'formatNumber'),
-            array('amountIncDebet', 'Total ex debet', 'amountIncDebet', 'formatNumber'),
-            array('subtype', 'Type', 'subtype'),
-            array(null, 'Download', null, 'formatDownload')
+            array('amountIncDebet', 'Total inc debet', 'amountIncDebet', 'formatNumber'),
+            array('download', 'Download', null, 'formatDownload')
         );
         
         $args = array(null);

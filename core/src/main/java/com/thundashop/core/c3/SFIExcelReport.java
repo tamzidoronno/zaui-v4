@@ -384,9 +384,9 @@ public class SFIExcelReport {
         }
         
         if (segreate && shouldTransferToOtherWp11(wpId)) {
-            double post11RemovalTotal = sumtotal * 0.01;
             double post11RemovalTotalNfr = 0;
             double post11RemovalTotalInkind = suminkind * 0.01;
+            double post11RemovalTotal = post11RemovalTotalInkind;
 
             
             sumtotal -= (int)post11RemovalTotal;
@@ -505,9 +505,9 @@ public class SFIExcelReport {
         }
         
         if (segreate && shouldTransferToOtherWp11(wpId)) {
-            double post11RemovalTotal = sumtotal * 0.01;
             double post11RemovalTotalNfr = 0;
             double post11RemovalTotalInkind = suminkind * 0.01;
+            double post11RemovalTotal = post11RemovalTotalInkind;
                     
             sumtotal -= (int)post11RemovalTotal;
             sumnfr -= (int)post11RemovalTotalNfr;
@@ -611,9 +611,10 @@ public class SFIExcelReport {
         }
         
         if (segreate && shouldTransferToOtherWp11(wpId)) {
-            double post11RemovalTotal = sumtotal * 0.01;
+            
             double post11RemovalTotalNfr = 0;
             double post11RemovalTotalInkind = suminkind * 0.01;
+            double post11RemovalTotal = post11RemovalTotalInkind;
                     
             sumtotal -= (int)post11RemovalTotal;
             sumnfr -= (int)post11RemovalTotalNfr;

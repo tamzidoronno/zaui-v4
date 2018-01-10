@@ -3,16 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.getshopaccounting;
+package com.thundashop.core.getshopaccounting.fikenservice;
 
 /**
  *
  * @author ktonder
  */
-public enum SystemType {
-     GBAT10,
-     XLEDGER,
-     TRIPLETEX_EXCEL,
-     FIKEN_API
- }
-
+public class FikenProductService {
+    
+}

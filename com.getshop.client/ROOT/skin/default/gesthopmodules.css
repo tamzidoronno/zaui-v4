@@ -30,7 +30,6 @@ body {
     
     margin-top: 5px;
     margin-bottom: -7px;
-    color: pink;
 }
 .gsarea[area="header"] .Menu .entry a {
     line-height: 40px;
@@ -226,9 +225,24 @@ body {
     padding: 40px 0px 10px 20px;
     border-top: solid 1px #DDD;
 }
+.module_toprow .top-row-icon {
+    font-size: 25px;
+    display: inline-block;
+    padding-top: 3px;
+    vertical-align: bottom;
+    margin-bottom: 2px;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.module_toprow .top-row-icon.active {
+    color: #82cdf3 !important;
+}
+
 .module_toprow {
     padding: 10px 0px 10px 20px;
-    font-size: 40px !important;
+    font-size: 25px !important;
 }
 
 .GetShopModuleTable .datarow .rowdate1 {

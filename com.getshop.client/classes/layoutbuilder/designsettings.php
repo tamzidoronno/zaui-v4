@@ -200,21 +200,3 @@ $factory = IocContainer::getFactorySingelton();
         }
     ?>
 </div>
-
-
-<br/>
-<br/>
-
-<script>
-    var gsonworkingonpicker = null;
-    $('.gsresizingpanel').draggable({handle: ".heading"});
-    $('.gscolselector').on('click', function () {
-        gsonworkingonpicker = $(this);
-    });
-    $('.gscolselector').ColorPicker({ onChange: function (hsb, hex, rgb) {
-            var field = gsonworkingonpicker.closest('.gspickerwrapper').find('.gspickerinput');
-            field.val("#" + hex);
-            field.ColorPickerHide();
-            field.keyup();
-        }});
-</script>

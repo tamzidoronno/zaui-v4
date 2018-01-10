@@ -5,18 +5,16 @@
  */
 package com.thundashop.core.getshopaccounting.fikenservice;
 
+import java.io.Serializable;
 import org.springframework.hateoas.ResourceSupport;
 
 /**
  *
  * @author ktonder
  */
-public class FikenCompany {
+public class FikenBankAccount extends ResourceSupport implements Serializable {
     private String name;
-    private String slug;
-    private String organizationNumber;
-    boolean templated;
-
+    
     public String getName() {
         return name;
     }
@@ -25,19 +23,4 @@ public class FikenCompany {
         this.name = name;
     }
 
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
-
-    public String getOrganizationNumber() {
-        return organizationNumber;
-    }
-
-    public void setOrganizationNumber(String organizationNumber) {
-        this.organizationNumber = organizationNumber;
-    }
 }

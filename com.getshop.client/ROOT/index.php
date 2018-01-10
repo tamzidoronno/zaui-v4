@@ -248,6 +248,9 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
             }
             
+            $logoutText = $factory->__f("Logout");
+            echo "<a class='gs_ignorenavigate' href='/logout.php?goBackToHome=true'><div class='gs_framework_module'><i class='icon-user-lock'></i> $logoutText</div></a>";
+            
             echo "</div>";
             
             echo "<div class='gs_framework_modules_icon'>";

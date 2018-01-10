@@ -170,7 +170,7 @@ public class TripleTexExcel extends AccountingSystemBase {
         for (Order order : orders) {
             for(CartItem item : order.cart.getItems()) {
                 Product product = productManager.getProduct(item.getProduct().id);
-                if (product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
+                if (product.incrementalProductId == null || product.incrementalProductId < 1) {
                     addToLog("The product: " + product.name + " does not have an product id that is used for matching product in tripletex");
                     allOk = false;
                 }

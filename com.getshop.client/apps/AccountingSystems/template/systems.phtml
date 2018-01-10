@@ -45,6 +45,7 @@ $activatedSystems = array_unique(array($selectedSystemInvoices, $selectedSystemO
 <div gstype="form" method="saveConfigSettings">
     
     <?
+    $found = false;
         foreach ($activatedSystems as $systemName) {
             $configOptions = $this->getApi()->getGetShopAccountingManager()->getConfigOptions($systemName);
             $values = $this->getApi()->getGetShopAccountingManager()->getConfigs($systemName);
@@ -55,10 +56,16 @@ $activatedSystems = array_unique(array($selectedSystemInvoices, $selectedSystemO
                 echo $val;
                 echo "<br/><input class='gsniceinput1' gsname='config|".$systemName."|".$key."' value='$oldVal'/>";
                 echo "</div>";
+                $found = true;
             }
             
         }
+        
+        if($found) {
     ?>
     <br/>
     <div gstype="submit" class="shop_button"><?  echo $this->__f("Save"); ?></div>
+    <?
+    }
+    ?>
 </div>

@@ -122,6 +122,7 @@ public class CartItem implements Serializable {
     }
 
     public Product getProduct() {
+        product.doFinalize();
         return product;
     }
 

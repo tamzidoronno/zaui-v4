@@ -145,6 +145,7 @@ public class Cart extends DataCommon {
         List<CartItem> itemsToReturn = new ArrayList();
         for(CartItem it : items) {
             if(it != null) {
+                it.doFinalize();
                 itemsToReturn.add(it);
             }
         }

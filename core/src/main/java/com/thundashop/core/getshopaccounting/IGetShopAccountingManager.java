@@ -54,4 +54,13 @@ public interface IGetShopAccountingManager {
     
     @Administrator
     public void setSystemTypeOther(String systemType);
+    
+    @Administrator
+    public void setConfig(String systemType, String key, String value);
+    
+    @Administrator
+    public HashMap<String, String> getConfigs(String systemType);
+    
+    @Administrator
+    public HashMap<String, String> getConfigOptions(String systemType);
 }

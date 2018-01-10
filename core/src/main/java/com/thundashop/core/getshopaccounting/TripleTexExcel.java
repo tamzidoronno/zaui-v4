@@ -47,7 +47,7 @@ public class TripleTexExcel extends AccountingSystemBase {
     }
 
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> orders, String subType) {
+    public List<SavedOrderFile> createFiles(List<Order> orders) {
         Map<String, List<Order>> allOrders = groupOrders(orders);
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
         
@@ -62,19 +62,22 @@ public class TripleTexExcel extends AccountingSystemBase {
         Sheet sheet = wb.createSheet();
         createHeaders(sheet);
 
-        SavedOrderFile file = new SavedOrderFile();
-        
-        file.orders = new ArrayList();
-        file.subtype = subType;
-        
-        List<Order> iOrders = allOrders.get(subType);
-        for (Order order : iOrders) {
-            file.orders.add(order.id);
-            addOrder(sheet, order);
-        }
+        for (String subType : allOrders.keySet()) {
+            SavedOrderFile file = new SavedOrderFile();
 
-        file.base64Excel = getBase64Encoded(wb);
-        retFiles.add(file);
+            file.orders = new ArrayList();
+            file.subtype = subType;
+
+            List<Order> iOrders = allOrders.get(subType);
+            for (Order order : iOrders) {
+                file.orders.add(order.id);
+                addOrder(sheet, order);
+            }
+
+            file.base64Excel = getBase64Encoded(wb);
+            retFiles.add(file);
+        }
+        
         return retFiles;
     }
 

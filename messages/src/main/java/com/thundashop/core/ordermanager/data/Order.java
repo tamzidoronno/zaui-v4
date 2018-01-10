@@ -91,6 +91,13 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean warnedNotPaid = false;
     public Date tryAutoPayWithDibs = null;
     
+    /**
+     * If this order has been transferred to an accountingsystem
+     * and there is a two way communincation, this field 
+     * will store the information needed to find the order again
+     * in the accountingssystem.
+     */
+    public String accountingReference = "";
     @Transient
     public String wubookid = "";
     public boolean warnedNotAbleToCapture = false;

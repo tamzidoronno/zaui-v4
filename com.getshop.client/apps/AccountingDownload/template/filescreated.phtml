@@ -8,14 +8,15 @@ if ($logEntries) {
     foreach ($logEntries as $entry) {
         echo "<div>$entry</div>";
     }
-} else {
-    $data = array();
-    foreach ($_SESSION['AccountingDownload_filesCreated'] as $fileId) {
-       $data[] = $this->getApi()->getGetShopAccountingManager()->getOrderFile($fileId);
-    }
-    echo "<h2>Files created now</h2>";
-    $this->printFileTable($data);
+} 
+
+
+$data = array();
+foreach ($_SESSION['AccountingDownload_filesCreated'] as $fileId) {
+   $data[] = $this->getApi()->getGetShopAccountingManager()->getOrderFile($fileId);
 }
+echo "<h2>Files created now</h2>";
+$this->printFileTable($data);
 ?>
 
 <br/>

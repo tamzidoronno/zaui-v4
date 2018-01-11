@@ -248,7 +248,6 @@ class Factory extends FactoryBase {
         $this->addJavascriptFile("js/getshop.ImportApplication.js");
         $this->addJavascriptFile("js/getshop.Toolbox.js");
         $this->addJavascriptFile("js/datatables/jquery.dataTables.min.js");
-        $this->addJavascriptFile("js/colorpicker/js/colorpicker.js");
         $this->addJavascriptFile("js/jquery.applicationPicker.js");
         $this->addJavascriptFile("js/imagesloaded.pkgd.min.js");
         $this->addJavascriptFile("js/getshop.doImageUpload.js");
@@ -572,7 +571,6 @@ class Factory extends FactoryBase {
     public function showCssFiles() {
         if ($this->isEditorMode()) {
             $this->addCssFile("skin/default/ckeditor.css");
-            $this->addCssFile("js/colorpicker/css/colorpicker.css");
         }
         
         
@@ -608,13 +606,6 @@ class Factory extends FactoryBase {
         $styleSheet->render(false);
 
         $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
-        if ($config) {
-            echo "<style id='set_colors'>";
-            foreach ($config as $name => $entry) {
-                echo $entry['path'] . " {" . $entry['type'] . " : #" . $entry['color'] . " }\n";
-            }
-            echo "</style>";
-        }
         
         $appinstance = $this->getApplicationPool()->getSelectedThemeApp();
         if(isset($_GET['removeextracss'])) {

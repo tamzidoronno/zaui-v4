@@ -9,7 +9,7 @@
     "loggedonas" : "Logged on as ",
     "adults" : "Adults",
     "children" : "Children",
-    "agestwototwelve" : "Ages 2-12",
+    "agebelow" : "Below {age} year",
     "apply" : "Apply",
     "search" : "Search",
     "remove" : "Remove",

@@ -33,13 +33,17 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
 
     @Override
     public List<String> createNextOrderFile(Date endDate) {
-        List<String> others = getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, "invoice");
-        List<String> invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other");
-        
         List<String> ret = new ArrayList();
-        ret.addAll(others);
-        ret.addAll(invoices);
         
+        if (config.activatedSystemTypeInvoices.equals(config.activatedSystemTypeOther)) {
+            ret.addAll(getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, null));
+        } else {        
+            List<String> others = getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, "invoice");
+            List<String> invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other");            
+            ret.addAll(others);
+            ret.addAll(invoices);
+        }
+
         return ret;
     }
     
@@ -100,11 +104,7 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     }
     
     private AccountingSystemBase getActivatedAccountingSystemInvoices() {
-        AccountingSystemBase system = accountingSystems
-                .stream()
-                .filter(o -> o.getSystemType().equals(config.activatedSystemTypeInvoices))
-                .findAny()
-                .orElse(null);
+        AccountingSystemBase system = getSystem(config.activatedSystemTypeInvoices);
         
         if (system == null) {
             throw new ErrorException(1047);
@@ -114,16 +114,21 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     }
     
     private AccountingSystemBase getActivatedAccountingSystemOther() {
-        AccountingSystemBase system = accountingSystems
-                .stream()
-                .filter(o -> o.getSystemType().equals(config.activatedSystemTypeOther))
-                .findAny()
-                .orElse(null);
+        AccountingSystemBase system = getSystem(config.activatedSystemTypeOther);
         
         if (system == null) {
             throw new ErrorException(1047);
         }
         
+        return system;
+    }
+
+    private AccountingSystemBase getSystem(SystemType type) {
+        AccountingSystemBase system = accountingSystems
+                .stream()
+                .filter(o -> o.getSystemType().equals(type))
+                .findAny()
+                .orElse(null);
         return system;
     }
 
@@ -151,7 +156,10 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
 
     @Override
     public List<String> getLogEntries() {
-        return getActivatedAccountingSystemInvoices().getLogEntries();
+        List<String> arr = new ArrayList();
+        arr.addAll(getActivatedAccountingSystemInvoices().getLogEntries());
+        arr.addAll(getActivatedAccountingSystemOther().getLogEntries());
+        return arr;
     }
 
     @Override
@@ -193,5 +201,41 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     public void setSystemTypeOther(String systemType) {
         this.config.activatedSystemTypeOther = SystemType.valueOf(systemType);
         saveObject(this.config);
+    }
+
+    @Override
+    public void setConfig(String systemType, String key, String value) {
+        SystemType type = SystemType.valueOf(systemType);
+        AccountingSystemBase system = getSystem(type);
+        
+        if (system == null) {
+            throw new ErrorException(1047);
+        }
+        
+        system.setConfig(key, value);
+    }
+
+    @Override
+    public HashMap<String, String> getConfigs(String systemType) {
+        SystemType type = SystemType.valueOf(systemType);
+        AccountingSystemBase system = getSystem(type);
+        
+        if (system == null) {
+            throw new ErrorException(1047);
+        }
+        
+        return system.getConfigs();
+    }
+
+    @Override
+    public HashMap<String, String> getConfigOptions(String systemType) {
+        SystemType type = SystemType.valueOf(systemType);
+        AccountingSystemBase system = getSystem(type);
+        
+        if (system == null) {
+            throw new ErrorException(1047);
+        }
+        
+        return system.getConfigOptions();
     }
 }

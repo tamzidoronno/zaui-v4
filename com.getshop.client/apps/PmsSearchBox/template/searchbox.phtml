@@ -1,0 +1,17 @@
+<?
+/* @var $this \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+$pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+$filter = $pms->getSelectedFilter();
+$searchWord = $filter ? $filter->searchWord : "";
+
+?>
+
+
+<div gstype="form" method="search">
+    <div title="<? echo $this->__f("Latest registered users"); ?>" gsclick="clearFilter" class="top-row-icon  <? echo !isset($_SESSION['pmfilter']) || !$_SESSION['pmfilter'] ? 'active' : ''; ?>"><i class="icon-database-upload"></i></div>
+    <div title="<? echo $this->__f("Users checkin today"); ?>" day="0" gsclick='showCheckins' class="top-row-icon <? echo $filter && $filter->filterType == "checkin" ? 'active' : ''; ?>"><i class="icon-enter"></i></div>
+    <div title="<? echo $this->__f("Users checkout today"); ?>" day="0"  gsclick='showCheckOuts' class="top-row-icon <? echo $filter && $filter->filterType == "checkout" ? 'active' : ''; ?>"><i class="icon-exit"></i></div>
+    <input class="gsniceinput1" gstype='submitenter' gsname='searchtext' placeholder="<? echo $this->__f("Search"); ?>" value='<? echo $searchWord; ?>'/>
+    <div class="top-row-icon <? echo $searchWord ? 'active' : ''; ?>" gstype='submit'><i class="icon-search"></i></div>
+    <div class="top-row-icon"><i class="icon-search2"></i></div>
+</div>

@@ -9,7 +9,7 @@
     "loggedonas" : "Logget på som ",
     "adults" : "Voksne",
     "children" : "Barn",
-    "agestwototwelve" : "Alder 2-12",
+    "agebelow" : "Under {age} år",
     "apply" : "Oppdater",
     "search" : "Søk",
     "logout" : "Logg ut",

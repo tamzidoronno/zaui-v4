@@ -7,8 +7,13 @@
 .AccountingDownload .col_amountEx,
 .AccountingDownload .col_amountInc,
 .AccountingDownload .col_amountExDebet,
+.AccountingDownload .col_amountIncDebet,
 .AccountingDownload .col_orders {
-    width: 80px !important;
+    width: 100px !important;
+}
+
+.AccountingDownload .col_download {
+    width: 150px;
 }
 
 .AccountingDownload .preview .row .col {

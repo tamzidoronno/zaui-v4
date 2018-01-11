@@ -47,7 +47,7 @@ public class TripleTexExcel extends AccountingSystemBase {
     }
 
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> orders, String subType) {
+    public List<SavedOrderFile> createFiles(List<Order> orders) {
         Map<String, List<Order>> allOrders = groupOrders(orders);
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
         
@@ -62,19 +62,22 @@ public class TripleTexExcel extends AccountingSystemBase {
         Sheet sheet = wb.createSheet();
         createHeaders(sheet);
 
-        SavedOrderFile file = new SavedOrderFile();
-        
-        file.orders = new ArrayList();
-        file.subtype = subType;
-        
-        List<Order> iOrders = allOrders.get(subType);
-        for (Order order : iOrders) {
-            file.orders.add(order.id);
-            addOrder(sheet, order);
-        }
+        for (String subType : allOrders.keySet()) {
+            SavedOrderFile file = new SavedOrderFile();
 
-        file.base64Excel = getBase64Encoded(wb);
-        retFiles.add(file);
+            file.orders = new ArrayList();
+            file.subtype = subType;
+
+            List<Order> iOrders = allOrders.get(subType);
+            for (Order order : iOrders) {
+                file.orders.add(order.id);
+                addOrder(sheet, order);
+            }
+
+            file.base64Excel = getBase64Encoded(wb);
+            retFiles.add(file);
+        }
+        
         return retFiles;
     }
 
@@ -150,7 +153,7 @@ public class TripleTexExcel extends AccountingSystemBase {
         row.createCell(getCellNumber("ORDER LINE - VAT CODE")).setCellValue(product.sku);
         
         // Product Name
-        row.createCell(getCellNumber("ORDER LINE - PROD NO")).setCellValue(product.accountingSystemId);
+        row.createCell(getCellNumber("ORDER LINE - PROD NO")).setCellValue(product.incrementalProductId);
         row.createCell(getCellNumber("ORDER LINE - PROD NAME")).setCellValue(nullAndCsvCheck(product.name));
     }
 
@@ -167,7 +170,7 @@ public class TripleTexExcel extends AccountingSystemBase {
         for (Order order : orders) {
             for(CartItem item : order.cart.getItems()) {
                 Product product = productManager.getProduct(item.getProduct().id);
-                if (product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
+                if (product.incrementalProductId == null || product.incrementalProductId < 1) {
                     addToLog("The product: " + product.name + " does not have an product id that is used for matching product in tripletex");
                     allOk = false;
                 }

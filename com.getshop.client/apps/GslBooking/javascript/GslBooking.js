@@ -23,6 +23,18 @@ function getshop_setBookingTranslation() {
             
         }
         
+        $.ajax({
+            "dataType": "jsonp",
+            "url": getshop_endpoint + '/scripts/bookingprocess.php?method=getConfiguration',
+            success: function (config) {
+                getshop_bookingconfiguration = config;
+                var text = getshop_translationMatrixLoaded['agebelow'];
+                text = text.replace("{age}", config.childAge);
+                $("[gstranslationfield='agebelow']").html(text);
+                console.log(getshop_bookingconfiguration);
+            }
+        });    
+        
     });
 }
 

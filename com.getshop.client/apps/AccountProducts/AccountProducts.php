@@ -31,6 +31,14 @@ class AccountProducts extends \MarketingApplication implements \Application {
                 $product->accountingSystemId = $value;
                 $this->getApi()->getProductManager()->saveProduct($product);
             }
+            
+            if (strpos($key, "accounting_") > -1) {
+                $x = explode("_", $key);
+                $productId = $x[1];
+                $product = $this->getApi()->getProductManager()->getProduct($productId);
+                $product->accountingAccount = $value;
+                $this->getApi()->getProductManager()->saveProduct($product);
+            }
         }
     }
 }

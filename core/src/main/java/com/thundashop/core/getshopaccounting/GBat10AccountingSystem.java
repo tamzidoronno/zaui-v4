@@ -34,32 +34,30 @@ import org.springframework.stereotype.Component;
 public class GBat10AccountingSystem extends AccountingSystemBase {
    
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> inOrders, String subType) {
+    public List<SavedOrderFile> createFiles(List<Order> inOrders) {
         Map<String, List<Order>> allOrders = groupOrders(inOrders);
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
         
-        List<Order> orders = allOrders.get(subType);
+        for (String subType : allOrders.keySet()) {
+            List<Order> orders = allOrders.get(subType);
+            
+            SavedOrderFile file = new SavedOrderFile();
+            List<String> toPrint = new ArrayList();
+            file.orders = new ArrayList();
+            file.subtype = subType;
 
-        if (orders == null) {
-            return new ArrayList();
-        }
-        
-        SavedOrderFile file = new SavedOrderFile();
-        List<String> toPrint = new ArrayList();
-        file.orders = new ArrayList();
-        file.subtype = subType;
-
-        for(Order order : orders) {
-            file.orders.add(order.id);
-            List<HashMap<Integer, String>> lines = generateLine(order);
-            for(HashMap<Integer, String> toConvert : lines) {
-                String line = makeLine(toConvert);
-                toPrint.add(line);
+            for(Order order : orders) {
+                file.orders.add(order.id);
+                List<HashMap<Integer, String>> lines = generateLine(order);
+                for(HashMap<Integer, String> toConvert : lines) {
+                    String line = makeLine(toConvert);
+                    toPrint.add(line);
+                }
             }
-        }
 
-        file.result = toPrint;
-        retFiles.add(file);
+            file.result = toPrint;
+            retFiles.add(file);
+        }
 
         return retFiles;
     }

@@ -24,10 +24,10 @@ public class FikenInvoiceCreateRequest {
     private String yourReference = "";
     private FikenInvoiceCreateRequest.Customer customer;
     private boolean cash = true;
-    private String paymentAccount = "1920:10001";
+    private String paymentAccount = "";
     private List<FikenInvoiceCreateRequest.OrderLine> lines = new ArrayList();
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("Y-M-d");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     
     public void setIssueDate(Date issueDate) {
         this.issueDate = sdf.format(issueDate);
@@ -117,8 +117,7 @@ public class FikenInvoiceCreateRequest {
     public void setLines(List<OrderLine> lines) {
         this.lines = lines;
     }
-    
-    
+
     class OrderLine {
         private int unitNetAmount;
         private int netAmount;
@@ -128,6 +127,16 @@ public class FikenInvoiceCreateRequest {
         private String description = "";
         private String productUrl = "";
         private int grossAmount;
+        private int quantity;
+        private int incomeAccount = 3000;
+
+        public int getIncomeAccount() {
+            return incomeAccount;
+        }
+
+        public void setIncomeAccount(int incomeAccount) {
+            this.incomeAccount = incomeAccount;
+        }
 
         public int getUnitNetAmount() {
             return unitNetAmount;
@@ -191,7 +200,17 @@ public class FikenInvoiceCreateRequest {
 
         public void setGrossAmount(int grossAmount) {
             this.grossAmount = grossAmount;
-        }        
+        }  
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
+        
         
     }
     

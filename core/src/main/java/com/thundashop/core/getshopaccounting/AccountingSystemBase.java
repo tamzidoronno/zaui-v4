@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshopaccounting;
 
+import com.thundashop.core.accountingmanager.AccountingSystemConfiguration;
 import com.thundashop.core.accountingmanager.AccountingTransferConfig;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -40,6 +41,8 @@ public abstract class AccountingSystemBase extends ManagerBase {
  
     private List<String> logEntries = new ArrayList();
      
+    private AccountingSystemConfiguration config = new AccountingSystemConfiguration();
+    
     @Autowired
     public OrderManager orderManager;    
     
@@ -65,10 +68,13 @@ public abstract class AccountingSystemBase extends ManagerBase {
                 SavedOrderFile file = (SavedOrderFile) obj;
                 files.put(((SavedOrderFile) obj).id, file);
             }
+            if (obj instanceof AccountingSystemConfiguration) {
+                this.config = (AccountingSystemConfiguration)obj;
+            }
         }
     }
     
-    public abstract List<SavedOrderFile> createFiles(List<Order> orders, String subType);
+    public abstract List<SavedOrderFile> createFiles(List<Order> orders);
     
     public abstract SystemType getSystemType();
     
@@ -117,6 +123,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
         logEntries.clear();
         
         List<Order> orders = orderManager.getOrdersToTransferToAccount(endDate);
+        orders.removeIf(order -> order.triedTransferredToAccountingSystem);
         
         boolean hasFail = checkTaxCodes(orders);
         
@@ -124,7 +131,16 @@ public abstract class AccountingSystemBase extends ManagerBase {
             return null;
         }
         
-        List<SavedOrderFile> newFiles = createFiles(orders, subType);
+        Map<String, List<Order>> groupedOrders = groupOrders(orders);
+        
+        if (subType != null) {
+            orders = groupedOrders.get(subType);
+            if (orders == null) {
+                orders = new ArrayList();
+            }
+        }
+        
+        List<SavedOrderFile> newFiles = createFiles(orders);
         
         if (newFiles == null) {
             return new ArrayList();
@@ -135,6 +151,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             file.endDate = endDate;
             file.startDate = prevDate;
             markOrdersAsTransferred(file);
+            markOrdersAsFailedTrasfer(file);
             sumOrders(file);
             finalizeFile(file);
             saveObject(file);
@@ -431,4 +448,29 @@ public abstract class AccountingSystemBase extends ManagerBase {
         });
     }
 
+    
+    public void setConfig(String key, String value) {
+        config.configs.put(key, value);
+        saveObject(config);
+    }
+    
+    public String getConfig(String key) {
+        return config.configs.get(key);
+    }
+
+    public HashMap<String, String> getConfigs() {
+        return config.configs;
+    }
+
+    public HashMap<String, String> getConfigOptions() {
+        return new HashMap();
+    }
+
+    private void markOrdersAsFailedTrasfer(SavedOrderFile file) {
+        file.ordersTriedButFailed.stream().forEach(orderId -> { 
+            Order order = orderManager.getOrderSecure(orderId);
+            order.triedTransferredToAccountingSystem = true;
+            orderManager.saveOrder(order);
+        });
+    }
 }

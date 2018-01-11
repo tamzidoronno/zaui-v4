@@ -17,6 +17,7 @@ import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
@@ -347,7 +348,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 if(translation != null && !translation.isEmpty()) {
                     toAddAddon.name = translation;
                 }
-                if(toAddAddon.name == null || toAddAddon.name.isEmpty()) {
+                if(toAddAddon.name == null || toAddAddon.name.isEmpty() && productManager.getProduct(item.productId) != null) {
                     toAddAddon.name = productManager.getProduct(item.productId).name;
                 }
                 toAddAddon.icon = item.bookingicon;
@@ -772,5 +773,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         return generateSummary();
+    }
+
+    @Override
+    public BookingConfig getConfiguration() {
+        PmsConfiguration config = pmsManager.getConfiguration();
+        BookingConfig retval = new BookingConfig();
+        retval.childAge = config.childMaxAge;
+        return retval;
     }
 }

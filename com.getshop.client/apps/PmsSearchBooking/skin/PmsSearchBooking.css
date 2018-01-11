@@ -518,12 +518,14 @@
     padding: 0px;
     border-top: 0px;
 }
-
+    
+.PmsSearchBooking .datarow .datarow_inner {
+    padding-top: 20px;
+    padding-bottom: 20px;   
+}
 
 .PmsSearchBooking .datarow {
     line-height: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
 } 
 
 .PmsSearchBooking .datarow .rowdate1 {

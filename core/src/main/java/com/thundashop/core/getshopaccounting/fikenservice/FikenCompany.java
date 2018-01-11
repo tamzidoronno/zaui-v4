@@ -5,6 +5,8 @@
  */
 package com.thundashop.core.getshopaccounting.fikenservice;
 
+import org.springframework.hateoas.ResourceSupport;
+
 /**
  *
  * @author ktonder

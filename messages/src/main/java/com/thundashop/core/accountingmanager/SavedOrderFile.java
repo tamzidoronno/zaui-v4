@@ -27,6 +27,7 @@ public class SavedOrderFile extends DataCommon {
     public HashMap<String, Double> amountOnOrder = new HashMap();
     public List<String> tamperedOrders = new ArrayList();
     public List<String> orders = new ArrayList();
+    public List<String> ordersTriedButFailed = new ArrayList();
     public String configId = "";
     public String transferId;
     public ArrayList ordersNow = new ArrayList();

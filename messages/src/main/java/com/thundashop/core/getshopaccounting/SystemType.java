@@ -12,6 +12,7 @@ package com.thundashop.core.getshopaccounting;
 public enum SystemType {
      GBAT10,
      XLEDGER,
-     TRIPLETEX_EXCEL
+     TRIPLETEX_EXCEL,
+     FIKEN_API
  }
 

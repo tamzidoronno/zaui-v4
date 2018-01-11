@@ -51,7 +51,7 @@ class CommunicationHelper {
             return;
         }
         file_put_contents("/tmp/test.txt", "");
-        $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 120);
+        $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 220);
         if (!$this->socket) {
             header("HTTP/1.0 500 Internal server error");
             echo "The system are being updated / upgraded, please retry in about 10 seconds.";
@@ -115,6 +115,7 @@ class CommunicationHelper {
             $this->errors[] = "failed on " . $data . " sent: " . $len . " size compared to : " . strlen($data)+1;
         }
         
+        stream_set_timeout($this->socket, 300);
         $res = stream_get_line($this->socket, 2147483647, "\n");
         if ($debug)
             echo $res;

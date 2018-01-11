@@ -119,10 +119,10 @@ public abstract class AccountingSystemBase extends ManagerBase {
         return hasFail;
     }
     
-    public List<String> createNextOrderFile(Date endDate, String subType) {
+    public List<String> createNextOrderFile(Date endDate, String subType, List<Order> orders) {
         logEntries.clear();
         
-        List<Order> orders = orderManager.getOrdersToTransferToAccount(endDate);
+        orders.removeIf(order -> order.triedTransferredToAccountingSystem);
         
         boolean hasFail = checkTaxCodes(orders);
         
@@ -150,6 +150,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             file.endDate = endDate;
             file.startDate = prevDate;
             markOrdersAsTransferred(file);
+            markOrdersAsFailedTrasfer(file);
             sumOrders(file);
             finalizeFile(file);
             saveObject(file);
@@ -203,6 +204,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             file.orders.stream().forEach(orderId -> {
                 Order order = orderManager.getOrder(orderId);
                 order.resetTransferToAccounting();
+                orderManager.saveOrder(order);
             });    
         }
         
@@ -462,5 +464,13 @@ public abstract class AccountingSystemBase extends ManagerBase {
 
     public HashMap<String, String> getConfigOptions() {
         return new HashMap();
+    }
+
+    private void markOrdersAsFailedTrasfer(SavedOrderFile file) {
+        file.ordersTriedButFailed.stream().forEach(orderId -> { 
+            Order order = orderManager.getOrderSecure(orderId);
+            order.triedTransferredToAccountingSystem = true;
+            orderManager.saveOrder(order);
+        });
     }
 }

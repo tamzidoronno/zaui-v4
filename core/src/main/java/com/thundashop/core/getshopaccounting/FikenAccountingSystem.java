@@ -50,7 +50,8 @@ public class FikenAccountingSystem extends AccountingSystemBase {
                 boolean res = service.createInvoice(order);
                 if (res) {
                     file.orders.add(order.id);
-                    
+                } else {
+                    file.ordersTriedButFailed.add(order.id);
                 }
             });
             

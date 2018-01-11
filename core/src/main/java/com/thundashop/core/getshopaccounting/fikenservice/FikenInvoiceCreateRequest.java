@@ -19,7 +19,6 @@ public class FikenInvoiceCreateRequest {
     private String dueDate;
     private String uuid;
     private String invoiceText;
-    private String kid;
     private String bankAccountUrl;
     private String ourReference;
     private String yourReference = "";
@@ -119,15 +118,6 @@ public class FikenInvoiceCreateRequest {
         this.lines = lines;
     }
 
-    public String getKid() {
-        return kid;
-    }
-
-    public void setKid(String kid) {
-        this.kid = kid;
-    }
-    
-    
     class OrderLine {
         private int unitNetAmount;
         private int netAmount;

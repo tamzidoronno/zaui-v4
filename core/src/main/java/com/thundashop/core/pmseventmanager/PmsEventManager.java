@@ -153,7 +153,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private PmsBookingEventEntry finalize(PmsBookingEventEntry get, boolean includeDeleted) {
         PmsBooking booking = pmsManager.getBookingUnsecure(get.id);
         setRooms(get, booking, includeDeleted);
-        get.arrangedBy = userManager.getUserById(booking.userId).fullName;
+        get.arrangedBy = userManager.getUserById(booking.userId) != null ? userManager.getUserById(booking.userId).fullName : "";
         get.finalizeSubEntries();
         return get;
     }

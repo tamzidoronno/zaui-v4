@@ -13,6 +13,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.usermanager.data.User;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +21,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -612,6 +616,85 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return null;
     }
+
+    public boolean isOrderFinanciallyRelatedToDates(Date start, Date end) {
+        if (incrementOrderId == 122109 ) {
+            System.out.println("Checking it");
+        }
+        if (createdBetween(start, end)) {
+            return true;
+        }
+        
+        long startTime = start.getTime();
+        long endTime = end.getTime();
+        
+        if (intercepts(paymentDate, startTime, endTime)) {
+            return true;
+        }
+        
+        if (intercepts(transferToAccountingDate, startTime, endTime)) {
+            return true;
+        }
+        
+        if (cart != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            
+            for (CartItem item : cart.getItems()) {
+                if (item.priceMatrix != null) {
+                    for (String date : item.priceMatrix.keySet()) {
+                        try {
+                            Date checkDate = sdf.parse(date);
+                            if (intercepts(checkDate, startTime, endTime)) {
+                                return true;
+                            }
+                        } catch (ParseException ex) {
+                            System.out.println("failed");
+                        }
+                    }
+                }
+                
+                if (intercepts(item.startDate, startTime, endTime)) {
+                    return true;
+                }
+                
+                if (intercepts(item.endDate, startTime, endTime)) {
+                    return true;
+                }
+                
+                if (intercepts(item.newEndDate, startTime, endTime)) {
+                    return true;
+                }
+                
+                if (intercepts(item.newStartDate, startTime, endTime)) {
+                    return true;
+                }
+                
+                if (item.itemsAdded != null) {
+                    for (PmsBookingAddonItem addon : item.itemsAdded) {
+                        if (intercepts(addon.date, startTime, endTime)) {
+                            return true;
+                        }  
+                    } 
+                }
+            }
+            
+        }
+        
+        return false;
+    }
+    
+    private boolean intercepts(Date dateToCheckAgainst, long startTime, long endTime) {
+        if (dateToCheckAgainst == null) {
+            return false;
+        }
+        
+        long time = dateToCheckAgainst.getTime();
+        
+        if (startTime <= time && time <= endTime) {
+            return true;
+        }
+        return false;
+    }
     
     public static class Status  {
         public static int CREATED = 1;
@@ -777,5 +860,6 @@ public class Order extends DataCommon implements Comparable<Order> {
     
     public void resetTransferToAccounting() {
         transferredToAccountingSystem = false;
+        triedTransferredToAccountingSystem = false;
     }
 } 

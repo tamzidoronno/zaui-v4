@@ -14,7 +14,7 @@ class PaymentApplication extends ApplicationBase {
     /* @var $order core_ordermanager_data_Order */
     public $order;
     
-    private $paymentOptions = null;
+    public $paymentOptions = null;
     /**
      * @var PaymentMethod[]
      */
@@ -146,7 +146,7 @@ class PaymentApplication extends ApplicationBase {
         }
         
         echo "<input type='hidden' value='$paymentid' gsname='paymentid'/>";
-        $this->renderPaymentOption();
+        $this->renderPaymentOption($options);
         echo "</div>";
     }
     

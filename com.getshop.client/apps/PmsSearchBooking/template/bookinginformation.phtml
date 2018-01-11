@@ -14,18 +14,19 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 
 <div class="bookinginformation">
     <div class='guestinfobox'>
-        <div class=" row">
-            <div class="col col1"><i class="fa fa-key"></i> <? echo $this->__f("GetShop booking id"); ?></div>
+        <div class='insideheader'><? echo $this->__f("General information"); ?></div>
+        <div class="row odd">
+            <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
             <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
         </div>
 
-        <div class=" row">
-            <div class="col col1"><i class="fa fa-calendar"></i> <? echo $this->__f("Date created"); ?></div>
+        <div class="row">
+            <div class="col col1"><? echo $this->__f("Date created"); ?></div>
             <div class="col col2"><? echo $pmsBooking->rowCreatedDate; ?></div>    
         </div>
 
-        <div class=" row">
-            <div class="col col1"><i class="fa fa-user"></i> <span><? echo $this->__f("Booked for"); ?></span></div>
+        <div class="row odd">
+            <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span></div>
             <div class="col col2">
                 <?
                 $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
@@ -37,43 +38,46 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
         </div>
     </div>
     
-    <h2><? echo $this->__f("Guests"); ?></h2>
+    
     
     <div class="guestinfo">
-        
+        <div class='insideheader'>
+            <? echo $this->__f("Guests"); ?>
+            <div class="gs_shop_small_icon " title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
+        </div>
         <div class="guest_row header">
-            <div class="guest_col guest_col1"> 
-                
-            </div>
-
-            <div class="guest_col guest_col2">
+            <div class="guest_col guest_col1">
                 <b><? echo $this->__f("Name"); ?></b>
             </div>
 
-            <div class="guest_col guest_col3">
+            <div class="guest_col guest_col2">
                 <b><? echo $this->__f("Email"); ?></b>
             </div>
 
-            <div class="guest_col guest_col4">
+            <div class="guest_col guest_col3">
                 <b><? echo $this->__f("Phone"); ?></b>
+            </div>
+            
+            <div class="guest_col guest_col4"> 
+                
             </div>
         </div>
         
         <div  class="guest_row row_template" style='display: none'>
-            <div class="guest_col guest_col1">      
-                <div class="gs_shop_small_icon remove_guest"><i class="fa fa-trash"></i></div>
-            </div>
-
-            <div class="guest_col guest_col2">
+            <div class="guest_col guest_col1">
                 <input temp_gsname="guestinfo_name" class="gsniceinput1" value=""/>
             </div>
 
-            <div class="guest_col guest_col3">
+            <div class="guest_col guest_col2">
                 <input temp_gsname="guestinfo_email" class="gsniceinput1" value=""/>
             </div>
 
-            <div class="guest_col guest_col4">
+            <div class="guest_col guest_col3">
                 <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value=""/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
+            </div>
+            
+            <div class="guest_col guest_col4">      
+                <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
             </div>
         </div>
 
@@ -88,27 +92,27 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                 $i++;
                 ?>
                 <div class="guest_row" counter='<? echo $i; ?>'>
-                    <div class="guest_col guest_col1">      
-                        <div class="gs_shop_small_icon remove_guest"><i class="fa fa-trash"></i></div>
-                    </div>
+                    
 
-                    <div class="guest_col guest_col2">
+                    <div class="guest_col guest_col1">
                         <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" value="<? echo $guest->name; ?>"/>
                     </div>
 
-                    <div class="guest_col guest_col3">
+                    <div class="guest_col guest_col2">
                         <input gsname="guestinfo_<? echo $i; ?>_email" class="gsniceinput1" value="<? echo $guest->email; ?>"/>
                     </div>
 
-                    <div class="guest_col guest_col4">
+                    <div class="guest_col guest_col3">
                         <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $guest->prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
+                    </div>
+                    
+                    <div class="guest_col guest_col4">      
+                        <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
                     </div>
                 </div>
             <?
             }
         ?>
-        <br/>
-        <div class="gs_shop_small_icon add_more_guests"><i class="fa fa-plus"></i> <? echo $this->__f("Add new guest"); ?></div>
     </div>
     
     

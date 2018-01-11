@@ -576,5 +576,12 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
 
 
+    public function invoiceNoteChanged() {
+        $this->setData();
+        $booking = $this->getPmsBooking();
+        $booking->invoiceNote = $_POST['data']['invoicenote'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->setData();
+    }
 }
 ?>

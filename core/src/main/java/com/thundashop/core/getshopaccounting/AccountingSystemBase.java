@@ -205,6 +205,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             file.orders.stream().forEach(orderId -> {
                 Order order = orderManager.getOrder(orderId);
                 order.resetTransferToAccounting();
+                orderManager.saveOrder(order);
             });    
         }
         

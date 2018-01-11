@@ -17,8 +17,8 @@
     "discountcode" : "Discount coupon?",
     "logout" : "Logout",
     "signinbutton" : "Sign in",
-    "inLuckAvailable" : "You are in luck, we have rooms available for you!",
-    "bestValue" : "This is the best value deal we can offer you total:",
+    "inLuckAvailable" : "We found the perfect room for you!",
+    "bestValue" : "This is the best value deal we can offer you!",
     "continue" : "Continue",
     "addons" : "Addons",
     "addAddonsOr" : "Add addons for all guests, or add individual addons under room information.",
@@ -55,12 +55,12 @@
     "downloadTerms" : "Download terms of use",
     "roomExample1" : "Room 1 - Double Room",
     "downloadTerms" : "Download terms of use",        
-    "noRoomsMessage" : "Sorry, we are sold out for your specified selection.",
-    "startingAt" : "Starting at NOK ",
+    "noRoomsMessage" : "Sorry, we are sold out for your specified selection",
     "numberofguests" : "Guests",
     "guest" : "guest",
     "numberofrooms" : "Number of rooms",
     "price" : "Price",
     "availableRooms" : "Available rooms: ",
-    "chosenRoom" : "Rooms chosen"
+    "chosenRoom" : "Rooms chosen",
+    "total" : "Total"
 }

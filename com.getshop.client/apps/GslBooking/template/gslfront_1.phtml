@@ -1,22 +1,11 @@
 <div class='gslfront_1'>
     <div class='gslbookingHeader'>
-        <div class="fa_box destination" style="display: none;">
-            <input id="destination" placeholder="Destination?" onfocus="this.placeholder =''" onblur="this.placeholder ='Destination?'" style="border-right:1px solid #ddd;" readonly>
-            <div class="destinationInfoBox">
-                <div class='destination_line'><img class="destination_image" src=""><span gstype='bookingtranslation' gstranslationfield='gsHotelOs'></span></div>
-                <div class='destination_line'><img class="destination_image" src=""><span gstype='bookingtranslation' gstranslationfield='gsHotelTb'></span></div>
-                
-            </div>
-        </div>
         <div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
-        </div>
-        <div class='datepickermobile'>
+        </div><div class='datepickermobile'>
             <input id="date_picker_start" type='date'>
             <input id="date_picker_end" type='date'>
-        </div>
-
-        <div class="fa_box guests">
+        </div><div class="fa_box guests">
             <input id="guests" value="" style="border-right:1px solid #ddd;" readonly>
             <div class="guestInfoBox">
                 <div class='guestInfoBox_left'>
@@ -45,13 +34,14 @@
     </div>
     
     <div class="gslbookingBody">
-        <div id="orderSum" class="noroomsfound"><span gstype='bookingtranslation' gstranslationfield='noRoomsMessage'></span></div>
+        <div id="orderSum" class="noroomsfound"><h3><i class="fa fa-warning"></i><span gstype='bookingtranslation' gstranslationfield='noRoomsMessage'></span></h3></div>
         <div id="orderSum" class="ordersummary">
-            <h3><i class='fa fa-smile-o'></i><span gstype='bookingtranslation' gstranslationfield='inLuckAvailable'></span><i class='fa fa-smile-o'></i></h3>
+            <h3><i class='fa fa-thumbs-o-up'></i><span gstype='bookingtranslation' gstranslationfield='inLuckAvailable'></span></h3>
             <div class="selectedguests"></div>
-            <div class="bestValue"><span gstype='bookingtranslation' gstranslationfield='bestValue'></span> <span class='totalprice'></span></div>
-            <span class='gsl_button continue active'><span gstype='bookingtranslation' gstranslationfield='continue'></span></span>
-            <div class='bottomspacer'></div>
+            <div id="order-sticky">
+                <div class="bestValue"><span gstype='bookingtranslation' gstranslationfield='bestValue'></span> <span class='totalprice'></span>
+                </div><div class='gsl_button continue active'><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
+            </div>
         </div>
         <div class="productoverview">
             <div id="productentry"></div>
@@ -61,7 +51,7 @@
         <div class="addons_overview">
             <div class="addons_overview_right">
                 <div style="padding:10px;">
-                    <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
+                    <h4 style="border-bottom: 1px solid #ddd;text-align:center;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                     <div class='yourstaysummary'></div>
                     <div style="position:absolute;bottom:10px;right:0; width:30%;">
                         <div class="gsl_button continue" onclick="getshop_showOverviewPage()" style='float:right;margin-right: 10px;'><span gstype='bookingtranslation' gstranslationfield='continue'></span><i class="fa fa-arrow-right"></i></div>
@@ -98,7 +88,6 @@
                                 (<span gstype='bookingtranslation' gstranslationfield='checkin'></span><span class='startdate'></span>, <span gstype='bookingtranslation' gstranslationfield='checkout'></span><span class='enddate'></span>)
                             </span>
                         </h4>
-                        
                         <div class="guestentry">
                             <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
                             <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
@@ -119,14 +108,13 @@
                         <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
                         <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
                     </div>
-<!--                    <div class="addroom gsl_button" style="float:right;"><i class="fa fa-plus"></i> Add another room</div>-->
                     <div style="clear:both;"></div>
                 </div>
             </div>
         </div>
         <div class="overview">
             <div class="overview_room_info">
-                <h4 style="border-bottom: 2px solid #ddd;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
+                <h4 style="border-bottom: 1px solid #ddd;text-align: center;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                 <div class='yourstaysummary'></div>
                 <div class="overview_confirmation">
                     <div class="gsl_button return" onclick="getshop_showAddonsPage()"><i class="fa fa-arrow-left"> </i><span gstype='bookingtranslation' gstranslationfield='return'></span></div><div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
@@ -141,7 +129,6 @@
                     <b><span gstype='bookingtranslation' gstranslationfield='ordertext'></span></b><br>
                     <textarea gsname='ordertext' class="ordertext"></textarea>
                 </div>
-                
                 <div class="overview_contact">
                     <h3><span gstype='bookingtranslation' gstranslationfield='contactInformation'></span></h3>
                     <div class="overview_contact_tab">
@@ -220,9 +207,7 @@
                             <div style="width: 50%; float:left;"><span gstype='bookingtranslation' gstranslationfield='password'></span><br><input type="password" gsname="password"></div>
                         </div>
                         <input type='button' class='gssigninbutton gsl_button' gstype='bookingtranslation' gstranslationfield='signinbutton'>
-                        
                         <div class='failedlogon'><span gstype='bookingtranslation' gstranslationfield='failedlogon'></span></div>
-                        
                     </div>
                     <div style="clear: both;"></div>
                 </div>
@@ -236,7 +221,6 @@
                 </div>
                 <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
                 <div class='agreetotermserrormessage'><span gstype='bookingtranslation' gstranslationfield='agreetotermserrormessage'></span></div>
-                
                 <div style="clear: both;"></div>
             </div>
         </div>
@@ -245,10 +229,8 @@
     <div class='errorcompleted'><span gstype='bookingtranslation' gstranslationfield='errorcompleted'></span></div>
 </div>
 
-
 <div class="productentry" id="productentrybox">
     <div class='productentry_gallery gsgalleryroot'>
-        <i class="fa fa-times"></i>
         <div class="feature">
             <div class="featured-image image-holder gsgallery" galidx="" width="300" height="300" index="0"></div>
         </div>
@@ -261,7 +243,6 @@
         <div class="productentry_header">
             <div class="roomname"></div>
             <div class="product_availablerooms"><span gstype='bookingtranslation' gstranslationfield='availableRooms'></span><span class='availableroomcontainer'></span></div>
-            <!--<div class="lowpricediv"><span gstype='bookingtranslation' gstranslationfield='startingAt'></span><span class='lowpricedisplayer'></span>,-</div>-->
         </div>
         <div class="productentry_body">
             <table class="guestselection">

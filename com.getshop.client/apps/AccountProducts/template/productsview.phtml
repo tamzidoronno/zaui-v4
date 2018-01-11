@@ -8,6 +8,7 @@ $products = $this->getApi()->getProductManager()->getAllProductsIncDeleted();
     <div class="taxes"><? echo $this->__f("Tax rate"); ; ?></div>
     <div class="taxcode"><? echo $this->__f("Tax code accounting"); ?></div>
     <div class="accountingcode"><? echo $this->__f("Accounting ProductId"); ?></div>
+    <div class="accountingcode"><? echo $this->__f("Accounting Account"); ?></div>
 </div>
 <div gstype="form" method="saveTaxGroups">
     <?
@@ -16,9 +17,10 @@ $products = $this->getApi()->getProductManager()->getAllProductsIncDeleted();
         <div class="product_row">
             <div class="name"><? echo $product->name ? $product->name : $this->__f("N/A"); ?></div>
             <div class="taxgroup"><? echo $product->taxgroup ; ?></div>
-            <div class="taxes"><? echo $product->taxGroupObject->taxRate; ?></div>
+            <div class="taxes"><? echo $product->taxGroupObject != null && $product->taxGroupObject->taxRate; ?></div>
             <div class="taxcode"><input class="gsniceinput1" gsname="taxcode_<? echo $product->id; ?>" value="<? echo $product->sku; ?>"></div>
             <div class="accountingcode"><input class="gsniceinput1" gsname="product_<? echo $product->id; ?>" value="<? echo $product->accountingSystemId; ?>"></div>
+            <div class="accointingtax"><input class="gsniceinput1" gsname="accounting_<? echo $product->id; ?>" value="<? echo $product->accountingAccount; ?>"></div>
         </div>
         <?
     }

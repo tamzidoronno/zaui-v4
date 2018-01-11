@@ -759,11 +759,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return new PmsOrderStatistics(null, userManager.getAllUsersMap());
         }
         
-        List<Order> orders = orderManager.getOrders(null, null, null);
+        List<Order> orders = new ArrayList();
         
         if(filter.includeVirtual) {
             pmsManager.createAllVirtualOrders();
             orders = orderManager.getAllOrderIncludedVirtual();
+        } else {
+            orders = orderManager.getOrders(null, null, null);
         }
         
         if(filter.channel != null && !filter.channel.trim().isEmpty()) {

@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class PmsStatisticsBuilder {
     private final List<PmsBooking> bookings;
@@ -175,10 +176,12 @@ class PmsStatisticsBuilder {
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
                     
-        List<Order> ordersToUse = orderManager.getOrders(null, null, null);
+        List<Order> ordersToUse = new ArrayList();
 
         if (filter.includeVirtual) {
             ordersToUse = orderManager.getAllOrderIncludedVirtual();
+        } else {
+            ordersToUse = orderManager.getOrders(null, null, null);
         }
         
         while(true) {

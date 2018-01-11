@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -552,7 +553,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             Double totalInStats = stats.getTotalForOrder(order.id);
             Double diff = totalEx - totalInStats;
             if(diff < -1 || diff > 1) {
-                System.out.println("Order failed calculated: " + order.incrementOrderId + " - " + diff);
+//                System.out.println("Order failed calculated: " + order.incrementOrderId + " - " + diff);
             }
         }
     }
@@ -759,6 +760,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         List<Order> orders = orderManager.getOrders(null, null, null);
+        
         if(filter.includeVirtual) {
             pmsManager.createAllVirtualOrders();
             orders = orderManager.getAllOrderIncludedVirtual();
@@ -767,6 +769,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(filter.channel != null && !filter.channel.trim().isEmpty()) {
             orders = filterOrdersOnChannel(filter.channel, orders);
         }
+        
+        // This is a huge improvement of speed!
+        if (filter.start != null && filter.end != null && storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
+            orders = orders
+                .stream()
+                .filter(order -> order.isVirtual || order.isOrderFinanciallyRelatedToDates(filter.start, filter.end))
+                .collect(Collectors.toList());
+        }
+     
         System.out.println("Channel: " + filter.channel + " - " + orders.size());
         
         List<Order> ordersToUse = new ArrayList();
@@ -838,10 +849,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             roomProducts.add(type.productId);
             roomProducts.addAll(type.historicalProductIds);
         }
-        
+       
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
-//        doubleCheckStats(stats,ordersToUse);
+        doubleCheckStats(stats,ordersToUse);
 
         return stats;
     }

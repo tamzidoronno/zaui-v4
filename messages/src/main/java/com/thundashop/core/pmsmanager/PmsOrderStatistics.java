@@ -286,7 +286,7 @@ public class PmsOrderStatistics implements Serializable  {
         if(item.getProduct() == null) {
            System.out.println("Null product on item: " + item);
         } else if(item.getProduct().taxGroupObject == null) {
-           System.out.println("Null tax object on product: " + item.getProduct().name);
+//           System.out.println("Null tax object on product: " + item.getProduct().name);
         } else {
             taxRate = item.getProduct().taxGroupObject.taxRate;
         }

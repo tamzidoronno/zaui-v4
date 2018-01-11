@@ -15,10 +15,12 @@ $options->canCreateOrderAfterStay = true;
 $options->postMethod = "doPaymentNormal";
 $options->gscallback = "app.PmsSearchBooking.toggleTabClicked";
 $options->guestEmail = $user->emailAddress;
+$options->invoicenote = $pmsBooking->invoiceNote;
 
 $options->extraArgs = array();
 $options->extraArgs['roomid'] = $pmsSelectedRoom->pmsBookingRoomId;
 $options->extraArgs['id'] = $booking->id;
+
 
 ?>
 

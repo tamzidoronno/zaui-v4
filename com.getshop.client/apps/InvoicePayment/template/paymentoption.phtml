@@ -1,5 +1,6 @@
 <?
 $expDate = date('m/d/Y', strtotime("+14 days"));
+$note = isset($this->paymentOptions) && isset($this->paymentOptions->invoicenote) ? $this->paymentOptions->invoicenote : "";
 ?>
 <div>
     <div class="paymentinfo">
@@ -16,7 +17,7 @@ $expDate = date('m/d/Y', strtotime("+14 days"));
     <br/> <input gsname="expirydate" class='gsniceinput1 expirydate' value='<? echo $expDate; ?>'/>
     <br/>
     <br/>
-    <textarea gsname="invoicenote" class='invoicenote'></textarea>
+    <textarea gsname="invoicenote" class='invoicenote'><? echo $note; ?></textarea>
     <br/>
     <br/>
     <br/> <? echo $this->renderPaymentButtons(); ?>

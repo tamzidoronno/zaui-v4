@@ -92,7 +92,7 @@ public class C3ProjectWorkpackage {
             errorMessage += "\n wpid: " + test;
         }
         
-        errorMessage += "companyid: " + companyId;
+        errorMessage += "\ncompanyid: " + companyId;
         
         return errorMessage;
         

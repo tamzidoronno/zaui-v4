@@ -119,10 +119,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
         return hasFail;
     }
     
-    public List<String> createNextOrderFile(Date endDate, String subType) {
+    public List<String> createNextOrderFile(Date endDate, String subType, List<Order> orders) {
         logEntries.clear();
         
-        List<Order> orders = orderManager.getOrdersToTransferToAccount(endDate);
         orders.removeIf(order -> order.triedTransferredToAccountingSystem);
         
         boolean hasFail = checkTaxCodes(orders);

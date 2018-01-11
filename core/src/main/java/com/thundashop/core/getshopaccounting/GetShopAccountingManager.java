@@ -10,6 +10,8 @@ import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -29,17 +31,22 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     private Configuration config = new Configuration();
     
     @Autowired
+    private OrderManager orderManager;
+    
+    @Autowired
     private final List<AccountingSystemBase> accountingSystems = new ArrayList();
 
     @Override
     public List<String> createNextOrderFile(Date endDate) {
         List<String> ret = new ArrayList();
         
+        List<Order> orders = orderManager.getOrdersToTransferToAccount(endDate);
+        
         if (config.activatedSystemTypeInvoices.equals(config.activatedSystemTypeOther)) {
-            ret.addAll(getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, null));
+            ret.addAll(getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, null, orders));
         } else {        
-            List<String> others = getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, "invoice");
-            List<String> invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other");            
+            List<String> others = getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, "invoice", orders);
+            List<String> invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other", orders);            
             ret.addAll(others);
             ret.addAll(invoices);
         }
@@ -148,10 +155,10 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
 
     @Override
     public void deleteFile(String fileId, String password) {
-        if (password.equals("asdjfa094u51jn12on51o2n35123nasdfasdf")) {
+//        if (password.equals("asdjfa094u51jn12on51o2n35123nasdfasdf")) {
             getActivatedAccountingSystemInvoices().deleteFile(fileId);
             getActivatedAccountingSystemOther().deleteFile(fileId);
-        }
+//        }
     }
 
     @Override

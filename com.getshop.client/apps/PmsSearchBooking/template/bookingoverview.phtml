@@ -12,23 +12,17 @@ $pmsSelectedRoom = $this->getSelectedRoom();
 <div gstype='form' method="updateBooking" class="bookingoverview_content_row">
     <input type='hidden' gsname='id' value='<? echo $_POST['data']['id']; ?>'/>
     <input type='hidden' gsname='roomId' value='<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>'/>
-    
-    <div class="bottommenuarea">
-        <a href="/?page=groupbooking&bookingEngineId=<? echo $this->bookingEngineBooking->id; ?>">
-            <div gstype="submit" class="shop_button" gs_local_update_only="true"><i class="fa fa-chain"></i> <? echo $this->__f("Open group"); ?></div>
-        </a>
-        <div gstype="submit" class="shop_button disabled" gs_callback="app.PmsSearchBooking.contentSaved" synchron="true"><i class="fa fa-save"></i> <? echo $this->__f("Save"); ?></div>
-    </div>
+   
      
     <div class="menuarea" roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" bookingEngineId="<? echo $bookingEngineBooking->id; ?>">
-        <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <? echo $this->__f("Booking"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <? echo $this->__f("Stay"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <? echo $this->__f("Addons"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <? echo $this->__f("Access codes"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <? echo $this->__f("Messages"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <? echo $this->__f("Payments"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <? echo $this->__f("Log"); ?></div>
-        <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <? echo $this->__f("Tickets"); ?></div>
+        <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Booking"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access codes"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Tickets"); ?></span></div>
     </div>
     
     <div class="workarea">
@@ -76,6 +70,13 @@ $pmsSelectedRoom = $this->getSelectedRoom();
             $availability = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
             $availability->showBookingInformationExternal($this->bookingEngineBooking, $this->pmsBooking, $pmsSelectedRoom);
             ?>
+        </div>
+        
+        <div class="bottommenuarea">
+            <a href="/?page=groupbooking&bookingEngineId=<? echo $this->bookingEngineBooking->id; ?>">
+                <div gstype="submit" class="shop_button" gs_local_update_only="true"><i class="fa fa-chain"></i> <? echo $this->__f("Open group"); ?></div>
+            </a>
+            <div gstype="submit" class="shop_button disabled" gs_callback="app.PmsSearchBooking.contentSaved" synchron="true"><i class="fa fa-save"></i> <? echo $this->__f("Save"); ?></div>
         </div>
     </div>
    

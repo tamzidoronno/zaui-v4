@@ -131,23 +131,15 @@
 }
 
 .PmsSearchBooking .bookingoverview_content_row .bottommenuarea {
-    text-align: center;
+    text-align: right;
     font-size: 0px;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .PmsSearchBooking .bookingoverview_content_row .bottommenuarea .shop_button {
     font-size: 15px;
-    width: 50%;
-    box-sizing: border-box;
-    border-left: solid 1px rgba(255,255,255,0.5);
-    line-height: 50px;
-    height: 50px;
-    
-    background: rgb(99,182,219); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(99,182,219,1) 0%, rgba(48,157,207,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(99,182,219,1) 0%,rgba(48,157,207,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(99,182,219,1) 0%,rgba(48,157,207,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#63b6db', endColorstr='#309dcf',GradientType=0 );
+    margin-right: 20px;
 }
 
 .PmsSearchBooking .bookingoverview_content_row .bottommenuarea .shop_button:hover {
@@ -178,39 +170,61 @@
 }
 
 .PmsSearchBooking .bookingoverview_content_row .workarea {
-    width: calc(100% - 64px);
+    width: calc(100% - 200px);
     box-sizing: border-box;
 }
 
 .PmsSearchBooking .bookingoverview_content_row .menuarea {
-    width: 64px;
+    width: 200px;
     box-sizing: border-box;
- background-color: #f2f5f6; background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f5f6), to(#c8d7dc));
- background-image: -webkit-linear-gradient(top, #f2f5f6, #c8d7dc);
- background-image: -moz-linear-gradient(top, #f2f5f6, #c8d7dc);
- background-image: -ms-linear-gradient(top, #f2f5f6, #c8d7dc);
- background-image: -o-linear-gradient(top, #f2f5f6, #c8d7dc);
- background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#f2f5f6, endColorstr=#c8d7dc);
-}
-
-
-
-.PmsSearchBooking .bookingoverview_content_row .menuarea .menuentry.active {
-    background-color: rgba(0,0,0,0.1);
+    padding: 30px;
+    padding-left: 10px;
 }
 
 .PmsSearchBooking .bookingoverview_content_row .menuarea .menuentry i{
     font-size: 30px;
-    display: block;
+    display: none;
 }
 .PmsSearchBooking .bookingoverview_content_row .menuarea .menuentry {
-    text-align: center;
-    /*border-bottom: solid 1px #DDD;*/
+    text-align: left;
     padding: 5px;
     cursor: pointer;
-    height: 64px;
-    font-size: 12px;
-    color: #000;
+    color: #82cdf3;
+    text-decoration: dotted;
+    text-decoration: none;
+    width: inherit;
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.PmsSearchBooking .bookingoverview_content_row .menuarea .menuentry span {
+    border-bottom: 2px dotted #82cdf3;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding: 3px;
+    margin-left: 20px;
+}
+
+.PmsSearchBooking .bookingoverview_content_row .menuarea .menuentry.active span {
+    
+}
+
+.PmsSearchBooking .bookingoverview_content_row .menuarea .menuentry.active span {
+    border-bottom: 2px dotted transparent;
+    display: inline-block;
+    background-color: #2a324e;
+    color: #FFF;
+    border-radius: 20px;
+    border: solid 0px;
+    margin-left: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .PmsSearchBooking .seperatorbox .seperatortext {
@@ -398,9 +412,22 @@
     padding: 20px;
 }
 
-.PmsSearchBooking .bookinginformation .header .guest_col {
-    border-bottom: solid 1px #DDD;
+.PmsSearchBooking .bookinginformation .header {
+    border-bottom: solid 2px #333;
     padding-bottom: 5px;
+}
+
+.PmsSearchBooking .bookinginformation .guest_row .remove_guest {
+    background: #fb6a32;
+    background-color: #fb6a32;
+    color: #FFF;
+    width: 15px;
+    height: 15px;
+    padding: 0px;
+    text-align: center;
+    line-height: 15px;
+    border-radius: 15px;
+    padding: 2px;
 }
 
 .PmsSearchBooking .bookinginformation .guest_row {
@@ -411,15 +438,10 @@
 .PmsSearchBooking .bookinginformation .guest_col {
     display: inline-block;
     padding-right: 10px;
-    border-right: solid 1px #DDD;
     font-size: 13px;
     padding-left: 10px;
     padding-top: 5px;
-}
-
-.PmsSearchBooking .bookinginformation .guest_col1 {
-    border-right: 0px;
-    border-bottom: solid 0px !important;
+    box-sizing: border-box;
 }
 
 .PmsSearchBooking .bookinginformation .guest_col input {
@@ -438,22 +460,35 @@
 .PmsSearchBooking .payment_process_started {
     padding: 20px;
 }
-.PmsSearchBooking .bookinginformation .guest_col1 { width: 35px; }
-.PmsSearchBooking .bookinginformation .guest_col2 { width: 150px; }
-.PmsSearchBooking .bookinginformation .guest_col3 { width: 200px; }
-.PmsSearchBooking .bookinginformation .guest_col4 { width: 200px; }
 
-.PmsSearchBooking h2 {
+.PmsSearchBooking .bookinginformation .guest_col1 { width: 150px; }
+.PmsSearchBooking .bookinginformation .guest_col2 { width: 200px; }
+.PmsSearchBooking .bookinginformation .guest_col3 { width: 200px; }
+.PmsSearchBooking .bookinginformation .guest_col4 { width: 35px; }
+
+.PmsSearchBooking .insideheader {
     padding: 0px;
     margin: 0px;
     padding: 10px;
-    padding-left: 20px;
-    background-color: #EFEFEF;
+    padding-left: 0px;
+    border-bottom: solid 1px #DDD;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
 }
 
-.PmsSearchBooking .guestinformation {
-    border-left: solid 1px #DDD;
+.PmsSearchBooking .insideheader .gs_shop_small_icon {
+    background: #82ca35;
+    background-color: #82ca35;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 0px;
+    color: #FFF;
+    border: solid 0px;
 }
+
 .PmsSearchBooking .guestinformation[tab="orders"] .SalesPointCartCheckout {
 
     padding: 20px;
@@ -540,6 +575,36 @@
 .PmsSearchBooking .guestinfo, 
 .PmsSearchBooking .guestinfobox {
     padding: 20px;
+    display: inline-block;
+    
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+.PmsSearchBooking .guestinfo {
+    width: 708px;
+}
+
+.PmsSearchBooking .guestinfobox {
+    width: calc(100% - 712px);
+}
+
+.PmsSearchBooking .guestinfobox .row {
+    padding: 3px;
+    border-bottom: solid 1px #DDD;
+    padding-left: 20px;
+}
+
+.PmsSearchBooking .guestinfobox .row .col1 {
+    color: #5d5d5d;
+}
+
+.PmsSearchBooking .guestinfobox .row.odd {
+    background-color: #f9fafa;    
+}
+
+.PmsSearchBooking .guestinfobox div.row:last-child {
+    border-bottom: solid 0px;
 }
 
 .PmsSearchBooking .unsettledamount {

@@ -31,6 +31,8 @@ public class Lock {
     
     private Date dontUpdateUntil = null;
     
+    public Date lastStartedUpdating = null;
+    
     @Transient
     private List<UserSlot> toRemove = new ArrayList();
     
@@ -217,5 +219,11 @@ public class Lock {
         }
         
         return null;
+    }
+
+    void delayUpdateForMinutes(int minutes) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, minutes);
+        dontUpdateUntil = cal.getTime();
     }
 }

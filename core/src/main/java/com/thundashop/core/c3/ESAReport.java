@@ -50,17 +50,8 @@ public class ESAReport {
         this.workPackages = this.workPackages.stream().sorted(WorkPackage.getComperator()).collect(Collectors.toList());
         this.endDate = endDate;
        
-        for (String wpId : inKind.keySet()) {
-            for (String companyId : inKind.innerKeySet(wpId)) {
-                if (companyId.equals("68506dc3-881f-4534-8a08-196713993cdc")) {
-                    Double val = inKind.get(wpId, companyId);
-                    System.out.println("in-kind: " + val);
-                }
-            }
-        }
-        
         transferCostsToWp11(totalCosts, inKind);
-        
+        calculateRcnGrant(totalCosts, inKind);
         mergeOus(totalCosts, inKind);
 
         totalCosts = devideAllNumbersOn1000(totalCosts);
@@ -466,8 +457,11 @@ public class ESAReport {
     private void transferCostsToWp11(DoubleKeyMap<String, String, Double> totalCost, DoubleKeyMap<String, String, Double> inKind) {
         for (String wpId : inKind.keySet()) {
             WorkPackage moveCost = getWorkPackage(wpId);
-            if (moveCost.shouldRemoveOnePercent(endDate)) {
-                for (String companyId : inKind.innerKeySet(wpId)) {
+            inKind.put(wpId, "rcngrant", 0D);
+            
+            for (String companyId : inKind.innerKeySet(wpId)) {
+                
+                if (moveCost.shouldRemoveOnePercent(endDate)) {
                     double oldValue = inKind.get(wpId, companyId);
                     double onePercent = oldValue / (double)100;
                     double newValue = oldValue - onePercent;
@@ -493,7 +487,7 @@ public class ESAReport {
                         if (found)
                             totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
                     }
-                }    
+                }  
             }
         }
         
@@ -539,6 +533,25 @@ public class ESAReport {
         
         totalCosts.put(wpId, ousVertsId, newValue);
         totalCosts.remove(wpId, companyId);
+    }
+
+    private void calculateRcnGrant(DoubleKeyMap<String, String, Double> totalCost, DoubleKeyMap<String, String, Double> inKind) {
+        for (String wpId : totalCost.keySet()) {
+            
+            inKind.put(wpId, "rcngrant", 0D);
+            
+            for (String companyId : totalCost.innerKeySet(wpId)) {        
+                double tCost = totalCost.get(wpId, companyId);
+                double iCost = inKind.get(wpId, companyId);
+                double rcngrant = tCost - iCost;
+
+                if (inKind.get(wpId, "rcngrant") != null) {
+                    rcngrant += inKind.get(wpId, "rcngrant");
+                }
+
+                inKind.put(wpId, "rcngrant", rcngrant);
+            }
+        }
     }
     
 }

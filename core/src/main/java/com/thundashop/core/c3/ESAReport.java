@@ -50,8 +50,16 @@ public class ESAReport {
         this.workPackages = this.workPackages.stream().sorted(WorkPackage.getComperator()).collect(Collectors.toList());
         this.endDate = endDate;
        
-//        transferCostsToWp11(totalCosts);
-        transferCostsToWp11(inKind);
+        for (String wpId : inKind.keySet()) {
+            for (String companyId : inKind.innerKeySet(wpId)) {
+                if (companyId.equals("68506dc3-881f-4534-8a08-196713993cdc")) {
+                    Double val = inKind.get(wpId, companyId);
+                    System.out.println("in-kind: " + val);
+                }
+            }
+        }
+        
+        transferCostsToWp11(totalCosts, inKind);
         
         mergeOus(totalCosts, inKind);
 
@@ -455,23 +463,32 @@ public class ESAReport {
         return newKeySet;
     }
 
-    private void transferCostsToWp11(DoubleKeyMap<String, String, Double> totalCosts) {
-        for (String wpId : totalCosts.keySet()) {
+    private void transferCostsToWp11(DoubleKeyMap<String, String, Double> totalCost, DoubleKeyMap<String, String, Double> inKind) {
+        for (String wpId : inKind.keySet()) {
             WorkPackage moveCost = getWorkPackage(wpId);
             if (moveCost.shouldRemoveOnePercent(endDate)) {
-                for (String companyId : totalCosts.innerKeySet(wpId)) {
-                    double oldValue = totalCosts.get(wpId, companyId);
+                for (String companyId : inKind.innerKeySet(wpId)) {
+                    double oldValue = inKind.get(wpId, companyId);
                     double onePercent = oldValue / (double)100;
                     double newValue = oldValue - onePercent;
-                    totalCosts.put(wpId, companyId, newValue);
+                    inKind.put(wpId, companyId, newValue);
+                    
+                    if (totalCost.get(wpId, companyId) != null) {
+                        oldValue = totalCost.get(wpId, companyId);
+                        newValue = oldValue - onePercent;
+                        totalCost.put(wpId, companyId, newValue);
+                    }
+
                     
                     
-                    if (totalCosts.keyExists("de20c1c3-faee-4237-8457-dc9efed16364", companyId)) {
-                        double toAdd = totalCosts.get("de20c1c3-faee-4237-8457-dc9efed16364", companyId);
+                    if (inKind.keyExists("de20c1c3-faee-4237-8457-dc9efed16364", companyId)) {
+                        double toAdd = inKind.get("de20c1c3-faee-4237-8457-dc9efed16364", companyId);
                         toAdd = toAdd + onePercent;
-                        totalCosts.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
+                        inKind.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
+                        totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
                     } else {
-                        totalCosts.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
+                        inKind.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
+                        totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
                     }
                 }    
             }

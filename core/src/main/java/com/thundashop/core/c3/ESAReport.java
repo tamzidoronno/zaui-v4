@@ -473,22 +473,25 @@ public class ESAReport {
                     double newValue = oldValue - onePercent;
                     inKind.put(wpId, companyId, newValue);
                     
+                    boolean found = false;
+                    
                     if (totalCost.get(wpId, companyId) != null) {
                         oldValue = totalCost.get(wpId, companyId);
                         newValue = oldValue - onePercent;
                         totalCost.put(wpId, companyId, newValue);
+                        found = true;
                     }
 
-                    
-                    
                     if (inKind.keyExists("de20c1c3-faee-4237-8457-dc9efed16364", companyId)) {
                         double toAdd = inKind.get("de20c1c3-faee-4237-8457-dc9efed16364", companyId);
                         toAdd = toAdd + onePercent;
                         inKind.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
-                        totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
+                        if (found)
+                            totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
                     } else {
                         inKind.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
-                        totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
+                        if (found)
+                            totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
                     }
                 }    
             }

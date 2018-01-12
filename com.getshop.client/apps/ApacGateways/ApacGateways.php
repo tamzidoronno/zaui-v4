@@ -17,6 +17,15 @@ class ApacGateways extends \MarketingApplication implements \Application {
         $this->includefile("addnewserver");
     }
     
+    public function saveConnectionDetails() {
+        $this->getApi()->getGetShopLockSystemManager()->updateConnectionDetails(
+                $_POST['data']['serverid'],
+                $_POST['data']['hostname'], 
+                $_POST['data']['username'], 
+                $_POST['data']['password'], 
+                $_POST['data']['servername']);
+    }
+    
     public function createNewServer() {
         $this->getApi()->getGetShopLockSystemManager()->createServer(
                 $_POST['data']['type'], 
@@ -75,6 +84,10 @@ class ApacGateways extends \MarketingApplication implements \Application {
 
     public function runCheck() {
         $this->getApi()->getGetShopLockSystemManager()->triggerCheckOfCodes($_POST['data']['serverid']);
+    }
+    
+    public function toggleUpdate() {
+        $this->getApi()->getGetShopLockSystemManager()->toggleActiveServer($_POST['data']['serverid']);
     }
 }
 ?>

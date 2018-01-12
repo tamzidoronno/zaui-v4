@@ -384,6 +384,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             ((ZwaveLockServer)server).startUpdatingOfLocks();
         }
     }
+    
+    @Override
+    public void toggleActiveServer(String serverId) {
+        LockServer server = getLockServer(serverId);
+        if (server instanceof ZwaveLockServer) {
+            ((ZwaveLockServer)server).toggleActivated();
+        }
+    }
 
     @Override
     public void triggerCronTab() {

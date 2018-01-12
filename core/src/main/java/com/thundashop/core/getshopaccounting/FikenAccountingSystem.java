@@ -47,12 +47,12 @@ public class FikenAccountingSystem extends AccountingSystemBase {
             FikenInvoiceService service = new FikenInvoiceService(this, productManager, userManager);
 
             groupedOrders.get(subType).stream().forEach(order -> {
-                boolean res = service.createInvoice(order);
-                if (res) {
+//                boolean res = service.createInvoice(order);
+//                if (res) {
                     file.orders.add(order.id);
-                } else {
-                    file.ordersTriedButFailed.add(order.id);
-                }
+//                } else {
+//                    file.ordersTriedButFailed.add(order.id);
+//                }
             });
             
             retFiles.add(file);

@@ -33,6 +33,8 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     @ExcludeFromJson
     private ZwaveThread currentThread; 
     
+    private boolean activated = true;
+    
     public ZwaveLockServer() {
     }
 
@@ -165,6 +167,10 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
     }
 
+    public void toggleActivated() {
+        this.activated = !this.activated;
+    }
+    
     private synchronized void startNextThread(boolean stopOldThread) {
         if (stopOldThread) {
             currentThread = null;

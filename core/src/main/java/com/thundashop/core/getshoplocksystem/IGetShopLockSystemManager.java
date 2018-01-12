@@ -83,6 +83,9 @@ public interface IGetShopLockSystemManager {
     public void triggerCheckOfCodes(String serverId);
     
     @Administrator
+    public void toggleActiveServer(String serverId);
+    
+    @Administrator
     public void triggerCronTab();
     
     /***** Group code stuff *****/

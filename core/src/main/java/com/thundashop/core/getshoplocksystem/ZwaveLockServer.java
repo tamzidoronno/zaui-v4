@@ -172,6 +172,10 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     }
     
     private synchronized void startNextThread(boolean stopOldThread) {
+        if (!this.activated) {
+            return;
+        }
+        
         if (stopOldThread) {
             currentThread = null;
         }

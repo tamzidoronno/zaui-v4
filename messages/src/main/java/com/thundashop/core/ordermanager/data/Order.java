@@ -860,6 +860,6 @@ public class Order extends DataCommon implements Comparable<Order> {
     
     public void resetTransferToAccounting() {
         transferredToAccountingSystem = false;
-        triedTransferredToAccountingSystem = false;
+        triedTransferredToAccountingSystem  = false;
     }
 } 

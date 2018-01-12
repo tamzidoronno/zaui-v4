@@ -185,6 +185,13 @@ class AccountingDownload extends \MarketingApplication implements \Application {
     public function transferFromOldSystem() {
         $this->getApi()->getAccountingManager()->transferAllToNewSystem();
     }
+    
+    public function markAsTransferred() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->transferredToAccountingSystem = true;
+        $order->triedTransferredToAccountingSystem  = true;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
 }
 ?>
 

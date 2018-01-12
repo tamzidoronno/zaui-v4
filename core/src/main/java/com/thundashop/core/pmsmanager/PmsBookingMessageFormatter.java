@@ -50,9 +50,6 @@ class PmsBookingMessageFormatter {
         if(room.date != null && room.date.end != null) {
             message = message.replace("{checkout_time}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
         }
-        if(room.date != null && room.date.end != null) {
-            message = message.replace("{roomType}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
-        }
         if(room.guests != null && !room.guests.isEmpty()) {
             PmsGuests guest = room.guests.get(0);
             if(guest.name != null && !guest.name.isEmpty()) {

@@ -54,6 +54,8 @@ public abstract class ZwaveThread implements Runnable {
             return;
         }
         
+        lock.lastStartedUpdating = new Date();
+        
         for (int i = 0; i < attempts; i++) {
             if (shouldStop) {
                 break;

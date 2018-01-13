@@ -272,3 +272,8 @@ body {
 .gsniceinput1 {
     border-radius: 3px;
 }
+
+.gs_modalinner {
+    width: 1266px;
+    margin: 0 auto;
+}

@@ -2,6 +2,8 @@
 namespace ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d;
 
 class EcommerceOrderList extends \MarketingApplication implements \Application {
+    private $selectedOrder;
+    
     public function getDescription() {
         
     }
@@ -60,7 +62,9 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     }
     
     public function OrderManager_getOrders() {
-        $this->includefile("overview");
+        $app = new \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView();
+        $app->loadOrder($_POST['data']['id']);
+        $app->renderApplication(true, $this);
     }
 
     public function printTable() {
@@ -82,9 +86,20 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $table->render();
     }
 
-    public function isTabActive($param0) {
-        return false;
+
+    /**
+     * 
+     * @return \core_ordermanager_data_Order 
+     */
+    public function getSelectedOrder() {
+        $this->setData();
+        return $this->selectedOrder;
     }
 
+    public function setData($force=false) {
+        if (!$this->selectedOrder || $force) {
+            $this->selectedOrder = $this->getApi()->getOrderManager()->getOrder($_POST['data']['id']);
+        }
+    }
 }
 ?>

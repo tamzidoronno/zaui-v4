@@ -45,12 +45,17 @@ foreach ($groupedOrders as $month => $orders) {
         $monthTotalExTaxes += $order->totalForOrderExTaxes;
     ?>
         <div class="row">
-            <div class="col col1"><? echo $order->incrementOrderId; ?></div>
+            <div class="col col1">
+                <div class="gs_shop_small_icon" gs_show_modal="orderview" orderid="<? echo $order->id; ?>"><i class="fa fa-edit"></i></div>
+                <? echo $order->incrementOrderId; ?>
+            </div>
             <div class="col col2"><? echo $order->transferToAccountingDate; ?></div>
             <div class="col col3"><? echo $order->shouldHaveBeenTransferredToAccountingOnDate; ?></div>
             <div class="col col4"><? echo round($order->totalForOrder, 2); ?></div>
             <div class="col col5"><? echo explode("\\", $order->payment->paymentType)[1]; ?></div>
-            <div class="col col6"><div class="gs_shop_small_icon" gsclick="markAsTransferred" orderid="<? echo $order->id; ?>"><i class="fa fa-trash"></i> <? echo $this->__f("Ignore"); ?></div></div>
+            <div class="col col6">
+                <div class="gs_shop_small_icon" gsclick="markAsTransferred" orderid="<? echo $order->id; ?>"><i class="fa fa-trash"></i> <? echo $this->__f("Ignore"); ?></div>
+            </div>
         </div>
     <?
     }

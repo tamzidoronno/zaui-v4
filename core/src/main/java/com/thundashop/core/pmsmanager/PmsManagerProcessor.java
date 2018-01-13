@@ -1232,6 +1232,9 @@ public class PmsManagerProcessor {
             if(booking.orderIds.size() > 1) {
                 continue;
             }
+            if(booking.hasForcedAccessedRooms()) {
+                continue;
+            }
             for(String orderId : booking.orderIds) {
                 Order order = manager.orderManager.getOrder(orderId);
                 if(order.warnedNotPaid) {
@@ -1245,7 +1248,6 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 if(checkDate.after(order.rowCreatedDate)) {
-                    System.out.println("Order need to be warned:" + order.rowCreatedDate);
                     order.warnedNotPaid = true;
                     manager.orderManager.saveOrder(order);
                     manager.doNotification("warnfirstordernotpaid", booking.id);

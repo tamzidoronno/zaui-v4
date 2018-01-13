@@ -96,7 +96,7 @@ public class PmsBookingRooms implements Serializable {
     public Integer maxNumberOfGuests = 0;
     @Transient
     boolean paidFor = false;
-    boolean forceAccess = false;
+    public boolean forceAccess = false;
     Double printablePrice = 0.0;
     
     void clear() {

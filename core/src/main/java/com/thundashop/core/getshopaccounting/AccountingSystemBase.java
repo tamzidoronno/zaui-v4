@@ -128,6 +128,10 @@ public abstract class AccountingSystemBase extends ManagerBase {
     }
     
     public List<String> createNextOrderFile(Date endDate, String subType, List<Order> orders) {
+        if (GetShopLogHandler.isDeveloper) {
+            throw new RuntimeException("Transfers to accounting is disabled in development mode.");
+        }
+        
         clearLog();
         
         orders.removeIf(order -> order.triedTransferredToAccountingSystem);
@@ -489,6 +493,10 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     public void directTransfer(String orderId) {
         Order order = orderManager.getOrder(orderId);
+        
+        if (GetShopLogHandler.isDeveloper) {
+            throw new RuntimeException("Transfers to accounting is disabled in development mode.");
+        }
         
         if(checkTaxCodes(order)) {
             return;

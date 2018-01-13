@@ -138,7 +138,7 @@ public class FikenAccountingSystem extends AccountingSystemBase {
             return;
         }
         
-        boolean transferred = true; //service.createInvoice(order);
+        boolean transferred = service.createInvoice(order);
 
         order.triedTransferredToAccountingSystem = true;
         if (transferred) {

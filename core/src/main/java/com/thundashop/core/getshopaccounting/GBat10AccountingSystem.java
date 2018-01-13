@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
@@ -217,6 +218,11 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
     @Override
     public String getSystemName() {
         return "GBAT10";
+    }
+
+    @Override
+    public void handleDirectTransfer(String orderId) {
+        throw new ErrorException(1049);
     }
 
 }

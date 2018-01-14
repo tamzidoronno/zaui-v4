@@ -334,6 +334,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 info.email = guest.email;
                 info.prefix = guest.prefix;
                 info.phone = guest.phone;
+                info.isChild = guest.isChild;
                 returnroom.guestInfo.add(info);
             }
             List<PmsBookingAddonItem> addons = pmsManager.getAddonsWithDiscount(room.pmsBookingRoomId);
@@ -377,15 +378,32 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void addTextualSummary(GuestAddonsSummary result) {
         PmsBooking booking = pmsManager.getCurrentBooking();
-        int numberOfGuests = 0;
+        int numberOfAdults = 0;
+        int numberOfChildren = 0;
         String curLang = getSession().language;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
-            numberOfGuests += room.numberOfGuests;
+            for(int i = 0; i < room.numberOfGuests; i++) {
+                if(room.guests.size() > i) {
+                    PmsGuests guestInfo = room.guests.get(i);
+                    if(guestInfo.isChild) {
+                        numberOfChildren++;
+                    } else {
+                        numberOfAdults++;
+                    }
+                } else {
+                    numberOfAdults++;
+                }
+            }
         }
-        if(numberOfGuests == 1) {
-            result.textualSummary.add(numberOfGuests + " x {guest}");
+        if(numberOfAdults == 1) {
+            result.textualSummary.add(numberOfAdults + " x {adult}");
         } else {
-            result.textualSummary.add(numberOfGuests + " x {guests}");
+            result.textualSummary.add(numberOfAdults + " x {adults}");
+        }
+        if(numberOfChildren == 1) {
+            result.textualSummary.add(numberOfChildren + " x {child}");
+        } else {
+            result.textualSummary.add(numberOfChildren + " x {children}");
         }
         result.textualSummary.add(booking.getActiveRooms().size() + " x {rooms}");
         
@@ -487,6 +505,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 newGuest.phone = ginfo.phone;
                 newGuest.prefix = ginfo.prefix;
                 newGuest.name = ginfo.name;
+                newGuest.isChild = ginfo.isChild;
                 updatedGuestInfo.add(newGuest);
             }
             room.guests = updatedGuestInfo;

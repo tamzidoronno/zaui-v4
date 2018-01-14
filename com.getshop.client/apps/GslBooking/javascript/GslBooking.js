@@ -183,8 +183,10 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
     $('.addonprinted').remove();
     var template = $('.addonsentry #addon');
     var translation = getshop_getBookingTranslations();
+    var foundItems = false;
     if(typeof(res) !== "undefined" || typeof(res.items) !== "undefined") {
         for(var k in res.items) {
+            foundItems = true;
             var item = res.items[k];
             var entry = template.clone();
             
@@ -217,6 +219,9 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
             entry.show();
             $('.addonsentry .overview_addons').append(entry);
         }
+    }
+    if(!foundItems) {
+        $('.addonsentry').hide();
     }
    
     getshop_loadRooms(res);
@@ -251,8 +256,10 @@ function getshop_loadTextualSummary(res) {
     var translation = getshop_getBookingTranslations();
     for(var k in res.textualSummary) {
         var text = res.textualSummary[k];
-        text = text.replace("{guests}", translation['numberofguests'].toLowerCase());
-        text = text.replace("{guest}", translation['guest'].toLowerCase());
+        text = text.replace("{adults}", translation['adults'].toLowerCase());
+        text = text.replace("{adult}", translation['adult'].toLowerCase());
+        text = text.replace("{child}", translation['child'].toLowerCase());
+        text = text.replace("{children}", translation['children'].toLowerCase());
         text = text.replace("{rooms}", translation['rooms'].toLowerCase());
         text = text.replace("{totalprice}", translation['totalprice']);
         $('.yourstaysummary').append(text + "<br>");
@@ -282,6 +289,9 @@ function getshop_loadRooms(res) {
                 guestRow.find('[gsname="prefix"]').val(guestObject.prefix);
                 guestRow.find('[gsname="email"]').val(guestObject.email);
                 guestRow.find('[gsname="phone"]').val(guestObject.phone);
+                if(guestObject.isChild) {
+                   guestRow.find('[gsname="ischild"]').attr('checked','checked');
+                }
             }
             
             if(addedAddons) {
@@ -666,7 +676,8 @@ function getshop_saveGuestInformation() {
                 "prefix" : $(this).find('[gsname="prefix"]').val(),
                 "phone" : $(this).find('[gsname="phone"]').val(),
                 "name" : $(this).find('[gsname="name"]').val(),
-                "email" : $(this).find('[gsname="email"]').val()
+                "email" : $(this).find('[gsname="email"]').val(),
+                "isChild" : $(this).find('[gsname="ischild"]').is(':checked')
             };
             guests.push(info);
             
@@ -739,8 +750,7 @@ function getshop_previusPage() {
 function getshop_confirmGuestInfoBox() {
     var room = $('#count_room').val();
     var adult = $('#count_adult').val();
-    var child = $('#count_child').val();
-    var guest = +adult + +child;
+    var guest = adult;
     var translation = getshop_getBookingTranslations();
     
     var roomText = ' ' + translation['room'].toLowerCase();
@@ -1189,6 +1199,13 @@ function getshop_removeRoom() {
     }
 }
 
+function getshop_changeChildSettings() {
+    var saving = getshop_saveGuestInformation();
+    saving.done(function(res) {
+        getshop_loadAddonsAndGuestSummaryByResult(res);
+    });
+}
+
 function getshop_hideGuestSelectionBox(e) {
     var target = $(e.target);
     if(target.attr('id') == "guests" || target.closest('#guests').length > 0) {
@@ -1221,6 +1238,7 @@ $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRo
 $(document).on('mousedown touchstart', '.GslBooking .ordersummary .continue', getshop_continueToSummary);
 $(document).on('mousedown touchstart', '.GslBooking .addButton', getshop_addRemoveAddon);
 $(document).on('mousedown touchstart', '.GslBooking .removeselectedroom', getshop_removeGroupedRooms);
+$(document).on('click', '.GslBooking [gsname="ischild"]', getshop_changeChildSettings);
 $(document).on('mousedown touchstart', getshop_hideGuestSelectionBox);
 
 var lastSelectedPage = localStorage.getItem('gslcurrentpage');

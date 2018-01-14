@@ -61,5 +61,10 @@
     "price" : "Pris",
     "availableRooms" : "Tilgjengelige rom: ",
     "chosenRoom" : "Valgte rom",
-    "ischildtext" : "Denne gjesten er et barn på under{age} år."
+    "ischildtext" : "Denne gjesten er et barn under {age} år.",
+    "adult" : "voksen",
+    "adults" : "voksne",
+    "child" : "barn",
+    "children" : "barn",
+
 }

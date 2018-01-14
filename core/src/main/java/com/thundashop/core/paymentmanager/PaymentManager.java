@@ -90,7 +90,11 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
     public boolean handleOrder(Order order) {
         Date lockDate = getShopAccountingManager.getPreviouseEndDate();
         
-        if (order.transferredToAccountingSystem || order.transferToAccountingDate != null) {
+        if (order.incrementOrderId == 104013) {
+            System.out.println("OK");
+        }
+         
+        if (order.transferredToAccountingSystem) {
             return false;
         }
         

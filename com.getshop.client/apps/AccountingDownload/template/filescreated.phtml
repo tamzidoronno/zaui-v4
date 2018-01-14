@@ -12,11 +12,18 @@ if ($logEntries) {
 
 
 $data = array();
-foreach ($_SESSION['AccountingDownload_filesCreated'] as $fileId) {
+$toLoop = isset($_SESSION['AccountingDownload_filesCreated']) ? $_SESSION['AccountingDownload_filesCreated'] : array();
+if (!is_array($toLoop)) {
+    $toLoop = array();
+}
+foreach ($toLoop as $fileId) {
    $data[] = $this->getApi()->getGetShopAccountingManager()->getOrderFile($fileId);
 }
-echo "<h2>Files created now</h2>";
-$this->printFileTable($data);
+
+if (count($data)) {
+    echo "<h2>Files created now</h2>";
+    $this->printFileTable($data);
+}
 ?>
 
 <br/>

@@ -2104,6 +2104,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .stream()
                 .filter(order -> order.transferredToAccountingSystem == null || !order.transferredToAccountingSystem)
                 .filter(order -> order.transferToAccountingDate != null)
+                .filter(order -> !order.isNullOrder())
                 .filter(order -> order.isTransferBefore(endDate))
                 .collect(Collectors.toList());
         
@@ -2117,8 +2118,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void updateTransferToAccountingDate() {
         orders.values()
                 .stream()
-                .filter(order -> order.transferToAccountingDate == null || !order.transferredToAccountingSystem)
-                .filter(order -> order.transferToAccountingDate == null)
+                .filter(order -> !order.transferredToAccountingSystem)
                 .forEach(order -> {
                     boolean orderChanged = paymentManager.handleOrder(order);
                     if (orderChanged) {

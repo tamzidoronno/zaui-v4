@@ -33,6 +33,8 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     @ExcludeFromJson
     private ZwaveThread currentThread; 
     
+    private boolean activated = true;
+    
     public ZwaveLockServer() {
     }
 
@@ -148,6 +150,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         
         if (!thread.successfullyCompleted) {
             threadFailed(thread);
+            saveMe();
         } else {
             LocstarLock lock = locks.get(thread.getLockId());
             if (lock != null && lock.prioritizeLockUpdate && lock.getJobSize() == 0) {
@@ -165,7 +168,15 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
     }
 
+    public void toggleActivated() {
+        this.activated = !this.activated;
+    }
+    
     private synchronized void startNextThread(boolean stopOldThread) {
+        if (!this.activated) {
+            return;
+        }
+        
         if (stopOldThread) {
             currentThread = null;
         }
@@ -211,7 +222,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         String lockId = thread.getLockId();
         Lock lock = getLock(lockId);
         if (lock != null) {
-            lock.delayUpdateForFiveMinutes();
+            lock.delayUpdateForMinutes(60);
         }
         saveMe();
     }

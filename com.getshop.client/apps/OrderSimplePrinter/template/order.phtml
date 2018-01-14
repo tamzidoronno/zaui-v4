@@ -8,7 +8,7 @@ $lastInTableClass = $this->lastOrderInTable ? "lastrow" : "";
 ?>
 <div class='OrderSimplerPrinter_inner <? echo $lastInTableClass; ?>'>
     <div class='orderheader'>
-        <div class='orderid'><i class='fa fa-asterisk'></i> <? echo $order->incrementOrderId; ?></div>
+        <div class='orderid' gs_show_modal=orderview" orderid=<? echo $order->id; ?>><i class='fa fa-asterisk'></i> <? echo $order->incrementOrderId; ?></div>
         <div class='cost'><i class='fa fa-money'></i> <? echo $totalAmount ; ?></div>
         <div class='createdby'><i class='fa fa-calendar'></i> <? echo date('d/m-Y h:i', strtotime($order->createdDate)); ?></div>
 

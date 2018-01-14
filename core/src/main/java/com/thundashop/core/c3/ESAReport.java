@@ -50,9 +50,8 @@ public class ESAReport {
         this.workPackages = this.workPackages.stream().sorted(WorkPackage.getComperator()).collect(Collectors.toList());
         this.endDate = endDate;
        
-//        transferCostsToWp11(totalCosts);
-        transferCostsToWp11(inKind);
-        
+        transferCostsToWp11(totalCosts, inKind);
+        calculateRcnGrant(totalCosts, inKind);
         mergeOus(totalCosts, inKind);
 
         totalCosts = devideAllNumbersOn1000(totalCosts);
@@ -455,25 +454,40 @@ public class ESAReport {
         return newKeySet;
     }
 
-    private void transferCostsToWp11(DoubleKeyMap<String, String, Double> totalCosts) {
-        for (String wpId : totalCosts.keySet()) {
+    private void transferCostsToWp11(DoubleKeyMap<String, String, Double> totalCost, DoubleKeyMap<String, String, Double> inKind) {
+        for (String wpId : inKind.keySet()) {
             WorkPackage moveCost = getWorkPackage(wpId);
-            if (moveCost.shouldRemoveOnePercent(endDate)) {
-                for (String companyId : totalCosts.innerKeySet(wpId)) {
-                    double oldValue = totalCosts.get(wpId, companyId);
+            inKind.put(wpId, "rcngrant", 0D);
+            
+            for (String companyId : inKind.innerKeySet(wpId)) {
+                
+                if (moveCost.shouldRemoveOnePercent(endDate)) {
+                    double oldValue = inKind.get(wpId, companyId);
                     double onePercent = oldValue / (double)100;
                     double newValue = oldValue - onePercent;
-                    totalCosts.put(wpId, companyId, newValue);
+                    inKind.put(wpId, companyId, newValue);
                     
+                    boolean found = false;
                     
-                    if (totalCosts.keyExists("de20c1c3-faee-4237-8457-dc9efed16364", companyId)) {
-                        double toAdd = totalCosts.get("de20c1c3-faee-4237-8457-dc9efed16364", companyId);
-                        toAdd = toAdd + onePercent;
-                        totalCosts.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
-                    } else {
-                        totalCosts.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
+                    if (totalCost.get(wpId, companyId) != null) {
+                        oldValue = totalCost.get(wpId, companyId);
+                        newValue = oldValue - onePercent;
+                        totalCost.put(wpId, companyId, newValue);
+                        found = true;
                     }
-                }    
+
+                    if (inKind.keyExists("de20c1c3-faee-4237-8457-dc9efed16364", companyId)) {
+                        double toAdd = inKind.get("de20c1c3-faee-4237-8457-dc9efed16364", companyId);
+                        toAdd = toAdd + onePercent;
+                        inKind.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
+                        if (found)
+                            totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
+                    } else {
+                        inKind.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
+                        if (found)
+                            totalCost.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
+                    }
+                }  
             }
         }
         
@@ -519,6 +533,25 @@ public class ESAReport {
         
         totalCosts.put(wpId, ousVertsId, newValue);
         totalCosts.remove(wpId, companyId);
+    }
+
+    private void calculateRcnGrant(DoubleKeyMap<String, String, Double> totalCost, DoubleKeyMap<String, String, Double> inKind) {
+        for (String wpId : totalCost.keySet()) {
+            
+            inKind.put(wpId, "rcngrant", 0D);
+            
+            for (String companyId : totalCost.innerKeySet(wpId)) {        
+                double tCost = totalCost.get(wpId, companyId);
+                double iCost = inKind.get(wpId, companyId);
+                double rcngrant = tCost - iCost;
+
+                if (inKind.get(wpId, "rcngrant") != null) {
+                    rcngrant += inKind.get(wpId, "rcngrant");
+                }
+
+                inKind.put(wpId, "rcngrant", rcngrant);
+            }
+        }
     }
     
 }

@@ -1,0 +1,8 @@
+.EcommerceOrderList .col_incrementOrderId { width: 100px !important; }
+.EcommerceOrderList .col_rowCreatedDate { width: 100px !important; }
+.EcommerceOrderList .col_paymentDate { width: 100px !important; }
+.EcommerceOrderList .col_transferredToAccounting { width: 100px !important; }
+.EcommerceOrderList .col_user { width: calc(100% - 750px) !important; }
+.EcommerceOrderList .col_inctaxes { width: 100px !important; }
+.EcommerceOrderList .col_extaxes { width: 100px !important; }
+.EcommerceOrderList .col_state { width: 50px !important; }

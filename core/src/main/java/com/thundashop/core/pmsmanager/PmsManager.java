@@ -1700,17 +1700,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 orderManager,
             bookingEngine);
         builder.setBudget(getConfigurationSecure().budget);
-        int totalRooms = bookingEngine.getBookingItems().size();
-        if(!filter.typeFilter.isEmpty()) {
-            totalRooms = 0;
-            for(String id : filter.typeFilter) {
-                totalRooms += bookingEngine.getBookingItemsByType(id).size();
-            }
-        }
         
-        if(filter.itemFilter != null && !filter.itemFilter.isEmpty()) {
-            totalRooms = filter.itemFilter.size();
-        }
+        int totalRooms = getTotalRoomsBasedOnFilter(filter);
         
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
@@ -1739,6 +1730,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         result.deliveryStats = deliveryStats;
         
         return result;
+    }
+
+    private int getTotalRoomsBasedOnFilter(PmsBookingFilter filter) {
+        int totalRooms = bookingEngine.getBookingItems().size();
+        if(!filter.typeFilter.isEmpty()) {
+            totalRooms = 0;
+            for(String id : filter.typeFilter) {
+                totalRooms += bookingEngine.getBookingItemsByType(id).size();
+            }
+        }
+        if(filter.itemFilter != null && !filter.itemFilter.isEmpty()) {
+            totalRooms = filter.itemFilter.size();
+        }
+        return totalRooms;
     }
 
     @Override

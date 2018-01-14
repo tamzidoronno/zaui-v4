@@ -101,15 +101,6 @@ class GetShopLockSystem extends \WebshopApplication implements \Application {
         $this->getApi()->getGetShopLockSystemManager()->startFetchingOfLocksFromServer($_POST['data']['serverid']);
     }
     
-    public function saveConnectionDetails() {
-        $this->getApi()->getGetShopLockSystemManager()->updateConnectionDetails(
-                $_POST['data']['serverid'],
-                $_POST['data']['hostname'], 
-                $_POST['data']['username'], 
-                $_POST['data']['password'], 
-                $_POST['data']['servername']);
-    }
-    
     public function editSettingsForLock() {
         $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_editlock_serverid'] = $_POST['data']['serverid'];
         $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_editlock_lockid'] = $_POST['data']['lockid'];

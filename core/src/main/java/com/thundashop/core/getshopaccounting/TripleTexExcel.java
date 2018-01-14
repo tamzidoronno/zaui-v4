@@ -201,4 +201,9 @@ public class TripleTexExcel extends AccountingSystemBase {
         }
     }
 
+    @Override
+    public void handleDirectTransfer(String orderId) {
+        throw new ErrorException(1049);
+    }
+
 }

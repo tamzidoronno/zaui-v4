@@ -2,7 +2,7 @@
 /* @var $this \ns_2d6a27b9_b238_4406_9f03_c4ca8184f590\ApacGateways */
 
 $server = $this->getServer();
-$isUpdating = true;
+$isUpdating = $server->activated;
 $numberOfLocks = 0;
 foreach ($server->locks as $lock) {
     $numberOfLocks++;

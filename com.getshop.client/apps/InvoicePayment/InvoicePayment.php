@@ -72,6 +72,10 @@ class InvoicePayment extends \PaymentApplication implements \Application{
     }
     
     public function getExtraInformation($order) {
+        if (!isset($order->expiryDate)) {
+            return;
+        }
+        
         $expdate = $this->__f("Expiry date").": ".date('d/m-Y', strtotime($order->expiryDate));
         if ($order->invoiceNote) {
             $expdate .= "<div style='display: block;'><b>".$this->__f("Note")."</b>:<br/>".nl2br($order->invoiceNote)."</div>";

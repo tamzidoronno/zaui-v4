@@ -1244,13 +1244,6 @@ function getshop_tryChangingDate() {
     var start = moment(room.find('[gsname="newroomstartdate"]').val(), 'DD.MM.YYYY');
     var end = moment(room.find('[gsname="newroomenddate"]').val(), 'DD.MM.YYYY');
     
-//    var parts = start.split(".");
-//    var start = new Date(parseInt(parts[2], 10),parseInt(parts[1], 10) - 1,parseInt(parts[0], 10));
-    console.log(start);
-    console.log(end);
-//    var parts = end.split(".");
-//    var end = new Date(parseInt(parts[2], 10),parseInt(parts[1], 10) - 1,parseInt(parts[0], 10));
-    
     var time = new Date().toLocaleTimeString('en-us');
     
     var roomid = room.attr("roomid");

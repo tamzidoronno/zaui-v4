@@ -6,5 +6,6 @@ public class GuestInfo {
     public String email;
     public String prefix;
     public String phone;
+    public Boolean isChild = false;
     
 }

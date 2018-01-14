@@ -58,7 +58,7 @@ class GetShopModuleTable {
         $this->data = call_user_func_array(array($res, $this->functionName), $this->args);
     }
 
-    private function renderTable() {
+    private function renderTable($renderPaging=false) {
         echo "<div class='GetShopModuleTable' identifier='".$this->getIdentifier()."' method='".$this->manangerName."_".$this->functionName."'>";
         
             echo "<div class='attributeheader datarow'>";
@@ -123,6 +123,10 @@ class GetShopModuleTable {
                     echo "</div>";
                     $j++;
                 }
+            }
+            
+            if ($renderPaging) {
+                $this->renderPaging();
             }
         echo "</div>";
     }
@@ -211,6 +215,109 @@ class GetShopModuleTable {
             return "<div class='rowdate1'>".date("d.m.y", $date/1000)."</div><div class='rowdate2'>".date("H:i", $date/1000)."</div>";
         }
         return "<div class='rowdate1'>".date("d.m.y", strtotime($date))."</div><div class='rowdate2'>".date("H:i", strtotime($date))."</div>";
+    }
+
+    public function renderPagedTable() {
+        $this->uuid = uniqid();
+        $this->loadPagedData();
+        $this->clearJavaScriptData();
+        $this->renderTable(true);
+        $this->printJavaScript();
+    }
+
+    public function loadPagedData() {
+        $this->setPageDataToSession();
+        $this->args[0]->pageNumber = $this->getCurrentPageNumber();
+        $this->args[0]->pageSize = $this->getCurrentPageSize();
+        
+        $this->loadData();
+        $this->pagedInfo = $this->data;
+        $this->data = $this->pagedInfo->datas;
+    }
+
+    private function renderPaging() {
+        echo "<div class='pagingrow'>";
+        
+        $leftAndRightCount = 4;
+        $disabeled = $this->pagedInfo->currentPageNumber >1 ? "" : "disabled" ;
+        echo "<div class='pagenumber icon-chevron-left-circle $disabeled'></div>";
+        
+        $start = $this->pagedInfo->currentPageNumber - $leftAndRightCount;
+        if ($start < 1) {
+            $start = 1;
+        }
+        
+        
+        $end = $this->pagedInfo->currentPageNumber + $leftAndRightCount + 1;
+        
+        if ($end > $this->pagedInfo->totalPages) {
+            $end = $this->pagedInfo->totalPages;
+        }
+        
+        if ($start > 1) {
+            if ($end <= $this->pagedInfo->totalPages) {
+                echo $this->getNumber(1)."..."; 
+            }    
+        }
+        
+        for ($i = $start; $i < $end; $i++) {
+           echo $this->getNumber($i); 
+        }
+        
+        if ($end < $this->pagedInfo->totalPages) {
+            echo "...".$this->getNumber($this->pagedInfo->totalPages); 
+        }
+        
+        $disabeled = $this->pagedInfo->currentPageNumber < $this->pagedInfo->totalPages ? "" : "disabled";
+        echo "<div class='pagenumber icon-chevron-right-circle $disabeled'></div>";
+        
+        echo "</div>";
+        
+        echo "<div class='pagingrow'>";
+            echo $this->application->__f("Page size").": ";
+            $this->printPageSize(5).",";
+            $this->printPageSize(10).",";
+            $this->printPageSize(15).",";
+            $this->printPageSize(30).",";
+            $this->printPageSize(50).",";
+            $this->printPageSize(100);
+        echo "</div>";
+    }
+
+    public function getNumber($i) {
+        $activeClass = $this->pagedInfo->currentPageNumber == $i ? "active" : "";
+        return "<div gsclick='handleGetShopModulePaging' newpagenumber='$i' class='pagenumber $activeClass'>$i</div>";
+    }
+
+    public function setPageDataToSession() {
+        if (isset($_POST['data']['newpagenumber'])) {
+            $_SESSION['gs_moduletable_'.$this->getFunctionName()."_pagenumber"] = $_POST['data']['newpagenumber'];
+        }
+        
+        if (isset($_POST['data']['newpagesize'])) {
+            $_SESSION['gs_moduletable_'.$this->getFunctionName()."_pagesize"] = $_POST['data']['newpagesize'];
+        }
+    }
+    
+    public function getCurrentPageNumber() {
+        if (isset($_SESSION['gs_moduletable_'.$this->getFunctionName()."_pagenumber"])) {
+            return $_SESSION['gs_moduletable_'.$this->getFunctionName()."_pagenumber"];
+        }
+        
+        return 1;
+    }
+    
+    public function getCurrentPageSize() {
+        if (isset($_SESSION['gs_moduletable_'.$this->getFunctionName()."_pagesize"])) {
+            return $_SESSION['gs_moduletable_'.$this->getFunctionName()."_pagesize"];
+        }
+        
+        return 20;
+    }
+
+    public function printPageSize($pageSize) {
+        $activeClass = $this->getCurrentPageSize() == $pageSize ? "active" : "";
+        echo "<span class='pagenumber $activeClass' gsclick='handleGetShopModulePaging' newpagesize='$pageSize' >$pageSize</span>";
     }
 
 }

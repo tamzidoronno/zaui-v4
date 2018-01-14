@@ -1,1 +1,42 @@
-Orderlines
+<?
+/* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+$cart = $order->cart;
+?>
+
+<div class="insideheader">
+    <? echo $this->__f("OrderLines"); ?>
+</div>
+
+<?
+if (!count($cart->items)) {
+    echo $this->__f("No orderlines added to this order");
+}
+
+?>
+<div class="cartitem header">
+    <span class="product"><? echo $this->__f("Product"); ?></span>
+    <span class="count"><? echo $this->__f("Count"); ?></span>
+    x <span class="price"><? echo $this->__f("Price"); ?></span>
+</div>
+<?
+
+if ($order->closed) {
+    $this->includefile("closedorderlines");
+} else {
+    $this->includefile("openorderlines");
+}
+?>
+
+<div class='ordersummary'>
+    <div class="cartitem header">
+       <?
+       $totalEx = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+       $totalInc = $this->getApi()->getOrderManager()->getTotalAmount($order);
+       
+       echo $this->__f("Total ex taxes").": ".$totalEx;
+       echo "<br/>".$this->__f("Total inc taxes").": ".$totalInc;
+       ?>
+        <span class="price"></span>
+    </div>
+</div>

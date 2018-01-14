@@ -1,0 +1,83 @@
+<?
+/* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
+$user = $this->getUser();
+?>
+<div class="insideheader"><? echo $this->__f("Customer details"); ?></div>
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Name"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="fullName" value="<? echo $user->fullName; ?>"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Email"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="emailAddress" value="<? echo $user->emailAddress; ?>"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Phone prefix"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="prefix" value="<? echo $user->prefix; ?>"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Cellphone"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="cellPhone" value="<? echo $user->cellPhone; ?>"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Invoice email"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="emailAddressToInvoice" value="<? echo $user->emailAddressToInvoice; ?>"/>
+    </div>
+</div>
+
+<div class="insideheader"><? echo $this->__f("Address"); ?></div>
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Name"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="address_fullname" value="<? echo @$user->address->fullName; ?>"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Address"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="address_address" value="<? echo @$user->address->address; ?>"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Postbox"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="address_postcode" value="<? echo @$user->address->postCode; ?>"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("City"); ?>
+    </div>
+    <div class="col col2">
+        <input class="gsniceinput1" gsname="address_city" value="<? echo @$user->address->city; ?>"/>
+    </div>
+</div>

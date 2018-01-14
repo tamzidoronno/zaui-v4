@@ -269,6 +269,29 @@ body {
     padding-bottom: 50px;
 }
 
+.GetShopModuleTable .pagingrow {
+    text-align: center;
+    padding: 10px;
+}
+
+.GetShopModuleTable .pagingrow .pagenumber {
+    display: inline-block;
+    font-size: 14px;
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.GetShopModuleTable .pagingrow .pagenumber.icon-chevron-right-circle,
+.GetShopModuleTable .pagingrow .pagenumber.icon-chevron-left-circle {
+    padding-top: 3px;
+}
+
+.GetShopModuleTable .pagingrow .pagenumber.active {
+    font-weight: bold;
+}
+
 .gsniceinput1 {
     border-radius: 3px;
 }
@@ -277,3 +300,4 @@ body {
     width: 1266px;
     margin: 0 auto;
 }
+

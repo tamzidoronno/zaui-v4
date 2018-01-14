@@ -61,14 +61,14 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         return \GetShopModuleTable::formatDate($order->rowCreatedDate);
     }
     
-    public function OrderManager_getOrders() {
+    public function OrderManager_getOrdersFiltered() {
         $app = new \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView();
         $app->loadOrder($_POST['data']['id']);
         $app->renderApplication(true, $this);
     }
 
     public function printTable() {
-        $args = array(null, 1, 20);
+        $args = array(new \core_common_FilterOptions());
         
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
@@ -82,8 +82,8 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             array('state', 'STATE', null, 'formatState')
         );
         
-        $table = new \GetShopModuleTable($this, 'OrderManager', 'getOrders', $args, $attributes);
-        $table->render();
+        $table = new \GetShopModuleTable($this, 'OrderManager', 'getOrdersFiltered', $args, $attributes);
+        $table->renderPagedTable();
     }
 
 

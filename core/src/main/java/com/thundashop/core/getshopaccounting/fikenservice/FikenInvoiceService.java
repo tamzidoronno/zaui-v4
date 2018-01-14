@@ -6,6 +6,7 @@
 package com.thundashop.core.getshopaccounting.fikenservice;
 
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshopaccounting.AccountingSystemBase;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
@@ -68,6 +69,12 @@ public class FikenInvoiceService extends FikenServiceBase {
 
         String invoiceServiceUrl = company.getLink("https://fiken.no/api/v1/rel/create-invoice-service").getHref();
         HttpEntity<FikenInvoiceCreateRequest> request = new HttpEntity<>(invoice, headers);
+        
+        if (GetShopLogHandler.isDeveloper) {
+            System.out.println("Warning! Its not uploading the invoices to Fiken as this is in development mode");
+            return true;
+        }
+        
         try {
             ResponseEntity<FikenInvoiceCreateRequest> response = restTemplate.exchange(invoiceServiceUrl, HttpMethod.POST, request, FikenInvoiceCreateRequest.class);
             return response.getStatusCode().equals(HttpStatus.CREATED);

@@ -816,7 +816,8 @@ public class PmsBookingRooms implements Serializable {
         codeObject = null;
     }
 
-    public void setGuestAsChildren(Integer children) {
+    public Integer setGuestAsChildren(Integer children) {
+        int childrenSet = 0;
         if(guests.size() < numberOfGuests) {
             for(int i = guests.size(); i < numberOfGuests; i++) {
                 guests.add(new PmsGuests());
@@ -824,8 +825,12 @@ public class PmsBookingRooms implements Serializable {
         }
         
         for(int i = numberOfGuests-children; i < numberOfGuests;i++) {
-            guests.get(i).isChild = true;
+            if(guests.size() > i) {
+                guests.get(i).isChild = true;
+                childrenSet++;
+            }
         }
+        return childrenSet;
     }
 
 }

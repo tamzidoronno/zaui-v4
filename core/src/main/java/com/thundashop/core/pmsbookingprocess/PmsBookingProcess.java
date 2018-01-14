@@ -235,6 +235,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         logPrint("---------------: " + guestLeft + "-----------");
+        int childToSet = arg.children;
         for(PmsBookingProcessorCalculator check : listOfRooms) {
                 logPrint(check.guests + " : "+ check.room.availableRooms + " : " + check.price + " : " + check.room.name);
                 Integer current = check.room.roomsSelectedByGuests.get(check.guests);
@@ -250,8 +251,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 toAddToCurrentBooking.date = new PmsBookingDateRange();
                 toAddToCurrentBooking.date.start = normalizeDate(arg.start, true);
                 toAddToCurrentBooking.date.end = normalizeDate(arg.end, false);
-                if(arg.children > 0) {
-                    toAddToCurrentBooking.setGuestAsChildren(arg.children);
+                if(childToSet > 0) {
+                    childToSet -= toAddToCurrentBooking.setGuestAsChildren(childToSet);
                 }
                 result.roomsSelected++;
                 booking.addRoom(toAddToCurrentBooking);
@@ -331,6 +332,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             returnroom.roomId = room.pmsBookingRoomId;
             returnroom.roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
             returnroom.maxGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
+            returnroom.totalCost = room.totalCost;
             
             for(PmsGuests guest : room.guests) {
                 GuestInfo info = new GuestInfo();
@@ -804,5 +806,19 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         BookingConfig retval = new BookingConfig();
         retval.childAge = config.childMaxAge;
         return retval;
+    }
+
+    @Override
+    public GuestAddonsSummary changeDateOnRoom(StartBooking arg) {
+        arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
+        arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);
+        
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        PmsBookingRooms room = booking.getRoom(arg.roomId);
+        if(room != null) {
+            pmsManager.changeDates(arg.roomId, booking.id, arg.start, arg.end);
+        }
+        
+        return generateSummary();
     }
 }

@@ -24,15 +24,19 @@ app.EcommerceOrderView = {
         }
         
         var data = {
-            selectedTab : tab,
-            roomId : $(this).closest('.menuarea').attr('roomId'),
-            id :  $(this).closest('.menuarea').attr('bookingEngineId'),    
+            selectedTab : tab
         }
         
         var event = thundashop.Ajax.createEvent(null, "subMenuChanged", this, data);
         event['synchron'] = true;
         
         thundashop.Ajax.post(event, app.EcommerceOrderView.tabChanged, data, true, true);
+    },
+    
+    tabChanged: function(res, args) {
+        if (res) {
+            $('.EcommerceOrderView .workarea div[tab="'+args.selectedTab+'"]').html(res);
+        }
     }
 }
 

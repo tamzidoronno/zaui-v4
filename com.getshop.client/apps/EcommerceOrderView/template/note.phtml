@@ -1,0 +1,8 @@
+<?
+/* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+?>
+<div class="insideheader">
+    <? echo $this->__f("Note"); ?>
+</div>
+<textarea gsname='invoiceNote' class='gsniceinput1 invoiceNote'><? echo isset($order->invoiceNote) ? $order->invoiceNote : ""; ?></textarea>

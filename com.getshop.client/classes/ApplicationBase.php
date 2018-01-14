@@ -305,7 +305,7 @@ class ApplicationBase extends FactoryBase {
         if(!$this->isEditorMode()) {
             return false;
         }
-        $accesslist = $this->getUser()->applicationAccessList;
+        $accesslist = @$this->getUser()->applicationAccessList;
         $type = -1;
         if(isset($this->applicationSettings) && isset($accesslist->{$this->applicationSettings->id})) {
             $type = $accesslist->{$this->applicationSettings->id};
@@ -712,5 +712,8 @@ class ApplicationBase extends FactoryBase {
         return $instance;
     }
 
+    public function handleGetShopModulePaging() {
+        
+    }
 }
 ?>

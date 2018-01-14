@@ -20,6 +20,7 @@ public class ManagerBase extends ManagerSubBase {
         FilteredData retData = new FilteredData();
         retData.datas = chopit(filterOptions, data);
         retData.filterOptions = filterOptions;
+        retData.currentPageNumber = filterOptions.pageNumber;
         retData.totalPages = (int) Math.ceil((double)data.size()/(double)filterOptions.pageSize);
         return retData;
     }

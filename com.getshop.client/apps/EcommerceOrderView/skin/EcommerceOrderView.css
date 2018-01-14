@@ -83,3 +83,48 @@
     padding-bottom: 5px;
     margin-bottom: 20px;
 }
+
+
+.EcommerceOrderView .row {
+    border-top: solid 1px #EEE;
+}
+.EcommerceOrderView .row .col { display: inline-block; padding: 0px;}
+.EcommerceOrderView .row .col1 { width: 130px; }
+
+.EcommerceOrderView .row .col2 { width: calc(100% - 134px); box-sizing: border-box; }
+
+
+.EcommerceOrderView .cartitem span {
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
+.EcommerceOrderView .cartitem .count {
+    width: 50px;
+    text-align: center;
+    box-sizing: border-box;
+    padding-left: 0px !important;
+}
+
+.EcommerceOrderView .ordersummary {
+    padding: 10px;
+    font-weight: bold;
+}
+
+.EcommerceOrderView .invoiceNote {
+    width: 100%;
+    height: 200px;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.EcommerceOrderView .buttonarea {
+    margin-top: 30px;
+}
+
+.EcommerceOrderView .cartitem .product {
+    width: calc(100% - 280px);
+    box-sizing: border-box;
+    margin-right: 20px;
+}

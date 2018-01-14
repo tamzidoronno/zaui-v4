@@ -1,0 +1,18 @@
+<?
+/* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+$cart = $order->cart;
+
+foreach ($cart->items as $item) {
+    $product = $item->product;
+    ?>
+    <div class="cartitem open">
+        <input gsname='<? echo $item->cartItemId; ?>_productname' class="gsniceinput1 product" value="<? echo $product->name; ?>"/>
+        <input gsname='<? echo $item->cartItemId; ?>_count' class="gsniceinput1 count" value="<? echo $item->count; ?>"/>
+        x <input gsname='<? echo $item->cartItemId; ?>_price' class="gsniceinput1 price" value="<? echo $product->price; ?>"/>
+    </div>
+    <?
+}
+?>
+
+

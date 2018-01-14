@@ -1,0 +1,5 @@
+.CrmCustomerList .col_rowCreatedDate { width: 80px !important; }
+.CrmCustomerList .col_type { width: 80px !important; text-align: center }
+.CrmCustomerList .col_fullname { width: calc(100% - 820px) !important; }
+.CrmCustomerList .col_callPhone { width: 150px !important; }
+

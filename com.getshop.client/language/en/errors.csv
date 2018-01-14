@@ -151,6 +151,7 @@
 "1046","Generating a report with users that are not connected to a company"
 "1047","No accountingsystem selected"
 "1048","No product conencted to the ticket"
+"1049","This accountingsystem does not support direct transfer"
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

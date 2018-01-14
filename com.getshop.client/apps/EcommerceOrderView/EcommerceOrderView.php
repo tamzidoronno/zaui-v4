@@ -17,6 +17,15 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $this->includefile("overview");
     }
     
+    public function updateOrder() {
+        $this->setData();
+        $order = $this->getOrder();
+        $order->invoiceNote = $_POST['data']['invoiceNote'];
+        
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($order->id);
+    }
+    
     public function setData() {
         if ($this->getModalVariable("orderid")) {
             $_SESSION['EcommerceOrderView_current_order'] = $this->getModalVariable("orderid");
@@ -24,6 +33,10 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         if (isset($_SESSION['EcommerceOrderView_current_order'])) {
             $this->order = $this->getApi()->getOrderManager()->getOrder($_SESSION['EcommerceOrderView_current_order']);
         }
+    }
+    
+    public function subMenuChanged() {
+        $_SESSION['EcommerceOrderView_current_tab'] = $_POST['data']['selectedTab'];
     }
 
     public function loadOrder($orderId) {
@@ -50,13 +63,21 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         }
     }
     
+    /**
+     * 
+     * @return \core_ordermanager_data_Order 
+     */
     public function getOrder() {
         return $this->order;
     }
     
     
     public function isTabActive($tabName) {
-        if ($tabName == "accounting") {
+        if (isset($_SESSION['EcommerceOrderView_current_tab'])) {
+            return ($tabName == $_SESSION['EcommerceOrderView_current_tab']) ? "active" : false;
+        }
+        
+        if ($tabName == "overview") {
             return "active";
         }
         

@@ -16,4 +16,5 @@ public class FilteredData {
     public List datas = new ArrayList();
     public int totalPages = 0;
     public FilterOptions filterOptions = new FilterOptions();
+    public int currentPageNumber = 1;
 }

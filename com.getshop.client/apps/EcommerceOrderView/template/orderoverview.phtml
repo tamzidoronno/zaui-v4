@@ -1,1 +1,122 @@
-Order overview
+<?
+/* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
+
+?>
+    <div class="insideheader">
+        <div class="shop_button" gs_show_modal="customerview" userid="<? echo $user->id; ?>"><? echo $this->__f("Open customer view"); ?></div>
+        &nbsp;&nbsp;
+        <? echo $this->__f("Customer details"); ?>
+    </div>
+<?
+if (!$user) {
+    echo $this->__f("Not available");
+} else {
+    ?>
+    <div class="customerinfo">
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Name"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->fullName; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Email"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->emailAddress ? $user->emailAddress : "N/A"; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Invoice email"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->emailAddressToInvoice ? $user->emailAddressToInvoice : "N/A"; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Cellphone"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->cellPhone ? $user->cellPhone : "N/A"; ?>
+            </div>
+        </div>
+    </div>
+    <?
+}
+
+if ($user->address) {
+?>
+
+    <br/>
+    <div class="insideheader">
+        <? echo $this->__f("Address"); ?>
+    </div>
+
+    <div class="customerinfo">
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Name"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->address->fullName; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Address"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->address->address ? $user->address->address : "N/A"; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Address2"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->address->address2 ? $user->address->address2 : "N/A"; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Address2"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->address->postCode." ".$user->address->city ; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Email"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->address->emailAddress ? $user->emailAddress : "N/A"; ?>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Cellphone"); ?>
+            </div>
+            <div class="col col2">
+                <? echo $user->address->phone ? $user->phone : "N/A"; ?>
+            </div>
+        </div>
+    </div>
+<? } ?>
+

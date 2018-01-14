@@ -63,4 +63,11 @@ public interface IGetShopAccountingManager {
     
     @Administrator
     public HashMap<String, String> getConfigOptions(String systemType);
+    
+    @Administrator
+    public boolean canOrderBeTransferredDirect(String orderId);
+    
+    @Administrator
+    public List<String> transferDirect(String orderId);
+    
 }

@@ -1,0 +1,31 @@
+<?
+/* @var $this \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList */
+?>
+
+<div gstype='form' method="updateOrder" class="orderview">
+
+
+    <div class="menuarea">
+        <div class="menuentry <? echo $this->isTabActive('overview'); ?>" tab='overview'><span><? echo $this->__f("Overview"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('orderlines'); ?>" tab='orderlines'><span><? echo $this->__f("Orderlines"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('accounting'); ?>" tab='accounting'><span><? echo $this->__f("Accounting"); ?></span></div>
+    </div><div class="workarea">
+        <div class="orderinformation <? echo $this->isTabActive('overview'); ?>" tab='overview'>
+            <?
+            $this->includefile("orderoverview");
+            ?>
+        </div>
+
+        <div class="orderinformation <? echo $this->isTabActive('orderlines'); ?>" tab='orderlines'>
+            <?
+            $this->includefile("orderlines");
+            ?>
+        </div>
+
+        <div class="orderinformation <? echo $this->isTabActive('accounting'); ?>" tab='accounting'>
+            <?
+            $this->includefile("accounting");
+            ?>
+        </div>
+    </div>
+</div>

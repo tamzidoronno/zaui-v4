@@ -672,7 +672,12 @@ class ApplicationBase extends FactoryBase {
         $obj->gsfield = new stdClass();
         
         $obj->version = 2;
-        $obj->appName = $this->getApplicationSettings()->appName;
+        $obj->appName = @$this->getApplicationSettings()->appName;
+        
+        if (!isset($this->getApplicationSettings()->appName) && isset($_POST['core']['appid'])) {
+            $arr = explode("\\", $_POST['core']['appid']);
+            $obj->appName = $arr[1];
+        }
         
         return $obj;
     }

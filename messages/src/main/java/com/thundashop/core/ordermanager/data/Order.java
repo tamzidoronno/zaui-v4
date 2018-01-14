@@ -695,7 +695,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
-    
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;
@@ -861,5 +861,10 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void resetTransferToAccounting() {
         transferredToAccountingSystem = false;
         triedTransferredToAccountingSystem  = false;
+    }
+    
+    public void markAsTransferredToAccounting() {
+        transferredToAccountingSystem = true;
+        triedTransferredToAccountingSystem  = true;
     }
 } 

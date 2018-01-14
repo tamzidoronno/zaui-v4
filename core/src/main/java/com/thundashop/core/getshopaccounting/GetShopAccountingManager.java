@@ -155,10 +155,10 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
 
     @Override
     public void deleteFile(String fileId, String password) {
-//        if (password.equals("asdjfa094u51jn12on51o2n35123nasdfasdf")) {
+        if (password.equals("asdjfa094u51jn12on51o2n35123nasdfasdf")) {
             getActivatedAccountingSystemInvoices().deleteFile(fileId);
             getActivatedAccountingSystemOther().deleteFile(fileId);
-//        }
+        }
     }
 
     @Override
@@ -244,5 +244,39 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         }
         
         return system.getConfigOptions();
+    }
+
+    @Override
+    public boolean canOrderBeTransferredDirect(String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        String subType = getActivatedAccountingSystemInvoices().getSubType(order.getPaymentApplicationId());
+        
+        if (subType.equals("other")) {
+            return getActivatedAccountingSystemOther().supportDirectTransfer();
+        } else {
+            return getActivatedAccountingSystemInvoices().supportDirectTransfer();
+        }
+    }
+
+    @Override
+    public List<String> transferDirect(String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        
+        getActivatedAccountingSystemOther().clearLog();
+        getActivatedAccountingSystemInvoices().clearLog();
+        
+        if (order != null) {
+            String subType = getActivatedAccountingSystemInvoices().getSubType(order.getPaymentApplicationId());
+
+            if (subType.equals("other")) {
+                getActivatedAccountingSystemOther().directTransfer(orderId);
+                return getActivatedAccountingSystemOther().getLogEntries();
+            } else {
+                getActivatedAccountingSystemInvoices().directTransfer(orderId);
+                return getActivatedAccountingSystemInvoices().getLogEntries();
+            }    
+        }
+        
+        return new ArrayList();
     }
 }

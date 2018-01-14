@@ -94,25 +94,33 @@ public abstract class AccountingSystemBase extends ManagerBase {
         files.put(file.id, file);
     }
     
+    private boolean checkTaxCodes(Order order) {
+        for(CartItem item : order.cart.getItems()) {
+            Product prod = productManager.getProduct(item.getProduct().id);
+            if(prod == null) {
+                prod = productManager.getDeletedProduct(item.getProduct().id);
+            }
+            if(prod == null) {
+                addToLog("Product does not exists anymore on order, regarding order: " + order.incrementOrderId);
+                return true;
+            } else if(prod.sku == null || prod.sku.trim().isEmpty()) {
+                if(prod.deleted != null && (prod.name == null || prod.name.trim().isEmpty())) {
+                    prod.name = item.getProduct().name;
+                    productManager.saveProduct(prod);
+                }
+                addToLog("Tax code not set for product: " + prod.name + ", regarding order: " + order.incrementOrderId);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     private boolean checkTaxCodes(List<Order> orders) {
         boolean hasFail = false;
         for(Order order : orders) {
-            for(CartItem item : order.cart.getItems()) {
-                Product prod = productManager.getProduct(item.getProduct().id);
-                if(prod == null) {
-                    prod = productManager.getDeletedProduct(item.getProduct().id);
-                }
-                if(prod == null) {
-                    addToLog("Product does not exists anymore on order, regarding order: " + order.incrementOrderId);
-                    hasFail = true;
-                } else if(prod.sku == null || prod.sku.trim().isEmpty()) {
-                    if(prod.deleted != null && (prod.name == null || prod.name.trim().isEmpty())) {
-                        prod.name = item.getProduct().name;
-                        productManager.saveProduct(prod);
-                    }
-                    addToLog("Tax code not set for product: " + prod.name + ", regarding order: " + order.incrementOrderId);
-                    hasFail = true;
-                }
+            if (checkTaxCodes(order)) {
+                hasFail = true;
             }
         }
         
@@ -120,7 +128,11 @@ public abstract class AccountingSystemBase extends ManagerBase {
     }
     
     public List<String> createNextOrderFile(Date endDate, String subType, List<Order> orders) {
-        logEntries.clear();
+        if (GetShopLogHandler.isDeveloper) {
+            throw new RuntimeException("Transfers to accounting is disabled in development mode.");
+        }
+        
+        clearLog();
         
         orders.removeIf(order -> order.triedTransferredToAccountingSystem);
         
@@ -381,7 +393,11 @@ public abstract class AccountingSystemBase extends ManagerBase {
         return retMap;
     }
     
-    private String getSubType(String paymentId) {
+    public boolean supportDirectTransfer() {
+        return false;
+    }
+    
+    public String getSubType(String paymentId) {
         // InvoicePayment
         if (paymentId.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
             return "invoice";
@@ -472,5 +488,26 @@ public abstract class AccountingSystemBase extends ManagerBase {
             order.triedTransferredToAccountingSystem = true;
             orderManager.saveOrder(order);
         });
+    }
+    
+    
+    public void directTransfer(String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        
+        if (GetShopLogHandler.isDeveloper) {
+            throw new RuntimeException("Transfers to accounting is disabled in development mode.");
+        }
+        
+        if(checkTaxCodes(order)) {
+            return;
+        }
+        
+        handleDirectTransfer(orderId);
+    }
+    
+    public abstract void handleDirectTransfer(String orderId);
+    
+    public void clearLog() {
+        logEntries.clear();
     }
 }

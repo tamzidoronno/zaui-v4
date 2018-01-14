@@ -474,7 +474,7 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
-    void calculateTotalCost() {
+    public void calculateTotalCost() {
         if(!priceType.equals(PmsBooking.PriceType.daily)) {
             return;
         }

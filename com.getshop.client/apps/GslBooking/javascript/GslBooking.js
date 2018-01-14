@@ -589,7 +589,7 @@ function getshop_changeGuestSelection() {
     count = parseInt(count);
     if (btn.is('.fa-plus')) {
         count++;
-        if ($(this).is('#add_child') && count.val() >= 1) {
+        if ($(this).is('#add_child') && count >= 1) {
             minusButton.removeClass('disabled');
         } else if (count >= 2) {
             minusButton.removeClass('disabled');
@@ -750,7 +750,8 @@ function getshop_previusPage() {
 function getshop_confirmGuestInfoBox() {
     var room = $('#count_room').val();
     var adult = $('#count_adult').val();
-    var guest = adult;
+    var child = $('#count_child').val();
+    var guest = +adult + +child;
     var translation = getshop_getBookingTranslations();
     
     var roomText = ' ' + translation['room'].toLowerCase();
@@ -788,9 +789,9 @@ function getshop_updateOrderSummary(res, isSearch) {
                     row += translationMatrix['room'].toLowerCase();
                 }
                 row += ")</td>";
-                row += "<td>" + (room.pricesByGuests[guest] * count)  * res.numberOfDays + ",-</td>";
+                row += "<td>" + room.totalPriceForRoom + ",-</td>";
                 row += "</tr>";
-                total += (room.pricesByGuests[guest] * count) * res.numberOfDays;
+                total += room.totalPriceForRoom;
                 totalRooms += parseInt(count);
                 totalGuests += (guest*count);
             }

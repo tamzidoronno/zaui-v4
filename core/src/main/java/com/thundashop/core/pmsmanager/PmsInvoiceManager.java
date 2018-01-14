@@ -592,15 +592,31 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return ordersToReturn;
     }
 
-    public Double getDerivedPrice(PmsBooking booking, String bookingItemType, Integer numberOfGuests) {
+    public Double getDerivedPrice(PmsBooking booking, String bookingItemType, Integer numberOfGuests, int adults, int children) {
         PmsPricing priceObject = pmsManager.getPriceObjectFromBooking(booking);
         double toAdd = 0.0;
+        int childrenAdded = 0;
         if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(bookingItemType)) {
             HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(bookingItemType);
+            HashMap<Integer, Double> derivedPricedChildren = null;
+            if(priceObject.derivedPricesChildren != null) {
+                derivedPricedChildren = priceObject.derivedPricesChildren.get(bookingItemType);
+            }
+            
             for(int i = 2;i <= numberOfGuests;i++) {
+                Double toAddPrice = 0.0;
                 if(derivedPriced != null && derivedPriced.containsKey(i)) {
-                    toAdd += derivedPriced.get(i);
+                    toAddPrice = derivedPriced.get(i);
                 }
+                if(derivedPricedChildren != null && derivedPricedChildren.containsKey(i)) {
+                    Double toAddPriceChildren = derivedPricedChildren.get(i);
+                    if(toAddPriceChildren > 0 && toAddPrice > toAddPriceChildren && childrenAdded < children) {
+                        toAddPrice = toAddPriceChildren;
+                        childrenAdded++;
+                    }
+                }
+                
+                toAdd += toAddPrice;
             }
         }
         return toAdd;
@@ -939,7 +955,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.bookingItemTypeId == null) {
             return price;
         }
-        Double toAdd = getDerivedPrice(booking, room.bookingItemTypeId, room.numberOfGuests);
+        Double toAdd = getDerivedPrice(booking, room.bookingItemTypeId, room.numberOfGuests, room.getNumberOfAdults(), room.getNumberOfChildren());
         return price + toAdd;
     }
 

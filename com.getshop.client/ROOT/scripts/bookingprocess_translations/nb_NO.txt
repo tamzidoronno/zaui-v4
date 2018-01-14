@@ -17,7 +17,7 @@
     "remove" : "Fjern",
     "discountcode" : "Rabattkode?",
     "inLuckAvailable" : "Der hadde du flaks, vi har tilgjengelige rom til deg!",
-    "bestValue" : "Dette er den beste dealen vi kan gi deg, total pris er:",
+    "bestValue" : "Dette er den beste dealen vi kan gi deg.",
     "continue" : "Fortsett",
     "addons" : "Addons",
     "addAddonsOr" : "Legg til addons for alle gjester eller legg dem til individuelt for hvert enkelt rom under.",

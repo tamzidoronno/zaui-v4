@@ -63,7 +63,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
         
-        if(arg.adults < arg.rooms) {
+        if(arg.getGuests() < arg.rooms) {
             return null;
         }
         PmsBooking booking = pmsManager.startBooking();
@@ -131,7 +131,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     }
                     room.roomsSelectedByGuests.put(i, count);
                     Double price = pmsInvoiceManager.calculatePrice(type.id, arg.start, arg.end, true, existing);
-                    price += pmsInvoiceManager.getDerivedPrice(existing, type.id, i);
+                    price += pmsInvoiceManager.getDerivedPrice(existing, type.id, i, i, 0);
                     room.pricesByGuests.put(i, price);
                 }
             } catch (Exception ex) {
@@ -142,14 +142,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         selectMostSuitableRooms(result, arg);
-        
-        result.totalAmount = existing.getTotalPrice();
+        result.totalAmount = pmsManager.getCurrentBooking().getTotalPrice();
         
         return result;
     }
 
     private void selectMostSuitableRooms(StartBookingResult result, StartBooking arg) {
-        System.out.println("Need to find: " + arg.rooms + " rooms for :" + arg.adults);
+        System.out.println("Need to find: " + arg.rooms + " rooms for :" + arg.getGuests());
         
         List<PmsBookingProcessorCalculator> toUse = new ArrayList();
         
@@ -181,7 +180,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         });
        
         List<PmsBookingProcessorCalculator> listOfRooms = new ArrayList();
-        int guestLeft = arg.adults;
+        int guestLeft = arg.getGuests();
         int roomsLeft = arg.rooms;
         int breaker = 0;
         while(true) {
@@ -251,10 +250,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 toAddToCurrentBooking.date = new PmsBookingDateRange();
                 toAddToCurrentBooking.date.start = normalizeDate(arg.start, true);
                 toAddToCurrentBooking.date.end = normalizeDate(arg.end, false);
+                if(arg.children > 0) {
+                    toAddToCurrentBooking.setGuestAsChildren(arg.children);
+                }
                 result.roomsSelected++;
                 booking.addRoom(toAddToCurrentBooking);
+                check.room.totalPriceForRoom = (pmsInvoiceManager.updatePriceMatrix(booking,toAddToCurrentBooking, booking.priceType) * toAddToCurrentBooking.getNumberOfDays());
         }
         try {
+            booking.calculateTotalCost();
             pmsManager.setBooking(booking);
         }catch(Exception e) {
             e.printStackTrace();

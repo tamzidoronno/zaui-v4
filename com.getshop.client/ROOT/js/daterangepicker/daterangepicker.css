@@ -4,7 +4,7 @@
   color: inherit;
   background-color: #f9f9f9;
   width: 100%;
-  padding: 4px;
+  padding: 8px;
   top: 100px;
   left: 20px;
   margin-top: 0;
@@ -99,7 +99,6 @@
       font-size: 80%;
       color: #ccc; }
   .daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date {
-    background-color:#f9f9f9;
     border-color: transparent;
     color: #999; }
   .daterangepicker td.in-range {
@@ -219,9 +218,10 @@
     .daterangepicker.ltr {
       direction: ltr;
       text-align: left; }
+    .daterangepicker.ltr .calendar{
+        margin-right:10px;}
       .daterangepicker.ltr .calendar.left {
-        clear: left;
-        margin-right: 0; }
+        clear: left;}
         .daterangepicker.ltr .calendar.left .calendar-table {
           border-right: none;
           border-top-right-radius: 0;

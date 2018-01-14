@@ -362,26 +362,33 @@ function getshop_createSticky(sticky) {
         var stopperbox = $('#productoverview_footer');
         var paddingBox = $('.productoverview');
         var stopPos = (stopperbox.offset().top - sticky.height());
-        var yPos = stopPos - (sticky.height()*2) -14;/*should only be stopPos, but sets yPos wrong*/
 
-        $('.GslBooking .ordersummary').css('width', $('.GslBooking .ordersummary').outerWidth());
-        if(!$('.GslBooking .ordersummary').is(':visible')) {
+        $('.GslBooking #order-sticky').css('width', $('.GslBooking #order-sticky').outerWidth());
+        if(!$('.GslBooking #order-sticky').is(':visible')) {
             return;
         }
+        
         win.on("scroll", function () {
-            if(win.scrollTop() > pos && win.scrollTop() < stopPos) {
+            if(win.scrollTop() > pos && win.scrollTop() <= stopPos) {
                 sticky.addClass('sticky');
                 sticky.css({
                     position: 'fixed',
                     top: 0
-                }); 
+                });
                 paddingBox.css('padding-top', sticky.height()+'px');
             } 
             else if (win.scrollTop() >= stopPos) {
+//                sticky.css({
+//                    position: 'absolute',
+//                    top: stopPos
+//                });
+//                sticky.hide();
+                sticky.removeClass('sticky');
                 sticky.css({
-                    position: 'absolute',
-                    top: yPos
+                    position: 'relative',
+                    top: '0'
                 });
+                $('.productoverview').css('padding-top', '0px');
             } 
             else {
                 sticky.removeClass('sticky');
@@ -773,7 +780,7 @@ function getshop_updateOrderSummary(res, isSearch) {
                     row += translationMatrix['room'].toLowerCase();
                 }
                 row += ")</td>";
-                row += "<td>" + (room.pricesByGuests[guest] * count)  * res.numberOfDays + "</td>";
+                row += "<td>" + (room.pricesByGuests[guest] * count)  * res.numberOfDays + ",-</td>";
                 row += "</tr>";
                 total += (room.pricesByGuests[guest] * count) * res.numberOfDays;
                 totalRooms += parseInt(count);
@@ -781,9 +788,9 @@ function getshop_updateOrderSummary(res, isSearch) {
             }
         }
     }
-    var totalAmount = "<tr class='totalAmountline'><td></td><td>"+totalGuests+"("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ") </td><td>"+total+"</td></tr>";
-    $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + totalAmount + "</table>");
-    $('.GslBooking .ordersummary .totalprice').html(total);
+//    var totalAmount = "<tr class='totalAmountline'><td>"+chosenRoomText['total']+"</td><td>"+totalGuests+" ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ") </td><td>"+total+"</td></tr>";
+    $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + "</table>");
+    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong> "+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ")");
     $('.GslBooking .ordersummary .continue').hide();
     if(total > 0) {
         $('.GslBooking .ordersummary .continue').show();
@@ -791,7 +798,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     if(isSearch) {
         if(!$('.GslBooking .ordersummary').is(":visible")) {
             $('.GslBooking .ordersummary').slideDown('slow', function() {
-                $(function(){getshop_createSticky($(".ordersummary"));});
+                $(function(){getshop_createSticky($("#order-sticky"));});
             });
         }
     }
@@ -1194,6 +1201,7 @@ function getshop_hideGuestSelectionBox(e) {
         return;
     }
     $('.GslBooking .guestInfoBox').hide();
+    getshop_confirmGuestInfoBox();
 }
 
 $(document).on('click touchstart', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);

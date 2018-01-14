@@ -31,7 +31,10 @@ function getshop_setBookingTranslation() {
                 var text = getshop_translationMatrixLoaded['agebelow'];
                 text = text.replace("{age}", config.childAge);
                 $("[gstranslationfield='agebelow']").html(text);
-                console.log(getshop_bookingconfiguration);
+                
+                var text = getshop_translationMatrixLoaded['ischildtext'];
+                text = text.replace("{age}", config.childAge);
+                $("[gstranslationfield='ischildtext']").html(text);
             }
         });    
         
@@ -282,7 +285,7 @@ function getshop_loadRooms(res) {
             }
             
             if(addedAddons) {
-                guestRow.find('.guest_addon').hide();
+                guestRow.find('.guest_addon').addClass('addonsdisabled');
             }
             guestRow.append('<i class="fa fa-times removeguest" title="'+translation['removeguest']+'"></i>');
             
@@ -324,7 +327,7 @@ function getshop_loadRooms(res) {
         }
         
         if(!added) {
-            newRoom.find('.guest_addon').hide();
+            newRoom.find('.guest_addon').addClass('addonsdisabled');
             newRoom.find('[gstranslationfield="addons"]').hide();
         }
         
@@ -568,49 +571,44 @@ function getshop_completeBooking() {
 }
 
 function getshop_changeGuestSelection() {
-    var minusButton = $(this).closest('.count_line').find('.fa-minus'); //Closest minusbutton
-    var plusButton = $(this).closest('.count_line').find('.fa-plus'); //Closest plusbutton
-    var count = $(this).closest('.count_line').find('.count'); //Closest numbercount for adding guests or room
-    if ($(this).is('.fa-plus')) {
-        if (count.val() < 10) {
-            count.val(function (i, val) {
-                return (+val + 1);
-            });
-        }
+    var btn = $(this);
+    var minusButton = btn.closest('.count_line').find('.fa-minus'); //Closest minusbutton
+    var plusButton = btn.closest('.count_line').find('.fa-plus'); //Closest plusbutton
+    var count = btn.closest('.count_line').find('.count').val(); //Closest numbercount for adding guests or room
+    console.log(count);
+    count = parseInt(count);
+    if (btn.is('.fa-plus')) {
+        count++;
         if ($(this).is('#add_child') && count.val() >= 1) {
             minusButton.removeClass('disabled');
-        } else if (count.val() >= 2) {
+        } else if (count >= 2) {
             minusButton.removeClass('disabled');
         }
-        if (count.val() >= 10) {
+        if (count >= 10) {
             plusButton.addClass('disabled');
         }
     }
-    if ($(this).is('.fa-minus')) {
+    if (btn.is('.fa-minus')) {
+        count--;
         if ($(this).is('#subtract_child')) {
-            if (count.val() > 0) {
-                count.val(function (i, val) {
-                    return (+val - 1);
-                });
-            }
-            if (count.val() <= 0) {
+            if (count <= 0) {
                 minusButton.addClass('disabled');
             }
         } else {
-            if (count.val() > 1) {
-                count.val(function (i, val) {
-                    return (+val - 1);
-                });
+            if (count > 1) {
+                
             }
-            if (count.val() <= 1) {
+            if (count <= 1) {
                 minusButton.addClass('disabled');
             }
         }
-        if (count.val() <= 9) {
+        if (count <= 9) {
             plusButton.removeClass('disabled');
         }
     }
     
+    $(this).closest('.count_line').find('.count').val(count);
+    getshop_confirmGuestInfoBox();    
 }
 
 function getshop_saveBookerInformation() {
@@ -754,7 +752,7 @@ function getshop_confirmGuestInfoBox() {
         guestText = ' '+translation['numberofguests'].toLowerCase()+' ';
     }
     $('#guests').val(room + roomText + ', ' + guest + guestText);
-    $('.guestInfoBox').hide();
+//    $('.guestInfoBox').hide();
 }
 function getshop_updateOrderSummary(res, isSearch) {
     $('.GslBooking .ordersummary .selectedguests').html('');

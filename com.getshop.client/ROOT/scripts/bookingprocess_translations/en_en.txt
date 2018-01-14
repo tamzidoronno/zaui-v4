@@ -62,5 +62,6 @@
     "price" : "Price",
     "availableRooms" : "Available rooms: ",
     "chosenRoom" : "Rooms chosen",
-    "total" : "Total"
+    "total" : "Total",
+    "ischildtext" : "This guest is a child (below : {age} year)."
 }

@@ -25,14 +25,13 @@
                     </div>
                 </div>
                 <div class="guestInfoBox_footer">
-                    <div onclick="getshop_confirmGuestInfoBox()"><span gstype='bookingtranslation' gstranslationfield='apply'></span></div>
                 </div>
             </div>
         </div><div class="fa_box coupon">
-            <input id='coupon_input' onfocus="this.placeholder =''" placeholder="" gstype='bookingtranslation_placeholder' gstranslationfield='discountcode'>
+            <input id='coupon_input' onfocus="this.placeholder = ''" placeholder="" gstype='bookingtranslation_placeholder' gstranslationfield='discountcode'>
         </div><div class="fa_box gsl_button" id="search_rooms" onclick="getshop_showProductList()"><span gstype='bookingtranslation' gstranslationfield='search'></span></div>
     </div>
-    
+
     <div class="gslbookingBody">
         <div id="orderSum" class="noroomsfound"><h3><i class="fa fa-warning"></i><span gstype='bookingtranslation' gstranslationfield='noRoomsMessage'></span></h3></div>
         <div id="orderSum" class="ordersummary">
@@ -72,7 +71,7 @@
                                 <span gstype='bookingtranslation' gstranslationfield='currency'></span> 
                                 <span class='price'></span>
                             </div>
-                                <select class='addonsSelectionCount'><option value='-1'>-1</option></select>
+                            <select class='addonsSelectionCount'><option value='-1'>-1</option></select>
                             <div class="addButton gsl_button addaddonsonallroombutton">
                                 <span gstype='bookingtranslation' gstranslationfield='add'></span>
                             </div>
@@ -83,30 +82,40 @@
                 <span gstype='bookingtranslation' gstranslationfield='correctEmailforGuest'></span>
                 <div class="roomentryframe">
                     <div class="roomentry" id='roomentrycontainer' style='display:none;'>
-                        <h4><i class="fa fa-trash-o removeroom"></i> <span class='roomname'></span> 
-                            <span class='secondary_text'>
-                                (<span gstype='bookingtranslation' gstranslationfield='checkin'></span>: <span class='startdate'></span>, <span gstype='bookingtranslation' gstranslationfield='checkout'></span>: <span class='enddate'></span>)
+                        <div class='roomheading'> 
+                            <span class="innertext">
+                                <span class='roomname'></span> 
+                                <span class='secondary_text'>
+                                    <span class='startdate'></span> - <span class='enddate'></span>
+                                </span>
                             </span>
-                        </h4>
-                        <div class="guestentry">
-                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
-                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
-                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
-                            <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='addons'></span></div>
-                            <div style="clear:both;"></div>
+                            <i class="fa fa-edit displayeditroom"></i>
                         </div>
-                        <div class="guestentry" id='guestentryrow' style='display:none;'>
-                            <div class='entryfield'><input type="txt" gsname="name" placeholder="Name"></div>
-                            <div class='entryfield'><input type="txt" gsname="email"placeholder="E-mail"></div>
-                            <div class='entryfield'><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"></div>
-                            <div class='entryfield'>
-                                <div class="guest_addon"></div>
+                        <div class='guestbox'>
+                            <div class="guestentry">
+                                <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
+                                <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
+                                <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
+                                <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='addons'></span></div>
+                                <div style="clear:both;"></div>
                             </div>
-                            <div style="clear:both;"></div>
+                            <div class="guestentry" id='guestentryrow' style='display:none;'>
+                                <div class='entryfield'><input type="txt" gsname="name" placeholder="Name"></div>
+                                <div class='entryfield'><input type="txt" gsname="email"placeholder="E-mail"></div>
+                                <div class='entryfield'><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"></div>
+                                <div class='entryfield'>
+                                    <div class="guest_addon"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div class="ischildrow">
+                                    <input type="checkbox" class="ischild"><span gstype='bookingtranslation' gstranslationfield='ischildtext'></span><br>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class='guestRows'></div>
+                            <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
+                            <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
                         </div>
-                        <div class='guestRows'></div>
-                        <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
-                        <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
                     </div>
                     <div style="clear:both;"></div>
                 </div>
@@ -263,7 +272,7 @@
 <script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
 <script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
 <script>
-    
+
 //Reset page on load.
 //    localStorage.setItem('gslcurrentpage','');
     $('.gslbookingBody').hide();

@@ -58,9 +58,14 @@
     "noRoomsMessage" : "Sorry, we are sold out for your specified selection",
     "numberofguests" : "Guests",
     "guest" : "guest",
+    "adult" : "adult",
+    "adults" : "adults",
+    "child" : "child",
+    "children" : "children",
     "numberofrooms" : "Number of rooms",
     "price" : "Price",
     "availableRooms" : "Available rooms: ",
     "chosenRoom" : "Rooms chosen",
-    "total" : "Total"
+    "total" : "Total",
+    "ischildtext" : "This guest is a child (below : {age} year)."
 }

@@ -31,7 +31,10 @@ function getshop_setBookingTranslation() {
                 var text = getshop_translationMatrixLoaded['agebelow'];
                 text = text.replace("{age}", config.childAge);
                 $("[gstranslationfield='agebelow']").html(text);
-                console.log(getshop_bookingconfiguration);
+                
+                var text = getshop_translationMatrixLoaded['ischildtext'];
+                text = text.replace("{age}", config.childAge);
+                $("[gstranslationfield='ischildtext']").html(text);
             }
         });    
         
@@ -180,8 +183,10 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
     $('.addonprinted').remove();
     var template = $('.addonsentry #addon');
     var translation = getshop_getBookingTranslations();
+    var foundItems = false;
     if(typeof(res) !== "undefined" || typeof(res.items) !== "undefined") {
         for(var k in res.items) {
+            foundItems = true;
             var item = res.items[k];
             var entry = template.clone();
             
@@ -214,6 +219,9 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
             entry.show();
             $('.addonsentry .overview_addons').append(entry);
         }
+    }
+    if(!foundItems) {
+        $('.addonsentry').hide();
     }
    
     getshop_loadRooms(res);
@@ -248,10 +256,24 @@ function getshop_loadTextualSummary(res) {
     var translation = getshop_getBookingTranslations();
     for(var k in res.textualSummary) {
         var text = res.textualSummary[k];
-        text = text.replace("{guests}", translation['numberofguests'].toLowerCase());
-        text = text.replace("{guest}", translation['guest'].toLowerCase());
-        text = text.replace("{rooms}", translation['rooms'].toLowerCase());
-        text = text.replace("{totalprice}", translation['totalprice']);
+        if(typeof(translation['adults']) !== "undefined") {
+            text = text.replace("{adults}", translation['adults'].toLowerCase());
+        }
+        if(typeof(translation['adults']) !== "undefined") {
+            text = text.replace("{adult}", translation['adult'].toLowerCase());
+        }
+        if(typeof(translation['child']) !== "undefined") {
+            text = text.replace("{child}", translation['child'].toLowerCase());
+        }
+        if(typeof(translation['children']) !== "undefined") {
+            text = text.replace("{children}", translation['children'].toLowerCase());
+        }
+        if(typeof(translation['rooms']) !== "undefined") {
+            text = text.replace("{rooms}", translation['rooms'].toLowerCase());
+        }
+        if(typeof(translation['totalprice']) !== "undefined") {
+            text = text.replace("{totalprice}", translation['totalprice']);
+        }
         $('.yourstaysummary').append(text + "<br>");
     }
     
@@ -267,6 +289,9 @@ function getshop_loadRooms(res) {
         var newRoom = roomContainer.clone();
         newRoom.addClass('roomrowadded');
         var room = res.rooms[k];
+        newRoom.find('[gsname="newroomstartdate"]').val(getshop_js_yyyy_mm_dd_hh_mm_ss(room.start).substr(0, 10));
+        newRoom.find('[gsname="newroomenddate"]').val(getshop_js_yyyy_mm_dd_hh_mm_ss(room.end).substr(0, 10));
+        newRoom.find('.totalroomprice').html(room.totalCost);
         var guestTemplateRow = newRoom.find('#guestentryrow');
         var addedAddons = false;
         for(var i = 0; i < room.guestCount;i++) {
@@ -279,10 +304,13 @@ function getshop_loadRooms(res) {
                 guestRow.find('[gsname="prefix"]').val(guestObject.prefix);
                 guestRow.find('[gsname="email"]').val(guestObject.email);
                 guestRow.find('[gsname="phone"]').val(guestObject.phone);
+                if(guestObject.isChild) {
+                   guestRow.find('[gsname="ischild"]').attr('checked','checked');
+                }
             }
             
             if(addedAddons) {
-                guestRow.find('.guest_addon').hide();
+                guestRow.find('.guest_addon').addClass('addonsdisabled');
             }
             guestRow.append('<i class="fa fa-times removeguest" title="'+translation['removeguest']+'"></i>');
             
@@ -324,7 +352,7 @@ function getshop_loadRooms(res) {
         }
         
         if(!added) {
-            newRoom.find('.guest_addon').hide();
+            newRoom.find('.guest_addon').addClass('addonsdisabled');
             newRoom.find('[gstranslationfield="addons"]').hide();
         }
         
@@ -568,49 +596,44 @@ function getshop_completeBooking() {
 }
 
 function getshop_changeGuestSelection() {
-    var minusButton = $(this).closest('.count_line').find('.fa-minus'); //Closest minusbutton
-    var plusButton = $(this).closest('.count_line').find('.fa-plus'); //Closest plusbutton
-    var count = $(this).closest('.count_line').find('.count'); //Closest numbercount for adding guests or room
-    if ($(this).is('.fa-plus')) {
-        if (count.val() < 10) {
-            count.val(function (i, val) {
-                return (+val + 1);
-            });
-        }
-        if ($(this).is('#add_child') && count.val() >= 1) {
+    var btn = $(this);
+    var minusButton = btn.closest('.count_line').find('.fa-minus'); //Closest minusbutton
+    var plusButton = btn.closest('.count_line').find('.fa-plus'); //Closest plusbutton
+    var count = btn.closest('.count_line').find('.count').val(); //Closest numbercount for adding guests or room
+    console.log(count);
+    count = parseInt(count);
+    if (btn.is('.fa-plus')) {
+        count++;
+        if ($(this).is('#add_child') && count >= 1) {
             minusButton.removeClass('disabled');
-        } else if (count.val() >= 2) {
+        } else if (count >= 2) {
             minusButton.removeClass('disabled');
         }
-        if (count.val() >= 10) {
+        if (count >= 10) {
             plusButton.addClass('disabled');
         }
     }
-    if ($(this).is('.fa-minus')) {
+    if (btn.is('.fa-minus')) {
+        count--;
         if ($(this).is('#subtract_child')) {
-            if (count.val() > 0) {
-                count.val(function (i, val) {
-                    return (+val - 1);
-                });
-            }
-            if (count.val() <= 0) {
+            if (count <= 0) {
                 minusButton.addClass('disabled');
             }
         } else {
-            if (count.val() > 1) {
-                count.val(function (i, val) {
-                    return (+val - 1);
-                });
+            if (count > 1) {
+                
             }
-            if (count.val() <= 1) {
+            if (count <= 1) {
                 minusButton.addClass('disabled');
             }
         }
-        if (count.val() <= 9) {
+        if (count <= 9) {
             plusButton.removeClass('disabled');
         }
     }
     
+    $(this).closest('.count_line').find('.count').val(count);
+    getshop_confirmGuestInfoBox();    
 }
 
 function getshop_saveBookerInformation() {
@@ -668,7 +691,8 @@ function getshop_saveGuestInformation() {
                 "prefix" : $(this).find('[gsname="prefix"]').val(),
                 "phone" : $(this).find('[gsname="phone"]').val(),
                 "name" : $(this).find('[gsname="name"]').val(),
-                "email" : $(this).find('[gsname="email"]').val()
+                "email" : $(this).find('[gsname="email"]').val(),
+                "isChild" : $(this).find('[gsname="ischild"]').is(':checked')
             };
             guests.push(info);
             
@@ -754,7 +778,7 @@ function getshop_confirmGuestInfoBox() {
         guestText = ' '+translation['numberofguests'].toLowerCase()+' ';
     }
     $('#guests').val(room + roomText + ', ' + guest + guestText);
-    $('.guestInfoBox').hide();
+//    $('.guestInfoBox').hide();
 }
 function getshop_updateOrderSummary(res, isSearch) {
     $('.GslBooking .ordersummary .selectedguests').html('');
@@ -780,9 +804,9 @@ function getshop_updateOrderSummary(res, isSearch) {
                     row += translationMatrix['room'].toLowerCase();
                 }
                 row += ")</td>";
-                row += "<td>" + (room.pricesByGuests[guest] * count)  * res.numberOfDays + ",-</td>";
+                row += "<td>" + room.totalPriceForRoom + ",-</td>";
                 row += "</tr>";
-                total += (room.pricesByGuests[guest] * count) * res.numberOfDays;
+                total += room.totalPriceForRoom;
                 totalRooms += parseInt(count);
                 totalGuests += (guest*count);
             }
@@ -1191,6 +1215,17 @@ function getshop_removeRoom() {
     }
 }
 
+function getshop_changeChildSettings() {
+    var saving = getshop_saveGuestInformation();
+    saving.done(function(res) {
+        getshop_loadAddonsAndGuestSummaryByResult(res);
+    });
+}
+
+function getshop_showEditRoomOptions() {
+    $(this).closest('.roomentry').find('.editroomoptions').toggle();
+}
+
 function getshop_hideGuestSelectionBox(e) {
     var target = $(e.target);
     if(target.attr('id') == "guests" || target.closest('#guests').length > 0) {
@@ -1204,6 +1239,34 @@ function getshop_hideGuestSelectionBox(e) {
     getshop_confirmGuestInfoBox();
 }
 
+function getshop_tryChangingDate() {
+    var room = $(this).closest('.roomentry');
+    var start = moment(room.find('[gsname="newroomstartdate"]').val(), 'DD.MM.YYYY');
+    var end = moment(room.find('[gsname="newroomenddate"]').val(), 'DD.MM.YYYY');
+    
+    var time = new Date().toLocaleTimeString('en-us');
+    
+    var roomid = room.attr("roomid");
+    var data = {
+        "start" : start.format('MMM DD, YYYY ') + time,
+        "end" : end.format('MMM DD, YYYY ') + time,
+        "roomId" : roomid
+    }
+    
+    var saving = getshop_saveGuestInformation();
+    saving.done(function(res) {
+        $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=changeDateOnRoom', {
+            dataType: 'jsonp',
+            data: {
+                "body": data
+            },
+            success: function (res) {
+                getshop_loadAddonsAndGuestSummaryByResult(res);
+            }
+        });
+    });
+}
+    
 $(document).on('click touchstart', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
 $(document).on('mousedown touchstart', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
 $(document).on('mousedown touchstart','.GslBooking .gssigninbutton', getshop_logon);
@@ -1222,8 +1285,11 @@ $(document).on('mousedown touchstart', '.GslBooking .guestentry .removeguest', g
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
 $(document).on('mousedown touchstart', '.GslBooking .ordersummary .continue', getshop_continueToSummary);
 $(document).on('mousedown touchstart', '.GslBooking .addButton', getshop_addRemoveAddon);
-$(document).on('mousedown touchstart', '.GslBooking .removeselectedroom', getshop_removeGroupedRooms);
+$(document).on('mousedown touchstart', '.GslBooking .gslfront_1 .editroomoptionsrow.removeroom', getshop_removeGroupedRooms);
+$(document).on('mousedown touchstart', '.GslBooking .gslfront_1 .trychangingdate', getshop_tryChangingDate);
+$(document).on('click', '.GslBooking [gsname="ischild"]', getshop_changeChildSettings);
 $(document).on('mousedown touchstart', getshop_hideGuestSelectionBox);
+$(document).on('click', '.GslBooking .displayeditroom', getshop_showEditRoomOptions);
 
 var lastSelectedPage = localStorage.getItem('gslcurrentpage');
 if(lastSelectedPage === "summary") {

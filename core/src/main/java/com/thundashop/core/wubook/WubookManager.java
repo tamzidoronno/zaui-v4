@@ -864,6 +864,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             pmsManager.setBooking(newbooking);
             int i = 0;
             for(PmsBookingRooms room : newbooking.getActiveRooms()) {
+                if(booking.isBookingComVirtual) {
+                    room.forceAccess = true;
+                }
                 WubookBookedRoom r = booking.rooms.get(i);
                 if(r.breakfasts > 0) {
                     boolean add = true;

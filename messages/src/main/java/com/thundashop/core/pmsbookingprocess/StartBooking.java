@@ -11,4 +11,9 @@ public class StartBooking implements Serializable {
     public Integer children;
     public String discountCode;
     String bookingId = "";
+    String roomId = "";
+
+    int getGuests() {
+        return adults+children;
+    }
 }

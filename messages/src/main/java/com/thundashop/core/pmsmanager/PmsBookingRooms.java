@@ -96,7 +96,7 @@ public class PmsBookingRooms implements Serializable {
     public Integer maxNumberOfGuests = 0;
     @Transient
     boolean paidFor = false;
-    boolean forceAccess = false;
+    public boolean forceAccess = false;
     Double printablePrice = 0.0;
     
     void clear() {
@@ -157,6 +157,34 @@ public class PmsBookingRooms implements Serializable {
         }
         return days;        
     }    
+    
+    public Integer getNumberOfAdults() {
+        int adults = 0;
+        for(int i = 0; i < numberOfGuests; i++) {
+            if(guests.size() > i) {
+                PmsGuests guest = guests.get(i);
+                if(!guest.isChild) {
+                    adults++;
+                }
+            } else {
+                adults++;
+            }
+        }
+        return adults;
+    }
+    
+    public Integer getNumberOfChildren() {
+        int children = 0;
+        for(int i = 0; i < numberOfGuests; i++) {
+            if(guests.size() > i) {
+                PmsGuests guest = guests.get(i);
+                if(guest.isChild) {
+                    children++;
+                }
+            }
+        }
+        return children;
+    }
     
     public static Date convertOffsetToDate(String offset) {
         try {
@@ -642,7 +670,7 @@ public class PmsBookingRooms implements Serializable {
         return total;
     }
     
-    void calculateTotalCost(Integer priceType) {
+    public void calculateTotalCost(Integer priceType) {
         totalCost = 0.0;
         Integer days = getNumberOfNights();
         
@@ -786,6 +814,23 @@ public class PmsBookingRooms implements Serializable {
     public void removeCode() {
         code = "";
         codeObject = null;
+    }
+
+    public Integer setGuestAsChildren(Integer children) {
+        int childrenSet = 0;
+        if(guests.size() < numberOfGuests) {
+            for(int i = guests.size(); i < numberOfGuests; i++) {
+                guests.add(new PmsGuests());
+            }
+        }
+        
+        for(int i = numberOfGuests-children; i < numberOfGuests;i++) {
+            if(guests.size() > i) {
+                guests.get(i).isChild = true;
+                childrenSet++;
+            }
+        }
+        return childrenSet;
     }
 
 }

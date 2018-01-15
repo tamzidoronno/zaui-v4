@@ -14,4 +14,5 @@ public class RoomInfo {
     public Date end;
     public String roomName = "";
     public HashMap<String, AddonItem> addonsAvailable = new HashMap();
+    public Double totalCost = 0.0;
 }

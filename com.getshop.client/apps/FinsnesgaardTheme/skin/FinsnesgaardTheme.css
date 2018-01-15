@@ -34,8 +34,8 @@ h3 {
 .gsarea[area="footer"] .shop_button{width:100%;}
 .footerprovidedtext{ line-height:150px;background-color:#111;color:#fff; font-size:22px}
 
-.Menu { text-align:right;}
-.Menu .entry div { padding:20px;font-size:22px; }
+.Menu { text-align:right;padding-top:10px;}
+.Menu .entry div { padding:20px;font-size:18px; }
 .Menu .entry div:hover { opacity:0.8; }
 .Menu .entry .entries:hover{opacity:1;}
 .Menu .entry .entries {background-color:#fff;color:#333; box-shadow:0px 0px 4px 0px #333;padding:0;}

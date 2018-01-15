@@ -3,14 +3,28 @@
 $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 ?>
 <h1>Other instructions</h1>
-<div id="otherinstructionsfiled" gsname='otherinstructions' style="border: solid 1px; min-height: 400px;"><?
-    if(isset($notificationSettings->otherinstructions)) {
+<div id="otherinstructionsfiled" gsname='otherinstructions' style="border: solid 1px; min-height: 400px;">
+    <?
+    if (isset($notificationSettings->otherinstructions)) {
         echo $notificationSettings->otherinstructions;
     }
-?></div>
+    ?>
+</div>
+
 <h1>Fire instructions</h1>
-<div id="fireinstructions" gsname='fireinstructions' style="border: solid 1px; min-height: 400px;"><?
-    if(isset($notificationSettings->fireinstructions)) {
+<div id="fireinstructions" gsname='fireinstructions' style="border: solid 1px; min-height: 400px;">
+    <?
+    if (isset($notificationSettings->fireinstructions)) {
         echo $notificationSettings->fireinstructions;
     }
-?></div>
+    ?>
+</div>
+
+<h1>Cleaning instructions</h1>
+<div id="cleaninginstruction" gsname='cleaninginstruction' style="border: solid 1px; min-height: 400px;">
+    <?
+    if (isset($notificationSettings->cleaninginstruction)) {
+        echo $notificationSettings->cleaninginstruction;
+    }
+    ?>
+</div>

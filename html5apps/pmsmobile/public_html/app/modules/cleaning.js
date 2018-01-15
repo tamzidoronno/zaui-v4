@@ -1,12 +1,20 @@
 if (typeof (getshop) === "undefined") {
     var getshop = {};
 }
-getshop.cleaningController = function ($scope, $state, $stateParams) {
+getshop.cleaningController = function ($scope, $state, $stateParams, $sce) {
     $scope.checkInGuests = [];
     $scope.checkOutGuests = [];
     $scope.defaultStart = 14;
     $scope.reportPanel = false;
     $scope.defaultEnd = 12;
+    $scope.instruction = "";
+    
+    $scope.loadInstruction = function() {
+        getshopclient.PmsManager.getConfiguration(getMultilevelName()).done(function(res) {
+            $scope.instruction = $sce.trustAsHtml(res.cleaninginstruction);
+            $scope.$applyAsync();
+        });
+    }
     
     $scope.loadFutureCleanings = function() {
         var start = new Date();
@@ -180,5 +188,5 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     
     $scope.loadBookingItems();
     $scope.loadFutureCleanings();
-    
+    $scope.loadInstruction();
 };

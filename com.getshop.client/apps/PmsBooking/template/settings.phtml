@@ -58,6 +58,16 @@
             </select>
         </td>
     </tr>
+    <tr>
+        <td width="50%">Information text</td>
+        <td width="50%"><textarea type="text" wrap="soft" gsname="info_textarea" style='width:100%;'><? echo $this->getText("info_textarea"); ?></textarea></td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>
+<style>
+    textarea{
+        white-space: nowrap;overflow: auto;
+    }
+</style>
+    

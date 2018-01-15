@@ -544,5 +544,12 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         saveObject(msg);
     }
 
+    @Override
+    public void setDefaultMultilevelName(String multilevelname) {
+        Store store = getMyStore();
+        store.defaultMultilevelName = multilevelname;
+        storePool.saveStore(store);
+    }
+
     
 }

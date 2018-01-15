@@ -202,4 +202,7 @@ public interface IStoreManager {
     
     @Administrator
     public void seenCriticalMessage(String id);
+    
+    @Administrator
+    public void setDefaultMultilevelName(String multilevelname);
 }

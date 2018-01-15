@@ -6,7 +6,13 @@
     <span class='btn btn-success' ng-click='showReportPanel()'>Message to caretaker</span>
 </div>
 
-<div class='row' ng-show='reportPanel'>
+<div class='row' ng-show='instruction' style="border: solid 1px #CCC !important; padding-top: 10px;">
+    <div class='col-md-12'><span style='font-size: 16px;'><b>Cleaning instruction</b></span></div>
+    <div class='col-xs-12' ng-bind-html="instruction" style="padding: 20px">
+    </div>
+</div>
+
+<div class='row' ng-show='reportPanel' >
     <div class='col-xs-12'>
         <select class='form-control' ng-model="selectedRoom" ng-options="item as item.bookingItemName for item in items"></select>
         <textarea ng-model="caretakermsg" class='form-control'></textarea>

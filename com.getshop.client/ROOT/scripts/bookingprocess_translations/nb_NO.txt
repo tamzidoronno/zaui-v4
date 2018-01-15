@@ -1,4 +1,5 @@
 {
+    "bookStay" : "Book ditt opphold i dag",
     "failedlogon" : "Beklager, feil brukernavn eller passord",
     "rooms" : "Rom",
     "room" : "Rom",

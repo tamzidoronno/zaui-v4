@@ -20,7 +20,10 @@ class PmsGlobalSettings extends \WebshopApplication implements \Application {
             $config->{$field} = $val;
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+        $this->getApi()->getStoreManager()->setDefaultMultilevelName($_POST['data']['defaultmultilevelname']);
+        $this->changeMultiLevelName($_POST['data']['defaultmultilevelname']);
     }
-    
+
+  
 }
 ?>

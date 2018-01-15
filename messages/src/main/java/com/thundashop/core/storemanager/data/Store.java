@@ -25,6 +25,13 @@ public class Store extends DataCommon {
     public boolean mobileApp = false;
     public String favicon = "";
     
+    /**
+     * If this is set the it will default to this 
+     * multilevelname unless its specified something else.
+     * 
+     */
+    public String defaultMultilevelName = "default";
+    
     public Date expiryDate;
     
     /**

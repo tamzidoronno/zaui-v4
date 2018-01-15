@@ -20,7 +20,7 @@ class PmsGuestCounter extends \WebshopApplication implements \Application {
                 var event = thundashop.Ajax.createEvent('','getContent', $('#pmsguestcounter'), {});
                 thundashop.Ajax.postWithCallBack(event, function(res) {
                     $('#pmsguestcounter').html(res);
-                });
+                }, true);
             }, "5000");
         </script>
         <?php

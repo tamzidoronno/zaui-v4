@@ -16,7 +16,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         return "PmsAvailability";
     }
 
-    public function render() {
+    public function render() {        
         $this->includefile("filter");
         $this->includefile("timelines");
         $this->includefile("bookingtemplate");

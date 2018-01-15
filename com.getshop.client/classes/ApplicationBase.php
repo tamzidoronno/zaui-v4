@@ -694,8 +694,21 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function getSelectedMultilevelDomainName() {
-        return "default";
+        if (!isset($_SESSION['selected_multilevel_name'])) {
+            $_SESSION['selected_multilevel_name'] = $this->getApi()->getStoreManager()->getMyStore()->defaultMultilevelName;
+        }
+        
+        if (!$_SESSION['selected_multilevel_name']) {
+            $_SESSION['selected_multilevel_name'] = "default";
+        }
+        
+        return $_SESSION['selected_multilevel_name'];
     }
+    
+    public function changeMultiLevelName($name) {
+        $_SESSION['selected_multilevel_name'] = $name;
+    }
+
     
     public function setGetShopTableRowId() {
         $_SESSION['gs_moduletable_'.$_POST['data']['functionName']] = $_POST['data'];

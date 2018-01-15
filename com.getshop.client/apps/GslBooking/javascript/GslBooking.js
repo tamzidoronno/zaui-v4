@@ -1143,11 +1143,12 @@ function getshop_searchRooms() {
                         active = ' active';
                     }
                     var imgaddr = getshop_endpoint + '/displayImage.php?id=' + room.images[i].fileId;
+                    console.log(imgaddr);
                     var img = $("<img>");
                     img.attr('index', k);
                     img.attr("src", imgaddr);
                     img.attr('innerindex', i);
-                    img.load(function () {
+                    img.on('load',function () {
 
                         var idx = $(this).attr('index');
                         var inneridx = $(this).attr('innerindex');

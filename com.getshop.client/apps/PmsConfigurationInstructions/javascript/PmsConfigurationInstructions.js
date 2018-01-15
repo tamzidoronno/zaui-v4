@@ -10,6 +10,11 @@ app.PmsConfigurationInstructions = {
                 autogrow : false
             });
         });
+        $(document).on('click', '.PmsConfigurationInstructions #cleaninginstruction', function() {
+            thundashop.common.activateCKEditor('cleaninginstruction', {
+                autogrow : false
+            });
+        });
     },
     changeLanguage : function() {
         var lang = $(this).val();

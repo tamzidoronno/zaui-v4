@@ -31,6 +31,8 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, String> contracts = new HashMap();
     public String fireinstructions = "";
     public String otherinstructions = "";
+    public String cleaninginstruction = "";
+    public String maintanceinstruction = "";
     
     /* other configurations */
     public boolean needConfirmation = false;

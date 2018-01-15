@@ -301,3 +301,47 @@ body {
     margin: 0 auto;
 }
 
+
+
+.gs_headerbox {
+    display: inline-block;
+    margin-right: 50px;
+    font-size: 0px;
+    text-align: left;
+    position: relative;
+    padding-right: 0px;
+}
+
+.gs_headerbox div {
+    font-size: 12px;
+    display: block;
+    padding: 0px;
+    color: #005a51;
+}
+
+.gs_headerbox input {
+    margin-top: 0px;
+    
+    border: solid 0px;
+    border-bottom: solid 1px #DDD;
+    height: 28px;
+    box-sizing: border-box;
+    padding-top: 5px;
+}
+
+.gs_headerbox i {
+    position: absolute;
+    font-size: 20px;
+    color: #82cdf3;
+    right: 5px;
+    bottom: 8px;
+}
+
+.gs_headerbox select {
+    width: 200px;
+    border: 0px;
+    border-bottom: solid 1px #DDD;
+    background: #FFF;
+    background-color: #FFF;
+    padding: 8px;
+}

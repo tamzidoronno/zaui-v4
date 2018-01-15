@@ -19,7 +19,6 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     public function render() {        
         $this->includefile("filter");
         $this->includefile("timelines");
-        $this->includefile("bookingtemplate");
     }
     
     public function getData() {
@@ -30,8 +29,8 @@ class PmsAvailability extends \MarketingApplication implements \Application {
 
     public function getSelectedFilter() {
         $filter = new \core_pmsmanager_PmsIntervalFilter();
-        $filter->start = $this->convertToJavaDate(strtotime("11/01-2017"));
-        $filter->end = $this->convertToJavaDate(strtotime("11/16-2017"));
+        $filter->start = $this->convertToJavaDate($this->getStartDate());
+        $filter->end = $this->convertToJavaDate($this->getEndDate());
         $filter->interval = 60*60*24;
         return $filter;
     }
@@ -194,5 +193,32 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $this->setCurrentRoom();
     }
 
+    public function getStartDate() {
+        if (!isset($_SESSION['PmsAvailability_startDate'])) {
+            $date = strtotime('-3 days');
+        } else {
+            $date = strtotime($_SESSION['PmsAvailability_startDate']);
+        }
+        
+        return $date;
+    }
+
+    public function getEndDate() {
+        if (!isset($_SESSION['PmsAvailability_endDate'])) {
+            $date = strtotime('+7 days');
+        } else {
+            $date = strtotime($_SESSION['PmsAvailability_endDate']);
+        }
+        
+        return $date;
+    }
+
+    public function setStartDate($date) {
+        $_SESSION['PmsAvailability_startDate'] = $date;
+    }
+    
+    public function setEndDate($date) {
+        $_SESSION['PmsAvailability_endDate'] = $date;
+    }
 }
 ?>

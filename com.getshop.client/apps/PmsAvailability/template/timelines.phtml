@@ -7,11 +7,14 @@ $types = $this->getTypes();
 
 foreach ($types as $type) {
 ?>
-    <h2><? echo $type->name; ?></h2>
    
     <div class='type_line'>
+        
         <div class='timeline_item_name'>
+            
             <?
+            echo "<div class='category_name'>".$type->name."</div>";
+            
             foreach ($items as $item) {
                 if ($item->bookingItemTypeId != $type->id) {
                     continue;
@@ -24,6 +27,7 @@ foreach ($types as $type) {
         
         <div class='timeline'>
             <?
+            
             $j = 0;
             foreach ($items as $item) {
                 
@@ -43,7 +47,7 @@ foreach ($types as $type) {
                         $header = "";
                         
                         if ($j == 1) {
-                            $header = "<div class='header'>".date("d.m.y", $time/1000)."</div>";
+                            $header = "<div class='header col_width'>".date("d.m.y", $time/1000)."</div>";
                         }
                         
                         $nextBookingIds = $this->getNextBookingIds($itemTimeLines, $time);
@@ -62,7 +66,7 @@ foreach ($types as $type) {
                         $containsBooking = count($data->bookingIds) ? "contains_booking" : "";
                         $bookingId = count($data->bookingIds) ? $data->bookingIds[0] : "";
                         
-                        echo "<div bookingid='$bookingId' class='$color timeline_col$i col col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div>";
+                        echo "<div class='col_outer'><div bookingid='$bookingId' class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
                         $prevBookingIds = $data->bookingIds;
                         $i++;
                     }
@@ -77,8 +81,19 @@ foreach ($types as $type) {
 }
 ?>
 <script>
-$('.type_line').each(function() {
+$(document).ready(function() {
+    
+    var count = $('.timeline_row:first').find('.header').size();
     var width = $(this).find('.timeline_item_name').outerWidth() + 5;
     $(this).find('.timeline').css('width', 'calc(100% - ' + width + "px)");
+    width = $(this).find('.timeline').width();
+    var size = width/count;
+    
+    if (size < 64) {
+        size = 64;
+    }
+    
+    $(".col_width").outerWidth(size);
+//    
 });
 </script>

@@ -1,4 +1,5 @@
 {
+    "bookStay" : "Book you stay today",
     "failedlogon" : "Sorry, wrong username or password",
     "rooms" : "Rooms",
     "room" : "Room",

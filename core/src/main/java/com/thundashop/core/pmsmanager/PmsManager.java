@@ -95,6 +95,7 @@ import org.springframework.stereotype.Component;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, OrderManagerEvents {
 
     private HashMap<String, PmsBooking> bookings = new HashMap(); 
+    private HashMap<String, String> bookingIdMap = new HashMap(); 
     private HashMap<String, Product> fetchedProducts = new HashMap();
     private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap();
     private HashMap<String, PmsCareTaker> careTaker = new HashMap();
@@ -1965,7 +1966,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             PmsBookingFilter bookingfilter = getPmsBookingFilter(filter.selectedDefinedFilter);
             types = bookingfilter.typeFilter;
         }
-            
+        gsTiming("Checking types");
         for (BookingItemType type : bookingEngine.getBookingItemTypes()) {
             if(!types.isEmpty() && !types.contains(type.id)) {
                 continue;
@@ -1973,10 +1974,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
             res.typeTimeLines.put(type.id, line.getTimelines(filter.interval-21600, 21600));
         }
+        gsTiming("Checking types 2");
 
         List<BookingItem> items = bookingEngine.getBookingItems();
+        gsTiming("Checking types 3");
 
         List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimal(filter.start, filter.end);
+        gsTiming("Checking types 4");
         
         for (BookingItem item : items) {
             if(!types.isEmpty() && !types.contains(item.bookingItemTypeId)) {
@@ -1987,6 +1991,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                     .filter(li -> li.bookingItemId.equals(item.id))
                     .findFirst()
                     .orElse(null);
+            
+            gsTiming("Before looping");
             
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval-21600, 21600);
             LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
@@ -3777,17 +3783,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         return res;
     }
 
+    public PmsBooking getBookingFromBookingEngineIdUnfinalized(String bookingEngineId) {
+        HashMap<String, String> map = buildBookingIdMap();
+        PmsBooking booking = getBookingUnfinalized(map.get(bookingEngineId));
+        return booking;
+    }
+    
     @Override
     public PmsBooking getBookingFromBookingEngineId(String bookingEngineId) {
-        for(PmsBooking booking : bookings.values()) {
-            for(PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.bookingId != null && room.bookingId.equals(bookingEngineId)) {
-                    finalize(booking);
-                    return booking;
-                }
-            }
-        }
-        return null;
+        return finalize(getBookingFromBookingEngineIdUnfinalized(bookingEngineId));
     }
 
     /**
@@ -6131,7 +6135,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }catch(Exception e) {
             e.printStackTrace();
         }
-        
+        bookingIdMap = new HashMap();
     }
 
     private boolean needConfirmation(PmsBooking booking) {
@@ -7649,6 +7653,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 }
             }
         }
+    }
+
+    private HashMap<String, String> buildBookingIdMap() {
+        if(!bookingIdMap.isEmpty()) {
+            return bookingIdMap;
+        }
+        
+        bookingIdMap = new HashMap();
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.bookingId != null) {
+                    bookingIdMap.put(room.bookingId, booking.id);
+                }
+            }
+        }
+        
+        return bookingIdMap;
     }
 
 }

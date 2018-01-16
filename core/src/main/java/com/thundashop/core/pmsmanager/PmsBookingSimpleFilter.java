@@ -149,7 +149,7 @@ public class PmsBookingSimpleFilter {
         simple.requestedEndDate = room.requestedEndDate;
         simple.userId = booking.userId;
         
-        if(manager.getConfigurationSecure().hasLockSystem()) {
+        if(manager.hasLockSystemActive()) {
             simple.code = room.code;
         }
         simple.pmsRoomId = room.pmsBookingRoomId;
@@ -175,7 +175,7 @@ public class PmsBookingSimpleFilter {
         if(room.isDeleted() || booking.isDeleted) {
             simple.progressState = "deleted";
         } else if(room.isStarted() && !room.isEnded()) {
-            if(manager.getConfiguration().hasLockSystem() && !room.addedToArx) {
+            if(manager.hasLockSystemActive() && !room.addedToArx) {
                 simple.progressState = "waitingforlock";
             } else {
                 simple.progressState = "active";

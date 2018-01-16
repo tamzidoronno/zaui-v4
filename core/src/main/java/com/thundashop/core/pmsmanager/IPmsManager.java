@@ -36,6 +36,9 @@ public interface IPmsManager {
     public void undoLastCleaning(String itemId);
     
     @Administrator
+    public boolean hasLockSystemActive();
+    
+    @Administrator
     public void createAllVirtualOrders();
     
     @Administrator

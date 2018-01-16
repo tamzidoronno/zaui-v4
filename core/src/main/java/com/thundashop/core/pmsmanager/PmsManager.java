@@ -3093,7 +3093,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                     continue;
                 }
                 
-                if(!room.addedToArx && getConfiguration().hasLockSystem() && !getConfiguration().markDirtyEvenWhenCodeNotPressed) {
+                if(!room.addedToArx && hasLockSystemActive() && !getConfiguration().markDirtyEvenWhenCodeNotPressed) {
                     continue;
                 }
 
@@ -3160,7 +3160,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         if (room.isStarted() && !room.isEnded()) {
             room.addedToArx = false;
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
-            if(!getConfigurationSecure().hasLockSystem()) {
+            if(!hasLockSystemActive()) {
                 add.markDirty();
             }
             saveObject(add);
@@ -3624,6 +3624,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         return cartManager.getCoupon(couponCode); 
     }
 
+    public boolean hasLockSystemActive() {
+        if(getConfiguration().hasLockSystem()) {
+            return true;
+        }
+        
+        List<LockGroup> groups = getShopLockSystemManager.getAllGroups();
+        if (groups.size() > 0) {
+            return true;
+        }
+       
+        return false;
+    }
+    
+    
+    
+    
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
@@ -4758,7 +4774,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public void checkIfGuestHasArrived() throws Exception {
-        if(!this.getConfigurationSecure().hasLockSystem()) {
+        if(!hasLockSystemActive()) {
             return;
         }
         if(getConfigurationSecure().isArx()) {

@@ -161,7 +161,7 @@ public class PmsManagerProcessor {
                 save = true;
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
-                if(hoursAhead == 0 && !manager.getConfigurationSecure().hasLockSystem()) {
+                if(hoursAhead == 0 && !manager.hasLockSystemActive()) {
                     manager.markRoomAsDirty(room.bookingItemId);
                 }
             }
@@ -1305,12 +1305,7 @@ public class PmsManagerProcessor {
     }
 
     private boolean isApacSolutionActivated() {
-        List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
-        if (groups.size() > 0) {
-            return true;
-        }
-       
-        return false;
+        return manager.hasLockSystemActive();
     }
 
     private void checkForDeadCodesApac() {

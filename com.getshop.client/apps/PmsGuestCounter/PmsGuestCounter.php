@@ -31,7 +31,7 @@ class PmsGuestCounter extends \WebshopApplication implements \Application {
         $content = json_decode($content,true);
 
         echo "<center>";
-        echo "<h3>Since august 2016 have <b style='color:#98048c; font-size: 32px;padding: 10px;'>" . $content['results'][0]['series'][0]['values'][0][1] . "</b> guests put their trust in the GetShops automated check in system.</h3>";
+        echo "<h3>Since august 2016 <b style='color:#98048c; font-size: 32px;padding: 10px;'>" . $content['results'][0]['series'][0]['values'][0][1] . "</b> guests have put their trust in the GetShops automated check in system.</h3>";
         echo "</center>";
     }
 }

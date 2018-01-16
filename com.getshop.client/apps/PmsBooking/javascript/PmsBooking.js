@@ -89,24 +89,6 @@ app.PmsBooking = {
         var endDate = new Date();
         endDate.setTime(endDate.getTime() + (86400*1000)); 
 
-        var hash = window.location.hash.substr(1);
-        var result = hash.split('&').reduce(function (result, item) {
-            var parts = item.split('=');
-            result[parts[0]] = parts[1];
-            return result;
-        }, {});
-
-        if(result.start) {
-            var tmpDate = new Date(result.start);
-            currentDate.setTime(tmpDate.getTime());
-            console.log('change start date: ' + result.start);
-        }
-        if(result.end) {
-            var tmpDate = new Date(result.end);
-            endDate.setTime(tmpDate.getTime());
-        }
-
-
         $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
         $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
 
@@ -154,10 +136,7 @@ app.PmsBooking = {
         }
     },
     search : function(){
-        console.log('hei');
         var next = $(this).attr('next_page');
-        
-//        var time = new Date().toLocaleTimeString('en-us');
         var startDate = $('#date_picker').data('daterangepicker').startDate.format('YYYY-MM-DD');
         var endDate = $('#date_picker').data('daterangepicker').endDate.format('YYYY-MM-DD');
         var rooms = $('#count_room').val();

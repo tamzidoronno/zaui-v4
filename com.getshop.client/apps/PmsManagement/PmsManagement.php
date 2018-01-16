@@ -1499,6 +1499,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
         $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
         $discount->discountType = 0;
+        $discount->pricePlan = $_POST['data']['pricePlan'];
+        $discount->attachedDiscountCode = $_POST['data']['attachedDiscountCode'];
+        
         if($_POST['data']['discounttype'] == "fixedprice") {
             $discount->discountType = 1;
         }

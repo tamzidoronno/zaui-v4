@@ -15,8 +15,8 @@ function getshop_setBookingTranslation() {
             var field = $('[gstype="bookingtranslation_placeholder"][gstranslationfield="'+key+'"]');
             field.attr('placeholder', translations[key]);
         }
-        var guestInput = $('#guests');
-        guestInput.val('1 '+translations['room'].toLowerCase()+', 1 ' + translations['guest'].toLowerCase());
+//        var guestInput = $('#guests');
+//        guestInput.val('1 '+translations['room'].toLowerCase()+', 1 ' + translations['guest'].toLowerCase());
         
         var hash = window.location.hash.substr(1);
         if(hash) {
@@ -37,7 +37,7 @@ function getshop_setBookingTranslation() {
                 $("[gstranslationfield='ischildtext']").html(text);
             }
         });    
-        
+        getshop_confirmGuestInfoBox(); 
     });
 }
 
@@ -600,7 +600,6 @@ function getshop_changeGuestSelection() {
     var minusButton = btn.closest('.count_line').find('.fa-minus'); //Closest minusbutton
     var plusButton = btn.closest('.count_line').find('.fa-plus'); //Closest plusbutton
     var count = btn.closest('.count_line').find('.count').val(); //Closest numbercount for adding guests or room
-    console.log(count);
     count = parseInt(count);
     if (btn.is('.fa-plus')) {
         count++;
@@ -778,7 +777,6 @@ function getshop_confirmGuestInfoBox() {
         guestText = ' '+translation['numberofguests'].toLowerCase()+' ';
     }
     $('#guests').val(room + roomText + ', ' + guest + guestText);
-//    $('.guestInfoBox').hide();
 }
 function getshop_updateOrderSummary(res, isSearch) {
     $('.GslBooking .ordersummary .selectedguests').html('');
@@ -866,6 +864,10 @@ var removeGuest = confirm(translation['sureremoveguest']);
 
 function getshop_setDatePicker() {
     var currentDate = new Date();
+    var rooms = $('#count_room');
+    var adults = $('#count_adult');
+    var children = $('#count_child');
+    var discountCode = $('#coupon_input');
     var endDate = new Date();
     endDate.setTime(endDate.getTime() + (86400*1000)); 
     
@@ -885,8 +887,19 @@ function getshop_setDatePicker() {
         var tmpDate = new Date(result.end);
         endDate.setTime(tmpDate.getTime());
     }
+    if(result.rooms){
+        rooms.val(result.rooms);
+    }
+    if(result.adults){
+        adults.val(result.adults);
+    }
+    if(result.children){
+        children.val(result.children);
+    }
+    if(result.discount){
+        discountCode.val(result.discount);
+    }
     
-
     $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
     $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
 
@@ -1143,7 +1156,6 @@ function getshop_searchRooms() {
                         active = ' active';
                     }
                     var imgaddr = getshop_endpoint + '/displayImage.php?id=' + room.images[i].fileId;
-                    console.log(imgaddr);
                     var img = $("<img>");
                     img.attr('index', k);
                     img.attr("src", imgaddr);

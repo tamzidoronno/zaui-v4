@@ -1,0 +1,45 @@
+<?
+/* @var $this ns_a5599ed1_60be_43f4_85a6_a09d5318638f\PmsAvailabilityDateSelector */
+?>
+
+<div class="gs_headerbox">
+    <div>
+        <?
+        echo $this->__f("From");
+        ?>
+    </div>
+    
+    <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>"/>
+    
+    <i class="icon-calendar-text"></i>
+</div>
+
+<div class="gs_headerbox">
+    <div>
+        <?
+        echo $this->__f("To");
+        ?>
+    </div>
+    
+    <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>"/>
+    
+    <i class="icon-calendar-text"></i>
+</div>
+
+<div class="gs_headerbox">
+    <div>
+        <?
+        echo $this->__f("Room");
+        ?>
+    </div>
+    
+    <select>
+        <option>All</option>
+    </select>
+    
+</div>
+
+<script>
+    $('#startdate').datepicker();
+    $('#enddate').datepicker();
+</script>

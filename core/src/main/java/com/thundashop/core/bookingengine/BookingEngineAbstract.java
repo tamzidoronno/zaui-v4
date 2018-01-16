@@ -1036,21 +1036,22 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     private BookingItemAssignerOptimal getAvailableItemsAssigner(String typeId, Date start, Date end, String bookingId) throws BookingEngineException {
-
         BookingItemType type = types.get(typeId);
         if (type == null) {
             throw new BookingEngineException("Can not get available items ");
         }
         
-        Set<Booking> bookingsWithinDaterange = bookings.values().stream()
+        List<Booking> bookingOfTypes = bookings.values().stream()
                 .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+                .collect(Collectors.toList());
+        
+        Set<Booking> bookingsWithinDaterange = bookingOfTypes.stream()
                 .filter(booking -> booking.interCepts(start, end))
                 .collect(Collectors.toSet());
         
         List<Booking> checkIt = new ArrayList(bookingsWithinDaterange);
         for (Booking ibooking : checkIt) {
-            List<Booking> overlapping = bookings.values().stream()
-                    .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+            List<Booking> overlapping = bookingOfTypes.stream()
                     .filter(booking -> booking.interCepts(ibooking.startDate, ibooking.endDate))
                     .collect(Collectors.toList());
             

@@ -128,12 +128,6 @@ app.PmsBooking = {
 
             $("#date_picker").data('daterangepicker').setEndDate(end);
         });
-
-        if(result.start) {
-            $(function() {
-                $('.GslBooking #search_rooms').mousedown();
-            });
-        }
     },
     search : function(){
         var next = $(this).attr('next_page');

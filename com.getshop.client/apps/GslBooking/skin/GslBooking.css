@@ -304,7 +304,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .productentry_footer{position:absolute;width:68%;bottom:0;padding:6px 0;text-align: right;}
 .GslBooking .gslfront_1 .productentry_footer i{padding: 0 10px;}
 .GslBooking .gslfront_1 .productoverview .gsl_button.continue.active:hover{background-color:#4391dc;}
-.GslBooking .gslfront_1 .productoverview .gsl_button.continue.active{cursor: pointer;background-color:#329ad6;}
+.GslBooking .gslfront_1 .productoverview .gsl_button.continue.active{cursor: pointer;background-color:#329ad6; display:none;}
 .GslBooking .gslfront_1 .productoverview .gsl_button.continue{
     background-color: #ddd;
     width: 20%;
@@ -471,7 +471,7 @@ Error      : #de5353; red
     /*Ordersum header*/
     .GslBooking .gslfront_1 #priceoffertable td{font-size: 12px;}
     .GslBooking .gslfront_1 .ordersummary .selectedguests{padding:10px 0;}
-    .GslBooking .gslfront_1 .ordersummary .gsl_button.continue{bottom:4px;width:50%;right:10px;padding: 4px;}
+    .GslBooking .gslfront_1 .ordersummary .gsl_button.continue{bottom:4px;width:50%;right:10px;}
     .GslBooking .gslfront_1 .ordersummary.sticky h3{display:none;}
     
     .GslBooking .gslfront_1 .fa_box,

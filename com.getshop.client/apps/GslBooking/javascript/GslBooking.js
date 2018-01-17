@@ -427,13 +427,24 @@ function getshop_createSticky(sticky) {
                 $('.productoverview').css('padding-top', '0px');
             }
         });
+        $(function() {
+            win.scroll();
+            $('.GslBooking .ordersummary .continue').show();
+        });
     }
 }
 function getshop_addRemoveAddons(btn) {
     var saving = getshop_saveGuestInformation();
+    
+    var text = btn.html();
+
+    if(btn.hasClass('fa')) {
+        btn.addClass('fa-spin');
+    } else {
+        btn.html('<i class="fa fa-spin fa-spinner"></i>');
+    }
     saving.done(function() {
         var body = {};
-        
         if(btn.hasClass('guestaddonicon')) {
             if(btn.find('.countselections').length > 0) {
                btn.find('.countselections').toggle();
@@ -823,15 +834,14 @@ function getshop_updateOrderSummary(res, isSearch) {
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + "</table>");
     $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong><span class='mobilesplitter'></span>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ")");
     $('.GslBooking .ordersummary .continue').hide();
-    if(total > 0) {
-        $('.GslBooking .ordersummary .continue').show();
-    }
     if(isSearch) {
         if(!$('.GslBooking .ordersummary').is(":visible")) {
             $('.GslBooking .ordersummary').slideDown('slow', function() {
                 $(function(){getshop_createSticky($("#order-sticky"));});
             });
         }
+    } else if(total > 0) {
+        $('.GslBooking .ordersummary .continue').show();
     }
     
     if(roomsSelected === 0) {
@@ -1333,17 +1343,6 @@ $(document).on('click', '.GslBooking [gsname="ischild"]', getshop_changeChildSet
 $(document).on('mousedown touchstart', getshop_hideGuestSelectionBox);
 $(document).on('click', '.GslBooking .displayeditroom', getshop_showEditRoomOptions);
 
-var lastSelectedPage = localStorage.getItem('gslcurrentpage');
-if(lastSelectedPage === "summary") {
-    $(function() {
-        getshop_goToAddonsPage();
-    });
-}
-if(lastSelectedPage === "overview") {
-    $(function() {
-        getshop_goToOverviewPage();
-    });
-}
 
 (function ($) {
 $.fn.tclick = function (onclick) {

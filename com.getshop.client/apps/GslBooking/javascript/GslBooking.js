@@ -601,6 +601,11 @@ function getshop_changeGuestSelection() {
     var plusButton = btn.closest('.count_line').find('.fa-plus'); //Closest plusbutton
     var count = btn.closest('.count_line').find('.count').val(); //Closest numbercount for adding guests or room
     count = parseInt(count);
+    
+    if(btn.hasClass('disabled')) {
+        return;
+    }
+    
     if (btn.is('.fa-plus')) {
         count++;
         if ($(this).is('#add_child') && count >= 1) {
@@ -816,7 +821,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     }
 //    var totalAmount = "<tr class='totalAmountline'><td>"+chosenRoomText['total']+"</td><td>"+totalGuests+" ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ") </td><td>"+total+"</td></tr>";
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + "</table>");
-    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong> "+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ")");
+    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong><span class='mobilesplitter'></span>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ")");
     $('.GslBooking .ordersummary .continue').hide();
     if(total > 0) {
         $('.GslBooking .ordersummary .continue').show();

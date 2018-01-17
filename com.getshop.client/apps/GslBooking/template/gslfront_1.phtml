@@ -44,7 +44,7 @@
             <div id="order-sticky">
                 <div class='noRoomSelected'><i class="fa fa-frown-o"></i> No room has been selected, please select one below</div>
                 <div class='roomSelected'>
-                    <div class="bestValue"><span gstype='bookingtranslation' gstranslationfield='bestValue'></span> <span class='totalprice'></span>
+                    <div class="bestValue"><span gstype='bookingtranslation' gstranslationfield='bestValue'></span><span class='totalprice'></span>
                     </div><div class='gsl_button continue active'><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
                 </div>
             </div>
@@ -120,11 +120,9 @@
                                 <div style="clear:both;"></div>
                             </div>
                             <div class="guestentry" id='guestentryrow' style='display:none;'>
-                                <div class='entryfield'><input type="txt" gsname="name" placeholder="Name"></div>
-                                <div class='entryfield'><input type="txt" gsname="email"placeholder="E-mail"></div>
-                                <div class='entryfield'><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"></div>
-                                <div class='entryfield'>
-                                </div>
+                                <div class='entryfield'><input type="txt" gsname="name" placeholder="Name"/></div>
+                                <div class='entryfield'><input type="txt" gsname="email"placeholder="E-mail"/></div>
+                                <div class='entryfield'><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"/></div>
                                 <div style="clear:both;"></div>
                                 <div class="ischildrow">
                                     <input type="checkbox" class="ischild" gsname="ischild"><span gstype='bookingtranslation' gstranslationfield='ischildtext'></span><br>
@@ -242,10 +240,12 @@
                     <div style="clear: both;"></div>
                 </div>
                 <div class='agreetotermsbox'>
-                    <label for="agreeTerms">
-                        <input id="agreeTerms" type="checkbox">
-                        <span gstype='bookingtranslation' gstranslationfield='agreeTerms'></span>
-                    </label>
+                    <div class='agreetotermcheckboxline'>
+                        <label for="agreeTerms">
+                            <input id="agreeTerms" type="checkbox">
+                            <span gstype='bookingtranslation' gstranslationfield='agreeTerms'></span>
+                        </label>
+                    </div>
                     <div><a style="cursor:pointer;"><span gstype='bookingtranslation' gstranslationfield='readTerms'></span></a></div>
                     <div><a style="cursor:pointer;"><span gstype='bookingtranslation' gstranslationfield='downloadTerms'></span></a></div>
                 </div>

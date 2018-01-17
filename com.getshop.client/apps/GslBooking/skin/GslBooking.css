@@ -320,10 +320,11 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .ordersummary .gsl_button { background-color:#9abe2a;margin-top: 6px;}/*#69a70e*/
 .GslBooking .gslfront_1 .ordersummary #order-sticky{
     background-color:#f9f9f9;
-    height: 50px !important;
+    min-height: 50px !important;
     background: #f9f9f9;
     padding: 0 4px;
     box-shadow: 0px 1px 0px 0px #ddd;}
+.GslBooking .gslfront_1 .fa { padding-right: 12px; }
 .GslBooking .gslfront_1 .ordersummary .selectedguests { padding: 10px; }
 .GslBooking .gslfront_1 .ordersummary td{padding:2px;}
 .GslBooking .gslfront_1 .ordersummary .bottomspacer { clear:both;height: 10px; }
@@ -378,10 +379,6 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .guestentry input{padding:8px;width:100%;border:0;box-shadow: 0px 0px 0px 1px #ddd;}
 .GslBooking .gslfront_1 .guestentry input.ischild {box-shadow: none; float:left; width: 14px; padding: 0px; margin: 0px; margin-top:2px; }
 .GslBooking .gslfront_1 .guestentry .ischildrow { padding-top: 4px; padding-bottom: 7px; color:#563333;font-size: 12px; display:inline-block; }
-.GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#fff;}
-.GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#fff !important;}
-.GslBooking .gslfront_1 .guestentry input:-moz-placeholder{color:#fff;}
-.GslBooking .gslfront_1 .guestentry input:-ms-input-placeholder{color:#fff;}
 .GslBooking .gslfront_1 .guest_phone{width:25% !important;background-color:#f9f9f9;color: #329ad6;text-align: center;padding: 8px 0 !important;}
 .GslBooking .gslfront_1 .guest_addon{position: absolute;right:40px; top:0px; height: 31px; display:inline-block; color:#329ad6; }
 .GslBooking .gslfront_1 .agreetotermsbox{padding:10px 0;}
@@ -403,14 +400,20 @@ Error      : #de5353; red
 
 .GslBooking .gslfront_1 .datepickermobile { display:none; }
 
-@media only all and (max-width:1100px){
+@media only all and (min-width:800px){
     .GslBooking .gslfront_1 .gsl_button.return{font-size:0;}
     .GslBooking .gslfront_1 .gsl_button.return i{font-size:18px;}
+    .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#efefef;}
+    .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#efefef !important;}
+    .GslBooking .gslfront_1 .guestentry input:-moz-placeholder{color:#efefef;}
+    .GslBooking .gslfront_1 .guestentry input:-ms-input-placeholder{color:#efefef;}
 }
 @media only all and (max-width:800px){
+    .GslBooking .gslfront_1 .mobilesplitter { width: 100%; display:block; }
     .GslBooking .gslfront_1 .agreetotermserrormessage,
     .GslBooking .gslfront_1 .errormessage { padding-bottom: 10px; }
     .GslBooking .gslfront_1 .gsl_button.continue { top: 0px; }
+    .GslBooking .gslfront_1 .agreetotermcheckboxline { padding-top: 10px; padding-bottom: 10px; font-size: 17px; }
     .GslBooking .gslfront_1 .guestentry input.ischild { width: 17px; height: 17px; }
     .GslBooking .ischildrow span { font-size: 14px !important; }
     .GslBooking .addonprinted { min-height: 60px; }

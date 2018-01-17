@@ -25,6 +25,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .countselections { position:absolute; border: solid 1px #bbb; background-color:#fff; display: none; top: 20px; left:0px;z-index: 99999999; }
 .GslBooking .gslfront_1 .countselections .countselection { font-size: 28px; border-right: solid 1px #bbb; text-align: center; width: 28px; display:inline-block; } 
 .GslBooking .gslfront_1 .countselections .countselection:hover { color:#000; }
+.GslBooking .gslfront_1 .noRoomSelected { display:none; padding: 10px; font-size: 20px; text-align: center; font-weight: bold; }
 .GslBooking .gslfront_1 h3{
     font-size: 20px;
     text-transform: none;
@@ -101,7 +102,12 @@ Error      : #de5353; red
     border-radius:20px;
     display: inline-block;}
 .GslBooking .gslfront_1 .gsl_button.return:hover{background-color:#91bfec;}
-.GslBooking .gslfront_1 .gsl_button.continue{padding:8px 0;width: 68%;}
+.GslBooking .gslfront_1 .gsl_button.continue{width: 68%;     position: absolute;
+    right: 10px;
+    height: 33px;
+    bottom: 10px;
+    line-height:33px;
+}
 .GslBooking .gslfront_1 .gsl_button.return{
     width:26%;
     margin:0 2%;

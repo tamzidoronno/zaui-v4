@@ -24,6 +24,13 @@ import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingRooms implements Serializable {
 
+    public static Integer getNumberOfDays(Date start, Date end) {
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.date.start = start;
+        room.date.end = end;
+        return room.getNumberOfNights();
+    }
+
     public String bookingItemTypeId = "";
     public String bookingItemId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();

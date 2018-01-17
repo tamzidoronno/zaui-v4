@@ -253,9 +253,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 if(childToSet > 0) {
                     childToSet -= toAddToCurrentBooking.setGuestAsChildren(childToSet);
                 }
+                pmsManager.setPriceOnRoom(toAddToCurrentBooking, true, booking);
                 result.roomsSelected++;
                 booking.addRoom(toAddToCurrentBooking);
-                check.room.totalPriceForRoom = (pmsInvoiceManager.updatePriceMatrix(booking,toAddToCurrentBooking, booking.priceType) * toAddToCurrentBooking.getNumberOfDays());
+                check.room.totalPriceForRoom = toAddToCurrentBooking.price;
         }
         try {
             booking.calculateTotalCost();

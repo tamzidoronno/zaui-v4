@@ -1286,10 +1286,10 @@ public class PmsManagerProcessor {
         
         boolean updated = false;
         if(deleted) {
-            room.removeCode();    
             if (room.codeObject != null) {
                 manager.getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
             }
+            room.removeCode();    
             updated = true;
         } else {        
             LockCode nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");

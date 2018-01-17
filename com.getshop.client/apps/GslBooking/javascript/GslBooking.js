@@ -1317,7 +1317,7 @@ $(document).on('mousedown touchstart', '.GslBooking .go_to_payment_button', gets
 $(document).on('mousedown touchstart', '.GslBooking #search_rooms', getshop_searchRooms);
 $(document).on('mousedown touchstart', '.GslBooking .addguest', getshop_addGuest);
 $(document).on('mousedown touchstart', '.GslBooking .addroom', getshop_addRoom);
-$(document).on('mousedown touchstart', '.GslBooking .guestentry .guestaddonicon', getshop_addRemoveAddon);
+$(document).on('mousedown touchstart', '.GslBooking .roomheading .guestaddonicon', getshop_addRemoveAddon);
 $(document).on('mousedown touchstart', '.GslBooking .guestentry .removeguest', getshop_removeGuest);
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
 $(document).on('mousedown touchstart', '.GslBooking .ordersummary .continue', getshop_continueToSummary);

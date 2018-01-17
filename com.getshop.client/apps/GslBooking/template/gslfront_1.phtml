@@ -3,7 +3,9 @@
         <div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
         </div><div class='datepickermobile'>
+            <div class='mobilecheckinheading'><span gstype='bookingtranslation' gstranslationfield='checkin'></span></div>
             <input id="date_picker_start" type='date'>
+            <div class='mobilecheckoutheading'><span gstype='bookingtranslation' gstranslationfield='checkout'></span></div>
             <input id="date_picker_end" type='date'>
         </div><div class="fa_box guests">
             <input id="guests" value="" style="border-right:1px solid #ddd;" readonly>
@@ -29,7 +31,7 @@
             </div>
         </div><div class="fa_box coupon">
             <input id='coupon_input' onfocus="this.placeholder = ''" placeholder="" gstype='bookingtranslation_placeholder' gstranslationfield='discountcode'>
-        </div><div class="fa_box gsl_button" id="search_rooms" onclick="getshop_showProductList()"><span gstype='bookingtranslation' gstranslationfield='search'></span></div>
+        </div><div class="fa_box gsl_button" id="search_rooms"><span gstype='bookingtranslation' gstranslationfield='search'></span></div>
     </div>
 
     <div class="gslbookingBody">
@@ -95,7 +97,8 @@
                                     <span class='startdate'></span> - <span class='enddate'></span>
                                 </span>
                             </span>
-                            <span class='totalroomprice'></span>
+                            <span class="guest_addon"></span>
+
                             <i class="fa fa-edit displayeditroom"></i>
                             <span class="editroomoptions">
                                 <div class="editroomoptionsrow removeroom">
@@ -114,7 +117,6 @@
                                 <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
                                 <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
                                 <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
-                                <div class='entryfield'><span gstype='bookingtranslation' gstranslationfield='addons'></span></div>
                                 <div style="clear:both;"></div>
                             </div>
                             <div class="guestentry" id='guestentryrow' style='display:none;'>
@@ -122,7 +124,6 @@
                                 <div class='entryfield'><input type="txt" gsname="email"placeholder="E-mail"></div>
                                 <div class='entryfield'><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"></div>
                                 <div class='entryfield'>
-                                    <div class="guest_addon"></div>
                                 </div>
                                 <div style="clear:both;"></div>
                                 <div class="ischildrow">
@@ -133,6 +134,9 @@
                             <div class='guestRows'></div>
                             <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
                             <div class="addguest gsl_button"><i class="fa fa-plus"></i><span gstype='bookingtranslation' gstranslationfield='addGuest'></span></div>
+                        </div>
+                        <div class='roomfooter'>
+                            <span class='totalroomprice'></span>
                         </div>
                     </div>
                 </div>
@@ -291,7 +295,7 @@
 <script>
 
 //Reset page on load.
-//    localStorage.setItem('gslcurrentpage','');
+    localStorage.setItem('gslcurrentpage','');
     $('.gslbookingBody').hide();
     $('.addons_overview').hide();
     

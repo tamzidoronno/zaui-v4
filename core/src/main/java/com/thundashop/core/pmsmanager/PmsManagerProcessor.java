@@ -1289,8 +1289,8 @@ public class PmsManagerProcessor {
             room.removeCode();    
             if (room.codeObject != null) {
                 manager.getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
-                updated = true;
             }
+            updated = true;
         } else {        
             LockCode nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
             if (nextUnusedCode != null) {

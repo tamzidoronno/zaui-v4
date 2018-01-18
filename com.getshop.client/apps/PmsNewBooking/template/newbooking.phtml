@@ -1,0 +1,67 @@
+<?php
+/* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+?>
+<h3>Create a new room reservation</h3>
+<div gstype='form' method='addRoom'>
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("From");
+            ?>
+        </div>
+
+        <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>" gsname='from'/>
+
+        <i class="icon-calendar-text"></i>
+    </div>
+
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("To");
+            ?>
+        </div>
+
+        <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>" gsname='to'/>
+
+        <i class="icon-calendar-text"></i>
+    </div>
+
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("Room type");
+            ?>
+        </div>
+        <select class='gsniceselect2' gsname='type'>
+            <?php
+            foreach($types as $type) {
+                echo "<option value='".$type->id."'>" . $type->name . "</option>";
+            }
+            ?>
+        </select>
+    </div>
+
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("Number of rooms");
+            ?>
+        </div>
+        <input type='text' class='gsniceinput1' value='1' style='width: 70px;text-align: center;' gsname='numberOfRooms'>
+    </div>
+
+    <div class="gs_headerbox">
+        <div>
+        </div>
+        <span class='shop_button' style='cursor:pointer;' gstype='submit'>Add room</span>
+    </div>
+</div>
+
+
+
+<script>
+    $('#startdate').datepicker();
+    $('#enddate').datepicker();
+</script>

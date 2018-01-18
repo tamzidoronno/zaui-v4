@@ -1,0 +1,4 @@
+.PmsNewBooking .GetShopModuleTable .col { width: 20%; }
+.PmsNewBooking .addnewroom { width: 68%; float:left;}
+.PmsNewBooking .availablerooms { width: 30%;float:right; }
+.PmsNewBooking .hasDatepicker {  max-width: 100px; }

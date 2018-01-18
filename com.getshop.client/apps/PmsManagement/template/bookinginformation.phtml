@@ -31,10 +31,7 @@ $config = $pmsManager->getConfiguration($this->getSelectedName());
 
 $lang = $this->getFactory()->getCurrentLanguage();
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
-$hasArx = false;
-if($config->arxHostname) {
-    $hasArx = true;
-}
+$hasArx = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedName());
 foreach ($types as $idx => $type) {
     $types[$type->id] = $type;
 }

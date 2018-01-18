@@ -14,16 +14,6 @@ class PmsGuestCounter extends \WebshopApplication implements \Application {
         echo "<div id='pmsguestcounter'>";
         $this->getContent();
         echo "</div>";
-        ?>
-        <script>
-            setInterval(function() {
-                var event = thundashop.Ajax.createEvent('','getContent', $('#pmsguestcounter'), {});
-                thundashop.Ajax.postWithCallBack(event, function(res) {
-                    $('#pmsguestcounter').html(res);
-                }, true);
-            }, "5000");
-        </script>
-        <?php
     }
     
     public function getContent() {

@@ -161,7 +161,7 @@ public class PmsManagerProcessor {
                 save = true;
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
-                if(hoursAhead == 0 && !manager.getConfigurationSecure().hasLockSystem()) {
+                if(hoursAhead == 0 && !manager.hasLockSystemActive()) {
                     manager.markRoomAsDirty(room.bookingItemId);
                 }
             }
@@ -273,6 +273,9 @@ public class PmsManagerProcessor {
             }
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.pmsBookingRoomId.equals("335e60a1-318b-4bc8-a6f6-9ca7d718cb50")) {
+                    System.out.println("TEST");
+                }
                 if(!room.forceUpdateLocks) {
                     if(room.addedToArx) {
                         continue;
@@ -1283,11 +1286,11 @@ public class PmsManagerProcessor {
         
         boolean updated = false;
         if(deleted) {
-            room.removeCode();    
             if (room.codeObject != null) {
                 manager.getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
-                updated = true;
             }
+            room.removeCode();    
+            updated = true;
         } else {        
             LockCode nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
             if (nextUnusedCode != null) {
@@ -1309,7 +1312,6 @@ public class PmsManagerProcessor {
         if (groups.size() > 0) {
             return true;
         }
-       
         return false;
     }
 

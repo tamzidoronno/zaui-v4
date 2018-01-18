@@ -130,8 +130,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         }
                     }
                     room.roomsSelectedByGuests.put(i, count);
-                    Double price = pmsInvoiceManager.calculatePrice(type.id, arg.start, arg.end, true, existing);
-                    price += pmsInvoiceManager.getDerivedPrice(existing, type.id, i, i, 0);
+                    Double price = getPriceForRoom(room, arg.start, arg.end, i, arg.discountCode);
                     room.pricesByGuests.put(i, price);
                 }
             } catch (Exception ex) {
@@ -254,9 +253,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 if(childToSet > 0) {
                     childToSet -= toAddToCurrentBooking.setGuestAsChildren(childToSet);
                 }
+                pmsManager.setPriceOnRoom(toAddToCurrentBooking, true, booking);
                 result.roomsSelected++;
                 booking.addRoom(toAddToCurrentBooking);
-                check.room.totalPriceForRoom = (pmsInvoiceManager.updatePriceMatrix(booking,toAddToCurrentBooking, booking.priceType) * toAddToCurrentBooking.getNumberOfDays());
+                check.room.totalPriceForRoom = toAddToCurrentBooking.price;
         }
         try {
             booking.calculateTotalCost();
@@ -820,5 +820,20 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         return generateSummary();
+    }
+
+    private Double getPriceForRoom(BookingProcessRooms bookingProcessRoom, Date start, Date end, int numberofguests, String discountcode) {
+            PmsBookingRooms room = new PmsBookingRooms();
+            room.bookingItemTypeId = bookingProcessRoom.id;
+            room.date = new PmsBookingDateRange();
+            room.date.start = start;
+            room.date.end = end;
+            room.numberOfGuests = numberofguests;
+            
+            PmsBooking booking = new PmsBooking();
+            booking.priceType = PmsBooking.PriceType.daily;
+            booking.couponCode = discountcode;
+            pmsManager.setPriceOnRoom(room, true, booking);
+            return room.price;
     }
 }

@@ -32,10 +32,7 @@ $defaultType = $booking->rooms[0]->bookingItemTypeId;
 
 $cleaningInterval = $config->cleaningInterval;
 
-$hasArx = false;
-if($config->arxHostname) {
-    $hasArx = true;
-}
+$hasArx = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedName());
 $hasPrices = false;
 $arr = (array)$prices->dailyPrices;
 if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType != 1) {

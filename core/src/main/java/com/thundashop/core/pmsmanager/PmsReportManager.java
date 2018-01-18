@@ -239,7 +239,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
                 usersIdsCounted.add(booking.userId);
                 
                 User user = userManager.getUserById(booking.userId);
-                if(user.companyObject != null) {
+                if(user != null && user.companyObject != null) {
                     stats.numberOfOrgansitionBookers++;
                 } else {
                     stats.numberOfPrivateBookers++;

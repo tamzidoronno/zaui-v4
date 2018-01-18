@@ -1,0 +1,85 @@
+<?php
+$nextPage = $this->getText("next_page");
+$infoText = $this->getConfigurationSetting('info_textarea');
+
+if(!$nextPage) {
+    $nextPage = "/?page=booking_" . $this->getSelectedName();
+}
+?>
+<div class="pmsfront5">
+    <?if($infoText  != ""){
+        echo '<i id="information" class="fa fa-info-circle"></i>';
+        echo '<div id="informationBox" class="infoBox">'.$infoText.'</div>';
+    } ?>
+    <div>
+        <div class="pfframe">
+            <span gstype='bookingtranslation' gstranslationfield='checkin'></span><span gstype='bookingtranslation' gstranslationfield='checkout'></span><br>
+            <span id="faholder_date"><input id="date_picker" type="txt"></span>
+            <div class='datepickermobile'>
+                <input id="date_picker_start" type='date' style="float:left;">
+                <input id="date_picker_end" type='date' style="float:right;">
+            </div>
+        </div>
+
+        <div class="pfframe guestframe">
+            <div class="pfbox">
+                <div class="inner">
+                    <div gstype='bookingtranslation' gstranslationfield='rooms'></div>
+                    <i id="subtract_room" class="fa fa-minus disabled"></i>
+                    <input type="txt" class="count" id="count_room" value="1" readonly>
+                    <i id="add_room" class="fa fa-plus"></i>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+            <div class="pfbox">
+                <div class="inner">
+                    <div gstype='bookingtranslation' gstranslationfield='adults'></div>
+                    <i id="subtract_adult" class="fa fa-minus disabled"></i>
+                    <input type="txt" class="count" id="count_adult" value="1" readonly>
+                    <i id="add_adult" class="fa fa-plus"></i>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+            <?php
+               if($this->getText("display_child") == "yes"){?>
+                   <div class="pfbox">
+                        <div class="inner">
+                            <div gstype="bookingtranslation" gstranslationfield="children"></div>
+                            <i id="subtract_child" class="fa fa-minus disabled "></i>
+                            <input type="txt" class="count" id="count_child" value="0" readonly>
+                            <i id="add_child" class="fa fa-plus"></i>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+               <?}else{?>
+                    <input style="display:none;"type="txt" class="count" id="count_child" value="0" readonly>
+                    <style>
+                        .PmsBooking .pmsfront5 .pfbox{width:50%;padding:0 10%;}
+                    </style>
+               <?}
+            ?>
+          
+        </div>
+        <div class="pfframe couponframe">
+            <span gstype='bookingtranslation' gstranslationfield='discountcode'></span><br>
+            <span id="faholder_coupon"><input id="coupon_input" type="txt"></span>
+        </div>
+        <br>
+        <div class="searchbutton" next_page='<? echo $nextPage; ?>'><span gstype='bookingtranslation' gstranslationfield='search'></div>
+    </div>
+    <div style="clear: both;"></div>
+</div>
+
+
+<link rel="stylesheet" type="text/css" media="all" href="/js/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
+<script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
+<script>
+    $('#information').hover(function() {
+        $('#informationBox').show();
+    }, function() {
+        $('#informationBox').hide();
+    });
+    getshop_setBookingTranslation();
+    getshop_setDatePicker();
+</script>

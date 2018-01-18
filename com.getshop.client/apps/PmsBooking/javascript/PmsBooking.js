@@ -2,7 +2,7 @@ app.PmsBooking = {
     init: function () {
         $(document).on('click', '.PmsBooking .check_available_button', app.PmsBooking.next);
         $(document).on('click', '.PmsBooking .searchbutton', app.PmsBooking.search);
-        $(document).on('mousedown touchstart', '.PmsBooking .pmsfront4 .pfbox .fa', app.PmsBooking.chooseGuestinformation);
+        $(document).on('mousedown touchstart', '.PmsBooking .pfbox .fa', app.PmsBooking.chooseGuestinformation);
     },
     chooseGuestinformation : function() {
         var minusButton = $(this).closest('.inner').find('.fa-minus'); //Closest minusbutton
@@ -92,7 +92,7 @@ app.PmsBooking = {
         $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
         $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
 
-        var picker = $('#date_picker').daterangepicker({
+        $('#date_picker').daterangepicker({
             "autoApply": true,
             "showWeekNumbers": true,
             "minDate": currentDate,

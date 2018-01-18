@@ -40,25 +40,15 @@ if(!$nextPage) {
                     <div style="clear: both;"></div>
                 </div>
             </div>
-            <?php
-               if($this->getText("display_child") == "yes"){?>
-                   <div class="pfbox">
-                        <div class="inner">
-                            <div gstype="bookingtranslation" gstranslationfield="children"></div>
-                            <i id="subtract_child" class="fa fa-minus disabled "></i>
-                            <input type="txt" class="count" id="count_child" value="0" readonly>
-                            <i id="add_child" class="fa fa-plus"></i>
-                            <div style="clear: both;"></div>
-                        </div>
-                    </div>
-               <?}else{?>
-                    <input style="display:none;"type="txt" class="count" id="count_child" value="0" readonly>
-                    <style>
-                        .PmsBooking .pmsfront5 .pfbox{width:50%;padding:0 10%;}
-                    </style>
-               <?}
-            ?>
-          
+            <div class="pfbox excludeChildSelection">
+                 <div class="inner">
+                     <div gstype="bookingtranslation" gstranslationfield="children"></div>
+                     <i id="subtract_child" class="fa fa-minus disabled "></i>
+                     <input type="txt" class="count" id="count_child" value="0" readonly>
+                     <i id="add_child" class="fa fa-plus"></i>
+                     <div style="clear: both;"></div>
+                 </div>
+             </div>
         </div>
         <div class="pfframe couponframe">
             <span gstype='bookingtranslation' gstranslationfield='discountcode'></span><br>

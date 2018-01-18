@@ -119,10 +119,10 @@
     padding-bottom: 4px;
 }
 .PmsBooking .pmsfront4 .pfbox{
-    width:33.33%;
+    width:50%;
     text-align: center;
     float:left;
-    padding:5%;
+    padding:0 10%;
 }
 .PmsBooking .pmsfront4 .pfbox input{
     width:50%;
@@ -228,10 +228,10 @@
     float: left;
 }
 .PmsBooking .pmsfront5 .pfbox{
-    width:33.33%;
+    width:50%;
     text-align: center;
     float:left;
-    padding:0 5%;
+    padding:0 10%;
 }
 .PmsBooking .pmsfront5 .pfbox input{
     width:50%;
@@ -289,6 +289,7 @@
     right: 8px;
     top: 0;
 }
+.PmsBooking .excludeChildSelection{display:none;}
 @media only all and (max-width:800px){
     .PmsBooking .datepickermobile{display: block;}
     .PmsBooking #date_picker,
@@ -302,6 +303,7 @@
     
     /*Front 5*/
     .PmsBooking .pmsfront5 #coupon_input{width: 100%;}
+    .PmsBooking .pmsfront5 #information{right:5px;top:5px;}
     .PmsBooking .pmsfront5 .datepickermobile input{
         width:49%;
         padding:4px;

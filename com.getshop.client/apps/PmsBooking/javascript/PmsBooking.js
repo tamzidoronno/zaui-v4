@@ -79,7 +79,7 @@ app.PmsBooking = {
                     text = text.replace("{age}", config.childAge);
                     $("[gstranslationfield='agebelow']").html(text);
                     console.log(getshop_bookingconfiguration);
-                }
+                    }
             });    
 
         });

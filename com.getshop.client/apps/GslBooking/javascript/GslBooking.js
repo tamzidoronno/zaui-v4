@@ -35,6 +35,10 @@ function getshop_setBookingTranslation() {
                 var text = getshop_translationMatrixLoaded['ischildtext'];
                 text = text.replace("{age}", config.childAge);
                 $("[gstranslationfield='ischildtext']").html(text);
+                if(config.childAge !== 0){
+                    $('.pfbox').css('width','33.33%').css('padding','0 5%');
+                    $('.excludeChildSelection').css('display','block');
+                }
             }
         });    
         getshop_confirmGuestInfoBox(); 

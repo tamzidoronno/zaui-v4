@@ -13,7 +13,7 @@ app.PmsAvailabilityDateSelector = {
         };
         
         if (data.from && data.to) {
-            thundashop.Ajax.simplePost(this, "update", data);
+            thundashop.Ajax.simplePost($('.PmsAvailabilityDateSelector'), "update", data);
         }
     },
     

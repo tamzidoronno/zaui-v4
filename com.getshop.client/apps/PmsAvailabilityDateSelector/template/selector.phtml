@@ -50,6 +50,7 @@
                 date.add(7, 'days');
                 $('#enddate').val(date.format('DD.MM.YYYY')); 
             }
+            app.PmsAvailabilityDateSelector.changed();
         }
     });
     $('#enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
@@ -62,6 +63,7 @@
                 date.add(-7, 'days');
                 $('#startdate').val(date.format('DD.MM.YYYY')); 
             }
+            app.PmsAvailabilityDateSelector.changed();
         }
     });
 </script>

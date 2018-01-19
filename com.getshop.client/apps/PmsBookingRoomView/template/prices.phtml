@@ -1,8 +1,8 @@
 <?
-/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
-$currentBooking = $this->getCurrentBookingFromBookingEngine();
-$pmsBooking = $this->getCurrentBooking();
-$room = $this->getCurrentRoom();
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$currentBooking = $this->getBookingEngineBooking();
+$pmsBooking = $this->getPmsBooking();
+$room = $this->getSelectedRoom();
 $types = $this->getTypes();
 $items = $this->getItems();
 

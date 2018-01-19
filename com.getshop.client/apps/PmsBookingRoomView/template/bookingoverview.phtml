@@ -1,8 +1,7 @@
 <?
-/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $this->setData();
 
-/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
 $pmsBooking = $this->getPmsBooking();
 $bookingEngineBooking = $this->getBookingEngineBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
@@ -10,7 +9,6 @@ $pmsSelectedRoom = $this->getSelectedRoom();
 ?>
 
 <div gstype='form' method="updateBooking" class="bookingoverview_content_row">
-    <input type='hidden' gsname='id' value='<? echo $_POST['data']['id']; ?>'/>
     <input type='hidden' gsname='roomId' value='<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>'/>
    
      
@@ -67,8 +65,7 @@ $pmsSelectedRoom = $this->getSelectedRoom();
         
         <div class="stayinformation PmsAvailability <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'>
             <?
-            $availability = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
-            $availability->showBookingInformationExternal($this->bookingEngineBooking, $this->pmsBooking, $pmsSelectedRoom);
+            $this->includefile("movebooking");
             ?>
         </div>
         
@@ -76,7 +73,7 @@ $pmsSelectedRoom = $this->getSelectedRoom();
             <a href="/?page=groupbooking&bookingEngineId=<? echo $this->bookingEngineBooking->id; ?>">
                 <div gstype="submit" class="shop_button" gs_local_update_only="true"><i class="fa fa-chain"></i> <? echo $this->__f("Open group"); ?></div>
             </a>
-            <div gstype="submit" class="shop_button disabled" gs_callback="app.PmsSearchBooking.contentSaved" synchron="true"><i class="fa fa-save"></i> <? echo $this->__f("Save"); ?></div>
+            <div gstype="submit" class="shop_button" gs_callback="app.PmsBookingRoomView.contentSaved" synchron="true"><i class="fa fa-save"></i> <? echo $this->__f("Save"); ?></div>
         </div>
     </div>
 </div>

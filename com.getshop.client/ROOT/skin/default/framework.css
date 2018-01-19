@@ -2660,16 +2660,16 @@ select.gsniceselect1:active {
 }
 
 .gs_modalouter {
-    position:absolute;
+    position:fixed;
     width: 100%;
     border: solid 1px;
-    left: 0px;
-    top: 0px;
-    min-height: 100%;
     background: rgba(0,0,0,0.7);   
     padding-top: 30px;
     z-index: 2;
-    box-sizing: border-box;
+    
+    position: fixed; 
+    overflow-y: scroll;
+    top: 0; left: 0; top: 0; bottom: 0;
 }
 
 .gs_modalouter .gs_modalinner .gs_close_modal {
@@ -2721,10 +2721,7 @@ select.gsniceselect1:active {
 }
 
 .gs_modalIsOpen {
-   height: 100vh;
-   overflow-y: hidden;
-   position: fixed;
-   width: 100%;
+   overflow: hidden;
 }
 
 .company_header_selector {

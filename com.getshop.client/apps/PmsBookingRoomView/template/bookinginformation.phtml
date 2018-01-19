@@ -1,5 +1,5 @@
 <?
-/* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $bookingEngineBooking = $this->getBookingEngineBooking();
@@ -22,7 +22,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 
         <div class="row">
             <div class="col col1"><? echo $this->__f("Date created"); ?></div>
-            <div class="col col2"><? echo $pmsBooking->rowCreatedDate; ?></div>    
+            <div class="col col2"><? echo GetShopModuleTable::formatDate($pmsBooking->rowCreatedDate); ?></div>    
         </div>
 
         <div class="row odd">

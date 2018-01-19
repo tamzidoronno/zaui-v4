@@ -49,7 +49,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
             echo $this->__f("Number of rooms");
             ?>
         </div>
-        <input type='text' class='gsniceinput1' value='1' style='width: 70px;text-align: center;' gsname='numberOfRooms'>
+        <input type='text' class='gsniceinput1' value='0' style='width: 70px;text-align: center;' gsname='numberOfRooms' class='numberofrooms'>
     </div>
 
     <div class="gs_headerbox">
@@ -57,11 +57,46 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
         </div>
         <span class='shop_button' style='cursor:pointer;' gstype='submit'>Add room</span>
     </div>
+    <div class='moreThenAvailableWarning'>
+        * Warning: You don't have enough rooms for this selection. Are you sure you want to add this rooms?<br> The rooms not available will be put into a waiting state.
+    </div>
+    
 </div>
 
 
 
 <script>
-    $('#startdate').datepicker();
-    $('#enddate').datepicker();
+    $('#startdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
+            var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = curEnd.valueOf() - date.valueOf();
+            if(diff <= 0) {
+                date.add(1, 'days');
+                $('#enddate').val(date.format('DD.MM.YYYY')); 
+                app.PmsNewBooking.reloadAvailability();
+            }
+        }
+    });
+    
+    $('#enddate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
+            var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = date.valueOf() - curStart.valueOf();
+            if(diff <= 0) {
+                date.add(-1, 'days');
+                $('#startdate').val(date.format('DD.MM.YYYY')); 
+                app.PmsNewBooking.reloadAvailability();
+            }
+            app.PmsNewBooking.reloadAvailability();
+        }
+    });
+    $(document).on('click', '.PmsNewBooking .icon-calendar-text', function() {
+        $(this).closest('div').find('input').focus();
+    });
 </script>

@@ -1,1 +1,24 @@
-Add an availablility view her for the selected date range per type.
+<?php
+/* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+echo "<div class='availableroomsheading'><h3>Availability for " . $start . " - " . $end . "</h3></div>";
+
+$start = $this->convertToJavaDate(strtotime($start));
+$end = $this->convertToJavaDate(strtotime($end));
+
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+echo "<table width='100%'>";
+foreach($types as $type) {
+    $rooms = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedMultilevelDomainName(), $type->id, $start, $end);
+    $size = sizeof($rooms);
+    $disabled = "";
+    if($size == 0) {
+        $disabled = "disabled";
+    }
+    echo "<tr class='$disabled'>";
+    echo "<td>" . $type->name . "</td><td class='availableroomscounter' roomtype='".$type->id."'>$size</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

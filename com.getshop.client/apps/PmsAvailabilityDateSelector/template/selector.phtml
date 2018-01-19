@@ -40,6 +40,28 @@
 </div>
 
 <script>
-    $('#startdate').datepicker();
-    $('#enddate').datepicker();
+    $('#startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = curEnd.valueOf() - date.valueOf();
+            if(diff <= 0) {
+                date.add(7, 'days');
+                $('#enddate').val(date.format('DD.MM.YYYY')); 
+            }
+        }
+    });
+    $('#enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = date.valueOf() - curStart.valueOf();
+            if(diff <= 0) {
+                date.add(-7, 'days');
+                $('#startdate').val(date.format('DD.MM.YYYY')); 
+            }
+        }
+    });
 </script>

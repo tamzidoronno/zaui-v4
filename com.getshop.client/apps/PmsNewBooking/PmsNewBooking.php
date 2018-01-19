@@ -30,6 +30,13 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $this->includefile("availablerooms");
     }
     
+    public function reloadAvailability() {
+        $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
+        $app->setStartDate($_POST['data']['start']);
+        $app->setEndDate($_POST['data']['end']);
+        $this->includefile("availablerooms");
+    }
+    
     
     public function completequickreservation() {
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
@@ -74,7 +81,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     
     public function getStartDate() {
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
-        return date('m/d/y', $app->getStartDate());
+        return date('d.m.Y', $app->getStartDate());
     }
     
     public function loadResult() {
@@ -83,7 +90,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     
     public function getEndDate() {
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
-        return date('m/d/y', $app->getEndDate());
+        return date('d.m.Y', $app->getEndDate());
     }
     
     public function addRoom() {

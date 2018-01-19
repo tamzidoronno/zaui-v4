@@ -13,7 +13,7 @@ $rows = array();
 $canBeAdded = true;
 foreach($booking->rooms as $room) {
     $row = new stdClass();
-    $row->type = "<i class='fa fa-trash-o' gstype='clicksubmit' gsname='id' gsvalue='".$room->pmsBookingRoomId."' method='removeRoom'></i> " . $types[$room->bookingItemTypeId]->name;
+    $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$room->pmsBookingRoomId."' method='removeRoom'></i> " . $types[$room->bookingItemTypeId]->name;
     $row->start = date("d.m.Y H:i", strtotime($room->date->start));
     $row->end = date("d.m.Y H:i", strtotime($room->date->end));
     if($room->canBeAdded) {

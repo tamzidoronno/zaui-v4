@@ -1,11 +1,14 @@
 app.PmsNewBooking = {
     init : function() {
+        $(document).on('change', '.PmsNewBooking select[gsname="type"]', function() {
+            $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
+        });
+        
         $(document).on('keyup', '.PmsNewBooking [gsname="numberOfRooms"]', function() {
             $('.moreThenAvailableWarning').hide();
            var number = $(this).val();
            var type = $('select[gsname="type"]').val();
            var available = parseInt($('.availableroomscounter[roomtype="'+type+'"]').text());
-           console.log(type + " : " + number + " : " + available);
            if(number > available) {
                $(this).addClass('moreThenAvailable');
             $('.moreThenAvailableWarning').slideDown();

@@ -28,6 +28,7 @@ public class WubookBooking implements Serializable {
     public boolean isExpediaCollect = false;
     boolean isNonRefundable = false;
     boolean isBookingComVirtual = false;
+    boolean isPrePaid = false;
     
     boolean isAddedToPms = false;
 }

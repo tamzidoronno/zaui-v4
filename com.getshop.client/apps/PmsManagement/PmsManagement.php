@@ -1499,6 +1499,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
         $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
         $discount->discountType = 0;
+        $discount->pricePlan = $_POST['data']['pricePlan'];
+        $discount->attachedDiscountCode = $_POST['data']['attachedDiscountCode'];
+        
         if($_POST['data']['discounttype'] == "fixedprice") {
             $discount->discountType = 1;
         }
@@ -2095,7 +2098,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime($filter->endDate))));
                     $filter->timeInterval = "monthly";
                 }
-                if($stattype == "prevyear") {
+                if($stattype == "pastyear") {
                     $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1year"))));
                     $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1year"))));
                     $filter->timeInterval = "monthly";

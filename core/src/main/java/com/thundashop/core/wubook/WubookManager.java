@@ -234,6 +234,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         booking.status = new Integer(table.get("status") + "");
         booking.isExpediaCollect = checkExpediaCollect(table);
         booking.isBookingComVirtual = checkBcomVirtualCard(table);
+        booking.isPrePaid = checkIfPrepaid(table);
         booking.isNonRefundable = checkNonRefundable(table);
         Vector modifications = (Vector) table.get("modified_reservations");
         if(modifications != null) {
@@ -749,6 +750,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         customerNotes = customerNotes.replace("You have a booker that would prefer a quiet room.", "");
         customerNotes = customerNotes.replace("Non-Smoking, 1 double bed", "");
         customerNotes = customerNotes.replace("Non-Smoking, 2 double beds", "");
+        customerNotes = customerNotes.replace("Non-Smoking, 2 double beds", "");
         customerNotes = customerNotes.replace("*** Genius booker ***", "");
         customerNotes = customerNotes.replace("Multi-room booking. Primary traveler", "");
         customerNotes = customerNotes.replace("1 double bed, Non-Smoking", "");
@@ -945,6 +947,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     String content = "Possible overbooking happened:<br>" + text;
                     messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
 
+                }
+            }
+            
+            if(booking.isPrePaid) {
+                for(String orderId : newbooking.orderIds) {
+                    Order order = orderManager.getOrder(orderId);
+                    if(order.isExpedia() || order.isBookingCom() && order.status != Order.Status.PAYMENT_COMPLETED) {
+                        order.status = Order.Status.PAYMENT_COMPLETED;
+                        orderManager.saveOrder(order);
+                    }
                 }
             }
 
@@ -1801,6 +1813,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(toCheck.toLowerCase().contains("virtuelt kredittkort")) {
                 return true;
             }
+            if(toCheck.toLowerCase().contains("** this reservation has been pre-paid")) {
+                return true;
+            }
         }catch(Exception e) {
             logPrintException(e);
         }
@@ -1845,5 +1860,23 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         return minstay;
     }
+
+    private boolean checkIfPrepaid(Hashtable table) {
+        try {
+            if(!table.get("id_channel").equals(2)) {
+                return false;
+            }
+            Gson test = new Gson();
+            String toCheck = test.toJson(table);
+            if(toCheck.toLowerCase().contains("** this reservation has been pre-paid")) {
+                return true;
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return false;
+    }
+
 
 }

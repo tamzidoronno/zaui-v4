@@ -35,6 +35,10 @@ function getshop_setBookingTranslation() {
                 var text = getshop_translationMatrixLoaded['ischildtext'];
                 text = text.replace("{age}", config.childAge);
                 $("[gstranslationfield='ischildtext']").html(text);
+                if(config.childAge !== 0){
+                    $('.pfbox').css('width','33.33%').css('padding','0 5%');
+                    $('.excludeChildSelection').css('display','block');
+                }
             }
         });    
         getshop_confirmGuestInfoBox(); 
@@ -427,13 +431,24 @@ function getshop_createSticky(sticky) {
                 $('.productoverview').css('padding-top', '0px');
             }
         });
+        $(function() {
+            win.scroll();
+            $('.GslBooking .ordersummary .continue').show();
+        });
     }
 }
 function getshop_addRemoveAddons(btn) {
     var saving = getshop_saveGuestInformation();
+    
+    var text = btn.html();
+
+    if(btn.hasClass('fa')) {
+        btn.addClass('fa-spin');
+    } else {
+        btn.html('<i class="fa fa-spin fa-spinner"></i>');
+    }
     saving.done(function() {
         var body = {};
-        
         if(btn.hasClass('guestaddonicon')) {
             if(btn.find('.countselections').length > 0) {
                btn.find('.countselections').toggle();
@@ -595,12 +610,18 @@ function getshop_completeBooking() {
     return def;
 }
 
-function getshop_changeGuestSelection() {
+function getshop_changeGuestSelection(e) {
+    e.preventDefault();
     var btn = $(this);
     var minusButton = btn.closest('.count_line').find('.fa-minus'); //Closest minusbutton
     var plusButton = btn.closest('.count_line').find('.fa-plus'); //Closest plusbutton
     var count = btn.closest('.count_line').find('.count').val(); //Closest numbercount for adding guests or room
     count = parseInt(count);
+    
+    if(btn.hasClass('disabled')) {
+        return;
+    }
+    
     if (btn.is('.fa-plus')) {
         count++;
         if ($(this).is('#add_child') && count >= 1) {
@@ -767,7 +788,9 @@ function getshop_confirmGuestInfoBox() {
     var child = $('#count_child').val();
     var guest = +adult + +child;
     var translation = getshop_getBookingTranslations();
-    
+    if(typeof(translation['room']) === "undefined") {
+        return;
+    }
     var roomText = ' ' + translation['room'].toLowerCase();
     var guestText = ' ' + translation['guest'].toLowerCase() + ' ';
     if (room > 1) {
@@ -788,12 +811,14 @@ function getshop_updateOrderSummary(res, isSearch) {
     var header = "<tr style='font-weight:bold;'><td style='text-align:left;'>"+chosenRoomText['chosenRoom']+"</td><td>"+chosenRoomText['numberofguests']+"</td><td>"+chosenRoomText['price']+"</td></tr>";
     var row = "";
     var translationMatrix = getshop_getBookingTranslations();
+    var roomsSelected = 0;
     for(var k in res.rooms) {
         var room = res.rooms[k];
         for(var guest in room.roomsSelectedByGuests) {
             var count = room.roomsSelectedByGuests[guest];
             if(count > 0) {
-                row += "<tr roomid='"+room.id+"' guests='"+guest+"' index='"+k+"'><td style='text-align:left;'><i class='fa fa-trash-o removeselectedroom' style='cursor:pointer;'></i> "+ room.name +"</td>";
+                var price = room.pricesByGuests[guest] * res.numberOfDays;
+                row += "<tr roomid='"+room.id+"' guests='"+guest+"' index='"+k+"' class='priceofferrow'><td style='text-align:left;'><i class='fa fa-trash-o removeselectedroom' style='cursor:pointer;'></i> "+ room.name +"</td>";
                 row += "<td>" + (guest*count);
                 row += " (" + count + " ";
                 if(count > 1) {
@@ -802,28 +827,41 @@ function getshop_updateOrderSummary(res, isSearch) {
                     row += translationMatrix['room'].toLowerCase();
                 }
                 row += ")</td>";
-                row += "<td>" + room.totalPriceForRoom + ",-</td>";
+                
+                row += "<td>" + price + ",-</td>";
                 row += "</tr>";
-                total += room.totalPriceForRoom;
+                total += price;
                 totalRooms += parseInt(count);
                 totalGuests += (guest*count);
+                roomsSelected++;
             }
         }
     }
 //    var totalAmount = "<tr class='totalAmountline'><td>"+chosenRoomText['total']+"</td><td>"+totalGuests+" ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ") </td><td>"+total+"</td></tr>";
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + "</table>");
-    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong> "+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ")");
+    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong><span class='mobilesplitter'></span>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ")");
     $('.GslBooking .ordersummary .continue').hide();
-    if(total > 0) {
-        $('.GslBooking .ordersummary .continue').show();
-    }
     if(isSearch) {
         if(!$('.GslBooking .ordersummary').is(":visible")) {
             $('.GslBooking .ordersummary').slideDown('slow', function() {
                 $(function(){getshop_createSticky($("#order-sticky"));});
             });
         }
+    } else if(total > 0) {
+        $('.GslBooking .ordersummary .continue').show();
     }
+    
+    if(roomsSelected === 0) {
+        $('.roomSelected').hide();
+        $('.noRoomSelected').show();
+    } else {
+        $('.roomSelected').show();
+        $('.noRoomSelected').hide();
+        if(!isSearch) {
+            $('.gsl_button.continue.active').effect( "shake" );
+        }
+    }
+
     
 }
 
@@ -881,7 +919,6 @@ function getshop_setDatePicker() {
     if(result.start) {
         var tmpDate = new Date(result.start);
         currentDate.setTime(tmpDate.getTime());
-        console.log('change start date: ' + result.start);
     }
     if(result.end) {
         var tmpDate = new Date(result.end);
@@ -967,6 +1004,10 @@ function getshop_changeNumberOfRooms() {
             }
         },
         success: function (res) {
+            console.log('------------');
+            console.log(res);
+            console.log(gslbookingcurresult);
+            console.log('------------');
             gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = count;            
             var target = $(this);
             var totalCost = 0;
@@ -1129,7 +1170,7 @@ function getshop_searchRooms() {
                     roomBox.find('.guestselection').show();
                     if(numberofrooms) {
                         numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
-                        productentry = $('<tr class="productentry_itemlist"><td><i class="fa fa-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td> NOK ' + room.pricesByGuests[guest] + ',-</td><td style="text-align:right;padding-right:25px;"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></td></tr>');
+                        productentry = $('<tr class="productentry_itemlist"><td><i class="fa fa-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td> NOK ' + room.pricesByGuests[guest] + ',-</td><td style="text-align:right;padding-right:10px;"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></td></tr>');
                         productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
                     } else {
                         roomBox.find('.guestselection').hide();
@@ -1200,8 +1241,13 @@ function getshop_removeGroupedRooms() {
             }
         },
         success : function(res) {
+            console.log('---------------');
+            console.log("index:" + index);
+            console.log("guest:" + guest);
+            console.log(gslbookingcurresult.rooms[index]);
+            console.log('---------------');
             gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = 0;    
-            getshop_updateOrderSummary(res, false);
+            getshop_updateOrderSummary(gslbookingcurresult, false);
             $('.productentrybox[index="'+index+'"]').find('.numberof_rooms[guests="'+guest+'"]').val(0);
         }
     });
@@ -1280,45 +1326,34 @@ function getshop_tryChangingDate() {
     });
 }
     
-$(document).on('click touchstart', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
-$(document).on('mousedown touchstart', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
-$(document).on('mousedown touchstart','.GslBooking .gssigninbutton', getshop_logon);
-$(document).on('mousedown touchstart','.GslBooking .gssignoutbutton', getshop_logout);
-$(document).on('mousedown touchstart','.GslBooking .selectedusertype', getshop_changeBookingType);
-$(document).on('mousedown touchstart','.GslBooking .removeroom', getshop_removeRoom);
-$(document).on('mousedown touchstart', '.GslBooking .destination_line', getshop_changedestination);
-$(document).on('mousedown touchstart', '.GslBooking #guests', getshop_showGuestBox);
-$(document).on('mousedown touchstart', '.GslBooking #destination', getshop_showDesitinationBox);
-$(document).on('mousedown touchstart', '.GslBooking .go_to_payment_button', getshop_gotopayment);
-$(document).on('mousedown touchstart', '.GslBooking #search_rooms', getshop_searchRooms);
-$(document).on('mousedown touchstart', '.GslBooking .addguest', getshop_addGuest);
-$(document).on('mousedown touchstart', '.GslBooking .addroom', getshop_addRoom);
-$(document).on('mousedown touchstart', '.GslBooking .guestentry .guestaddonicon', getshop_addRemoveAddon);
-$(document).on('mousedown touchstart', '.GslBooking .guestentry .removeguest', getshop_removeGuest);
+$(document).on('click touchend', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
+$(document).on('click', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
+$(document).on('mousedown touchend','.GslBooking .gssigninbutton', getshop_logon);
+$(document).on('mousedown touchend','.GslBooking .gssignoutbutton', getshop_logout);
+$(document).on('mousedown touchend','.GslBooking .selectedusertype', getshop_changeBookingType);
+$(document).on('mousedown touchend','.GslBooking .removeroom', getshop_removeRoom);
+$(document).on('mousedown touchend', '.GslBooking .destination_line', getshop_changedestination);
+$(document).on('mousedown touchend', '.GslBooking #guests', getshop_showGuestBox);
+$(document).on('mousedown touchend', '.GslBooking #destination', getshop_showDesitinationBox);
+$(document).on('mousedown touchend', '.GslBooking .go_to_payment_button', getshop_gotopayment);
+$(document).on('click', '.GslBooking #search_rooms', getshop_searchRooms);
+$(document).on('mousedown touchend', '.GslBooking .addguest', getshop_addGuest);
+$(document).on('mousedown touchend', '.GslBooking .addroom', getshop_addRoom);
+$(document).on('mousedown touchend', '.GslBooking .roomheading .guestaddonicon', getshop_addRemoveAddon);
+$(document).on('mousedown touchend', '.GslBooking .guestentry .removeguest', getshop_removeGuest);
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
-$(document).on('mousedown touchstart', '.GslBooking .ordersummary .continue', getshop_continueToSummary);
-$(document).on('mousedown touchstart', '.GslBooking .addButton', getshop_addRemoveAddon);
-$(document).on('mousedown touchstart', '.GslBooking .gslfront_1 .editroomoptionsrow.removeroom', getshop_removeGroupedRooms);
-$(document).on('mousedown touchstart', '.GslBooking .gslfront_1 .trychangingdate', getshop_tryChangingDate);
+$(document).on('click', '.GslBooking .ordersummary .continue', getshop_continueToSummary);
+$(document).on('mousedown touchend', '.GslBooking .addButton', getshop_addRemoveAddon);
+$(document).on('mousedown touchend', '.GslBooking .removeselectedroom', getshop_removeGroupedRooms);
+$(document).on('mousedown touchend', '.GslBooking .gslfront_1 .trychangingdate', getshop_tryChangingDate);
 $(document).on('click', '.GslBooking [gsname="ischild"]', getshop_changeChildSettings);
-$(document).on('mousedown touchstart', getshop_hideGuestSelectionBox);
+$(document).on('mousedown touchend', getshop_hideGuestSelectionBox);
 $(document).on('click', '.GslBooking .displayeditroom', getshop_showEditRoomOptions);
 
-var lastSelectedPage = localStorage.getItem('gslcurrentpage');
-if(lastSelectedPage === "summary") {
-    $(function() {
-        getshop_goToAddonsPage();
-    });
-}
-if(lastSelectedPage === "overview") {
-    $(function() {
-        getshop_goToOverviewPage();
-    });
-}
 
 (function ($) {
 $.fn.tclick = function (onclick) {
-    this.bind("touchstart", function (e) { onclick.call(this, e); e.stopPropagation(); e.preventDefault(); });
+    this.bind("touchend", function (e) { onclick.call(this, e); e.stopPropagation(); e.preventDefault(); });
     this.bind("click", function (e) { onclick.call(this, e); });   //substitute mousedown event for exact same result as touchstart         
     return this;
   };

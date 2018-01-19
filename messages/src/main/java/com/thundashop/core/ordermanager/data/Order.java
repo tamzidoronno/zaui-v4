@@ -696,6 +696,13 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
     }
 
+    public boolean isBookingCom() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("bookingcomcollectpayments")) {
+            return true;
+        }
+        return false;
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

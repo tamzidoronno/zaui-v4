@@ -650,6 +650,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order getOrder(String orderId) throws ErrorException {
+        correctOrderForRenaTrening();
         if(getSession() == null) {
             logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
             return null;
@@ -2161,6 +2162,40 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return count;
+    }
+
+    private void correctOrderForRenaTrening() {
+        if(!storeId.equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b")) {
+            //Only temporary for renatrening, can be removed whenever you want.
+            return;
+        }
+        Calendar cal = Calendar.getInstance();
+        
+        for(Order ord : orders.values()) {
+            boolean save = false;
+            cal.setTime(ord.rowCreatedDate);
+            int year = cal.get(Calendar.YEAR);
+            int day = cal.get(Calendar.DAY_OF_YEAR);
+            if(year == 2018 && day == 2 && ord.getEndDateByItems() != null) {
+                System.out.println(ord.incrementOrderId);
+                System.out.println(ord.getEndDateByItems());
+                cal.setTime(ord.getEndDateByItems());
+                year = cal.get(Calendar.YEAR);
+                day = cal.get(Calendar.DAY_OF_YEAR);
+                if(year == 2018 && day == 2) {
+                    cal.set(Calendar.MONTH, 1);
+                    cal.set(Calendar.DAY_OF_MONTH,1);
+                    System.out.println("- " + cal.getTime());
+                    for(CartItem item : ord.cart.getItems()) {
+                        item.endDate = cal.getTime();
+                        save = true;
+                    }
+                }
+            }
+            if(save) {
+                saveOrder(ord);
+            }
+        }
     }
 
 

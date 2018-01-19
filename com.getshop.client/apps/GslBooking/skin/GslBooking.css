@@ -21,10 +21,11 @@ Error      : #de5353; red
 .GslBooking .guestentry { position:relative; }
 .GslBooking .gslfront_1{background-color: #f9f9f9;padding: 0px;font-size: 16px;position: relative;cursor:default;color:#222;font-family: sans-serif;}
 .GslBooking .gslfront_1 *,.GslBooking .gslfront_1 *::before,.GslBooking .gslfront_1 *::after{box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
-.GslBooking .gslfront_1 .guestaddonicon { position: relative; }
+.GslBooking .gslfront_1 .guestaddonicon { position: relative; cursor:pointer; }
 .GslBooking .gslfront_1 .countselections { position:absolute; border: solid 1px #bbb; background-color:#fff; display: none; top: 20px; left:0px;z-index: 99999999; }
 .GslBooking .gslfront_1 .countselections .countselection { font-size: 28px; border-right: solid 1px #bbb; text-align: center; width: 28px; display:inline-block; } 
 .GslBooking .gslfront_1 .countselections .countselection:hover { color:#000; }
+.GslBooking .gslfront_1 .noRoomSelected { display:none; padding: 10px; font-size: 20px; text-align: center; font-weight: bold; }
 .GslBooking .gslfront_1 h3{
     font-size: 20px;
     text-transform: none;
@@ -35,6 +36,7 @@ Error      : #de5353; red
 }
 .GslBooking .gslfront_1 h4{font-size: 18px;margin: 12px 0;font-family: inherit;font-weight: 500;line-height: 1.1;color: inherit;}
 .GslBooking .errormessage, .GslBooking .agreetotermserrormessage { color: red; font-weight: bold; display:none; }
+.GslBooking .excludeChildSelection{display:none;}
 .GslBooking .gssigninbutton { padding-left: 20px; padding-right:20px; float:right; margin-top:10px; border: 0;}
 .GslBooking .overview_loggedon { min-height: 200px; }
 
@@ -101,7 +103,12 @@ Error      : #de5353; red
     border-radius:20px;
     display: inline-block;}
 .GslBooking .gslfront_1 .gsl_button.return:hover{background-color:#91bfec;}
-.GslBooking .gslfront_1 .gsl_button.continue{padding:8px 0;width: 68%;}
+.GslBooking .gslfront_1 .gsl_button.continue{width: 68%;     position: absolute;
+    right: 10px;
+    height: 33px;
+    bottom: 10px;
+    line-height:33px;
+}
 .GslBooking .gslfront_1 .gsl_button.return{
     width:26%;
     margin:0 2%;
@@ -182,9 +189,6 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .guestInfoBox_left{float:left;width:40%;padding-bottom:0;}
 .GslBooking .gslfront_1 .guestInfoBox_left div{padding:14px 0;}
 .GslBooking .gslfront_1 .guestInfoBox_right{float:right;width:60%;text-align: right;padding-bottom:0;text-align: center;}
-.GslBooking .gslfront_1 .guestInfoBox_footer{clear:both;font-size:14px;padding:20px 0 0;}
-.GslBooking .gslfront_1 .guestInfoBox_footer div{float:right;text-align: center;cursor:pointer;}
-.GslBooking .gslfront_1 .guestInfoBox_footer div:hover{color:#329ad6;}
 
 .GslBooking .gslfront_1 .destinationInfoBox{
     position: absolute;
@@ -216,14 +220,22 @@ Error      : #de5353; red
 
 /*Gallery*/
 .GslBooking .gslfront_1 .productentry_gallery{width: 35%;display: inline-block;overflow: hidden;}
-.GslBooking .gslfront_1 .roomheading { border-left: solid 1px #ddd; border-top: solid 1px #ddd; height:32px; font-size: 20px; background-color:#514792; color:#fff; }
+.GslBooking .gslfront_1 .roomheading { border-left: solid 1px #ddd; border-top: solid 1px #ddd; height:32px; font-size: 20px; background-color:#514792; color:#fff; position:relative; }
 .GslBooking .gslfront_1 .innertext { padding: 4px; display:inline-block; padding-left: 10px; }
 .GslBooking .gslfront_1 .displayeditroom { float: right;background-color:#281c5a; color:#fff; padding: 5px; height:31px; padding-left: 8px; cursor:pointer;}
 .GslBooking .gslfront_1 .guestbox { padding: 10px; border: solid 1px #ddd; background-color:#eee; }
 .GslBooking .gslfront_1 .editroomoptions { position:absolute; right: 0px; top: 51px; background-color:#281c5a; color:#fff;  z-index: 1; display:none;}
 .GslBooking .gslfront_1 .editroomoptionsrow { border-bottom: solid 1px #FFF; padding: 10px; }
 .GslBooking .gslfront_1 .editroomoptionsrow.removeroom { cursor:pointer; }
-.GslBooking .gslfront_1 .totalroomprice { position:absolute; right: 45px; top: 25px; }
+.GslBooking .gslfront_1 .roomfooter { border-left: solid 1px #ddd;
+    border: solid 1px #ddd;
+    height: 32px;
+    font-size: 20px;
+    background-color: #eee;
+    color: #0a0a0a;
+    position: relative;
+}
+.GslBooking .gslfront_1 .totalroomprice { position:absolute; right: 5px; }
 .GslBooking .gslfront_1 .productentry_gallery .image-holder{
     background-size: cover;
     background-position: center center;
@@ -290,7 +302,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .productentry_footer{position:absolute;width:68%;bottom:0;padding:6px 0;text-align: right;}
 .GslBooking .gslfront_1 .productentry_footer i{padding: 0 10px;}
 .GslBooking .gslfront_1 .productoverview .gsl_button.continue.active:hover{background-color:#4391dc;}
-.GslBooking .gslfront_1 .productoverview .gsl_button.continue.active{cursor: pointer;background-color:#329ad6;}
+.GslBooking .gslfront_1 .productoverview .gsl_button.continue.active{cursor: pointer;background-color:#329ad6; display:none;}
 .GslBooking .gslfront_1 .productoverview .gsl_button.continue{
     background-color: #ddd;
     width: 20%;
@@ -306,10 +318,11 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .ordersummary .gsl_button { background-color:#9abe2a;margin-top: 6px;}/*#69a70e*/
 .GslBooking .gslfront_1 .ordersummary #order-sticky{
     background-color:#f9f9f9;
-    height: 50px !important;
+    min-height: 50px !important;
     background: #f9f9f9;
     padding: 0 4px;
     box-shadow: 0px 1px 0px 0px #ddd;}
+.GslBooking .gslfront_1 .fa { padding-right: 12px; }
 .GslBooking .gslfront_1 .ordersummary .selectedguests { padding: 10px; }
 .GslBooking .gslfront_1 .ordersummary td{padding:2px;}
 .GslBooking .gslfront_1 .ordersummary .bottomspacer { clear:both;height: 10px; }
@@ -341,6 +354,9 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .overview_addons .addButton:hover{background-color:#91bfec;}
 .GslBooking .secondary_text { text-align: right; color:#bbb; font-size:14px; }
 
+.GslBooking .gslfront_1 .mobilecheckinheading, .GslBooking .gslfront_1 .mobilecheckoutheading { color:#bbb; width: 50%; float: left; border-bottom:1px solid #ddd;padding:0 4px;}
+.gslfront_1 .mobilecheckinheading span, .GslBooking .gslfront_1 .mobilecheckoutheading span{position:absolute;}
+.GslBooking .gslfront_1 .mobilecheckinheading{box-shadow: 1px 0px 0px 0px #ddd;}
 .GslBooking .gslfront_1 .overview_addons .addon{
     padding: 12px 0;
     box-shadow: inset 0px 1px 0px 0px #ededed;}
@@ -357,18 +373,14 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .roomentry .addroombox input{border: 1px solid #ddd;}
 .GslBooking .gslfront_1 .roomentry .addroombox select{height: 30px;}
 .GslBooking .gslfront_1 .roomentry .addroombox #addroom{float: right;background-color:#329ad6;color:#fff;}
-.GslBooking .gslfront_1 .guestentry .entryfield {display:inline-block;width: 24%;float:left;}
+.GslBooking .gslfront_1 .guestentry .entryfield {display:inline-block;width: 33%;float:left;}
 .GslBooking .gslfront_1 .guestentry div span{white-space: nowrap;text-overflow:ellipsis;overflow: hidden;}
 .GslBooking .gslfront_1 .guestentry i{padding:0 2px;cursor:pointer;color:#aaa;}
 .GslBooking .gslfront_1 .guestentry input{padding:8px;width:100%;border:0;box-shadow: 0px 0px 0px 1px #ddd;}
 .GslBooking .gslfront_1 .guestentry input.ischild {box-shadow: none; float:left; width: 14px; padding: 0px; margin: 0px; margin-top:2px; }
 .GslBooking .gslfront_1 .guestentry .ischildrow { padding-top: 4px; padding-bottom: 7px; color:#563333;font-size: 12px; display:inline-block; }
-.GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#fff;}
-.GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#fff !important;}
-.GslBooking .gslfront_1 .guestentry input:-moz-placeholder{color:#fff;}
-.GslBooking .gslfront_1 .guestentry input:-ms-input-placeholder{color:#fff;}
 .GslBooking .gslfront_1 .guest_phone{width:25% !important;background-color:#f9f9f9;color: #329ad6;text-align: center;padding: 8px 0 !important;}
-.GslBooking .gslfront_1 .guest_addon{box-shadow: 0px 0px 0px 1px #ddd;padding: 4px 4px 5px 4px;width:100% !important;position: relative;left:1px;background-color:#f9f9f9; height: 31px;}
+.GslBooking .gslfront_1 .guest_addon{position: absolute;right:40px; top:0px; height: 31px; display:inline-block; color:rgba(255,255,255,0.3); }
 .GslBooking .gslfront_1 .agreetotermsbox{padding:10px 0;}
 .GslBooking .gslfront_1 .agreetotermsbox a{color:#329ad6;}
 .GslBooking .gslfront_1 .addroom {position: absolute;right: 0;bottom: 0;}
@@ -383,33 +395,50 @@ Error      : #de5353; red
     border-top: solid 1px #bbb;
     border-bottom: solid 1px #bbb;
     color: #f9f9f9 !important;}
-.GslBooking .gslfront_1 .active_addon{color:#329ad6 !important;}
+.GslBooking .gslfront_1 .active_addon{color:#fff !important;}
 .GslBooking .gslfront_1 .gsl_button.goToPayment{width:68%;padding:8px 0;}
 
 .GslBooking .gslfront_1 .datepickermobile { display:none; }
 
-@media only all and (max-width:1100px){
+@media only all and (min-width:800px){
     .GslBooking .gslfront_1 .gsl_button.return{font-size:0;}
     .GslBooking .gslfront_1 .gsl_button.return i{font-size:18px;}
+    .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#efefef;}
+    .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#efefef !important;}
+    .GslBooking .gslfront_1 .guestentry input:-moz-placeholder{color:#efefef;}
+    .GslBooking .gslfront_1 .guestentry input:-ms-input-placeholder{color:#efefef;}
 }
 @media only all and (max-width:800px){
+    .GslBooking .gslfront_1 .mobilesplitter { width: 100%; display:block; }
+    .GslBooking .gslfront_1 .agreetotermserrormessage,
+    .GslBooking .gslfront_1 .errormessage { padding-bottom: 10px; }
+    .GslBooking .gslfront_1 .gsl_button.continue { top: 0px; }
+    .GslBooking .gslfront_1 .agreetotermcheckboxline { padding-top: 10px; padding-bottom: 10px; font-size: 17px; }
+    .GslBooking .gslfront_1 .guestentry input.ischild { width: 17px; height: 17px; }
+    .GslBooking .ischildrow span { font-size: 14px !important; }
+    .GslBooking .addonprinted { min-height: 60px; }
+    .GslBooking .secondary_text { display:none; }
     .GslBooking .gslfront_1 .productentry_gallery .gallery { display:none; }
     .GslBooking .bestValue{width: 50%;padding: 0;}
     .GslBooking .bestValue span[gstranslationfield="bestValue"]{display: none;}
     .GslBooking .totalprice{display: inline-block;width: 100%;}
     .GslBooking .totalprice:before{content: "Total: ";font-size:14px;}
     .GslBooking .failedlogon{font-size: 16px;}
-    .GslBooking .gslfront_1 {font-size: 14px;}
+    
+    /*Font mobile*/
+    .GslBooking .gslfront_1,
+    .GslBooking .gslfront_1 .productentry table td{font-size: 13px;}
+    /*end*/
+    
     .GslBooking .gslfront_1 h3{font-size: 16px;}
-    .GslBooking .gslfront_1 .productentry_header div{font-size:14px;}
+    .GslBooking .gslfront_1 .productentry_header div{font-size:14px; padding:4px;}
     .GslBooking .gslfront_1 .productentry_header .lowpricediv{float:none;}
     .GslBooking .pricebox { position:absolute; left: 24px; top: 30px; }
     .GslBooking .gslfront_1 .overview_addons .addaddonsonallroombutton {width: 80px !important; }
     .GslBooking .fa_box.date { display:none; }
+    
     /*Productentry*/
-    .GslBooking .gslfront_1 .productentry_main{width: 100%;top:-5px;position: relative;box-shadow: 0 0 0;}
-    .GslBooking .gslfront_1 .productentry_body{box-shadow: 0px 1px 4px 0px #454545;margin-bottom: 8px;}
-/*    .GslBooking .gslfront_1 .productentry_header{padding-left: 32%;height:100px;}*/
+    .GslBooking .gslfront_1 .productentry_main{width: 100%;top:-5px;position: relative;box-shadow: 0 0 0;min-height:auto !important;}
     .GslBooking .gslfront_1 .productentry_gallery{width:100%;position: relative;}
     .GslBooking .gslfront_1 .productentry_gallery .feature{max-height:150px;}
     .GslBooking .gslfront_1 .productentry_gallery .image-holder{padding-bottom:0;height:150px !important;}
@@ -446,13 +475,33 @@ Error      : #de5353; red
     /*Ordersum header*/
     .GslBooking .gslfront_1 #priceoffertable td{font-size: 12px;}
     .GslBooking .gslfront_1 .ordersummary .selectedguests{padding:10px 0;}
-    .GslBooking .gslfront_1 .ordersummary .gsl_button.continue{bottom:4px;width:50%;right:10px;padding: 4px;}
+    .GslBooking .gslfront_1 .ordersummary .gsl_button.continue{bottom:4px;width:50%;right:10px;}
     .GslBooking .gslfront_1 .ordersummary.sticky h3{display:none;}
     
-    .GslBooking .gslfront_1 .fa_box,
-    .GslBooking .gslfront_1 .guestInfoBox{width: 100% !important;}
-    .GslBooking .gslfront_1 .gslbookingHeader input{border:0 !important;box-shadow: inset 0px -1px 0px 0px #ddd;}
-    .GslBooking .gslfront_1 .gslbookingHeader .guestInfoBox input{box-shadow: 0 0 0;}
+    /*.GslBooking .gslfront_1 .fa_box{width: 100% !important;}*/
+    .GslBooking .gslfront_1 .fa_box.guests{width:100% !important;padding: 10px 0;}
+    .GslBooking .gslfront_1 .fa_box #guests{display:none;padding: 10px 20px; }
+    .GslBooking .gslfront_1 .fa_box #coupon_input {box-shadow: inset 0px 1px 0px 0px #ddd;}
+    .GslBooking .gslfront_1 .fa_box.coupon {width:65%;}
+    .GslBooking .gslfront_1 .fa_box.gsl_button{width:35%;height:60px;line-height:60px;}
+    .GslBooking .gslfront_1 .gslbookingHeader input{border:0 !important;font-size: 14px;padding:0 20px;height:60px;line-height:60px;}
+    .GslBooking .gslfront_1 .gslbookingHeader .guestInfoBox input{box-shadow: 0 0 0;height:50px;line-height:50px;}
+    .GslBooking .gslfront_1 .guestInfoBox i{padding:8px;}
+    
+    
+    .GslBooking { padding: 10px; box-sizing:border-box;}
+    .GslBooking .gslfront_1 #date_picker_start[type="date"] {padding:12px 0 0 20px;}
+    .GslBooking .gslfront_1 #date_picker_end[type="date"] {padding:12px 0 0 20px;}
+    .GslBooking .gslfront_1 .guestInfoBox {
+        position: initial !important;
+        display:block !important;
+        border-bottom: 2px solid #329ad6;
+        width:100% !important;
+        border:0;box-shadow:0 0 0;
+        padding:0 20px;
+    }
+    .GslBooking .gslfront_1 .fa_box::after { display:none !important; }
+    .GslBooking .gslfront_1 .productentry_itemlist select{margin:4px;}
     
 }
 

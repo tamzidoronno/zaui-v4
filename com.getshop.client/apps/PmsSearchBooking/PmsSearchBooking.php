@@ -190,6 +190,40 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
     }
 
+    public function showCheckins() {
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->filterType = "checkin";
+        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['day']." days", time()));
+        $filter->endDate = $this->convertToJavaDate(time());
+        $this->setCurrentFilter($filter);
+    }
+    
+    public function showCheckouts() {
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->filterType = "checkout";
+        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['day']." days", time()));
+        $filter->endDate = $this->convertToJavaDate(time());
+        $this->setCurrentFilter($filter);
+    }
+    
+    public function searchBooking() {
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->searchWord = $_POST['data']['searchtext'];
+        $this->setCurrentFilter($filter);
+    }
+
+    public function clearFilter() {
+        unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
+    }
+    
+     
+    public function setCurrentFilter($filter) {
+        $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()] = serialize($filter);
+    }
+    
     
 }
 ?>

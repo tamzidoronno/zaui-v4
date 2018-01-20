@@ -136,3 +136,27 @@ Settings configuration example:
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>
+
+
+KaiPal template:
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("I am ready to welcome the guest"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("I have found a clean room and confirmed that the guest has paid for the stay. As soon as the guest checkin-time has passed I will send him/her the code by SMS and email.");
+                ?>    
+
+
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Do you want me to do something else?"); ?></div>
+                    <div class="shop_button"><? echo $this->__f("Block access"); ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

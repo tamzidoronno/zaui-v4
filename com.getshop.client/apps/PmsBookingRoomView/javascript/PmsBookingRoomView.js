@@ -13,6 +13,10 @@ app.PmsBookingRoomView = {
         $(document).on('change', '.PmsBookingRoomView .unitprice_changed', this.unitPriceChanged);
     },
     
+    accessCodeTabUpdated: function(res) {
+        $('.PmsBookingRoomView .guestinformation[tab="accesscodes"]').html(res);
+    },
+    
     unitPriceChanged: function() {
         $(this).attr('manuallyset', 'true');
         app.PmsBookingRoomView.formChanged();

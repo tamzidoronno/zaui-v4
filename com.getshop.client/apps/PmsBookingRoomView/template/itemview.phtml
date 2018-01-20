@@ -13,7 +13,11 @@ if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
     $endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));  
 }
 
+$isSameDayStart = date('Y-m-d', strtotime($startDate)) == date('Y-m-d', time());
+
 $availableItems = $this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(), $startDate, $endDate, $currentBooking->id);
+
+$cleanIcon = "";
 
 function canUseItem($item, $availeableitems) {
     foreach ($availeableitems as $available) {
@@ -54,7 +58,6 @@ function canUseItem($item, $availeableitems) {
                 <div class="itemselector">
                     <?
                     
-
                     foreach ($items as $item) {
                         if ($item->bookingItemTypeId != $type->id) {
                             continue;
@@ -67,12 +70,18 @@ function canUseItem($item, $availeableitems) {
 
                     $currentlyUsing = !$currentBooking->bookingItemId  && $currentBooking->bookingItemTypeId == $type->id ? "gs_selected" : "";
                     foreach ($items as $item) {
+
                         if ($item->bookingItemTypeId != $type->id) {
                             continue;
                         }
+                        
+                        if ($isSameDayStart) {
+                            $cleanText = $this->__f("This room is clean");
+                            $cleanIcon = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $item->id) ? "<i title='$cleanText' class='icon-gs-cleaning'></i> " : "";
+                        }
                         $currentlyUsing = $item->id == $currentBooking->bookingItemId ? "gs_selected" : "";
                         $useClass = canUseItem($item, $availableItems) ? "canUse" : "canNotUse";
-                        echo "<div class='bookingitem $useClass $currentlyUsing' gs_value='".$type->id."_".$item->id."'>".$item->bookingItemName."</div>";
+                        echo "<div class='bookingitem $useClass $currentlyUsing' gs_value='".$type->id."_".$item->id."'>$cleanIcon".$item->bookingItemName."</div>";
                     }
                     ?>
                 </div>

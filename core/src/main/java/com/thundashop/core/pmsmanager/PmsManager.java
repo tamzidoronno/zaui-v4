@@ -2009,6 +2009,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 
                 if(!tmpres.bookingIds.isEmpty()) {
                     Booking bookingEngineBooking = bookingEngine.getBooking(tmpres.bookingIds.get(0));
+                    tmpres.state = bookingEngineBooking.getSourceState();
+                    
                     if(bookingEngineBooking.source != null && !bookingEngineBooking.source.isEmpty()) {
                         tmpres.name = bookingEngineBooking.source;
                     } else {
@@ -2017,6 +2019,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                             User user = userManager.getUserById(booking.userId);
                             if(user != null) {
                                 tmpres.name = user.fullName;
+                            }
+                            
+                            for (PmsBookingRooms room : booking.rooms) {
+                                if (bookingEngineBooking.id.equals(room.bookingId)) {
+                                    tmpres.roomId = room.pmsBookingRoomId;
+                                }
                             }
                         }
                     }
@@ -7697,6 +7705,49 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         
         return bookingIdMap;
+    }
+
+    @Override
+    public void setNewStartDateAndAssignToRoom(String pmsRoomId, Date newStartDate, String bookingItemId) {
+       
+        System.out.println("In date: " + newStartDate);
+        PmsBooking pmsBooking = getBookingFromRoom(pmsRoomId);
+        if (pmsBooking == null)
+            return;
+        
+        PmsBookingRooms room = pmsBooking.getRoom(pmsRoomId);
+        
+        if (room == null) 
+            return;
+        
+        Booking booking = bookingEngine.getBooking(room.bookingId);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(booking.startDate);
+        
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(newStartDate);
+        cal2.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+        cal2.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
+        cal2.set(Calendar.SECOND, cal.get(Calendar.SECOND));
+        cal2.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND));
+//        cal2.add(Calendar.DAY_OF_YEAR, );
+        newStartDate = cal2.getTime();
+        
+        System.out.println("Transformed date: " + newStartDate);
+        
+        System.out.println(booking.startDate + " | " + booking.endDate);
+        
+        long newTime = newStartDate.getTime();
+        long diff = booking.startDate.getTime() - newTime;
+        
+        long newStart = booking.startDate.getTime() - diff;
+        long newEnd = booking.endDate.getTime() - diff;
+       
+        Date start = new Date(newStart);
+        Date end = new Date(newEnd);
+        
+        bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
     }
 
 }

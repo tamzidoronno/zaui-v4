@@ -1,0 +1,180 @@
+
+
+
+.PmsBookingRoomView .movetotype .itemselector div:first-child {
+    border-left: solid 1px;
+}
+
+.PmsBookingRoomView .staytime .explenation {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 15px;
+    vertical-align: top;
+    padding-top: 5px;
+    display: inline-block;
+}
+
+.PmsBookingRoomView .staytime .explenation .expcolorouter {
+    display: inline-block;
+    width: calc(25% - 4px);
+    vertical-align: top;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.PmsBookingRoomView .staytime .explenation {
+    width: calc(100% - 448px);
+    box-sizing: border-box;
+    padding-left: 30px;
+    display: inline-block;
+}
+
+.PmsBookingRoomView .staytime .explenation .expcolor {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 15px;
+    vertical-align: top;
+    padding-top: 5px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+}
+
+
+.PmsBookingRoomView .movetotype {
+    border-bottom: solid 1px #DDD;
+    margin-top: 10px;
+    position: relative;
+    vertical-align: top;
+    padding-bottom: 8px;
+}
+
+.PmsBookingRoomView div.movetotype:last-child {
+    border-bottom: solid 0px;
+}
+
+.PmsBookingRoomView .movetotype .itemselector {
+    display: inline-block;
+    width: calc(100% - 204px);
+}
+
+.PmsBookingRoomView .movetotype .headername {
+    display: inline-block;
+    left: 0px;
+    top: 5px;
+    color: #444;
+    width: 200px;
+    vertical-align: top;
+}
+
+.PmsBookingRoomView .movetotype .bookingitem {
+    border: solid 1px transparent;
+    display: inline-block;
+    padding: 3px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    line-height: 25px;
+    margin-right: 2px;
+    border-radius: 2px;
+    margin-bottom: 2px;
+    
+}
+
+.PmsBookingRoomView .floatingbutton { margin-top: 5px; padding-left: 10px !important; padding-right: 10px  !important; }
+.PmsBookingRoomView .canNotUse { background: #b6ced9; cursor: not-allowed; }
+.PmsBookingRoomView .canUse { background: #82ca35; color: #FFF; cursor: pointer; }
+.PmsBookingRoomView .gs_selected { background: #23314e; color: #FFF; }
+
+.PmsBookingRoomView .staytime {
+    background-color: #fafcfd;
+    font-weight: bold;
+    border-bottom: solid 2px #000;
+    padding-bottom: 5px;
+}
+
+.PmsBookingRoomView .staytime {
+    padding-top: 30px;
+    padding-bottom: 10px;
+}
+
+.PmsBookingRoomView .updater {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 30px;
+    color: #FFF;
+}
+
+.PmsBookingRoomView .update_in_progress .updater {
+    display: block;
+}
+
+.PmsBookingRoomView .itemview {
+    position: relative;
+}
+
+.PmsBookingRoomView .canNotUseGs_selected,
+.PmsBookingRoomView .movetotype .gs_selected.canNotUse {
+    background: rgb(169,3,41) !important; /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(169,3,41,1) 0%, rgba(143,2,34,1) 44%, rgba(109,0,25,1) 100%) !important; /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%) !important; /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%) !important; /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=0 ) !important;
+}
+
+.PmsBookingRoomView .pricesview, 
+.PmsBookingRoomView .itemview_inner {
+    display: inline-block;
+    font-size: inherit;
+    box-sizing: border-box;
+    vertical-align: top;
+    
+    font-size: 14px;
+    padding: 20px;
+}
+
+.PmsBookingRoomView .itemview_inner {
+    
+    padding-top: 10px;
+    width: 70%;
+}
+
+.PmsBookingRoomView .pricerow {
+    border-bottom: solid 1px #EEE
+}
+.PmsBookingRoomView .pricerow .col2,
+.PmsBookingRoomView .pricerow .col2 input { 
+    width: 50px;
+}
+
+.PmsBookingRoomView .pricerow .col1 {
+    width: 100px;
+    line-height: 35px;
+}
+.PmsBookingRoomView .pricerow .col {
+    display: inline-block;
+}
+
+.PmsBookingRoomView .pricesview {
+    width: calc(30% - 15px);
+    box-sizing: border-box;
+}
+
+.PmsBookingRoomView .totalrow {
+    font-size: 16px;
+    margin-top: 20px;
+}
+.PmsBookingRoomView .extrainfo {
+    font-style: italic;
+    margin-top: 10px;
+    font-size: 13px;
+}

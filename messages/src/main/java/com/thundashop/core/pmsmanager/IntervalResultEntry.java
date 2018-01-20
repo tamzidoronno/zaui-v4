@@ -10,4 +10,6 @@ public class IntervalResultEntry implements Serializable {
     public List<String> bookingIds;
     public String name = "";
     public List<String> virtuallyAssigned;
+    public String state = "";
+    public String roomId = "";
 }

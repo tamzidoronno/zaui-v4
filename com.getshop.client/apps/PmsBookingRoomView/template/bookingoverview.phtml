@@ -16,7 +16,7 @@ $pmsSelectedRoom = $this->getSelectedRoom();
         <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Booking"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access codes"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
@@ -35,8 +35,8 @@ $pmsSelectedRoom = $this->getSelectedRoom();
             addons
         </div>
         
-        <div class="guestinformation <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'>
-            accesscodes
+        <div class="guestinformation <? echo $this->isTabActive('accesscodes'); ?> accesscode" tab='accesscodes'>
+            <? $this->includefile("accesscode"); ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('messages'); ?>" tab='messages'>

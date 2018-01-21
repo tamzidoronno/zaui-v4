@@ -107,39 +107,34 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $channels;
     }
 
-    public function showCheckins() {
-        $this->clearFilter();
-        $filter = $this->getSelectedFilter();
-        $filter->filterType = "checkin";
-        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['day']." days", time()));
-        $filter->endDate = $this->convertToJavaDate(time());
-        $this->setCurrentFilter($filter);
+    public function forceAccessRegardlessOfPayment() {
+        $this->setData();
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
+                $room->forceAccess = true;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->setData();
+        $this->includefile("accesscode");
+        die();
     }
     
-    public function showCheckouts() {
-        $this->clearFilter();
-        $filter = $this->getSelectedFilter();
-        $filter->filterType = "checkout";
-        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['day']." days", time()));
-        $filter->endDate = $this->convertToJavaDate(time());
-        $this->setCurrentFilter($filter);
-    }
-    
-    public function setCurrentFilter($filter) {
-        $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()] = serialize($filter);
-    }
-    
-    public function searchBooking() {
-        $this->clearFilter();
-        $filter = $this->getSelectedFilter();
-        $filter->searchWord = $_POST['data']['searchtext'];
-        $this->setCurrentFilter($filter);
+    public function ungrantPayment() {
+        $this->setData();
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
+                $room->forceAccess = false;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->setData();
+        $this->includefile("accesscode");
+        die();
     }
 
-    public function clearFilter() {
-        unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
-    }
-    
     public function startPaymentProcess() {
         if (isset($_SESSION['payment_process_cart_'.$this->getSelectedRoom()->pmsBookingRoomId])) {
             $this->includefile("paymentprocess_started_for_room");
@@ -467,6 +462,64 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             $this->types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
         }
     }
-
+    
+    public function markRoomCleaned() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $this->getApi()->getPmsManager()->markRoomAsCleaned($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+        
+        $this->setData();
+        $this->includefile("accesscode");
+        die();
+    }
+    
+    public function markRoomCleanedwithoutlog() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $this->getApi()->getPmsManager()->markRoomAsCleanedWithoutLogging($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+        $this->setData();
+        $this->includefile("accesscode");
+        die();
+    }
+    
+    public function markRoomDirty() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $this->getApi()->getPmsManager()->markRoomDirty($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+        
+        $this->setData();
+        $this->includefile("accesscode");
+        die();
+    }
+    
+    public function blockAccessToRoom() {
+        $this->setData();
+        $booking = $this->getPmsBooking();
+        $room = $this->getSelectedRoom();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                $room->blocked = true;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->setData();
+        $this->includefile("accesscode");
+        die();
+    }
+    
+    public function unBlockRoom() {
+        $this->setData();
+        $booking = $this->getPmsBooking();
+        $room = $this->getSelectedRoom();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                $room->blocked = false;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->setData();
+        $this->includefile("accesscode");
+        die();
+    }
 }
 ?>

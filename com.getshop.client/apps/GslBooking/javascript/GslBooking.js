@@ -789,7 +789,9 @@ function getshop_confirmGuestInfoBox() {
     var child = $('#count_child').val();
     var guest = +adult + +child;
     var translation = getshop_getBookingTranslations();
-    
+    if(typeof(translation['room']) === "undefined") {
+        return;
+    }
     var roomText = ' ' + translation['room'].toLowerCase();
     var guestText = ' ' + translation['guest'].toLowerCase() + ' ';
     if (room > 1) {

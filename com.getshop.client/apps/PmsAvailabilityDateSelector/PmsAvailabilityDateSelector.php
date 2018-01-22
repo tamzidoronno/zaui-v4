@@ -22,12 +22,12 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
     
     public function getStartDate() {
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
-        return date('m/d/y', $app->getStartDate());
+        return date('d.m.Y', $app->getStartDate());
     }
     
     public function getEndDate() {
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
-        return date('m/d/y', $app->getEndDate());
+        return date('d.m.Y', $app->getEndDate());
     }
 }
 ?>

@@ -1,0 +1,41 @@
+<?
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$currentBooking = $this->getBookingEngineBooking();
+$room = $this->getSelectedRoom();
+
+$startDate = date('d.m.Y H:i', strtotime($currentBooking->startDate));
+$endDate = date('d.m.Y H:i', strtotime($currentBooking->endDate));
+?>
+
+<div class="staytime">
+    <? echo $this->__f("Dates"); ?>: <input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo $startDate; ?>"/> - <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo $endDate; ?>"/> 
+    <div class='explenation'>
+        <div class='expcolorouter'><div class='expcolor canUse'></div> <? echo $this->__f("Can be selected"); ?></div>
+        <div class='expcolorouter'><div class='expcolor canNotUse'></div> <? echo $this->__f("Not available"); ?></div>
+        <div class='expcolorouter'><div class='expcolor canNotUseGs_selected'></div> <? echo $this->__f("Guest is living in this room, but is not available for the given timeframe"); ?></div>
+        <div class='expcolorouter'><div class='expcolor gs_selected'></div> <? echo $this->__f("Selected"); ?></div>
+    </div>
+</div>
+
+
+<div class="itemview" bookingid="<? echo $currentBooking->id; ?>" roomid='<? echo $room->pmsBookingRoomId; ?>'>
+    <?
+    $this->includefile("itemview");
+    ?>
+</div>
+
+
+<script>
+    $('.PmsBookingRoomView .startdate').datetimepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            app.PmsBookingRoomView.updateAvailability();
+        }
+    });
+    
+    $('.PmsBookingRoomView .enddate').datetimepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            app.PmsBookingRoomView.updateAvailability();
+        }
+    });
+</script>
+    

@@ -100,9 +100,11 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 }
 
 
+$openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : ""; 
+
 ?>
 
-<html xmlns:fb="http://ogp.me/ns/fb#">
+<html xmlns:fb="http://ogp.me/ns/fb#" <? echo $openModalClass; ?>>
     <head>
         
         <?

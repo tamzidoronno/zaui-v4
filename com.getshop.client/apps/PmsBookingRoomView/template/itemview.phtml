@@ -1,6 +1,7 @@
 <?
-/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
-$currentBooking = $this->getCurrentBookingFromBookingEngine();
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$currentBooking = $this->getBookingEngineBooking();
+
 $types = $this->getTypes();
 $items = $this->getItems();
 
@@ -12,7 +13,11 @@ if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
     $endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));  
 }
 
+$isSameDayStart = date('Y-m-d', strtotime($startDate)) == date('Y-m-d', time());
+
 $availableItems = $this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(), $startDate, $endDate, $currentBooking->id);
+
+$cleanIcon = "";
 
 function canUseItem($item, $availeableitems) {
     foreach ($availeableitems as $available) {
@@ -25,23 +30,34 @@ function canUseItem($item, $availeableitems) {
 }
 ?>
 <div class='itemview_inner'>
-    <div class='explenation_header'>
-        <div class="bookingitemhead canUse"></div> <? echo $this->__f("Can be selected"); ?>
-        <br/><div class="bookingitemhead canNotUse"></div> <? echo $this->__f("Not available"); ?>
-        <br/><div class="bookingitemhead canNotUseGs_selected"></div> <? echo $this->__f("Currently selected, but not valid with given timeframe"); ?>
-    </div>
     <div class='updater'>
         <i class='fa fa-spin fa-spinner'></i> Updating.. please wait..
     </div>
     <div gstype="select" gsname="itemid"><?
         foreach ($types as $type) {
+            $useClass = "canNotUse";
+            
+            $canUseFloating = "canNotUse";
+            
+            $currentlyUsingFloating = !$currentBooking->bookingItemId  && $currentBooking->bookingItemTypeId == $type->id ? "gs_selected" : "";
+            foreach ($items as $item) {
+                if ($item->bookingItemTypeId != $type->id) {
+                    continue;
+                }
+
+                if (canUseItem($item, $availableItems)) {
+                    $canUseFloating = "canUse";
+                }
+            }
         ?>
             <div class='movetotype' typeid='<? echo $type->id; ?>'>
-                <div class="headername"><? echo $type->name; ?></div>
+                <div class="headername">
+                    <? echo $type->name; ?>
+                    <br/><div class='bookingitem floatingbutton <? echo $canUseFloating." ".$currentlyUsingFloating; ?>' gs_value='<? echo $type->id; ?>'><? echo $this->__f("Floating"); ?></div>
+                </div>
                 <div class="itemselector">
                     <?
-                    $useClass = "canNotUse";
-
+                    
                     foreach ($items as $item) {
                         if ($item->bookingItemTypeId != $type->id) {
                             continue;
@@ -53,16 +69,19 @@ function canUseItem($item, $availeableitems) {
                     }
 
                     $currentlyUsing = !$currentBooking->bookingItemId  && $currentBooking->bookingItemTypeId == $type->id ? "gs_selected" : "";
-                    ?>
-                    <div class='bookingitem <? echo $useClass." ".$currentlyUsing; ?>' gs_value='<? echo $type->id; ?>'><? echo $this->__f("Floating"); ?></div>
-                    <?
                     foreach ($items as $item) {
+
                         if ($item->bookingItemTypeId != $type->id) {
                             continue;
                         }
+                        
+                        if ($isSameDayStart) {
+                            $cleanText = $this->__f("This room is clean");
+                            $cleanIcon = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $item->id) ? "<i title='$cleanText' class='icon-gs-cleaning'></i> " : "";
+                        }
                         $currentlyUsing = $item->id == $currentBooking->bookingItemId ? "gs_selected" : "";
                         $useClass = canUseItem($item, $availableItems) ? "canUse" : "canNotUse";
-                        echo "<div class='bookingitem $useClass $currentlyUsing' gs_value='".$type->id."_".$item->id."'>".$item->bookingItemName."</div>";
+                        echo "<div class='bookingitem $useClass $currentlyUsing' gs_value='".$type->id."_".$item->id."'>$cleanIcon".$item->bookingItemName."</div>";
                     }
                     ?>
                 </div>

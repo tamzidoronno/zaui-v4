@@ -37,7 +37,7 @@ foreach ($types as $type) {
                 
                 $itemTimeLines = $timelines->itemTimeLines->{$item->id};
                 $i = 1;
-                $j++;
+                
                 
                 $odd = $j % 2 ? "odd" : "even";
                 echo "<div class='timeline_row $odd'>";
@@ -45,31 +45,53 @@ foreach ($types as $type) {
                     
                     foreach ($itemTimeLines as $time => $data) {
                         $header = "";
+                        $colDate = date("d.m.y", $time/1000);
+                        $colDate2 = date("m/d/y", $time/1000);
                         
-                        if ($j == 1) {
-                            $header = "<div class='header col_width'>".date("d.m.y", $time/1000)."</div>";
+                        if ($j == 0) {
+                            $header = "<div class='header col_width'>$colDate</div>";
                         }
                         
                         $nextBookingIds = $this->getNextBookingIds($itemTimeLines, $time);
                         $inPrev = $this->anyMatches($data->bookingIds, $prevBookingIds) ? "connected_with_prev" : "";
                         $inNext = $this->anyMatches($data->bookingIds, $nextBookingIds) ? "connected_with_next" : "";
-                        $virtuallyAssigned = $this->anyMatches($data->bookingIds, $data->virtuallyAssigned);
                         
                         $firstInRow = (!$inPrev && $inNext) || (!$inNext && !$inPrev)  ? "first_in_row" : "";
                         $lastInRow = ($inPrev && !$inNext) || (!$inNext && !$inPrev) ? "last_in_row" : "";
                         
-                        $color = "red";
-                        if ($virtuallyAssigned) {
+                        $color = $data->state;
+                        
+                        if ($this->anyMatches($data->bookingIds, $data->virtuallyAssigned) && $data->state === "normal") {
                             $color = "grey";
                         }
                         
                         $containsBooking = count($data->bookingIds) ? "contains_booking" : "";
                         $bookingId = count($data->bookingIds) ? $data->bookingIds[0] : "";
                         
-                        echo "<div class='col_outer'><div bookingid='$bookingId' class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
+                        if (!$inPrev && $containsBooking) {
+                            $header .= $this->createNameOfBooker($data);
+                        }
+                        
+                        $firstInRowOuter = "";
+                        if ($firstInRow && $containsBooking) {
+                            $firstInRowOuter = $firstInRow."_outer";
+                        }
+                        
+                        $lastInRowOuter = "";
+                        if ($lastInRow && $containsBooking) {
+                            $lastInRowOuter = $lastInRow."_outer";
+                        }
+                        
+                        $noData = !$containsBooking ? "nodata" : "";
+                        $canShowModal = $containsBooking && $data->state == "normal" ? "gs_show_modal='booking_room_view'"  : "";
+                        
+                        
+                        echo "<div typeid='$type->id' col='$i' bookingitemid='$item->id' date='$colDate2' row='$j' ondrop='app.PmsAvailability.onDragDrop(event)' ondragleave='app.PmsAvailability.onDragLeave(event)' ondragover='app.PmsAvailability.onDragOver(event)' class='col_outer $noData $firstInRowOuter $lastInRowOuter'><div ondragstart='app.PmsAvailability.onDragStart(event)' draggable='true' $canShowModal bookingid='$bookingId' roomid='$data->roomId' class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
                         $prevBookingIds = $data->bookingIds;
                         $i++;
                     }
+                    
+                    $j++;
                     
                 echo "</div>";
 
@@ -93,7 +115,23 @@ $(document).ready(function() {
         size = 64;
     }
     
-    $(".col_width").outerWidth(size);
-//    
+    $(".col_outer").outerWidth(size);
+    
+    $('.bookername').each(function() {
+        var col = $(this).closest('.col_outer').find('.col_data');
+        var bookingid = col.attr('bookingid');
+        var numberOfBlocks = $('.col_data[bookingid="'+bookingid+'"]').size();
+        var marginLeft = size * numberOfBlocks;
+        marginLeft -= size;
+        $(this).css('margin-right', "-"+marginLeft+"px");
+        $(this).find('span').hide();
+        $(this).attr('numberofblocks', numberOfBlocks);
+        
+        if (size > 100 || numberOfBlocks > 1) {
+            $(this).find('.fullname').fadeIn();
+        } else {
+            $(this).find('.acronyme').fadeIn();
+        }
+    });
 });
 </script>

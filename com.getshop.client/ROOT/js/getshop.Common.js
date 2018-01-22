@@ -202,19 +202,23 @@ thundashop.common.showModal = function(modalName, data) {
     data.modalName = modalName;
     var event = thundashop.Ajax.createEvent(null, "showModal", null, data);
     event['synchron'] = true;
+    
     thundashop.Ajax.post(event, function(res) {
-        $('#gsbody .gsbody_inner').addClass('gs_modalIsOpen');
+        $('html').addClass('gs_modalIsOpen');
         $('#dynamicmodal').html(res);
-        $(window).scrollTop(0);
+//        $(window).scrollTop(0);
     });
 }
 
 thundashop.common.closeModal = function(done) {
+    $('html').removeClass('gs_modalIsOpen');
+    
     var event = thundashop.Ajax.createEvent(null, "closeModal", null, {});
     event['synchron'] = true;
+    
     thundashop.Ajax.post(event, function(res) {
         $('#dynamicmodal').html("");
-        $(window).scrollTop(0);
+//        $(window).scrollTop(0);
         if (done) {
             done();
         }
@@ -1244,7 +1248,7 @@ thundashop.common.sendPubSubMessage = function(data) {
     PubSub.publish("EVENT_POST_NAV_ACTION", data);
 }
 
-var timeCheckMs = 10000;
+var timeCheckMs = 120000;
 thundashop.common.checkWithServerIfLoggedOut = function() {
     if ($('input[name="userid_in_body"]').length > 0) {
         $.ajax({

@@ -12,7 +12,7 @@ getshop.Modal = {
     
     removeClassIfNeeded: function(topic, data) {
         if (data != null && data.event != null && (data.event === "closemodal" || data.event === "closeModal")) {
-            $('#gsbody').removeClass('gs_modalIsOpen');
+            $('html').removeClass('gs_modalIsOpen');
         }
     }
 };

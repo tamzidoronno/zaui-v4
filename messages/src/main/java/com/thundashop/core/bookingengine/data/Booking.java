@@ -152,4 +152,16 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         
         return startDate.after(toCompareDate);
     }
+
+    public String getSourceState() {
+        if(source != null && source.equals("cleaning")) {
+            return "cleaning";
+        }
+        
+        if(source != null && source.toLowerCase().contains("closed")) {
+            return "closed";
+        }
+        
+        return "normal";
+    }
 }

@@ -462,4 +462,7 @@ public interface IPmsManager {
     
     @Administrator
     public void transferTicketsAsAddons();
+    
+    @Administrator
+    public void setNewStartDateAndAssignToRoom(String roomId, Date newStartDate, String bookingItemId);
 }

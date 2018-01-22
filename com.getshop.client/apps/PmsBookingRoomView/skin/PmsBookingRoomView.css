@@ -1,0 +1,544 @@
+.PmsBookingRoomView .bookingoverview_content_row .bottommenuarea {
+    text-align: right;
+    font-size: 0px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .bottommenuarea .shop_button {
+    font-size: 15px;
+    margin-right: 20px;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .bottommenuarea .shop_button:hover {
+    background: rgb(99,182,219); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(99,182,219,1) 0%, rgba(48,157,207,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(99,182,219,1) 0%,rgba(48,157,207,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(99,182,219,1) 0%,rgba(48,157,207,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#63b6db', endColorstr='#309dcf',GradientType=0 );
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .bottommenuarea .shop_button.disabled {
+    background: #EFEFEF;
+    background-color: #EFEFEF;
+    color: #888;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row {
+    font-size: 0px;
+    background-color: #FFF;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .menuarea,
+.PmsBookingRoomView .bookingoverview_content_row .workarea {
+    width: 500px;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 13px;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .workarea {
+    width: calc(100% - 200px);
+    box-sizing: border-box;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .menuarea {
+    width: 200px;
+    box-sizing: border-box;
+    padding: 30px;
+    padding-left: 10px;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry i{
+    font-size: 30px;
+    display: none;
+}
+.PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry {
+    text-align: left;
+    padding: 5px;
+    cursor: pointer;
+    color: #82cdf3;
+    text-decoration: dotted;
+    text-decoration: none;
+    width: inherit;
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry span {
+    border-bottom: 2px dotted #82cdf3;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding: 3px;
+    margin-left: 20px;
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry.active span {
+    
+}
+
+.PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry.active span {
+    border-bottom: 2px dotted transparent;
+    display: inline-block;
+    background-color: #2a324e;
+    color: #FFF;
+    border-radius: 20px;
+    border: solid 0px;
+    margin-left: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.PmsBookingRoomView .seperatorbox .seperatortext {
+    background-color: #FFF;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: inline;
+    position: relative;
+    margin: 0 auto;
+}
+
+.PmsBookingRoomView .seperatorbox .rowseperator {
+    position: absolute;
+    left: 0px;
+    height: 1px;
+    right: 0px;
+    top: 10px;
+    border-top: dashed 3px #DDD;
+    
+}
+.PmsBookingRoomView .searchbox .tabs {
+    background-color: #EEE;
+    font-size: 0px;
+}   
+
+.PmsBookingRoomView .searchbox .tab {
+    padding: 5px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-right: solid 1px #DDD;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.PmsBookingRoomView .searchbox .buttonareaadvanced {
+    margin-top: 10px;
+}
+.PmsBookingRoomView .searchbox .dropdowns {   
+}
+.PmsBookingRoomView .searchbox .tab_content {
+    padding-top: 20px;
+}
+.PmsBookingRoomView .searchbox .tab_content.active {
+    display: block;
+}
+
+.PmsBookingRoomView .searchbox .tab.active {
+    background-color: #FFF;
+}
+
+.PmsBookingRoomView .searchbox .tab_content {
+    padding-left: 50px;
+    display: none;
+}
+.PmsBookingRoomView .searchbox {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 50px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    width: calc(100% - 255px);
+    box-sizing: border-box;
+    height: 252px;
+}
+
+.PmsBookingRoomView .quickfilters .header {
+    text-align: center;
+    padding: 5px;
+    background-color: #EEE;
+    margin-bottom: 10px;
+   
+}
+.PmsBookingRoomView .quickfilters i {
+    margin-left: 10px;
+}
+.PmsBookingRoomView .quickfilters .quickfilter_sub {
+    padding: 5px;
+    padding-left: 25px;
+    cursor: pointer;
+}
+.PmsBookingRoomView .quickfilters {
+    display: inline-block;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    vertical-align: top;
+    width: 200px;
+}
+
+.PmsBookingRoomView .orderpreview {
+    position: fixed;
+    top: 50px;
+    left: 50px;
+    bottom: 50px;
+    right: 50px;
+    background-color: #FFF;
+    z-index: 3;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+    display: none;
+}
+
+.PmsBookingRoomView .orderpreview .header {
+    font-size: 20px;
+    background-color: #EEE;
+    text-align: center;
+    padding: 20px;
+    
+}
+
+.PmsBookingRoomView .orderpreview .close {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    background-color: #FFF;
+    border: solid 3px #888; 
+    border-radius: 50px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 23px;
+    cursor: pointer;
+}
+
+.PmsBookingRoomView .orderpreview .content {
+    overflow-y: scroll;
+    position: absolute;
+    top: 70px;
+    bottom: 90px;
+    left: 0px;
+    right: 0px;
+}
+
+.PmsBookingRoomView .orderpreview .menurow {
+    position: absolute;
+    height: 50px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    text-align: right;
+    padding: 20px;
+}
+
+.PmsBookingRoomView .workarea div[tab] {
+    display: none;
+}
+
+.PmsBookingRoomView .no_orders_created i {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 50px;
+}
+.PmsBookingRoomView .no_orders_created {
+    font-size: 20px;
+    color: red;
+    text-align: center;
+}
+
+.PmsBookingRoomView .workarea div[tab].active {
+    display: block;
+}
+
+.PmsBookingRoomView .bookinginformation .prefix {
+    width: 30px;
+}
+
+.PmsBookingRoomView .bookinginformation .col1 {
+    width: 150px;
+}
+.PmsBookingRoomView .bookinginformation .col2 {
+    width: calc(100% - 230px);
+}
+.PmsBookingRoomView .bookinginformation .guestheader {
+    padding: 5px;
+    background-color: #EFEFEF;
+    margin-top: 20px;
+}
+.PmsBookingRoomView .colbox {
+    width: 400px;
+    display: inline-block;
+    vertical-align: top;
+}
+.PmsBookingRoomView .warning {
+    margin-bottom: 30px;
+    background-color: #e8ffc8;
+    padding: 20px;
+}
+
+.PmsBookingRoomView .bookinginformation .header {
+    border-bottom: solid 2px #333;
+    padding-bottom: 5px;
+}
+
+.PmsBookingRoomView .bookinginformation .guest_row .remove_guest {
+    background: #fb6a32;
+    background-color: #fb6a32;
+    color: #FFF;
+    width: 15px;
+    height: 15px;
+    padding: 0px;
+    text-align: center;
+    line-height: 15px;
+    border-radius: 15px;
+    padding: 2px;
+}
+
+.PmsBookingRoomView .bookinginformation .guest_row {
+    font-size: 0px;
+}
+
+
+.PmsBookingRoomView .bookinginformation .guest_col {
+    display: inline-block;
+    padding-right: 10px;
+    font-size: 13px;
+    padding-left: 10px;
+    padding-top: 5px;
+    box-sizing: border-box;
+}
+
+.PmsBookingRoomView .bookinginformation .guest_col input {
+    width: 100%;
+    box-sizing: border-box;
+} 
+
+.PmsBookingRoomView .bookinginformation .guest_col .gsniceinput1.prefix {
+    width:50px;
+}
+
+.PmsBookingRoomView .bookinginformation .guest_col .gsniceinput1.cellnumber {
+    width: calc(100% - 61px);
+}
+
+.PmsBookingRoomView .payment_process_started {
+    padding: 20px;
+}
+
+.PmsBookingRoomView .bookinginformation .guest_col1 { width: 150px; }
+.PmsBookingRoomView .bookinginformation .guest_col2 { width: 200px; }
+.PmsBookingRoomView .bookinginformation .guest_col3 { width: 200px; }
+.PmsBookingRoomView .bookinginformation .guest_col4 { width: 35px; }
+
+.PmsBookingRoomView .insideheader {
+    padding: 0px;
+    margin: 0px;
+    padding: 10px;
+    padding-left: 0px;
+    border-bottom: solid 1px #DDD;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+}
+
+.PmsBookingRoomView .insideheader .gs_shop_small_icon {
+    background: #82ca35;
+    background-color: #82ca35;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 0px;
+    color: #FFF;
+    border: solid 0px;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] .SalesPointCartCheckout {
+    padding: 20px;
+}
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_window {
+
+    padding: 20px;
+}
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_options .options,
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_options .option_content {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.PmsBookingRoomView .rmation[tab="orders"] .payment_options .option_content {
+    width: calc(100% - 250px);
+    min-height: 250px;
+    border: solid 1px #CCC;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_options .options i {
+    display: none;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_options .options .activeline {
+    position: absolute;
+    top: 15px;
+    right: -27px;
+    width: 24px;
+    height: 0px;
+    border: solid 1px #DDD;
+    display: none;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_option_choice.active i {
+    display: inline-block;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_option_choice.active .activeline {
+    display: block;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_options .options .payment_option_choice {
+    position: relative;
+    width: 200px;
+    margin-bottom: 10px;
+}
+.PmsBookingRoomView .guestinformation[tab="orders"] .payment_options .options {
+    width: 224px;
+    padding-right: 20px;
+    position: relative;
+}
+
+.PmsBookingRoomView .paymentinfo  {
+    font-size: 15px;
+    color: green;
+}
+
+.PmsBookingRoomView .guestinfo, 
+.PmsBookingRoomView .guestinfobox {
+    padding: 20px;
+    display: inline-block;
+    
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+.PmsBookingRoomView .guestinfo {
+    width: 627px;
+}
+
+.PmsBookingRoomView .guestinfobox {
+    width: calc(100% - 632px);
+}
+
+.PmsBookingRoomView .guestinfobox .row {
+    padding: 3px;
+    border-bottom: solid 1px #DDD;
+    padding-left: 20px;
+}
+
+.PmsBookingRoomView .guestinfobox .row .col {
+    vertical-align: tpo;
+}
+
+.PmsBookingRoomView .guestinfobox .row .col1 {
+    color: #5d5d5d;
+    vertical-align: top;
+}
+
+.PmsBookingRoomView .guestinfobox .row.odd {
+    background-color: #f9fafa;    
+}
+
+.PmsBookingRoomView .guestinfobox div.row:last-child {
+    border-bottom: solid 0px;
+}
+
+.PmsBookingRoomView .unsettledamount {
+    animation: bodybg 1s 0s linear infinite alternate;
+    color: red;
+}
+
+@keyframes bodybg{
+  from   {color: #960000;}
+  to     {color: #ff5e5e;}
+}
+
+.PmsBookingRoomView .date,
+.PmsBookingRoomView .by {
+    display: inline-block;
+    width: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    box-sizing: border-box;
+    padding: 20px;
+    background-color: #EFEFEF;
+}
+
+.PmsBookingRoomView .logtext {
+    font-size: 14px;
+    padding: 20px;
+}
+
+.PmsBookingRoomView .log_pages {
+    font-size: 0px;
+}
+
+.PmsBookingRoomView .log_pages .pagenumber.active {
+    background: rgb(164,179,87); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(164,179,87,1) 0%, rgba(117,137,12,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(164,179,87,1) 0%,rgba(117,137,12,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(164,179,87,1) 0%,rgba(117,137,12,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a4b357', endColorstr='#75890c',GradientType=0 );
+}
+.PmsBookingRoomView .log_pages .pagenumber {
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+    font-size: 16px;
+    display: inline-block;
+    text-align: center;
+    line-height: 50px;
+    
+    background: rgb(255,168,76); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255,168,76,1) 0%, rgba(255,123,13,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,168,76,1) 0%,rgba(255,123,13,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); 
+
+    border-right: solid 1px rgba(255,255,255,0.5);
+    color: #FFF;
+    cursor: pointer;
+}
+
+.PmsBookingRoomView .loaderspinner {
+    text-align: center;
+    padding: 50px;
+    font-size: 50px;
+}
+
+.PmsBookingRoomView .logentry {
+    border-bottom: solid 1px #DDD;
+    font-size: 0px;
+}
+
+
+.PmsBookingRoomView .guestinformation[tab="ticket"] {
+    padding: 20px;
+}
+
+.PmsBookingRoomView .TicketList .datarow_extended_content {
+    padding: 20px;
+}
+
+.PmsBookingRoomView .col {
+    display: inline-block;
+}
+
+.PmsBookingRoomView .col1,
+.PmsBookingRoomView .col2 {
+    width: 50px;
+}
+

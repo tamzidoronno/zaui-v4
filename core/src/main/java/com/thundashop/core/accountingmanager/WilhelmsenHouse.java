@@ -269,6 +269,8 @@ public class WilhelmsenHouse implements AccountingInterface {
             ordrehode += order.incrementOrderId + ";"; // GetShop ordre id
             if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
                 ordrehode += "11072;"; // Expedia customer id.
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_d79569c6_ff6a_4ab5_8820_add42ae71170\\BookingComCollectPayments")) {
+                ordrehode += "19982;"; // Bookingcom.
             } else if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
                 ordrehode += "24359;"; // Vipps customer id.
             } else {
@@ -282,6 +284,9 @@ public class WilhelmsenHouse implements AccountingInterface {
                 ordrehode += "1;"; //Betalingsbetingelse
                 ordrehode += "1;"; //Betalingsmåte
             } else if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
+                ordrehode += "30;"; //Betalingsbetingelse
+                ordrehode += "30;"; //Betalingsmåte
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_d79569c6_ff6a_4ab5_8820_add42ae71170\\BookingComCollectPayments")) {
                 ordrehode += "30;"; //Betalingsbetingelse
                 ordrehode += "30;"; //Betalingsmåte
             } else if (order.payment != null && order.payment.paymentType.equals("ns_639164bc_37f2_11e6_ac61_9e71128cae77\\AirBNBCollect")) {

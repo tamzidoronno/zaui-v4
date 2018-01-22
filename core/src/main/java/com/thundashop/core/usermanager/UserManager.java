@@ -282,6 +282,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.suspended) {
             throw new ErrorException(26);
         }
+        
+        if (user.totpKey != null && !user.totpKey.isEmpty()) {
+            // Use logon trough logonUsingTotpAgainstCrm or logonUsingTotpAgainst
+            throw new ErrorException(26);
+        }
+        
         addUserToSession(user);
         
 //        loginHistory.markLogin(user, getSession().id);
@@ -2144,6 +2150,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         totpHandler.getAllUsers().stream().forEach(user -> {
             getUserStoreCollection(storeId).addUserDirect(user);
         });
+    }
+
+    @Override
+    public User logonUsingTotp(String username, String password, int oneTimeCode) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

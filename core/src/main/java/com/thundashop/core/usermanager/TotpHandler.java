@@ -53,6 +53,8 @@ public class TotpHandler {
     }
     
     private void loadUsers() {
+        users.clear();
+        
         database.getAll("UserManager", storeIdToCheckUsersAgainst).forEach(data -> {
             if (data instanceof User) {
                 User user = ((User)data);

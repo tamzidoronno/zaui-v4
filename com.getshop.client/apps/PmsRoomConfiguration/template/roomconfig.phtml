@@ -1,10 +1,18 @@
 <?php 
 /* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 ?>
 <br>
 <br>
 <br>
 <span style="float:right;" gstype='form' method='createRoom'>
+    <select gsname='type' class="gsniceselect1" style="height:34px;">
+        <?php
+        foreach($types as $type) {
+            echo "<option value='".$type->id."'>" . $type->name . "</option>";
+        }
+        ?>
+    </select>
     <input type="txt" class="gsniceinput1" placeholder='101' gsname='name'>
     <input type="button" value="Create a new room" style="padding:9px;" gstype='submit'>
 </span>

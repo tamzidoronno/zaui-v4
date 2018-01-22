@@ -79,10 +79,9 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
     public function createRoom() {
         $name = $_POST['data']['name'];
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
         $item = new \core_bookingengine_data_BookingItem();
         $item->bookingItemName = $name;
-        $item->bookingItemTypeId = $types[0]->id;
+        $item->bookingItemTypeId = $_POST['data']['type'];
         $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedMultilevelDomainName(), $item);
     }
     
@@ -220,8 +219,13 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     
     
     public function createType() {
-        $type = $_POST['data']['name'];
-        $this->getApi()->getBookingEngine()->createABookingItemType($this->getSelectedMultilevelDomainName(), $type);
+        $room = $_POST['data']['name'];
+        $type = $this->getApi()->getBookingEngine()->createABookingItemType($this->getSelectedMultilevelDomainName(), $room);
+        $product = $this->getApi()->getProductManager()->createProduct();
+        $product->name = $type->name;
+        $this->getApi()->getProductManager()->saveProduct($product);
+        $type->productId = $product->id;
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
     }
     
     public function deleteImage() {

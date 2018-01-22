@@ -78,7 +78,7 @@ app.PmsRoomConfiguration = {
 
         var control = document.getElementById("your-files");
         var me = this;
-
+        typeIdToUploadTo = $(this).attr('typeid');
         control.addEventListener("change", function () {
             button.html('<i class="fa fa-spin fa-spinner"></i>');
             fileSelector.remove();
@@ -97,7 +97,7 @@ app.PmsRoomConfiguration = {
         reader.onload = function (event) {
             var dataUri = event.target.result;
             var data = {
-                typeId: application.find('.uploadTypeImage').attr('typeid'),
+                typeId: typeIdToUploadTo,
                 fileBase64: dataUri,
                 fileName: fileName
             };

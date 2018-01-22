@@ -189,8 +189,8 @@ app.PmsBookingRoomView = {
         var needAllSaved = $(this).attr('needAllSaved');
         
         if (needAllSaved === "true" && !$('.PmsBookingRoomView .datarow.active [gstype="submit"]').hasClass('disabled')) {
-            alert(__f("Please save your changes before you go to payment"));
-            return;
+//            alert(__f("Please save your changes before you go to payment"));
+//            return;
         }
     
         $('.PmsBookingRoomView .menuarea .menuentry').removeClass('active');

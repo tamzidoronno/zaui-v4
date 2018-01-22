@@ -13,6 +13,9 @@ $products = $this->getApi()->getProductManager()->getAllProductsIncDeleted();
 <div gstype="form" method="saveTaxGroups">
     <?
     foreach ($products as $product) {
+        if($product->deleted) {
+            continue;
+        }
         ?>
         <div class="product_row">
             <div class="name"><? echo $product->name ? $product->name : $this->__f("N/A"); ?></div>

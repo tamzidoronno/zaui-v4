@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.*;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -92,6 +93,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Autowired
     public StoreManager storeManager;
 
+    @Autowired
+    public Database database;
     
     @Autowired
     public GSAdmins gsAdmins;
@@ -595,6 +598,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private void saveSessionFactory() throws ErrorException {
         sessionFactory.storeId = storeId;
         saveObject(sessionFactory);
+    }
+    
+    public User getUserByIdIncludedDeleted(String id) {
+        UserStoreCollection storeCollection = getUserStoreCollection(storeId);
+        User user = storeCollection.getUser(id);
+        
+        if (user == null) {
+            return storeCollection.getDeletedUser(id);
+        }
+        
+        return user;
     }
 
     @Override

@@ -44,8 +44,15 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         
         List<String> others = getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, "invoice", orders);
         List<String> invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other", orders);            
-        ret.addAll(others);
-        ret.addAll(invoices);
+        
+        if (getActivatedAccountingSystemInvoices().equals(getActivatedAccountingSystemOther())) {
+            ret.addAll(invoices);
+        } else {
+            ret.addAll(others);
+            ret.addAll(invoices);    
+        }
+        
+        
 
         return ret;
     }
@@ -53,8 +60,13 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     @Override
     public List<SavedOrderFile> getOrderFiles() {
         List<SavedOrderFile> files = new ArrayList();
-        files.addAll(getActivatedAccountingSystemInvoices().getOrderFiles());
-        files.addAll(getActivatedAccountingSystemOther().getOrderFiles());
+        
+        if (getActivatedAccountingSystemInvoices().equals(getActivatedAccountingSystemOther())) {
+            files.addAll(getActivatedAccountingSystemInvoices().getOrderFiles());
+        } else {
+            files.addAll(getActivatedAccountingSystemInvoices().getOrderFiles());
+            files.addAll(getActivatedAccountingSystemOther().getOrderFiles());
+        }
         
         return files;
     }

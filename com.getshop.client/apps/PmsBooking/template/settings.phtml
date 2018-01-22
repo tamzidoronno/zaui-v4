@@ -59,15 +59,6 @@
         </td>
     </tr>
     <tr>
-        <td width="50%">Display child</td>
-        <td width="50%">
-            <select gsname="display_child">
-                <option value='yes'>Yes</option>
-                <option value='no' <? if($this->getText("display_child") == "no") { echo "SELECTED"; } ?>>No</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
         <td width="50%">Information text</td>
         <td width="50%"><textarea type="text" wrap="soft" gsname="info_textarea" style='width:100%;'><? echo $this->getText("info_textarea"); ?></textarea></td>
     </tr>

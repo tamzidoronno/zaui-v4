@@ -5,6 +5,7 @@
 package com.thundashop.core.usermanager;
 
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.usermanager.data.Address;
@@ -14,6 +15,7 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.UserCompanyHistory;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -27,6 +29,7 @@ public class UserStoreCollection {
     
     private HashMap<String, User> users = new HashMap<String, User>();
 
+    
     private List<User> finalize(List<User> users) {
         List<User> arraylist = new LinkedList<User>();
         for (User user : users) {
@@ -499,6 +502,10 @@ public class UserStoreCollection {
         if (user != null) {
             user.undoSuspention(suspensionId);
         }
+    }
+
+    public User getDeletedUser(String id) {
+        return (User)userManager.database.getObject(credentials, id);
     }
 
 }

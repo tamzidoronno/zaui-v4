@@ -58,7 +58,19 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
         <span class='shop_button' style='cursor:pointer;' gstype='submit'>Add room</span>
     </div>
     <div class='moreThenAvailableWarning'>
-        * Warning: You don't have enough rooms for this selection. Are you sure you want to add this rooms?<br> The rooms not available will be put into a waiting state.
+        <div class="isnotactive">
+            <div class="kaipal infobox">
+               // faces: happy,sad,talking,danger
+               <div class="image sad"></div>
+               <div class="textbox">
+                   <div class="header">Hey there, we have a problem.</div>
+                   <div class="text">
+                       You want me to create <span class='numberofrooms'></span> rooms. But I can only give you <span class='maxrooms'></span> rooms of type: <span class='typename'></span>. I will put <span class='roomsdiff'></span> rooms into a waiting list.
+                   </div>
+               </div>
+           </div>
+        </div>
+        
     </div>
     
 </div>

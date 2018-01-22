@@ -23,6 +23,7 @@ $prices = $priceObject->dailyPrices;
     </tr>
     <?
     foreach($itemTypes as $type) {
+        $price = "";
         if(isset($prices->{$type->id}->{'default'})) {
             $price = $prices->{$type->id}->{'default'};
         }

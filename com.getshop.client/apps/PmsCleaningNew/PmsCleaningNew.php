@@ -38,12 +38,14 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
             echo "Please specify a booking engine first";
             return;
         }
+        echo "<div style='max-width:1500px;margin:auto;'>";
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         if($config->cleaningInterval == 0) {
             echo "Cleaning interval is set to 0, this means it is disabled and need to be configured.";
         } else {
             $this->includefile("cleaningpanel");
         }
+        echo "</div>";
     }
     
     function print_guests_table($time, $arriving) {
@@ -152,7 +154,13 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         echo "<h1>Total cleanings for the next 7 days : $total</h1>";
     }
 
+    
     public function printRoomOverview() {
+        $res = array();
+        $res['isclean'] = 0;
+        $res['inuse'] = 0;
+        $res['dirty'] = 0;
+        
         $additional = $this->getAdditionalInfo();
         $items = $this->getItems();
         echo "<span class='notclean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
@@ -160,16 +168,19 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         echo "<span class='inUse' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
         foreach($additional as $add) {
             $isClean = "notclean roomNotReady";
-            if($add->isClean) {
-                $isClean = "clean";
-            }
             if($add->inUse && !$add->inUseByCleaning) {
                 $isClean = "inUse roomNotReady";
+                $res['inuse']++;
+            } else if($add->isClean) {
+                $isClean = "clean";
+                $res['isclean']++;
+            } else {
+                $res['dirty']++;
             }
             echo "<span class='roombox cleaningbox $isClean' itemid='".$add->itemId."'>" . $items[$add->itemId]->bookingItemName . "</span>";
         }
+        return $res;
     }
-
     public function getAdditionalInfo() {
         if(isset($this->additionalInfo)) {
             return $this->additionalInfo;

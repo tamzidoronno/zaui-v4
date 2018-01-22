@@ -25,7 +25,7 @@ if(!$nextPage) {
     
     <div class="pfbox">
         <div class="inner">
-            <span gstype='bookingtranslation' gstranslationfield='rooms'></span><br>
+            <div gstype='bookingtranslation' gstranslationfield='rooms'></div>
             <i id="subtract_room" class="fa fa-minus disabled"></i>
             <input type="txt" class="count" id="count_room" value="1" readonly>
             <i id="add_room" class="fa fa-plus"></i>
@@ -33,7 +33,8 @@ if(!$nextPage) {
     </div>
     <div class="pfbox">
         <div class="inner">
-            <span gstype='bookingtranslation' gstranslationfield='adults'></span><br>
+            <div class="excludeChildSelection" gstype='bookingtranslation' gstranslationfield='adults'></div>
+            <div class="switchAdultToGuest" gstype='bookingtranslation' gstranslationfield='numberofguests'></div>
             <i id="subtract_adult" class="fa fa-minus disabled"></i>
             <input type="txt" class="count" id="count_adult" value="1" readonly>
             <i id="add_adult" class="fa fa-plus"></i>
@@ -41,7 +42,7 @@ if(!$nextPage) {
     </div>
     <div class="pfbox excludeChildSelection">
         <div class="inner">
-            <span gstype='bookingtranslation' gstranslationfield='children'></span><br>
+            <div gstype='bookingtranslation' gstranslationfield='children'></div>
 
             <i id="subtract_child" class="fa fa-minus disabled "></i>
             <input type="txt" class="count" id="count_child" value="0" readonly>

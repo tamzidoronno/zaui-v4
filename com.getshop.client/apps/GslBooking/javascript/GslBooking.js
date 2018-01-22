@@ -38,6 +38,7 @@ function getshop_setBookingTranslation() {
                 if(config.childAge !== 0){
                     $('.pfbox').css('width','33.33%').css('padding','0 5%');
                     $('.excludeChildSelection').css('display','block');
+                    $('.switchAdultToGuest').css('display','none');
                 }
             }
         });    

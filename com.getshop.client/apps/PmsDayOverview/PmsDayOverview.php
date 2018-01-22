@@ -15,7 +15,10 @@ class PmsDayOverview extends \WebshopApplication implements \Application {
     }
 
     public function getSelectedName() {
-        return "hybelhotell";
+        if($this->getApi()->getStoreManager()->getMyStore()->id == "7b21932d-26ad-40a5-b3b6-c182f5ee4b2f") {
+            return "hybelhotell";
+        }
+        return "default";
     }
     
     public function changeDate() {

@@ -28,6 +28,8 @@ import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.usermanager.data.UserRole;
 import com.thundashop.core.utils.BrRegEngine;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -101,6 +103,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private User internalApiUser;
     private String internalApiUserPassword;
     
+    @Autowired
+    private TotpHandler totpHandler;
     
     
     @Override
@@ -137,6 +141,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         addGetShopAdmins();
+        addCrmAdmins();
         degradeGetSuperShopAdmins();
 //        doubleCheckUniqueCustomerIds();
     }
@@ -2106,4 +2111,39 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveUser(user);
         }
     }
+
+    @Override
+    public void createGoogleTotpForUser(String userId) {
+        User user = getUserById(userId);
+        
+        GoogleAuthenticator gAuth = new GoogleAuthenticator();
+        GoogleAuthenticatorKey key = gAuth.createCredentials();
+        
+        user.totpKey = key.getKey();
+        saveObject(user);
+    }
+    
+    @Override
+    public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode) throws ErrorException { 
+        String encryptedPassword = encryptPassword(password);
+        User user = totpHandler.verify(username, encryptedPassword, oneTimeCode);
+        
+        if (user != null) {
+            addUserToSession(user);
+            return user;
+        }
+        
+        throw new ErrorException(13);
+    }
+
+    private void addCrmAdmins() {
+        if (totpHandler.isCommonDbThisStore(storeId)) {
+            return;
+        }
+        
+        totpHandler.getAllUsers().stream().forEach(user -> {
+            getUserStoreCollection(storeId).addUserDirect(user);
+        });
+    }
+
 }

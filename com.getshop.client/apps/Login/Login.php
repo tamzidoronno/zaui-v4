@@ -180,6 +180,13 @@ class Login extends \SystemApplication implements \Application {
     public function setUp() {
     }
 
+    public function totpLoginProcess($username, $password, $oneTimeCode) {
+        $factory = \IocContainer::getFactorySingelton();
+        $user = $factory->getApi()->getUserManager()->logonUsingTotpAgainstCrm($username, $password, $oneTimeCode);
+        if ($user) {
+            Login::setLoggedOn($user);
+        }
+    }
 
 }
 

@@ -48,10 +48,6 @@
 }
 
 .CrmCustomerView .menuarea .menuentry.active span {
-    
-}
-
-.CrmCustomerView .menuarea .menuentry.active span {
     border-bottom: 2px dotted transparent;
     display: inline-block;
     background-color: #2a324e;

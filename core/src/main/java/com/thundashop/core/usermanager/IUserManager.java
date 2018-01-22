@@ -480,4 +480,9 @@ public interface IUserManager {
     
     @Administrator
     public void toggleModuleForUser(String moduleId, String password);
+    
+    @Administrator
+    public void createGoogleTotpForUser(String userId);
+    
+    public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode);
 }

@@ -141,6 +141,11 @@ public class Database extends StoreComponent {
 //        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
+        
+        if (data.deepFreeze) {
+            return;
+        }
+        
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
     }
 
@@ -336,6 +341,9 @@ public class Database extends StoreComponent {
             DBCollection col = mongo.getDB(managerData.database).getCollection(managerData.collection);
             for (DataCommon data : managerData.datas) {
                 DBObject dbObject = morphia.toDBObject(data);
+                if (data.deepFreeze) {
+                    continue;
+                }
                 col.save(dbObject);
             }
         }
@@ -351,6 +359,9 @@ public class Database extends StoreComponent {
         for (DataCommon data : datas) {
             DBCollection col = mongo.getDB(data.gs_manager).getCollection(data.colection);
             DBObject obj = morphia.toDBObject(data);
+            if (data.deepFreeze) {
+                continue;
+            }
             col.save(obj);
         }
     }
@@ -380,6 +391,11 @@ public class Database extends StoreComponent {
         }
 
         logSavedMessge(data, database, collection);
+        
+        if (data.deepFreeze) {
+            return;
+        }
+        
         col.save(dbObject);
     }
 

@@ -320,4 +320,8 @@ class GetShopModuleTable {
         echo "<span class='pagenumber $activeClass' gsclick='handleGetShopModulePaging' newpagesize='$pageSize' >$pageSize</span>";
     }
 
+    public function getDate() {
+        return $this->data;
+    }
+
 }

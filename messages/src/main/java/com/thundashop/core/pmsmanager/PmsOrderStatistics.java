@@ -18,6 +18,7 @@ public class PmsOrderStatistics implements Serializable  {
     LinkedList<PmsOrderStatisticsEntry> entries = new LinkedList();
     private List<String> roomProducts = new ArrayList();
     private final HashMap<String, User> users;
+    private HashMap<String, Boolean> canUseNew = new HashMap();
     
     public PmsOrderStatistics(List<String> roomProducts, HashMap<String, User> users) {
         this.roomProducts = roomProducts;
@@ -48,8 +49,10 @@ public class PmsOrderStatistics implements Serializable  {
         double total = 0.0;
         int orderscount = 0;
         for(Order order : ordersToUse) {
-            if(!order.isForPeriodedaySlept(cal.getTime())) {
-                continue;
+            if(filter.displayType.equals("dayslept")) {
+                if(!order.isForPeriodedaySlept(cal.getTime())) {
+                    continue;
+                }
             }
             
             double ordertotal = order.getTotalAmountUnfinalized();
@@ -243,6 +246,17 @@ public class PmsOrderStatistics implements Serializable  {
         }
         return total;
     }
+    
+    double getTotalExForOrder(long id) {
+        double total = 0.0;
+        for(PmsOrderStatisticsEntry entry : entries) {
+            Double extra = entry.orderEx.get(id);
+            if(extra != null) {
+                total += extra;
+            }
+        }
+        return total;
+    }
 
     private void addProductOrderPrice(String productId, String orderId, double price, HashMap<String, HashMap<String, Double>> toAdd) {
         if(!toAdd.containsKey(productId)) {
@@ -260,7 +274,7 @@ public class PmsOrderStatistics implements Serializable  {
 
     private boolean canUseNewCalculation(CartItem item, PmsOrderStatisticsEntry entry, Calendar cal,Order order) {
         int year = cal.get(Calendar.YEAR);
-        if(!order.isMatrixAndItemsValid()) {
+        if(!item.isMatrixAndItemsValid()) {
             return false;
         }
         if(item.priceMatrix != null && !item.priceMatrix.isEmpty()) {
@@ -276,6 +290,11 @@ public class PmsOrderStatistics implements Serializable  {
     }
 
     private PmsOrderStatisticsEntry calculatePeriodisatedValues(Order order, CartItem item, Calendar cal) {
+
+        if(order.incrementOrderId == 114664) {
+            System.out.println(item.getProduct().name + "(new) : " + item.startDate + " - " + item.endDate + " : " + cal.getTime());
+        }
+
         PmsOrderStatisticsEntry entry = new PmsOrderStatisticsEntry();
         String date = PmsBookingRooms.convertOffsetToString(cal.getTime());
         Double price = 0.0;

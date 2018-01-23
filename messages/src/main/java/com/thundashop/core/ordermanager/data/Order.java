@@ -763,6 +763,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(isSameDay(date, periodeDaySleptStart)) {
             return true;
         }
+        if(isSameDay(date, periodeDaySleptEnd)) {
+            return true;
+        }
         if(isSameDay(date, rowCreatedDate)) {
             return true;
         }
@@ -805,7 +808,7 @@ public class Order extends DataCommon implements Comparable<Order> {
 
 
     private Date getEndDateByItemsAndAddons() {
-        Date end = getStartDateByItems();
+        Date end = getEndDateByItems();
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             
@@ -826,7 +829,7 @@ public class Order extends DataCommon implements Comparable<Order> {
             if(end == null || (item.endDate != null && item.endDate.after(end))) {
                 end = item.endDate;
             }
-
+            
             if (item.itemsAdded != null) {
                 for (PmsBookingAddonItem addon : item.itemsAdded) {
                     if (end == null || end.before(addon.date)) {
@@ -963,6 +966,9 @@ public class Order extends DataCommon implements Comparable<Order> {
             if(item != null && item.getStartingDate() != null && (start == null || start.after(item.getStartingDate()))) {
                 start = item.getStartingDate();
             }
+            if(item != null && item.getEndingDate()!= null && (start == null || start.after(item.getEndingDate()))) {
+                start = item.getEndingDate();
+            }
         }
         return start;
     }
@@ -973,6 +979,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         for(CartItem item : cart.getItems()) {
             if(end == null || (item.getEndingDate() != null && end.before(item.getEndingDate()))) {
                 end = item.getEndingDate();
+            }
+            if(end == null || (item.getStartingDate()!= null && end.before(item.getStartingDate()))) {
+                end = item.getStartingDate();
             }
         }
         return end;

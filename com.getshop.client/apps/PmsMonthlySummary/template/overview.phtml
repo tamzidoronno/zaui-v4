@@ -53,12 +53,15 @@ foreach($totalYear as $year => $val) {
     $totalTransferredEx += $val;
     $totalTransferredInc += $totalYearInc[$year];
     if($val > 1 || $val < -1) {
-        echo "<tr><td>$year</td><td>".$val."</td><td>".round($totalYearInc[$year])."</td></tr>";
+        echo "<tr><td>$year</td><td>".round($val)."</td><td>".round($totalYearInc[$year])."</td></tr>";
     }
 }
+
+$diff = $monthlyStats->totalEx - $totalTransferredEx;
+
 echo "</table>";
 
-echo "<div title='".$monthlyStats->totalEx."'>Total transferred to accounting ex taxes: ".round($totalTransferredEx)."</div>";
+echo "<div title='".$monthlyStats->totalEx." - $diff'>Total transferred to accounting ex taxes: ".round($totalTransferredEx)."</div>";
 echo "<div title='".$monthlyStats->totalInc."'>Total transferred to accounting inc taxes: ".round($totalTransferredInc)."</div>";
 
 

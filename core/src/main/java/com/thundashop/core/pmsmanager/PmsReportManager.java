@@ -422,7 +422,22 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         toReturn.setData(res);
         toReturn.totalInc = totalInc;
         toReturn.totalEx = totalEx;
+        doubleCheck(ordersToUse, stats);
         return toReturn;
+    }
+
+    private void doubleCheck(List<Order> ordersToUse, PmsOrderStatistics stats) {
+        double totalMissing = 0.0;
+        for(Order order : ordersToUse) {
+            double totalEx = orderManager.getTotalAmountExTaxes(order);
+            double totalExInStats = stats.getTotalExForOrder(order.incrementOrderId);
+            double diff = totalEx-totalExInStats;
+            if(diff > 1 || diff < -1) {
+                System.out.println("Missing in order: " + order.incrementOrderId + " : " + diff);
+            }
+            totalMissing += diff;
+        }
+        System.out.println("Total missing: " + totalMissing);
     }
     
 }

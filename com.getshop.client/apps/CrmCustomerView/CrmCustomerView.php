@@ -94,5 +94,11 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         
         $this->user = $this->getApi()->getUserManager()->getUserById($user->id);
     }
+    
+    public function regeneratTotpKey() {
+        $this->loadData();
+        $user = $this->getUser();
+        $this->getApi()->getUserManager()->createGoogleTotpForUser($user->id);
+    } 
 }
 ?>

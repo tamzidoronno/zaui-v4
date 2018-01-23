@@ -66,6 +66,10 @@ public class User extends DataCommon implements Comparable<User> {
     
     public boolean createInSendRegning = false;
     public boolean autoConfirmBookings = false;
+    
+    @Administrator
+    public String totpKey;
+    public int lastTotpVerificationCodeUsed = 0;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

@@ -132,6 +132,9 @@ public class ScormManager extends ManagerBase implements IScormManager {
             return null;
         
         Scorm scorm= getScorm(user.id, scormId);
+        
+        updateDateOnGroup(scorm);
+        
         finalizeScorm(scorm);
         return scorm;
     }
@@ -332,6 +335,37 @@ public class ScormManager extends ManagerBase implements IScormManager {
             }
         });
     }
+    
+    private void updateDateOnGroup(Scorm scorm) {
+        ScormPackage pck = getPackage(scorm.scormId);
+        
+        if (scorm.passedDate != null) {
+            return;
+        }
+        
+        if(pck == null) {
+            return;
+        }
+        
+        if (pck.groupedScormPackages.isEmpty()) {
+            return;
+        }
+        
+        List<Scorm> scormsForUser = new ArrayList();
+        
+        pck.groupedScormPackages.stream().forEach(id -> {
+            Scorm subScorm = getScorm(scorm.userId, id);
+            scormsForUser.add(subScorm);
+        }); 
+         
+        long passedTestsCount = scormsForUser.stream().filter(s -> s.passed).count();
+        
+        if (passedTestsCount == scormsForUser.size()) {
+            scorm.passedDate = getLastPassedDate(scormsForUser);
+            saveObject(scorm);
+        }
+        
+    }
 
     private void updateGroupedScormPackages(Scorm scorm, String userId) {
         List<ScormPackage> dbs = packages.values().stream()
@@ -340,18 +374,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
         
         List<Scorm> passedTests = new ArrayList();
         for (ScormPackage pck : dbs) {
-            boolean allPassed = true;
-            for (String scormId : pck.groupedScormPackages) {
-                Scorm userscorm = getScormForCurrentUser(scormId, userId);
-                if (userscorm == null) {
-                    continue;
-                }
-                if (!userscorm.passed) {
-                    allPassed = false;
-                } else {
-                    passedTests.add(userscorm);
-                }
-            }
+            boolean allPassed = isAllPassed(pck, userId, passedTests);
             
             if (allPassed) {
                 Scorm userscorm = getScormForCurrentUser(pck.id, userId);
@@ -370,6 +393,22 @@ public class ScormManager extends ManagerBase implements IScormManager {
                 cachedMap.put(userscorm.scormId+"_"+userscorm.userId, scorm);
             }
         }
+    }
+
+    private boolean isAllPassed(ScormPackage pck, String userId, List<Scorm> passedTests) {
+        boolean allPassed = true;
+        for (String scormId : pck.groupedScormPackages) {
+            Scorm userscorm = getScormForCurrentUser(scormId, userId);
+            if (userscorm == null) {
+                continue;
+            }
+            if (!userscorm.passed) {
+                allPassed = false;
+            } else {
+                passedTests.add(userscorm);
+            }
+        }
+        return allPassed;
     }
 
     private Date getLastPassedDate(List<Scorm> passedTests) {

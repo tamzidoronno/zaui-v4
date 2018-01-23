@@ -52,8 +52,6 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
             ret.addAll(invoices);    
         }
         
-        
-
         return ret;
     }
     

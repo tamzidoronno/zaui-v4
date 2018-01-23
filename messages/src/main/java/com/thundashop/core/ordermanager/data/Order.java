@@ -106,6 +106,17 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String wubookid = "";
     public boolean warnedNotAbleToCapture = false;
     
+    @Transient
+    private Date periodeDaySleptStart;
+    @Transient
+    private Date periodeDaySleptEnd;
+    
+    @Transient
+    private Calendar cal2;
+    
+    @Transient
+    private Calendar cal1;
+    
     public Order jsonClone() {
         Gson gson = new Gson();
         String gsonOrder = gson.toJson(this);
@@ -589,6 +600,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         return amount;
     }
 
+    public double getTotalAmountUnfinalized() {
+        double amount = 0.0;
+        for(CartItem item : cart.getItemsUnfinalized()) {
+            amount += item.getTotalAmount();
+        }
+        return amount;
+    }
+
     public boolean sentToCustomer() {
         return shipmentLog.size() > 0;
     }
@@ -616,11 +635,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return null;
     }
-
+    
     public boolean isOrderFinanciallyRelatedToDates(Date start, Date end) {
-        if (incrementOrderId == 122109 ) {
-            System.out.println("Checking it");
-        }
         if (createdBetween(start, end)) {
             return true;
         }
@@ -702,6 +718,144 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
+
+    private boolean isSameDay(Date date1, Date date2) {
+        if(date1 == null || date2 == null) {
+            return false;
+        }
+        
+        if(!isSameDayByMilliSeconds(date1, date2)) {
+            return false;
+        }
+        
+        if(cal1 == null) {
+            cal1 = Calendar.getInstance();
+        }
+        if(cal2 == null) {
+            cal2 = Calendar.getInstance();
+        }
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        return sameDay;
+    }
+
+    public boolean isForPeriodedaySlept(Date date) {
+        if(periodeDaySleptStart == null) {
+            periodeDaySleptStart = rowCreatedDate;
+            Date start = getStartDateByItemsAndAddons();
+            if(start != null) {
+                periodeDaySleptStart = start;
+            }
+        }
+        if(periodeDaySleptEnd == null) {
+            periodeDaySleptEnd = rowCreatedDate;
+            Date end = getEndDateByItemsAndAddons();
+            if(end != null) {
+                periodeDaySleptEnd = end;
+            }
+        }
+        
+        if(intercepts(date, periodeDaySleptStart.getTime(), periodeDaySleptEnd.getTime())) {
+            return true;
+        }
+        if(isSameDay(date, periodeDaySleptStart)) {
+            return true;
+        }
+        if(isSameDay(date, rowCreatedDate)) {
+            return true;
+        }
+        return false;
+    }
+
+    private Date getStartDateByItemsAndAddons() {
+        Date start = getStartDateByItems();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            
+        for (CartItem item : cart.getItems()) {
+            if (item.priceMatrix != null) {
+                for (String date : item.priceMatrix.keySet()) {
+                    try {
+                        Date checkDate = sdf.parse(date);
+                        if(start == null || checkDate.before(start)) {
+                            start = checkDate;
+                        }
+                    } catch (ParseException ex) {
+                        System.out.println("failed");
+                    }
+                }
+            }
+
+            if(start == null || (item.startDate != null && item.startDate.before(start))) {
+                start = item.startDate;
+            }
+
+            if (item.itemsAdded != null) {
+                for (PmsBookingAddonItem addon : item.itemsAdded) {
+                    if (start == null || start.after(addon.date)) {
+                        start = addon.date;
+                    }  
+                } 
+            }
+        }
+        return start;
+    }
+
+
+    private Date getEndDateByItemsAndAddons() {
+        Date end = getStartDateByItems();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            
+        for (CartItem item : cart.getItems()) {
+            if (item.priceMatrix != null) {
+                for (String date : item.priceMatrix.keySet()) {
+                    try {
+                        Date checkDate = sdf.parse(date);
+                        if(end == null || checkDate.after(end)) {
+                            end = checkDate;
+                        }
+                    } catch (ParseException ex) {
+                        System.out.println("failed");
+                    }
+                }
+            }
+
+            if(end == null || (item.endDate != null && item.endDate.after(end))) {
+                end = item.endDate;
+            }
+
+            if (item.itemsAdded != null) {
+                for (PmsBookingAddonItem addon : item.itemsAdded) {
+                    if (end == null || end.before(addon.date)) {
+                        end = addon.date;
+                    }  
+                } 
+            }
+        }
+        return end;
+    }
+
+    private boolean isSameDayByMilliSeconds(Date date1, Date date2) {
+        long diff = date1.getTime() - date2.getTime();
+        if(diff < 0) {
+            diff *= -1;
+        }
+        
+        if(diff > (86400000*2)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    public void clearPeriodisation() {
+        periodeDaySleptEnd = null;
+        periodeDaySleptStart = null;
+    }
+
 
     public static class Status  {
         public static int CREATED = 1;

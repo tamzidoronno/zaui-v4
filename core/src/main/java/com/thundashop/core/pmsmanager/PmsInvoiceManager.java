@@ -501,7 +501,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private void adjustAmountOnOrder(Order order, Double totalAmount) {
         double now = orderManager.getTotalAmount(order);
-        System.out.println("Need to adjust from :" + now + " to " + totalAmount);
         double diff = (totalAmount / now);
 
         for(CartItem item : order.cart.getItems()) {
@@ -788,16 +787,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             orders = filterOrdersOnChannel(filter.channel, orders);
         }
         
-        // This is a huge improvement of speed!
-        if (filter.start != null && filter.end != null && storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
-            orders = orders
-                .stream()
-                .filter(order -> order.isVirtual || order.isOrderFinanciallyRelatedToDates(filter.start, filter.end))
-                .collect(Collectors.toList());
-        }
-     
-        System.out.println("Channel: " + filter.channel + " - " + orders.size());
-        
         List<Order> ordersToUse = new ArrayList();
         for(Order order : orders) {
             if(order == null || order.cart == null) {
@@ -860,7 +849,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(Order ord : ordersToUse) {
             totalAmountEx += orderManager.getTotalAmountExTaxes(ord);
         }
-        System.out.println("Jepp: " + filter.channel + ":" + totalAmountEx);
         
         List<String> roomProducts = new ArrayList();
         for(BookingItemType type : bookingEngine.getBookingItemTypes()) {

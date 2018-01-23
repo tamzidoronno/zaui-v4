@@ -38,11 +38,13 @@ foreach($monthlyStats->entries as $entry) {
         }
         $totalYearInc[date("Y", strtotime($entry->day))] += $val;
     }
-    echo "<tr>";
-    echo "<td>" . date("m-Y", strtotime($entry->day)) . "</td>";
+    if($totalDayEx > 1 || $totalDayEx < -1) {
+        echo "<tr>";
+        echo "<td>" . date("m-Y", strtotime($entry->day)) . "</td>";
     echo "<td>" . round($totalDayEx) . "</td>";
     echo "<td>" . round($totalDayInc) . "</td>";
-    echo "</tr>";
+        echo "</tr>";
+    }
 }
 
 $totalTransferredEx = 0.0;
@@ -50,7 +52,9 @@ $totalTransferredInc = 0.0;
 foreach($totalYear as $year => $val) {
     $totalTransferredEx += $val;
     $totalTransferredInc += $totalYearInc[$year];
-    echo "<tr><td>$year</td><td>".round($val)."</td><td>".round($totalYearInc[$year])."</td></tr>";
+    if($val > 1 || $val < -1) {
+        echo "<tr><td>$year</td><td>".$val."</td><td>".round($totalYearInc[$year])."</td></tr>";
+    }
 }
 echo "</table>";
 

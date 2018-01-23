@@ -247,6 +247,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order.isVirtual) {
             return;
         }
+        order.clearPeriodisation();
+        
         User user = getSession().currentUser;
         if (user != null && order.userId == null) {
             order.userId = user.id;

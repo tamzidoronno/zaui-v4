@@ -48,7 +48,11 @@ public class PmsOrderStatistics implements Serializable  {
         double total = 0.0;
         int orderscount = 0;
         for(Order order : ordersToUse) {
-            double ordertotal = order.getTotalAmount();
+            if(!order.isForPeriodedaySlept(cal.getTime())) {
+                continue;
+            }
+            
+            double ordertotal = order.getTotalAmountUnfinalized();
             
             if(ordertotal < 1.0 && ordertotal > -1.0) {
                 continue;
@@ -95,7 +99,7 @@ public class PmsOrderStatistics implements Serializable  {
                     addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                 }
             } else if(filter.displayType.equals("dayslept")) {
-                for(CartItem item : order.cart.getItems()) {
+                for(CartItem item : order.cart.getItemsUnfinalized()) {
                     if(canUseNewCalculation(item, entry, cal, order)) {
                         PmsOrderStatisticsEntry tmpEntry = calculatePeriodisatedValues(order, item,cal);
                         copy(priceEx, tmpEntry.priceEx);

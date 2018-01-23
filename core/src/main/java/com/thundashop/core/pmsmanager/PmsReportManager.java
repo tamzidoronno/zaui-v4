@@ -408,9 +408,15 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         Calendar now = Calendar.getInstance();
         cal.set(Calendar.YEAR, now.get(Calendar.YEAR)+3);
         filter.end = cal.getTime();
+        filter.displayType = "dayslept";
+        filter.priceType = "extaxes";
+        filter.includeVirtual = false;
+        
+        gsTiming("before createstats");
         
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
+        gsTiming("After createstats");
         LinkedList<PmsOrderStatisticsEntry> res = stats.entries;
         PmsMonthlyOrderStatistics toReturn = new PmsMonthlyOrderStatistics();
         toReturn.setData(res);

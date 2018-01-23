@@ -126,6 +126,10 @@ public class CartItem implements Serializable {
         return product;
     }
 
+    public Product getProductUnfinalized() {
+        return product;
+    }
+    
     public Map<String, String> getVariations() {
         if(variations == null) {
             return new HashMap();
@@ -410,5 +414,9 @@ public class CartItem implements Serializable {
             
             count = priceMatrix.size();
         }
+    }
+
+    public boolean isForPeriode(Date date) {
+        return false;
     }
 }

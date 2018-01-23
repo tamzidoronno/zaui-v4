@@ -141,6 +141,10 @@ public class Cart extends DataCommon {
         return retValue;
     }
     
+    public List<CartItem> getItemsUnfinalized() {
+        return items;
+    }
+    
     public List<CartItem> getItems() {
         List<CartItem> itemsToReturn = new ArrayList();
         for(CartItem it : items) {

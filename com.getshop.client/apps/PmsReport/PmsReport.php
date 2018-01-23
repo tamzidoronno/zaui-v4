@@ -160,7 +160,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         } else {
             $data = $this->data;
         }
-            
+        
         $rows = array();
         $products = array();
         $allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());

@@ -13,7 +13,6 @@ if($followup == "true"){
     $manualtext = "<span class='manualfollowup'>Manuell oppfølging</span>";
     $sliderinput = "<input type='checkbox' value='<? echo $followup; ?>' gsname='fleetFollowup' id='followupslider'/>";
 }
-
 ?>
 <div class='title'><? echo $fleet->name ."<br><span style='font-size:16px;font-style:italic;'>En ".$followuptext." oppfølgingsflåte.</span>";?></div>
 <?
@@ -46,9 +45,27 @@ if ($isAdmin) {
         <?
     }
     ?>
-    <span class="saveform shop_button" gstype="submit"> Lagre </span>
     </div>
     
+    <?
+    if (!$followup) {
+        $text_none = "Det er kun hovedforspørselen som blir sendt ut.";
+        $text_daily = "Sender først 1 reminder dagen etter hovedforspørselen, deretter en til 2 dager etter hovedforspørselen.";
+        $text_weekly = "Sender først 1 reminder en uke etter hovedforspørselen, deretter en til etter 2 uker etter hovedforspørselen.";
+    ?>
+    <div class='followupoptions'>
+        <b>Oppfølgingsfrekvens på kilometerstand forespørsel:</b>
+        <div style="font-size: 13px; padding-top: 10px; padding-right: 100px;"> Systemet gjør forspørsler 1 gang i måneden etter kilometerstand. Ved å stille inn under så setter du hvor ofte systemet skal "mase" på brukerene. Dersom du ønsker at systemet aldri skal spørre etter kilometerstanden velger du "Manuell oppfølging"</div>
+        <br/>
+        <input type='radio' name='frequency' gsname='frequency_none'   <? echo $fleet->naggingInterval == "frequency_none" ? 'checked="true"' : ""; ?> /> Ingen    <i title='<? echo $text_none; ?>' class='fa fa-info-circle'></i>
+        <input type='radio' name='frequency' gsname='frequency_daily'  <? echo $fleet->naggingInterval == "frequency_daily" ? 'checked="true"' : ""; ?> /> Daglig   <i title="<? echo $text_daily; ?>" class='fa fa-info-circle'></i>
+        <input type='radio' name='frequency' gsname='frequency_weekly' <? echo $fleet->naggingInterval == "frequency_weekly" ? 'checked="true"' : ""; ?> /> Ukentlig <i title="<? echo $text_weekly; ?>" class='fa fa-info-circle'></i>
+    </div>
+    <?
+    }
+    ?>
+    
+   <span class="saveform shop_button" gstype="submit"> Lagre </span>
 </div>
 <?
 }

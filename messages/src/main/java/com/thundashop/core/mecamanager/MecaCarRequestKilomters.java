@@ -5,69 +5,34 @@
  */
 package com.thundashop.core.mecamanager;
 
+import com.thundashop.core.messagemanager.SmsLogEntry;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author ktonder
  */
 public class MecaCarRequestKilomters implements Serializable {
-    private Date requestedLastTime;
-    
-    private Date requestedLastTimeSms;
     
     private Date lastReceivedKilomters = new Date(0);
+    private Date nextRequestDate = null;
+    private int requestCount = 0;
     
-    private boolean requestActive = false;
+    private List<MessageLog> logs = new ArrayList();
     
     public void reset() {
-        requestedLastTime = null;
-        requestedLastTimeSms = null;
     }
     
-    public boolean canSendPushNotification() {
-        if (requestedLastTime == null || lastReceivedKilomters == null)
-            return true;
-        
-        Date date1 = getDateInFuture(lastReceivedKilomters, 1, 0);
-        Date date2 = getDateInFuture(requestedLastTime, 1, 0);
-        Date date3 = getDateInFuture(requestedLastTime, 0, 1);
-        Date toDay = new Date();
-        
-        if (date1.before(toDay) && date2.before(toDay))
-            return true;
-        
-        if (date1.before(toDay) && date3.before(toDay))
-            return true;
-        
-        return false;
-    }
-
     public void markReceivedKilomters() {
-        requestActive = false;
-        requestedLastTime = new Date();
         lastReceivedKilomters = new Date();
-    }
-
-    public void setRequestedLastTime(Date requestedLastTime) {
-        this.requestedLastTime = requestedLastTime;
     }
 
     public void setLastReceivedKilomters(Date lastReceivedKilomters) {
         this.lastReceivedKilomters = lastReceivedKilomters;
-    }
-
-    private Date getDateInFuture(Date lastReceivedKilomters, int month, int extraDays) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(lastReceivedKilomters);
-        
-        cal.add(Calendar.MONTH, month);
-        cal.add(Calendar.DAY_OF_MONTH, -1);
-        cal.add(Calendar.DAY_OF_MONTH, extraDays);
-        
-        return cal.getTime();
     }
 
     /**
@@ -76,50 +41,93 @@ public class MecaCarRequestKilomters implements Serializable {
      * 
      * @return 
      */
-    public boolean canSendSmsNotification() {
+    public boolean canSendNotification() {
+        Date today = new Date();
         
-        Date date1 = getDateInFuture(lastReceivedKilomters, 1, 7);
-        
-        Date toDay = new Date();
-        
-        if (date1.before(toDay)) {
-            
-            if (requestedLastTimeSms == null) 
-                return true;
-            
-            Date date2 = getDateInFuture(requestedLastTimeSms, 0, 7);
-            
-            if (date2.before(toDay)) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
-    public void markAsSentSmsNotification() {
-        requestActive = true;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.MINUTE, 1);
-        requestedLastTimeSms = cal.getTime();
-    }
-    
-    public void markAsSentPushNotification() {
-        requestActive = true;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.MINUTE, 1);
-        requestedLastTime = cal.getTime();
-    }
-
-    boolean updateRequestedLastTimeSms() {
-        if (requestedLastTimeSms == null) {
-            requestedLastTimeSms = new Date();
+        if (today.after(nextRequestDate)) {
             return true;
         }
         
         return false;
     }
+
+    public void markAsSentSmsNotification(MecaFleet fleet, String textMessage, String number) {
+        String message = "Sms: " + textMessage + ", Telefonnr: " + number;
+        String type = "sms";
+        addLogEntry(message, type, fleet.naggingInterval);
+        calculateNextRequest(fleet);
+    }
     
+    public void markAsSentPushNotification(MecaFleet fleet) {
+        addLogEntry("Push notification sendt", "push", fleet.naggingInterval);
+    }
+
+    private void addLogEntry(String message, String type, String naggingInterval) {
+        MessageLog entry = new MessageLog();
+        entry.message = message;
+        entry.type = type + "("+naggingInterval+")";
+        logs.add(entry);
+    }
+    
+    private void calculateNextRequest(MecaFleet fleet) {
+        requestCount++;
+        
+        if (fleet.naggingInterval.equals("frequency_none")) {
+            setNextMainRequest();
+        } else if (fleet.naggingInterval.equals("frequency_daily")) {
+            handleDailyRequest();
+        } else if (fleet.naggingInterval.equals("frequency_weekly")) {
+            handleWeeklyRequest();
+        } else {
+            setNextMainRequest();
+        }
+    }
+
+    private void setNextMainRequest() {
+        requestCount = 0;
+        nextRequestDate = getNextMainRequest();
+    }
+
+    private Date getNextMainRequest() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 7);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    private void handleDailyRequest() {
+        if (requestCount <= 2) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(nextRequestDate);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            nextRequestDate = cal.getTime();
+        } else {
+            setNextMainRequest();
+        }
+    }
+
+    private void handleWeeklyRequest() {
+        if (requestCount <= 2) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(nextRequestDate);
+            cal.add(Calendar.DAY_OF_MONTH, 7);
+            nextRequestDate = cal.getTime();
+        } else {
+            setNextMainRequest();
+        }
+    }
+
+    public boolean setNextIfNull() {
+        if (nextRequestDate == null) {
+            nextRequestDate = getNextMainRequest();
+            return true;
+        }
+        
+        return false;
+    }
 }

@@ -1,18 +1,26 @@
-.MecaFleetTitlePrinter .title {padding: 20px;background-color: #EFEFEF;text-align: center;font-size: 26px;border: 1px solid #dcdcdc;color:#555;}
-.MecaFleetTitlePrinter .editmecafleetform{border:1px solid #dcdcdc;min-height: 400px;}
+.MecaFleetTitlePrinter .title {padding: 20px;background-color: #EFEFEF;text-align: center;font-size: 26px;border: 1px solid #dcdcdc;color:#555; }
+.MecaFleetTitlePrinter .editmecafleetform{border:1px solid #dcdcdc;min-height: 400px; background-color: #EFEFEF; padding-bottom: 30px;}
 
-.MecaFleetTitlePrinter .leftFleetbox{width:50%;float:left;min-height:400px;background-color: #EFEFEF;color:#666;margin-bottom: 50px;z-index: 1;}
+.MecaFleetTitlePrinter .leftFleetbox{width:50%;background-color: #EFEFEF;color:#666;z-index: 1; display: inline-block; vertical-align: top;}
 .MecaFleetTitlePrinter .leftFleetbox .fleetfield{margin-left:50px;margin-right: 50px;line-height: 35px;height:35px;background-color:#fff;margin-bottom: 25px;padding-left:10px;border:1px solid #dcdcdc;}
 .MecaFleetTitlePrinter .leftFleetbox input{position:relative;top:-1px;left:1px;float:right;z-index:1;}
 
-.MecaFleetTitlePrinter .rightFleetbox{width:50%;float:right;min-height:368px;background-color: #EFEFEF;color:#666;margin-bottom: 50px;z-index:1;padding-top:32px;}
+.MecaFleetTitlePrinter .rightFleetbox{width:calc(50% - 10px); background-color: #EFEFEF;color:#666;z-index:1;padding-top:32px; display: inline-block; vertical-align: top; }
 .MecaFleetTitlePrinter .rightFleetbox .fleetfield{margin-left:50px;margin-right: 50px;line-height: 35px;height:35px;background-color:#fff;margin-bottom: 25px;padding-left:10px;border:1px solid #dcdcdc;}
 .MecaFleetTitlePrinter .rightFleetbox .fleetarea{margin:25px 50px 0 50px;border:1px solid #dcdcdc;background-color:#fff;}
 .MecaFleetTitlePrinter .rightFleetbox textarea{width:99%;height:127px;position: relative;bottom:-5px;border:0;border-top:1px solid #dcdcdc;}
 /*.MecaFleetTitlePrinter .rightFleetbox textarea:focus{height:80px;}*/
 .MecaFleetTitlePrinter .rightFleetbox input{position:relative;top:-1px;left:1px;float:right;z-index:1;}
-.MecaFleetTitlePrinter .rightFleetbox .saveform{position:relative;float:right;top:10px;right:50px;width:80px;}
+.MecaFleetTitlePrinter .saveform{position:absolute;right:10px;width:80px; bottom: 10px;}
 
+.MecaFleetTitlePrinter input[name='frequency'] {
+    margin-left: 50px;
+    margin-top: 10px;
+}
+.MecaFleetTitlePrinter .followupoptions {
+    padding-left: 50px;
+    padding-right: 50px;
+}
 
 /*gsniceslider1*/
 .MecaFleetTitlePrinter .gsniceslider1 {

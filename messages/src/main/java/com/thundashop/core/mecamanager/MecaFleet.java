@@ -31,4 +31,7 @@ public class MecaFleet extends DataCommon {
     public String contactOther = "";
     public String pageId = "";
     public List<String> cars = new ArrayList();
+    
+    // frequency_none, frequency_daily, frequency_weekly
+    public String naggingInterval = "frequency_weekly";
 }

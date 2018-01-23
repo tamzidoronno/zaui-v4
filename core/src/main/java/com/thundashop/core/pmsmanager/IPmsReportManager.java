@@ -29,4 +29,7 @@ public interface IPmsReportManager {
     @Administrator
     public List<PmsSubscriptionReportEntry> getSubscriptionReport(Date start, Date end);
     
+    @Administrator
+    public PmsMonthlyOrderStatistics getMonthlyStatistics();
+   
 }

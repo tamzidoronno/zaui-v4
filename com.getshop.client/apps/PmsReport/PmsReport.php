@@ -2,6 +2,8 @@
 namespace ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9;
 
 class PmsReport extends \MarketingApplication implements \Application {
+    var $data;
+    
     public function getDescription() {
         
     }
@@ -153,8 +155,12 @@ class PmsReport extends \MarketingApplication implements \Application {
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
         }
-        $data = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedMultilevelDomainName(), $filter);
-        
+        if(!$this->data) {
+            $data = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedMultilevelDomainName(), $filter);
+        } else {
+            $data = $this->data;
+        }
+            
         $rows = array();
         $products = array();
         $allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());

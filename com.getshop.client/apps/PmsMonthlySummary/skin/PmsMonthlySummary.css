@@ -1,0 +1,3 @@
+.PmsMonthlySummary .GetShopModuleTable {display:table; }
+.PmsMonthlySummary .GetShopModuleTable .datarow {display:table-row; }
+.PmsMonthlySummary .GetShopModuleTable .col {display:table-cell; }

@@ -1947,6 +1947,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 PmsBooking booking = new PmsBooking();
                 pmsManager.setPriceOnRoom(room, true, booking);
                 priceToAdd = room.price;
+                
+                //Lofoten bed and breakfast icreases the rooms by 15%.
+                if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9")) {
+                    priceToAdd *= 1.15;
+                }
+                
             } else if(pmsManager.getConfigurationSecure().enableCoveragePrices) {
                 PmsBooking booking = new PmsBooking();
                 priceToAdd = pmsInvoiceManager.calculatePrice(rdata.bookingEngineTypeId, calStart.getTime(), calStart.getTime(), true, booking);

@@ -170,6 +170,9 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
 
     public void toggleActivated() {
         this.activated = !this.activated;
+        if (!this.activated && this.currentThread != null) {
+            this.currentThread.stop();
+        }
     }
     
     private synchronized void startNextThread(boolean stopOldThread) {

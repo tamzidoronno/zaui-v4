@@ -126,7 +126,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return true;
         }
         
-        client = new XmlRpcClient("https://wubook.net/xrws/");
+        //Old
+//        client = new XmlRpcClient("https://wubook.net/xrws/");
+        //New
+        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
 
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
@@ -465,7 +468,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             String[] roomIds = new String[1];
             roomIds[0] = rdata.wubookroomid + "";
             if(rdata.newRoomPriceSystem) {
-                roomIds = rdata.virtualWubookRoomIds.split(";");
+//                roomIds = rdata.virtualWubookRoomIds.split(";");
             }
             int guests = 1;
             for(String roomId : roomIds) {
@@ -475,7 +478,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
                 guests++;
             }
-        }
+        } 
         
         Vector params = new Vector();
         params.addElement(token);

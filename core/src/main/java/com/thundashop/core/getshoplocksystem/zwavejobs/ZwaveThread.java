@@ -49,7 +49,7 @@ public abstract class ZwaveThread implements Runnable {
     @Override
     public void run() {
         if (GetShopLogHandler.isDeveloper) {
-//            return;
+            return;
         }
         
         lock.lastStartedUpdating = new Date();

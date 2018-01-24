@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.braintreegateway.Transaction;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import org.joda.time.DateTime;
@@ -38,6 +40,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     
     @Autowired
     OrderManager orderManager;
+    
+    @Autowired
+    PmsInvoiceManager pmsInvoiceManager;
     
     @Override
     public List<PmsMobileReport> getReport(Date start, Date end, String compareTo, boolean excludeClosedRooms) {
@@ -370,6 +375,69 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             
         }
         return result;
+    }
+
+    @Override
+    public PmsMonthlyOrderStatistics getMonthlyStatistics() {
+        PmsOrderStatsFilter filter = new PmsOrderStatsFilter();
+        
+        List<Order> ordersToUse = new ArrayList();
+        
+        List<String> roomProducts = new ArrayList();
+        for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
+            roomProducts.add(type.productId);
+            roomProducts.addAll(type.historicalProductIds);
+        }
+       
+        double totalInc = 0.0;
+        double totalEx = 0.0;
+        List<Order> allOrders = orderManager.getOrders(null, null, null);
+        for(Order ord : allOrders) {
+            if(ord.transferredToAccountingSystem) {
+                ordersToUse.add(ord);
+                totalInc += orderManager.getTotalAmount(ord);
+                totalEx += orderManager.getTotalAmountExTaxes(ord);
+            }
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2014);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.MONTH, 1);
+        filter.start = cal.getTime();
+        Calendar now = Calendar.getInstance();
+        cal.set(Calendar.YEAR, now.get(Calendar.YEAR)+3);
+        filter.end = cal.getTime();
+        filter.displayType = "dayslept";
+        filter.priceType = "extaxes";
+        filter.includeVirtual = false;
+        
+        gsTiming("before createstats");
+        
+        PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
+        stats.createStatistics(ordersToUse, filter);
+        gsTiming("After createstats");
+        LinkedList<PmsOrderStatisticsEntry> res = stats.entries;
+        PmsMonthlyOrderStatistics toReturn = new PmsMonthlyOrderStatistics();
+        toReturn.setData(res);
+        toReturn.totalInc = totalInc;
+        toReturn.totalEx = totalEx;
+        doubleCheck(ordersToUse, stats);
+        return toReturn;
+    }
+
+    private void doubleCheck(List<Order> ordersToUse, PmsOrderStatistics stats) {
+        double totalMissing = 0.0;
+        for(Order order : ordersToUse) {
+            double totalEx = orderManager.getTotalAmountExTaxes(order);
+            double totalExInStats = stats.getTotalExForOrder(order.incrementOrderId);
+            double diff = totalEx-totalExInStats;
+            if(diff > 1 || diff < -1) {
+                System.out.println("Missing in order: " + order.incrementOrderId + " : " + diff);
+            }
+            totalMissing += diff;
+        }
+        System.out.println("Total missing: " + totalMissing);
     }
     
 }

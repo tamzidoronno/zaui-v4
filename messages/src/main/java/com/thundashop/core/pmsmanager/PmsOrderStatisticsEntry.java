@@ -39,4 +39,24 @@ public class PmsOrderStatisticsEntry implements Serializable {
         
         return uniqueList;
     }
+
+    void append(PmsOrderStatisticsEntry entry) {
+        for(String key : entry.priceEx.keySet()) {
+            Double res = 0.0;
+            if(priceEx.containsKey(key)) {
+                res = priceEx.get(key);
+            }
+            res += entry.priceEx.get(key);
+            priceEx.put(key, res);
+        }
+        
+        for(String key : entry.priceInc.keySet()) {
+            Double res = 0.0;
+            if(priceInc.containsKey(key)) {
+                res = priceInc.get(key);
+            }
+            res += entry.priceInc.get(key);
+            priceInc.put(key, res);
+        }
+    }
 }

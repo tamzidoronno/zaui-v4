@@ -1,0 +1,68 @@
+ <div class="kaipal infobox">
+    <div class="image talking"></div>
+    <div class="textbox">
+        <div class="header"><? echo $this->__f("I got some reports for you"); ?></div>
+        <div class="text">
+            This reports help you periodisate the data an contains everything you need related to your accounting system. The source of this reports is the orders transferred to the accounting system. This means the coverage and income report found in the pms module can be different since the data might not have been pushed to the accounting system yet.
+        </div>
+    </div>
+</div>
+<br><br>
+<?php
+/* @var $this ns_54e85e9b_cbeb_4ddd_abf9_7a2ddf1c259f\PmsMonthlySummary */
+$monthlyStats = $this->getApi()->getPmsReportManager()->getMonthlyStatistics($this->getSelectedMultilevelDomainName());
+$totalYear = array();
+$totalYearInc = array();
+echo "<table style='width: 50%'>";
+echo "<tr>";
+echo "<th style='text-align:left;'>Year</th>";
+echo "<th style='text-align:left;'>Total ex tax</th>";
+echo "<th style='text-align:left;'>Total inc tax</th>";
+echo "</tr>";
+
+foreach($monthlyStats->entries as $entry) {
+    $totalDayEx = 0.0;
+    $totalDayInc = 0.0;
+    foreach($entry->priceEx as $prodId => $val) {
+        $totalDayEx += $val;
+        if(!isset($totalYear[date("Y", strtotime($entry->day))])) {
+            $totalYear[date("Y", strtotime($entry->day))] = 0.0;
+        }
+        $totalYear[date("Y", strtotime($entry->day))] += $val;
+    }
+    
+    foreach($entry->priceInc as $prodId => $val) {
+        $totalDayInc += $val;
+        if(!isset($totalYearInc[date("Y", strtotime($entry->day))])) {
+            $totalYearInc[date("Y", strtotime($entry->day))] = 0.0;
+        }
+        $totalYearInc[date("Y", strtotime($entry->day))] += $val;
+    }
+    if($totalDayEx > 1 || $totalDayEx < -1) {
+        echo "<tr>";
+        echo "<td>" . date("m-Y", strtotime($entry->day)) . "</td>";
+    echo "<td>" . round($totalDayEx) . "</td>";
+    echo "<td>" . round($totalDayInc) . "</td>";
+        echo "</tr>";
+    }
+}
+
+$totalTransferredEx = 0.0;
+$totalTransferredInc = 0.0;
+foreach($totalYear as $year => $val) {
+    $totalTransferredEx += $val;
+    $totalTransferredInc += $totalYearInc[$year];
+    if($val > 1 || $val < -1) {
+        echo "<tr><td>$year</td><td>".round($val)."</td><td>".round($totalYearInc[$year])."</td></tr>";
+    }
+}
+
+$diff = $monthlyStats->totalEx - $totalTransferredEx;
+
+echo "</table>";
+
+echo "<div title='".$monthlyStats->totalEx." - $diff'>Total transferred to accounting ex taxes: ".round($totalTransferredEx)."</div>";
+echo "<div title='".$monthlyStats->totalInc."'>Total transferred to accounting inc taxes: ".round($totalTransferredInc)."</div>";
+
+
+?>

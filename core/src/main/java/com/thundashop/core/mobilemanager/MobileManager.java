@@ -121,6 +121,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
 //            Sender sender = new Sender("AIzaSyBk5eR0ZxtHUafrXAdv5pw-PtEj4GNnSvg");
 //            sender.send(gcmmessage, token.tokenId, 1);
             
+//          Meca Fleet
             Sender sender = new Sender("AIzaSyDkfN5kMdU54C5DoXw-2rgcmoWeZRi0-8c");
             sender.send(gcmmessage, tokenId, 1);
         } catch (IOException ex) {

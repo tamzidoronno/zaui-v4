@@ -452,12 +452,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             Calendar cal = Calendar.getInstance();
-            Vector list = new Vector();
             Date now = cal.getTime();
             cal.add(Calendar.DAY_OF_YEAR, 365*2);
             Date end = cal.getTime();
             PmsPricing prices = pmsManager.getPrices(now, end);
             Calendar calStart = Calendar.getInstance();
+            calStart.set(Calendar.HOUR_OF_DAY, 15);
             
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
             if(pricesForType == null) {
@@ -468,11 +468,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             String[] roomIds = new String[1];
             roomIds[0] = rdata.wubookroomid + "";
             if(rdata.newRoomPriceSystem) {
-//                roomIds = rdata.virtualWubookRoomIds.split(";");
+                roomIds = rdata.virtualWubookRoomIds.split(";");
             }
             int guests = 1;
             for(String roomId : roomIds) {
-                list = createRoomPriceList(rdata, pricesForType,calStart,list,guests);
+                Vector list = new Vector();
+                Calendar copy = Calendar.getInstance();
+                copy.setTime(calStart.getTime());
+                list = createRoomPriceList(rdata, pricesForType,copy,list,guests);
                 if(!list.isEmpty()) {
                     table.put(roomId, list);
                 }
@@ -1939,7 +1942,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 room.numberOfGuests = guests;
                 room.bookingItemTypeId = rdata.bookingEngineTypeId;
                 room.date.start = calStart.getTime();
-                room.date.end = calStart.getTime();
+                room.date.end = new Date();
+                room.date.end.setTime(calStart.getTimeInMillis()+57600000);
                 PmsBooking booking = new PmsBooking();
                 pmsManager.setPriceOnRoom(room, true, booking);
                 priceToAdd = room.price;

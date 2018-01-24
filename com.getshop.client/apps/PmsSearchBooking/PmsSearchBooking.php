@@ -223,7 +223,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public function setCurrentFilter($filter) {
         $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()] = serialize($filter);
     }
-    
+
     
 }
 ?>

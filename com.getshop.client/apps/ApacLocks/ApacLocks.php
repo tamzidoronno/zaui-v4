@@ -27,6 +27,46 @@ class ApacLocks extends \MarketingApplication implements \Application {
         $this->includefile("lock");
     }
     
+    /**
+     * 
+     * @param \core_getshoplocksystem_Lock $lock
+     * @return int
+     */
+    public function formatSlotsInUse($lock) {
+        $cunt = 0;
+        foreach ($lock->userSlots as $slut) {
+            if ($slut->takenInUseDate) {
+                $cunt++;
+            }
+        }
+        return $cunt;
+    }
+    
+    /**
+     * 
+     * @param \core_getshoplocksystem_Lock $lock
+     * @return int
+     */
+    public function formatFreeSlots($lock) {
+        $cunt = 0;
+        foreach ($lock->userSlots as $slut) {
+            if (!$slut->belongsToGroupId) {
+                $cunt++;
+            }
+        }
+        return $cunt;
+    }
+    
+    public function formatCodesToUpdate($lock) {
+        $cunt = 0;
+        foreach ($lock->userSlots as $slut) {
+            if ($slut->toBeAdded || $slut->toBeRemoved) {
+                $cunt++;
+            }
+        }
+        return $cunt;
+    }
+    
     public function render() {
         $servers = $this->getApi()->getGetShopLockSystemManager()->getLockServers();
         foreach ($servers as $server) {
@@ -39,7 +79,10 @@ class ApacLocks extends \MarketingApplication implements \Application {
                 array("zwaveDeviceId", "DeviceId", 'zwaveDeviceId'),
                 array("typeOfLock", "Type", 'typeOfLock'),
                 array("name", "Name", 'name'),
-                array("maxnumberOfCodes", "MaxCodes", 'maxnumberOfCodes')
+                array("maxnumberOfCodes", "MaxCodes", 'maxnumberOfCodes'),
+                array("slotsToUpdate", "SlotsToUpdate", null, 'formatCodesToUpdate'),
+                array("slotsInUse", "SlotsInUse", null, 'formatSlotsInUse'),
+                array("freeSlots", "Free Slots", null, 'formatFreeSlots')
             );
             
             $extraData = array();
@@ -47,6 +90,7 @@ class ApacLocks extends \MarketingApplication implements \Application {
             
             $table = new \GetShopModuleTable($this, "ApacLocks", "getLockData", null, $attributes, $extraData);
             $table->setData($server->locks);
+            $table->sortByColumn('zwaveDeviceId', true);
             $table->render();
         }
     }

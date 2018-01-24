@@ -2,6 +2,8 @@
 namespace ns_25c15968_4b9b_4c23_9e44_dc5cdb83244c;
 
 class ApacAccessGroups extends \MarketingApplication implements \Application {
+    private $cachedLocks = array();
+    
     public function getDescription() {
         
     }
@@ -96,11 +98,24 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
         $ret .= "Slot: ".$masterSlot->slotId;
         $ret .= "<br/><br/><b>The following locks has not been updated</b>";
         foreach ($masterSlot->slotsNotOk as $slotNotOk) {
-            $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($slotNotOk->connectedToServerId, $slotNotOk->connectedToLockId);
+            $lock = $this->getLock($slotNotOk->connectedToServerId, $slotNotOk->connectedToLockId);
             $ret .= "<br/>Lockname: ".$lock->name;
         }
         
         return $ret;
+    }
+
+    public function getLock($serverId, $lockId) {
+        $key = $serverId."_".$lockId;
+    
+        if (isset($this->cachedLocks[$key])) {
+            return $this->cachedLocks[$key];
+        }
+        
+        $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($serverId, $lockId);
+        $this->cachedLocks[$key] = $lock;
+        
+        return $lock;
     }
 
 }

@@ -124,6 +124,20 @@ public class UserSlot implements Serializable {
         markCodeForDeletion();
     }
 
+    boolean isSameCode(LockCode code) {
+        if (this.code == null)
+            return false;
+        
+        if (code == null)
+            return false;
+        
+        if (this.code.pinCode == code.pinCode && this.code.cardId.equals(code.cardId)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     void setCodeObject(LockCode code) {
         this.code = code;
         markCodeForResending();

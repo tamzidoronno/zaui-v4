@@ -36,9 +36,15 @@ $servers = $this->getServers();
                 echo "<div class='servergroup' serverid='$server->id'>";
                     echo "<br/><b>".$server->givenName."</b>";
                     foreach ($server->locks as $lock) {
-                        $checked = in_array($lock->id, $lockIdsAlreadyAdded) ? "checked='checked'" : ""
+                        $checked = in_array($lock->id, $lockIdsAlreadyAdded) ? "checked='checked'" : "";
+                        $name = "";
+                        $name .= $lock->name;
+                        if (isset($lock->zwaveDeviceId)) {
+                            $name .= " (ZID: $lock->zwaveDeviceId)";
+                        }
+                        
                         ?>
-                        <div><input <? echo $checked; ?> class='lockingroup' type="checkbox" value="<? echo $lock->id; ?>"/> <? echo $lock->name; ?></div>
+                        <div><input <? echo $checked; ?> class='lockingroup' type="checkbox" value="<? echo $lock->id; ?>"/> <? echo $name; ?></div>
                         <?
                     }   
                 echo "</div>";

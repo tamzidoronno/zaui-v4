@@ -31,3 +31,11 @@
 .ApacLocks .userrow:nth-child(odd) {
     background: #DDD;
 }
+
+.ApacLocks .col_zwaveDeviceId { width: 100px !important; }
+.ApacLocks .col_typeOfLock { width: 100px !important; }
+.ApacLocks .col_maxnumberOfCodes { width: 100px !important; }
+.ApacLocks .col_slotsToUpdate { width: 150px !important; }
+.ApacLocks .col_slotsInUse { width: 100px !important; }
+.ApacLocks .col_freeSlots { width: 100px !important; }
+.ApacLocks .col_name { width: calc(100% - 730px) !important; }

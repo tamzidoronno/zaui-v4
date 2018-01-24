@@ -84,10 +84,6 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
                 } else {
                     cars.put(car.id, car);
                 }
-                
-                if (car.updateRequestedLastTimeSms()) {
-                    saveObject(car);
-                }
             }
         }
         
@@ -159,7 +155,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             throw new NullPointerException("Why is there cars created without connections to a fleet?");
         }
         
-        car.updateRequestedLastTimeSms();
+        isPhoneNumberDuplicated(car);
+        
         saveObject(car);
         finalize(car);
         cars.put(car.id, car);
@@ -219,6 +216,11 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         }
         
         car.finalizeCar();
+        
+        boolean updated = car.requestKilomters.setNextIfNull();
+        if (updated) {
+            saveObject(car);
+        }
     }
 
     @Override
@@ -396,7 +398,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     private void notifyByPushToCar(MecaCar car, String message) {
         if (car != null) {
             for (String token : car.tokens) {
-//                mobileManager.sendMessage(token, message);
+                mobileManager.sendMessage(token, message);
             }
         }
     }
@@ -552,10 +554,12 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     }
 
     private void sendRequestByPushNotification(MecaCar car) throws ErrorException {
+        MecaFleet fleet = getFleetByCar(car);
+        
         String msg = getMailContent("pushRequestKilometers");
         msg += " (" + car.licensePlate + ")";
         notifyByPush(car.cellPhone, msg);
-        car.requestKilomters.markAsSentPushNotification();
+        car.requestKilomters.markAsSentPushNotification(fleet);
         saveObject(car);
     }
 
@@ -616,16 +620,16 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             saveObject(car);
         }
     }
-
+    
     @Override
     public void runNotificationCheck() {
         for (MecaCar car : cars.values()) {
             finalize(car);
-            if (car.requestKilomters.canSendPushNotification()) {
+            if (car.requestKilomters.canSendNotification()) {
                 sendKilometerRequest(car.id);
             }
             
-            if (car.requestKilomters.canSendSmsNotification()) {
+            if (car.requestKilomters.canSendNotification()) {
                 sendSmsKilometersRequest(car);
             }
         }
@@ -634,9 +638,9 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     private void sendSmsKilometersRequest(MecaCar car) {
         if (!shouldBeFollowedUpAutomatically(car)) {
             return;
-        }
+        } 
         
-        if (!car.requestKilomters.canSendSmsNotification()) {
+        if (!car.requestKilomters.canSendNotification()) {
             return;
         }
         
@@ -644,7 +648,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         message = replaceContactVariables(car, message, car.cellPhone, "");
         messageManager.sendSms("sveve", car.cellPhone, message, getStoreDefaultPrefix());
         
-        car.requestKilomters.markAsSentSmsNotification();
+        MecaFleet fleet = getFleetByCar(car);
+        car.requestKilomters.markAsSentSmsNotification(fleet, message, car.cellPhone);
         
         saveObject(car);
     }
@@ -836,5 +841,17 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         }
         
         return true;
+    }
+
+    private void isPhoneNumberDuplicated(MecaCar car) {
+        for (MecaCar icar : cars.values()) {
+            if (icar.id.equals(car.id)) {
+                continue;
+            }
+            
+            if (car.cellPhone.trim().equals(icar.cellPhone.trim())) {
+                throw new ErrorException(1000017);
+            }
+        }
     }
 }

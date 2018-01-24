@@ -11,6 +11,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +59,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 .forEach(g -> {
                     g.finalize(lockServers);
                 });
+        
         return groups;
     }
     
@@ -207,7 +209,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public List<LockGroup> getAllGroups() {
-        return new ArrayList(getFinalizedGroups().values());
+        List<LockGroup> retGroups = new ArrayList(getFinalizedGroups().values());
+        Collections.sort(retGroups, (LockGroup group1, LockGroup group2) -> {
+            return group1.name.compareToIgnoreCase(group2.name);
+        });
+        return retGroups;
     }
 
     private LockServer getLockServer(String serverId) {

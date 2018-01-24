@@ -248,8 +248,4 @@ public class MecaCar extends DataCommon {
     boolean needAttention() {
         return needAttentionToService() || needAttentionToControl();
     }
-
-    boolean updateRequestedLastTimeSms() {
-        return requestKilomters.updateRequestedLastTimeSms();
-    }
 }

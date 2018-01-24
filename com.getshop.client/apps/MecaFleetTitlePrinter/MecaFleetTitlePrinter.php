@@ -30,8 +30,20 @@ class MecaFleetTitlePrinter extends \MarketingApplication implements \Applicatio
             
             $fleet->discount = $_POST['data']['discount'];
             $fleet->rentalcar = $_POST['data']['rentalcar'];
-            $fleet->contactDetails = $_POST['data']['contactDetails'];
+            $fleet->contactDetails = @$_POST['data']['contactDetails'];
             $fleet->contactOther = $_POST['data']['contactOther'];
+            
+            if (isset($_POST['data']['frequency_none'])) {
+                $fleet->naggingInterval = "frequency_none";
+            }
+            
+            if (isset($_POST['data']['frequency_daily'])) {
+                $fleet->naggingInterval = "frequency_daily";
+            }
+            
+            if (isset($_POST['data']['frequency_weekly'])) {
+                $fleet->naggingInterval = "frequency_weekly";
+            }
             
             $this->getApi()->getMecaManager()->saveFleet($fleet);
         }

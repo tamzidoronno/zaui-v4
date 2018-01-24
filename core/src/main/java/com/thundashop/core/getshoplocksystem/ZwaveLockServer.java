@@ -222,7 +222,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         String lockId = thread.getLockId();
         Lock lock = getLock(lockId);
         if (lock != null) {
-            lock.delayUpdateForMinutes(60);
+            lock.delayUpdateForMinutes(120);
         }
         saveMe();
     }

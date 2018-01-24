@@ -27,6 +27,8 @@ public class ZwaveAddCodeThread extends ZwaveThread {
 
     @Override
     public boolean execute(int attempt) throws ZwaveThreadExecption {
+        stopOnAttemptFiveIfDeviceIsDead(attempt);
+        
         String codeAlreadyAdded = isCodeAdded();
         
         if (codeAlreadyAdded.equals("unkown")) {
@@ -53,6 +55,15 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         }
         
         return false;
+    }
+
+    private void stopOnAttemptFiveIfDeviceIsDead(int attempt) throws ZwaveThreadExecption {
+        if (attempt == 6) {
+            if (isDeviceDead()) {
+                logEntry("Detected dead device, moving on");
+                throw new ZwaveThreadExecption("Deteched dead device, moving on", attempt);
+            }
+        }
     }
 
 
@@ -129,4 +140,5 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         ZwaveRemoveCodeThread removeJob = new ZwaveRemoveCodeThread(server, slot, lock, true, storeId);
         return removeJob.execute(20);
     }
+
 }

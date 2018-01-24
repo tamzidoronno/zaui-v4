@@ -170,15 +170,20 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
 
     public void toggleActivated() {
         this.activated = !this.activated;
+        
+        if (!this.activated) {
+            stopCurrentJob();
+        }
     }
     
     private synchronized void startNextThread(boolean stopOldThread) {
-        if (!this.activated) {
-            return;
-        }
-        
+       
         if (stopOldThread) {
             currentThread = null;
+        }
+        
+        if (!this.activated) {
+            return;
         }
         
         if (currentThread == null) {
@@ -222,7 +227,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         String lockId = thread.getLockId();
         Lock lock = getLock(lockId);
         if (lock != null) {
-            lock.delayUpdateForMinutes(60);
+            lock.delayUpdateForMinutes(120);
         }
         saveMe();
     }

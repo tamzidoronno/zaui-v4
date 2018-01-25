@@ -55,7 +55,8 @@ public abstract class ZwaveThread implements Runnable {
         lock.lastStartedUpdating = new Date();
         lock.currentlyUpdating = true;
         lock.dead = false;
-        
+       
+        sendNoOperationSignal();
         
         for (int i = 0; i < attempts; i++) {
             if (shouldStop) {
@@ -65,6 +66,7 @@ public abstract class ZwaveThread implements Runnable {
             lock.currentlyAttempt = i;
 
             try {
+                stopIfDead(i);
                 boolean threadSuccess = execute(i);
 
                 if (threadSuccess) {
@@ -91,6 +93,13 @@ public abstract class ZwaveThread implements Runnable {
         server.threadDone(this);
     }
 
+    private void stopIfDead(int attempt) throws ZwaveThreadExecption {
+        if (isDeviceDead()) {
+            logEntry("Detected dead device, moving on");
+            throw new ZwaveThreadExecption("Detected dead device, moving on", attempt);
+        }
+    }
+     
     public void stop() {
         shouldStop = true;
     }
@@ -181,6 +190,12 @@ public abstract class ZwaveThread implements Runnable {
         }
         
         return false;
+    }
+
+    private void sendNoOperationSignal() {
+        String postfix = "ZWave.zway/Run/devices["+lock.zwaveDeviceId+"].SendNoOperation()";
+        server.httpLoginRequestZwaveServer(postfix);
+        waitForEmptyQueue();
     }
 
 }

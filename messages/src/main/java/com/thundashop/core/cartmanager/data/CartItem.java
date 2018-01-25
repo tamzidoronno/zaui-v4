@@ -126,6 +126,10 @@ public class CartItem implements Serializable {
         return product;
     }
 
+    public Product getProductUnfinalized() {
+        return product;
+    }
+    
     public Map<String, String> getVariations() {
         if(variations == null) {
             return new HashMap();
@@ -185,13 +189,16 @@ public class CartItem implements Serializable {
 
     public boolean startsOnDate(Date time, Date rowCreatedDate) {
         Date startToUse = startDate;
-        if(startToUse == null) {
+        Calendar createdCal = Calendar.getInstance();
+        if(startDate != null) {
+            createdCal.setTime(startDate);
+        }
+        if(startToUse == null || createdCal.get(Calendar.YEAR) < 1980) {
             startToUse = rowCreatedDate;
         }
         if(startToUse == null) {
             return false;
         }
-        Calendar createdCal = Calendar.getInstance();
         createdCal.setTime(startToUse);
         Calendar timeCal = Calendar.getInstance();
         timeCal.setTime(time);
@@ -220,10 +227,16 @@ public class CartItem implements Serializable {
             return -1;
         }
         
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        if(cal.get(Calendar.YEAR) < 1980) {
+            return -1;
+        }
+        
         Date tmpStartDate = new Date(startDate.getTime());
         Date tmpEndDate = new Date(endDate.getTime());
         if(shift) {
-            Calendar cal = Calendar.getInstance();
+            cal = Calendar.getInstance();
             cal.setTime(tmpStartDate);
             int toShift = cal.get(Calendar.HOUR_OF_DAY);
             cal.add(Calendar.HOUR_OF_DAY, toShift * -1);
@@ -410,5 +423,48 @@ public class CartItem implements Serializable {
             
             count = priceMatrix.size();
         }
+    }
+
+    public boolean isForPeriode(Date date) {
+        return false;
+    }
+
+    public boolean isMatrixAndItemsValid() {
+        Double total = 0.0;
+        boolean found = false;
+            correctIncorrectCalculation();
+            if(itemsAdded != null && !itemsAdded.isEmpty()) {
+               for(PmsBookingAddonItem pmsitem : itemsAdded) {
+                   if (pmsitem == null ) {
+                       continue;
+                   }
+                   
+                   if (pmsitem.count == null) {
+                       pmsitem.count = 0;
+                   }
+                   
+                   if (pmsitem.price == null) {
+                       pmsitem.price = 0D;
+                   }
+                   
+                   total += (pmsitem.count * pmsitem.price);
+                   found = true;
+               }
+            }
+            if(priceMatrix != null && !priceMatrix.isEmpty()) {
+                for(Double val : priceMatrix.values()) {
+                    total += val;
+                    found = true;
+                }
+            }
+        
+        Double orderTotal = getTotalAmount();
+        long ordertotalcheck = Math.round(orderTotal);
+        long ordercheck = Math.round(total);
+
+        if(found && ordercheck != ordertotalcheck) {
+            return false;
+        }
+        return true;
     }
 }

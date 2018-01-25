@@ -5,10 +5,8 @@
  */
 package com.thundashop.core.getshoplocksystem.zwavejobs;
 
-import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveThreadExecption;
 import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
-import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
@@ -55,13 +53,20 @@ public abstract class ZwaveThread implements Runnable {
         }
         
         lock.lastStartedUpdating = new Date();
+        lock.currentlyUpdating = true;
+        lock.dead = false;
+       
+        sendNoOperationSignal();
         
         for (int i = 0; i < attempts; i++) {
             if (shouldStop) {
                 break;
             }
+            
+            lock.currentlyAttempt = i;
 
             try {
+                stopIfDead(i);
                 boolean threadSuccess = execute(i);
 
                 if (threadSuccess) {
@@ -84,9 +89,18 @@ public abstract class ZwaveThread implements Runnable {
             }
         }
 
+        lock.currentlyUpdating = false;
         server.threadDone(this);
     }
 
+    private void stopIfDead(int attempt) throws ZwaveThreadExecption {
+        if (isDeviceDead()) {
+            logEntry("Detected dead device, moving on after a sleep for 30 seconds");
+            try {Thread.sleep(30000); }  catch (Exception ex) {}
+            throw new ZwaveThreadExecption("Detected dead device, moving on", attempt);
+        }
+    }
+     
     public void stop() {
         shouldStop = true;
     }
@@ -156,6 +170,33 @@ public abstract class ZwaveThread implements Runnable {
 
     public List<String> getLogEntries() {
         return logEntries;
+    }
+    
+    public boolean isDeviceDead() {
+        String postfix = "ZWave.zway/Run/devices["+lock.zwaveDeviceId+"]";
+        String res = server.httpLoginRequestZwaveServer(postfix);
+        Gson gson = new Gson();
+        try {
+            ZwaveStatusDevice device = gson.fromJson(res, ZwaveStatusDevice.class);
+            boolean dead = device.data.isFailed.value;
+            
+            if (dead) {
+                lock.dead = true;
+                lock.markedDateAtDate = new Date();
+            }
+            
+            return dead;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
+
+    private void sendNoOperationSignal() {
+        String postfix = "ZWave.zway/Run/devices["+lock.zwaveDeviceId+"].SendNoOperation()";
+        server.httpLoginRequestZwaveServer(postfix);
+        waitForEmptyQueue();
     }
 
 }

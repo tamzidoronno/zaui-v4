@@ -1,12 +1,8 @@
 <?php
  /* @var $this ns_ae42328b_3726_4875_8546_212cd8cc3cde\PmsCleaning */
 $time = strtotime($this->getCleaningDate());
+ob_start();
 ?> 
-
-<div gstype="form" method="changeDate">
-    <input type='text' gsname="date" value='<? echo $this->getCleaningDate(); ?>'>
-    <input gstype="submit" type="button" value='Change date'>
-</div>
 
 <div class='stepbox'>
     <h1>Guests arriving today</h1>
@@ -54,6 +50,42 @@ $time = strtotime($this->getCleaningDate());
 <div class='stepbox'>
     <h1>Total room overview</h1>
     <?php
-    $this->printRoomOverview();
+    $overview = $this->printRoomOverview();
     ?>
 </div>
+<?php
+$data = ob_get_clean();
+$emo = "happy";
+if($overview['dirty'] > 0) {
+    $emo = "talking";
+}
+?>
+
+<div class="kaipal infobox">
+    <div class="image <?php echo $emo; ?>"></div>
+    <div class="textbox">
+        <div class="header"><? echo $this->__f("Make sure your hotel is clean and nice."); ?></div>
+        <div class="text">
+            <?
+            if($overview['dirty'] == 0) {
+                echo "Good work, you don't have any rooms to clean as of now.";
+            } else {
+                echo $this->__f("Hi there, you have " . $overview['dirty'] . " room(s) to clean. Look below me to see what rooms needs to be cleaned.");
+            }
+            ?>
+            
+            <div class="buttonarea">
+                <div class="buttonareaheader"><? echo $this->__f("Do you want to look at a different date?"); ?></div>
+                <div gstype="form" method="changeDate">
+                    <input type='text' class='gsniceinput1' gsname="date" value='<? echo $this->getCleaningDate(); ?>'>
+                    <div gstype="submit" class="shop_button"><? echo $this->__f("Look up this date"); ?></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<br><br>
+<?php
+echo $data;
+?>

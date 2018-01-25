@@ -9,3 +9,16 @@
     padding: 30px;
     background-color: #FEFEFE;
 }
+
+.MecaFleetCarService .log_line {
+    border-top: solid 1px #DDD;
+    margin-top: 20px;
+}
+
+.MecaFleetCarService .log_line .log_date,
+.MecaFleetCarService .log_line .log_type {
+    display: inline-block;
+    color: #666;
+    padding-bottom: 5px;
+    font-size: 13px;
+}

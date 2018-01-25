@@ -6,7 +6,6 @@
 package com.thundashop.core.getshopaccounting;
 
 import com.thundashop.core.accountingmanager.AccountingSystemConfiguration;
-import com.thundashop.core.accountingmanager.AccountingTransferConfig;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
@@ -21,6 +20,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +53,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     @Autowired
     public ProductManager productManager;
+    
+    @Autowired
+    public WebManager webManager;
     
     public HashMap<String, SavedOrderFile> files = new HashMap();
     
@@ -128,7 +130,6 @@ public abstract class AccountingSystemBase extends ManagerBase {
     }
     
     public List<String> createNextOrderFile(Date endDate, String subType, List<Order> orders) {
-        
         clearLog();
         
         orders.removeIf(order -> order.triedTransferredToAccountingSystem);
@@ -148,6 +149,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             }
         }
         
+        orders = distinctOrders(orders);
         List<SavedOrderFile> newFiles = createFiles(orders);
         
         if (newFiles == null) {
@@ -231,7 +233,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             idToUse = useOffset;
         }
 
-        User user = userManager.getUserById(userId);
+        User user = userManager.getUserByIdIncludedDeleted(userId);
         Integer accountingId = user.customerId;
         if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
             try {
@@ -376,6 +378,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
     }
     
     public Map<String, List<Order>> groupOrders(List<Order> orders) {
+        
         Map<String, List<Order>> retMap = new HashMap();
         
         for (Order order : orders) {
@@ -502,5 +505,13 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     public void clearLog() {
         logEntries.clear();
+    }
+
+    private List<Order> distinctOrders(List<Order> orders) {
+        Map<String, Order> distinctOrders = new HashMap();
+        
+        orders.stream().forEach(order -> distinctOrders.put(order.id, order));
+        
+        return new ArrayList(distinctOrders.values());
     }
 }

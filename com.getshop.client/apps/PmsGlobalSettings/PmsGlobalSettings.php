@@ -23,6 +23,10 @@ class PmsGlobalSettings extends \WebshopApplication implements \Application {
         $this->getApi()->getStoreManager()->setDefaultMultilevelName($_POST['data']['defaultmultilevelname']);
         $this->changeMultiLevelName($_POST['data']['defaultmultilevelname']);
     }
+    
+    public function correctAllOrders() {
+        $this->getApi()->getPmsInvoiceManager()->recalculateAllBookings($this->getSelectedMultilevelDomainName(), $_POST['data']['prompt']);
+    }
 
   
 }

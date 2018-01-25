@@ -6,7 +6,8 @@
         <th><i class='fa fa-file-excel-o' style='cursor:pointer;' gs_downloadexcelreport="accountsExport" gs_filename="accountsExport"></i> Id</th>
         <th align='left'>Customer name</th>
         <th>Customer type</th>
-        <th>Number of bookings</th>
+        <th>Booking</th>
+        <th>Rooms</th>
         <th>Number of orders</th>
         <th>Last booking</th>
         <th>Preferences</th>
@@ -34,6 +35,7 @@
         echo "<td>$name</td>";
         echo "<td align='center'>" . $user->customerType . "</td>";
         echo "<td align='center'>" . $user->numberOfBookings . "</td>";
+        echo "<td align='center'>" . $user->numberOfRooms . "</td>";
         echo "<td align='center'>" . $user->numberOfOrders . "</td>";
         echo "<td align='center'>" . date("d.m.Y", strtotime($user->latestBooking)) . "</td>";
         echo "<td align='center'>";

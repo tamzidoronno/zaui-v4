@@ -9,4 +9,5 @@ public class WubookRoomData extends DataCommon {
     public boolean addedToWuBook = false;
     public Integer wubookroomid = -1;
     public String virtualWubookRoomIds = "";
+    public boolean newRoomPriceSystem = false;
 }

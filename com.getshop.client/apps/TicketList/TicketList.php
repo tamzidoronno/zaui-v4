@@ -56,6 +56,8 @@ class TicketList extends \MarketingApplication implements \Application {
             array('rowCreatedDate', 'REG', 'rowCreatedDate'),
             array('title', 'TITLE', 'title'),
             array('userId', 'USER', 'userId', 'formatUser'),
+            array('timeSpent', 'timeSpent', 'timeSpent',null),
+            array('timeInvoice', 'timeInvoice', 'timeInvoice',null),
             array('currentState', 'STATE', 'currentState', 'formatState'),
             array('type', 'TYPE', 'type')
         );
@@ -71,6 +73,18 @@ class TicketList extends \MarketingApplication implements \Application {
         
         $table = new \GetShopModuleTable($this, 'TicketManager', "getAllTickets", $args, $attributes);
         $table->render();
+        
+        $data = $table->getDate();
+        
+        $totalTimeSpent = 0;
+        $totalTimeInvoice = 0;
+        foreach($data as $obj) {
+            $totalTimeSpent += $obj->timeSpent;
+            $totalTimeInvoice += $obj->timeInvoice;
+        }
+
+        echo "Time spent in total: $totalTimeSpent<br>";
+        echo "Time spent to invoice: $totalTimeInvoice<br>";
     }
     
     public function addEvent() {

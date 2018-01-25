@@ -2,22 +2,59 @@
 /* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
 $start = $this->getStartDate();
 $end = $this->getEndDate();
-echo "<div class='availableroomsheading'><h3>Availability for " . $start . " - " . $end . "</h3></div>";
+$number = 0;
 
 $start = $this->convertToJavaDate(strtotime($start));
 $end = $this->convertToJavaDate(strtotime($end));
+
+$current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+foreach($types as $type) {
+    $rooms = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedMultilevelDomainName(), $type->id, $start, $end);
+    $roomCount = sizeof($rooms);
+    foreach($current->rooms as $room) {
+        if($room->bookingItemTypeId == $type->id) {
+            $roomCount--;
+        }
+    }
+    $number += $roomCount;
+}
+$emo = "happy";
+if($number == 0) {
+    $emo = "sad";
+}
+?>
+<div class="kaipal infobox">
+    <div class="image <?php echo $emo; ?>"></div>
+    <div class="textbox">
+        <div class="header">This is the rooms we have available</div>
+        <div class="text">
+            I have <?php echo $number; ?> rooms available for you between <?php echo $start . " and " . $end; ?> 
+        </div>
+    </div>
+</div>
+<?php
+
+echo "<div class='availableroomsheading'></div>";
+
 
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 echo "<table width='100%'>";
 foreach($types as $type) {
     $rooms = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedMultilevelDomainName(), $type->id, $start, $end);
     $size = sizeof($rooms);
+    foreach($current->rooms as $room) {
+        if($room->bookingItemTypeId == $type->id) {
+            $size--;
+        }
+    }
     $disabled = "";
-    if($size == 0) {
+    if($size <= 0) {
         $disabled = "disabled";
     }
     echo "<tr class='$disabled'>";
-    echo "<td>" . $type->name . "</td><td class='availableroomscounter' roomtype='".$type->id."'>$size</td>";
+    echo "<td class='availabletypename' roomtype='".$type->id."'>" . $type->name . "</td><td class='availableroomscounter' roomtype='".$type->id."'>$size</td>";
     echo "</tr>";
 }
 echo "</table>";

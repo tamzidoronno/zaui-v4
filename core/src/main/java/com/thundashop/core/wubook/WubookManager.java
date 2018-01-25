@@ -126,7 +126,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return true;
         }
         
+        //Old
         client = new XmlRpcClient("https://wubook.net/xrws/");
+        //New
+//        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
 
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
@@ -449,53 +452,38 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             Calendar cal = Calendar.getInstance();
-            Vector list = new Vector();
             Date now = cal.getTime();
             cal.add(Calendar.DAY_OF_YEAR, 365*2);
             Date end = cal.getTime();
             PmsPricing prices = pmsManager.getPrices(now, end);
             Calendar calStart = Calendar.getInstance();
+            calStart.set(Calendar.HOUR_OF_DAY, 15);
             
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
             if(pricesForType == null) {
                 logPrint("Invalid price daily prices for : " + rdata.bookingEngineTypeId);
                 continue;
             }
-            Double defaultPrice = pricesForType.get("default");
             
-            for(int i = 0;i < (365*2); i++) {
-                int year = calStart.get(Calendar.YEAR);
-                int month = calStart.get(Calendar.MONTH)+1;
-                int day = calStart.get(Calendar.DAY_OF_MONTH);
-                String dateString = "";
-                
-                if(day < 10) { dateString += "0" + day; } else { dateString += day; }
-                dateString += "-";
-                if(month < 10) { dateString += "0" + month; } else { dateString += month; }
-                dateString += "-" + year; 
-                Double priceToAdd = null;
-                if(pricesForType.containsKey(dateString)) {
-                    priceToAdd = pricesForType.get(dateString);
-                }
-                if((priceToAdd == null || priceToAdd == 0.0) && defaultPrice != null) {
-                    priceToAdd = defaultPrice;
-                }
-                if(priceToAdd == null) {
-                    priceToAdd = 999999.0;
-                } else if(pmsManager.getConfigurationSecure().enableCoveragePrices) {
-                    PmsBooking booking = new PmsBooking();
-                    priceToAdd = pmsInvoiceManager.calculatePrice(rdata.bookingEngineTypeId, calStart.getTime(), calStart.getTime(), true, booking);
-                }
-                if(priceToAdd == 0.0) {
-                    priceToAdd = 1.0;
-                }
-                list.add(priceToAdd);
-                calStart.add(Calendar.DAY_OF_YEAR, 1);
+            String[] roomIds = new String[1];
+            roomIds[0] = rdata.wubookroomid + "";
+            if(rdata.newRoomPriceSystem) {
+                roomIds = rdata.virtualWubookRoomIds.split(";");
             }
-            if(!list.isEmpty()) {
-                table.put(rdata.wubookroomid + "", list);
+            int guests = 1;
+            for(String roomId : roomIds) {
+                Vector list = new Vector();
+                Calendar copy = Calendar.getInstance();
+                copy.setTime(calStart.getTime());
+                list = createRoomPriceList(rdata, pricesForType,copy,list,guests);
+                if(!list.isEmpty()) {
+                    if(!roomId.equals("-1")) {
+                        table.put(roomId, list);
+                    }
+                }
+                guests++;
             }
-        }
+        } 
         
         Vector params = new Vector();
         params.addElement(token);
@@ -503,7 +491,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(0);
         params.addElement(dfrom);
         params.addElement(table);
-
+        
         Vector result = executeClient("update_plan_prices", params);
         if((Integer)result.get(0) != 0) {
             logText("Where not able to update prices:" + result.get(1));
@@ -598,6 +586,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 added = insertRoom(type);
             }
             
+            insertVirtualRooms(data, type);
+            
             if(!added.isEmpty()) {
                 errors.add(added);
             }
@@ -668,6 +658,31 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             res = result.toString();
         }
         return res;
+    }
+
+    private Integer insertVirtualRoom(BookingItemType type, int guests, WubookRoomData data) throws XmlRpcException, IOException, Exception {
+        if(!connectToApi()) { return -1; }
+        List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
+        Vector<Object> params = new Vector<Object>();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        params.addElement(new Integer(data.wubookroomid));
+        params.addElement(1);
+        params.addElement(type.name + "(" + guests + " guests)");
+        params.addElement(type.size);
+        params.addElement(0);
+        params.addElement(9999);
+        params.addElement("r" + data.code + "" + guests);
+        params.addElement("nb");
+        Vector result = executeClient("new_virtual_room", params);
+        Integer response = (Integer) result.get(0);
+        String res = "";
+        if(response == 0) {
+            logPrint("Succesfully added virtual room");
+            return (Integer)result.get(1);
+        } else {
+            return -1;
+        }
     }
 
     private String updateRoom(BookingItemType type) throws XmlRpcException, IOException {
@@ -1823,7 +1838,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
     }
 
-    private Vector executeClient(String apicall, Vector<String> params) throws XmlRpcException, IOException {
+    private Vector executeClient(String apicall, Vector params) throws XmlRpcException, IOException {
         logText("Executing api call: " + apicall);
         try {
             Vector res = (Vector) client.execute(apicall, params);
@@ -1878,5 +1893,104 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
     }
 
+    private void insertVirtualRooms(WubookRoomData data, BookingItemType type) {
+        System.out.println("Virtual rooms, number of guests: " + type.size + ";roomid: " + data.rid + ", data virtualroom ids:" + data.virtualWubookRoomIds);
+        String[] virtualRooms = data.virtualWubookRoomIds.split(";");
+        String virtualRoomIds = data.wubookroomid + "";
+        for(int i = 2; i <= type.size; i++) {
+            System.out.println("Need to add virtual room for guest: " + i);
+            try {
+                int roomId = -1;
+                if(virtualRooms.length >= i) {
+                    roomId = new Integer(virtualRooms[i-1]);
+                    updateVirtualRoom(type,i,data, roomId);
+                } else {
+                    roomId = insertVirtualRoom(type, i, data);
+                }
+                    virtualRoomIds += ";" + roomId;
+            }catch(Exception e) {
+                
+            }
+        }
+        data.virtualWubookRoomIds = virtualRoomIds;
+        data.newRoomPriceSystem = true;
+        saveObject(data);
+    }
+
+    private Vector createRoomPriceList(WubookRoomData rdata, HashMap<String, Double> pricesForType, Calendar calStart, Vector list, int guests) {
+        Double defaultPrice = pricesForType.get("default");
+            
+        for(int i = 0;i < (365*2); i++) {
+            int year = calStart.get(Calendar.YEAR);
+            int month = calStart.get(Calendar.MONTH)+1;
+            int day = calStart.get(Calendar.DAY_OF_MONTH);
+            String dateString = "";
+
+            if(day < 10) { dateString += "0" + day; } else { dateString += day; }
+            dateString += "-";
+            if(month < 10) { dateString += "0" + month; } else { dateString += month; }
+            dateString += "-" + year; 
+            Double priceToAdd = null;
+            if(pricesForType.containsKey(dateString)) {
+                priceToAdd = pricesForType.get(dateString);
+            }
+            if((priceToAdd == null || priceToAdd == 0.0) && defaultPrice != null) {
+                priceToAdd = defaultPrice;
+            }
+            if(priceToAdd == null) {
+                priceToAdd = 999999.0;
+            } else if(rdata.newRoomPriceSystem) {
+                PmsBookingRooms room = new PmsBookingRooms();
+                room.numberOfGuests = guests;
+                room.bookingItemTypeId = rdata.bookingEngineTypeId;
+                room.date.start = calStart.getTime();
+                room.date.end = new Date();
+                room.date.end.setTime(calStart.getTimeInMillis()+57600000);
+                PmsBooking booking = new PmsBooking();
+                pmsManager.setPriceOnRoom(room, true, booking);
+                priceToAdd = room.price;
+                
+                //Lofoten bed and breakfast icreases the rooms by 15%.
+                if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9")) {
+                    priceToAdd *= 1.15;
+                    priceToAdd = (double)Math.round(priceToAdd);
+                }
+                
+            } else if(pmsManager.getConfigurationSecure().enableCoveragePrices) {
+                PmsBooking booking = new PmsBooking();
+                priceToAdd = pmsInvoiceManager.calculatePrice(rdata.bookingEngineTypeId, calStart.getTime(), calStart.getTime(), true, booking);
+            }
+            if(priceToAdd == 0.0) {
+                priceToAdd = 1.0;
+            }
+            list.add(priceToAdd);
+            calStart.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return list;
+    }
+
+    private Integer updateVirtualRoom(BookingItemType type, int guests, WubookRoomData data, Integer roomid) throws Exception {
+        if(!connectToApi()) { return -1; }
+        List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
+        Vector<Object> params = new Vector<Object>();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        params.addElement(roomid);
+        params.addElement(type.name + "(" + guests + " guests)");
+        params.addElement(type.size);
+        params.addElement(0);
+        params.addElement(9999);
+        params.addElement("r" + data.code + "" + guests);
+        params.addElement("nb");
+        Vector result = executeClient("mod_virtual_room", params);
+        Integer response = (Integer) result.get(0);
+        String res = "";
+        if(response == 0) {
+            logPrint("Succesfully added virtual room");
+            return (Integer)result.get(1);
+        } else {
+            return -1;
+        }
+    }
 
 }

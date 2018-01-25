@@ -83,6 +83,37 @@ $kmStatus = "Nåværende kilmoterstand: ".$car->kilometers.", Sist oppdatert: ".
     <br/> <? echo $kmStatus; ?>
     
 </div>
+<?
+$fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
+
+if (!$fleet->followup) {
+?>
+<div style="border-top: solid 1px #DDD; margin-top: 50px;">
+    <h2>Forespørsler om kilomterstand</h2>
+    <div>
+        Neste forspørsel vil bli sendt: <? echo date('d/m-Y', strtotime($car->requestKilomters->nextRequestDate)); ?>
+        <div>
+            <?
+            if (!count($car->requestKilomters->logs)) {
+                echo "Ingen hendelser å vise";
+            } else {
+                foreach ($car->requestKilomters->logs as $log) {
+                    ?>
+                    <div class="log_line">
+                        <div class="log_date"><? echo date('d/m-Y h:i', strtotime($log->date)); ?> - </div>
+                        <div class="log_type"><? echo $log->type; ?></div>
+                        <div class="log_message"><? echo $log->message; ?></div>
+                    </div>
+                    <?
+                }
+            }
+            ?>
+        </div>
+    </div>
+</div>
+<?
+}
+?>
 
 <script>
     $('#lastservice').datepicker({ dateFormat: 'yy-mm-dd' });

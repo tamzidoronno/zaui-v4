@@ -185,13 +185,24 @@ public class Lock {
         });
     }
 
-    public void setCodeObject(int slotId, LockCode code) {
+    /**
+     * This function checks if the code needs to be changed.
+     * if it has not changed because its the same it will return false.
+     * If it changes the code it return true
+     */
+    public boolean setCodeObject(int slotId, LockCode code) {
         Gson gson = new Gson();
         code = gson.fromJson(gson.toJson(code), LockCode.class);
         
         if (userSlots.get(slotId) != null) {
+            if (userSlots.get(slotId).isSameCode(code)) {
+                return false;
+            }
+            
             userSlots.get(slotId).setCodeObject(code);
         }
+        
+        return true;
     }
     
     public boolean canUpdate() {
@@ -225,5 +236,9 @@ public class Lock {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, minutes);
         dontUpdateUntil = cal.getTime();
+    }
+
+    public Date getDontUpdateUntil() {
+        return dontUpdateUntil;
     }
 }

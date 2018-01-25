@@ -1318,6 +1318,10 @@ public class PmsManagerProcessor {
     private void checkForDeadCodesApac() {
         List<PmsBooking> bookings = manager.getAllBookingsFlat();
         
+        if (bookings == null || bookings.isEmpty()) {
+            return;
+        }
+        
         List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
         
         groups.stream().forEach(group -> {

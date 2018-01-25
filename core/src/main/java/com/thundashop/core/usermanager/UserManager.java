@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.*;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -27,6 +28,8 @@ import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.usermanager.data.UserRole;
 import com.thundashop.core.utils.BrRegEngine;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -92,12 +95,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Autowired
     public StoreManager storeManager;
 
+    @Autowired
+    public Database database;
     
     @Autowired
     public GSAdmins gsAdmins;
     private User internalApiUser;
     private String internalApiUserPassword;
     
+    @Autowired
+    private TotpHandler totpHandler;
     
     
     @Override
@@ -134,6 +141,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         addGetShopAdmins();
+        addCrmAdmins();
         degradeGetSuperShopAdmins();
 //        doubleCheckUniqueCustomerIds();
     }
@@ -274,6 +282,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.suspended) {
             throw new ErrorException(26);
         }
+        
+        if (user.totpKey != null && !user.totpKey.isEmpty()) {
+            // Use logon trough logonUsingTotpAgainstCrm or logonUsingTotpAgainst
+            throw new ErrorException(26);
+        }
+        
         addUserToSession(user);
         
 //        loginHistory.markLogin(user, getSession().id);
@@ -595,6 +609,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private void saveSessionFactory() throws ErrorException {
         sessionFactory.storeId = storeId;
         saveObject(sessionFactory);
+    }
+    
+    public User getUserByIdIncludedDeleted(String id) {
+        UserStoreCollection storeCollection = getUserStoreCollection(storeId);
+        User user = storeCollection.getUser(id);
+        
+        if (user == null) {
+            return storeCollection.getDeletedUser(id);
+        }
+        
+        return user;
     }
 
     @Override
@@ -2092,4 +2117,44 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveUser(user);
         }
     }
+
+    @Override
+    public void createGoogleTotpForUser(String userId) {
+        User user = getUserById(userId);
+        
+        GoogleAuthenticator gAuth = new GoogleAuthenticator();
+        GoogleAuthenticatorKey key = gAuth.createCredentials();
+        
+        user.totpKey = key.getKey();
+        saveObject(user);
+    }
+    
+    @Override
+    public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode) throws ErrorException { 
+        String encryptedPassword = encryptPassword(password);
+        User user = totpHandler.verify(username, encryptedPassword, oneTimeCode);
+        
+        if (user != null) {
+            addUserToSession(user);
+            return user;
+        }
+        
+        throw new ErrorException(13);
+    }
+
+    private void addCrmAdmins() {
+        if (totpHandler.isCommonDbThisStore(storeId)) {
+            return;
+        }
+        
+        totpHandler.getAllUsers().stream().forEach(user -> {
+            getUserStoreCollection(storeId).addUserDirect(user);
+        });
+    }
+
+    @Override
+    public User logonUsingTotp(String username, String password, int oneTimeCode) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

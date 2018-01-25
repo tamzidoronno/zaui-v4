@@ -27,6 +27,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
 
     @Override
     public boolean execute(int attempt) throws ZwaveThreadExecption {
+        
         String codeAlreadyAdded = isCodeAdded();
         
         if (codeAlreadyAdded.equals("unkown")) {
@@ -55,6 +56,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         return false;
     }
 
+   
 
     /**
      * Check if code is already added, if it is throw an exception. If its not able to check this properly due
@@ -129,4 +131,5 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         ZwaveRemoveCodeThread removeJob = new ZwaveRemoveCodeThread(server, slot, lock, true, storeId);
         return removeJob.execute(20);
     }
+
 }

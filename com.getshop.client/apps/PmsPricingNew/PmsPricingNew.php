@@ -142,7 +142,9 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         if(!$this->getSelectedName()) {
             echo "PLease specify a booking engine first";
         } else {
+            echo "<div style='max-width:1500px;margin:auto;'>";
             $this->includefile("pricingview");
+            echo "</div>";
         }
     }
     

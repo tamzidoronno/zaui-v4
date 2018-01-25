@@ -2,6 +2,8 @@
 namespace ns_25c15968_4b9b_4c23_9e44_dc5cdb83244c;
 
 class ApacAccessGroups extends \MarketingApplication implements \Application {
+    private $cachedLocks = array();
+    
     public function getDescription() {
         
     }
@@ -89,18 +91,31 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
     public function changeSlotCode() {
         $this->getApi()->getGetShopLockSystemManager()->changeCode($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'], $_POST['data']['slotid'], $_POST['data']['code'], "");
     }
-
+    
     public function generateTitle($serverId, $masterSlot) {
         
         $ret = "";
         $ret .= "Slot: ".$masterSlot->slotId;
         $ret .= "<br/><br/><b>The following locks has not been updated</b>";
         foreach ($masterSlot->slotsNotOk as $slotNotOk) {
-            $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($slotNotOk->connectedToServerId, $slotNotOk->connectedToLockId);
+            $lock = $this->getLock($slotNotOk->connectedToServerId, $slotNotOk->connectedToLockId);
             $ret .= "<br/>Lockname: ".$lock->name;
         }
         
         return $ret;
+    }
+
+    public function getLock($serverId, $lockId) {
+        $key = $serverId."_".$lockId;
+    
+        if (isset($this->cachedLocks[$key])) {
+            return $this->cachedLocks[$key];
+        }
+        
+        $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($serverId, $lockId);
+        $this->cachedLocks[$key] = $lock;
+        
+        return $lock;
     }
 
 }

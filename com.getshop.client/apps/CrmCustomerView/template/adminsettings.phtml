@@ -15,3 +15,28 @@ $user = $this->getUser();
         <input gsname="canchangepagelayout" <? echo $user->canChangeLayout ? "checked='true'" : ""; ?> type="checkbox" class="gsnicecheckbox1"/>
     </div>
 </div>
+
+<div class="row">
+    <div class="col col1">
+        <? echo $this->__f("Google Authenticator"); ?>
+    </div>
+    
+    <div class="col col2">
+        <?
+        echo $this->__f("Key").": ".$user->totpKey;
+        if ($user->totpKey) {
+            ?>
+            <br/>
+            <?
+            $hostname = urlencode($_SERVER['HTTP_HOST']);
+            $otpauth = "otpauth://totp/".$hostname."?secret=".$user->totpKey."&issuer=GetShop";
+            $qrSource = "https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=".$otpauth;
+            ?>
+            <a target='blank' class="gs_ignorenavigate" href='<? echo $qrSource; ?>'><? echo $this->__f("Click here for QR code"); ?></a>
+            <br/>
+        <?
+        }
+        ?>
+        <div class='gs_shop_small_icon' gsclick='regeneratTotpKey'><i class='fa fa-refresh'></i> <? echo $this->__f("Regenerate key"); ?></div>
+    </div>
+</div>

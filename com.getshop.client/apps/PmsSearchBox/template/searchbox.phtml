@@ -1,17 +1,112 @@
 <?
-/* @var $this \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+/* @var $pms \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+/* @var $this \ns_1ba01a11_1b79_4d80_8fdd_c7c2e286f94c\PmsSearchBox */
 $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+
+$types = $this->getSearchTypes();
 $filter = $pms->getSelectedFilter();
 $searchWord = $filter ? $filter->searchWord : "";
-
+$bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 ?>
 
 
-<div gstype="form" method="search">
+<span class="advancesearch">
+    <div title="<? echo $this->__f("Group booking"); ?>" class="top-row-icon"><i class="fa fa-users"></i></div>
+    <div title="<? echo $this->__f("Include deleted"); ?>" class="top-row-icon"><i class="fa fa-trash-o"></i></div>
+    
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("From");
+            ?>
+        </div>
+        <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>" gsname='from'/>
+        <i class="icon-calendar-text"></i>
+    </div>
+
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("To");
+            ?>
+        </div>
+        <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>" gsname='to'/>
+        <i class="icon-calendar-text"></i>
+    </div>
+
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("Filtertype");
+            ?>
+        </div>
+        <select>
+            <?php
+            foreach($types as $typeId => $val) {
+                echo "<option value='$typeId'>$val</option>";
+            }
+            ?>
+        </select>
+    </div>
+    
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("Room types");
+            ?>
+        </div>
+        <div style='padding-top:4px;color:blue; cursor:pointer;'>All types</div>
+    </div>
+
+    <div class="gs_headerbox">
+        <span class='shop_button'>Load</span>
+    </div>
+</span>
+
+<span gstype="form" method="search" class='simplesearch'>
     <div title="<? echo $this->__f("Latest registered users"); ?>" gsclick="clearFilter" class="top-row-icon  <? echo !isset($_SESSION['pmfilter']) || !$_SESSION['pmfilter'] ? 'active' : ''; ?>"><i class="icon-database-upload"></i></div>
     <div title="<? echo $this->__f("Users checkin today"); ?>" day="0" gsclick='showCheckins' class="top-row-icon <? echo $filter && $filter->filterType == "checkin" ? 'active' : ''; ?>"><i class="icon-enter"></i></div>
     <div title="<? echo $this->__f("Users checkout today"); ?>" day="0"  gsclick='showCheckOuts' class="top-row-icon <? echo $filter && $filter->filterType == "checkout" ? 'active' : ''; ?>"><i class="icon-exit"></i></div>
     <input class="gsniceinput1" gstype='submitenter' gsname='searchtext' placeholder="<? echo $this->__f("Search"); ?>" value='<? echo $searchWord; ?>'/>
-    <div class="top-row-icon <? echo $searchWord ? 'active' : ''; ?>" gstype='submit'><i class="icon-search"></i></div>
-    <div class="top-row-icon"><i class="icon-search2"></i></div>
-</div>
+    <div class="top-row-icon <? echo $searchWord ? 'active' : ''; ?>" gstype='submit' title='Show filtering'><i class="icon-search"></i></div>
+</span>
+
+<div class="top-row-icon advancesearchtoggle"><i class="icon-search2"></i></div>
+
+
+
+<script>
+    $('#startdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
+            var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = curEnd.valueOf() - date.valueOf();
+            if(diff <= 0) {
+                date.add(1, 'days');
+                $('#enddate').val(date.format('DD.MM.YYYY')); 
+                app.PmsNewBooking.reloadAvailability();
+            }
+        }
+    });
+    
+    $('#enddate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
+            var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = date.valueOf() - curStart.valueOf();
+            if(diff <= 0) {
+                date.add(-1, 'days');
+                $('#startdate').val(date.format('DD.MM.YYYY')); 
+                app.PmsNewBooking.reloadAvailability();
+            }
+            app.PmsNewBooking.reloadAvailability();
+        }
+    });
+    $(document).on('click', '.PmsNewBooking .icon-calendar-text', function() {
+        $(this).closest('div').find('input').focus();
+    });
+</script>

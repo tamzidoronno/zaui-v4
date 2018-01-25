@@ -25,7 +25,6 @@ public class LockGroup extends DataCommon {
     public String name;
 
     public void rebuildCodeMatrix(List<LockServer> servers) {
-        groupLockCodes.clear();
         
         int j = 0;
         
@@ -42,6 +41,9 @@ public class LockGroup extends DataCommon {
                 masterSlot.generateNewCode();
             }
             
+            connectedToLocks.clear();
+            masterSlot.subSlots.clear();
+            
             for (LockServer server : servers) {
                 ArrayList<String> lockIds = new ArrayList();
                 
@@ -52,7 +54,10 @@ public class LockGroup extends DataCommon {
                     }
                     
                     lockIds.add(lock.id);
-                    masterSlot.subSlots.add(slots.get(j));
+                    
+                    if (!isInSubSlot(masterSlot.subSlots, slots.get(j))) {
+                        masterSlot.subSlots.add(slots.get(j));
+                    }
                 }
                 
                 connectedToLocks.put(server.getId(), lockIds);
@@ -121,5 +126,15 @@ public class LockGroup extends DataCommon {
                 }
             }
         }
+    }
+
+    private boolean isInSubSlot(List<UserSlot> subSlots, UserSlot slotToCheck) {
+        for (UserSlot slot : subSlots) {
+            if (slot.slotId == slotToCheck.slotId && slot.connectedToLockId.equals(slotToCheck.connectedToLockId)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

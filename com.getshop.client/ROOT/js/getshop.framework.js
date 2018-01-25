@@ -1870,9 +1870,17 @@ thundashop.framework = {
         if(element.hasClass("clicksubmitcheckbox")) {
             value = element.is(':checked');
         }
-
+        
         var data = {}
         data[name] = value;
+        if (element.attr("gs_prompt")) {
+            var prompt = window.prompt(element.attr("gs_prompt"));
+            if (!prompt) {
+                return;
+            }
+            data['prompt'] = prompt;
+        }
+
 
         var event = thundashop.Ajax.createEvent("", method, element, data);
         thundashop.framework.postToChannel(event, element);

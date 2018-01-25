@@ -27,8 +27,75 @@ class ApacLocks extends \MarketingApplication implements \Application {
         $this->includefile("lock");
     }
     
+    /**
+     * 
+     * @param \core_getshoplocksystem_Lock $lock
+     * @return int
+     */
+    public function formatSlotsInUse($lock) {
+        $cunt = 0;
+        foreach ($lock->userSlots as $slut) {
+            if ($slut->takenInUseDate) {
+                $cunt++;
+            }
+        }
+        return $cunt;
+    }
+    
+    /**
+     * 
+     * @param \core_getshoplocksystem_Lock $lock
+     * @return int
+     */
+    public function formatFreeSlots($lock) {
+        $cunt = 0;
+        foreach ($lock->userSlots as $slut) {
+            if (!$slut->belongsToGroupId) {
+                $cunt++;
+            }
+        }
+        return $cunt;
+    }
+    
+    public function getCountOfCodesToUpdate($lock) {
+        $cunt = 0;
+        foreach ($lock->userSlots as $slut) {
+            if ($slut->toBeAdded || $slut->toBeRemoved) {
+                $cunt++;
+            }
+        }
+        return $cunt;
+    }
+    
+    public function formatStatus($lock) {
+        $ret = "";
+        
+        if ($lock->prioritizeLockUpdate) {
+            $ret .= "<i class='fa fa-warning' title='prioritize activated'></i> ";
+        }
+        if ($lock->dead) {
+            $ret .= "<i class='fa fa-ban' title='This device was found dead last update: ".$lock->markedDateAtDate."'></i>";
+        } else if ($lock->currentlyUpdating) {
+            $ret .= "<i class='fa fa-spinner fa-spin' title='Currently updating device, attempt: ".$lock->currentlyAttempt."'></i>";
+        } else {
+            $ret .= "<i class='fa fa-check' title='Last tried to update: ".$lock->lastStartedUpdating."'></i>";
+        }
+        
+        return $ret;
+    }
+    
     public function render() {
         $servers = $this->getApi()->getGetShopLockSystemManager()->getLockServers();
+        
+        $total = 0;
+        foreach ($servers as $server) {
+            foreach ($server->locks as $lock) {
+                $total += $this->getCountOfCodesToUpdate($lock);
+            }
+        }
+        
+        echo "<h2>Total codes to update: ".$total."</h2>";
+        
         foreach ($servers as $server) {
             $args = array();
             
@@ -39,7 +106,11 @@ class ApacLocks extends \MarketingApplication implements \Application {
                 array("zwaveDeviceId", "DeviceId", 'zwaveDeviceId'),
                 array("typeOfLock", "Type", 'typeOfLock'),
                 array("name", "Name", 'name'),
-                array("maxnumberOfCodes", "MaxCodes", 'maxnumberOfCodes')
+                array("maxnumberOfCodes", "MaxCodes", 'maxnumberOfCodes'),
+                array("slotsToUpdate", "SlotsToUpdate", null, 'getCountOfCodesToUpdate'),
+                array("slotsInUse", "SlotsInUse", null, 'formatSlotsInUse'),
+                array("freeSlots", "Free Slots", null, 'formatFreeSlots'),
+                array("status", "STATUS", null, 'formatStatus')
             );
             
             $extraData = array();
@@ -47,8 +118,10 @@ class ApacLocks extends \MarketingApplication implements \Application {
             
             $table = new \GetShopModuleTable($this, "ApacLocks", "getLockData", null, $attributes, $extraData);
             $table->setData($server->locks);
+            $table->sortByColumn('zwaveDeviceId', true);
             $table->render();
         }
+        
     }
 
     public function getLock() {

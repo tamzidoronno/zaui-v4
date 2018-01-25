@@ -33,6 +33,8 @@ public class DataCommon extends TranslationHandler implements Serializable, Clon
     public String gsDeletedBy;
     public String lastModifiedByUserId = "";
     public String getshopModule = "";
+    
+    public boolean deepFreeze = false;
 
     private void checkAnnotations(Field field, boolean Administrator) throws IllegalArgumentException, IllegalAccessException {
         Object emptyObject = new Product();

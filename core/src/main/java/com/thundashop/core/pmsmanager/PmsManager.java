@@ -6978,12 +6978,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         
         HashMap<String, Integer> bookingCount = new HashMap();
+        HashMap<String, Integer> roomCount = new HashMap();
         HashMap<String, Date> bookingLatest = new HashMap();
         for(PmsBooking book : bookings.values()) {
             if(bookingCount.containsKey(book.userId)) {
                 bookingCount.put(book.userId, bookingCount.get(book.userId)+1);
             } else {
                 bookingCount.put(book.userId, 1);
+            }
+            if(roomCount.containsKey(book.userId)) {
+                roomCount.put(book.userId, roomCount.get(book.userId)+book.getActiveRooms().size());
+            } else {
+                roomCount.put(book.userId, book.getActiveRooms().size());
             }
             if(bookingLatest.containsKey(book.userId)) {
                 if(book.rowCreatedDate.after(bookingLatest.get(book.userId))) {
@@ -7007,6 +7013,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             row.numberOfBookings = 0;
             if(bookingCount.containsKey(user.id)) {
                 row.numberOfBookings = bookingCount.get(user.id);
+            }
+            if(roomCount.containsKey(user.id)) {
+                row.numberOfRooms = roomCount.get(user.id);
             }
             row.numberOfOrders = orderManager.getAllOrdersForUser(user.id).size();
             row.latestBooking = bookingLatest.get(user.id);

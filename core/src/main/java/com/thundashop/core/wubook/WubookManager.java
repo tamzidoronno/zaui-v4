@@ -520,7 +520,20 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             
-            Vector list = new Vector();
+            String[] roomIds = new String[1];
+            roomIds[0] = rdata.wubookroomid + "";
+            if(rdata.newRoomPriceSystem) {
+                roomIds = rdata.virtualWubookRoomIds.split(";");
+            }
+            
+
+            HashMap<String, Vector> results = new HashMap();
+            for(String roomId : roomIds) {
+                Vector vector = new Vector();
+                results.put(roomId, vector);
+            }
+
+            
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY,16);
             for(int i = 0;i < (365*2); i++) {
@@ -528,14 +541,20 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(minstay == null) {
                     return "";
                 }
-                logText(cal.getTime() + " : " + minstay + " : " + rdata.bookingEngineTypeId);
-                Hashtable dayEntry = new Hashtable();
-                dayEntry.put("min_stay", minstay);
-                list.add(dayEntry);
-                found = true;
+                for(String roomId : roomIds) {
+                    Vector list = results.get(roomId);
+                    Hashtable dayEntry = new Hashtable();
+                    dayEntry.put("min_stay", minstay);
+                    list.add(dayEntry);
+                    found = true;
+                }
                 cal.add(Calendar.DAY_OF_YEAR, 1);
             }
-            table.put(rdata.wubookroomid + "", list);
+            for(String roomId : results.keySet()) {
+                if(!roomId.equals("-1")) {
+                    table.put(roomId + "", results.get(roomId));
+                }
+            }
         }
         if(found) {
             Vector params = new Vector();

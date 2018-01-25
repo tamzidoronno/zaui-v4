@@ -55,7 +55,7 @@ public class ZwaveJobPriotizer {
         }
         
         Collections.sort(locks, (LocstarLock l1, LocstarLock l2) -> {
-            return Comparator.nullsFirst(Date::compareTo).compare(l2.getDontUpdateUntil(), l1.getDontUpdateUntil());
+            return Comparator.nullsFirst(Date::compareTo).compare(l1.getDontUpdateUntil(), l2.getDontUpdateUntil());
         });
         
         return locks.stream()

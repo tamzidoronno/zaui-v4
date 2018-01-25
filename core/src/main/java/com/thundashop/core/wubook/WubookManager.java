@@ -477,7 +477,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 copy.setTime(calStart.getTime());
                 list = createRoomPriceList(rdata, pricesForType,copy,list,guests);
                 if(!list.isEmpty()) {
-                    table.put(roomId, list);
+                    if(!roomId.equals("-1")) {
+                        table.put(roomId, list);
+                    }
                 }
                 guests++;
             }
@@ -1951,6 +1953,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 //Lofoten bed and breakfast icreases the rooms by 15%.
                 if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9")) {
                     priceToAdd *= 1.15;
+                    priceToAdd = (double)Math.round(priceToAdd);
                 }
                 
             } else if(pmsManager.getConfigurationSecure().enableCoveragePrices) {

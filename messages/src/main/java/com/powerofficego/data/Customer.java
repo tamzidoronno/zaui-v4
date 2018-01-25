@@ -8,6 +8,7 @@ public class Customer {
     public String vatNumber;
     public String emailAddress;
     public String id;
+    public Address mailAddress;
     
     public void setUser(User user) {
         name = user.fullName;
@@ -25,5 +26,13 @@ public class Customer {
         if(user.externalAccountingId != null && !user.externalAccountingId.isEmpty()) {
             id = user.externalAccountingId;
         }
+        
+        mailAddress = new Address();
+        mailAddress.address1 = user.address.address;
+        mailAddress.city = user.address.city;
+        mailAddress.zipCode = user.address.postCode;
+        mailAddress.countryCode = user.address.countrycode;
+        mailAddress.id = 1;
+        mailAddress.isPrimary = true;
     }
 }

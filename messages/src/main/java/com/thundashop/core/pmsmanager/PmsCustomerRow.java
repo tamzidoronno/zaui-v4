@@ -17,6 +17,7 @@ public class PmsCustomerRow {
     public Integer customerId;
     public String customerType;
     public Integer numberOfBookings;
+    public Integer numberOfRooms;
     public Double totalPrice;
     public Integer numberOfOrders;
     public Date latestBooking;

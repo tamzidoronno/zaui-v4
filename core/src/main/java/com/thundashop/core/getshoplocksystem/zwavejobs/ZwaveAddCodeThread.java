@@ -27,7 +27,6 @@ public class ZwaveAddCodeThread extends ZwaveThread {
 
     @Override
     public boolean execute(int attempt) throws ZwaveThreadExecption {
-        stopOnAttemptFiveIfDeviceIsDead(attempt);
         
         String codeAlreadyAdded = isCodeAdded();
         
@@ -57,15 +56,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         return false;
     }
 
-    private void stopOnAttemptFiveIfDeviceIsDead(int attempt) throws ZwaveThreadExecption {
-        if (attempt == 6) {
-            if (isDeviceDead()) {
-                logEntry("Detected dead device, moving on");
-                throw new ZwaveThreadExecption("Deteched dead device, moving on", attempt);
-            }
-        }
-    }
-
+   
 
     /**
      * Check if code is already added, if it is throw an exception. If its not able to check this properly due

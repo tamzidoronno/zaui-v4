@@ -237,4 +237,8 @@ public class Lock {
         cal.add(Calendar.MINUTE, minutes);
         dontUpdateUntil = cal.getTime();
     }
+
+    public Date getDontUpdateUntil() {
+        return dontUpdateUntil;
+    }
 }

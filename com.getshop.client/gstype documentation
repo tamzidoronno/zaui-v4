@@ -61,6 +61,7 @@ attribute gstypes;
 
         gs_confirm="Are you sure you want to delete?"
         <div gsclick="save" gs_confirm="Are you sure">Test</div>
+        <input type='button' value='Recalculate' gstype='clicksubmitforce' method='correctAllOrders' gs_prompt="Password">
 
         gs_also="classename":
             <textarea class='myclassname2' gsname='moredata2'></textarea>

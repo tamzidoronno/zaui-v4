@@ -643,6 +643,35 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return itemsToReturn;
     }
 
+    @Override
+    public void recalculateAllBookings(String password) {
+        if(!password.equals("fdsafsadewuio8439ngdfs")) {
+            return;
+        }
+        List<PmsBooking> bookings = pmsManager.getAllBookings(null);
+        for(PmsBooking booking : bookings) {
+            boolean recalc = false;
+            for(String orderId : booking.orderIds) {
+                Order order = orderManager.getOrder(orderId);
+                if(order.closed) {
+                    continue;
+                }
+                if(userManager.getUserById(booking.userId) == null) {
+                    System.out.println("Cannot recalculate: " + booking.id);
+                    continue;
+                }
+                order.cart.clear();
+                orderManager.saveOrder(order);
+                recalc = true;
+            }
+            if(recalc) {
+                NewOrderFilter filter = new NewOrderFilter();
+                filter.avoidOrderCreation = false;
+                createOrder(booking.id, filter);
+            }
+        }
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

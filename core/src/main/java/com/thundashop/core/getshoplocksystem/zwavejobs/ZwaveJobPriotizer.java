@@ -8,6 +8,8 @@ package com.thundashop.core.getshoplocksystem.zwavejobs;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +53,10 @@ public class ZwaveJobPriotizer {
             lock.finalize();
             return lock;
         }
+        
+        Collections.sort(locks, (LocstarLock l1, LocstarLock l2) -> {
+            return Comparator.nullsFirst(Date::compareTo).compare(l2.getDontUpdateUntil(), l1.getDontUpdateUntil());
+        });
         
         return locks.stream()
                 .filter(l -> l.getJobSize() > 0)

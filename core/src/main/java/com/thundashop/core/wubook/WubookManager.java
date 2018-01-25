@@ -127,9 +127,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         //Old
-//        client = new XmlRpcClient("https://wubook.net/xrws/");
+        client = new XmlRpcClient("https://wubook.net/xrws/");
         //New
-        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
+//        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
 
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);

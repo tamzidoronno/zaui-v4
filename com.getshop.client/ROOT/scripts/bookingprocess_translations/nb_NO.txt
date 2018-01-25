@@ -17,7 +17,7 @@
     "signinbutton" : "Logg in",
     "remove" : "Fjern",
     "discountcode" : "Rabattkode?",
-    "inLuckAvailable" : "Der hadde du flaks, vi har tilgjengelige rom til deg!",
+    "inLuckAvailable" : "Vi har ledige rom, og har valgt rom for deg!",
     "bestValue" : "Dette er den beste dealen vi kan gi deg.",
     "continue" : "Fortsett",
     "addons" : "Addons",
@@ -67,5 +67,6 @@
     "adults" : "voksne",
     "child" : "barn",
     "children" : "barn",
-
+    "priceonroom" : "Prisen på dette rommet",
+    "addonsinformation" : "Her kan du velge hvilken type addon du ønsker for oppholdet. Om du ønsker å velge addons for kun noen rom klikker du på ikonene under gjesteinformasjon."
 }

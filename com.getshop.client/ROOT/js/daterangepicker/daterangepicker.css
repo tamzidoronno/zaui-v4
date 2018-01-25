@@ -1,13 +1,18 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 .daterangepicker {
   position: absolute;
   display: none;
   color: inherit;
-  background-color: #f9f9f9;
+  background-color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.5;
   width: 100%;
   padding: 8px;
   top: 100px;
   left: 20px;
   margin-top: 0;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
   /* Calendars */ }
   .daterangepicker:before, .daterangepicker:after {
     position: absolute;
@@ -60,7 +65,7 @@
     max-width: none;
     border:0;
     border-radius: 0;
-    border-top:2px solid #329ad6;
+    border-top:2px solid #94ccdf;
     z-index: 3001; }
   .daterangepicker.single .ranges, .daterangepicker.single .calendar {
     float: none; }
@@ -87,14 +92,15 @@
     width: 20px;
     height: 20px;
     border-radius: 4px;
+    font-size:13px;
     border: 1px solid transparent;
     white-space: nowrap;
     box-sizing: border-box;
     cursor: pointer; }
     .daterangepicker td.available:hover, .daterangepicker th.available:hover {
-      background-color: #329ad6;
+      background-color: #94ccdf;
       border-color: transparent;
-      color: #f9f9f9; }
+      color: #fff; }
     .daterangepicker td.week, .daterangepicker th.week {
       font-size: 80%;
       color: #ccc; }
@@ -102,9 +108,9 @@
     border-color: transparent;
     color: #999; }
   .daterangepicker td.in-range {
-    background-color: #83b0dc;
+    background-color: #cde9f3;
     border-color: transparent;
-    color: #f9f9f9;
+    color: #fff;
     border-radius: 0; }
   .daterangepicker td.start-date {
     border-radius: 4px 0 0 4px; }
@@ -113,9 +119,9 @@
   .daterangepicker td.start-date.end-date {
     border-radius: 4px; }
   .daterangepicker td.active, .daterangepicker td.active:hover {
-    background-color: #329ad6;
+    background-color: #94ccdf;
     border-color: transparent;
-    color: #f9f9f9;}
+    color: #fff;}
   .daterangepicker th.month {
     width: auto; }
   .daterangepicker td.disabled, .daterangepicker option.disabled {
@@ -219,7 +225,7 @@
       direction: ltr;
       text-align: left; }
     .daterangepicker.ltr .calendar{
-        margin-right:10px;}
+        margin-right:16px;}
       .daterangepicker.ltr .calendar.left {
         clear: left;}
         .daterangepicker.ltr .calendar.left .calendar-table {

@@ -95,7 +95,8 @@ public abstract class ZwaveThread implements Runnable {
 
     private void stopIfDead(int attempt) throws ZwaveThreadExecption {
         if (isDeviceDead()) {
-            logEntry("Detected dead device, moving on");
+            logEntry("Detected dead device, moving on after a sleep for 60 seconds");
+            try {Thread.sleep(60000); }  catch (Exception ex) {}
             throw new ZwaveThreadExecption("Detected dead device, moving on", attempt);
         }
     }

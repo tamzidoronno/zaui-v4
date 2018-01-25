@@ -1318,6 +1318,10 @@ public class PmsManagerProcessor {
     private void checkForDeadCodesApac() {
         List<PmsBooking> bookings = manager.getAllBookingsFlat();
         
+        if (bookings == null || bookings.isEmpty()) {
+            return;
+        }
+        
         List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
         
         groups.stream().forEach(group -> {
@@ -1327,7 +1331,7 @@ public class PmsManagerProcessor {
                 .forEach(masterUserSlot -> {
                     boolean isSlotInUse = isMasterUserSlotInUse(group, masterUserSlot, bookings);
                     if (!isSlotInUse) {
-//                        manager.getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
+                        manager.getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
                     }
                 });
         });

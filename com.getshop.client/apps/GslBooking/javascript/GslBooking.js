@@ -630,9 +630,9 @@ function getshop_changeGuestSelection(e) {
         } else if (count >= 2) {
             minusButton.removeClass('disabled');
         }
-        if (count >= 10) {
-            plusButton.addClass('disabled');
-        }
+//        if (count >= 99) {
+//            plusButton.addClass('disabled');
+//        }
     }
     if (btn.is('.fa-minus')) {
         count--;
@@ -648,9 +648,9 @@ function getshop_changeGuestSelection(e) {
                 minusButton.addClass('disabled');
             }
         }
-        if (count <= 9) {
-            plusButton.removeClass('disabled');
-        }
+//        if (count <= 98) {
+//            plusButton.removeClass('disabled');
+//        }
     }
     
     $(this).closest('.count_line').find('.count').val(count);
@@ -809,7 +809,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     var totalGuests = 0;
     var chosenRoomText = getshop_getBookingTranslations();
     
-    var header = "<tr style='font-weight:bold;'><td style='text-align:left;'>"+chosenRoomText['chosenRoom']+"</td><td>"+chosenRoomText['numberofguests']+"</td><td>"+chosenRoomText['price']+"</td></tr>";
+    var header = "<tr style='font-weight:bold;box-shadow: inset 0px -1px 0px #efeff0;'><td style='text-align:left;'>"+chosenRoomText['chosenRoom']+"</td><td>"+chosenRoomText['numberofguests']+"</td><td>"+chosenRoomText['price']+"</td></tr>";
     var row = "";
     var translationMatrix = getshop_getBookingTranslations();
     var roomsSelected = 0;
@@ -829,18 +829,17 @@ function getshop_updateOrderSummary(res, isSearch) {
                 }
                 row += ")</td>";
                 
-                row += "<td>" + price + ",-</td>";
+                row += "<td>" + price*count + ",-</td>";
                 row += "</tr>";
-                total += price;
+                total += price*count;
                 totalRooms += parseInt(count);
                 totalGuests += (guest*count);
                 roomsSelected++;
             }
         }
     }
-//    var totalAmount = "<tr class='totalAmountline'><td>"+chosenRoomText['total']+"</td><td>"+totalGuests+" ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ") </td><td>"+total+"</td></tr>";
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + "</table>");
-    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong><span class='mobilesplitter'></span>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " ("+ totalRooms +" " + translationMatrix['rooms'].toLowerCase() + ")");
+    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " <strong>"+ chosenRoomText['rooms']+":</strong> "+ totalRooms);
     $('.GslBooking .ordersummary .continue').hide();
     if(isSearch) {
         if(!$('.GslBooking .ordersummary').is(":visible")) {
@@ -1077,8 +1076,8 @@ function getshop_searchRooms() {
     }    
     
     var rooms = $('#count_room').val();
-    var adults = $('#count_adult').val();
-    var children = $('#count_child').val();
+    var adults = parseInt($('#count_adult').val());
+    var children = parseInt($('#count_child').val());
     if(rooms > (adults+children)) {
         alert('It is not possible to select more rooms than guests');
         return;
@@ -1171,7 +1170,7 @@ function getshop_searchRooms() {
                     roomBox.find('.guestselection').show();
                     if(numberofrooms) {
                         numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
-                        productentry = $('<tr class="productentry_itemlist"><td><i class="fa fa-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td> NOK ' + room.pricesByGuests[guest] + ',-</td><td style="text-align:right;padding-right:10px;"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></td></tr>');
+                        productentry = $('<tr class="productentry_itemlist"><td><i class="icon-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td> NOK ' + room.pricesByGuests[guest] + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
                         productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
                     } else {
                         roomBox.find('.guestselection').hide();
@@ -1180,16 +1179,16 @@ function getshop_searchRooms() {
                     user_icon++;
                 }
 
-                var controller = '';
-                if (room.images.length > 4) {
-                    controller = '<div class="controls"><div class="move-btn left"><i class="fa fa-caret-left"></i></div><div class="move-btn right"><i class="fa fa-caret-right"></i></div></div>'
-                }
+//                var controller = '';
+//                if (room.images.length > 4) {
+//                    controller = '<div class="controls"><div class="move-btn left"><i class="fa fa-caret-left"></i></div><div class="move-btn right"><i class="fa fa-caret-right"></i></div></div>'
+//                }
                 for (var utility in room.utilities) {
                     utilities += '<i class="fa fa-' + utility + '" title="' + room.utilities[utility] + '"></i>';
                 }
 
                 $('#productentry').append(roomBox);
-                roomBox.find('.gsgalleryroot').prepend(controller);
+//                roomBox.find('.gsgalleryroot').prepend(controller);
                 roomBox.show();
 
                 for (var i = 0; i <= room.images.length - 1; i++) {

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -273,7 +274,19 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
         
         if (!lockToWorkWith.getToUpdate().isEmpty()) {
-            return new ZwaveAddCodeThread(this, lockToWorkWith.getToUpdate().get(0), lockToWorkWith, storeId);
+            UserSlot slotToUpdate = null;
+            
+            if (lockToWorkWith.getToUpdate().size() == 1) {
+                slotToUpdate = lockToWorkWith.getToUpdate().get(0);
+            } else {
+                int min = 0;
+                int max = lockToWorkWith.getToUpdate().size() - 1;
+                Random rn = new Random();
+                int slot = rn.nextInt(max - min + 1) + min;
+                slotToUpdate = lockToWorkWith.getToUpdate().get(slot);
+            }
+            
+            return new ZwaveAddCodeThread(this, slotToUpdate, lockToWorkWith, storeId);
         }
         
         return null;

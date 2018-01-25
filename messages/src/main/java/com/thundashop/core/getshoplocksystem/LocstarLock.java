@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplocksystem;
 
 import java.util.Date;
 import java.util.UUID;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -15,7 +16,10 @@ import java.util.UUID;
 public class LocstarLock extends Lock {
     public int zwaveDeviceId;
     public boolean prioritizeLockUpdate = false;
-    public boolean currentlyUpdating;
+    
+    @Transient
+    public boolean currentlyUpdating = false;
+    
     public int currentlyAttempt;
     public boolean dead = false;
     public Date markedDateAtDate;

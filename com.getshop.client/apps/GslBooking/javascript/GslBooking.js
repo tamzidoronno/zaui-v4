@@ -384,7 +384,11 @@ function getshop_continueToSummary() {
         $('.GslBooking .gslbookingHeader').slideUp();
         localStorage.setItem('gslcurrentpage','summary');
         getshop_loadAddonsAndGuestSumaryView();
-        $(window).scrollTop(0);
+        
+        var padding = $('.gslbookingBody').position().top;
+        var body = $('.gslbookingBody').offset().top;
+        $(window).scrollTop(body-padding);
+        
     });
 }
 
@@ -750,9 +754,10 @@ function getshop_showProductList() {
     });
 }
 function getshop_showOverviewPage() {
-    $(window).scrollTop(0);
     localStorage.setItem('gslcurrentpage','overview');
     var saving = getshop_saveGuestInformation();
+    var padding = $('.gslbookingBody').position().top;
+    var body = $('.gslbookingBody').offset().top;
     $('.invalidinput').removeClass('invalidinput');
     $('.GslBooking .errormessage').hide();
     saving.done(function(res) {
@@ -774,7 +779,10 @@ function getshop_showOverviewPage() {
         if(success) {
             $('.addons_overview').fadeOut('400', function () {
                 $('.overview').fadeIn('400');
+                $(window).scrollTop(body-padding);
             });
+        } else {
+            $(window).scrollTop(body-padding);
         }
     });
 }
@@ -1128,6 +1136,7 @@ function getshop_searchRooms() {
                 $('.GslBooking .hide').hide();
             } else {
                 getshop_updateOrderSummary(res, true);
+                $(window).scrollTop($('.productoverview').offset().top);
             }
         
             for (var k in res.rooms) {

@@ -155,6 +155,17 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
             This is useful if you for instance have multiple buildings and want to seperate the bookings for each building, but want to have all orders/accounting together<br/>
             <b>Select what domain is the default one</b>
         </span>
+        <?php if($this->getUser()->showHiddenFields) { ?>
+            <div style='text-align: right;'>
+                <input type='button' style='padding: 9px; width:200px; cursor:pointer;' value='Recalculate' gstype='clicksubmitforce' method='correctAllOrders' gs_prompt="Password">
+            </div>
+        
+            <span class='title'>
+                Recalculate all orders on the bookings (done if something has been wrong while importing at startup).
+            </span>
+            <?php
+        }
+        ?>
     </div>
     
     <div style='text-align: right;'>

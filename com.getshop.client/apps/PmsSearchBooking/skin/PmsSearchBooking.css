@@ -1,6 +1,7 @@
 .PmsSearchBooking {
     max-width: 1500px;
     margin: 0 auto;
+    min-height: 800px;
 }
 
 .PmsSearchBooking .GetShopModuleTable .col_expandbutton i {

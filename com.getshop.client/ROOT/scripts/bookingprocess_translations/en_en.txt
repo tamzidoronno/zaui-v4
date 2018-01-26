@@ -18,7 +18,7 @@
     "discountcode" : "Discount coupon?",
     "logout" : "Logout",
     "signinbutton" : "Sign in",
-    "inLuckAvailable" : "We found the perfect room for you!",
+    "inLuckAvailable" : "We have selected rooms for you!",
     "bestValue" : "This is the best value deal we can offer you!",
     "continue" : "Continue",
     "addons" : "Addons",
@@ -66,7 +66,9 @@
     "numberofrooms" : "Number of rooms",
     "price" : "Price",
     "availableRooms" : "Available rooms: ",
-    "chosenRoom" : "Rooms chosen",
+    "chosenRoom" : "Selected rooms",
     "total" : "Total",
-    "ischildtext" : "This guest is a child (below : {age} year)."
+    "ischildtext" : "This guest is a child (below : {age} year).",
+    "priceonroom" : "The price on this room",
+    "addonsinformation" : "Here you select what kind of addons you want on your stay. If you want seperate addons for room, click on the icons under guest info in the selected room."
 }

@@ -92,4 +92,7 @@ public interface IPmsInvoiceManager {
     @Administrator
     public List<Order> fetchDibsOrdersToAutoPay();
     
+    @Administrator
+    public void recalculateAllBookings(String password);
+    
 }

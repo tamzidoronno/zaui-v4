@@ -162,6 +162,15 @@
     font-size: 16px;
     letter-spacing: 1px;
 }
+.PmsBooking .pmsfront4 .date_pickerwrapper{position: relative;}
+.PmsBooking .pmsfront4 .date_pickerwrapper:after{
+    content: "\e92f";
+    position: absolute;
+    font-family: "icomoon";
+    right: 20px;
+    top: 32px;
+    color: #000;
+}
 .PmsBooking .pmsfront4 #date_picker{text-align:center;}
 .PmsBooking .pmsfront4 .searchbutton{
     background: #329ad6;
@@ -262,6 +271,7 @@
     content: "\f097";
     position: absolute;
     font-family: fontawesome;
+    pointer-events: none;
     right: 8px;
     top: 0;
 }
@@ -286,14 +296,17 @@
     content: "\f073";
     position: absolute;
     font-family: fontawesome;
+    pointer-events: none;
     right: 8px;
     top: 0;
 }
 .PmsBooking .excludeChildSelection{display:none;}
 @media only all and (max-width:800px){
     .PmsBooking .datepickermobile{display: block;}
+    
     .PmsBooking #date_picker,
-    .PmsBooking #faholder_date{display: none;}
+    .PmsBooking #faholder_date,
+    .PmsBooking .date_pickerwrapper{display: none;}
     
     /*Front 4*/
     .PmsBooking .pmsfront4 {background-color:rgba(10, 30, 41, 1);}

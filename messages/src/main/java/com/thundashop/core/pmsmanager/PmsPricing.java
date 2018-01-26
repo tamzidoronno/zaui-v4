@@ -4,8 +4,23 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class PmsPricing extends DataCommon {
+
+    HashMap<Integer, Integer> getLongTermDeal() {
+        if(longTermDeal == null) {
+            return new HashMap();
+        }
+        
+        SortedSet<Integer> keys = new TreeSet<Integer>(longTermDeal.keySet());
+        HashMap<Integer, Integer> result = new HashMap();
+        for(Integer k : keys) {
+            result.put(k, longTermDeal.get(k));
+        }
+        return result;
+    }
     public static class PmsPricingCoverageType {
         public static Integer PERCENTAGE = 0;
         public static Integer FIXEDPRICE = 1;

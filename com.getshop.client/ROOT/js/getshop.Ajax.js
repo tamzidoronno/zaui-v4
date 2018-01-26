@@ -117,7 +117,7 @@ thundashop.Ajax = {
             method = $(this).attr('gschange');
             data.gsvalue = $(this).val();
         }
-        
+
         if ($(this).attr("gs_confirm")) {
             var conf = confirm($(this).attr("gs_confirm"));
             if (!conf) {

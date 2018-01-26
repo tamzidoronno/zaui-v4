@@ -63,3 +63,53 @@ body{color:#111;font-size:13px;}
 .PmsBookingContactData .complete_button,
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingCalendar .calendar .day.selected{background:#1979c2;background-color:#1979c2;border-color:#1979c2;}
+
+@media only all and (max-width:800px){
+    div[pageid="ba2dee2d-87aa-400f-8cc3-26b3373f1d27"] .gsarea[area="body"] { padding: 0;}
+    .gsarea[area="body"] { padding:0 10px; } 
+    .Menu .mobilenavigatemenu .fa{
+        font-size:20px;
+        color:#fff;
+        padding:5px;
+    }
+    .Menu .menuentries.horizontal{
+        top:30px;
+        background-color:#8fb3cf;
+    }
+    .Menu .entry,
+    .Menu .entry a div{
+        box-shadow: 0 0 0 !important;
+        border:0 !important;
+        line-height:1 !important;
+    }
+    .Menu .entry a div { padding:4px !important; }
+    .Menu .entry .entries { top:0; }
+    .ImageDisplayer .imagecontainer.originalSize img { min-width:100px; }
+    
+    /*PmsBooking*/
+    .PmsBooking { font-size:10px; }
+    .PmsBooking * { box-sizing:border-box; }
+    .PmsBooking .pmsfront .dates input { padding:7px; font-size: 10px;width:75%;}
+    .PmsBooking .pmsfront .dates .dates_inner { padding:0; height:28px !important;line-height:28px;}
+    .PmsBooking .inputblock { width:33.33%; }
+    .PmsBooking .pmsfront .fa-calendar { width:25%;float:right; text-align:center;padding:8px 0; }
+    .PmsBooking .check_available_button { 
+        width:100% !important; 
+        font-size:10px !important;
+        border-bottom: 1px solid #1a79c2;
+        margin-top:14px !important;
+        padding:8px 0 !important;
+        height:28px  !important;
+    }
+    
+    .gscell_3.gsucell{height:25px;line-height:25px;padding:0 4px;}
+    .gscell_3.gsucell span{font-size:8px !important;}
+    .gscell_5.gsuicell{margin-top:0;}
+    .gscell_10.gsuicell {top:-5px;}
+    .gscell_11.gsuicell {padding:50px 0;}
+    .gscell_33.gsucell { min-height:290px;}
+    .gscell_34.gsuicell {font-size:20px;}
+    .gscell_35.gsuicell { padding: 0;}
+    .gscell_36.gsuicell .ImageDisplayer .imagecontainer.originalSize img { max-width:33.33%;float:left; }
+    .gscell_40.gsuicell { padding-top:0; }
+}

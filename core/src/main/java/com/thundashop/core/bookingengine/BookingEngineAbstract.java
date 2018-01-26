@@ -852,17 +852,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         for (String bookingItemTypeId : types.keySet()) {
             BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(bookingItemTypeId, start, end, null);
-            if (ignoreErrors) {
-                assigner.disableErrorCheck();
-                
-            }
+          
             
             List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
             
-            if (!assigner.getLinesOverBooked().isEmpty()) {
-                assigner.printBookingLines(assigner.getLinesOverBooked());
-                messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
-            }
+            messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
             
             for (BookingItem item : items.values()) {
                 if (!item.bookingItemTypeId.equals(bookingItemTypeId)) {

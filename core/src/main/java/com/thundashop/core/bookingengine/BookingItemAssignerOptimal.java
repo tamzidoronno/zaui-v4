@@ -33,7 +33,9 @@ public class BookingItemAssignerOptimal {
     private boolean throwException = true;
     private HashMap<Booking, BookingItem> assigned = new HashMap();
     private final String storeId;
-    private List<OptimalBookingTimeLine> failedRows;
+    private List<OptimalBookingTimeLine> failedRows = new ArrayList();
+    private List<OptimalBookingTimeLine> linesToBruteforce;
+    private ArrayList bookingsToBruteForce;
 
     public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items, Boolean throwException, String storeId) {
         this.type = type;
@@ -637,7 +639,20 @@ public class BookingItemAssignerOptimal {
     }
 
     private void tryToMerge(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
-        // TODO.
+        OptimalBookingTimeLine line = getLineWithFewestBooking(bookingLines);
+        
+        if (linesToBruteforce == null) {
+            bookingsToBruteForce = new ArrayList(line.bookings);
+            linesToBruteforce = bookingLines.stream()
+                    .filter(l -> !l.equals(line))
+                    .collect(Collectors.toList());
+        }
+        
+        if (bookingsToBruteForce == null) {
+            return;
+        }
+        
+        System.out.println(bookingsToBruteForce);
     }
 
     void disableErrorCheck() {
@@ -646,6 +661,18 @@ public class BookingItemAssignerOptimal {
 
     public List<OptimalBookingTimeLine> getOverbookedLines() {
         return failedRows;
+    }
+
+    private OptimalBookingTimeLine getLineWithFewestBooking(List<OptimalBookingTimeLine> bookingLines) {
+        List<OptimalBookingTimeLine> optLines = new ArrayList(bookingLines);
+        
+        Collections.sort(optLines, (OptimalBookingTimeLine l1, OptimalBookingTimeLine l2) -> {
+            Integer i1 = new Integer(l1.bookings.size());
+            Integer i2 = new Integer(l2.bookings.size());
+            return i1.compareTo(i2);
+        });
+        
+        return optLines.get(0);
     }
 
 }

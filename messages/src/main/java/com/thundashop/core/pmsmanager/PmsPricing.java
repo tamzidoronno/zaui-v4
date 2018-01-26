@@ -4,18 +4,19 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class PmsPricing extends DataCommon {
 
-    HashMap<Integer, Integer> getLongTermDeal() {
+    LinkedHashMap<Integer, Integer> getLongTermDeal() {
         if(longTermDeal == null) {
-            return new HashMap();
+            return new LinkedHashMap();
         }
         
         SortedSet<Integer> keys = new TreeSet<Integer>(longTermDeal.keySet());
-        HashMap<Integer, Integer> result = new HashMap();
+        LinkedHashMap<Integer, Integer> result = new LinkedHashMap();
         for(Integer k : keys) {
             result.put(k, longTermDeal.get(k));
         }
@@ -44,7 +45,7 @@ public class PmsPricing extends DataCommon {
     public Double price_sat;
     public Double price_sun;
     public HashMap<String, Double> productPrices = new HashMap();
-    public HashMap<Integer, Integer> longTermDeal = new HashMap();
+    public LinkedHashMap<Integer, Integer> longTermDeal = new LinkedHashMap();
     public HashMap<Integer, Double> coveragePrices = new HashMap();
     public Integer coverageType = PmsPricing.PmsPricingCoverageType.PERCENTAGE;
 }

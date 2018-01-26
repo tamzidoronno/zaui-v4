@@ -124,9 +124,13 @@ if(sizeof($coupons) == 0) {
                             <th>discount(%)</th>
                         </tr>
                         <?php
-                        $keys = array_keys((array)$prices->longTermDeal);
-                        $values = array_values((array)$prices->longTermDeal);
-                        for($i = 0; $i < 5; $i++) {
+                        
+                        $longtermdeal  = (array)$prices->longTermDeal;
+                        ksort($longtermdeal);
+                    
+                        $keys = array_keys($longtermdeal);
+                        $values = array_values($longtermdeal);
+                        for($i = 0; $i < 10; $i++) {
                             $days = "";
                             $discount = "";
                             if(isset($keys[$i])) { $days = $keys[$i]; }

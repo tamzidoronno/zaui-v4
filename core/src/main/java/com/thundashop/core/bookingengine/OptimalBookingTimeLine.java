@@ -52,22 +52,15 @@ public class OptimalBookingTimeLine {
         Collections.sort(bookings, Booking.sortByStartDate());
         
         for (Booking ibooking : bookings) {
-            long startTimeBookingInLine = ibooking.startDate.getTime();
-            long endTimeBookingInLine = ibooking.startDate.getTime();
+            long endTimeBookingInLine = ibooking.endDate.getTime();
             
             long timeBetweenNext = booking.startDate.getTime() - endTimeBookingInLine;
-            long timeBetweenPrev = startTimeBookingInLine - booking.endDate.getTime();
-            
-            if (timeBetweenNext < 0 && timeBetweenPrev > 0) {
-                shortestDistance = timeBetweenPrev;
+            if (timeBetweenNext < shortestDistance) {
+                shortestDistance  = timeBetweenNext;
             }
-            
-            if (timeBetweenPrev < 0 && timeBetweenNext > 0) {
-                shortestDistance = timeBetweenNext;
-            }
-            
-            if (timeBetweenPrev == 0 || timeBetweenNext == 0) {
-                shortestDistance = 0;
+
+            if (shortestDistance < 0 ) {
+                continue;
             }
             
             if (ibooking.interCepts(booking.startDate, booking.endDate)) {
@@ -80,6 +73,20 @@ public class OptimalBookingTimeLine {
     }
 
     public boolean canAddBooking(Booking booking) {
+        for (Booking ibooking : bookings) {
+            if (ibooking.bookingItemTypeId != null && !ibooking.bookingItemTypeId.equals(booking.bookingItemTypeId)) {
+                return false;
+            }
+        }
+        
+        if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+            for (Booking ibooking : bookings) {
+                if (ibooking.bookingItemId != null && !ibooking.bookingItemId.isEmpty() && !ibooking.bookingItemId.equals(booking.bookingItemId)) {
+                    return false;
+                }
+            }
+        }
+        
         for (Booking ibooking : bookings) {
             if (ibooking.interCepts(booking.startDate, booking.endDate)) {
                 return false;

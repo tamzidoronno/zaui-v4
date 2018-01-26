@@ -1987,7 +1987,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         List<BookingItem> items = bookingEngine.getBookingItems();
         gsTiming("Checking types 3");
 
-        List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimal(filter.start, filter.end);
+        List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimalIngoreErrors(filter.start, filter.end);
         gsTiming("Checking types 4");
         
         for (BookingItem item : items) {

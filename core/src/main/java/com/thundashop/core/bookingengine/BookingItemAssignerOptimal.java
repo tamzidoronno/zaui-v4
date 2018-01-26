@@ -29,6 +29,7 @@ public class BookingItemAssignerOptimal {
     private final BookingItemType type;
     private List<Booking> bookings;
     private List<BookingItem> items;
+    private List<OptimalBookingTimeLine> linesOverBooked = new ArrayList();
     private boolean dryRun = false;
     private boolean throwException = true;
     private HashMap<Booking, BookingItem> assigned = new HashMap();
@@ -48,6 +49,10 @@ public class BookingItemAssignerOptimal {
         
     }
 
+    public List<OptimalBookingTimeLine> getLinesOverBooked() {
+        return linesOverBooked;
+    }
+
     /**
      * If this runs without throwing any exceptions
      * it is considered to be ok.
@@ -62,7 +67,6 @@ public class BookingItemAssignerOptimal {
         long maximumNumberOfLines = items.stream().mapToInt(o -> o.bookingSize).sum();
         
         if (bookingLines.size() > maximumNumberOfLines) {
-            printBookingLines(bookingLines);
             if (throwException) {
                 throw new BookingEngineException("The setup of bookings can not be fitted into the booking, you have more bookings than you have items of this type");
             }
@@ -309,17 +313,17 @@ public class BookingItemAssignerOptimal {
         return retItems;
     }
     
-    private void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
-//        int i = 1;
-//        for (OptimalBookingTimeLine bookings : bookingLines) {
-//            GetShopLogHandler.logPrintStatic("Line " + i, null);
-//            Collections.sort(bookings.bookings, Booking.sortByStartDate());
-//            for (Booking booking : bookings.bookings) {
-//                
-//                GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + ",created : " + booking.rowCreatedDate + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
-//            }
-//            i++;
-//        }
+    public void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
+        int i = 1;
+        for (OptimalBookingTimeLine bookings : bookingLines) {
+            GetShopLogHandler.logPrintStatic("Line " + i + " - " + bookings.bookingItemId, null);
+            Collections.sort(bookings.bookings, Booking.sortByStartDate());
+            for (Booking booking : bookings.bookings) {
+                
+                GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + ",created : " + booking.rowCreatedDate + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
+            }
+            i++;
+        }
     }
 
     private boolean overlappingBooking(Booking booking, List<Booking> bookingLine) {
@@ -467,10 +471,17 @@ public class BookingItemAssignerOptimal {
             Booking bookingToUse = null;
             boolean found = false;
             
-            for (OptimalBookingTimeLine timeLine : bookingLines) {
-                for (Booking booking : unassignedBookings) {
+            for (Booking booking : unassignedBookings) {
+                for (OptimalBookingTimeLine timeLine : bookingLines) {
+                    if (!timeLine.canAddBooking(booking)) {
+                        continue;
+                    }
+                    if (overlappingBooking(booking, timeLine.bookings)) {
+                        continue;
+                    }
+                    
                     long closestDistanceInBooking = timeLine.getDistanceBetweenBookings(booking);
-                    if (closestDistanceInBooking < closestDistance && !overlappingBooking(booking, timeLine.bookings)) {
+                    if (closestDistanceInBooking < closestDistance) {
                         closestDistance = closestDistanceInBooking;
                         timeLineToUse = timeLine;
                         bookingToUse = booking;
@@ -573,15 +584,16 @@ public class BookingItemAssignerOptimal {
         for (OptimalBookingTimeLine line : bookingLines) {
             if (line.bookingItemId.isEmpty()) {
                 BookingItemTimeline itemToUse = getNextAvailableItem(line, bookingLines, itemIdsUsed);
+                if (itemToUse == null && !throwException) {
+                    linesOverBooked.add(line);
+                }
                 if (itemToUse == null && throwException) {
-                    printBookingLines(bookingLines);
                     throw new BookingEngineException("Not enough space for this booking");
                 } else {
                     if (itemToUse != null) {
                         line.bookingItemId = itemToUse.bookingItemId;
                     } else {
                         List<BookingItemTimeline> flatten = getBookingItemsFlatten();
-                        printBookingLines(bookingLines);
                     }
                 }
             }
@@ -594,7 +606,6 @@ public class BookingItemAssignerOptimal {
             for (String itemId : groupedBookings.keySet()) {
                 BookingItem item2 = getBookingItem(itemId);
                 if (item2 == null || item2.bookingSize < groupedBookings.get(itemId).size()) {
-                    printBookingLines(groupedBookings.get(itemId));
                     throw new BookingEngineException("Not enough space for this booking");
                 }
             }
@@ -629,6 +640,10 @@ public class BookingItemAssignerOptimal {
         }
         
         return null;
+    }
+
+    void disableErrorCheck() {
+        this.throwException = false;
     }
 
 }

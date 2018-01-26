@@ -174,7 +174,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
     
     public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end) {
-        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimal(start,end));
+        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimal(start,end, false));
     }
     
     @Override
@@ -340,5 +340,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         
         Double res = ((double)(total - available) / (double)total) * 100;
         return res.intValue();
+    }
+
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrors(Date start, Date end) {
+        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimalIngoreErrors(start,end));
     }
 }

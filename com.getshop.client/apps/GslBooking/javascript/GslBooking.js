@@ -948,7 +948,7 @@ function getshop_setDatePicker() {
     $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
     $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
 
-    var picker = $('#date_picker').daterangepicker({
+    $('#date_picker').daterangepicker({
         "autoApply": true,
         "showWeekNumbers": true,
         "minDate": currentDate,
@@ -987,7 +987,7 @@ function getshop_setDatePicker() {
     
     if(result.start) {
         $(function() {
-            $('.GslBooking #search_rooms').mousedown();
+            $('.GslBooking #search_rooms').click();
         });
     }
 }
@@ -1170,7 +1170,6 @@ function getshop_searchRooms() {
                     if (guest == 1) {
                         multipleGuests = ' ' + translation['guest'].toLowerCase();
                     }
-//                        user_icon += '<i class="fa fa-user"></i>';
                     for (var i = 1; i <= room.availableRooms; i++) {
                         var price = room.pricesByGuests[guest] * i;
                         numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';

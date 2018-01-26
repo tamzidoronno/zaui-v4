@@ -407,7 +407,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         int percentages = 0;
         int daysUsed = 0;
         if(room != null) {
-            for(Integer days : plan.longTermDeal.keySet()) {
+            for(Integer days : plan.getLongTermDeal().keySet()) {
                 if(days <= room.getNumberOfNights() && daysUsed < days) {
                     percentages = plan.longTermDeal.get(days);
                 }

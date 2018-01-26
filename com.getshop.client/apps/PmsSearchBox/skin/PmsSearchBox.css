@@ -3,3 +3,6 @@
     padding-right: 20px;
 }
 .PmsSearchBox .advancesearch { display:none; }
+.PmsSearchBox .advanceserachbuttonenabled { color: #82cdf3; }
+.PmsSearchBox .roomtypeselection { position:absolute; border: solid 1px; background-color:#fff; border: solid 1px; z-index: 1; color:#000; min-width: 500px; max-width: 1000px; right: 0px; clear:both; display: none;}
+.PmsSearchBox .roomtypeselection .type { padding: 4px; font-size: 16px; clear:both;}

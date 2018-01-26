@@ -19,6 +19,11 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $pms->searchBooking();
     }
     
+    public function doAdvanceSearch() {
+        $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+        $pms->advanceSearchBooking();
+    }
+    
     public function clearFilter() {
         $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
         $pms->clearFilter();

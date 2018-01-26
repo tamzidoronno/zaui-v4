@@ -7,13 +7,22 @@ $types = $this->getSearchTypes();
 $filter = $pms->getSelectedFilter();
 $searchWord = $filter ? $filter->searchWord : "";
 $bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$activeDelete = "";
+$activeGrouping = "";
+if($filter->includeDeleted) {
+    $activeDelete = "advanceserachbuttonenabled";
+}
+if($filter->groupByBooking) {
+    $activeGrouping = "advanceserachbuttonenabled";
+}
 ?>
 
 
-<span class="advancesearch">
-    <div title="<? echo $this->__f("Group booking"); ?>" class="top-row-icon"><i class="fa fa-users"></i></div>
-    <div title="<? echo $this->__f("Include deleted"); ?>" class="top-row-icon"><i class="fa fa-trash-o"></i></div>
-    
+<span class="advancesearch" gstype='form' method='doAdvanceSearch'>
+    <div title="<? echo $this->__f("Group booking"); ?>" class="top-row-icon"><i class="fa fa-users advancesearchicon <?php echo $activeGrouping; ?>" forfilter='groupbooking'></i></div>
+    <div title="<? echo $this->__f("Include deleted"); ?>" class="top-row-icon"><i class="fa fa-trash-o advancesearchicon <?php echo $activeDelete; ?>" forfilter='includedeleted'></i></div>
+    <input type='hidden' gsname='groupbooking' value=''>
+    <input type='hidden' gsname='includedeleted' value=''>
     <div class="gs_headerbox">
         <div>
             <?
@@ -40,10 +49,14 @@ $bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->
             echo $this->__f("Filtertype");
             ?>
         </div>
-        <select>
+        <select gsname='filtertype'>
             <?php
             foreach($types as $typeId => $val) {
-                echo "<option value='$typeId'>$val</option>";
+                $selected = "";
+                if($filter->filterType == $typeId) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$typeId' $selected>$val</option>";
             }
             ?>
         </select>
@@ -53,13 +66,30 @@ $bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->
         <div>
             <?
             echo $this->__f("Room types");
+            $counter = "All";
+            if(sizeof($filter->typeFilter) > 0) {
+                $counter = sizeof($filter->typeFilter);
+            }
             ?>
         </div>
-        <div style='padding-top:4px;color:blue; cursor:pointer;'>All types</div>
+        <div style='padding-top:4px;color:blue; cursor:pointer;' class='typeselectiontoggle'><span class='selectioncount'><?php echo $counter; ?></span> types</div>
+        <span class='roomtypeselection'>
+            <i class='fa fa-close' style='position:absolute;top:3px;cursor:pointer;'></i>
+            <?php
+            foreach($bookingItems as $type) {
+                $checked = "";
+                if(in_array($type->id, $filter->typeFilter)) {
+                    $checked = "CHECKED";
+                }
+                echo "<div class='type'><input type='checkbox' style='float:left;' gsname='typeselection_".$type->id."' $checked>" . $type->name . "</div>";
+            }
+            ?>
+        </span>
     </div>
 
     <div class="gs_headerbox">
-        <span class='shop_button'>Load</span>
+        <span class='shop_button' gstype='submit'>Apply filter</span>
+        <span class='shop_button opensimplesearch' style='margin-left: 5px;'>Open simple search</span>
     </div>
 </span>
 
@@ -69,9 +99,9 @@ $bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->
     <div title="<? echo $this->__f("Users checkout today"); ?>" day="0"  gsclick='showCheckOuts' class="top-row-icon <? echo $filter && $filter->filterType == "checkout" ? 'active' : ''; ?>"><i class="icon-exit"></i></div>
     <input class="gsniceinput1" gstype='submitenter' gsname='searchtext' placeholder="<? echo $this->__f("Search"); ?>" value='<? echo $searchWord; ?>'/>
     <div class="top-row-icon <? echo $searchWord ? 'active' : ''; ?>" gstype='submit' title='Show filtering'><i class="icon-search"></i></div>
+    <div class="top-row-icon advancesearchtoggle"><i class="icon-search2"></i></div>
 </span>
 
-<div class="top-row-icon advancesearchtoggle"><i class="icon-search2"></i></div>
 
 
 
@@ -109,4 +139,15 @@ $bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->
     $(document).on('click', '.PmsNewBooking .icon-calendar-text', function() {
         $(this).closest('div').find('input').focus();
     });
+    
+    if(localStorage.getItem('advancesearchtoggled') === "true") {
+        $('.PmsSearchBox .simplesearch').hide();
+        $('.PmsSearchBox .advancesearch').show();
+    }
+    $('input[gsname="searchtext"]').focus();
+    
+    $(document).on('click', '.PmsSearchBox .icon-calendar-text', function() {
+        $(this).closest('div').find('input').focus();
+    });
+    
 </script>

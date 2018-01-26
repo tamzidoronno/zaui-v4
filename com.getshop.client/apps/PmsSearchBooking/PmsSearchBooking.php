@@ -224,6 +224,34 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()] = serialize($filter);
     }
 
-    
+    public function advanceSearchBooking() {
+        $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
+        $app->setStartDate($_POST['data']['from']);
+        $app->setEndDate($_POST['data']['to']);
+ 
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->filterType = $_POST['data']['filtertype'];
+        $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+        $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+        
+        if($_POST['data']['groupbooking'] == "true") {
+            $filter->groupByBooking = true;
+        }
+        if($_POST['data']['includedeleted'] == "true") {
+            $filter->includeDeleted = true;
+        }
+        
+        $types = array();
+        foreach($_POST['data'] as $key => $val) {
+            if($val == "true" && stristr($key, "typeselection_")) {
+                $types[] = str_replace("typeselection_", "", $key);
+            }
+        }
+        $filter->typeFilter = $types;
+        
+        $this->setCurrentFilter($filter);
+    }
+
 }
 ?>

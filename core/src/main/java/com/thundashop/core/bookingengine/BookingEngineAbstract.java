@@ -327,7 +327,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private void preventOverBookingByItemId(List<Booking> bookings1) throws BookingEngineException {
         for (Booking booking : bookings1) {
             if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
-                if (itemInUseBetweenTime(booking.startDate, booking.endDate, booking.bookingItemId)) {
+                if (itemInUseBetweenTime(booking.getStartDateTranslated(), booking.getEndDateTranslated(), booking.bookingItemId)) {
                     throw new BookingEngineException("Alread in use, can not add booking");
                 }
             }
@@ -351,7 +351,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 verifier.throwExceptionIfBookingItemIdMissing(booking, items);
             }   
             
-            if (booking.startDate != null && booking.endDate != null && booking.startDate.after(booking.endDate) && shouldThrowException()) {
+            if (booking.getStartDateTranslated() != null && booking.getEndDateTranslated() != null && booking.getStartDateTranslated().after(booking.getEndDateTranslated()) && shouldThrowException()) {
                 throw new BookingEngineException("Startdate can not be after enddate");
             }            
             
@@ -384,7 +384,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
            
             List<Booking> bookingsToConsider = this.bookings.values().stream()
                     .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
-                    .filter(o -> o.interCepts(booking.startDate, booking.endDate))
+                    .filter(o -> o.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated()))
                     .collect(Collectors.toList());
         
             if (booking.id == null || !booking.id.isEmpty()) {
@@ -393,7 +393,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             List<Booking> oldBookingsToConsider = checkedBookings.stream()
                     .filter(o -> o.bookingItemTypeId.equals(bookingItemTypeId))
-                    .filter(o -> o.interCepts(booking.startDate, booking.endDate))
+                    .filter(o -> o.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated()))
                     .collect(Collectors.toList());
             
             bookingsToConsider.addAll(oldBookingsToConsider);
@@ -589,14 +589,14 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         Booking newBooking = deepClone(booking);
-        newBooking.startDate = start;
-        newBooking.endDate = end;
+        newBooking.setStartDate(start);
+        newBooking.setEndDate(end);
         
         
         validateChange(newBooking);
         
-        booking.startDate = start;
-        booking.endDate = end;
+        booking.setStartDate(start);
+        booking.setEndDate(end);
         
         saveObject(booking);
     }
@@ -644,21 +644,21 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     private void tryToGetLineAfterChange(Booking booking, String oldItemId, String oldBookingItemTypeId) {
         List<Booking> bookingsIntercepts = bookings.values().stream()
-                .filter(o -> o.interCepts(booking.startDate, booking.endDate))
+                .filter(o -> o.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated()))
                 .collect(Collectors.toList());
         
         List<Booking> secondLayer = new ArrayList(bookingsIntercepts);
         
         for (Booking booking2 : bookingsIntercepts) {
             for (Booking iBooking : bookings.values()) {
-                if (iBooking.interCepts(booking2.startDate, booking2.endDate)) {
+                if (iBooking.interCepts(booking2.getStartDateTranslated(), booking2.getEndDateTranslated())) {
                     secondLayer.add(iBooking);
                 }
             }
         }
         
-        Date startDate = secondLayer.stream().map(u -> u.startDate).min(Date::compareTo).get();
-        Date endDate = secondLayer.stream().map(u -> u.endDate).max(Date::compareTo).get();
+        Date startDate = secondLayer.stream().map(u -> u.getStartDateTranslated()).min(Date::compareTo).get();
+        Date endDate = secondLayer.stream().map(u -> u.getEndDateTranslated()).max(Date::compareTo).get();
         
         try {
             getTimeLinesForItemWithOptimal(startDate, endDate, false);
@@ -680,7 +680,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         try {
-            getTimeLinesForItemWithOptimal(booking.startDate, booking.endDate, false);
+            getTimeLinesForItemWithOptimal(booking.getStartDateTranslated(), booking.getEndDateTranslated(), false);
         } catch (BookingEngineException ex) {
             booking.bookingItemId = oldId;
             booking.bookingItemTypeId = oldBookingItemTypeId;
@@ -741,15 +741,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (bookingItem != null)
             newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         
-        newBooking.startDate = start;
-        newBooking.endDate = end;
+        newBooking.setStartDate(start);
+        newBooking.setEndDate(end);
         newBooking.bookingItemId = itemId;
         
         validateChange(newBooking);
         
         booking.bookingItemId = itemId;
-        booking.startDate = start;
-        booking.endDate = end;
+        booking.setStartDate(start);
+        booking.setEndDate(end);
+        
         if (bookingItem != null) {
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         }
@@ -827,7 +828,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return this.bookings.values().stream()
                 .filter(booking -> booking.bookingItemTypeId.equals(typeId))
                 .filter(booking -> booking.bookingItemId != null && !booking.bookingItemId.isEmpty())
-                .filter(booking -> booking.within(bookings.get(0).startDate, bookings.get(0).endDate))
+                .filter(booking -> booking.within(bookings.get(0).getStartDateTranslated(), bookings.get(0).getEndDateTranslated()))
                 .collect(Collectors.toList()); 
     }
 
@@ -1005,8 +1006,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             if (booking != null && booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
                 try {
                     Booking newBooking = deepClone(booking);
-                    newBooking.startDate = start;
-                    newBooking.endDate = end;
+                    newBooking.setStartDate(start);
+                    newBooking.setEndDate(end);
                     ArrayList bookings = new ArrayList();
                     bookings.add(newBooking);
                     checkIfAssigningPossible(bookings);
@@ -1064,7 +1065,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         List<Booking> checkIt = new ArrayList(bookingsWithinDaterange);
         for (Booking ibooking : checkIt) {
             List<Booking> overlapping = bookingOfTypes.stream()
-                    .filter(booking -> booking.interCepts(ibooking.startDate, ibooking.endDate))
+                    .filter(booking -> booking.interCepts(ibooking.getStartDateTranslated(), ibooking.getEndDateTranslated()))
                     .collect(Collectors.toList());
             
             bookingsWithinDaterange.addAll(overlapping);
@@ -1213,9 +1214,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         for (Booking booking : bookings) {
             if (booking.id != null && !booking.id.isEmpty()) {
                 
-                BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(booking.bookingItemTypeId, booking.startDate, booking.endDate, null);
+                BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(booking.bookingItemTypeId, booking.getStartDateTranslated(), booking.getEndDateTranslated(), null);
                 
-                List<BookingItem> availableItems = assigner.getAvailableItems(booking.id, booking.startDate, booking.endDate).stream()
+                List<BookingItem> availableItems = assigner.getAvailableItems(booking.id, booking.getStartDateTranslated(), booking.getEndDateTranslated()).stream()
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
           
@@ -1230,7 +1231,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                         int i = 0;
                         
                         for (Booking ibooking : bookingsUsingItem) {
-                            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                            if (ibooking.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated())) {
                                 i++;
                                 extra += "<br/> " + i + ". " + ibooking.getHumanReadableDates();
                             }
@@ -1252,7 +1253,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .collect(Collectors.toList());
         
         for (Booking booking : unassignedBookings) {
-            List<BookingItem> canUseItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+            List<BookingItem> canUseItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.getStartDateTranslated(), booking.getEndDateTranslated(), booking.id);
             
             if (!canUseItems.isEmpty()) {
                 changeBookingItemOnBooking(booking.id, canUseItems.get(0).id);
@@ -1288,7 +1289,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             }
             
             BookingItem item = items.get(booking.bookingItemId);
-            List<BookingItem> availableItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+            List<BookingItem> availableItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.getStartDateTranslated(), booking.getEndDateTranslated(), booking.id);
             if (!availableItems.contains(item)) {
                 throw new BookingEngineException("The room you tried to use is not available. Please use another one.");
             }

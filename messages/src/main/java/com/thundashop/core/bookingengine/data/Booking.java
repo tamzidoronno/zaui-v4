@@ -36,7 +36,7 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     public String getInformation() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
         try {
-            return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",startDate="+dateFormat.format(startDate)+",endDate="+dateFormat.format(endDate)+"]";
+            return "[Itemid=" + bookingItemId+",incrementalBookingId="+incrementalBookingId+",bookingItemTypeId="+bookingItemTypeId+",getStartDateTranslated()="+dateFormat.format(getStartDateTranslated())+",getEndDateTranslated()="+dateFormat.format(getEndDateTranslated())+"]";
         } catch (NullPointerException ex) {
             return "";
         }
@@ -44,8 +44,8 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     
     public String getHumanReadableDates() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");
-        if (endDate != null && startDate != null) {
-            return dateFormat.format(startDate)+" - "+dateFormat.format(endDate);
+        if (getEndDateTranslated() != null && getStartDateTranslated() != null) {
+            return dateFormat.format(getStartDateTranslated())+" - "+dateFormat.format(getEndDateTranslated());
         } 
         
         return "";
@@ -53,44 +53,44 @@ public class Booking extends DataCommon implements Comparable<Booking> {
 
     // Got this solution from: http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
     public boolean interCepts(Date startDate, Date endDate) {
-        if (startDate == null || endDate == null || this.startDate == null || this.endDate == null) {
+        if (startDate == null || endDate == null || this.getStartDateTranslated() == null || this.getEndDateTranslated() == null) {
             return false;
         }
         
         long StartDate1 = startDate.getTime();
-        long StartDate2 = this.startDate.getTime()+1;
+        long StartDate2 = this.getStartDateTranslated().getTime()+1;
         long EndDate1 = endDate.getTime();
-        long EndDate2 = this.endDate.getTime()-1;
+        long EndDate2 = this.getEndDateTranslated().getTime()-1;
         return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
     }
     
     public boolean within(Date startDate, Date endDate) { 
-        if (startDate == null || endDate == null || this.startDate == null || this.endDate == null) {
+        if (startDate == null || endDate == null || this.getStartDateTranslated() == null || this.getEndDateTranslated() == null) {
             return false;
         }
         
         long StartDate1 = startDate.getTime();
-        long StartDate2 = this.startDate.getTime();
+        long StartDate2 = this.getStartDateTranslated().getTime();
         long EndDate1 = endDate.getTime(); 
-        long EndDate2 = this.endDate.getTime();
+        long EndDate2 = this.getEndDateTranslated().getTime();
         return (StartDate1 < EndDate2) && (StartDate2 < EndDate1);
     }
 
-    public boolean completlyWithin(Date start, Date end) {
-        if (start == null || end == null || this.startDate == null || this.endDate == null) {
+    private boolean completlyWithin(Date start, Date end) {
+        if (start == null || end == null || this.getStartDateTranslated() == null || this.getEndDateTranslated() == null) {
             return false;
         }
         
-        if (startDate.equals(start) && endDate.equals(end))
+        if (getStartDateTranslated().equals(start) && getEndDateTranslated().equals(end))
             return true;
         
-        if (start.after(startDate) && end.before(endDate))
+        if (start.after(getStartDateTranslated()) && end.before(getEndDateTranslated()))
             return true;
         
-        if (start.equals(startDate) && end.before(endDate))
+        if (start.equals(getStartDateTranslated()) && end.before(getEndDateTranslated()))
             return true;
 
-        if (start.after(startDate) && end.equals(endDate))
+        if (start.after(getStartDateTranslated()) && end.equals(getEndDateTranslated()))
             return true;
 
         return false;
@@ -98,7 +98,7 @@ public class Booking extends DataCommon implements Comparable<Booking> {
 
     @Override
     public int compareTo(Booking o) {
-        return startDate.compareTo(o.startDate);
+        return getStartDateTranslated().compareTo(o.getStartDateTranslated());
     }
 
     public boolean isUnassigned() {
@@ -110,23 +110,23 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         return new Comparator<Booking>() {
             @Override
             public int compare(Booking o1, Booking o2) {
-                if (o1.startDate.equals(o2.startDate)) {
-                    return o2.endDate.compareTo(o1.endDate);
+                if (o1.getStartDateTranslated().equals(o2.getStartDateTranslated())) {
+                    return o2.getEndDateTranslated().compareTo(o1.getEndDateTranslated());
                 }
 
-                return o1.startDate.compareTo(o2.startDate);
+                return o1.getStartDateTranslated().compareTo(o2.getStartDateTranslated());
             }
         };
     }
 
     public Long getStayLength() {
-        if (startDate == null || endDate == null)
+        if (getStartDateTranslated() == null || getEndDateTranslated() == null)
             return 0L;
         
-        return endDate.getTime() - startDate.getTime();
+        return getEndDateTranslated().getTime() - getStartDateTranslated().getTime();
     }
     
-    public static Comparator sortStayLength() {
+    private static Comparator sortStayLength() {
     
         return new Comparator<Booking>() {
             @Override
@@ -137,7 +137,7 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     }
     
     public boolean startsTomorrowOrLater() {
-        if (startDate  == null)
+        if (getStartDateTranslated()  == null)
             return false;
         
         Calendar cal = Calendar.getInstance();
@@ -150,7 +150,7 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         
         Date toCompareDate = cal.getTime();
         
-        return startDate.after(toCompareDate);
+        return getStartDateTranslated().after(toCompareDate);
     }
 
     public String getSourceState() {
@@ -163,5 +163,21 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         }
         
         return "normal";
+    }
+    
+    public Date getStartDateTranslated() {
+        return startDate;
+    }
+    
+    public Date getEndDateTranslated() {
+        return endDate;
+    }
+
+    public void setStartDate(Date start) {
+        this.startDate = start;
+    }
+
+    public void setEndDate(Date end) {
+        this.endDate = end;
     }
 }

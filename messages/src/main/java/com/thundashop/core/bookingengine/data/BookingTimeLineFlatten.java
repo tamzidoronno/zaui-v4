@@ -86,11 +86,11 @@ public class BookingTimeLineFlatten implements Serializable {
         Collections.sort(bookings, new Comparator<Booking>(){
             @Override
             public int compare(Booking o1, Booking o2) {
-                if(o1 == null || o2 == null || o1.startDate == null || o2.startDate == null) {
+                if(o1 == null || o2 == null || o1.getStartDateTranslated() == null || o2.getStartDateTranslated() == null) {
                     GetShopLogHandler.logPrintStatic("null date", null);
                     return 1;
                 }
-                return o1.startDate.compareTo(o2.startDate);
+                return o1.getStartDateTranslated().compareTo(o2.getStartDateTranslated());
             }
         });
     }
@@ -98,8 +98,8 @@ public class BookingTimeLineFlatten implements Serializable {
     private List<Date> getMarkers() {
         Set<Date> treeSet = new TreeSet();
         for (Booking booking : bookings) {
-            treeSet.add(booking.startDate);
-            treeSet.add(booking.endDate);
+            treeSet.add(booking.getStartDateTranslated());
+            treeSet.add(booking.getEndDateTranslated());
         }
 
         return new ArrayList(treeSet);

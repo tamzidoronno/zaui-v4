@@ -71,6 +71,32 @@ public class OptimalBookingTimeLine {
         
         return shortestDistance;
     }
+    
+    long getDistanceBetweenNextBookings(Booking booking) {
+        long shortestDistance = Long.MAX_VALUE;
+        
+        Collections.sort(bookings, Booking.sortByStartDate());
+        
+        for (Booking ibooking : bookings) {
+            long endTimeBookingInLine = ibooking.startDate.getTime();
+            
+            long timeBetweenNext = endTimeBookingInLine - booking.endDate.getTime();
+            if (timeBetweenNext < shortestDistance) {
+                shortestDistance  = timeBetweenNext;
+            }
+
+            if (shortestDistance < 0 ) {
+                continue;
+            }
+            
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                return Long.MAX_VALUE;
+            }
+            
+        }
+        
+        return shortestDistance;
+    }
 
     public boolean canAddBooking(Booking booking) {
         for (Booking ibooking : bookings) {

@@ -860,6 +860,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
             
             if (!assigner.getLinesOverBooked().isEmpty()) {
+                assigner.printBookingLines(assigner.getLinesOverBooked());
                 messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
             }
             

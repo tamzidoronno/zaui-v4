@@ -101,6 +101,8 @@ public class BookingItemAssignerOptimal {
 
         addUnassignedBookingsToLine(bookingLines, unassignedBookings);
         
+        canItBeMerged(bookingLines);
+        
         setItemIdsToLines(bookingLines);
         
         return bookingLines;
@@ -466,6 +468,8 @@ public class BookingItemAssignerOptimal {
     
     private void addUnassignedBookingsToLine(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
         while(!unassignedBookings.isEmpty()) {
+            long closestDistanceInPreviouseBooking = Long.MAX_VALUE;
+            long closestDistanceNextBooking = Long.MAX_VALUE;
             long closestDistance = Long.MAX_VALUE;
             OptimalBookingTimeLine timeLineToUse = null;
             Booking bookingToUse = null;
@@ -480,9 +484,12 @@ public class BookingItemAssignerOptimal {
                         continue;
                     }
                     
-                    long closestDistanceInBooking = timeLine.getDistanceBetweenBookings(booking);
-                    if (closestDistanceInBooking < closestDistance) {
-                        closestDistance = closestDistanceInBooking;
+                    closestDistanceInPreviouseBooking = timeLine.getDistanceBetweenBookings(booking);
+                    closestDistanceNextBooking = timeLine.getDistanceBetweenNextBookings(booking);
+                    long toUse = closestDistanceInPreviouseBooking < closestDistanceNextBooking ? closestDistanceInPreviouseBooking : closestDistanceNextBooking;
+                    
+                    if (toUse < closestDistance) {
+                        closestDistance = toUse;
                         timeLineToUse = timeLine;
                         bookingToUse = booking;
                         found = true;
@@ -644,6 +651,96 @@ public class BookingItemAssignerOptimal {
 
     void disableErrorCheck() {
         this.throwException = false;
+    }
+
+    private void canItBeMerged(List<OptimalBookingTimeLine> bookingLines) {
+        List<BookingItemTimeline> totalItems = getBookingItemsFlatten();
+        
+        if (bookingLines.isEmpty() || totalItems.isEmpty()) {
+            return;
+        }
+        
+        if (bookingLines.size() < totalItems.size()) {
+            return;
+        }
+        
+        while(bookingLines.size() > totalItems.size()) {
+            boolean didDoAMerge = doExtraMergeIfPossible(bookingLines);
+            if (!didDoAMerge) {
+                break;
+            }
+        }
+        
+    }
+
+    private boolean doExtraMergeIfPossible(List<OptimalBookingTimeLine> bookingLines) {
+        OptimalBookingTimeLine lineWithFewestBookings = getLineWithFewestBookings(bookingLines);
+        
+        List<Booking> toCheck = new ArrayList(lineWithFewestBookings.bookings);
+        
+        for (Booking booking : toCheck) {
+            bookingLines.stream()
+                    .filter(line -> !line.equals(lineWithFewestBookings))
+                    .forEach(line -> {
+                        List<Booking> interceptingBookingsThatNeedsToMove = getInterceptedBookingsFromLine(booking, line);
+                        boolean canMoveAll = true;
+                        for (Booking moveBooking : interceptingBookingsThatNeedsToMove) {
+                            long availableLines = bookingLines.stream()
+                                    .filter(l -> !l.equals(line) && !l.equals(lineWithFewestBookings))
+                                    .filter(l -> l.canAddBooking(moveBooking))
+                                    .count();
+                            
+                            if (availableLines == 0) {
+                                canMoveAll = false;
+                            }
+                        }
+                        
+                        if (canMoveAll) {
+                            for (Booking moveBooking : interceptingBookingsThatNeedsToMove) {
+                                OptimalBookingTimeLine moveToThis = bookingLines.stream()
+                                        .filter(l -> !l.equals(line) && !l.equals(lineWithFewestBookings))
+                                        .filter(l -> l.canAddBooking(moveBooking))
+                                        .findFirst()
+                                        .orElse(null);
+                                
+                                moveToThis.bookings.add(moveBooking);
+                            }
+                            
+                            line.bookings.add(booking);
+                            lineWithFewestBookings.bookings.remove(booking);
+                        }
+                    });
+        }
+        
+        if (lineWithFewestBookings.bookings.isEmpty()) {
+            bookingLines.remove(lineWithFewestBookings);
+            return true;
+        }
+        
+        return false;
+    }
+
+    private  List<Booking>  getInterceptedBookingsFromLine(Booking booking, OptimalBookingTimeLine line) {
+        List<Booking> interceptingBookingsThatNeedsToMove = line.bookings
+                .stream()
+                .filter(bo -> bo.interCepts(booking.startDate, booking.endDate))
+                .collect(Collectors.toList());
+        
+        return interceptingBookingsThatNeedsToMove;
+    }
+
+    private OptimalBookingTimeLine getLineWithFewestBookings(List<OptimalBookingTimeLine> bookingLines) {
+        int count = Integer.MAX_VALUE;
+        OptimalBookingTimeLine retLine = null;
+        
+        for (OptimalBookingTimeLine line : bookingLines) {
+            if (line.bookings.size() < count) {
+                count = line.bookings.size();
+                retLine = line;
+            }
+        }
+
+        return bookingLines.get((bookingLines.size() -1 ));
     }
 
 }

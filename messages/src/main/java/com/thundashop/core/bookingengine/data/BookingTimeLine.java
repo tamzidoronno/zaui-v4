@@ -31,9 +31,9 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
     }
 
     public boolean intercepts(Booking booking) {
-        long StartDate1 = booking.getStartDateTranslated().getTime();
+        long StartDate1 = booking.startDate.getTime();
         long StartDate2 = start.getTime();
-        long EndDate1 = booking.getEndDateTranslated().getTime();
+        long EndDate1 = booking.endDate.getTime();
         long EndDate2 = end.getTime();
         return (StartDate1 < EndDate2) && (StartDate2 < EndDate1);
     }

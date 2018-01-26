@@ -29,13 +29,11 @@ public class BookingItemAssignerOptimal {
     private final BookingItemType type;
     private List<Booking> bookings;
     private List<BookingItem> items;
+    private List<OptimalBookingTimeLine> linesOverBooked = new ArrayList();
     private boolean dryRun = false;
     private boolean throwException = true;
     private HashMap<Booking, BookingItem> assigned = new HashMap();
     private final String storeId;
-    private List<OptimalBookingTimeLine> failedRows = new ArrayList();
-    private List<OptimalBookingTimeLine> linesToBruteforce;
-    private ArrayList bookingsToBruteForce;
 
     public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items, Boolean throwException, String storeId) {
         this.type = type;
@@ -49,6 +47,10 @@ public class BookingItemAssignerOptimal {
             this.throwException = throwException;
         }
         
+    }
+
+    public List<OptimalBookingTimeLine> getLinesOverBooked() {
+        return linesOverBooked;
     }
 
     /**
@@ -98,10 +100,6 @@ public class BookingItemAssignerOptimal {
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
 
         addUnassignedBookingsToLine(bookingLines, unassignedBookings);
-        
-        if (bookingLines.size() > getBookingItemsFlatten().size()) {
-            tryToMerge(bookingLines, unassignedBookings);
-        }
         
         setItemIdsToLines(bookingLines);
         
@@ -252,8 +250,8 @@ public class BookingItemAssignerOptimal {
         }
         
         for (BookingItemTimeline timeLine : timeLines) {
-            if (timeLine.isAvailable(booking.getStartDateTranslated(), booking.getEndDateTranslated())) {
-                timeLine.add(booking.id, booking.getStartDateTranslated(), booking.getEndDateTranslated());
+            if (timeLine.isAvailable(booking.startDate, booking.endDate)) {
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 timeLine.setOptimalBookingTimeLineId(optimalTimeLine.uuid);
                 return timeLine;
             }
@@ -282,8 +280,8 @@ public class BookingItemAssignerOptimal {
         
         if (booking == null) {
             booking = new Booking();
-            booking.setStartDate(start);
-            booking.setEndDate(end);
+            booking.startDate = start;
+            booking.endDate = end;
             booking.bookingItemTypeId = type.id;
             booking.id = "TMP_BOOKING_TO_TEST_AVAILABILITY";
             bookings.add(booking);
@@ -294,8 +292,8 @@ public class BookingItemAssignerOptimal {
                 ex.printStackTrace();
                 return new ArrayList();
             }
-            booking.setStartDate(start);
-            booking.setEndDate(end);
+            booking.startDate = start;
+            booking.endDate = end;
             
             bookings.removeIf(book -> book.id.equals(bookingToConsider));
             bookings.add(booking);    
@@ -318,7 +316,7 @@ public class BookingItemAssignerOptimal {
     public void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
         int i = 1;
         for (OptimalBookingTimeLine bookings : bookingLines) {
-            GetShopLogHandler.logPrintStatic("Line " + i, null);
+            GetShopLogHandler.logPrintStatic("Line " + i + " - " + bookings.bookingItemId, null);
             Collections.sort(bookings.bookings, Booking.sortByStartDate());
             for (Booking booking : bookings.bookings) {
                 GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + ",created : " + booking.rowCreatedDate + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
@@ -329,7 +327,7 @@ public class BookingItemAssignerOptimal {
 
     private boolean overlappingBooking(Booking booking, List<Booking> bookingLine) {
         for (Booking ibooking : bookingLine) {
-            if (ibooking.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated())) {
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
                 return true;
             }
         }
@@ -340,7 +338,7 @@ public class BookingItemAssignerOptimal {
     private void printBookingsInterceptingWithItem(Booking bookingWithItem) {
         
         for (Booking booking : bookings) {
-            if (booking.bookingItemId != null && booking.bookingItemId.equals(bookingWithItem.bookingItemId) && booking.interCepts(bookingWithItem.getStartDateTranslated(), bookingWithItem.getEndDateTranslated())) {
+            if (booking.bookingItemId != null && booking.bookingItemId.equals(bookingWithItem.bookingItemId) && booking.interCepts(bookingWithItem.startDate, bookingWithItem.endDate)) {
                 GetShopLogHandler.logPrintStatic(booking.getInformation(), null);
             }
         }
@@ -348,15 +346,15 @@ public class BookingItemAssignerOptimal {
 
     private BookingItemTimeline isThereAFreeItemForBookings(Booking booking, List<BookingItemTimeline> bookingItemsFlatten, OptimalBookingTimeLine bookingLine) {
         for (BookingItemTimeline timeLine : bookingItemsFlatten) {
-            if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.getStartDateTranslated(), booking.getEndDateTranslated()) && timeLine.optimalTimeLineId != null && timeLine.optimalTimeLineId.equals(bookingLine.uuid)) {
-                timeLine.add(booking.id, booking.getStartDateTranslated(), booking.getEndDateTranslated());
+            if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.startDate, booking.endDate) && timeLine.optimalTimeLineId != null && timeLine.optimalTimeLineId.equals(bookingLine.uuid)) {
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 return timeLine;
             }
         }
         
         for (BookingItemTimeline timeLine : bookingItemsFlatten) {
-            if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.getStartDateTranslated(), booking.getEndDateTranslated())) {
-                timeLine.add(booking.id, booking.getStartDateTranslated(), booking.getEndDateTranslated());
+            if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.startDate, booking.endDate)) {
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 return timeLine;
             }
         }
@@ -365,7 +363,7 @@ public class BookingItemAssignerOptimal {
     }
 
     private void removeBookingsThatHasNullDates() {
-        bookings.removeIf(o -> o.getStartDateTranslated() == null || o.getEndDateTranslated() == null);
+        bookings.removeIf(o -> o.startDate == null || o.endDate == null);
     }
 
     public List<Booking> getBookingThatUseItem(String bookingItemId) {
@@ -435,7 +433,7 @@ public class BookingItemAssignerOptimal {
             String currentBookingItemId = currentBooking.bookingItemId;
             
             for (Booking booking : assignedBookings) {
-                if (currentBooking.getEndDateTranslated().getTime() <= booking.getStartDateTranslated().getTime()) {
+                if (currentBooking.endDate.getTime() <= booking.startDate.getTime()) {
                     if (!canBeOnTheSameLine(booking, currentBookingItemId)) {
                         continue;
                     }
@@ -472,10 +470,17 @@ public class BookingItemAssignerOptimal {
             Booking bookingToUse = null;
             boolean found = false;
             
-            for (OptimalBookingTimeLine timeLine : bookingLines) {
-                for (Booking booking : unassignedBookings) {
+            for (Booking booking : unassignedBookings) {
+                for (OptimalBookingTimeLine timeLine : bookingLines) {
+                    if (!timeLine.canAddBooking(booking)) {
+                        continue;
+                    }
+                    if (overlappingBooking(booking, timeLine.bookings)) {
+                        continue;
+                    }
+                    
                     long closestDistanceInBooking = timeLine.getDistanceBetweenBookings(booking);
-                    if (closestDistanceInBooking < closestDistance && !overlappingBooking(booking, timeLine.bookings)) {
+                    if (closestDistanceInBooking < closestDistance) {
                         closestDistance = closestDistanceInBooking;
                         timeLineToUse = timeLine;
                         bookingToUse = booking;
@@ -542,10 +547,10 @@ public class BookingItemAssignerOptimal {
     private Booking getPrevBooking(Booking booking, List<Booking> unassignedBookings) {
         Booking prevBooking = null;
         long shortesTimeBetween = Long.MAX_VALUE;
-        long startDate = booking.getStartDateTranslated().getTime();
+        long startDate = booking.startDate.getTime();
         
         for (Booking ibook : unassignedBookings) {
-            long timeBetween = startDate - ibook.getEndDateTranslated().getTime();
+            long timeBetween = startDate - ibook.endDate.getTime();
             if (timeBetween < 0)
                 continue;
             
@@ -578,11 +583,9 @@ public class BookingItemAssignerOptimal {
         for (OptimalBookingTimeLine line : bookingLines) {
             if (line.bookingItemId.isEmpty()) {
                 BookingItemTimeline itemToUse = getNextAvailableItem(line, bookingLines, itemIdsUsed);
-                
                 if (itemToUse == null && !throwException) {
-                    failedRows.add(line);
+                    linesOverBooked.add(line);
                 }
-                
                 if (itemToUse == null && throwException) {
                     throw new BookingEngineException("Not enough space for this booking");
                 } else {
@@ -638,41 +641,8 @@ public class BookingItemAssignerOptimal {
         return null;
     }
 
-    private void tryToMerge(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
-        OptimalBookingTimeLine line = getLineWithFewestBooking(bookingLines);
-        
-        if (linesToBruteforce == null) {
-            bookingsToBruteForce = new ArrayList(line.bookings);
-            linesToBruteforce = bookingLines.stream()
-                    .filter(l -> !l.equals(line))
-                    .collect(Collectors.toList());
-        }
-        
-        if (bookingsToBruteForce == null) {
-            return;
-        }
-        
-        System.out.println(bookingsToBruteForce);
-    }
-
     void disableErrorCheck() {
-        throwException = false;
-    }
-
-    public List<OptimalBookingTimeLine> getOverbookedLines() {
-        return failedRows;
-    }
-
-    private OptimalBookingTimeLine getLineWithFewestBooking(List<OptimalBookingTimeLine> bookingLines) {
-        List<OptimalBookingTimeLine> optLines = new ArrayList(bookingLines);
-        
-        Collections.sort(optLines, (OptimalBookingTimeLine l1, OptimalBookingTimeLine l2) -> {
-            Integer i1 = new Integer(l1.bookings.size());
-            Integer i2 = new Integer(l2.bookings.size());
-            return i1.compareTo(i2);
-        });
-        
-        return optLines.get(0);
+        this.throwException = false;
     }
 
 }

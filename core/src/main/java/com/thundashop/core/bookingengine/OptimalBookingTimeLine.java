@@ -24,11 +24,11 @@ public class OptimalBookingTimeLine {
         long retVal = 0;
         
         for (Booking ibooking : bookings) {
-            long startTimeBookingInLine = ibooking.getStartDateTranslated().getTime();
-            long endTimeBookingInLine = ibooking.getStartDateTranslated().getTime();
+            long startTimeBookingInLine = ibooking.startDate.getTime();
+            long endTimeBookingInLine = ibooking.startDate.getTime();
             
-            long timeBetweenNext = booking.getStartDateTranslated().getTime() - endTimeBookingInLine;
-            long timeBetweenPrev = startTimeBookingInLine - booking.getEndDateTranslated().getTime();
+            long timeBetweenNext = booking.startDate.getTime() - endTimeBookingInLine;
+            long timeBetweenPrev = startTimeBookingInLine - booking.endDate.getTime();
             
             if (timeBetweenNext > retVal) {
                 retVal = timeBetweenNext;
@@ -38,7 +38,7 @@ public class OptimalBookingTimeLine {
                 retVal = retVal;
             }
             
-            if (ibooking.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated())) {
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
                 return 0;
             }
         }
@@ -52,11 +52,11 @@ public class OptimalBookingTimeLine {
         Collections.sort(bookings, Booking.sortByStartDate());
         
         for (Booking ibooking : bookings) {
-            long startTimeBookingInLine = ibooking.getStartDateTranslated().getTime();
-            long endTimeBookingInLine = ibooking.getStartDateTranslated().getTime();
+            long startTimeBookingInLine = ibooking.startDate.getTime();
+            long endTimeBookingInLine = ibooking.startDate.getTime();
             
-            long timeBetweenNext = booking.getStartDateTranslated().getTime() - endTimeBookingInLine;
-            long timeBetweenPrev = startTimeBookingInLine - booking.getEndDateTranslated().getTime();
+            long timeBetweenNext = booking.startDate.getTime() - endTimeBookingInLine;
+            long timeBetweenPrev = startTimeBookingInLine - booking.endDate.getTime();
             
             if (timeBetweenNext < 0 && timeBetweenPrev > 0) {
                 shortestDistance = timeBetweenPrev;
@@ -70,7 +70,7 @@ public class OptimalBookingTimeLine {
                 shortestDistance = 0;
             }
             
-            if (ibooking.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated())) {
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
                 return Long.MAX_VALUE;
             }
             
@@ -81,7 +81,7 @@ public class OptimalBookingTimeLine {
 
     public boolean canAddBooking(Booking booking) {
         for (Booking ibooking : bookings) {
-            if (ibooking.interCepts(booking.getStartDateTranslated(), booking.getEndDateTranslated())) {
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
                 return false;
             }
         }

@@ -98,7 +98,11 @@ public class BookingItemAssignerOptimal {
         Collections.sort(assignedBookings, Booking.sortByStartDate());
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
-
+        
+        if (storeId != null && storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
+            squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
+        }
+        
         addUnassignedBookingsToLine(bookingLines, unassignedBookings);
         
         setItemIdsToLines(bookingLines);
@@ -643,6 +647,50 @@ public class BookingItemAssignerOptimal {
 
     void disableErrorCheck() {
         this.throwException = false;
+    }
+
+    private void squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        List<OptimalBookingTimeLine> linesToCheck = bookingLines.stream()
+                .filter(l -> l.hasAssingedBookingsInFuture())
+                .collect(Collectors.toList());
+        
+        for (OptimalBookingTimeLine timeLine : linesToCheck) {
+            HashMap<Date, Date> dateRangeToOptimizeBookingsIn = timeLine.getDatesBetweenAssignedBokings();
+            
+            for (Date start : dateRangeToOptimizeBookingsIn.keySet()) {
+                Date end = dateRangeToOptimizeBookingsIn.get(start);
+                
+                List<Booking> bookingsToBruteforce = unassignedBookings.stream()
+                        .filter(b -> b.startDate.after(start) || b.startDate.equals(b))
+                        .filter(b -> b.endDate.before(end) || b.endDate.equals(end))
+                        .collect(Collectors.toList());
+                
+                if (bookingsToBruteforce.isEmpty()) {
+                    continue;
+                }
+                
+                List<Booking> bestCombination = getBestCombinationOfBookings(bookingsToBruteforce);
+                
+                List<OptimalBookingTimeLine> bookingLines2 = new ArrayList();
+                bookingLines2.add(timeLine);
+                unassignedBookings.removeAll(bestCombination);
+                
+                addUnassignedBookingsToLine(bookingLines2, bestCombination);
+                
+                if (!bestCombination.isEmpty() || bookingLines2.size() > 1) {
+                    throw new RuntimeException("Oh dear, this should not happen. This means that bookings will be removed as they did not fit on the lines");
+                }
+            }
+        }
+    }
+
+    private List<Booking> getBestCombinationOfBookings(List<Booking> bookingsToBruteforce) {
+        BookingTimeLineFlatten flatten = new BookingTimeLineFlatten(1, bookingsToBruteforce.get(0).bookingItemTypeId);
+        
+        bookingsToBruteforce.stream()
+                .forEach(b -> flatten.add(b));
+        
+        return flatten.getBestCombo();
     }
 
 }

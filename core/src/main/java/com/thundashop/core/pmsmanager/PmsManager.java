@@ -542,6 +542,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         booking.sessionId = "";
         verifyPhoneOnBooking(booking, true);
+        booking.deleted = null;
+        booking.completedDate = new Date();
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -852,7 +854,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         
         if (booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) {
-            if (!booking.rowCreatedDate.after(nowCal.getTime())) {
+            if (!booking.rowCreatedDate.after(nowCal.getTime()) && (booking.completedDate == null || booking.completedDate.after(nowCal.getTime()))) {
                 hardDeleteBooking(booking, "finalize");
                 return null;
             }
@@ -7764,4 +7766,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
     }
 
+    private void doubleCheckDuplicateOrders() {
+        List<String> orderIds = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            for(String orderId : booking.orderIds) {
+                if(orderIds.contains(orderId)) {
+                    System.out.println("Found duplicate on order: " + orderManager.getOrder(orderId).incrementOrderId);
+                } else {
+                    orderIds.add(orderId);
+                }
+            }
+        }
+    }
 }

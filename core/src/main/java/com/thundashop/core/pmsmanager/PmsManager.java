@@ -4261,7 +4261,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 order.payment = firstOrder.payment;
             }
             orderManager.saveOrder(order);
-            copy.orderIds.add(order.id);
+            addOrderToBooking(copy, order.id);
         }
         
         booking.removeRooms(roomsToSplit);
@@ -6636,7 +6636,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         item.endDate = freezeUntil;
         item.getProduct().externalReferenceId = room.pmsBookingRoomId;
         Order order = orderManager.createOrderForUser(booking.userId);
-        booking.orderIds.add(order.id);
+        addOrderToBooking(booking, order.id);
         order.status = Order.Status.PAYMENT_COMPLETED;
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
         saveBooking(booking);
@@ -7400,7 +7400,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 booking.orderIds = new ArrayList();
             }
             if (!booking.orderIds.contains(order.id)) {
-                booking.orderIds.add(order.id);
+                addOrderToBooking(booking, order.id);
                 saveBooking(booking);
             }
         }   
@@ -7765,17 +7765,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
     }
+    
+    public void addOrderToBooking(PmsBooking booking, String orderId) {
+        if(checkDuplicateOrders(orderId, booking.id)) {
+            messageManager.sendErrorNotification("Order added to a different booking: " + orderId, new Exception());
+        }
+        booking.orderIds.add(orderId);
+    }
 
-    private void doubleCheckDuplicateOrders() {
+    private boolean checkDuplicateOrders(String orderId, String currentBookingId) {
         List<String> orderIds = new ArrayList();
         for(PmsBooking booking : bookings.values()) {
-            for(String orderId : booking.orderIds) {
-                if(orderIds.contains(orderId)) {
-                    System.out.println("Found duplicate on order: " + orderManager.getOrder(orderId).incrementOrderId);
-                } else {
-                    orderIds.add(orderId);
-                }
+            if(booking.id.equals(currentBookingId)) {
+                continue;
+            }
+            if(booking.orderIds != null && booking.orderIds.contains(orderId)) {
+                return true;
             }
         }
+        return false;
     }
 }

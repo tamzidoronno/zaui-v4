@@ -542,6 +542,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         booking.sessionId = "";
         verifyPhoneOnBooking(booking, true);
+        booking.deleted = null;
+        booking.completedDate = new Date();
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -852,7 +854,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         
         if (booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) {
-            if (!booking.rowCreatedDate.after(nowCal.getTime())) {
+            if (!booking.rowCreatedDate.after(nowCal.getTime()) && (booking.completedDate == null || booking.completedDate.after(nowCal.getTime()))) {
                 hardDeleteBooking(booking, "finalize");
                 return null;
             }
@@ -4259,7 +4261,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 order.payment = firstOrder.payment;
             }
             orderManager.saveOrder(order);
-            copy.orderIds.add(order.id);
+            addOrderToBooking(copy, order.id);
         }
         
         booking.removeRooms(roomsToSplit);
@@ -6634,7 +6636,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         item.endDate = freezeUntil;
         item.getProduct().externalReferenceId = room.pmsBookingRoomId;
         Order order = orderManager.createOrderForUser(booking.userId);
-        booking.orderIds.add(order.id);
+        addOrderToBooking(booking, order.id);
         order.status = Order.Status.PAYMENT_COMPLETED;
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
         saveBooking(booking);
@@ -7398,7 +7400,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 booking.orderIds = new ArrayList();
             }
             if (!booking.orderIds.contains(order.id)) {
-                booking.orderIds.add(order.id);
+                addOrderToBooking(booking, order.id);
                 saveBooking(booking);
             }
         }   
@@ -7763,5 +7765,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         
         bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
     }
+    
+    public void addOrderToBooking(PmsBooking booking, String orderId) {
+        if(checkDuplicateOrders(orderId, booking.id)) {
+            Order order = orderManager.getOrder(orderId);
+            messageManager.sendErrorNotification("Order added to a different booking: " + " : " + order.incrementOrderId + " - " + orderId + " booking: " + booking.id, new Exception());
+            return;
+        }
+        booking.orderIds.add(orderId);
+    }
 
+    private boolean checkDuplicateOrders(String orderId, String currentBookingId) {
+        List<String> orderIds = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.id.equals(currentBookingId)) {
+                continue;
+            }
+            if(booking.orderIds != null && booking.orderIds.contains(orderId)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

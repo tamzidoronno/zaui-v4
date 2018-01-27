@@ -1,0 +1,16 @@
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+        <div class="image sad"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Sorry, i can't help you"); ?></div>
+            <div class="text">
+                <?
+                $text = "Sorry, im not able to find the guest you are looking for. Try searching for a booking id, phone number, email, guest name, booker name, or change search view to filter mode by clicking the {filtericon} icon and look at the day of the check in.";
+                $text = str_replace("{filtericon}", "<i class='icon-search2'></i>", $text);
+                echo $this->__f($text);
+                ?>    
+            </div>
+        </div>
+    </div>
+</div>

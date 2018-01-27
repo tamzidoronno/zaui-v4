@@ -229,7 +229,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         orderManager.saveOrder(order);
                     }
                     autoSendInvoice(order, booking.id);
-                    booking.orderIds.add(order.id);
+                    pmsManager.addOrderToBooking(booking, order.id);
                     Double total = orderManager.getTotalAmount(order);
                     if(total < 0) {
                         List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
@@ -1479,7 +1479,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
-        booking.orderIds.add(creditedOrder.id);
+        pmsManager.addOrderToBooking(booking, creditedOrder.id);
         pmsManager.saveBooking(booking);
     }
     
@@ -1602,7 +1602,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 adjustAmountOnOrder(order, filter.totalAmount);
             }
             orderManager.saveOrder(order);
-            booking.orderIds.add(order.id);
+            pmsManager.addOrderToBooking(booking, order.id);
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
             booking.orderIds = uniqueList;
             pmsManager.saveBooking(booking);

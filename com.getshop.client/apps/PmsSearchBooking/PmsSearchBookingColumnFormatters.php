@@ -97,32 +97,38 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatState($room) {
+        $text = "";
         if ($room->progressState == "waitingforlock") {
             $waiting = $this->pmsSearchBooking->__f("Receiving code from lock...");
-            return "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-hourglass fa-stack-1x'></i> <i style='color: #FFF' class='fa fa-lock  fa-stack-3x'></i></span>";
-        }
-        
-        if ($room->progressState == "confirmed") {
+            $text = "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-hourglass fa-stack-1x'></i> <i style='color: #FFF' class='fa fa-lock  fa-stack-3x'></i></span>";
+        } else if($room->progressState == "confirmed") {
             $waiting = $this->pmsSearchBooking->__f("Booking is confirmed");
-            return "<span title='$waiting' ><i class='icon-clipboard-check'></i></span>";
-        }
-        
-        if ($room->progressState == "notpaid") {
+            $text = "<span title='$waiting' ><i class='icon-clipboard-check'></i></span>";
+        } else if ($room->progressState == "notpaid") {
             $waiting = $this->pmsSearchBooking->__f("Room not paid");
-            return "<span title='$waiting'><i class='icon-bag-dollar' style='color: red'></i></span>";
-        }
-        
-        if ($room->progressState == "ended") {
+            $text = "<span title='$waiting'><i class='icon-bag-dollar' style='color: red'></i></span>";
+        } else if ($room->progressState == "ended") {
             $waiting = $this->pmsSearchBooking->__f("Ended");
-            return "<span title='$waiting'><i class='icon-checkered-flag'></i style='color: green'></span>";
-        }
-        
-        if ($room->progressState == "active") {
+            $text = "<span title='$waiting'><i class='icon-checkered-flag'></i style='color: green'></span>";
+        } else if ($room->progressState == "active") {
             $waiting = $this->pmsSearchBooking->__f("All good (active)");
-            return "<span title='$waiting'> <i class='icon-list'></i></span>";
+            $text = "<span title='$waiting'> <i class='icon-list'></i></span>";
+        } else {
+            $text = $room->progressState;
         }
         
-        return $room->progressState;
+        $channels = array();
+        $channels['wubook_1'] = "Exp.";
+        $channels['wubook_2'] = "b.com";
+        
+        $channelText = $room->channel;
+        if(isset($channels[$room->channel])) {
+            $channelText = $channels[$room->channel];
+        }
+        
+        $text .= "<div class='channelDesc'>" . $channelText . "</div>";
+        
+        return $text;
     }
     
     public function formatPrice($room) {

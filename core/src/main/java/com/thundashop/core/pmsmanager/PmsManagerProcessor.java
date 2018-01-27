@@ -273,9 +273,6 @@ public class PmsManagerProcessor {
             }
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.pmsBookingRoomId.equals("335e60a1-318b-4bc8-a6f6-9ca7d718cb50")) {
-                    System.out.println("TEST");
-                }
                 if(!room.forceUpdateLocks) {
                     if(room.addedToArx) {
                         continue;

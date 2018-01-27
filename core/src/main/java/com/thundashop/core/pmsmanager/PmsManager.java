@@ -7768,7 +7768,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     
     public void addOrderToBooking(PmsBooking booking, String orderId) {
         if(checkDuplicateOrders(orderId, booking.id)) {
-            messageManager.sendErrorNotification("Order added to a different booking: " + orderId, new Exception());
+            Order order = orderManager.getOrder(orderId);
+            messageManager.sendErrorNotification("Order added to a different booking: " + " : " + order.incrementOrderId + " - " + orderId + " booking: " + booking.id, new Exception());
+            return;
         }
         booking.orderIds.add(orderId);
     }

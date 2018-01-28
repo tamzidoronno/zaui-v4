@@ -440,6 +440,9 @@ public interface IPmsManager {
     @Administrator
     public List<ConferenceData> getFutureConferenceData();
     
+    @Administrator
+    public List<PmsBookingAddonItem> createAddonsThatCanBeAddedToRoom(String productId, String pmsBookingRoomId);
+    
     /**
      * Key = date / day
      * @return 

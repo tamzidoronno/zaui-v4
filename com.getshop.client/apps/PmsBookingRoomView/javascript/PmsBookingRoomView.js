@@ -85,6 +85,7 @@ app.PmsBookingRoomView = {
         });
         
         $('.PmsBookingRoomView .item_prices .totalrow span').html(total);
+        $('.PmsBookingRoomView .totalstayprice').html(total);
     },
     
     formChanged: function() {

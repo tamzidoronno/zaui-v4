@@ -590,5 +590,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $totalAmount;
     }
 
+    public function getStayPrice() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $total = 0.0;
+        foreach($room->priceMatrix as $day => $val) {
+            $total += $val;
+        }
+        return $total;
+    }
+
 }
 ?>

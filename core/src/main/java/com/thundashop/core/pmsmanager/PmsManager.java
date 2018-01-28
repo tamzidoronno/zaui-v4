@@ -4043,6 +4043,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
             toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
             toReturn.isActive = addonConfig.isActive;
+            toReturn.isSingle = addonConfig.isSingle;
             toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
             toReturn.validDates = addonConfig.validDates;
             toReturn.dependsOnGuestCount = addonConfig.dependsOnGuestCount;
@@ -7786,5 +7787,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         return false;
+    }
+
+    @Override
+    public List<PmsBookingAddonItem> createAddonsThatCanBeAddedToRoom(String productId, String pmsBookingRoomId) {
+        PmsBookingAddonItem addon = getAddonByProductId(productId);
+        
+        List<PmsBookingAddonItem> result = new ArrayList();
+        if(addon.isSingle) {
+            PmsBookingAddonItem addonToReturn = createAddonToAdd(addon, new Date());
+            addonToReturn.setOverrideName(productManager.getProduct(productId).name);
+            result.add(addonToReturn);
+            return result;
+        }
+        
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        for(String day : room.priceMatrix.keySet()) {
+            Date date = PmsBookingRooms.convertOffsetToDate(day);
+            if(room.hasAddon(productId, date) != null) {
+                continue;
+            }
+            PmsBookingAddonItem addonToAdd = createAddonToAdd(addon, date);
+            if(addon.dependsOnGuestCount) {
+                addonToAdd.count = room.numberOfGuests;
+            }
+            addonToAdd.setOverrideName(productManager.getProduct(productId).name);
+            result.add(addonToAdd);
+        }
+        return result;
     }
 }

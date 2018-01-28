@@ -537,6 +537,15 @@ public class PmsBookingRooms implements Serializable {
         return null;
     }
 
+    PmsBookingAddonItem hasAddon(String productId, Date date) {
+        for(PmsBookingAddonItem addon : addons) {
+            if(addon.productId.equals(productId) && isSameDay(date, addon.date)) {
+                return addon;
+            }
+        }
+        return null;
+    }
+
     void sortAddonList() {
         Collections.sort(addons, new Comparator<PmsBookingAddonItem>(){
             public int compare(PmsBookingAddonItem o1, PmsBookingAddonItem o2){

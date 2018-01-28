@@ -89,16 +89,29 @@ if(sizeof($addons) > 0) {
     </div>
 
     <?php
-    foreach($addons as $addon) {
-        $totalPrice = 100;
+    $productAddonPrinted = array();
+     foreach($addons as $addon) {
+        if(in_array($addon->productId, $productAddonPrinted)) {
+            continue;
+        }
+        $addonsCount = 0;
+        $addonsTotal = 0;
+        foreach($addons as $addon2) {
+            if($addon2->productId != $addon->productId) {
+                continue;
+            }
+            $addonsCount += $addon2->count;
+            $addonsTotal += ($addon2->count * $addon2->price);
+        }
         echo "<div class='row' productId='".$addon->productId."'>";
         echo "<div class='col col-1'><i class='fa fa-square-o toggleRemoveAddonCheckBox'></i></div>";
         echo "<div class='col col-2'>".$addon->name."</div>";
-        echo "<div class='col col-3'>".$addon->count."</div>";
-        echo "<div class='col col-4'>".$totalPrice."</div>";
+        echo "<div class='col col-3'>".$addonsCount."</div>";
+        echo "<div class='col col-4'>".$addonsTotal."</div>";
         echo "<div class='col col-4'><i class='fa fa-edit'></i></div>";
         echo "</div>";
-    }
+        $productAddonPrinted[] = $addon->productId;
+     }
 }
 ?>
 

@@ -184,7 +184,8 @@ app.PmsBookingRoomView = {
     },
    
     menuClicked: function() {
-    
+        thundashop.Ajax.ajaxFile = "cached.php";
+        
         var tab = $(this).attr('tab');
         var needAllSaved = $(this).attr('needAllSaved');
         

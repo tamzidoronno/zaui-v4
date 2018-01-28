@@ -32,7 +32,9 @@ $pmsSelectedRoom = $this->getSelectedRoom();
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('addons'); ?>" tab='addons'>
-            addons
+            <?php
+            $this->includefile("addons");
+            ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('accesscodes'); ?> accesscode" tab='accesscodes'>

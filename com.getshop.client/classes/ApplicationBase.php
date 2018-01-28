@@ -226,7 +226,6 @@ class ApplicationBase extends FactoryBase {
     }
 
     public function renderApplication($appNotAddedToPage=false, $fromApplication=false) {
-        
         $changeable = '';
         $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
         $id = isset($this->configuration) ? $this->configuration->id : "";
@@ -235,7 +234,7 @@ class ApplicationBase extends FactoryBase {
         if ($appNotAddedToPage) {
             $id = get_class($this);
         }
-        
+        $fromId = "";
         if ($fromApplication) {
             $fromId = isset($fromApplication->configuration) ? $fromApplication->configuration->id : "";
             $callbackInstance = " fromapplication='$fromId' ";
@@ -248,8 +247,17 @@ class ApplicationBase extends FactoryBase {
         $className = get_class($this);
         if(strrpos($className, "\\")) {
             $className = substr($className, strrpos($className, "\\")+1);
+            $_SESSION['cachedClasses'][$fromId] = get_class($this);
+            $_SESSION['cachedClasses'][$id] = get_class($this);
+        } else {
+            $_SESSION['cachedClasses'][$fromId] = $fromId;
+            $_SESSION['cachedClasses'][$id] = $id;
         }
         
+        if(!isset($_SESSION['cachedClasses'])) {
+            $_SESSION['cachedClasses'] = array();
+        }
+
         echo "<div $callbackInstance appid='$id' ".$this->getExtraAttributesToAppArea()." app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         if($this->isEditorMode() && !$this->getFactory()->isMobile()) {
             echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";

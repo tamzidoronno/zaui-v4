@@ -253,6 +253,7 @@ thundashop.Ajax = {
             dataType: dataType,
             context: document.body,
             success: function(response) {
+                thundashop.Ajax.ajaxFile = "handler.php";
                 if (typeof(dontUpdate) === "undefined" || dontUpdate === false) {
                     thundashop.Ajax.updateFromResponse(response);
                 }

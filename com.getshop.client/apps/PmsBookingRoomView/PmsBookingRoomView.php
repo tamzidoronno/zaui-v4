@@ -7,6 +7,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     private $items = array();
     
+    /* @var $selectedRoom \core_pmsmanager_PmsBookingRooms */
+    private $selectedRoom;
+    
     public function getDescription() {
         
     }
@@ -34,6 +37,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         return null;
     }
+    
+    public function reloadAddons() {
+        $this->includefile("addons");
+    }
+    
     public function updateBooking() {
         $this->setData();
         $selectedRoom = $this->getPmsRoom();
@@ -201,7 +209,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function reloadApp() {
-        $this->setData();
+        $this->render();
     }
     
     public function setData($reload = false) {
@@ -232,7 +240,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
             foreach ($this->pmsBooking->rooms as $room) {
                 if ($room->pmsBookingRoomId == $_SESSION['PmsBookingRoomView_current_pmsroom_id']) {
-                    $_SESSION['cachedroomspmsrooms'][$room->pmsBookingRoomId] = json_encode($room);
+                    $this->updateRoom($room);
                     $this->selectedRoom = $room;
                 }
             }
@@ -346,6 +354,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function renderTabContent() {
         if ($_SESSION['currentSubMenu'] == "log") {
             $this->includefile("log");
+        }
+        if ($_SESSION['currentSubMenu'] == "addons") {
+            $this->printAddonsArea();
         }
         if ($_SESSION['currentSubMenu'] == "orders") {
             $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
@@ -544,5 +555,40 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("accesscode");
         die();
     }
+
+    public function updateRoom($room) {
+        $_SESSION['cachedroomspmsrooms'][$room->pmsBookingRoomId] = json_encode($room);
+    }
+
+    public function printAddonsArea() {
+        echo "<br>";
+        echo "<span class='addonsArea'>";
+        $this->includefile("addons");
+        echo "</span>";
+    }
+    
+    public function removeSelectedAddons() {
+        $this->setData();
+        $room = $this->selectedRoom;
+        $keep = array();
+        foreach($room->addons as $addon) {
+            if(!in_array($addon->productId, $_POST['data']['productIds'])) {
+                $keep[] = $addon;
+            }
+        }
+        $room->addons = $keep;
+        $this->updateRoom($room);
+    }
+
+    public function getAddonsCost() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $totalAmount = 0.0;
+        foreach($room->addons as $addon) {
+            $totalAmount += $addon->price * $addon->count;
+        }
+        return $totalAmount;
+    }
+
 }
 ?>

@@ -79,7 +79,6 @@ a[href^=tel] { color: inherit; }
     height: 75px;
     background-color: #23314e;
 }
-.gsrightwidgetbody { padding: 10px; }
 
 .gseasymode i { color: #555555; cursor:pointer; font-size:12px; border-radius:3px; padding: 3px; background-color:#fff; margin: 1px; border: solid 1px #bbb; }
 .gsdoneeditbutton { position:absolute; right: 3px; top: 3px; }

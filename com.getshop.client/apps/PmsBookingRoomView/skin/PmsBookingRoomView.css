@@ -10,6 +10,19 @@
     margin-right: 20px;
 }
 
+
+.PmsBookingRoomView .removeselectedaddons { background-color: red;
+    display: block;
+    width: 241px;
+    float: left;
+    margin-right: 10px; }
+.PmsBookingRoomView .addonsaddedrow { font-size: 18px; border-bottom: solid 1px #ddd; padding: 10px; }
+.PmsBookingRoomView .addonsArea .headercol { font-weight: bold; }
+.PmsBookingRoomView .addonsaddedrow .fa-edit{ float:right; }
+.PmsBookingRoomView .addonsaddedrow .fa-square-o { cursor: pointer; }
+.PmsBookingRoomView .addonsArea .col-1 { width: 20px; }
+.PmsBookingRoomView .addonsArea .row { font-size: 20px; }
+.PmsBookingRoomView .addonsArea .row .fa { cursor:pointer; }
 .PmsBookingRoomView .bookingoverview_content_row .bottommenuarea .shop_button:hover {
     background: rgb(99,182,219); /* Old browsers */
     background: -moz-linear-gradient(top, rgba(99,182,219,1) 0%, rgba(48,157,207,1) 100%); /* FF3.6-15 */

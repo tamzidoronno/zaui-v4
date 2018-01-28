@@ -206,6 +206,7 @@ thundashop.Ajax = {
             data: data,
             context: document.body,
             success: function(response) {
+                thundashop.Ajax.ajaxFile = "handler.php";
                 callback(response);
                 $('#loaderbox').hide();
                 if(file !== "Chat.php") {
@@ -305,6 +306,7 @@ thundashop.Ajax = {
             data: thundashop.base64.encodeForAjax(event),
             context: document.body,
             success: function(response) {
+                thundashop.Ajax.ajaxFile = "handler.php";
                 result = response;
                 PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
                 thundashop.common.sendPubSubMessage(thundashop.base64.encodeForAjax(event));
@@ -325,6 +327,7 @@ thundashop.Ajax = {
             async: false,
             dataType: "json",
             success: function(response) {
+                thundashop.Ajax.ajaxFile = "handler.php";
                 thundashop.Ajax.updateFromResponse(response);
                 thundashop.common.sendPubSubMessage(thundashop.base64.encodeForAjax(event));
                 if (response.errors && response.errors !== "")
@@ -407,6 +410,7 @@ thundashop.Ajax = {
             dataType: "json",
             data: data,
             success: function(response) {
+                thundashop.Ajax.ajaxFile = "handler.php";
                 thundashop.Ajax.updateFromResponse(response);
                 thundashop.common.sendPubSubMessage(info);
                 PubSub.publish('navigation_complete', variables);
@@ -428,6 +432,7 @@ thundashop.Ajax = {
             type: "POST",
             url: url,
             success: function(response) {
+                thundashop.Ajax.ajaxFile = "handler.php";
                 thundashop.Ajax.reloadCss();
                 $('#loaderbox').hide();
             },

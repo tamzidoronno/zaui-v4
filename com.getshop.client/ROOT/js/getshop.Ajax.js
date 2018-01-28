@@ -357,6 +357,7 @@ thundashop.Ajax = {
         } else {
             $('#gsbody').html(response.content);
             $('#dynamicmodal').html(response.modal);
+            $('.gsrightwidgetbody').html(response.rightWidget);
             PubSub.publish('NAVIGATION_COMPLETED', {response: response});
         }
         $(window).scrollTop(scrolltop);

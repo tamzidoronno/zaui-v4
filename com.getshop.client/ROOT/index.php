@@ -213,13 +213,36 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
         ?>
     <script>
      $(function() {
-        if (typeof(CKEDITOR) !== "undefined") {         
+        if (typeof(CKEDITOR) !== "undefined") {
             CKEDITOR.dtd.$removeEmpty['span'] = false;
         }
      });
     </script>
     </head>
+    <?php 
+    $rightWidgetOpen = false;
+    if(isset($_SESSION['gs_currently_showing_rightWidget'])) { 
+        $rightWidgetOpen = true;
+    }
+    ?>
+    
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+        <div class='gsrightwidgetpanel'><div class='gsrightwidgetpanelheader'><i class='fa fa-close' onclick='thundashop.framework.toggleRightWidgetPanel();'></i></div>
+            <div class='gsrightwidgetbody'>
+                <?php 
+                if($rightWidgetOpen) { 
+                    $factory->getPage()->renderRightWidgetArea($_SESSION['gs_currently_showing_rightWidget']); 
+                    echo "<script>";
+                    echo "$(function() {";
+                    echo "$('.gsrightwidgetpanel').addClass('gsactiverightwidget');";
+                    echo "$('#gsbody').addClass('gsactiverightwidget');";
+                    echo "});";
+                    echo "</script>";
+                    
+                }
+                ?></div>
+        </div>
+
         <?
         
         $modules = $factory->getApi()->getPageManager()->getModules();

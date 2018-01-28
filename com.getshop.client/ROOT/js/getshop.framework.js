@@ -17,6 +17,26 @@ thundashop.framework = {
     firstCellIdToMove : null,
     lastScrollTopInfoBox : null,
     
+    toggleRightWidgetPanel : function(areaName) {
+        if(!$('.gsrightwidgetpanel').hasClass('gsactiverightwidget')) {
+            $('.gsrightwidgetpanel').addClass('gsactiverightwidget');
+            $('#gsbody').addClass('gsactiverightwidget');
+            
+            var event = thundashop.Ajax.createEvent('','loadRightWidgetPanelArea',null, {
+                "area" : areaName
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.gsrightwidgetbody').html(res);
+            });
+            
+        } else {
+            $('.gsrightwidgetpanel').removeClass('gsactiverightwidget');
+            $('#gsbody').removeClass('gsactiverightwidget');
+            var event = thundashop.Ajax.createEvent('','closeRightWidget',null, {});
+            thundashop.Ajax.postWithCallBack(event, function(res) {});
+        }
+    },
+    
     scrollToPosition : function(scrollTop) {
         
         var cur = $(document).scrollTop();

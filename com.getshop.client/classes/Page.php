@@ -2001,6 +2001,23 @@ class Page {
         echo "</div>";
 
     }
+    
+    public function renderRightWidgetArea($areaname) {
+        if(!$areaname) {
+            return;
+        }
+        $this->factory->getApi()->getPageManager()->createModal($areaname);
+        
+        $notChachedJavPage = $this->factory->getApi()->getPageManager()->getPage($this->getId());
+        $page = new Page($notChachedJavPage, $this->factory);
+        $layout = $page->javapage->layout;
+        echo "<div class='gsarea gs_rightwidgetouter' area='$areaname'>";
+            echo "<div class='".$areaname."_inner gs_rightwidgetouter'>";
+            $page->printArea($layout->areas->{$areaname}, false);
+        echo "</div>";
+        echo "</div>";
+
+    }
 
     public function removeAllHoverEffects($styles) {
         $offset = 0;

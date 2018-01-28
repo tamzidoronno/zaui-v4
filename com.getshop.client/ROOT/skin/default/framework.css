@@ -66,6 +66,20 @@ a[href^=tel] { color: inherit; }
     text-align:center; 
     border: solid 1px #666666;
 }
+.gsrightwidgetpanel { position:fixed; right:0px; height: 100%; width: 0%; z-index: 5; background-color:#f5f8fa; top: 0px;display:none; 
+ -webkit-animation: slide 0.5s forwards;
+ -webkit-animation-delay: 2s;
+ animation: slide 0.5s forwards;
+}
+.gsrightwidgetpanel.gsactiverightwidget { width: 20%;transition: 0.2s;border-left: solid 1px #000; display:block; }
+#gsbody.gsactiverightwidget { width: 80%;transition: 0.2s;}
+.gsrightwidgetpanelheader .fa-close { color:#fff; font-size: 50px; right: 20px; top: 10px; position: absolute; cursor:pointer; }
+.gsrightwidgetpanelheader {
+    border-bottom: solid 1px;
+    height: 75px;
+    background-color: #23314e;
+}
+.gsrightwidgetbody { padding: 10px; }
 
 .gseasymode i { color: #555555; cursor:pointer; font-size:12px; border-radius:3px; padding: 3px; background-color:#fff; margin: 1px; border: solid 1px #bbb; }
 .gsdoneeditbutton { position:absolute; right: 3px; top: 3px; }

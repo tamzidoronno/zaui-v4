@@ -532,10 +532,18 @@ class Factory extends FactoryBase {
                 $modal = ob_get_contents();
                 ob_end_clean();
             }
+            $rightWidget = "";
+            if (isset($_SESSION['gs_currently_showing_rightWidget'])) {
+                ob_start();
+                $this->page->renderRightWidgetArea($_SESSION['gs_currently_showing_rightWidget']);
+                $rightWidget = ob_get_contents();
+                ob_end_clean();
+            }
             
             $data = array();
             $data['content'] = $content;
             $data['modal'] = $modal;
+            $data['rightWidget'] = $rightWidget;
             echo json_encode($data);
         } else {
             $this->page->loadSkeleton();

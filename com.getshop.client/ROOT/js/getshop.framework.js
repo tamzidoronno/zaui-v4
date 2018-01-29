@@ -17,6 +17,26 @@ thundashop.framework = {
     firstCellIdToMove : null,
     lastScrollTopInfoBox : null,
     
+    toggleRightWidgetPanel : function(areaName) {
+        if(!$('.gsrightwidgetpanel').hasClass('gsactiverightwidget')) {
+            $('.gsrightwidgetpanel').addClass('gsactiverightwidget');
+            $('#gsbody').addClass('gsactiverightwidget');
+            
+            var event = thundashop.Ajax.createEvent('','loadRightWidgetPanelArea',null, {
+                "area" : areaName
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.gsrightwidgetbody').html(res);
+            });
+            
+        } else {
+            $('.gsrightwidgetpanel').removeClass('gsactiverightwidget');
+            $('#gsbody').removeClass('gsactiverightwidget');
+            var event = thundashop.Ajax.createEvent('','closeRightWidget',null, {});
+            thundashop.Ajax.postWithCallBack(event, function(res) {});
+        }
+    },
+    
     scrollToPosition : function(scrollTop) {
         
         var cur = $(document).scrollTop();
@@ -1871,6 +1891,10 @@ thundashop.framework = {
             value = element.is(':checked');
         }
         
+        if(element.attr('gscached')) {
+            thundashop.Ajax.ajaxFile = "cached.php";
+        }
+        
         var data = {}
         data[name] = value;
         if (element.attr("gs_prompt")) {
@@ -1901,7 +1925,13 @@ thundashop.framework = {
         thundashop.common.destroyCKEditors();
         var callback = this.getCallBackFunction(element);
         if (!element.attr('output')) {
-            thundashop.Ajax.post(event, callback, event);
+            if(element.attr('gstoarea')) {
+                thundashop.Ajax.postWithCallBack(event, function(res) {
+                    $(element.attr('gstoarea')).html(res);
+                });
+            } else {
+                thundashop.Ajax.post(event, callback, event);
+            }
             thundashop.common.hideInformationBox(null);
         } else if (element.attr('output') == "informationbox") {
             var informationTitle = element.attr('informationtitle');
@@ -1938,6 +1968,12 @@ thundashop.framework = {
     },
     submitFromEvent: function (event) {
         var target = $(event.target);
+        if(target.attr('gscached')) {
+            thundashop.Ajax.ajaxFile = "cached.php";
+        }
+        if(target.attr('gstoarea')) {
+            thundashop.Ajax.postToArea = target.attr('gstoarea');
+        }
         thundashop.framework.submitFromElement(target);
     },
     createGsArgs: function (form) {

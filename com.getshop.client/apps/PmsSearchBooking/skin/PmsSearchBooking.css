@@ -4,6 +4,7 @@
     min-height: 800px;
 }
 
+.PmsSearchBooking .channelDesc { color: #888; }
 .PmsSearchBooking .GetShopModuleTable .col_expandbutton i {
    font-size: 30px;
    color: #82cdf3;

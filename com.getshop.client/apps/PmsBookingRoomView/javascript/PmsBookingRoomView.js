@@ -9,8 +9,40 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .payment_option_choice', this.paymentSelected);
         $(document).on('click', '.PmsBookingRoomView .pagenumber', this.changeLogIndex);
         $(document).on('click', '.PmsBookingRoomView .canUse', this.addSelectedClass);
+        $(document).on('click', '.PmsBookingRoomView .removeselectedaddons', this.removeSelectedAddons);
+        $(document).on('click', '.PmsBookingRoomView .addonsArea .toggleRemoveAddonCheckBox', this.toggleRemoveAddonCheckBox);
         $(document).on('change', '.PmsBookingRoomView [gsname]', this.formChanged);
         $(document).on('change', '.PmsBookingRoomView .unitprice_changed', this.unitPriceChanged);
+    },
+    removeSelectedAddons : function() {
+        var productIds = [];
+        $(".fa-check-square").each(function() {
+            productIds.push($(this).closest('.row').attr('productId'));
+        });
+        var event = thundashop.Ajax.createEvent('','removeSelectedAddons',$(this), {
+            productIds : productIds
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsBookingRoomView.refresh();
+        });
+    },
+    refresh : function() {
+        thundashop.Ajax.ajaxFile = "cached.php";
+        var event = thundashop.Ajax.createEvent('','reloadApp',$('.PmsBookingRoomView'), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsBookingRoomView').html(res);
+        });
+    },
+    toggleRemoveAddonCheckBox : function() {
+        if($(this).hasClass('fa-square-o')) {
+            $(this).removeClass('fa-square-o');
+            $(this).addClass('fa-check-square');
+        } else {
+            $(this).addClass('fa-square-o');
+            $(this).removeClass('fa-check-square');
+        }
+        $('.removeselectedaddons').effect( "bounce", { times: 3 } );
     },
     
     accessCodeTabUpdated: function(res) {
@@ -53,6 +85,7 @@ app.PmsBookingRoomView = {
         });
         
         $('.PmsBookingRoomView .item_prices .totalrow span').html(total);
+        $('.PmsBookingRoomView .totalstayprice').html(total);
     },
     
     formChanged: function() {
@@ -184,7 +217,8 @@ app.PmsBookingRoomView = {
     },
    
     menuClicked: function() {
-    
+        thundashop.Ajax.ajaxFile = "cached.php";
+        
         var tab = $(this).attr('tab');
         var needAllSaved = $(this).attr('needAllSaved');
         

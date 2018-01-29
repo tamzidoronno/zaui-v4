@@ -141,6 +141,17 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
         $table->render();
+        $data = $table->getDate();
+        
+        $rowCount = 0;
+        $guests = 0;
+        foreach($data as $row ){
+            $rowCount++;
+            $guests += $row->numberOfGuests;
+        }
+        
+        
+        echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests</div>";
     }
     
     public function getAllProducts() {
@@ -249,7 +260,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             }
         }
         $filter->typeFilter = $types;
-        
+
         $this->setCurrentFilter($filter);
     }
 

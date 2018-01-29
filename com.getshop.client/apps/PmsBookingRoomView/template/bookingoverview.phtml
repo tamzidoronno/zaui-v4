@@ -6,16 +6,19 @@ $pmsBooking = $this->getPmsBooking();
 $bookingEngineBooking = $this->getBookingEngineBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 
+$stayPrice = $this->getStayPrice();
+if(!$stayPrice) {$stayPrice = "";} else {$stayPrice  = " - " . $stayPrice;}
+
+$addonsPrice = $this->getAddonsCost();
+if(!$addonsPrice) {$addonsPrice = "";} else {$addonsPrice  = " - " . $addonsPrice;}
 ?>
 
 <div gstype='form' method="updateBooking" class="bookingoverview_content_row">
     <input type='hidden' gsname='roomId' value='<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>'/>
-   
-     
     <div class="menuarea" roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" bookingEngineId="<? echo $bookingEngineBooking->id; ?>">
         <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Booking"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay") . $stayPrice; ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . $addonsPrice; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
@@ -32,7 +35,9 @@ $pmsSelectedRoom = $this->getSelectedRoom();
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('addons'); ?>" tab='addons'>
-            addons
+            <?php
+            $this->printAddonsArea();
+            ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('accesscodes'); ?> accesscode" tab='accesscodes'>

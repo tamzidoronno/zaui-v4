@@ -41,6 +41,9 @@ attribute gstypes;
     ckeditor, attributes to attach to the form. if you are using the thundashop.common.createCkeditor(), use this to identfy its content.
         example: <div gstype="ckeditor" type="txt" gsname='content'>Some content</div>
 
+    cached results,
+        <span gstype='clicksubmit' gscached='true' gsname="id" gsvalue="<?php echo $this->bookingEngineBooking->id; ?>" method="reloadAddons"  gstoarea=".addonsArea">test</span>
+
     submitenter, makes it to submit when pressing enter. 
         example: <div gstype="form" method="addEntry"><input gstype="submitenter" type="txt" name='example' placeholder="Enter a menu name"></div>
 

@@ -661,7 +661,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         Date endDate = secondLayer.stream().map(u -> u.endDate).max(Date::compareTo).get();
         
         try {
-            getTimeLinesForItemWithOptimal(startDate, endDate);
+            getTimeLinesForItemWithOptimal(startDate, endDate, false);
         } catch (BookingEngineException ex) {
             booking.bookingItemId = oldItemId;
             booking.bookingItemTypeId = oldBookingItemTypeId;
@@ -680,7 +680,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         try {
-            getTimeLinesForItemWithOptimal(booking.startDate, booking.endDate);
+            getTimeLinesForItemWithOptimal(booking.startDate, booking.endDate, false);
         } catch (BookingEngineException ex) {
             booking.bookingItemId = oldId;
             booking.bookingItemTypeId = oldBookingItemTypeId;
@@ -843,12 +843,23 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return line;
     }
    
-    List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end) {
+    List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrors(Date start, Date end) {
+        return getTimeLinesForItemWithOptimal(start, end, true);
+    }
+    
+    List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end, boolean ignoreErrors) {
         List<BookingTimeLineFlatten> retList = new ArrayList();        
         
         for (String bookingItemTypeId : types.keySet()) {
             BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(bookingItemTypeId, start, end, null);
+            if (ignoreErrors) {
+                assigner.disableErrorCheck();
+            }
             List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
+            
+            if (!assigner.getLinesOverBooked().isEmpty()) {
+                messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
+            }
             
             for (BookingItem item : items.values()) {
                 if (!item.bookingItemTypeId.equals(bookingItemTypeId)) {
@@ -859,6 +870,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 line.bookingItemId = item.id;
                 line.start = start;
                 line.end = end;
+                
                 bookings.values().stream().
                         filter(o -> o.within(start, end)).
                         filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(item.id))).

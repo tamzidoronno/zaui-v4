@@ -37,6 +37,7 @@ public class PmsBooking extends DataCommon {
     public Integer priceType = 1;
     public boolean confirmed = false;
     public Date confirmedDate = null;
+    public Date completedDate = null;
     public boolean unConfirmed = false;
     public boolean isDeleted = false;
     public boolean payedFor = false;

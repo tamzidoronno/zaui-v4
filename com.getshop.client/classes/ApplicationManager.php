@@ -14,6 +14,11 @@ class ApplicationManager extends FactoryBase {
     function setCurrentApp($app) {
         $this->app = $app;
     }
+    
+    public function loadRightWidgetPanelArea() {
+        $_SESSION['gs_currently_showing_rightWidget'] = $_POST['data']['area'];
+        $this->getPage()->renderRightWidgetArea($_POST['data']['area']);
+    }
 
     function removeCriticalMessage() {
         $this->getApi()->getStoreManager()->seenCriticalMessage($_POST['data']['id']);
@@ -1061,6 +1066,12 @@ class ApplicationManager extends FactoryBase {
             if (isset($_SESSION['modal_variable_'.$name])) {
                 unset($_SESSION['modal_variable_'.$name]);
             }
+        }
+    }
+    
+    public function closeRightWidget() {
+        if (isset($_SESSION['gs_currently_showing_rightWidget'])) {
+            unset($_SESSION['gs_currently_showing_rightWidget']);
         }
     }
     

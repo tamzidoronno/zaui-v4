@@ -164,4 +164,8 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         
         return "normal";
     }
+
+    public boolean isAssigned() {
+        return !isUnassigned();
+    }
 }

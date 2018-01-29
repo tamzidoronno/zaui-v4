@@ -354,20 +354,9 @@ public interface IPmsManager {
     public void sendStatistics() throws Exception;
     
     @Administrator
-    public void addProductToRoom(String productId, String pmsRoomId, Integer count);
-    
-    @Administrator
-    public void addAddonToRoom(PmsBookingAddonItem addon, String pmsRoomId);
-    
-    @Administrator
-    public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
-    
-    @Administrator
     public void markRoomDirty(String itemId) throws Exception;
 
     public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
-    public void addAddonsToBooking(Integer type, String roomId, boolean remove);
-    public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
     
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
@@ -375,14 +364,12 @@ public interface IPmsManager {
     public void processor();
     public void hourlyProcessor();
     public String getCurrenctContract() throws Exception;
-    public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
     public void removeFromCurrentBooking(String roomId) throws Exception;
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
     public List<PmsBooking> getAllBookingsForLoggedOnUser();
     public RegistrationRules initBookingRules();
     public void addRepeatingData(PmsRepeatingData data) throws Exception;
     public List<Integer> getAvailabilityForType(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
-    public void toggleAddon(String itemId) throws Exception;
     public PmsBookingDateRange getDefaultDateRange();
     public List<PmsBookingRooms> getAllRoomTypes(Date start, Date end);
     public void setBooking(PmsBooking addons) throws Exception;
@@ -393,9 +380,6 @@ public interface IPmsManager {
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
-    public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
-    
-    public List<PmsBookingAddonItem> getAddonsWithDiscountForBooking(String pmsBookingRoomId);
     
     public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
     
@@ -403,10 +387,7 @@ public interface IPmsManager {
     
     @Administrator
     public void saveAdditionalTypeInformation(PmsAdditionalTypeInformation info) throws Exception;
-    
-    @Administrator
-    public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
-    
+        
     @Administrator
     public void massUpdatePrices(PmsPricing price, String bookingId) throws Exception;
     
@@ -427,10 +408,7 @@ public interface IPmsManager {
     
     @Administrator
     public void deletePricePlan(String code);
-    
-    @Administrator
-    public List<PmsRoomSimple> getAllRoomsThatHasAddonsOfType(String type);
-    
+        
     @Administrator
     public ConferenceData getConferenceData(String bookingId);
     
@@ -439,10 +417,7 @@ public interface IPmsManager {
     
     @Administrator
     public List<ConferenceData> getFutureConferenceData();
-    
-    @Administrator
-    public List<PmsBookingAddonItem> createAddonsThatCanBeAddedToRoom(String productId, String pmsBookingRoomId);
-    
+        
     /**
      * Key = date / day
      * @return 
@@ -464,8 +439,37 @@ public interface IPmsManager {
     public PmsBookingRooms getPrecastedRoom(String roomId, String bookingItemTypeId, Date from, Date to);
     
     @Administrator
+    public void setNewStartDateAndAssignToRoom(String roomId, Date newStartDate, String bookingItemId);
+    
+    
+    
+    
+    @Administrator
     public void transferTicketsAsAddons();
     
     @Administrator
-    public void setNewStartDateAndAssignToRoom(String roomId, Date newStartDate, String bookingItemId);
+    public List<PmsBookingAddonItem> createAddonsThatCanBeAddedToRoom(String productId, String pmsBookingRoomId);
+
+    @Administrator
+    public List<PmsRoomSimple> getAllRoomsThatHasAddonsOfType(String type);
+
+    @Administrator
+    public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
+    @Administrator
+    public void addProductToRoom(String productId, String pmsRoomId, Integer count);
+    
+    @Administrator
+    public void addAddonToRoom(PmsBookingAddonItem addon, String pmsRoomId);
+    
+    @Administrator
+    public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
+    
+    public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
+    public List<PmsBookingAddonItem> getAddonsWithDiscountForBooking(String pmsBookingRoomId);
+    public void toggleAddon(String itemId) throws Exception;
+    public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
+    public void addAddonsToBooking(Integer type, String roomId, boolean remove);
+    public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
+
+    
 }

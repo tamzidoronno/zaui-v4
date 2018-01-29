@@ -112,14 +112,14 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         //Innland
                         if(toAddonInternal == null) {
                             PmsBookingAddonItem internal = pmsManager.getAddonByProductId(productIdInner);
-                            toAddonInternal = pmsManager.createAddonToAdd(internal, postingDate);
+                            toAddonInternal = pmsManager.createAddonToAdd(internal, postingDate, room);
                             room.addons.add(toAddonInternal);
                         }
                         
                         //Utland
                         if(toAddonExternal == null) {
                             PmsBookingAddonItem external = pmsManager.getAddonByProductId(productIdOuter);
-                            toAddonExternal = pmsManager.createAddonToAdd(external, postingDate);
+                            toAddonExternal = pmsManager.createAddonToAdd(external, postingDate, room);
                             room.addons.add(toAddonExternal);
                         }
                         

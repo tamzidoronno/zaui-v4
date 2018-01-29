@@ -25,6 +25,7 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
         super(server, lock, 10, storeId);
         this.silent = silent;
         this.slot = slot;
+        this.slot.isAddedToLock = "unkown";
     }
 
     @Override
@@ -49,55 +50,37 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
         return false;
     }
     
-        /**
-     * Check if code is already added, if it is throw an exception. If its not able to check this properly due
-     * to server connection etc, return false.
-     */
     /**
      * Check if code is already added, if it is throw an exception. If its not able to check this properly due
      * to server connection etc, return false.
      */
     private String isCodeAdded() {
+        server.httpLoginRequestZwaveServer(getFetchingOfCodes());
+        waitForEmptyQueue();
+        
         String result = server.httpLoginRequestZwaveServer(getAddressForFetchingLog());
-        int lastUpdatedTime = 0;
-        
-        if (!result.equals("null") && !result.isEmpty()) {
-            lastUpdatedTime = getLastUpdatedTime(result);
+
+        if (result.equals("null") || result.isEmpty()) {
+            slot.isAddedToLock = "unkown";
+            return slot.isAddedToLock;
         }
-        
-        
-        for (int i=0; i<10; i++) {
-            server.httpLoginRequestZwaveServer(getFetchingOfCodes());
-            waitForEmptyQueue();
-            
-            result = server.httpLoginRequestZwaveServer(getAddressForFetchingLog());
-            
-            int newUpdateTime = 0;
-            
-            if (!result.equals("null") && !result.isEmpty()) {
-                newUpdateTime = getLastUpdatedTime(result);
-            }
-            
-            if (newUpdateTime == lastUpdatedTime)
-                continue;
-            
-            Gson gson = new Gson();
-            JsonElement element = gson.fromJson(result, JsonElement.class);
-            
-            if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
-                JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
-                if (hasCodeElement.getAsJsonObject() != null ) {
-                    boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
-                    if (added) {
-                        return "yes";
-                    } else {
-                        return "no";
-                    }
+
+        Gson gson = new Gson();
+        JsonElement element = gson.fromJson(result, JsonElement.class);
+
+        if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
+            JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
+            if (hasCodeElement.getAsJsonObject() != null ) {
+                boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
+                if (added) {
+                    slot.isAddedToLock = "yes";
+                } else {
+                    slot.isAddedToLock = "no";
                 }
             }
         }
         
-        return "unkown";
+        return slot.isAddedToLock;
     }
     
     private int getLastUpdatedTime(String result) throws JsonSyntaxException {

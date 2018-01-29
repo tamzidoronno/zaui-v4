@@ -1,0 +1,31 @@
+<div style='text-align: right; padding-right: 5px;'>
+    <i class='fa fa-close' style='cursor:pointer;' onclick='$(this).closest(".editaddonpanel").hide();'></i>
+</div>
+
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$this->setData();
+$productId = $_POST['data']['productId'];
+
+$room = $this->getSelectedRoom();
+
+echo "<span style='width: 125px;display:inline-block;font-size: 16px; font-weight:bold;padding-left:20px;'>Date</span>";
+echo "<span style='width: 55px;display:inline-block;font-size: 16px; font-weight:bold;'>Count</span>";
+echo "<span style='width: 60px;display:inline-block;font-size: 16px; font-weight:bold;'>Price</span>";
+
+foreach($room->addons as $addon) {
+    if($addon->productId != $productId) {
+        continue;
+    }
+    echo "<div>";
+    echo "<input type='checkbox' style='padding: 10px;'>";
+    echo "<input type='txt' class='gsniceinput1' value='".date("d.m.Y", strtotime($addon->date))."' style='width:100px;'>";
+    echo "<input type='txt' class='gsniceinput1' value='".$addon->count."' style='text-align:center; width: 30px;'>";
+    echo "<input type='txt' class='gsniceinput1' value='".$addon->price."' style='text-align:center; width: 30px;'>";
+    echo "</div>";
+}
+?>
+<div style='padding: 20px;padding-top: 10px; padding-bottom: 10px;padding-right: 15px;'>
+    <span class='shop_button' style='background-color:red;'><i class='fa fa-trash-o'></i> Delete</span>
+    <span class='shop_button' style='float:right; background-color:green;'><i class='fa fa-check'></i> Save</span>
+</div>

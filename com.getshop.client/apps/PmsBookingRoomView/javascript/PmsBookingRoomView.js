@@ -4,6 +4,7 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .closebutton', this.closePreview);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .continue', this.continueToBooking);
         $(document).on('click', '.PmsBookingRoomView .menuarea .menuentry', this.menuClicked);
+        $(document).on('click', '.PmsBookingRoomView .editaddon', this.editAddonView);
         $(document).on('click', '.PmsBookingRoomView .bookinginformation .remove_guest', this.removeGuest);
         $(document).on('click', '.PmsBookingRoomView .bookinginformation .add_more_guests', this.addGuest);
         $(document).on('click', '.PmsBookingRoomView .payment_option_choice', this.paymentSelected);
@@ -13,6 +14,19 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .addonsArea .toggleRemoveAddonCheckBox', this.toggleRemoveAddonCheckBox);
         $(document).on('change', '.PmsBookingRoomView [gsname]', this.formChanged);
         $(document).on('change', '.PmsBookingRoomView .unitprice_changed', this.unitPriceChanged);
+    },
+    editAddonView : function() {
+        thundashop.Ajax.ajaxFile = "cached.php";
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','loadEditEvent', $(this), {
+            "productId" : $(this).attr('productId')
+        }); 
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.editaddonpanel').show();
+            $('.editaddonpanel').html(res);
+            $('.editaddonpanel').css('left', btn.position().left-$('.editaddonpanel').width());
+            $('.editaddonpanel').css('top', btn.position().top+30);
+        });
     },
     removeSelectedAddons : function() {
         var productIds = [];

@@ -11,6 +11,7 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        echo "FDASF";
         $this->includefile("addaddonslist");
     }
     

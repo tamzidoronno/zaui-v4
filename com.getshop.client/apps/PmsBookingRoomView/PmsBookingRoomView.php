@@ -14,6 +14,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
 
+    public function loadEditEvent() {
+        $this->includefile("editaddons");
+    }
+    
     public function getName() {
         return "PmsBookingRoomView";
     }

@@ -407,28 +407,12 @@ function getshop_createSticky(sticky) {
         
         win.on("scroll", function () {
             if(win.scrollTop() > pos && win.scrollTop() <= stopPos) {
-                sticky.addClass('sticky');
                 sticky.css({
                     position: 'fixed',
                     top: 0
                 });
                 paddingBox.css('padding-top', sticky.height()+'px');
-            } 
-            else if (win.scrollTop() >= stopPos) {
-//                sticky.css({
-//                    position: 'absolute',
-//                    top: stopPos
-//                });
-//                sticky.hide();
-                sticky.removeClass('sticky');
-                sticky.css({
-                    position: 'relative',
-                    top: '0'
-                });
-                $('.productoverview').css('padding-top', '0px');
-            } 
-            else {
-                sticky.removeClass('sticky');
+            } else {
                 sticky.css({
                     position: 'relative',
                     top: '0'
@@ -619,9 +603,15 @@ function getshop_changeGuestSelection(e) {
     e.preventDefault();
     var btn = $(this);
     var minusButton = btn.closest('.count_line').find('.fa-minus'); //Closest minusbutton
-    var plusButton = btn.closest('.count_line').find('.fa-plus'); //Closest plusbutton
     var count = btn.closest('.count_line').find('.count').val(); //Closest numbercount for adding guests or room
+    var room = $('#count_room').val();
+    var adult = $('#count_adult').val();
+    var child = $('#count_child').val();
+    
     count = parseInt(count);
+    room = parseInt(room);
+    adult = parseInt(adult);
+    child = parseInt(child);
     
     if(btn.hasClass('disabled')) {
         return;
@@ -634,9 +624,10 @@ function getshop_changeGuestSelection(e) {
         } else if (count >= 2) {
             minusButton.removeClass('disabled');
         }
-//        if (count >= 99) {
-//            plusButton.addClass('disabled');
-//        }
+        if ($(this).is('#add_room') && count > (adult+child)) {
+            $('#count_adult').val(count-child);
+            $('#count_adult').closest('.count_line').find('.fa-minus').removeClass('disabled');
+        }
     }
     if (btn.is('.fa-minus')) {
         count--;
@@ -644,17 +635,23 @@ function getshop_changeGuestSelection(e) {
             if (count <= 0) {
                 minusButton.addClass('disabled');
             }
-        } else {
-            if (count > 1) {
-                
+            if((count+adult) < room){
+                $('#count_room').val(count+adult);
+                if($('#count_room').val() <= 1){
+                    $('#count_room').closest('.count_line').find('.fa-minus').addClass('disabled');
+                }
             }
+        } else {
             if (count <= 1) {
                 minusButton.addClass('disabled');
             }
         }
-//        if (count <= 98) {
-//            plusButton.removeClass('disabled');
-//        }
+        if ($(this).is('#subtract_adult') && (count+child) < room) {
+            $('#count_room').val(count+child);
+            if($('#count_room').val() <= 1){
+                $('#count_room').closest('.count_line').find('.fa-minus').addClass('disabled');
+            }
+        }
     }
     
     $(this).closest('.count_line').find('.count').val(count);
@@ -948,7 +945,7 @@ function getshop_setDatePicker() {
     $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
     $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
 
-    var picker = $('#date_picker').daterangepicker({
+    $('#date_picker').daterangepicker({
         "autoApply": true,
         "showWeekNumbers": true,
         "minDate": currentDate,
@@ -987,7 +984,7 @@ function getshop_setDatePicker() {
     
     if(result.start) {
         $(function() {
-            $('.GslBooking #search_rooms').mousedown();
+            $('.GslBooking #search_rooms').click();
         });
     }
 }
@@ -1170,7 +1167,6 @@ function getshop_searchRooms() {
                     if (guest == 1) {
                         multipleGuests = ' ' + translation['guest'].toLowerCase();
                     }
-//                        user_icon += '<i class="fa fa-user"></i>';
                     for (var i = 1; i <= room.availableRooms; i++) {
                         var price = room.pricesByGuests[guest] * i;
                         numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';

@@ -66,7 +66,9 @@ public abstract class ZwaveThread implements Runnable {
             lock.currentlyAttempt = i;
 
             try {
-                stopIfDead(i);
+                if (i == 0) {
+                    stopIfDead(i);
+                }
                 boolean threadSuccess = execute(i);
 
                 if (threadSuccess) {

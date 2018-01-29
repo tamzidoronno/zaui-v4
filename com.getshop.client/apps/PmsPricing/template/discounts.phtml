@@ -119,8 +119,11 @@ if(isset($this->addCouponError) && $this->addCouponError) {
                         <th>discount(%)</th>
                     </tr>
                     <?php
-                    $keys = array_keys((array)$prices->longTermDeal);
-                    $values = array_values((array)$prices->longTermDeal);
+                    $longtermdeal  = (array)$prices->longTermDeal;
+                    ksort($longtermdeal);
+                    
+                    $keys = array_keys($longtermdeal);
+                    $values = array_values($longtermdeal);
                     for($i = 0; $i < 10; $i++) {
                         $days = "";
                         $discount = "";

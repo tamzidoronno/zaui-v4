@@ -2,52 +2,64 @@ app.PmsBooking = {
     init: function () {
         $(document).on('click', '.PmsBooking .check_available_button', app.PmsBooking.next);
         $(document).on('click', '.PmsBooking .searchbutton', app.PmsBooking.search);
-        $(document).on('mousedown touchstart', '.PmsBooking .pfbox .fa', app.PmsBooking.chooseGuestinformation);
+        $(document).on('click', '.PmsBooking .pfbox .fa', app.PmsBooking.chooseGuestinformation);
     },
-    chooseGuestinformation : function() {
-        var minusButton = $(this).closest('.inner').find('.fa-minus'); //Closest minusbutton
-        var plusButton = $(this).closest('.inner').find('.fa-plus'); //Closest plusbutton
-        var count = $(this).closest('.inner').find('.count'); //Closest numbercount for adding guests or room
-        if ($(this).is('.fa-plus')) {
-            if (count.val() < 10) {
-                count.val(function (i, val) {
-                    return (+val + 1);
-                });
-            }
-            if ($(this).is('#add_child') && count.val() >= 1) {
+    chooseGuestinformation : function(e) {
+        e.preventDefault();
+        var btn = $(this);
+        var minusButton = btn.closest('.inner').find('.fa-minus'); //Closest minusbutton
+        var count = btn.closest('.inner').find('.count').val(); //Closest numbercount for adding guests or room
+        var room = $('#count_room').val();
+        var adult = $('#count_adult').val();
+        var child = $('#count_child').val();
+
+        count = parseInt(count);
+        room = parseInt(room);
+        adult = parseInt(adult);
+        child = parseInt(child);
+
+        if(btn.hasClass('disabled')) {
+            return;
+        }
+
+        if (btn.is('.fa-plus')) {
+            count++;
+            if ($(this).is('#add_child') && count >= 1) {
                 minusButton.removeClass('disabled');
-            } else if (count.val() >= 2) {
+            } else if (count >= 2) {
                 minusButton.removeClass('disabled');
             }
-            if (count.val() >= 10) {
-                plusButton.addClass('disabled');
+            if ($(this).is('#add_room') && count > (adult+child)) {
+                $('#count_adult').val(count-child);
+                $('#count_adult').closest('.inner').find('.fa-minus').removeClass('disabled');
             }
         }
-        if ($(this).is('.fa-minus')) {
+        if (btn.is('.fa-minus')) {
+            count--;
             if ($(this).is('#subtract_child')) {
-                if (count.val() > 0) {
-                    count.val(function (i, val) {
-                        return (+val - 1);
-                    });
-                }
-                if (count.val() <= 0) {
+                if (count <= 0) {
                     minusButton.addClass('disabled');
                 }
-            } else {
-                if (count.val() > 1) {
-                    count.val(function (i, val) {
-                        return (+val - 1);
-                    });
+                if((count+adult) < room){
+                    $('#count_room').val(count+adult);
+                    if($('#count_room').val() <= 1){
+                        $('#count_room').closest('.inner').find('.fa-minus').addClass('disabled');
+                    }
                 }
-                if (count.val() <= 1) {
+            } else {
+                if (count <= 1) {
                     minusButton.addClass('disabled');
                 }
             }
-            if (count.val() <= 9) {
-                plusButton.removeClass('disabled');
+            if ($(this).is('#subtract_adult') && (count+child) < room) {
+                $('#count_room').val(count+child);
+                if($('#count_room').val() <= 1){
+                    $('#count_room').closest('.inner').find('.fa-minus').addClass('disabled');
+                }
             }
         }
 
+        $(this).closest('.inner').find('.count').val(count);
     },
     getshop_setBookingTranslation : function() {
         var loadTranslation = load_getBookingTranslations();

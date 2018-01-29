@@ -346,7 +346,7 @@ Error      : #de5353; red
 .GslBooking #priceoffertable { width: 100%; }
 .GslBooking #priceoffertable td { font-size: 16px; }
 .GslBooking .totalAmountline td{border-top:1px solid #ddd;}
-.GslBooking .bestValue{width: 80%;display: inline-block;padding: 0 10px;}
+.GslBooking .bestValue{width: 80%;display: inline-block;padding: 18px 10px;}
 .GslBooking .totalprice{letter-spacing: 2px;}
 
 /*Addons and guest information*/
@@ -439,7 +439,7 @@ Error      : #de5353; red
     .GslBooking .addonprinted { min-height: 60px; }
     .GslBooking .secondary_text { display:none; }
     .GslBooking .gslfront_1 .productentry_gallery .gallery { display:none; }
-    .GslBooking .bestValue{width: 50%;padding: 5px;}
+    .GslBooking .bestValue{width: 50%;padding:13px 5px;}
     .GslBooking .bestValue span[gstranslationfield="bestValue"]{display: none;}
     .GslBooking .totalprice:before{content: "Total ";}
     .GslBooking .failedlogon{font-size: 16px;}
@@ -502,7 +502,6 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .ordersummary {border:0;}
     .GslBooking .gslfront_1 .ordersummary .selectedguests{padding:10px 0;}
     .GslBooking .gslfront_1 .ordersummary .gsl_button.continue{width:30%;}
-    .GslBooking .gslfront_1 .ordersummary #order-sticky{padding-top:10px !important;}
     /**/
     
     .GslBooking .gslfront_1 .fa_box.guests{width:100% !important;padding: 10px 0;}

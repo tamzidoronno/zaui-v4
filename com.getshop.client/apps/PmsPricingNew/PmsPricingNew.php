@@ -129,8 +129,8 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     public function savelongtermdeal() {
         $pricePlan = $this->getPrices();
         $newArray = array();
-        for($i = 0; $i < 3; $i++) {
-            if($_POST['data']['minday_'. $i]) {
+        for($i = 0; $i < 10; $i++) {
+            if($_POST['data']['minday_'. $i] && $_POST['data']['discount_'. $i]) {
                  $newArray[$_POST['data']['minday_'. $i]] = $_POST['data']['discount_'. $i];
             }
         }

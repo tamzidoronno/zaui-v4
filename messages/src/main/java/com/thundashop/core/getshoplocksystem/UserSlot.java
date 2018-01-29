@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplocksystem;
 
 import java.io.Serializable;
 import java.util.Date;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -35,6 +36,9 @@ public class UserSlot implements Serializable {
     public String takenInUseManagerName = "";
     public String takenInUseReference = "";
     
+    
+    @Transient
+    public String isAddedToLock = "unkown";
 
     public void generateNewCode() {
         previouseCode = code;

@@ -28,19 +28,19 @@ public class ZwaveAddCodeThread extends ZwaveThread {
     @Override
     public boolean execute(int attempt) throws ZwaveThreadExecption {
         
-        String codeAlreadyAdded = isCodeAdded();
-        
-        if (codeAlreadyAdded.equals("unkown")) {
-            logEntry("Unkown status of added code on attempt, not added: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
-            return false;
+        if (slot.isAddedToLock.equals("unkown")) {
+            String result = isCodeAdded();
+            if (result.equals("unkown")) {
+                logEntry("Unkown status of added code on attempt, not added: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
+                return false;
+            }
         }
         
-        if (codeAlreadyAdded.equals("yes") && !removeCodeFromSlot()) {
+        if (slot.isAddedToLock.equals("yes") && !removeCodeFromSlot()) {
             logEntry("Code was already added but was not able to remove it from slot on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
             return false;
         }
 
-        waitForEmptyQueue();
         server.httpLoginRequestZwaveServer(getAddressForSettingCode());
         waitForEmptyQueue();
 
@@ -63,46 +63,33 @@ public class ZwaveAddCodeThread extends ZwaveThread {
      * to server connection etc, return false.
      */
     private String isCodeAdded() {
+        
+        server.httpLoginRequestZwaveServer(getFetchingOfCodes());
+        waitForEmptyQueue();
+        
         String result = server.httpLoginRequestZwaveServer(getAddressForFetchingLog());
-        int lastUpdatedTime = 0;
-        
-        if (!result.equals("null") && !result.isEmpty()) {
-            lastUpdatedTime = getLastUpdatedTime(result);
+
+        if (result.equals("null") || result.isEmpty()) {
+            slot.isAddedToLock = "unkown";
+            return slot.isAddedToLock;
         }
-        
-        
-        for (int i=0; i<10; i++) {
-            server.httpLoginRequestZwaveServer(getFetchingOfCodes());
-            waitForEmptyQueue();
-            
-            result = server.httpLoginRequestZwaveServer(getAddressForFetchingLog());
-            
-            int newUpdateTime = 0;
-            
-            if (!result.equals("null") && !result.isEmpty()) {
-                newUpdateTime = getLastUpdatedTime(result);
-            }
-            
-            if (newUpdateTime == lastUpdatedTime)
-                continue;
-            
-            Gson gson = new Gson();
-            JsonElement element = gson.fromJson(result, JsonElement.class);
-            
-            if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
-                JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
-                if (hasCodeElement.getAsJsonObject() != null ) {
-                    boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
-                    if (added) {
-                        return "yes";
-                    } else {
-                        return "no";
-                    }
+
+        Gson gson = new Gson();
+        JsonElement element = gson.fromJson(result, JsonElement.class);
+
+        if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
+            JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
+            if (hasCodeElement.getAsJsonObject() != null ) {
+                boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
+                if (added) {
+                    slot.isAddedToLock = "yes";
+                } else {
+                    slot.isAddedToLock = "no";
                 }
             }
         }
         
-        return "unkown";
+        return slot.isAddedToLock;
     }
 
     private int getLastUpdatedTime(String result) throws JsonSyntaxException {

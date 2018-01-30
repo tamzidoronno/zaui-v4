@@ -79,6 +79,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     public HashMap<String, String> getConfigOptions() {
         HashMap<String, String> ret = new HashMap();
         ret.put("password", "PowerOfficeGo Application Key");
+        ret.put("department", "PowerOfficeGo Department");
         return ret;
     }
     
@@ -151,7 +152,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
             
         }
         customer.setUser(user);
-        customer.code = getAccountingId(user.id) + "";
+        customer.code = getAccountingAccountId(user.id) + "";
         Gson gson = new Gson();
         try {
             String htmlType = "POST";
@@ -253,6 +254,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         goOrder.mergeWithPreviousOrder = false;
         goOrder.salesOrderLines = new ArrayList();
         goOrder.orderNo = (int)order.incrementOrderId;
+        goOrder.departmentCode = getConfigOptions().get("department");
         if(order.cart != null) {
             for(CartItem item : order.cart.getItems()) {
                 PowerOfficeGoSalesOrderLines line = new PowerOfficeGoSalesOrderLines();
@@ -274,19 +276,21 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         Calendar cal = Calendar.getInstance();
         cal.setTime(order.rowCreatedDate);
         cal.add(Calendar.DAY_OF_YEAR, 14);
-        Date postingDate = order.shouldHaveBeenTransferredToAccountingOnDate;
+        Date postingDate = getAccountingPostingDate(order);
+        Integer incrementOrderId = (int)getAccountingIncrementOrderId(order);
         
         PowerOfficeGoImportLine totalline = new PowerOfficeGoImportLine();
-        totalline.description = "GetShop order: " + order.incrementOrderId;
-        totalline.invoiceNo = (int)order.incrementOrderId;
+        totalline.description = "GetShop order: " + incrementOrderId;
+        totalline.invoiceNo = incrementOrderId;
         totalline.amount = orderManager.getTotalAmount(order);
         totalline.currencyAmount = orderManager.getTotalAmount(order);
         totalline.postingDate = postingDate;
         totalline.documentDate = order.rowCreatedDate;
-        totalline.documentNumber = (int)order.incrementOrderId;
+        totalline.documentNumber = incrementOrderId;
         totalline.dueDate = cal.getTime();
         totalline.currencyCode = "NOK";
-        
+        totalline.departmentCode = getConfigOptions().get("department");
+
         String uniqueId = getUniqueCustomerIdForOrder(order);
         if(uniqueId != null) {
             totalline.customerCode = new Integer(uniqueId);

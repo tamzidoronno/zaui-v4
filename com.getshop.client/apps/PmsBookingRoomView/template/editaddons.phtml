@@ -17,11 +17,12 @@ foreach($room->addons as $addon) {
     if($addon->productId != $productId) {
         continue;
     }
+    
     echo "<div>";
-    echo "<input type='checkbox' style='padding: 10px;'>";
-    echo "<input type='txt' class='gsniceinput1' value='".date("d.m.Y", strtotime($addon->date))."' style='width:100px;'>";
-    echo "<input type='txt' class='gsniceinput1' value='".$addon->count."' style='text-align:center; width: 30px;'>";
-    echo "<input type='txt' class='gsniceinput1' value='".$addon->price."' style='text-align:center; width: 30px;'>";
+    echo "<input type='checkbox' style='padding: 10px;' gsname='".$addon->addonId."_delete'>";
+    echo "<input type='txt' class='gsniceinput1' value='".date("d.m.Y", strtotime($addon->date))."' style='width:100px;' gsname='".$addon->addonId."_date'>";
+    echo "<input type='txt' class='gsniceinput1' value='".$addon->count."' style='text-align:center; width: 30px;' gsname='".$addon->addonId."_count'>";
+    echo "<input type='txt' class='gsniceinput1' value='".$addon->price."' style='text-align:center; width: 30px;' gsname='".$addon->addonId."_price'>";
     echo "</div>";
 }
 ?>

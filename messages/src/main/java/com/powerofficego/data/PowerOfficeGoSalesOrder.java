@@ -11,5 +11,6 @@ public class PowerOfficeGoSalesOrder {
     public boolean mergeWithPreviousOrder = false;
     public Integer orderNo;
     public String reference;
+    public String departmentCode;
     public List<PowerOfficeGoSalesOrderLines> salesOrderLines;
 }

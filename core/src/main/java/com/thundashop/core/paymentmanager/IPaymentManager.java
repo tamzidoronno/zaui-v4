@@ -34,4 +34,7 @@ public interface IPaymentManager {
     
     @Administrator
     public void saveGeneralPaymentConfig(GeneralPaymentConfig config);
+    
+    @Administrator
+    public void resetAllAccountingConfigurationForUsersAndOrders(String password);
 }

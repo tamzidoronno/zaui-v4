@@ -138,7 +138,7 @@ public class TripleTexExcel extends AccountingSystemBase {
         
         if (firstRowInOrder) {
             row.createCell(getCellNumber("ORDER DATE")).setCellValue(generateOrderDate(order));
-            row.createCell(getCellNumber("CUSTOMER NO")).setCellValue(getAccountingId(order.userId));
+            row.createCell(getCellNumber("CUSTOMER NO")).setCellValue(getAccountingAccountId(order.userId));
             row.createCell(getCellNumber("DELIVERY DATE")).setCellValue(getDeliveryDate(order));
             
             // Customer details

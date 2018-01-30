@@ -7,6 +7,7 @@ package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -114,6 +116,10 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
                 this.config = (Configuration)datacommon;
             }    
         });
+    }
+    
+    public Configuration getGlobalConfiguration() {
+        return config;
     }
     
     private AccountingSystemBase getActivatedAccountingSystemInvoices() {

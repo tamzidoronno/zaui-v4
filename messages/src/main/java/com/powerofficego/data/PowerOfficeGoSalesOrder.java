@@ -1,9 +1,6 @@
 
 package com.powerofficego.data;
 
-import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.ordermanager.data.Order;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PowerOfficeGoSalesOrder {

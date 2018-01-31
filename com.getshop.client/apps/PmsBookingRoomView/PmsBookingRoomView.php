@@ -13,6 +13,27 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function updateAddons() {
+        $this->setData();
+        
+        $room = $this->getSelectedRoom();
+        $newAddonList = array();
+        foreach($room->addons as $addon) {
+            if($_POST['data']['type']== "save") {
+                $addon->date = $this->convertToJavaDate(strtotime($_POST['data'][$addon->addonId."_date"]));
+                $addon->count = $_POST['data'][$addon->addonId."_count"];
+                $addon->price = $_POST['data'][$addon->addonId."_price"];
+            }
+            if($_POST['data']['type']== "delete" && $_POST['data'][$addon->addonId."_delete"] == "true") {
+                continue;
+            }
+            
+            $newAddonList[] = $addon;
+        }
+        $room->addons = $newAddonList;
+        $this->updateRoom($room);
+    }
 
     public function loadEditEvent() {
         $this->includefile("editaddons");

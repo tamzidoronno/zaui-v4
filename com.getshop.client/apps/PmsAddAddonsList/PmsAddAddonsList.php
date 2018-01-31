@@ -41,10 +41,21 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
                 $addon->price = $_POST['data']['price_'.$index];
                 $addon->name = $_POST['data']['name'];
                 $addon->productId = $addonToUse->productId;
+                $addon->addonId = $this->generate_uuid();
                 $selectedRoom->addons[] = $addon;
             }
         }
         $app->updateRoom($selectedRoom);
+    }
+    
+    function generate_uuid() {
+        return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0x0fff ) | 0x4000,
+            mt_rand( 0, 0x3fff ) | 0x8000,
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+        );
     }
     
     public function getDatesToAdd($start, $end, $room) {

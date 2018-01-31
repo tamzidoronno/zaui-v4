@@ -12,9 +12,21 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .canUse', this.addSelectedClass);
         $(document).on('click', '.PmsBookingRoomView .removeselectedaddons', this.removeSelectedAddons);
         $(document).on('click', '.PmsBookingRoomView .addonsArea .toggleRemoveAddonCheckBox', this.toggleRemoveAddonCheckBox);
+        $(document).on('click', '.PmsBookingRoomView .doeditaddonupdate', this.doEditAddonUpdate);
         $(document).on('change', '.PmsBookingRoomView [gsname]', this.formChanged);
         $(document).on('change', '.PmsBookingRoomView .unitprice_changed', this.unitPriceChanged);
     },
+    doEditAddonUpdate : function() {
+        thundashop.Ajax.ajaxFile = "cached.php";
+        var panel = $(this).closest('.editaddonpanel');
+        var args = thundashop.framework.createGsArgs(panel);
+        args.type = $(this).attr('gstype');
+        var event = thundashop.Ajax.createEvent('','updateAddons', $(this), args);
+        thundashop.Ajax.postWithCallBack(event, function(res){
+            app.PmsBookingRoomView.refresh();
+        });
+    },
+    
     editAddonView : function() {
         thundashop.Ajax.ajaxFile = "cached.php";
         var btn = $(this);

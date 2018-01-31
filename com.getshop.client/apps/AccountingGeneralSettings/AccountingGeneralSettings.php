@@ -21,11 +21,20 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
     public function render() {
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
-            array('appName', 'Name', 'appName')
+            array('appName', 'Name', 'appName'),
+            array('accoutUserId', 'Account id', 'accountUserId'),
+            
         );
+        
+        $data = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach($data as $app) {
+            $conf = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($app->id);
+            $app->accountUserId = $conf ? $conf->userCustomerNumber : "Not set";
+        }
         
         $args = array(null);
         $table = new \GetShopModuleTable($this, 'StoreApplicationPool', 'getActivatedPaymentApplications', $args, $attributes);
+        $table->setData($data);
         $table->render();
         $this->includefile("extra");
     }

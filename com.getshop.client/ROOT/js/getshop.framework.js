@@ -21,7 +21,7 @@ thundashop.framework = {
         if(!$('.gsrightwidgetpanel').hasClass('gsactiverightwidget')) {
             $('.gsrightwidgetpanel').addClass('gsactiverightwidget');
             $('#gsbody').addClass('gsactiverightwidget');
-            
+            $('.gsrightwidgetpanel').show();
             var event = thundashop.Ajax.createEvent('','loadRightWidgetPanelArea',null, {
                 "area" : areaName
             });
@@ -30,6 +30,7 @@ thundashop.framework = {
             });
             
         } else {
+            $('.gsrightwidgetpanel').hide();
             $('.gsrightwidgetpanel').removeClass('gsactiverightwidget');
             $('#gsbody').removeClass('gsactiverightwidget');
             var event = thundashop.Ajax.createEvent('','closeRightWidget',null, {});

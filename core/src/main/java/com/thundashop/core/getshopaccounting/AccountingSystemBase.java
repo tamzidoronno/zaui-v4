@@ -237,7 +237,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
         if (useOffset != null && useOffset > 0) {
             idToUse = useOffset;
         }
-
+        
         User user = userManager.getUserByIdIncludedDeleted(userId);
         Integer accountingId = user.customerId;
         if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
@@ -250,10 +250,6 @@ public abstract class AccountingSystemBase extends ManagerBase {
         if(accountingId >= idToUse) {
             return accountingId;
         } else {
-            if(GetShopLogHandler.isDeveloper) {
-                //DO NOT CREATE NEW IDS IN NON PRODUCTION MODE
-                return -100000;
-            }
             int next = userManager.getNextAccountingId();
             if(next < idToUse) {
                 next = idToUse;
@@ -456,10 +452,14 @@ public abstract class AccountingSystemBase extends ManagerBase {
             endDate = sourceFormat.format(item.endDate);
         }
         
+        String metaData = item.getProduct().metaData;
+        if(metaData == null) {
+            metaData = "";
+        }
         if(!item.getProduct().additionalMetaData.isEmpty()) {
-            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
+            lineText = item.getProduct().name + " "+metaData+" " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
         } else {
-            lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+            lineText = item.getProduct().name + " " + metaData + " (" + startDate + " - " + endDate + ")";
         }
          
         return lineText;

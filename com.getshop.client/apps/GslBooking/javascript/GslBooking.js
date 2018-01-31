@@ -1133,7 +1133,6 @@ function getshop_searchRooms() {
                 $('.GslBooking .hide').hide();
             } else {
                 getshop_updateOrderSummary(res, true);
-                $(window).scrollTop($('.productoverview').offset().top);
             }
         
             for (var k in res.rooms) {

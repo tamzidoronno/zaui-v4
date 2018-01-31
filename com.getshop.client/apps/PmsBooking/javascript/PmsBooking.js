@@ -2,7 +2,42 @@ app.PmsBooking = {
     init: function () {
         $(document).on('click', '.PmsBooking .check_available_button', app.PmsBooking.next);
         $(document).on('click', '.PmsBooking .searchbutton', app.PmsBooking.search);
-        $(document).on('click', '.PmsBooking .pfbox .fa', app.PmsBooking.chooseGuestinformation);
+        $(document).on('click', '.PmsBooking .fa', app.PmsBooking.chooseGuestinformation);
+        $(document).on('mousedown', '.PmsBooking #guests', app.PmsBooking.showGuestBox);
+        $(document).on('mousedown', app.PmsBooking.hideGuestBox);
+    },
+    showGuestBox : function() {
+        $('.guestInfoBox').show();
+    },
+    hideGuestBox :function(e) {
+        var target = $(e.target);
+        
+        if(target.attr('id') == "guests" || target.closest('#guests').length > 0) {
+            return;
+        }
+
+        if(target.closest('.guestInfoBox').length > 0 || target.hasClass('guestInfoBox')) {
+            return;
+        }
+        $('.PmsBooking .guestInfoBox').hide();
+        
+        var room = $('#count_room').val();
+        var adult = $('#count_adult').val();
+        var child = $('#count_child').val();
+        var guest = +adult + +child;
+        var translation = getshop_getBookingTranslations();
+        if(typeof(translation['room']) === "undefined") {
+            return;
+        }
+        var roomText = ' ' + translation['room'].toLowerCase();
+        var guestText = ' ' + translation['guest'].toLowerCase() + ' ';
+        if (room > 1) {
+            roomText = ' ' + translation['rooms'].toLowerCase();
+        }
+        if (guest > 1) {
+            guestText = ' '+translation['numberofguests'].toLowerCase()+' ';
+        }
+        $('#guests').val(room + roomText + ', ' + guest + guestText);
     },
     chooseGuestinformation : function(e) {
         e.preventDefault();

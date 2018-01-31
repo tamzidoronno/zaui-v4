@@ -301,6 +301,87 @@
     top: 0;
 }
 .PmsBooking .excludeChildSelection{display:none;}
+
+/*PMSBOOKING 6*/
+.PmsBooking .pmsfront6 *{box-sizing:border-box;}
+.PmsBooking .pmsfront6 .gsl_button:hover{background-color:#48cfa3;}/*#95e4c2*/
+.PmsBooking .pmsfront6 .gsl_button{
+    text-align:center;
+    letter-spacing:1px;
+    background: #3fc297; /*#93dfbe*/
+    color:#fff;
+    cursor:pointer;
+    border-radius:2px;
+    display: inline-block;}
+.PmsBooking .pmsfront6 .disabled{opacity:0.3 !important; cursor: default !important;}
+.PmsBooking .pmsfront6 .disabled:hover{opacity: 0.3 !important;}
+.PmsBooking .pmsfront6 .fa{padding:0 4px;}
+.PmsBooking .pmsfront6 .fa_box{position: relative;width: 27%;float:left;}
+.PmsBooking .pmsfront6 .fa_box::after{
+    font-family: fontawesome;
+    font-family: 'icomoon' !important;
+    position: absolute;
+    pointer-events: none;
+    right: 1.5em;
+    top: 50%;
+    margin-top: -.8em;
+    font-size: 20px;}
+.PmsBooking .pmsfront6 .gslbookingHeader {display: block;width: 100%;user-select:none;height:60px;position:relative;}
+
+.PmsBooking .pmsfront6 .gslbookingHeader input{overflow: hidden;text-overflow: ellipsis;}
+.PmsBooking .pmsfront6 .gslbookingHeader input::-webkit-input-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input::-moz-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input:-moz-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input:-ms-input-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input:focus{outline-width:0;box-shadow: 0 0 0;}
+
+.PmsBooking .pmsfront6 .gslbookingHeader .date::after{content: "\e92f";}
+.PmsBooking .pmsfront6 .gslbookingHeader .guests::after{content: "\e90f";}
+.PmsBooking .pmsfront6 .gslbookingHeader .coupon::after{content: "\e911";}
+
+.PmsBooking .pmsfront6 .gslbookingHeader .gsl_button:hover{background-color:#4391dc;}
+.PmsBooking .pmsfront6 .gslbookingHeader .gsl_button{
+    height: 60px;
+    line-height: 60px;
+    letter-spacing:1px;
+    float:right;
+    background: #329ad6;
+    width: 19%;
+    border-radius: 0;
+    font-size:18px;}
+.PmsBooking .pmsfront6 .gslbookingHeader input{
+    width:100%;
+    cursor: pointer;
+    height:60px;
+    line-height:60px;
+    letter-spacing:1px;
+    font-size:16px;
+    padding:0 30px 0 26px;
+    background-color:#fff;
+    border:0;}
+.PmsBooking .pmsfront6 .guestInfoBox{
+    position: absolute;
+    display: none;
+    font-size:16px;
+    width: 100%;
+    border-top: 2px solid #94ccdf;
+    padding: 16px;
+    text-align: left;
+    text-transform: capitalize;
+    background-color: #fff;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    z-index: 2;}
+.PmsBooking .pmsfront6 .guestInfoBox div{position:relative;}
+.PmsBooking .pmsfront6 .guestInfoBox input{padding: 0;height: auto;width:50%;cursor: default;text-align: center;line-height: 50px;}
+.PmsBooking .pmsfront6 .guestInfoBox input:hover{box-shadow: 0 0 0;}
+.PmsBooking .pmsfront6 .guestInfoBox i{cursor: pointer;padding: 10px;border-radius: 4px;background-color: #fff;color: #94ccdf;border: 1px solid #94ccdf;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);}
+.PmsBooking .pmsfront6 .guestInfoBox_left{float:left;width:40%;padding-bottom:0;}
+.PmsBooking .pmsfront6 .guestInfoBox_left div{padding:14px 0;}
+.PmsBooking .pmsfront6 .guestInfoBox_right{float:right;width:60%;text-align: right;padding-bottom:0;text-align: center;}
+
+
+
 @media only all and (max-width:800px){
     .PmsBooking .datepickermobile{display: block;}
     

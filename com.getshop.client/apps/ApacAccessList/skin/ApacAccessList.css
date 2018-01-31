@@ -1,0 +1,25 @@
+.ApacAccessList {
+    margin: 50px;
+}
+
+.ApacAccessList .col_phonenumber,
+.ApacAccessList .col_groupid,
+.ApacAccessList .col_code {
+    width: 100px !important;
+}
+
+.ApacAccessList .col_date {
+    width: 80px !important;
+}
+.ApacAccessList .col_prefix {
+    width: 50px !important; 
+    text-align: center;
+}
+
+.ApacAccessList .col_name {
+    width: calc(100% - 750px) !important;
+}
+
+.ApacAccessList .col_email {
+    width: 200px !important;
+}

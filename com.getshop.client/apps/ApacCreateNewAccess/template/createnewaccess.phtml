@@ -1,0 +1,51 @@
+<?
+/* @var $this \ns_b698ac77_15f3_45b7_a412_47186a2defb6\ApacCreateNewAccess */
+$groups = $this->getApi()->getGetShopLockSystemManager()->getAllGroups();
+?>
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+        <div class="image happy"></div>
+        <div class="textbox" gstype="form" method="createAccess">
+            <div class="header"><? echo $this->__f("Give access to your guests."); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("Please let me know the following details and I will grant access to the guest");
+                ?>
+                <div>
+                    <div class="inputrow">
+                        <b><? echo $this->__f("Name"); ?> </b>
+                        <br/><input gsname="name" class="gsniceinput1"/>
+                    </div>
+                    <div class="inputrow">
+                        <b><? echo $this->__f("Phone number"); ?> </b>
+                        <br/>+ <input gsname="prefix" class="gsniceinput1 prefix" placeholder="47"/> - <input gsname="phonenumber" class="gsniceinput1"/>
+                    </div>
+                    <div class="inputrow">
+                        <b><? echo $this->__f("Email"); ?> </b>
+                        <br/><input gsname="email" class="gsniceinput1" placeholder=""/>
+                    </div>
+                    <div class="inputrow">
+                        <b><? echo $this->__f("Access group"); ?> </b>
+                        <br/>
+                        <select gsname="room" class="gsniceselect1">
+                            <?
+                            foreach ($groups as $group) {
+                                ?> 
+                                <option value="<? echo $group->id; ?>"><? echo $group->name; ?></option>
+                                <?
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="buttonarea">
+                    <div class="buttonareaheader"></div>
+                    <div class="shop_button" gstype="submit" gs_callback='app.ApacCreateNewAccess.userCreated'><? echo $this->__f("Create access"); ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

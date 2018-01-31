@@ -1,0 +1,70 @@
+
+.ApacAccessView .inputrow {
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+.ApacAccessView .gsniceselect1 {
+    width: 265px;
+}
+.ApacAccessView input[gsname="email"],
+.ApacAccessView input[gsname="name"] {
+    width: 243px;
+}
+
+.ApacAccessView .prefix {
+    width: 50px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.ApacAccessView textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    height: 100px;
+    padding: 10px;
+}
+
+.ApacAccessView .infobox2,
+.ApacAccessView .messagelog {
+    display: inline-block;
+    width: calc(50% - 4px);
+    vertical-align: top;
+}
+
+.ApacAccessView input[gsname="subject"] {
+    width: 100%;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+}
+
+.ApacAccessView .sentmessages {
+    margin-top: 30px;
+}
+
+.ApacAccessView .messagerow {
+    border-top: solid 1px #DDD;
+    padding: 20px;
+}
+
+.ApacAccessView .messagerow .header {
+    margin-bottom: 10px;
+}
+
+.ApacAccessView .messagerow .header .rowdate1,
+.ApacAccessView .messagerow .header .rowdate2 {
+    display: inline-block;
+    padding-right: 20px;
+}
+
+.ApacAccessView .messagerow .to,
+.ApacAccessView .messagerow .date {
+    display: inline-block;
+    width: calc(50% - 10px);
+    vertical-align: top;
+}
+
+.ApacAccessView .savebutton {
+    margin-right: 75px;
+}

@@ -452,10 +452,14 @@ public abstract class AccountingSystemBase extends ManagerBase {
             endDate = sourceFormat.format(item.endDate);
         }
         
+        String metaData = item.getProduct().metaData;
+        if(metaData == null) {
+            metaData = "";
+        }
         if(!item.getProduct().additionalMetaData.isEmpty()) {
-            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
+            lineText = item.getProduct().name + " "+metaData+" " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
         } else {
-            lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+            lineText = item.getProduct().name + " " + metaData + " (" + startDate + " - " + endDate + ")";
         }
          
         return lineText;

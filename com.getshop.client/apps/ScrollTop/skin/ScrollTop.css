@@ -1,0 +1,27 @@
+.ScrollTop .scrolltopbutton:hover{background-color: rgba(6, 6, 6, 0.7);}
+.ScrollTop .scrolltopbutton{
+    display:none;
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    padding: 14px;
+    margin:0;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 4px;
+    cursor:pointer;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 0px 14px 1px rgba(0, 0, 0, 0.3);
+}
+
+@media only all and (max-width:800px){
+    .ScrollTop .scrolltopbutton {
+        right:10px;
+        bottom:10px;
+        padding:10px;
+    }
+}

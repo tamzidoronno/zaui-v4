@@ -19,6 +19,7 @@ import com.powerofficego.data.SalesOrderTransfer;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshopaccounting.fikenservice.FikenInvoiceService;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
@@ -157,17 +158,23 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         try {
             String htmlType = "POST";
             String data = gson.toJson(customer);
-            String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
-            ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
-            if(resp.success) {
-                user.accountingId = customer.code + "";
-                user.externalAccountingId = resp.data.id + "";
-                userManager.saveUser(user);
-                return true;
+            if(!GetShopLogHandler.isDeveloper) {
+                String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
+                ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
+                if(resp.success) {
+                    user.accountingId = customer.code + "";
+                    user.externalAccountingId = resp.data.id + "";
+                    userManager.saveUser(user);
+                    return true;
+                } else {
+                    /* @TODO HANDLE PROPER WARNING */
+                    addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
+                    addToLog(resp.summary + " : accounting id: " + user.accountingId + ", powerofficego id: " + user.externalAccountingId);
+                } 
             } else {
-                /* @TODO HANDLE PROPER WARNING */
-                addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
-                addToLog(resp.summary + " : accounting id: " + user.accountingId + ", powerofficego id: " + user.externalAccountingId);
+                user.accountingId = customer.code + "";
+                user.externalAccountingId = "1";
+                return true;
             }
         }catch(Exception e) {
             /* @TODO HANDLE PROPER WARNING */
@@ -214,19 +221,21 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         Gson gson = new Gson();
         String data = gson.toJson(transferObject);
         try {
-            String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
-            ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
-            if(resp.success) {
-                for(Order order : orders) {
-                    order.transferredToAccountingSystem = true;
-                    order.dateTransferredToAccount = new Date();
-                    orderManager.saveOrder(order);
-                    
-                    return resp.data;
+            if(!GetShopLogHandler.isDeveloper) {
+                String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
+                ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
+                if(resp.success) {
+                    for(Order order : orders) {
+                        order.transferredToAccountingSystem = true;
+                        order.dateTransferredToAccount = new Date();
+                        orderManager.saveOrder(order);
+
+                        return resp.data;
+                    }
+                } else {
+                    /* @TODO HANDLE PROPER WARNING */
+                    addToLog("Failed to transfer customer: " + result);
                 }
-            } else {
-                /* @TODO HANDLE PROPER WARNING */
-                addToLog("Failed to transfer customer: " + result);
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -254,7 +263,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         goOrder.mergeWithPreviousOrder = false;
         goOrder.salesOrderLines = new ArrayList();
         goOrder.orderNo = (int)order.incrementOrderId;
-        goOrder.departmentCode = getConfigOptions().get("department");
+        goOrder.departmentCode = getConfig("department");
         if(order.cart != null) {
             for(CartItem item : order.cart.getItems()) {
                 PowerOfficeGoSalesOrderLines line = new PowerOfficeGoSalesOrderLines();
@@ -289,7 +298,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         totalline.documentNumber = incrementOrderId;
         totalline.dueDate = cal.getTime();
         totalline.currencyCode = "NOK";
-        totalline.departmentCode = getConfigOptions().get("department");
+        totalline.departmentCode = getConfig("department");
 
         String uniqueId = getUniqueCustomerIdForOrder(order);
         if(uniqueId != null) {

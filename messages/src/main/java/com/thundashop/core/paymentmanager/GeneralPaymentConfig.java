@@ -12,7 +12,7 @@ import com.thundashop.core.common.DataCommon;
  * @author ktonder
  */
 public class GeneralPaymentConfig extends DataCommon {
-    public Integer accountingCustomerOffset; 
-    public Integer accountingerOrderIdPrefix;
+    public Integer accountingCustomerOffset = 0; 
+    public Integer accountingerOrderIdPrefix = 0;
     public String postingDate = "";
 }

@@ -54,6 +54,9 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
                 paymentConfigs.put(commonData.id, (PaymentConfiguration)commonData);
             }
             if (commonData instanceof GeneralPaymentConfig) {
+                if(generalConfig.id == null || generalConfig.id.isEmpty()) {
+                    continue;
+                }
                 generalConfig = (GeneralPaymentConfig)generalConfig;
             }
             if (commonData instanceof StorePaymentConfig) {
@@ -222,7 +225,7 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
 
     @Override
     public void saveGeneralPaymentConfig(GeneralPaymentConfig config) {
-        if (generalConfig != null) {
+        if (generalConfig != null && generalConfig.id != null && !generalConfig.id.isEmpty()) {
             config.id = generalConfig.id;
         }
         

@@ -296,7 +296,7 @@ function getshop_loadRooms(res) {
         var room = res.rooms[k];
         newRoom.find('[gsname="newroomstartdate"]').val(getshop_js_yyyy_mm_dd_hh_mm_ss(room.start).substr(0, 10));
         newRoom.find('[gsname="newroomenddate"]').val(getshop_js_yyyy_mm_dd_hh_mm_ss(room.end).substr(0, 10));
-        newRoom.find('.totalroomprice').html(room.totalCost);
+        newRoom.find('.totalroomprice').html(parseInt(room.totalCost));
         var guestTemplateRow = newRoom.find('#guestentryrow');
         var addedAddons = false;
         for(var i = 0; i < room.guestCount;i++) {
@@ -834,9 +834,9 @@ function getshop_updateOrderSummary(res, isSearch) {
                 }
                 row += ")</td>";
                 
-                row += "<td>" + price*count + ",-</td>";
+                row += "<td>" + parseInt(price*count) + ",-</td>";
                 row += "</tr>";
-                total += price*count;
+                total += parseInt(price*count);
                 totalRooms += parseInt(count);
                 totalGuests += (guest*count);
                 roomsSelected++;
@@ -931,12 +931,21 @@ function getshop_setDatePicker() {
     }
     if(result.rooms){
         rooms.val(result.rooms);
+        if(rooms.val() != 1){
+            rooms.closest('.count_line').find('.fa-minus').removeClass('disabled');
+        }
     }
     if(result.adults){
         adults.val(result.adults);
+        if(adults.val() != 1){
+            adults.closest('.count_line').find('.fa-minus').removeClass('disabled');
+        }
     }
     if(result.children){
         children.val(result.children);
+        if(children.val() != 0){
+            children.closest('.count_line').find('.fa-minus').removeClass('disabled');
+        }
     }
     if(result.discount){
         discountCode.val(result.discount);
@@ -1169,13 +1178,14 @@ function getshop_searchRooms() {
                     }
                     for (var i = 1; i <= room.availableRooms; i++) {
                         var price = room.pricesByGuests[guest] * i;
+                        price = parseInt(price);
                         numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';
                     }
                     
                     roomBox.find('.guestselection').show();
                     if(numberofrooms) {
                         numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
-                        productentry = $('<tr class="productentry_itemlist"><td><i class="icon-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td> NOK ' + room.pricesByGuests[guest] + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
+                        productentry = $('<tr class="productentry_itemlist"><td><i class="icon-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td>' + parseInt(room.pricesByGuests[guest]) + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
                         productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
                     } else {
                         roomBox.find('.guestselection').hide();

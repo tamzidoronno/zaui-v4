@@ -259,10 +259,10 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         } else {
             goOrder.customerCode = new Integer(uniqueId);
         }
-        goOrder.reference = order.incrementOrderId + "";
+        goOrder.reference = getAccountingIncrementOrderId(order) + "";
         goOrder.mergeWithPreviousOrder = false;
         goOrder.salesOrderLines = new ArrayList();
-        goOrder.orderNo = (int)order.incrementOrderId;
+        goOrder.orderNo = (int)getAccountingIncrementOrderId(order);
         goOrder.departmentCode = getConfig("department");
         if(order.cart != null) {
             for(CartItem item : order.cart.getItems()) {
@@ -328,7 +328,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 line.accountNumber = new Integer(prod.accountingAccount);
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;
-                line.invoiceNo = (int)order.incrementOrderId;
+                line.invoiceNo = (int)getAccountingIncrementOrderId(order);
                 int count = item.getCount();
                 line.amount = (item.getProduct().price * count) * -1;
                 if(count < 0) {
@@ -337,7 +337,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 line.quantity = count;
                 line.postingDate = postingDate;
                 line.documentDate = order.rowCreatedDate;
-                line.documentNumber = (int)order.incrementOrderId;
+                line.documentNumber = (int)getAccountingAccountId(storeId);
                 line.currencyCode = "NOK";
                 line.vatCode = prod.sku;
                 lines.add(line);

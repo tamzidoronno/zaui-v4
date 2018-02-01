@@ -197,6 +197,7 @@ Error      : #de5353; red
     display: none;
     font-size:16px;
     width: 100%;
+    min-width: 300px;
     border-top: 2px solid #94ccdf;
     padding: 16px;
     text-align: left;
@@ -371,7 +372,7 @@ Error      : #de5353; red
 .GslBooking .secondary_text { font-size: 14px;letter-spacing: 1px;padding-left: 20px;}
 
 .GslBooking .gslfront_1 .mobilecheckinheading, .GslBooking .gslfront_1 .mobilecheckoutheading { color:#bbb; width: 50%; float: left; border-bottom:1px solid #ddd;padding:0 4px;}
-.gslfront_1 .mobilecheckinheading span, .GslBooking .gslfront_1 .mobilecheckoutheading span{position:absolute;}
+.GslBooking .gslfront_1 .mobilecheckinheading span, .GslBooking .gslfront_1 .mobilecheckoutheading span{position:absolute;}
 .GslBooking .gslfront_1 .mobilecheckinheading{box-shadow: 1px 0px 0px 0px #ddd;}
 .GslBooking .gslfront_1 .overview_addons .addon:last-child{box-shadow: 0 0 0;}
 .GslBooking .gslfront_1 .overview_addons .addon{
@@ -523,6 +524,7 @@ Error      : #de5353; red
         display:block !important;
         border-bottom: 2px solid #329ad6;
         width:100% !important;
+        min-width: 0;
         border:0;box-shadow:0 0 0;
         padding:0 20px;
     }

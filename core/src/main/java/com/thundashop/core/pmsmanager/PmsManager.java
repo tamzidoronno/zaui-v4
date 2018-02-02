@@ -5470,7 +5470,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         
-        
         return result;
     } 
     
@@ -6497,6 +6496,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 if(!found) {
                     newAddonList.add(item);
                 }
+            } else {
+                newAddonList.add(item);
             }
         }
         return newAddonList;

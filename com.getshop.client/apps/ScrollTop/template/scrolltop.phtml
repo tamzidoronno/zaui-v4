@@ -1,0 +1,14 @@
+<div style="padding:16px;"></div>
+<div class="scrolltopbutton">
+    <i class="fa fa-chevron-up"></i>
+</div>
+<script>
+    $(window).scroll(function() {
+        if ($(window).scrollTop() > 500) {
+            $('.scrolltopbutton').fadeIn('slow');
+        } else {
+            $('.scrolltopbutton').fadeOut('slow'); 
+        }
+    });
+    $('.scrolltopbutton').on('click', function() { $('html, body').animate({ scrollTop: "0" }, 'slow'); } );
+</script>

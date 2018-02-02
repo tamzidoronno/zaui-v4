@@ -50,10 +50,12 @@ echo $event->location . "</div><br>";
 echo "<span style='font-size:16px;'>".nl2br($event->shortdesc)."</span><br><br>";
 
 $imgDisplayer = $this->getImageDisplayer($event->id);
-$fileid = $imgDisplayer->getImageId();
-if($fileid && !$event->imageId) {
-    $event->imageId = $fileid;
-    $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+if($imgDisplayer) {
+    $fileid = $imgDisplayer->getImageId();
+    if($fileid && !$event->imageId) {
+        $event->imageId = $fileid;
+        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+    }
 }
 
 echo "<span style='font-size:16px;'>".nl2br($event->description)."</span>";

@@ -98,7 +98,7 @@
     z-index: 2;
 }
 
-/*Front 4*/
+/*pmsfront4*/
 .PmsBooking .pmsfront4 *{box-sizing: border-box;}
 .PmsBooking .pmsfront4 {
     position: relative;
@@ -203,7 +203,7 @@
 .PmsBooking .pmsfront4 .searchbutton:hover{background-color:#40aae6;}
 .PmsBooking .pmsfront4 .disabled{opacity: 0.2 !important;cursor:default !important;}
 
-/*Front 5*/
+/*pmsfront5*/
 .PmsBooking .pmsfront5 *{
     box-sizing: border-box;
 }
@@ -301,6 +301,99 @@
     top: 0;
 }
 .PmsBooking .excludeChildSelection{display:none;}
+
+/*pmsfront6*/
+.PmsBooking .pmsfront6 { background-color: #fff;}
+.PmsBooking .pmsfront6 *{box-sizing:border-box;}
+.PmsBooking .pmsfront6 .gsl_button:hover{background-color:#48cfa3;}
+.PmsBooking .pmsfront6 .gsl_button{
+    text-align:center;
+    letter-spacing:1px;
+    background: #3fc297;
+    color:#fff;
+    cursor:pointer;
+    border-radius:2px;
+    display: inline-block;}
+.PmsBooking .pmsfront6 .disabled{opacity:0.3 !important; cursor: default !important;}
+.PmsBooking .pmsfront6 .disabled:hover{opacity: 0.3 !important;}
+.PmsBooking .pmsfront6 .fa{padding:0 4px;}
+.PmsBooking .pmsfront6 .fa_box{position: relative;width: 27%;float:left;}
+.PmsBooking .pmsfront6 .fa_box::after{
+    font-family: fontawesome;
+    font-family: 'icomoon' !important;
+    position: absolute;
+    pointer-events: none;
+    right: 1.5em;
+    top: 50%;
+    margin-top: -.8em;
+    font-size: 20px;}
+.PmsBooking .pmsfront6 .gslbookingHeader {display: block;width: 100%;user-select:none;height:60px;position:relative;}
+
+.PmsBooking .pmsfront6 .gslbookingHeader input{overflow: hidden;text-overflow: ellipsis;}
+.PmsBooking .pmsfront6 .gslbookingHeader input::-webkit-input-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input::-moz-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input:-moz-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input:-ms-input-placeholder{color:#000;}
+.PmsBooking .pmsfront6 .gslbookingHeader input:focus{outline-width:0;box-shadow: 0 0 0;}
+
+.PmsBooking .pmsfront6 .gslbookingHeader .date::after{content: "\e92f";}
+.PmsBooking .pmsfront6 .gslbookingHeader .guests::after{content: "\e90f";}
+.PmsBooking .pmsfront6 .gslbookingHeader .coupon::after{content: "\e911";}
+
+.PmsBooking .pmsfront6 .gslbookingHeader .gsl_button:hover{background-color:#4391dc;}
+.PmsBooking .pmsfront6 .gslbookingHeader .gsl_button{
+    height: 60px;
+    line-height: 60px;
+    letter-spacing:1px;
+    float:right;
+    background: #329ad6;
+    width: 19%;
+    border-radius: 0;
+    font-size:18px;}
+.PmsBooking .pmsfront6 .gslbookingHeader input{
+    width:100%;
+    cursor: pointer;
+    height:60px;
+    line-height:60px;
+    letter-spacing:1px;
+    font-size:16px;
+    padding:0 30px 0 26px;
+    background-color:#fff;
+    border:0;}
+.PmsBooking .pmsfront6 .guestInfoBox{
+    position: absolute;
+    display: none;
+    font-size:16px;
+    width: 100%;
+    min-width: 300px;
+    border-top: 2px solid #94ccdf;
+    padding: 16px;
+    text-align: left;
+    text-transform: capitalize;
+    background-color: #fff;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    z-index: 2;}
+.PmsBooking .pmsfront6 .guestInfoBox div{position:relative;}
+.PmsBooking .pmsfront6 .guestInfoBox input{padding: 0;height: auto;width:50%;cursor: default;text-align: center;line-height: 50px;}
+.PmsBooking .pmsfront6 .guestInfoBox input:hover{box-shadow: 0 0 0;}
+.PmsBooking .pmsfront6 .guestInfoBox i{cursor: pointer;padding: 10px;border-radius: 4px;background-color: #fff;color: #94ccdf;border: 1px solid #94ccdf;box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);}
+.PmsBooking .pmsfront6 .guestInfoBox_left{float:left;width:40%;padding-bottom:0;}
+.PmsBooking .pmsfront6 .guestInfoBox_left div{padding:14px 0;}
+.PmsBooking .pmsfront6 .guestInfoBox_right{float:right;width:60%;text-align: right;padding-bottom:0;text-align: center;}
+
+.PmsBooking .pmsfront6 .mobilecheckinheading, .PmsBooking .pmsfront6 .mobilecheckoutheading { color:#bbb; width: 50%; float: left; border-bottom:1px solid #ddd;padding:0 4px;}
+.PmsBooking .pmsfront6 .mobilecheckinheading span, .PmsBooking .pmsfront6 .mobilecheckoutheading span{position:absolute;}
+.PmsBooking .pmsfront6 .mobilecheckinheading{box-shadow: 1px 0px 0px 0px #ddd;}
+
+/*.PmsBooking .pmsfrontTheme{
+    height: 60px;
+    width: 20px;
+    position: absolute;
+    z-index: 2;
+    background: #5c70cd;
+}*/
+
 @media only all and (max-width:800px){
     .PmsBooking .datepickermobile{display: block;}
     
@@ -308,13 +401,13 @@
     .PmsBooking #faholder_date,
     .PmsBooking .date_pickerwrapper{display: none;}
     
-    /*Front 4*/
+    /*pmsfront4*/
     .PmsBooking .pmsfront4 {background-color:rgba(10, 30, 41, 1);}
     .PmsBooking .pmsfront4 .pfbox {padding:5% 3%;}
     .PmsBooking .pmsfront4 #information{right:5px;}
     .PmsBooking .pmsfront4 .datepickermobile input{width:49%;float: left;font-size: 12px;padding:4px;}
     
-    /*Front 5*/
+    /*pmsfront5*/
     .PmsBooking .pmsfront5 #coupon_input{width: 100%;}
     .PmsBooking .pmsfront5 #information{right:5px;top:5px;}
     .PmsBooking .pmsfront5 .datepickermobile input{
@@ -326,4 +419,28 @@
     .PmsBooking .pmsfront5 .pfframe{width: 100%;}
     .PmsBooking .pmsfront5 .couponframe{width:49%;}
     .PmsBooking .pmsfront5 .guestframe{padding: 20px 0}
+    
+    /*pmsfront6*/
+    .PmsBooking .pmsfront6 .fa_box.guests{width:100% !important;padding: 10px 0;}
+    .PmsBooking .pmsfront6 .fa_box #guests{display:none;}
+    .PmsBooking .pmsfront6 .fa_box #coupon_input {border: 1px solid #ddd !important;border-width: 1px 0px 1px 0px;}
+    .PmsBooking .pmsfront6 .fa_box.coupon {width:65%;}
+    .PmsBooking .pmsfront6 .fa_box.gsl_button{width:35%;height:60px;line-height:60px;}
+    .PmsBooking .pmsfront6 .gslbookingHeader input{border:0 !important;font-size: 14px;padding:0 20px;height:60px;line-height:60px;}
+    .PmsBooking .pmsfront6 .gslbookingHeader .guestInfoBox input{box-shadow: 0 0 0;height:50px;line-height:50px;}
+    .PmsBooking .pmsfront6 .guestInfoBox i{padding:8px;}
+    .PmsBooking .pmsfront6 .gssigninbutton { margin-top:10px;}
+    
+    .PmsBooking .pmsfront6 #date_picker_start[type="date"] {padding:12px 0 0 20px;}
+    .PmsBooking .pmsfront6 #date_picker_end[type="date"] {padding:12px 0 0 20px;}
+    .PmsBooking .pmsfront6 .guestInfoBox {
+        position: initial !important;
+        display:block !important;
+        border-bottom: 2px solid #329ad6;
+        width:100% !important;
+        min-width: 0;
+        border:0;box-shadow:0 0 0;
+        padding:0 20px;
+    }
+    .PmsBooking .pmsfront6 .fa_box::after { display:none !important; }
 }

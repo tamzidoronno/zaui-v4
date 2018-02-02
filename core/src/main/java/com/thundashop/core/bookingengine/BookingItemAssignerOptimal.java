@@ -101,9 +101,9 @@ public class BookingItemAssignerOptimal {
         
         if (storeId != null && storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
             squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
+        } else {
+            addUnassignedBookingsToLine(bookingLines, unassignedBookings);
         }
-        
-        addUnassignedBookingsToLine(bookingLines, unassignedBookings);
         
         setItemIdsToLines(bookingLines);
         
@@ -305,6 +305,9 @@ public class BookingItemAssignerOptimal {
         
         List<String> retItems = new ArrayList();
         for (BookingItem item : items) {
+            if (item.id.equals("db1e3524-3426-478a-ab71-e6d16eee1ceb")) {
+                System.out.println("TGEST(");
+            }
             booking.bookingItemId = item.id;
             try {
                 canAssign();
@@ -651,7 +654,6 @@ public class BookingItemAssignerOptimal {
 
     private void squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
         List<OptimalBookingTimeLine> linesToCheck = bookingLines.stream()
-                .filter(l -> l.hasAssingedBookingsInFuture())
                 .collect(Collectors.toList());
         
         for (OptimalBookingTimeLine timeLine : linesToCheck) {
@@ -678,10 +680,23 @@ public class BookingItemAssignerOptimal {
                 addUnassignedBookingsToLine(bookingLines2, bestCombination);
                 
                 if (!bestCombination.isEmpty() || bookingLines2.size() > 1) {
-                    throw new RuntimeException("Oh dear, this should not happen. This means that bookings will be removed as they did not fit on the lines");
+                    throw new BookingEngineException("A unexpected error happend while shuffeling the bookings.");
                 }
             }
         }
+        
+        while(!unassignedBookings.isEmpty()) {
+            List<Booking> bestCombination = getBestCombinationOfBookings(unassignedBookings);
+            List<Booking> bookingsToRemove = new ArrayList(bestCombination);
+            addUnassignedBookingsToLine(bookingLines, bestCombination);
+            
+            if (!bestCombination.isEmpty()) {
+                throw new BookingEngineException("A unexpected error happend while shuffeling the bookings.");
+            }
+            
+            unassignedBookings.removeAll(bookingsToRemove);
+        }
+        
     }
 
     private List<Booking> getBestCombinationOfBookings(List<Booking> bookingsToBruteforce) {
@@ -692,5 +707,6 @@ public class BookingItemAssignerOptimal {
         
         return flatten.getBestCombo();
     }
+
 
 }

@@ -194,6 +194,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         }
                         lowest.maxRooms--;
                         listOfRooms.add(lowest);
+                        if((guestLeft-lowest.guests) <= roomsLeft) {
+                            lowest.guests = 1;
+                        }
                         guestLeft -= lowest.guests;
                         roomsLeft--;
                         break;

@@ -1682,7 +1682,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             for(Integer key : addTypes.keySet()) {
                 PmsBookingAddonItem config = pmsManager.getConfigurationSecure().addonConfiguration.get(key);
                 if(room.hasAddon(key, startCal.getTime()) == null) {
-                    PmsBookingAddonItem addon = pmsManager.createAddonToAdd(config, time);
+                    PmsBookingAddonItem addon = pmsManager.createAddonToAdd(config, time, room);
                     room.addons.add(addon);
                 }
             }

@@ -18,5 +18,6 @@ public class PowerOfficeGoImportLine {
     public Date dueDate;
     public String currencyCode;
     public String vatCode;
+    public String departmentCode;
     
 }

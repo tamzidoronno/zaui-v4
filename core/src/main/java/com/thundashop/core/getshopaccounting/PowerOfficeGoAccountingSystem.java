@@ -19,6 +19,7 @@ import com.powerofficego.data.SalesOrderTransfer;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshopaccounting.fikenservice.FikenInvoiceService;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
@@ -79,6 +80,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     public HashMap<String, String> getConfigOptions() {
         HashMap<String, String> ret = new HashMap();
         ret.put("password", "PowerOfficeGo Application Key");
+        ret.put("department", "PowerOfficeGo Department");
         return ret;
     }
     
@@ -151,22 +153,28 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
             
         }
         customer.setUser(user);
-        customer.code = getAccountingId(user.id) + "";
+        customer.code = getAccountingAccountId(user.id) + "";
         Gson gson = new Gson();
         try {
             String htmlType = "POST";
             String data = gson.toJson(customer);
-            String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
-            ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
-            if(resp.success) {
-                user.accountingId = customer.code + "";
-                user.externalAccountingId = resp.data.id + "";
-                userManager.saveUser(user);
-                return true;
+            if(!GetShopLogHandler.isDeveloper) {
+                String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
+                ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
+                if(resp.success) {
+                    user.accountingId = customer.code + "";
+                    user.externalAccountingId = resp.data.id + "";
+                    userManager.saveUser(user);
+                    return true;
+                } else {
+                    /* @TODO HANDLE PROPER WARNING */
+                    addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
+                    addToLog(resp.summary + " : accounting id: " + user.accountingId + ", powerofficego id: " + user.externalAccountingId);
+                } 
             } else {
-                /* @TODO HANDLE PROPER WARNING */
-                addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
-                addToLog(resp.summary + " : accounting id: " + user.accountingId + ", powerofficego id: " + user.externalAccountingId);
+                user.accountingId = customer.code + "";
+                user.externalAccountingId = "1";
+                return true;
             }
         }catch(Exception e) {
             /* @TODO HANDLE PROPER WARNING */
@@ -213,19 +221,21 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         Gson gson = new Gson();
         String data = gson.toJson(transferObject);
         try {
-            String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
-            ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
-            if(resp.success) {
-                for(Order order : orders) {
-                    order.transferredToAccountingSystem = true;
-                    order.dateTransferredToAccount = new Date();
-                    orderManager.saveOrder(order);
-                    
-                    return resp.data;
+            if(!GetShopLogHandler.isDeveloper) {
+                String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
+                ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
+                if(resp.success) {
+                    for(Order order : orders) {
+                        order.transferredToAccountingSystem = true;
+                        order.dateTransferredToAccount = new Date();
+                        orderManager.saveOrder(order);
+
+                        return resp.data;
+                    }
+                } else {
+                    /* @TODO HANDLE PROPER WARNING */
+                    addToLog("Failed to transfer customer: " + result);
                 }
-            } else {
-                /* @TODO HANDLE PROPER WARNING */
-                addToLog("Failed to transfer customer: " + result);
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -249,10 +259,11 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         } else {
             goOrder.customerCode = new Integer(uniqueId);
         }
-        goOrder.reference = order.incrementOrderId + "";
+        goOrder.reference = getAccountingIncrementOrderId(order) + "";
         goOrder.mergeWithPreviousOrder = false;
         goOrder.salesOrderLines = new ArrayList();
-        goOrder.orderNo = (int)order.incrementOrderId;
+        goOrder.orderNo = (int)getAccountingIncrementOrderId(order);
+        goOrder.departmentCode = getConfig("department");
         if(order.cart != null) {
             for(CartItem item : order.cart.getItems()) {
                 PowerOfficeGoSalesOrderLines line = new PowerOfficeGoSalesOrderLines();
@@ -274,19 +285,21 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         Calendar cal = Calendar.getInstance();
         cal.setTime(order.rowCreatedDate);
         cal.add(Calendar.DAY_OF_YEAR, 14);
-        Date postingDate = order.shouldHaveBeenTransferredToAccountingOnDate;
+        Date postingDate = getAccountingPostingDate(order);
+        Integer incrementOrderId = (int)getAccountingIncrementOrderId(order);
         
         PowerOfficeGoImportLine totalline = new PowerOfficeGoImportLine();
-        totalline.description = "GetShop order: " + order.incrementOrderId;
-        totalline.invoiceNo = (int)order.incrementOrderId;
+        totalline.description = "GetShop order: " + incrementOrderId;
+        totalline.invoiceNo = incrementOrderId;
+        totalline.documentNumber = incrementOrderId;
         totalline.amount = orderManager.getTotalAmount(order);
         totalline.currencyAmount = orderManager.getTotalAmount(order);
         totalline.postingDate = postingDate;
         totalline.documentDate = order.rowCreatedDate;
-        totalline.documentNumber = (int)order.incrementOrderId;
         totalline.dueDate = cal.getTime();
         totalline.currencyCode = "NOK";
-        
+        totalline.departmentCode = getConfig("department");
+
         String uniqueId = getUniqueCustomerIdForOrder(order);
         if(uniqueId != null) {
             totalline.customerCode = new Integer(uniqueId);
@@ -315,7 +328,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 line.accountNumber = new Integer(prod.accountingAccount);
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;
-                line.invoiceNo = (int)order.incrementOrderId;
+                line.invoiceNo = incrementOrderId;
                 int count = item.getCount();
                 line.amount = (item.getProduct().price * count) * -1;
                 if(count < 0) {
@@ -324,7 +337,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 line.quantity = count;
                 line.postingDate = postingDate;
                 line.documentDate = order.rowCreatedDate;
-                line.documentNumber = (int)order.incrementOrderId;
+                line.documentNumber = incrementOrderId;
                 line.currencyCode = "NOK";
                 line.vatCode = prod.sku;
                 lines.add(line);

@@ -1,0 +1,103 @@
+<?
+/* @var $this \ns_0cf90108_6e9f_49fd_abfe_7541d1526ba2\ApacAccessView */
+$user = $this->getUser();
+
+if (!$user) {
+    ?>
+    <div class="isnotactive">
+        <div class="kaipal infobox">
+            // faces: happy,sad,talking,danger
+            <div class="image happy"></div>
+            <div class="textbox">
+                <div class="header"><? echo $this->__f("Access has been removed"); ?></div>
+                <div class="text">
+                    <?
+                    echo $this->__f("I have removed access for this and told the locksystem that the code should be removed from the lock.");
+                    ?>    
+                    
+                    <br/>
+                    <br/>
+                    <?
+                    echo $this->__f("You can close this by pressing the X on the right corner.");
+                    ?>   
+                </div>
+            </div>
+        </div>
+    </div>
+    <?
+    return;
+}
+
+$messages = $this->getSentMessages();
+?>
+
+<div class="infobox2" gstype="form" method="saveData">
+    <div>
+        <div class="inputrow">
+            <b><? echo $this->__f("Name"); ?> </b>
+            <br/><input gsname="fullName" class="gsniceinput1" value="<? echo $user->fullName; ?>"/>
+        </div>
+        <div class="inputrow">
+            <b><? echo $this->__f("Phone number"); ?> </b>
+            <br/>+ <input gsname="prefix" class="gsniceinput1 prefix" placeholder="47" value="<? echo $user->prefix; ?>"/> - <input gsname="phonenumber" class="gsniceinput1" value="<? echo $user->phonenumber; ?>"/>
+        </div>
+        <div class="inputrow">
+            <b><? echo $this->__f("Email"); ?> </b>
+            <br/><input gsname="email" class="gsniceinput1" placeholder="" value="<? echo $user->email; ?>"/>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="shop_button savebutton" gstype="submit"><? echo $this->__f("Save"); ?></div>
+    <div class="shop_button removeaccess" gs_confirm="<? $this->__f("Are you sure you want to remove the acecss for this guest?"); ?>" gsclick="removeAccess"><? echo $this->__f("Remove access"); ?></div>
+</div>
+
+<div class="messagelog">
+    <div class="isnotactive">
+        <div class="kaipal infobox" gstype="form" method="sendMessage">
+            <div class="image talking"></div>
+            <div class="textbox">
+                <div class="header"><? echo $this->__f("Send sms/email to customer?"); ?></div>
+                <div class="text">
+                    <input class="gsniceinput1" gsname="subject" placeholder="subject"/> 
+                    <textarea placeholder="message..." gsname="message"></textarea>
+
+                    <div class="buttonarea">
+                        <div class="buttonareaheader"><? echo $this->__f("Ready?"); ?></div>
+                        <div class="shop_button" gstype="submit" gsvalue="sms"><i class="fa fa-phone"></i> <? echo $this->__f("Send SMS"); ?></div>
+                        <div class="shop_button" gstype="submit" gsvalue="email"><i class="fa fa-envelope"></i> <? echo $this->__f("Send Email"); ?></div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sentmessages">
+    <?
+    foreach ($messages as $msg) {
+        $content = isset($msg->content) ? $msg->content : $msg->message;
+        $date = GetShopModuleTable::formatDate($msg->rowCreatedDate);
+        $type = isset($msg->content) ? $this->__f("email") : $this->__f("sms");
+        ?>
+        <div class="messagerow">
+            <div class="header">
+                <div class="date"><?echo $date; ?></div>
+                <div class="to"><?echo @$msg->prefix." ".$msg->to. "<b> ( ".$type. " )</b> "; ?></div>    
+            </div>
+            
+            <div class="content">
+                <?
+                if (isset($msg->subject)) {
+                ?>
+                <div class="subject"><?echo $this->__f("Subject").": ".$msg->subject; ?></div>
+                <?
+                }
+                ?>
+                <div class="msg"><?echo $content; ?></div>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

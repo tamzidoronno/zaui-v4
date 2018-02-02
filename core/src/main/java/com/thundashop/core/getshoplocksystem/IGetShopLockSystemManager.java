@@ -6,6 +6,8 @@
 package com.thundashop.core.getshoplocksystem;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import java.util.Date;
 import java.util.List;
@@ -100,5 +102,27 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void changeDatesForSlot(String groupId, int slotId, Date startDate, Date endDate);
+    
     /***** End group code stuff *****/
+    
+    @Administrator
+    public AccessGroupUserAccess grantAccessDirect(String groupId, AccessGroupUserAccess user);
+    
+    @Administrator
+    public void removeAccess(String id);
+    
+    @Administrator
+    public FilteredData getAllAccessUsers(FilterOptions options);
+    
+    @Administrator
+    public AccessGroupUserAccess getAccess(String userId);
+    
+    @Administrator
+    public void sendSmsToCustomer(String userId, String textMessage);
+    
+    @Administrator
+    public void sendEmailToCustomer(String userId, String subject, String body);
+    
+    @Administrator
+    public void saveUser(AccessGroupUserAccess user);
 }

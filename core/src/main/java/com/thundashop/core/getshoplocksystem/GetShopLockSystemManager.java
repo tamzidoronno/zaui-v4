@@ -8,8 +8,13 @@ package com.thundashop.core.getshoplocksystem;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MailMessage;
+import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SmsMessage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,7 +34,13 @@ import org.springframework.stereotype.Component;
 public class GetShopLockSystemManager extends ManagerBase implements IGetShopLockSystemManager {
     private HashMap<String, LockServer> lockServers = new HashMap();
     private HashMap<String, LockGroup> groups = new HashMap();
+    private HashMap<String, AccessGroupUserAccess> users = new HashMap();
+    private HashMap<String, SmsMessage> smsMessage = new HashMap();
+    private HashMap<String, MailMessage> mailMessage = new HashMap();
 
+    @Autowired
+    private MessageManager messageManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon iData : data.data) {
@@ -44,6 +56,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 ZwaveLockServer server = (ZwaveLockServer)iData;                
                 server.setManger(this);
                 lockServers.put(iData.id, server);
+            }
+            if (iData instanceof AccessGroupUserAccess) {
+                AccessGroupUserAccess access = (AccessGroupUserAccess)iData;                
+                users.put(access.id, access);
             }
         }
         
@@ -405,5 +421,64 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 .forEach(s -> triggerCheckOfCodes(s.getId()));
     }
 
-    
+    @Override
+    public AccessGroupUserAccess grantAccessDirect(String groupId, AccessGroupUserAccess user) {
+        LockCode code = getNextUnusedCode(groupId, "", GetShopLockSystemManager.class.getSimpleName(), "");
+        if (code != null) {
+            user.lockCode = code;
+            user.lockGroupId = groupId;
+            saveObject(user);
+            users.put(user.id, user);
+            
+            return user;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void removeAccess(String id) {
+        AccessGroupUserAccess access = users.remove(id);
+        if (access != null) {
+            renewCodeForSlot(access.lockGroupId, access.lockCode.slotId);
+            deleteObject(access);
+        }
+    }
+
+    @Override
+    public FilteredData getAllAccessUsers(FilterOptions options) {
+        ArrayList<AccessGroupUserAccess> data = new ArrayList(users.values());
+        return pageIt(data, options);
+    }
+
+    @Override
+    public AccessGroupUserAccess getAccess(String userId) {
+        return users.get(userId);
+    }
+
+    @Override
+    public void sendSmsToCustomer(String userId, String textMessage) {
+        AccessGroupUserAccess user = users.get(userId);
+        if (user != null) {
+            String smsMessageId = messageManager.sendSms("nexmo", ""+user.phonenumber, textMessage, ""+user.prefix);
+            user.smsMessages.add(smsMessageId);
+            saveObject(user);
+        }
+    }
+
+    @Override
+    public void sendEmailToCustomer(String userId, String subject, String body) {
+        AccessGroupUserAccess user = users.get(userId);
+        if (user != null) {
+            String smsMessageId = messageManager.sendMail(user.email, user.fullName, subject, body, "", "");
+            user.emailMessages.add(smsMessageId);
+            saveObject(user);
+        }
+    }
+
+    @Override
+    public void saveUser(AccessGroupUserAccess user) {
+        saveObject(user);
+        users.put(user.id, user);
+    }
 }

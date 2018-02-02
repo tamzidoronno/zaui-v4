@@ -1,0 +1,23 @@
+.ApacCreateNewAccess {
+    margin: 50px;
+}
+
+.ApacCreateNewAccess .inputrow {
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+.ApacCreateNewAccess .gsniceselect1 {
+    width: 265px;
+}
+.ApacCreateNewAccess input[gsname="email"],
+.ApacCreateNewAccess input[gsname="name"] {
+    width: 243px;
+}
+
+.ApacCreateNewAccess .prefix {
+    width: 50px;
+    box-sizing: border-box;
+    text-align: center;
+}
+

@@ -10,6 +10,29 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         return "TESWT";
     }
     
+    public function readAddons() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $roomId = $_POST['data']['roomid'];
+        $productId = $_POST['data']['productId'];
+        $addonToAdd = null;
+        foreach($config->addonConfiguration as $addonItem) {
+            if($addonItem->productId == $productId) {
+                $addonToAdd = $addonItem;
+                break;
+            }
+        }
+        
+        $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedMultilevelDomainName(), null);
+        foreach($bookings as $booking) {
+            foreach($booking->rooms as $room) {
+                if($this->hasAddon($productId, $room)) {
+                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonToAdd->addonType, $room->pmsBookingRoomId, true);
+                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonToAdd->addonType, $room->pmsBookingRoomId, false);
+                }
+            }
+        }
+    }
+    
     public function getName() {
         return "PsmConfigurationAddons";
     }
@@ -126,6 +149,20 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
         
     }
-    
+
+    /**
+     * 
+     * @param type $productId
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
+    public function hasAddon($productId, $room) {
+        foreach($room->addons as $addon) {
+            if($addon->productId == $productId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 ?>

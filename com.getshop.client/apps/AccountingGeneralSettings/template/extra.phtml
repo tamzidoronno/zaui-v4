@@ -2,6 +2,14 @@
 /* @var $this \ns_c3f32e06_365b_4c7f_995a_79012b9ea0fe\AccountingGeneralSettings */
 $config = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig();
 $offset = $config->accountingCustomerOffset;
+$prefix = $config->accountingerOrderIdPrefix;
+$postingDate = $config->postingDate;
+
+$postingTypes = array();
+$postingTypes["checkin"] = "When guest is checking in";
+$postingTypes["checkout"] = "When guest is checking out";
+$postingTypes["created"] = "When order is created";
+
 ?>
 <br/>
 <br/>
@@ -11,6 +19,33 @@ $offset = $config->accountingCustomerOffset;
     <? 
     echo $this->__f("Should customers be transferred to accounting with a special offset?");
     ?>
-    <br/> <input gsname="customeroffset" class="gsniceinput1" value="<? echo $offset; ?>"/> <div gstype="submit" class="shop_button"><? echo $this->__f("Save"); ?></div>
+    <br/> <input gsname="customeroffset" class="gsniceinput1" value="<? echo $offset; ?>"/>
+    <br>
+    <br>
+    <div>
+        <? echo $this->__f("What prefix should the orders be set at"); ?><br>
+        <input gsname="orderprefix" class="gsniceinput1" value="<? echo $prefix; ?>"/>
+    </div>
+    <br>
+    <div>
+        <? 
+        echo $this->__f("Posting dates, when should the posting be done in the accounting system?") . "<br>";
+        echo "<select gsname='postingdate' class='gsniceselect1'>";
+        foreach($postingTypes as $type => $text) {
+            $selected = "";
+            if($type == $postingDate) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$type' $selected>$text</option>";
+        }
+        echo "</select>";
+        
+        ?>
+        
+    </div>
+    <br>
+    <div gstype="submit" class="shop_button"><? echo $this->__f("Save"); ?></div>
+    <br><br>
 </div>
+<div gstype='clicksubmitforce' method='resetConnectoin' gs_prompt="Password" gstype="submit" class="shop_button"><? echo $this->__f("Reset connection (need to be done by getshop administator)"); ?></div>
     

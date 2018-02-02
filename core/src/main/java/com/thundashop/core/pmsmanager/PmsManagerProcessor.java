@@ -1325,6 +1325,7 @@ public class PmsManagerProcessor {
             group.getGroupLockCodes().values()
                 .stream()
                 .filter(masterUserSlot -> masterUserSlot.takenInUseDate != null)
+                .filter(masterUserSlot -> masterUserSlot.takenInUseManagerName != null && masterUserSlot.takenInUseManagerName.equals(getClass().getSimpleName()))
                 .forEach(masterUserSlot -> {
                     boolean isSlotInUse = isMasterUserSlotInUse(group, masterUserSlot, bookings);
                     if (!isSlotInUse) {

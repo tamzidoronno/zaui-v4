@@ -1,0 +1,44 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$app = new ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+$app->setData();
+$selectedRoom = $app->getSelectedRoom();
+
+
+$start = strtotime($selectedRoom->date->start);
+$end = strtotime($selectedRoom->date->end);
+$dates = $this->getDatesToAdd($start, $end, $selectedRoom);
+echo "<div style='font-weight:bold;'>";
+echo "<span style='width:125px;display:inline-block;padding-left:20px;'>Date</span>";
+echo "<span style='width:55px;display:inline-block;'>Count</span>";
+echo "<span style='width:50px;display:inline-block;'>Price</span>";
+echo "</div>";
+
+$idx = 0;
+foreach($dates as $date => $obj) {
+    echo "<div>";
+    echo "<input type='checkbox' checked class='toggleifshouldbeadded' gsname='rowindex_$idx'>";
+    echo "<input type='txt' class='gsniceinput1' value='".date("d.m.Y", $date)."' style='width:100px;' gsname='date_$idx'>";
+    echo "<input type='txt' class='gsniceinput1' value='".$obj->count."' style='width:40px;' gsname='count_$idx'>";
+    echo "<input type='txt' class='gsniceinput1' value='".$obj->price."' style='width:50px;' gsname='price_$idx'>";
+    echo "</div>";
+    $idx++;
+}
+?>
+
+<script>
+$('.toggleifshouldbeadded').on('click', function() {
+    var checked = $(this).is(':checked');
+    var row = $(this).closest('div');
+    row.find('input').each(function() {
+        if($(this).is(':checkbox')) {
+            return;
+        }
+        if(checked) {
+            $(this).attr('disabled',null);
+        } else {
+            $(this).attr('disabled','disabled');
+        }
+    });
+});
+</script>

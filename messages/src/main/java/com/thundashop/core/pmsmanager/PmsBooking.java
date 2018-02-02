@@ -95,6 +95,9 @@ public class PmsBooking extends DataCommon {
     @Transient
     public Date endDate;
     
+    @Transient
+    boolean isAddedToEventList;
+    
     public Double getTotalPrice() {
         return totalPrice;
     }

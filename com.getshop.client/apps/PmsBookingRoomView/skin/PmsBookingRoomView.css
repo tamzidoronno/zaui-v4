@@ -10,6 +10,7 @@
     margin-right: 20px;
 }
 
+.PmsBookingRoomView .editaddonpanel { border: solid 1px #bbb; position:absolute; background-color: #fff; padding: 2px; }
 
 .PmsBookingRoomView .removeselectedaddons { background-color: red;
     display: block;

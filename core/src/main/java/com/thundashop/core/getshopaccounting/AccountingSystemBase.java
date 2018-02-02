@@ -21,6 +21,8 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -41,6 +43,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
     private List<String> logEntries = new ArrayList();
      
     private AccountingSystemConfiguration config = new AccountingSystemConfiguration();
+    
+    @Autowired
+    GetShopAccountingManager getShopAccountingManager;
     
     @Autowired
     public OrderManager orderManager;    
@@ -225,14 +230,14 @@ public abstract class AccountingSystemBase extends ManagerBase {
         }
     }
     
-    public Integer getAccountingId(String userId) {
+    public Integer getAccountingAccountId(String userId) {
         Integer idToUse = 0;
         Integer useOffset = paymentManager.getGeneralPaymentConfig().accountingCustomerOffset;
         
         if (useOffset != null && useOffset > 0) {
             idToUse = useOffset;
         }
-
+        
         User user = userManager.getUserByIdIncludedDeleted(userId);
         Integer accountingId = user.customerId;
         if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
@@ -245,10 +250,6 @@ public abstract class AccountingSystemBase extends ManagerBase {
         if(accountingId >= idToUse) {
             return accountingId;
         } else {
-            if(GetShopLogHandler.isDeveloper) {
-                //DO NOT CREATE NEW IDS IN NON PRODUCTION MODE
-                return -100000;
-            }
             int next = userManager.getNextAccountingId();
             if(next < idToUse) {
                 next = idToUse;
@@ -289,6 +290,33 @@ public abstract class AccountingSystemBase extends ManagerBase {
 
     public List<String> getLogEntries() {
         return logEntries;
+    }
+    
+    public long getAccountingIncrementOrderId(Order order) {
+        Integer prefix = paymentManager.getGeneralPaymentConfig().accountingerOrderIdPrefix;
+        long toReturn = order.incrementOrderId;
+        if(prefix != null && paymentManager.getGeneralPaymentConfig().accountingerOrderIdPrefix > 0) {
+            toReturn = new Long(prefix + "" + toReturn + "");
+        }
+        return toReturn;
+    }
+    
+    public Date getAccountingPostingDate(Order order) {
+        Date postingDate = order.getEndDateByItems();
+        if(postingDate == null) {
+            postingDate = order.rowCreatedDate;
+        }
+        if(order.paymentDate != null) {
+            postingDate = order.paymentDate;
+        }
+        
+        if(paymentManager.getGeneralPaymentConfig().postingDate != null && paymentManager.getGeneralPaymentConfig().postingDate.contains("checkout")) {
+            postingDate = order.getEndDateByItems();
+        }
+        if(paymentManager.getGeneralPaymentConfig().postingDate != null && paymentManager.getGeneralPaymentConfig().postingDate.contains("checkin")) {
+            postingDate = order.getStartDateByItems();
+        }
+        return postingDate;
     }
     
     private void finalizeFile(SavedOrderFile saved) {
@@ -414,32 +442,26 @@ public abstract class AccountingSystemBase extends ManagerBase {
     public String createLineText(CartItem item) {
         String lineText = "";
         String startDate = "";
+        DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
         if(item.startDate != null) {
-            DateTime start = new DateTime(item.startDate);
-            startDate = start.toString("dd.MM.yy");
+            startDate = sourceFormat.format(item.startDate);
         }
 
         String endDate = "";
         if(item.endDate != null) {
-            DateTime end = new DateTime(item.endDate);
-            endDate = end.toString("dd.MM.yy");
+            endDate = sourceFormat.format(item.endDate);
         }
         
-        String startEnd = "";
-        if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
-            startEnd = " (" + startDate + " - " + endDate + ")";
+        String metaData = item.getProduct().metaData;
+        if(metaData == null) {
+            metaData = "";
         }
-        
         if(!item.getProduct().additionalMetaData.isEmpty()) {
-            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + startEnd;
+            lineText = item.getProduct().name + " "+metaData+" " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
         } else {
-            String mdata = item.getProduct().metaData;
-            mdata = ", " + mdata;
-            lineText = item.getProduct().name + mdata + startEnd;
+            lineText = item.getProduct().name + " " + metaData + " (" + startDate + " - " + endDate + ")";
         }
-        
-        lineText = lineText.trim();
-        lineText = nullAndCsvCheck(lineText);
+         
         return lineText;
     }
     

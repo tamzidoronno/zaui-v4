@@ -14,14 +14,27 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $this->includefile("paymentapplication");
     }
     
+    public function resetConnectoin() {
+        $this->getApi()->getPaymentManager()->resetAllAccountingConfigurationForUsersAndOrders($_POST['data']['prompt']);
+    }
+    
     public function render() {
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
-            array('appName', 'Name', 'appName')
+            array('appName', 'Name', 'appName'),
+            array('accoutUserId', 'Account id', 'accountUserId'),
+            
         );
+        
+        $data = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach($data as $app) {
+            $conf = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($app->id);
+            $app->accountUserId = $conf ? $conf->userCustomerNumber : "Not set";
+        }
         
         $args = array(null);
         $table = new \GetShopModuleTable($this, 'StoreApplicationPool', 'getActivatedPaymentApplications', $args, $attributes);
+        $table->setData($data);
         $table->render();
         $this->includefile("extra");
     }
@@ -36,6 +49,8 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
     public function saveGeneral() {
         $config = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig();
         $config->accountingCustomerOffset = $_POST['data']['customeroffset'];
+        $config->postingDate = $_POST['data']['postingdate'];
+        $config->accountingerOrderIdPrefix = $_POST['data']['orderprefix'];
         $this->getApi()->getPaymentManager()->saveGeneralPaymentConfig($config);
     }
 }

@@ -14,6 +14,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +40,9 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
     private OrderManager orderManager;
     
     @Autowired
+    private UserManager userManager;
+    
+    @Autowired
     private GetShopAccountingManager getShopAccountingManager;
     
     @Override
@@ -49,7 +54,10 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
                 paymentConfigs.put(commonData.id, (PaymentConfiguration)commonData);
             }
             if (commonData instanceof GeneralPaymentConfig) {
-                generalConfig = (GeneralPaymentConfig)generalConfig;
+                if(commonData.id == null || commonData.id.isEmpty()) {
+                    continue;
+                }
+                generalConfig = (GeneralPaymentConfig)commonData;
             }
             if (commonData instanceof StorePaymentConfig) {
                 storePaymentConfig.put(commonData.id, (StorePaymentConfig)commonData);
@@ -217,12 +225,35 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
 
     @Override
     public void saveGeneralPaymentConfig(GeneralPaymentConfig config) {
-        if (generalConfig != null) {
+        if (generalConfig != null && generalConfig.id != null && !generalConfig.id.isEmpty()) {
             config.id = generalConfig.id;
         }
         
         saveObject(config);
         generalConfig = config;
+    }
+
+    @Override
+    public void resetAllAccountingConfigurationForUsersAndOrders(String password) {
+        if(!password.equals("fngfi0456tbvxdFREtgdfs")) {
+            return;
+        }
+        
+        List<User> users = userManager.getAllUsers();
+        for(User usr : users) {
+            boolean save = false;
+            if(usr.externalAccountingId != null && !usr.externalAccountingId.isEmpty()) {
+                usr.externalAccountingId = null;
+                save = true;
+            }
+            if(usr.accountingId != null && !usr.accountingId.isEmpty()) {
+                usr.accountingId = "";
+                save = true;
+            }
+            if(save) {
+                userManager.saveUser(usr);
+            }
+        }
     }
     
 }

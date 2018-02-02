@@ -106,7 +106,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
             duedays = order.dueDays;
         }
         
-        Integer customerId = getAccountingId(order.userId);
+        Integer customerId = getAccountingAccountId(order.userId);
         String unique = getUniqueCustomerIdForOrder(order);
         if(unique != null) {
             customerId = new Integer(unique);

@@ -386,6 +386,14 @@
 .PmsBooking .pmsfront6 .mobilecheckinheading span, .PmsBooking .pmsfront6 .mobilecheckoutheading span{position:absolute;}
 .PmsBooking .pmsfront6 .mobilecheckinheading{box-shadow: 1px 0px 0px 0px #ddd;}
 
+/*.PmsBooking .pmsfrontTheme{
+    height: 60px;
+    width: 20px;
+    position: absolute;
+    z-index: 2;
+    background: #5c70cd;
+}*/
+
 @media only all and (max-width:800px){
     .PmsBooking .datepickermobile{display: block;}
     

@@ -291,11 +291,11 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         PowerOfficeGoImportLine totalline = new PowerOfficeGoImportLine();
         totalline.description = "GetShop order: " + incrementOrderId;
         totalline.invoiceNo = incrementOrderId;
+        totalline.documentNumber = incrementOrderId;
         totalline.amount = orderManager.getTotalAmount(order);
         totalline.currencyAmount = orderManager.getTotalAmount(order);
         totalline.postingDate = postingDate;
         totalline.documentDate = order.rowCreatedDate;
-        totalline.documentNumber = incrementOrderId;
         totalline.dueDate = cal.getTime();
         totalline.currencyCode = "NOK";
         totalline.departmentCode = getConfig("department");
@@ -328,7 +328,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 line.accountNumber = new Integer(prod.accountingAccount);
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;
-                line.invoiceNo = (int)getAccountingIncrementOrderId(order);
+                line.invoiceNo = incrementOrderId;
                 int count = item.getCount();
                 line.amount = (item.getProduct().price * count) * -1;
                 if(count < 0) {
@@ -337,7 +337,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 line.quantity = count;
                 line.postingDate = postingDate;
                 line.documentDate = order.rowCreatedDate;
-                line.documentNumber = (int)getAccountingAccountId(storeId);
+                line.documentNumber = incrementOrderId;
                 line.currencyCode = "NOK";
                 line.vatCode = prod.sku;
                 lines.add(line);

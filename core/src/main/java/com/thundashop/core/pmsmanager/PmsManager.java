@@ -957,6 +957,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             booking.endDate = booking.getEndDate();
         }
         
+        booking.isAddedToEventList = pmsEventManager.isChecked(booking.id);
+        
         booking.makeUniqueIds();
         
         return booking;
@@ -7833,5 +7835,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             result.add(addonToAdd);
         }
         return result;
+    }
+
+    public PmsBooking getBookingUnsecureUnfinalized(String id) {
+        return bookings.get(id);
     }
 }

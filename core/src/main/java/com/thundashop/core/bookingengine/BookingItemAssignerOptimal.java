@@ -305,9 +305,6 @@ public class BookingItemAssignerOptimal {
         
         List<String> retItems = new ArrayList();
         for (BookingItem item : items) {
-            if (item.id.equals("db1e3524-3426-478a-ab71-e6d16eee1ceb")) {
-                System.out.println("TGEST(");
-            }
             booking.bookingItemId = item.id;
             try {
                 canAssign();

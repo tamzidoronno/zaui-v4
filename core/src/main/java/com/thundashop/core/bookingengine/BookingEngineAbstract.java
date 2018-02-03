@@ -796,6 +796,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 }
             }
             
+            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
+                checkBookings = getAllBookingsOfType(bookingTypeId);
+            }
+            
             BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id), shouldThrowException(), storeId);
             
             // This throws exception if not possible.
@@ -1076,6 +1080,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
+        
+         if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
+            bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
+        }
+
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);
         return assigner;
     }
@@ -1141,6 +1150,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                     .filter(o -> o.startsTomorrowOrLater())
                     .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
                     .collect(Collectors.toList());
+            
+            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
+                toCheck = getAllBookingsOfType(type.id);
+            }
             
             new BookingItemAssignerOptimal(type, toCheck, bookingItems, shouldThrowException(), storeId).canAssign();
         }
@@ -1294,5 +1307,19 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 throw new BookingEngineException("The room you tried to use is not available. Please use another one.");
             }
         }
+    }
+    
+    private List<Booking> getAllBookingsOfType(String typeId) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_YEAR, -7);
+        Date yesterday = cal.getTime();
+        
+        List<Booking> bookingsOfType = bookings.values()
+                .stream()
+                .filter(o -> o.bookingItemTypeId.equals(typeId))
+                .filter(o -> o.startDate.after(yesterday))
+                .collect(Collectors.toList());
+        return bookingsOfType;
     }
 }

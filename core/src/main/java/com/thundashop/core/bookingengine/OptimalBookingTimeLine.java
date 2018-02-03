@@ -127,6 +127,10 @@ public class OptimalBookingTimeLine {
             retDates.put(new Date(0), endDate);
         }
         
+        if (retDates.isEmpty()) {
+            retDates.put(new Date(0), new Date(Long.MAX_VALUE));
+        }
+        
         return retDates;
     }
 }

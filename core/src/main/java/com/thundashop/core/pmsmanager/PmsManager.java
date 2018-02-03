@@ -6299,7 +6299,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             if(orderIdToSend != null) {
                 message = message.replace("{orderid}", this.orderIdToSend);
                 Order order = orderManager.getOrderSecure(this.orderIdToSend);
-                message = message.replace("{paymentlink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id="+order.incrementOrderId);
+                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id="+order.incrementOrderId;
+                if (type.equals("email")) {
+                    message = message.replace("{paymentlink}", "<a href='"+link+"'>"+link+"</a>");
+                } else {
+                    message = message.replace("{paymentlink}", link);
+                }
                 message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id="+booking.secretBookingId);
             }
         }

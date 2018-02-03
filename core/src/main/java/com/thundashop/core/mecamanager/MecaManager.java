@@ -155,7 +155,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             throw new NullPointerException("Why is there cars created without connections to a fleet?");
         }
         
-        isPhoneNumberDuplicated(car);
+        isPhoneNumberDuplicated(car, fleet);
         
         saveObject(car);
         finalize(car);
@@ -783,6 +783,13 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
 
     @Override
     public void saveFleet(MecaFleet fleet) {
+        if (!fleet.followup) {
+            getCarsForMecaFleet(fleet.pageId).stream()
+                    .forEach(car -> {
+                        isPhoneNumberDuplicated(car, fleet);
+                    });
+        }
+        
         fleets.put(fleet.id, fleet);
         saveObject(fleet);
     }
@@ -843,7 +850,12 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         return true;
     }
 
-    private void isPhoneNumberDuplicated(MecaCar car) {
+    private void isPhoneNumberDuplicated(MecaCar car, MecaFleet fleet) {
+        
+        if (fleet.followup) {
+            return;
+        }
+        
         for (MecaCar icar : cars.values()) {
             if (icar.id.equals(car.id)) {
                 continue;

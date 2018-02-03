@@ -80,6 +80,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.axis.handlers.LogMessage;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -1023,7 +1024,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             String to = bookingEngine.getBookingItemType(newType).name;
 
             String logText = "Changed item type from : " + from + " to " + to;
-            logEntry(logText, bookingId, null, roomId);
+            logEntry(logText, bookingId, null, roomId, "changetype");
         } catch (BookingEngineException ex) {
             logPrintException(ex);
             return ex.getMessage();
@@ -1048,7 +1049,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             changeDatesOnRoom(room, start, end);
             
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
-            logEntry(logText, bookingId, room.bookingItemId, roomId);
+            logEntry(logText, bookingId, room.bookingItemId, roomId, "changestay");
             if(!booking.isSameDay(end, oldEnd) || !booking.isSameDay(start, oldStart)) {
                 doNotification("date_changed", booking, room);
             }
@@ -1159,7 +1160,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
-                logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId);
+                logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId, "changestay");
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
                 resetBookingItem(room, itemId, booking);
             } else {
@@ -1194,7 +1195,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 logText = "Unassigned room from " + from;
             }
             
-            logEntry(logText, booking.id, null, roomId);
+            logEntry(logText, booking.id, null, roomId, "changestayitem");
             if(room.isStarted() && !room.isEnded()) {
                 doNotification("room_changed", booking, room);
             }
@@ -1366,11 +1367,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             repemail += rep + ", ";
         }
 
+        String roomId = null;
+        if(room != null) {
+            roomId = room.pmsBookingRoomId;
+        }
         if (message != null && !message.isEmpty()) {
-            logEntry("Sms notification: " + key + " Message: " + message + " recipients: " + repssms, booking.id, null);
+            logEntry(message + " recipients: " + repssms, booking.id, null, roomId, key+"_sms");
         }
         if (message2 != null && !message2.isEmpty()) {
-            logEntry("Email notification: " + key + " Message: " + message2 + " recipients: " + repemail, booking.id, null);
+            logEntry(message2 + " recipients: " + repemail, booking.id, null, roomId, key+"_email");
         }
         emailToSendTo = null;
         booking.notificationsSent.add(addNotificationSent);
@@ -2860,17 +2865,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public void logEntry(String logText, String bookingId, String itemId) {
-        logEntry(logText, bookingId, itemId, null);
+        logEntry(logText, bookingId, itemId, null, "api");
 
     }
 
-    private void logEntry(String logText, String bookingId, String itemId, String roomId) {
+    private void logEntry(String logText, String bookingId, String itemId, String roomId, String logType) {
 
         PmsLog log = new PmsLog();
         log.bookingId = bookingId;
         log.bookingItemId = itemId;
         log.roomId = roomId;
         log.logText = logText;
+        log.logType = logType;
         logEntryObject(log);
     }
 
@@ -2890,6 +2896,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 } else if (!filter.bookingId.isEmpty() && filter.bookingId.equals(log.bookingId)) {
                     res.add(log);
                 } else if (!filter.bookingItemId.isEmpty() && filter.bookingItemId.equals(log.bookingItemId)) {
+                    res.add(log);
+                } else if ((!filter.roomId.isEmpty() && filter.roomId.equals(log.roomId)) || log.roomId == null || log.roomId.isEmpty()) {
                     res.add(log);
                 }
             }
@@ -3760,6 +3768,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 } else {
                     messageManager.sendSms("nexmo", guest.phone, message, guest.prefix);
                 }
+                logEntry(message + "<br>+" + guest.prefix + " " + guest.phone, storeId, null, simple.pmsRoomId, "sms");
             }
         }
     }
@@ -4316,11 +4325,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     }
 
     @Override
+    public void sendMessageOnRoom(String email, String title, String message, String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        message = configuration.emailTemplate.replace("{content}", message);
+        messageManager.sendMail(email, "", title, message, getFromEmail(), getFromName());
+        if(title == null || title.isEmpty()) {
+            message = "Message sent to : " + email + " Message: " + message;
+        } else {
+            message = "Message sent to : " + email + " Message: " + message + ", title: " + title;
+        }
+        logEntry(message, booking.id, null, roomId, "email");
+    }
+
+    @Override
+    public void sendSmsOnRoom(String prefix, String phone, String message, String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        logEntry(message + "<br> +" + prefix + " " + phone, booking.id, null, roomId, "sms");
+        message = configuration.emailTemplate.replace("{content}", message);
+        if(prefix.equals("47")) {
+            messageManager.sendSms("sveve", phone, message, prefix);
+        } else {
+            messageManager.sendSms("nexmo", phone, message, prefix);
+        }
+    }
+    
+    @Override
     public void sendMessage(String bookingId, String email, String title, String message) {
         message = configuration.emailTemplate.replace("{content}", message);
         messageManager.sendMail(email, "", title, message, getFromEmail(), getFromName());
         message = "Message sent to : " + email + " Message: " + message + ", title: " + title;
-        logEntry(message, bookingId, null);
+        logEntry(message, bookingId, null, null, "email");
    }
 
     void setOrderIdToSend(String id) {
@@ -5513,7 +5547,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 if(room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
                     if(room.isEndingToday() && !room.isEnded()) {
                         changeDatesOnRoom(room, room.date.start, new Date());
-                        logEntry("Cleaning program is ending the stay.", booking.id, itemId, room.pmsBookingRoomId);
+                        logEntry("Cleaning program is ending the stay.", booking.id, itemId, room.pmsBookingRoomId, "endstay");
                     }
                 }
             }
@@ -5764,7 +5798,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         saveBooking(booking);
         
         Product product = productManager.getProduct(addon.productId);
-        logEntry("Added addon: " + product.name, booking.id, room.bookingItemId, room.pmsBookingRoomId);
+        logEntry("Added addon: " + product.name, booking.id, room.bookingItemId, room.pmsBookingRoomId, "addaddon");
     }
 
     private void updateRoomPriceFromAddons(PmsBookingRooms room, PmsBooking booking) {
@@ -6599,7 +6633,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 for(PmsGuests guest : room.guests) {
                     if(guest.guestId.equals(guestId)) {
                         messageManager.sendSms("sveve", guest.phone, message, guest.prefix, configuration.smsName);
-                        logEntry("SMS SENT: " + message + "<bR> +" + guest.prefix + " " + guest.phone, booking.id, room.bookingItemId);
+                        logEntry(message + "<bR> +" + guest.prefix + " " + guest.phone, booking.id, room.bookingItemId, room.pmsBookingRoomId, "sms");
                         return;
                     }
                 }
@@ -7122,7 +7156,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         room.addons.removeAll(toRemove);
-        logEntry("Removed addon from room:" + productManager.getProduct(productId).name, booking.id, room.bookingItemId, room.pmsBookingRoomId);
+        logEntry("Removed addon from room:" + productManager.getProduct(productId).name, booking.id, room.bookingItemId, room.pmsBookingRoomId, "removeaddon");
         saveBooking(booking);
     }
 

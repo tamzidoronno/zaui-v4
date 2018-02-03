@@ -165,6 +165,7 @@ body {
     max-width: 1500px;
     margin: 0 auto;
 }
+.GetShopModuleTable .datarow:not(.active) { cursor:pointer; }
 
 .gs_main_column .GetShopModuleTable {
     margin: inherit;

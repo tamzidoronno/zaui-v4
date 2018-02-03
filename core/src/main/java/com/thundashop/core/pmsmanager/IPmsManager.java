@@ -187,6 +187,12 @@ public interface IPmsManager {
     @Administrator
     public void sendMessage(String bookingId, String email, String title, String message);
     
+    @Administrator
+    public void sendMessageOnRoom(String email, String title, String message, String roomId);
+    
+    @Administrator
+    public void sendSmsOnRoom(String prefix, String phone, String message, String roomId);
+    
     public void endRoom(String roomId);
     
     @Administrator

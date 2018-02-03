@@ -15,6 +15,7 @@ public class PmsLog extends DataCommon {
     public String roomId = "";
     public String tag = "";
     public boolean includeAll = false;
+    public String logType;
     
     @Transient
     public String userName = "";

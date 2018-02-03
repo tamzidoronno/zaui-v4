@@ -227,7 +227,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     private function setModalVariable() {
         if ($this->isModalView()) {    
-            
             $_SESSION['PmsBookingRoomView_current_pmsroom_id'] = $this->getModalVariable("roomid");
             $this->setData();
         } 
@@ -312,6 +311,43 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->setData();
         return $this->selectedRoom;
     }
+    
+    public function sendMessage() {
+        $type = $_POST['data']['submit'];
+        $message = $_POST['data']['message'];
+        $room = $this->getSelectedRoom();
+        for($i = 0; $i <= 30; $i++) {
+            if(!isset($_POST['data']['sendtoguest_'.$i])) {
+                continue;
+            }
+            if($_POST['data']['sendtoguest_'.$i] !== "true") {
+                continue;
+            }
+            $prefix = $_POST['data']['prefix_'.$i];
+            $phone = $_POST['data']['phone_'.$i];
+            $email = $_POST['data']['email_'.$i];
+            $guestId = $_POST['data']['guestid_'.$i];
+            if($type == "sendassms") {
+                $this->getApi()->getPmsManager()->sendSmsOnRoom($this->getSelectedMultilevelDomainName(), $prefix, $phone, $message, $room->pmsBookingRoomId);
+            }
+            if($type == "sendasemail") {
+                //sendMessageOnRoom(String email, String title, String message, String roomId)
+                $this->getApi()->getPmsManager()->sendMessageOnRoom($this->getSelectedMultilevelDomainName(), $email, "", $message, $room->pmsBookingRoomId);
+            }
+            if($type == "sendasboth") {
+                $this->getApi()->getPmsManager()->sendSmsOnRoom($this->getSelectedMultilevelDomainName(), $prefix, $phone, $message, $room->pmsBookingRoomId);
+                $this->getApi()->getPmsManager()->sendMessageOnRoom($this->getSelectedMultilevelDomainName(), $email, "", $message, $room->pmsBookingRoomId);
+            }
+        }
+    }
+    
+    public function resendConfirmation() {
+        $email = $_POST['data']['email'];
+        $this->setData();
+        $booking = $this->getPmsBooking();
+        $bookingId = $booking->id;
+        $this->getApi()->getPmsManager()->sendConfirmation($this->getSelectedMultilevelDomainName(), $email, $bookingId, "");
+    }
 
     public function saveUser($user) {
         $this->setData();
@@ -382,6 +418,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         if ($_SESSION['currentSubMenu'] == "addons") {
             $this->printAddonsArea();
+        }
+        if ($_SESSION['currentSubMenu'] == "messages") {
+            $this->printMessages();
         }
         if ($_SESSION['currentSubMenu'] == "orders") {
             $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
@@ -623,6 +662,29 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             $total += $val;
         }
         return $total;
+    }
+
+    public function printMessages() {
+        $this->includefile("messages");
+    }
+
+    public function renewCodeForRoom() {
+        $this->setData();
+        $code = $this->getApi()->getPmsManager()->generateNewCodeForRoom($this->getSelectedMultilevelDomainName(), $this->getSelectedRoom()->pmsBookingRoomId);
+        $room = $this->getSelectedRoom();
+        $room->code = $code;
+        $this->updateRoom($room);
+        $this->includefile("accesscode");
+    }
+    
+    public function resendCodeForRoom() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $roomId = $room->pmsBookingRoomId;
+        $prefix = $_POST['data']['prefix'];
+        $phoneNumber = $_POST['data']['phone'];
+        $this->getApi()->getPmsManager()->sendCode($this->getSelectedMultilevelDomainName(), $prefix, $phoneNumber, $roomId);
+        $this->includefile("accesscode");
     }
 
 }

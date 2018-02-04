@@ -69,6 +69,9 @@ public interface IPmsManager {
     public List<PmsRoomSimple> getRoomsToSwap(String roomId, String moveToType);
     
     @Administrator
+    public List<PmsCleaningHistory> getCleaningHistoryForItem(String itemId);
+    
+    @Administrator
     public String swapRoom(String roomId, List<String> roomIds);
     
     @Administrator

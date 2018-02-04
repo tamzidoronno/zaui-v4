@@ -49,6 +49,10 @@ if(!$addonsPrice) {$addonsPrice = "";} else {$addonsPrice  = " - " . $addonsPric
             <? $this->includefile("messages"); ?>
         </div>
         
+        <div class="guestinformation <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'>
+            <? $this->includefile("cleaning"); ?>
+        </div>
+        
         <div class="guestinformation <? echo $this->isTabActive('orders'); ?>" tab='orders'>
             <? 
             $this->includefile("orderstab");

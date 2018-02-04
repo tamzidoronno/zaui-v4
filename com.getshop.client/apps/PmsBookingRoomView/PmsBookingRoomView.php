@@ -236,6 +236,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->render();
     }
     
+    public function clearCache() {
+        unset($_SESSION['cachedroomspmsrooms']);
+        unset($_SESSION['cachedbookings']);
+        unset($_SESSION['cachedpmsbookings']);
+    }
+    
     public function setData($reload = false) {
         
         if(!isset($_SESSION['cachedroomspmsrooms'])) {
@@ -421,6 +427,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         if ($_SESSION['currentSubMenu'] == "messages") {
             $this->printMessages();
+        }
+        if ($_SESSION['currentSubMenu'] == "cleaning") {
+            $this->printCleaning();
         }
         if ($_SESSION['currentSubMenu'] == "orders") {
             $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
@@ -668,6 +677,50 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("messages");
     }
 
+    public function markRoomCleanedWithoutLogging() {
+        $itemId = $this->getSelectedRoom()->bookingItemId;
+        $this->getApi()->getPmsManager()->markRoomAsCleanedWithoutLogging($this->getSelectedMultilevelDomainName(), $itemId);
+        $this->clearCache();
+    }
+    
+    public function markRoomCleanedWithLogging() {
+        $itemId = $this->getSelectedRoom()->bookingItemId;
+        $this->getApi()->getPmsManager()->markRoomAsCleaned($this->getSelectedMultilevelDomainName(), $itemId);
+        $this->clearCache();
+    }
+    
+    public function setCleaningComment() {
+        $roomId = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomId) {
+                $room->cleaningComment = $_POST['data']['comment'];
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->clearCache();
+    }
+
+    public function setCleaningDate() {
+        $roomId = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomId) {
+                $room->date->cleaningDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->clearCache();
+    }
+    
+    public function setCleaningInterval() {
+        $roomId = $_POST['data']['roomid'];
+        $interval = $_POST['data']['interval'];
+        $this->getApi()->getPmsManager()->setNewCleaningIntervalOnRoom($this->getSelectedMultilevelDomainName(), $roomId, $interval);
+        $this->clearCache();
+    }
+    
+    
     public function renewCodeForRoom() {
         $this->setData();
         $code = $this->getApi()->getPmsManager()->generateNewCodeForRoom($this->getSelectedMultilevelDomainName(), $this->getSelectedRoom()->pmsBookingRoomId);
@@ -685,6 +738,35 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $phoneNumber = $_POST['data']['phone'];
         $this->getApi()->getPmsManager()->sendCode($this->getSelectedMultilevelDomainName(), $prefix, $phoneNumber, $roomId);
         $this->includefile("accesscode");
+    }
+
+    public function printCleaning() {
+        $this->includefile("cleaning");
+    }
+
+    /**
+     * 
+     * @return \core_pmsmanager_PmsLog[]
+     */
+    public function getSelectedRoomLog() {
+        if(isset($this->roomLog)) {
+            return $this->roomLog;
+        }
+        $filter = new \core_pmsmanager_PmsLog();
+        $filter->roomId = $this->getSelectedRoom()->pmsBookingRoomId;
+        $logs = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedMultilevelDomainName(), $filter);
+        $this->roomLog = $logs;
+        return $logs;
+    }
+
+    public function getRoom($roomId) {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $roomId);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomId) {
+                return $room;
+            }
+        }
+        return null;
     }
 
 }

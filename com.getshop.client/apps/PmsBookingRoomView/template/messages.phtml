@@ -44,13 +44,11 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 <br>
 <h3>Message log</h3>
 <?php
-$filter = new core_pmsmanager_PmsLog();
-$filter->roomId = $this->getSelectedRoom()->pmsBookingRoomId;
-$logs = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedMultilevelDomainName(), $filter);
+$logs = $this->getSelectedRoomLog();
 $printed = false;
 foreach($logs as $log) {
     $type = $log->logType;
-//    if(stristr($type, "sms") || stristr($type, "email")) {
+    if(stristr($type, "sms") || stristr($type, "email")) {
         $printed = true;
         $text = $log->logText;
         $text = preg_replace('/^(?:<br\s*\/?>\s*)+/', '', $text);
@@ -60,7 +58,7 @@ foreach($logs as $log) {
         echo "<span style='float:left;'>" . $log->rowCreatedDate . "</span>";
         echo $log->logType . "<div style='clear:both;'></div></div>";
         echo "</div>";
-//    }
+    }
 }
 if(!$printed) {
     echo "No messages sent yet";

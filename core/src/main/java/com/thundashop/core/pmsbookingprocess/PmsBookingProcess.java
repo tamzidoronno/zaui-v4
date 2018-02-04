@@ -152,6 +152,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         List<PmsBookingProcessorCalculator> toUse = new ArrayList();
         
         PmsBooking booking = pmsManager.getCurrentBooking();
+        HashMap<String, Integer> maxRooms = new HashMap();
         
         for(BookingProcessRooms room : result.rooms) {
             if(!room.visibleForBooker) {
@@ -165,6 +166,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 res.price = price;
                 res.guestPrice = price/guest;
                 res.maxRooms = room.availableRooms;
+                maxRooms.put(room.id, room.availableRooms);
                 toUse.add(res);
                 
             }
@@ -185,15 +187,17 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         while(true) {
             for(Integer roomIdx = 0; roomIdx < arg.rooms; roomIdx++) {
                 for(PmsBookingProcessorCalculator lowest : toUse) {
-                    if(lowest.maxRooms == 0) {
+                    if(maxRooms.get(lowest.room.id) == 0) {
                         continue;
                     }
                     if((guestLeft - lowest.guests) < (roomsLeft-1)) {
                         continue;
                     }
-                    lowest.maxRooms--;
+                    int count = maxRooms.get(lowest.room.id);
+                    count--;
+                    maxRooms.put(lowest.room.id, count);
+                    
                     listOfRooms.add(lowest);
-                    System.out.println(lowest.room.id + " : " + lowest.guests + " : " + lowest.price);
                     guestLeft -= lowest.guests;
                     roomsLeft--;
                     break;

@@ -2905,10 +2905,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 }
                 if(filter.includeAll) {
                     res.add(log);
-                } else if (!filter.bookingId.isEmpty() && filter.bookingId.equals(log.bookingId)) {
-                    res.add(log);
-                } else if (!filter.bookingItemId.isEmpty() && filter.bookingItemId.equals(log.bookingItemId)) {
-                    res.add(log);
+                } else if (!filter.bookingId.isEmpty()) {
+                    if(filter.bookingId.equals(log.bookingId)) {
+                        res.add(log);
+                    }
+                } else if (!filter.bookingItemId.isEmpty()) {
+                    if(filter.bookingItemId.equals(log.bookingItemId)) {
+                        res.add(log);
+                    }
                 } else if ((!filter.roomId.isEmpty() && filter.roomId.equals(log.roomId)) || log.roomId == null || log.roomId.isEmpty()) {
                     res.add(log);
                 }

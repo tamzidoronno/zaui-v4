@@ -1,7 +1,7 @@
 <?
 /* @var $this \ns_01b8bd0c_0375_42fa_a44e_d177485db704\ApacLocks */
 $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($_POST['data']['serverid'], $_POST['data']['lockid']);
-
+$_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_editlock_lockid']  = $lock->id;
 $this->setLock($lock);
 ?>
 <div class='lock'>

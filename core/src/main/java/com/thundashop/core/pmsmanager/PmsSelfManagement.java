@@ -19,6 +19,8 @@ import static org.apache.commons.lang3.time.DateUtils.isSameDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static org.apache.commons.lang3.time.DateUtils.isSameDay;
+import static org.apache.commons.lang3.time.DateUtils.isSameDay;
+import static org.apache.commons.lang3.time.DateUtils.isSameDay;
 
 /**
  *
@@ -123,7 +125,7 @@ public class PmsSelfManagement extends GetShopSessionBeanNamed implements IPmsSe
         } else {
             pmsAddon.count = 1;
         }
-        pmsManager.addAddonToRoom(addon.roomId, pmsAddon);
+        pmsManager.addAddonOnRoom(addon.roomId, pmsAddon);
     }
 
     private void triggerCreateOrder(PmsBooking booking) throws ErrorException {

@@ -5802,10 +5802,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         addon.description = product.description;
         
-        addAddonToRoom(pmsBookingRoomId, addon);
+        addAddonOnRoom(pmsBookingRoomId, addon);
     }
     
-    public void addAddonToRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
+    public void addAddonOnRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
        
@@ -7702,7 +7702,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 addon.date = new Date();
             }
             
-            addAddonToRoom(ticket.externalId, addon);
+            addAddonOnRoom(ticket.externalId, addon);
             
             ticketManager.markTicketAsTransferredToAccounting(ticket.id);
         });

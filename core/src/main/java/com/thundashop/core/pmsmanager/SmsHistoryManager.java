@@ -75,7 +75,6 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         cal.set(Calendar.SECOND, 0);
                         cal.set(Calendar.MILLISECOND, 0);
                         
-                        cal.add(Calendar.MONTH, 1);
                         Date postingDate = cal.getTime();
                         cal.add(Calendar.MONTH, -1);
 

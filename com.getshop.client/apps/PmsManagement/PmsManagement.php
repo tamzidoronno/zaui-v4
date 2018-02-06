@@ -3155,15 +3155,21 @@ class PmsManagement extends \WebshopApplication implements \Application {
             if(!$item) {
                 continue;
             }
-            $priceEx = round($item->product->priceExTaxes);
-            $price = round($item->product->price, 1);
+            $priceEx = round($item->product->priceExTaxes,2);
+            $price = round($item->product->price, 2);
             $totalEx += ($priceEx * $item->count);
             $total += ($price * $item->count);
             $totalCount += $item->count;
             $res = array();
             $res['additionalmetadata'] = $item->product->additionalMetaData;
-            $res['itemstart'] = date("d.m.Y H:i", strtotime($item->startDate));
-            $res['itemend'] = date("d.m.Y H:i", strtotime($item->endDate));
+            $res['itemstart'] = "";
+            if($item->startDate) {
+                $res['itemstart'] = date("d.m.Y H:i", strtotime($item->startDate));
+            }
+            $res['itemend'] = "";
+            if($item->endDate) {
+                $res['itemend'] = date("d.m.Y H:i", strtotime($item->endDate));
+            }
             $res['productname'] = $item->product->name;
             $res['metadata'] = $item->product->metaData;
             $res['price'] = $price;

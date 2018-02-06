@@ -227,8 +227,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
-            correctOrdersThatHasToBeChangedTaxesOn();
+        if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
+            checkChargeAfterDate();
         }
     }
 
@@ -652,7 +652,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order getOrder(String orderId) throws ErrorException {
-        correctOrderForRenaTrening();
         if(getSession() == null) {
             logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
             return null;
@@ -2130,72 +2129,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 });
     }
 
-    /**
-     * A temporary function that can be removed whenever you want.
-     */
-    private Integer correctOrdersThatHasToBeChangedTaxesOn() {
-        int count = 0;
-        try {
-            for(Order order : orders.values()) {
-                Date start = order.getStartDateByItems();
-                if(start == null) {
+    
+
+    private void checkChargeAfterDate() {
+        for(Order ord : this.orders.values()) {
+            if(ord.chargeAfterDate != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(ord.rowCreatedDate);
+                int createdYear = cal.get(Calendar.YEAR);
+                int createdMonth = cal.get(Calendar.MONTH);
+                if(createdYear != 2018 || createdMonth != 0) {
                     continue;
                 }
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(start);
-                Integer year = cal.get(Calendar.YEAR);
-                boolean save = false;
-                if(year == 2017) {
-                    for(CartItem item : order.cart.getItems()) {
-                        Double rate = item.getProduct().taxGroupObject.taxRate;
-                        if(rate.intValue() == 12) {
-                            item.getProduct().taxGroupObject.taxRate = 10.0;
-                            save = true;
-                        }
-                    }
-                }
-                if(save) {
-                    saveObject(order);
-                    count++;
-                }
-            }
-        }catch(Exception e) {
-            messageManager.sendErrorNotification("Failed to correct ordes for this store.", e);
-        }
-        
-        return count;
-    }
-
-    private void correctOrderForRenaTrening() {
-        if(!storeId.equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b")) {
-            //Only temporary for renatrening, can be removed whenever you want.
-            return;
-        }
-        Calendar cal = Calendar.getInstance();
-        
-        for(Order ord : orders.values()) {
-            boolean save = false;
-            cal.setTime(ord.rowCreatedDate);
-            int year = cal.get(Calendar.YEAR);
-            int day = cal.get(Calendar.DAY_OF_YEAR);
-            if(year == 2018 && day == 2 && ord.getEndDateByItems() != null) {
-                System.out.println(ord.incrementOrderId);
-                System.out.println(ord.getEndDateByItems());
-                cal.setTime(ord.getEndDateByItems());
-                year = cal.get(Calendar.YEAR);
-                day = cal.get(Calendar.DAY_OF_YEAR);
-                if(year == 2018 && day == 2) {
+                
+                
+                cal.setTime(ord.chargeAfterDate);
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                if(month == 2 && year == 2018 && day == 1) {
+                    System.out.println(ord.rowCreatedDate + " : " + ord.chargeAfterDate + " : " + day + "." + month+"."+year);
                     cal.set(Calendar.MONTH, 1);
-                    cal.set(Calendar.DAY_OF_MONTH,1);
-                    System.out.println("- " + cal.getTime());
-                    for(CartItem item : ord.cart.getItems()) {
-                        item.endDate = cal.getTime();
-                        save = true;
-                    }
+                    ord.chargeAfterDate = cal.getTime();
+                    saveObject(ord);
                 }
-            }
-            if(save) {
-                saveOrder(ord);
             }
         }
     }

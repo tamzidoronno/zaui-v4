@@ -76,7 +76,6 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         cal.set(Calendar.MILLISECOND, 0);
                         
                         Date postingDate = cal.getTime();
-                        cal.add(Calendar.MONTH, -1);
 
                         
                         
@@ -113,6 +112,7 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                             PmsBookingAddonItem internal = pmsManager.getAddonByProductId(productIdInner);
                             toAddonInternal = pmsManager.createAddonToAdd(internal, postingDate, room);
                             room.addons.add(toAddonInternal);
+                            toAddonInternal.count = res.inner;
                         }
                         
                         //Utland
@@ -120,10 +120,9 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                             PmsBookingAddonItem external = pmsManager.getAddonByProductId(productIdOuter);
                             toAddonExternal = pmsManager.createAddonToAdd(external, postingDate, room);
                             room.addons.add(toAddonExternal);
+                            toAddonExternal.count = res.outer;
                         }
                         
-                        toAddonExternal.count = res.outer;
-                        toAddonInternal.count = res.inner;
                     
                         saveBooking = true;
                     }

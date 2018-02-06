@@ -7054,6 +7054,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             count.put(book.userId, 1);
         }
         
+        List<User> users = userManager.findUsers(filter.searchWord);
+        for(User user : users) {
+            count.put(user.id, 1);
+        }
+        
+        
         HashMap<String, Integer> bookingCount = new HashMap();
         HashMap<String, Integer> roomCount = new HashMap();
         HashMap<String, Date> bookingLatest = new HashMap();

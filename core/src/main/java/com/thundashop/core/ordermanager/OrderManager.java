@@ -1420,6 +1420,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
+        if(order.id.equals("2c5a3e97-53e2-4ad1-9cc5-f399770716fb")) {
+            System.out.println("yes");
+        }
         if(order == null || order.cart == null) {
             return false;
         }
@@ -1448,7 +1451,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if(item.startDate != null && new Date().after(item.startDate)) {
                     boolean isAfter = yesterday.getTime().after(order.rowCreatedDate);
                     if(order.chargeAfterDate != null && order.chargeAfterDate.after(order.rowCreatedDate)) {
-                        yesterday.getTime().after(order.chargeAfterDate);
+                        isAfter = yesterday.getTime().after(order.chargeAfterDate);
                     }
                     if(isAfter) {
                         Store store = storeManager.getMyStore();

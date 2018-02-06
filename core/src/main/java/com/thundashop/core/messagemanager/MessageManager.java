@@ -39,6 +39,8 @@ import org.springframework.stereotype.Component;
 
 import static java.util.stream.Collectors.toMap;
 import static java.lang.Math.min;
+import static java.util.stream.Collectors.toMap;
+import static java.lang.Math.min;
 
 /**
  */

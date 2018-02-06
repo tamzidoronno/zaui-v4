@@ -33,6 +33,7 @@ public class PmsBookingRooms implements Serializable {
 
     public String bookingItemTypeId = "";
     public String bookingItemId = "";
+    public String orderUnderConstructionId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();
     @ExcludePersonalInformation
     public List<PmsGuests> guests = new ArrayList();

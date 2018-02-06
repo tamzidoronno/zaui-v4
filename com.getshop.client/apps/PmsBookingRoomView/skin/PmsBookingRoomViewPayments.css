@@ -1,0 +1,49 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 3, 2018, 4:03:24 PM
+    Author     : ktonder
+*/
+
+.PmsBookingRoomView .payment_window, 
+.PmsBookingRoomView .SalesPointCartCheckout {
+    padding: 0px !important;
+}
+
+.PmsBookingRoomView .booking_cart_buttons_area {
+    text-align: right;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] {
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.PmsBookingRoomView .guestinformation[tab="orders"] .kaipal {
+    margin-bottom: 30px;
+}
+.PmsBookingRoomView .paymentcomment {
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    padding: 20px;
+    position: absolute;
+    z-index: 1;
+    background-color: #FFF;
+    width: 400px;
+    margin-top: 20px;
+    display: none;
+}
+
+.PmsBookingRoomView .paymentcomment textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    padding: 20px;
+    height: 100px;
+}
+
+.PmsBookingRoomView .topbuttons {
+    margin-bottom: 20px;
+}

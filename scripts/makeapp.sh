@@ -55,6 +55,9 @@ echo "9. Apac";
 echo "10. Salespoint";
 echo "11. Ecommerce";
 echo "12. GetShop Settings";
+echo "13. Accounting";
+echo "14. Ticket";
+echo "15. CRM";
 read moduleNumber
 
 module=other
@@ -95,6 +98,18 @@ if [ $moduleNumber = "11" ]; then
 fi
 if [ $moduleNumber = "12" ]; then 
     module=settings
+    defaultActivated=true
+fi
+if [ $moduleNumber = "13" ]; then 
+    module=account
+    defaultActivated=true
+fi
+if [ $moduleNumber = "14" ]; then 
+    module=ticket
+    defaultActivated=true
+fi
+if [ $moduleNumber = "15" ]; then 
+    module=crm
     defaultActivated=true
 fi
 

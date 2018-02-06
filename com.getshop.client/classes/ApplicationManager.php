@@ -17,6 +17,7 @@ class ApplicationManager extends FactoryBase {
     
     public function loadRightWidgetPanelArea() {
         $_SESSION['gs_currently_showing_rightWidget'] = $_POST['data']['area'];
+        $_SESSION['modal_variable_'.$_POST['data']['area']] = $_POST['data'];
         $this->getPage()->renderRightWidgetArea($_POST['data']['area']);
     }
 

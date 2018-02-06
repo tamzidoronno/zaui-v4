@@ -13,9 +13,51 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .removeselectedaddons', this.removeSelectedAddons);
         $(document).on('click', '.PmsBookingRoomView .addonsArea .toggleRemoveAddonCheckBox', this.toggleRemoveAddonCheckBox);
         $(document).on('click', '.PmsBookingRoomView .doeditaddonupdate', this.doEditAddonUpdate);
+        $(document).on('click', '.PmsBookingRoomView .addselecteditemstocart', this.addSelectedItemsToCart);
         $(document).on('change', '.PmsBookingRoomView [gsname]', this.formChanged);
         $(document).on('change', '.PmsBookingRoomView .unitprice_changed', this.unitPriceChanged);
+        $(document).on('click', '.PmsBookingRoomView .topbuttons .toggleComment', this.toggleComment);
+        $(document).on('click', '.PmsBookingRoomView .topbuttons .saveInvoiceNote', this.saveInvoiceNote);
     },
+    
+    saveInvoiceNote: function() {
+        var data = {
+            invoicenote : $(this).closest('.paymentcomment').find('textarea').val()
+        };
+        
+        var event= thundashop.Ajax.createEvent(null, "invoiceNoteChanged", this, data);
+        event['synchron'] = true;
+        var me = $(this);
+        
+        thundashop.Ajax.post(event, function() {
+            me.closest('.topbuttons').find('.paymentcomment').hide();
+        });
+    },
+    
+    toggleComment: function() {
+        var box = $(this).closest('.topbuttons').find('.paymentcomment');
+        if (box.is(':visible')) {
+            box.hide();
+        } else {
+            box.show();
+        }
+    },
+    
+    addSelectedItemsToCart: function() {
+        var event = thundashop.Ajax.createEvent(null, "transferSelectedToCart", this, {});
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function (res) {
+            if (!$('.GetShopCart').is(':visible')) {
+                var data = {
+                    orderUnderConstrcutionId : res
+                }
+                thundashop.framework.toggleRightWidgetPanel('gs_modul_cart', data);
+                app.PmsBookingRoomView.refresh();
+            }    
+        });
+    },
+    
     doEditAddonUpdate : function() {
         thundashop.Ajax.ajaxFile = "cached.php";
         var panel = $(this).closest('.editaddonpanel');

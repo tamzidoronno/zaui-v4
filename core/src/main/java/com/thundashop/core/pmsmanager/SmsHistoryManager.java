@@ -91,7 +91,7 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         List<PmsBookingAddonItem> remove = new ArrayList();
                         for(PmsBookingAddonItem item : room.addons) {
                             if(!PmsBookingRooms.isSameDayStatic(item.date, postingDate)) {
-                                continue;
+//                                continue;
                             }
                             if(item.productId.equals(productIdInner)) {
 //                                toAddonInternal = item;

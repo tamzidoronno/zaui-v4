@@ -253,12 +253,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         if(!isset($_SESSION['cachedbookings'])) {
             $_SESSION['cachedbookings'] = array();
         }
-        
+
         if (!isset($_SESSION['PmsBookingRoomView_current_pmsroom_id']) && !$reload) {
             return;
         }
         
-        if (isset($_SESSION['cachedroomspmsrooms'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']])) {
+        if (isset($_SESSION['cachedroomspmsrooms'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']]) && !$reload) {
             $this->selectedRoom = json_decode($_SESSION['cachedroomspmsrooms'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']]);
             $this->bookingEngineBooking = json_decode($_SESSION['cachedbookings'][$this->selectedRoom->bookingId]);
             $this->pmsBooking = json_decode($_SESSION['cachedpmsbookings'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']] );
@@ -538,7 +538,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $booking = $this->getPmsBooking();
         $booking->invoiceNote = $_POST['data']['invoicenote'];
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
-        $this->setData();
+        $this->setData(true);
     }
 
     
@@ -768,6 +768,59 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         return null;
     }
+
+    public function transferSelectedToCart() {
+        $this->setData();
+        
+        $selectedRoom = null;
+        
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $this->getSelectedRoom()->pmsBookingRoomId);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
+                $selectedRoom = $room;
+                break;
+            }
+        }
+        
+        if (!$selectedRoom) {
+            die("Could not find the room.");
+        }
+        
+        if (!$selectedRoom->orderUnderConstructionId) {
+            $selectedRoom->orderUnderConstructionId = $this->uuidV4();
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        }
+        
+        echo $selectedRoom->orderUnderConstructionId;
+        
+        $salesPoint = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $this->getApi()->getOrderManager()->updateCartOnOrderUnderConstruction($selectedRoom->orderUnderConstructionId, $cart);
+        $this->setData(true);
+    }
+    
+    private function uuidV4() {
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+
+          // 32 bits for "time_low"
+          mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+
+          // 16 bits for "time_mid"
+          mt_rand(0, 0xffff),
+
+          // 16 bits for "time_hi_and_version",
+          // four most significant bits holds version number 4
+          mt_rand(0, 0x0fff) | 0x4000,
+
+          // 16 bits, 8 bits for "clk_seq_hi_res",
+          // 8 bits for "clk_seq_low",
+          // two most significant bits holds zero and one for variant DCE1.1
+          mt_rand(0, 0x3fff) | 0x8000,
+
+          // 48 bits for "node"
+          mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+    );
+  }
 
 }
 ?>

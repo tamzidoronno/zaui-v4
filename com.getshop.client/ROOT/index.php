@@ -227,7 +227,10 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
     ?>
     
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
-        <div class='gsrightwidgetpanel' style='display:none;'><div class='gsrightwidgetpanelheader'><i class='fa fa-close' onclick='thundashop.framework.toggleRightWidgetPanel();'></i></div>
+        <?
+        $showRightPanel = !$rightWidgetOpen ? "display:none;" : "";
+        ?>
+        <div class='gsrightwidgetpanel' style='<? echo $showRightPanel; ?>'><div class='gsrightwidgetpanelheader'><i class='fa fa-close' onclick='thundashop.framework.toggleRightWidgetPanel();'></i></div>
             <div class='gsrightwidgetbody'>
                 <?php 
                 if($rightWidgetOpen) { 

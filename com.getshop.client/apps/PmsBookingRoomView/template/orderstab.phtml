@@ -22,71 +22,51 @@ $options->extraArgs['roomid'] = $pmsSelectedRoom->pmsBookingRoomId;
 $options->extraArgs['id'] = $booking->id;
 ?>
 
-<div class="payment_window">
-    <?
-    echo $this->__f("Here you have an overview of the payments that need to be created and a payment history");
-    ?>
+<div class="topbuttons">
+    <div class="gs_shop_small_icon toggleComment" title="<? echo $this->__f("Payment comment"); ?>"><i class="icon-bubble-pencil"></i></div>
+    
+    <div class="paymentcomment">
+        <?
+        echo $this->__f("Invoice note").":";
+        ?>
+        <textarea><? echo $pmsBooking->invoiceNote; ?></textarea>
+        <div>
+            <div class="shop_button toggleComment"><? echo $this->__f("close"); ?></div>
+            <div class="shop_button saveInvoiceNote"><? echo $this->__f("Save"); ?></div>
+        </div>
+    </div>
 </div>
-<h2><? echo $this->__f("Need to be paid"); ?></h2>
+
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Payment"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("I am constantly looking out for you. Each time you change something that got to do with prices in the booking itself I will automatically recalculate for you what you havent claimed money for. Simply put, everything you see under in list the \"Need to by paid\" is all that you have not yet created orders for. When you create a new order the remaining part of what the guest owns you will still be under the list need to be paid.");
+                ?>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='insideheader'><? echo $this->__f("Need to be paid"); ?></div>
 <?
 $showingPaymentProcess = $this->startPaymentProcess();
+
 if ($showingPaymentProcess) {
 ?>
-<div class="payment_options payment_window">
-    <div class="h3"><? echo $this->__f("Payment options"); ?></div>
-    <div class="options">
-        <div class="gs_shop_small_icon payment_option_choice active" payment="paymentproces">
-            <div class="activeline"></div>
-            <i class="fa fa-check"></i> <? echo $this->__f("Add to process for payment"); ?>
-        </div>    
-        
-        <?
-        foreach ($paymentApps as $app) {
-            ?>
-            <div class="gs_shop_small_icon payment_option_choice" style="font-size: 14px;" payment="<? echo $app->id; ?>">
-                <div class="activeline"></div>
-                <i class="fa fa-check"></i> <? echo $app->appName; ?>
-            </div>        
-        <?
-        }
-        ?>
-    </div>
-    
-    <div class="option_content">
-        
-        <div class="option_content_div payment_content active" payment="paymentproces">
-            You can use this option to merge and split payments. Add as many rooms and items you wish to process, then process them all at one to create one single payment etc.
-
-            <br/>
-            <br/><div class="shop_button" synchron="true" gs_callback="app.PmsSearchBooking.ordersTabChanged" id="<? echo $booking->id; ?>" roomid="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" gsclick="addCurrentCartForPaymentProcess" >Start payment process</div>  
-        </div>
-        
-        <?
-        foreach ($paymentApps as $paymentApp) {
-            $instance = $this->getFactory()->getApplicationPool()->createInstace($paymentApp);
-            ?>
-            <div class="option_content_div payment_content" payment="<? echo $paymentApp->id; ?>" appName="<? echo $paymentApp->appName; ?>">
-                <?
-                $instance->renderPayment($options);
-                ?>
-            </div>
-            <?
-        }
-        ?>
-    </div>
+<div class='booking_cart_buttons_area'>
+    <div class='shop_button addselecteditemstocart'><? echo $this->__f("Add selected items to cart"); ?></div>
 </div>
     
 <?
-} else {
-?>
-    <div class="paymentok payment_window">
-        <i class="fa fa-smile-o"></i> <? echo $this->__f("Nothing to pay."); ?>
-    </div>
-<? 
 }
 ?>
 
-<h2><? echo $this->__f("Payment history"); ?></h2>
+<div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
 <?
 if (!count($this->pmsBooking->orderIds)) {
     ?>

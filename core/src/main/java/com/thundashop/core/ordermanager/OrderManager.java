@@ -23,6 +23,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderUnderConstruction;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -63,6 +64,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public HashMap<String, Order> orders = new HashMap();
     
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
+    
+    public HashMap<String, OrderUnderConstruction> ordersUnderConstruction = new HashMap();
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
     
@@ -207,6 +210,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
             }
+            
+            if (dataFromDatabase instanceof OrderUnderConstruction) {
+                OrderUnderConstruction constructionOrder = (OrderUnderConstruction)dataFromDatabase;
+                ordersUnderConstruction.put(constructionOrder.id, constructionOrder);
+            }
+            
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
                 if (order.cleanMe()) {
@@ -682,6 +691,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             } else if (order.userId.equals(user.id)) {
                 return order;
             }
+        }
+        
+        OrderUnderConstruction orderUnderConstruction = ordersUnderConstruction.get(orderId);
+        
+        if (orderUnderConstruction != null) {
+            foundOrder = true;
+            orderUnderConstruction.finalizeOrder();
+            return orderUnderConstruction.order;
         }
         
         logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it, " + foundOrderIncId);
@@ -1212,6 +1229,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order != null) {
             order.doFinalize();
         }
+        
+        if (ordersUnderConstruction.get(orderId) != null) {
+            ordersUnderConstruction.get(orderId).finalizeOrder();
+            return ordersUnderConstruction.get(orderId).order;
+        }
+        
         return order;
     }
 
@@ -2200,5 +2223,44 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    @Override
+    public OrderUnderConstruction createOrGetOrderUnderConstruction(String id) {
+        OrderUnderConstruction existingOnSameReference = ordersUnderConstruction.get(id);
+        
+        if (existingOnSameReference != null) {
+            return existingOnSameReference;
+        }
+        
+        existingOnSameReference = new OrderUnderConstruction();
+        existingOnSameReference.id = id;
+        existingOnSameReference.order = new Order();
+        existingOnSameReference.order.id = UUID.randomUUID().toString();
+        existingOnSameReference.order.rowCreatedDate = new Date();
+        
+        existingOnSameReference.order.cart = new Cart();
+        existingOnSameReference.order.cart.address = new Address();
+        
+        saveObject(existingOnSameReference);
+        
+        ordersUnderConstruction.put(existingOnSameReference.id, existingOnSameReference);
+        
+        return existingOnSameReference;
+    }
+
+    @Override
+    public void updateCartOnOrderUnderConstruction(String id, Cart cart) {
+        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
+        orderUnder.order.cart = cart;
+        saveObject(orderUnder);
+    }
+
+    @Override
+    public void deleteOrderUnderConstruction(String id) {
+        OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
+        if (ret != null) {
+            deleteObject(ret);
+        }
+    }
+    
 
 }

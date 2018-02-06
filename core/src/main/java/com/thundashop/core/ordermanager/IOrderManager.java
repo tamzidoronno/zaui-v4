@@ -1,5 +1,6 @@
 package com.thundashop.core.ordermanager;
 
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
@@ -11,6 +12,7 @@ import com.thundashop.core.common.Internal;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderUnderConstruction;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -296,4 +298,13 @@ public interface IOrderManager {
     public void sendRecieptWithText(String orderId, String email, String subject, String text);
     
     public void startCheckForOrdersToCapture(String internalPassword) throws ErrorException;
+    
+    @Editor
+    public OrderUnderConstruction createOrGetOrderUnderConstruction(String id);
+    
+    @Editor
+    public void updateCartOnOrderUnderConstruction(String id, Cart cart);
+    
+    @Editor
+    public void deleteOrderUnderConstruction(String id);
 }

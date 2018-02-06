@@ -629,6 +629,10 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function getModalVariable($variableName) {
+        if (isset($_SESSION['gs_currently_showing_rightWidget'])) {
+            return @$_SESSION['modal_variable_'.$_SESSION['gs_currently_showing_rightWidget']][$variableName];
+        }
+        
         if (!isset($_SESSION['gs_currently_showing_modal'])) {
             return null;
         }

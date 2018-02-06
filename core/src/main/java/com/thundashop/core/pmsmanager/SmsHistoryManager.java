@@ -77,9 +77,11 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         
                         Date postingDate = cal.getTime();
 
+                        cal.add(Calendar.MONTH, -1);
+                        Integer month = cal.get(Calendar.MONTH)+1;
+                        Integer year = cal.get(Calendar.YEAR);
                         
-                        
-                        ViewSmsHistory history = new ViewSmsHistory(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+                        ViewSmsHistory history = new ViewSmsHistory(month, year);
                         ViewSmsHistory.SmsCounter res = history.viewByStoreId(database, storeId, room.guests.get(0).name);
                         
                         if(res.inner == 0 && res.outer == 0) {

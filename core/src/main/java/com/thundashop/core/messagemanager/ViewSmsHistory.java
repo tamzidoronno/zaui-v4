@@ -44,6 +44,9 @@ public class ViewSmsHistory {
             if (data instanceof SmsMessage) {
                 SmsMessage sms = (SmsMessage)data;
                 double msgCount = (double)sms.message.length() / (double)160;
+                if(msgCount > 8) {
+                    continue;
+                }
                 msgCount = Math.ceil(msgCount);
                 
                 if (sms.prefix.equals("47")) {

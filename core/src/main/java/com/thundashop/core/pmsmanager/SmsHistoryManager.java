@@ -84,28 +84,32 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         ViewSmsHistory history = new ViewSmsHistory(month, year);
                         ViewSmsHistory.SmsCounter res = history.viewByStoreId(database, storeId, room.guests.get(0).name);
                         
-                        if(res.inner == 0 && res.outer == 0) {
-                            continue;
-                        }
                         
                         boolean doNot = false;
                         PmsBookingAddonItem toAddonInternal = null;
                         PmsBookingAddonItem toAddonExternal = null;
-                        
+                        List<PmsBookingAddonItem> remove = new ArrayList();
                         for(PmsBookingAddonItem item : room.addons) {
                             if(!PmsBookingRooms.isSameDayStatic(item.date, postingDate)) {
                                 continue;
                             }
                             if(item.productId.equals(productIdInner)) {
-                                toAddonInternal = item;
+//                                toAddonInternal = item;
+                                remove.add(item);
                             }
                             if(item.productId.equals(productIdOuter)) {
-                                toAddonExternal = item;
+//                                toAddonExternal = item;
+                                remove.add(item);
                             }
 
                         }
+                        room.addons.removeAll(remove);
                         
                         if(doNot) {
+                            continue;
+                        }
+                        
+                        if(res.inner == 0 && res.outer == 0) {
                             continue;
                         }
                         
@@ -133,7 +137,7 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
             }
             
             if(saveBooking) {
-//                pmsManager.saveBooking(booking);
+                pmsManager.saveBooking(booking);
             }
             
             System.out.println("Stores not found");

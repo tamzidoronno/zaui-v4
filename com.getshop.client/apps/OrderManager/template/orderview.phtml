@@ -100,6 +100,9 @@ $cart = $order->cart;
             } else {
                 echo " / Tranfserred dato not set";
             }
+            if($order->chargeAfterDate) {
+                echo "<div style='padding-bottom: 15px;'>Charge after date: " . $order->chargeAfterDate  . "</div>";
+            }
             ?>
         </div>
         <?php if(isset($address)) { ?>

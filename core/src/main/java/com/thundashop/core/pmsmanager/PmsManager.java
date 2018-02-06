@@ -2905,10 +2905,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 }
                 if(filter.includeAll) {
                     res.add(log);
-                } else if (!filter.bookingId.isEmpty() && filter.bookingId.equals(log.bookingId)) {
-                    res.add(log);
-                } else if (!filter.bookingItemId.isEmpty() && filter.bookingItemId.equals(log.bookingItemId)) {
-                    res.add(log);
+                } else if (!filter.bookingId.isEmpty()) {
+                    if(filter.bookingId.equals(log.bookingId)) {
+                        res.add(log);
+                    }
+                } else if (!filter.bookingItemId.isEmpty()) {
+                    if(filter.bookingItemId.equals(log.bookingItemId)) {
+                        res.add(log);
+                    }
                 } else if ((!filter.roomId.isEmpty() && filter.roomId.equals(log.roomId)) || log.roomId == null || log.roomId.isEmpty()) {
                     res.add(log);
                 }
@@ -5798,10 +5802,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         addon.description = product.description;
         
-        addAddonToRoom(pmsBookingRoomId, addon);
+        addAddonOnRoom(pmsBookingRoomId, addon);
     }
     
-    public void addAddonToRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
+    public void addAddonOnRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
        
@@ -7050,6 +7054,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             count.put(book.userId, 1);
         }
         
+        List<User> users = userManager.findUsers(filter.searchWord);
+        for(User user : users) {
+            count.put(user.id, 1);
+        }
+        
+        
         HashMap<String, Integer> bookingCount = new HashMap();
         HashMap<String, Integer> roomCount = new HashMap();
         HashMap<String, Date> bookingLatest = new HashMap();
@@ -7698,7 +7708,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 addon.date = new Date();
             }
             
-            addAddonToRoom(ticket.externalId, addon);
+            addAddonOnRoom(ticket.externalId, addon);
             
             ticketManager.markTicketAsTransferredToAccounting(ticket.id);
         });

@@ -45,17 +45,14 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
 
     @Override
     public void prioritizeLock(String lockId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void lockSettingsChanged(LockSettings lockSettings) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void deactivatePrioritingOfLock() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

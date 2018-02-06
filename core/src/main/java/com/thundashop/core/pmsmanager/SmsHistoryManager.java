@@ -75,37 +75,40 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         cal.set(Calendar.SECOND, 0);
                         cal.set(Calendar.MILLISECOND, 0);
                         
-                        cal.add(Calendar.MONTH, 1);
                         Date postingDate = cal.getTime();
-                        cal.add(Calendar.MONTH, -1);
 
+                        cal.add(Calendar.MONTH, -1);
+                        Integer month = cal.get(Calendar.MONTH)+1;
+                        Integer year = cal.get(Calendar.YEAR);
                         
-                        
-                        ViewSmsHistory history = new ViewSmsHistory(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+                        ViewSmsHistory history = new ViewSmsHistory(month, year);
                         ViewSmsHistory.SmsCounter res = history.viewByStoreId(database, storeId, room.guests.get(0).name);
                         
-                        if(res.inner == 0 && res.outer == 0) {
-                            continue;
-                        }
                         
                         boolean doNot = false;
                         PmsBookingAddonItem toAddonInternal = null;
                         PmsBookingAddonItem toAddonExternal = null;
-                        
+                        List<PmsBookingAddonItem> remove = new ArrayList();
                         for(PmsBookingAddonItem item : room.addons) {
                             if(!PmsBookingRooms.isSameDayStatic(item.date, postingDate)) {
                                 continue;
                             }
                             if(item.productId.equals(productIdInner)) {
-                                toAddonInternal = item;
+//                                toAddonInternal = item;
+                                remove.add(item);
                             }
                             if(item.productId.equals(productIdOuter)) {
-                                toAddonExternal = item;
+//                                toAddonExternal = item;
+                                remove.add(item);
                             }
 
                         }
+                        room.addons.removeAll(remove);
                         
                         if(doNot) {
+                            continue;
+                        }
+                        if(res.inner == 0 && res.outer == 0) {
                             continue;
                         }
                         
@@ -115,6 +118,7 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                             toAddonInternal = pmsManager.createAddonToAdd(internal, postingDate, room);
                             room.addons.add(toAddonInternal);
                         }
+                        toAddonInternal.count = res.inner;
                         
                         //Utland
                         if(toAddonExternal == null) {
@@ -122,9 +126,8 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                             toAddonExternal = pmsManager.createAddonToAdd(external, postingDate, room);
                             room.addons.add(toAddonExternal);
                         }
-                        
                         toAddonExternal.count = res.outer;
-                        toAddonInternal.count = res.inner;
+                        
                     
                         saveBooking = true;
                     }
@@ -133,7 +136,7 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
             }
             
             if(saveBooking) {
-//                pmsManager.saveBooking(booking);
+                pmsManager.saveBooking(booking);
             }
             
             System.out.println("Stores not found");

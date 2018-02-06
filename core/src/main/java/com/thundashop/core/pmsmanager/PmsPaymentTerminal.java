@@ -117,7 +117,7 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
         } else {
             pmsAddon.count = 1;
         }
-        pmsManager.addAddonToRoom(pmsBookingRoomId, pmsAddon);
+        pmsManager.addAddonOnRoom(pmsBookingRoomId, pmsAddon);
  
         NewOrderFilter bookingFilter = new NewOrderFilter();
         pmsInvoiceManager.clearOrdersOnBooking(booking);

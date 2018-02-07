@@ -88,15 +88,18 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         boolean doNot = false;
                         PmsBookingAddonItem toAddonInternal = null;
                         PmsBookingAddonItem toAddonExternal = null;
+                        List<PmsBookingAddonItem> remove = new ArrayList();
                         for(PmsBookingAddonItem item : room.addons) {
                             if(!PmsBookingRooms.isSameDayStatic(item.date, postingDate)) {
                                 continue;
                             }
                             if(item.productId.equals(productIdInner)) {
                                 toAddonInternal = item;
-                            }
+                                remove.add(toAddonInternal);
+                    }
                             if(item.productId.equals(productIdOuter)) {
                                 toAddonExternal = item;
+                                remove.add(toAddonExternal);
                             }
 
                         }
@@ -104,9 +107,13 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                         if(doNot) {
                             continue;
                         }
+                        
+                        room.addons.removeAll(remove);
+                        
                         if(res.inner == 0 && res.outer == 0) {
                             continue;
                         }
+                        
                         
                         //Innland
                         if(toAddonInternal == null) {

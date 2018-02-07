@@ -14,6 +14,7 @@ public enum SystemType {
      XLEDGER,
      TRIPLETEX_EXCEL,
      FIKEN_API,
-     POWEROFFICEGO_API
+     POWEROFFICEGO_API,
+     VISMAEACCOUNTING_API
  }
 

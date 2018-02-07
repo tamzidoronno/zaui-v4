@@ -1,6 +1,11 @@
 <?
 /* @var $this \ns_b698ac77_15f3_45b7_a412_47186a2defb6\ApacCreateNewAccess */
 $groups = $this->getApi()->getGetShopLockSystemManager()->getAllGroups();
+$defaultPrefix = "47";
+$defaultPrefix = $this->getApi()->getStoreManager()->getMyStore()->configuration->defaultPrefix;
+if(!$defaultPrefix) {
+    $defaultPrefix = "47";
+}
 ?>
 <div class="isnotactive">
     <div class="kaipal infobox">
@@ -19,7 +24,7 @@ $groups = $this->getApi()->getGetShopLockSystemManager()->getAllGroups();
                     </div>
                     <div class="inputrow">
                         <b><? echo $this->__f("Phone number"); ?> </b>
-                        <br/>+ <input gsname="prefix" class="gsniceinput1 prefix" placeholder="47"/> - <input gsname="phonenumber" class="gsniceinput1"/>
+                        <br/>+ <input gsname="prefix" class="gsniceinput1 prefix" value="<?php echo $defaultPrefix; ?>"/> - <input gsname="phonenumber" class="gsniceinput1"/>
                     </div>
                     <div class="inputrow">
                         <b><? echo $this->__f("Email"); ?> </b>

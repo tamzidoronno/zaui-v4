@@ -86,6 +86,12 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             return null;
         }
         
+        if(from == null || from.isEmpty()) {
+            if(storeManager.getMyStore().configuration != null && storeManager.getMyStore().configuration.emailAdress != null) {
+                from = storeManager.getMyStore().configuration.emailAdress;
+            }
+        }
+        
         String res = mailFactory.send(from, to, subject, content);
         feedGrafana(content);
         return res;

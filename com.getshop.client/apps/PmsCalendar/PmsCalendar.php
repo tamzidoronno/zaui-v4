@@ -444,6 +444,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         
         foreach($bookings as $booking) {
             /* @var $booking \core_pmsmanager_PmsBooking */
+            $addedToList = $this->getApi()->getPmsEventManager()->isChecked($this->getSelectedName(), $booking->id);
             foreach($booking->rooms as $room) {
                 if($room->deleted) {
                     continue;
@@ -472,7 +473,11 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 $state = "";
                 if($booking->confirmed) {
                     $this->currentBooking = $booking->id;
-                    $state = "occupied";
+                    if($addedToList == true){
+                        $state = "occupied public";
+                    } else {
+                        $state = "occupied";
+                    }
                 } else {
                     $this->currentBooking = $booking->id;
                     $state = "notconfirmed";

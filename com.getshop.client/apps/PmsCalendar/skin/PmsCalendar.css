@@ -62,6 +62,7 @@
 
 /* states colors */
 .PmsCalendar .occupied { background-color: #ee3e35 !important; }
+.PmsCalendar .occupied.public {background-color:#36328c !important;}
 .PmsCalendar .notconfirmed { background-color: #f7931d !important; }
 .PmsCalendar .openforpublic { background-color: #383886 !important; }
 .PmsCalendar .available { background-color: #eaeaea !important; }

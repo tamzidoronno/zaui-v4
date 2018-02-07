@@ -188,7 +188,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     @Autowired
     private TicketManager ticketManager;
     
-    @Administrator
+    @Autowired
     private SmsHistoryManager smsHistoryManager;
     
     @Autowired

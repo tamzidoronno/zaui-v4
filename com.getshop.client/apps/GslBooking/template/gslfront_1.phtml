@@ -110,9 +110,9 @@
                                 </div>
                                 <div class="editroomoptionsrow">
                                     Change date:<br>
-                                    <div><input type='text' gsname="newroomstartdate"></div>
-                                    <div><input type='text' gsname="newroomenddate"></div>
-                                    <div><input type='button' class='trychangingdate' value="Update" style="width:100%;"></div>
+                                    <div class="editroomoptionsrow-date"><input type='text' gsname="newroomstartdate"></div>
+                                    <div class="editroomoptionsrow-date"><input type='text' gsname="newroomenddate"></div>
+                                    <div><input type='button' class='trychangingdate' value="Update" style="width: 100%;background-color: #5cc397;color: #fff;box-shadow: 0 0 0;"></div>
                                 </div>
                             </span>
                         </div>
@@ -190,7 +190,7 @@
                             </div>
                             <div style="width: 33.33%;float: left;">
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
-                                <input type="txt" class="guest_phone" value="47" gsname="user_prefix" style='float:left;'>
+                                <div class='phonefield'><input type="txt" class="guest_phone" value="47" gsname="user_prefix" style='float:left;'></div>
                                 <input type="text" style="width:75%;float:left;"gsname="user_cellPhone">
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;">
@@ -294,17 +294,19 @@
     <div style="clear:both;"></div>
 </div>
 
-<link rel="stylesheet" type="text/css" media="all" href="/js/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" media="all" href="https://www.getshop.com/js/daterangepicker/daterangepicker.css" />
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-<script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
-<script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript" src="https://www.getshop.com/js/daterangepicker/moment.js"></script>
+<script type="text/javascript" src="https://www.getshop.com/js/daterangepicker/daterangepicker.js"></script>
 <script>
 
 //Reset page on load.
-    localStorage.setItem('gslcurrentpage','');
-    $('.gslbookingBody').hide();
-    $('.addons_overview').hide();
-    
-    getshop_setBookingTranslation();
-    getshop_setDatePicker();
+    $(function() {
+        localStorage.setItem('gslcurrentpage','');
+        $('.gslbookingBody').hide();
+        $('.addons_overview').hide();
+
+        getshop_setBookingTranslation();
+        getshop_setDatePicker();
+    });
 </script>

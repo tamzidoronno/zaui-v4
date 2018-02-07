@@ -110,6 +110,10 @@ class TicketList extends \MarketingApplication implements \Application {
         $ticket->type = $_POST['data']['type'];
         $ticket->timeSpent = $_POST['data']['timespent'];
         $ticket->timeInvoice = $_POST['data']['timeInvoice'];
+        $ticket->rowCreatedDate = $this->convertToJavaDate(strtotime($_POST['data']['createddate']));
+        if ($_POST['data']['completeddate']) {
+            $ticket->dateCompleted = $this->convertToJavaDate(strtotime($_POST['data']['completeddate']));    
+        }
         $this->getApi()->getTicketManager()->saveTicket($ticket);
     }
 

@@ -63,6 +63,18 @@ $ticket = $this->getCurrentTicket();
         <br/> <input gsname="timespent" class="gsniceinput1" value="<? echo  $ticket->timeSpent; ?>" />
         <br/><br/>Time to invoice:
         <br/> <input gsname="timeInvoice" class="gsniceinput1" value="<? echo  $ticket->timeInvoice; ?>" />
+        <br/><br/>External id (ex, roomid):
+        <br/> <input gsname="externalid" class="gsniceinput1" value="<? echo  $ticket->externalId; ?>" />
+        <br/><br/>Created date:
+        <br/> <input gsname="createddate" class="gsniceinput1" value="<? echo  date('d.m.Y', strtotime($ticket->rowCreatedDate));  ?>" />
+        <?
+        if ($ticket->currentState == "COMPLETED") {
+        ?>
+        <br/><br/>Completed date:
+        <br/> <input gsname="completeddate" class="gsniceinput1" value="<? echo  date('d.m.Y', strtotime($ticket->dateCompleted));  ?>" />
+        <?
+        }
+        ?>
         <br/>
         <br/><div class="shop_button" gstype="submit"><? echo $this->__f("Save ticket"); ?></div>
         - <div class="shop_button" gsclick="deleteTicket" gs_confirm="Are you sure?" id="<? echo $ticket->id; ?>"><? echo $this->__f("Delete ticket"); ?></div>

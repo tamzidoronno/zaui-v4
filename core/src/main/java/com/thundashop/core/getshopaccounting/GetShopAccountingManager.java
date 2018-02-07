@@ -48,10 +48,16 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         List<String> invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other", orders);            
         
         if (getActivatedAccountingSystemInvoices().equals(getActivatedAccountingSystemOther())) {
-            ret.addAll(invoices);
+            if(invoices != null) {
+                ret.addAll(invoices);
+            }
         } else {
-            ret.addAll(others);
-            ret.addAll(invoices);    
+            if(others != null) {
+                ret.addAll(others);
+            }
+            if(invoices != null) {
+                ret.addAll(invoices);
+            }
         }
         
         return ret;

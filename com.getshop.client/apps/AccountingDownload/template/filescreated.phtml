@@ -4,7 +4,7 @@
 $logEntries = $this->getApi()->getGetShopAccountingManager()->getLogEntries();
 
 if ($logEntries) {
-    echo "<h2> Errors accurd: </h2>";
+    echo "<h2> Errors occured: </h2>";
     foreach ($logEntries as $entry) {
         echo "<div>$entry</div>";
     }

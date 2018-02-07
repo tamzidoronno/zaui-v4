@@ -68,7 +68,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
     public void dataFromDatabase(DataRetreived data) {
         addSavedOrderFiles(data);
     }
-
+    
     private void addSavedOrderFiles(DataRetreived data) {
         for(DataCommon obj : data.data) {
             if(obj instanceof SavedOrderFile) {

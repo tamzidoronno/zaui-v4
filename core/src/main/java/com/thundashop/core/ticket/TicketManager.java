@@ -13,6 +13,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,31 +29,32 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class TicketManager extends ManagerBase implements ITicketManager {
+
     public HashMap<String, Ticket> tickets = new HashMap();
 
     @Autowired
     public UserManager userManager;
-    
+
     @Autowired
     public MessageManager messageManager;
-    
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
         data.data.stream().forEach(inData -> {
             if (inData instanceof Ticket) {
-                tickets.put(inData.id, (Ticket)inData);
+                tickets.put(inData.id, (Ticket) inData);
             }
         });
     }
-    
+
     @Override
     public void saveTicket(Ticket ticket) {
         checkSecurity(ticket);
-        
+
         if (ticket.id == null || ticket.id.isEmpty()) {
             ticket.incrementalId = getNextIncrementalId();
         }
-        
+
         ticket.setCompletedDate();
         saveObject(ticket);
         tickets.put(ticket.id, ticket);
@@ -60,13 +62,13 @@ public class TicketManager extends ManagerBase implements ITicketManager {
 
     private void checkSecurity(Ticket ticket) throws ErrorException {
         String userId = ticket.userId;
-        
+
         if (getSession() == null || getSession().currentUser == null) {
             if (userId != null && !userId.isEmpty()) {
                 throw new ErrorException(26);
             }
         }
-        
+
         if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type < 11 && !getSession().currentUser.id.equals(userId)) {
             throw new ErrorException(26);
         }
@@ -75,23 +77,23 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     @Override
     public List<Ticket> getAllTickets(TicketFilter filter) {
         List<Ticket> retList = new ArrayList(tickets.values());
-        
+
         if (filter.userId != null && !filter.userId.isEmpty()) {
             retList.removeIf(f -> f.userId == null || !f.userId.equals(filter.userId));
         }
-        
+
         if (filter.type != null) {
             retList.removeIf(f -> f.type == null || !f.type.equals(filter.type));
         }
-        
+
         if (filter.state != null) {
             retList.removeIf(f -> f.currentState == null || !f.currentState.equals(filter.state));
         }
-        
+
         Collections.sort(retList, (Ticket t1, Ticket t2) -> {
             return t2.rowCreatedDate.compareTo(t1.rowCreatedDate);
         });
-        
+
         return retList;
     }
 
@@ -99,18 +101,18 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public void updateEvent(String ticketId, TicketEvent event) {
         Ticket ticket = tickets.get(ticketId);
         checkSecurity(ticket);
-        
+
         event.updatedByUserId = getSession().currentUser.id;
-        
+
         if (event.eventType.equals(TicketEventType.OUTGOING_EMAIL)) {
             sendMail(ticket, event);
         }
-        
+
         ticket.currentState = event.state;
-        
+
         ticket.setCompletedDate();
         ticket.events.add(event);
-        
+
         saveObject(ticket);
     }
 
@@ -118,11 +120,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public Ticket getTicket(String ticketId) {
         Ticket ticket = tickets.get(ticketId);
         checkSecurity(ticket);
-        
+
         Collections.sort(ticket.events, (TicketEvent e1, TicketEvent e2) -> {
             return e2.date.compareTo(e1.date);
         });
-        
+
         return ticket;
     }
 
@@ -136,15 +138,15 @@ public class TicketManager extends ManagerBase implements ITicketManager {
 
     private int getNextIncrementalId() {
         int i = 0;
-        
+
         for (Ticket ticket : tickets.values()) {
             if (ticket.incrementalId > i) {
                 i = ticket.incrementalId;
             }
         }
-        
+
         i++;
-        
+
         return i;
     }
 
@@ -157,15 +159,18 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     }
 
     public List<Ticket> getTicketsToTransferToAccounting() {
+        Date lastDayInPrevMonth = getLastDateInPrevMonth();
+
         List<Ticket> ticketsToTransfer = tickets.values().stream()
                 .filter(ticket -> !ticket.transferredToAccounting)
                 .filter(ticket -> ticket.currentState.equals(TicketState.COMPLETED))
+                .filter(ticket -> ticket.dateCompleted.before(lastDayInPrevMonth) || ticket.dateCompleted.equals(lastDayInPrevMonth) )
                 .filter(ticket -> ticket.timeInvoice > 0)
                 .collect(Collectors.toList());
-        
+
         return ticketsToTransfer;
     }
-    
+
     public void markTicketAsTransferredToAccounting(String ticketId) {
         Ticket ticket = tickets.get(ticketId);
         if (ticket != null) {
@@ -173,5 +178,24 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             saveObject(ticket);
         }
     }
+
+    private Date getLastDateInPrevMonth() {
+        Calendar aCalendar = Calendar.getInstance();
+        aCalendar.add(Calendar.MONTH, -1);
+        aCalendar.set(Calendar.DATE, 1);
+
+        aCalendar.set(Calendar.DATE, aCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        
+        aCalendar.set(Calendar.MINUTE, 59);
+        aCalendar.set(Calendar.SECOND, 59);
+        aCalendar.set(Calendar.MILLISECOND, 999);
     
+        Date lastDateOfPreviousMonth = aCalendar.getTime();
+        
+        System.out.println(lastDateOfPreviousMonth);
+    
+        
+        return lastDateOfPreviousMonth;
+    }
+
 }

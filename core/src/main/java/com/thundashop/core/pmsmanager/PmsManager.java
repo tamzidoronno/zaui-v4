@@ -5802,10 +5802,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         }
         addon.description = product.description;
         
-        addAddonToRoom(pmsBookingRoomId, addon);
+        addAddonOnRoom(pmsBookingRoomId, addon);
     }
     
-    public void addAddonToRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
+    public void addAddonOnRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
        
@@ -7054,6 +7054,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             count.put(book.userId, 1);
         }
         
+        List<User> users = userManager.findUsers(filter.searchWord);
+        for(User user : users) {
+            count.put(user.id, 1);
+        }
+        
+        
         HashMap<String, Integer> bookingCount = new HashMap();
         HashMap<String, Integer> roomCount = new HashMap();
         HashMap<String, Date> bookingLatest = new HashMap();
@@ -7702,7 +7708,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 addon.date = new Date();
             }
             
-            addAddonToRoom(ticket.externalId, addon);
+            addAddonOnRoom(ticket.externalId, addon);
             
             ticketManager.markTicketAsTransferredToAccounting(ticket.id);
         });

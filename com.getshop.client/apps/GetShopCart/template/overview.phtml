@@ -1,0 +1,15 @@
+<?
+
+/* @var $this \ns_478a4c37_5163_4aa8_be30_5d63f67a5cb9\GetShopCart */
+
+$order = $this->getOrder();
+$cart = $order->cart;
+foreach ($cart->items as $item) {
+    echo "<div>" . $item->product->name . " " . $item->count . "x" . $item->product->price . "</div>";
+}
+
+echo $this->getApi()->getOrderManager()->getTotalAmount($order);
+?>
+
+<br/>
+<div class='shop_button' gsclick="clearOrderUnderConstruction"><? echo $this->__f("Reset"); ?></div>

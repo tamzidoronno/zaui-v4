@@ -23,6 +23,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderUnderConstruction;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -63,6 +64,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public HashMap<String, Order> orders = new HashMap();
     
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
+    
+    public HashMap<String, OrderUnderConstruction> ordersUnderConstruction = new HashMap();
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
     
@@ -207,6 +210,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
             }
+            
+            if (dataFromDatabase instanceof OrderUnderConstruction) {
+                OrderUnderConstruction constructionOrder = (OrderUnderConstruction)dataFromDatabase;
+                ordersUnderConstruction.put(constructionOrder.id, constructionOrder);
+            }
+            
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
                 if (order.cleanMe()) {
@@ -227,8 +236,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
-            correctOrdersThatHasToBeChangedTaxesOn();
+        if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
+            checkChargeAfterDate();
         }
     }
 
@@ -652,7 +661,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order getOrder(String orderId) throws ErrorException {
-        correctOrderForRenaTrening();
         if(getSession() == null) {
             logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
             return null;
@@ -682,6 +690,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             } else if (order.userId.equals(user.id)) {
                 return order;
             }
+        }
+        
+        OrderUnderConstruction orderUnderConstruction = ordersUnderConstruction.get(orderId);
+        
+        if (orderUnderConstruction != null) {
+            foundOrder = true;
+            orderUnderConstruction.finalizeOrder();
+            return orderUnderConstruction.order;
         }
         
         logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it, " + foundOrderIncId);
@@ -1212,6 +1228,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order != null) {
             order.doFinalize();
         }
+        
+        if (ordersUnderConstruction.get(orderId) != null) {
+            ordersUnderConstruction.get(orderId).finalizeOrder();
+            return ordersUnderConstruction.get(orderId).order;
+        }
+        
         return order;
     }
 
@@ -1421,6 +1443,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
+        if(order.id.equals("2c5a3e97-53e2-4ad1-9cc5-f399770716fb")) {
+            System.out.println("yes");
+        }
         if(order == null || order.cart == null) {
             return false;
         }
@@ -1449,7 +1474,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if(item.startDate != null && new Date().after(item.startDate)) {
                     boolean isAfter = yesterday.getTime().after(order.rowCreatedDate);
                     if(order.chargeAfterDate != null && order.chargeAfterDate.after(order.rowCreatedDate)) {
-                        yesterday.getTime().after(order.chargeAfterDate);
+                        isAfter = yesterday.getTime().after(order.chargeAfterDate);
                     }
                     if(isAfter) {
                         Store store = storeManager.getMyStore();
@@ -2130,75 +2155,72 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 });
     }
 
-    /**
-     * A temporary function that can be removed whenever you want.
-     */
-    private Integer correctOrdersThatHasToBeChangedTaxesOn() {
-        int count = 0;
-        try {
-            for(Order order : orders.values()) {
-                Date start = order.getStartDateByItems();
-                if(start == null) {
+    
+
+    private void checkChargeAfterDate() {
+        for(Order ord : this.orders.values()) {
+            if(ord.chargeAfterDate != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(ord.rowCreatedDate);
+                int createdYear = cal.get(Calendar.YEAR);
+                int createdMonth = cal.get(Calendar.MONTH);
+                if(createdYear != 2018 || createdMonth != 0) {
                     continue;
                 }
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(start);
-                Integer year = cal.get(Calendar.YEAR);
-                boolean save = false;
-                if(year == 2017) {
-                    for(CartItem item : order.cart.getItems()) {
-                        Double rate = item.getProduct().taxGroupObject.taxRate;
-                        if(rate.intValue() == 12) {
-                            item.getProduct().taxGroupObject.taxRate = 10.0;
-                            save = true;
-                        }
-                    }
-                }
-                if(save) {
-                    saveObject(order);
-                    count++;
-                }
-            }
-        }catch(Exception e) {
-            messageManager.sendErrorNotification("Failed to correct ordes for this store.", e);
-        }
-        
-        return count;
-    }
-
-    private void correctOrderForRenaTrening() {
-        if(!storeId.equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b")) {
-            //Only temporary for renatrening, can be removed whenever you want.
-            return;
-        }
-        Calendar cal = Calendar.getInstance();
-        
-        for(Order ord : orders.values()) {
-            boolean save = false;
-            cal.setTime(ord.rowCreatedDate);
-            int year = cal.get(Calendar.YEAR);
-            int day = cal.get(Calendar.DAY_OF_YEAR);
-            if(year == 2018 && day == 2 && ord.getEndDateByItems() != null) {
-                System.out.println(ord.incrementOrderId);
-                System.out.println(ord.getEndDateByItems());
-                cal.setTime(ord.getEndDateByItems());
-                year = cal.get(Calendar.YEAR);
-                day = cal.get(Calendar.DAY_OF_YEAR);
-                if(year == 2018 && day == 2) {
+                
+                
+                cal.setTime(ord.chargeAfterDate);
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                if(month == 2 && year == 2018 && day == 1) {
+                    System.out.println(ord.rowCreatedDate + " : " + ord.chargeAfterDate + " : " + day + "." + month+"."+year);
                     cal.set(Calendar.MONTH, 1);
-                    cal.set(Calendar.DAY_OF_MONTH,1);
-                    System.out.println("- " + cal.getTime());
-                    for(CartItem item : ord.cart.getItems()) {
-                        item.endDate = cal.getTime();
-                        save = true;
-                    }
+                    ord.chargeAfterDate = cal.getTime();
+                    saveObject(ord);
                 }
-            }
-            if(save) {
-                saveOrder(ord);
             }
         }
     }
 
+    @Override
+    public OrderUnderConstruction createOrGetOrderUnderConstruction(String id) {
+        OrderUnderConstruction existingOnSameReference = ordersUnderConstruction.get(id);
+        
+        if (existingOnSameReference != null) {
+            return existingOnSameReference;
+        }
+        
+        existingOnSameReference = new OrderUnderConstruction();
+        existingOnSameReference.id = id;
+        existingOnSameReference.order = new Order();
+        existingOnSameReference.order.id = UUID.randomUUID().toString();
+        existingOnSameReference.order.rowCreatedDate = new Date();
+        
+        existingOnSameReference.order.cart = new Cart();
+        existingOnSameReference.order.cart.address = new Address();
+        
+        saveObject(existingOnSameReference);
+        
+        ordersUnderConstruction.put(existingOnSameReference.id, existingOnSameReference);
+        
+        return existingOnSameReference;
+    }
+
+    @Override
+    public void updateCartOnOrderUnderConstruction(String id, Cart cart) {
+        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
+        orderUnder.order.cart = cart;
+        saveObject(orderUnder);
+    }
+
+    @Override
+    public void deleteOrderUnderConstruction(String id) {
+        OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
+        if (ret != null) {
+            deleteObject(ret);
+        }
+    }
+    
 
 }

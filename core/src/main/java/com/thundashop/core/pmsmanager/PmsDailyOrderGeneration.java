@@ -140,6 +140,12 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
         List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
         
+        if (!room.orderUnderConstructionId.isEmpty()) {
+            if (orderManager.getOrder(room.orderUnderConstructionId) != null) {
+                uniqueList.add(room.orderUnderConstructionId);
+            }
+        }
+        
         for(String orderId : uniqueList) {
             Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
@@ -473,6 +479,13 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         addonsToAdd = gson.fromJson(copy, type);
       
         List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
+        
+        if (!room.orderUnderConstructionId.isEmpty()) {
+            if (orderManager.getOrder(room.orderUnderConstructionId) != null) {
+                uniqueList.add(room.orderUnderConstructionId);
+            }
+        }
+        
         for(String orderId : uniqueList) {
             Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {

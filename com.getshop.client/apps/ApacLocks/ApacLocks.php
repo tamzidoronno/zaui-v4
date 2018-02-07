@@ -27,6 +27,13 @@ class ApacLocks extends \MarketingApplication implements \Application {
         $this->includefile("lock");
     }
     
+    public function saveZwaveLockSettings() {
+        $lockSettings = new \core_getshoplocksystem_LockSettings();
+        $lockSettings->lockId = $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_editlock_lockid'];
+        $lockSettings->zwaveDeviceId = $_POST['data']['updateDeviceId'];
+        $this->getApi()->getGetShopLockSystemManager()->lockSettingsChanged($lockSettings);
+    }
+    
     /**
      * 
      * @param \core_getshoplocksystem_Lock $lock

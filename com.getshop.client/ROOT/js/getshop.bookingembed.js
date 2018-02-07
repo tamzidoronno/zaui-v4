@@ -6,7 +6,7 @@
         $.ajax({
             "type": "get",
             async: false,
-            "url": '/scripts/booking/bookingcontent.php',
+            "url": 'https://www.getshop.com/scripts/booking/bookingcontent.php',
             success: function (form) {
                 box.html("<span class='GslBooking'>" + form + "</span>");
             }

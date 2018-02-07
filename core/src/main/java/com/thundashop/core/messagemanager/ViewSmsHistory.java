@@ -6,6 +6,7 @@
 package com.thundashop.core.messagemanager;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.databasemanager.Database;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,6 +44,9 @@ public class ViewSmsHistory {
             if (data instanceof SmsMessage) {
                 SmsMessage sms = (SmsMessage)data;
                 double msgCount = (double)sms.message.length() / (double)160;
+                if(msgCount > 8) {
+                    continue;
+                }
                 msgCount = Math.ceil(msgCount);
                 
                 if (sms.prefix.equals("47")) {
@@ -53,7 +57,7 @@ public class ViewSmsHistory {
             }
         }
         
-        System.out.println("Norge: " + String.format("%10s", norge)  + " Utlandet: " + String.format("%10s", utlandet) + " (" + storeName + ")");
+        GetShopLogHandler.logPrintStatic("Norge: " + String.format("%10s", norge)  + " Utlandet: " + String.format("%10s", utlandet) + " (" + storeName + ")", "b703b793-c7f4-4803-83bb-106cab891d6c");
         
         SmsCounter counter = new SmsCounter();
         counter.inner = norge;

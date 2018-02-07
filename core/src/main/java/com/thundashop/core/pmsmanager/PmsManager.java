@@ -887,7 +887,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         
+        
         for (PmsBookingRooms room : booking.getActiveRooms()) {
+            for(PmsBookingAddonItem item : room.addons) {
+                item.finalize();
+            }
+
+            
             if(room.bookingItemTypeId != null && 
                     productManager.getProduct(room.bookingItemTypeId) != null && 
                     productManager.getProduct(room.bookingItemTypeId).taxGroupObject != null) {

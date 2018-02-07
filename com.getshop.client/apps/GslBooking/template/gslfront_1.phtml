@@ -294,17 +294,19 @@
     <div style="clear:both;"></div>
 </div>
 
-<link rel="stylesheet" type="text/css" media="all" href="/js/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" media="all" href="https://www.getshop.com/js/daterangepicker/daterangepicker.css" />
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-<script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
-<script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
+<script type="text/javascript" src="https://www.getshop.com/js/daterangepicker/moment.js"></script>
+<script type="text/javascript" src="https://www.getshop.com/js/daterangepicker/daterangepicker.js"></script>
 <script>
 
 //Reset page on load.
-    localStorage.setItem('gslcurrentpage','');
-    $('.gslbookingBody').hide();
-    $('.addons_overview').hide();
-    
-    getshop_setBookingTranslation();
-    getshop_setDatePicker();
+    $(function() {
+        localStorage.setItem('gslcurrentpage','');
+        $('.gslbookingBody').hide();
+        $('.addons_overview').hide();
+
+        getshop_setBookingTranslation();
+        getshop_setDatePicker();
+    });
 </script>

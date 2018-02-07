@@ -94,11 +94,9 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                                 continue;
                             }
                             if(item.productId.equals(productIdInner)) {
-                                toAddonInternal = item;
                                 remove.add(toAddonInternal);
                     }
                             if(item.productId.equals(productIdOuter)) {
-                                toAddonExternal = item;
                                 remove.add(toAddonExternal);
                             }
 

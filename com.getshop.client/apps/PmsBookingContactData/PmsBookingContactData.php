@@ -305,7 +305,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if(isset($_POST['data'][$requirements->name])) {
             $res = $_POST['data'][$requirements->name];
 
-            if($key == "company_email" && !stristr($res, "@")) {
+            if($key == "company_email" && !stristr($res, "@") && $res) {
                 $this->validation[$requirements->name] = $this->__w("Not a valid email");
             }
 

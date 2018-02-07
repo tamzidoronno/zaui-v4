@@ -7697,7 +7697,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             if (ticketProduct == null) {
                 ticketProduct = new Product();
                 ticketProduct.id = "TICKET-"+ticket.type;
-                ticketProduct.price = 800;
+                ticketProduct.price = 1000;
                 productManager.saveProduct(ticketProduct);
             }
             

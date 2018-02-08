@@ -26,7 +26,6 @@ class LoginWithRefCode extends \SystemApplication implements \Application {
             // This login is after data has been initialized to factory.
             $page = $_SERVER['PHP_SELF'];
             header("Refresh:0");
-            exit(0);
         }   
         
     }

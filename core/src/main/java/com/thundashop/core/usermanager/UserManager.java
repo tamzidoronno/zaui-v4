@@ -662,11 +662,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return null;
         }
         
-        if(user.emailAddress == null || user.emailAddress.isEmpty()) {
-            user.emailAddress = UUID.randomUUID().toString();
-        }
-        
-        logonEncrypted(user.emailAddress, user.password);
+        logonEncrypted(refCode, user.password);
         return user;
     }
 

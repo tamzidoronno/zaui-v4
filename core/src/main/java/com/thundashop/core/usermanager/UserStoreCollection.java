@@ -164,8 +164,11 @@ public class UserStoreCollection {
     }
  
     public User login(String username, String password) throws ErrorException {
-        for (User user : users.values()) {           
+        for (User user : users.values()) {    
             if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
+                return finalize(user);
+            }
+            if (username != null && !username.isEmpty() && user.referenceKey != null && user.referenceKey.equalsIgnoreCase(username)) {
                 return finalize(user);
             }
             

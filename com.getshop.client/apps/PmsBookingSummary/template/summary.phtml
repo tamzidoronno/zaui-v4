@@ -246,7 +246,7 @@ function printAddons($room, $config, $object) {
     $addonsText[6] = $object->__w("Include the possibility to cancel your stay for {price} per night");
     $printed = false;
     foreach($addons as $addon) {
-        if(!$addon->isActive && !$addon->isAvailableForBooking) {
+        if(!$addon->isAvailableForBooking) {
             continue;
         }
         $printed = true;

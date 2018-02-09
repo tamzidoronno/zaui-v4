@@ -4,20 +4,25 @@ import com.getshop.scope.GetShopSession;
 import com.google.gson.JsonObject;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
 public class VismaEAccountingSystem extends AccountingSystemBase {
 
+    @Autowired
+    StoreManager storeManager;
+    
     String endpointTest = "https://eaccountingapi-sandbox.test.vismaonline.com/v2/";
     String endpointProd = "";
     String authTest = "https://identity-sandbox.test.vismaonline.com/connect/authorize";
-    String authProd = "";
+    String authProd = "https://identity.vismaonline.com/connect/authorize";
     String tokenTest = "https://identity-sandbox.test.vismaonline.com/connect/token";
     String tokenProd = "";
     
@@ -77,8 +82,11 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
         ret.put("client_secret", "Client secret");
         
         String clientId = getConfig("client_id");
+        String webaddr = storeManager.getMyStore().getDefaultWebAddress();
         if(clientId != null && !clientId.isEmpty()) {
-            ret.put("oAuthButton", authpoint+"/connect/authorize?client_id=[client_id]&redirect_uri=&scope=ea:api%20offline_access%20ea:sales%20ea:accounting%20ea:purchase&state=jadaskullebaremangle&response_type=code&prompt=login");
+            String url = authpoint+"?response_type=code&client_id=[client_id]&redirect_uri=https://localhost:44300/callback&state=Simplex&scope=ea:accounting+ea:api+ea:purchase+ea:sales+offline_access";
+            url = url.replace("[client_id]", clientId);
+            ret.put("oAuthButton", url);
         }
         return ret;
     }

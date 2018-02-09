@@ -1018,10 +1018,6 @@ function getshop_changeNumberOfRooms() {
             }
         },
         success: function (res) {
-            console.log('------------');
-            console.log(res);
-            console.log(gslbookingcurresult);
-            console.log('------------');
             gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = count;            
             var target = $(this);
             var totalCost = 0;

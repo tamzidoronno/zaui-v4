@@ -1400,12 +1400,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(!orderNeedAutoPay(order, daysToTryAfterOrderHasStarted)) {
                 continue;
             }
-            order.payment.transactionLog.put(System.currentTimeMillis(), "trying autopay for order: " + order.incrementOrderId);
             User user = userManager.getUserById(order.userId);
+            boolean expired = false;
             for(UserCard card : user.savedCards) {
                 if(card.isExpired()) {
+                    expired = true;
                     continue;
                 }
+                expired = false;
+                order.payment.transactionLog.put(System.currentTimeMillis(), "trying autopay for order: " + order.incrementOrderId);
                 
                         
                 if(!frameworkConfig.productionMode) {
@@ -1434,6 +1437,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     order.payment.transactionLog.put(System.currentTimeMillis(), "Fatal error when trying autopay.");
                     saveOrder(order);
                 }
+            }
+            if(expired) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "no valid cards found (maybe: expired).");
+                order.status = Order.Status.PAYMENT_FAILED;
+                saveOrder(order);
             }
         }
     }

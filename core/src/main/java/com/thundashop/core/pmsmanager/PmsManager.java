@@ -189,6 +189,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     private TicketManager ticketManager;
     
     @Autowired
+    private SmsHistoryManager smsHistoryManager;
+    
+    @Autowired
     Database dataBase;
     private Date virtualOrdersCreated;
     private Date startedDate;
@@ -887,7 +890,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         
+        
         for (PmsBookingRooms room : booking.getActiveRooms()) {
+            for(PmsBookingAddonItem item : room.addons) {
+                item.finalize();
+            }
+
+            
             if(room.bookingItemTypeId != null && 
                     productManager.getProduct(room.bookingItemTypeId) != null && 
                     productManager.getProduct(room.bookingItemTypeId).taxGroupObject != null) {
@@ -1722,7 +1731,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         if(storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6") || filter.includeOrderStatistics) {
             result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         }
-        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018) {
+        if(getConfigurationSecure().usePriceMatrixOnOrder && (storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018)) {
             setTotalFromIncomeReport(result, filter);
         }
         gsTiming("After after setting income report");
@@ -7677,14 +7686,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
 
     @Override
     public void transferTicketsAsAddons() {
+        smsHistoryManager.generateSmsUsage();
+        
         List<Ticket> tickets = ticketManager.getTicketsToTransferToAccounting();
-
+        
+        Date invoiceDate = getFirstDateInMonth();
+        
         tickets.stream().forEach(ticket -> {
             Product ticketProduct = productManager.getProduct("TICKET-"+ticket.type);
             if (ticketProduct == null) {
                 ticketProduct = new Product();
                 ticketProduct.id = "TICKET-"+ticket.type;
-                ticketProduct.price = 800;
+                ticketProduct.price = 1000;
                 productManager.saveProduct(ticketProduct);
             }
             
@@ -7696,13 +7709,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             addon.isSingle = true;
             addon.priceExTaxes = ticketProduct.priceExTaxes;
             addon.variations = ticketProduct.variationCombinations;
-            addon.date = ticket.getAddonInvoiceDate();
+            addon.date = invoiceDate;
             addon.addedBy = "TICKET_SYSTEM";
             
             int seconds = (int)(ticket.timeInvoice * 60 * 60);
             String timeSpent = timeConversion(seconds);
             
-            addon.setOverrideName(timeSpent + " | Ticket: " + ticket.incrementalId + " - " + ticket.title);
+            addon.setOverrideName("Ticket: " + ticket.incrementalId + " - " + ticket.title + " ( " + timeSpent + " )");
             
             if(addon.date == null) {
                 addon.date = new Date();
@@ -7730,8 +7743,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 return minutes + " minutter";
             }
             
-            if (minutes < 1) {
+            if (minutes < 1 && hours > 1) {
                 return hours + " timer";
+            }
+            
+            if (minutes < 1 && hours == 1) {
+                return hours + " time";
             }
             
             return hours + " timer og " + minutes + " minutter";
@@ -7955,5 +7972,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         });
         
         return returnList;
+    }
+
+    private Date getFirstDateInMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        return cal.getTime();
     }
 }

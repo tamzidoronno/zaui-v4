@@ -90,7 +90,7 @@ function chooseGuestinformation(e) {
 
     $(this).closest('.inner').find('.count').val(count);
 }
-function getshop_setBookingTranslation() {
+function getshop_setBookingTranslationFront() {
     var loadTranslation = load_getBookingTranslations();
     loadTranslation.done(function(translations) {
         for(var key in translations) {
@@ -142,7 +142,7 @@ function getshop_getBookingTranslations() {
     }
     return {};
 }
-function getshop_setDatePicker() {
+function getshop_setDatePickerFront() {
     var currentDate = new Date();
     var endDate = new Date();
     endDate.setTime(endDate.getTime() + (86400*1000)); 

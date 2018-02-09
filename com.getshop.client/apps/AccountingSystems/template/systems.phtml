@@ -52,10 +52,14 @@ $activatedSystems = array_unique(array($selectedSystemInvoices, $selectedSystemO
             
             foreach ($configOptions as $key => $val) {
                 $oldVal = @$values->{$key};
-                echo "<div>";
-                echo $val;
-                echo "<br/><input class='gsniceinput1' gsname='config|".$systemName."|".$key."' value='$oldVal'/>";
-                echo "</div>";
+                if($key == "oAuthButton") {
+                    echo "<span class='shop_button' onclick='window.open(\"".$val."\");'>Connect to accounting system</span>";
+                } else {
+                    echo "<div>";
+                    echo $val;
+                    echo "<br/><input class='gsniceinput1' gsname='config|".$systemName."|".$key."' value='$oldVal'/>";
+                    echo "</div>";
+                }
                 $found = true;
             }
             

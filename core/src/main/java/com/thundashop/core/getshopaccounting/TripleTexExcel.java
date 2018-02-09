@@ -148,7 +148,8 @@ public class TripleTexExcel extends AccountingSystemBase {
         }
         
         row.createCell(getCellNumber("ORDER LINE - DESCRIPTION")).setCellValue(createLineText(item));
-        row.createCell(getCellNumber("ORDER LINE - UNIT PRICE")).setCellValue(round(item.getProduct().priceExTaxes));
+        // Its important that this unit price is not rounded, example an SMS costs 0.39 x 2000 smses. Rounding this will be very wrong.
+        row.createCell(getCellNumber("ORDER LINE - UNIT PRICE")).setCellValue(item.getProduct().priceExTaxes);
         row.createCell(getCellNumber("ORDER LINE - COUNT")).setCellValue(item.getCount());
         row.createCell(getCellNumber("ORDER LINE - VAT CODE")).setCellValue(product.sku);
         

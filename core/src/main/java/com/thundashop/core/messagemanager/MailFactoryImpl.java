@@ -252,7 +252,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             from = "post@getshop.com";
         }
         
-        if (mailSettings.sendMailFrom != null && mailSettings.sendMailFrom.contains("@")) {
+        if (mailSettings.sendMailFrom != null && mailSettings.sendMailFrom.contains("@") && !mailSettings.sendMailFrom.equals("noreply@getshop.com")) {
             from = mailSettings.sendMailFrom;
         }
         

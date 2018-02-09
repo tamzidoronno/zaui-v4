@@ -15,6 +15,12 @@ import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
 
+    public void finalize() {
+        if(overrideName != null && !overrideName.isEmpty()) {
+            name = overrideName;
+        }
+    }
+    
     void setOverrideName(String overrideName) {
         this.name = overrideName;
         this.overrideName = overrideName;
@@ -62,9 +68,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     @Translation
     public String descriptionWeb = "";
     
-    @Transient
     private String name = "";
-    
     boolean addedToRoom = false;
 
     

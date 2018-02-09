@@ -658,7 +658,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User logonUsingRefNumber(String refCode) throws ErrorException { 
         User user = getUserByReference(refCode);
-        logonEncrypted(user.emailAddress, user.password);
+        if(user == null) {
+            return null;
+        }
+        
+        logonEncrypted(refCode, user.password);
         return user;
     }
 

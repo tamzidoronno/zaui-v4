@@ -1,9 +1,8 @@
 <?php
+namespace ns_8bfb1ed3_aac1_48b9_a6d3_cf7c3d59b944;
 
-namespace ns_2059b00f_8bcb_466d_89df_3de79acdf3a1;
-
-class PmsCalendar extends \WebshopApplication implements \Application {
-
+class PmsEventOverview extends \WebshopApplication implements \Application {
+    
     private $types = false;
     private $isItemPage = false;
     private $bookingresultforday = array();
@@ -15,67 +14,38 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $appsForPage = false;
     private $currentRoomId = "";
     
+    
     public function getDescription() {
-        return "Calendar view for displaying booked entries in a calendar.";
+        return "An overview of the event calendar";
     }
 
-    public function changeDateToSpecific() {
-        $_SESSION['calday'] = strtotime($_POST['data']['date']);
-    }
-    
     public function getName() {
-        return "PmsCalendar";
+        return "PmsEventOverview";
     }
 
-    public function showSettings() {
-        $this->includefile("settings");
-    }
-
-    public function getSelectedName() {
-        return $this->getConfigurationSetting("engine_name");
-    }
-
-    public function saveSettings() {
-        foreach ($_POST['data'] as $key => $value) {
-            $this->setConfigurationSetting($key, $value);
-        }
-    }
-
-    public function setEngine() {
-        $engine = $_POST['data']['engine'];
-        $this->setConfigurationSetting("engine_name", $engine);
-    }
-    
-    public function getMobileMenu() {
-        $name = $this->getSelectedName();
-        if($name == "alna") {
-            return "/lindeberg_kalender.html";
-        }
-        return "/".$name."_kalender.html";
-    }
-    
     public function render() {
-        $showWeekOnly = $this->getConfigurationSetting("showWeekOnly");
-        if($showWeekOnly == "true"){
-            $_SESSION['calendardaytype'] = "week";
-        }
         if (!$this->getSelectedName()) {
-            echo "You need to specify a booking engine first<br>";
-            $engines = $this->getApi()->getStoreManager()->getMultiLevelNames();
-            foreach($engines as $engine) {
-                echo "<span gstype='clicksubmit' style='font-size: 20px; cursor:pointer; display:inline-block; margin-bottom: 20px;' method='setEngine' gsname='engine' gsvalue='$engine'>$engine</span><br>"; 
+            echo "Select booking engine. <br>";
+            $engns = $this->getApi()->getStoreManager()->getMultiLevelNames();
+
+            foreach($engns as $engine) {
+                echo '<div gstype="clicksubmit" style="font-size: 16px; cursor:pointer; margin-top: 10px;" method="selectEngine" gsname="name" gsvalue="'.$engine.'">' . $engine . "</div>";
             }
             return;
         }
-        if(!$this->getFactory()->isMobileIgnoreDisabled()) {
-            $this->includefile("roomlist");
-        } else {
-            if($this->isItemPage()) {
-                $this->includefile("mobileroom");
-            } else {
-                $this->includefile("roomlistmobile");
-            }
-        }
+        $this->includefile('calendarOverview');
+        
+    }
+    public function selectEngine() {
+        $this->setConfigurationSetting("selectedkey", $_POST['data']['name']);
+    }
+    
+    public function getSelectedName() {
+        return $this->getConfigurationSetting("selectedkey");
+    }
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("selectedkey", $_POST['data']['booking_engine_name']);
     }
     
     /**
@@ -143,7 +113,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
     
     
-    public function printBlocks($day, $type, $room, $withSideBar) {
+    public function printBlocks($day, $type, $room) {
         $size = "";
         $start = $this->getStartTime($day);
         $hours = $this->getHoursAtDay();
@@ -202,26 +172,21 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
     
     public function getDayType() {
-        $day = "day";
+        $day = "month";
         
-        $lastItemPage = false;
-        if(isset($_SESSION['lastItemPage'])) {
-            $lastItemPage = $_SESSION['lastItemPage'];
-        }
-        
-        if(isset($_SESSION['calendardaytype'])) {
-            $day = $_SESSION['calendardaytype'];
-        }
-        if($day == "month" && !$this->isItemPage()) {
-            $day = "day";
-        }
-        
-        if($this->isItemPage() && !$lastItemPage) {
-            $day = "month";
-            $_SESSION['calendardaytype'] = $day;
-        }
-        
-        $_SESSION['lastItemPage'] = $this->isItemPage();
+//        if(isset($_SESSION['calendardaytype'])) {
+//            $day = $_SESSION['calendardaytype'];
+//        }
+//        if($day == "month" && !$this->isItemPage()) {
+//            $day = "day";
+//        }
+//        
+//        if($this->isItemPage() && !$lastItemPage) {
+//            $day = "month";
+//            $_SESSION['calendardaytype'] = $day;
+//        }
+//        
+//        $_SESSION['lastItemPage'] = $this->isItemPage();
         
         return $day;
     }
@@ -270,32 +235,13 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return time();
     }
     
-    public function printHeader($day, $type) {
-        if($type == "day") {
-            for($i = 7; $i <= 22; $i++) {
-                $text = $i;
-                if($i < 10) {
-                    $text = "0" . $i;
-                }
-                $width = 100 / ($this->getHoursAtDay());
-                echo "<span class='outerblock headerouterblock ' style='width:$width%;'><span class='timeheader available'>" . $text . ".00</span></span>";
-            }
-        }
-        
+    public function printHeader($day) {
         $dayDate = "";
-        if($type != "month") {
-            $dayDate = date('d', $day);
-        }
-        
-        if($type == "week" || $type == "month") {
-            echo "<span class='weekdaycontainer weektimeheader'>";
-            echo "<span class='weektimeheaderinner'>";
-            echo "<div>" . $dayDate . ". " . $this->__w(date('l', $day)) . "</div>";
-            echo "<span style='float:left; padding-left: 5px; font-size: 8px;'>".date("H.i", $this->getStartTime($day)) ."</span>";
-            echo "<span style='float:right;padding-right: 5px; font-size: 8px;'>".date("H.i", $this->getEndTime($day)) ."</span>";
-            echo "</span>";
-            echo "</span>";
-        }
+        echo "<span class='weekdaycontainer weektimeheader'>";
+        echo "<span class='weektimeheaderinner'>";
+        echo "<div>" . $dayDate . " " . $this->__w(date('l', $day)) . "</div>";
+        echo "</span>";
+        echo "</span>";
     }
 
     public function setCalendarWeek() {
@@ -612,7 +558,5 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         }
         return $this->selectedTypes;
     }
-
 }
-
 ?>

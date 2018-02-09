@@ -394,3 +394,38 @@ body {
 .kaipal.infobox .image.happy { background-image: url('/skin/default/images/kaipal-100px-happy.png'); }
 .kaipal.infobox .image.sad { background-image: url('/skin/default/images/kaipal-100px-sad.png'); }
 .kaipal.infobox .image.danger { background-image: url('/skin/default/images/kaipal-100px-warning.png'); }
+
+@media only all and (max-width:800px){
+    .gsarea[area="header"] {padding-bottom:40px;}
+    .gs_framework_modules {left:0 !important;}
+    
+    
+    .ApacAccessList {margin:0;}
+    .ApacAccessList .col {width:14% !important;padding:0 !important}
+    .module_grayrow {padding:0;}
+
+    .GetShopModuleTable {font-size:8px;text-align: center;}
+    .GetShopModuleTable .attributeheader.datarow .col,.GetShopModuleTable .datarow_inner .col{width:10% !important;padding:2px 0;}
+    .GetShopModuleTable .col_expandbutton {position: absolute;right: 0;margin-top:20px;}
+    .GetShopModuleTable .col_price .price {padding:0 !important;min-width: 50%;}
+    .GetShopModuleTable .attributeheader {padding:0;}
+    .GetShopModuleTable .datarow {position:relative;}
+    .GetShopModuleTable .datarow .datarow_inner {padding:8px 0;height: 70px;}
+    .GetShopModuleTable .guestinfo2 {display: none !important;}
+    .GetShopModuleTable .numberofguests {height:25px !important;width:25px !important;line-height: 25px !important;font-size:10px !important;}
+    .GetShopModuleTable .numberofguests .guesticon {width:15px !important;height: 15px !important;line-height: 15px !important;font-size:10px !important;}
+    
+    
+    .PmsBookingRoomView .guestinfobox {width:100%;}
+    .PmsBookingRoomView .bookingoverview_content_row {text-align: left;}
+    .PmsBookingRoomView .bookingoverview_content_row .workarea { width: 100%}
+    .PmsBookingRoomView .bookingoverview_content_row .menuarea {width: 100%;padding:0;text-align: center;}
+    .PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry {margin:0;}
+    
+    
+    .GetShopModuleTable .datarow_extended_content {padding:0 !important;text-align: left;}
+    .GetShopModuleTable .datarow_extended_content input.gsniceinput1{width:100% !important;}
+    .ApacAccessView .infobox2, .ApacAccessView .messagelog {width: 100% !important;box-sizing: border-box;padding: 6px;}
+    .ApacAccessView .messagelog .buttonarea .shop_button {width: 100%;margin-bottom: 2px;box-sizing: border-box;}
+    
+}

@@ -1,0 +1,119 @@
+<?php
+/* @var $this \ns_8bfb1ed3_aac1_48b9_a6d3_cf7c3d59b944\PmsEventOverview */
+$rooms = $this->getAllRoomsSorted();
+$types = $this->getAllTypes();
+$type = $this->getDayType();
+
+//need to be here to include theese days into the translation
+$f = $this->__w("Monday");
+$f = $this->__w("Tuesday");
+$f = $this->__w("Wednesday");
+$f = $this->__w("Thursday");
+$f = $this->__w("Friday");
+$f = $this->__w("Saturday");
+$f = $this->__w("Sunday");
+$f = $this->__w("Week");
+
+/*Settings*/
+$withSideBar = "withSideBar";
+
+?>
+
+<div class='calendartopheader'>
+    <div class='dayorweekdiv'>
+        <span class="stateinformtaion">
+            <div class='statedesrow'><span class='statedescbox occupied'></span> <?php echo $this->__w("Occupied"); ?></div>
+            <div class='statedesrow'><span class='statedescbox notconfirmed'></span> <?php echo $this->__w("Not confirmed"); ?></div>
+            <div class='statedesrow'><span class='statedescbox openforpublic'></span> <?php echo $this->__w("Open for public"); ?></div>
+            <div class='statedesrow'><span class='statedescbox available'></span> <?php echo $this->__w("Available"); ?></div>
+            <div class='statedesrow'><span class='statedescbox not_available'></span> <?php echo $this->__w("Not available"); ?></div>
+        </span>
+        <div class='dayorweekdivbuttons'>
+            <span style='padding-right: 30px; cursor:pointer;' gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
+                <i class='fa fa-caret-left'></i> <? echo $this->__w("Previous"); ?>
+            </span>
+            <?php echo date("M Y", $this->getSelectedDay());?>
+            <span style='padding-left: 30px; cursor:pointer;' gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
+                <? echo $this->__w("Next"); ?> <i class='fa fa-caret-right'></i>
+            </span>
+        </div>
+    </div>
+</div>
+<?
+
+
+echo "<div class='roomrow $withSideBar'>";
+echo "<span style='float:none;' class='roomdescouter roomdesc_$type'></span>";
+echo "<span class='timecontainer $withSideBar timecontainer_$type'>";
+
+$start = $this->getStartOfSelectedWeek();
+for($i = 0; $i < 7; $i++) {
+    $this->printHeader($start);
+    $start += 86400;
+}
+
+echo "<div style='clear:both;'></div>";
+echo "</span>";
+echo "</div>";
+
+
+$dates = $this->getDates($this->getSelectedYear());
+$month = $this->getSelectedMonth();
+$year = $this->getSelectedYear();
+$monthDates = $dates[$month];
+
+$typeToUse = null;
+foreach($types as $room) {
+    if($this->isItemPage()) {
+        if($room->pageId == $this->getPage()->javapage->id) {
+            $typeToUse = $room;
+        }
+    }
+}
+
+
+foreach($monthDates as $week => $days) {
+//    echo "<div class='roomrow itemlist' itemid='".$typeToUse->id."'>";
+    
+    echo "<div class='roomrow itemlist'>";
+    
+    echo "<span class='roomdescouter roomdesc_$type'>";
+    echo "<div class='roomdesc'>". $this->__w("Week"). " ".$week."</div>";
+    foreach ($types as $room){
+        $imgId = $this->getImageFromPage($room->pageId);
+//        echo "<img src='displayImage.php?id=$imgId'>";
+        echo "<img src='https://frivillighetenshus.getshop.com/displayImage.php?id=$imgId'>";
+        echo $room->name ."<br>";
+    }
+
+    echo "</span>";
+
+    echo "<span class='timecontainer $withSideBar timecontainer_$type'>";
+    for($i = 1; $i <= 7; $i++) {
+        $day="";
+        if(isset($days[$i])) {
+            $day = $days[$i]."-".$month."-".$year;
+        }
+
+        echo "<div class='weekdaycontainer'>";
+        if($day) {
+            echo "<div class='dayindicator'>".date("d", strtotime($day));
+            echo "<span class='daytime'style='float:left;'>".date("H:i", $this->getStartTime($start)) ."</span>";
+            echo "<span class='daytime'style='float:right'>".date("H:i", $this->getEndTime($start)) ."</span>";
+            echo "</div>";
+            
+            foreach($types as $room) {
+                $this->printBlocks(strtotime($day), $type, $room->id);
+            }
+        }
+        echo "</div>";
+    }
+    echo "</span>";
+    echo "</div>";
+ }
+     
+$nextPage = $this->__w("summary") . "_" . $this->getSelectedName();
+echo "<input type='hidden' class='continue' value='$nextPage'>";
+
+?>
+<input type='hidden' class='continue_button disabled continue' value="<?php echo $nextPage; ?>">

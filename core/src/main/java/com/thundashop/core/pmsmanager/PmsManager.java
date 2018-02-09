@@ -1731,7 +1731,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         if(storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6") || filter.includeOrderStatistics) {
             result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         }
-        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018) {
+        if(getConfigurationSecure().usePriceMatrixOnOrder && (storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018)) {
             setTotalFromIncomeReport(result, filter);
         }
         gsTiming("After after setting income report");

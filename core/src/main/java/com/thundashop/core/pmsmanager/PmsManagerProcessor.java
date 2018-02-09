@@ -992,9 +992,6 @@ public class PmsManagerProcessor {
         
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
-        if(hour < 10) {
-            return;
-        }
         
         int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
         
@@ -1011,6 +1008,9 @@ public class PmsManagerProcessor {
         bookingsCheckingIn.addAll(nonRefBookings);
         
         for(PmsBooking book : bookingsCheckingIn) {
+            if(hour < 10 && !book.isRegisteredToday()) {
+                return;
+            }            
             if(book.payedFor) {
                 continue;
             }

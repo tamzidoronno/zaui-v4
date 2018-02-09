@@ -1,0 +1,110 @@
+.PmsEventOverview .typebutton { border: solid 1px #bbb; font-size: 12px; width: 50px; text-align: center; display:inline-block; padding: 3px; cursor:pointer; background-color:#efefef; }
+.PmsEventOverview .typebutton.selected { background-color:#bbb; font-weight: bold; }
+.PmsEventOverview .calendartopheader { position:relative;text-align: center; }
+.PmsEventOverview .calendartopheader.withSideBar { padding-left: 216px; }
+.PmsEventOverview .day { display:inline-block; width: 20px; height: 20px; font-size: 12px;line-height: 20px; cursor:pointer; }
+.PmsEventOverview .dayentry:hover { background-color:#36328c !important; border-radius: 3px; color:#fff !important; }
+.PmsEventOverview .dayentry.selected { font-weight: bold; color:#87edb0 !important; }
+.PmsEventOverview .dayheader { cursor:inherit; font-size:10px; }
+.PmsEventOverview .tinycalendar { position:absolute; left: 0px; top: 0px; border: solid 1px #bbb; border-radius: 2px; padding: 3px; background-color:#6e69c4; color:#fff; }
+.PmsEventOverview .selectedweek { border: solid 1px; }
+.PmsEventOverview .statedescbox { display:inline-block; width: 12px; height: 12px; float:left;  margin-right: 5px; border-radius: 50%;}
+.PmsEventOverview .statedesrow { height: 16px; line-height: 16px; }
+.PmsEventOverview .caltextheader { border-bottom: solid 1px #fff; padding-bottom: 5px; margin-bottom: 5px; }
+.PmsEventOverview .available {
+    transition: background-color 0.2s ease;
+}
+.PmsEventOverview .available:hover { background-color:#bae9fd; cursor:pointer; }
+.PmsEventOverview .continue_button { border: solid 1px #bbb;  width: 200px; text-align: center; display:inline-block; padding: 10px; }
+.PmsEventOverview .calendarfooter { text-align: right; cursor:pointer; padding-right: 5px; padding-top: 20px; }
+.PmsEventOverview .timeselectionpanel { display: none; position:fixed; border: solid 1px #bbb; background-color:#fff; border-radius: 2px; padding: 3px; font-size: 16px; z-index: 200; }
+.PmsEventOverview .dayindicator { left: 0px; top: 0px; background-color:#9ddcc3; color:#fff; text-align: center;font-size: 20px; border-radius: 4px;margin-bottom: 4px;}
+.PmsEventOverview .dayorweekdiv{}
+.PmsEventOverview .dayorweekdivbuttons{}
+
+/* printing the timelines */
+.PmsEventOverview .roomrow { box-sizing: border-box; clear:both; margin-bottom: 40px; }
+.PmsEventOverview .roomdescouter { display:inline-block; width: 20%; box-sizing: border-box;  float:left;padding:0 4px;}
+.PmsEventOverview .roomdesc { background-color:#eaeaea; display:inline-block; width: 100%; height: 100%; font-size: 10px; position:relative; }
+.PmsEventOverview .timecontainer { display:inline-block; width: 100%; box-sizing: border-box; }
+.PmsEventOverview .weekdaycontainer { box-sizing: border-box;  width: 14.285%; float:left; display:inline-block; padding-right: 5px; position:relative; }
+.PmsEventOverview .outerblock { display:inline-block; box-sizing: border-box; padding-right: 1px; height:18px !important;}
+.PmsEventOverview .outerblock.small { padding-right: 1px; }
+.PmsEventOverview .timeblock { display:inline-block; height: 100%; width: 100%; box-sizing: border-box; background-color:#efefef;}
+.PmsEventOverview .readmorelink a { position:absolute; right: 3px; bottom: 3px; color:blue; }
+.PmsEventOverview .roomattributes { display:inline-block; width: 100px; left: 80px; padding-left: 3px; padding-top: 3px; }
+.PmsEventOverview .roomdesc img { float:left; display:inline-block; width: 40%; height: 100%; }
+.PmsEventOverview .continue_button.disabled { color:#bbb !important; cursor:text;  background-color:#e5e5e5; }
+
+
+
+.PmsEventOverview .headerouterblock { text-align: center; }
+.PmsEventOverview .headerouterblock .timeheader { width: 100%; height: 100%; display:inline-block; line-height: 32px; font-size:12px;  }
+.PmsEventOverview .weektimeheader { font-size: 12px;text-align: center; line-height: 12px; padding: 5px; }
+.PmsEventOverview .weektimeheader .weektimeheaderinner { display:inline-block; height: 100%; width: 100%; box-sizing: border-box; }
+.PmsEventOverview .roomdesc_month { width: 15%;white-space: nowrap;}
+.PmsEventOverview .roomdesc_month .roomdesc {
+    font-size: 14px;
+    text-align: center;
+    background-color: #fff;
+    line-height: 30px;
+    display: block;
+    color: #9ddcc3;}
+.PmsEventOverview .timecontainer_month { width: 85% }
+
+/* states colors */
+.PmsEventOverview .occupied { background-color: #b2d6d9 !important; }
+.PmsEventOverview .occupied.public {background-color:#36328c !important;}
+.PmsEventOverview .notconfirmed { background-color: #e0b375 !important; }
+.PmsEventOverview .openforpublic { background-color: #8182f3 !important; }
+.PmsEventOverview .available { background-color: #eaeaea !important; }
+.PmsEventOverview .not_available { background-color: #d2d2d2 !important;}
+.PmsEventOverview .day.disabled { color:#bbb; cursor:inherit !important; }
+.PmsEventOverview .day.disabled:hover { cursor:inherit !important;  }
+.PmsEventOverview .highlighted .timeblock { background-color:green !important; cursor:pointer; }
+
+.PmsEventOverview .readmorelink { position:absolute; right: 5px; bottom: 5px; }
+.PmsEventOverview .roomentry { display:inline-block; min-height: 100px; width:100%; position:relative; min-height: 50px; background-color:#fff;  }
+.PmsEventOverview .roomentry img { width: 100%; }
+.PmsEventOverview .singleroomentry img { width: 100%; }
+.PmsEventOverview .singleroomentry { position: fixed; z-index: 10; top:0px; width: 100%; top: 40px; }
+
+.PmsEventOverview .roomlistmobileouter { padding: 10px; box-sizing: border-box; }
+.PmsEventOverview .bottomdesc {position:absolute; width: 100%; bottom: 0px; height: 30%; background-color:rgba(241,241,241,0.9); padding: 10px; box-sizing: border-box; }
+.PmsEventOverview .bottomdescshell{border: solid 1px; background-color:#fff; text-align: center; padding-top: 2px; padding-bottom: 2px; position:absolute; bottom: -80px; width:100%;}
+.PmsEventOverview .timerow {  height: 60px; padding-left: 60px; position: relative; background-color:#fff; padding-bottom: 2px; }
+.PmsEventOverview .timerow .timebox {background-color:rgba(241,241,241,1); line-height: 61px; width: 58px; display:inline-block; position:absolute; left:0px; text-align: center; }
+.PmsEventOverview .timerow .halfourbox { width: 100%; display:inline-block; margin-bottom: 1px; box-sizing: border-box; height: 29px; float:left; background-color:rgba(241,241,241,1);}
+.PmsEventOverview .timerow .halfourbox.first { margin-bottom: 2px; }
+.PmsEventOverview .fa-angle-left { position:absolute; left: 10px; top: 40px; font-size: 100px; color:#fff; }
+.PmsEventOverview .fa-angle-right { position:absolute; right: 10px; top: 40px; font-size: 100px; color:#fff; }
+.PmsEventOverview .changedateleft { position:absolute; left: 20px; bottom: 0px; }
+.PmsEventOverview .changedateright { position:absolute; right: 20px; bottom: 0px; }
+.PmsEventOverview .changedateleft i,.PmsEventOverview .changedateright i { position:absolute; bottom: 0px; }
+.PmsEventOverview .changemonthmobile { font-size: 20px; background-color:#fff; text-align: center; }
+.PmsEventOverview .smalltypeselection { position:relative; font-size: 20px; border-bottom: solid 1px; padding-bottom: 15px; display:none; }
+.PmsEventOverview .smalltypeselection i { font-size: 30px; bottom: 12px; }
+.PmsEventOverview .transparentbackground { background-color:rgba(255,255,255,0.8) !important; position: fixed !important; z-index: 2 !important; top: 0 !important; width: 100% !important; }
+.PmsEventOverview .overrider { border: solid 1px; display:block; width: 100%; background-color:#fff; height: 200px; }
+.PmsEventOverview .addbookingpopup { background-color:#fff; padding: 10px;border-top: solid 3px; position: fixed; bottom: 0px; z-index: 2; width: 100%; box-sizing: border-box; display:none; }
+.PmsEventOverview .addbookingpopup td { font-size: 16px; }
+.PmsEventOverview .addbookingpopup input { width: 100%; border: solid 1px; margin: 0px; font-size: 20px; box-sizing: border-box;  margin: 5px; text-align: center;}
+.PmsEventOverview .addmobilesmall { width: 70px !important; }
+.PmsEventOverview .continuebuttonmobile { width: 100%; border: solid 1px; padding: 5px; display:inline-block; box-sizing: border-box; margin-top: 10px; text-align: center; }
+
+.PmsEventOverview .selected_periode,.PmsEventOverview .selected_periode2 { background-color: #ed70ec !important; }
+.PmsEventOverview .dayselectionsmall { position: fixed;width: 100%; }
+.PmsEventOverview .singleroomoverview { padding-top: 250px; }
+
+
+.PmsEventOverview .stateinformtaion {position:absolute; left:0px; display:inline-block; width: 150px; text-align: left;}
+.PmsEventOverview .itemlist .weekdaycontainer {min-height: 70px;}
+.PmsEventOverview .daytime {padding:14px 5px 0px 5px; font-size: 9px;}
+.PmsEventOverview .roomdescouter img{
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    margin-top: 0px;
+    position: relative;
+    top: 4px;
+    margin-right: 2px;}

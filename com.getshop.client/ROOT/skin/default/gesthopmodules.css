@@ -410,7 +410,7 @@ body {
     .GetShopModuleTable .col_price .price {padding:0 !important;min-width: 50%;}
     .GetShopModuleTable .attributeheader {padding:0;}
     .GetShopModuleTable .datarow {position:relative;}
-    .GetShopModuleTable .datarow .datarow_inner {padding:0;height: 70px;}
+    .GetShopModuleTable .datarow .datarow_inner {padding:8px 0;height: 70px;}
     .GetShopModuleTable .guestinfo2 {display: none !important;}
     .GetShopModuleTable .numberofguests {height:25px !important;width:25px !important;line-height: 25px !important;font-size:10px !important;}
     .GetShopModuleTable .numberofguests .guesticon {width:15px !important;height: 15px !important;line-height: 15px !important;font-size:10px !important;}
@@ -421,5 +421,11 @@ body {
     .PmsBookingRoomView .bookingoverview_content_row .workarea { width: 100%}
     .PmsBookingRoomView .bookingoverview_content_row .menuarea {width: 100%;padding:0;text-align: center;}
     .PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry {margin:0;}
+    
+    
+    .GetShopModuleTable .datarow_extended_content {padding:0 !important;text-align: left;}
+    .GetShopModuleTable .datarow_extended_content input.gsniceinput1{width:100% !important;}
+    .ApacAccessView .infobox2, .ApacAccessView .messagelog {width: 100% !important;box-sizing: border-box;padding: 6px;}
+    .ApacAccessView .messagelog .buttonarea .shop_button {width: 100%;margin-bottom: 2px;box-sizing: border-box;}
     
 }

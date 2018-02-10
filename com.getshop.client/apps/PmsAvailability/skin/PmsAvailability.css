@@ -73,10 +73,12 @@
     box-sizing: border-box;
     text-align: center;
     font-weight: bold;
-    
+    color:#000;
     border-bottom: solid 2px #000;
     
 }
+.PmsAvailability .showdropnotpossible { background-color:red; }
+
 .PmsAvailability .contains_booking.first_in_row {
     border-radius: 2px 0px 0px 2px;
 }
@@ -98,11 +100,40 @@
 }
 
 .PmsAvailability .contains_booking.cleaning {  background-color: #ff4e35; color: #FFF; }
-.PmsAvailability .contains_booking.closed {  background-color: #00baff; }
+.PmsAvailability .contains_booking.closed i {
+    color: #000;
+    font-size: 18px;
+    padding-left: 5px;
+}
+
+.PmsAvailability .contains_booking.closed {
+    background: 
+      /* On "top" */
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 1px,
+        #ccc 2px,
+        #ccc 2px
+      ),
+      /* on "bottom" */
+      linear-gradient(
+        to bottom,
+        #eee,
+        #999
+      );
+}
+.PmsAvailability .closemodalarea { position:fixed; border: solid 1px; display:none;z-index: 5;     background-color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    border-color: #bbb;
+    width: 400px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      }
 .PmsAvailability .contains_booking.closed.mouseover {  background-color: #00a0ff; }
-.PmsAvailability .contains_booking.grey {  background-color: #c0c0c6; }
-.PmsAvailability .contains_booking.grey.mouseover {  background-color: #acacb2; }
-.PmsAvailability .contains_booking.normal {  background-color: #ff7a00; }
+.PmsAvailability .contains_booking.grey {background-color: rgba(0,0,0,0.1);
+    color: rgba(0,0,0,0.5);
+    border: solid 1px rgba(0,0,0,0.3);}
+.PmsAvailability .contains_booking.grey.mouseover {  background-color: rgba(0,0,0,0.4); }
+.PmsAvailability .contains_booking.normal {  background-color: #15772f; color:#fff; }
 .PmsAvailability .contains_booking.normal.mouseover {  background-color: #ff6300; }
 
 .PmsAvailability .contains_booking {
@@ -114,6 +145,7 @@
     display: inline-block;
     border-bottom: solid 1px #DDD;
     box-sizing: border-box;
+    cursor:pointer;
 }
 
 .PmsAvailability .col_outer.last_in_row_outer { 
@@ -132,6 +164,16 @@
 
 .PmsAvailability .col_outer.nodata {
     border-right: solid 1px rgba(0,0,0,0.1);
+}
+.PmsAvailability .col_outer {
+    border-right: solid 1px rgba(0,0,0,0.1);
+    background: repeating-linear-gradient(
+        45deg,
+        #0bd03e,
+        #2bef5e 1px,
+        #3dea69 1px,
+        #5fd07d 3px
+    );
 }
 .PmsAvailability .col_data {
     height: 22px;
@@ -181,13 +223,22 @@
 .PmsAvailability .bookername .fullname {
     display: none;
 }
+.PmsAvailability .hatched {
+    background: repeating-linear-gradient(
+        45deg,
+        #606dbc,
+        #606dbc 10px,
+        #465298 10px,
+        #465298 20px
+    );
+}
 
 .PmsAvailability .bookername .acronyme {
     display: none;
 }
 
 .PmsAvailability .showdroppossible {
-    background-color: #ff7a00;
+    background-color: green;
 }
 
 .PmsAvailability .showdroppossible .col_data {

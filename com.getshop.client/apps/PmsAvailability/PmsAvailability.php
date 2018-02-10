@@ -228,16 +228,50 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $_SESSION['PmsAvailability_endDate'] = $date;
     }
 
-    public function createNameOfBooker($data) {
-        if ($data->state !== "normal") {
-            return "<div class='otherdata'><i class='fa fa-trash'></i></div>";
+    public function loadMarkedAreaBox() {
+        $this->includefile("markedareabox");
+    }
+    
+    public function closeroom() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $itemid = $_POST['data']['bookingitemid'];
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        
+        $comment = "closed by: " . $user->fullName . ", ";
+        $comment .= $_POST['data']['comment'];
+        
+        $this->getApi()->getPmsManager()->closeItem($this->getSelectedMultilevelDomainName(), $itemid, $start, $end, $comment);
+    }
+    
+    public function updateBookingDirect() {
+        
+        if(isset($_POST['data']['submit']) && $_POST['data']['submit'] == "openroom") {
+            $this->getApi()->getBookingEngine()->deleteBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+            return;
         }
+        
+        $this->getApi()->getBookingEngine()->changeDatesOnBooking($this->getSelectedMultilevelDomainName(), 
+                $_POST['data']['bookingid'], 
+                $this->convertToJavaDate(strtotime($_POST['data']['start'])), 
+                $this->convertToJavaDate(strtotime($_POST['data']['end'])));
+        
+        $this->getApi()->getBookingEngine()->changeSourceOnBooking($this->getSelectedMultilevelDomainName(), 
+                $_POST['data']['bookingid'], $_POST['data']['source']);
+    }
+    
+    public function createNameOfBooker($data) {
         
         $words = explode(" ", ucwords($data->name));
         $acronym = "";
 
         foreach ($words as $w) {
-            $acronym .= $w[0];
+            if($w && strlen($w) > 0) {
+                $acronym .= $w[0];
+            }
+        }
+        if ($data->state !== "normal") {
+            return "<div class='bookername'><span class='fullname'>" . $data->name . "</span><span class='acronyme'>$acronym</span></div>";
         }
 
         $header = "<div class='bookername'><span class='fullname'>" . $data->name . "</span><span class='acronyme'>$acronym</span></div>";
@@ -263,6 +297,13 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         return strtotime(date("d.m.Y 06:00", $time));
     }
 
+    public function deleteroom() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+        
+
+        $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $booking->id, $_POST['data']['roomid']);
+    }
+    
 }
 
 ?>

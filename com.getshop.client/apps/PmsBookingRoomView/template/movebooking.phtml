@@ -1,10 +1,9 @@
 <?
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
-$currentBooking = $this->getBookingEngineBooking();
 $room = $this->getSelectedRoom();
 
-$startDate = date('d.m.Y H:i', strtotime($currentBooking->startDate));
-$endDate = date('d.m.Y H:i', strtotime($currentBooking->endDate));
+$startDate = date('d.m.Y H:i', strtotime($room->date->start));
+$endDate = date('d.m.Y H:i', strtotime($room->date->end));
 ?>
 
 <div class="staytime">
@@ -18,7 +17,7 @@ $endDate = date('d.m.Y H:i', strtotime($currentBooking->endDate));
 </div>
 
 
-<div class="itemview" bookingid="<? echo $currentBooking->id; ?>" roomid='<? echo $room->pmsBookingRoomId; ?>'>
+<div class="itemview" bookingid="<? echo $room->bookingId; ?>" roomid='<? echo $room->pmsBookingRoomId; ?>'>
     <?
     $this->includefile("itemview");
     ?>

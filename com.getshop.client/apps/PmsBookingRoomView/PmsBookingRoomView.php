@@ -14,6 +14,84 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function updatePriceMatrixWithPeriodePrices() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $amount = $_POST['data']['periodePrice'];
+        switch($_POST['data']['periodePriceType']) {
+            case "dayprice":
+                foreach($room->priceMatrix as $day => $val) {
+                    $room->priceMatrix->{$day} = $amount;
+                }
+                break;
+            case "wholestay":
+                foreach($room->priceMatrix as $day => $val) {
+                    $days = sizeof(array_keys((array)$room->priceMatrix));
+                    $room->priceMatrix->{$day} = round(($amount / $days), 2);
+                }
+                break;
+            case "start_of_stay":
+                $time = strtotime($room->date->start);
+                while(true) {
+                    $start = $time;
+                    $end = strtotime("+1 month", $time);
+                    $time = strtotime("+1 month", $time);
+                    
+                    $datediff = $end - $start;
+                    $days = floor($datediff / (60 * 60 * 24));
+                    $avg = $amount / $days;
+                    
+                    foreach($room->priceMatrix as $day => $val) {
+                        $dayInTime = strtotime($day . " 23:59");
+                        if($dayInTime >= $start && $dayInTime < $end) {
+                            $room->priceMatrix->{$day} = round($avg,2);
+                        }
+                    }
+                    
+                    if($end > strtotime($room->date->end)) {
+                        break;
+                    }
+                }
+                break;
+            case "start_of_month":
+                $time = strtotime($room->date->start);
+                $time = strtotime(date("01.m.Y", $time));
+                while(true) {
+                    $start = $time;
+                    $end = strtotime("+1 month", $time);
+                    $time = strtotime("+1 month", $time);
+                    
+                    $datediff = $end - $start;
+                    $days = floor($datediff / (60 * 60 * 24));
+                    $avg = $amount / $days;
+                    
+                    echo date("d.m.Y", $start) . " - ";
+                    echo date("d.m.Y", $end) . " ($days)" . "<br>";
+                    
+                    foreach($room->priceMatrix as $day => $val) {
+                        $dayInTime = strtotime($day . " 23:59");
+                        if($dayInTime >= $start && $dayInTime < $end) {
+                            $room->priceMatrix->{$day} = round($avg,2);
+                        }
+                    }
+                    
+                    if($end > strtotime($room->date->end)) {
+                        break;
+                    }
+                }
+                break;
+            case "whole_stay":
+                $avg = $amount / sizeof($room->priceMatrix);
+                foreach($room->priceMatrix as $key => $val) {
+                    $room->priceMatrix[$key] = $avg;
+                }
+                break;
+        }
+        $this->updateRoom($room);
+    }
+
+    
+    
     public function updateAddons() {
         $this->setData();
         
@@ -48,6 +126,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("bookingoverview");
     }
 
+    public function loadChangesPanel() {
+        $this->includefile("differenceinroom");
+    }
+    
+    public function discardChanges() {
+        $this->clearCache();
+    }
+    
     public function setRoomId($roomId) {
         $_SESSION['PmsBookingRoomView_current_pmsroom_id'] = $roomId;
     }
@@ -86,7 +172,38 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function refresh() {
     }
     
+    public function updateAvialablity() {
+        $room = $this->getSelectedRoom();
+        if (isset($_POST['data']['itemId']) && isset($_POST['data']['itemId'])) {
+            $room->bookingItemId = $_POST['data']['itemId'];
+        }
+        if (isset($_POST['data']['typeId']) && isset($_POST['data']['typeId'])) {
+            $room->bookingItemTypeId = $_POST['data']['typeId'];
+        }
+        if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
+            $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+            $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));  
+            $newPricesRoom = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), 
+                    $room->pmsBookingRoomId, 
+                    $room->bookingItemTypeId, 
+                    $room->date->start, 
+                    $room->date->end);
+            foreach($room->priceMatrix as $day => $val) {
+                foreach($newPricesRoom->priceMatrix as $day2 => $val2) {
+                    if($day2 == $day) {
+                        $newPricesRoom->priceMatrix->{$day} = $val;
+                    }
+                }
+            }
+            $room->priceMatrix = $newPricesRoom->priceMatrix;
+        }
+        
+        $this->updateRoom($room);
+
+    }
+    
     public function loaditemview() {
+        $this->setData();
         $this->includefile("itemview");
     }
 
@@ -270,7 +387,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
             foreach ($this->pmsBooking->rooms as $room) {
                 if ($room->pmsBookingRoomId == $_SESSION['PmsBookingRoomView_current_pmsroom_id']) {
-                    $this->updateRoom($room);
+                    $this->updateRoom($room, true);
                     $this->selectedRoom = $room;
                 }
             }
@@ -629,7 +746,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         die();
     }
 
-    public function updateRoom($room) {
+    public function updateRoom($room, $avoidChanges = false) {
+        if(!$avoidChanges) {
+            $room->hasBeenUpdated = true;
+        }
         $_SESSION['cachedroomspmsrooms'][$room->pmsBookingRoomId] = json_encode($room);
     }
 

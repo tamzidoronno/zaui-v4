@@ -10,6 +10,25 @@
     margin-right: 20px;
 }
 
+.PmsBookingRoomView .priceselectionhelp { display:none; font-size: 12px; font-style: italic; color:green; padding-top: 10px; }
+.PmsBookingRoomView .masseditpricesbox {
+    border: solid 1px #bbb;
+    padding: 10px;
+    background-color: #fff;
+    z-index: 2;
+}
+
+.PmsBookingRoomView .unsavedchangeswarning {
+    background-color: gray;
+    color: #fff;
+    padding: 0px;
+    height: 33px;
+    font-size: 17px;
+    padding-top: 15px;
+    position: relative;
+    padding-left: 20px;
+}
+
 .PmsBookingRoomView .editaddonpanel { border: solid 1px #bbb; position:absolute; background-color: #fff; padding: 2px; }
 
 .PmsBookingRoomView .removeselectedaddons { background-color: red;

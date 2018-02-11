@@ -11,6 +11,18 @@ if(!$stayPrice) {$stayPrice = "";} else {$stayPrice  = " - " . $stayPrice;}
 
 $addonsPrice = $this->getAddonsCost();
 if(!$addonsPrice) {$addonsPrice = "";} else {$addonsPrice  = " - " . $addonsPrice;}
+
+if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
+    echo "<div class='changespanel'></div>";
+    echo "<div class='unsavedchangeswarning'><i class='fa fa-info-circle'></i> You have unsaved changes for this room (+400).";
+    echo "<span style='position:absolute; right:5px; top: 5px;'>";
+    echo "<span class='shop_button' style='margin-right: 5px;background-color:red;' gstype='clicksubmit' gsname='id' gsvalue='123' method='discardChanges'><i class='fa fa-trash-o'></i> Discard changes</span>";
+    echo "<span class='shop_button seechangesbutton' style='margin-right: 5px;'>See changes</span>";
+    echo "<span class='shop_button' style='background-color:green; margin-right: 5px;'>Save</span>";
+    echo "<span class='shop_button' style='background-color:green;'>Save&Pay</span>";
+    echo "</span>";
+    echo "</div>";
+}
 ?>
 
 <div gstype='form' method="updateBooking" class="bookingoverview_content_row">
@@ -83,7 +95,6 @@ if(!$addonsPrice) {$addonsPrice = "";} else {$addonsPrice  = " - " . $addonsPric
             <a href="/?page=groupbooking&bookingEngineId=<? echo $this->bookingEngineBooking->id; ?>">
                 <div gstype="submit" class="shop_button" gs_local_update_only="true"><i class="fa fa-chain"></i> <? echo $this->__f("Open group"); ?></div>
             </a>
-            <div gstype="submit" class="shop_button" gs_callback="app.PmsBookingRoomView.contentSaved" synchron="true"><i class="fa fa-save"></i> <? echo $this->__f("Save"); ?></div>
         </div>
     </div>
 </div>

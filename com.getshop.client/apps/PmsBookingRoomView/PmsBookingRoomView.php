@@ -961,8 +961,26 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $dayPriceOnUnsavedRoom = 0.0;
         foreach($unsavedRoom->priceMatrix as $val) { $dayPriceOnUnsavedRoom += $val; }
         $diff = $dayPriceOnUnsavedRoom-$dayPriceOnSavedRoom;
-        if($diff > 0) { $changes['pricematrix'] = "Stay price increased by " . $diff; }
-        if($diff < 0) { $changes['pricematrix'] = "Stay price day by " . $diff; }
+        if($diff > 0) { $changes['pricematrix'] = "Stay cost increased by " . $diff; }
+        if($diff < 0) { $changes['pricematrix'] = "Stay cost decreased by " . $diff; }
+        
+        //Has the room or type been changed?
+        if($savedRoom->bookingItemTypeId != $unsavedRoom->bookingItemTypeId) {
+            $savedType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $savedRoom->bookingItemTypeId)->name;
+            $unSavedType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $unsavedRoom->bookingItemTypeId)->name;
+            $changes['typechange'] = "Room type has bene changed from <b>" . $savedType . "</b> to <b>" . $unSavedType . "</b>";
+        }
+        if($savedRoom->bookingItemId != $unsavedRoom->bookingItemId) {
+            $savedItem = "Floating";
+            if($savedRoom->bookingItemId) {
+                $savedItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $savedRoom->bookingItemId)->bookingItemName;
+            }
+            $unSavedItem = "Floating";
+            if($unsavedRoom->bookingItemId) {
+                $unSavedItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $unsavedRoom->bookingItemId)->bookingItemName;
+            }
+            $changes['itemchange'] = "Room type has bene changed from <b>" . $savedItem . "</b> to <b>" . $unSavedItem . "</b>";
+        }
         
         $totalChanges += $diff;
         

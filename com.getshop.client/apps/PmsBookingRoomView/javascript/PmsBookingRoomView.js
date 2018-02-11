@@ -23,9 +23,15 @@ app.PmsBookingRoomView = {
     },
     
     seeChangesOnBooking : function() {
+        if($('.changespanel').is(':visible')) {
+            $('.changespanel').slideUp();
+            return;
+        }
+        $('.changespanel').hide();
         var event = thundashop.Ajax.createEvent('','loadChangesPanel', $(this), {});
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.changespanel').html(res);
+            $('.changespanel').slideDown();
         });
     },
     

@@ -17,7 +17,22 @@
     background-color: #fff;
     z-index: 2;
 }
+.PmsBookingRoomView .changespanel {
+    position: absolute;
+    z-index: 2;
+    background-color: #fff;
+    right: 10px;
+    top: 50px;
+    border: solid 1px #bbb;
+    display:none;
+}
 
+.PmsBookingRoomView .changespanel .changetextrow {
+    border-bottom: solid 1px #bbb;
+    padding: 10px;
+}
+
+.PmsBookingRoomView .pricerows { max-height: 200px; overflow:auto;}
 .PmsBookingRoomView .unsavedchangeswarning {
     background-color: gray;
     color: #fff;

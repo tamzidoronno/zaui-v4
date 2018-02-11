@@ -33,14 +33,16 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
     </div>
     <br/>
     <h2>Daily prices</h2>
-    <?
-    $total = 0;
-    foreach ($priceMatrix as $date => $price) {
-        $total += $price;
-        echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2'><input class='gsniceinput1 unitprice_changed' gsname='room_price_$date' value='$price'></div> </div>";
-    }
-    ?>
-    
+    <div class="pricerows">
+        <?
+        $total = 0;
+        foreach ($priceMatrix as $date => $price) {
+            $total += $price;
+            echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2'><input class='gsniceinput1 unitprice_changed' gsname='room_price_$date' value='$price'></div> </div>";
+        }
+        ?>
+    </div>
+
     <div class='totalrow'>
         <?
         echo $this->__f("Total").": <span>".$total."</span>";

@@ -942,5 +942,132 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     );
   }
 
+    public function getDifferenceInRoom() {
+        $totalChanges = 0;
+        $unsavedRoom = $this->getSelectedRoom();
+        $savedBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $unsavedRoom->pmsBookingRoomId);
+        $savedRoom = null;
+        $changes = array();
+        foreach($savedBooking->rooms as $room) {
+            if($room->pmsBookingRoomId == $unsavedRoom->pmsBookingRoomId) {
+                $savedRoom = $room;
+                break;
+            }
+        }
+        
+        //Pricematrix diff.
+        $dayPriceOnSavedRoom = 0.0;
+        foreach($savedRoom->priceMatrix as $val) { $dayPriceOnSavedRoom += $val; }
+        $dayPriceOnUnsavedRoom = 0.0;
+        foreach($unsavedRoom->priceMatrix as $val) { $dayPriceOnUnsavedRoom += $val; }
+        $diff = $dayPriceOnUnsavedRoom-$dayPriceOnSavedRoom;
+        if($diff > 0) { $changes['pricematrix'] = "Stay price increased by " . $diff; }
+        if($diff < 0) { $changes['pricematrix'] = "Stay price day by " . $diff; }
+        
+        $totalChanges += $diff;
+        
+        //Stay periode diff.
+        $unsavedStart = strtotime($unsavedRoom->date->start);
+        $savedStart = strtotime($savedRoom->date->start);
+        $unsavedEnd = strtotime($unsavedRoom->date->end);
+        $savedEnd = strtotime($savedRoom->date->end);
+        
+        if($unsavedStart != $savedStart) { $changes['startdate'] = "Checkin changed from: " . date("d.m.Y H:i", $savedStart) . " to " . date("d.m.Y H:i", $unsavedStart); }
+        if($unsavedEnd != $savedEnd) { $changes['enddate'] = "Checkout changed from: " . date("d.m.Y H:i", $savedEnd) . " to " . date("d.m.Y H:i", $unsavedEnd); }
+        
+        //Addons added.
+        $changes['newAddon'] = array();
+        foreach($unsavedRoom->addons as $unsavedAddon) {
+            $found = false;
+            foreach($savedRoom->addons as $savedAddon) {
+                if($savedAddon->addonId == $unsavedAddon->addonId) {
+                    $found = true;
+                }
+            }
+            if(!$found) {
+                $changes['newAddon'][] = $unsavedAddon;
+            }
+        }
+        
+        
+        //Addons removed.
+        $changes['removedAddon'] = array();
+        foreach($savedRoom->addons as $savedAddon) {
+            $found = false;
+            foreach($unsavedRoom->addons as $unsavedAddon) {
+                if($savedAddon->addonId == $unsavedAddon->addonId) {
+                    $found = true;
+                }
+            }
+            if(!$found) {
+                $changes['removedAddon'][] = $savedAddon;
+            }
+        }
+
+        //Addons updated.
+        $changes['changedaddons'] = array();
+        foreach($savedRoom->addons as $savedAddon) {
+            $found = false;
+            foreach($unsavedRoom->addons as $unsavedAddon) {
+                if($savedAddon->addonId == $unsavedAddon->addonId) {
+                    $totalChanges += ($unsavedAddon->count*$unsavedAddon->price)-($savedAddon->count*$savedAddon->price);
+                    $savedAddon->price = $unsavedAddon->price - $savedAddon->price;
+                    $savedAddon->count = $unsavedAddon->count - $savedAddon->count;
+                    if($savedAddon->count != 0 || $savedAddon->price != 0) {
+                        $changes['changedaddons'][] = $savedAddon; 
+                    }
+                }
+            }
+        }
+        $changes['totalchanges'] = $totalChanges;
+        
+        return $changes;
+    }
+
+    public function createReadableDiffText($diffs) {
+        $text = "";
+        foreach($diffs as $key => $diff) {
+            if($key == "newAddon") { continue; }
+            if($key == "removedAddon") { continue; }
+            if($key == "changedaddons") { continue; }
+            if($key == "totalchanges") { continue; }
+            $text .= "<div class='changetextrow'>" . $diff . "</div>";
+        }
+        
+        
+        if(sizeof($diffs['newAddon'])) {
+            $text .= "<div class='changetextrow'>";
+            $text .= "New addons added:<br>";
+            foreach($diffs['newAddon'] as $addon) {
+                /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+                $text .= date("d.m.Y", strtotime($addon->date)) . " : " . $this->getApi()->getProductManager()->getProduct($addon->productId)->name . " : " . $addon->count . " x " . $addon->price . "<br>";
+            }
+            $text .= "</div>";
+        }
+        
+        if(sizeof($diffs['changedaddons'])) {
+            $text .= "<div class='changetextrow'>";
+            $text .= "Changes in addons:<br>";
+            foreach($diffs['changedaddons'] as $addon) {
+                /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+                $text .= date("d.m.Y", strtotime($addon->date)) . " : " . $this->getApi()->getProductManager()->getProduct($addon->productId)->name . " : " . $addon->count . " x " . $addon->price . "<br>";
+            }
+            $text .= "</div>";
+        }
+        
+        if(sizeof($diffs['removedAddon'])) {
+            $text .= "<div class='changetextrow'>";
+            $text .= "Addons removed:<br>";
+            foreach($diffs['removedAddon'] as $addon) {
+                /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+                $text .= date("d.m.Y", strtotime($addon->date)) . " : " . $this->getApi()->getProductManager()->getProduct($addon->productId)->name . " : " . $addon->count . " x " . $addon->price . "<br>";
+            }
+            $text .= "</div>";
+        }
+        $text .= "<div class='changetextrow' style='font-weight:bold;'>Changes in total: ".$diffs['totalchanges']."</div>";
+        
+        return $text;
+    }
+
 }
 ?>

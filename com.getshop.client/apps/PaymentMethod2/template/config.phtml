@@ -1,0 +1,26 @@
+<div class='gss_settings_header'>
+    <i class='fa fa-envelope'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <?php echo $this->getName(true); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php echo $this->getDescription(); ?>
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="ordertype">
+        <span class="title"><?php echo $this->__f("Name of payment method"); ?></span>
+        <input type="textfield" gs_model='paymentmethod2' gs_model_attr='name' value="<? echo $this->getConfigurationSetting("name"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("The name of this payment method"); ?>
+        </div>
+    </div>
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="paymentmethod2" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

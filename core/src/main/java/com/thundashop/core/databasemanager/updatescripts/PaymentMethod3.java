@@ -69,6 +69,7 @@ public class PaymentMethod3 extends UpdateScriptBase implements UpdateScript {
         Application PaymentMethod3 = createSettings("PaymentMethod3",
         "1d02cbe8-6894-4438-af26-e7e5eccefbae",
         allowed2,
+        
         " ",
         Application.Type.Payment, true);
         PaymentMethod3.isPublic = true;

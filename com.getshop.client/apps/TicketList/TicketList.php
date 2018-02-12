@@ -20,6 +20,14 @@ class TicketList extends \MarketingApplication implements \Application {
         $this->renderTable();
     }
     
+    public function subMenuChanged() {
+        
+    }
+    
+    public function reloadApp() {
+        
+    }
+    
     public function setFilterState() {
         $_SESSION['ns_419c41e7_1dd5_4c96_b820_c1b77a2fffa3_statefilter'] = $_POST['data']['state'];
     }

@@ -1,3 +1,5 @@
+
+<div class="closemodalarea"></div>
 <?
 /* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
 
@@ -83,10 +85,14 @@ foreach ($types as $type) {
                         }
                         
                         $noData = !$containsBooking ? "nodata" : "";
-                        $canShowModal = $containsBooking && $data->state == "normal" ? "gs_show_modal='booking_room_view'"  : "";
-                        
-                        
-                        echo "<div typeid='$type->id' col='$i' bookingitemid='$item->id' date='$colDate2' row='$j' ondrop='app.PmsAvailability.onDragDrop(event)' ondragleave='app.PmsAvailability.onDragLeave(event)' ondragover='app.PmsAvailability.onDragOver(event)' class='col_outer $noData $firstInRowOuter $lastInRowOuter'><div ondragstart='app.PmsAvailability.onDragStart(event)' draggable='true' $canShowModal bookingid='$bookingId' roomid='$data->roomId' class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
+                        $canShowModal = $containsBooking && $data->state == "normal" ? "hasBookingYes"  : "";
+                        $dragging = "";
+                        $marking = "";
+                        $dragging .= "ondragstart='app.PmsAvailability.onDragStart(event)' ondrop='app.PmsAvailability.onDragDrop(event)' ondragleave='app.PmsAvailability.onDragLeave(event)' ondragover='app.PmsAvailability.onDragOver(event)' onmousedown='app.PmsAvailability.startMarking(event)' onmouseup='app.PmsAvailability.endMarking(event)' onmouseover='app.PmsAvailability.markArea(event)'";
+                        if($canShowModal) {
+                            $dragging .= " draggable='true' ";
+                        }
+                        echo "<div typeid='$type->id' col='$i' bookingitemid='$item->id' date='$colDate2' row='$j' class='col_outer $noData $firstInRowOuter $lastInRowOuter'><div $canShowModal bookingid='$bookingId' roomid='$data->roomId' $dragging class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
                         $prevBookingIds = $data->bookingIds;
                         $i++;
                     }

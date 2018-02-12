@@ -1,0 +1,86 @@
+<?php /* @var $this \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+$booking = null;
+$room = null;
+if(isset($_POST['data']['roomid']) && $_POST['data']['roomid']) {
+    $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+}
+if($booking) {
+    foreach($booking->rooms as $tmpRoom) {
+        if($tmpRoom->pmsBookingRoomId == $_POST['data']['roomid']) {
+            $room = $tmpRoom;
+        }
+    }
+}
+
+if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
+    $bookingItem = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+    ?>
+    <div method='updateBookingDirect' gstype='form'>
+        <div style='text-align: center; cursor:pointer; border-bottom: solid 1px #bbb;padding-bottom:5px; margin-bottom: 5px;'>
+            <i class='fa fa-close' style='float:right; cursor:pointer;' onclick='app.PmsAvailability.closeCloseRoomDialog();'></i>
+            This area is closed off</div>
+        <input type='hidden' value='<?php echo $bookingItem->id; ?>' gsname='bookingid'>
+        <input type='text' class='gsniceinput1' value='<?php echo date("d.m.Y", strtotime($bookingItem->startDate)); ?>' gsname='start'>
+        <input type='text' class='gsniceinput1' value='<?php echo date("d.m.Y", strtotime($bookingItem->endDate)); ?>' style='float:right;' gsname='end'><br><br>
+        <textarea style='border: solid 1px #bbb; width: 100%; box-sizing: border-box; height:100px;' gsname='source'><?php echo $bookingItem->source; ?></textarea>
+        <span class='shop_button' style='float:right;' gstype='submit'>Update closing information</span>
+        <span class='shop_button' style='background-color:green;' gstype='submit' gsvalue='openroom'>Open this room</span>
+    </div>
+    <?php
+    return;
+}
+
+?>
+
+<i class='fa fa-close' style='float:right; cursor:pointer;' onclick='app.PmsAvailability.closeCloseRoomDialog();'></i>
+    <div style='text-align: center; cursor:pointer; border-bottom: solid 1px;padding-bottom:5px; '>Information</div>
+<table width='100%'>
+    <tr>
+        <td valign='top' width='50%' style='padding: 10px;'>
+            <?php
+            if($booking) {
+                ?>
+                <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;' gs_show_modal='booking_room_view' onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid='<?php echo $booking->id; ?>'  roomid="<?php echo $_POST['data']['roomid']; ?>">Open booking</span>
+                <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:red;' gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'><i class='fa fa-trash-o'></i> Delete booking</span>
+                <?php
+            }
+            ?>
+                <div style='text-align: center; border-top: solid 1px #bbb; border-bottom: solid 1px #bbb; font-weight: bold; margin-top:10px;padding-top:10px; padding-bottom:10px;'>Close room</div>
+            <?php
+            if($room && $room->bookingItemId) {
+                echo "To close this room you have to some guests.";
+            } else {
+                ?>
+                <div gstype='form' method='closeroom'>
+                    <input type='hidden' value='<?php echo $_POST['data']['bookingitemid']; ?>' gsname='bookingitemid'>
+                    <br>
+                    Start<br>
+                    <input type='txt' value='<?php echo $_POST['data']['start']; ?>' gsname='start' class='gsniceinput1' style='width:100%;box-sizing:border-box;'>
+                    End:<br>
+                    <input type='txt' value='<?php echo $_POST['data']['end']; ?>' gsname='end' class='gsniceinput1' style='width:100%;box-sizing:border-box;'><br>
+                    Why do you close this room?<br>
+                    <textarea  style='width:100%;box-sizing:border-box; border: solid 1px #bbb; height:100px;' gsname='comment'></textarea>
+                    <span class="shop_button" style='width:100%;box-sizing:border-box;' gstype='submit'>Close room</span>
+                </div>
+            <?php } ?>
+        </td>
+        <td valign='top' width='50%' style='padding: 10px;border-left: solid 1px #bbb; '>
+            <?php
+            if(!$booking) {
+                echo "This room is not assigned to anyone yet.";
+            } else {
+                $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+                echo "<div style='text-align:center;padding-bottom: 10px; margin-bottom: 10px;'>" . $user->fullName . "</div>";
+                echo "<div>Check-in <span style='float:right;'>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</span></div>";
+                echo "<div>Check-out <span style='float:right;'>" . date("d.m.Y H:i", strtotime($room->date->end)) . "</span></div>";
+                echo "<div>Total price <span style='float:right;'>" . $room->totalCost . "</span></div>";
+                echo "<br>";
+                echo "<div style='text-align:center;margin-bottom: 5px;'>Guests</div>";
+                foreach($room->guests as $guest) {
+                    echo $guest->name . "<br>";
+                }
+            }
+            ?>
+        </td>
+    </tr>
+</table>

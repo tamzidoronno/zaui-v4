@@ -539,12 +539,23 @@ class Factory extends FactoryBase {
                 $rightWidget = ob_get_contents();
                 ob_end_clean();
             }
-            
             $data = array();
             $data['content'] = $content;
             $data['modal'] = $modal;
             $data['rightWidget'] = $rightWidget;
-            echo json_encode($data);
+            $res = json_encode($data);
+            if($res === FALSE) {
+                $data = array();
+                $data['content'] = mb_convert_encoding($content, "UTf-8");
+                $data['modal'] = $modal;
+                $data['rightWidget'] = $rightWidget;
+                $res = json_encode($data);
+                if($res === FALSE) {
+                    echo "Failed to encode json array data.<br>";
+                    echo json_last_error_msg();
+                }
+            }
+            echo $res;
         } else {
             $this->page->loadSkeleton();
         }

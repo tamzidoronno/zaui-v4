@@ -296,8 +296,6 @@
 
 <link rel="stylesheet" type="text/css" media="all" href="https://www.getshop.com/js/daterangepicker/daterangepicker.css" />
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-<script type="text/javascript" src="https://www.getshop.com/js/daterangepicker/moment.js"></script>
-<script type="text/javascript" src="https://www.getshop.com/js/daterangepicker/daterangepicker.js"></script>
 <script>
 
 //Reset page on load.
@@ -306,7 +304,12 @@
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
 
-        getshop_setBookingTranslation();
-        getshop_setDatePicker();
+        
+        $.getScript( "https://www.getshop.com/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
+            $.getScript( "https://www.getshop.com/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
+                getshop_setDatePicker();
+                getshop_setBookingTranslation();
+            });
+        });
     });
 </script>

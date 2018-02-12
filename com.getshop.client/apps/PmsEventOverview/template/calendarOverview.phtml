@@ -3,38 +3,43 @@
 $rooms = $this->getAllRoomsSorted();
 $types = $this->getAllTypes();
 $type = $this->getDayType();
-
-//need to be here to include theese days into the translation
-$f = $this->__w("Monday");
-$f = $this->__w("Tuesday");
-$f = $this->__w("Wednesday");
-$f = $this->__w("Thursday");
-$f = $this->__w("Friday");
-$f = $this->__w("Saturday");
-$f = $this->__w("Sunday");
-$f = $this->__w("Week");
-
-/*Settings*/
-$withSideBar = "withSideBar";
-
 ?>
+
+<div class="calendarSettings">
+    <i class="fa fa-th active"></i>
+    <i class="fa fa-list-ul"></i>
+    <i class="fa fa-cog"></i>
+</div>
+
+<div id="calendarConfiguration">
+    <span class="configheader"><?php echo $this->__w("Visibility"); ?></span>
+    <ul>
+        <li class="toggleborders"><?php echo $this->__w("Borders"); ?></li>
+        <li class="toggleoccupied active"><?php echo $this->__w("Occupied"); ?></li>
+        <li class="togglenotconfirmed active"><?php echo $this->__w("Not confirmed"); ?></li>
+        <li class="toggleopenforpublic active"><?php echo $this->__w("Open for public"); ?></li>
+        <li class="toggleavailable active"><?php echo $this->__w("Available"); ?></li>
+        <li class="togglenotavailable"><?php echo $this->__w("Not available"); ?></li>
+    </ul>
+    
+</div>
 
 <div class='calendartopheader'>
     <div class='dayorweekdiv'>
         <span class="stateinformtaion">
-            <div class='statedesrow'><span class='statedescbox occupied'></span> <?php echo $this->__w("Occupied"); ?></div>
-            <div class='statedesrow'><span class='statedescbox notconfirmed'></span> <?php echo $this->__w("Not confirmed"); ?></div>
-            <div class='statedesrow'><span class='statedescbox openforpublic'></span> <?php echo $this->__w("Open for public"); ?></div>
-            <div class='statedesrow'><span class='statedescbox available'></span> <?php echo $this->__w("Available"); ?></div>
-            <div class='statedesrow'><span class='statedescbox not_available'></span> <?php echo $this->__w("Not available"); ?></div>
+            <div class='statedesrow occupied' style="background-color: transparent !important;"><span class='statedescbox occupied'></span> <?php echo $this->__w("Occupied"); ?></div>
+            <div class='statedesrow notconfirmed' style="background-color: transparent !important;"><span class='statedescbox notconfirmed'></span> <?php echo $this->__w("Not confirmed"); ?></div>
+            <div class='statedesrow openforpublic' style="background-color: transparent !important;"><span class='statedescbox openforpublic'></span> <?php echo $this->__w("Open for public"); ?></div>
+            <div class='statedesrow available' style="background-color: transparent !important;"><span class='statedescbox available'></span> <?php echo $this->__w("Available"); ?></div>
+            <div class='statedesrow not_available hidden' style="background-color: transparent !important;"><span class='statedescbox not_available'></span> <?php echo $this->__w("Not available"); ?></div>
         </span>
         <div class='dayorweekdivbuttons'>
-            <span style='padding-right: 30px; cursor:pointer;' gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
-                <i class='fa fa-caret-left'></i> <? echo $this->__w("Previous"); ?>
+            <span style='padding-right: 30px; cursor:pointer;float:left;' gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
+                <i class='fa fa-caret-left'></i> <? echo $this->__w("Previous")." ".$this->__w("month"); ?>
             </span>
-            <?php echo date("M Y", $this->getSelectedDay());?>
-            <span style='padding-left: 30px; cursor:pointer;' gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
-                <? echo $this->__w("Next"); ?> <i class='fa fa-caret-right'></i>
+            <?php echo $this->__w(date("F Y", $this->getSelectedDay()));?>
+            <span style='padding-left: 30px; cursor:pointer;float:right;' gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
+                <? echo $this->__w("Next")." ".$this->__w("month"); ?> <i class='fa fa-caret-right'></i>
             </span>
         </div>
     </div>
@@ -42,9 +47,9 @@ $withSideBar = "withSideBar";
 <?
 
 
-echo "<div class='roomrow $withSideBar'>";
+echo "<div class='roomrow'>";
 echo "<span style='float:none;' class='roomdescouter roomdesc_$type'></span>";
-echo "<span class='timecontainer $withSideBar timecontainer_$type'>";
+echo "<span class='timecontainer timecontainer_$type'>";
 
 $start = $this->getStartOfSelectedWeek();
 for($i = 0; $i < 7; $i++) {
@@ -88,7 +93,7 @@ foreach($monthDates as $week => $days) {
 
     echo "</span>";
 
-    echo "<span class='timecontainer $withSideBar timecontainer_$type'>";
+    echo "<span class='timecontainer timecontainer_$type'>";
     for($i = 1; $i <= 7; $i++) {
         $day="";
         if(isset($days[$i])) {
@@ -98,8 +103,8 @@ foreach($monthDates as $week => $days) {
         echo "<div class='weekdaycontainer'>";
         if($day) {
             echo "<div class='dayindicator'>".date("d", strtotime($day));
-            echo "<span class='daytime'style='float:left;'>".date("H:i", $this->getStartTime($start)) ."</span>";
-            echo "<span class='daytime'style='float:right'>".date("H:i", $this->getEndTime($start)) ."</span>";
+            echo "<span class='daytime'style='left:8px;'>".date("H:i", $this->getStartTime($start)) ."</span>";
+            echo "<span class='daytime'style='right:8px;'>".date("H:i", $this->getEndTime($start)) ."</span>";
             echo "</div>";
             
             foreach($types as $room) {
@@ -117,3 +122,4 @@ echo "<input type='hidden' class='continue' value='$nextPage'>";
 
 ?>
 <input type='hidden' class='continue_button disabled continue' value="<?php echo $nextPage; ?>">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">

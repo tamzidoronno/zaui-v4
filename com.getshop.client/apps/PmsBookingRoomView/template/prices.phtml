@@ -1,6 +1,5 @@
 <?
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
-$currentBooking = $this->getBookingEngineBooking();
 $pmsBooking = $this->getPmsBooking();
 $room = $this->getSelectedRoom();
 $types = $this->getTypes();
@@ -9,13 +8,6 @@ $items = $this->getItems();
 $start = $room->date->start;
 $end = $room->date->end;
 
-if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
-    $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-    $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
-    $typeid = isset($_POST['data']['typeId']) ? $_POST['data']['typeId'] : $room->bookingItemTypeId;
-    $room = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $typeid, $start, $end);
-}
-
 $priceMatrix = (array)$room->priceMatrix;
 uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability','sortByDate'))
 
@@ -23,15 +15,34 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
 
 <div class="item_prices">
     <h2>Prices</h2>
+    <div class='masseditpricesbox'>
+        <select class="gsniceselect1 masseditpricestay" style="width:100%; margin-bottom: 5px;">
+            <option value="dayprice">Same price all days</option>
+            <option value="start_of_month">Monthly price beginning of month</option>
+            <option value="start_of_stay">Monthly price beginning of stay</option>
+            <option value="wholestay">Total cost for whole stay</option>
+        </select>
+        <input type="text" class="gsniceinput1 massupdatepricevalue" placeholder="value">
+        <span class="shop_button massupdateprices" style="float:right;">Update</span>
+        
+        <div class='priceselectionhelp' type="dayprice" style='display:block;'>This will set the same price for each day.</div>
+        <div class='priceselectionhelp' type="start_of_month">This will calculate the daily price to be the same as a total of monthly cost, since each month has different days it will use the number of days in month where the base will be the first day in the month.</div>
+        <div class='priceselectionhelp' type="start_of_stay">This will calculate the daily price to be the same as a total of monthly cost, since each month has different days it will use the number of days in month where the base will be the first day of the stay, if the stay start the 15 one month will be calculated from 15 to 15.</div>
+        <div class='priceselectionhelp' type="wholestay">This will calculate the daily price for each day which the total will be the same as you entered.</div>
+        
+    </div>
     <br/>
-    <?
-    $total = 0;
-    foreach ($priceMatrix as $date => $price) {
-        $total += $price;
-        echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2'><input class='gsniceinput1 unitprice_changed' gsname='room_price_$date' value='$price'></div> </div>";
-    }
-    ?>
-    
+    <h2>Daily prices</h2>
+    <div class="pricerows">
+        <?
+        $total = 0;
+        foreach ($priceMatrix as $date => $price) {
+            $total += $price;
+            echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2'><input class='gsniceinput1 unitprice_changed' gsname='room_price_$date' value='$price'></div> </div>";
+        }
+        ?>
+    </div>
+
     <div class='totalrow'>
         <?
         echo $this->__f("Total").": <span>".$total."</span>";
@@ -45,3 +56,10 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
     </div>
 </div>
     
+<script>
+$('.masseditpricestay').on('change', function() {
+    var type = $(this).val();
+    $('.priceselectionhelp').hide();
+    $('.priceselectionhelp[type="'+type+'"]').show();
+});
+</script>

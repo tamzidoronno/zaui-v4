@@ -82,8 +82,8 @@ if($amount != 0) {
                 if(sizeof($user->savedCards) > 0) {
                     $selected = "";
                 }
-                
-                echo "<option name='".$app->appName."' value='".$id."' $selected> ".$app->appName."</option>";
+                $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+                echo "<option name='".$app->appName."' value='".$id."' $selected> ".$appInstance->getName()."</option>";
             }
             
             if($amount > 0) {

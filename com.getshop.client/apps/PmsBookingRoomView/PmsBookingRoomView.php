@@ -14,6 +14,84 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function updatePriceMatrixWithPeriodePrices() {
+        $this->setData();
+        $room = $this->getSelectedRoom();
+        $amount = $_POST['data']['periodePrice'];
+        switch($_POST['data']['periodePriceType']) {
+            case "dayprice":
+                foreach($room->priceMatrix as $day => $val) {
+                    $room->priceMatrix->{$day} = $amount;
+                }
+                break;
+            case "wholestay":
+                foreach($room->priceMatrix as $day => $val) {
+                    $days = sizeof(array_keys((array)$room->priceMatrix));
+                    $room->priceMatrix->{$day} = round(($amount / $days), 2);
+                }
+                break;
+            case "start_of_stay":
+                $time = strtotime($room->date->start);
+                while(true) {
+                    $start = $time;
+                    $end = strtotime("+1 month", $time);
+                    $time = strtotime("+1 month", $time);
+                    
+                    $datediff = $end - $start;
+                    $days = floor($datediff / (60 * 60 * 24));
+                    $avg = $amount / $days;
+                    
+                    foreach($room->priceMatrix as $day => $val) {
+                        $dayInTime = strtotime($day . " 23:59");
+                        if($dayInTime >= $start && $dayInTime < $end) {
+                            $room->priceMatrix->{$day} = round($avg,2);
+                        }
+                    }
+                    
+                    if($end > strtotime($room->date->end)) {
+                        break;
+                    }
+                }
+                break;
+            case "start_of_month":
+                $time = strtotime($room->date->start);
+                $time = strtotime(date("01.m.Y", $time));
+                while(true) {
+                    $start = $time;
+                    $end = strtotime("+1 month", $time);
+                    $time = strtotime("+1 month", $time);
+                    
+                    $datediff = $end - $start;
+                    $days = floor($datediff / (60 * 60 * 24));
+                    $avg = $amount / $days;
+                    
+                    echo date("d.m.Y", $start) . " - ";
+                    echo date("d.m.Y", $end) . " ($days)" . "<br>";
+                    
+                    foreach($room->priceMatrix as $day => $val) {
+                        $dayInTime = strtotime($day . " 23:59");
+                        if($dayInTime >= $start && $dayInTime < $end) {
+                            $room->priceMatrix->{$day} = round($avg,2);
+                        }
+                    }
+                    
+                    if($end > strtotime($room->date->end)) {
+                        break;
+                    }
+                }
+                break;
+            case "whole_stay":
+                $avg = $amount / sizeof($room->priceMatrix);
+                foreach($room->priceMatrix as $key => $val) {
+                    $room->priceMatrix[$key] = $avg;
+                }
+                break;
+        }
+        $this->updateRoom($room);
+    }
+
+    
+    
     public function updateAddons() {
         $this->setData();
         
@@ -48,6 +126,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("bookingoverview");
     }
 
+    public function loadChangesPanel() {
+        $this->includefile("differenceinroom");
+    }
+    
+    public function discardChanges() {
+        $this->clearCache();
+    }
+    
     public function setRoomId($roomId) {
         $_SESSION['PmsBookingRoomView_current_pmsroom_id'] = $roomId;
     }
@@ -86,7 +172,38 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function refresh() {
     }
     
+    public function updateAvialablity() {
+        $room = $this->getSelectedRoom();
+        if (isset($_POST['data']['itemId']) && isset($_POST['data']['itemId'])) {
+            $room->bookingItemId = $_POST['data']['itemId'];
+        }
+        if (isset($_POST['data']['typeId']) && isset($_POST['data']['typeId'])) {
+            $room->bookingItemTypeId = $_POST['data']['typeId'];
+        }
+        if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
+            $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+            $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));  
+            $newPricesRoom = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), 
+                    $room->pmsBookingRoomId, 
+                    $room->bookingItemTypeId, 
+                    $room->date->start, 
+                    $room->date->end);
+            foreach($room->priceMatrix as $day => $val) {
+                foreach($newPricesRoom->priceMatrix as $day2 => $val2) {
+                    if($day2 == $day) {
+                        $newPricesRoom->priceMatrix->{$day} = $val;
+                    }
+                }
+            }
+            $room->priceMatrix = $newPricesRoom->priceMatrix;
+        }
+        
+        $this->updateRoom($room);
+
+    }
+    
     public function loaditemview() {
+        $this->setData();
         $this->includefile("itemview");
     }
 
@@ -270,7 +387,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
             foreach ($this->pmsBooking->rooms as $room) {
                 if ($room->pmsBookingRoomId == $_SESSION['PmsBookingRoomView_current_pmsroom_id']) {
-                    $this->updateRoom($room);
+                    $this->updateRoom($room, true);
                     $this->selectedRoom = $room;
                 }
             }
@@ -629,7 +746,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         die();
     }
 
-    public function updateRoom($room) {
+    public function updateRoom($room, $avoidChanges = false) {
+        if(!$avoidChanges) {
+            $room->hasBeenUpdated = true;
+        }
         $_SESSION['cachedroomspmsrooms'][$room->pmsBookingRoomId] = json_encode($room);
     }
 
@@ -821,6 +941,151 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
           mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
     );
   }
+
+    public function getDifferenceInRoom() {
+        $totalChanges = 0;
+        $unsavedRoom = $this->getSelectedRoom();
+        $savedBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $unsavedRoom->pmsBookingRoomId);
+        $savedRoom = null;
+        $changes = array();
+        foreach($savedBooking->rooms as $room) {
+            if($room->pmsBookingRoomId == $unsavedRoom->pmsBookingRoomId) {
+                $savedRoom = $room;
+                break;
+            }
+        }
+        
+        //Pricematrix diff.
+        $dayPriceOnSavedRoom = 0.0;
+        foreach($savedRoom->priceMatrix as $val) { $dayPriceOnSavedRoom += $val; }
+        $dayPriceOnUnsavedRoom = 0.0;
+        foreach($unsavedRoom->priceMatrix as $val) { $dayPriceOnUnsavedRoom += $val; }
+        $diff = $dayPriceOnUnsavedRoom-$dayPriceOnSavedRoom;
+        if($diff > 0) { $changes['pricematrix'] = "Stay cost increased by " . $diff; }
+        if($diff < 0) { $changes['pricematrix'] = "Stay cost decreased by " . $diff; }
+        
+        //Has the room or type been changed?
+        if($savedRoom->bookingItemTypeId != $unsavedRoom->bookingItemTypeId) {
+            $savedType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $savedRoom->bookingItemTypeId)->name;
+            $unSavedType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $unsavedRoom->bookingItemTypeId)->name;
+            $changes['typechange'] = "Room type has bene changed from <b>" . $savedType . "</b> to <b>" . $unSavedType . "</b>";
+        }
+        if($savedRoom->bookingItemId != $unsavedRoom->bookingItemId) {
+            $savedItem = "Floating";
+            if($savedRoom->bookingItemId) {
+                $savedItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $savedRoom->bookingItemId)->bookingItemName;
+            }
+            $unSavedItem = "Floating";
+            if($unsavedRoom->bookingItemId) {
+                $unSavedItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $unsavedRoom->bookingItemId)->bookingItemName;
+            }
+            $changes['itemchange'] = "Room type has bene changed from <b>" . $savedItem . "</b> to <b>" . $unSavedItem . "</b>";
+        }
+        
+        $totalChanges += $diff;
+        
+        //Stay periode diff.
+        $unsavedStart = strtotime($unsavedRoom->date->start);
+        $savedStart = strtotime($savedRoom->date->start);
+        $unsavedEnd = strtotime($unsavedRoom->date->end);
+        $savedEnd = strtotime($savedRoom->date->end);
+        
+        if($unsavedStart != $savedStart) { $changes['startdate'] = "Checkin changed from: " . date("d.m.Y H:i", $savedStart) . " to " . date("d.m.Y H:i", $unsavedStart); }
+        if($unsavedEnd != $savedEnd) { $changes['enddate'] = "Checkout changed from: " . date("d.m.Y H:i", $savedEnd) . " to " . date("d.m.Y H:i", $unsavedEnd); }
+        
+        //Addons added.
+        $changes['newAddon'] = array();
+        foreach($unsavedRoom->addons as $unsavedAddon) {
+            $found = false;
+            foreach($savedRoom->addons as $savedAddon) {
+                if($savedAddon->addonId == $unsavedAddon->addonId) {
+                    $found = true;
+                }
+            }
+            if(!$found) {
+                $changes['newAddon'][] = $unsavedAddon;
+            }
+        }
+        
+        
+        //Addons removed.
+        $changes['removedAddon'] = array();
+        foreach($savedRoom->addons as $savedAddon) {
+            $found = false;
+            foreach($unsavedRoom->addons as $unsavedAddon) {
+                if($savedAddon->addonId == $unsavedAddon->addonId) {
+                    $found = true;
+                }
+            }
+            if(!$found) {
+                $changes['removedAddon'][] = $savedAddon;
+            }
+        }
+
+        //Addons updated.
+        $changes['changedaddons'] = array();
+        foreach($savedRoom->addons as $savedAddon) {
+            $found = false;
+            foreach($unsavedRoom->addons as $unsavedAddon) {
+                if($savedAddon->addonId == $unsavedAddon->addonId) {
+                    $totalChanges += ($unsavedAddon->count*$unsavedAddon->price)-($savedAddon->count*$savedAddon->price);
+                    $savedAddon->price = $unsavedAddon->price - $savedAddon->price;
+                    $savedAddon->count = $unsavedAddon->count - $savedAddon->count;
+                    if($savedAddon->count != 0 || $savedAddon->price != 0) {
+                        $changes['changedaddons'][] = $savedAddon; 
+                    }
+                }
+            }
+        }
+        $changes['totalchanges'] = $totalChanges;
+        
+        return $changes;
+    }
+
+    public function createReadableDiffText($diffs) {
+        $text = "";
+        foreach($diffs as $key => $diff) {
+            if($key == "newAddon") { continue; }
+            if($key == "removedAddon") { continue; }
+            if($key == "changedaddons") { continue; }
+            if($key == "totalchanges") { continue; }
+            $text .= "<div class='changetextrow'>" . $diff . "</div>";
+        }
+        
+        
+        if(sizeof($diffs['newAddon'])) {
+            $text .= "<div class='changetextrow'>";
+            $text .= "New addons added:<br>";
+            foreach($diffs['newAddon'] as $addon) {
+                /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+                $text .= date("d.m.Y", strtotime($addon->date)) . " : " . $this->getApi()->getProductManager()->getProduct($addon->productId)->name . " : " . $addon->count . " x " . $addon->price . "<br>";
+            }
+            $text .= "</div>";
+        }
+        
+        if(sizeof($diffs['changedaddons'])) {
+            $text .= "<div class='changetextrow'>";
+            $text .= "Changes in addons:<br>";
+            foreach($diffs['changedaddons'] as $addon) {
+                /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+                $text .= date("d.m.Y", strtotime($addon->date)) . " : " . $this->getApi()->getProductManager()->getProduct($addon->productId)->name . " : " . $addon->count . " x " . $addon->price . "<br>";
+            }
+            $text .= "</div>";
+        }
+        
+        if(sizeof($diffs['removedAddon'])) {
+            $text .= "<div class='changetextrow'>";
+            $text .= "Addons removed:<br>";
+            foreach($diffs['removedAddon'] as $addon) {
+                /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+                $text .= date("d.m.Y", strtotime($addon->date)) . " : " . $this->getApi()->getProductManager()->getProduct($addon->productId)->name . " : " . $addon->count . " x " . $addon->price . "<br>";
+            }
+            $text .= "</div>";
+        }
+        $text .= "<div class='changetextrow' style='font-weight:bold;'>Changes in total: ".$diffs['totalchanges']."</div>";
+        
+        return $text;
+    }
 
 }
 ?>

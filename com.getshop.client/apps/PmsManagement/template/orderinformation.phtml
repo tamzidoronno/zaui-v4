@@ -322,7 +322,10 @@ if($booking->orderIds) {
             $foundPaymentType = false;
             foreach($instances as $id => $app) {
                 if($this->isPaymentType($order->payment->paymentType, $app)) {
-                    $name = $app->appName;
+                    
+                    $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+
+                    $name = $appInstance->getName();
                     if($name == "InvoicePayment") {
                         $name = "Invoice";
                     }

@@ -138,7 +138,7 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
             if(!$lines[$i-1]) {
                 if(!$this->isAdminMode()) {
-                    $state = "not_available";
+                    $state = "not_available hidden";
                 }
             }
             
@@ -390,7 +390,6 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
         
         foreach($bookings as $booking) {
             /* @var $booking \core_pmsmanager_PmsBooking */
-            $addedToList = $this->getApi()->getPmsEventManager()->isChecked($this->getSelectedName(), $booking->id);
             foreach($booking->rooms as $room) {
                 if($room->deleted) {
                     continue;
@@ -419,8 +418,8 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
                 $state = "";
                 if($booking->confirmed) {
                     $this->currentBooking = $booking->id;
-                    if($addedToList == true){
-                        $state = "occupied public";
+                    if($booking->isAddedToEventList){
+                        $state = "openforpublic";
                     } else {
                         $state = "occupied";
                     }

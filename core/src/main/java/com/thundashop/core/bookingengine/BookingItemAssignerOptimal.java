@@ -99,7 +99,7 @@ public class BookingItemAssignerOptimal {
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
         
-        if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841"))) {
+        if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048"))) {
             squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
         } else {
             addUnassignedBookingsToLine(bookingLines, unassignedBookings);

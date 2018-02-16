@@ -774,15 +774,24 @@ function getshop_showOverviewPage() {
             $('.roomrowadded[roomid="'+splitted[1]+'"] [gsname="'+splitted[2]+'"]').closest("div").addClass('invalidinput');
         }
         if(success) {
-            $('.addons_overview').fadeOut('400', function () {
-                $('.overview').fadeIn('400');
-                $(window).scrollTop(body-padding);
-            });
+            if(typeof(getshop_viewmode) !== "undefined" && getshop_viewmode == "terminal") {
+                getshop_startPaymentTerminalProcess();
+            } else {
+                $('.addons_overview').fadeOut('400', function () {
+                    $('.overview').fadeIn('400');
+                    $(window).scrollTop(body-padding);
+                });
+            }
         } else {
             $(window).scrollTop(body-padding);
         }
     });
 }
+
+function getshop_startPaymentTerminalProcess() {
+    $('.terminalpaymentprocess').show();
+}
+
 function getshop_previusPage() {
     $('.overview').fadeOut('400', function () {
         $('.productoverview').fadeIn('400');
@@ -953,8 +962,8 @@ function getshop_setDatePicker() {
     
     $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
     $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
-
-    $('#date_picker').daterangepicker({
+    
+    var options = {
         "autoApply": true,
         "showWeekNumbers": true,
         "minDate": currentDate,
@@ -964,7 +973,45 @@ function getshop_setDatePicker() {
             "format": "DD MMM",
             "firstDay": 1
         }
-    });    
+    }
+    
+    if(typeof(getshop_viewmode) !== "undefined" && getshop_viewmode == "terminal") {
+        $('.GslBooking .nights').show();
+        options.singleDatePicker = true;
+        $('.GslBooking .gslfront_1 .fa_box').css('width','20%');
+        $('.GslBooking .nights .fa-plus-circle').click(function() {
+            var counter = parseInt($('#nightscounter').val());
+            counter++;
+            $('#nightscounter').val(counter);
+            var end = moment(startDate).add(counter, 'days');
+            $('#date_picker').data('daterangepicker').setEndDate(end);
+        });
+        $('.GslBooking .nights .fa-minus-circle').click(function() {
+            var time = new Date().toLocaleTimeString('en-us');
+            var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
+            var counter = parseInt($('#nightscounter').val());
+            counter--;
+            if(counter < 1) { counter = 1; }
+            $('#nightscounter').val(counter);
+            var end = moment(startDate).add(counter, 'days');
+            $('#date_picker').data('daterangepicker').setEndDate(end);
+        });
+    }
+
+    $('#date_picker').daterangepicker(options);    
+    
+    if(typeof(getshop_viewmode) !== "undefined" && getshop_viewmode == "terminal") {
+        var time = new Date().toLocaleTimeString('en-us');
+        var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
+        
+        var counter = parseInt($('#nightscounter').val());
+        var end = moment(startDate).add(counter, 'days');
+        $('#date_picker').data('daterangepicker').setEndDate(end);
+    }
+    
+    $('#date_picker').on('apply.daterangepicker', function(ev, picker) {
+        $('#nightscounter').val(1);
+    });
     
     $('#date_picker_start').on('blur', function() {
         var start = new Date($(this).val());
@@ -976,6 +1023,7 @@ function getshop_setDatePicker() {
             $('#date_picker_end').val(end.toISOString().substring(0, 10));
             $("#date_picker").data('daterangepicker').setEndDate(end);
         }
+        $('#nightscounter').val(1);
     });
     
     $('#date_picker_end').on('blur', function() {
@@ -989,6 +1037,7 @@ function getshop_setDatePicker() {
         }
         
         $("#date_picker").data('daterangepicker').setEndDate(end);
+        $('#nightscounter').val(1);
     });
     
     if(result.start) {

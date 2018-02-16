@@ -19,6 +19,25 @@ Error      : #de5353; red
 /*-----------------gslfront_1-----------------*/
 .GslBooking .invalidinput { border-color: red; border: solid 1px red !important; }
 .GslBooking .guestentry { position:relative; }
+.GslBooking .terminalpaymentprocess {  
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 5;
+    text-align:center;
+}
+.GslBooking .terminalpaymentprocess .content {  
+    background-color:#fff;
+    width: 50%;
+    display: inline-block;
+    margin-top: 40px;
+    padding: 10px;
+}
+
+
 .GslBooking .gslfront_1 {
     background-color: #fff;
     padding: 0px;
@@ -33,7 +52,13 @@ Error      : #de5353; red
 }
 .GslBooking .gslfront_1 *,.GslBooking .gslfront_1 *::before,.GslBooking .gslfront_1 *::after{box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
 .GslBooking .gslfront_1, .GslBooking .gslfront_1 input, .GslBooking .gslfront_1 select{font-family: 'Montserrat', sans-serif;}
-
+.GslBooking .gslfront_1 .nights .fa { font-size: 25px; cursor:pointer; }
+.GslBooking #nightscounter { padding: 0px;width: 30px;text-align: center; }
+.GslBooking .gslfront_1 .nights { border-right: solid 1px #ddd;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+}
 .GslBooking .gslfront_1 .guestaddonicon { position: relative; cursor:pointer; }
 .GslBooking .gslfront_1 .countselections { position:absolute; border: solid 1px #bbb; background-color:#fff; display: none; top: 20px; left:0px;z-index: 99999999; }
 .GslBooking .gslfront_1 .countselections .countselection { font-size: 28px; border-right: solid 1px #bbb; text-align: center; width: 28px; display:inline-block; } 

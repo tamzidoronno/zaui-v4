@@ -58,6 +58,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Autowired
     public StoreApplicationInstancePool instancePool;
     
+    public boolean requestDisabled = true;
+    
     private Map<String, MecaFleet> fleets = new HashMap();
     private Map<String, MecaCar> cars = new HashMap();
     
@@ -554,6 +556,9 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     }
 
     private void sendRequestByPushNotification(MecaCar car) throws ErrorException {
+        if (requestDisabled)
+            return;
+        
         MecaFleet fleet = getFleetByCar(car);
         
         String msg = getMailContent("pushRequestKilometers");
@@ -641,6 +646,10 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         } 
         
         if (!car.requestKilomters.canSendNotification()) {
+            return;
+        }
+        
+        if (requestDisabled) {
             return;
         }
         

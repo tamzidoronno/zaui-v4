@@ -31,7 +31,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     public WebSocketServerImpl webSocketServer;
 
     @Override
-    public void chargeOrder(String orderId, Integer terminalNumber) {
+    public void chargeOrder(String orderId, String terminalId) {
         if(orderToPay != null) {
             //Only one order at a time.
             printFeedBack("A payment is already being processed");
@@ -43,7 +43,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         orderManager.saveOrder(order);
         System.out.println("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
-        Double total = orderManager.getTotalAmount(order)* 100;
+        Double total = orderManager.getTotalAmount(order) * 100 * Math.random();
         Integer amount = total.intValue();
         
         VerifonePaymentApp app = new VerifonePaymentApp();

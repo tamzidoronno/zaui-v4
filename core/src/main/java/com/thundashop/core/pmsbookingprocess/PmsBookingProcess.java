@@ -8,10 +8,15 @@ package com.thundashop.core.pmsbookingprocess;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
@@ -21,9 +26,11 @@ import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.verifonemanager.VerifoneManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -59,6 +66,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Autowired
     UserManager userManager;
     private ArrayList itemsTaken;
+    
+    @Autowired
+    OrderManager orderManager;
+    
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    VerifoneManager verifoneManager;
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
@@ -598,6 +614,45 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         return generateSummary();
     }
 
+    
+    @Override
+    public void printReciept(BookingPrintRecieptData data) {
+        Order order = orderManager.getOrder(data.orderId);
+        User user = userManager.getUserById(order.userId);
+        String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
+        
+        System.out.println(text);
+    }
+    
+    private AccountingDetails getAccountingDetails() throws ErrorException {
+        Application settings = storeApplicationPool.getApplicationIgnoreActive("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        AccountingDetails details = new AccountingDetails();
+        if(settings != null) {
+            details.accountNumber = settings.getSetting("accountNumber");
+            details.iban = settings.getSetting("iban");
+            details.swift = settings.getSetting("swift");
+            details.address = settings.getSetting("address");
+            details.city = settings.getSetting("city");
+            details.companyName = settings.getSetting("companyName");
+            details.contactEmail = settings.getSetting("contactEmail");
+            details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
+            details.vatNumber = settings.getSetting("vatNumber");
+            details.webAddress = settings.getSetting("webAddress");
+            details.useLanguage = settings.getSetting("language");
+            String kidSize = settings.getSetting("kidSize");
+            if(kidSize != null && !kidSize.isEmpty()) {
+                details.kidSize = new Integer(kidSize);
+            }
+            details.kidType = settings.getSetting("defaultKidMethod");
+            details.type = settings.getSetting("type");
+            details.currency = settings.getSetting("currency");
+        }
+
+        return details;
+    }
+
+    
+    
     @Override
     public BookingResult completeBooking() {
         User loggedOn = userManager.getLoggedOnUser();
@@ -838,5 +893,32 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             booking.couponCode = discountcode;
             pmsManager.setPriceOnRoom(room, true, booking);
             return room.price;
+    }
+
+    @Override
+    public BookingResult completeBookingForTerminal(CompleteBookingInput input) {
+        PmsBooking booking = pmsManager.completeCurrentBooking();
+        booking.channel = "terminal";
+        pmsManager.saveBooking(booking);
+        
+        BookingResult res = new BookingResult();
+        res.success = 1;
+        if(res == null) {
+            res.success = 0;
+        } else {
+            res.bookingid = booking.id;
+            if(booking.orderIds.size() == 1) {
+                res.continuetopayment = 1;
+                res.orderid = booking.orderIds.get(0);
+            } else {
+                res.continuetopayment = 0;
+            }
+        }
+        
+        if(res.orderid != null && !res.orderid.isEmpty()) {
+            verifoneManager.chargeOrder(res.orderid, input.terminalId);
+        }
+        
+        return res;
     }
 }

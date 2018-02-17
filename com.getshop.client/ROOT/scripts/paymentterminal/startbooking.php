@@ -37,7 +37,8 @@ if(!$isProdMode) {
         <script>
         $( "#bookingprocess" ).getshopbooking({
             "endpoint" : "<?php echo $endpoint; ?>",
-            "viewmode" : "terminal"
+            "viewmode" : "terminal",
+            "terminalid" : "029df902-0e66-445d-84b2-cdae3fc371d7"
         });
         </script>
     </div>

@@ -790,6 +790,17 @@ function getshop_showOverviewPage() {
 
 function getshop_startPaymentTerminalProcess() {
     $('.terminalpaymentprocess').show();
+    $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=completeBookingForTerminal', {
+        dataType: 'jsonp',
+        data: { 
+            "body" :  {
+                "terminalId" : getshop_terminalid
+            }
+        },
+        success: function (res) {
+            getshop_currentorderid = res.orderid;
+        }
+    });
 }
 
 function getshop_previusPage() {
@@ -996,6 +1007,8 @@ function getshop_setDatePicker() {
             var end = moment(startDate).add(counter, 'days');
             $('#date_picker').data('daterangepicker').setEndDate(end);
         });
+        getshop_WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", getshop_displayVerifoneFeedBack);
+        
     }
 
     $('#date_picker').daterangepicker(options);    
@@ -1357,6 +1370,30 @@ function getshop_hideGuestSelectionBox(e) {
     getshop_confirmGuestInfoBox();
 }
 
+function getshop_displayVerifoneFeedBack(res) {
+    console.log(res);
+    if(res.msg === "completed") {
+        var tosend = {
+            "orderId" :  getshop_currentorderid
+       }
+        
+        $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=printReciept', {
+            dataType: 'jsonp',
+            data: {
+                "body": tosend
+            },
+            success: function (res) {}
+        });
+        
+        setTimeout(function() {
+            window.location.href="paymentterminal.php";
+        }, "2000");
+    } else {
+        $('.verifonefeedbackdata').show();
+        $('.verifonefeedbackdata').html(res.msg);
+    }
+}
+
 function getshop_tryChangingDate() {
     var room = $(this).closest('.roomentry');
     var start = moment(room.find('[gsname="newroomstartdate"]').val(), 'DD.MM.YYYY');
@@ -1409,7 +1446,6 @@ $(document).on('click', '.GslBooking [gsname="ischild"]', getshop_changeChildSet
 $(document).on('mousedown touchend', getshop_hideGuestSelectionBox);
 $(document).on('click', '.GslBooking .displayeditroom', getshop_showEditRoomOptions);
 
-
 (function ($) {
 $.fn.tclick = function (onclick) {
     this.bind("touchend", function (e) { onclick.call(this, e); e.stopPropagation(); e.preventDefault(); });
@@ -1417,3 +1453,58 @@ $.fn.tclick = function (onclick) {
     return this;
   };
 })(jQuery);
+
+
+getshop_WebSocketClient = {
+    client: false, 
+    listeners: [],
+    
+    connected: function() {
+    },
+    
+    disconnected: function() {
+        getshop_WebSocketClient.client = false;
+        setTimeout(getshop_WebSocketClient.getClient, 1000);
+    },
+    
+    handleMessage: function(msg) {
+        var dataObject = JSON.parse(JSON.parse(msg.data));
+        
+        for (var i in getshop_WebSocketClient.listeners) {
+            var listener = getshop_WebSocketClient.listeners[i];
+            if (listener.dataObjectName === dataObject.coninicalName) {
+                listener.callback(dataObject.payLoad);
+            }
+        }
+    },
+    
+    getClient: function() {
+//        var me = getshop_WebSocketClient;
+        if (!getshop_WebSocketClient.client) {
+            var endpoint = window.location.host;
+            if(getshop_endpoint) {
+                endpoint = getshop_endpoint;
+            }
+            this.socket = new WebSocket("ws://"+endpoint+":31330/");
+            this.socket.onopen = getshop_WebSocketClient.connected;
+            this.socket.onclose = function() {
+                getshop_WebSocketClient.disconnected();
+            };
+            this.socket.onmessage = function(msg) {
+                getshop_WebSocketClient.handleMessage(msg);
+            };
+        }
+        
+        return getshop_WebSocketClient.client;
+    },
+    
+    addListener : function(dataObjectName, callback) {
+        getshop_WebSocketClient.getClient();
+        var listenObject = {
+            dataObjectName : dataObjectName,
+            callback: callback
+        }
+        
+        getshop_WebSocketClient.listeners.push(listenObject);
+   }
+};

@@ -8,9 +8,9 @@
         </div>
         <h1>Welcome, book your stay here!</h1>
 
-        <a href="startbooking.php"><span class="nextpagebutton">Book a stay</span></a>
-        <span class="nextpagebutton">Already booked?</span>
-        <span class="nextpagebutton">Print reciept</span>
+        <a href="startbooking.php"><span class="nextpagebutton">Book a <br>stay</span></a>
+        <span class="nextpagebutton">Already<br>booked?</span>
+        <span class="nextpagebutton">Print<br>reciept</span>
         <div class="explaintext">
            * This is a self service check in machine. After booking you will recieve a sms and email with the code for your room.
         </div>

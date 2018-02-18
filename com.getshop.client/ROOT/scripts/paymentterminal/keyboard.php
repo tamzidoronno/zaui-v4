@@ -55,7 +55,7 @@
 
 <style>
     .keyboard { position:fixed; bottom: 0px; width: 100%; background-color:#fff;text-align: center; height: 270px;  }
-    .keyboard .button { border: solid 1px; font-size: 30px; line-height: 50px; width: 50px; height: 50px; display:inline-block; margin:5px;border-radius: 3px; cursor:pointer;}
+    .keyboard .button { border: solid 1px; font-size: 30px; line-height: 45px; width: 45px; height: 45px; display:inline-block; margin:5px;border-radius: 3px; cursor:pointer;}
     .keyboard .button.space { width: 200px; } 
     .keyboard .button.backspace { width: 100px; }
     .keyboard .button.shift { width: 70px; }

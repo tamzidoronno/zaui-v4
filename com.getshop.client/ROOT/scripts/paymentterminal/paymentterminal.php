@@ -1,3 +1,9 @@
+<?php
+chdir("../../");
+include '../loader.php';
+$factory = IocContainer::getFactorySingelton();
+include("header.php");
+?>
 <head>
     <link href="standardcss.css" rel="stylesheet">
 </head>
@@ -6,13 +12,20 @@
         <div class="logorow">
             <span class="logo"></span>
         </div>
-        <h1>Welcome, book your stay here!</h1>
+        <h1><?php echo $factory->__w("Welcome, book your stay here!"); ?></h1>
 
-        <a href="startbooking.php"><span class="nextpagebutton">Book a <br>stay</span></a>
-        <span class="nextpagebutton">Already<br>booked?</span>
-        <span class="nextpagebutton">Print<br>reciept</span>
+        <a href="startbooking.php"><span class="nextpagebutton"><?php echo $factory->__w("Book a stay"); ?></span></a>
+        <span class="nextpagebutton"><?php echo $factory->__w("Already booked?"); ?></span>
+        <span class="nextpagebutton"><?php echo $factory->__w("Print reciept"); ?></span>
         <div class="explaintext">
-           * This is a self service check in machine. After booking you will recieve a sms and email with the code for your room.
+           <?php echo $factory->__w("* This is a self service check in machine. After booking you will recieve a sms and email with the code for your room."); ?>
         </div>
     </div>
 </body>
+
+<script>
+    
+setTimeout(function() {
+    window.location.href="paymentterminal.php";
+}, "3600000");
+</script>

@@ -3,6 +3,7 @@
     "failedlogon" : "Sorry, wrong username or password",
     "rooms" : "Rooms",
     "room" : "Room",
+    "nights" : "night(s)",
     "totalprice" : "Total price",
     "sureremoveroom" : "Are you sure you want to remove this room?",
     "sureremoveguest" : "Are you sure you want to remove this guest?",

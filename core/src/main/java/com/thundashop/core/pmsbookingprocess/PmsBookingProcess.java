@@ -625,15 +625,27 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void printReciept(BookingPrintRecieptData data) {
+        pmsManager.processor();
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
         Order order = orderManager.getOrderSecure(data.orderId);
         User user = userManager.getUserById(order.userId);
         String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
-        System.out.println("Post to termial: " + settings.ip);
-        System.out.println(text);
+        pmsManager.processor();
+        String url = "http://" + settings.ip + "/print.php";
         try {
-            String url = "http://" + settings.ip + "/print.php";
-            System.out.println("Posting to : " + url);
+            if(order.isRecent()) {
+                PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
+                for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                        text += "--------------------\r\n";
+                        text += "###  ROOM CODE   ###\r\n";
+                        text += "--------------------\r\n";
+                        text += "Room: " + item.bookingItemName + "\r\n";
+                        text += "Code: " + room.code + "\r\n";
+                    }
+                }
+            }
             webManager.htmlPost(url, text, false, "UTF-8");
         }catch(Exception e) {
             

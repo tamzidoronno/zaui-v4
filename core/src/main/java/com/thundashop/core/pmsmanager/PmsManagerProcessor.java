@@ -177,7 +177,7 @@ public class PmsManagerProcessor {
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         PmsConfiguration config = manager.getConfigurationSecure();
         try {
-            PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
+            PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
             if(deleted) {
                 manager.logEntry("Removing code from lock code (" + room.code + ")", booking.id , room.bookingItemId);
             } else {
@@ -391,7 +391,7 @@ public class PmsManagerProcessor {
             if(room.recentlyChangedBookingItem()) {
                 continue;
             }
-            PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
+            PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
             manager.autoAssignItem(room);
             manager.finalize(booking);
             manager.saveBooking(booking);

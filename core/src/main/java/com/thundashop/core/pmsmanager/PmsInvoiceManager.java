@@ -736,7 +736,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Override
     public boolean isRoomPaidFor(String pmsRoomId) {
-        PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(pmsRoomId);
         return isRoomPaidForWithBooking(pmsRoomId, booking);
     }
     

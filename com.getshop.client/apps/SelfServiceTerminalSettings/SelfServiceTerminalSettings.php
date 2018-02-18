@@ -11,7 +11,16 @@ class SelfServiceTerminalSettings extends \WebshopApplication implements \Applic
     }
 
     public function render() {
-        
+        $this->includefile("config");
     }
+    
+    public function saveTerminalConfiguration() {
+        $setting = new \core_paymentterminalmanager_PaymentTerminalSettings();
+        $setting->ip = $_POST['data']['ip'];
+        $setting->verifoneTerminalId = $_POST['data']['terminalid'];
+        $setting->offset = $_POST['data']['offset'];
+        $this->getApi()->getPaymentTerminalManager()->saveSettings($setting);
+    }
+    
 }
 ?>

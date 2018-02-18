@@ -1,0 +1,44 @@
+<?php
+/* @var $this \ns_4b1dc2e3_a4a7_4874_9be7_3ff66e5e5a6c\SelfServiceTerminalSettings */
+?>
+<div class="kaipal infobox">
+    <div class="image happy"></div>
+    <div class="textbox">
+        <div class="header">Our self service terminal helps you suppport drop in customers</div>
+        <div class="text">
+            You can choose between two different self check-in terminals. One for indoor usage and one for outdoor usage.
+        </div>
+    </div>
+</div>
+
+<?php
+for($i = 1; $i <= 5; $i++) {
+    $settings = $this->getApi()->getPaymentTerminalManager()->getSetings($i);
+    $ip = "";
+    $id = "";
+    if($settings) {
+        $ip = $settings->ip;
+        $id = $settings->verifoneTerminalId;
+    }
+    ?>
+    <h1>Terminal <?php echo $i; ?></h1>
+    <div class="configurationpanel" gstype="form" method="saveTerminalConfiguration">
+        <input type='hidden' gsname='offset' value='<?php echo $i; ?>'>
+        <div>
+            <input type="txt" class="gsniceinput1" style="float:right;" gsname="ip" value="<?php echo $ip; ?>">
+            Terminal ip
+            <div style="clear:both"></div>
+        </div>
+        <div>
+            <input type="txt" class="gsniceinput1" style="float:right;" gsname="terminalid" value="<?php echo $id; ?>">
+            Verifone payment terminal id
+            <div style="clear:both"></div>
+        </div>
+        
+        <div style="clear:both; text-align:right; padding-top: 20px;">
+            <input type="button" style="padding:8px; width:200px;" value="Save settings" gstype="submit">
+        </div>
+    </div>
+    <?php
+}
+?>

@@ -16,6 +16,8 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.paymentterminalmanager.PaymentTerminalManager;
+import com.thundashop.core.paymentterminalmanager.PaymentTerminalSettings;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
 import com.thundashop.core.pmsmanager.PmsBooking;
@@ -31,6 +33,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.verifonemanager.VerifoneManager;
+import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -75,6 +78,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     VerifoneManager verifoneManager;
+    
+    @Autowired
+    PaymentTerminalManager paymentTerminalManager;
+    
+    @Autowired
+    WebManager webManager;
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
@@ -609,19 +618,26 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         try {
             pmsManager.setBooking(booking);
         }catch(Exception e) {
-            logPrint(e);
+            logPrint(e); 
         }
         return generateSummary();
     }
 
-    
     @Override
     public void printReciept(BookingPrintRecieptData data) {
-        Order order = orderManager.getOrder(data.orderId);
+        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
+        Order order = orderManager.getOrderSecure(data.orderId);
         User user = userManager.getUserById(order.userId);
         String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
-        
+        System.out.println("Post to termial: " + settings.ip);
         System.out.println(text);
+        try {
+            String url = "http://" + settings.ip + "/print.php";
+            System.out.println("Posting to : " + url);
+            webManager.htmlPost(url, text, false, "UTF-8");
+        }catch(Exception e) {
+            
+        }
     }
     
     private AccountingDetails getAccountingDetails() throws ErrorException {
@@ -916,7 +932,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         if(res.orderid != null && !res.orderid.isEmpty()) {
-            verifoneManager.chargeOrder(res.orderid, input.terminalId);
+            PaymentTerminalSettings settings = paymentTerminalManager.getSetings(input.terminalId);
+            verifoneManager.chargeOrder(res.orderid, settings.verifoneTerminalId);
         }
         
         return res;

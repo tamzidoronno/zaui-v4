@@ -1168,6 +1168,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                 start = room.date.start;
                 end = room.date.end;
             }
+            room.lastBookingChangedItem = new Date();
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
                 logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId, "changestay");

@@ -38,9 +38,15 @@ if(!$isProdMode) {
         $( "#bookingprocess" ).getshopbooking({
             "endpoint" : "<?php echo $endpoint; ?>",
             "viewmode" : "terminal",
-            "terminalid" : "029df902-0e66-445d-84b2-cdae3fc371d7"
+            "terminalid" : localStorage.getItem("getshopterminalid")
         });
+        
+        if(!localStorage.getItem("getshopterminalid")) {
+            alert('no getshopterminalid set: getshopterminalid');
+        }
         </script>
     </div>
 </body>
-
+<?php
+include("keyboard.php");
+?>

@@ -1371,11 +1371,12 @@ function getshop_hideGuestSelectionBox(e) {
 }
 
 function getshop_displayVerifoneFeedBack(res) {
-    console.log(res);
+    
     if(res.msg === "completed") {
         var tosend = {
-            "orderId" :  getshop_currentorderid
-       }
+            "orderId" :  getshop_currentorderid,
+            "terminalId" : getshop_terminalid
+        }
         
         $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=printReciept', {
             dataType: 'jsonp',

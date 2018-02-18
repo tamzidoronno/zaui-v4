@@ -18,6 +18,8 @@ import com.thundashop.core.getshoplocksystem.UserSlot;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -362,8 +364,8 @@ public class PmsManagerProcessor {
 
     private void processAutoAssigning() {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        List<PmsBookingRooms> roomsToAssing = new ArrayList();
         for (PmsBooking booking : bookings) {
-            boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (!room.isStartingToday() && !room.isStarted()) {
                     continue;
@@ -371,18 +373,28 @@ public class PmsManagerProcessor {
                 if (room.isEnded()) {
                     continue;
                 }
-                if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
-                    booking = manager.finalize(booking);
-                    if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
-                        manager.autoAssignItem(room);
-                        save = true;
-                    }
+                if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+                    roomsToAssing.add(room);
                 }
             }
-            if (save) {
-                manager.finalize(booking);
-                manager.saveBooking(booking);
+        }
+        
+        Collections.sort(roomsToAssing, new Comparator<PmsBookingRooms>(){
+            public int compare(PmsBookingRooms o1, PmsBookingRooms o2){
+                if(o1.date.start == null || o2.date.start == null)
+                    return 0;
+                return o1.date.start.compareTo(o2.date.start);
             }
+       });
+        
+        for(PmsBookingRooms room : roomsToAssing) {
+            if(room.recentlyChangedBookingItem()) {
+                continue;
+            }
+            PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
+            manager.autoAssignItem(room);
+            manager.finalize(booking);
+            manager.saveBooking(booking);
         }
     }
 

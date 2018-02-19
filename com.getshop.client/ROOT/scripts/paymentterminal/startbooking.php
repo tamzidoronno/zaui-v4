@@ -30,7 +30,6 @@ include("header.php");
                 <span class="logo"></span>
             </div>
 
-            
             <h1><?php echo $factory->__w("Book your stay now"); ?></h1>
             <div id='bookingprocess'></div>
         </div>

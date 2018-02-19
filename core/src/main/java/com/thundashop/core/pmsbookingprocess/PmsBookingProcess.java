@@ -646,6 +646,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     }
                 }
             }
+            text += "\r\n";
+            text += "\r\n";
+            text += "\r\n";
             webManager.htmlPost(url, text, false, "UTF-8");
         }catch(Exception e) {
             

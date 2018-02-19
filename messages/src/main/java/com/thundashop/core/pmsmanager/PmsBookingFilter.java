@@ -45,4 +45,8 @@ public class PmsBookingFilter extends DataCommon {
     public List<String> typeFilter = new ArrayList();
     public List<String> itemFilter = new ArrayList();
     public String filterName = "";
+    
+    public List<String> customers = new ArrayList();
+    public List<String> addons = new ArrayList();
+    public List<String> codes = new ArrayList();
 }

@@ -1,6 +1,7 @@
 package com.thundashop.core.verifonemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -30,20 +31,26 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     @Autowired
     public WebSocketServerImpl webSocketServer;
 
+    @Autowired
+    public FrameworkConfig frameworkConfig;
+    
     @Override
-    public void chargeOrder(String orderId, Integer terminalNumber) {
+    public void chargeOrder(String orderId, String terminalId) {
         if(orderToPay != null) {
             //Only one order at a time.
             printFeedBack("A payment is already being processed");
             return;
         }
-        
+        double random = 1.0;
+        if(!frameworkConfig.productionMode) {
+            random = Math.random();
+        }
         Order order = orderManager.getOrderSecure(orderId);
         order.payment.paymentType = "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\\VerifoneTerminal";
         orderManager.saveOrder(order);
         System.out.println("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
-        Double total = orderManager.getTotalAmount(order)* 100;
+        Double total = orderManager.getTotalAmount(order) * 100 * random;
         Integer amount = total.intValue();
         
         VerifonePaymentApp app = new VerifonePaymentApp();

@@ -1,8 +1,19 @@
 <div class='gslfront_1'>
+    <div style='display:none' class='terminalpaymentprocess'>
+        <span class='content'><i class='fa fa-spin fa-spinner'></i> Payment process.
+        <div class='verifonefeedbackdata' style='font-size:12px;font-style: italic;padding-top: 10px; padding-bottom: 10px; display:none;'></div>
+        </span>
+    </div>
+    
     <div class='gslbookingHeader'>
         <div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
-        </div><div class='datepickermobile'>
+        </div>
+        <div class="fa_box nights" style='display:none;'>
+            <i class='fa fa-minus-circle'></i> <input type='txt' value='1' id='nightscounter'/> <span gstype='bookingtranslation' gstranslationfield='nights'></span> <i class='fa fa-plus-circle'></i>
+        </div>
+       
+        <div class='datepickermobile'>
             <div class='mobilecheckinheading'>
                 <span gstype='bookingtranslation' gstranslationfield='checkin'></span>
                 <input id="date_picker_start" type='date'>
@@ -11,8 +22,8 @@
                 <span gstype='bookingtranslation' gstranslationfield='checkout'></span>
                 <input id="date_picker_end" type='date'>
             </div>
-            
-        </div><div class="fa_box guests">
+        </div>
+        <div class="fa_box guests">
             <input id="guests" value="" style="border-right:1px solid #ddd;" readonly>
             <div class="guestInfoBox">
                 <div class='guestInfoBox_left'>
@@ -304,12 +315,16 @@
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
 
-        
+
+ 
+       $.getScript( "https://www.getshop.com/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
         $.getScript( "https://www.getshop.com/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
             $.getScript( "https://www.getshop.com/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
                 getshop_setDatePicker();
                 getshop_setBookingTranslation();
             });
         });
+       });
     });
+    
 </script>

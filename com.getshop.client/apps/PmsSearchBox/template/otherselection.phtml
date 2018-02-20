@@ -1,0 +1,54 @@
+<?php
+$typesProducts = array();
+$bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+foreach($bookingItems as $type) {
+    $typesProducts[] = $type->productId;
+}
+/* @var $pms \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
+/* @var $this \ns_1ba01a11_1b79_4d80_8fdd_c7c2e286f94c\PmsSearchBox */
+$pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+$filter = $pms->getSelectedFilter();
+$customers = (array)$filter->customers;
+$codes = (array)$filter->codes;
+$addons = (array)$filter->addons;
+?>
+<i class='fa fa-close' onclick='$(".otherselection").slideUp();' style='float:right; position: initial; cursor:pointer;'></i>
+<div class='otherselectionheading'>Include only customers</div>
+<div class='customersadded' style='margin-bottom: 5px;'>
+    <?php
+    foreach($customers as $customerId) {
+        $user = $this->getApi()->getUserManager()->getUserById($customerId);
+        echo "<div class='addusertofilter addtofilterrow' userid='".$user->id."'><i class='fa fa-trash-o'></i>" . $user->fullName . "</div>";
+    }
+    ?>
+</div>
+<input type='txt' clasS='gsniceinput1 searchcustomervalue' style='float:left;'><span class='shop_button searchcustomer' style='line-height:27px; height:27px;width:60px;'>Search</span>
+<div style='clear:both;padding-bottom:10px;'></div>
+<div class='customersearcresultpanel'></div>
+<div class='otherselectionheading'>Include only discount code</div>
+<div class='codesadded' style='margin-bottom: 5px;'>
+<?php
+foreach($codes as $code) {
+    echo '<div class="addtofilterrow" code="'.$code.'"><i class="fa fa-trash-o"></i>'.$code."</div>";
+}
+?>
+</div>
+<input type='txt' clasS='gsniceinput1 addaddonvalue' style='float:left;'><span class='shop_button addaddon' style='line-height:27px; height:27px;width:60px;'>Add</span>
+<div style='clear:both;padding-bottom:10px;'></div>
+<div class='otherselectionheading'>Include only addons</div>
+<?php
+$products = $this->getApi()->getProductManager()->getAllProducts();
+foreach($products as $product) {
+    if(in_array($product->id, $typesProducts)) {
+        continue;
+    }
+    $checked = "";
+    if(in_array($product->id, $addons)) {
+        $checked = "CHECKED";
+    }
+    echo "<div>";
+    echo "<label style='line-height:18px;'><input type='checkbox' productid='".$product->id."' style='float:left; height: 18px; margin:0px; padding:0px; margin-right: 5px;' class='addonstofilter' $checked>" . $product->name . "</label>";
+    echo "<div style='clear:both;'></div>";
+    echo "</div>";
+}
+?>

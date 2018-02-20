@@ -80,11 +80,12 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
         
         ret.put("client_id", "Client id");
         ret.put("client_secret", "Client secret");
+        ret.put("code", "Api code");
         
         String clientId = getConfig("client_id");
         String webaddr = storeManager.getMyStore().getDefaultWebAddress();
         if(clientId != null && !clientId.isEmpty()) {
-            String url = authpoint+"?response_type=code&client_id=[client_id]&redirect_uri=https://localhost:44300/callback&state=Simplex&scope=ea:accounting+ea:api+ea:purchase+ea:sales+offline_access";
+            String url = authpoint+"?client_id=[client_id]&scope=ea:api+offline_access+ea:sales+ea:accounting+ea:purchase&nounce=asdasdasdas&state=10135467&redirect_uri=https://localhost:44300/callback&response_type=code";
             url = url.replace("[client_id]", clientId);
             ret.put("oAuthButton", url);
         }
@@ -138,7 +139,9 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
 
     private String checkIfUserExistsInVismaEAccounting(Integer accountingId) {
         try {
+            String token = getToken();
             String postFix= URLEncoder.encode("$filter=CustomerNumber eq '"+accountingId+"'", "UTF-8");
+            
             JsonObject res = webManager.htmlGetJson(endpoint+"customers?"+postFix);
             System.out.println(res);
         }catch(Exception e) {
@@ -147,6 +150,21 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
             return null;
         }
         return null;
+    }
+
+    private String getToken() {
+        HashMap<String, String> headerData = new HashMap();
+        headerData.put("code", getConfig("code"));
+        headerData.put("grant_type", "authorization_code");
+        headerData.put("redirect_uri", "https://localhost:44300");
+        String auth = getConfig("client_id") + ":" + getConfig("client_secret");
+        try {
+            String result = webManager.htmlPostBasicAuth(tokenpoint, "kvakk", false, "UTF-8", auth, "Bearer", true, "POST", headerData);
+            System.out.println(result);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
     
 }

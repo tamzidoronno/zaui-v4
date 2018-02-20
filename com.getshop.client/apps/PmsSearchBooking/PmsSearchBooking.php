@@ -245,6 +245,15 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $filter->filterType = $_POST['data']['filtertype'];
         $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['from']));
         $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+        if(isset($_POST['data']['addons'])) {
+            $filter->addons = $_POST['data']['addons'];
+        }
+        if(isset($_POST['data']['customers'])) {
+            $filter->customers = $_POST['data']['customers'];
+        }
+        if(isset($_POST['data']['codes'])) {
+            $filter->codes = $_POST['data']['codes'];
+        }
         
         if($_POST['data']['groupbooking'] == "true") {
             $filter->groupByBooking = true;

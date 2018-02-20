@@ -68,5 +68,20 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         return $searchtypes;
     }
 
+    
+    public function searchCustomers() {
+        $name = $_POST['data']['name'];
+        $filterData = new \core_common_FilterOptions();
+        $filterData->searchWord = $name;
+        $data = $this->getApi()->getUserManager()->getAllUsersFiltered($filterData);
+        foreach($data->datas as $user) {
+            echo "<div class='addusertofilter addtofilterrow' userid='".$user->id."'><i class='fa fa-trash-o'></i>" . $user->fullName . "</div>";
+        }
+    }
+    
+    public function displayOtherSelection() {
+        $this->includefile("otherselection");
+    }
+
 }
 ?>

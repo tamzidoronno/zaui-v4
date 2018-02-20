@@ -1,3 +1,7 @@
+getshop_endpoint = "";
+if(localStorage.getItem('getshop_endpoint')) {
+    getshop_endpoint = localStorage.getItem('getshop_endpoint');
+}
 app.PmsBooking = {
     init: function () {
         $(document).on('click', '.PmsBooking .check_available_button', app.PmsBooking.next);
@@ -130,6 +134,18 @@ app.PmsBooking = {
             });    
 
         });
+    },
+    load_getBookingTranslations : function() {
+        var def = $.Deferred();
+        $.ajax({
+            "dataType": "jsonp",
+            "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
+            success: function (res) {
+                getshop_translationMatrixLoaded = res;
+                def.resolve(res);
+            }
+        });    
+        return def;
     },
     getshop_setDatePicker : function() {
         var currentDate = new Date();

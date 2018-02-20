@@ -61,6 +61,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.wubook.WubookManager;
@@ -769,7 +770,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public PmsBooking getBooking(String bookingId) {
-
+//        dumpRenaTrening();
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -1165,6 +1166,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 start = room.date.start;
                 end = room.date.end;
             }
+            room.lastBookingChangedItem = new Date();
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
                 logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId, "changestay");
@@ -2761,7 +2763,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.end = end;
         room.guests.add(new PmsGuests());
         setPriceOnRoom(room, true, booking);
-
+        
+        List<PmsBookingRooms> toAdd = new ArrayList();
+        toAdd.add(room);
         
         if(guestInfoFromRoom != null && !guestInfoFromRoom.isEmpty()) {
             PmsBooking bookingforguest = getBookingFromRoom(guestInfoFromRoom);
@@ -2776,6 +2780,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!res.isEmpty()) {
             return res;
         }
+        
+        addDefaultAddonsToRooms(toAdd);
+        
         saveBooking(booking);
 
         logEntry(typeToAdd.name + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, null);
@@ -3709,6 +3716,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         res.removeAll(remove);
+        
+        res = removeByCustomersCodesAndAddons(res, filter);
+        
         return res;
     }
 
@@ -4085,6 +4095,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             toReturn.includedInBookingItemTypes = addonConfig.includedInBookingItemTypes;
             toReturn.setTranslationStrings(addonConfig.getTranslations());
             toReturn.onlyForBookingItems = addonConfig.onlyForBookingItems;
+            toReturn.alwaysAddAddon = addonConfig.alwaysAddAddon;
             
             if(addonConfig.price != null && addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
@@ -5866,24 +5877,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void addDefaultAddons(PmsBooking booking) {
-        HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
-        for(PmsBookingRooms room : booking.getActiveRooms()) {
-            for(PmsBookingAddonItem item : addons.values()) {
-                if(room.bookingItemTypeId != null) {
-                    if(item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
-                        if(!bookings.containsKey(booking.id)) {
-                            logPrint("Booking does not exists in the booking object.. that should not happen");
-                        }
-                        int size =1;
-                        if(item.dependsOnGuestCount) {
-                            size = room.numberOfGuests;
-                        }
-                        removeProductFromRoom(room.pmsBookingRoomId, item.productId);
-                        addProductToRoom(item.productId, room.pmsBookingRoomId, size);
-                    }
-                }
-            }
-        }
+        addDefaultAddonsToRooms(booking.getAllRooms());
     }
 
     @Override
@@ -7175,7 +7169,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void removeProductFromRoom(String pmsBookingRoomId, String productId) {
-        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         List<PmsBookingAddonItem> toRemove = new ArrayList();
         for(PmsBookingAddonItem item : room.addons) {
@@ -8004,5 +7998,149 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cal.setTime(new Date());
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return cal.getTime();
+    }
+
+    private void dumpRenaTrening() {
+        System.out.println("------------------");
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.startDate = new Date();
+        filter.endDate = new Date();
+        filter.filterType = "active";
+        List<PmsBooking> allBookings = getAllBookings(filter);
+        
+        //Etternavn,fornavn
+        for(PmsBooking booking : allBookings) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                User user = userManager.getUserById(booking.userId);
+                if(user.fullName != null && user.fullName.contains(" ")) {
+                    String[] names = user.fullName.split(" ");
+                    System.out.print(names[1] + "\t" + names[0]);
+                } else {
+                    System.out.print(user.fullName + "\t");
+                }
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                
+                System.out.print("\t");
+                //Kommentar
+                System.out.print("\t");
+                //Senteravtale
+                System.out.print("\t");
+                
+                //Meldem siden
+                SimpleDateFormat sm = new SimpleDateFormat("dd-MM-yyyy");
+                System.out.print(sm.format(room.date.start) + "\t");
+                
+                
+                //Binding
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(room.date.start);
+                
+                if(type.name.equals("Abonnement uten binding")) {
+                    System.out.print("\t");
+                } else if(type.name.equals("Forsvarsabonnement med binding")) {
+                    cal.add(Calendar.MONTH, 12);
+                    System.out.print(sm.format(cal.getTime())+"\t");
+                } else if(type.name.equals("Studentabonnement med binding 10")) {
+                    cal.add(Calendar.MONTH, 10);
+                    System.out.print(sm.format(cal.getTime())+"\t");
+                } else if(type.name.equals("Studentabonnement med binding 6")) {
+                    cal.add(Calendar.MONTH, 6);
+                    System.out.print(sm.format(cal.getTime())+"\t");
+                } else {
+                    System.out.print("\t");
+                }
+                
+                //Adgangskort
+                System.out.print(room.code+"\t");
+                
+                //Epost
+                System.out.print(user.emailAddress+"\t");
+                
+                //Mobiltlf
+                System.out.print(user.cellPhone+"\t");
+                
+                //Kjønn
+                System.out.print("\t");
+                
+                //Fødselsdato
+                System.out.print(user.birthDay+"\t");
+                
+                //Adresse
+                System.out.print(user.address.address+"\t");
+                
+                //Postnr
+                System.out.print(user.address.postCode+"\t");
+                
+                //poststed
+                System.out.print(user.address.city+"\t");
+                
+                //senter
+                System.out.print("\t");
+                
+                //aktiv/inaktiv
+                System.out.print("aktiv\t");
+                
+                //medlemsksapstype
+                System.out.print(type.name + "\t");
+                
+                //betalingskort
+                String cards = "";
+                for(UserCard card : user.savedCards) {
+                    cards += card.mask + ",";
+                }
+                if(cards.length() > 0) { cards = cards.substring(0, cards.length()-1); }
+                System.out.print(cards + "\t");
+                
+                //dibs tickets
+                cards = "";
+                for(UserCard card : user.savedCards) {
+                    cards += card.card + ",";
+                }
+                if(cards.length() > 0) { cards = cards.substring(0, cards.length()-1); }
+                System.out.print(cards + "\t");
+                
+                
+                System.out.println();
+            }
+        }
+        
+        
+    }
+
+    private void addDefaultAddonsToRooms(List<PmsBookingRooms> allRooms) {
+        HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
+        for(PmsBookingRooms room : allRooms) {
+            for(PmsBookingAddonItem item : addons.values()) {
+                if(room.bookingItemTypeId != null) {
+                    if(item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon) {
+                        int size =1;
+                        if(item.dependsOnGuestCount) {
+                            size = room.numberOfGuests;
+                        }
+                        removeProductFromRoom(room.pmsBookingRoomId, item.productId);
+                        addProductToRoom(item.productId, room.pmsBookingRoomId, size);
+                    }
+                }
+            }
+        }    
+    }
+
+    private List<PmsRoomSimple> removeByCustomersCodesAndAddons(List<PmsRoomSimple> res, PmsBookingFilter filter) {
+        List<PmsRoomSimple> finalList = new ArrayList();
+        for(PmsRoomSimple r : res) {
+           if(!filter.customers.isEmpty() && !filter.customers.contains(r.userId)) {
+               continue;
+           }
+           if(!filter.codes.isEmpty() && !filter.containsCode(getBooking(r.bookingId).couponCode)) {
+               continue;
+           }
+           
+           if(!filter.addons.isEmpty() && !filter.containsAddon(r.addons)) {
+               continue;
+           }
+           
+           finalList.add(r);
+        }
+        return finalList;
     }
 }

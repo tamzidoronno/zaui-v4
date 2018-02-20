@@ -193,8 +193,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
     public Date getPreviouseEndDate() {
         if (files.isEmpty()) {
             Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.YEAR, 0);
-            cal.set(Calendar.DAY_OF_MONTH, 0);
+            cal.set(Calendar.DAY_OF_YEAR, 1);
             return cal.getTime();
         }
         

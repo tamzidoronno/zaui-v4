@@ -4097,6 +4097,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             toReturn.includedInBookingItemTypes = addonConfig.includedInBookingItemTypes;
             toReturn.setTranslationStrings(addonConfig.getTranslations());
             toReturn.onlyForBookingItems = addonConfig.onlyForBookingItems;
+            toReturn.alwaysAddAddon = addonConfig.alwaysAddAddon;
             
             if(addonConfig.price != null && addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
@@ -8086,7 +8087,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
         for(PmsBookingRooms room : allRooms) {
             for(PmsBookingAddonItem item : addons.values()) {
                 if(room.bookingItemTypeId != null) {
-                    if(item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                    if(item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon) {
                         int size =1;
                         if(item.dependsOnGuestCount) {
                             size = room.numberOfGuests;

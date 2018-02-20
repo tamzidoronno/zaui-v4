@@ -1341,7 +1341,7 @@ public class PmsManagerProcessor {
                 .forEach(masterUserSlot -> {
                     boolean isSlotInUse = isMasterUserSlotInUse(group, masterUserSlot, bookings);
                     if (!isSlotInUse) {
-                        manager.getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
+//                        manager.getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
                     }
                 });
         });

@@ -1,5 +1,5 @@
 
-var getshop_endpoint = "";
+var getshop_endpoint = localStorage.getItem('getshop_endpoint');
 var leftInterval;
 
 function getshop_setBookingTranslation() {

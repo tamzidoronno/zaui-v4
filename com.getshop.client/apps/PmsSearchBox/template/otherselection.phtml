@@ -8,12 +8,15 @@ foreach($bookingItems as $type) {
 /* @var $this \ns_1ba01a11_1b79_4d80_8fdd_c7c2e286f94c\PmsSearchBox */
 $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
 $filter = $pms->getSelectedFilter();
+$customers = (array)$filter->customers;
+$codes = (array)$filter->codes;
+$addons = (array)$filter->addons;
 ?>
 <i class='fa fa-close' onclick='$(".otherselection").slideUp();' style='float:right; position: initial; cursor:pointer;'></i>
 <div class='otherselectionheading'>Include only customers</div>
 <div class='customersadded' style='margin-bottom: 5px;'>
     <?php
-    foreach($filter->customers as $customerId) {
+    foreach($customers as $customerId) {
         $user = $this->getApi()->getUserManager()->getUserById($customerId);
         echo "<div class='addusertofilter addtofilterrow' userid='".$user->id."'><i class='fa fa-trash-o'></i>" . $user->fullName . "</div>";
     }
@@ -25,7 +28,7 @@ $filter = $pms->getSelectedFilter();
 <div class='otherselectionheading'>Include only discount code</div>
 <div class='codesadded' style='margin-bottom: 5px;'>
 <?php
-foreach($filter->codes as $code) {
+foreach($codes as $code) {
     echo '<div class="addtofilterrow" code="'.$code.'"><i class="fa fa-trash-o"></i>'.$code."</div>";
 }
 ?>
@@ -40,7 +43,7 @@ foreach($products as $product) {
         continue;
     }
     $checked = "";
-    if(in_array($product->id, $filter->addons)) {
+    if(in_array($product->id, $addons)) {
         $checked = "CHECKED";
     }
     echo "<div>";

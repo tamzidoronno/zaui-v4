@@ -8,6 +8,33 @@ import java.util.List;
 
 public class PmsBookingFilter extends DataCommon {
 
+    boolean containsCode(String couponCode) {
+        if(couponCode == null) {
+            return false;
+        }
+        for(String code : codes) {
+            if(code.toLowerCase().equals(couponCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean containsAddon(List<PmsBookingAddonItem> addonsToCheck) {
+        if(addons == null) {
+            return false;
+        }
+        
+        for(String productId : addons) {
+            for(PmsBookingAddonItem item2 : addonsToCheck) {
+                if(item2.productId.equals(productId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static class PmsBookingFilterTypes {
         public static String registered = "registered";
         public static String active = "active";

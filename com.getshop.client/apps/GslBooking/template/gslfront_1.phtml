@@ -315,13 +315,16 @@
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
 
-        
+
+ 
+       $.getScript( "https://www.getshop.com/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
         $.getScript( "https://www.getshop.com/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
             $.getScript( "https://www.getshop.com/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
                 getshop_setDatePicker();
                 getshop_setBookingTranslation();
             });
         });
+       });
     });
     
 </script>

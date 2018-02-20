@@ -78,7 +78,7 @@ if($filter->groupByBooking) {
             <?php
             foreach($bookingItems as $type) {
                 $checked = "";
-                if(in_array($type->id, $filter->typeFilter)) {
+                if(in_array($type->id, (array)$filter->typeFilter)) {
                     $checked = "CHECKED";
                 }
                 echo "<div class='type'><input type='checkbox' style='float:left;' gsname='typeselection_".$type->id."' $checked>" . $type->name . "</div>";

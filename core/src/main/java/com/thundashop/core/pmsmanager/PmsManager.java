@@ -3718,6 +3718,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
             }
         }
         res.removeAll(remove);
+        
+        res = removeByCustomersCodesAndAddons(res, filter);
+        
         return res;
     }
 
@@ -8093,5 +8096,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
                     }
                 }
             }
-        }    }
+        }    
+    }
+
+    private List<PmsRoomSimple> removeByCustomersCodesAndAddons(List<PmsRoomSimple> res, PmsBookingFilter filter) {
+        List<PmsRoomSimple> finalList = new ArrayList();
+        for(PmsRoomSimple r : res) {
+           if(!filter.customers.isEmpty() && !filter.customers.contains(r.userId)) {
+               continue;
+           }
+           if(!filter.codes.isEmpty() && !filter.containsCode(getBooking(r.bookingId).couponCode)) {
+               continue;
+           }
+           
+           if(!filter.addons.isEmpty() && !filter.containsAddon(r.addons)) {
+               continue;
+           }
+           
+           finalList.add(r);
+        }
+        return finalList;
+    }
 }

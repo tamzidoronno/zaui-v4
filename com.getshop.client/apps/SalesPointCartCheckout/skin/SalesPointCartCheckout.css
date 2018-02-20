@@ -51,9 +51,7 @@
 }
 
 .SalesPointCartCheckout .addonlist_row .addon_inputs {
-    position: absolute; 
-    right: 0px;
-    top: 0px;
+    text-align: right;
 }
 
 .SalesPointCartCheckout .addonlist_row .addon_count {
@@ -87,4 +85,21 @@
 .SalesPointCartCheckout .normalrow .itemcount {
     width: 30px;
     text-align: center;
+}
+
+[area="gs_modul_cart"] .SalesPointCartCheckout {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.SalesPointCartCheckout .payment_options .option_content {
+    position: absolute;
+    background-color: #FFF;
+    right: 0px;
+    border: solid 1px;
+}
+.SalesPointCartCheckout .payment_options .shop_button {
+    width: 100% !important;
+    margin-bottom: 3px;
 }

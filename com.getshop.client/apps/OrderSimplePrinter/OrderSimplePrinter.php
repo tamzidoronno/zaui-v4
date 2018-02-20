@@ -53,6 +53,7 @@ class OrderSimplePrinter extends \MarketingApplication implements \Application {
         if ($paymentApp->canDeleteOrder($order)) {
             $order->cart->items = array();
             $this->getApi()->getOrderManager()->saveOrder($order);
+            $this->getApi()->getPmsManager()->orderChanged($this->getSelectedMultilevelDomainName(), $order->id);
         }
     }
 

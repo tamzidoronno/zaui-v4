@@ -69,8 +69,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
     
-    private List<OrderManagerEvents> eventListeners = new ArrayList();
-    
     private Set<String> ordersChanged = new TreeSet();
     
     private Set<String> ordersCreated = new TreeSet();
@@ -286,23 +284,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             ordersChanged.add(order.id);
             
         }
-    }
-    
-    public void fireEvents() {
-        ordersCreated.stream().forEach(orderId -> {
-            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
-                o.orderCreated(orderId);
-            });
-        });
-        
-        ordersChanged.stream().forEach(orderId -> {
-            new ArrayList<OrderManagerEvents>(eventListeners).stream().forEach(o -> {
-                o.orderChanged(orderId);
-            });
-        });
-        
-        ordersChanged.clear();
-        ordersCreated.clear();
     }
 
     @Override
@@ -2128,11 +2109,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
     }
-
-    public void addListener(PmsManager listener) {
-        eventListeners.add(listener);
-    }
-
     public List<Order> getOrdersToTransferToAccount(Date endDate) {
         updateTransferToAccountingDate();
         
@@ -2202,6 +2178,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         existingOnSameReference = new OrderUnderConstruction();
         existingOnSameReference.id = id;
         existingOnSameReference.order = new Order();
+        existingOnSameReference.order.isUnderConstruction = true;
         existingOnSameReference.order.id = UUID.randomUUID().toString();
         existingOnSameReference.order.rowCreatedDate = new Date();
         
@@ -2212,13 +2189,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         ordersUnderConstruction.put(existingOnSameReference.id, existingOnSameReference);
         
+        existingOnSameReference.finalizeOrder();
+        
         return existingOnSameReference;
     }
 
     @Override
-    public void updateCartOnOrderUnderConstruction(String id, Cart cart) {
+    public void updateCartOnOrderUnderConstruction(String id, String roomId, Cart cart) {
         OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
-        orderUnder.order.cart = cart;
+        orderUnder.carts.put(roomId, cart);
+        orderUnder.finalizeOrder();
         saveObject(orderUnder);
     }
 
@@ -2228,6 +2208,54 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (ret != null) {
             deleteObject(ret);
         }
+    }
+
+    @Override
+    public boolean isRoomAddedToOrderUnderConstruction(String id, String roomId) {
+        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
+        return orderUnder.carts.containsKey(roomId);
+    }
+
+    @Override
+    public void removeRoomForOrderUnderConstruction(String id, String roomId) {
+        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
+        orderUnder.carts.remove(roomId);
+        orderUnder.finalizeOrder();
+        saveObject(orderUnder);
+    }
+
+    @Override
+    public void updateOrderUnderConstructionItems(String id, Cart cart) {
+        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
+        orderUnder.updateCartItems(cart);
+    }
+
+    @Override
+    public String convertOrderUnderConstructionToOrder(String id, Address address, String paymentId) {
+        if (!ordersUnderConstruction.containsKey(id)) {
+            return "";
+        }
+        
+        OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
+        ret.finalizeOrder();
+        
+        cartManager.setCart(ret.order.cart);
+        
+        Order order = createOrder(address);
+        order.createByManager = "PmsDailyOrderGeneration";
+        order.payment = new Payment();
+        order.payment.paymentId = paymentId;
+        
+        Application paymentApplication = storeApplicationPool.getApplication(paymentId);
+        order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+        
+        deleteObject(ret);
+        finalizeOrder(order);
+        saveOrder(order);
+
+        cartManager.clear();
+        
+        return order.id;
     }
     
 

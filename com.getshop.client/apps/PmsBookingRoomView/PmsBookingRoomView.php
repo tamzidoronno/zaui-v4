@@ -291,24 +291,18 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             return false;
         }
         
-        $bookingId = $this->getPmsBooking()->id;
-        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId);
-
-        $filter = new \core_pmsmanager_NewOrderFilter();
-        $filter->avoidOrderCreation = true;
-        $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
-
-        $this->getApi()->getCartManager()->clear();
-        $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);    
-
-        $itemCount = count($this->getApi()->getCartManager()->getCart()->items);
+        $this->refreshCartForRoom();
+        
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $itemCount = count($cart->items);
         if (!$itemCount) {
             return false;
         }
         
-        echo "<div class='SalesPointCartCheckout'>";
+        echo "<div class='SalesPointCartCheckout' roomid='".$this->getSelectedRoom()->pmsBookingRoomId."'>";
         $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
-        $salesPointCartCheckout->setOriginalCart();
+        $salesPointCartCheckout->setOriginalCart($cart);
+        $salesPointCartCheckout->setReadOnly();
         $salesPointCartCheckout->render();
         echo "</div>";
         
@@ -360,6 +354,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function setData($reload = false) {
+        $reload = true;
         
         if(!isset($_SESSION['cachedroomspmsrooms'])) {
             $_SESSION['cachedroomspmsrooms'] = array();
@@ -894,6 +889,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         $selectedRoom = null;
         
+        $this->removeRoomFromCart();
+        $this->refreshCartForRoom();
+        
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $this->getSelectedRoom()->pmsBookingRoomId);
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
@@ -907,16 +905,39 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         
         if (!$selectedRoom->orderUnderConstructionId) {
-            $selectedRoom->orderUnderConstructionId = $this->uuidV4();
+            if (isset($_SESSION['orderUnderConstructionId'])) {
+                $selectedRoom->orderUnderConstructionId = $_SESSION['orderUnderConstructionId'];
+            } else {
+                $selectedRoom->orderUnderConstructionId = $this->uuidV4();
+            }
+            
             $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         }
         
         echo $selectedRoom->orderUnderConstructionId;
-        
-        $salesPoint = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
+
+        $_SESSION['orderUnderConstructionId'] = $selectedRoom->orderUnderConstructionId;
+   
         $cart = $this->getApi()->getCartManager()->getCart();
-        $this->getApi()->getOrderManager()->updateCartOnOrderUnderConstruction($selectedRoom->orderUnderConstructionId, $cart);
+
+        $this->getApi()->getOrderManager()->updateCartOnOrderUnderConstruction($selectedRoom->orderUnderConstructionId, $selectedRoom->pmsBookingRoomId, $cart);
         $this->setData(true);
+    }
+    
+    public function removeRoomFromCart() {
+        $id = $this->getSelectedRoom()->orderUnderConstructionId;
+
+        $this->getApi()->getOrderManager()->removeRoomForOrderUnderConstruction($id, $this->getSelectedRoom()->pmsBookingRoomId);
+        
+        $booking = $this->getPmsBooking();
+        
+        foreach ($booking->rooms as $room) {
+            if ($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
+                $room->orderUnderConstructionId = "";
+            }
+        }
+        
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
     
     private function uuidV4() {
@@ -939,8 +960,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
           // 48 bits for "node"
           mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-    );
-  }
+        );
+    }
 
     public function getDifferenceInRoom() {
         $totalChanges = 0;
@@ -1086,6 +1107,22 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         return $text;
     }
+    
+    public function isRoomAddedToCart() {
+        $id = $this->getSelectedRoom()->orderUnderConstructionId;
+        return $this->getApi()->getOrderManager()->isRoomAddedToOrderUnderConstruction($id, $this->getSelectedRoom()->pmsBookingRoomId);
+    }
 
+    public function refreshCartForRoom() {
+        $booking = $this->getPmsBooking();
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->avoidOrderCreation = true;
+        $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
+        $filter->pmsRoomIds = array();
+        $filter->pmsRoomIds[]  = $this->getSelectedRoom()->pmsBookingRoomId;
+
+        $this->getApi()->getCartManager()->clear();
+        $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $booking->id, $filter);    
+    }
 }
 ?>

@@ -7,6 +7,11 @@ $total = $this->getApi()->getCartManager()->getCartTotal($currentCart);
 $items = (array)$originalCart->items;
 $i = 0;
 
+if (!count($items)) {
+    echo "Nothing to do";
+    return;
+}
+
 foreach ($items as $item) {
     $i++;
     $lastItem = count($items) == $i ? "last_row" : "";
@@ -32,3 +37,33 @@ foreach ($items as $item) {
     <? echo $this->__f("Total"); ?>: <span><? echo $total; ?></span>
 </div>
 
+<?
+
+if ($this->isReadOnly()) {
+    return;
+}
+
+
+$paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+?>
+
+<div class="payment_options payment_window">
+
+    <div class="option_content">
+       
+    </div>
+    
+    <div class="options">
+        
+        <?
+        foreach ($paymentApps as $app) {
+            ?>
+            <div class="shop_button" gsclick="createOrder" style="font-size: 14px;" payment="<? echo $app->id; ?>">
+                <? echo $app->appName; ?>
+            </div>        
+        <?
+        }
+        ?>
+    </div>
+    
+</div>

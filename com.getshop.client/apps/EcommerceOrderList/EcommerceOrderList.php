@@ -83,6 +83,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         );
         
         $table = new \GetShopModuleTable($this, 'OrderManager', 'getOrdersFiltered', $args, $attributes);
+        $table->sortByColumn("incrementOrderId", false);
         $table->renderPagedTable();
     }
 

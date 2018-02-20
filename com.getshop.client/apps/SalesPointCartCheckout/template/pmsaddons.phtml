@@ -20,9 +20,21 @@ usort($itemsAdded, array('ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCart
         <div class='addonlist_row <? echo $oddClass; ?> ' addonid='<? echo $addon->addonId; ?>'>
             <input type='checkbox' checked='true' class='addon_checked gsnicecheckbox1'> 
             <span><? echo $date; ?></span>
+            
             <div class='addon_inputs'>
-                <input type='textfield' class='gsniceinput1 addon_count' value="<? echo $addon->count; ?>">
-                x <input type='textfield' class='gsniceinput1 addon_price' value="<? echo $addon->price; ?>">    
+                <?
+                if ($this->isReadOnly()) {
+                    ?>
+                    <span class="addon_count"><? echo $addon->count; ?></span>
+                    x <span class="addon_price"><? echo $addon->price; ?></span>
+                    <?
+                } else {
+                ?>
+                    <input type='textfield' class='gsniceinput1 addon_count' value="<? echo $addon->count; ?>">
+                    x <input type='textfield' class='gsniceinput1 addon_price' value="<? echo $addon->price; ?>">    
+                <?
+                }
+                ?>
             </div>
         </div>
         <?

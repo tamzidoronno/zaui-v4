@@ -20,7 +20,6 @@ public class MecaCarRequestKilomters implements Serializable {
     
     private Date lastReceivedKilomters = new Date(0);
     private Date nextRequestDate = null;
-    private int requestCount = 0;
     
     private List<MessageLog> logs = new ArrayList();
     
@@ -60,6 +59,7 @@ public class MecaCarRequestKilomters implements Serializable {
     
     public void markAsSentPushNotification(MecaFleet fleet) {
         addLogEntry("Push notification sendt", "push", fleet.naggingInterval);
+        calculateNextRequest(fleet);
     }
 
     private void addLogEntry(String message, String type, String naggingInterval) {
@@ -69,22 +69,20 @@ public class MecaCarRequestKilomters implements Serializable {
         logs.add(entry);
     }
     
-    private void calculateNextRequest(MecaFleet fleet) {
-        requestCount++;
+    public void calculateNextRequest(MecaFleet fleet) {
         
-        if (fleet.naggingInterval.equals("frequency_none")) {
-            setNextMainRequest();
-        } else if (fleet.naggingInterval.equals("frequency_daily")) {
-            handleDailyRequest();
-        } else if (fleet.naggingInterval.equals("frequency_weekly")) {
-            handleWeeklyRequest();
+        if (fleet.naggingInterval.equals("frequency_monthly")) {
+            handleMonthlyRequest();
+        } else if (fleet.naggingInterval.equals("frequency_quartly")) {
+            handleQuarterlyRequest();
+        } else if (fleet.naggingInterval.equals("frequency_halfayear")) {
+            handleHalfAYear();
         } else {
-            setNextMainRequest();
+            handleMonthlyRequest();
         }
     }
 
-    private void setNextMainRequest() {
-        requestCount = 0;
+    private void handleMonthlyRequest() {
         nextRequestDate = getNextMainRequest();
     }
 
@@ -93,33 +91,39 @@ public class MecaCarRequestKilomters implements Serializable {
         cal.setTime(new Date());
         cal.add(Calendar.MONTH, 1);
         cal.set(Calendar.DAY_OF_MONTH, 1);
+        setStartTime(cal);
+        return cal.getTime();
+    }
+
+    private void setStartTime(Calendar cal) {
         cal.set(Calendar.HOUR_OF_DAY, 7);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
     }
 
-    private void handleDailyRequest() {
-        if (requestCount <= 2) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(nextRequestDate);
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-            nextRequestDate = cal.getTime();
-        } else {
-            setNextMainRequest();
-        }
+    private void handleQuarterlyRequest() {
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)/3 * 3);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.MONTH, 3);
+        
+        setStartTime(cal);
+
+        nextRequestDate = cal.getTime();
     }
 
-    private void handleWeeklyRequest() {
-        if (requestCount <= 2) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(nextRequestDate);
-            cal.add(Calendar.DAY_OF_MONTH, 7);
-            nextRequestDate = cal.getTime();
-        } else {
-            setNextMainRequest();
-        }
+    private void handleHalfAYear() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)/6 * 6);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.MONTH, 6);
+        
+        setStartTime(cal);
+        nextRequestDate = cal.getTime();
     }
 
     public boolean setNextIfNull() {

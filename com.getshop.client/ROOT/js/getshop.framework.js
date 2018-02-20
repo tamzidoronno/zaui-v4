@@ -18,20 +18,12 @@ thundashop.framework = {
     lastScrollTopInfoBox : null,
     
     toggleRightWidgetPanel : function(areaName, data) {
-        if (!data) {
-            data = {};
-        }
+        
         if(!$('.gsrightwidgetpanel').hasClass('gsactiverightwidget')) {
             $('.gsrightwidgetpanel').addClass('gsactiverightwidget');
             $('#gsbody').addClass('gsactiverightwidget');
             $('.gsrightwidgetpanel').show();
-            data.area = areaName;
-            
-            var event = thundashop.Ajax.createEvent('','loadRightWidgetPanelArea',null, data);
-            thundashop.Ajax.postWithCallBack(event, function(res) {
-                $('.gsrightwidgetbody').html(res);
-            });
-            
+            thundashop.framework.refreshRightWidget(areaName, data);
         } else {
             $('.gsrightwidgetpanel').hide();
             $('.gsrightwidgetpanel').removeClass('gsactiverightwidget');
@@ -39,6 +31,18 @@ thundashop.framework = {
             var event = thundashop.Ajax.createEvent('','closeRightWidget',null, {});
             thundashop.Ajax.postWithCallBack(event, function(res) {});
         }
+    },
+    
+    refreshRightWidget: function(areaName, data) {
+        if (!data) {
+            data = {};
+        }
+        
+        data.area = areaName;
+        var event = thundashop.Ajax.createEvent('','loadRightWidgetPanelArea',null, data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.gsrightwidgetbody').html(res);
+        });
     },
     
     scrollToPosition : function(scrollTop) {

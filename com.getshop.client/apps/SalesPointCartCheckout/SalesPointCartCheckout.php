@@ -4,6 +4,8 @@ namespace ns_90d14853_2dd5_4f89_96c1_1fa15a39babd;
 class SalesPointCartCheckout extends \MarketingApplication implements \Application {
     private $currentCart = null;
     
+    private $readOnly = false;
+    
     public function getDescription() { 
     }
 
@@ -66,6 +68,7 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
         
         echo $this->getApi()->getCartManager()->getCartTotal($orginalCart);
         $this->saveTmpCart($orginalCart, @$_POST['data']['roomId']);
+        $this->getApi()->getOrderManager()->updateOrderUnderConstructionItems($this->getModalVariable("orderUnderConstrcutionId"), $orginalCart);
         die();
     }
 
@@ -74,6 +77,12 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     }
     
     public function setOriginalCart($cart = false) {
+        if (!$cart && $this->getModalVariable("orderUnderConstrcutionId")) {
+            $order = $this->getApi()->getOrderManager()->createOrGetOrderUnderConstruction($this->getModalVariable("orderUnderConstrcutionId"));
+            $this->originalCart = $order->order->cart;
+            return;
+        }
+        
         if ($cart) {
             $this->originalCart = $cart;
         } else {
@@ -81,6 +90,12 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
         }
     }
 
+    public function createOrder() {
+        $id = $this->getModalVariable("orderUnderConstrcutionId");
+        $orderId = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment']);
+        $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
+    }
+    
     /**
      * 
      * @return \core_cartmanager_data_Cart
@@ -224,6 +239,13 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
         
         return null;
     }
+    
+    public function setReadOnly() {
+        $this->readOnly = true;
+    }
 
+    public function isReadOnly() {
+        return $this->readOnly;
+    }
 }
 ?>

@@ -303,8 +303,20 @@ public interface IOrderManager {
     public OrderUnderConstruction createOrGetOrderUnderConstruction(String id);
     
     @Editor
-    public void updateCartOnOrderUnderConstruction(String id, Cart cart);
+    public void updateCartOnOrderUnderConstruction(String id, String roomId, Cart cart);
     
     @Editor
     public void deleteOrderUnderConstruction(String id);
+    
+    @Editor
+    public boolean isRoomAddedToOrderUnderConstruction(String id, String roomId);
+    
+    @Editor
+    public void removeRoomForOrderUnderConstruction(String id, String roomId);
+    
+    @Editor
+    public void updateOrderUnderConstructionItems(String id, Cart cart);
+    
+    @Editor
+    public String convertOrderUnderConstructionToOrder(String id, Address address, String paymentId);
 }

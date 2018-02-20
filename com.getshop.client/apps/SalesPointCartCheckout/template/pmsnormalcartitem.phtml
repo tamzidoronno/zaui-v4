@@ -5,7 +5,20 @@ $item = $this->getCurrentItem();
 <div class='normalrow'>
     <b><? echo $item->product->name; ?></b>
     <div class='textfields'>
+        <?
+        if ($this->isReadOnly()) {
+        ?>
+        <div>
+            <span class="itemcount"><? echo $item->count; ?></span>
+            x <span class="itemprice"><? echo $item->product->price; ?></span>
+        </div>
+        <?
+        } else {
+        ?>
         <input type='textfield' class='gsniceinput1 itemcount' value='<? echo $item->count; ?>'/>
         x <input type='textfield' class='gsniceinput1 itemprice' value='<? echo $item->product->price; ?>'/>    
+        <?
+        }
+        ?>
     </div>
 </div>

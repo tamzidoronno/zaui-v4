@@ -135,6 +135,7 @@ public class TripleTexExcel extends AccountingSystemBase {
         
         Row row = sheet.createRow(getNextRowNumberAndIncrement());
         row.createCell(getCellNumber("ORDER NO")).setCellValue(order.incrementOrderId);
+        row.createCell(getCellNumber("COMMENTS")).setCellValue(order.invoiceNote);
         
         if (firstRowInOrder) {
             row.createCell(getCellNumber("ORDER DATE")).setCellValue(generateOrderDate(order));

@@ -79,13 +79,17 @@ app.PmsBookingRoomView = {
         event['synchron'] = true;
         
         thundashop.Ajax.post(event, function (res) {
-            if (!$('.GetShopCart').is(':visible')) {
-                var data = {
-                    orderUnderConstrcutionId : res
-                }
+            var data = {
+                orderUnderConstrcutionId : res
+            }
+
+            if (!$('[area="gs_modul_cart"]').is(':visible')) {
                 thundashop.framework.toggleRightWidgetPanel('gs_modul_cart', data);
-                app.PmsBookingRoomView.refresh();
-            }    
+            } else {
+                thundashop.framework.refreshRightWidget('gs_modul_cart', data)
+            }
+            
+            app.PmsBookingRoomView.refreshCurrentTab();
         });
     },
     
@@ -315,6 +319,21 @@ app.PmsBookingRoomView = {
         }
         
         var event = thundashop.Ajax.createEvent(null, "subMenuChanged", this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, app.PmsBookingRoomView.tabChanged, data, true, true);
+    },
+    
+    refreshCurrentTab: function() {
+        var currentPmsRoomView =$('.PmsBookingRoomView:visible .menuentry.active');
+        var tab = $(currentPmsRoomView).attr('tab');
+        var data = {
+            selectedTab : tab,
+            roomId : $(currentPmsRoomView).closest('.menuarea').attr('roomId'),
+            id :  $(currentPmsRoomView).closest('.menuarea').attr('bookingEngineId'),    
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "subMenuChanged", currentPmsRoomView, data);
         event['synchron'] = true;
         
         thundashop.Ajax.post(event, app.PmsBookingRoomView.tabChanged, data, true, true);

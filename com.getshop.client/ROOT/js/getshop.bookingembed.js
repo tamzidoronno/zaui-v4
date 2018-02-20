@@ -5,6 +5,12 @@
         getshop_viewmode = options.viewmode;
         getshop_terminalid = options.terminalid;
         localStorage.setItem('getshop_endpoint',options.endpoint);
+
+        $('<link/>', {
+           rel: 'stylesheet',
+           type: 'text/css',
+           href: 'https://www.getshop.com/scripts/booking/bookingstyles.php'
+        }).appendTo('head');
         
         $.ajax({
             "type": "get",
@@ -19,6 +25,14 @@
 }( jQuery ));
 (function ( $ ) {
         $.fn.getshopbookingfront = function( options ) {
+
+        $('<link/>', {
+           rel: 'stylesheet',
+           type: 'text/css',
+           href: 'https://www.getshop.com/scripts/booking/bookingstylesfront.php'
+        }).appendTo('head');
+
+            
         var box = $(this);
         localStorage.setItem('getshop_endpoint',options.endpoint);
         getshop_endpoint = options.endpoint;
@@ -46,12 +60,6 @@ $('<link/>', {
    rel: 'stylesheet',
    type: 'text/css',
    href: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
-}).appendTo('head');
-
-$('<link/>', {
-   rel: 'stylesheet',
-   type: 'text/css',
-   href: 'https://www.getshop.com/scripts/booking/bookingstyles.php'
 }).appendTo('head');
 
 $('<link/>', {

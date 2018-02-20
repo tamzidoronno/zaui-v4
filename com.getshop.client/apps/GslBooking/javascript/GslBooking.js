@@ -1,5 +1,7 @@
-
-var getshop_endpoint = localStorage.getItem('getshop_endpoint');
+getshop_endpoint = "";
+if(localStorage.getItem('getshop_endpoint')) {
+    getshop_endpoint = localStorage.getItem('getshop_endpoint');
+}
 var leftInterval;
 
 function getshop_setBookingTranslation() {
@@ -399,6 +401,10 @@ function getshop_createSticky(sticky) {
         var stopperbox = $('#productoverview_footer');
         var paddingBox = $('.productoverview');
         var stopPos = (stopperbox.offset().top - sticky.height());
+        var positionPaddingTop = 0;
+        if(localStorage.getItem('getshop_topstickyposition')) {
+            positionPaddingTop = parseInt(localStorage.getItem('getshop_topstickyposition'));
+        }
 
         $('.GslBooking #order-sticky').css('width', $('.GslBooking #order-sticky').outerWidth());
         if(!$('.GslBooking #order-sticky').is(':visible')) {
@@ -409,7 +415,7 @@ function getshop_createSticky(sticky) {
             if(win.scrollTop() > pos && win.scrollTop() <= stopPos) {
                 sticky.css({
                     position: 'fixed',
-                    top: 0
+                    top: (0+positionPaddingTop)
                 });
                 paddingBox.css('padding-top', sticky.height()+'px');
             } else {
@@ -779,11 +785,11 @@ function getshop_showOverviewPage() {
             } else {
                 $('.addons_overview').fadeOut('400', function () {
                     $('.overview').fadeIn('400');
-                    $(window).scrollTop(body-padding);
+                    $(window).scrollTop(0);
                 });
             }
         } else {
-            $(window).scrollTop(body-padding);
+            $(window).scrollTop(0);
         }
     });
 }
@@ -1500,7 +1506,7 @@ getshop_WebSocketClient = {
     },
     
     addListener : function(dataObjectName, callback) {
-        getshop_WebSocketClient.getClient();
+        getshop_WebSocketClient.getClient(); 
         var listenObject = {
             dataObjectName : dataObjectName,
             callback: callback

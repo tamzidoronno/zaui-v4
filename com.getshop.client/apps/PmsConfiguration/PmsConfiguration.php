@@ -369,7 +369,8 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 }
                 $config->addonConfiguration->{$addonKey}->includedInBookingItemTypes = $includedRes;
                 $config->addonConfiguration->{$addonKey}->channelManagerAddonText = $_POST['data']['channelManagerAddonText'];
-                
+                $config->addonConfiguration->{$addonKey}->alwaysAddAddon = $_POST['data']['alwaysAddAddon'] == "true";
+               
                 $product = $this->getApi()->getProductManager()->getProduct($addon->productId);
                 $product->isNotRecurring = $_POST['data']['isNotRecurring'] == "true";
                 $this->getApi()->getProductManager()->saveProduct($product);

@@ -1,12 +1,15 @@
 package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
 import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +23,26 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
     StoreManager storeManager;
     
     String endpointTest = "https://eaccountingapi-sandbox.test.vismaonline.com/v2/";
-    String endpointProd = "";
     String authTest = "https://identity-sandbox.test.vismaonline.com/connect/authorize";
-    String authProd = "https://identity.vismaonline.com/connect/authorize";
     String tokenTest = "https://identity-sandbox.test.vismaonline.com/connect/token";
+    String clientIdTest = "getshop";
+    String clientSecretTest = "BhQ2172BnzvSxXIzzViuyIimGTKfnkD9IeyhyZmI5K7NzgQ86m7baOx6WfvEEhHaa4dFv9dDzHuS69";
+    
+    String endpointProd = "";
+    String authProd = "https://identity.vismaonline.com/connect/authorize";
     String tokenProd = "";
+    String clientIdProd = "getshop";
+    String clientSecretProd = "dduj4kGnhy1tgSFXa179YnJAB1atauRDXkYxKDCpUWvSCgWLDFecGkt3bn6GdRv";
+    
+    
     
     String endpoint = "";
     String tokenpoint = "";
     String authpoint = "";
+    String clientId = "";
+    String clientSecret = "";
+    private Date tokenExpires;
+    private String token;
     
     
     public void setupEndpoints() {
@@ -36,10 +50,14 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
             endpoint = endpointProd;
             tokenpoint = tokenProd;
             authpoint = authProd;
+            clientId = clientIdProd;
+            clientSecret = clientSecretProd;
         } else {
             endpoint = endpointTest;
             tokenpoint = tokenTest;
             authpoint = authTest;
+            clientId = clientIdTest;
+            clientSecret = clientSecretTest;
         }
     }
     
@@ -75,17 +93,13 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
     
     @Override
     public HashMap<String, String> getConfigOptions() {
-        setupEndpoints();
-        HashMap<String, String> ret = new HashMap();
-        
-        ret.put("client_id", "Client id");
-        ret.put("client_secret", "Client secret");
+        setupEndpoints(); 
+       HashMap<String, String> ret = new HashMap();
         ret.put("code", "Api code");
-        
         String clientId = getConfig("client_id");
         String webaddr = storeManager.getMyStore().getDefaultWebAddress();
         if(clientId != null && !clientId.isEmpty()) {
-            String url = authpoint+"?client_id=[client_id]&scope=ea:api+offline_access+ea:sales+ea:accounting+ea:purchase&nounce=asdasdasdas&state=10135467&redirect_uri=https://localhost:44300/callback&response_type=code";
+            String url = authpoint+"?client_id="+clientId+"&scope=ea:api+offline_access+ea:sales+ea:accounting+ea:purchase&nounce=asdasdasdas&state=10135467&redirect_uri=https://localhost:44300/callback&response_type=code";
             url = url.replace("[client_id]", clientId);
             ret.put("oAuthButton", url);
         }
@@ -114,6 +128,8 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
             user.externalAccountingId = externalAccountId;
             userManager.saveUser(user);
             return externalAccountId;
+        } else {
+            System.out.println("CREATE USER, NEXT STEP FINALLY");
         }
         
         
@@ -134,37 +150,71 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
             }
             userId = user.externalAccountingId;
         }
-        
     }
-
+    
     private String checkIfUserExistsInVismaEAccounting(Integer accountingId) {
-        try {
-            String token = getToken();
-            String postFix= URLEncoder.encode("$filter=CustomerNumber eq '"+accountingId+"'", "UTF-8");
-            
-            JsonObject res = webManager.htmlGetJson(endpoint+"customers?"+postFix);
-            System.out.println(res);
-        }catch(Exception e) {
-            logPrintException(e);
-            //If error is thrown, assume 404 not found.
-            return null;
-        }
+//        try {
+//            String token = getToken();
+//            String postFix= URLEncoder.encode("$filter=CustomerNumber eq '"+accountingId+"'", "UTF-8");
+//            
+//            String res = webManager.htmlPostBasicAuth(endpoint+"customers?"+postFix, "", true, "UTF-8",token,"Bearer",false,"GET",new HashMap());
+//            System.out.println(res);
+//        }catch(Exception e) {
+//            logPrintException(e);
+//            //If error is thrown, assume 404 not found.
+//            return null;
+//        }
         return null;
     }
 
     private String getToken() {
-        HashMap<String, String> headerData = new HashMap();
-        headerData.put("code", getConfig("code"));
-        headerData.put("grant_type", "authorization_code");
-        headerData.put("redirect_uri", "https://localhost:44300");
-        String auth = getConfig("client_id") + ":" + getConfig("client_secret");
-        try {
-            String result = webManager.htmlPostBasicAuth(tokenpoint, "kvakk", false, "UTF-8", auth, "Bearer", true, "POST", headerData);
-            System.out.println(result);
-        }catch(Exception e) {
-            e.printStackTrace();
+        if(token != null && !token.isEmpty() && new Date().before(tokenExpires)) {
+            return token;
+        }
+        
+        String refreshToken = getConfig("refresh_token");
+        if(refreshToken != null && !refreshToken.isEmpty()) {
+            refreshToken();
+            return token;
+        } else {
+            HashMap<String, String> headerData = new HashMap();
+            String toPost = "code="+getConfig("code") + "&grant_type=authorization_code&redirect_uri=https://localhost:44300/callback";
+            String auth = clientId + ":" + clientSecret;
+            try {
+                String result = webManager.htmlPostBasicAuth(tokenpoint, toPost, false, "UTF-8", auth, "Basic", true, "POST", headerData);
+                Gson gson = new Gson();
+                VismaEaccountingTokenResponse res = gson.fromJson(result, VismaEaccountingTokenResponse.class);
+
+                token = res.access_token;
+                setConfig("refresh_token", res.refresh_token);
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.SECOND, res.expires_in);
+                tokenExpires = cal.getTime();
+                return token;
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
         }
         return "";
+    }
+
+    private void refreshToken() {
+            HashMap<String, String> headerData = new HashMap();
+            String toPost = "code="+getConfig("code") + "&grant_type=refresh_token&refresh_token="+getConfig("refresh_token")+"&redirect_uri=https://localhost:44300/callback";
+            String auth = clientId + ":" + clientSecret;
+            try {
+                String result = webManager.htmlPostBasicAuth(tokenpoint, toPost, false, "UTF-8", auth, "Basic", true, "POST", headerData);
+                Gson gson = new Gson();
+                VismaEaccountingTokenResponse res = gson.fromJson(result, VismaEaccountingTokenResponse.class);
+
+                token = res.access_token;
+                setConfig("refresh_token", res.refresh_token);
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.SECOND, res.expires_in);
+                tokenExpires = cal.getTime();
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
     }
     
 }

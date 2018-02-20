@@ -1,0 +1,18 @@
+<body>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://www.getshop.com/js/getshop.bookingembed.js"></script>
+    </head>
+
+    <div style="margin:auto; width: 1200px; padding: 30px;">
+        <h1>Booking process</h1>
+        <div id='bookingprocessfront'></div>
+    </div>
+    
+    <script>
+    $( "#bookingprocessfront" ).getshopbookingfront({
+        "endpoint" : "https://www.getshop.com",
+        "nextpage" : "embedtest.html"
+    });
+    </script>
+</body>

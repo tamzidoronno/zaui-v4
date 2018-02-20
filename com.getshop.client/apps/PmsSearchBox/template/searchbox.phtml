@@ -78,7 +78,7 @@ if($filter->groupByBooking) {
             <?php
             foreach($bookingItems as $type) {
                 $checked = "";
-                if(in_array($type->id, $filter->typeFilter)) {
+                if(in_array($type->id, (array)$filter->typeFilter)) {
                     $checked = "CHECKED";
                 }
                 echo "<div class='type'><input type='checkbox' style='float:left;' gsname='typeselection_".$type->id."' $checked>" . $type->name . "</div>";
@@ -86,10 +86,29 @@ if($filter->groupByBooking) {
             ?>
         </span>
     </div>
+    
+    <div class="gs_headerbox">
+        <div>
+            <?
+            echo $this->__f("Other");
+            $customers = sizeof($filter->customers);
+            $codes = sizeof($filter->codes);
+            $addons = sizeof($filter->addons);
+            $counter = "($customers,$codes,$addons)";
+            ?>
+        </div>
+        <div style='padding-top:4px;color:blue; cursor:pointer;' class='otherselectiontoggle'><span class='selectioncount'><?php echo $counter; ?></span></div>
+        <span class='otherselection'>
+            <?php
+            $this->displayOtherSelection();
+            ?>
+        </span>
+    </div>
 
     <div class="gs_headerbox">
-        <span class='shop_button' gstype='submit'>Apply filter</span>
+        <span class='shop_button applyfilterbutton'>Apply filter</span>
         <span class='shop_button opensimplesearch' style='margin-left: 5px;'>Open simple search</span>
+        <span class='shop_button clearfilter' style='margin-left: 5px;'>Clear filter</span>
     </div>
 </span>
 

@@ -1,6 +1,7 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
 * PayOnDelivery fee;-;Gebyr henting 
+* This is a self service check in machine. After booking you will recieve a sms and email with the code for your room.;-;Dette er en selvbetjeningsterminal hvor du kan booke deg inn. Book ditt opphold nå og motta en kode til døren.
 0-100 km/h;-;0-100 km/h
 10 digits required;-;10 nummer påkrevd
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
@@ -33,6 +34,7 @@ All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 All products;-;Alle produkter
 All the time;-;Hele tiden
+Already booked?;-;Allerede booket?
 Already signed up;-;Allerede registrert
 Amount to pay;-;Beløp å betale
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
@@ -56,6 +58,8 @@ Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
 Body title;-;Tittel
 Book;-;Bestill
+Book a stay;-;Book et opphold
+Book your stay now;-;Book ditt opphold nå
 Book your stay today;-;Book ditt opphold idag
 Book your storage room today;-;Book din bod idag
 Booking;-;Booking
@@ -68,6 +72,7 @@ Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
 Can not create account, it already exists.;-;Kan ikke opprette konto, denne kontoen er alerede registrert.
+Cancel booking;-;Avbryt bookingen
 Cancel event;-;Kanseler event
 Cancel order;-;Kanselert ordre
 Cancelation possibility;-;Mulighet for avbestilling
@@ -434,6 +439,7 @@ Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
+Print reciept;-;Print kvittering
 Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
 Private person;-;Privatperson
 Processing order, please wait;-;Behandler bestilling, vennligst vent.
@@ -626,6 +632,7 @@ User with this email already exists.;-;En bruker med denne eposten eksisterer al
 Username / Email;-;Brukernavn / Epost
 Username already taken;-;Brukernavnet er allerede registrert.
 Users in your company;-;Brukere i firmaet
+Visibility;-;Synlighet
 Waiting for payment;-;Venter på betaling
 Waiting list;-;Venteliste
 Waitinglist;-;Venteliste
@@ -638,6 +645,7 @@ Wednesday;-;Onsdag
 Week;-;Uke
 Weekly;-;Ukentlig
 Welcome to my page;-;Velkommen til min side
+Welcome, book your stay here!;-;Velkommen, book ditt opphold her!
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
 What kind of parallax effect?;-;Hvilken type parallax effekt?
 What type of date is this;-;Hvilken type dato er dette

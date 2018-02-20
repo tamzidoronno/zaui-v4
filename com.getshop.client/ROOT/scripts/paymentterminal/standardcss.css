@@ -1,0 +1,16 @@
+body { margin: 0px; }
+.paymentterminal { background-color:#9dd2ef; color:#fff; text-align: center; height: 100%; overflow: auto; }
+.paymentterminal h1 { font-size : 80px; margin: 10px; }
+.paymentterminal .nextpagebutton {border: solid 1px #bbb; background-color:#4391dc; padding: 20px; font-size: 50px; width: 485px;  display:inline-block; margin-right: 10px; margin-left: 10px; cursor:pointer; color:#fff;}
+.paymentterminal .explaintext { color:#000; padding: 20px; }
+.paymentterminal .logorow .logo {
+    display:inline-block;
+    width: 500px; height: 100px;
+    margin-top: -10px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('https://www.getshop.com/displayImage.php?id=3e2e2471-3911-4827-b268-578246282137&crop=true&x=19&x2=290&y=20&y2=119&rotation=0&width=226'); 
+}
+.paymentterminal .cancelbutton { border: solid 1px #bbb; background-color:#4391dc; padding: 20px; float:left; font-size: 15px; width: 70px;  display:inline-block; cursor:pointer; color:#fff; }
+.header { background-color:#9dd2ef; }
+.header a { color:#fff; }

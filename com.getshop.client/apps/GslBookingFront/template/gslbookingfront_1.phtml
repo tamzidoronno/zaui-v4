@@ -39,10 +39,13 @@
 </div>
 <div style="clear:both;"></div>
 
-<link rel="stylesheet" type="text/css" media="all" href="/js/daterangepicker/daterangepicker.css" />
-<script type="text/javascript" src="/js/daterangepicker/moment.js"></script>
-<script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
 <script>
-    getshop_setBookingTranslationFront();
-    getshop_setDatePickerFront();
+   $.getScript( "https://www.getshop.com/scripts/booking/bookingscriptsfront.php", function( data, textStatus, jqxhr ) {
+    $.getScript( "https://www.getshop.com/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
+        $.getScript( "https://www.getshop.com/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
+            getshop_setBookingTranslationFront();
+            getshop_setDatePickerFront();
+        });
+    });
+});
 </script>

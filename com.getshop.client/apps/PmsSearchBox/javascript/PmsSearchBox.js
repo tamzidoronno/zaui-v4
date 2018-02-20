@@ -1,11 +1,103 @@
 app.PmsSearchBox = {
     init : function() {
         $(document).on('click','.PmsSearchBox .advancesearchtoggle',app.PmsSearchBox.toggleAdvanceSearch);
+        $(document).on('click','.PmsSearchBox .otherselectiontoggle',app.PmsSearchBox.otherToggle);
         $(document).on('click','.PmsSearchBox .opensimplesearch',app.PmsSearchBox.toggleAdvanceSearch);
         $(document).on('click','.PmsSearchBox .advancesearchicon',app.PmsSearchBox.toggleAdvanceSearchButton);
         $(document).on('click','.PmsSearchBox .typeselectiontoggle',app.PmsSearchBox.toggleRoomSelection);
         $(document).on('click','.PmsSearchBox .roomtypeselection .fa-close',app.PmsSearchBox.toggleRoomSelection);
         $(document).on('click','.PmsSearchBox .roomtypeselection .type input[type="checkbox"]',app.PmsSearchBox.updateRoomTypeCounter);
+        $(document).on('click','.PmsSearchBox .searchcustomer',app.PmsSearchBox.searchForCustomers);
+        $(document).on('click','.PmsSearchBox .addusertofilter',app.PmsSearchBox.addUserToFilter);
+        $(document).on('click','.PmsSearchBox .addaddon',app.PmsSearchBox.addAddon);
+        $(document).on('click','.PmsSearchBox .addtofilterrow .fa-trash-o',app.PmsSearchBox.removeRow);
+        $(document).on('click','.PmsSearchBox .applyfilterbutton',app.PmsSearchBox.applyFilter);
+        $(document).on('click','.PmsSearchBox .addonstofilter',app.PmsSearchBox.updateOtherFilterCounter);
+        $(document).on('click','.PmsSearchBox .clearfilter',app.PmsSearchBox.clearFilter);
+    },
+    clearFilter : function() {
+        thundashop.Ajax.simplePost($(this),"clearFilter", {});
+    },
+    applyFilter : function() {
+        var form = $(this).closest("[gstype='form']");
+        var args = thundashop.framework.createGsArgs(form);
+        
+        var customers = [];
+        $('.customersadded .addtofilterrow').each(function(res) {
+           customers.push($(this).attr("userid")); 
+        });
+        args['customers'] = customers;
+        
+        var codes = [];
+        $('.codesadded .addtofilterrow').each(function(res) {
+           codes.push($(this).attr("code")); 
+        });
+        args['codes'] = codes;
+
+        var addons = [];
+        $('.addonstofilter').each(function() {
+            if($(this).is(':checked')) {
+                addons.push($(this).attr('productid'));
+            }
+        });
+        
+        args['addons'] = addons;
+        
+        var event = thundashop.Ajax.createEvent('',form.attr('method'), form, args);
+        thundashop.Ajax.post(event);
+    },
+    
+    otherToggle : function() {
+        $('.PmsSearchBox .otherselection').toggle();
+    },
+    addAddon : function() {
+        var input = $('.addaddonvalue');
+        $('.codesadded').append('<div class="addtofilterrow" code="'+input.val()+'"><i class="fa fa-trash-o"></i>'+input.val()+"</div>");
+        input.val('');
+        app.PmsSearchBox.updateOtherFilterCounter();
+    },
+    addUserToFilter : function(event) {
+        var target = $(event.target);
+        var box = $(this);
+        if(target.hasClass('fa-trash-o')) {
+            return;
+        }
+        $('.customersadded').append(box.clone());
+        box.remove();
+        app.PmsSearchBox.updateOtherFilterCounter();
+    },
+    
+    
+    updateOtherFilterCounter : function() {
+        var customerCount = 0;
+        var codes = 0;
+        var addons = 0;
+        $('.customersadded .addtofilterrow').each(function(res) { customerCount++; });
+        $('.codesadded .addtofilterrow').each(function(res) { codes++; });
+        $('.addonstofilter').each(function() {
+            if($(this).is(':checked')) {
+                addons++;
+            }
+        });
+        
+        var text = "(" + customerCount + "," + codes + "," + addons + ")";
+        $('.otherselectiontoggle .selectioncount').html(text);
+    },
+    removeRow : function() {
+        $(this).closest('.addtofilterrow').remove();
+        app.PmsSearchBox.updateOtherFilterCounter();
+    },
+    searchForCustomers : function() {
+        var input = $('.searchcustomervalue');
+        var toSearch = input.val();
+        input.val('');
+        
+        var event = thundashop.Ajax.createEvent('','searchCustomers', input, {
+            "name" : toSearch
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.customersearcresultpanel').html(res);
+        });
     },
     updateRoomTypeCounter : function() {
         var counter = 0;

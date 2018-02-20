@@ -3,6 +3,7 @@
     "failedlogon" : "Beklager, feil brukernavn eller passord",
     "rooms" : "Rom",
     "room" : "Rom",
+    "nights" : "netter",
     "sameasguest" : "Samme som gjest",
     "totalprice" : "Total pris",
     "sureremoveroom" : "Er du sikker på at du ønsker å slette dette rommet?",

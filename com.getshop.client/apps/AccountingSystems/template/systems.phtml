@@ -53,6 +53,8 @@ $activatedSystems = array_unique(array($selectedSystemInvoices, $selectedSystemO
             foreach ($configOptions as $key => $val) {
                 $oldVal = @$values->{$key};
                 if($key == "oAuthButton") {
+//                    $val = str_replace("[redirecturl]", $_SERVER['SERVER_NAME'], $val);
+                    $val = str_replace("[redirecturl]", "https://localhost:44300", $val);
                     echo "<span class='shop_button' onclick='window.open(\"".$val."\");'>Connect to accounting system</span>";
                 } else {
                     echo "<div>";

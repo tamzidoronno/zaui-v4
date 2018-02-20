@@ -28,7 +28,9 @@ public interface IPmsBookingProcess {
     public GuestAddonsSummary setGuestInformation(BookerInformation bookerInfo);
     public GuestAddonsSummary changeDateOnRoom(StartBooking arg);
     public BookingResult completeBooking();
+    public BookingResult completeBookingForTerminal(CompleteBookingInput input);
     public BookingConfig getConfiguration();
     public GuestAddonsSummary logOn(BookingLogonData logindata);
     public GuestAddonsSummary logOut();
+    public void printReciept(BookingPrintRecieptData data);
 }

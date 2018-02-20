@@ -87,6 +87,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean inWorkSpace = false;
     public boolean addedToWaitingList = false;
     public boolean overbooking = false;
+    public Date lastBookingChangedItem;
     
     @Transient
     public Boolean isUsingNewBookingEngine = null;
@@ -118,6 +119,15 @@ public class PmsBookingRooms implements Serializable {
         invoicedFrom = null;
         invoicedTo = null;
         booking = null;
+    }
+    
+    public boolean recentlyChangedBookingItem() {
+        if(lastBookingChangedItem == null) {
+            return false;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -5);
+        return lastBookingChangedItem.after(cal.getTime());
     }
     
     public static String getOffsetKey(Calendar calStart, Integer priceType) {

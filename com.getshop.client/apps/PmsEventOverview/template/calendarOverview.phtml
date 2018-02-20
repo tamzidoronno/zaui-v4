@@ -3,53 +3,61 @@
 $rooms = $this->getAllRoomsSorted();
 $types = $this->getAllTypes();
 $type = $this->getDayType();
+
+$nextPage = $this->__w("summary") . "_" . $this->getSelectedName();
+echo "<input type='hidden' class='continue' value='$nextPage'>";
 ?>
 
-<div class="calendarSettings">
-    <i class="fa fa-th active"></i>
-    <i class="fa fa-list-ul"></i>
-    <i class="fa fa-cog"></i>
+<div id="piechart" style="width: 600px; height: 300px;"></div>
+<span class="timeselectionpanel">
+    Fra <span class="startTime"></span> til <span class="endTime"></span>
+</span>
+<div style="height: 40px;">
+    <div class="calendarSettings">
+        <i class="fa fa-th active"></i>
+        <!--<i class="fa fa-list-ul"></i>-->
+        <i class="fa fa-cog"></i>
+    </div>
 </div>
 
 <div id="calendarConfiguration">
-    <span class="configheader"><?php echo $this->__w("Visibility"); ?></span>
-    <ul>
-        <li class="toggleborders"><?php echo $this->__w("Borders"); ?></li>
-        <li class="toggleoccupied active"><?php echo $this->__w("Occupied"); ?></li>
-        <li class="togglenotconfirmed active"><?php echo $this->__w("Not confirmed"); ?></li>
-        <li class="toggleopenforpublic active"><?php echo $this->__w("Open for public"); ?></li>
-        <li class="toggleavailable active"><?php echo $this->__w("Available"); ?></li>
-        <li class="togglenotavailable"><?php echo $this->__w("Not available"); ?></li>
-    </ul>
-    
+    <div>
+        <span class="configheader"><?php echo $this->__w("Visibility"); ?></span>
+        <ul>
+            <li class="toggleoccupied active"><?php echo $this->__w("Occupied"); ?></li>
+            <li class="togglenotconfirmed active"><?php echo $this->__w("Not confirmed"); ?></li>
+            <li class="toggleopenforpublic active"><?php echo $this->__w("Open for public"); ?></li>
+            <li class="toggleavailable active"><?php echo $this->__w("Available"); ?></li>
+            <li class="togglenotavailable active"><?php echo $this->__w("Not available"); ?></li>
+        </ul>
+    </div>
 </div>
 
 <div class='calendartopheader'>
     <div class='dayorweekdiv'>
         <span class="stateinformtaion">
-            <div class='statedesrow occupied' style="background-color: transparent !important;"><span class='statedescbox occupied'></span> <?php echo $this->__w("Occupied"); ?></div>
-            <div class='statedesrow notconfirmed' style="background-color: transparent !important;"><span class='statedescbox notconfirmed'></span> <?php echo $this->__w("Not confirmed"); ?></div>
-            <div class='statedesrow openforpublic' style="background-color: transparent !important;"><span class='statedescbox openforpublic'></span> <?php echo $this->__w("Open for public"); ?></div>
-            <div class='statedesrow available' style="background-color: transparent !important;"><span class='statedescbox available'></span> <?php echo $this->__w("Available"); ?></div>
-            <div class='statedesrow not_available hidden' style="background-color: transparent !important;"><span class='statedescbox not_available'></span> <?php echo $this->__w("Not available"); ?></div>
+            <div class='statedesrow occupied'><span class='statedescbox occupied'></span> <?php echo $this->__w("Occupied"); ?></div>
+            <div class='statedesrow notconfirmed'><span class='statedescbox notconfirmed'></span> <?php echo $this->__w("Not confirmed"); ?></div>
+            <div class='statedesrow openforpublic'><span class='statedescbox openforpublic'></span> <?php echo $this->__w("Open for public"); ?></div>
+            <div class='statedesrow available'><span class='statedescbox available' style="cursor: default;"></span> <?php echo $this->__w("Available"); ?></div>
+            <div class='statedesrow not_available'><span class='statedescbox not_available'></span> <?php echo $this->__w("Not available"); ?></div>
         </span>
         <div class='dayorweekdivbuttons'>
             <span style='padding-right: 30px; cursor:pointer;float:left;' gstype="clicksubmit" method="setPrevious" gsname="type" gsvalue="day">
-                <i class='fa fa-caret-left'></i> <? echo $this->__w("Previous")." ".$this->__w("month"); ?>
+                <i class='fa fa-caret-left' style="pointer-events: none;"></i> <? echo $this->__w("Previous")." ".$this->__w("month"); ?>
             </span>
-            <?php echo $this->__w(date("F Y", $this->getSelectedDay()));?>
+            <?php echo $this->__w(date("F", $this->getSelectedDay())) . date(" Y", $this->getSelectedDay());?>
             <span style='padding-left: 30px; cursor:pointer;float:right;' gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
-                <? echo $this->__w("Next")." ".$this->__w("month"); ?> <i class='fa fa-caret-right'></i>
+                <? echo $this->__w("Next")." ".$this->__w("month"); ?> <i class='fa fa-caret-right' style="pointer-events: none;"></i>
             </span>
         </div>
     </div>
 </div>
 <?
 
-
 echo "<div class='roomrow'>";
-echo "<span style='float:none;' class='roomdescouter roomdesc_$type'></span>";
-echo "<span class='timecontainer timecontainer_$type'>";
+echo "<span style='float:none;' class='roomdescouter'></span>";
+echo "<span class='weekcontainer'>";
 
 $start = $this->getStartOfSelectedWeek();
 for($i = 0; $i < 7; $i++) {
@@ -60,7 +68,6 @@ for($i = 0; $i < 7; $i++) {
 echo "<div style='clear:both;'></div>";
 echo "</span>";
 echo "</div>";
-
 
 $dates = $this->getDates($this->getSelectedYear());
 $month = $this->getSelectedMonth();
@@ -77,23 +84,31 @@ foreach($types as $room) {
 }
 
 
+
+$counter = 0;
+$totalAvailable = 0;
+ob_start();
 foreach($monthDates as $week => $days) {
-//    echo "<div class='roomrow itemlist' itemid='".$typeToUse->id."'>";
-    
-    echo "<div class='roomrow itemlist'>";
-    
-    echo "<span class='roomdescouter roomdesc_$type'>";
+    echo "<div class='roomrow'>";
+    echo "<span class='roomdescouter'>";
     echo "<div class='roomdesc'>". $this->__w("Week"). " ".$week."</div>";
     foreach ($types as $room){
+        if(!$room->visibleForBooking && !$this->isEditorMode()) {
+            continue;
+        }
+        if($room->addon) {
+            continue;
+        }
+        echo "<div class='roomdescitem'>";
         $imgId = $this->getImageFromPage($room->pageId);
 //        echo "<img src='displayImage.php?id=$imgId'>";
         echo "<img src='https://frivillighetenshus.getshop.com/displayImage.php?id=$imgId'>";
-        echo $room->name ."<br>";
+        echo $room->name;
+        echo "</div>";
     }
 
     echo "</span>";
-
-    echo "<span class='timecontainer timecontainer_$type'>";
+    echo "<span class='timecontainer'>";
     for($i = 1; $i <= 7; $i++) {
         $day="";
         if(isset($days[$i])) {
@@ -101,25 +116,106 @@ foreach($monthDates as $week => $days) {
         }
 
         echo "<div class='weekdaycontainer'>";
+//        need to add check for month
+//        if($day < date("d-m")){
+//            echo "gray";
+//        } else {
+//            echo "green";
+//        }
         if($day) {
             echo "<div class='dayindicator'>".date("d", strtotime($day));
-            echo "<span class='daytime'style='left:8px;'>".date("H:i", $this->getStartTime($start)) ."</span>";
-            echo "<span class='daytime'style='right:8px;'>".date("H:i", $this->getEndTime($start)) ."</span>";
+            echo "<div class='daytime'>";
+            for($z = 8; $z < 23; $z++) {
+                echo "<span style='width:6.250%;display:inline-block;'><span style='100%'>".$z.":00</span></span>";
+            }
             echo "</div>";
-            
+            echo "</div>";
             foreach($types as $room) {
-                $this->printBlocks(strtotime($day), $type, $room->id);
+                if(!$room->visibleForBooking && !$this->isEditorMode()) {
+                    continue;
+                }
+                if($room->addon) {
+                    continue;
+                }
+                echo "<div class='dayrow' itemid='".$room->id."'>";
+                $taken = $this->printBlocks(strtotime($day), $room->id);
+                $counter += $taken;
+                
+                $available = $this->getAllAvailableHours(strtotime($day), $room->id);
+                $totalAvailable += $available;
+                echo "</div>";
             }
         }
         echo "</div>";
     }
     echo "</span>";
     echo "</div>";
- }
-     
-$nextPage = $this->__w("summary") . "_" . $this->getSelectedName();
-echo "<input type='hidden' class='continue' value='$nextPage'>";
+    
+}
 
+$toPrint = ob_get_contents();
+ob_end_clean();
+
+
+//echo "Occupied: ". $counter/2 . "hours. Available: ". $totalAvailable/2 . "hours.";
+//echo "<hr>";
+echo $toPrint;
 ?>
-<input type='hidden' class='continue_button disabled continue' value="<?php echo $nextPage; ?>">
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+        var state = getStateNumbers();
+        var occupiedText = $('.statedesrow.occupied').text();
+        var notconfirmedText = $('.statedesrow.notconfirmed').text();
+        var openforpublicText = $('.statedesrow.openforpublic').text();
+        var availableText = $('.statedesrow.available').text();
+        var notavailableText = $('.statedesrow.not_available').text();
+        var data = google.visualization.arrayToDataTable([
+            ['State', 'Hours per month'],
+            [occupiedText,        state['occupied']],
+            [notconfirmedText,   state['notconfirmed']],
+            [openforpublicText, state['openforpublic']],
+            [availableText,       state['available']],
+            [notavailableText,     state['notavailable']]
+        ]);
+
+        var options = {
+            colors: ['#db97ae','#e8b975','#bfc1f4','#e5f7ed','#ededed'],
+            pieSliceTextStyle : {color: '#555'},
+            pieStartAngle: 100
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+    }
+    
+    function getStateNumbers() {
+        var occupied = 0;
+        var notconfirmed = 0;
+        var openforpublic = 0;
+        var available = 0;
+        var notavailable = 0;
+        var overview = $('.PmsEventOverview');
+        
+        overview.find('.timeblock.occupied').each(function(){occupied++;});
+        overview.find('.timeblock.notconfirmed').each(function(){notconfirmed++;});
+        overview.find('.timeblock.openforpublic').each(function(){openforpublic++;});
+        overview.find('.timeblock.available').each(function(){available++;});
+        overview.find('.timeblock.not_available').each(function(){notavailable++;});
+        
+        var state = {
+            occupied : occupied/2,
+            notconfirmed : notconfirmed/2,
+            openforpublic : openforpublic/2,
+            available : available/2,
+            notavailable : notavailable/2
+        };
+        
+        return state;
+    }
+</script>

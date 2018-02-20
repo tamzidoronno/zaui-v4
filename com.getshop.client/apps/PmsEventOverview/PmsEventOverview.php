@@ -22,7 +22,7 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
     public function getName() {
         return "PmsEventOverview";
     }
-
+    
     public function render() {
         if (!$this->getSelectedName()) {
             echo "Select booking engine. <br>";
@@ -113,21 +113,14 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
     }
     
     
-    public function printBlocks($day, $type, $room) {
+    public function printBlocks($day, $room) {
+        $taken = 0;
         $size = "";
         $start = $this->getStartTime($day);
         $hours = $this->getHoursAtDay();
-
         $startTime = $start;
-        if($type == "day") {
-            $minutes = 30;
-            $numberOfSlots = $hours * 2;
-        } else {
-            $size = "small";
-            $minutes = 60;
-            $numberOfSlots = $hours;
-        }
-        
+        $minutes = 30;
+        $numberOfSlots = $hours * 2;
         $end = $startTime + ($numberOfSlots * $minutes * 60);
         
         $lines = $this->getApi()->getPmsManager()->getAvailabilityForType($this->getSelectedName(), $room, $this->convertToJavaDate($start), $this->convertToJavaDate($end), $minutes);
@@ -138,8 +131,12 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
             if(!$lines[$i-1]) {
                 if(!$this->isAdminMode()) {
-                    $state = "not_available hidden";
+                    $state = "not_available";
                 }
+            }
+            
+            if($state == "occupied" || $state == "notconfirmed" || $state == "occupied public") {
+                $taken++;          
             }
             
             $title = date("H:i", $startTime)." - ".date("H:i", $endTime);
@@ -155,8 +152,7 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
             
             $title = str_replace("\"", "&QUOT;", $title);
             $title = str_replace("'", "&apos;", $title);
-            $rid = "";
-            echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId' instanceid='$instanceId' roomid='".$this->currentRoomId."'>";
+            echo "<span class='$loadBookingOnClick outerblock' style='width: $width%' bookingid='$bookingId' instanceid='$instanceId' roomid='".$this->currentRoomId."'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "
                     . "title='".$title."' "
@@ -165,6 +161,31 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
             echo "</span>";
             $startTime = $endTime;
         }
+        return $taken;
+    }
+    
+    public function getAllAvailableHours($day, $room) {
+        $available = 0;
+        $hours = $this->getHoursAtDay();
+        $start = $this->getStartTime($day);
+        $startTime = $start;
+        $numberOfSlots = $hours * 2;
+        $minutes = 30;
+        $end = $startTime + ($numberOfSlots * $minutes * 60);
+        $lines = $this->getApi()->getPmsManager()->getAvailabilityForType($this->getSelectedName(), $room, $this->convertToJavaDate($start), $this->convertToJavaDate($end), $minutes);
+        
+        for($i = 1; $i <= $numberOfSlots; $i++) {
+            $endTime = $start + (60*$minutes*$i);
+            $state = $this->getBlockState($room, $day, $startTime, $endTime);
+            if(!$lines[$i-1]) {
+                $state = "not_available hidden";
+            }
+            if($state == "available") {
+                $available++;
+            }
+            $startTime = $endTime;
+        }
+        return $available;
     }
 
     public function setDayType() {
@@ -419,7 +440,7 @@ class PmsEventOverview extends \WebshopApplication implements \Application {
                 if($booking->confirmed) {
                     $this->currentBooking = $booking->id;
                     if($booking->isAddedToEventList){
-                        $state = "openforpublic";
+                        $state = "occupied public";
                     } else {
                         $state = "occupied";
                     }

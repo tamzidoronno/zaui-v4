@@ -133,7 +133,7 @@ Error      : #de5353; red
     cursor:pointer;
 }
 
-.GslBooking .gslfront_1 input[type="date"] { -webkit-appearance: none; } /*Removes iphone input styling*/
+.GslBooking .gslfront_1 input[type="date"] { -webkit-appearance: none;-moz-appearance: none; } /*Removes iphone input styling*/
 .GslBooking .gslfront_1 input[type="checkbox"] ,.GslBooking .gslfront_1 input[type="radio"] {box-shadow: 0 0 0 !important;}
 .GslBooking .gslfront_1 input[type="checkbox"]:hover, .GslBooking .gslfront_1 input[type="radio"]:hover{box-shadow: 0 0 0 !important;}
 .GslBooking .gslfront_1 input:hover{box-shadow: inset 0px 0px 2px #ddd;}
@@ -347,6 +347,7 @@ Error      : #de5353; red
     box-shadow: inset 0 0 0 1px #ececec;
     background-color:#fff;
     -webkit-appearance: none;
+    -moz-appearance: none;
     cursor: pointer;}
 .GslBooking .gslfront_1 .productentry_body{padding: 10px 10px 30px 10px;}
 .GslBooking .gslfront_1 .productentry_total{width:100%;text-align: center;font-size:18px;padding:14px;border-top: 1px solid #ddd;}

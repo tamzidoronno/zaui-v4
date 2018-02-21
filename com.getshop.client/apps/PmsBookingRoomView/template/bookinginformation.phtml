@@ -42,7 +42,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
     <div class="guestinfo">
         <div class='insideheader'>
             <? echo $this->__f("Guests"); ?>
-            <div class="gs_shop_small_icon " title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
+            <div class="gs_shop_small_icon add_more_guests" title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
         </div>
         <div class="guest_row header">
             <div class="guest_col guest_col1">
@@ -64,6 +64,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
         
         <div  class="guest_row row_template" style='display: none'>
             <div class="guest_col guest_col1">
+                <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1" value=""/>
                 <input temp_gsname="guestinfo_name" class="gsniceinput1" value=""/>
             </div>
 
@@ -75,7 +76,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                 <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value=""/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
             </div>
             
-            <div class="guest_col guest_col4">      
+            <div class="guest_col guest_col4">
                 <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
             </div>
         </div>
@@ -94,6 +95,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                     
 
                     <div class="guest_col guest_col1">
+                        <input type="hidden" gsname="guestinfo_<? echo $i; ?>_guestid" class="gsniceinput1 prefix" value="<? echo $guest->guestId; ?>"/>
                         <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" value="<? echo $guest->name; ?>"/>
                     </div>
 
@@ -104,7 +106,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                     <div class="guest_col guest_col3">
                         <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $guest->prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
                     </div>
-                    
+
                     <div class="guest_col guest_col4">      
                         <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
                     </div>

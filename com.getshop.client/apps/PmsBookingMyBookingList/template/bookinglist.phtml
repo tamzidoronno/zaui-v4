@@ -65,92 +65,96 @@ foreach($bookings as $booking) {
             continue;
         }
         $room->pmsBookingId = $booking->id;
-        $allRooms[$startTime] = $room;
+        if(!isset($allRooms[$startTime])) {
+            $allRooms[$startTime] = array();
+        }
+        $allRooms[$startTime][] = $room;
     }
 }
 
 ksort($allRooms);
 
-foreach($allRooms as $room) {
-    echo "<tr bookingid='".$room->pmsBookingId."' roomid='".$room->pmsBookingRoomId ."'>";
-    echo "<td width='30'>";
-    if($this->isEditorMode() || $this->isAdminMode()) {
-        echo "<i class='fa fa-trash-o deleteroom'></i> ";
-    }
-    if($config->bookingProfile != "subscription") {
-        echo "<i class='fa fa-edit editroom' style='cursor:pointer;'></i>";
-    }
-    echo "</td>";
-    echo "<td>";
-    if(isset($items[$room->bookingItemId])) {
-        echo $items[$room->bookingItemId]->bookingItemName;
-    }
-    echo "</td>";
-    echo "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
-    if($rules->includeGuestData) {
-        echo "<td>";
-        foreach($room->guests as $guest) {
-            echo $guest->name . "<bR>";
+foreach($allRooms as $roomArray) {
+    foreach($roomArray as $room) {
+        echo "<tr bookingid='".$room->pmsBookingId."' roomid='".$room->pmsBookingRoomId ."'>";
+        echo "<td width='30'>";
+        if($this->isEditorMode() || $this->isAdminMode()) {
+            echo "<i class='fa fa-trash-o deleteroom'></i> ";
+        }
+        if($config->bookingProfile != "subscription") {
+            echo "<i class='fa fa-edit editroom' style='cursor:pointer;'></i>";
         }
         echo "</td>";
         echo "<td>";
-        foreach($room->guests as $guest) {
-            echo $guest->phone . "<bR>";
+        if(isset($items[$room->bookingItemId])) {
+            echo $items[$room->bookingItemId]->bookingItemName;
         }
         echo "</td>";
-        echo "<td>";
-        foreach($room->guests as $guest) {
-            echo $guest->email . "<bR>";
-        }
-        echo "</td>";
-    }
-    echo "<td>" . $types[$room->bookingItemTypeId]->name . "</td>";
-    if($config->requirePayments) {
-        echo "<td>".$room->price ."</td>";
-        if($room->invoicedTo) {
-            echo "<td>".date("d.m.Y", strtotime($room->invoicedTo)) ."</td>";
-        } else {
-            echo "<td>".$this->__w("Not invoiced yet")."</td>";
-        }
-        echo "<td>";
-        if($this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedName(), $room->pmsBookingRoomId)) {
-            echo "<i class='fa fa-check'></i>";
-        } else {
-            echo "Missing:<bR>";
-            $toPay = $this->getApi()->getPmsInvoiceManager()->getOrdersForRoomToPay($this->getSelectedName(), $room->pmsBookingRoomId);
-            foreach($toPay as $incId) {
-                echo $incId . "<br>";
+        echo "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
+        if($rules->includeGuestData) {
+            echo "<td>";
+            foreach($room->guests as $guest) {
+                echo $guest->name . "<bR>";
             }
+            echo "</td>";
+            echo "<td>";
+            foreach($room->guests as $guest) {
+                echo $guest->phone . "<bR>";
+            }
+            echo "</td>";
+            echo "<td>";
+            foreach($room->guests as $guest) {
+                echo $guest->email . "<bR>";
+            }
+            echo "</td>";
         }
-        echo "</td>";
-    }
-
-    if($this->getConfigurationSetting("can_end_stay") == "true") {
-        if(strtotime($room->date->end) > (time() + (1000*60*24*90))) {
-            $canEnd= true;
-            $type = $types[$room->bookingItemTypeId];
-            $product = $this->getApi()->getProductManager()->getProduct($type->productId);
-
-
-            if($product->minPeriode > 0) {
-                $total = time() - strtotime($room->date->start);
-                if($total < $product->minPeriode) {
-                    $canEnd = false;
+        echo "<td>" . $types[$room->bookingItemTypeId]->name . "</td>";
+        if($config->requirePayments) {
+            echo "<td>".$room->price ."</td>";
+            if($room->invoicedTo) {
+                echo "<td>".date("d.m.Y", strtotime($room->invoicedTo)) ."</td>";
+            } else {
+                echo "<td>".$this->__w("Not invoiced yet")."</td>";
+            }
+            echo "<td>";
+            if($this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedName(), $room->pmsBookingRoomId)) {
+                echo "<i class='fa fa-check'></i>";
+            } else {
+                echo "Missing:<bR>";
+                $toPay = $this->getApi()->getPmsInvoiceManager()->getOrdersForRoomToPay($this->getSelectedName(), $room->pmsBookingRoomId);
+                foreach($toPay as $incId) {
+                    echo $incId . "<br>";
                 }
             }
-
-            if($canEnd) {
-                echo "<td width='10' class='runEndStay'>End</td>";
-            } else {
-                echo "<td width='10'>Not expired yet</td>";
-            }
-
-        } else {
-            echo "<td width='10'>Ended</td>";
+            echo "</td>";
         }
-    }
 
-    echo "</tr>";
+        if($this->getConfigurationSetting("can_end_stay") == "true") {
+            if(strtotime($room->date->end) > (time() + (1000*60*24*90))) {
+                $canEnd= true;
+                $type = $types[$room->bookingItemTypeId];
+                $product = $this->getApi()->getProductManager()->getProduct($type->productId);
+
+
+                if($product->minPeriode > 0) {
+                    $total = time() - strtotime($room->date->start);
+                    if($total < $product->minPeriode) {
+                        $canEnd = false;
+                    }
+                }
+
+                if($canEnd) {
+                    echo "<td width='10' class='runEndStay'>End</td>";
+                } else {
+                    echo "<td width='10'>Not expired yet</td>";
+                }
+
+            } else {
+                echo "<td width='10'>Ended</td>";
+            }
+        }
+        echo "</tr>";
+    }
 }
 echo "</table>";
 

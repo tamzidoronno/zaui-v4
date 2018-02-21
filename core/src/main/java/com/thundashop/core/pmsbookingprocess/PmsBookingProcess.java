@@ -87,7 +87,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
-        
+        Gson gson = new Gson();
+        logPrint(gson.toJson(arg));
         if(arg.getGuests() < arg.rooms) {
             return null;
         }

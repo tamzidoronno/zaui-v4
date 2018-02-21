@@ -32,6 +32,15 @@ public class MecaFleet extends DataCommon {
     public String pageId = "";
     public List<String> cars = new ArrayList();
     
-    // frequency_none, frequency_daily, frequency_weekly
-    public String naggingInterval = "frequency_weekly";
+    // frequency_monthly, frequency_quartly, frequency_halfayear
+    public String naggingInterval = "frequency_monthly";
+
+    void resetNaggingLevel() {
+        if (naggingInterval.equals("frequency_monthly") || naggingInterval.equals("frequency_quartly") || naggingInterval.equals("frequency_halfayear")) {
+            return;
+        }
+        
+        naggingInterval = "frequency_monthly";
+    
+    }
 }

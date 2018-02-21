@@ -10,18 +10,19 @@ app.SalesPointCartCheckout = {
     },
     
     cartChanged: function() {
+        debugger;
         var data = {};
         
         data.cartItems = [];
         data.roomId = $(this).closest('.SalesPointCartCheckout').attr('roomid');
         
         if (data.roomId) {
-            $('.SalesPointCartCheckout[roomid="'+data.roomId+'"] .cartitem.row').each(function() {
+            $(this).closest('.SalesPointCartCheckout[roomid="'+data.roomId+'"]').find('.cartitem.row').each(function() {
                 var cartItem = app.SalesPointCartCheckout.createCartItem(this);
                 data.cartItems.push(cartItem);
             });
         } else {
-            $('.SalesPointCartCheckout .cartitem.row').each(function() {
+            $(this).closest('.SalesPointCartCheckout').find('.cartitem.row').each(function() {
                 var cartItem = app.SalesPointCartCheckout.createCartItem(this);
                 data.cartItems.push(cartItem);
             });
@@ -30,13 +31,15 @@ app.SalesPointCartCheckout = {
         var event = thundashop.Ajax.createEvent(null, "updateCartAndPrice", this, data);
         event['synchron'] = true;
         
+        var me = $(this);
         thundashop.Ajax.post(event, function(res, args) {
             if (args && typeof(args.roomId) !== "undefined")  {
                 $('.SalesPointCartCheckout[roomid="'+args.roomId+'"] .summary span').html(res);
             } else {
-                $('.SalesPointCartCheckout .summary span').html(res);
+                me.closest('.SalesPointCartCheckout').find('.summary span').html(res);
             }
             
+            app.PmsBookingRoomView.refreshCurrentTab();
             
         }, data);
         

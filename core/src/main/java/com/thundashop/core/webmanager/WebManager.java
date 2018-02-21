@@ -95,9 +95,9 @@ public class WebManager extends ManagerBase implements IWebManager {
             if(base64EncodeAuth) {
                 encoded = Base64.encodeBase64String(auth.getBytes());
             }
-            connection.setRequestProperty("Authorization",basic+ " " + encoded);
+            String authorization = basic+ " " + encoded;
+            connection.setRequestProperty("Authorization",authorization);
         }
-        
         for(String key : headerData.keySet()) {
             connection.setRequestProperty(key, headerData.get(key));
         }

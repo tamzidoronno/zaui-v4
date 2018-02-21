@@ -117,6 +117,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     @Transient
     private Calendar cal1;
     
+    public boolean isUnderConstruction = false;
+    
     public Order jsonClone() {
         Gson gson = new Gson();
         String gsonOrder = gson.toJson(this);

@@ -47,7 +47,6 @@ import com.thundashop.core.getshoplocksystem.LockGroup;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
-import com.thundashop.core.ordermanager.OrderManagerEvents;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmseventmanager.PmsEventFilter;
@@ -94,7 +93,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, OrderManagerEvents {
+public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private HashMap<String, PmsBooking> bookings = new HashMap(); 
     private HashMap<String, String> bookingIdMap = new HashMap(); 
@@ -204,7 +203,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
         this.orderManager = orderManager;
-        this.orderManager.addListener(this);
     }
     
     public HashMap<String, PmsCareTaker> getCareTakerTasks() {
@@ -7474,20 +7472,47 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager, 
     public void orderCreated(String orderId) {
         Order order = orderManager.getOrderSecure(orderId);
         
+        String reference = null;
         if (order != null && order.cart != null && order.cart.reference != null && !order.cart.reference.isEmpty()) {
-            PmsBooking booking = getBookingUnsecure(order.cart.reference);
-            if (booking == null) {
-                return;
-            }
-            
-            if (booking.orderIds == null) {
-                booking.orderIds = new ArrayList();
-            }
-            if (!booking.orderIds.contains(order.id)) {
-                addOrderToBooking(booking, order.id);
-                saveBooking(booking);
-            }
-        }   
+            reference = order.cart.reference;
+        }
+        
+        addOrderBasedOnReference(reference, order);
+        
+        if (order.cart.references != null) {
+            order.cart.references.stream()
+                    .forEach(ref -> {
+                        addOrderBasedOnReference(ref, order);
+                    });
+        }
+    }
+    
+    public void addOrderBasedOnReference(String reference, Order order) {
+        if (reference == null || reference.isEmpty()) {
+            return;
+        }
+        
+        if (order.isUnderConstruction) {
+            return;
+        }
+        
+        PmsBooking booking = getBookingUnsecure(reference);
+        
+        if (booking == null) {
+            booking = getBookingFromRoom(reference);
+        }
+        
+        if (booking == null) {
+            return;
+        }
+
+        if (booking.orderIds == null) {
+            booking.orderIds = new ArrayList();
+        }
+        if (!booking.orderIds.contains(order.id)) {
+            addOrderToBooking(booking, order.id);
+            saveBooking(booking);
+        }
     }
 
     @Override

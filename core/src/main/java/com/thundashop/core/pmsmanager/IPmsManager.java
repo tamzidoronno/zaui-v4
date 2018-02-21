@@ -480,5 +480,7 @@ public interface IPmsManager {
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
 
-    
+
+    public void orderCreated(String orderId);
+    public void orderChanged(String orderId);    
 }

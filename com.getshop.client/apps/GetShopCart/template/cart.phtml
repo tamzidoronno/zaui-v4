@@ -1,49 +1,7 @@
 <?
 if ($showingPaymentProcess) {
 ?>
-<div class="payment_options payment_window">
-    <div class="h3"><? echo $this->__f("Payment options"); ?></div>
-    <div class="options">
-        <div class="gs_shop_small_icon payment_option_choice active" payment="paymentproces">
-            <div class="activeline"></div>
-            <i class="fa fa-check"></i> <? echo $this->__f("Add to process for payment"); ?>
-        </div>    
-        
-        <?
-        foreach ($paymentApps as $app) {
-            ?>
-            <div class="gs_shop_small_icon payment_option_choice" style="font-size: 14px;" payment="<? echo $app->id; ?>">
-                <div class="activeline"></div>
-                <i class="fa fa-check"></i> <? echo $app->appName; ?>
-            </div>        
-        <?
-        }
-        ?>
-    </div>
-    
-    <div class="option_content">
-        
-        <div class="option_content_div payment_content active" payment="paymentproces">
-            You can use this option to merge and split payments. Add as many rooms and items you wish to process, then process them all at one to create one single payment etc.
 
-            <br/>
-            <br/><div class="shop_button" synchron="true" gs_callback="app.PmsSearchBooking.ordersTabChanged" id="<? echo $booking->id; ?>" roomid="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" gsclick="addCurrentCartForPaymentProcess" >Start payment process</div>  
-        </div>
-        
-        <?
-        foreach ($paymentApps as $paymentApp) {
-            $instance = $this->getFactory()->getApplicationPool()->createInstace($paymentApp);
-            ?>
-            <div class="option_content_div payment_content" payment="<? echo $paymentApp->id; ?>" appName="<? echo $paymentApp->appName; ?>">
-                <?
-                $instance->renderPayment($options);
-                ?>
-            </div>
-            <?
-        }
-        ?>
-    </div>
-</div>
     
 <?
 } else {

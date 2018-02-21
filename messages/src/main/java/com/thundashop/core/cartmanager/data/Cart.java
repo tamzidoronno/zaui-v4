@@ -27,6 +27,14 @@ public class Cart extends DataCommon {
     public boolean isShippingFree = false;
     public TaxGroup shippingTax = null;
     public String reference = "";
+    
+    /**
+     * Used if there is multiple references for a order.
+     * Example, it could be two different bookings that this cart
+     * reflects.
+     */
+    public List<String> references = new ArrayList();
+    
     public String createByGetShopModule = "";
     
     public Address address;
@@ -284,5 +292,10 @@ public class Cart extends DataCommon {
         
         return value == 0D;
                 
+    }
+
+    public void replaceItem(CartItem item) {
+        items.removeIf(i -> i.getCartItemId().equals(item.getCartItemId()));
+        items.add(item);
     }
 }

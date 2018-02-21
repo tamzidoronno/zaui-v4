@@ -16,3 +16,17 @@
     });
     </script>
 </body>
+
+
+<h1>Booking process</h1>
+<div id='bookingprocess'></div>
+<script>
+jQuery(function($){
+  $.getScript( "https://www.getshop.com/js/getshop.bookingembed.js", function( data, textStatus, jqxhr ) {   
+    $( "#bookingprocess" ).getshopbookingfront({
+        "endpoint" : "https://f2harstad.getshop.com",
+        "nextpage" : "/bookingflyt/"
+    });
+  });
+});
+</script>

@@ -5,21 +5,7 @@ $pmsSelectedRoom = $this->getSelectedRoom();
 $booking = $this->getBookingEngineBooking();
 
 $user = $this->getUserForBooking();
-$paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 
-$options = new stdClass();
-$options->cellphone = $user->cellPhone;
-$options->prefix = $user->prefix;
-$options->message = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $pmsBooking->id, "booking_sendpaymentlink");
-$options->canCreateOrderAfterStay = true;
-$options->postMethod = "doPaymentNormal";
-$options->gscallback = "app.PmsSearchBooking.toggleTabClicked";
-$options->guestEmail = $user->emailAddress;
-$options->invoicenote = $pmsBooking->invoiceNote;
-
-$options->extraArgs = array();
-$options->extraArgs['roomid'] = $pmsSelectedRoom->pmsBookingRoomId;
-$options->extraArgs['id'] = $booking->id;
 ?>
 
 <div class="topbuttons">
@@ -55,16 +41,18 @@ $options->extraArgs['id'] = $booking->id;
 <div class='insideheader'><? echo $this->__f("Need to be paid"); ?></div>
 <?
 $showingPaymentProcess = $this->startPaymentProcess();
+$alreadyAdded = $this->isRoomAddedToCart();
 
 if ($showingPaymentProcess) {
 ?>
 <div class='booking_cart_buttons_area'>
-    <div class='shop_button addselecteditemstocart'><? echo $this->__f("Add selected items to cart"); ?></div>
+    <div class='shop_button addselecteditemstocart'><? echo $this->__f("Add room to cart"); ?></div>
 </div>
     
 <?
 }
 ?>
+
 
 <div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
 <?

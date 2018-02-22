@@ -149,7 +149,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     }
     
     public function setNewPrices() {
-        $pricingObject = new \core_pmsmanager_PmsPricing();
+        $pricingObject = $this->getPrices();
         if(isset($_POST['data']['prices'])) {
             $prices = $_POST['data']['prices'];
             $pricingObject->dailyPrices = $prices;

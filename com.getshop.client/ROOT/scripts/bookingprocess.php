@@ -5,6 +5,8 @@ $factory = IocContainer::getFactorySingelton();
 
 $storeId = $factory->getStore()->id;
 $domain = "default";
+
+//lofoten.booking.fasthotels.no, havna.booking.fasthotels.no, svolver.booking.fasthotels.no
 if($storeId == "e625c003-9754-4d66-8bab-d1452f4d5562" || $storeId == "a152b5bd-80b6-417b-b661-c7c522ccf305" || $storeId == "3b647c76-9b41-4c2a-80db-d96212af0789") {
     $domain = "demo";
 }

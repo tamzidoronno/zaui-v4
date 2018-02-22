@@ -261,7 +261,7 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
         }
         
         
-        if (count($modules) > 1 && $isLoggedInEditorOrAdministrator) {
+        if (count($modules) > 1 && $isLoggedInEditorOrAdministrator || (count($modules) == 1 && $modules[0]->id != "cms")) {
             $activeModule = null;
             echo "<div class='gs_framework_modules'>";
 

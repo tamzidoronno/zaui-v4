@@ -87,6 +87,23 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
         </div>
         
         <div class="stayinformation PmsAvailability <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'>
+            <br>
+            <div class="isnotactive">
+                <div class="kaipal infobox">
+                    <div class="image talking"></div>
+                    <div class="textbox">
+                        <div class="text">
+                            <?
+                            echo $this->__f("The stay area contains all information about the stay. The check in / check out date, what room and room type the guests has been assigned and the daily prices related to it.");
+                            echo "<br>";
+                            echo "<br>";
+                            echo "Floating rooms: A room is in a floating state if it has not been assigned to a specific room yet. When it has not been assigned a specific room it has only been assinged to a room category. At the day of the check in I will automatically try to find the best possible fit for the guest. If it is checking in early I will prioritize this guest and give it a clean room this day. I would recommend putting guests on floating rooms and let me assign them the best possible fit on the day of the arrival. This also allows me to optimize the availability and sell as much room as possible.";
+                            ?>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <?
             $this->includefile("movebooking");
             ?>

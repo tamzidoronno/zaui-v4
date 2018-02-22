@@ -12,6 +12,21 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 ?>
 
 <div class="bookinginformation">
+    <bR>
+    <div class="isnotactive">
+        <div class="kaipal infobox">
+            <div class="image talking"></div>
+            <div class="textbox">
+                <div class="header"><? echo $this->__f("Booking information"); ?></div>
+                <div class="text">
+                    <?
+                    echo $this->__f("Hi there, this area keeps track of the information about the booking itself. Who the booker for this room was, when it was booked, and the guests who are attached to this room.");
+                    ?>    
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class='guestinfobox'>
         <div class='insideheader'><? echo $this->__f("General information"); ?></div>
         <div class="row odd">

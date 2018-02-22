@@ -6,6 +6,22 @@ $guests = $room->guests;
 $booking = $this->getPmsBooking();
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 ?>
+
+<br>
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        <div class="image talking"></div>
+        <div class="textbox">
+            <div class="text">
+                <?
+                echo $this->__f("Do you want me to inform the guests about something? Check the guest you would like to send a message to, enter the message you want me to send and press send as sms / email or both.");
+                ?>    
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <table>
     <tr>
         <td width='50%' valign='top'>

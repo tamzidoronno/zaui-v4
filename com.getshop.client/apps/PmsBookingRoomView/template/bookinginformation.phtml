@@ -22,8 +22,22 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                     <?
                     echo $this->__f("Hi there, this area keeps track of the information about the booking itself. Who the booker for this room was, when it was booked, and the guests who are attached to this room.");
                     ?>    
+                
+                    <div class="buttonarea">
+                        <div class="buttonareaheader"><? echo $this->__f("What would you like me to do?"); ?></div>
+                        <span class="shop_button"><i class='fa fa-edit'></i> Update current booker</span>
+                        <span class="shop_button"><i class='fa fa-user'></i> Change booker</span>
+                        <?php
+                        if(!$pmsSelectedRoom->deleted) {
+                            ?>
+                            <span class="shop_button" style='background-color:red;' gstype='clicksubmit' gsname="id" gsvalue="" method="deleteRoom"><i class='icon-trashcan'></i> Delete this room</span>
+                        <?php
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
+            
         </div>
     </div>
     
@@ -130,6 +144,5 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
             }
         ?>
     </div>
-    
     
 </div>

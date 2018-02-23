@@ -7,10 +7,22 @@ $bookingEngineBooking = $this->getBookingEngineBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 
 $stayPrice = $this->getStayPrice();
+$addonsPrice = $this->getAddonsCost(false);
+$addonsPriceToDisplay = $this->getAddonsCost(true);
+$totalOnRoom = $stayPrice + $addonsPrice;
+
 if(!$stayPrice) {$stayPrice = "";} else {$stayPrice  = " - " . $stayPrice;}
 
-$addonsPrice = $this->getAddonsCost();
-if(!$addonsPrice) {$addonsPrice = "";} else {$addonsPrice  = " - " . $addonsPrice;}
+if(!$addonsPriceToDisplay) {$addonsPriceToDisplay = "";} else {$addonsPriceToDisplay  = " - " . $addonsPriceToDisplay;}
+
+
+
+$numberOfRooms = 0;
+foreach($pmsBooking->rooms as $room) {
+    if(!$room->deleted) {
+        $numberOfRooms++;
+    }
+}
 
 if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
     $changes = $this->getDifferenceInRoom();
@@ -24,6 +36,33 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     echo "</span>";
     echo "</div>";
 }
+
+if($numberOfRooms > 1) {
+    echo "<div class='isgroupinformation'>";
+    echo '<a href="/?page=groupbooking&bookingEngineId='.$this->bookingEngineBooking->id.'">';
+    echo "This is room is part of a group of " . $numberOfRooms . " rooms, <a href='/?page=groupbooking&bookingEngineId=".$this->bookingEngineBooking->id."' style='color:blue;'>open group</a>.";
+    echo "</div>";
+}
+
+if($room->deleted) {
+    echo "<div class='isdeletedinformation'>";
+    echo "This room has been cancelled / deleted, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to undelete it</a>.";
+    echo "</div>";
+}
+
+$totalOrdersOnRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
+
+$totalPaymentsText = "";
+if($totalOrdersOnRoom) {
+    $diff = $totalOnRoom - $totalOrdersOnRoom;
+    $totalPaymentsText = " - " . $totalOrdersOnRoom;
+} else {
+    $diff = $totalOnRoom;
+}
+$warningPayments = "";
+if($diff < -1 || $diff > 1) {
+    $warningPayments = "<span class='fa fa-warning' style='padding:0px;margin:0px; color:red;' title='You have unhandled payments'></span> ";
+}
 ?>
 
 <div gstype='form' method="updateBooking" class="bookingoverview_content_row">
@@ -31,11 +70,11 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     <div class="menuarea" roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" bookingEngineId="<? echo $bookingEngineBooking->id; ?>">
         <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Booking"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay") . $stayPrice; ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . $addonsPrice; ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . " " . $addonsPriceToDisplay; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa icon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <span><? echo $warningPayments . "" . $this->__f("Payments") . " " . $totalPaymentsText; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Tickets"); ?></span></div>
     </div>
@@ -108,11 +147,36 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
             $this->includefile("movebooking");
             ?>
         </div>
-        
-        <div class="bottommenuarea">
-            <a href="/?page=groupbooking&bookingEngineId=<? echo $this->bookingEngineBooking->id; ?>">
-                <div gstype="submit" class="shop_button" gs_local_update_only="true"><i class="fa fa-chain"></i> <? echo $this->__f("Open group"); ?></div>
-            </a>
-        </div>
     </div>
 </div>
+<?php
+
+if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
+    $changes = $this->getDifferenceInRoom();
+    echo "<div class='changespanel'></div>";
+    echo "<div class='unsavedchangeswarning'><i class='fa fa-info-circle'></i> You have unsaved changes for this room (".$changes['totalchanges'].").";
+    echo "<span style='position:absolute; right:5px; top: 5px;'>";
+    echo "<span class='shop_button' style='margin-right: 5px;background-color:red;' gstype='clicksubmit' gsname='id' gsvalue='123' method='discardChanges'><i class='fa fa-trash-o'></i> Discard changes</span>";
+    echo "<span class='shop_button seechangesbutton' style='margin-right: 5px;'>See changes</span>";
+    echo "<span class='shop_button savechangesonroom' style='background-color:green; margin-right: 5px;'>Save</span>";
+    echo "<span class='shop_button' style='background-color:green;'>Save&Pay</span>";
+    echo "</span>";
+    echo "</div>";
+}
+
+if($warningPayments) {
+    ?>
+<script>
+    if(typeof(warnaboutnopaymentsflashinterval) !== "undefined") {
+        clearInterval(warnaboutnopaymentsflashinterval);
+    }
+    
+    $('.fa-warning').fadeOut();$('.fa-warning').fadeIn();
+    warnaboutnopaymentsflashinterval = setInterval(function() {
+        $('.fa-warning').fadeOut();$('.fa-warning').fadeIn();
+    }, "2000");
+
+</script>
+<?php
+}
+?>

@@ -59,6 +59,12 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
             clientId = clientIdTest;
             clientSecret = clientSecretTest;
         }
+        
+        token = getConfig("current_token");
+        if(getConfig("token_expire") != null && !getConfig("token_expire").isEmpty()) {
+            tokenExpires = new Date();
+            tokenExpires.setTime(new Long(getConfig("token_expire")));
+        }
     }
     
     @Override
@@ -130,11 +136,9 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
             return externalAccountId;
         } else {
             System.out.println("CREATE USER, NEXT STEP FINALLY");
+            String res = sendUserToVismaEaccounting(user);
+            return res;
         }
-        
-        
-        
-        return null;
     }
 
     private void transferOrder(Order order) {
@@ -145,7 +149,6 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
         } else {
             User user = getUserFromOrder(order);
             if(user == null) {
-                addToLog("Could not find user for order:" + order.incrementOrderId + ", we are probably not able to create it.");
                 return;
             }
             userId = user.externalAccountingId;
@@ -153,17 +156,17 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
     }
     
     private String checkIfUserExistsInVismaEAccounting(Integer accountingId) {
-//        try {
-//            String token = getToken();
-//            String postFix= URLEncoder.encode("$filter=CustomerNumber eq '"+accountingId+"'", "UTF-8");
-//            
-//            String res = webManager.htmlPostBasicAuth(endpoint+"customers?"+postFix, "", true, "UTF-8",token,"Bearer",false,"GET",new HashMap());
-//            System.out.println(res);
-//        }catch(Exception e) {
-//            logPrintException(e);
-//            //If error is thrown, assume 404 not found.
-//            return null;
-//        }
+        try {
+            String token = getToken();
+            String postFix= URLEncoder.encode("$filter=CustomerNumber eq '"+accountingId+"'", "UTF-8");
+            
+            String res = webManager.htmlPostBasicAuth(endpoint+"customers?"+postFix, "", true, "UTF-8",token,"Bearer",false,"GET",new HashMap());
+            System.out.println(res);
+        }catch(Exception e) {
+            logPrintException(e);
+            //If error is thrown, assume 404 not found.
+            return null;
+        }
         return null;
     }
 
@@ -186,10 +189,12 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
                 VismaEaccountingTokenResponse res = gson.fromJson(result, VismaEaccountingTokenResponse.class);
 
                 token = res.access_token;
-                setConfig("refresh_token", res.refresh_token);
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.SECOND, res.expires_in);
                 tokenExpires = cal.getTime();
+                setConfig("refresh_token", res.refresh_token);
+                setConfig("current_token", token);
+                setConfig("token_expire", tokenExpires.getTime() + "");
                 return token;
             }catch(Exception e) {
                 e.printStackTrace();
@@ -212,9 +217,29 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.SECOND, res.expires_in);
                 tokenExpires = cal.getTime();
+                setConfig("refresh_token", res.refresh_token);
+                setConfig("current_token", token);
+                setConfig("token_expire", tokenExpires.getTime() + "");
             }catch(Exception e) {
                 e.printStackTrace();
             }
+    }
+
+    private String sendUserToVismaEaccounting(User user) {
+        VismaeaccountingCustomer customer = new VismaeaccountingCustomer();
+        customer.setUser(user);
+        
+        Gson gson = new Gson();
+        HashMap<String, String> headerData = new HashMap();
+        String toPost = gson.toJson(customer);
+        try {
+            String result = webManager.htmlPostBasicAuth(endpoint+"/customers", toPost, true, "UTF-8", token,"Bearer", false, "POST", headerData);
+            System.out.println(result);
+        }catch(Exception e) {
+            addToLog(webManager.getLatestErrorMessage());
+            addToLog("Regarding user:" + user.fullName + " userid: " + user.customerId);
+        }
+        return "";
     }
     
 }

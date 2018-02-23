@@ -154,7 +154,17 @@ if(isset($_POST['username'])) {
 }
 
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
-    echo "<script>document.location = '/'</script>";
+    $modules = $factory->getApi()->getPageManager()->getModules();
+    if(sizeof($modules) > 1) {
+        echo "<center><h1>Select a module</h1></center>";
+        foreach($modules as $module) {
+            echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW' style='text-decoration:none;'>";
+            echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" .$module->fontAwesome . "'></span> " . $module->name . "</div>";
+        }
+    } else {
+        $module = $modules[0];
+        echo "<script>document.location = '/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW'</script>";
+    }
 }
 ?>
 <script>

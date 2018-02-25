@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 25, 2018, 2:14:13 PM
+    Author     : ktonder
+*/
+.PmsBookingRoomView .tabcontent {
+    margin-top: 30px;
+}
+
+.PmsBookingRoomView .tabcontent[orders_sub_tab] {
+    display: none;
+}
+
+.PmsBookingRoomView .tabcontent.active[orders_sub_tab] {
+    display: block;
+}

@@ -4,6 +4,7 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .closebutton', this.closePreview);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .continue', this.continueToBooking);
         $(document).on('click', '.PmsBookingRoomView .menuarea .menuentry', this.menuClicked);
+        $(document).on('click', '.PmsBookingRoomView .order_tab_menu', this.menuOrdersClicked);
         $(document).on('click', '.PmsBookingRoomView .editaddon', this.editAddonView);
         $(document).on('click', '.PmsBookingRoomView .bookinginformation .remove_guest', this.removeGuest);
         $(document).on('click', '.PmsBookingRoomView .bookinginformation .add_more_guests', this.addGuest);
@@ -23,9 +24,34 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .savechangesonroom', this.saveChangesOnRoom);
     },
     
+    menuOrdersClicked: function() {
+        var tab  = $(this).attr('orders_sub_tab');
+        var roomId = $(this).closest('.bookingoverview_content_row').find('[gsname="roomId"]').val();
+        
+        app.PmsBookingRoomView.activateOrdersSubTab(tab, roomId);
+        sessionStorage.setItem("selected_sub_order_tab_"+roomId, tab);
+    },
+    
+    activateSelectedTabSubOrders: function(roomId) {
+        var tab = sessionStorage.getItem("selected_sub_order_tab_"+roomId);
+        
+        if (!tab) {
+            tab = "simple";
+        } 
+        
+        app.PmsBookingRoomView.activateOrdersSubTab(tab, roomId);
+    },
+    
+    activateOrdersSubTab: function(tab, roomId) {
+        var div = $('.PmsBookingRoomView .bookingoverview_content_row [gsname="roomId"][value="'+roomId+'"]:first').closest('.PmsBookingRoomView');
+        div.find('.tabcontent').removeClass('active');
+        div.find('.tabcontent[orders_sub_tab="'+tab+'"]').addClass('active');
+    },
+    
     saveChangesOnRoom : function() {
         thundashop.Ajax.simplePost($(this),"saveRoom", {});
     },
+    
     updateGuestInformation : function() {
         thundashop.Ajax.ajaxFile = "cached.php";
         var guests = [];
@@ -319,6 +345,10 @@ app.PmsBookingRoomView = {
     },
    
     menuClicked: function() {
+        if (!$(this).closest('.app').hasClass('PmsBookingRoomView')) {
+            return;
+        }
+        
         thundashop.Ajax.ajaxFile = "cached.php";
         
         var tab = $(this).attr('tab');

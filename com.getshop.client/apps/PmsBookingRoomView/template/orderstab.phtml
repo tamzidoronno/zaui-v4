@@ -7,6 +7,23 @@ $booking = $this->getBookingEngineBooking();
 
 $user = $this->getUserForBooking();
 
+if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image sad"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Unsaved changes"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("Before you can start handling payments you will have to save all the changes done first. Please save the payments by pressing the button above.");
+                ?>    
+            </div>
+        </div>
+    </div>
+    <?
+    return;
+}
+
 ?>
 
 <div class="isnotactive">

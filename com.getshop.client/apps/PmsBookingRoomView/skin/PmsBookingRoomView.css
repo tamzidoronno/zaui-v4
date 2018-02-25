@@ -5,10 +5,15 @@
     margin-bottom: 50px;
 }
 
+.PmsBookingRoomView .isgroupinformation { border-bottom: solid 1px; padding: 5px; background-color:#efefef; }
+.PmsBookingRoomView .isdeletedinformation { background-color:red; color:#fff; padding: 5px; padding-left: 10px; }
+
 .PmsBookingRoomView .bookingoverview_content_row .bottommenuarea .shop_button {
     font-size: 15px;
     margin-right: 20px;
 }
+
+.PmsBookingRoomView .pricecontainerbox { padding-right: 10px; }
 
 .PmsBookingRoomView .priceselectionhelp { display:none; font-size: 12px; font-style: italic; color:green; padding-top: 10px; }
 .PmsBookingRoomView .masseditpricesbox {

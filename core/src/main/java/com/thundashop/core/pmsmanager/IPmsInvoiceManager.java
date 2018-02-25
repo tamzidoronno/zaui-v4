@@ -93,6 +93,9 @@ public interface IPmsInvoiceManager {
     public List<Order> fetchDibsOrdersToAutoPay();
     
     @Administrator
+    public Double getTotalOnOrdersForRoom(String pmsRoomId, boolean inctaxes);
+    
+    @Administrator
     public void recalculateAllBookings(String password);
     
 }

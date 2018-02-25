@@ -14,6 +14,16 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function deleteRoom() {
+        $room = $this->getSelectedRoom();
+        $booking = $this->getPmsBooking();
+        $error = $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(),$booking->id, $room->pmsBookingRoomId);
+        if($error) {
+            $this->errors[] = $error;
+        }
+        $this->setData(true);
+    }
+    
     public function updateGuestData() {
         $room = $this->getSelectedRoom();
         $i = 0;
@@ -789,6 +799,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         die();
     }
 
+    public function updateDayPrices() {
+        $room = $this->getSelectedRoom();
+        $room->priceMatrix = $_POST['data'];
+        $this->updateRoom($room);
+    }
+    
     public function updateRoom($room, $avoidChanges = false) {
         if(!$avoidChanges) {
             $room->hasBeenUpdated = true;
@@ -816,11 +832,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->updateRoom($room);
     }
 
-    public function getAddonsCost() {
+    public function getAddonsCost($withIncludedInRoomPrice) {
         $this->setData();
         $room = $this->getSelectedRoom();
         $totalAmount = 0.0;
         foreach($room->addons as $addon) {
+            if($addon->isIncludedInRoomPrice && !$withIncludedInRoomPrice) {
+                continue;
+            }
             $totalAmount += $addon->price * $addon->count;
         }
         return $totalAmount;

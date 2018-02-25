@@ -12,6 +12,35 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 ?>
 
 <div class="bookinginformation">
+    <bR>
+    <div class="isnotactive">
+        <div class="kaipal infobox">
+            <div class="image talking"></div>
+            <div class="textbox">
+                <div class="header"><? echo $this->__f("Booking information"); ?></div>
+                <div class="text">
+                    <?
+                    echo $this->__f("Hi there, this area keeps track of the information about the booking itself. Who the booker for this room was, when it was booked, and the guests who are attached to this room.");
+                    ?>    
+                
+                    <div class="buttonarea">
+                        <div class="buttonareaheader"><? echo $this->__f("What would you like me to do?"); ?></div>
+                        <span class="shop_button"><i class='fa fa-edit'></i> Update current booker</span>
+                        <span class="shop_button"><i class='fa fa-user'></i> Change booker</span>
+                        <?php
+                        if(!$pmsSelectedRoom->deleted) {
+                            ?>
+                            <span class="shop_button" style='background-color:red;' gstype='clicksubmit' gsname="id" gsvalue="" method="deleteRoom"><i class='icon-trashcan'></i> Delete this room</span>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
     <div class='guestinfobox'>
         <div class='insideheader'><? echo $this->__f("General information"); ?></div>
         <div class="row odd">
@@ -115,6 +144,5 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
             }
         ?>
     </div>
-    
     
 </div>

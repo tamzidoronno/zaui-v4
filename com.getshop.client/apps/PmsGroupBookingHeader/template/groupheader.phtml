@@ -7,42 +7,54 @@ $user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
 $guestcount = 0;
 
 foreach($pmsBooking->rooms as $room) {
-    $guestcount += count($room->guests);
+    $guestcount += $room->numberOfGuests;
 }
 ?>
 
-<div>
-    <div class="top_box">
+<div style='text-align: center;'>
+    <h1 style='border-bottom: solid 1px; padding-bottom: 10px; margin-bottom: 40px;'>
+    <?php echo "Grouped booking for " . $user->fullName; ?>
+    </h1>
+
+    <div class="top_box selected" areatype="owner">
+        <div class="title">Owner</div>
+        <i class="fa fa-user"></i>
+    </div>
+    <div class="top_box" areatype="guests">
         <div class="title">Guests</div>
-        <i class="fa fa-user"></i> <? echo $guestcount; ?>
+        <i class="fa fa-users"></i> <? echo $guestcount; ?>
     </div>
     
-    <div class="top_box">
+    <div class="top_box" areatype="rooms">
         <div class="title">Rooms</div>
         <i class="fa fa-building"></i> <? echo $rooms; ?>
     </div>
     
-    <div class="top_box">
-        <div class="title">Orders</div>
+    <div class="top_box" areatype="payments">
+        <div class="title displayorders">Payments</div>
         <i class="fa fa-shopping-bag"></i> <? echo $rooms; ?>
+    </div>
+    
+    <div class="top_box" areatype="stay">
+        <div class="title displayorders">Stay</div>
+        <i class="fa fa-bed"></i>
     </div>
 </div>
 
-<div class="booker_main_user">
-    <div class="title"><? echo $this->__("BOOKER OWNER"); ?></div>
-    <div class="row">
-        <div class="col col1"><? echo $this->__("Name"); ?></div>
-        <div class="col col2"><? echo $user->fullName; ?></div>
-    </div>
-    
-    <div class="row">
-        <div class="col col1"><? echo $this->__("Email"); ?></div>
-        <div class="col col2"><? echo $user->emailAddress ?></div>
-    </div>
-    
-    <div class="row">
-        <div class="col col1"><? echo $this->__("Phone number"); ?></div>
-        <div class="col col2"><? echo $user->cellPhone ?></div>
-    </div>
-    
+<div class="booker_main_user selected" areatype="owner">
+    <?php $this->includefile("groupbookerowner"); ?>
 </div>
+<div class="booker_main_user" areatype="guests"><center><i class='fa fa-spin fa-spinner'></i></center></div>
+<div class="booker_main_user" areatype="rooms"><center><i class='fa fa-spin fa-spinner'></i></center></div>
+<div class="booker_main_user" areatype="payments"><center><i class='fa fa-spin fa-spinner'></i></center></div>
+<div class="booker_main_user" areatype="stay"><center><i class='fa fa-spin fa-spinner'></i></center></div>
+<div class="booker_main_user" areatype="addroom"><center><i class='fa fa-spin fa-spinner'></i></center></div>
+<div class="booker_main_user" areatype="removeroom"><center><i class='fa fa-spin fa-spinner'></i></center></div>
+
+<script>
+<?php
+if(isset($_SESSION['currentgroupbookedarea'])) {
+    echo "$(\".top_box[areatype='".$_SESSION['currentgroupbookedarea']."']\").click()";
+}
+?>
+</script>

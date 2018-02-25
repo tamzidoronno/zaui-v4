@@ -1,0 +1,40 @@
+<?php
+/* @var $this ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+?>
+
+<div class='manipulateroomoptions'>
+        <span class='shop_button disabled' type='delete'><i class='fa fa-trash-o'></i> Delete selected rooms</span>
+        <span class='shop_button disabled' type='singlepaymentsnosend'><i class='fa fa-dollar'></i> Create payments for each room</span>
+        <span class='shop_button disabled' type='singlepayments'><i class='fa fa-dollar'></i> + <i class='fa fa-phone'></i> Create payments for each room and send payment link</span>
+        <span class='shop_button disabled' type='split'><i class='fa fa-users'></i> Split into a new group</span>
+        <i class='fa fa-caret-down'></i>
+</div>
+<span class='shop_button' style='float:right;'>Add another room</span>
+
+
+<div class='addroombox' style='display:none;'>
+    <h3>Add another room to this group</h3>
+    <input type='txt' class='gsniceinput1'> 
+    <input type='txt' class='gsniceinput1'> 
+    <select class='gsniceselect1' style='height:38px;'>
+        <?php
+        foreach($types as $type) {
+            echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
+        }
+        ?>
+    </select>
+    <span class='shop_button'>Add room</span>
+</div>
+
+<?php
+$filter = new core_pmsmanager_PmsBookingFilter();
+$roomView = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+$roomView->renderApplication(true,$this);
+?>
+
+<style>
+    .manipulateroomoptions { display:inline-block; padding: 2px; border-bottom: solid 1px #bbb; position: relative; }
+    .shop_button.disabled { background-color:#efefef; color:#000; cursor:inherit; }
+    .manipulateroomoptions .fa-caret-down { position:absolute; bottom: -13px; font-size: 20px; left: 32px; color:#bbb; }
+</style>

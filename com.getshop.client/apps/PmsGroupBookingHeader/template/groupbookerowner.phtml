@@ -1,0 +1,19 @@
+<?php
+$pmsBooking = $this->getCurrentBooking();
+$user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
+?>
+<div class="title"><? echo $this->__("BOOKER OWNER"); ?></div>
+<div class="row">
+    <div class="col col1"><? echo $this->__("Name"); ?></div>
+    <div class="col col2"><? echo $user->fullName; ?></div>
+</div>
+
+<div class="row">
+    <div class="col col1"><? echo $this->__("Email"); ?></div>
+    <div class="col col2"><? echo $user->emailAddress ?></div>
+</div>
+
+<div class="row">
+    <div class="col col1"><? echo $this->__("Phone number"); ?></div>
+    <div class="col col2"><? echo $user->cellPhone ?></div>
+</div>

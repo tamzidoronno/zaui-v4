@@ -18,6 +18,11 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
     }
 
     public function loadArea() {
+        if(isset($_POST['data']['area'])) {
+            $_SESSION['currentgroupbookedarea'] = $_POST['data']['area'];
+        } else {
+            echo "NOT FOUND";
+        }
         switch($_POST['data']['area']) {
             case "owner":
                 $this->includefile("groupbookerowner");
@@ -31,7 +36,6 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
             default:
                 echo "Path not exisiting yet: " . $_POST['data']['area'];
         }
-        $_SESSION['currentgroupbookedarea'] = $_POST['data']['area'];
     }
     
     public function doRoomsBookedAction() {
@@ -80,7 +84,6 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
             }
         }
         $this->currentBooking = null;
-
     }
     
     /**
@@ -119,6 +122,16 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         echo "<input type='text' class='gsniceinput1' gsname='phone' value='".$guest->phone."'>";
         echo "<input type='hidden' class='gsniceinput1' gsname='guestId' value='".$guest->guestId."'>";
         echo "</div>";
+    }
+
+    public function includeSelectedArea() {
+        $area = "owner";
+        if(isset($_SESSION['currentgroupbookedarea'])) {
+            $area = $_SESSION['currentgroupbookedarea'];
+        }
+        
+        $_POST['data']['area'] = $area;
+        $this->loadArea();
     }
 
 }

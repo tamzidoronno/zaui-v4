@@ -1,6 +1,8 @@
 <?php
 /* @var $this ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$start = date("d.m.Y", time());
+$end = date("d.m.Y", strtotime(date("d.m.Y",time()) . " +1 day"));
 ?>
 
 <div class='manipulateroomoptions'>
@@ -10,13 +12,13 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
         <span class='shop_button disabled' type='split'><i class='fa fa-users'></i> Split into a new group</span>
         <i class='fa fa-caret-down'></i>
 </div>
-<span class='shop_button' style='float:right;'>Add another room</span>
+<span class='shop_button' style='float:right;' onclick="$('.addroombox').toggle();">Add another room</span>
 
 
 <div class='addroombox' style='display:none;'>
     <h3>Add another room to this group</h3>
-    <input type='txt' class='gsniceinput1'> 
-    <input type='txt' class='gsniceinput1'> 
+    <input type='txt' class='gsniceinput1' value='<?php echo $start; ?>' gsname='start'> 
+    <input type='txt' class='gsniceinput1' value='<?php echo $end; ?>' gsname='end'> 
     <select class='gsniceselect1' style='height:38px;'>
         <?php
         foreach($types as $type) {

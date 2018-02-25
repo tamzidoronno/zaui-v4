@@ -65,11 +65,9 @@ app.PmsGroupBookingHeader = {
         thundashop.Ajax.post(event);
     },
     changeArea : function() {
-        var newArea = $('.booker_main_user[areatype="'+$(this).attr('areatype')+'"]');
+        var newArea = $('.booker_main_user');
         $('.PmsGroupBookingHeader .top_box').removeClass('selected');
         $(this).addClass('selected');
-        $('.PmsGroupBookingHeader .booker_main_user').removeClass('selected');
-        newArea.addClass('selected');
         
         var event = thundashop.Ajax.createEvent('','loadArea', $(this), {
             "area" : $(this).attr('areatype')

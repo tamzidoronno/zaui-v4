@@ -32,7 +32,7 @@ foreach($pmsBooking->rooms as $room) {
     
     <div class="top_box" areatype="payments">
         <div class="title displayorders">Payments</div>
-        <i class="fa fa-shopping-bag"></i> <? echo $rooms; ?>
+        <i class="fa fa-shopping-bag"></i> <? echo $orderCount; ?>
     </div>
     
     <div class="top_box" areatype="stay">
@@ -41,20 +41,5 @@ foreach($pmsBooking->rooms as $room) {
     </div>
 </div>
 
-<div class="booker_main_user selected" areatype="owner">
-    <?php $this->includefile("groupbookerowner"); ?>
-</div>
-<div class="booker_main_user" areatype="guests"><center><i class='fa fa-spin fa-spinner'></i></center></div>
-<div class="booker_main_user" areatype="rooms"><center><i class='fa fa-spin fa-spinner'></i></center></div>
-<div class="booker_main_user" areatype="payments"><center><i class='fa fa-spin fa-spinner'></i></center></div>
-<div class="booker_main_user" areatype="stay"><center><i class='fa fa-spin fa-spinner'></i></center></div>
-<div class="booker_main_user" areatype="addroom"><center><i class='fa fa-spin fa-spinner'></i></center></div>
-<div class="booker_main_user" areatype="removeroom"><center><i class='fa fa-spin fa-spinner'></i></center></div>
+<div class="booker_main_user" areatype="owner"><?php $this->includeSelectedArea(); ?></div>
 
-<script>
-<?php
-if(isset($_SESSION['currentgroupbookedarea'])) {
-    echo "$(\".top_box[areatype='".$_SESSION['currentgroupbookedarea']."']\").click()";
-}
-?>
-</script>

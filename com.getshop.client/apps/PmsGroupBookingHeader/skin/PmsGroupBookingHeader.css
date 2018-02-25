@@ -11,7 +11,8 @@
     margin: auto;
 }
 
-.PmsGroupBookingHeader .booker_main_user { display:none; }
+.PmsGroupBookingHeader .datarow_extended_content { padding: 0px !important; }
+
 .PmsGroupBookingHeader .booker_main_user.selected { display:block; }
 .PmsGroupBookingHeader .top_box {
     border-radius: 100px;

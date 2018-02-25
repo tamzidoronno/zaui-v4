@@ -14,6 +14,17 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function isGroupBookingView() {
+        if($this->getPage()) {
+            $_SESSION['cachedgroupedbooking'] = $this->getPage()->getId() == "groupbooking";
+            return $this->getPage()->getId() == "groupbooking";
+        }
+        if(isset($_SESSION['cachedgroupedbooking'])) {
+            return $_SESSION['cachedgroupedbooking'];
+        }
+        return false;
+    }
+    
     public function deleteRoom() {
         $room = $this->getSelectedRoom();
         $booking = $this->getPmsBooking();

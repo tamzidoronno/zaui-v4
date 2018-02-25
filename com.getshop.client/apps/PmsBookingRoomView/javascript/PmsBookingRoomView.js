@@ -169,7 +169,7 @@ app.PmsBookingRoomView = {
     },
     refresh : function() {
         thundashop.Ajax.ajaxFile = "cached.php";
-        var event = thundashop.Ajax.createEvent('','reloadApp',$('.PmsBookingRoomView'), {});
+        var event = thundashop.Ajax.createEvent('','reloadApp',$('.PmsBookingRoomView .applicationinner'), {});
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.PmsBookingRoomView').html(res);
         });

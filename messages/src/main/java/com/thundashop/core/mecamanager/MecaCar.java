@@ -132,7 +132,7 @@ public class MecaCar extends DataCommon {
     private void setIfNeedAttention() {
         needAttentionToService = false;
         
-        if (monthsToNextService < 2) {
+        if (monthsToNextService < 4) {
             needAttentionToService = true;
             return;
         }

@@ -1502,6 +1502,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(filterOrdersByDate(filterOptions))
                 .filter(filterOrdersBySearchWord(filterOptions))
                 .filter(filterOrdersByStatus(filterOptions))
+                .filter(filterByOrderIdsInExtra(filterOptions))
                 .collect(Collectors.toList());
         
         if(filterOptions.extra.containsKey("paymenttype")) {
@@ -2256,6 +2257,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         cartManager.clear();
         
         return order.id;
+    }
+
+    private Predicate<? super Order> filterByOrderIdsInExtra(FilterOptions filterOptions) {
+        if (filterOptions.extra.get("orderids") == null) {
+            return order -> order != null;
+        }
+        
+        List<String> orderIds = Arrays.asList(filterOptions.extra.get("orderids").split(","));
+        
+        if (orderIds.isEmpty())
+            return order -> order != null;
+        
+        return order -> orderIds.contains(order.id);
     }
     
 

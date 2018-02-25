@@ -3,7 +3,8 @@ namespace ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d;
 
 class EcommerceOrderList extends \MarketingApplication implements \Application {
     private $selectedOrder;
-    
+    private $orderIds = null;
+
     public function getDescription() {
         
     }
@@ -68,7 +69,17 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     }
 
     public function printTable() {
-        $args = array(new \core_common_FilterOptions());
+        $filterOptions = new \core_common_FilterOptions();
+        
+        if ($this->orderIds) {
+            if (!$filterOptions->extra) {
+                $filterOptions->extra = new \stdClass();
+            }
+            
+            $filterOptions->extra->orderids = implode(",", $this->orderIds);
+        }
+        
+        $args = array($filterOptions);
         
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
@@ -101,6 +112,10 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         if (!$this->selectedOrder || $force) {
             $this->selectedOrder = $this->getApi()->getOrderManager()->getOrder($_POST['data']['id']);
         }
+    }
+    
+    public function setOrderIds($orderIds) {
+        $this->orderIds = $orderIds;
     }
 }
 ?>

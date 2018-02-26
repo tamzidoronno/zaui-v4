@@ -1,0 +1,10 @@
+<div style='text-align: right; margin-bottom: 20px;'>
+    <span class='shop_button'>Start payment process for all rooms</span>
+</div>
+
+<?php
+/* @var $this ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
+$orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+$orderlist->setOrderIds($this->getCurrentBooking()->orderIds);
+$orderlist->renderApplication(true, $this);
+?>

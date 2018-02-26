@@ -3,6 +3,7 @@ namespace ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f;
 
 class PmsGroupBookingHeader extends \MarketingApplication implements \Application {
     private $currentBooking = null;
+    public $notChangedError = array();
     
     public function getDescription() {
         
@@ -10,6 +11,21 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
 
     public function getName() {
         return "PmsGroupBookingHeader";
+    }
+    
+    public function addRoomToGroup() {
+        $type = $_POST['data']['type'];
+        $count = $_POST['data']['count'];
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $bookingId = $this->getCurrentBooking()->id;
+        $guestInfoRoom = $_POST['data']['guestInfoOnRoom'];
+        
+        
+        for($i = 0; $i < $count; $i++) {
+            $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedMultilevelDomainName(), $bookingId, $type, $start, $end, $guestInfoRoom);
+        }
+        
     }
 
     public function render() {
@@ -32,6 +48,15 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
                 break;
             case "rooms":
                 $this->includefile("rooms");
+                break;
+            case "payments":
+                $this->includefile("payments");
+                break;
+            case "stay":
+                $this->includefile("stay");
+                break;
+            case "addons":
+                $this->includefile("addons");
                 break;
             default:
                 echo "Path not exisiting yet: " . $_POST['data']['area'];
@@ -92,17 +117,35 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
      */
     public function getCurrentBooking() {
         if (!$this->currentBooking) {
-            $this->currentBooking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_SESSION['PmsSearchBooking_groupbookingengineid']);
+            $this->currentBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $_SESSION['PmsSearchBooking_bookingId']);
         }
         return $this->currentBooking;
     }
 
     public function setBookingEngineId() {
-        if (isset($_GET['bookingEngineId'])) {
-            $_SESSION['PmsSearchBooking_groupbookingengineid'] = $_GET['bookingEngineId'];
+        if (isset($_GET['bookingId'])) {
+            $this->currentBooking = null;
+            $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
         }
     }
 
+    public function updateStayPeriode() {
+        $booking = $this->getCurrentBooking();
+        foreach($booking->rooms as $room) {
+            $start = $_POST['data']['start_'.$room->pmsBookingRoomId] . " " . $_POST['data']['starttime_'.$room->pmsBookingRoomId];
+            $end = $_POST['data']['end_'.$room->pmsBookingRoomId] . " " . $_POST['data']['endtime_'.$room->pmsBookingRoomId];
+            
+            $start = $this->convertToJavaDate(strtotime($start));
+            $end = $this->convertToJavaDate(strtotime($end));
+            
+            $res = $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $booking->id, $start, $end);
+            if(!$res) {
+                $this->notChangedError[$room->pmsBookingRoomId] = "Unable to change date on this room";
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
     
     public function saveGuestInformation() {
         $booking = $this->getCurrentBooking();

@@ -1,0 +1,47 @@
+
+
+<?php
+/* @var $this ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
+$booking = $this->getCurrentBooking();
+echo "<div gstype='form' method='updateStayPeriode'>";
+foreach($booking->rooms as $room) {
+    echo "<div class='roomrow' roomid='".$room->pmsBookingRoomId."'>";
+    $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+    $start = date("d.m.Y H:i", strtotime($room->date->start));
+    $end = date("d.m.Y H:i", strtotime($room->date->end));
+    echo "<div class='header'>";
+    echo "<div style='text-align:right;'>";
+    echo "<span style='float:left;padding-top: 5px;'>" . $type->name;
+    if($room->bookingItemId) {
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+        echo " (" . $item->bookingItemName . ")";
+    }
+    echo "</span>";
+    echo "<input type='text' class='gsniceinput1 calendarinput' style='width:80px;text-align:center;' value='".date("d.m.Y", strtotime($room->date->start))."' gsname='start_".$room->pmsBookingRoomId."'>";
+    echo "<input type='text' class='gsniceinput1' style='margin-right: 15px; width:40px;text-align:center;' value='".date("H:i", strtotime($room->date->start))."' gsname='starttime_".$room->pmsBookingRoomId."'>";
+    echo "<input type='text' class='gsniceinput1 calendarinput' style='width:80px;text-align:center;' value='".date("d.m.Y", strtotime($room->date->end))."' gsname='end_".$room->pmsBookingRoomId."'>";
+    echo "<input type='text' class='gsniceinput1' style='width:40px;text-align:center;' value='".date("H:i", strtotime($room->date->end))."' gsname='endtime_".$room->pmsBookingRoomId."'>";
+    echo "</div>";
+    if(isset($this->notChangedError[$room->pmsBookingRoomId])) {
+        echo "<div class='error'>" . $this->notChangedError[$room->pmsBookingRoomId]. "</div>";
+    }
+    echo "</div>";
+}
+echo "<div style='text-align:right;'><span class='shop_button' gstype='submit'>Try to update all stay</span></div>";
+echo "</div>";
+?>
+
+<style>
+    .header { font-weight: bold; font-size: 16px; margin-bottom: 5px;padding-left:0px; }
+    .date {
+        float:right;
+    }
+    .rowheader { width: 220px; display:inline-block; font-weight: bold;}
+    .guestrowtemplate { display:none; }
+    .error { color:red; font-size: 12px; font-style: italic; }
+</style>
+
+
+<script>
+    $('.calendarinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

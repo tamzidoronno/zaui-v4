@@ -3,6 +3,7 @@
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 $start = date("d.m.Y", time());
 $end = date("d.m.Y", strtotime(date("d.m.Y",time()) . " +1 day"));
+$booking = $this->getCurrentBooking();
 ?>
 
 <div class='manipulateroomoptions'>
@@ -15,23 +16,42 @@ $end = date("d.m.Y", strtotime(date("d.m.Y",time()) . " +1 day"));
 <span class='shop_button' style='float:right;' onclick="$('.addroombox').toggle();">Add another room</span>
 
 
-<div class='addroombox' style='display:none;'>
+<div class='addroombox' style='display:none;' gstype="form" method="addRoomToGroup">
     <h3>Add another room to this group</h3>
     <input type='txt' class='gsniceinput1' value='<?php echo $start; ?>' gsname='start'> 
     <input type='txt' class='gsniceinput1' value='<?php echo $end; ?>' gsname='end'> 
-    <select class='gsniceselect1' style='height:38px;'>
+    <select class='gsniceselect1' style='height:38px;' gsname='type'>
         <?php
         foreach($types as $type) {
             echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
         }
         ?>
     </select>
-    <span class='shop_button'>Add room</span>
+    <select class='gsniceselect1' style='height:38px;' gsname='guestInfoOnRoom'>
+        <?php
+        foreach($booking->rooms as $room) {
+            $guestInfo = "";
+            echo "<option value=''>No guest information</option>";
+            if(isset($room->guests[0])) {
+                $guestInfo = $room->guests[0]->name . " - ";
+                $guestInfo .= $room->guests[0]->email . " - ";
+                $guestInfo .= $room->guests[0]->prefix . " - ";
+                $guestInfo .= $room->guests[0]->phone;
+            }
+            echo "<option value='" . $room->pmsBookingRoomId . "'>" . $guestInfo . "</option>";
+        }
+        ?>
+    </select>
+    <input type='txt' class='gsniceinput1' gsname='count' value="1" style="width:30px;"> 
+    <span class='shop_button' gstype="submit">Add room</span>
 </div>
 
 <?php
 $filter = new core_pmsmanager_PmsBookingFilter();
+$filter->includeDeleted = true;
+$filter->bookingId = $booking->id;
 $roomView = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+$roomView->setCurrentFilter($filter);
 $roomView->renderApplication(true,$this);
 ?>
 
@@ -40,3 +60,8 @@ $roomView->renderApplication(true,$this);
     .shop_button.disabled { background-color:#efefef; color:#000; cursor:inherit; }
     .manipulateroomoptions .fa-caret-down { position:absolute; bottom: -13px; font-size: 20px; left: 32px; color:#bbb; }
 </style>
+
+<script>
+    $('[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

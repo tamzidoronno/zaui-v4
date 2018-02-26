@@ -1214,6 +1214,7 @@ function getshop_searchRooms() {
                 if(room.images.length > 0) {
                     firstFile = room.images[0].fileId;
                 }
+                var featuredImageUrl = getshop_endpoint+'/displayImage.php?id='+firstFile;
                 var productentry = '';
                 var utilities = '';
                 var user_icon = 1;
@@ -1227,7 +1228,7 @@ function getshop_searchRooms() {
                 roomBox.find('.availableroomcontainer').html(room.availableRooms);
                 roomBox.find('.lowpricedisplayer').html(room.pricesByGuests[1]);
                 roomBox.find('.roomdescription').html(room.description);
-                roomBox.find('.featured-image').css('background-image','url('+getshop_endpoint+'/displayImage.php?id='+ firstFile);
+                roomBox.find('.featured-image').css('background-image','url('+featuredImageUrl+')');              
                 roomBox.attr('index', k);
                 
                 var translation = getshop_getBookingTranslations();

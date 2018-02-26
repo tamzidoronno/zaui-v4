@@ -1,19 +1,31 @@
 <?
 /* @var $this \ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
 $pmsBooking = $this->getCurrentBooking();
-$rooms = count($pmsBooking->rooms);
+$rooms = 0;
+foreach($pmsBooking->rooms as $r) {
+    if(!$r->deleted) {
+        $rooms++;
+    }
+}
 $orderCount = count($pmsBooking->orderIds);
 $user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
 $guestcount = 0;
 
 foreach($pmsBooking->rooms as $room) {
+    if($room->deleted) {
+        continue;
+    }
     $guestcount += $room->numberOfGuests;
 }
 ?>
 
 <div style='text-align: center;'>
     <h1 style='border-bottom: solid 1px; padding-bottom: 10px; margin-bottom: 40px;'>
-    <?php echo "Grouped booking for " . $user->fullName; ?>
+    <?php 
+    echo "Grouped booking for " . $user->fullName; 
+    echo ", total : " . round($pmsBooking->totalPrice); 
+   ?>
+    
     </h1>
 
     <div class="top_box selected" areatype="owner">

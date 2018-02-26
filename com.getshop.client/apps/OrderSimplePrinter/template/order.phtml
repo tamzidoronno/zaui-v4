@@ -14,7 +14,7 @@ $lastInTableClass = $this->lastOrderInTable ? "lastrow" : "";
 
         <div class='actions'>
             <?
-            if ($paymentInstance->canDeleteOrder($order)) {
+            if ($paymentInstance && $paymentInstance->canDeleteOrder($order)) {
             ?>
                 <div class='gs_shop_small_icon' gsclick='deleteOrder' orderid='<? echo $order->id; ?>'>
                     <i class='fa fa-trash'></i> <? echo $this->__f("Delete"); ?>
@@ -24,7 +24,7 @@ $lastInTableClass = $this->lastOrderInTable ? "lastrow" : "";
             ?>
 
             <?
-            if ($paymentInstance->isAllowedToManuallyMarkAsPaid($order)) {
+            if ($paymentInstance && $paymentInstance->isAllowedToManuallyMarkAsPaid($order)) {
             ?>
                 <div class='gs_shop_small_icon'>
                     <i class='fa fa-check-circle'></i> <? echo $this->__f("Mark as paid"); ?>
@@ -35,9 +35,9 @@ $lastInTableClass = $this->lastOrderInTable ? "lastrow" : "";
         </div>
 
         <div class='payment'>
-            PaymentType: <? echo $paymentInstance->getName(); ?>
+            PaymentType: <? if($paymentInstance) { echo $paymentInstance->getName(); } ?>
             <?
-            if ($paymentInstance->canChangePaymentMethod($order)) {
+            if ($paymentInstance && $paymentInstance->canChangePaymentMethod($order)) {
                 ?>
                     
                     <div class='gs_shop_small_icon'>
@@ -61,23 +61,25 @@ $lastInTableClass = $this->lastOrderInTable ? "lastrow" : "";
         ?>
         <div class="extrainformation">
             <?
-            echo $paymentInstance->getExtraInformation($order);
+            if($paymentInstance) {
+                echo $paymentInstance->getExtraInformation($order);
+            }
             ?>
         </div>
     </div>
 
     <div class="cartitemrows">
         <?
-            foreach($order->cart->items as $item) {
-        ?>
-        <div class='cartitemrow <? echo lastrow; ?>'>
-            <div class='productname'><? echo $item->product->name; ?></div>
-            <div class='priceandcount'>
-                <div class='count'><? echo $item->count; ?></div> x <div class='price'><? echo $item->product->price; ?></div>
+        foreach($order->cart->items as $item) {
+            ?>
+            <div class='cartitemrow <? echo lastrow; ?>'>
+                <div class='productname'><? echo $item->product->name; ?></div>
+                <div class='priceandcount'>
+                    <div class='count'><? echo $item->count; ?></div> x <div class='price'><? echo $item->product->price; ?></div>
+                </div>
             </div>
-        </div>
-        <?
-            }
+            <?
+        }
         ?>
     </div>
 </div>

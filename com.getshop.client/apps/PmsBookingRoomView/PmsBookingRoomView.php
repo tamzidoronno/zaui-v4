@@ -439,18 +439,20 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             return;
         }
         
-        if (isset($_SESSION['cachedroomspmsrooms'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']]) && !$reload) {
-            $this->selectedRoom = json_decode($_SESSION['cachedroomspmsrooms'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']]);
+        $cachedRoomId = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
+        
+        if (isset($_SESSION['cachedroomspmsrooms'][$cachedRoomId]) && !$reload) {
+            $this->selectedRoom = json_decode($_SESSION['cachedroomspmsrooms'][$cachedRoomId]);
             $this->bookingEngineBooking = json_decode($_SESSION['cachedbookings'][$this->selectedRoom->bookingId]);
-            $this->pmsBooking = json_decode($_SESSION['cachedpmsbookings'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']] );
+            $this->pmsBooking = json_decode($_SESSION['cachedpmsbookings'][$cachedRoomId] );
         } else {
             if (!isset($this->pmsBooking) || $reload) {
-                $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_SESSION['PmsBookingRoomView_current_pmsroom_id']);
-                $_SESSION['cachedpmsbookings'][$_SESSION['PmsBookingRoomView_current_pmsroom_id']] = json_encode($this->pmsBooking);
+                $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $cachedRoomId);
+                $_SESSION['cachedpmsbookings'][$cachedRoomId] = json_encode($this->pmsBooking);
             }
 
             foreach ($this->pmsBooking->rooms as $room) {
-                if ($room->pmsBookingRoomId == $_SESSION['PmsBookingRoomView_current_pmsroom_id']) {
+                if ($room->pmsBookingRoomId == $cachedRoomId) {
                     $this->updateRoom($room, true);
                     $this->selectedRoom = $room;
                 }

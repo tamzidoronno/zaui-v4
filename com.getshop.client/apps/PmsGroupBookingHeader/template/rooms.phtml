@@ -29,9 +29,9 @@ $booking = $this->getCurrentBooking();
     </select>
     <select class='gsniceselect1' style='height:38px;' gsname='guestInfoOnRoom'>
         <?php
+        echo "<option value=''>No guest information</option>";
         foreach($booking->rooms as $room) {
             $guestInfo = "";
-            echo "<option value=''>No guest information</option>";
             if(isset($room->guests[0])) {
                 $guestInfo = $room->guests[0]->name . " - ";
                 $guestInfo .= $room->guests[0]->email . " - ";

@@ -55,6 +55,7 @@ public class PmsBookingFilter extends DataCommon {
     public String filterType;
     public String filterSubType;
     public String searchWord;
+    public String bookingId;
     public Boolean needToBeConfirmed = false;
     public Boolean includeDeleted = false;
     public Boolean onlyUntransferredToBookingCom = false;

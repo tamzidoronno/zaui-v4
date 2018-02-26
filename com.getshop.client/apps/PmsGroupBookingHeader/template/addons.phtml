@@ -1,2 +1,50 @@
-1. Display a list of all addons to add.
-2. Display a list of all addons to remove.
+<?php
+/* @var $this \ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
+$products = $this->getApi()->getProductManager()->getAllProductsLight();
+$rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$booking = $this->getCurrentBooking();
+$roomProducts = array();
+foreach($rooms as $room) {
+    $roomProducts[] = $room->productId;
+}
+foreach($products as $product) {
+    if(in_array($product->id, $roomProducts)) {
+        continue;
+    }
+    
+    $count = 0;
+    foreach($booking->rooms as $room) {
+        foreach($room->addons as $addon) {
+            if($addon->productId == $product->id) {
+                $count += $addon->count;
+            }
+        }
+    }
+    $added = "";
+    if($count > 0) {
+        $added = "<span class='alreadyaddedcount'>$count added</span>";
+    }
+    ?>
+<div class='productrow'>
+    <span class='name'><?php echo $product->name; ?></span>
+    <span class='buttons'>
+        <?php echo $added;
+        
+        if($count == 0) {
+        ?>
+            <span class='shop_button' gstype='clicksubmit' gsvalue='<?php echo $product->id; ?>' method='addAddons' gsname='id'>Add addons</span>
+        <? } else { ?>
+            <span class='shop_button' gstype='clicksubmit' gsvalue='<?php echo $product->id; ?>' method='removeAddons' gsname='id' style='background-color:red;'>Remove addons</span>
+        <?php } ?>
+    </span>
+    <div style='clear:both;'></div>
+</div>
+    <?php
+}
+
+?>
+<style>
+    .buttons { float:right; }
+    .productrow { margin-bottom: 2px; font-size: 18px; border-bottom: solid 1px #fff; }
+    .productrow:hover { border-bottom: solid 1px #bbb; }
+</style>

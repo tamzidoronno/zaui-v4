@@ -107,7 +107,16 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function PmsManager_getSimpleRoomsForGroup() {
-        $this->includefile('bookingoverview');
+        $roomView = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $roomView->setRoomId($_POST['data']['id']);
+        $roomView->renderApplication(true, $this);
+    }
+    
+    public function formatCheck($row) {
+//        echo "<pre>";
+//        print_r($row);
+//        echo "</pre>";
+        return "<input type='checkbox' class='dontExpand groupedactioncheckbox' roomid='".$row->pmsRoomId."'></input>";
     }
     
     private function renderDataTable() {   
@@ -116,27 +125,42 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $domainName = $this->getSelectedMultilevelDomainName();
         $args = array($domainName, $filter);
         
-        $attributes = array(
-            array('id', 'gs_hidden', 'pmsRoomId'),
-            array('state', 'STATE', null, 'formatState'),            
-            array('roomId', 'gs_hidden', 'roomId', 'formatRoomId'),
-            array('reg', 'REG', 'regDate', 'formatRegDate'),
-            array('checkin', 'CHECKIN', null, 'formatStartPeriode'),
-            array('checkout', 'CHECKOUT', null, 'formatEndPeriode'),
-            array('visitor', 'VISITORS', null, 'formatVistior'),
-            array('addons', 'ADDONS', null, 'formatAddons'),
-            array('bookedfor', 'BOOKED FOR', null, 'formatBookedFor'),
-            array('room', 'ROOM', null, 'formatRoom'),
-            array('price', 'PRICE', null, 'formatPrice'),
-            array('totalprice', 'TOTAL', null, 'formatTotalPrice'),
-            array('expandbutton', '', null, 'formatExpandButton')
-        );
         
         $functionToUse = "getSimpleRooms";
         
         if ($this->isGroupBookingView()) {
-            $functionToUse = "getSimpleRoomsForGroup";
-            $args = array($domainName, $this->getCurrentGroupBookingEngineId());
+            
+            $attributes = array(
+                array('id', 'gs_hidden', 'pmsRoomId'),
+                array('check', '', null, 'formatCheck'),            
+                array('state', 'STATE', null, 'formatState'),            
+                array('roomId', 'gs_hidden', 'roomId', 'formatRoomId'),
+                array('reg', 'REG', 'regDate', 'formatRegDate'),
+                array('checkin', 'CHECKIN', null, 'formatStartPeriode'),
+                array('checkout', 'CHECKOUT', null, 'formatEndPeriode'),
+                array('visitor', 'VISITORS', null, 'formatVistior'),
+                array('addons', 'ADDONS', null, 'formatAddons'),
+                array('room', 'ROOM', null, 'formatRoom'),
+                array('price', 'PRICE', null, 'formatPrice'),
+                array('totalprice', 'TOTAL', null, 'formatTotalPrice'),
+                array('expandbutton', '', null, 'formatExpandButton')
+            );
+        } else {
+            $attributes = array(
+                array('id', 'gs_hidden', 'pmsRoomId'),
+                array('state', 'STATE', null, 'formatState'),            
+                array('roomId', 'gs_hidden', 'roomId', 'formatRoomId'),
+                array('reg', 'REG', 'regDate', 'formatRegDate'),
+                array('checkin', 'CHECKIN', null, 'formatStartPeriode'),
+                array('checkout', 'CHECKOUT', null, 'formatEndPeriode'),
+                array('visitor', 'VISITORS', null, 'formatVistior'),
+                array('addons', 'ADDONS', null, 'formatAddons'),
+                array('bookedfor', 'BOOKED FOR', null, 'formatBookedFor'),
+                array('room', 'ROOM', null, 'formatRoom'),
+                array('price', 'PRICE', null, 'formatPrice'),
+                array('totalprice', 'TOTAL', null, 'formatTotalPrice'),
+                array('expandbutton', '', null, 'formatExpandButton')
+            );
         }
         
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
@@ -233,6 +257,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     
      
     public function setCurrentFilter($filter) {
+        $this->clearFilter();
         $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()] = serialize($filter);
     }
 

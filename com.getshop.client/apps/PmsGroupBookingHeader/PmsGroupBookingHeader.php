@@ -9,6 +9,36 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         
     }
 
+    public function addAddons() {
+        $booking = $this->getCurrentBooking();
+        $productId = $_POST['data']['id'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $room) {
+            foreach($config->addonConfiguration as $addonItem) {
+                if($addonItem->productId == $productId) {
+                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, false);
+                    break;
+                }
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
+    public function removeAddons() {
+        $booking = $this->getCurrentBooking();
+        $productId = $_POST['data']['id'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $room) {
+            foreach($config->addonConfiguration as $addonItem) {
+                if($addonItem->productId == $productId) {
+                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, true);
+                    break;
+                }
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
     public function getName() {
         return "PmsGroupBookingHeader";
     }
@@ -25,7 +55,7 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         for($i = 0; $i < $count; $i++) {
             $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedMultilevelDomainName(), $bookingId, $type, $start, $end, $guestInfoRoom);
         }
-        
+        $this->currentBooking = null;
     }
 
     public function render() {

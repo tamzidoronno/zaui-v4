@@ -42,6 +42,17 @@
     font-size: 30px;
     color: #164e16;
 }
+    
+.PmsSearchBooking .GetShopModuleTable .col_check input {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-top: 7px;
+}
+
+.PmsSearchBooking .GetShopModuleTable .col_check {
+    width: 20px;
+}
 
 .PmsSearchBooking .GetShopModuleTable .guestname,
 .PmsSearchBooking .GetShopModuleTable .guestphone,
@@ -120,8 +131,8 @@
 }
     
 .PmsSearchBooking .datarow .datarow_inner {
-    padding-top: 20px;
-    padding-bottom: 20px;   
+    padding-top: 5px;
+    padding-bottom: 0px;   
 }
 
 .PmsSearchBooking .datarow {

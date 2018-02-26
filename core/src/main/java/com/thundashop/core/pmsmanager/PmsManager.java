@@ -12,7 +12,6 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar; 
-import com.thundashop.core.amesto.AmestoSync; 
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
@@ -579,6 +578,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
         gsTiming("start");
+        
+        if(filter.bookingId != null && !filter.bookingId.isEmpty()) {
+            List<PmsBooking> res = new ArrayList();
+            res.add(getBooking(filter.bookingId));
+            return res;
+        }
+        
         if(!getConfigurationSecure().exposeUnsecureBookings) {
             if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
                 return new ArrayList();
@@ -2778,7 +2784,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         String res = addBookingToBookingEngine(booking, room);
         if(!res.isEmpty()) {
-            return res;
+            room.addedToWaitingList = true;
+            room.overbooking = true;
         }
         
         addDefaultAddonsToRooms(toAdd);

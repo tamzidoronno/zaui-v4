@@ -20,6 +20,7 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
     public function updateOrder() {
         $this->setData();
         $order = $this->getOrder();
+        
         $order->invoiceNote = $_POST['data']['invoiceNote'];
         
         $this->getApi()->getOrderManager()->saveOrder($order);

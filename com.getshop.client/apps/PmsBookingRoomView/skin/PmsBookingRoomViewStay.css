@@ -5,7 +5,7 @@
     border-left: solid 1px;
 }
 
-.PmsBookingRoomView .staytime .explenation {
+.PmsBookingRoomView .itemview_inner .explenation {
     font-size: 13px;
     font-weight: normal;
     line-height: 15px;
@@ -14,22 +14,22 @@
     display: inline-block;
 }
 
-.PmsBookingRoomView .staytime .explenation .expcolorouter {
+.PmsBookingRoomView .itemview_inner .explenation .expcolorouter {
     display: inline-block;
-    width: calc(25% - 4px);
+    width: 100%;
+    margin-top: 10px;
     vertical-align: top;
     padding-right: 10px;
     box-sizing: border-box;
 }
 
-.PmsBookingRoomView .staytime .explenation {
+.PmsBookingRoomView .itemview_inner .explenation {
     width: calc(100% - 448px);
     box-sizing: border-box;
-    padding-left: 30px;
     display: inline-block;
 }
 
-.PmsBookingRoomView .staytime .explenation .expcolor {
+.PmsBookingRoomView .itemview_inner .explenation .expcolor {
     font-size: 13px;
     font-weight: normal;
     line-height: 15px;
@@ -93,11 +93,11 @@
     font-weight: bold;
     border-bottom: solid 2px #000;
     padding-bottom: 5px;
-}
-
-.PmsBookingRoomView .staytime {
-    padding-top: 30px;
-    padding-bottom: 10px;
+    
+    border: solid 1px #bbb;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #efefef;    
 }
 
 .PmsBookingRoomView .updater {
@@ -144,8 +144,8 @@
 
 .PmsBookingRoomView .itemview_inner {
     
-    padding-top: 10px;
-    width: 70%;
+   padding-top: 20px;
+   width: calc(100% - 300px);
 }
 
 .PmsBookingRoomView .pricerow {
@@ -164,9 +164,27 @@
     display: inline-block;
 }
 
-.PmsBookingRoomView .pricesview {
-    width: calc(30% - 15px);
+.PmsBookingRoomView .stayperiodecontainer {
+    padding-bottom: 20px;
+    border-bottom: solid 1px #bbb;
+    padding-right: 10px;
+}
+.PmsBookingRoomView .stayperiodecontainer input {
+    width: 200px;
     box-sizing: border-box;
+}
+.PmsBookingRoomView .stayperiodecontainer input.time {
+    width: 60px;
+    text-align: center;
+    float:right;
+}
+
+.PmsBookingRoomView .pricesview {
+    width: 280px;
+    box-sizing: border-box;
+    border-right: solid 1px #bbb;
+    padding:0px;
+    margin-top: 20px;
 }
 
 .PmsBookingRoomView .totalrow {

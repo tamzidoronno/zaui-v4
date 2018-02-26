@@ -104,6 +104,9 @@ class PmsSearchBookingColumnFormatters {
         } else if($room->progressState == "confirmed") {
             $waiting = $this->pmsSearchBooking->__f("Booking is confirmed");
             $text = "<span title='$waiting' ><i class='icon-clipboard-check'></i></span>";
+        } else if ($room->progressState == "deleted") {
+            $waiting = $this->pmsSearchBooking->__f("Room has been deleted");
+            $text = "<span title='$waiting'><i class='icon-trashcan' style='color: red'></i></span>";
         } else if ($room->progressState == "notpaid") {
             $waiting = $this->pmsSearchBooking->__f("Room not paid");
             $text = "<span title='$waiting'><i class='icon-bag-dollar' style='color: red'></i></span>";

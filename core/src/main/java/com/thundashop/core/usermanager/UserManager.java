@@ -2097,7 +2097,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         });
         
         if (!retModulesMap.isEmpty()) {
-            retModulesMap.put("cms", modules.getModule("cms"));
+//            retModulesMap.put("cms", modules.getModule("cms"));
         }
         
         return new ArrayList(retModulesMap.values());

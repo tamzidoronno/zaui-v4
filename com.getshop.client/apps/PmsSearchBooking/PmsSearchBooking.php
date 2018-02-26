@@ -223,6 +223,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $this->clearFilter();
         $filter = $this->getSelectedFilter();
         $filter->searchWord = $_POST['data']['searchtext'];
+        $filter->includeDeleted = true;
         $this->setCurrentFilter($filter);
     }
 

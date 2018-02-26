@@ -33,6 +33,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     private final String USER_AGENT = "Mozilla/5.0";
     private HashMap<String, String> latestResponseHeader = new HashMap();
+    private String latestErrorMessage;
     
     
     @Override
@@ -151,9 +152,7 @@ public class WebManager extends ManagerBase implements IWebManager {
                     responseBuffer.append(responseLine);
                 }
                 String res = responseBuffer.toString();
-                logPrintException(ex);
-                logPrint(res);
-                
+                latestErrorMessage = res;
                 throw ex;
             }
         } finally {
@@ -167,6 +166,10 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     public HashMap<String, String> getLatestResponseHeader() {
         return latestResponseHeader;
+    }
+
+    public String getLatestErrorMessage() {
+        return latestErrorMessage;
     }
     
 }

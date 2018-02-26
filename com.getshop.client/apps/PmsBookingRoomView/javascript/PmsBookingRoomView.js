@@ -4,6 +4,7 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .closebutton', this.closePreview);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .continue', this.continueToBooking);
         $(document).on('click', '.PmsBookingRoomView .menuarea .menuentry', this.menuClicked);
+        $(document).on('click', '.PmsBookingRoomView .order_tab_menu', this.menuOrdersClicked);
         $(document).on('click', '.PmsBookingRoomView .editaddon', this.editAddonView);
         $(document).on('click', '.PmsBookingRoomView .bookinginformation .remove_guest', this.removeGuest);
         $(document).on('click', '.PmsBookingRoomView .bookinginformation .add_more_guests', this.addGuest);
@@ -14,14 +15,78 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .addonsArea .toggleRemoveAddonCheckBox', this.toggleRemoveAddonCheckBox);
         $(document).on('click', '.PmsBookingRoomView .doeditaddonupdate', this.doEditAddonUpdate);
         $(document).on('click', '.PmsBookingRoomView .addselecteditemstocart', this.addSelectedItemsToCart);
-        $(document).on('change', '.PmsBookingRoomView [gsname]', this.formChanged);
-        $(document).on('change', '.PmsBookingRoomView .unitprice_changed', this.unitPriceChanged);
+        $(document).on('keyup', '.PmsBookingRoomView .unitprice_changed', this.unitPriceChanged);
         $(document).on('click', '.PmsBookingRoomView .topbuttons .toggleComment', this.toggleComment);
         $(document).on('click', '.PmsBookingRoomView .topbuttons .saveInvoiceNote', this.saveInvoiceNote);
         $(document).on('click', '.PmsBookingRoomView .massupdateprices', this.doMassUpdatePrices);
         $(document).on('click', '.PmsBookingRoomView .seechangesbutton', this.seeChangesOnBooking);
+        $(document).on('keyup', '.PmsBookingRoomView .guestinfo input', this.updateGuestInformation);
+        $(document).on('click', '.PmsBookingRoomView .savechangesonroom', this.saveChangesOnRoom);
+        $(document).on('click', '.PmsBookingRoomView .tryundeleteroom', this.tryundeleteroom);
+    },
+    tryundeleteroom : function() {
+        thundashop.Ajax.simplePost($(this),'deleteRoom', {});
+    },
+
+    
+    menuOrdersClicked: function() {
+        var tab  = $(this).attr('orders_sub_tab');
+        var roomId = $(this).closest('.bookingoverview_content_row').find('[gsname="roomId"]').val();
+        
+        app.PmsBookingRoomView.activateOrdersSubTab(tab, roomId);
+        sessionStorage.setItem("selected_sub_order_tab_"+roomId, tab);
     },
     
+    activateSelectedTabSubOrders: function(roomId) {
+        var tab = sessionStorage.getItem("selected_sub_order_tab_"+roomId);
+        
+        if (!tab) {
+            tab = "simple";
+        } 
+        
+        app.PmsBookingRoomView.activateOrdersSubTab(tab, roomId);
+    },
+    
+    activateOrdersSubTab: function(tab, roomId) {
+        var div = $('.PmsBookingRoomView .bookingoverview_content_row [gsname="roomId"][value="'+roomId+'"]:first').closest('.PmsBookingRoomView');
+        div.find('.tabcontent').removeClass('active');
+        div.find('.tabcontent[orders_sub_tab="'+tab+'"]').addClass('active');
+    },
+    
+    saveChangesOnRoom : function() {
+        thundashop.Ajax.simplePost($(this),"saveRoom", {});
+    },
+    
+    updateGuestInformation : function() {
+        thundashop.Ajax.ajaxFile = "cached.php";
+        var guests = [];
+        $('.guest_row').each(function() {
+            var counter = $(this).attr('counter');
+            if(!counter) {
+                return;
+            }
+            
+            var guestData = {};
+            guestData.name = $(this).find('[gsname="guestinfo_'+counter+'_name"]').val();
+            guestData.email = $(this).find('[gsname="guestinfo_'+counter+'_email"]').val();
+            guestData.prefix = $(this).find('[gsname="guestinfo_'+counter+'_prefix"]').val();
+            guestData.phone = $(this).find('[gsname="guestinfo_'+counter+'_phone"]').val();
+            guestData.guestId = $(this).find('[gsname="guestinfo_'+counter+'_guestid"]').val();
+            guests.push(guestData);
+        });
+        
+        var event = thundashop.Ajax.createEvent('','updateGuestData',$('.guest_row'),guests);
+        thundashop.Ajax.postWithCallBack(event, function() {});
+        
+        if(typeof(app.PmsBookingRoomView.waitForReload) !== "undefined") {
+            clearTimeout(app.PmsBookingRoomView.waitForReload);
+        }
+        
+        app.PmsBookingRoomView.waitForReload = setTimeout(function() {
+            app.PmsBookingRoomView.refresh();
+        }, "3000");
+        
+    },
     seeChangesOnBooking : function() {
         if($('.changespanel').is(':visible')) {
             $('.changespanel').slideUp();
@@ -153,15 +218,25 @@ app.PmsBookingRoomView = {
     },
     
     unitPriceChanged: function() {
-        $(this).attr('manuallyset', 'true');
-        app.PmsBookingRoomView.formChanged();
-        app.PmsBookingRoomView.calculateTotal();
+        var data = thundashop.framework.createGsArgs($('.pricerows'));
+        
+        thundashop.Ajax.ajaxFile = "cached.php";
+        
+        var event = thundashop.Ajax.createEvent('','updateDayPrices',$(this),data);
+        thundashop.Ajax.postWithCallBack(event, function() {});
+        
+        if(typeof(app.PmsBookingRoomView.waitForReload) !== "undefined") {
+            clearTimeout(app.PmsBookingRoomView.waitForReload);
+        }
+        
+        app.PmsBookingRoomView.waitForReload = setTimeout(function() {
+            app.PmsBookingRoomView.refresh();
+        }, "2000");
     },
     
     addSelectedClass: function() {
         $('.PmsBookingRoomView .gs_selected').removeClass('gs_selected');
         $(this).addClass('gs_selected');
-        app.PmsBookingRoomView.formChanged();
         app.PmsBookingRoomView.updateAvailability(true);
     },
     
@@ -178,21 +253,6 @@ app.PmsBookingRoomView = {
         event['synchron'] = true;
         
         thundashop.Ajax.post(event, app.PmsBookingRoomView.tabChanged, data);
-    },
-    
-    calculateTotal: function() {
-        var total = 0;
-        
-        $('.PmsBookingRoomView .item_prices input').each(function() {
-            total += parseInt($(this).val());
-        });
-        
-        $('.PmsBookingRoomView .item_prices .totalrow span').html(total);
-        $('.PmsBookingRoomView .totalstayprice').html(total);
-    },
-    
-    formChanged: function() {
-        $('.PmsBookingRoomView .datarow.active [gstype="submit"]').removeClass('disabled');
     },
     
     paymentSelected: function() {
@@ -229,14 +289,14 @@ app.PmsBookingRoomView = {
         var found = cloned.find('[temp_gsname="guestinfo_email"]'); found.removeAttr('temp_gsname'); found.attr('gsname', 'guestinfo_'+highest+'_email');
         var found = cloned.find('[temp_gsname="guestinfo_prefix"]'); found.removeAttr('temp_gsname'); found.attr('gsname', 'guestinfo_'+highest+'_prefix');
         var found = cloned.find('[temp_gsname="guestinfo_phone"]'); found.removeAttr('temp_gsname'); found.attr('gsname', 'guestinfo_'+highest+'_phone');
+        var found = cloned.find('[temp_gsname="guestinfo_guestid"]'); found.removeAttr('temp_gsname'); found.attr('gsname', 'guestinfo_'+highest+'_guestid');
         
         $('.guestinfo').append(cloned);
-        app.PmsBookingRoomView.formChanged();
     },
     
     removeGuest: function(e) {
         $(this).closest('.guest_row').remove();
-        app.PmsBookingRoomView.formChanged();
+        app.PmsBookingRoomView.updateGuestInformation();
     },
    
     updateAvailability: function(onlyPrices) {
@@ -247,8 +307,8 @@ app.PmsBookingRoomView = {
         
         var data = {
             bookingid: $('.PmsBookingRoomView .itemview').attr('bookingid'),
-            start : $('.PmsBookingRoomView .startdate').val(),
-            end : $('.PmsBookingRoomView .enddate').val(),
+            start : $('.PmsBookingRoomView .startdate').val() + " " + $('.PmsBookingRoomView .starttime').val(),
+            end : $('.PmsBookingRoomView .enddate').val() + " " + $('.PmsBookingRoomView .endtime').val(),
             roomId: $('.PmsBookingRoomView .itemview').attr('roomid'),
         };
         
@@ -291,6 +351,10 @@ app.PmsBookingRoomView = {
     },
    
     menuClicked: function() {
+        if (!$(this).closest('.app').hasClass('PmsBookingRoomView')) {
+            return;
+        }
+        
         thundashop.Ajax.ajaxFile = "cached.php";
         
         var tab = $(this).attr('tab');

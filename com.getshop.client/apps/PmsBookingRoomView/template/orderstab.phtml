@@ -1,3 +1,4 @@
+
 <?
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
@@ -6,22 +7,24 @@ $booking = $this->getBookingEngineBooking();
 
 $user = $this->getUserForBooking();
 
-?>
-
-<div class="topbuttons">
-    <div class="gs_shop_small_icon toggleComment" title="<? echo $this->__f("Payment comment"); ?>"><i class="icon-bubble-pencil"></i></div>
-    
-    <div class="paymentcomment">
-        <?
-        echo $this->__f("Invoice note").":";
-        ?>
-        <textarea><? echo $pmsBooking->invoiceNote; ?></textarea>
-        <div>
-            <div class="shop_button toggleComment"><? echo $this->__f("close"); ?></div>
-            <div class="shop_button saveInvoiceNote"><? echo $this->__f("Save"); ?></div>
+if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image sad"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Unsaved changes"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("Before you can start handling payments you will have to save all the changes done first. Please save the payments by pressing the button above.");
+                ?>    
+            </div>
         </div>
     </div>
-</div>
+    <?
+    return;
+}
+
+?>
 
 <div class="isnotactive">
     <div class="kaipal infobox">
@@ -38,42 +41,37 @@ $user = $this->getUserForBooking();
     </div>
 </div>
 
-<div class='insideheader'><? echo $this->__f("Need to be paid"); ?></div>
-<?
-$showingPaymentProcess = $this->startPaymentProcess();
-$alreadyAdded = $this->isRoomAddedToCart();
-
-if ($showingPaymentProcess) {
-?>
-<div class='booking_cart_buttons_area'>
-    <div class='shop_button addselecteditemstocart'><? echo $this->__f("Add room to cart"); ?></div>
-</div>
+<div class="topbuttons">
+    <div class="gs_shop_small_icon toggleComment" title="<? echo $this->__f("Payment comment"); ?>"><i class="icon-bubble-pencil"></i></div>
     
-<?
-}
-?>
-
-
-<div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
-<?
-if (!count($this->pmsBooking->orderIds)) {
-    ?>
-    <div class="nopaymentscreatedyet payment_window">  
-        <i class="fa fa-frown-o"></i> <? echo $this->__f("There are no payment created yet, create one by using the options above."); ?>
+    <div class="paymentcomment">
+        <?
+        echo $this->__f("Invoice note").":";
+        ?>
+        <textarea><? echo $pmsBooking->invoiceNote; ?></textarea>
+        <div>
+            <div class="shop_button toggleComment"><? echo $this->__f("close"); ?></div>
+            <div class="shop_button saveInvoiceNote"><? echo $this->__f("Save"); ?></div>
+        </div>
     </div>
-    <?
-} else {
-    echo "<div class='payment_window'>";
-    $i = 0;
-    foreach ($this->pmsBooking->orderIds as $orderId) {
-        $i++;
-        $orderPrinter = new ns_f22e70e7_7c31_4c83_a8c1_20ae882853a7\OrderSimplePrinter();
-        $orderPrinter->setOrderId($orderId);
-        if (count($this->pmsBooking->orderIds) == $i) {
-            $orderPrinter->setLastOrderInTable();
-        }
-        $orderPrinter->renderApplication(true);
-    }
-    echo "</div>";
-}
-?>
+    
+    <div class="gs_shop_small_icon active order_tab_menu" title="<? echo $this->__f("Switch to simple payment"); ?>" orders_sub_tab="simple"><i class=""></i> <? echo $this->__f("Simple"); ?></div>
+    <div class="gs_shop_small_icon order_tab_menu" title="<? echo $this->__f("Switch to advanced payment"); ?>" orders_sub_tab="advanced"><i class=""></i> <? echo $this->__f("Advanced"); ?></div>
+    
+    <div class="tabcontent" orders_sub_tab="simple">
+        <?
+        $this->includefile("orderstabsimple");
+        ?>
+    </div>
+    
+    <div class="tabcontent active" orders_sub_tab="advanced">
+        <? 
+        $this->includefile("orderstabadvanced");
+        ?>
+    </div>
+    
+    <script>
+        app.PmsBookingRoomView.activateSelectedTabSubOrders('<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>');
+    </script>
+</div>
+

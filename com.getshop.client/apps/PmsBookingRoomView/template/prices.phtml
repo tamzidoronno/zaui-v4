@@ -9,49 +9,62 @@ $start = $room->date->start;
 $end = $room->date->end;
 
 $priceMatrix = (array)$room->priceMatrix;
-uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability','sortByDate'))
+uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability','sortByDate'));
 
+$startDate = strtotime($room->date->start);
+$endDate = strtotime($room->date->end);
 ?>
 
 <div class="item_prices">
-    <h2>Prices</h2>
-    <div class='masseditpricesbox'>
-        <select class="gsniceselect1 masseditpricestay" style="width:100%; margin-bottom: 5px;">
-            <option value="dayprice">Same price all days</option>
-            <option value="start_of_month">Monthly price beginning of month</option>
-            <option value="start_of_stay">Monthly price beginning of stay</option>
-            <option value="wholestay">Total cost for whole stay</option>
-        </select>
-        <input type="text" class="gsniceinput1 massupdatepricevalue" placeholder="value">
-        <span class="shop_button massupdateprices" style="float:right;">Update</span>
-        
-        <div class='priceselectionhelp' type="dayprice" style='display:block;'>This will set the same price for each day.</div>
-        <div class='priceselectionhelp' type="start_of_month">This will calculate the daily price to be the same as a total of monthly cost, since each month has different days it will use the number of days in month where the base will be the first day in the month.</div>
-        <div class='priceselectionhelp' type="start_of_stay">This will calculate the daily price to be the same as a total of monthly cost, since each month has different days it will use the number of days in month where the base will be the first day of the stay, if the stay start the 15 one month will be calculated from 15 to 15.</div>
-        <div class='priceselectionhelp' type="wholestay">This will calculate the daily price for each day which the total will be the same as you entered.</div>
-        
+    <div class='stayperiodecontainer'>
+        <h2>Stay periode</h2>
+        Check-in<br>
+        <input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo date("d.m.Y", $startDate); ?>"/>
+        <input type="textfield" class="gsniceinput1 starttime time starttime" gsname="startTime" value="<? echo date("H:i", $startDate); ?>"/><br><br>
+        Check-out<br>
+        <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo date("d.m.Y", $endDate); ?>"/> 
+        <input type="textfield" class="gsniceinput1 endtime time endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
+        <span class='shop_button setnewdates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>
     </div>
-    <br/>
-    <h2>Daily prices</h2>
-    <div class="pricerows">
-        <?
-        $total = 0;
-        foreach ($priceMatrix as $date => $price) {
-            $total += $price;
-            echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2'><input class='gsniceinput1 unitprice_changed' gsname='room_price_$date' value='$price'></div> </div>";
-        }
-        ?>
-    </div>
+    <div class='pricecontainerbox'>
+        <h2>Daily prices <i class='fa fa-edit' style='float:right;cursor:pointer;' onclick='$(".masseditpricesbox").toggle()'></i></h2>
+        <div class='masseditpricesbox' style='display:none;'>
+            <select class="gsniceselect1 masseditpricestay" style="width:100%; margin-bottom: 5px;">
+                <option value="dayprice">Same price all days</option>
+                <option value="start_of_month">Monthly price beginning of month</option>
+                <option value="start_of_stay">Monthly price beginning of stay</option>
+                <option value="wholestay">Total cost for whole stay</option>
+            </select>
+            <input type="text" class="gsniceinput1 massupdatepricevalue" placeholder="value">
+            <span class="shop_button massupdateprices" style="float:right;">Update</span>
 
-    <div class='totalrow'>
-        <?
-        echo $this->__f("Total").": <span>".$total."</span>";
-        ?>
-        <div class='extrainfo'>
-            <i class='fa fa-info-circle'></i>
+            <div class='priceselectionhelp' type="dayprice" style='display:block;'>This will set the same price for each day.</div>
+            <div class='priceselectionhelp' type="start_of_month">This will calculate the daily price to be the same as a total of monthly cost, since each month has different days it will use the number of days in month where the base will be the first day in the month.</div>
+            <div class='priceselectionhelp' type="start_of_stay">This will calculate the daily price to be the same as a total of monthly cost, since each month has different days it will use the number of days in month where the base will be the first day of the stay, if the stay start the 15 one month will be calculated from 15 to 15.</div>
+            <div class='priceselectionhelp' type="wholestay">This will calculate the daily price for each day which the total will be the same as you entered.</div>
+        </div>
+
+        <div class="pricerows">
             <?
-            echo $this->__f("The total here is only for the rooms itselfs, it does not contain addons unless they are included in the roomprice");
+            $total = 0;
+            foreach ($priceMatrix as $date => $price) {
+                $total += $price;
+                echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2' style='float:right;    margin-right: 32px;'><input class='gsniceinput1 unitprice_changed' gsname='$date' value='$price' ></div> </div>";
+                echo "<div style='clear:both;'></div>";
+            }
             ?>
+        </div>
+
+        <div class='totalrow'>
+            <?
+            echo $this->__f("Total").": <span>".$total."</span>";
+            ?>
+            <div class='extrainfo'>
+                <i class='fa fa-info-circle'></i>
+                <?
+                echo $this->__f("The total here is only for the rooms itselfs, it does not contain addons unless they are included in the roomprice");
+                ?>
+            </div>
         </div>
     </div>
 </div>
@@ -61,5 +74,9 @@ $('.masseditpricestay').on('change', function() {
     var type = $(this).val();
     $('.priceselectionhelp').hide();
     $('.priceselectionhelp[type="'+type+'"]').show();
+});
+
+$('.setnewdates').on('click',function() {
+    app.PmsBookingRoomView.updateAvailability();
 });
 </script>

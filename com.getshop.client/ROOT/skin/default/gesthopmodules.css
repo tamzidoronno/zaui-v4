@@ -196,7 +196,7 @@ body {
     color: #000;
     text-transform: uppercase;
     font-weight: bold;
-    border-bottom: solid 2px #444;
+    border-bottom: solid 1px #DDD;
     padding-bottom: 10px;
     padding-left: 20px;
     padding-right: 20px;
@@ -209,9 +209,7 @@ body {
     margin-bottom: 10px;
 }
 .GetShopModuleTable .datarow.active .datarow_inner{    
-    background-color: #23314e;
-    color: #FFF;
-    border: solid 1px #23314e;
+    background-color: #f4f7f9;
 }
 
 .GetShopModuleTable .col {

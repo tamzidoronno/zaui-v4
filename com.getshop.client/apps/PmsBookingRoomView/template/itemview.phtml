@@ -23,7 +23,14 @@ function canUseItem($item, $availeableitems) {
     return false;
 }
 ?>
+
+
+<div class='pricesview'>
+    <? $this->includefile("prices"); ?>
+</div>
+
 <div class='itemview_inner'>
+    <h2>Room and categories</h2>
     <div class='updater'>
         <i class='fa fa-spin fa-spinner'></i> Updating.. please wait..
     </div>
@@ -47,9 +54,9 @@ function canUseItem($item, $availeableitems) {
             <div class='movetotype' typeid='<? echo $type->id; ?>'>
                 <div class="headername">
                     <? echo $type->name; ?>
-                    <br/><div class='bookingitem floatingbutton <? echo $canUseFloating." ".$currentlyUsingFloating; ?>' gs_value='<? echo $type->id; ?>' itemId=""><? echo $this->__f("Floating"); ?></div>
                 </div>
                 <div class="itemselector">
+                    <div class='bookingitem floatingbutton <? echo $canUseFloating." ".$currentlyUsingFloating; ?>' gs_value='<? echo $type->id; ?>' itemId=""><? echo $this->__f("Floating"); ?></div>
                     <?
                     
                     foreach ($items as $item) {
@@ -84,8 +91,11 @@ function canUseItem($item, $availeableitems) {
         }
         ?>
     </div>
-</div>
 
-<div class='pricesview'>
-    <? $this->includefile("prices"); ?>
+    <div class='explenation'>
+        <div class='expcolorouter'><div class='expcolor canUse'></div> <? echo $this->__f("Can be selected"); ?></div>
+        <div class='expcolorouter'><div class='expcolor canNotUse'></div> <? echo $this->__f("Not available"); ?></div>
+        <div class='expcolorouter'><div class='expcolor canNotUseGs_selected'></div> <? echo $this->__f("Guest is living in this room, but is not available for the given timeframe"); ?></div>
+        <div class='expcolorouter'><div class='expcolor gs_selected'></div> <? echo $this->__f("Selected"); ?></div>
+    </div>    
 </div>

@@ -14,6 +14,43 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function deleteRoom() {
+        $room = $this->getSelectedRoom();
+        $booking = $this->getPmsBooking();
+        $error = $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(),$booking->id, $room->pmsBookingRoomId);
+        if($error) {
+            $this->errors[] = $error;
+        }
+        $this->setData(true);
+    }
+    
+    public function updateGuestData() {
+        $room = $this->getSelectedRoom();
+        $i = 0;
+        $newGuests = array();
+        foreach($_POST['data'] as $guestPost) {
+            $guest = null;
+            foreach($room->guests as $g) {
+                if($g->guestId == $guestPost['guestId']) {
+                    $guest = $g;
+                }
+            }
+            if(!$guest) {
+                $guest = new \core_pmsmanager_PmsGuests();
+                $room->guests[] = $guest;
+            }
+            $guest->name = $guestPost['name'];
+            $guest->email = $guestPost['email'];
+            $guest->prefix = $guestPost['prefix'];
+            $guest->phone = $guestPost['phone'];
+            $i++;
+            $newGuests[] = $guest;
+        }
+        $room->guests = $newGuests;
+        $room->numberOfGuests = sizeof($room->guests);
+        $this->updateRoom($room);
+    }
+    
     public function updatePriceMatrixWithPeriodePrices() {
         $this->setData();
         $room = $this->getSelectedRoom();
@@ -151,6 +188,29 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     public function reloadAddons() {
         $this->includefile("addons");
+    }
+    
+    public function saveRoom() {
+        $booking = $this->getPmsBooking();
+        $room = $this->getSelectedRoom();
+        $toAdd = array();
+        foreach($booking->rooms as $r) {
+            if($room->pmsBookingRoomId == $r->pmsBookingRoomId) {
+                continue;
+            }
+            $toAdd[] = $r;
+        }
+        $toAdd[] = $room;
+        $booking->rooms = $toAdd;
+        
+        $text = $this->createReadableDiffText($this->getDifferenceInRoom());
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $item = "";
+        if(isset($room->bookingItemId)) {
+            $item = $room->bookingItemId;
+        }
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), $text, $booking->id, $item);
+        $this->setData(true);
     }
     
     public function updateBooking() {
@@ -354,8 +414,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function setData($reload = false) {
-        $reload = true;
-        
         if(!isset($_SESSION['cachedroomspmsrooms'])) {
             $_SESSION['cachedroomspmsrooms'] = array();
         }
@@ -741,6 +799,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         die();
     }
 
+    public function updateDayPrices() {
+        $room = $this->getSelectedRoom();
+        $room->priceMatrix = $_POST['data'];
+        $this->updateRoom($room);
+    }
+    
     public function updateRoom($room, $avoidChanges = false) {
         if(!$avoidChanges) {
             $room->hasBeenUpdated = true;
@@ -768,11 +832,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->updateRoom($room);
     }
 
-    public function getAddonsCost() {
+    public function getAddonsCost($withIncludedInRoomPrice) {
         $this->setData();
         $room = $this->getSelectedRoom();
         $totalAmount = 0.0;
         foreach($room->addons as $addon) {
+            if($addon->isIncludedInRoomPrice && !$withIncludedInRoomPrice) {
+                continue;
+            }
             $totalAmount += $addon->price * $addon->count;
         }
         return $totalAmount;
@@ -1060,6 +1127,57 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         $changes['totalchanges'] = $totalChanges;
         
+        $changes['guestchanges'] = "";
+        
+        //Guests added
+        foreach($unsavedRoom->guests as $guest) {
+            if(!$guest->guestId) {
+                $changes['guestchanges'] .= "<div>Guest added : ". $guest->name . " - " . $guest->email . " - " . $guest->prefix . " - " . $guest->phone . "</div>";
+            }
+        }
+        
+        //Guests removed
+        foreach($savedRoom->guests as $guest) {
+            $found = false;
+            foreach($unsavedRoom->guests as $unsavedGuest) {
+                if($guest->guestId == $unsavedGuest->guestId) {
+                    $found = true;
+                }
+            }
+            if(!$found) {
+                $changes['guestchanges'] .= "<div>Guest removed : ". $guest->name . " - " . $guest->email . " - " . $guest->prefix . " - " . $guest->phone . "</div>";
+            }
+        }
+        
+        //Guests changed
+        foreach($savedRoom->guests as $guest) {
+            $found = false;
+            $savedGuest = $guest; 
+            $unsavedGuest = null;
+            foreach($unsavedRoom->guests as $unsaved) {
+                if($guest->guestId == $unsaved->guestId) {
+                    $unsavedGuest = $unsaved;
+                }
+            }
+            
+            if($unsavedGuest != null && $savedGuest->email && $savedGuest->email != $unsavedGuest->email) {
+                $changes['guestchanges'] .= "<div>Email changed from " . $savedGuest->email . " to " . $unsavedGuest->email ."</div>";
+            }
+            
+            if($unsavedGuest != null && $savedGuest->phone && $savedGuest->phone != $unsavedGuest->phone) {
+                $changes['guestchanges'] .= "<div>Phone changed from " . $savedGuest->phone . " to " . $unsavedGuest->phone ."</div>";
+            }
+            
+            if($unsavedGuest != null && $savedGuest->prefix && $savedGuest->prefix != $unsavedGuest->prefix) {
+                $changes['guestchanges'] .= "<div>Phone prefix changed from " . $savedGuest->prefix . " to " . $unsavedGuest->prefix ."</div>";
+            }
+            
+            if($unsavedGuest != null && $savedGuest->name && $savedGuest->name != $unsavedGuest->name) {
+                $changes['guestchanges'] .= "<div>Name changed from " . $savedGuest->name . " to " . $unsavedGuest->name ."</div>";
+            }
+        }
+        
+        
         return $changes;
     }
 
@@ -1094,6 +1212,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             $text .= "</div>";
         }
         
+        
         if(sizeof($diffs['removedAddon'])) {
             $text .= "<div class='changetextrow'>";
             $text .= "Addons removed:<br>";
@@ -1124,5 +1243,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->getApi()->getCartManager()->clear();
         $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $booking->id, $filter);    
     }
+
+    public function printOrderList() {
+        $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        $orderlist->setOrderIds($this->pmsBooking->orderIds);
+        $orderlist->renderApplication(true, $this);
+    }
+
 }
 ?>

@@ -579,7 +579,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
         gsTiming("start");
         
-        if(filter.bookingId != null && !filter.bookingId.isEmpty()) {
+        if(filter != null && filter.bookingId != null && !filter.bookingId.isEmpty()) {
             List<PmsBooking> res = new ArrayList();
             res.add(getBooking(filter.bookingId));
             return res;

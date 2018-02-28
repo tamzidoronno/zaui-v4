@@ -1865,7 +1865,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             public boolean verify(String hostname,
                     javax.net.ssl.SSLSession sslSession) {
-                return hostname.equals("localhost");
+                return true;
             }
         });
         

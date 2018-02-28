@@ -191,6 +191,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean usePricesFromChannelManager = false;
     public boolean useGetShopPricesOnExpedia = false;
     public boolean ignoreNoShow = false;
+    public Integer increaseByPercentage = 0;
     
     public String tripTeaseHotelId = "";
 

@@ -20,6 +20,7 @@ import com.thundashop.core.pmsmanager.PmsBookingComment;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
@@ -309,7 +310,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             room.guest = guest;
             room.guestName = getGuestName(roomNumber, table);
-            room.roomId = roomId;
+            room.roomId = roomId; 
             room.breakfasts = checkForBreakfast(roomtable, table, guest);
             try {
                 ArrayList<PmsBookingAddonItem> addons = new ArrayList(pmsManager.getConfigurationSecure().addonConfiguration.values());
@@ -1938,6 +1939,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private Vector createRoomPriceList(WubookRoomData rdata, HashMap<String, Double> pricesForType, Calendar calStart, Vector list, int guests) {
         Double defaultPrice = pricesForType.get("default");
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
             
         for(int i = 0;i < (365*2); i++) {
             int year = calStart.get(Calendar.YEAR);
@@ -1968,20 +1970,25 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 PmsBooking booking = new PmsBooking();
                 pmsManager.setPriceOnRoom(room, true, booking);
                 priceToAdd = room.price;
-                
-                //Lofoten bed and breakfast icreases the rooms by 15%.
-                if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9")) {
-                    priceToAdd *= 1.15;
-                    priceToAdd = (double)Math.round(priceToAdd);
-                }
-                
             } else if(pmsManager.getConfigurationSecure().enableCoveragePrices) {
                 PmsBooking booking = new PmsBooking();
                 priceToAdd = pmsInvoiceManager.calculatePrice(rdata.bookingEngineTypeId, calStart.getTime(), calStart.getTime(), true, booking);
             }
+            
             if(priceToAdd == 0.0) {
                 priceToAdd = 1.0;
             }
+            
+            //Lofoten bed and breakfast icreases the rooms by 15%.
+            if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9") || config.increaseByPercentage > 0) {
+                double factor = 1.15;
+                if(config.increaseByPercentage > 0) {
+                    factor = 1.0 + ((double)config.increaseByPercentage/100);
+                }
+                priceToAdd *= factor;
+                priceToAdd = (double)Math.round(priceToAdd);
+            }
+
             list.add(priceToAdd);
             calStart.add(Calendar.DAY_OF_YEAR, 1);
         }

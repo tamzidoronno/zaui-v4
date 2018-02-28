@@ -72,6 +72,18 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
             * At what age does a child become an adult?
         </span>
     </div>
+    <div class='container'>
+        <span class='option'>
+            <select class='gsniceselect1' gsname="avoidRandomRoomAssigning">
+                <option value='false'>Select a random clean room</option>
+                <option value='true' <?php if($config->avoidRandomRoomAssigning) { echo "SELECTED"; } ?>>Select a clean room from sorted list</option>
+            </select>
+        </span>
+        <span class='title'>
+            Priority on autoassigned rooms<br>
+            * The same day of arrival the system will try to automatically give the guest the best selected room, the sorted list is found in the configuration section for the rooms.<br><br>
+        </span>
+    </div>
     
     <h1>Payment and order creation</h1>
     <div class='container'>

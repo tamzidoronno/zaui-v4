@@ -23,6 +23,16 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         return "PmsSearchBooking";
     }
     
+    public function quickAction() {
+        $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $app->quickAction();
+    }
+    
+    public function loadQuickMenu() {
+        $type = $_POST['data']['type'];
+        $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $app->loadQuickMenu($type);
+    }
     
     public function getCurrentGroupBookingEngineId() {
         if (isset($_GET['bookingEngineId'])) {

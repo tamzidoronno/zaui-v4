@@ -34,6 +34,9 @@ public interface IPmsManager {
             
     @Administrator
     public void undoLastCleaning(String itemId);
+            
+    @Administrator
+    public void removeProductFromRoom(String pmsBookingRoomId, String productId);
     
     @Administrator
     public boolean hasLockSystemActive();

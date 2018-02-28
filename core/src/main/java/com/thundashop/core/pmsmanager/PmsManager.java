@@ -7175,7 +7175,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
-    void removeProductFromRoom(String pmsBookingRoomId, String productId) {
+    @Override
+    public void removeProductFromRoom(String pmsBookingRoomId, String productId) {
         PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         List<PmsBookingAddonItem> toRemove = new ArrayList();

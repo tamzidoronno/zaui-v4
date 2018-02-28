@@ -1,0 +1,25 @@
+<span class='shop_button' style='width:100%;box-sizing: border-box;' onclick="thundashop.framework.toggleRightWidgetPanel('addaddons')">Add addon</span>
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$type = $_POST['data']['type'];
+$roomId = $_POST['data']['roomid'];
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+$currentRoom = null;
+ foreach($booking->rooms as $room) {
+    if($room->pmsBookingRoomId == $roomId) {
+        $currentRoom = $room;
+    }
+}
+echo "<br><bR>";
+$products = array();
+foreach($currentRoom->addons as $addon) {
+    $products[$addon->productId] = "1";
+}
+foreach($products as $productId => $val) {
+    $product = $this->getApi()->getProductManager()->getProduct($productId);
+    echo "<div><input type='checkbox' gsname='productid_$productId'> " . $product->name . "</div>";
+}
+if(sizeof($products) > 0) {
+    echo "<span class='shop_button' gstype='submit' style='width:100%;box-sizing: border-box;' >Remove selected addons</span>";
+}
+?>

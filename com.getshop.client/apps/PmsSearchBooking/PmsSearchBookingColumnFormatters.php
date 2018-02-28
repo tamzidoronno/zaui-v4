@@ -64,14 +64,13 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatVistior($room) {
-        
         $checkedIn = "";
         if($room->checkedIn) {
             $checkedIn = "<div class='guesticon checkedin'><i class='fa fa-smile-o' title='Guest has checked in'></i></div>";
         }
         
         $vistorText = "";
-        $vistorText = "<div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='icon-user'></i></div>$checkedIn</div>";
+        $vistorText = "<span class='quickmenuoption dontExpand'></span><div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='icon-user'></i></div>$checkedIn</div>";
         
         $vistorText .= "<div class='guestinfo2'>";
             foreach($room->guest as $guest) {
@@ -91,7 +90,17 @@ class PmsSearchBookingColumnFormatters {
             if(@$filter->groupByBooking && $room->numberOfRoomsInBooking > 1) {
                 $vistorText .=  '<div>+ ' . ($room->numberOfRoomsInBooking-1) . " addititional entries.</div>";
             }
-        $vistorText .= "</div>";
+            
+        $vistorText .= "<span class='quickfunctions' roomid='".$room->pmsRoomId."'>";
+        if($room->progressState != "deleted") {
+            $vistorText .= "<i class='fa fa-trash-o dontExpand quickfunction' title='Delete room' type='delete'></i> ";
+            $vistorText .= "<i class='fa fa-exchange dontExpand quickfunction' title='Change stay' type='changestay'></i> ";
+        }
+        $vistorText .= "<i class='fa fa-dollar dontExpand quickfunction' title='Change dayprice' type='changeprice'></i> ";
+        $vistorText .= "<i class='fa fa-plus-circle dontExpand quickfunction' title='Update addons' type='updateaddons'></i> ";
+        $vistorText .= "<i class='fa fa-users dontExpand quickfunction' title='Change guest information' type='guestinfo'></i> ";
+        $vistorText .= "<i class='fa fa-arrow-right dontExpand quickfunction' title='Process payments' type='payments'></i>";
+        $vistorText .= "</span></div>";
         
         return $vistorText;
     }

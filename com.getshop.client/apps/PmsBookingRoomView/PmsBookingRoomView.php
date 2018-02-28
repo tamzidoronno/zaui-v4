@@ -14,6 +14,34 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function quickAction() {
+        $this->includefile("doquickaction");
+    }
+    
+    public function loadQuickMenu($type) {
+        ?>
+        <div style="padding: 10px;" gstype="form" method="quickAction">
+            <input type='hidden' gsname='type' value='<?php echo $_POST['data']['type']; ?>'>
+            <input type='hidden' gsname='roomid' value='<?php echo $_POST['data']['roomid']; ?>'>
+        <?php
+        switch($type) {
+            case "delete":
+            case "changeprice":
+            case "changestay":
+            case "updateaddons":
+            case "":
+                $this->setRoomId($_POST['data']['roomid']);
+                $this->includefile("quickmenu_" . $type);
+                break;
+            default:
+                echo "Not found: " . $type;
+                break;
+        }
+        ?>
+        </div>
+        <?php
+    }
+    
     public function isGroupBookingView() {
         if($this->getPage()) {
             $_SESSION['cachedgroupedbooking'] = $this->getPage()->getId() == "groupbooking";
@@ -65,76 +93,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function updatePriceMatrixWithPeriodePrices() {
         $this->setData();
         $room = $this->getSelectedRoom();
-        $amount = $_POST['data']['periodePrice'];
-        switch($_POST['data']['periodePriceType']) {
-            case "dayprice":
-                foreach($room->priceMatrix as $day => $val) {
-                    $room->priceMatrix->{$day} = $amount;
-                }
-                break;
-            case "wholestay":
-                foreach($room->priceMatrix as $day => $val) {
-                    $days = sizeof(array_keys((array)$room->priceMatrix));
-                    $room->priceMatrix->{$day} = round(($amount / $days), 2);
-                }
-                break;
-            case "start_of_stay":
-                $time = strtotime($room->date->start);
-                while(true) {
-                    $start = $time;
-                    $end = strtotime("+1 month", $time);
-                    $time = strtotime("+1 month", $time);
-                    
-                    $datediff = $end - $start;
-                    $days = floor($datediff / (60 * 60 * 24));
-                    $avg = $amount / $days;
-                    
-                    foreach($room->priceMatrix as $day => $val) {
-                        $dayInTime = strtotime($day . " 23:59");
-                        if($dayInTime >= $start && $dayInTime < $end) {
-                            $room->priceMatrix->{$day} = round($avg,2);
-                        }
-                    }
-                    
-                    if($end > strtotime($room->date->end)) {
-                        break;
-                    }
-                }
-                break;
-            case "start_of_month":
-                $time = strtotime($room->date->start);
-                $time = strtotime(date("01.m.Y", $time));
-                while(true) {
-                    $start = $time;
-                    $end = strtotime("+1 month", $time);
-                    $time = strtotime("+1 month", $time);
-                    
-                    $datediff = $end - $start;
-                    $days = floor($datediff / (60 * 60 * 24));
-                    $avg = $amount / $days;
-                    
-                    echo date("d.m.Y", $start) . " - ";
-                    echo date("d.m.Y", $end) . " ($days)" . "<br>";
-                    
-                    foreach($room->priceMatrix as $day => $val) {
-                        $dayInTime = strtotime($day . " 23:59");
-                        if($dayInTime >= $start && $dayInTime < $end) {
-                            $room->priceMatrix->{$day} = round($avg,2);
-                        }
-                    }
-                    
-                    if($end > strtotime($room->date->end)) {
-                        break;
-                    }
-                }
-                break;
-            case "whole_stay":
-                $avg = $amount / sizeof($room->priceMatrix);
-                foreach($room->priceMatrix as $key => $val) {
-                    $room->priceMatrix[$key] = $avg;
-                }
-                break;
-        }
+        $room = $this->doUpdatePriceMatrixWithPeriodePrice();
         $this->updateRoom($room);
     }
 
@@ -1261,6 +1220,80 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
         $orderlist->setOrderIds($this->pmsBooking->orderIds);
         $orderlist->renderApplication(true, $this);
+    }
+
+    public function doUpdatePriceMatrixWithPeriodePrice($room) {
+        $amount = $_POST['data']['periodePrice'];
+        switch($_POST['data']['periodePriceType']) {
+            case "dayprice":
+                foreach($room->priceMatrix as $day => $val) {
+                    $room->priceMatrix->{$day} = $amount;
+                }
+                break;
+            case "wholestay":
+                foreach($room->priceMatrix as $day => $val) {
+                    $days = sizeof(array_keys((array)$room->priceMatrix));
+                    $room->priceMatrix->{$day} = round(($amount / $days), 2);
+                }
+                break;
+            case "start_of_stay":
+                $time = strtotime($room->date->start);
+                while(true) {
+                    $start = $time;
+                    $end = strtotime("+1 month", $time);
+                    $time = strtotime("+1 month", $time);
+                    
+                    $datediff = $end - $start;
+                    $days = floor($datediff / (60 * 60 * 24));
+                    $avg = $amount / $days;
+                    
+                    foreach($room->priceMatrix as $day => $val) {
+                        $dayInTime = strtotime($day . " 23:59");
+                        if($dayInTime >= $start && $dayInTime < $end) {
+                            $room->priceMatrix->{$day} = round($avg,2);
+                        }
+                    }
+                    
+                    if($end > strtotime($room->date->end)) {
+                        break;
+                    }
+                }
+                break;
+            case "start_of_month":
+                $time = strtotime($room->date->start);
+                $time = strtotime(date("01.m.Y", $time));
+                while(true) {
+                    $start = $time;
+                    $end = strtotime("+1 month", $time);
+                    $time = strtotime("+1 month", $time);
+                    
+                    $datediff = $end - $start;
+                    $days = floor($datediff / (60 * 60 * 24));
+                    $avg = $amount / $days;
+                    
+                    echo date("d.m.Y", $start) . " - ";
+                    echo date("d.m.Y", $end) . " ($days)" . "<br>";
+                    
+                    foreach($room->priceMatrix as $day => $val) {
+                        $dayInTime = strtotime($day . " 23:59");
+                        if($dayInTime >= $start && $dayInTime < $end) {
+                            $room->priceMatrix->{$day} = round($avg,2);
+                        }
+                    }
+                    
+                    if($end > strtotime($room->date->end)) {
+                        break;
+                    }
+                }
+                break;
+            case "whole_stay":
+                $avg = $amount / sizeof($room->priceMatrix);
+                foreach($room->priceMatrix as $key => $val) {
+                    $room->priceMatrix[$key] = $avg;
+                }
+                break;
+        }
+        return $room;
     }
 
 }

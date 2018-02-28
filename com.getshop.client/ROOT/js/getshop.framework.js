@@ -2249,6 +2249,9 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
     if ($(e.target).hasClass('dontExpand')) {
         return;
     }
+    if($(e.target).closest('.dontExpand').length > 0) {
+        return;
+    }
     
     var table = $(this).closest('.GetShopModuleTable');
     var identifier = table.attr('identifier');

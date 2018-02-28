@@ -4,6 +4,20 @@
     min-height: 800px;
 }
 
+.GetShopModuleTable .quickmenuoption {  
+    position: absolute;
+    right: 0px;
+    border: solid 1px;
+    padding: 2px;
+    background-color: #fff;
+    width: 200px;
+    top: 60px; 
+    display:none;
+    z-index:2;
+}
+.GetShopModuleTable .quickfunctions { display:none; float:right; color:#bbb; }
+.GetShopModuleTable .datarow_inner:hover .quickfunctions { display:block; }
+.GetShopModuleTable .datarow_inner .quickfunctions .fa:hover { color:#000; cursor:pointer; }
 .PmsSearchBooking .channelDesc { color: #888; }
 .PmsSearchBooking .GetShopModuleTable .col_expandbutton i {
    font-size: 30px;
@@ -101,6 +115,7 @@
 }
 
 .PmsSearchBooking .GetShopModuleTable .col_visitor {
+    position:relative;
     width: 500px;
 }
 .PmsSearchBooking .GetShopModuleTable .col_checkin i {

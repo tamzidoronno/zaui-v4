@@ -1,0 +1,40 @@
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$type = $_POST['data']['type'];
+$roomId = $_POST['data']['roomid'];
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+$currentRoom = null;
+ foreach($booking->rooms as $room) {
+    if($room->pmsBookingRoomId == $roomId) {
+        $currentRoom = $room;
+    }
+}
+switch($type) {
+    case "delete":
+        $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $booking->id, $roomId);
+        break;
+    case "changeprice":
+        $room = $this->doUpdatePriceMatrixWithPeriodePrice($currentRoom);
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        break;
+    case "updateaddons":
+        $products = array();
+        foreach($currentRoom->addons as $addon) {
+            $products[$addon->productId] = "1";
+        }
+
+        foreach($products as $prodId => $val) {
+            if($_POST['data']['productid_'.$prodId] == "true") {
+                $this->getApi()->getPmsManager()->removeProductFromRoom($this->getSelectedMultilevelDomainName(), $roomId, $prodId);
+            }
+        }
+        break;
+    case "changestay":
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $_POST['data']['starttime']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $_POST['data']['endtime']));
+        $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $roomId, $booking->id, $start, $end);
+        break;
+    
+}
+
+?>

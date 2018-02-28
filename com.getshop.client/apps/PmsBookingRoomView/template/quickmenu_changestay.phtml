@@ -1,0 +1,34 @@
+<?php
+$type = $_POST['data']['type'];
+$roomId = $_POST['data']['roomid'];
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+$currentRoom = null;
+ foreach($booking->rooms as $room) {
+    if($room->pmsBookingRoomId == $roomId) {
+        $currentRoom = $room;
+    }
+}
+$start = date("d.m.Y", strtotime($room->date->start));
+$startTime = date("H:i", strtotime($room->date->start));
+$end = date("d.m.Y", strtotime($room->date->end));
+$endTime = date("H:i", strtotime($room->date->end));
+?>
+<div>
+    Check in:<br>
+    <div>
+        <input type='txt' class='gsniceinput1 calendarinput' value='<?php echo $start; ?>' gsname='start' style='width:80px;'>
+        <input type='txt' class='gsniceinput1' value='<?php echo $startTime; ?>' gsname='starttime' style='width:40px;'>
+    </div>
+    Check out:<br>
+    <div>
+        <input type='txt' class='gsniceinput1 calendarinput' value='<?php echo $end; ?>' gsname='end' style='width:80px;'>
+        <input type='txt' class='gsniceinput1' value='<?php echo $endTime; ?>' gsname='endtime' style='width:40px;'>
+    </div>
+</div>
+<br>
+<span class='shop_button' gstype='submit'>Update stay periode</span>
+
+
+<script>
+    $('.calendarinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

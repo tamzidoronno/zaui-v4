@@ -128,9 +128,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         //Old
-        client = new XmlRpcClient("https://wubook.net/xrws/");
+//        client = new XmlRpcClient("https://wubook.net/xrws/");
         //New
-//        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
+        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
 
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
@@ -1859,6 +1859,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private Vector executeClient(String apicall, Vector params) throws XmlRpcException, IOException {
+        
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+        new javax.net.ssl.HostnameVerifier(){
+
+            public boolean verify(String hostname,
+                    javax.net.ssl.SSLSession sslSession) {
+                return hostname.equals("localhost");
+            }
+        });
+        
         logText("Executing api call: " + apicall);
         try {
             Vector res = (Vector) client.execute(apicall, params);

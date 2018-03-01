@@ -1006,11 +1006,13 @@ public class PmsManagerProcessor {
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         
         int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
         
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkin";
-        filter.startDate = new Date();
-        cal = Calendar.getInstance();
+        filter.startDate = cal.getTime();
+        cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_YEAR, days);
         filter.endDate = cal.getTime();
         
@@ -1021,7 +1023,7 @@ public class PmsManagerProcessor {
         
         for(PmsBooking book : bookingsCheckingIn) {
             if(hour < 10 && !book.isRegisteredToday()) {
-                return;
+                continue;
             }            
             if(book.payedFor) {
                 continue;

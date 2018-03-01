@@ -1,4 +1,4 @@
-<span class='shop_button' style='width:100%;box-sizing: border-box;' onclick="thundashop.framework.toggleRightWidgetPanel('addaddons')">Add addon</span>
+<span class='shop_button doquickaddaddons' style='width:100%;box-sizing: border-box;'>Add addon</span>
 <?php
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $type = $_POST['data']['type'];
@@ -23,3 +23,13 @@ if(sizeof($products) > 0) {
     echo "<span class='shop_button' gstype='submit' style='width:100%;box-sizing: border-box;' >Remove selected addons</span>";
 }
 ?>
+
+<script>
+$('.doquickaddaddons').on('click',  function() {
+    var event = thundashop.Ajax.createEvent('','toggleQuickAddAddons',$(this), {});
+    thundashop.Ajax.postWithCallBack(event, function() {
+        thundashop.framework.toggleRightWidgetPanel('addaddons');
+        $('.quickmenuoption').hide();
+    });
+});
+</script>

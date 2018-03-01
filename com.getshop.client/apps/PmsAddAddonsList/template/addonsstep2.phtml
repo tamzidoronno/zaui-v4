@@ -34,6 +34,10 @@
     $addPeriodeTypes['repeat_weekly'] = "Weekly entries";
     $addPeriodeTypes['repeat_monthly'] = "Monthly entries";
     $addPeriodeTypes['alldays'] = "All days";
+    $quickadd = "false";
+    if(isset($_POST['data']['quickadd'])) {
+        $quickadd = $_POST['data']['quickadd'];
+    }
     ?>
     <div class='addaddonstep2' style='border-bottom: solid 1px #bbb; border-top: solid 1px #bbb; padding: 10px;text-align: center;font-size: 18px; margin-bottom: 10px;'>
         <i class='fa fa-arrow-left goBackToStart' style='float:left;cursor:pointer; color:#bbb; '></i> Add <?php echo $addonProduct->name . " to room"; ?>
@@ -41,6 +45,7 @@
     <div style='padding: 10px;'>
         <div class='addaddonsstep2'>
             <input type='hidden' gsname='productId' value='<?php echo $addonItem->productId; ?>'>
+            <input type='hidden' gsname='quickadd' value='<?php echo $quickadd; ?>'>
             <select style='width:100%' class='typeofaddon gsniceselect1' gsname='periode_selection'>
                 <?php
                 foreach($addPeriodeTypes as $id => $type) {
@@ -64,6 +69,7 @@
         <br>
         <div gstype='form' method='addAdvancedAddons'>
             <input type='hidden' gsname='productId' value='<?php echo $addonItem->productId; ?>'>
+            <input type='hidden' gsname='quickadd' value='<?php echo $quickadd; ?>'>
             <div class='addonpreview'></div>
             <br>
             Text on order<br>

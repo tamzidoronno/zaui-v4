@@ -9,10 +9,17 @@ app.PmsAddAddonsList = {
         var args = thundashop.framework.createGsArgs(panel);
         
         var event = thundashop.Ajax.createEvent('','addAdvancedAddons', $(this), args);
-        thundashop.Ajax.postWithCallBack(event, function(res){
-            thundashop.framework.toggleRightWidgetPanel('addaddons');
-            app.PmsBookingRoomView.refresh();
-        });
+        if(args.quickadd === "true") {
+            thundashop.Ajax.postWithCallBack(event, function() {
+                thundashop.framework.toggleRightWidgetPanel('addaddons');
+                thundashop.framework.reprintPage();
+            });
+        } else {
+            thundashop.Ajax.postWithCallBack(event, function(res){
+                thundashop.framework.toggleRightWidgetPanel('addaddons');
+                app.PmsBookingRoomView.refresh();
+            });
+        }
     },
     showFirstStep : function() {
         $('.addaddonrows.step1').show();
@@ -22,9 +29,9 @@ app.PmsAddAddonsList = {
         $('.addaddonrows.step1').hide();
         $('.addaddonrows.step2').show();
         var event = thundashop.Ajax.createEvent('','loadSecondAddAddonsStep',$(this), {
-            "productId" : $(this).attr('productid')
+            "productId" : $(this).attr('productid'),
+            "quickadd" : $(this).attr('quickadd')
         });
-        
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.addaddonrows.step2').html(res);
         });

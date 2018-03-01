@@ -10,12 +10,16 @@
     border: solid 1px;
     padding: 2px;
     background-color: #fff;
-    width: 200px;
+    min-width: 200px;
     top: 60px; 
     display:none;
     z-index:2;
 }
-.GetShopModuleTable .quickfunctions { display:none; float:right; color:#bbb; }
+.GetShopModuleTable .quickfunctions {     display: none;
+    position: absolute;
+    color: #bbb;
+    right: 0px;
+    bottom: 0px; }
 .GetShopModuleTable .datarow_inner:hover .quickfunctions { display:block; }
 .GetShopModuleTable .datarow_inner .quickfunctions .fa:hover { color:#000; cursor:pointer; }
 .PmsSearchBooking .channelDesc { color: #888; }

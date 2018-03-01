@@ -18,6 +18,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("doquickaction");
     }
     
+    
     public function loadQuickMenu($type) {
         ?>
         <div style="padding: 10px;" gstype="form" method="quickAction">
@@ -29,7 +30,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             case "changeprice":
             case "changestay":
             case "updateaddons":
-            case "":
+            case "guestinfo":
+                echo "<div style='text-align:right; border-bottom: solid 1px #bbb; padding-bottom: 10px; margin-bottom: 10px;'><i class='fa fa-close' style='cursor:pointer;' onmousedown='$(\".quickmenuoption\").hide();'></i></div>";
                 $this->setRoomId($_POST['data']['roomid']);
                 $this->includefile("quickmenu_" . $type);
                 break;

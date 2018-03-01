@@ -34,7 +34,29 @@ switch($type) {
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $_POST['data']['endtime']));
         $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $roomId, $booking->id, $start, $end);
         break;
-    
+    case "guestinfo":
+        $guests = array();
+        $numberOfGuests = $_POST['data']['numberofguests'];
+        for($i = 0; $i < 30; $i++) {
+            if($i >= $numberOfGuests) {
+                break;
+            }
+            $guestId = $_POST['data']['guestid_'.$i];
+            $name = $_POST['data']['name_'.$i];
+            $email = $_POST['data']['email_'.$i];
+            $prefix = $_POST['data']['prefix_'.$i];
+            $phone = $_POST['data']['phone_'.$i];
+            
+            $guestInfo = new core_pmsmanager_PmsGuests();
+            $guestInfo->email = $email;
+            $guestInfo->phone = $phone;
+            $guestInfo->prefix = $prefix;
+            $guestInfo->name = $name;
+            $guests[] = $guestInfo;
+        }
+        $currentRoom->guests = $guests;
+        $this->getApi()->getPmsManager()->setGuestOnRoom($this->getSelectedMultilevelDomainName(), $guests, $booking->id, $currentRoom->pmsBookingRoomId);
+        break;
 }
 
 ?>

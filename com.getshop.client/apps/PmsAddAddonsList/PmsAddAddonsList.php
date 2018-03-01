@@ -31,7 +31,7 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
                 break;
             }
         }
-        
+        $newAddons = array();
         foreach($_POST['data'] as $key => $val) {
             if(stristr($key, "rowindex_") && $val == "true") {
                 $addon = new \core_pmsmanager_PmsBookingAddonItem();
@@ -42,10 +42,23 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
                 $addon->name = $_POST['data']['name'];
                 $addon->productId = $addonToUse->productId;
                 $addon->addonId = $this->generate_uuid();
+                $newAddons[] = $addon;
                 $selectedRoom->addons[] = $addon;
             }
         }
-        $app->updateRoom($selectedRoom);
+        if($_POST['data']['quickadd'] == "true") {
+            $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId);
+            foreach($booking->rooms as $room) {
+                if($room->pmsBookingRoomId == $selectedRoom->pmsBookingRoomId) {
+                    foreach($newAddons as $tmp) {
+                        $room->addons[] = $tmp;
+                    }
+                }
+            }
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        } else {
+            $app->updateRoom($selectedRoom);
+        }
     }
     
     function generate_uuid() {

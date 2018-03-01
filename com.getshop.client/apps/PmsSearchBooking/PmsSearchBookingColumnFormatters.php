@@ -99,6 +99,11 @@ class PmsSearchBookingColumnFormatters {
         $vistorText .= "<i class='fa fa-dollar dontExpand quickfunction' title='Change dayprice' type='changeprice'></i> ";
         $vistorText .= "<i class='fa fa-plus-circle dontExpand quickfunction' title='Update addons' type='updateaddons'></i> ";
         $vistorText .= "<i class='fa fa-users dontExpand quickfunction' title='Change guest information' type='guestinfo'></i> ";
+        if($room->numberOfRoomsInBooking > 1) {
+            $vistorText .= "<a href='/?page=groupbooking&bookingId=".$room->bookingId."' style='color:#bbb;'>";
+            $vistorText .= "<i class='fa fa-arrows dontExpand' title='This room is part of a group of ".$room->numberOfRoomsInBooking." rooms'></i></a> ";
+            
+        }
         $vistorText .= "<i class='fa fa-arrow-right dontExpand quickfunction' title='Process payments' type='payments'></i>";
         $vistorText .= "</span></div>";
         

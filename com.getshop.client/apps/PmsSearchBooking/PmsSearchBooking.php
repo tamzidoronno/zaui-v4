@@ -19,6 +19,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public function getDescription() {   
     }
 
+    
+    public function toggleQuickAddAddons() {
+        $_SESSION['quickaddaddons'] = true;
+    }
+    
     public function getName() {
         return "PmsSearchBooking";
     }

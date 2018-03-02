@@ -540,7 +540,7 @@ public class PmsManagerProcessor {
 
     private void processAutoExtend() {
         if (manager.getConfigurationSecure().autoExtend) {
-            List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
+            List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
             for (PmsBooking booking : bookings) {
                 boolean needSaving = false;
                 for (PmsBookingRooms room : booking.getActiveRooms()) {

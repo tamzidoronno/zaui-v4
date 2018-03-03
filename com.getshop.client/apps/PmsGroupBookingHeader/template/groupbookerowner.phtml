@@ -1,11 +1,22 @@
 <?php
 $pmsBooking = $this->getCurrentBooking();
 $user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
+
+$extraArgs = array();
+$extraArgs['userid'] = $user->id;
+
 ?>
 <div class="title"><? echo $this->__("BOOKER OWNER"); ?></div>
 <div class="row">
     <div class="col col1"><? echo $this->__("Name"); ?></div>
-    <div class="col col2"><? echo $user->fullName; ?></div>
+    <div class="col col2">
+        <?
+        $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+        $quser->setUser($user);
+        $quser->setExtraArgs($extraArgs);
+        $quser->renderApplication(true, $this);
+        ?>
+    </div>
 </div>
 
 <div class="row">

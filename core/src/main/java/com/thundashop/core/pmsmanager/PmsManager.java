@@ -1842,6 +1842,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.isDeleted = false;
                     remove.credited = false;
                     remove.setBooking(tmpbook);
+                    remove.deleted = false;
                     if(remove.priceMatrix.keySet().isEmpty()) {
                         setPriceOnRoom(remove, true, booking);
                     }

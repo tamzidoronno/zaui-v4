@@ -61,7 +61,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
             $this->msg = ""; 
             $this->msg .= "<script>";
-            $this->msg .= "thundashop.common.goToPageLink('/?page=groupbooking&bookingEngineId=".$bookingEngineId."');";
+            $this->msg .= "thundashop.common.goToPageLink('/?page=groupbooking&bookingId=".$res->id."');";
             $this->msg .= "</script>";
         }
     }

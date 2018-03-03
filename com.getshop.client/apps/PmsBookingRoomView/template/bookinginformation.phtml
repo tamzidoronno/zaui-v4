@@ -28,7 +28,12 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
         <div class="row odd">
             <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span></div>
             <div class="col col2">
-                <?php echo $user->fullName; ?>
+                <?
+                $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+                $quser->setUser($user);
+                $quser->setExtraArgs($extraArgs);
+                $quser->renderApplication(true, $this);
+                ?>
             </div>
         </div>
         
@@ -43,9 +48,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                 ?>
             </div>
         </div>
-        <div style='padding-top:10px;'>
-            <span class="shop_button"><i class='fa fa-edit'></i> Update current booker</span>
-            <span class="shop_button"><i class='fa fa-user'></i> Change booker</span>
+        <div style='padding-top:10px;text-align: right;'>
             <?php
             if(!$pmsSelectedRoom->deleted) {
                 ?>
@@ -137,6 +140,36 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
             echo "</div>";
         ?>
         <div style='text-align:right;padding-top:10px;'><span class='shop_button saveguestinformation'>Save guest information</div>
+        <div class='insideheader'>Internal comments (not exposed to guests)</div>
+        <?php
+        $comments = (array)$pmsBooking->comments;
+        ksort($comments);
+        foreach($comments as $time => $comment) {
+            $style = "";
+            if($comment->deleted) {
+                $style = "text-decoration: line-through;";
+            }
+            echo "<div style='$style'>";
+            echo $comment->comment;
+            echo "</div>";
+            echo "<div style='color:#bbb;$style'>";
+            echo "<i class='fa fa-trash-o deletecomment' time='$time' style='cursor:pointer;'></i> ";
+            echo date("d.m.Y H:i", $time/1000);
+            if($comment->userId) {
+                $commentUser = $this->getApi()->getUserManager()->getUserById($comment->userId);
+                echo "<span style='float:right;$style'>" . $commentUser->fullName . "</span>";
+            }
+            echo "</div>";
+            
+        }
+        ?>
+        <textarea style='width:100%;height: 70px;' class='commenttext'></textarea>
+        <div style='text-align: right;'>
+            <span class='shop_button addcommentbutton'>Add comment</span>
+        </div>
     </div>
     
 </div>
+<style>
+    .show_edit_user,.show_change_user { float:right; margin-left: 5px; }
+</style>

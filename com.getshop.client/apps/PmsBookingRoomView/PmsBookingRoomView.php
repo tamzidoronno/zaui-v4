@@ -7,8 +7,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     private $items = array();
     
+    
+    
     /* @var $selectedRoom \core_pmsmanager_PmsBookingRooms */
-    private $selectedRoom;
+    public $selectedRoom;
+    public $pmsBooking;
     
     public function getDescription() {
         
@@ -148,10 +151,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     private function getPmsRoom() {
-        $pmsBooking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        if(isset($this->selectedRoom)) {
+            return $this->selectedRoom;
+        }
+        $pmsBooking = $this->getPmsBooking();
+        $roomId = $this->getSelectedRoomId();
         
         foreach ($pmsBooking->rooms as $room) {
-            if ($room->bookingId == $_POST['data']['id']) {
+            if ($room->pmsBookingRoomId == $roomId) {
+                $this->selectedRoom = $room;
                 return $room;
             }
         }
@@ -359,7 +367,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
     public function isTabActive($tabname) {
         if (isset($_SESSION['currentSubMenu']) && $_SESSION['currentSubMenu'] == $tabname) {
-            echo "active";
+            return "active";
         }
         
         echo "";
@@ -386,42 +394,19 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function setData($reload = false) {
-        if(!isset($_SESSION['cachedroomspmsrooms'])) {
-            $_SESSION['cachedroomspmsrooms'] = array();
-        }
-        if(!isset($_SESSION['pmsbookings'])) {
-            $_SESSION['pmsbookings'] = array();
-        }
-        if(!isset($_SESSION['cachedbookings'])) {
-            $_SESSION['cachedbookings'] = array();
-        }
-
-        if (!isset($_SESSION['PmsBookingRoomView_current_pmsroom_id']) && !$reload) {
+        if(isset($this->pmsBooking) && isset($this->selectedRoom)) {
             return;
         }
-        
-        $cachedRoomId = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
-        
-        if (isset($_SESSION['cachedroomspmsrooms'][$cachedRoomId]) && !$reload) {
-            $this->selectedRoom = json_decode($_SESSION['cachedroomspmsrooms'][$cachedRoomId]);
-            $this->bookingEngineBooking = json_decode($_SESSION['cachedbookings'][$this->selectedRoom->bookingId]);
-            $this->pmsBooking = json_decode($_SESSION['cachedpmsbookings'][$cachedRoomId] );
-        } else {
-            if (!isset($this->pmsBooking) || $reload) {
-                $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $cachedRoomId);
-                $_SESSION['cachedpmsbookings'][$cachedRoomId] = json_encode($this->pmsBooking);
+        $cachedRoomId = $this->getSelectedRoomId();
+         $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $cachedRoomId);
+        foreach ($this->pmsBooking->rooms as $room) {
+            if ($room->pmsBookingRoomId == $cachedRoomId) {
+                $this->updateRoom($room, true);
+                $this->selectedRoom = $room;
             }
-
-            foreach ($this->pmsBooking->rooms as $room) {
-                if ($room->pmsBookingRoomId == $cachedRoomId) {
-                    $this->updateRoom($room, true);
-                    $this->selectedRoom = $room;
-                }
-            }
-
-            $this->bookingEngineBooking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $this->selectedRoom->bookingId);
-            $_SESSION['cachedbookings'][$this->selectedRoom->bookingId] = json_encode($this->bookingEngineBooking);
         }
+
+        $this->bookingEngineBooking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $this->selectedRoom->bookingId);
     }
 
     /**
@@ -429,7 +414,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
      * @return \core_pmsmanager_PmsBooking
      */
     public function getPmsBooking() {
-        $this->setData();
+        if(isset($this->pmsBooking)) {
+            return $this->pmsBooking;
+        }
+        $roomId = $this->getSelectedRoomId();
+        $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
         return $this->pmsBooking;
     }
     
@@ -562,23 +551,35 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
 
+    public function saveGuestInformation() {
+        $selectedRoom = $this->getPmsRoom();
+        $pmsBooking = $this->getPmsBooking();
+        $guestsToUse = $_POST['data'];
+        if(!$selectedRoom) {
+            echo "NO room";
+        }
+        if(!$pmsBooking) {
+            echo "NO booking";
+        }
+        
+        $guests = array();
+        for($i = 1; $i <= 100; $i++) {
+            $guest = new \core_pmsmanager_PmsGuests();
+            if(isset($_POST['data']['guestinfo_'.$i.'_name'])) {
+                $guest->name = $_POST['data']['guestinfo_'.$i.'_name'];
+                $guest->email = $_POST['data']['guestinfo_'.$i.'_email'];
+                $guest->phone = $_POST['data']['guestinfo_'.$i.'_phone'];
+                $guest->prefix = $_POST['data']['guestinfo_'.$i.'_prefix'];
+                $guests[] = $guest;
+            }
+        }
+        
+        $this->getApi()->getPmsManager()->setGuestOnRoom($this->getSelectedMultilevelDomainName(), $guests, $pmsBooking->id, $selectedRoom->pmsBookingRoomId);
+        $this->forceUpdate();
+    }
+    
     public function renderTabContent() {
-        if ($_SESSION['currentSubMenu'] == "log") {
-            $this->includefile("log");
-        }
-        if ($_SESSION['currentSubMenu'] == "addons") {
-            $this->printAddonsArea();
-        }
-        if ($_SESSION['currentSubMenu'] == "messages") {
-            $this->printMessages();
-        }
-        if ($_SESSION['currentSubMenu'] == "cleaning") {
-            $this->printCleaning();
-        }
-        if ($_SESSION['currentSubMenu'] == "orders") {
-            $salesPointCartCheckout = new \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout();
-            $this->includefile("orderstab");
-        } 
+        $this->printArea($_SESSION['currentSubMenu']);
     }
 
     public function addCurrentCartForPaymentProcess() {
@@ -780,10 +781,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function updateRoom($room, $avoidChanges = false) {
-        if(!$avoidChanges) {
-            $room->hasBeenUpdated = true;
-        }
-        $_SESSION['cachedroomspmsrooms'][$room->pmsBookingRoomId] = json_encode($room);
     }
 
     public function printAddonsArea() {
@@ -794,16 +791,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function removeSelectedAddons() {
-        $this->setData();
-        $room = $this->selectedRoom;
-        $keep = array();
+        $room = $this->getSelectedRoom();
         foreach($room->addons as $addon) {
-            if(!in_array($addon->productId, $_POST['data']['productIds'])) {
-                $keep[] = $addon;
+            if(in_array($addon->productId, $_POST['data']['productIds'])) {
+                $this->getApi()->getPmsManager()->removeAddonFromRoom($this->getSelectedMultilevelDomainName(), $addon->addonId, $room->pmsBookingRoomId);
             }
         }
-        $room->addons = $keep;
-        $this->updateRoom($room);
     }
 
     public function getAddonsCost($withIncludedInRoomPrice) {
@@ -1296,6 +1289,26 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 break;
         }
         return $room;
+    }
+
+    public function getSelectedRoomId() {
+        return $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
+    }
+
+    public function forceUpdate() {
+        $this->selectedRoom = null;
+        $this->pmsBooking = null;
+    }
+
+    public function printArea($area) {
+        if(!$this->isTabActive($area)) {
+            return;
+        }
+        if($area == "addons") {
+            $this->printAddonsArea();
+        } else {
+            $this->includefile($area);
+        }
     }
 
 }

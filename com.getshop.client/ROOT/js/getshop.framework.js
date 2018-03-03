@@ -1899,10 +1899,6 @@ thundashop.framework = {
             value = element.is(':checked');
         }
         
-        if(element.attr('gscached')) {
-            thundashop.Ajax.ajaxFile = "cached.php";
-        }
-        
         var data = {}
         data[name] = value;
         if (element.attr("gs_prompt")) {
@@ -1976,9 +1972,6 @@ thundashop.framework = {
     },
     submitFromEvent: function (event) {
         var target = $(event.target);
-        if(target.attr('gscached')) {
-            thundashop.Ajax.ajaxFile = "cached.php";
-        }
         if(target.attr('gstoarea')) {
             thundashop.Ajax.postToArea = target.attr('gstoarea');
         }

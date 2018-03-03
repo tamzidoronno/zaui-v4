@@ -12,34 +12,6 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 ?>
 
 <div class="bookinginformation">
-    <bR>
-    <div class="isnotactive">
-        <div class="kaipal infobox">
-            <div class="image talking"></div>
-            <div class="textbox">
-                <div class="header"><? echo $this->__f("Booking information"); ?></div>
-                <div class="text">
-                    <?
-                    echo $this->__f("Hi there, this area keeps track of the information about the booking itself. Who the booker for this room was, when it was booked, and the guests who are attached to this room.");
-                    ?>    
-                
-                    <div class="buttonarea">
-                        <div class="buttonareaheader"><? echo $this->__f("What would you like me to do?"); ?></div>
-                        <span class="shop_button"><i class='fa fa-edit'></i> Update current booker</span>
-                        <span class="shop_button"><i class='fa fa-user'></i> Change booker</span>
-                        <?php
-                        if(!$pmsSelectedRoom->deleted) {
-                            ?>
-                            <span class="shop_button" style='background-color:red;' gstype='clicksubmit' gsname="id" gsvalue="" method="deleteRoom"><i class='icon-trashcan'></i> Delete this room</span>
-                        <?php
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-    </div>
     
     <div class='guestinfobox'>
         <div class='insideheader'><? echo $this->__f("General information"); ?></div>
@@ -56,15 +28,34 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
         <div class="row odd">
             <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span></div>
             <div class="col col2">
-                <?
-                $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
-                $quser->setUser($user);
-                $quser->setExtraArgs($extraArgs);
-                $quser->renderApplication(true, $this);
+                <?php echo $user->fullName; ?>
+            </div>
+        </div>
+        
+        <div class="row odd">
+            <div class="col col1"><span><? echo $this->__f("Adress"); ?></span></div>
+            <div class="col col2">
+                <?php
+                if(isset($user->address)) {
+                    echo $user->address->address . "<br>";
+                    echo $user->address->postCode . " " . $user->address->city . "<br>";
+                }
                 ?>
-            </div>    
+            </div>
+        </div>
+        <div style='padding-top:10px;'>
+            <span class="shop_button"><i class='fa fa-edit'></i> Update current booker</span>
+            <span class="shop_button"><i class='fa fa-user'></i> Change booker</span>
+            <?php
+            if(!$pmsSelectedRoom->deleted) {
+                ?>
+                <span class="shop_button" style='background-color:red;' gstype='clicksubmit' gsname="id" gsvalue="" method="deleteRoom"><i class='icon-trashcan'></i> Delete this room</span>
+            <?php
+            }
+            ?>
         </div>
     </div>
+    
     
     
     
@@ -117,6 +108,7 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
             $roomName = $room->item ? $room->item->bookingItemName : "Floating";
 
             $i = 0;
+            echo "<div class='guestinforows'>";
             foreach ($room->guests as $guest) {
                 $i++;
                 ?>
@@ -142,7 +134,9 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                 </div>
             <?
             }
+            echo "</div>";
         ?>
+        <div style='text-align:right;padding-top:10px;'><span class='shop_button saveguestinformation'>Save guest information</div>
     </div>
     
 </div>

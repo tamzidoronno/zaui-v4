@@ -3,7 +3,6 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.PmsGroupBookingHeader .top_box', app.PmsGroupBookingHeader.changeArea);
         $(document).on('click', '.PmsGroupBookingHeader .addanotherguest', app.PmsGroupBookingHeader.addAnotherGuest);
         $(document).on('click', '.PmsGroupBookingHeader .removeguestrow', app.PmsGroupBookingHeader.removeGuestRow);
-        $(document).on('click', '.PmsGroupBookingHeader .updateguestinformation', app.PmsGroupBookingHeader.updateGuestInformation);
         $(document).on('click', '.PmsGroupBookingHeader .groupedactioncheckbox', app.PmsGroupBookingHeader.updateGroupedAction);
         $(document).on('click', '.manipulateroomoptions .shop_button', app.PmsGroupBookingHeader.doAction);
     },
@@ -45,24 +44,9 @@ app.PmsGroupBookingHeader = {
         $(this).closest('.guestrow').remove();
     },
     addAnotherGuest : function() {
-        var row = $(this).closest('.roomrowouter').find('.roomrow');
+        var row = $(this).closest('.guestinforows');
         var template = $('.guestrowtemplate').find('.guestrow').clone();
         row.append(template);
-    },
-    updateGuestInformation : function() {
-        var rooms = {};
-        $('.roomrow').each(function() {
-            var guests = [];
-            $(this).find('.guestrow').each(function() {
-                guests.push(thundashop.framework.createGsArgs($(this)));
-            });
-            rooms[$(this).attr('roomid')] = guests;
-        });
-        
-        var event = thundashop.Ajax.createEvent('','saveGuestInformation',$(this), {
-            "rooms" : rooms
-        });
-        thundashop.Ajax.post(event);
     },
     changeArea : function() {
         var newArea = $('.booker_main_user');

@@ -73,7 +73,7 @@ if($diff < -1 || $diff > 1) {
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa icon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orders'><i class="fa fa-dollar"></i> <span><? echo $warningPayments . "" . $this->__f("Payments") . " " . $totalPaymentsText; ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $warningPayments . "" . $this->__f("Payments") . " " . $totalPaymentsText; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Tickets"); ?></span></div>
     </div>
@@ -87,64 +87,40 @@ if($diff < -1 || $diff > 1) {
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('addons'); ?>" tab='addons'>
-            <?php
-            $this->printAddonsArea();
-            ?>
+            <?php $this->printArea("addons"); ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('accesscodes'); ?> accesscode" tab='accesscodes'>
-            <? $this->includefile("accesscode"); ?>
+            <?php $this->printArea("accesscodes"); ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('messages'); ?>" tab='messages'>
-            <? $this->includefile("messages"); ?>
+            <?php $this->printArea("messages"); ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'>
-            <? $this->includefile("cleaning"); ?>
+            <?php $this->printArea("cleaning"); ?>
         </div>
         
-        <div class="guestinformation <? echo $this->isTabActive('orders'); ?>" tab='orders'>
-            <? 
-            $this->includefile("orderstab");
-            ?>
+        <div class="guestinformation <? echo $this->isTabActive('orderstab'); ?>" tab='orderstab'>
+            <?php $this->printArea("orderstab"); ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('ticket'); ?>" tab='ticket'>
-            <? 
-            $this->includefile("ticket");
-            ?>
+            <?php $this->printArea("ticket"); ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('log'); ?>" tab='log'>
             <?
             if ($_SESSION['currentSubMenu'] == "log") {
-                $this->includefile("log");
+                $this->printArea("log");
             }
             ?>
         </div>
         
         <div class="stayinformation PmsAvailability <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'>
             <br>
-            <div class="isnotactive">
-                <div class="kaipal infobox">
-                    <div class="image talking"></div>
-                    <div class="textbox">
-                        <div class="text">
-                            <?
-                            echo $this->__f("The stay area contains all information about the stay. The check in / check out date, what room and room type the guests has been assigned and the daily prices related to it.");
-                            echo "<br>";
-                            echo "<br>";
-                            echo "Floating rooms: A room is in a floating state if it has not been assigned to a specific room yet. When it has not been assigned a specific room it has only been assinged to a room category. At the day of the check in I will automatically try to find the best possible fit for the guest. If it is checking in early I will prioritize this guest and give it a clean room this day. I would recommend putting guests on floating rooms and let me assign them the best possible fit on the day of the arrival. This also allows me to optimize the availability and sell as much room as possible.";
-                            ?>    
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <?
-            $this->includefile("movebooking");
-            ?>
+            <?php $this->printArea("stayinformation"); ?>
         </div>
     </div>
 </div>

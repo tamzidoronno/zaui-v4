@@ -8151,4 +8151,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return finalList;
     }
+
+    @Override
+    public boolean removeFromWaitingList(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        if(!room.addedToWaitingList) {
+            return true;
+        }
+        
+        
+        String res = addBookingToBookingEngine(booking, room);
+        if(res.isEmpty()) {
+            room.addedToWaitingList = false;
+            saveBooking(booking);
+            return true;
+        }
+        return false;
+    }
 }

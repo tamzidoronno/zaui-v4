@@ -117,6 +117,9 @@ public interface IPmsManager {
     public PmsAdditionalItemInformation getAdditionalInfo(String itemId);
     
     @Administrator
+    public boolean removeFromWaitingList(String pmsRoomId);
+    
+    @Administrator
     public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date);
     
     @Administrator

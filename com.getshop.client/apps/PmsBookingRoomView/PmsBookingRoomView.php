@@ -37,6 +37,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsManager()->addComment($this->getSelectedMultilevelDomainName(), $booking->id, $comment);
     }
     
+    public function removeFromWaitingList() {
+        $roomId = $_POST['data']['id'];
+        $this->getApi()->getPmsManager()->removeFromWaitingList($this->getSelectedMultilevelDomainName(), $roomId);
+    }
     
     public function loadQuickMenu($type) {
         ?>

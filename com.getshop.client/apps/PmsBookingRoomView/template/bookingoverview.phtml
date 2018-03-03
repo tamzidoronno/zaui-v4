@@ -145,12 +145,6 @@ if($warningPayments) {
     if(typeof(warnaboutnopaymentsflashinterval) !== "undefined") {
         clearInterval(warnaboutnopaymentsflashinterval);
     }
-    
-    $('.fa-warning').fadeOut();$('.fa-warning').fadeIn();
-    warnaboutnopaymentsflashinterval = setInterval(function() {
-        $('.fa-warning').fadeOut();$('.fa-warning').fadeIn();
-    }, "2000");
-
 </script>
 <?php
 }

@@ -16,10 +16,13 @@ foreach($booking->rooms as $room) {
     $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$room->pmsBookingRoomId."' method='removeRoom'></i> " . $types[$room->bookingItemTypeId]->name;
     $row->start = date("d.m.Y H:i", strtotime($room->date->start));
     $row->end = date("d.m.Y H:i", strtotime($room->date->end));
-    if($room->canBeAdded) {
+    if($room->canBeAdded && !$room->addedToWaitingList) {
         $row->available = "<i class='fa fa-check'></i>";
     } else {
         $row->available = "<i class='fa fa-close'></i>";
+        if($room->addedToWaitingList) {
+            $row->available = " (waiting list)";
+        }
         $canBeAdded = false;
     }
     

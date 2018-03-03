@@ -776,7 +776,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public PmsBooking getBooking(String bookingId) {
-//        dumpRenaTrening();
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -3489,7 +3488,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 cal.add(Calendar.YEAR, 100);
                 room.date.end = cal.getTime();
             }
-            if(!room.isDeleted() && room.canBeAdded) {
+            if(!room.isDeleted() && room.canBeAdded && !room.addedToWaitingList) {
                 bookingsToAdd.add(bookingToAdd);
             }
         }

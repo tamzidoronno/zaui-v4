@@ -314,12 +314,17 @@
         localStorage.setItem('gslcurrentpage','');
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
-
-
- 
-       $.getScript( "https://www.getshop.com/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
-        $.getScript( "https://www.getshop.com/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
-            $.getScript( "https://www.getshop.com/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
+<?php
+/* @var $this \ns_81edf29e_38e8_4811_a2c7_bc86ad5ab948\GslBooking */
+$prod = $this->getApi()->getStoreManager()->isProductMode();
+$endpoint = "/";
+if($prod) {
+    $endpoint = "https://www.getshop.com/";
+}
+?>
+       $.getScript( "<?php echo $endpoint; ?>scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
+        $.getScript( "<?php echo $endpoint; ?>js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
+            $.getScript( "<?php echo $endpoint; ?>js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
                 getshop_setDatePicker();
                 getshop_setBookingTranslation();
             });

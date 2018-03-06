@@ -1861,7 +1861,7 @@ class Page {
             $selectedTranslation = $this->factory->getSelectedTranslation();
             $active = $mainLangCode == $selectedTranslation ? "active" : "";
             if ($this->javapage->getshopModule && $this->javapage->getshopModule != "cms") {
-                echo "<div class='gs_language_selection_icon'><i class='icon-flag'></i></div>";
+                echo "<div class='gs_language_selection_icon'><i class='gsicon-flag'></i></div>";
             }
             echo "<div class='gs_language_selection'>";
             echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode $active'>";

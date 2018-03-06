@@ -13,7 +13,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 
         <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>" gsname='from'/>
 
-        <i class="icon-calendar-text"></i>
+        <i class="gsicon-calendar-text"></i>
     </div>
 
     <div class="gs_headerbox">
@@ -25,7 +25,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 
         <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>" gsname='to'/>
 
-        <i class="icon-calendar-text"></i>
+        <i class="gsicon-calendar-text"></i>
     </div>
 
     <div class="gs_headerbox">
@@ -108,7 +108,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
             app.PmsNewBooking.reloadAvailability();
         }
     });
-    $(document).on('click', '.PmsNewBooking .icon-calendar-text', function() {
+    $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function() {
         $(this).closest('div').find('input').focus();
     });
 </script>

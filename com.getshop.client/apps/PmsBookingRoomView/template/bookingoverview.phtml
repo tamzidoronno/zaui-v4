@@ -78,7 +78,7 @@ if($diff < -1 || $diff > 1) {
         <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . " " . $addonsPriceToDisplay; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa icon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa gsicon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $warningPayments . "" . $this->__f("Payments") . " " . $totalPaymentsText; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Tickets"); ?></span></div>

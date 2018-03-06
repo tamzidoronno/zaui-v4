@@ -232,7 +232,7 @@ class GetShopModuleTable {
 
         $leftAndRightCount = 4;
         $disabeled = $this->pagedInfo->currentPageNumber > 1 ? "" : "disabled";
-        echo "<div class='pagenumber icon-chevron-left-circle $disabeled'></div>";
+        echo "<div class='pagenumber gsicon-chevron-left-circle $disabeled'></div>";
 
         $start = $this->pagedInfo->currentPageNumber - $leftAndRightCount;
         if ($start < 1) {
@@ -261,7 +261,7 @@ class GetShopModuleTable {
         }
 
         $disabeled = $this->pagedInfo->currentPageNumber < $this->pagedInfo->totalPages ? "" : "disabled";
-        echo "<div class='pagenumber icon-chevron-right-circle $disabeled'></div>";
+        echo "<div class='pagenumber gsicon-chevron-right-circle $disabeled'></div>";
 
         echo "</div>";
 

@@ -271,22 +271,22 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
                 if (!$activeModule && $module->id == "cms") {
                     $activeModule = $module;
                 }
-                $icon = "<i class='fa $module->fontAwesome'></i>";
+                $icon = "<i class='fa gs".$module->fontAwesome."'></i>";
                 $scopeId = $_POST['scopeid'];
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
             }
             
             $logoutText = $factory->__f("Logout");
-            echo "<a class='gs_ignorenavigate' href='/logout.php?goBackToHome=true'><div class='gs_framework_module'><i class='icon-user-lock'></i> $logoutText</div></a>";
+            echo "<a class='gs_ignorenavigate' href='/logout.php?goBackToHome=true'><div class='gs_framework_module'><i class='gsicon-user-lock'></i> $logoutText</div></a>";
             
             echo "</div>";
             
             echo "<div class='gs_framework_modules_icon'>";
-                echo "<i class='fa icon-menu'></i>";
+                echo "<i class='fa gsicon-menu'></i>";
             echo "</div>";
             
             if (!$isCmsLayout) {
-                echo "<div class='getshop_logo_icon'><i class='icon-gs-logo'></i> GetShop</div>";
+                echo "<div class='getshop_logo_icon'><i class='gsicon-gs-logo'></i> GetShop</div>";
             }
         }
         

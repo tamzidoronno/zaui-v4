@@ -1281,7 +1281,7 @@ function getshop_searchRooms(e) {
                     roomBox.find('.guestselection').show();
                     if(numberofrooms) {
                         numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
-                        productentry = $('<tr class="productentry_itemlist"><td><i class="icon-gs-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td>' + parseInt(room.pricesByGuests[guest]) + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
+                        productentry = $('<tr class="productentry_itemlist"><td><i class="gsicon-gs-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td>' + parseInt(room.pricesByGuests[guest]) + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
                         productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
                     } else {
                         roomBox.find('.guestselection').hide();

@@ -932,6 +932,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public BookingResult completeBookingForTerminal(CompleteBookingInput input) {
         PmsBooking booking = pmsManager.completeCurrentBooking();
         booking.channel = "terminal";
+        
+        User user = new User();
+        user.fullName = booking.rooms.get(0).guests.get(0).name;
+        user.emailAddress = booking.rooms.get(0).guests.get(0).email;
+        user.cellPhone = booking.rooms.get(0).guests.get(0).phone;
+        user.prefix = booking.rooms.get(0).guests.get(0).prefix;
+        userManager.saveUser(user);
+        booking.userId = user.id;
+        
         pmsManager.saveBooking(booking);
         
         BookingResult res = new BookingResult();

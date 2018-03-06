@@ -9,7 +9,7 @@ $content = file_get_contents("../apps/GslBooking/template/gslfront_1.phtml");
 $factory = IocContainer::getFactorySingelton();
 $prod = $factory->isProductionMode();
 $endpoint = "http://" . $_SERVER['SERVER_NAME'];
-if($prod) {
+if($prod || $_SERVER['SERVER_NAME'] == "www.getshop.com") {
     $endpoint = "https://www.getshop.com/";
 }
 $content = str_replace("{getshop_endpoint}", $endpoint, $content);

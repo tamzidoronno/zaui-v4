@@ -5,8 +5,10 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 $isProdMode = $factory->isProductionMode();
 $endpoint = "https://www.getshop.com";
+$jsEnpoint = "https://www.getshop.com";
 if(!$isProdMode) {
     $endpoint = "";
+    $jsEnpoint = "http://" . $_SERVER['SERVER_NAME'] ."/";
 }
 include("header.php");
 ?>
@@ -38,6 +40,7 @@ include("header.php");
         $( "#bookingprocess" ).getshopbooking({
             "endpoint" : "<?php echo $endpoint; ?>",
             "viewmode" : "terminal",
+            "jsendpoint" : "<?php echo $jsEnpoint; ?>",
             "terminalid" : localStorage.getItem("getshopterminalid")
         });
         

@@ -5,17 +5,21 @@
         getshop_viewmode = options.viewmode;
         getshop_terminalid = options.terminalid;
         localStorage.setItem('getshop_endpoint',options.endpoint);
-
+        var jsendpoint = "https://www.getshop.com/";
+        if(options.jsendpoint) {
+            jsendpoint = options.jsendpoint;
+        }
+           
         $('<link/>', {
            rel: 'stylesheet',
            type: 'text/css',
-           href: 'https://www.getshop.com/scripts/booking/bookingstyles.php'
+           href: jsendpoint+'scripts/booking/bookingstyles.php'
         }).appendTo('head');
         
         $.ajax({
             "type": "get",
             async: false,
-            "url": 'https://www.getshop.com/scripts/booking/bookingcontent.php',
+            "url": jsendpoint+'/scripts/booking/bookingcontent.php',
             success: function (form) {
                 box.html("<span class='GslBooking'>" + form + "</span>");
             }
@@ -29,7 +33,7 @@
         $('<link/>', {
            rel: 'stylesheet',
            type: 'text/css',
-           href: 'https://www.getshop.com/scripts/booking/bookingstylesfront.php'
+           href: jsendpoint+'/scripts/booking/bookingstylesfront.php'
         }).appendTo('head');
 
             
@@ -40,7 +44,7 @@
         $.ajax({
             "type": "get",
             async: false,
-            "url": 'https://www.getshop.com/scripts/booking/bookingcontentfront.php',
+            "url": jsendpoint+'/scripts/booking/bookingcontentfront.php',
             success: function (form) {
                 box.html("<span class='GslBookingFront'>" + form + "</span>");
             }

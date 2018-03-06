@@ -23,6 +23,7 @@ import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.core.pmsmanager.PmsGuests;
@@ -953,5 +954,52 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         return res;
+    }
+
+    @Override
+    public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data) {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        if(data.reference.length() < 7) {
+            return null;
+        }
+        
+        filter.searchWord = data.reference;
+        List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
+        if(bookings.size() == 0) {
+            return null;
+        }
+        
+        for(PmsBooking booking : bookings) {
+            if(booking.getEndDate().before(new Date())) {
+                continue;
+            }
+            
+            if(booking.payedFor) {
+                continue;
+            }
+            double amount = -1.0;
+            for(String orderId : booking.orderIds) {
+                Order order = orderManager.getOrder(orderId);
+                if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                    amount = orderManager.getTotalAmount(order);
+                    if(amount > 0) {
+                        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
+                        verifoneManager.chargeOrder(orderId, "1");
+//                        verifoneManager.chargeOrder(orderId, settings.verifoneTerminalId);
+                        break;
+                    }
+                }
+                
+            }
+            if(amount > 0) {
+                StartPaymentProcessResult result = new StartPaymentProcessResult();
+                User user = userManager.getUserById(booking.userId);
+                result.name = user.fullName;
+                result.amount = amount;
+                return result;
+            }
+        }
+        
+        return null;
     }
 }

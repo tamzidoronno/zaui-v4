@@ -2,10 +2,14 @@
 chdir("../../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
+$storeId = $factory->getApi()->getStoreManager()->getStoreId();
+$cssStore = str_replace("-", "", $storeId);
+
 include("header.php");
 ?>
 <head>
     <link href="standardcss.css" rel="stylesheet">
+    <link href="storecss/<?php echo $cssStore; ?>.css" rel="stylesheet">
 </head>
 <body>
     <div class="paymentterminal">

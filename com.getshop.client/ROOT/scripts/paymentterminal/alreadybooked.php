@@ -10,6 +10,10 @@ if(!$isProdMode) {
     $endpoint = "";
     $jsEnpoint = "http://" . $_SERVER['SERVER_NAME'] ."/";
 }
+
+$storeId = $factory->getApi()->getStoreManager()->getStoreId();
+$cssStore = str_replace("-", "", $storeId);
+
 include("header.php");
 ?>
 <body>
@@ -20,6 +24,7 @@ include("header.php");
         <script src="<?php echo $endpoint; ?>/js/getshop.bookingembed.js"></script>
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="standardcss.css" rel="stylesheet">
+        <link href="storecss/<?php echo $cssStore; ?>.css" rel="stylesheet">
         <script src="<?php echo $endpoint; ?>/scripts/booking/bookingscripts.php"></script>
         <link rel="stylesheet" href="<?php echo $endpoint; ?>/scripts/booking/bookingstyles.php">
     </head>

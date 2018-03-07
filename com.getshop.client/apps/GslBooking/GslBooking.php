@@ -11,7 +11,13 @@ class GslBooking extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        ob_start();
         $this->includefile("gslfront_1");
+        $content = ob_get_contents();
+        ob_end_clean();
+        
+        $content = str_replace("{getshop_endpoint}", "", $content);
+        echo $content;
     }
 }
 ?>

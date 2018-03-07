@@ -29,6 +29,11 @@
 }( jQuery ));
 (function ( $ ) {
         $.fn.getshopbookingfront = function( options ) {
+            
+        var jsendpoint = "https://www.getshop.com/";
+        if(options.jsendpoint) {
+            jsendpoint = options.jsendpoint;
+        }
 
         $('<link/>', {
            rel: 'stylesheet',

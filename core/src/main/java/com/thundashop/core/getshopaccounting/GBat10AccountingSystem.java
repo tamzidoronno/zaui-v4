@@ -64,6 +64,13 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
     }
 
     @Override
+    public HashMap<String, String> getConfigOptions() {
+       HashMap<String, String> ret = new HashMap();
+        ret.put("eiendelskonto", "Eiendelskonto (default 1510)");
+        return ret;
+    }
+        
+    @Override
     public SystemType getSystemType() {
         return SystemType.GBAT10;
     }
@@ -124,6 +131,11 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         cal2.add(Calendar.DAY_OF_YEAR, duedays);
         Date dueDate = cal2.getTime();
 
+        String eiendelsKonto = getConfig("code");
+        if(eiendelsKonto == null || eiendelsKonto.isEmpty()) {
+            eiendelsKonto = "1510";
+        }
+        
         HashMap<Integer, String> line = new HashMap();
         line.put(0, "GBAT10");
         line.put(1, order.incrementOrderId+ "");
@@ -131,7 +143,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         line.put(3, "1");
         line.put(4, firstMonth + "");
         line.put(5, year + "");
-        line.put(6, "1510");
+        line.put(6, eiendelsKonto);
         line.put(7, "1");
         line.put(8, df.format(total)+"");
         line.put(9, customerId+"");

@@ -34,7 +34,7 @@ public class PmsBookingSimpleFilter {
                     rooms = booking.getAllRoomsIncInactive();
                 }
                 rooms.addAll(booking.getOverBookedRooms());
-                rooms.addAll(booking.getWaitingListRooms());
+//                rooms.addAll(booking.getWaitingListRooms());
                 for(PmsBookingRooms room : rooms) {
                     if(inFilter(room, filter, booking)) {
                         result.add(convertRoom(room, booking));

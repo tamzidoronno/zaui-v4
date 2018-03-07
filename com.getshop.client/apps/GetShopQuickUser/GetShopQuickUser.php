@@ -66,9 +66,9 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
         
         $instance = $this->getCallBackApp();
         $instance->saveUser($user);
-        
         $this->includefile("edituser");
         die();
+        
     }
 
     public function searchForUsers() {

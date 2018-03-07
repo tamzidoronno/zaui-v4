@@ -4,24 +4,35 @@ $start = $this->getStartDate();
 $end = $this->getEndDate();
 $number = 0;
 
-$start = $this->convertToJavaDate(strtotime($start));
-$end = $this->convertToJavaDate(strtotime($end));
+
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$start = $this->convertToJavaDate(strtotime($start. " " . $config->defaultStart));
+$end = $this->convertToJavaDate(strtotime($end. " " . $config->defaultEnd));
 
 $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 
+ob_start();
+echo "<div class='availableroomsheading'></div>";
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+echo "<table width='100%'>";
+$total = 0;
 foreach($types as $type) {
-    $rooms = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedMultilevelDomainName(), $type->id, $start, $end);
-    $roomCount = sizeof($rooms);
-    foreach($current->rooms as $room) {
-        if($room->bookingItemTypeId == $type->id) {
-            $roomCount--;
-        }
+    $size = $this->getNumberOfAvailableForType($type,$current,$start,$end);
+    $disabled = "";
+    if($size <= 0) {
+        $disabled = "disabled";
     }
-    $number += $roomCount;
+    $total += $size;
+    echo "<tr class='$disabled'>";
+    echo "<td class='availabletypename' roomtype='".$type->id."'>" . $type->name . "</td><td class='availableroomscounter' roomtype='".$type->id."'>$size</td>";
+    echo "</tr>";
 }
+echo "</table>";
+
+$res = ob_get_clean();
+
 $emo = "happy";
-if($number == 0) {
+if($total <= 0) {
     $emo = "sad";
 }
 ?>
@@ -30,32 +41,12 @@ if($number == 0) {
     <div class="textbox">
         <div class="header">This is the rooms we have available</div>
         <div class="text">
-            I have <?php echo $number; ?> rooms available for you between <?php echo $start . " and " . $end; ?> 
+            I have <?php echo $total; ?> rooms available for you between <?php echo $start . " and " . $end; ?> 
         </div>
     </div>
 </div>
 <?php
-
-echo "<div class='availableroomsheading'></div>";
-
-
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
-echo "<table width='100%'>";
-foreach($types as $type) {
-    $rooms = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedMultilevelDomainName(), $type->id, $start, $end);
-    $size = sizeof($rooms);
-    foreach($current->rooms as $room) {
-        if($room->bookingItemTypeId == $type->id) {
-            $size--;
-        }
-    }
-    $disabled = "";
-    if($size <= 0) {
-        $disabled = "disabled";
-    }
-    echo "<tr class='$disabled'>";
-    echo "<td class='availabletypename' roomtype='".$type->id."'>" . $type->name . "</td><td class='availableroomscounter' roomtype='".$type->id."'>$size</td>";
-    echo "</tr>";
-}
-echo "</table>";
+echo $res;
 ?>
+
+

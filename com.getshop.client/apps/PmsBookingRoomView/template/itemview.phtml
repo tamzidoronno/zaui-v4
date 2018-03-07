@@ -78,7 +78,7 @@ function canUseItem($item, $availeableitems) {
                         
                         if ($isSameDayStart) {
                             $cleanText = $this->__f("This room is clean");
-                            $cleanIcon = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $item->id) ? "<i title='$cleanText' class='icon-gs-cleaning'></i> " : "";
+                            $cleanIcon = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $item->id) ? "<i title='$cleanText' class='gsicon-gs-cleaning'></i> " : "";
                         }
                         $currentlyUsing = $item->id == $room->bookingItemId ? "gs_selected" : "";
                         $useClass = canUseItem($item, $availableItems) ? "canUse" : "canNotUse";

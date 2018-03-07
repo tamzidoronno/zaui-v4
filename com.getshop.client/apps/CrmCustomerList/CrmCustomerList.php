@@ -17,17 +17,17 @@ class CrmCustomerList extends \MarketingApplication implements \Application {
     public function renderType($user) {
         if ($user->type == 50) {
             $text = $this->__f("Editor");
-            return "<i class='icon-typewriter' title='$text'></i>";
+            return "<i class='gsicon-typewriter' title='$text'></i>";
         }
         
         if ($user->type == 100) {
             $text = $this->__f("Administrator");
-            return "<i class='icon-crown' title='$text'></i>";
+            return "<i class='gsicon-crown' title='$text'></i>";
         }
         
         if ($user->type == 10) {
             $text = $this->__f("Customer");
-            return "<i class='icon-man-woman' title='$text'></i>";
+            return "<i class='gsicon-man-woman' title='$text'></i>";
         }
         
         return $user->type; 

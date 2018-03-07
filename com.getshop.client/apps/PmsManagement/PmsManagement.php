@@ -41,7 +41,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(!$res) {
             echo "<div style='border: solid 1px; background-color:red; padding: 10px; font-size: 16px; color:#fff;'>";
             echo "<i class='fa fa-warning'></i> ";
-            echo "Unable to comply, your selection is a possible.";
+            echo "Unable to comply, your selection is not possible.";
             echo "</div>";
             $this->loadReserveRoomInformation();
         } else {

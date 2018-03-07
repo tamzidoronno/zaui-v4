@@ -776,7 +776,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public PmsBooking getBooking(String bookingId) {
-//        dumpRenaTrening();
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -1842,6 +1841,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.isDeleted = false;
                     remove.credited = false;
                     remove.setBooking(tmpbook);
+                    remove.deleted = false;
                     if(remove.priceMatrix.keySet().isEmpty()) {
                         setPriceOnRoom(remove, true, booking);
                     }
@@ -3488,7 +3488,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 cal.add(Calendar.YEAR, 100);
                 room.date.end = cal.getTime();
             }
-            if(!room.isDeleted() && room.canBeAdded) {
+            if(!room.isDeleted() && room.canBeAdded && !room.addedToWaitingList) {
                 bookingsToAdd.add(bookingToAdd);
             }
         }
@@ -8150,5 +8150,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
            finalList.add(r);
         }
         return finalList;
+    }
+
+    @Override
+    public boolean removeFromWaitingList(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        if(!room.addedToWaitingList) {
+            return true;
+        }
+        
+        
+        String res = addBookingToBookingEngine(booking, room);
+        if(res.isEmpty()) {
+            room.addedToWaitingList = false;
+            saveBooking(booking);
+            return true;
+        }
+        return false;
     }
 }

@@ -23,6 +23,20 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .savechangesonroom', this.saveChangesOnRoom);
         $(document).on('click', '.PmsBookingRoomView .tryundeleteroom', this.tryundeleteroom);
         $(document).on('click', '.PmsBookingRoomView .saveguestinformation', this.saveGuestInformation);
+        $(document).on('click', '.PmsBookingRoomView .addcommentbutton', this.addcommentbutton);
+        $(document).on('click', '.PmsBookingRoomView .deletecomment', this.deletecomment);
+    },
+    deletecomment : function() {
+        var comment = $('.commenttext').val();
+        thundashop.Ajax.simplePost($(this), 'deleteComment', {
+            "time" : $(this).attr('time')
+        });
+    },
+    addcommentbutton : function() {
+        var comment = $('.commenttext').val();
+        thundashop.Ajax.simplePost($(this), 'addComment', {
+            "comment" : comment
+        });
     },
     tryundeleteroom : function() {
         thundashop.Ajax.simplePost($(this),'deleteRoom', {});

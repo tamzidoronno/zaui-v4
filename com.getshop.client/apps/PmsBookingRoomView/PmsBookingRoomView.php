@@ -21,6 +21,26 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("doquickaction");
     }
     
+    public function deleteComment() {
+        $booking = $this->getPmsBooking();
+        foreach($booking->comments as $time => $val) {
+            if($time == $_POST['data']['time']) {
+                $val->deleted = !$val->deleted;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
+    public function addComment() {
+        $comment = $_POST['data']['comment'];
+        $booking = $this->getPmsBooking();
+        $this->getApi()->getPmsManager()->addComment($this->getSelectedMultilevelDomainName(), $booking->id, $comment);
+    }
+    
+    public function removeFromWaitingList() {
+        $roomId = $_POST['data']['id'];
+        $this->getApi()->getPmsManager()->removeFromWaitingList($this->getSelectedMultilevelDomainName(), $roomId);
+    }
     
     public function loadQuickMenu($type) {
         ?>

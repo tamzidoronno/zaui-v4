@@ -305,7 +305,7 @@
     <div style="clear:both;"></div>
 </div>
 
-<link rel="stylesheet" type="text/css" media="all" href="https://www.getshop.com/js/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" media="all" href="{getshop_endpoint}/js/daterangepicker/daterangepicker.css" />
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <script>
 
@@ -314,12 +314,9 @@
         localStorage.setItem('gslcurrentpage','');
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
-
-
- 
-       $.getScript( "https://www.getshop.com/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
-        $.getScript( "https://www.getshop.com/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
-            $.getScript( "https://www.getshop.com/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
+       $.getScript( "{getshop_endpoint}/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
+        $.getScript( "{getshop_endpoint}/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
+            $.getScript( "{getshop_endpoint}/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
                 getshop_setDatePicker();
                 getshop_setBookingTranslation();
             });

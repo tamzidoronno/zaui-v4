@@ -70,7 +70,7 @@ class PmsSearchBookingColumnFormatters {
         }
         
         $vistorText = "";
-        $vistorText = "<span class='quickmenuoption dontExpand'></span><div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='icon-user'></i></div>$checkedIn</div>";
+        $vistorText = "<span class='quickmenuoption dontExpand'></span><div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='gsicon-user'></i></div>$checkedIn</div>";
         
         $vistorText .= "<div class='guestinfo2'>";
             foreach($room->guest as $guest) {
@@ -117,19 +117,19 @@ class PmsSearchBookingColumnFormatters {
             $text = "<span title='$waiting' class='fa-stack fa-lg'><i class='fa fa-hourglass fa-stack-1x'></i> <i style='color: #FFF' class='fa fa-lock  fa-stack-3x'></i></span>";
         } else if($room->progressState == "confirmed") {
             $waiting = $this->pmsSearchBooking->__f("Booking is confirmed");
-            $text = "<span title='$waiting' ><i class='icon-clipboard-check'></i></span>";
+            $text = "<span title='$waiting' ><i class='gsicon-clipboard-check'></i></span>";
         } else if ($room->progressState == "deleted") {
             $waiting = $this->pmsSearchBooking->__f("Room has been deleted");
-            $text = "<span title='$waiting'><i class='icon-trashcan' style='color: red'></i></span>";
+            $text = "<span title='$waiting'><i class='gsicon-trashcan' style='color: red'></i></span>";
         } else if ($room->progressState == "notpaid") {
             $waiting = $this->pmsSearchBooking->__f("Room not paid");
-            $text = "<span title='$waiting'><i class='icon-bag-dollar' style='color: red'></i></span>";
+            $text = "<span title='$waiting'><i class='gsicon-bag-dollar' style='color: red'></i></span>";
         } else if ($room->progressState == "ended") {
             $waiting = $this->pmsSearchBooking->__f("Ended");
-            $text = "<span title='$waiting'><i class='icon-checkered-flag'></i style='color: green'></span>";
+            $text = "<span title='$waiting'><i class='gsicon-checkered-flag'></i style='color: green'></span>";
         } else if ($room->progressState == "active") {
             $waiting = $this->pmsSearchBooking->__f("All good (active)");
-            $text = "<span title='$waiting'> <i class='icon-list'></i></span>";
+            $text = "<span title='$waiting'> <i class='gsicon-list'></i></span>";
         } else {
             $text = $room->progressState;
         }
@@ -180,7 +180,7 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatExpandButton() {
-        return "<i class='icon-chevrons-expand-vertical'></i>";
+        return "<i class='gsicon-chevrons-expand-vertical'></i>";
     }
     
     private function createAddonText($room) {

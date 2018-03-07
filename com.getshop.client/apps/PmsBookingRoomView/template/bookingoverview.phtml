@@ -43,7 +43,13 @@ if($numberOfRooms > 1 && !$this->isGroupBookingView()) {
     echo "</div>";
 }
 
-if($room->deleted) {
+if($pmsSelectedRoom->addedToWaitingList) {
+    echo "<div class='isgroupinformation'>";
+    echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try to remove it from waiting list</a>.";
+    echo "</div>";
+}
+
+if($pmsSelectedRoom->deleted) {
     echo "<div class='isdeletedinformation'>";
     echo "This room has been cancelled / deleted, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to undelete it</a>.";
     echo "</div>";
@@ -72,7 +78,7 @@ if($diff < -1 || $diff > 1) {
         <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . " " . $addonsPriceToDisplay; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa icon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa gsicon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $warningPayments . "" . $this->__f("Payments") . " " . $totalPaymentsText; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Tickets"); ?></span></div>
@@ -145,12 +151,6 @@ if($warningPayments) {
     if(typeof(warnaboutnopaymentsflashinterval) !== "undefined") {
         clearInterval(warnaboutnopaymentsflashinterval);
     }
-    
-    $('.fa-warning').fadeOut();$('.fa-warning').fadeIn();
-    warnaboutnopaymentsflashinterval = setInterval(function() {
-        $('.fa-warning').fadeOut();$('.fa-warning').fadeIn();
-    }, "2000");
-
 </script>
 <?php
 }

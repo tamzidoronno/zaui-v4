@@ -90,6 +90,24 @@ include("header.php");
 <?php
 include("keyboard.php");
 ?>
+
+<script>
+    getshop_timeout = setTimeout(function() {
+        getshop_redirectoToFront();
+    }, "600000");
+    
+    $(document).on('mousedown', getshop_setTimeoutBooking);
+    $(document).on('click', getshop_setTimeoutBooking);
+    $(document).on('mouseup', getshop_setTimeoutBooking);
+    
+    function getshop_setTimeoutBooking() {
+        clearTimeout(getshop_timeout);
+        getshop_timeout = setTimeout(function() {
+            getshop_redirectoToFront();
+        }, "600000");
+    }
+</script>
+
 <script>
     getshop_timeout = setTimeout(function() {
         window.location.href="paymentterminal.php";

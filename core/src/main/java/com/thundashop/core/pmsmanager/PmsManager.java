@@ -4874,6 +4874,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void checkIfGuestHasArrived() throws Exception {
         if(!hasLockSystemActive()) {
+            PmsManagerProcessor processor = new PmsManagerProcessor(this);
+            processor.processStartEndings();
             return;
         }
         if(getConfigurationSecure().isArx()) {

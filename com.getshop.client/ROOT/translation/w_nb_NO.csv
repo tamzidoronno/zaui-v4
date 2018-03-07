@@ -353,6 +353,7 @@ No files added.;-;Ingen filer er lagt til.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
+No result where found, please try another input or contact us;-;Vi kunne ikke finne noe booking ved oppgitt data, prøv igjen eller kontakt oss.
 No rooms are available.;-;Ingen rom er tilgjengelig
 No users added yet;-;Ingen brukere lagt til enda
 Not a valid email;-;Ikke en gyldig epost adresse
@@ -403,6 +404,7 @@ Password does not match confirmed password.;-;Passordet stemmer ikke overens med
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
 Password missmatch;-;Passordene stemmer ikke oversens
 Pay;-;Betal
+Pay for your stay;-;Betal for ditt opphold
 Payment;-;Betaling
 Payment completed;-;Betaling gjennomført
 Payment failed;-;Betaling feilet
@@ -421,6 +423,7 @@ Please check your invoice email address;-;Sjekk epostaddressene.
 Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
 Please choose your desired payment method;-;Vennligst velg foretrukket metode å betale på
 Please enter correct number of chars, min: {min}, max: {max};-;Vennligst oppgi nok tegn, min {min}, max {max}
+Please enter the phone number given when booked or your booking reference;-;Skriv inn ditt telefonnummer eller bookingreferansen du har fått tilsendt.
 Please enter your email address or cellphone number:;-;Oppgi epostaddresse eller mobilnr.
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
@@ -439,7 +442,6 @@ Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
-Print reciept;-;Print kvittering
 Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
 Private person;-;Privatperson
 Processing order, please wait;-;Behandler bestilling, vennligst vent.
@@ -644,6 +646,7 @@ Wed;-;Ons
 Wednesday;-;Onsdag
 Week;-;Uke
 Weekly;-;Ukentlig
+Welcome;-;Velkommen
 Welcome to my page;-;Velkommen til min side
 Welcome, book your stay here!;-;Velkommen, book ditt opphold her!
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
@@ -664,6 +667,7 @@ You have successfully paid with vipps.;-;Du har fullført betalingen med vipps.
 You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 You should recieve a payment message in your vipps application.;-;Du vil nå motta informasjon om hvordan du betaler via din vipps app.
+You will recieve the code for the room by sms and email after the payment has been completed.;-;Du vill motta en kode på sms og epost for rommet ditt når betalingen har blitt gjennomført.
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
 Your name;-;Ditt navn

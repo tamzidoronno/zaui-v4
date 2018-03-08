@@ -1127,10 +1127,6 @@ public class PmsManagerProcessor {
     }
 
     private void checkForDeadCodes() {
-        if (isApacSolutionActivated()) {
-            checkForDeadCodesApac();
-            return;
-        }
         
         if(!manager.getConfigurationSecure().isGetShopHotelLock()) {
             return;
@@ -1323,50 +1319,6 @@ public class PmsManagerProcessor {
         if (groups.size() > 0) {
             return true;
         }
-        return false;
-    }
-
-    private void checkForDeadCodesApac() {
-        List<PmsBooking> bookings = manager.getAllBookingsFlat();
-        
-        if (bookings == null || bookings.isEmpty()) {
-            return;
-        }
-        
-        List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
-        
-        groups.stream().forEach(group -> {
-            group.getGroupLockCodes().values()
-                .stream()
-                .filter(masterUserSlot -> masterUserSlot.takenInUseDate != null)
-                .filter(masterUserSlot -> masterUserSlot.takenInUseManagerName != null && masterUserSlot.takenInUseManagerName.equals(getClass().getSimpleName()))
-                .forEach(masterUserSlot -> {
-                    boolean isSlotInUse = isMasterUserSlotInUse(group, masterUserSlot, bookings);
-                    if (!isSlotInUse) {
-//                        manager.getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
-                    }
-                });
-        });
-       
-    }
-
-    private boolean isMasterUserSlotInUse(LockGroup group, MasterUserSlot masterUserSlot, List<PmsBooking> bookings) {
-        for (PmsBooking booking : bookings) {
-            
-            if (booking.isDeleted) {
-                continue;
-            }
-            
-            for (PmsBookingRooms room : booking.rooms) {
-                if (room.isDeleted() || room.isEnded() || room.codeObject == null)
-                    continue;
-                
-                if (masterUserSlot.takenInUseReference.equals(room.pmsBookingRoomId) && room.codeObject.slotId == masterUserSlot.slotId) {
-                    return true;
-                }
-            }
-        }
-        
         return false;
     }
 

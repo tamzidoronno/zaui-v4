@@ -1,4 +1,10 @@
 <?php
+if(isset($_GET['terminalid'])) {
+    echo "<script>";
+    echo 'localStorage.setItem("getshopterminalid","'.$_GET['terminalid'].'")';
+    echo "</script>";
+}
+
 chdir("../../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
@@ -31,8 +37,7 @@ include("header.php");
 </body>
 
 <script>
-    
 setTimeout(function() {
-    window.location.href="paymentterminal.php";
-}, "3600000");
+    getshop_redirectoToFront();
+}, "360000");
 </script>

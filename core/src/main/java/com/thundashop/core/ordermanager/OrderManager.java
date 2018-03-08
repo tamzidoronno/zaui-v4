@@ -2271,6 +2271,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return order -> orderIds.contains(order.id);
     }
-    
 
+    @Override
+    public void deleteOrder(String orderId) {
+        Order order = getOrder(orderId);
+        if (order == null)
+            return;
+        
+        if (order.closed)
+            return;
+        
+        order.cart.clear();
+        saveObject(order);
+    }
 }

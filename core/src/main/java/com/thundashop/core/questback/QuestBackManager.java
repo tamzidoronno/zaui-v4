@@ -187,7 +187,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             }
         }
     }
-
+    
     @Override
     public String getPageId(String nodeId) {
         if (questions.get(nodeId) == null) {
@@ -527,7 +527,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     
     @Override
     public QuestBackQuestion getQuestion(String id) {
-        return questions.get(id);
+        QuestBackQuestion ret = questions.get(id);
+        return ret;
     }
 
     @Override
@@ -615,6 +616,12 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             return new ArrayList();
         }
         
+        test.questions.stream()
+                .map(o -> getQuestion(o))
+                .forEach(o -> {
+                    System.out.println(o.parentId);
+                });
+                
         List<QuestBackQuestion> returnResult = test.questions.stream()
                 .map(o -> getQuestion(o))
                 .map(question -> getQuestion(question.parentId))

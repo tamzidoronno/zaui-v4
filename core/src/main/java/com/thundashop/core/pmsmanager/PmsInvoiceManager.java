@@ -692,6 +692,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return total;
     }
 
+    @Override
+    public Date getPaymentLinkSendingDate(String pmsRoomId) {
+        return new Date();
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

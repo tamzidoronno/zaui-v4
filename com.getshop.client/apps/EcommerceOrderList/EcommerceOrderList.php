@@ -53,6 +53,8 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     public function formatState($order) {
         if ($order->closed) {
             return '<i class="fa fa-lock"></i>';
+        } else {
+            return '<i class="fa fa-unlock"></i>';
         }
         
         return "";
@@ -66,6 +68,11 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $app = new \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView();
         $app->loadOrder($_POST['data']['id']);
         $app->renderApplication(true, $this);
+    }
+    
+    public function formatPaymentType($order) {
+        $arr = explode("\\", $order->payment->paymentType);
+        return $arr[1];
     }
 
     public function printTable() {
@@ -88,6 +95,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             array('paymentDate', 'PAYMENT DATE', null, 'formatPaymentDate'),
             array('transferredToAccounting', '<span title="Transferred to accounting">TFA</span>', null, 'formatTransferredToAccounting'),
             array('user', 'CUSTOMER', null, 'formatUser'),
+            array('payment', 'PAYMENT', null, 'formatPaymentType'),
             array('inctaxes', 'INC TAXES', null, 'formatIncTaxes'),
             array('extaxes', 'EX TAXES', null, 'formatExTaxes'),
             array('state', 'STATE', null, 'formatState')

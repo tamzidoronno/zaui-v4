@@ -12,26 +12,19 @@ $user = $this->getUserForBooking();
 $showingPaymentProcess = $this->startPaymentProcess();
 $alreadyAdded = $this->isRoomAddedToCart();
 
-if ($showingPaymentProcess) {
+if (!$showingPaymentProcess) {
+    echo $this->__f("There is nothing that be created payments for.");
+}
+
 ?>
 <div class='booking_cart_buttons_area'>
-    <div class='shop_button addselecteditemstocart'><? echo $this->__f("Add room to cart"); ?></div>
-</div>
+    <div class='shop_button order_tab_menu' orders_sub_tab="simple"><? echo $this->__f("Cancel"); ?></div>
     
-<?
-}
-?>
-
-
-<div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
-<?
-if (!count($this->pmsBooking->orderIds)) {
-    ?>
-    <div class="nopaymentscreatedyet payment_window">  
-        <i class="fa fa-frown-o"></i> <? echo $this->__f("There are no payment created yet, create one by using the options above."); ?>
-    </div>
     <?
-} else {
-    $this->printOrderList();
-}
-?>
+    if ($showingPaymentProcess) {
+    ?>
+        <div class='shop_button addselecteditemstocart'><? echo $this->__f("Add room to cart"); ?></div>
+    <?
+    } 
+    ?>
+</div>

@@ -88,6 +88,30 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
     public function test() {
         
     }
+    
+    public function deleteOrder() {
+        $this->setData();
+        $order = $this->getOrder();
+        $this->getApi()->getOrderManager()->deleteOrder($order->id);
+        if ($this->getSelectedMultilevelDomainName()) {
+            $this->getApi()->getPmsManager()->orderChanged($this->getSelectedMultilevelDomainName(), $order->id);
+        }
+    }
 
+    public function getAvailablePaymentMethods() {
+        $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        $instances = array();
+        foreach ($paymentApps as $app) {
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+            $instances[] = $instance;
+        }
+        return $instances;
+    }
+
+    public function changePaymentMethod() {
+        $this->setData();
+        $order = $this->getOrder();
+        $this->getApi()->getOrderManager()->changeOrderType($order->id, $_POST['data']['paymentappid']);
+    }
 }
 ?>

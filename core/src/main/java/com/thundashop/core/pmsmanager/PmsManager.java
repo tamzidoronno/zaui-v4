@@ -8192,6 +8192,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if (!isSlotInUse) {
                         String logCode = masterUserSlot.code != null ? ""+masterUserSlot.code.pinCode : "";
                         logPrint("Dead code found, removing from group: " + group.name + ", code: " + logCode);
+                        messageManager.sendErrorNotification("Dead code removed for: " + group.name + ", Code: " + logCode, null);
                         getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
                     }
                 });

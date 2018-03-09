@@ -3223,7 +3223,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void resetBookingItem(PmsBookingRooms room, String itemId, PmsBooking booking) {
         if (room.isStarted() && !room.isEnded()) {
-            room.addedToArx = false;
+            resetDoorLockCode(room);
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
             if(!hasLockSystemActive()) {
                 add.markDirty(room.pmsBookingRoomId);
@@ -4698,7 +4698,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             cal.setTime(room.date.start);
             cal.set(Calendar.HOUR_OF_DAY, hour);
             if(getConfigurationSecure().isArx()) {
-                room.addedToArx = false;
+                resetDoorLockCode(room);
             }
             room.date.start = cal.getTime();
             if(room.bookingId != null) {
@@ -4717,7 +4717,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             cal.set(Calendar.HOUR_OF_DAY, hour);
             room.date.end = cal.getTime();
             if(getConfigurationSecure().isArx()) {
-                room.addedToArx = false;
+                resetDoorLockCode(room);
             }
             if(room.bookingId != null) {
                 updateBooking(room);
@@ -5082,8 +5082,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String generateNewCodeForRoom(String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         PmsBookingRooms room = booking.findRoom(roomId);
+        resetDoorLockCode(room);
         room.code = generateCode();
-        room.addedToArx = false;
         if(room.isStarted() && !room.isEnded()) {
             room.forceUpdateLocks = true;
         }
@@ -8172,8 +8172,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return false;
     }
-    
-    @Administrator
+
     public void checkForDeadCodesApac() {
         List<PmsBooking> bookings = getAllBookingsFlat();
         
@@ -8217,5 +8216,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return false;
+    }
+
+    private void resetDoorLockCode(PmsBookingRooms room) {
+        room.addedToArx = false;
+        try {
+            if(room.bookingItemId != null && room.codeObject != null) {
+                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                if(item != null) {
+                    getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
     }
 }

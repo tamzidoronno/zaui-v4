@@ -140,9 +140,6 @@ public class PmsManagerProcessor {
             boolean save = false;
             
             for (PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.pmsBookingRoomId.equals("7f24e958-6a50-4e2b-872d-d7a1ed55ea7d")) {
-                    System.out.println("check");
-                }
                 int start = hoursAheadCheck;
                 int end = maxAheadCheck;
                 if(started) { 

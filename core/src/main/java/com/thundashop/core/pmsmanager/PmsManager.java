@@ -8196,4 +8196,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
                 
     }
+
+    @Override
+    public void updatePriceMatrixOnRoom(String pmsBookingRoomId, LinkedHashMap<String, Double> priceMatrix) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        room.priceMatrix = priceMatrix;
+        logEntry("Prices changed", booking.id, room.bookingItemId, room.pmsBookingRoomId, "price");
+    }
 }

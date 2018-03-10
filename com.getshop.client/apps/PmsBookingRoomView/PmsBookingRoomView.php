@@ -118,8 +118,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function updatePriceMatrixWithPeriodePrices() {
         $this->setData();
         $room = $this->getSelectedRoom();
-        $room = $this->doUpdatePriceMatrixWithPeriodePrice();
-        $this->updateRoom($room);
+        $tmpRoom = $this->getTmpSelectedRoom($room->pmsBookingRoomId);
+        $room = $this->doUpdatePriceMatrixWithPeriodePrice($tmpRoom);
+        $this->setTmpSelectedRoom($room);
     }
 
     
@@ -168,6 +169,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     public function setRoomId($roomId) {
         $_SESSION['PmsBookingRoomView_current_pmsroom_id'] = $roomId;
+        $this->changeModalVariable("roomid", $roomId);
     }
 
     private function getPmsRoom() {
@@ -191,34 +193,17 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function saveRoom() {
-        $booking = $this->getPmsBooking();
-        $room = $this->getSelectedRoom();
-        $toAdd = array();
-        foreach($booking->rooms as $r) {
-            if($room->pmsBookingRoomId == $r->pmsBookingRoomId) {
-                continue;
-            }
-            $toAdd[] = $r;
-        }
-        $toAdd[] = $room;
-        $booking->rooms = $toAdd;
-        
-        $text = $this->createReadableDiffText($this->getDifferenceInRoom());
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
-        $item = "";
-        if(isset($room->bookingItemId)) {
-            $item = $room->bookingItemId;
-        }
-        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), $text, $booking->id, $item);
-        $this->setData(true);
+        $selectedRoom = $this->getTmpSelectedRoom($_POST['data']['roomid']);
+        $roomId = $this->setStay($selectedRoom);
+        $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId, $selectedRoom->priceMatrix);
+        $this->removeTmpRoom($selectedRoom->pmsBookingRoomId);
+        echo $roomId;
     }
     
     public function updateBooking() {
         $this->setData();
         $selectedRoom = $this->getPmsRoom();
         $this->updateGuests($selectedRoom);
-        $this->setStay($selectedRoom);
-        $this->updateUnitPrices($selectedRoom);
         $this->setData(true);
         $this->includefile("bookingoverview");
         
@@ -233,7 +218,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function updateAvialablity() {
-        $room = $this->getSelectedRoom();
+        $room = $this->getTmpSelectedRoom($_POST['data']['roomId']);
         if (isset($_POST['data']['itemId']) && isset($_POST['data']['itemId'])) {
             $room->bookingItemId = $_POST['data']['itemId'];
         }
@@ -258,7 +243,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             $room->priceMatrix = $newPricesRoom->priceMatrix;
         }
         
-        $this->updateRoom($room);
+        $this->setTmpSelectedRoom($room);
 
     }
     
@@ -284,25 +269,42 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function setStay($selectedRoom) {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
-        $typeId = explode("_", $_POST['data']['itemid']);
-        $itemId = "";
-        
-        if (count($typeId) == 2) {
-            $itemId = $typeId[1];
-            $typeId = $typeId[0];
-        } else {
-            $typeId = $typeId[0];
+        $start = $this->convertToJavaDate(strtotime($selectedRoom->date->start));
+        $end = $this->convertToJavaDate(strtotime($selectedRoom->date->end));
+        $typeId = $selectedRoom->bookingItemTypeId;
+        $itemId = $selectedRoom->bookingItemId;
+        $split = false;
+        if(isset($selectedRoom->doSplitChange)) {
+            $split = $selectedRoom->doSplitChange;
+        }
+        if($split) {
+            $currentBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId);
         }
         
         $this->getApi()->getPmsManager()->setBookingItemAndDate(
                 $this->getSelectedMultilevelDomainName(), 
                 $selectedRoom->pmsBookingRoomId,
                 $itemId, 
-                false, 
+                $split, 
                 $start, 
                 $end);
+        
+        if($split) {
+            $newBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId);
+            $roomIds = array();
+            foreach($currentBooking->rooms as $r) {
+                $roomIds[] = $r->pmsBookingRoomId;
+            }
+            foreach($newBooking->rooms as $r) {
+                if(!in_array($r->pmsBookingRoomId, $roomIds)) {
+                    $this->setRoomId($r->pmsBookingRoomId);
+                    $this->selectedRoom = null;
+                    $this->pmsBooking = null;
+                    return $r->pmsBookingRoomId;
+                }
+            }
+        }
+        return $selectedRoom->pmsBookingRoomId;
     }
 
 
@@ -469,6 +471,40 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function getSelectedRoom() {
         $this->setData();
         return $this->selectedRoom;
+    }
+
+    public function removeTmpRoom($roomId) {
+        unset($_SESSION['tmpselectedroom'][$roomId]);
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
+    public function setTmpSelectedRoom($room) {
+        if(!isset($_SESSION['tmpselectedroom'])) {
+            $_SESSION['tmpselectedroom'] = array();
+        }
+        $room->tmpModified = true;
+        $_SESSION['tmpselectedroom'][$room->pmsBookingRoomId] = json_encode($room);
+        
+    }
+    
+    /**
+     * 
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getTmpSelectedRoom($roomId) {
+        if(isset($_SESSION['tmpselectedroom'][$roomId])) {
+            return json_decode($_SESSION['tmpselectedroom'][$roomId]);
+        } else {
+            if(!isset($_SESSION['tmpselectedroom'])) {
+                $_SESSION['tmpselectedroom'] = array();
+            }
+            $room = $this->getSelectedRoom();
+            $_SESSION['tmpselectedroom'][$roomId] = json_encode($room);
+            return $room;
+        }
     }
     
     public function sendMessage() {
@@ -676,25 +712,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function updateUnitPrices($selectedRoom) {
-        $priceMatrix = array();
         
-        foreach ($_POST['data'] as $key => $value) {
-            if (strpos($key, "room_price_") > -1) {
-                $arr = explode("_", $key);
-                $date = $arr[2];
-                $priceMatrix[$date] = $value;
-            }
-        }
-        
-        $this->setData(true);
-        $pmsBooking = $this->getPmsBooking();
-        foreach ($pmsBooking->rooms as $room) {
-            if ($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
-                $room->priceMatrix = $priceMatrix;
-            }
-        }
-        
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $pmsBooking);
     }
 
 
@@ -795,9 +813,16 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function updateDayPrices() {
-        $room = $this->getSelectedRoom();
+        $tmp = $this->getSelectedRoom();
+        $room = $this->getTmpSelectedRoom($tmp->pmsBookingRoomId);
         $room->priceMatrix = $_POST['data'];
-        $this->updateRoom($room);
+        $this->setTmpSelectedRoom($room);
+    }
+    
+    public function setSplitChange() {
+        $room = $this->getTmpSelectedRoom($_POST['data']['roomid']);
+        $room->doSplitChange = $_POST['data']['split'] == "true";
+        $this->setTmpSelectedRoom($room);
     }
     
     public function updateRoom($room, $avoidChanges = false) {

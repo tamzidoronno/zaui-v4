@@ -640,6 +640,13 @@ class ApplicationBase extends FactoryBase {
         return @$_SESSION['modal_variable_'.$_SESSION['gs_currently_showing_modal']][$variableName];
     }
     
+    public function changeModalVariable($variableName, $value) {
+        if (isset($_SESSION['gs_currently_showing_rightWidget'])) {
+            @$_SESSION['modal_variable_'.$_SESSION['gs_currently_showing_rightWidget']][$variableName] = $value;
+        }
+        @$_SESSION['modal_variable_'.$_SESSION['gs_currently_showing_modal']][$variableName] = $value;
+    }
+    
     /**
      * 
      * Notify parent if exists and method exists

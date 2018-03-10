@@ -20,11 +20,21 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .topbuttons .saveInvoiceNote', this.saveInvoiceNote);
         $(document).on('click', '.PmsBookingRoomView .massupdateprices', this.doMassUpdatePrices);
         $(document).on('click', '.PmsBookingRoomView .seechangesbutton', this.seeChangesOnBooking);
-        $(document).on('click', '.PmsBookingRoomView .savechangesonroom', this.saveChangesOnRoom);
+        $(document).on('click', '.PmsBookingRoomView .savetmproom', this.saveChangesOnRoom);
+        $(document).on('click', '.PmsBookingRoomView .dosplitchange', this.dosplitchange);
         $(document).on('click', '.PmsBookingRoomView .tryundeleteroom', this.tryundeleteroom);
         $(document).on('click', '.PmsBookingRoomView .saveguestinformation', this.saveGuestInformation);
         $(document).on('click', '.PmsBookingRoomView .addcommentbutton', this.addcommentbutton);
         $(document).on('click', '.PmsBookingRoomView .deletecomment', this.deletecomment);
+    },
+    dosplitchange : function() {
+        var event = thundashop.Ajax.createEvent('','setSplitChange',$(this), {
+            "split" : $(this).is(':checked'),
+            "roomid" : $(this).attr('roomid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsBookingRoomView.refresh(true);
+        });
     },
     deletecomment : function() {
         var comment = $('.commenttext').val();
@@ -70,7 +80,13 @@ app.PmsBookingRoomView = {
     },
     
     saveChangesOnRoom : function() {
-        thundashop.Ajax.simplePost($(this),"saveRoom", {});
+        var event = thundashop.Ajax.createEvent('','saveRoom', $(this),{
+            "roomid" : $(this).attr('roomid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(roomId) {
+            $('.menuarea').attr('roomId', roomId)
+            app.PmsBookingRoomView.refresh(true);
+        });
     },
 
     seeChangesOnBooking : function() {
@@ -95,7 +111,7 @@ app.PmsBookingRoomView = {
             "periodePrice" : value
         });
         thundashop.Ajax.postWithCallBack(event, function(res){
-            app.PmsBookingRoomView.refresh();
+            app.PmsBookingRoomView.refresh(true);
         });            
         
         $('.massupdatepricevalue').val('');
@@ -177,9 +193,11 @@ app.PmsBookingRoomView = {
             app.PmsBookingRoomView.refresh();
         });
     },
-    refresh : function() {
+    refresh : function(avoidSpinner) {
         var event = thundashop.Ajax.createEvent('','reloadApp',$('.PmsBookingRoomView'), {});
-        $('.PmsBookingRoomView').html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
+        if(!avoidSpinner) {
+            $('.PmsBookingRoomView').html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
+        }
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.PmsBookingRoomView').html(res);
         });
@@ -199,9 +217,8 @@ app.PmsBookingRoomView = {
         $('.PmsBookingRoomView .guestinformation[tab="accesscodes"]').html(res);
     },
     
-    unitPriceChanged: function() {
+    unitPriceChanged: function(e) {
         var data = thundashop.framework.createGsArgs($('.pricerows'));
-        
         
         var event = thundashop.Ajax.createEvent('','updateDayPrices',$(this),data);
         thundashop.Ajax.postWithCallBack(event, function() {});
@@ -211,8 +228,8 @@ app.PmsBookingRoomView = {
         }
         
         app.PmsBookingRoomView.waitForReload = setTimeout(function() {
-            app.PmsBookingRoomView.refresh();
-        }, "2000");
+            $('.warningchangesonroom').show();
+        }, "500");
     },
     
     addSelectedClass: function() {
@@ -298,7 +315,7 @@ app.PmsBookingRoomView = {
         
         var event = thundashop.Ajax.createEvent(null, "updateAvialablity", $('.PmsBookingRoomView'), data);
         thundashop.Ajax.postWithCallBack(event, function() {
-            app.PmsBookingRoomView.refresh();
+            app.PmsBookingRoomView.refresh(true);
         });
     },
     

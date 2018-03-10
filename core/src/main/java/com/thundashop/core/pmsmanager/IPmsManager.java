@@ -12,6 +12,7 @@ import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.usermanager.data.User;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,9 @@ public interface IPmsManager {
     
     @Administrator
     public void markRoomAsCleaned(String itemId);
+    
+    @Administrator
+    public void updatePriceMatrixOnRoom(String pmsBookingRoomId, LinkedHashMap<String,Double> priceMatrix);
     
     public void warnFailedBooking(PmsBooking booking);
     

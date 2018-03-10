@@ -1,6 +1,8 @@
 <?
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
-$room = $this->getSelectedRoom();
+$savedRoom = $this->getSelectedRoom();
+$room = $this->getTmpSelectedRoom($savedRoom->pmsBookingRoomId);
+
 $types = $this->getTypes();
 $items = $this->getItems();
 
@@ -9,9 +11,18 @@ $endDate = $this->convertToJavaDate(strtotime($room->date->end));
 
 $isSameDayStart = date('Y-m-d', strtotime($startDate)) == date('Y-m-d', time());
 
-$availableItems = $this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(), $startDate, $endDate, $room->bookingId);
+
+$warnAboutUnchanges = "";
+$startDateToCheckOn = $startDate;
 
 $cleanIcon = "";
+$splitChecked = "";
+if(isset($room->doSplitChange) && $room->doSplitChange) {
+    $splitChecked = "CHECKED";
+    $startDateToCheckOn = $this->convertToJavaDate(time());
+}
+
+$availableItems = $this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(), $startDateToCheckOn, $endDate, $room->bookingId);
 
 function canUseItem($item, $availeableitems) {
     foreach ($availeableitems as $available) {
@@ -22,15 +33,30 @@ function canUseItem($item, $availeableitems) {
     
     return false;
 }
+if(!isset($room->tmpModified)) {
+    $warnAboutUnchanges = "display:none;";
+}
 ?>
 
-
+<div style="border: solid 1px; text-align: right;background-color:red; color:#fff;<?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>
 <div class='pricesview'>
     <? $this->includefile("prices"); ?>
 </div>
 
 <div class='itemview_inner'>
     <h2>Room and categories</h2>
+    <div>
+        <?php
+        if(strtotime($room->date->start)-86400 < time() && strtotime($room->date->end) > time()-86400) {
+            ?>
+            <div>
+                <input type="checkbox" class='dosplitchange' roomid='<?php echo $room->pmsBookingRoomId; ?>' <?php echo $splitChecked; ?>> Split change
+            </div>
+            <div style="font-size:12px;">* When this is actived this guest will be assigned its room between <b>now</b> and <b><?php echo date("d.m.Y H:i", strtotime($room->date->end)); ?></b> instead of <?php echo date("d.m.Y H:i", strtotime($room->date->start)); ?> and <?php echo date("d.m.Y H:i", strtotime($room->date->end)); ?></div>
+            <?php
+        }
+        ?>
+    </div>
     <div class='updater'>
         <i class='fa fa-spin fa-spinner'></i> Updating.. please wait..
     </div>
@@ -99,3 +125,4 @@ function canUseItem($item, $availeableitems) {
         <div class='expcolorouter'><div class='expcolor gs_selected'></div> <? echo $this->__f("Selected"); ?></div>
     </div>    
 </div>
+<div style="border: solid 1px; text-align: right;background-color:red; color:#fff; <?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>

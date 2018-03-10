@@ -826,16 +826,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<Order> orders = new ArrayList();
         
         if(filter.includeVirtual) {
-            pmsManager.createAllVirtualOrders();
+            pmsManager.createAllVirtualOrdersForPeriode(filter.start, filter.end);
             orders = orderManager.getAllOrderIncludedVirtual();
         } else {
-            orders = orderManager.getOrders(null, null, null);
+            orders = orderManager.getAllOrders();
         }
         
         if(filter.channel != null && !filter.channel.trim().isEmpty()) {
             orders = filterOrdersOnChannel(filter.channel, orders);
         }
-        
+       
         List<Order> ordersToUse = new ArrayList();
         for(Order order : orders) {
             if(order == null || order.cart == null) {
@@ -904,7 +904,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             roomProducts.add(type.productId);
             roomProducts.addAll(type.historicalProductIds);
         }
-       
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
         doubleCheckStats(stats,ordersToUse);

@@ -314,14 +314,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(virtualOrdersCreated != null) {
             return;
         }
-        List<PmsBooking> allBookings = new ArrayList();
-        allBookings.addAll(bookings.values());
-        
-        for (PmsBooking booking : allBookings) {
-            orderManager.deleteVirtualOrders(booking.id);
-            pmsInvoiceManager.createVirtualOrder(booking.id);
-        }
-        
+        createAllVirtualOrdersForPeriode(null, null);
         virtualOrdersCreated = new Date();
     }
     
@@ -7670,7 +7663,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void setResultFromIncomeReportByFilter(PmsStatistics result, PmsOrderStatsFilter orderFilterToUse, List<String> roomProductIds) {
+        gsTiming("Before generate statistics");
         PmsOrderStatistics incomeReportResult = pmsInvoiceManager.generateStatistics(orderFilterToUse);
+        gsTiming("After generate statistics");
         for(PmsOrderStatisticsEntry entry : incomeReportResult.entries) {
             for(StatisticsEntry statEntry : result.entries) {
                 if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
@@ -8184,5 +8179,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }catch(Exception e) {
             logPrintException(e);
         }
+    }
+
+    void createAllVirtualOrdersForPeriode(Date start, Date end) {
+        List<PmsBooking> allBookings = new ArrayList();
+        allBookings.addAll(bookings.values());
+        
+        for (PmsBooking booking : allBookings) {
+            if(start != null && end != null) {
+                if(!booking.isActiveInPeriode(start, end)) {
+                    continue;
+                }
+            }
+            orderManager.deleteVirtualOrders(booking.id);
+            pmsInvoiceManager.createVirtualOrder(booking.id);
+        }
+                
     }
 }

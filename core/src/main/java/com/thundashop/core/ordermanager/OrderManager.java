@@ -508,7 +508,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     public List<Order> getAllOrderIncludedVirtual() {
-        List<Order> retOrders = getOrders(null, null, null);
+        List<Order> retOrders = getAllOrders();
         List<Order> retVirtualOrders = this.virtualOrders.values().stream().map(virt -> virt.order).collect(Collectors.toList());
         
         List<Order> all = new ArrayList();
@@ -2270,6 +2270,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return order -> order != null;
         
         return order -> orderIds.contains(order.id);
+    }
+
+    public List<Order> getAllOrders() {
+        List<Order> orderList = new ArrayList();
+        for(Order order : orders.values()) {
+            orderList.add(order);
+        }
+        return orderList;
     }
     
 

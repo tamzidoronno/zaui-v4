@@ -91,6 +91,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(time());
         $filter->endDate = $this->convertToJavaDate(time()+86400);
+        $filter->includeVirtual = false;
         $stats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $_SESSION['savedcoveragestats'] = json_encode($stats);
         $res = array();

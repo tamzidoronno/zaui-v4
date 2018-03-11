@@ -322,4 +322,7 @@ public interface IOrderManager {
     
     @Administrator
     public void deleteOrder(String orderId);
+    
+    @Administrator
+    public void filterOrdersUnderConstructionByDate(String id, Date start, Date end);
 }

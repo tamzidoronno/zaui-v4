@@ -10,6 +10,10 @@ app.SalesPointCartCheckout = {
         $(document).on('click', '.SalesPointCartCheckout .display_cart_filter' , this.loadCartFilter);
         $(document).on('click', '.SalesPointCartCheckout .removeitem' , this.removeCartItem);
     },
+    orderCreationCompleted : function() {
+        app.PmsBookingRoomView.refresh();
+        thundashop.framework.toggleRightWidgetPanel('gs_modul_cart');
+    },
     removeCartItem : function() {
         var item = $(this).closest('.cartitem');
         var itemid = item.attr('cartitemid');

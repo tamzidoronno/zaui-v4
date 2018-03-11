@@ -97,7 +97,10 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     }
 
     public function filterCartByDate() {
-        
+        $id = $this->getModalVariable("orderUnderConstrcutionId");
+        $start = $this->convertToJavaDate(strtotime($_POST['date']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['date']['end']));
+        $this->getApi()->getOrderManager()->filterOrdersUnderConstructionByDate($id, $start, $end);
     }
     
     public function removeItem() {

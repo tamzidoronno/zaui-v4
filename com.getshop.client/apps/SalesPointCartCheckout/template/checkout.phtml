@@ -48,40 +48,41 @@ if ($this->isReadOnly()) {
 
 $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 ?>
-
-<div class="payment_options payment_window">
-    <div class="option_content"></div>
-    <div class="options">
-        <select class='gsniceselect1 paymentmethodselection'>
-            <option value="">Create a new order</option>
-            <?
-            //Need to find orders that has been created on the bookings and display them here!
-            ?>
-        </select>
+<div gstype='form' method='createOrder'>
+    <div class="payment_options payment_window">
+        <div class="option_content"></div>
+        <div class="options">
+            <select class='gsniceselect1 paymentmethodselection' gsname='appendtoorder'>
+                <option value="">Create a new order</option>
+                <?
+                //Need to find orders that has been created on the bookings and display them here!
+                ?>
+            </select>
+        </div>
     </div>
-</div>
 
-<div class="payment_options payment_window">
-    <div class="option_content"></div>
-    <div class="options">
-        <?php
-        $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
-        $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
-        ?>
-        <select class='gsniceselect1 paymentmethodselection'>
-            <?
-            foreach ($paymentApps as $app) {
-                $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
-                $selected = $ecomsettings->getConfigurationSetting("defaultPaymentMethod") == $app->id ? "SELECTED" : "";
-                $name = $appInstance->getName();
-                if($name == "InvoicePayment") {
-                    $name = "Invoice";
+    <div class="payment_options payment_window">
+        <div class="option_content"></div>
+        <div class="options">
+            <?php
+            $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+            $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
+            ?>
+            <select class='gsniceselect1 paymentmethodselection' gsname='payment'>
+                <?
+                foreach ($paymentApps as $app) {
+                    $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+                    $selected = $ecomsettings->getConfigurationSetting("defaultPaymentMethod") == $app->id ? "SELECTED" : "";
+                    $name = $appInstance->getName();
+                    if($name == "InvoicePayment") {
+                        $name = "Invoice";
+                    }
+
+                    echo "<option value='".$app->id."' $selected>" . $name . " ". "</option>";
                 }
-                
-                echo "<option value='".$app->id."' $selected>" . $name . " ". "</option>";
-            }
-            ?>
-        </select>
+                ?>
+            </select>
+        </div>
     </div>
+    <span class="shop_button continue_checkout" gstype='submit' gs_callback='app.SalesPointCartCheckout.orderCreationCompleted'>Create payment</span>
 </div>
-<span class="shop_button continue_checkout">Continue</span>

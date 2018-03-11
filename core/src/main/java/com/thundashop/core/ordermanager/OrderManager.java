@@ -2296,4 +2296,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.cart.clear();
         saveObject(order);
     }
+
+    @Override
+    public void filterOrdersUnderConstructionByDate(String id, Date start, Date end) {
+        if (!ordersUnderConstruction.containsKey(id)) {
+            return;
+        }
+        
+        OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
+        ret.finalizeOrder();        
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

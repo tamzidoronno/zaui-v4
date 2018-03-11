@@ -1354,8 +1354,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
     }
 
-    public function showKaiPalSimple($text, $needAttentionToPayment, $canSendLink) {
-        $needAttentionToPayment = true;
+    public function showKaiPalSimple($text, $needAttentionToPayment, $canSendLink, $unsettled) {
         ?>
         <div class="isnotactive">
             <div class="kaipal infobox">
@@ -1368,11 +1367,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                         <?
                         echo $this->__f($text);
                         
-                        if ($needAttentionToPayment || $canSendLink) {
+                        if ($needAttentionToPayment) {
                         ?> 
                         
                             <div class="buttonarea">
-                                <div class="buttonareaheader"><? echo $this->__f("Manually handle payment?"); ?></div>
+                                <div class="buttonareaheader"><? echo $this->__f("You have not yet created an order for a total of " . $unsettled); ?></div>
                                 <div class="shop_button"><i class=""></i> <? echo $this->__f("Show payment request log"); ?></div>
                                 <?
                                 if ($canSendLink) {
@@ -1380,9 +1379,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                                     <div class="shop_button order_tab_menu" orders_sub_tab="advanced"><i class=""></i> <? echo $this->__f("Send paymentrequest now"); ?></div>
                                 <?
                                 }
-                                ?>
-                                    <div class="shop_button addselecteditemstocart"><i class=""></i> <? echo $this->__f("Handle payments"); ?></div>
-                                <?
+                                if($needAttentionToPayment) {
+                                    ?>
+                                        <div class="shop_button addselecteditemstocart"><i class=""></i> <? echo $this->__f("Handle payments"); ?></div>
+                                    <?
+                                }
                                 ?>
                             </div>
                         <?

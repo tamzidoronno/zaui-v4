@@ -1,0 +1,13 @@
+<div style='padding:5px; border-bottom: solid 1px;'>
+    Unpaid items for this room
+    <i class='fa fa-close' onclick='$(".unpaidroomview").remove();' style='cursor:pointer; float:right;'></i>
+</div>
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$roomid = $_POST['data']['roomid'];
+$this->getApi();
+$cartItems = $this->getApi()->getPmsInvoiceManager()->getAllUnpaidItemsForRoom($this->getSelectedMultilevelDomainName(), $roomid);
+$printer = new ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsCartItemsPrinter($this->getApi());
+$printer->printItems($cartItems);
+?>
+ 

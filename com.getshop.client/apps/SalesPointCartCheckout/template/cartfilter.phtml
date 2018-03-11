@@ -1,0 +1,69 @@
+<?php
+/* @var $this \ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout */
+$originalCart = $this->getOriginalCartFromSession();
+$currentCart = $this->getCurrentCart();
+$items = (array)$originalCart->items;
+$start = null;
+$end = null;
+foreach($items as $item) {
+    /* @var $item core_cartmanager_data_CartItem */
+    if(!$start || ($item->startDate && strtotime($item->startDate) > $start)) {
+        $start = strtotime($item->startDate);
+    }
+    if(!$end || ($item->endDate && strtotime($item->endDate) > $end)) {
+        $end = strtotime($item->endDate);
+    }
+}
+$startDate = "";
+if($start) { $startDate = date("d.m.Y", $start); }
+$endDate = "";
+if($end) { $endDate = date("d.m.Y", $end); }
+?>
+<div gstype='form' method='filterCartByDate'>
+    <label class='cartfilterdate'>
+        Start date
+        <input type='txt' class='gsniceinput1' id='startdate' gsname='end' value='<?php echo $startDate; ?>'>
+    </label>
+    <label class='cartfilterdate'>
+        End date
+        <input type='txt' class='gsniceinput1 enddate' id='enddate' gsname='start' value='<?php echo $endDate; ?>'>
+    </label>
+    <span class="shop_button" style='float:right; margin-top: 17px;' gstype='submit'>Apply dates</span>
+</div>
+<bR>
+<style>
+    .cartfilterdate { width: 110px; display:inline-block;}
+     .cartfilterdate input { width: 70px; }
+</style>
+
+<script>
+    
+<script>
+    $('#startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = curEnd.valueOf() - date.valueOf();
+            if(diff <= 0) {
+                date.add(7, 'days');
+                $('#enddate').val(date.format('DD.MM.YYYY')); 
+            }
+            app.PmsAvailabilityDateSelector.changed();
+        }
+    });
+    $('#enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = date.valueOf() - curStart.valueOf();
+            if(diff <= 0) {
+                date.add(-7, 'days');
+                $('#startdate').val(date.format('DD.MM.YYYY')); 
+            }
+            app.PmsAvailabilityDateSelector.changed();
+        }
+    });
+</script>
+</script>

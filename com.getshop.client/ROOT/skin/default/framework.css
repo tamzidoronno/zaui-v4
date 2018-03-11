@@ -73,6 +73,7 @@ a[href^=tel] { color: inherit; }
 }
 .gsrightwidgetpanel.gsactiverightwidget { width: 20%;transition: 0.2s;border-left: solid 1px #000; display:block; }
 #gsbody.gsactiverightwidget { width: 80%;transition: 0.2s;}
+.gs_modalouter .gs_modalinner.gsactiverightwidget { margin-right: 450px;}
 .gsrightwidgetpanelheader .fa-close { color:#fff; font-size: 50px; right: 20px; top: 10px; position: absolute; cursor:pointer; }
 .gsrightwidgetpanelheader {
     border-bottom: solid 1px;

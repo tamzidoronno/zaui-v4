@@ -239,6 +239,7 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
                     echo "$(function() {";
                     echo "$('.gsrightwidgetpanel').addClass('gsactiverightwidget');";
                     echo "$('#gsbody').addClass('gsactiverightwidget');";
+                    echo "$('.gs_modalouter .gs_modalinner').addClass('gsactiverightwidget');";
                     echo "});";
                     echo "</script>";
                     

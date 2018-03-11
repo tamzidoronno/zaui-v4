@@ -45,9 +45,11 @@
     background-color:#fff;
     z-index:2;
 }
+.PmsSearchBooking .unsettledamountwarning { font-style: italic; color:#bbb; }
 .PmsSearchBooking .GetShopModuleTable .col_totalprice .unpaidprice {
     cursor:pointer;
     color:red;
+    font-weight: bold;
 }
 
 .PmsSearchBooking .GetShopModuleTable .col_price .price {

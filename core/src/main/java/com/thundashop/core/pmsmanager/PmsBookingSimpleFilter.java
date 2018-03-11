@@ -144,9 +144,9 @@ public class PmsBookingSimpleFilter {
         simple.createOrderAfterStay = booking.createOrderAfterStay;
         simple.cleaningComment = room.cleaningComment;
         simple.bookingComments = booking.comments;
-        simple.totalUnsettledAmount = booking.totalUnsettledAmount;
+        simple.totalUnsettledAmount = pmsInvoiceManager.getTotalUnpaidOnRoom(room, booking, false);
         simple.totalCost = room.totalCost;
-        simple.totalUnpaidCost = pmsInvoiceManager.getTotalUnpaidOnRoom(room, booking);
+        simple.totalUnpaidCost = pmsInvoiceManager.getTotalUnpaidOnRoom(room, booking,true);
         simple.requestedEndDate = room.requestedEndDate;
         simple.userId = booking.userId;
         

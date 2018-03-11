@@ -4,13 +4,25 @@
     padding-right: 0px;
 }
 
-
+.SalesPointCartCheckout .removeitem { float: right; color: #bbb; cursor: pointer; }
 .SalesPointCartCheckout .cartsummary .row { border-bottom: solid 1px #DDD;}
+.SalesPointCartCheckout .cartitem { margin-bottom: 10px;}
 .SalesPointCartCheckout .cartsummary .row.row_last { border-bottom: solid 0px #DDD;}
 .SalesPointCartCheckout .cartsummary .col1 { width: 30px; text-align: right; }
 .SalesPointCartCheckout .cartsummary .col2 { width: calc(100% - 200px); }
 .SalesPointCartCheckout .cartsummary .col3 { width: 100px; }
+.SalesPointCartCheckout .paymentmethodselection,
+.SalesPointCartCheckout .display_cart_filter,
+.SalesPointCartCheckout .continue_checkout { box-sizing: border-box; width: 100%; margin-top: 5px; }
+.SalesPointCartCheckout .checkoutarea .itemsarea { max-height: 400px; overflow: auto; border: solid 1px #bbb; padding: 10px;background-color:#fff; }
+.SalesPointCartCheckout .checkoutarea { overflow: auto; max-height: 800px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
 
+}
+.SalesPointCartCheckout .addon_price,
+.SalesPointCartCheckout .matrix_price { width: 50px; text-align: center; }
 .SalesPointCartCheckout .matrix_item {
     margin-left: 50px;
 }
@@ -40,10 +52,6 @@
     padding-bottom: 6px;
 }
 
-.SalesPointCartCheckout .pmsaddonsrow {
-    margin-top: 20px;
-}
-
 
 .SalesPointCartCheckout .addonlist_row .addon_inputs input {
     padding: 7px;
@@ -52,6 +60,7 @@
 
 .SalesPointCartCheckout .addonlist_row .addon_inputs {
     text-align: right;
+    float:right;
 }
 
 .SalesPointCartCheckout .addonlist_row .addon_count {
@@ -87,11 +96,6 @@
     text-align: center;
 }
 
-[area="gs_modul_cart"] .SalesPointCartCheckout {
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-}
 
 .SalesPointCartCheckout .payment_options .option_content {
     position: absolute;

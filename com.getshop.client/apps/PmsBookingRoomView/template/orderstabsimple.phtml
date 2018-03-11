@@ -5,7 +5,39 @@ $pmsSelectedRoom = $this->getSelectedRoom();
 $booking = $this->getBookingEngineBooking();
 
 $user = $this->getUserForBooking();
+$noGuests = !$user;
+$cellPhone = "";
+if ($user->cellPhone) {
+    $cellPhone = "+".$user->prefix." ".$user->cellPhone;
+}
+$email = $user->emailAddress;
+$deleted = $pmsSelectedRoom->deleted;
 
+$dateForPaymentlinkToBeSent = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkSendingDate($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId);
+$canCreateOrders = $this->needToCreateOrders();
+$itemsUnpaid = $this->getApi()->getPmsInvoiceManager()->getAllUnpaidItemsForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId);
+$roomPaid = true;
+if(sizeof($itemsUnpaid) > 0) {
+    $roomPaid = false;
+}
 ?>
 
-Simple view.
+<div>
+    <?
+    if ($roomPaid) {
+        echo $this->showKaiPalSimple("Everything is already paid for.", $canCreateOrders, false);
+    } else if ($noGuests) {
+        echo $this->showKaiPalSimple("There is no information about the booker, so I will not send any payment requests.", $canCreateOrders, false);
+    } else if (!$cellPhone && !$email) {
+        echo $this->showKaiPalSimple("I am missing email and cellphone, so I can not send any payment requests.", $canCreateOrders, false);
+    } else if ($cellPhone && !$email) {
+        echo $this->showKaiPalSimple("Payment link will be sent to $cellPhone at $dateForPaymentlinkToBeSent", $canCreateOrders, true);
+    } else if (!$cellPhone && $email) {
+        echo $this->showKaiPalSimple("Payment link will be sent by sms to $cellPhone $dateForPaymentlinkToBeSent", $canCreateOrders, true);
+    }  else if ($deleted) {
+        $this->showKaiPalSimple("This room has been deleted, so I will not send out any payment requests.", $canCreateOrders, false);
+    }  else if ($cellPhone && $email) {
+        $this->showKaiPalSimple("Payment request will be sent by sms to $cellPhone and by email to $email on the $dateForPaymentlinkToBeSent", $canCreateOrders, true);        
+    }
+    ?>
+</div>

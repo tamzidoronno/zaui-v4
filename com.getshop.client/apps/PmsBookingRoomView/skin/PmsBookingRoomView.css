@@ -12,6 +12,10 @@
     font-size: 15px;
     margin-right: 20px;
 }
+.GetShopModuleTable .col.col_payment {
+    max-width: 100px;
+    overflow: hidden;
+}
 
 .PmsBookingRoomView .pricecontainerbox { padding-right: 10px; }
 

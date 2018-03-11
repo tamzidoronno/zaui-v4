@@ -43,6 +43,7 @@ import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
+import com.thundashop.core.getshoplocksystem.MasterUserSlot;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -8164,6 +8165,52 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveBooking(booking);
             return true;
         }
+        return false;
+    }
+
+    public void checkForDeadCodesApac() {
+        List<PmsBooking> bookings = getAllBookingsFlat();
+        
+        if (bookings == null || bookings.isEmpty()) {
+            return;
+        }
+        
+        List<LockGroup> groups = getShopLockSystemManager.getAllGroups();
+        
+        groups.stream().forEach(group -> {
+            group.getGroupLockCodes().values()
+                .stream()
+                .filter(masterUserSlot -> masterUserSlot.takenInUseDate != null)
+                .filter(masterUserSlot -> masterUserSlot.takenInUseManagerName != null && masterUserSlot.takenInUseManagerName.equals(getClass().getSimpleName()))
+                .forEach(masterUserSlot -> {
+                    boolean isSlotInUse = isMasterUserSlotInUse(group, masterUserSlot, bookings);
+                    if (!isSlotInUse) {
+                        String logCode = masterUserSlot.code != null ? ""+masterUserSlot.code.pinCode : "";
+                        logPrint("Dead code found, removing from group: " + group.name + ", code: " + logCode);
+                        messageManager.sendErrorNotification("Dead code removed for: " + group.name + ", Code: " + logCode, null);
+                        getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
+                    }
+                });
+        });
+    }
+    
+    private boolean isMasterUserSlotInUse(LockGroup group, MasterUserSlot masterUserSlot, List<PmsBooking> bookings) {
+        for (PmsBooking booking : bookings) {
+            
+            if (booking.isDeleted) {
+                continue;
+            }
+            
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.isDeleted() || room.isEnded() || room.codeObject == null)
+                    continue;
+                
+                if (masterUserSlot.takenInUseReference.equals(room.pmsBookingRoomId) && room.codeObject.slotId == masterUserSlot.slotId) {
+                    return true;
+                }
+            }
+        }
+        
         return false;
     }
 

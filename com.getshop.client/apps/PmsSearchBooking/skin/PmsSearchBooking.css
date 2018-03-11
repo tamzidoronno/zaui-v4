@@ -36,6 +36,20 @@
     box-sizing: border-box;
 }
 
+.PmsSearchBooking .GetShopModuleTable .col_totalprice .unpaidroomview {
+    position:absolute;
+    right: 0px;
+    width: 600px;
+    min-height: 60px;
+    border: solid 1px;
+    background-color:#fff;
+    z-index:2;
+}
+.PmsSearchBooking .GetShopModuleTable .col_totalprice .unpaidprice {
+    cursor:pointer;
+    color:red;
+}
+
 .PmsSearchBooking .GetShopModuleTable .col_price .price {
     background-color: #82cdf3;
     color: #FFF;

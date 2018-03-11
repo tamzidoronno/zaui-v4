@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -44,6 +45,9 @@ public class CartItem implements Serializable {
     public HashMap<String, Double> priceMatrix;
     public boolean hideDates = false;
     public String addedByGetShopModule = "";
+    
+    @Transient
+    public String orderId;
     
     public CartItem() {
     }

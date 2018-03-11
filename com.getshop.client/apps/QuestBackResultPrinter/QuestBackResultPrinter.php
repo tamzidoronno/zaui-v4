@@ -28,6 +28,7 @@ class QuestBackResultPrinter extends \MarketingApplication implements \Applicati
         foreach ($categories as $cat) {
             $cat->result = QuestBackResultPrinter::getResult($result, $cat);
         }
+        
         return $categories;
     }
 

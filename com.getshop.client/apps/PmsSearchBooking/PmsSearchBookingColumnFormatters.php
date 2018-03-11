@@ -150,7 +150,6 @@ class PmsSearchBookingColumnFormatters {
     
     public function formatPrice($room) {
         $priceData = "<div><div class='price'>".round($room->price)."</div><div class='pricetagright'></div></div>";
-        
         return $priceData;
     }
     
@@ -171,7 +170,12 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatTotalPrice($room) {
-        return $priceData = "<div title='Total cost for this room'>" . round($room->totalCost) . "</div>";
+        $priceData = "<div title='Total cost for this room'>" . round($room->totalCost) . "</div>";
+        if($room->totalUnpaidCost > 0) {
+            $priceData .= "<div><div class='unpaidprice dontExpand' title='Missing payment on room' roomid='".$room->pmsRoomId."'>".round($room->totalUnpaidCost)."</div><div class='pricetagright'></div></div>";
+        }
+        return $priceData;
+
     }
     
     public function formatEndPeriode($room) {

@@ -4,6 +4,11 @@
 
 <div gstype='form' method="updateOrder" class="orderview">
 
+    <div class="ordershortmenu">
+        <?
+        $this->includefile("ordershortmenu");
+        ?>
+    </div>
 
     <div class="menuarea">
         <div class="menuentry <? echo $this->isTabActive('overview'); ?>" tab='overview'><span><? echo $this->__f("Customer"); ?></span></div>

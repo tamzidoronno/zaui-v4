@@ -1,0 +1,31 @@
+<?
+/* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+$paymentApps = $this->getAvailablePaymentMethods();
+
+if ($order->closed) {
+?>
+<div>
+    <? echo $this->__f("Order is closed, so you can not do any changes to it."); ?>
+</div>    
+<?
+} else {
+?>
+
+<div class="">
+    <div class="gs_shop_small_icon show_payment_methods"><i class="fa fa-money"></i> <? echo $this->__f("Change payment method"); ?>
+        <div class="paymentmethods">
+            <?
+            foreach ($paymentApps as $app) {
+                $paymentId = $app->applicationSettings->id;
+                echo "<div class='paymentoption' gsclick='changePaymentMethod' paymentAppId='$paymentId'>".$app->getName()."</div>";
+            }
+            ?>
+        </div>
+        </div>
+    <div class="gs_shop_small_icon"><i class="fa fa-check-square"></i> <? echo $this->__f("Mark order as paid"); ?></div>
+    <div class="gs_shop_small_icon" gsclick="deleteOrder" gs_confirm="<? echo $this->__f("Are you sure you want to delete this order?"); ?>"><i class="fa fa-trash"></i> <? echo $this->__f("Delete order"); ?></div>
+</div>
+<?
+}
+?>

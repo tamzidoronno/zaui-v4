@@ -12,7 +12,11 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     $scope.routes = [];
     
     $scope.init = function($api) {
-        $scope.name = $api.getLoggedOnUser().fullName;
+        $scope.name = "";
+        
+        if ($api.getLoggedOnUser()) {
+            $scope.name = $api.getLoggedOnUser().fullName;
+        }
         
         for (var i in datarepository.routes) {
             var route = datarepository.routes[i];

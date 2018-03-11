@@ -4,24 +4,30 @@ $roomNumber = $item->product->additionalMetaData;
 
 $itemsAdded = (array)$item->itemsAdded;
 usort($itemsAdded, array('ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCartCheckout','sortByDate'));
-
+if($roomNumber) {
+    $roomNumber = " (" . $roomNumber . ")";
+}
 ?>
 
 <div class='pmsaddonsrow'>
-    <b><? echo $item->count; ?> x <? echo $item->product->name; ?> ( <? echo $roomNumber; ?> ) </b>
+    <i class='fa fa-trash-o removeitem'></i>
+    <b><? echo $item->count; ?> x <? echo $item->product->name;  echo $roomNumber; ?></b>
     <?
     $i = 0;
     foreach ($itemsAdded as $addon) {
         $i++;
         $oddClass = $i % 2 ? "even" : "odd";
         $date = $addon->date;
+        if($date) {
+            $date = date("d.m.Y", strtotime($date));
+        }
 
         ?>
         <div class='addonlist_row <? echo $oddClass; ?> ' addonid='<? echo $addon->addonId; ?>'>
             <input type='checkbox' checked='true' class='addon_checked gsnicecheckbox1'> 
             <span><? echo $date; ?></span>
             
-            <div class='addon_inputs'>
+            <span class='addon_inputs'>
                 <?
                 if ($this->isReadOnly()) {
                     ?>
@@ -35,7 +41,8 @@ usort($itemsAdded, array('ns_90d14853_2dd5_4f89_96c1_1fa15a39babd\SalesPointCart
                 <?
                 }
                 ?>
-            </div>
+            </span>
+            <div style="clear:both"></div>
         </div>
         <?
     }

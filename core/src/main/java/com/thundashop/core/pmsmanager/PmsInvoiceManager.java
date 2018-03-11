@@ -692,6 +692,53 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return total;
     }
 
+    double getTotalUnpaidOnRoom(PmsBookingRooms room, PmsBooking booking) {
+        double total = room.totalCost;
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                continue;
+            }
+            for(CartItem item : order.cart.getItemsUnfinalized()) {
+                if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                    total -= item.getTotalAmount();
+                }
+            }
+        }
+        return total;
+    }
+
+    @Override
+    public List<CartItem> getAllUnpaidItemsForRoom(String pmsRoomId) {
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.pmsRoomId = pmsRoomId;
+        filter.avoidOrderCreation = true;
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
+        createOrder(booking.id, filter);
+        
+        List<CartItem> result = new ArrayList();
+        result.addAll(cartManager.getCart().getItems());
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                continue;
+            }
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct().externalReferenceId.equals(pmsRoomId)) {
+                    item.orderId = order.id;
+                    result.add(item);
+                }
+            }
+        }
+        return result;
+    }
+        
+    @Override
+    public Date getPaymentLinkSendingDate(String pmsRoomId) {
+        return new Date();
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

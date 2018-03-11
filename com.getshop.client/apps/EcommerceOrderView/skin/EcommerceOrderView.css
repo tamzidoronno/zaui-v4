@@ -128,3 +128,31 @@
     box-sizing: border-box;
     margin-right: 20px;
 }
+
+.EcommerceOrderView .ordershortmenu {
+    text-align: center;
+    background-color: #EEE;
+    padding: 5px;
+}
+
+.EcommerceOrderView .paymentmethods {
+    position: absolute;
+    background-color: #FFF;
+    z-index: 1;
+    border: solid 1px #DDD;
+    display: none;
+}
+
+.EcommerceOrderView .paymentmethods .paymentoption {
+    padding: 5px;
+    border-bottom: solid 1px #DDD;
+    cursor: pointer;
+}
+
+.EcommerceOrderView .paymentmethods .paymentoption:hover {
+    background-color: #EEE;
+}
+
+.EcommerceOrderView .paymentmethods div.paymentoption:last-child {
+    border-bottom: 0px;
+}

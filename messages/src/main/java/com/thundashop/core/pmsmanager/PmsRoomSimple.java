@@ -50,6 +50,7 @@ public class PmsRoomSimple implements Serializable {
     boolean createOrderAfterStay;
     boolean hasBeenCleaned = false;
     public double totalCost;
+    public double totalUnpaidCost = 0.0;
     public String userId;
     public boolean nonrefundable = false;
     public HashMap<Long, PmsBookingComment> bookingComments = new HashMap(); 

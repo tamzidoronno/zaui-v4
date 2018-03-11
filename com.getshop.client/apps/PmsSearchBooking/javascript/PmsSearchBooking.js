@@ -1,6 +1,17 @@
 app.PmsSearchBooking = {
     init : function() {
         $(document).on('click','.GetShopModuleTable .quickfunction',app.PmsSearchBooking.doQuickFunction);
+        $(document).on('click','.GetShopModuleTable .unpaidprice',app.PmsSearchBooking.loadUnpaidPriceView);
+    },
+    loadUnpaidPriceView : function() {
+        var event = thundashop.Ajax.createEvent('','loadUnpaidView',$(this), {
+            "roomid" : $(this).attr('roomid')
+        });
+        var field = $(this).closest('.col');
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.unpaidroomview').remove();
+            field.append('<div class="unpaidroomview dontExpand">' + res + "</div>");
+        });
     },
     doQuickFunction : function() {
         var type = $(this).attr('type');

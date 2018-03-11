@@ -26,38 +26,7 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
 
 ?>
 
-<div class="isnotactive">
-    <div class="kaipal infobox">
-        // faces: happy,sad,talking,danger
-        <div class="image happy"></div>
-        <div class="textbox">
-            <div class="header"><? echo $this->__f("Payment"); ?></div>
-            <div class="text">
-                <?
-                echo $this->__f("I am constantly looking out for you. Each time you change something that got to do with prices in the booking itself I will automatically recalculate for you what you havent claimed money for. Simply put, everything you see under in list the \"Need to by paid\" is all that you have not yet created orders for. When you create a new order the remaining part of what the guest owns you will still be under the list need to be paid.");
-                ?>    
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="topbuttons">
-    <div class="gs_shop_small_icon toggleComment" title="<? echo $this->__f("Payment comment"); ?>"><i class="gsicon-bubble-pencil"></i></div>
-    
-    <div class="paymentcomment">
-        <?
-        echo $this->__f("Invoice note").":";
-        ?>
-        <textarea><? echo $pmsBooking->invoiceNote; ?></textarea>
-        <div>
-            <div class="shop_button toggleComment"><? echo $this->__f("close"); ?></div>
-            <div class="shop_button saveInvoiceNote"><? echo $this->__f("Save"); ?></div>
-        </div>
-    </div>
-    
-    <div class="gs_shop_small_icon active order_tab_menu" title="<? echo $this->__f("Switch to simple payment"); ?>" orders_sub_tab="simple"><i class=""></i> <? echo $this->__f("Simple"); ?></div>
-    <div class="gs_shop_small_icon order_tab_menu" title="<? echo $this->__f("Switch to advanced payment"); ?>" orders_sub_tab="advanced"><i class=""></i> <? echo $this->__f("Advanced"); ?></div>
-    
     <div class="tabcontent" orders_sub_tab="simple">
         <?
         $this->includefile("orderstabsimple");
@@ -75,3 +44,16 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     </script>
 </div>
 
+
+<div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
+<?
+if (!count($this->pmsBooking->orderIds)) {
+    ?>
+    <div class="nopaymentscreatedyet payment_window">  
+        <? echo $this->__f("There are no payment created yet, create one by using the options above."); ?>
+    </div>
+    <?
+} else {
+    $this->printOrderList();
+}
+?>

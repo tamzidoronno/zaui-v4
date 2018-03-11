@@ -18,3 +18,8 @@ and open the template in the editor.
 .PmsBookingRoomView .tabcontent.active[orders_sub_tab] {
     display: block;
 }
+
+.PmsBookingRoomView .guestinformation[tab="orderstab"] {
+    padding-top: 30px;
+    padding-right: 20px;
+}

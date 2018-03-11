@@ -2221,6 +2221,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void removeRoomForOrderUnderConstruction(String id, String roomId) {
         OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
         orderUnder.carts.remove(roomId);
+        for(Cart cart : orderUnder.carts.values()) {
+            cart.removeItem(roomId);
+        }
         orderUnder.finalizeOrder();
         saveObject(orderUnder);
     }
@@ -2281,4 +2284,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
 
+    @Override
+    public void deleteOrder(String orderId) {
+        Order order = getOrder(orderId);
+        if (order == null)
+            return;
+        
+        if (order.closed)
+            return;
+        
+        order.cart.clear();
+        saveObject(order);
+    }
 }

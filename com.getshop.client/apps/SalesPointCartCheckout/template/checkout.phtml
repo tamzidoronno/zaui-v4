@@ -11,7 +11,8 @@ if (!count($items)) {
     echo "Nothing to do";
     return;
 }
-
+$this->loadCartFilter();
+echo "<div class='itemsarea'>";
 foreach ($items as $item) {
     $i++;
     $lastItem = count($items) == $i ? "last_row" : "";
@@ -31,6 +32,7 @@ foreach ($items as $item) {
     
     echo "</div>";
 }
+echo "</div>";
 ?>
 
 <div class='summary'>
@@ -48,22 +50,38 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
 ?>
 
 <div class="payment_options payment_window">
-
-    <div class="option_content">
-       
-    </div>
-    
+    <div class="option_content"></div>
     <div class="options">
-        
-        <?
-        foreach ($paymentApps as $app) {
+        <select class='gsniceselect1 paymentmethodselection'>
+            <option value="">Create a new order</option>
+            <?
+            //Need to find orders that has been created on the bookings and display them here!
             ?>
-            <div class="shop_button" gsclick="createOrder" style="font-size: 14px;" payment="<? echo $app->id; ?>">
-                <? echo $app->appName; ?>
-            </div>        
-        <?
-        }
-        ?>
+        </select>
     </div>
-    
 </div>
+
+<div class="payment_options payment_window">
+    <div class="option_content"></div>
+    <div class="options">
+        <?php
+        $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+        $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
+        ?>
+        <select class='gsniceselect1 paymentmethodselection'>
+            <?
+            foreach ($paymentApps as $app) {
+                $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+                $selected = $ecomsettings->getConfigurationSetting("defaultPaymentMethod") == $app->id ? "SELECTED" : "";
+                $name = $appInstance->getName();
+                if($name == "InvoicePayment") {
+                    $name = "Invoice";
+                }
+                
+                echo "<option value='".$app->id."' $selected>" . $name . " ". "</option>";
+            }
+            ?>
+        </select>
+    </div>
+</div>
+<span class="shop_button continue_checkout">Continue</span>

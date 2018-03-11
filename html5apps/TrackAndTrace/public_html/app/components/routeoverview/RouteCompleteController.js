@@ -16,12 +16,14 @@ controllers.RouteCompleteController = function($scope, datarepository, $rootScop
         
         var d = new Date();
         $scope.time = ("0" + d.getDate()).slice(-2) + "/" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
-        
-        for (var i in $scope.route.destinations) {
-            var destination = $scope.route.destinations[i];
-            var completed = destination.signatures.length > 0 && destination.startInfo.started;
-            if (!completed) {
-                $scope.uncompletedStops++;
+
+        if ($scope.route && $scope.route.destinations) {
+            for (var i in $scope.route.destinations) {
+                var destination = $scope.route.destinations[i];
+                var completed = destination.signatures.length > 0 && destination.startInfo.started;
+                if (!completed) {
+                    $scope.uncompletedStops++;
+                }
             }
         }
     }

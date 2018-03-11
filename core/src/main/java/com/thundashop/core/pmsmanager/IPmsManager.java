@@ -483,6 +483,9 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
     
+    @Administrator
+    public void checkForDeadCodesApac();
+            
     public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
     public List<PmsBookingAddonItem> getAddonsWithDiscountForBooking(String pmsBookingRoomId);
     public void toggleAddon(String itemId) throws Exception;

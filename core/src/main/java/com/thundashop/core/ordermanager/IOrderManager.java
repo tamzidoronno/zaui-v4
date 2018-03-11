@@ -319,4 +319,7 @@ public interface IOrderManager {
     
     @Editor
     public String convertOrderUnderConstructionToOrder(String id, Address address, String paymentId);
+    
+    @Administrator
+    public void deleteOrder(String orderId);
 }

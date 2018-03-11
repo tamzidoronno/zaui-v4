@@ -98,4 +98,10 @@ public interface IPmsInvoiceManager {
     @Administrator
     public void recalculateAllBookings(String password);
     
+    @Administrator
+    public List<CartItem> getAllUnpaidItemsForRoom(String pmsRoomId);
+    
+    @Administrator
+    public Date getPaymentLinkSendingDate(String pmsRoomId);
+    
 }

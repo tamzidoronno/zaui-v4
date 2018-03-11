@@ -353,11 +353,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             return false;
         }
         
-        $this->refreshCartForRoom();
         
-        $cart = $this->getApi()->getCartManager()->getCart();
-        $itemCount = count($cart->items);
-        if (!$itemCount) {
+        
+        if (!$this->needToCreateOrders()) {
             return false;
         }
         
@@ -1354,6 +1352,62 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         } else {
             $this->includefile($area);
         }
+    }
+
+    public function showKaiPalSimple($text, $needAttentionToPayment, $canSendLink) {
+        $needAttentionToPayment = true;
+        ?>
+        <div class="isnotactive">
+            <div class="kaipal infobox">
+                // faces: happy,sad,talking,danger
+                <div class="image happy"></div>
+                <div class="textbox">
+                    <div class="header"><? echo $this->__f("Automatically payment"); ?></div>
+                    
+                    <div class="text">
+                        <?
+                        echo $this->__f($text);
+                        
+                        if ($needAttentionToPayment || $canSendLink) {
+                        ?> 
+                        
+                            <div class="buttonarea">
+                                <div class="buttonareaheader"><? echo $this->__f("Manually handle payment?"); ?></div>
+                                <div class="shop_button"><i class=""></i> <? echo $this->__f("Show payment request log"); ?></div>
+                                <?
+                                if ($canSendLink) {
+                                ?>
+                                    <div class="shop_button order_tab_menu" orders_sub_tab="advanced"><i class=""></i> <? echo $this->__f("Send paymentrequest now"); ?></div>
+                                <?
+                                }
+                                ?>
+                                    <div class="shop_button addselecteditemstocart"><i class=""></i> <? echo $this->__f("Handle payments"); ?></div>
+                                <?
+                                ?>
+                            </div>
+                        <?
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?
+    }
+
+    public function needToCreateOrders() {
+        $this->refreshCartForRoom();
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $itemCount = count($cart->items);
+        if (!$itemCount) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function loadUnpaidView() {
+        $this->includefile("unpaidview");
     }
 
 }

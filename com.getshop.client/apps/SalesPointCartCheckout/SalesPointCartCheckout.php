@@ -12,9 +12,15 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     public function getName() {
         return "SalesPointCartCheckout";
     }
+    
+    public function loadCartFilter() {
+        $this->includefile("cartfilter");
+    }
 
     public function render() {
+        echo "<div class='checkoutarea'>";
         $this->includefile("checkout");
+        echo "</div>";
     }
 
     public function renderPreview() {
@@ -90,6 +96,14 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
         }
     }
 
+    public function filterCartByDate() {
+        
+    }
+    
+    public function removeItem() {
+       $this->getApi()->getOrderManager()->removeRoomForOrderUnderConstruction($this->getModalVariable("orderUnderConstrcutionId"), $_POST['data']['id']);
+    }
+    
     public function createOrder() {
         $id = $this->getModalVariable("orderUnderConstrcutionId");
         $orderId = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment']);

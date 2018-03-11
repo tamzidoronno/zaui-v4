@@ -52,7 +52,7 @@ if(!isset($room->tmpModified)) {
             <div>
                 <input type="checkbox" class='dosplitchange' roomid='<?php echo $room->pmsBookingRoomId; ?>' <?php echo $splitChecked; ?>> Split change
             </div>
-            <div style="font-size:12px;">* When this is actived this guest will be assigned its room between <b>now</b> and <b><?php echo date("d.m.Y H:i", strtotime($room->date->end)); ?></b> instead of <?php echo date("d.m.Y H:i", strtotime($room->date->start)); ?> and <?php echo date("d.m.Y H:i", strtotime($room->date->end)); ?></div>
+        <div style="font-size:12px;">* When this is activated this guest will be assigned its room between <b>now</b> and <b><?php echo date("d.m.Y H:i", strtotime($room->date->end)); ?></b> and keep its existing room between <b><?php echo date("d.m.Y H:i", strtotime($room->date->start)); ?></b> and until <b>now</b>.</div>
             <?php
         }
         ?>

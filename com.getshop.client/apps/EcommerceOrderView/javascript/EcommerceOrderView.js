@@ -1,6 +1,17 @@
 app.EcommerceOrderView = {
     init: function() {
         $(document).on('click', '.EcommerceOrderView .menuarea .menuentry', this.menuClicked);
+        $(document).on('click', '.EcommerceOrderView .show_payment_methods', this.showPaymentMethods);
+    },
+    
+    showPaymentMethods: function() {
+        var app = $(this).closest('.app');
+        var paymentoptions = app.find('.paymentmethods');
+        if (paymentoptions.is(':visible')) {
+            paymentoptions.slideUp();
+        } else {
+            paymentoptions.slideDown();
+        }
     },
     
     menuClicked: function() {

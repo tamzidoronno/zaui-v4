@@ -19,6 +19,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public function getDescription() {   
     }
 
+    public function loadUnpaidView() {
+        $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $app->loadUnpaidView();
+    }
     
     public function toggleQuickAddAddons() {
         $_SESSION['quickaddaddons'] = true;

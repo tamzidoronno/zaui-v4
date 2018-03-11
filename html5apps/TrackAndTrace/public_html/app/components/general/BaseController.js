@@ -22,7 +22,11 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     }
     
     $scope.$on('refreshRouteEven1', function(msg, data) {
-        var loggedOnUserId = $api.getLoggedOnUser().id;
+        var loggedOnUserId = null; 
+        
+        if ($api.getLoggedOnUser()) {
+            loggedOnUserId = $api.getLoggedOnUser().id;
+        }
 
         for (var i in data.userIds) {
             if (data.userIds[i] === loggedOnUserId) {
@@ -33,23 +37,27 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     });
     
     $scope.$on('messageReceived', function(msg, data) {
-        if (data.driverId === $api.getLoggedOnUser().id) {
-            datarepository.driverMessages.push(data);
-            datarepository.save();
-            
-            $scope.messages = datarepository.driverMessages;
-            $scope.$evalAsync();
-            $rootScope.$apply();
+        if ($api.getLoggedOnUser()) {
+            if (data.driverId === $api.getLoggedOnUser().id) {
+                datarepository.driverMessages.push(data);
+                datarepository.save();
+
+                $scope.messages = datarepository.driverMessages;
+                $scope.$evalAsync();
+                $rootScope.$apply();
+            }
         }
     });
     
     $scope.$on('driverRemoved', function(msg, data) {
-        if (data.userId === $api.getLoggedOnUser().id) {
-            datarepository.removeRoute(data.routeId);
-            $state.transitionTo('base.home', {}, {reload: true});
-            
-            $scope.$evalAsync();
-            $rootScope.$apply();
+        if ($api.getLoggedOnUser()) {
+            if (data.userId === $api.getLoggedOnUser().id) {
+                datarepository.removeRoute(data.routeId);
+                $state.transitionTo('base.home', {}, {reload: true});
+
+                $scope.$evalAsync();
+                $rootScope.$apply();
+            }
         }
     });
     

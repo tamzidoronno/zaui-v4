@@ -6262,6 +6262,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         boolean foundNonAutoConfirm = false;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type == null) {
+                continue;
+            }
             if(room.date != null && room.date.start != null && room.date.end != null) {
                 if(!isRestricted(type.id, room.date.start, room.date.start, TimeRepeaterData.TimePeriodeType.autoconfirm)) {
                     foundNonAutoConfirm = true;

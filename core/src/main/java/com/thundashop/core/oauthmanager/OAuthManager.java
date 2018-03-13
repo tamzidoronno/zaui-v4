@@ -73,7 +73,7 @@ public class OAuthManager extends ManagerSubBase implements IOAuthManager {
         String redirect = getRedirect(source);
         
         HashMap<String, String> headerData = new HashMap();
-        String toPost = "code="+code+"&grant_type=refresh_token&refresh_token="+authObject.refreshToken+"&redirect_uri="+redirect;
+        String toPost = "grant_type=refresh_token&refresh_token="+authObject.refreshToken+"&redirect_uri="+redirect;
         String auth = clientId + ":" + clientSecret;
         try {
             String result = webManager.htmlPostBasicAuth(tokenendPoint, toPost, false, "UTF-8", auth, "Basic", true, "POST", headerData);
@@ -85,6 +85,7 @@ public class OAuthManager extends ManagerSubBase implements IOAuthManager {
             authObject.token = res.access_token;
             authObject.refreshToken = res.refresh_token;            
         }catch(Exception e) {
+            logPrint(webManager.getLatestErrorMessage());
             e.printStackTrace();
         }
         authObject.authorized = true;

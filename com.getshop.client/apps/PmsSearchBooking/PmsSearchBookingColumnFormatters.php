@@ -177,7 +177,7 @@ class PmsSearchBookingColumnFormatters {
             $priceData = "<div title='Total cost for this room'>" . round($room->totalCost) . "</div>";
         }
         if($room->totalUnsettledAmount > 0) {
-            $priceData .= "<div class='unsettledamountwarning' title='Amount not created orders for yet'>".$room->totalUnsettledAmount."</div>";
+            $priceData .= "<div class='unsettledamountwarning dontExpand' roomid='".$room->pmsRoomId."' title='Amount not created orders for yet'>".$room->totalUnsettledAmount."</div>";
         }
         return $priceData;
 

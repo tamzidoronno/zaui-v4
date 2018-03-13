@@ -123,6 +123,10 @@ public abstract class AccountingSystemBase extends ManagerBase {
         return false;
     }
     
+    public String getProductNumber(Product product) {
+        return "";
+    }
+    
     private boolean checkTaxCodes(List<Order> orders) {
         boolean hasFail = false;
         for(Order order : orders) {

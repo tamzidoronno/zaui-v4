@@ -5,8 +5,12 @@
  */
 package com.thundashop.core.accountingmanager;
 
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +65,6 @@ class AccountingTransferOptions {
             return next;
         }
     }
-    
     
     public String getUniqueCustomerIdForOrder(Order order) {
         for(String paymentMethod : config.paymentTypeCustomerIds.keySet()) {

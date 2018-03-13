@@ -49,7 +49,6 @@ public class VismaeaccountingCustomer {
     public VismaTermsOfPayment termsOfPayment = new VismaTermsOfPayment();
 
     void setUser(User user) {
-        Id = user.id;
         CustomerNumber = user.customerId + "";
         EmailAddress = user.emailAddress;
         if(user.address != null) {
@@ -65,7 +64,7 @@ public class VismaeaccountingCustomer {
             OrgNr = user.companyObject.vatNumber;
         }
         
-        if(InvoiceCountryCode.isEmpty()) {
+        if(InvoiceCountryCode == null || InvoiceCountryCode.isEmpty()) {
             InvoiceCountryCode = "NO";
         }
         
@@ -75,5 +74,25 @@ public class VismaeaccountingCustomer {
         
         MobilePhone = user.cellPhone;
         
+    }
+
+    String getInvalidText() {
+        String invalidText = "";
+        if(InvoiceAddress1 == null || InvoiceAddress1.trim().isEmpty()) {
+            invalidText += "Invoice address invalid ";
+        }
+        if(InvoiceCity == null || InvoiceCity.trim().isEmpty()) {
+            invalidText += "Invoice city invalid ";
+        }
+        if(InvoicePostalCode == null || InvoicePostalCode.trim().isEmpty()) {
+            invalidText += "Postal code is invalid ";
+        }
+        if(Name == null || Name.trim().isEmpty()) {
+            invalidText += "Postal code is invalid ";
+        }
+        if(EmailAddress == null || EmailAddress.trim().isEmpty()) {
+            invalidText += "Email code is invalid ";
+        }
+        return invalidText;
     }
 }

@@ -18,7 +18,7 @@ public class TokenEndpoints {
     public TokenEndpoints() {
         //Visma eaccounting
         endPoint.put("vismaeaccounting", "https://identity.vismaonline.com/");
-        endPointTest.put("vismaeaccounting", "https://identity-sandbox.test.vismaonline.com/");
+        endPointTest.put("vismaeaccounting", " https://identity-sandbox.test.vismaonline.com/");
         authorizeEndPoint.put("vismaeaccounting","connect/authorize");
         tokenEndPoint.put("vismaeaccounting","connect/token");
         clientSecret.put("vismaeaccounting", "dduj4kGnhy1tgSFXa179YnJAB1atauRDXkYxKDCpUWvSCgWLDFecGkt3bn6GdRv");

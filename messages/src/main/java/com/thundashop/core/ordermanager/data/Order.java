@@ -861,6 +861,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         periodeDaySleptStart = null;
     }
 
+    public Double getTotalAmountVat() {
+        double total = getTotalAmount();
+        double amount = 0.0;
+        for(CartItem item : cart.getItems()) {
+            amount += item.getTotalEx();
+        }
+        return total-amount;
+    }
+
 
     public static class Status  {
         public static int CREATED = 1;

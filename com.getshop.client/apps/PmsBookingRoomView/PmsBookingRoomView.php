@@ -1376,7 +1376,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                                 <?
                                 if($needAttentionToPayment) {
                                     ?>
-                                        <div class="shop_button addselecteditemstocart"><i class=""></i> <? echo $this->__f("Handle payments"); ?></div>
+                                        <div class="shop_button addselecteditemstocart"><i class=""></i> <? echo $this->__f("Start payment process"); ?></div>
                                     <?
                                 }
                                 ?>

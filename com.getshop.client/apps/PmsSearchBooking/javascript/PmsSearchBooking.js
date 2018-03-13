@@ -1,7 +1,7 @@
 app.PmsSearchBooking = {
     init : function() {
         $(document).on('click','.GetShopModuleTable .quickfunction',app.PmsSearchBooking.doQuickFunction);
-        $(document).on('click','.GetShopModuleTable .unpaidprice',app.PmsSearchBooking.loadUnpaidPriceView);
+        $(document).on('click','.GetShopModuleTable .unsettledamountwarning',app.PmsSearchBooking.loadUnpaidPriceView);
     },
     loadUnpaidPriceView : function() {
         var event = thundashop.Ajax.createEvent('','loadUnpaidView',$(this), {

@@ -61,6 +61,8 @@
     padding: 3px;
     font-weight: bold;
     margin-bottom: 1px;
+    overflow:hidden;
+    text-overflow: ellipsis;
 }
 
 .PmsAvailability .header {

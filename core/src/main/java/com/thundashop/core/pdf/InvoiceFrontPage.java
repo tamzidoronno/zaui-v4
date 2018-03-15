@@ -266,8 +266,11 @@ public class InvoiceFrontPage {
         if(order.cart.address == null) {
             order.cart.address = new Address();
         }
-        
-        writeText(order.cart.address.fullName, 45, startTop, false, 11);
+        String name = order.cart.address.fullName;
+        if(name != null) {
+            name = name.replace("&amp;", "&");
+        }
+        writeText(name, 45, startTop, false, 11);
         writeText(order.cart.address.address, 45, startTop-lineHeight, false, 11);
         writeText(order.cart.address.postCode + " " + order.cart.address.city, 45, startTop-lineHeight*2, false, 11);
         

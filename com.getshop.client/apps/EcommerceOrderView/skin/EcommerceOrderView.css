@@ -123,8 +123,24 @@
     margin-top: 30px;
 }
 
+.EcommerceOrderView .cartitem .startdate,
+.EcommerceOrderView .cartitem .enddate {
+    box-sizing: border-box;
+    width:95px;
+}
+
+.EcommerceOrderView .cartitem .additionalMetaData,
+.EcommerceOrderView .cartitem .metaData
+{
+    box-sizing: border-box;
+    width:130px;
+}
+.EcommerceOrderView .cartitem .price {
+    width: 50px;
+}
+
 .EcommerceOrderView .cartitem .product {
-    width: calc(100% - 280px);
+    width: calc(100% - 680px);
     box-sizing: border-box;
     margin-right: 20px;
 }

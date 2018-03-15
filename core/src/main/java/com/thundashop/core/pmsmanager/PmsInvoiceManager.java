@@ -739,6 +739,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return new Date();
     }
 
+    @Override
+    public Double getTotalPaidOnRoomOrBooking(String pmsBookingRoomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
+        if(booking == null) {
+            booking = pmsManager.getBooking(pmsBookingRoomId);
+        }
+        return 0.0;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

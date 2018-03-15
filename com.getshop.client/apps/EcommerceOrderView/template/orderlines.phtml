@@ -15,7 +15,11 @@ if (!count($cart->items)) {
 
 ?>
 <div class="cartitem header">
+    <span class="startdate"><? echo $this->__f("Start"); ?></span>
+    <span class="enddate"><? echo $this->__f("End"); ?></span>
     <span class="product"><? echo $this->__f("Product"); ?></span>
+    <span class="additionalMetaData"><? echo $this->__f("Room"); ?></span>
+    <span class="metaData"><? echo $this->__f("Guest"); ?></span>
     <span class="count"><? echo $this->__f("Count"); ?></span>
     x <span class="price"><? echo $this->__f("Price"); ?></span>
 </div>

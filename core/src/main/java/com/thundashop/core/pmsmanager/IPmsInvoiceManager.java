@@ -28,6 +28,9 @@ public interface IPmsInvoiceManager {
     public void clearOrder(String bookingId, String orderId);
 
     @Administrator
+    public Double getTotalPaidOnRoomOrBooking(String pmsBookingRoomId);
+    
+    @Administrator
     public String sendRecieptOrInvoice(String orderId, String email, String bookingId);
     
     @Administrator

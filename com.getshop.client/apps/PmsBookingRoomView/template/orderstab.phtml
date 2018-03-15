@@ -7,6 +7,19 @@ $booking = $this->getBookingEngineBooking();
 
 $user = $this->getUserForBooking();
 
+$totalOnRoom = $pmsSelectedRoom->totalCost;
+$totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
+$unsettledRoom = $totalOnRoom - $totalOrdersRoom;
+
+$totalOnBooking = $pmsBooking->totalPrice;
+$totalMissingOnGroup = 0.0;
+$totalNotPaidOnRoom = 0.0;
+foreach($pmsBooking->orderIds as $ordId) {
+    $order = $this->getApi()->getOrderManager()->getOrder($ordId);
+    $totalNotPaidOnRoom += $this->getApi()->getOrderManager()->getTotalAmount($order);
+}
+$totalMissingOnGroup = $pmsBooking->totalPrice - $totalNotPaidOnRoom;
+
 if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
     ?>
     <div class="kaipal infobox">
@@ -25,35 +38,45 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
 }
 
 ?>
-
-<div class="topbuttons">
-    <div class="tabcontent" orders_sub_tab="simple">
-        <?
-        $this->includefile("orderstabsimple");
-        ?>
+<div>
+    <div class="shop_button addselecteditemstocart" style='position:absolute; right: 0px; z-index: 5;'><i class=""></i> <? echo $this->__f("Start payment process"); ?></div>
+    <div class='insideheader'><? echo $this->__f("Payment overview"); ?></div>
+    <div>
+        <span class='pricetext'>Total for room</span> <span class='pricetag'><?php echo $totalOnRoom; ?></span>
+        <span class='pricetext'>Missing on room</span> <span class='pricetag'><?php echo $unsettledRoom; ?></span>
+            <span class='pricetext'>Orders on room</span> <span class='pricetag'><?php echo $totalOrdersRoom; ?></span>
     </div>
-    
-    <div class="tabcontent active" orders_sub_tab="advanced">
-        <? 
-        $this->includefile("orderstabsimple");
+    <?php
+    if(sizeof($pmsBooking->rooms) > 1) {
         ?>
-    </div>
-    
-    <script>
-        app.PmsBookingRoomView.activateSelectedTabSubOrders('<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>');
-    </script>
+        <div style='color:#bbb;'>
+            <span class='pricetext'>Total for group</span> <span class='pricetag'><?php echo $totalOnBooking; ?></span>
+            <span class='pricetext'>Missing on group</span> <span class='pricetag'><?php echo $totalMissingOnGroup; ?></span>
+            <span class='pricetext'>Orders for group</span> <span class='pricetag'><?php echo $totalNotPaidOnRoom; ?></span>
+        </div>
+        <?php
+    }
+    ?>
 </div>
 
+<div class="topbuttons">
+    <?
+    $this->includefile("orderstabsimple");
+    ?>
+</div>
+<script>
+    app.PmsBookingRoomView.activateSelectedTabSubOrders('<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>');
+</script>
 
 <div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
 <?
 if (!count($this->pmsBooking->orderIds)) {
-    ?>
-    <div class="nopaymentscreatedyet payment_window">  
-        <? echo $this->__f("There are no payment created yet, create one by using the options above."); ?>
-    </div>
-    <?
+    echo "No orders has been created yet, create an order by pressing the Start payment process button.";
 } else {
     $this->printOrderList();
 }
 ?>
+<style>
+    .pricetext { display:inline-block; width: 130px; }
+    .pricetag { display:inline-block; width: 80px; }
+</style>

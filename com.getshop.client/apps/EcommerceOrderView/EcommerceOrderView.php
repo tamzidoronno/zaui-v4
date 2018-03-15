@@ -3,7 +3,8 @@ namespace ns_bce90759_5488_442b_b46c_a6585f353cfe;
 
 class EcommerceOrderView extends \MarketingApplication implements \Application {
     private $order;
-    
+    public $externalReferenceIds;
+
     public function getDescription() {
         
     }
@@ -12,6 +13,10 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         return "EcommerceOrderView";
     }
 
+    public function getExternalReferenceIds() {
+        return $this->externalReferenceIds;
+    }
+    
     public function render() {
         $this->setData();
         $this->includefile("overview");
@@ -22,6 +27,21 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $order = $this->getOrder();
         
         $order->invoiceNote = $_POST['data']['invoiceNote'];
+        
+        foreach($order->cart->items as $item) {
+            $item->startDate = null;
+            if($_POST['data'][$item->cartItemId."_startdate"]) {
+                $item->startDate = $this->convertToJavaDate(strtotime($_POST['data'][$item->cartItemId."_startdate"]));
+            }
+            if($_POST['data'][$item->cartItemId."_enddate"]) {
+                $item->endDate = $this->convertToJavaDate(strtotime($_POST['data'][$item->cartItemId."_enddate"]));
+            }
+            $item->product->name = $_POST['data'][$item->cartItemId."_productname"];
+            $item->product->additionalMetaData = $_POST['data'][$item->cartItemId."_additionalMetaData"];
+            $item->product->metaData = $_POST['data'][$item->cartItemId."_metaData"];
+            $item->product->price = $_POST['data'][$item->cartItemId."_price"];
+            $item->count = $_POST['data'][$item->cartItemId."_count"];
+        }
         
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->order = $this->getApi()->getOrderManager()->getOrder($order->id);

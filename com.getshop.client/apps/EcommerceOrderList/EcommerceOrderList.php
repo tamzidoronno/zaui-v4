@@ -4,6 +4,7 @@ namespace ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d;
 class EcommerceOrderList extends \MarketingApplication implements \Application {
     private $selectedOrder;
     private $orderIds = null;
+    private $externalReferenceIds = array();
 
     public function getDescription() {
         
@@ -66,6 +67,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     
     public function OrderManager_getOrdersFiltered() {
         $app = new \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView();
+        $app->externalReferenceIds = $this->externalReferenceIds;
         $app->loadOrder($_POST['data']['id']);
         $app->renderApplication(true, $this);
     }
@@ -125,5 +127,10 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     public function setOrderIds($orderIds) {
         $this->orderIds = $orderIds;
     }
+
+    public function setExternalReferenceIds($ids) {
+        $this->externalReferenceIds = $ids;
+    }
+
 }
 ?>

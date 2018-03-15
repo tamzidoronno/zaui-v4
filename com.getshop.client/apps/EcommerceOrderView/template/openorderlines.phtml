@@ -3,15 +3,56 @@
 $order = $this->getOrder();
 $cart = $order->cart;
 
+$moreItems = 0;
+$totalcount = 0;
+$totalcost = 0;
+$display = true;
 foreach ($cart->items as $item) {
+    $ids = (array)$this->getExternalReferenceIds();
+    if(sizeof($ids) > 0) {
+        if(!in_array($item->product->externalReferenceId, $ids)) {
+            $moreItems++;
+            $display = false;
+        } else {
+            $totalcount += $item->count;
+            $totalcost += ($item->count * $item->product->price);
+        }
+    }
     $product = $item->product;
+    $start = "";
+    $end = "";
+    if($item->startDate) { $start = date("d.m.Y", strtotime($item->startDate)); }
+    if($item->endDate) { $end = date("d.m.Y", strtotime($item->endDate)); }
+    $displayStyle = "";
+    if(!$display) {
+        $displayStyle = "display:none;";
+    }
     ?>
-    <div class="cartitem open">
+    <div class="cartitem open" style='<?php echo $displayStyle; ?>'>
+        <input gsname='<? echo $item->cartItemId; ?>_startdate' class="gsniceinput1 startdate" value="<? echo $start; ?>"/>
+        <input gsname='<? echo $item->cartItemId; ?>_enddate' class="gsniceinput1 enddate" value="<? echo $end; ?>"/>
         <input gsname='<? echo $item->cartItemId; ?>_productname' class="gsniceinput1 product" value="<? echo $product->name; ?>"/>
+        <input gsname='<? echo $item->cartItemId; ?>_additionalMetaData' class="gsniceinput1 additionalMetaData" value="<? echo $item->product->additionalMetaData; ?>"/>
+        <input gsname='<? echo $item->cartItemId; ?>_metaData' class="gsniceinput1 metaData" value="<? echo $item->product->metaData; ?>"/>
         <input gsname='<? echo $item->cartItemId; ?>_count' class="gsniceinput1 count" value="<? echo $item->count; ?>"/>
         x <input gsname='<? echo $item->cartItemId; ?>_price' class="gsniceinput1 price" value="<? echo $product->price; ?>"/>
     </div>
     <?
+}
+
+if($moreItems > 0) {
+    ?>
+    <div class="cartitem header">
+        <span class="startdate"></span>
+        <span class="enddate"></span>
+        <span class="product"></span>
+        <span class="additionalMetaData"></span>
+        <span class="metaData"></span>
+        <span class="count"><? echo $totalcount; ?></span>
+        &nbsp;&nbsp;&nbsp;<span class="price"><? echo $totalcost; ?></span>
+    </div>
+    <?php
+    echo "There are " . $moreItems . " more items to this order, <span style='color:blue; cursor:pointer;' onclick='$(\".cartitem\").show();'>display them.</span>";
 }
 ?>
 

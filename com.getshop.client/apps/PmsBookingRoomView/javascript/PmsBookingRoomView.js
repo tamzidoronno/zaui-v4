@@ -26,7 +26,14 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .saveguestinformation', this.saveGuestInformation);
         $(document).on('click', '.PmsBookingRoomView .addcommentbutton', this.addcommentbutton);
         $(document).on('click', '.PmsBookingRoomView .deletecomment', this.deletecomment);
+        $(document).on('click', '.PmsBookingRoomView .showroomstoselect', this.showRoomsToSelect);
     },
+    
+    showRoomsToSelect: function() {
+        $('.PmsBookingRoomView .roomstoselect').show();
+        $('.PmsBookingRoomView .outerstay').hide();
+    },
+    
     dosplitchange : function() {
         var event = thundashop.Ajax.createEvent('','setSplitChange',$(this), {
             "split" : $(this).is(':checked'),

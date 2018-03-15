@@ -1409,5 +1409,45 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("unpaidview");
     }
 
+    
+    /**
+     * 
+     * @return \core_bookingengine_data_BookingItemType
+     */
+    public function getSelectedTypeForRoom() {
+        $savedRoom = $this->getSelectedRoom();
+        $room = $this->getTmpSelectedRoom($savedRoom->pmsBookingRoomId);
+        $types = $this->getTypes();
+        
+        $selectedType = null;
+
+        foreach ($types as $type) {
+            if ($room->bookingItemTypeId == $type->id) {
+                $selectedType = $type;
+            }
+        }
+        
+        return $selectedType;
+    }
+    
+    /**
+     * 
+     * @return \core_bookingengine_data_BookingItem
+     */
+    public function getSelectedItemForRoom() {
+        $savedRoom = $this->getSelectedRoom();
+        $room = $this->getTmpSelectedRoom($savedRoom->pmsBookingRoomId);
+        $items = $this->getItems();
+        
+        $selectedType = null;
+
+        foreach ($items as $type) {
+            if ($room->bookingItemId == $type->id) {
+                $selectedType = $type;
+            }
+        }
+        
+        return $selectedType;
+    }
 }
 ?>

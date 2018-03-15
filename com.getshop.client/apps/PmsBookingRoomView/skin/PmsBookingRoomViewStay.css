@@ -166,7 +166,6 @@
 
 .PmsBookingRoomView .stayperiodecontainer {
     padding-bottom: 20px;
-    border-bottom: solid 1px #bbb;
     padding-right: 10px;
 }
 .PmsBookingRoomView .stayperiodecontainer input {
@@ -195,4 +194,26 @@
     font-style: italic;
     margin-top: 10px;
     font-size: 13px;
+}
+
+.PmsBookingRoomView .roomandcats,
+.PmsBookingRoomView .pricesview,
+.PmsBookingRoomView .stayperiodecontainer {
+    width: calc(33% - 4px);
+    display: inline-block;
+}
+
+.PmsBookingRoomView .roomandcats .shop_button {
+    position: absolute;
+    bottom: 18px;
+    right: 20px;
+    left: 20px;
+}
+
+.PmsBookingRoomView .roomandcats {
+    height: 270px;
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    min-height: 100%;
+    position: relative;
 }

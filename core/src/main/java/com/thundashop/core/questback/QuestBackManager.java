@@ -160,6 +160,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         Gson gson = new Gson();
         ArrayList<QuestionTreeItem> items = gson.fromJson(jsonList, new TypeToken<ArrayList<QuestionTreeItem>>(){}.getType());
         
+        checkForEmtyNodeIdsOn(items, applicationId);
+        
         for (QuestionTreeItem item : items) {
             checkItem(item, null);
         }
@@ -971,6 +973,25 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         }
         
         return null;
+    }
+
+    private void checkForEmtyNodeIdsOn(ArrayList<QuestionTreeItem> items, String applicationId) {
+        if (items == null) 
+            return;
+        
+        if (items.size() == 1) {
+            QuestionTreeItem item = items.get(0);
+            boolean found = false;
+            for (QuestionTreeItem iItem : item.children) {
+                if (iItem.li_attr.nodeid.isEmpty()) {
+                    iItem.li_attr.nodeid = UUID.randomUUID().toString();
+                    found = true;
+                }
+            }
+            
+            Gson gson = new Gson();
+            setSettingsToApplication("list", gson.toJson(items), applicationId);
+        }
     }
 
 }

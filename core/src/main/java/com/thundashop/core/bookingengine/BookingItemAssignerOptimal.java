@@ -99,13 +99,20 @@ public class BookingItemAssignerOptimal {
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
         
-        if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048"))) {
-            squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
-        } else {
-            addUnassignedBookingsToLine(bookingLines, unassignedBookings);
-        }
+        String k1StoreId = "26c65d63-e353-4997-83df-488cc2fa3550";
         
-        setItemIdsToLines(bookingLines);
+        // Optimalisation as there is only one room of a category, so there is no point trying to make it optimal.
+        if (getBookingItemsFlatten().size() == 1 && storeId.equals(k1StoreId)) {
+            addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
+        } else {
+            if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048"))) {
+                squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
+            } else {
+                addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+            }
+
+            setItemIdsToLines(bookingLines);
+        }
         
         return bookingLines;
     }
@@ -703,6 +710,28 @@ public class BookingItemAssignerOptimal {
                 .forEach(b -> flatten.add(b));
         
         return flatten.getBestCombo();
+    }
+
+    private void addUnassignedBookingsToLineSingleItem(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        if (unassignedBookings.isEmpty())
+            return;
+        
+        OptimalBookingTimeLine timeLine = new OptimalBookingTimeLine();
+        if (bookingLines.isEmpty()) {
+            bookingLines.add(timeLine);
+        } else {
+            timeLine = bookingLines.get(0);
+        }
+        
+        for (Booking booking : unassignedBookings) {
+            if (timeLine.canAddBooking(booking)) {
+                timeLine.bookings.add(booking);
+            } else {
+                OptimalBookingTimeLine newLine = new OptimalBookingTimeLine();
+                newLine.bookings.add(booking);
+                bookingLines.add(newLine);
+            }
+        }
     }
 
 

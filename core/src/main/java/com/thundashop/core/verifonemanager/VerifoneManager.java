@@ -1,13 +1,18 @@
 package com.thundashop.core.verifonemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.socket.WebSocketServerImpl;
+import com.thundashop.core.storemanager.data.SettingsRow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.List;
 import no.point.paypoint.PayPoint;
 import no.point.paypoint.PayPointEvent;
 import no.point.paypoint.PayPointListener;
@@ -23,6 +28,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     @Autowired
     OrderManager orderManager;
+    
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
     
     private Order orderToPay;
 
@@ -57,7 +65,25 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         if (verifoneListener == null) {
             createListener();
         }
-        app.openCom("192.168.1.107", verifoneListener);
+        
+        List<Application> activePaymentMethods = storeApplicationPool.getActivatedPaymentApplications();
+        Application selectedApp = null;
+        for(Application tmpApp : activePaymentMethods) {
+            if(tmpApp.id.equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2")) {
+                selectedApp = tmpApp;
+            }
+        }
+        
+        String ip = "192.168.1.107";
+        if(selectedApp != null) {
+            for(String key : selectedApp.settings.keySet()) {
+                if(key.equals("ipaddr" + terminalId)) {
+                    ip = selectedApp.settings.get(key).value;
+                }
+            }
+        }        
+        
+        app.openCom(ip, verifoneListener);
         app.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
     }
 

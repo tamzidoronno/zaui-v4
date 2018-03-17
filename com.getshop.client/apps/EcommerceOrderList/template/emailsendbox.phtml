@@ -1,0 +1,31 @@
+<?php
+$roomId = $_POST['data']['roomid'];
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+$room = null;
+foreach ($booking->rooms as $r) {
+    if ($r->pmsBookingRoomId == $roomId) {
+        $room = $r;
+    }
+}
+$guests = $room->guests;
+$msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
+$order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$invoiceEmail = $user->emailAddress;
+if ($user->emailAddressToInvoice) {
+    $invoiceEmail = $user->emailAddressToInvoice;
+}
+$phonePrefix = $user->prefix;
+$phoneNumber = $user->cellPhone;
+$bookerName = $user->fullName;
+?>
+<span class='sendpaymentlinkbox dosendbox dontExpand' gstype='form' method='sendEmail'>
+    <div style='padding-bottom: 10px;'>
+        <i class='fa fa-close closesendpaymentlink' style='float:right;cursor:pointer;'></i>
+        <input type='txt' gsname="bookerEmail" value="<?php echo $invoiceEmail; ?>">
+        <input type='hidden' gsname="bookingid" value="<?php echo $booking->id; ?>">
+        <input type='hidden' gsname="orderid" value="<?php echo $order->id; ?>">
+        <input type="button" gstype='submit' value='Send'>
+    </div>
+</span>

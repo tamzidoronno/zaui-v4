@@ -1,0 +1,73 @@
+<?php
+/* @var $this \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList */
+$roomId = $_POST['data']['roomid'];
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+$room = null;
+foreach($booking->rooms as $r) {
+    if($r->pmsBookingRoomId == $roomId) {
+        $room = $r;
+    }
+}
+$guests = $room->guests;
+$msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
+$order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$invoiceEmail =  $user->emailAddress;
+if($user->emailAddressToInvoice) {
+    $invoiceEmail = $user->emailAddressToInvoice;
+}
+$phonePrefix = $user->prefix;
+$phoneNumber = $user->cellPhone;
+$bookerName = $user->fullName;
+
+
+echo "<span class='sendpaymentlinkbox dosendbox dontExpand' gstype='form' method='sendPaymentLink'>";
+echo "<div style='padding-bottom: 10px;'>";
+echo "<i class='fa fa-close closesendpaymentlink' style='float:right;cursor:pointer;'></i>";
+echo "Send payment link";
+echo "</div>";
+echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
+echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
+echo "<div>";
+
+echo "<select style='width:100%; margin-bottom: 5px;' class='sendlinktouser'>";
+echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail'>Booker : $bookerName</option>";
+$selectedPhone = $phoneNumber;
+$selectedEmail = $invoiceEmail;
+$selectedPrefix = $phonePrefix;
+
+
+$k = 1;
+foreach($guests as $guest) {
+    /* @var $guest core_pmsmanager_PmsGuests */
+    if(!$guest->name) {
+        continue;
+    }
+    $pref = $guest->prefix;
+    $phone = $guest->phone;
+    $email = $guest->email;
+    $selected = "";
+    if($k == $guestSelectedOffset) {
+        $selectedPhone = $phone;
+        $selectedEmail = $email;
+        $selectedPrefix = $pref;
+        $selected = "SELECTED";
+    }
+
+    echo "<option value='$pref:$phone:$email' $selected>Guest : " . $guest->name . "</option>";
+    $k++;
+}
+$msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
+
+echo "</select><br>";
+echo "<input type='txt' value='".$selectedEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";
+echo "<input type='txt' value='+".$selectedPrefix."' placeholder='bookerPrefix' gsname='bookerPrefix' style='width: 30px;'>";
+echo "<input type='txt' value='".$selectedPhone."' placeholder='bookerPhone' gsname='bookerPhone' style='width: 80px;'><input type='button' gstype='submit' gsvalue='sendtobooker' value='Send link' gs_callback='app.PmsBookingRoomView.refresh'>";
+echo "<br><br><span style='font-size:12px;'>Message</span><br>";
+echo "<textarea style='font-size:10px; width:100%; height: 100px;' gsname='smsMessage'>$msg</textarea>";
+
+echo "</div>";
+
+echo "</span>";  
+        ?>

@@ -103,8 +103,4 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public List<CartItem> getAllUnpaidItemsForRoom(String pmsRoomId);
-    
-    @Administrator
-    public Date getPaymentLinkSendingDate(String pmsRoomId);
-    
 }

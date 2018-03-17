@@ -7512,7 +7512,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking == null) {
             return;
         }
+        
+        order.shippingDate = pmsInvoiceManager.getPaymentLinkSendingDate(booking.id);
+        order.createByManager = "PmsDailyOrderGeneration";
+        order.userId = booking.userId;
 
+        orderManager.saveOrder(order);
+        
         if (booking.orderIds == null) {
             booking.orderIds = new ArrayList();
         }

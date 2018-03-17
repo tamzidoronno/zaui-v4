@@ -45,6 +45,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date needCollectingDate = null;
     public String paymentTransactionId = "";
     public Shipping shipping;
+    public Date shippingDate;
     public Payment payment = new Payment();
     public String session;
     public String recieptEmail = "";

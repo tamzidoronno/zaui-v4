@@ -734,9 +734,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return result;
     }
         
-    @Override
-    public Date getPaymentLinkSendingDate(String pmsRoomId) {
-        return new Date();
+    public Date getPaymentLinkSendingDate(String bookingId) {
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(booking.getStartDate());
+        cal.add(Calendar.DAY_OF_YEAR, pmsManager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay * -1);
+        if(cal.getTime().before(new Date())) {
+            return new Date();
+        } else {
+            return cal.getTime();
+        }
     }
 
     @Override
@@ -1673,6 +1680,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             order.wubookid = booking.latestwubookreservationid;
             order.createByManager = "PmsDailyOrderGeneration";
+            try {
+                order.shippingDate = getPaymentLinkSendingDate(booking.id);
+            }catch(Exception e) {
+                logPrintException(e);
+            }
             if(filter.totalAmount != null && filter.totalAmount > 0) {
                 adjustAmountOnOrder(order, filter.totalAmount);
             }

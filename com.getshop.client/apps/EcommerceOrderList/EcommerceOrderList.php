@@ -97,6 +97,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             array('paymentDate', 'PAYMENT DATE', null, 'formatPaymentDate'),
             array('transferredToAccounting', '<span title="Transferred to accounting">TFA</span>', null, 'formatTransferredToAccounting'),
             array('user', 'CUSTOMER', null, 'formatUser'),
+            array('shipmentdate', 'SHIPMENT DATE', null, 'formatShipmentDate'),
             array('payment', 'PAYMENT', null, 'formatPaymentType'),
             array('inctaxes', 'INC TAXES', null, 'formatIncTaxes'),
             array('extaxes', 'EX TAXES', null, 'formatExTaxes'),
@@ -108,7 +109,91 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $table->renderPagedTable();
     }
 
+    
+    /**
+     * 
+     * @param \core_ordermanager_data_Order $order
+     */
+    public function formatShipmentDate($order) {
+        $text = str_replace("\\", "\\\\", $order->payment->paymentType) . "()";
+        $text = "\\" . $order->payment->paymentType;
+        $instance = new $text();
+        
+        $text = "";
+        if($order->avoidAutoSending) {
+            $text = "Not being sent";
+        } else {
+            if($order->shippingDate) {
+                $date = date("d.m.Y", strtotime($order->shippingDate));
+                if($instance->hasPaymentLink()) {
+                    $text = "<span title='Payment link will be sent at $date'>" . $date . "</span>";
+                } else if($instance->hasAttachment()) {
+                    $text = "<span title='Will be sent at $date'>" . $date . "</span>";
+                } else {
+                    $text = "N/A";
+                }
+            }
+        }
+        $sentDate = null;
+        foreach($order->shipmentLog as $logEntry) {
+            if($logEntry->date) {
+                if(!$sentDate || $sentDate < strtotime($logEntry->date)) {
+                    $sentDate = strtotime($logEntry->date);
+                }
+            }
+        }
+        if($sentDate) {
+            $sentDate = date("d.m.Y", $sentDate);
+        } else {
+            $sentDate = "Not sent yet";
+        }
+        $roomid = "";
+        if($this->externalReferenceIds) {
+            $roomid = $this->externalReferenceIds[0];
+        }
+        
+        if($instance->hasPaymentLink()) {
+            $text .= " <span><i class='fa fa-forward dontExpand sendpaymentlink' roomid='".$roomid."' orderid='".$order->id."' title='Send now' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span></span> ";
+        } else if($instance->hasAttachment()) {
+            $text .= " <span><i class='fa fa-forward dontExpand sendemail' roomid='".$roomid."' orderid='".$order->id."' title='Send now' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span></span> ";
+        }
+        $text .= "<div class='sentdate'><span title='Where sent at $sentDate'>" . $sentDate."</span></div>";
+        return $text;
+    }
 
+    public function loadPaymentLinkConfig() {
+        $this->includefile("paymentlinkbox");
+    }
+    
+    public function loadSendEmail() {
+        $this->includefile("emailsendbox");
+    }
+    
+    public function sendEmail() {
+        $email = $_POST['data']['bookerEmail'];
+        $bookingId = $_POST['data']['bookingid'];
+        $orderid = $_POST['data']['orderid'];
+        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId);
+    }
+    
+    
+    public function sendPaymentLink() {
+        $orderid = $_POST['data']['orderid'];
+        $bookingid = $_POST['data']['bookingid'];
+        $email = $_POST['data']['bookerEmail'];
+        $prefix = $_POST['data']['bookerPrefix'];
+        $phone = $_POST['data']['bookerPhone'];
+        $msg = $_POST['data']['smsMessage'];
+
+        echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
+        echo "<i class='fa fa-info'></i> Paymentlink has been sent.";
+        echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
+        echo "</div>";
+        
+        $this->getApi()->getPmsManager()->sendPaymentLinkWithText($this->getSelectedMultilevelDomainName(), $orderid, $bookingid, $email, $prefix, $phone, $msg);
+    }
+    
+    
     /**
      * 
      * @return \core_ordermanager_data_Order 

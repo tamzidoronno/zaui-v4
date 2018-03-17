@@ -2,8 +2,19 @@
 .EcommerceOrderList .col_rowCreatedDate { width: 100px !important; }
 .EcommerceOrderList .col_paymentDate { width: 100px !important; }
 .EcommerceOrderList .col_transferredToAccounting { width: 100px !important; }
-.EcommerceOrderList .col_user { width: calc(100% - 840px) !important; }
+.EcommerceOrderList .col_user { width: calc(100% - 970px) !important; }
+.EcommerceOrderList .col_shipmentdate { width: 100px !important; }
 .EcommerceOrderList .col_inctaxes { width: 100px !important; }
 .EcommerceOrderList .col_extaxes { width: 100px !important; }
 .EcommerceOrderList .col_state { width: 50px !important; }
 .EcommerceOrderList .col_payment { width: 100px !important; }
+.EcommerceOrderList .sentdate { color:#bbb; }
+.EcommerceOrderList .sendpaymentlinkwindow {     
+    position: absolute;
+    width: 300px;
+    background-color: #fff;
+    padding: 10px;
+    border: solid 1px #bbb; 
+    display:none;
+    z-index: 2;
+}

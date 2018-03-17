@@ -1,1 +1,20 @@
-
+<?php
+/* @var $this \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+echo "<h1>Transaction log</h1>";
+foreach($order->payment->transactionLog as $time => $log) {
+    echo "<div>" . date("d.m.Y H:i", $time) . " : " . $log . "</div>";
+}
+echo "<h1>Shipment log</h1>";
+foreach($order->shipmentLog as $log) {
+    $date = "";
+    if(isset($log->date)) {
+        $date = date("d.m.Y H:i", strtotime($log->date)) . " : ";
+    }
+    echo "<div>" . $date  . $log->type . " : " . $log->address . "</div>";
+}
+echo "<h1>Callback paramenters</h1>";
+foreach($order->payment->callBackParameters as $key => $value) {
+    echo "<div>" . $key . " : " . $value . "</div>";
+}
+?>

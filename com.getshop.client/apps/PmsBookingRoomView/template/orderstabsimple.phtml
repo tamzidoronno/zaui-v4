@@ -13,7 +13,6 @@ if ($user->cellPhone) {
 $email = $user->emailAddress;
 $deleted = $pmsSelectedRoom->deleted;
 
-$dateForPaymentlinkToBeSent = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkSendingDate($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId);
 $canCreateOrders = true;
 $itemsUnpaid = (array)$this->getApi()->getPmsInvoiceManager()->getAllUnpaidItemsForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId);
 $unsettled = 0.0;

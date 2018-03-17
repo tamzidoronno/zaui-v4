@@ -21,6 +21,10 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         
     }
     
+    public function hasAttachment() {
+        return true;
+    }
+    
     public function preProcess() {
         $orderId = $this->order->id;
         $this->getApi()->getInvoiceManager()->createInvoice($orderId);

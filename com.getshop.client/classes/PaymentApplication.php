@@ -35,6 +35,14 @@ class PaymentApplication extends ApplicationBase {
     public function getSavedCards($userId) {
     }
     
+    public function hasPaymentLink() {
+        return false;
+    }
+    
+    public function hasAttachment() {
+        return false;
+    }
+    
     public function initPaymentMethod() {
         $this->order->payment->paymentType = get_class($this);
         $this->order->payment->paymentFee = $this->getPaymentFee();

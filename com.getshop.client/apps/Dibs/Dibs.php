@@ -17,6 +17,10 @@ class Dibs extends \PaymentApplication implements \Application {
         $namespace = __NAMESPACE__;
         $this->addPaymentMethod("Visa / MasterCard", "/showApplicationImages.php?appNamespace=$namespace&image=Dibs.png", "dibs");
     }
+    
+    public function hasPaymentLink() {
+        return true;
+    }
 
     public function postProcess() {
         

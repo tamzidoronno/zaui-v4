@@ -27,8 +27,38 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .addcommentbutton', this.addcommentbutton);
         $(document).on('click', '.PmsBookingRoomView .deletecomment', this.deletecomment);
         $(document).on('click', '.PmsBookingRoomView .showroomstoselect', this.showRoomsToSelect);
+        $(document).on('click', '.PmsBookingRoomView .checkallitems', this.checkallitems);
+        $(document).on('click', '.PmsBookingRoomView .continuepaymentprocess', this.continuePaymentProcess);
     },
-    
+    continuePaymentProcess : function() {
+        var form = $('.paymentprocess');
+        var args = thundashop.framework.createGsArgs(form);
+        args['multipleadd'] = true;
+
+        var event = thundashop.Ajax.createEvent(null, "transferSelectedToCart", this, args);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function (res) {
+            var data = {
+                orderUnderConstrcutionId : res
+            }
+
+            if (!$('[area="gs_modul_cart"]').is(':visible')) {
+                thundashop.framework.toggleRightWidgetPanel('gs_modul_cart', data);
+            } else {
+                thundashop.framework.refreshRightWidget('gs_modul_cart', data)
+            }
+            $('.grouppaymentprocess').hide();
+        });
+    },
+    checkallitems : function() {
+        var checked = $(this).is(':checked');
+        if(checked) {
+            $('.itemtopay').attr('checked','checked');
+        } else {
+            $('.itemtopay').attr('checked',null);
+        }
+    },
     showRoomsToSelect: function() {
         $('.PmsBookingRoomView .roomstoselect').show();
         $('.PmsBookingRoomView .outerstay').hide();
@@ -147,6 +177,20 @@ app.PmsBookingRoomView = {
     },
     
     addSelectedItemsToCart: function() {
+        if($(this).attr('isgroup') === "yes") {
+            var btn = $(this);
+            var paymentpanel = $('.grouppaymentprocess');
+            var event = thundashop.Ajax.createEvent('','loadGroupPayment',$(this), {
+                "roomid" : btn.attr('roomid')
+            });
+            
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                paymentpanel.html(res);
+                paymentpanel.show();
+            });
+            return;
+        }
+        
         var event = thundashop.Ajax.createEvent(null, "transferSelectedToCart", this, {});
         event['synchron'] = true;
         
@@ -160,8 +204,6 @@ app.PmsBookingRoomView = {
             } else {
                 thundashop.framework.refreshRightWidget('gs_modul_cart', data)
             }
-            
-            app.PmsBookingRoomView.refreshCurrentTab();
         });
     },
     

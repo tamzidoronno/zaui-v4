@@ -1,0 +1,66 @@
+<?php
+/* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+?>
+<i class='fa fa-close' style='float:right;cursor:pointer;' onclick='$(".grouppaymentprocess").hide();'></i>
+<h1>This room is part of a group, select rooms to create order for.</h1>
+<div class='paymentprocess'>
+    <table width='100%'>
+    <tr>
+        <th align='left'><input type='checkbox' class='checkallitems'></th>
+        <th align='left'>Room category</th>
+        <th align='left'>Room</th>
+        <th align='left'>Check-in</th>
+        <th align='left'>Check-out</th>
+        <th align='left'>Guests</th>
+    </tr>
+    <?php
+    foreach($booking->rooms as $room) {
+        $typeName = "";
+        if($room->bookingItemTypeId) {
+            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+            $typeName = $type->name;
+        }
+        $itemName = "";
+        if($room->bookingItemId) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+            $itemName = $item->bookingItemName;
+        }
+        $selected = "";
+        if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+            $selected = "CHECKED";
+        }
+        ?>
+        <tr <?php if($room->deleted) { echo "style='color:red;'"; } ?>>
+            <td><input type='checkbox' class='itemtopay' gsname='roomid][<?php echo $room->pmsBookingRoomId; ?>]' <?php echo $selected; ?>></td>
+            <td><?php echo $typeName; ?></td>
+            <td><?php echo $itemName; ?></td>
+            <td><?php echo date("d.m.Y H:i", strtotime($room->date->start)); ?></td>
+            <td><?php echo date("d.m.Y H:i", strtotime($room->date->end)); ?></td>
+            <td>
+                <table>
+                <?php 
+                foreach($room->guests as $guest) {
+                    echo "<tr>";
+                    echo "<td>" . $guest->name . "</td>";
+                    echo "<td>" . $guest->email . "</td>";
+                    echo "<td>+" . $guest->prefix . "</td>";
+                    echo "<td>" . $guest->phone . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+                </table>
+            </td>
+        </tr>
+        <?php
+    }
+    ?>
+    </table>
+    <select class='gsniceselect1' style='width:100%;' gsname='paymenttypeselection'>
+        <option value='all'>Create one order for all selected rooms</option>
+        <option value='uniqueorder'>Every guest pay themself</option>
+        <option value='uniqueordersendpaymentlink'>Every guest pay themself and send payment link to guests</option>
+    </select>
+    <span class='shop_button continuepaymentprocess' style='width:100%;margin-top:5px;box-sizing: border-box;'>Continue payment process</span>
+</div>
+    

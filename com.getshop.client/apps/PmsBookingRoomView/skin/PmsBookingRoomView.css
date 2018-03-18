@@ -4,6 +4,16 @@
     margin-top: 50px;
     margin-bottom: 50px;
 }
+.PmsBookingRoomView .grouppaymentprocess {
+    position: absolute;
+    background-color: #fff;
+    border: solid 1px #bbb;
+    z-index: 8;
+    padding: 5px;
+    right: 10px;
+    top: 10px;
+}
+
 .PmsBookingRoomView .editaddonpanel { z-index: 2; }
 .PmsBookingRoomView .isgroupinformation { border-bottom: solid 1px; padding: 5px; background-color:#efefef; }
 .PmsBookingRoomView .isdeletedinformation { background-color:red; color:#fff; padding: 5px; padding-left: 10px; }

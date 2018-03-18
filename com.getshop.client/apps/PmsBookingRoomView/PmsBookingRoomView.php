@@ -17,6 +17,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function loadGroupPayment() {
+        $this->includefile("grouppaymentselection");
+    }
+    
     public function quickAction() {
         $this->includefile("doquickaction");
     }
@@ -966,7 +970,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         $selectedRoom = null;
         
-        $this->removeRoomFromCart();
+        $id = $this->getSelectedRoom()->orderUnderConstructionId;
+        $this->getApi()->getOrderManager()->clearOrderUnderConstruction($id);
+        
         $this->refreshCartForRoom();
         
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $this->getSelectedRoom()->pmsBookingRoomId);
@@ -999,22 +1005,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
         $this->getApi()->getOrderManager()->updateCartOnOrderUnderConstruction($selectedRoom->orderUnderConstructionId, $selectedRoom->pmsBookingRoomId, $cart);
         $this->setData(true);
-    }
-    
-    public function removeRoomFromCart() {
-        $id = $this->getSelectedRoom()->orderUnderConstructionId;
-
-        $this->getApi()->getOrderManager()->removeRoomForOrderUnderConstruction($id, $this->getSelectedRoom()->pmsBookingRoomId);
-        
-        $booking = $this->getPmsBooking();
-        
-        foreach ($booking->rooms as $room) {
-            if ($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
-                $room->orderUnderConstructionId = "";
-            }
-        }
-        
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
     
     private function uuidV4() {
@@ -1249,7 +1239,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
         $filter->pmsRoomIds = array();
         $filter->pmsRoomIds[]  = $this->getSelectedRoom()->pmsBookingRoomId;
-
+        if(isset($_POST['data']['multipleadd'])) {
+            $filter->pmsRoomIds = array();
+            foreach($_POST['data']['roomid'] as $id => $val) {
+                if($val == "true") {
+                    $filter->pmsRoomIds[] = $id;
+                }
+            }
+        }
+        
         $this->getApi()->getCartManager()->clear();
         $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $booking->id, $filter);    
     }

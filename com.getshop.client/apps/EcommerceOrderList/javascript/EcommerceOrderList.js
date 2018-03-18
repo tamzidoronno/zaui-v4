@@ -3,6 +3,16 @@ app.EcommerceOrderList = {
         $(document).on('click','.EcommerceOrderList .sendpaymentlink', app.EcommerceOrderList.sendPaymentLink);
         $(document).on('click','.EcommerceOrderList .sendemail', app.EcommerceOrderList.sendEmail);
         $(document).on('click','.EcommerceOrderList .closesendpaymentlink', app.EcommerceOrderList.closesendpaymentlink);
+        $(document).on('click','.EcommerceOrderList .deleteOrder', app.EcommerceOrderList.deleteOrder);
+    },
+    deleteOrder : function() {
+        var confirmed = confirm("Are you sure you want to delete this order?");
+        if(confirmed) {
+            var orderid = $(this).attr('orderid');
+            thundashop.Ajax.simplePost($(this), "deleteOrder", {
+                "id" : orderid
+            });
+        }
     },
     sendEmail : function() {
         var btn = $(this);

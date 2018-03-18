@@ -18,13 +18,29 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $this->printTable();
     }
     
+    /**
+     * 
+     * @param \core_ordermanager_data_Order $order
+     * @return string
+     */
     public function formatUser($order) { 
         $user = $this->getApi()->getUserManager()->getUserById($order->userId);
         if (!$user) {
             return "N/A";
         }
         
-        return $user->fullName;
+        $text = "<div class='fullname' title='".$user->fullName."'>" . $user->fullName . "</div>";
+        $names = array();
+        $text .= "<div class='guestnames'>";
+        foreach($order->cart->items as $item) {
+            if(in_array($item->product->metaData, $names)) {
+                continue;
+            }
+            $names[] = $item->product->metaData;
+            $text .= $item->product->metaData;
+        }
+        $text .= "</div>";
+        return $text;
     }
     
     public function formatIncTaxes($order) {
@@ -35,12 +51,24 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         return \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order));
     }
     
+    public function deleteOrder() {
+        $orderid = $_POST['data']['id'];
+        $this->getApi()->getOrderManager()->deleteOrder($orderid);
+        $this->getApi()->getPmsManager()->orderChanged($this->getSelectedMultilevelDomainName(), $orderid);
+    }
+    
     public function formatPaymentDate($order) {
+        $text = "";
         if ($order->paymentDate) {
-            return \GetShopModuleTable::formatDate($order->paymentDate);
+            $text = \GetShopModuleTable::formatDate($order->paymentDate);
+        } else {
+            $text = "N/A";
         }
-        
-        return "N/A";
+        $text = "<div>" . $text . "</div>";
+        if($order->recieptEmail) {
+            $text .= "<div class='recieptemail' title='Reciept email'>" . $order->recieptEmail . "</div>";
+        }
+        return $text;
     }
     
     public function formatTransferredToAccounting($order) {
@@ -51,14 +79,20 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         }
     }
     
+    /**
+     * @param \core_ordermanager_data_Order $order
+     * @return string
+     */
     public function formatState($order) {
+        $text = "";
         if ($order->closed) {
-            return '<i class="fa fa-lock"></i>';
+            $text = '<i class="fa fa-lock"></i>';
         } else {
-            return '<i class="fa fa-unlock"></i>';
+            $text = '<i class="fa fa-unlock"></i>';
+            $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' orderid='".$order->id."'></i>";
         }
-        
-        return "";
+        $text .= "<i class='fa fa-download dontExpand' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'></i>";
+        return $text;
     }
     
     public function formatRowCreatedDate($order) {
@@ -97,7 +131,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             array('paymentDate', 'PAYMENT DATE', null, 'formatPaymentDate'),
             array('transferredToAccounting', '<span title="Transferred to accounting">TFA</span>', null, 'formatTransferredToAccounting'),
             array('user', 'CUSTOMER', null, 'formatUser'),
-            array('shipmentdate', 'SHIPMENT DATE', null, 'formatShipmentDate'),
+            array('shipmentdate', 'REQUEST DATE', null, 'formatShipmentDate'),
             array('payment', 'PAYMENT', null, 'formatPaymentType'),
             array('inctaxes', 'INC TAXES', null, 'formatIncTaxes'),
             array('extaxes', 'EX TAXES', null, 'formatExTaxes'),

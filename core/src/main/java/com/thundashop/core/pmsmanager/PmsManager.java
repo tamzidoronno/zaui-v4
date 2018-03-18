@@ -7496,24 +7496,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void orderCreated(String orderId) {
         Order order = orderManager.getOrderSecure(orderId);
-        
-        String reference = null;
-        if (order != null && order.cart != null && order.cart.reference != null && !order.cart.reference.isEmpty()) {
-            reference = order.cart.reference;
-        }
-        
-        addOrderBasedOnReference(reference, order);
-        
-        if (order.cart.references != null) {
-            order.cart.references.stream()
-                    .forEach(ref -> {
-                        addOrderBasedOnReference(ref, order);
-                    });
+        HashMap<String, List<CartItem>> grouped = orderManager.groupItemsOnOrder(order.cart);
+        for(String roomId : grouped.keySet()) {
+            addOrderBasedOnReference(roomId, order);
         }
     }
     
-    public void addOrderBasedOnReference(String reference, Order order) {
-        if (reference == null || reference.isEmpty()) {
+    private void addOrderBasedOnReference(String roomId, Order order) {
+        if (roomId == null || roomId.isEmpty()) {
             return;
         }
         
@@ -7521,11 +7511,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         }
         
-        PmsBooking booking = getBookingUnsecure(reference);
-        
-        if (booking == null) {
-            booking = getBookingFromRoom(reference);
-        }
+        PmsBooking booking = getBookingFromRoom(roomId);
         
         if (booking == null) {
             return;

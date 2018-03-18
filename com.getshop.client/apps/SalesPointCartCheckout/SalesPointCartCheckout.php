@@ -115,15 +115,11 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
         }
         $orderIds = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment'], $type);
         foreach($orderIds as $orderId) {
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
             $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
             if($type == "uniqueorder" || $type == "uniqueordersendpaymentlink") {
                 $room = $this->getRoom($orderId, $order);
                 foreach($room->guests as $guest) {
-                    if(stristr($guest->email, "@")) {
-                        $emailToUse = $guest->email;
-                        $order->recieptEmail = $emailToUse;
-                    }
                     if($type == "uniqueordersendpaymentlink" && ($guest->phone || $guest->email)) {
                         $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), 
                             $orderId, 
@@ -133,9 +129,6 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
                             $guest->phone);
                     }
                 }
-                
-                $order->recieptEmail = $emailToUse;
-                $this->getApi()->getOrderManager()->saveOrder($order);
             }
         }
     }

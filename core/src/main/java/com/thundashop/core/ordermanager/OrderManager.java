@@ -2329,7 +2329,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
+    public HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
         HashMap<String, List<CartItem>> toReturn = new HashMap();
         for(CartItem item : cart.getItems()) {
             List<CartItem> items = toReturn.get(item.getProduct().externalReferenceId);

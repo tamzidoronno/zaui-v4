@@ -109,8 +109,35 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     
     public function createOrder() {
         $id = $this->getModalVariable("orderUnderConstrcutionId");
-        $orderId = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment']);
-        $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
+        $type = "all";
+        if(isset($_POST['data']['paymenttypeselection'])) {
+            $type = $_POST['data']['paymenttypeselection'];
+        }
+        $orderIds = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment'], $type);
+        foreach($orderIds as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
+            if($type == "uniqueorder" || $type == "uniqueordersendpaymentlink") {
+                $room = $this->getRoom($orderId, $order);
+                foreach($room->guests as $guest) {
+                    if(stristr($guest->email, "@")) {
+                        $emailToUse = $guest->email;
+                        $order->recieptEmail = $emailToUse;
+                    }
+                    if($type == "uniqueordersendpaymentlink" && ($guest->phone || $guest->email)) {
+                        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), 
+                            $orderId, 
+                            $room->pmsBookingRoomId, 
+                            $guest->email,
+                            $guest->prefix,
+                            $guest->phone);
+                    }
+                }
+                
+                $order->recieptEmail = $emailToUse;
+                $this->getApi()->getOrderManager()->saveOrder($order);
+            }
+        }
     }
     
     /**
@@ -264,5 +291,27 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     public function isReadOnly() {
         return $this->readOnly;
     }
+
+    /**
+     * 
+     * @param type $orderId
+     * @param type $order
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getRoom($orderId, $order) {
+        $roomId = "";
+        foreach($order->cart->items as $item) {
+            $roomId = $item->product->externalReferenceId;
+            break;
+        }
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomId) {
+                return $room;
+            }
+        }
+        return;
+    }
+
 }
 ?>

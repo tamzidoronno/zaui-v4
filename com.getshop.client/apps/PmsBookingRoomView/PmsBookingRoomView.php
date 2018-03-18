@@ -963,7 +963,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function getRoom($roomId) {
-        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $roomId);
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $roomId) {
                 return $room;
@@ -1246,7 +1246,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
         $filter->pmsRoomIds = array();
         $filter->pmsRoomIds[]  = $this->getSelectedRoom()->pmsBookingRoomId;
+        unset($_SESSION['groupordercreationtype']);
         if(isset($_POST['data']['multipleadd'])) {
+            $_SESSION['groupordercreationtype'] = $_POST['data']['paymenttypeselection'];
             $filter->pmsRoomIds = array();
             foreach($_POST['data']['roomid'] as $id => $val) {
                 if($val == "true") {

@@ -2243,31 +2243,43 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public String convertOrderUnderConstructionToOrder(String id, Address address, String paymentId) {
+    public List<String> convertOrderUnderConstructionToOrder(String id, Address address, String paymentId, String orderCreationType) {
         if (!ordersUnderConstruction.containsKey(id)) {
-            return "";
+            return new ArrayList();
         }
+        
+        List<String> toreturn = new ArrayList();
         
         OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
         ret.finalizeOrder();
         
-        cartManager.setCart(ret.order.cart);
+        HashMap<String, List<CartItem>> groupedItems = new HashMap();
         
-        Order order = createOrder(address);
-        order.createByManager = "PmsDailyOrderGeneration";
-        order.payment = new Payment();
-        order.payment.paymentId = paymentId;
+        if(orderCreationType != null && (orderCreationType.equals("uniqueorder") || orderCreationType.equals("uniqueordersendpaymentlink"))) {
+            groupedItems = groupItemsOnOrder(ret.order.cart);
+        } else {
+            groupedItems.put("allrooms", ret.order.cart.getItems());
+        }
         
-        Application paymentApplication = storeApplicationPool.getApplication(paymentId);
-        order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
-        
-        deleteObject(ret);
-        finalizeOrder(order);
-        saveOrder(order);
+        for(String roomId : groupedItems.keySet()) {
+            cartManager.clear();
+            cartManager.getCart().addCartItems(groupedItems.get(roomId));
+            
+            Order order = createOrder(address);
+            order.createByManager = "PmsDailyOrderGeneration";
+            order.payment = new Payment();
+            order.payment.paymentId = paymentId;
 
-        cartManager.clear();
+            Application paymentApplication = storeApplicationPool.getApplication(paymentId);
+            order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            deleteObject(ret);
+            finalizeOrder(order);
+            saveOrder(order);
+            cartManager.clear();
+            toreturn.add(order.id);
+        }
         
-        return order.id;
+        return toreturn;
     }
 
     private Predicate<? super Order> filterByOrderIdsInExtra(FilterOptions filterOptions) {
@@ -2315,5 +2327,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         ret.finalizeOrder();        
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
+        HashMap<String, List<CartItem>> toReturn = new HashMap();
+        for(CartItem item : cart.getItems()) {
+            List<CartItem> items = toReturn.get(item.getProduct().externalReferenceId);
+            if(items == null) {
+                items = new ArrayList();
+            }
+            items.add(item);
+            toReturn.put(item.getProduct().externalReferenceId, items);
+        }
+        return toReturn;
     }
 }

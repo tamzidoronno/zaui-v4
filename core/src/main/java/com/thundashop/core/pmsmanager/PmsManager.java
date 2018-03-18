@@ -1426,6 +1426,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
         User user = userManager.getUserById(booking.userId);
+
+        Order order = null;
+        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+            order = orderManager.getOrderSecure(orderIdToSend);
+            order.sentToCustomerDate = new Date();
+        }
+        
         if (type.equals("sms")) {
             String phone = user.cellPhone;
             String prefix = user.prefix;
@@ -1434,12 +1441,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 prefix = prefixToSend;
                 phoneToSend = null;
             }
-            if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
-                Order order = orderManager.getOrderSecure(orderIdToSend);
-                if(order != null) {
-                    order.sentToPhone = phone;
-                    order.sentToPhonePrefix = prefix;
-                }
+            
+            if(order != null) {
+                order.sentToPhone = phone;
+                order.sentToPhonePrefix = prefix;
             }
             
             if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
@@ -1474,12 +1479,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 specificEmail = true;
                 emailToSendTo = null;
             }
-            
+                        
             if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
-                Order order = orderManager.getOrderSecure(orderIdToSend);
                 if(order != null) {
                     order.recieptEmail = recipientEmail;
-                    order.sentToCustomerDate = new Date();
                     order.sentToEmail = recipientEmail;
                     orderManager.saveOrder(order);
                 }
@@ -1501,9 +1504,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             repicientList.add(recipientEmail);
         }
+        
+        if(order != null) {
+            orderManager.saveOrder(order);
+        }
     }
 
     private String notifyGuest(PmsBooking booking, String message, String type, String key, PmsBookingRooms roomToNotify) {
+        Order order = null;
+        if(orderIdToSend != null) {
+            order = orderManager.getOrderSecure(orderIdToSend);                
+            order.sentToCustomerDate = new Date();
+        }
+        
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if (roomToNotify != null) {
                 if (!room.pmsBookingRoomId.equals(roomToNotify.pmsBookingRoomId)) {
@@ -1520,11 +1533,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     
                     if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
-                        Order order = orderManager.getOrderSecure(orderIdToSend);
                         if(order != null) {
                             order.recieptEmail = email;
-                            
-                            order.sentToCustomerDate = new Date();
                             order.sentToEmail = email;
                             orderManager.saveOrder(order);
                         }
@@ -1578,10 +1588,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             repicientList.add(email);
                             
                             if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
-                                Order order = orderManager.getOrderSecure(orderIdToSend);
                                 if(order != null) {
                                     order.recieptEmail = email;
-                                    orderManager.saveOrder(order);
                                 }
                             }
 
@@ -1611,6 +1619,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
             }
+        }
+        if(order != null) {
+            orderManager.saveOrder(order);
         }
         return message;
     }
@@ -3920,6 +3931,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void sendPaymentLink(String orderId, String bookingId, String email, String prefix, String phone) {
+        PmsBooking booking = getBookingUnsecure(bookingId);
+        if(booking == null) {
+            booking = getBookingFromRoom(bookingId);
+            if(booking != null) {
+                bookingId = booking.id;
+            }
+        }
         orderIdToSend = orderId;
         emailToSendTo = email;
         prefixToSend = prefix;

@@ -84,5 +84,31 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
             </select>
         </div>
     </div>
-    <span class="shop_button continue_checkout" gstype='submit' gs_callback='app.SalesPointCartCheckout.orderCreationCompleted'>Create payment</span>
+    <?php
+    if(isset($_SESSION['groupordercreationtype'])) {
+        $options = array();
+        $options['all'] = "Create one order for all selected rooms";
+        $options['uniqueorder'] = "Every guest pay themself";
+        $options['uniqueordersendpaymentlink'] = "Every guest pay themself and send payment link to guests";
+        ?>
+        <div class="payment_options payment_window">
+            <div class="option_content"></div>
+            <div class="options">
+                <select class='gsniceselect1' style='width:100%;' gsname='paymenttypeselection'>
+                    <?php
+                    foreach($options as $key => $val) {
+                        $selected = "";
+                        if($key == $_SESSION['groupordercreationtype']) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='$key' $selected>$val</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+        </div>
+        <span class="shop_button continue_checkout" gstype='submit' gs_callback='app.SalesPointCartCheckout.orderCreationCompleted'>Create payment</span>
+        <?php
+    }
+    ?>
 </div>

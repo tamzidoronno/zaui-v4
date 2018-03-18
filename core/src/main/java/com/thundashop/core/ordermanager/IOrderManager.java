@@ -320,7 +320,7 @@ public interface IOrderManager {
     public void updateOrderUnderConstructionItems(String id, Cart cart);
     
     @Editor
-    public String convertOrderUnderConstructionToOrder(String id, Address address, String paymentId);
+    public List<String> convertOrderUnderConstructionToOrder(String id, Address address, String paymentId, String orderCreationType);
     
     @Administrator
     public void deleteOrder(String orderId);

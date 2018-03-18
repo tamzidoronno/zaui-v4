@@ -54,12 +54,20 @@ $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelect
         </tr>
         <?php
     }
+    
+    $options = array();
+    $options['all'] = "Create one order for all selected rooms";
+    $options['uniqueorder'] = "Every guest pay themself";
+    $options['uniqueordersendpaymentlink'] = "Every guest pay themself and send payment link to guests";
+    
     ?>
     </table>
     <select class='gsniceselect1' style='width:100%;' gsname='paymenttypeselection'>
-        <option value='all'>Create one order for all selected rooms</option>
-        <option value='uniqueorder'>Every guest pay themself</option>
-        <option value='uniqueordersendpaymentlink'>Every guest pay themself and send payment link to guests</option>
+        <?php
+        foreach($options as $key => $val) {
+            echo "<option value='$key'>$val</option>";
+        }
+        ?>
     </select>
     <span class='shop_button continuepaymentprocess' style='width:100%;margin-top:5px;box-sizing: border-box;'>Continue payment process</span>
 </div>

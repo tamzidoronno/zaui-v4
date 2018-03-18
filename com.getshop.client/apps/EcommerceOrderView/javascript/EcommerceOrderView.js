@@ -2,8 +2,24 @@ app.EcommerceOrderView = {
     init: function() {
         $(document).on('click', '.EcommerceOrderView .menuarea .menuentry', this.menuClicked);
         $(document).on('click', '.EcommerceOrderView .show_payment_methods', this.showPaymentMethods);
+        $(document).on('click', '.EcommerceOrderView .removecartitemtfromorder', app.EcommerceOrderView.removeItem);
     },
-    
+    removeItem : function() {
+        var confirmed = confirm("Are you sure you want to remove this item?");
+        var btn = $(this);
+        if(!confirmed) {
+            return;
+        }
+        var itemid = btn.attr('itemid');
+        var orderid = btn.attr('orderid');
+        var event = thundashop.Ajax.createEvent('','removeCartItem',$(this), {
+            "itemid" : itemid,
+            "orderid" : orderid
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            btn.closest('.cartitem').remove();
+        });
+    },
     showPaymentMethods: function() {
         var app = $(this).closest('.app');
         var paymentoptions = app.find('.paymentmethods');

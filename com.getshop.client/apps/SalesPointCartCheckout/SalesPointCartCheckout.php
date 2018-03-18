@@ -108,7 +108,7 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     }
     
     public function createOrder() {
-        if(isset($_POST['data']['appendtoorder'])) {
+        if(isset($_POST['data']['appendtoorder']) && $_POST['data']['appendtoorder']) {
             $originalCart = $this->getOriginalCartFromSession();
             $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['appendtoorder']);
             foreach($originalCart->items as $item) {

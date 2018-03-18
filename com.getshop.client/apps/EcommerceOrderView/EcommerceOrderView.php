@@ -9,6 +9,10 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         
     }
 
+    public function markAsPaid() {
+        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($_POST['data']['date'])));
+    }
+    
     public function getName() {
         return "EcommerceOrderView";
     }
@@ -63,6 +67,19 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
     public function loadOrder($orderId) {
         $_SESSION['EcommerceOrderView_current_order'] = $orderId;
         $this->setData();
+    }
+    
+    public function removeCartItem() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $itemlist = array();
+        foreach($order->cart->items as $item) {
+            if($item->cartItemId == $_POST['data']['itemid']) {
+                continue;
+            }
+            $itemlist[] = $item;
+        }
+        $order->cart->items = $itemlist;
+        $this->getApi()->getOrderManager()->saveOrder($order);
     }
     
     public function markForResending() {

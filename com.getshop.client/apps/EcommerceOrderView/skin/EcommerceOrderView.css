@@ -1,4 +1,12 @@
-
+.EcommerceOrderView .markaspaidarea {
+        position: absolute;
+    z-index: 2;
+    background-color: #fff;
+    padding: 10px;
+    border: solid 1px #bbb;
+    left: 50%;
+    display:none;
+}
 .EcommerceOrderView .menuarea,
 .EcommerceOrderView .workarea {
     width: 500px;

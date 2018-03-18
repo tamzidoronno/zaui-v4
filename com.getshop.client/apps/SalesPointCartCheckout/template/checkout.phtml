@@ -52,10 +52,27 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
     <div class="payment_options payment_window">
         <div class="option_content"></div>
         <div class="options">
-            <select class='gsniceselect1 paymentmethodselection' gsname='appendtoorder'>
+            <select class='gsniceselect1 appendtoorderselection' gsname='appendtoorder'>
                 <option value="">Create a new order</option>
                 <?
                 //Need to find orders that has been created on the bookings and display them here!
+                $roomIds = array();
+                foreach($currentCart->items as $item) {
+                    $roomIds[$item->product->externalReferenceId] = "1";
+                }
+                $orderIds = array();
+                foreach($roomIds as $roomId => $id) {
+                    $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+                    foreach($booking->orderIds as $orderId) {
+                        if(!in_array($orderId, $orderIds)) {
+                            $orderIds[] = $orderId;
+                        }
+                    }
+                }
+                foreach($orderIds as $orderId) {
+                    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                    echo "<option value='$orderId'>Add to order: " . $order->incrementOrderId . "</option>";
+                }
                 ?>
             </select>
         </div>

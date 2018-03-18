@@ -9,6 +9,17 @@ app.SalesPointCartCheckout = {
         $(document).on('change', '.SalesPointCartCheckout .addon_price' , this.cartChanged);
         $(document).on('click', '.SalesPointCartCheckout .display_cart_filter' , this.loadCartFilter);
         $(document).on('click', '.SalesPointCartCheckout .removeitem' , this.removeCartItem);
+        $(document).on('click', '.SalesPointCartCheckout [gsname="appendtoorder"]' , this.changeAppendToOrder);
+    },
+    changeAppendToOrder : function() {
+        var orderId = $(this).val();
+        if(orderId) {
+            $('.paymentmethodselection').hide();
+            $('[gsname="paymenttypeselection"]').hide();
+        } else {
+            $('.paymentmethodselection').show();
+            $('[gsname="paymenttypeselection"]').show();
+        }
     },
     orderCreationCompleted : function() {
         app.PmsBookingRoomView.refresh();

@@ -12,6 +12,7 @@
 .SalesPointCartCheckout .cartsummary .col2 { width: calc(100% - 200px); }
 .SalesPointCartCheckout .cartsummary .col3 { width: 100px; }
 .SalesPointCartCheckout .paymentmethodselection,
+.SalesPointCartCheckout .appendtoorderselection,
 .SalesPointCartCheckout .display_cart_filter,
 .SalesPointCartCheckout .continue_checkout { box-sizing: border-box; width: 100%; margin-top: 5px; }
 .SalesPointCartCheckout .checkoutarea .itemsarea { max-height: 400px; overflow: auto; border: solid 1px #bbb; padding: 10px;background-color:#fff; }

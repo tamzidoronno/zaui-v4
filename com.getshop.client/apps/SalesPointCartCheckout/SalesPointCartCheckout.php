@@ -108,25 +108,34 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     }
     
     public function createOrder() {
-        $id = $this->getModalVariable("orderUnderConstrcutionId");
-        $type = "all";
-        if(isset($_POST['data']['paymenttypeselection'])) {
-            $type = $_POST['data']['paymenttypeselection'];
-        }
-        $orderIds = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment'], $type);
-        foreach($orderIds as $orderId) {
-            $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            if($type == "uniqueorder" || $type == "uniqueordersendpaymentlink") {
-                $room = $this->getRoom($orderId, $order);
-                foreach($room->guests as $guest) {
-                    if($type == "uniqueordersendpaymentlink" && ($guest->phone || $guest->email)) {
-                        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), 
-                            $orderId, 
-                            $room->pmsBookingRoomId, 
-                            $guest->email,
-                            $guest->prefix,
-                            $guest->phone);
+        if(isset($_POST['data']['appendtoorder'])) {
+            $originalCart = $this->getOriginalCartFromSession();
+            $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['appendtoorder']);
+            foreach($originalCart->items as $item) {
+                $order->cart->items[] = $item;
+            }
+            $this->getApi()->getOrderManager()->saveOrder($order);
+        } else {
+            $id = $this->getModalVariable("orderUnderConstrcutionId");
+            $type = "all";
+            if(isset($_POST['data']['paymenttypeselection'])) {
+                $type = $_POST['data']['paymenttypeselection'];
+            }
+            $orderIds = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment'], $type);
+            foreach($orderIds as $orderId) {
+                $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                if($type == "uniqueorder" || $type == "uniqueordersendpaymentlink") {
+                    $room = $this->getRoom($orderId, $order);
+                    foreach($room->guests as $guest) {
+                        if($type == "uniqueordersendpaymentlink" && ($guest->phone || $guest->email)) {
+                            $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), 
+                                $orderId, 
+                                $room->pmsBookingRoomId, 
+                                $guest->email,
+                                $guest->prefix,
+                                $guest->phone);
+                        }
                     }
                 }
             }

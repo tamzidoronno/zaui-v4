@@ -37,7 +37,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
                 continue;
             }
             $names[] = $item->product->metaData;
-            $text .= $item->product->metaData;
+            $text .= $item->product->metaData . " ";
         }
         $text .= "</div>";
         return $text;

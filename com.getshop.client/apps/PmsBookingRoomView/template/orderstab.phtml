@@ -4,7 +4,12 @@
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $booking = $this->getBookingEngineBooking();
-
+$endDate = null;
+foreach($pmsBooking->rooms as $r) {
+    if($endDate == null || strtotime($r->date->end) > $endDate) {
+        $endDate = strtotime($r->date->end);
+    }
+}
 $user = $this->getUserForBooking();
 
 $totalOnRoom = $pmsSelectedRoom->totalCost;
@@ -44,10 +49,21 @@ if(sizeof($pmsBooking->rooms)) {
 ?>
 <div class='grouppaymentprocess'></div>
 <div>
-    <span style='position:absolute; right: 0px; z-index: 5;'>
-        <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create order after stay"); ?></span>
-        <span class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Start payment process"); ?></span>
-    </span>
+        <?php
+        if(!$pmsBooking->createOrderAfterStay) {
+        ?>
+            <span style='position:absolute; right: 0px; z-index: 5;'>
+                <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create order after stay"); ?></span>
+                <span class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Start payment process"); ?></span>
+    |       </span>
+        <?php
+        } else {
+            ?>
+            <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;position:absolute; right: 10px;z-index:2;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
+            <?php
+            echo "<h1 >An order of " . $pmsBooking->unsettled . " will be created at " . date("d.m.Y", $endDate) . "</h1>";
+        }
+        ?>
     <div class='insideheader'><? echo $this->__f("Payment overview"); ?></div>
     <div>
         <span class='pricetext'>Total for room</span> <span class='pricetag'><?php echo $totalOnRoom; ?></span>

@@ -8,6 +8,61 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function saveSpecialCartItem() {
+        $orderid = $_POST['data']['orderid'];
+        $itemid = $_POST['data']['itemid'];
+        $order = $this->getApi()->getOrderManager()->getOrder($orderid);
+        $items = (array)$order->cart->items;
+        $count = 0;
+        $amount = 0;
+        foreach($items as $item) {
+            if($item->cartItemId != $itemid) {
+                continue;
+            }
+            $itemsAdded = (array)$item->itemsAdded;
+            $priceMatrix = (array)$item->priceMatrix;
+            if(sizeof($priceMatrix) > 0) {
+                foreach($priceMatrix as $day => $value) {
+                    $priceMatrix[$day] = $_POST['data']['pricematrix_'.$day];
+                    $amount += $priceMatrix[$day];
+                    $count++;
+                }
+            }
+            if(sizeof($itemsAdded) > 0) {
+                foreach($itemsAdded as $addon) {
+                    $addon->count = $_POST['data']['addoncount_'.$addon->addonId];
+                    $addon->price = $_POST['data']['addonprice_'.$addon->addonId];
+                    $count += $addon->count;
+                    $amount += $addon->count * $addon->price;
+                }
+            }
+            
+            $finalamount = ($amount/$count);
+            if($finalamount < 0) {
+                $finalamount *= -1;
+                if($count > 0) {
+                    $count *= -1;
+                }
+            }
+            $result = array();
+            $result['count'] = $count;
+            $result['price'] = $finalamount;
+            
+            $item->count = $count;
+            $item->product->price = $finalamount;
+            
+            $this->getApi()->getOrderManager()->saveOrder($order);
+            
+            
+            echo json_encode($result);
+            break;
+        }
+    }
+    
+    public function displaySpecialDataOnItem() {
+        $this->includefile("specialeditonitem");
+    }
 
     public function markAsPaid() {
         $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($_POST['data']['date'])));

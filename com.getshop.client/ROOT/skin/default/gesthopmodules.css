@@ -233,6 +233,10 @@ body {
     padding: 40px 0px 10px 20px;
     border-top: solid 1px #DDD;
 }
+.module_toprow .top-row-icon .fa-trash-o {
+    font-size: 25px;
+}
+
 .module_toprow .top-row-icon {
     font-size: 25px;
     display: inline-block;

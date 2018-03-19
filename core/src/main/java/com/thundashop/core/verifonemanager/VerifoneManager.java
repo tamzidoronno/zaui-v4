@@ -49,16 +49,12 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             printFeedBack("A payment is already being processed");
             return;
         }
-        double random = 1.0;
-        if(!frameworkConfig.productionMode) {
-            random = Math.random();
-        }
         Order order = orderManager.getOrderSecure(orderId);
         order.payment.paymentType = "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\\VerifoneTerminal";
         orderManager.saveOrder(order);
         System.out.println("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
-        Double total = orderManager.getTotalAmount(order) * 100 * random;
+        Double total = orderManager.getTotalAmount(order) * 100;
         Integer amount = total.intValue();
         
         VerifonePaymentApp app = new VerifonePaymentApp();

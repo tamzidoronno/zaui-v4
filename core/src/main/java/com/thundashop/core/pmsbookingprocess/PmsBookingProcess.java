@@ -630,6 +630,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         pmsManager.processor();
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
         Order order = orderManager.getOrderSecure(data.orderId);
+        if(order.status != Order.Status.PAYMENT_COMPLETED) {
+            return;
+        }
         User user = userManager.getUserById(order.userId);
         String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
         pmsManager.processor();
@@ -993,8 +996,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     amount = orderManager.getTotalAmount(order);
                     if(amount > 0) {
                         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
-                        verifoneManager.chargeOrder(orderId, "1");
-//                        verifoneManager.chargeOrder(orderId, settings.verifoneTerminalId);
+//                        verifoneManager.chargeOrder(orderId, "1");
+                        verifoneManager.chargeOrder(orderId, settings.verifoneTerminalId);
                         break;
                     }
                 }

@@ -1529,7 +1529,7 @@ getshop_WebSocketClient = {
             if(getshop_endpoint) {
                 endpoint = getshop_endpoint;
             }
-            this.socket = new WebSocket("ws://"+endpoint+":31330/");
+            this.socket = new WebSocket("wss://"+endpoint+":31332/");
             this.socket.onopen = getshop_WebSocketClient.connected;
             this.socket.onclose = function() {
                 getshop_WebSocketClient.disconnected();

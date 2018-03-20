@@ -290,6 +290,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $filter->filterType = $_POST['data']['filtertype'];
         $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['from']));
         $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+        $filter->channel = $_POST['data']['channel'];
         if(isset($_POST['data']['addons'])) {
             $filter->addons = $_POST['data']['addons'];
         }

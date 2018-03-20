@@ -83,5 +83,9 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $this->includefile("otherselection");
     }
 
+    public function getChannelMatrix() {
+        return $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
+    }
+
 }
 ?>

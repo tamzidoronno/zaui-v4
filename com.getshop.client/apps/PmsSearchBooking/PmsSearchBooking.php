@@ -319,5 +319,45 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $this->setCurrentFilter($filter);
     }
 
+    public function quickfilterselection() {
+        $this->clearFilter();
+        $filter = $this->getSelectedFilter();
+        $filter->filterType = $_POST['data']['type'];
+        switch($_POST['data']['date']) {
+            case "today":
+                $filter->startDate = $this->convertToJavaDate(time());
+                $filter->endDate = $this->convertToJavaDate(time());
+                break;
+            case "tomorrow":
+                $filter->startDate = $this->convertToJavaDate(time()+86400);
+                $filter->endDate = $this->convertToJavaDate(time()+86400);
+                break;
+            case "aftertomorrow":
+                $filter->startDate = $this->convertToJavaDate(time()+(2*86400));
+                $filter->endDate = $this->convertToJavaDate(time()+(2*86400));
+                break;
+            case "yesterday":
+                $filter->startDate = $this->convertToJavaDate(time()-(86400));
+                $filter->endDate = $this->convertToJavaDate(time()-(86400));
+                break;
+            case "beforeyesterday":
+                $filter->startDate = $this->convertToJavaDate(time()-(2*86400));
+                $filter->endDate = $this->convertToJavaDate(time()-(2*86400));
+                break;
+            case "pastthreedays":
+                $filter->startDate = $this->convertToJavaDate(time()-(86400*3));
+                $filter->endDate = $this->convertToJavaDate(time());
+                break;
+            case "nextthreedays":
+                $filter->startDate = $this->convertToJavaDate(time());
+                $filter->endDate = $this->convertToJavaDate(time()+(86400*3));
+                break;
+            default:
+                echo "date not found" . $_POST['data']['date'];
+                
+        }
+        $this->setCurrentFilter($filter);
+    }
+
 }
 ?>

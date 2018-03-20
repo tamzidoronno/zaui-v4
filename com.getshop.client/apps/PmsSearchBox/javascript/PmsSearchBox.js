@@ -14,6 +14,29 @@ app.PmsSearchBox = {
         $(document).on('click','.PmsSearchBox .applyfilterbutton',app.PmsSearchBox.applyFilter);
         $(document).on('click','.PmsSearchBox .addonstofilter',app.PmsSearchBox.updateOtherFilterCounter);
         $(document).on('click','.PmsSearchBox .clearfilter',app.PmsSearchBox.clearFilter);
+        $(document).on('click','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
+        $(document).on('click','.PmsSearchBox .dailydaterangepicker [daytype]',app.PmsSearchBox.changeSelection);
+    },
+    changeSelection : function() {
+        var date = $(this).attr('daytype');
+        var type = $(this).closest('.dailydaterangepicker').attr('type');
+        thundashop.Ajax.simplePost($(this), "quickfilterselection", {
+            "date" : date,
+            "type" : type
+        });
+        
+    },
+    displayDailyRangePicker : function() {
+        var view = $('.PmsSearchBox .dailydaterangepicker');
+        view.find('.header').hide();
+        var type = $(this).attr('type');
+        view.attr('type', type);
+        view.find('[type="'+type+'"]').show(); 
+        if(view.is(':visible')) {
+            view.slideUp();
+        } else {
+            view.slideDown();
+        }
     },
     clearFilter : function() {
         thundashop.Ajax.simplePost($(this),"clearFilter", {});

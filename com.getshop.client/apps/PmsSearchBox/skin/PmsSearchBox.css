@@ -12,6 +12,33 @@
     background-color:#fff;
     cursor:pointer;
 }
+.PmsSearchBox .dailydaterangepicker .header {
+    display:none;
+    border-bottom: solid 1px;
+    text-align: center; 
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+.PmsSearchBox .dailydaterangepicker .header:hover {
+    font-weight: normal;
+    cursor:initial;
+}
+.PmsSearchBox .dailydaterangepicker {
+    position: absolute;
+    z-index: 2;
+    font-size: 14px;
+    width: 200px;
+    background-color: #fff;
+    top: 40px;
+    text-align: left;
+    padding: 10px;
+    display:none;
+    border: solid 1px #bbb;
+}
+.PmsSearchBox .dailydaterangepicker div:hover {
+    font-weight: bold;
+    cursor:pointer;
+}
 .PmsSearchBox .fa-trash-o {
     position: inherit; cursor:pointer;
     padding-right: 5px;

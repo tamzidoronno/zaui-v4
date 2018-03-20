@@ -1,12 +1,12 @@
 <br>
 <?php
 /* @var $this ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
-$coupons = (array)$this->getApi()->getCartManager()->getCoupons();
+$coupons = (array) $this->getApi()->getCartManager()->getCoupons();
 $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $channelConfig = $notificationSettings->channelConfiguration;
 
 $prices = $this->getPrices();
-if(sizeof($coupons) == 0) {
+if (sizeof($coupons) == 0) {
     echo "<b>No coupon codes added yet.</b>";
 }
 ?>
@@ -30,42 +30,42 @@ if(sizeof($coupons) == 0) {
                         <th align='right'>Channel</th>
                     </tR>
                     <?php
-                    foreach($coupons as $coupon) {
-                        if($coupon->priceCode != $this->getSelectedPricePlan()) {
+                    foreach ($coupons as $coupon) {
+                        if ($coupon->priceCode != $this->getSelectedPricePlan()) {
                             continue;
                         }
 
                         $text = "";
-                        foreach($coupon->addonsToInclude as $toInclude) {
+                        foreach ($coupon->addonsToInclude as $toInclude) {
                             $product = $this->getApi()->getProductManager()->getProduct($toInclude->productId);
                             $text .= $product->name . ", ";
                         }
                         echo "<tr>";
-                        echo "<td><i class='fa fa-trash-o' gstype='clicksubmit' method='removeCoupon' gsvalue='".$coupon->id."' gsname='id' style='cursor:pointer;'</i> </td>";
+                        echo "<td><i class='fa fa-trash-o' gstype='clicksubmit' method='removeCoupon' gsvalue='" . $coupon->id . "' gsname='id' style='cursor:pointer;'</i> </td>";
                         echo "<td align='left'>" . $coupon->code . "</td>";
                         echo "<td>" . $coupon->amount . "</td>";
                         echo "<td>" . $coupon->timesLeft . "</td>";
                         echo "<td>" . $coupon->type . "</td>";
                         echo "<td><i class='fa fa-edit'onclick='$(this).closest(\"td\").find(\".editcomment\").fadeIn()'></i>" . $coupon->description;
                         echo "<span class='editcomment' method='savecommentoncoupon'  gstype='form'>";
-                        echo "<input type='hidden' gsname='couponid' value='".$coupon->id."'>";
-                        echo "<input type='txt' gsname='description' value='".$coupon->description."'></input><br>";
+                        echo "<input type='hidden' gsname='couponid' value='" . $coupon->id . "'>";
+                        echo "<input type='txt' gsname='description' value='" . $coupon->description . "'></input><br>";
                         echo "<span class='pmsbutton' gstype='submit'>Save description</span>";
                         echo "</span>";
 
                         echo "</td>";
-                        echo "<td><span style=' width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='".$this->getRepeatingSummary($coupon)."'><i class='fa fa-edit loadcouponmoredates' data-couponid='".$coupon->id."'></i>" . $this->getRepeatingSummary($coupon) . "</span>";
+                        echo "<td><span style=' width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='" . $this->getRepeatingSummary($coupon) . "'><i class='fa fa-edit loadcouponmoredates' data-couponid='" . $coupon->id . "'></i>" . $this->getRepeatingSummary($coupon) . "</span>";
                         echo "<span class='addmoredatespanel'></span>";
                         echo "</td>";
                         echo "<td style='position:relative;'>";
                         echo "<span class='addaddonsinludepanel'></span>";
-                        echo "<i class='fa fa-edit loadaddonstoinclude' style='cursor:pointer;'  data-couponid='".$coupon->id."' style='float:left;'></i>";
+                        echo "<i class='fa fa-edit loadaddonstoinclude' style='cursor:pointer;'  data-couponid='" . $coupon->id . "' style='float:left;'></i>";
                         echo "</td>";
                         echo "<td><span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='$text'>$text</span></td>";
                         echo "<td align='right'>";
-                        echo "<select class='changechanneloncoupon' couponid='".$coupon->id."'>";
+                        echo "<select class='changechanneloncoupon' couponid='" . $coupon->id . "'>";
                         echo "<option value=''>Connect to channel</option>";
-                        foreach($channelConfig as $key => $config) {
+                        foreach ($channelConfig as $key => $config) {
                             $selected = ($coupon->channel == $key) ? "SELECTED" : "";
                             echo "<option value='$key' $selected>" . $config->humanReadableText . "</option>";
                         }
@@ -78,7 +78,7 @@ if(sizeof($coupons) == 0) {
                 </table>
                 <br>
                 <?php
-                if(isset($this->addCouponError) && $this->addCouponError) {
+                if (isset($this->addCouponError) && $this->addCouponError) {
                     echo "<div style='font-size: 16px; color: red; font-weight:bold;'>";
                     echo $this->addCouponError;
                     echo "</div>";
@@ -124,17 +124,20 @@ if(sizeof($coupons) == 0) {
                             <th>discount(%)</th>
                         </tr>
                         <?php
-                        
-                        $longtermdeal  = (array)$prices->longTermDeal;
+                        $longtermdeal = (array) $prices->longTermDeal;
                         ksort($longtermdeal);
-                    
+
                         $keys = array_keys($longtermdeal);
                         $values = array_values($longtermdeal);
-                        for($i = 0; $i < 10; $i++) {
+                        for ($i = 0; $i < 10; $i++) {
                             $days = "";
                             $discount = "";
-                            if(isset($keys[$i])) { $days = $keys[$i]; }
-                            if(isset($values[$i])) { $discount = $values[$i]; }
+                            if (isset($keys[$i])) {
+                                $days = $keys[$i];
+                            }
+                            if (isset($values[$i])) {
+                                $discount = $values[$i];
+                            }
                             echo "<tr>";
                             echo "<td align='center'><input type='txt' style='width:40px;' gsname='minday_$i' value='$days' class='gsniceinput1'></td>";
                             echo "<td align='center'><input type='txt' style='width:40px;' gsname='discount_$i' value='$discount' class='gsniceinput1'></td>";
@@ -146,42 +149,42 @@ if(sizeof($coupons) == 0) {
                 </div>
             </div>
         </td>
-        <?php if($notificationSettings->enableCoveragePrices) { ?>
-            <td valign="top">
-                <div class="stepbox">
-                    <div gstype="form" method="saveCoveragePrices">
-                        <h1>Increase by coverage</h1>
-                        <table>
-                            <tr>
-                                <th>Percentage</th>
-                                <th>Increase</th>
-                            </tr>
-                            <?php
-                            for($i = 0; $i < 3; $i++) {
-                                $keys = array_keys((array)$prices->coveragePrices);
-                                $price = "";
-                                $coverage = "";
-                                if(isset($keys[$i])) {
-                                    $coverage = $keys[$i];
-                                    $price = $prices->coveragePrices->{$coverage};
-                                }
-                                echo "<tr>";
-                                echo "<td><input type='text' style='width:50px' value='$coverage' gsname='coverage_$i'></td>";
-                                echo "<td><input type='text' style='width:50px' value='$price' gsname='price_$i'></td>";
-                                echo "</tr>";
+        <td valign="top">
+            <div class="stepbox" style="min-height: 800px;">
+                <div gstype="form" method="saveCoveragePrices">
+                    <h1>Increase by coverage</h1>
+                    <table>
+                        <tr>
+                            <th>Percentage</th>
+                            <th>Increase</th>
+                        </tr>
+                        <?php
+                        for ($i = 0; $i < 3; $i++) {
+                            $keys = array_keys((array) $prices->coveragePrices);
+                            $price = "";
+                            $coverage = "";
+                            if (isset($keys[$i])) {
+                                $coverage = $keys[$i];
+                                $price = $prices->coveragePrices->{$coverage};
                             }
-                            ?>
-                        </table><br>
-                        <select gsname='coveragePriceType'>
-                            <option value="0">Percentage</option>
-                            <option value="1" <?php if($prices->coverageType == 1) { echo "SELECTED"; } ?> >Fixed price</option>
-                        </select>
-                        <br><br>
-                        <span class="pmsbutton" gstype="submit">Save coverage prices</span>
-                    </div>
+                            echo "<tr>";
+                            echo "<td><input type='text' style='width:50px' value='$coverage' gsname='coverage_$i'></td>";
+                            echo "<td><input type='text' style='width:50px' value='$price' gsname='price_$i'></td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </table><br>
+                    <select gsname='coveragePriceType'>
+                        <option value="0">Percentage</option>
+                        <option value="1" <?php if ($prices->coverageType == 1) {
+                            echo "SELECTED";
+                        } ?> >Fixed price</option>
+                    </select>
+                    <br><br>
+                    <span class="pmsbutton" gstype="submit">Save coverage prices</span>
                 </div>
-            </td>
-        <?php } ?>
+            </div>
+        </td>
     </tr>
 </table>
 

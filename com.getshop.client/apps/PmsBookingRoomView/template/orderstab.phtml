@@ -43,7 +43,7 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
 }
 
 $isgroup = "no";
-if(sizeof($pmsBooking->rooms)) {
+if(sizeof($pmsBooking->rooms) > 1) {
     $isgroup = "yes";
 }
 ?>

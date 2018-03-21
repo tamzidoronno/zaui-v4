@@ -54,12 +54,12 @@ app.PmsCheckout = {
         });
     },
     cartChanged: function() {
-        var row = $(this).closest('.cartitem');
+        var row = $(this).closest('.entryrow');
         var matrixrow = $(this).closest('.pricematrix_row');
         var addonrow = $(this).closest('.addonlist_row');
         var data = {
             itemid : row.closest('.cartitem').attr('cartitemid'),
-            checked : row.find('.item_checkbox').is('checked'),
+            checked : row.find('.item_checkbox').is(':checked'),
             addonid : addonrow.attr('addonid'),
             addonCount : addonrow.find('.addon_count').val(),
             addonPrice : addonrow.find('.addon_price').val(),

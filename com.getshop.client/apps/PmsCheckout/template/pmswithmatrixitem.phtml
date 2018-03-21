@@ -19,7 +19,7 @@ foreach ($priceMatrix as $date => $value) {
     $i++;
     $oddClass = $i % 2 ? "even" : "odd";
     ?>
-    <div class='cartitemrow pricematrix_row <? echo $oddClass; ?> '>
+    <div class='entryrow cartitemrow pricematrix_row <? echo $oddClass; ?> '>
         
         <?
         if ($this->isReadOnly()) {

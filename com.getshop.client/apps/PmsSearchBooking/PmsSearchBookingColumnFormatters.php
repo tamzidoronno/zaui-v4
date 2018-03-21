@@ -104,7 +104,6 @@ class PmsSearchBookingColumnFormatters {
             $vistorText .= "<i class='fa fa-arrows dontExpand' title='This room is part of a group of ".$room->numberOfRoomsInBooking." rooms'></i></a> ";
             
         }
-        $vistorText .= "<i class='fa fa-arrow-right dontExpand quickfunction' title='Process payments' type='payments'></i>";
         $vistorText .= "</span></div>";
         
         return $vistorText;

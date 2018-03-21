@@ -33,6 +33,13 @@ app.PmsCheckout = {
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             item.slideUp();
+            app.PmsCheckout.updateTotal();
+        });
+    },
+    updateTotal : function() {
+        var event = thundashop.Ajax.createEvent('','getTotalInCart', $('.PmsCheckout'), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsCheckout .summary span').html(res);
         });
     },
     loadCartFilter : function() {
@@ -47,38 +54,22 @@ app.PmsCheckout = {
         });
     },
     cartChanged: function() {
-        var data = {};
-        
-        data.cartItems = [];
-        data.roomId = $(this).closest('.PmsCheckout').attr('roomid');
-        
-        if (data.roomId) {
-            $(this).closest('.PmsCheckout[roomid="'+data.roomId+'"]').find('.cartitem.row').each(function() {
-                var cartItem = app.PmsCheckout.createCartItem(this);
-                data.cartItems.push(cartItem);
-            });
-        } else {
-            $(this).closest('.PmsCheckout').find('.cartitem.row').each(function() {
-                var cartItem = app.PmsCheckout.createCartItem(this);
-                data.cartItems.push(cartItem);
-            });
+        var row = $(this).closest('.cartitem');
+        var matrixrow = $(this).closest('.pricematrix_row');
+        var addonrow = $(this).closest('.addonlist_row');
+        var data = {
+            itemid : row.closest('.cartitem').attr('cartitemid'),
+            checked : row.find('.item_checkbox').is('checked'),
+            addonid : addonrow.attr('addonid'),
+            addonCount : addonrow.find('.addon_count').val(),
+            addonPrice : addonrow.find('.addon_price').val(),
+            matrixPrice : matrixrow.find('.matrix_price').val(),
+            matrixDate : matrixrow.find('.matrix_price').attr('date')
         }
-        
-        var event = thundashop.Ajax.createEvent(null, "updateCartAndPrice", this, data);
-        event['synchron'] = true;
-        
-        var me = $(this);
-        thundashop.Ajax.post(event, function(res, args) {
-            if (args && typeof(args.roomId) !== "undefined")  {
-                $('.PmsCheckout[roomid="'+args.roomId+'"] .summary span').html(res);
-            } else {
-                me.closest('.PmsCheckout').find('.summary span').html(res);
-            }
-            
-            app.PmsBookingRoomView.refreshCurrentTab();
-            
-        }, data);
-        
+        var event = thundashop.Ajax.createEvent('','updateItem', $('.PmsCheckout'), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsCheckout.updateTotal();
+        });
     },
     
     createCartItem: function(row) {

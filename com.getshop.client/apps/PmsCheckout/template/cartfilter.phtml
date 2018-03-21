@@ -37,8 +37,6 @@ if($end) { $endDate = date("d.m.Y", $end); }
 </style>
 
 <script>
-    
-<script>
     $('#startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
@@ -65,5 +63,4 @@ if($end) { $endDate = date("d.m.Y", $end); }
             app.PmsAvailabilityDateSelector.changed();
         }
     });
-</script>
 </script>

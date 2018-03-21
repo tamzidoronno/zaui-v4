@@ -43,6 +43,7 @@ if($numberOfRooms > 1 && !$this->isGroupBookingView()) {
     echo "</div>";
 }
 
+
 if($pmsSelectedRoom->addedToWaitingList) {
     echo "<div class='isgroupinformation'>";
     echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try to remove it from waiting list</a>.";
@@ -69,6 +70,7 @@ if($diff < -1 || $diff > 1) {
     $warningPayments = "<span class='fa fa-warning' style='padding:0px;margin:0px; color:red;' title='You have unhandled payments'></span> ";
 }
 ?>
+    <div class='grouppaymentprocess'></div>
 
 <div gstype='form' method="updateBooking" class="bookingoverview_content_row">
     <input type='hidden' gsname='roomId' value='<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>'/>
@@ -131,6 +133,22 @@ if($diff < -1 || $diff > 1) {
     </div>
 </div>
 <?php
+$isgroup = "no";
+if(sizeof($pmsBooking->rooms) > 1) {
+    $isgroup = "yes";
+}
+
+$totalOnRoom = $pmsSelectedRoom->totalCost;
+$totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
+$unsettledRoom = $totalOnRoom - $totalOrdersRoom;
+if($unsettledRoom > 1 || $unsettledRoom < -1) {
+
+    ?>
+    <div style="text-align: right;">
+        <span class="shop_button addselecteditemstocart quickstartpaymentprocessbutton" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Start payment process") . " (" . $unsettledRoom .")"; ?></span>
+    </div>
+    <?php
+}
 
 if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
     $changes = $this->getDifferenceInRoom();

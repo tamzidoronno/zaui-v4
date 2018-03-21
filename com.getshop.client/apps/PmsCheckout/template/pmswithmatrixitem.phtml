@@ -19,7 +19,7 @@ foreach ($priceMatrix as $date => $value) {
     $i++;
     $oddClass = $i % 2 ? "even" : "odd";
     ?>
-    <div class='pricematrix_row <? echo $oddClass; ?> '>
+    <div class='cartitemrow pricematrix_row <? echo $oddClass; ?> '>
         
         <?
         if ($this->isReadOnly()) {
@@ -29,9 +29,9 @@ foreach ($priceMatrix as $date => $value) {
         <?
         } else {
         ?>
-            <input type='checkbox' checked='true' class='matrix_input gsnicecheckbox1'> 
+            <input type='checkbox' checked='true' class='item_checkbox matrix_input gsnicecheckbox1'> 
             <span><? echo trim($date);?></span>
-            <input type='textfield' class='gsniceinput1 matrix_item matrix_price' value="<? echo $value; ?>">
+            <input type='textfield' class='gsniceinput1 matrix_item matrix_price' value="<? echo $value; ?>" date="<?php echo $date; ?>">
         <?
         }
         ?>

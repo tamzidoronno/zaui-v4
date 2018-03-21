@@ -49,35 +49,50 @@ class PmsCheckout extends \WebshopApplication implements \Application {
         return $this->currentItem;
     }
 
-    public function updateCartAndPrice() {
-        if (isset($_POST['data']['roomId'])) {
-            $this->setRoomCart($_POST['data']['roomId']);
-        }
-        
-        $orginalCart = $this->getOriginalCartFromSession();
-        
-        $newItemsArray = array();
-        foreach ($orginalCart->items as $cartItem) {
-            if (isset($cartItem->priceMatrix)) {
-                $cartItem->priceMatrix = $this->createNewPriceMatrix($cartItem);
-            }
-            
-            if (isset($cartItem->itemsAdded)) {
-                $cartItem->itemsAdded = $this->createAddons($cartItem);
-            } 
-            
-            $newItemsArray[] = $cartItem;
-        }
-        
-        $orginalCart->items = $newItemsArray;
-        $orginalCart = $this->getApi()->getCartManager()->recalculateMetaDataCart($orginalCart);
-        
-        echo $this->getApi()->getCartManager()->getCartTotal($orginalCart);
-        $this->saveTmpCart($orginalCart, @$_POST['data']['roomId']);
-        $this->getApi()->getOrderManager()->updateOrderUnderConstructionItems($this->getModalVariable("orderUnderConstrcutionId"), $orginalCart);
-        die();
+    public function getTotalInCart() {
+        echo $this->getApi()->getCartManager()->getCartTotalAmount();
     }
-
+    
+    public function updateItem() {
+        $cart = $this->getApi()->getCartManager()->getCart();
+        foreach($cart->items as $item) {
+            if($item->cartItemId == $_POST['data']['itemid']) {
+                if(isset($_POST['data']['matrixPrice'])) {
+                    $item->priceMatrix->{$_POST['data']['matrixDate']} = $_POST['data']['matrixPrice'];
+                }
+                if(isset($_POST['data']['addonid'])) {
+                    foreach((array)$item->itemsAdded as $addonItem) {
+                        if($addonItem->addonId == $_POST['data']['addonid']) {
+                             $addonItem->count = $_POST['data']['addonCount'];
+                             $addonItem->price = $_POST['data']['addonPrice'];
+                        }
+                    }
+                }
+                
+                $item->disabled = $_POST['data']['checked'] == "false";
+                
+                $total = 0;
+                $count = 0;
+                
+                $count += sizeof($item->priceMatrix);
+                foreach((array)$item->priceMatrix as $date => $val) {
+                    $count++;
+                    $total += $val;
+                }
+                foreach((array)$item->itemsAdded as $addonItem) {
+                    $count += $addonItem->count;
+                    $total += ($addonItem->count * $addonItem->price);
+                }
+                
+                $item->count = $count;
+                $item->product->price = ($total / $count);
+                
+                $this->getApi()->getCartManager()->updateCartItem($item);
+            }
+        }
+        
+    }
+    
     public function setCurrentCart($cart) {
         $this->currentCart = $cart;
     }
@@ -94,7 +109,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
     }
     
     public function removeItem() {
-       $this->getApi()->getOrderManager()->removeRoomForOrderUnderConstruction($this->getModalVariable("orderUnderConstrcutionId"), $_POST['data']['id']);
+        $this->getApi()->getCartManager()->removeCartItem($_POST['data']['id']);
     }
     
     public function createOrder() {

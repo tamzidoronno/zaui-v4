@@ -44,6 +44,7 @@ public class CartItem implements Serializable {
     public List<PmsBookingAddonItem> itemsAdded;
     public HashMap<String, Double> priceMatrix;
     public boolean hideDates = false;
+    public boolean disabled = false;
     public String addedByGetShopModule = "";
     
     @Transient

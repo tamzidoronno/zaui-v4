@@ -3,11 +3,13 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
@@ -50,6 +52,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private List<String> roomIdsInCart = null;
     private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
+    
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
     
     @Autowired
     SendRegningManager sendRegningManager;
@@ -3023,4 +3028,51 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return total;
     }
 
+    @Override
+    public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType) {
+        
+        List<String> toreturn = new ArrayList();
+        
+        Cart cart = cartManager.getCart();
+        
+        HashMap<String, List<CartItem>> groupedItems = new HashMap();
+        
+        if(orderCreationType != null && (orderCreationType.equals("uniqueorder") || orderCreationType.equals("uniqueordersendpaymentlink"))) {
+            groupedItems = groupItemsOnOrder(cart);
+        } else {
+            groupedItems.put("allrooms", cart.getItems());
+        }
+        
+        for(String roomId : groupedItems.keySet()) {
+            cartManager.clear();
+            cartManager.getCart().addCartItems(groupedItems.get(roomId));
+            
+            Order order = orderManager.createOrder(address);
+            order.createByManager = "PmsDailyOrderGeneration";
+            order.payment = new Payment();
+            order.payment.paymentId = paymentId;
+
+            Application paymentApplication = storeApplicationPool.getApplication(paymentId);
+            order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            orderManager.saveOrder(order);
+            cartManager.clear();
+            toreturn.add(order.id);
+        }
+        
+        return toreturn;
+    }
+    
+    private HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
+        HashMap<String, List<CartItem>> toReturn = new HashMap();
+        for(CartItem item : cart.getItems()) {
+            List<CartItem> items = toReturn.get(item.getProduct().externalReferenceId);
+            if(items == null) {
+                items = new ArrayList();
+            }
+            items.add(item);
+            toReturn.put(item.getProduct().externalReferenceId, items);
+        }
+        return toReturn;
+    }
+    
 }

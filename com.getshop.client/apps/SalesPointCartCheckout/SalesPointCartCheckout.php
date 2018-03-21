@@ -83,17 +83,7 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
     }
     
     public function setOriginalCart($cart = false) {
-        if (!$cart && $this->getModalVariable("orderUnderConstrcutionId")) {
-            $order = $this->getApi()->getOrderManager()->createOrGetOrderUnderConstruction($this->getModalVariable("orderUnderConstrcutionId"));
-            $this->originalCart = $order->order->cart;
-            return;
-        }
-        
-        if ($cart) {
-            $this->originalCart = $cart;
-        } else {
-            $this->originalCart = $this->getApi()->getCartManager()->getCart();
-        }
+        $this->originalCart = $this->getApi()->getCartManager()->getCart();
     }
 
     public function filterCartByDate() {
@@ -121,7 +111,7 @@ class SalesPointCartCheckout extends \MarketingApplication implements \Applicati
             if(isset($_POST['data']['paymenttypeselection'])) {
                 $type = $_POST['data']['paymenttypeselection'];
             }
-            $orderIds = $this->getApi()->getOrderManager()->convertOrderUnderConstructionToOrder($id, null, $_POST['data']['payment'], $type);
+            $orderIds = $this->getApi()->getPmsInvoiceManager()->convertCartToOrders($this->getSelectedMultilevelDomainName(), $id, null, $_POST['data']['payment'], $type);
             foreach($orderIds as $orderId) {
                 $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
                 $order = $this->getApi()->getOrderManager()->getOrder($orderId);

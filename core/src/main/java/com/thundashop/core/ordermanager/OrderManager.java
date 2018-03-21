@@ -23,7 +23,6 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.ordermanager.data.OrderUnderConstruction;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -64,8 +63,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public HashMap<String, Order> orders = new HashMap();
     
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
-    
-    public HashMap<String, OrderUnderConstruction> ordersUnderConstruction = new HashMap();
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
     
@@ -207,11 +204,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
-            }
-            
-            if (dataFromDatabase instanceof OrderUnderConstruction) {
-                OrderUnderConstruction constructionOrder = (OrderUnderConstruction)dataFromDatabase;
-                ordersUnderConstruction.put(constructionOrder.id, constructionOrder);
             }
             
             if (dataFromDatabase instanceof Order) {
@@ -671,14 +663,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             } else if (order.userId.equals(user.id)) {
                 return order;
             }
-        }
-        
-        OrderUnderConstruction orderUnderConstruction = ordersUnderConstruction.get(orderId);
-        
-        if (orderUnderConstruction != null) {
-            foundOrder = true;
-            orderUnderConstruction.finalizeOrder();
-            return orderUnderConstruction.order;
         }
         
         logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it, " + foundOrderIncId);
@@ -1208,11 +1192,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = orders.get(orderId);
         if(order != null) {
             order.doFinalize();
-        }
-        
-        if (ordersUnderConstruction.get(orderId) != null) {
-            ordersUnderConstruction.get(orderId).finalizeOrder();
-            return ordersUnderConstruction.get(orderId).order;
         }
         
         return order;
@@ -2168,119 +2147,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    @Override
-    public OrderUnderConstruction createOrGetOrderUnderConstruction(String id) {
-        OrderUnderConstruction existingOnSameReference = ordersUnderConstruction.get(id);
-        
-        if (existingOnSameReference != null) {
-            return existingOnSameReference;
-        }
-        
-        existingOnSameReference = new OrderUnderConstruction();
-        existingOnSameReference.id = id;
-        existingOnSameReference.order = new Order();
-        existingOnSameReference.order.isUnderConstruction = true;
-        existingOnSameReference.order.id = UUID.randomUUID().toString();
-        existingOnSameReference.order.rowCreatedDate = new Date();
-        
-        existingOnSameReference.order.cart = new Cart();
-        existingOnSameReference.order.cart.address = new Address();
-        
-        saveObject(existingOnSameReference);
-        
-        ordersUnderConstruction.put(existingOnSameReference.id, existingOnSameReference);
-        
-        existingOnSameReference.finalizeOrder();
-        
-        return existingOnSameReference;
-    }
-
-    @Override
-    public void updateCartOnOrderUnderConstruction(String id, String roomId, Cart cart) {
-        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
-        orderUnder.carts.put(roomId, cart);
-        orderUnder.finalizeOrder();
-        saveObject(orderUnder);
-    }
-
-    @Override
-    public void deleteOrderUnderConstruction(String id) {
-        OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
-        if (ret != null) {
-            deleteObject(ret);
-        }
-    }
-
-    @Override
-    public boolean isRoomAddedToOrderUnderConstruction(String id, String roomId) {
-        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
-        return orderUnder.carts.containsKey(roomId);
-    }
-
-    @Override
-    public void clearOrderUnderConstruction(String id) {
-        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
-        orderUnder.carts.clear();
-        orderUnder.finalizeOrder();
-        saveObject(orderUnder);
-    }
-    
-    @Override
-    public void removeRoomForOrderUnderConstruction(String id, String roomId) {
-        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
-        orderUnder.carts.remove(roomId);
-        for(Cart cart : orderUnder.carts.values()) {
-            cart.removeItem(roomId);
-        }
-        orderUnder.finalizeOrder();
-        saveObject(orderUnder);
-    }
-
-    @Override
-    public void updateOrderUnderConstructionItems(String id, Cart cart) {
-        OrderUnderConstruction orderUnder = createOrGetOrderUnderConstruction(id);
-        orderUnder.updateCartItems(cart);
-    }
-
-    @Override
-    public List<String> convertOrderUnderConstructionToOrder(String id, Address address, String paymentId, String orderCreationType) {
-        if (!ordersUnderConstruction.containsKey(id)) {
-            return new ArrayList();
-        }
-        
-        List<String> toreturn = new ArrayList();
-        
-        OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
-        ret.finalizeOrder();
-        
-        HashMap<String, List<CartItem>> groupedItems = new HashMap();
-        
-        if(orderCreationType != null && (orderCreationType.equals("uniqueorder") || orderCreationType.equals("uniqueordersendpaymentlink"))) {
-            groupedItems = groupItemsOnOrder(ret.order.cart);
-        } else {
-            groupedItems.put("allrooms", ret.order.cart.getItems());
-        }
-        
-        for(String roomId : groupedItems.keySet()) {
-            cartManager.clear();
-            cartManager.getCart().addCartItems(groupedItems.get(roomId));
-            
-            Order order = createOrder(address);
-            order.createByManager = "PmsDailyOrderGeneration";
-            order.payment = new Payment();
-            order.payment.paymentId = paymentId;
-
-            Application paymentApplication = storeApplicationPool.getApplication(paymentId);
-            order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
-            deleteObject(ret);
-            finalizeOrder(order);
-            saveOrder(order);
-            cartManager.clear();
-            toreturn.add(order.id);
-        }
-        
-        return toreturn;
-    }
 
     private Predicate<? super Order> filterByOrderIdsInExtra(FilterOptions filterOptions) {
         if (filterOptions.extra.get("orderids") == null) {
@@ -2315,18 +2181,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         order.cart.clear();
         saveObject(order);
-    }
-
-    @Override
-    public void filterOrdersUnderConstructionByDate(String id, Date start, Date end) {
-        if (!ordersUnderConstruction.containsKey(id)) {
-            return;
-        }
-        
-        OrderUnderConstruction ret = ordersUnderConstruction.remove(id);
-        ret.finalizeOrder();        
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {

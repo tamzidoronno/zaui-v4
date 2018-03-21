@@ -194,7 +194,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                     }
                     echo $daysBetween;
                 }
-                
+                if(($bookingToSend->totalPrice == 0.0 || !$bookingToSend->totalPrice || $bookingToSend->totalPrice == 0) && $bookingToSend->priceType == 1) {
+                    $ignorePaymentWindow = true;
+                }
+                 
                 echo "<script>";
                 if($config->payAfterBookingCompleted) {
                     if(!isset($curBooking->orderIds[0]) || $ignorePaymentWindow) {
@@ -209,6 +212,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                             if($ignorePaymentWindow) {
                                 echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
                             } else {
+                        echo "alert(' total: " . $bookingToSend->totalPrice . "');";
                                 echo 'thundashop.common.goToPage("payment_failed");';
                             }
                         }

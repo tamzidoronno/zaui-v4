@@ -763,6 +763,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     private Order createOrderInternally(Address address, boolean dummy) throws ErrorException {
         Cart cart = cartManager.getCart();
+        cart.clearDisabledItems();
         cart.address = address;
         
         Order order = new Order();

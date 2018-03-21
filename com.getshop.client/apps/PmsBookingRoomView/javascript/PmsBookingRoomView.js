@@ -207,9 +207,9 @@ app.PmsBookingRoomView = {
             }
 
             if (!$('[area="gs_modul_cart"]').is(':visible')) {
-                thundashop.framework.toggleRightWidgetPanel('gs_modul_cart', data);
+                thundashop.framework.toggleRightWidgetPanel('gs_modul_pmscart', data);
             } else {
-                thundashop.framework.refreshRightWidget('gs_modul_cart', data)
+                thundashop.framework.refreshRightWidget('gs_modul_pmscart', data)
             }
         });
     },

@@ -1,0 +1,24 @@
+<?/* @var $this ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout */
+$item = $this->getCurrentItem();
+?>
+
+<div class='normalrow'>
+    <b><? echo $item->product->name; ?></b>
+    <div class='textfields'>
+        <?
+        if ($this->isReadOnly()) {
+        ?>
+        <div>
+            <span class="itemcount"><? echo $item->count; ?></span>
+            x <span class="itemprice"><? echo $item->product->price; ?></span>
+        </div>
+        <?
+        } else {
+        ?>
+        <input type='textfield' class='gsniceinput1 itemcount' value='<? echo $item->count; ?>'/>
+        x <input type='textfield' class='gsniceinput1 itemprice' value='<? echo $item->product->price; ?>'/>    
+        <?
+        }
+        ?>
+    </div>
+</div>

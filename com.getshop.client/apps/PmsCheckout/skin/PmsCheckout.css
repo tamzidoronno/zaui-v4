@@ -1,0 +1,110 @@
+.PmsCheckout .cartsummary .col {
+    display: inline-block;
+    padding: 5px;
+    padding-right: 0px;
+}
+
+.PmsCheckout .removeitem { float: right; color: #bbb; cursor: pointer; }
+.PmsCheckout .cartsummary .row { border-bottom: solid 1px #DDD;}
+.PmsCheckout .cartitem { margin-bottom: 10px;}
+.PmsCheckout .cartsummary .row.row_last { border-bottom: solid 0px #DDD;}
+.PmsCheckout .cartsummary .col1 { width: 30px; text-align: right; }
+.PmsCheckout .cartsummary .col2 { width: calc(100% - 200px); }
+.PmsCheckout .cartsummary .col3 { width: 100px; }
+.PmsCheckout .paymentmethodselection,
+.PmsCheckout .appendtoorderselection,
+.PmsCheckout .display_cart_filter,
+.PmsCheckout .continue_checkout { box-sizing: border-box; width: 100%; margin-top: 5px; }
+.PmsCheckout .checkoutarea .itemsarea { max-height: 400px; overflow: auto; border: solid 1px #bbb; padding: 10px;background-color:#fff; }
+.PmsCheckout .checkoutarea { overflow: auto; max-height: 800px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+
+}
+.PmsCheckout .addon_price,
+.PmsCheckout .matrix_price { width: 50px; text-align: center; }
+.PmsCheckout .matrix_item {
+    margin-left: 50px;
+}
+
+.PmsCheckout .row {
+    position: relative;
+}
+.PmsCheckout .addonlist_row,
+.PmsCheckout .pricematrix_row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position: relative;
+    background-color: #EFEFEF;
+    
+}
+
+.PmsCheckout .addonlist_row.odd,
+.PmsCheckout .pricematrix_row.odd {
+    background-color: #FFF;
+}
+
+.PmsCheckout .pricematrix_row .matrix_item {
+    position: absolute; 
+    right: 0px;
+    top: 0px;
+    padding: 7px;
+    padding-bottom: 6px;
+}
+
+
+.PmsCheckout .addonlist_row .addon_inputs input {
+    padding: 7px;
+    padding-bottom: 6px;
+}
+
+.PmsCheckout .addonlist_row .addon_inputs {
+    text-align: right;
+    float:right;
+}
+
+.PmsCheckout .addonlist_row .addon_count {
+    width: 20px;
+    text-align: center;
+    padding: 7px;
+    padding-bottom: 6px;
+}
+
+.PmsCheckout .normalrow {
+    border-bottom: solid 1px #DDD;
+    line-height: 45px;
+    padding-bottom: 5px;
+}
+
+.PmsCheckout .last_row .normalrow {
+    border-bottom: solid 0px;
+}
+
+.PmsCheckout .normalrow .textfields {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+.PmsCheckout .summary {
+    font-size: 30px;
+    margin-top: 50px;
+    margin-right: 10px;
+}
+
+.PmsCheckout .normalrow .itemcount {
+    width: 30px;
+    text-align: center;
+}
+
+
+.PmsCheckout .payment_options .option_content {
+    position: absolute;
+    background-color: #FFF;
+    right: 0px;
+    border: solid 1px;
+}
+.PmsCheckout .payment_options .shop_button {
+    width: 100% !important;
+    margin-bottom: 3px;
+}

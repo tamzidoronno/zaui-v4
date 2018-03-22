@@ -1,4 +1,11 @@
 <?php
+$priceCodes = (array)$this->getApi()->getPmsManager()->getpriceCodes($this->getSelectedName());
+
+if(sizeof($priceCodes) == 0) {
+    $this->getApi()->getPmsManager()->createNewPricePlan($this->getSelectedMultilevelDomainName(), "default");
+}
+
+
 /* @var $this \ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
 $itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $start = $this->getStart();
@@ -16,7 +23,7 @@ $pricetypes[6] = "Per seconds";
 $pricetypes[7] = "Progressive";
 $pricetypes[8] = "Interval pricing";
 
-$priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelectedName());
+$priceCodes = (array)$this->getApi()->getPmsManager()->getpriceCodes($this->getSelectedName());
 ?>
 <div style=" margin-bottom: 20px; padding-bottom: 20px;">
     <?php
@@ -36,6 +43,8 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
         <input type='text' class="gsniceinput1" gsname='newplan'><input type='button' value='Create new plan' gstype='submit' style='padding: 9px;'>
     </div>
 </div>
+
+
 
 <div class="priceplansettings" style="display:none;" code="<?php echo $priceObject->code; ?>">
     <input type='button' gstype='clicksubmitforce' gsvalue='<?php echo $priceObject->code; ?>' gsname='code' value='Delete price plan' style='float:right;padding:9px;' method='deletePricePlan'>
@@ -140,5 +149,5 @@ if($this->getSelectedPricePlan() != "default") {
 <script>
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    app.PmsPricing.loadpriceinput();
+    app.PmsPricingNew.loadpriceinput();
 </script>

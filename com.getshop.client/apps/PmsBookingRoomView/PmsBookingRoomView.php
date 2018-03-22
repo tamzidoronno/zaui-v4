@@ -1412,5 +1412,28 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         return $selectedType;
     }
+    
+    public function checkinoutguest() {
+        $roomid = $_POST['data']['roomId'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId != $roomid) {
+                continue;
+            }
+            if($room->checkedin) {
+                $this->getApi()->getPmsManager()->checkOutRoom($this->getSelectedMultilevelDomainName(), $roomid);
+            } else {
+                $this->getApi()->getPmsManager()->checkInRoom($this->getSelectedMultilevelDomainName(), $roomid);
+            }
+            $this->removeTmpRoom($room->pmsBookingRoomId);
+        }
+    }
+
+    public function startingToday($room) {
+        $now = date("dmy", time());
+        $roomstart = date("dmy", strtotime($room->date->start));
+        return $now == $roomstart;
+    }
+
 }
 ?>

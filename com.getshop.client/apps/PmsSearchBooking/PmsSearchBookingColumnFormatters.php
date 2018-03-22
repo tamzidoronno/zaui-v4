@@ -143,6 +143,9 @@ class PmsSearchBookingColumnFormatters {
         }
         
         $text .= "<div class='channelDesc'>" . $channelText . "</div>";
+        if($room->checkedIn && !$room->checkedOut) {
+            $text .= "<div class='channelDesc' title='Room checked in' style='text-align:center;'>Is in</div>";
+        }
         
         return $text;
     }

@@ -30,7 +30,18 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .checkallitems', this.checkallitems);
         $(document).on('click', '.PmsBookingRoomView .continuepaymentprocess', this.continuePaymentProcess);
         $(document).on('click', '.PmsBookingRoomView .createafterstaybtn', this.createOrderAfterStay);
+        $(document).on('click', '.PmsBookingRoomView .checkinguest', this.checkInCheckOutGuest);
+        $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
     },
+    
+    checkInCheckOutGuest : function() {
+        var roomId = $(this).closest('.itemview').attr('roomid');
+        var event = thundashop.Ajax.createEvent('','checkinoutguest', $(this), {
+           roomId : roomId 
+        });
+        thundashop.Ajax.post(event);
+    },
+    
     createOrderAfterStay : function() {
         var event = thundashop.Ajax.createEvent('','toggleCreateAfterStay',$(this), {});
         thundashop.Ajax.postWithCallBack(event, function() {

@@ -993,15 +993,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             die("Could not find the room.");
         }
         
-        if (!$selectedRoom->orderUnderConstructionId) {
-            if (isset($_SESSION['orderUnderConstructionId'])) {
-                $selectedRoom->orderUnderConstructionId = $_SESSION['orderUnderConstructionId'];
-            } else {
-                $selectedRoom->orderUnderConstructionId = $this->uuidV4();
-            }
-            
-            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
-        }
         
         $this->setData(true);
     }
@@ -1237,7 +1228,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $filter->avoidOrderCreation = true;
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
         $filter->pmsRoomIds = array();
-        $filter->pmsRoomIds[]  = $this->getSelectedRoom()->pmsBookingRoomId;
+        $filter->pmsRoomId  = $this->getSelectedRoom()->pmsBookingRoomId;
         unset($_SESSION['groupordercreationtype']);
         if(isset($_POST['data']['multipleadd'])) {
             $_SESSION['groupordercreationtype'] = $_POST['data']['paymenttypeselection'];
@@ -1248,6 +1239,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 }
             }
         }
+        echo "<pre>";
+        print_r($filter);
+        echo "</pre>";
+        
         
         $this->getApi()->getCartManager()->clear();
         $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $booking->id, $filter);    

@@ -26,6 +26,7 @@ import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.sendregning.SendRegningManager;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
@@ -58,6 +59,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Autowired
     SendRegningManager sendRegningManager;
+    
+    @Autowired
+    StoreManager storeManager;
 
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -383,6 +387,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }catch(Exception e) {
             logPrintException(e);
+        }
+        
+        if(storeManager.isNewer(2018,2,1)) {
+            return "pmsdailyordergeneration";
         }
         
         return "";
@@ -1486,7 +1494,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || (room.invoicedTo.after(endDate)) || room.isSameDay(room.invoicedTo, endDate))) {
             return;
         }
-        if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0 && !pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
+        if(endDate != null && filter.endInvoiceAt != null && endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0 && !pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
             return;
         }
         if(room.invoicedTo == null && startDate.after(endDate)) {
@@ -1497,7 +1505,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(pmsManager.getConfigurationSecure().ignoreRoomToEndDate && endDate.before(filter.endInvoiceAt)) {
             endDate = filter.endInvoiceAt;
         }
-        if(startDate.after(filter.endInvoiceAt)) {
+        if(filter.endInvoiceAt != null && startDate.after(filter.endInvoiceAt)) {
             //Why should it be possible to invoice a stay with an end date that is before the start date of the stay?
             return;
         }

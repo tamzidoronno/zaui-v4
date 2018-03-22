@@ -5,6 +5,7 @@ import com.getshop.javaapi.GetShopApi;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionScope;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
@@ -110,6 +111,17 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return finalize(storePool.initialize(webAddress, sessionId));
     }
 
+    public boolean isNewer(int year, int month, int day) {
+        Store store = getMyStore();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        Date toCheck = new Date();
+        return toCheck.after(cal.getTime());
+    }
+
+    
     @Override
     public Store getMyStore() throws ErrorException {
         return finalize(storePool.getStoreBySessionId(getSession().id));

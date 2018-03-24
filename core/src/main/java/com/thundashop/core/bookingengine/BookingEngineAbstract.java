@@ -77,7 +77,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         };
         Collections.sort(result, comparator);
         result.stream().forEach(o -> finalize(o));
-        return result;
+        
+        List<BookingItemType> allItems = new ArrayList();
+        for(BookingItemType type : result) {
+            if(type.internal) {
+                continue;
+            }
+            allItems.add(type);
+        }
+        
+        return allItems;
     }
     
     public BookingItemType createABookingItemType(String name) {

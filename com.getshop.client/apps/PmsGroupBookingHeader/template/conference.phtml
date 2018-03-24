@@ -7,13 +7,22 @@ foreach($booking->rooms as $room) {
         $startDate = strtotime($room->date->start);
     }
 }
+$allItems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$conferenceRooms = array();
+foreach($allItems as $item) {
+    if($item->bookingItemTypeId == "gsconference") {
+        $conferenceRooms[] = $item;
+    }
+}
 ?>
 <h1>Conference rooms</h1>
- <div class="kaipal infobox">
-        // faces: happy,sad,talking,danger
+<?php
+if(sizeof($conferenceRooms) == 0) {
+    ?>
+     <div class="kaipal infobox">
         <div class="image sad"></div>
         <div class="textbox">
-            <div class="header"><? echo $this->__f("I am ready to welcome the guest"); ?></div>
+            <div class="header"><? echo $this->__f("Add a conference room"); ?></div>
             <div class="text">
                 <?
                 echo $this->__f("You do not have any conference rooms registered yet, go to room configuration and add your first conference room.");
@@ -21,6 +30,24 @@ foreach($booking->rooms as $room) {
             </div>
         </div>
     </div>
+    <?php
+    } else {
+    ?>
+        <input type='text' class='gsniceinput1' gsname='start' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
+        <input type='text' class='gsniceinput1' gsname='startTime' style='width:40px;' value='12:00'> - 
+        <input type='text' class='gsniceinput1' gsname='end' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
+        <select class='gsniceselect1' style='height:37px;'>
+            <?php
+            foreach($conferenceRooms as $confRoom) {
+                echo "<option value='".$confRoom->id."'>" . $confRoom->bookingItemName . "</option>";
+            }
+            ?>
+        </select>
+        <input type='text' class='gsniceinput1' gsname='endTime' style='width:40px;' value='14:00' style='width:50px;'>&nbsp;&nbsp;
+        <span class='shop_button'>Add confernce room</span>
+    <?php
+    }
+?>
 
 <h1>Action points</h1>
 <div gstype='form' method='addactionpoint'>

@@ -60,7 +60,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $additional->squareMetres = $_POST['data']['squareMetres'];
         $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedMultilevelDomainName(), $item);
         $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedMultilevelDomainName(), $additional);
-        if($_POST['data']['itemtype'] != $item->bookingItemTypeId) {
+        if(isset($_POST['data']['itemtype']) && $_POST['data']['itemtype'] != $item->bookingItemTypeId) {
             $this->getApi()->getBookingEngine()->changeBookingItemType($this->getSelectedMultilevelDomainName(), $item->id, $_POST['data']['itemtype']);
         }
     }
@@ -78,6 +78,18 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         return $res;
     }
     public function createRoom() {
+        if($_POST['data']['type'] == "gsconference") {
+            $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), "gsconference");
+            if(!$item) {
+                $type = new \core_bookingengine_data_BookingItemType();
+                $type->id = "gsconference";
+                $type->visibleForBooking = false;
+                $type->name = "Conference rooms";
+                $type->internal = true;
+                $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
+            }
+        }
+        
         $name = $_POST['data']['name'];
         $item = new \core_bookingengine_data_BookingItem();
         $item->bookingItemName = $name;

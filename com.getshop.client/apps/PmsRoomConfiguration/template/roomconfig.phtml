@@ -5,18 +5,19 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 <br>
 <br>
 <br>
-<span style="float:right;" gstype='form' method='createRoom'>
+<h2>Rooms <span class='openitemsorting' style='cursor:pointer;'>(open sorting)</span></h2>
+<span gstype='form' method='createRoom'>
     <select gsname='type' class="gsniceselect1" style="height:34px;">
         <?php
         foreach($types as $type) {
             echo "<option value='".$type->id."'>" . $type->name . "</option>";
         }
+        echo "<option value='gsconference'>Conference room</option>";
         ?>
     </select>
     <input type="txt" class="gsniceinput1" placeholder='101' gsname='name'>
-    <input type="button" value="Create a new room" style="padding:9px;" gstype='submit'>
+    <span gstype='submit' class='shop_button'>Create a new room</span>
 </span>
-<h2>Rooms <span class='openitemsorting' style='cursor:pointer;'>(open sorting)</span></h2>
 
 
 <?php
@@ -31,7 +32,11 @@ $rows = array();
 foreach($rooms as $room) {
     $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $room->id);
     $additional->name = $room->bookingItemName;
-    $additional->typeName = $types[$room->bookingItemTypeId]->name;
+    if($room->bookingItemTypeId == "gsconference") {
+        $additional->typeName = "Conference room";
+    } else {
+        $additional->typeName = $types[$room->bookingItemTypeId]->name;
+    }
     $additional->description = $room->description;
     $rows[] = $additional;
             

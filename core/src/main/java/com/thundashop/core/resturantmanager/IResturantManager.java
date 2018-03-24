@@ -72,4 +72,10 @@ interface IResturantManager {
     
     @Editor
     public PmsRoomSimple checkPinCode(String pincode, String bookingId, String pmsRoomId);
+    
+    @Editor
+    public void addCartItemToCurrentTableSession(String tableId, ResturantCartItem cartItem);
+    
+    @Editor
+    public void createCartForTable(String tableId);
 }

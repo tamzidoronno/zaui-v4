@@ -1,0 +1,27 @@
+.SrsFoodList .product {
+    background-color: #EFEFEF;
+    padding: 10px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.SrsFoodList .foodlist {
+    width: calc(100% - 300px);
+    vertical-align: top;
+    display: inline-block;
+}
+
+.SrsFoodList .summary .internal_summary {
+    background-color: #EFEFEF;
+    padding: 20px;
+}
+
+.SrsFoodList .summary {
+    width: 290px;
+    vertical-align: top;
+    display: inline-block;
+    box-sizing: border-box;
+}
+

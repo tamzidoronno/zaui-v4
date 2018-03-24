@@ -1,0 +1,21 @@
+<?
+/* @var $this \ns_3480a8d0_955e_4ad8_8c51_0eb88997fe6b\SrsFoodList */
+$items = $this->getItemsForCurrentPerson();
+echo "<div class='internal_summary'>";
+echo "<h2>".$this->__f("Summary")."</h2>";
+
+if (!count($items)) {
+    echo $this->__f("Nothing added for this person");
+}
+
+foreach ($items as $item) {
+    $product = $this->getProduct($item->productId);
+    echo $product->name."<br/>";
+}
+echo "</div>";
+?>
+
+<br/>
+<div class='shop_button' style='width: 100%; box-sizing: border-box;' gs_close_modal='true' gsclick='saveCurrentTable'>
+    <? echo $this->__f("Save"); ?>
+</div>

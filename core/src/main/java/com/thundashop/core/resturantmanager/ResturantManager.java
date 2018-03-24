@@ -538,6 +538,21 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     public PmsRoomSimple checkPinCode(String pincode, String bookingId, String pmsRoomId) {
         return getPmsManager().checkPinCode(bookingId, pmsRoomId, pincode);
     }
+
+    @Override
+    public void addCartItemToCurrentTableSession(String tableId, ResturantCartItem cartItem) {
+        TableSession currentSessionTable = getCurrentTableSession(tableId);
+        currentSessionTable.getCartItems();
+    }
+
+    @Override
+    public void createCartForTable(String tableId) {
+        TableData res = getCurrentTableData(tableId);
+        List<CartItem> items = getGroupedCartItems(res.cartItems, true);
+        cartManager.clear();
+        cartManager.getCart().addCartItems(items);
+//        addCartItems(new ArrayList(res.cartItems), false);
+    }
     
     
 }

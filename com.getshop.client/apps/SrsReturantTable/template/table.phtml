@@ -1,0 +1,34 @@
+<?
+/* @var $this \ns_686d5674_8c58_46a5_b38f_09772c9e5e02\SrsReturantTable */
+$table = $this->getCurrentTable();
+$data = $this->getApi()->getResturantManager()->getCurrentTableData($table->id);
+
+?>
+
+<div class="shop_button" gs_show_modal="addfood" tableid="<? echo $table->id; ?>">
+    <? echo $this->__f("Add food"); ?>
+</div>
+
+<?
+if (count($data->cartItems)) {
+    echo "<div class='shop_button startpaymentprocess'>".$this->__f("Start payment process")."</div>";
+}
+
+$groupedItems = $this->groupItemsOnPersons($data->cartItems);
+foreach ($groupedItems as $personNumber => $cartItems) {
+    
+    if (!count($cartItems)) {
+        continue;
+    }
+    
+    $header = $personNumber == 0 ? $this->__f("General") : $this->__f("Person").": ".$personNumber;
+    
+    echo "<div>";
+        echo "<div class='productHeader'>".$header."</div>";
+        echo "<div class='productlist'>";
+        $this->printTable($cartItems);
+        echo "</div>";
+    echo "</div>";
+}
+
+?>

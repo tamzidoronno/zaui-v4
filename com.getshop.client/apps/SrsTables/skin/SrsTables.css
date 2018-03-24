@@ -1,0 +1,19 @@
+.SrsTables .resturanttable {
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.SrsTables .resturanttable .tablename {
+    text-align: center;
+}
+
+.SrsTables .resturanttable.available {
+    background-color: #00b72f;
+}
+
+.SrsTables .resturanttable.inuse {
+    background-color: #ff7800;
+}

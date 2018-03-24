@@ -88,9 +88,92 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
             case "addons":
                 $this->includefile("addons");
                 break;
+            case "conference":
+                $this->includefile("conference");
+                break;
             default:
                 echo "Path not exisiting yet: " . $_POST['data']['area'];
         }
+    }
+    
+    public function removeRow() {
+        $confdata = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedMultilevelDomainName(), $this->getCurrentBooking()->id);
+        $day=null;
+        foreach($confdata->days as $tmpday) {
+            $newRows = array();
+            foreach($tmpday->conferences as $conf) {
+                if($conf->rowId == $_POST['data']['id']) {
+                    continue;
+                }
+                $newRows[] = $conf;
+            }
+            $tmpday->conferences = $newRows;
+        }
+        
+        $newRows = array();
+        foreach($confdata->days as $day) {
+            if(sizeof($day->conferences) == 0) {
+                continue;
+            }
+            $newRows[] = $day;
+        }
+        $confdata->days = $newRows;
+        
+        
+        $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedMultilevelDomainName(), $confdata);
+    }
+    
+    public function updateActionPoint() {
+        $confdata = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedMultilevelDomainName(), $this->getCurrentBooking()->id);
+        foreach($confdata->days as $tmpday) {
+            foreach($tmpday->conferences as $conf) {
+                if($conf->rowId == $_POST['data']['rowid']) {
+                    $conf->from = $_POST['data']['from'];
+                    $conf->to = $_POST['data']['to'];
+                    $conf->actionName = $_POST['data']['name'];
+                    $conf->attendeesCount = $_POST['data']['size'];
+                    $conf->place = $_POST['data']['where'];
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedMultilevelDomainName(), $confdata);        
+    }
+    
+    public function addactionpoint() {
+        $dateToAddTo = $_POST['data']['date'];
+
+        $confdata = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+        $day=null;
+        foreach($confdata->days as $tmpday) {
+            if(date("dmy", strtotime($dateToAddTo)) == date("dmy", strtotime($tmpday->day))) {
+                $day = $tmpday;
+            }
+        }
+        if(!$day) {
+            $day = new \core_pmsmanager_ConferenceDataDay();
+            $day->day = $dateToAddTo;
+            $confdata->days[] = $day;
+
+        }
+        $row = $_POST['data'];
+        $conferenceDataRow = new \core_pmsmanager_ConferenceDataRow();
+        $conferenceDataRow->place = $row['where'];
+        $conferenceDataRow->from = $row['from'];
+        $conferenceDataRow->to = $row['to'];
+        $conferenceDataRow->actionName = $row['name'];
+        $conferenceDataRow->attendeesCount = $row['size'];
+        $day->conferences[] = $conferenceDataRow;
+        
+        $newRows = array();
+        foreach($confdata->days as $day) {
+            if(sizeof($day->conferences) == 0) {
+                continue;
+            }
+            $newRows[] = $day;
+        }
+        $confdata->days = $newRows;
+        
+        $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedMultilevelDomainName(), $confdata);
     }
     
     public function doRoomsBookedAction() {

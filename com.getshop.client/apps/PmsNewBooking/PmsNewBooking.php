@@ -9,7 +9,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     public function getName() {
         return "PmsNewBooking";
     }
-
+    
     public function render() {
         if(isset($this->msg)) {
             echo $this->msg;
@@ -40,7 +40,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     
     public function completequickreservation() {
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-        $currentBooking->userId = "quickreservation";
+        $currentBooking->userId = $this->createSetUser();
         $currentBooking->quickReservation = true;
         $currentBooking->avoidCreateInvoice = true;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
@@ -144,6 +144,63 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
         }
         return $size;
+    }
+
+    public function createSetUser() {
+        $name = $_POST['data']['nameofholder'];
+        if(!$name) {
+            return "quickreservation";
+        }
+        
+        $user = $this->getApi()->getUserManager()->getUserById($name);
+        if($user) {
+            return $user->id;
+        }
+        
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $name;
+        $user = $this->getApi()->getUserManager()->createUser($user);
+        return $user->id;
+    }
+    
+    public function checkForExisiting() {
+        $text = $_POST['data']['text'];
+        $users = $this->getApi()->getUserManager()->findUsers($text);
+        if(sizeof($users) == 0) {
+            return;
+        }
+        
+        echo "<div style='text-align:left; width: 800px; display:inline-block;font-size: 20px; margin-top: 20px; font-weight:bold;'>We already have " . sizeof($text) . " users matching this search, is it one of the below?</div>";
+        echo "<table style=width:800px;float:right;text-align:left; margin-bottom: 50px;'>";
+        echo "<tr>";
+        echo "<th>Name</th>";
+        echo "<th>Email</th>";
+        echo "<th>Prefix</th>";
+        echo "<th>Phone</th>";
+        echo "<th>Address</th>";
+        echo "<th>Postcal code</th>";
+        echo "<th>City</th>";
+        echo "<th></th>";
+        echo "</tr>";
+        
+        foreach($users as $user) {
+            echo "<tr userid='".$user->id."' name='".$user->fullName."'>";
+            echo "<td>" . $user->fullName . "</td>";
+            echo "<td>" . $user->emailAddress . "</td>";
+            echo "<td>" . $user->prefix . "</td>";
+            echo "<td>" . $user->cellPhone . "</td>";
+            echo "<td>"; if(isset($user->address)) { echo $user->address->address; } echo "</td>";
+            echo "<td>"; if(isset($user->address)) { echo $user->address->postCode; } echo "</td>";
+            echo "<td>"; if(isset($user->address)) { echo $user->address->city; } echo "</td>";
+            echo "<td style='color:blue; cursor:pointer;' class='selectuser'>Select</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+        echo "<br>";
+        echo "<br>";
+        echo "<br>";
+        echo "<br>";
+        echo "<br>";
     }
 
 }

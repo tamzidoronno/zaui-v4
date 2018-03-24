@@ -176,6 +176,14 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         $this->currentBooking = null;
     }
     
+    public function massUpdateGuests() {
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+        foreach($booking->rooms as $room) {
+            $room->numberOfGuests = sizeof($_POST['data']['guests'][$room->pmsBookingRoomId]);
+            $room->guests = $_POST['data']['guests'][$room->pmsBookingRoomId];
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
     
     public function saveGuestInformation() {
         $booking = $this->getCurrentBooking();
@@ -188,11 +196,11 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
     
     public function printGuestRow($guest) {
         echo "<div style='margin-bottom: 2px;' class='guestrow'>";
-        echo "<span class='shop_button'><i class='fa fa-trash-o removeguestrow'></i></span>";
-        echo "<input type='text' class='gsniceinput1' gsname='name' value='".$guest->name."'>";
-        echo "<input type='text' class='gsniceinput1' gsname='email' value='".$guest->email."'>";
-        echo "<input type='text' class='gsniceinput1' gsname='prefix' value='".$guest->prefix."' style='width: 30px;'>";
-        echo "<input type='text' class='gsniceinput1' gsname='phone' value='".$guest->phone."'>";
+        echo "<span class='shop_button removeguestrow' style='margin-right:5px;border-radius:5px;'><i class='fa fa-trash-o'></i></span>";
+        echo "<input type='text' class='gsniceinput1' gsname='name' value='".$guest->name."' style='margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='email' value='".$guest->email."' style='margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='prefix' value='".$guest->prefix."' style='width: 30px;margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='phone' value='".$guest->phone."' style='margin-right: 10px;'>";
         echo "<input type='hidden' class='gsniceinput1' gsname='guestId' value='".$guest->guestId."'>";
         echo "</div>";
     }

@@ -29,12 +29,8 @@ foreach($pmsBooking->rooms as $room) {
     </h1>
 
     <div class="top_box selected" areatype="owner">
-        <div class="title">Owner</div>
+        <div class="title">Guest(s)</div>
         <i class="fa fa-user"></i>
-    </div>
-    <div class="top_box" areatype="guests">
-        <div class="title">Guests</div>
-        <i class="fa fa-users"></i> <? echo $guestcount; ?>
     </div>
     
     <div class="top_box" areatype="rooms">
@@ -59,4 +55,5 @@ foreach($pmsBooking->rooms as $room) {
 </div>
 
 <div class="booker_main_user" areatype="owner"><?php $this->includeSelectedArea(); ?></div>
+<div style='clear:both;'></div>
 

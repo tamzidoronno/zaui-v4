@@ -44,8 +44,13 @@ if(!$found) {
     $table->setData($rows);
     $table->render();
     
-    echo "<div style='text-align: right; margin-top: 5px;'>";
-    echo "<span class='shop_button' gstype='clicksubmit' method='completequickreservation'>Continue, reservation details is added in the next step <i class='fa fa-arrow-right'></i></span>";
-    echo "</div>";
+    ?>
+    <div style='text-align: right; margin-top: 25px;' gstype='form' method='completequickreservation'>
+        <span class='selecteduser' style='display:none;'><i class='fa fa-trash-o' style='cursor:pointer;'></i> <span class='name'></span></span>
+        <input type='text' class='gsniceinput1' placeholder="Name of group holder" gsname='nameofholder'>
+    <span class='shop_button' gstype='submit'>Continue, reservation details is added in the next step <i class='fa fa-arrow-right'></i></span>
+    <div class='alreadyexists'></div>
+    </div>
+    <?php
 }
 ?>

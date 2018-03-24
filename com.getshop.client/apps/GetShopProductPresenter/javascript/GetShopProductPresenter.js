@@ -58,8 +58,6 @@ app.GetShopProductPresenter = {
     },
     
     selectionChanged: function(me) {
-        $(me).closest('.roundbox').find('.mouseover').hide();
-        $(me).closest('.roundbox').find('.briefdesc').hide();
         var activeModules = [];
         
         $(".GetShopProductPresenter .roundbox.active").each(function() {

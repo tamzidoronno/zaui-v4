@@ -163,9 +163,15 @@
     </div>
 </div>
 
+<?
+if (isset($_POST['event']) && $_POST['event'] == "sendRequest") {
+    echo "<div class='requestconfirmation'>Thank you, you will be contacted by one of our support constulants</div>";
+}
+?>
+
 <div gstype="form" method="sendRequest">
     <div class="selectionform">
-        By using the form below we can get in touch with  you to show you what the system is capable of according to your selections.
+        Let us demostrate how your selection would best work with your needs.
         <br/>
         <br/>
         <input type="hidden" gsname="modules" value=""/>        

@@ -44,21 +44,27 @@
 }
 
 
-
 .GetShopProductPresenter .roundbox:hover {
     
 }
 
-
 .GetShopProductPresenter .roundbox:hover .briefdesc {
     display: block;
 }
+
 .GetShopProductPresenter .roundbox:hover .mouseover {
     display: block;
     z-index: 2;
-    
 }
 
+.GetShopProductPresenter .requestconfirmation {
+    border: solid 1px green;
+    padding: 20px;
+    text-align: center;
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
 
 
 .GetShopProductPresenter .roundbox .mouseover .innerbutton {

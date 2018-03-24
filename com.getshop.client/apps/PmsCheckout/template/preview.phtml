@@ -1,0 +1,25 @@
+<?
+/* @var $this ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout */
+$cart = $this->getApi()->getCartManager()->getCart();
+$totalPrice = $this->getApi()->getCartManager()->getCartTotalAmount();
+?>
+<div class="cartsummary">
+    <?
+    foreach ($cart->items as $item) {
+        ?>
+        <div class="row">
+            <div class="col col1"><? echo $item->count; ?></div>
+            <div class="col col2">x <? echo $item->product->name; ?></div>
+            <div class="col col3"><? echo $item->product->price; ?></div>
+        </div>
+        <?
+    }
+    ?>
+    
+    <div class="row row_last">
+        <div class="col col1"></div>
+        <div class="col col2"><? echo $this->__f("Total"); ?></div>
+        <div class="col col3"><? echo $totalPrice; ?></div>
+    </div>
+
+</div>

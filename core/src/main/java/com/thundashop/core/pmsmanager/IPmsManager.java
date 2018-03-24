@@ -136,6 +136,10 @@ public interface IPmsManager {
     public void checkOutRoom(String pmsBookingRoomId);
     
     @Administrator
+    public void checkInRoom(String pmsBookingRoomId);
+    
+    
+    @Administrator
     public List<PmsAddonDeliveryLogEntry> getDeliveryLog(List<String> productIds, Date start, Date end);
     
     @Administrator

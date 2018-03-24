@@ -17,6 +17,13 @@ thundashop.framework = {
     firstCellIdToMove : null,
     lastScrollTopInfoBox : null,
     
+    showRightWidgetPanel : function(areaName, data) {
+        $('.gsrightwidgetpanel').addClass('gsactiverightwidget');
+        $('#gsbody').addClass('gsactiverightwidget');
+        $('.gsrightwidgetpanel').show();
+        thundashop.framework.refreshRightWidget(areaName, data);
+    },
+    
     toggleRightWidgetPanel : function(areaName, data) {
         
         if(!$('.gsrightwidgetpanel').hasClass('gsactiverightwidget')) {

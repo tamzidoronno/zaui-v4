@@ -1,0 +1,41 @@
+<div gstype='form' method='saveSpecialCartItem'>
+    <div style='text-align: right;padding-bottom: 5px;'>
+        <i class='fa fa-close' onclick='$(".specialeditview").hide();' style='cursor:pointer;'></i>
+    </div>
+    <?php
+    /* @var $this \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+    $itemid = $_POST['data']['itemid'];
+    $orderid = $_POST['data']['orderid'];
+    
+    ?>
+    <input type='hidden' gsname='itemid' value='<?php echo $itemid; ?>'>
+    <input type='hidden' gsname='orderid' value='<?php echo $orderid; ?>'>
+    <?php
+
+    $order = $this->getApi()->getOrderManager()->getOrder($orderid);
+    $items = (array)$order->cart->items;
+    foreach($items as $item) {
+        if($item->cartItemId != $itemid) {
+            continue;
+        }
+        /* @var $item core_cartmanager_data_CartItem */
+        $itemsAdded = (array)$item->itemsAdded;
+        if($item->cartItemId == $itemid) {
+            foreach($itemsAdded as $addon) {
+                echo "<div>";
+                echo "<input gsname='addoncount_".$addon->addonId."' value='".$addon->count . "' class='gsniceinput1' style='width: 30px;'>";
+                echo "<input gsname='addonprice_".$addon->addonId."' value='".$addon->price . "' class='gsniceinput1' style='width: 90px'>";
+                echo "</div>";
+            }
+        }
+
+        $priceMatrix = (array)$item->priceMatrix;
+        foreach($priceMatrix as $date => $price) {
+            echo "<div>";
+            echo "$date : <input gsname='pricematrix_".$date."' value='".$price . "' class='gsniceinput1' style='width: 90px'>";
+            echo "</div>";
+        }
+    }
+    ?>
+    <span class='shop_button savespecialcartitem' style='width:100%; box-sizing: border-box; margin-top: 5px;'>Save changes</span>
+</span>

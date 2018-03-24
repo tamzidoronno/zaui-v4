@@ -104,7 +104,6 @@ class PmsSearchBookingColumnFormatters {
             $vistorText .= "<i class='fa fa-arrows dontExpand' title='This room is part of a group of ".$room->numberOfRoomsInBooking." rooms'></i></a> ";
             
         }
-        $vistorText .= "<i class='fa fa-arrow-right dontExpand quickfunction' title='Process payments' type='payments'></i>";
         $vistorText .= "</span></div>";
         
         return $vistorText;
@@ -144,6 +143,9 @@ class PmsSearchBookingColumnFormatters {
         }
         
         $text .= "<div class='channelDesc'>" . $channelText . "</div>";
+        if($room->checkedIn && !$room->checkedOut) {
+            $text .= "<div class='channelDesc' title='Room checked in' style='text-align:center;'>Is in</div>";
+        }
         
         return $text;
     }

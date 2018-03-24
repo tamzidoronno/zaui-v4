@@ -2,6 +2,7 @@
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $savedRoom = $this->getSelectedRoom();
 $room = $this->getTmpSelectedRoom($savedRoom->pmsBookingRoomId);
+$hasAcessControl = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName());
 
 $types = $this->getTypes();
 $items = $this->getItems();
@@ -39,7 +40,19 @@ if(!isset($room->tmpModified)) {
         <input type="textfield" class="gsniceinput1 starttime time starttime" gsname="startTime" value="<? echo date("H:i", $startDate); ?>"/><br><br>
         Check-out<br>
         <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo date("d.m.Y", $endDate); ?>"/> 
-        <input type="textfield" class="gsniceinput1 endtime itme endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
+
+        <input type="textfield" class="gsniceinput1 endtime time endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
+        <span class='shop_button setnewdates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>
+        <?php
+        if(!$hasAcessControl) {
+            if($this->startingToday($room) && !$room->checkedin) {
+                echo "<span class='shop_button checkinguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:green;'>Check in guest</span>";
+            }
+            if($room->checkedin && !$room->checkedout) {
+                echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:blue;'>Check out guest</span>";
+            }
+        }
+        ?>
     </div>
 
     <div class='itemview_inner roomandcats'>

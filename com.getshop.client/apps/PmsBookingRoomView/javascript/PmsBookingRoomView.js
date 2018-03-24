@@ -30,7 +30,18 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .checkallitems', this.checkallitems);
         $(document).on('click', '.PmsBookingRoomView .continuepaymentprocess', this.continuePaymentProcess);
         $(document).on('click', '.PmsBookingRoomView .createafterstaybtn', this.createOrderAfterStay);
+        $(document).on('click', '.PmsBookingRoomView .checkinguest', this.checkInCheckOutGuest);
+        $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
     },
+    
+    checkInCheckOutGuest : function() {
+        var roomId = $(this).closest('.itemview').attr('roomid');
+        var event = thundashop.Ajax.createEvent('','checkinoutguest', $(this), {
+           roomId : roomId 
+        });
+        thundashop.Ajax.post(event);
+    },
+    
     createOrderAfterStay : function() {
         var event = thundashop.Ajax.createEvent('','toggleCreateAfterStay',$(this), {});
         thundashop.Ajax.postWithCallBack(event, function() {
@@ -51,9 +62,9 @@ app.PmsBookingRoomView = {
             }
 
             if (!$('[area="gs_modul_cart"]').is(':visible')) {
-                thundashop.framework.toggleRightWidgetPanel('gs_modul_cart', data);
+                thundashop.framework.showRightWidgetPanel('gs_modul_pmscart', data);
             } else {
-                thundashop.framework.refreshRightWidget('gs_modul_cart', data)
+                thundashop.framework.refreshRightWidget('gs_modul_pmscart', data)
             }
             $('.grouppaymentprocess').hide();
         });
@@ -190,28 +201,26 @@ app.PmsBookingRoomView = {
             var event = thundashop.Ajax.createEvent('','loadGroupPayment',$(this), {
                 "roomid" : btn.attr('roomid')
             });
-            
             thundashop.Ajax.postWithCallBack(event, function(res) {
                 paymentpanel.html(res);
                 paymentpanel.show();
             });
-            return;
-        }
-        
-        var event = thundashop.Ajax.createEvent(null, "transferSelectedToCart", this, {});
-        event['synchron'] = true;
-        
-        thundashop.Ajax.post(event, function (res) {
-            var data = {
-                orderUnderConstrcutionId : res
-            }
+        } else {
+            var event = thundashop.Ajax.createEvent(null, "transferSelectedToCart", this, {});
+            event['synchron'] = true;
 
-            if (!$('[area="gs_modul_cart"]').is(':visible')) {
-                thundashop.framework.toggleRightWidgetPanel('gs_modul_cart', data);
-            } else {
-                thundashop.framework.refreshRightWidget('gs_modul_cart', data)
-            }
-        });
+            thundashop.Ajax.post(event, function (res) {
+                var data = {
+                    orderUnderConstrcutionId : res
+                }
+
+                if (!$('[area="gs_modul_cart"]').is(':visible')) {
+                    thundashop.framework.showRightWidgetPanel('gs_modul_pmscart', data);
+                } else {
+                    thundashop.framework.refreshRightWidget('gs_modul_pmscart', data)
+                }
+            });
+        }
     },
     
     doEditAddonUpdate : function() {

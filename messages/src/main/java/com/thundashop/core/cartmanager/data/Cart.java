@@ -112,6 +112,9 @@ public class Cart extends DataCommon {
     private Double getProductTotal(boolean excludeFreeShipping) {
         Double total = 0D;
         for (CartItem cartItem : getItems()) {
+            if(cartItem.disabled) {
+                continue;
+            }
             if(excludeFreeShipping && cartItem.getProduct().freeShipping) {
                 continue;
             }
@@ -297,5 +300,9 @@ public class Cart extends DataCommon {
     public void replaceItem(CartItem item) {
         items.removeIf(i -> i.getCartItemId().equals(item.getCartItemId()));
         items.add(item);
+    }
+
+    public void clearDisabledItems() {
+        items.removeIf(i -> i.disabled);
     }
 }

@@ -19,6 +19,11 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $pms->searchBooking();
     }
     
+    public function quickfilterselection() {
+        $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+        $pms->quickfilterselection();
+    }
+    
     public function doAdvanceSearch() {
         $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
         $pms->advanceSearchBooking();
@@ -81,6 +86,10 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
     
     public function displayOtherSelection() {
         $this->includefile("otherselection");
+    }
+
+    public function getChannelMatrix() {
+        return $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
     }
 
 }

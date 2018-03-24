@@ -88,6 +88,14 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
     <h1>Payment and order creation</h1>
     <div class='container'>
         <span class='option'>
+            <input type='checkbox' gsname='payAfterBookingCompleted' <?php if($config->payAfterBookingCompleted) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Go to payment window after booking has been completed (force payment)
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
             <input type='text' class='gsniceinput1' gsname='numberOfDaysToSendPaymentLinkAheadOfStay' value='<?php echo $config->numberOfDaysToSendPaymentLinkAheadOfStay; ?>' style='width: 50px; text-align: center;'>
         </span>
         <span class='title'>
@@ -131,6 +139,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
             Automark invoices as paid for.
         </span>
     </div>
+    
     <div class='container'>
         <span class='option'>
             <input type='checkbox' gsname='autoSumarizeCartItems' <?php if($config->autoSumarizeCartItems) { echo "CHECKED"; } ?>>

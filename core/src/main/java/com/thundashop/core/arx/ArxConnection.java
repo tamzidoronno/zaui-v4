@@ -9,7 +9,10 @@ import java.io.InputStream;
 import org.apache.axis.encoding.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
@@ -38,7 +41,6 @@ public class ArxConnection {
         }
         String loginToken = null;
         String loginUrl = address;
-        
         HttpParams my_httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);
         HttpConnectionParams.setSoTimeout(my_httpParams, 6000);
@@ -51,22 +53,26 @@ public class ArxConnection {
 
 
             HttpEntity entity;
-            HttpPost request = new HttpPost(loginUrl);
+            HttpRequestBase request = null;
+            if(storeId.equals("b0d1acd4-4f4c-49ff-b4c1-e6414c59f587") && address.contains("eventexport")) {
+                request = new HttpGet(loginUrl);
+            } else {
+                StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN);
+                StringBody body = new StringBody(content, ContentType.TEXT_PLAIN);
+            
+                HttpPost tmpRequest = new HttpPost(loginUrl);
+                HttpEntity reqEntity = MultipartEntityBuilder.create()
+                        .addPart("upfile", body)
+                        .addPart("comment", comment)
+                        .build();
+                
+                tmpRequest.setEntity(reqEntity);
+                request = tmpRequest;
+            }
             byte[] bytes = (username + ":" + password).getBytes();
             String encoding = Base64.encode(bytes);
 
             request.addHeader("Authorization", "Basic " + encoding);
-
-            StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN);
-
-            StringBody body = new StringBody(content, ContentType.TEXT_PLAIN);
-
-            HttpEntity reqEntity = MultipartEntityBuilder.create()
-                    .addPart("upfile", body)
-                    .addPart("comment", comment)
-                    .build();
-
-            request.setEntity(reqEntity);
 
             try {
                 httpResponse = client.execute(request);

@@ -194,7 +194,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                     }
                     echo $daysBetween;
                 }
-                
+                if(($bookingToSend->totalPrice == 0.0 || !$bookingToSend->totalPrice || $bookingToSend->totalPrice == 0) && $bookingToSend->priceType == 1) {
+                    $ignorePaymentWindow = true;
+                }
+                 
                 echo "<script>";
                 if($config->payAfterBookingCompleted) {
                     if(!isset($curBooking->orderIds[0]) || $ignorePaymentWindow) {
@@ -209,6 +212,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                             if($ignorePaymentWindow) {
                                 echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
                             } else {
+                        echo "alert(' total: " . $bookingToSend->totalPrice . "');";
                                 echo 'thundashop.common.goToPage("payment_failed");';
                             }
                         }
@@ -298,14 +302,6 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             return;
         }
         
-        if($this->getFactory()->getStore()->id == "c444ff66-8df2-4cbb-8bbe-dc1587ea00b7") {
-            if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registration_private" && stristr($key, "user_birthday")) {
-                if(strlen($_POST['data']['user_birthday']) != 11) {
-                     $this->validation[$requirements->name] = "Ikke gyldig";
-                }
-                return;
-            }
-        }
         if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registered_user") {
             return;
         }

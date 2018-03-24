@@ -3,11 +3,13 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
@@ -24,6 +26,7 @@ import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.sendregning.SendRegningManager;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
@@ -52,7 +55,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
     
     @Autowired
+    StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
     SendRegningManager sendRegningManager;
+    
+    @Autowired
+    StoreManager storeManager;
 
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -378,6 +387,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }catch(Exception e) {
             logPrintException(e);
+        }
+        
+        if(storeManager.isNewer(2018,2,1)) {
+            return "pmsdailyordergeneration";
         }
         
         return "";
@@ -1481,7 +1494,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || (room.invoicedTo.after(endDate)) || room.isSameDay(room.invoicedTo, endDate))) {
             return;
         }
-        if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0 && !pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
+        if(endDate != null && filter.endInvoiceAt != null && endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0 && !pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
             return;
         }
         if(room.invoicedTo == null && startDate.after(endDate)) {
@@ -1492,7 +1505,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(pmsManager.getConfigurationSecure().ignoreRoomToEndDate && endDate.before(filter.endInvoiceAt)) {
             endDate = filter.endInvoiceAt;
         }
-        if(startDate.after(filter.endInvoiceAt)) {
+        if(filter.endInvoiceAt != null && startDate.after(filter.endInvoiceAt)) {
             //Why should it be possible to invoice a stay with an end date that is before the start date of the stay?
             return;
         }
@@ -3023,4 +3036,51 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return total;
     }
 
+    @Override
+    public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType) {
+        
+        List<String> toreturn = new ArrayList();
+        
+        Cart cart = cartManager.getCart();
+        
+        HashMap<String, List<CartItem>> groupedItems = new HashMap();
+        
+        if(orderCreationType != null && (orderCreationType.equals("uniqueorder") || orderCreationType.equals("uniqueordersendpaymentlink"))) {
+            groupedItems = groupItemsOnOrder(cart);
+        } else {
+            groupedItems.put("allrooms", cart.getItems());
+        }
+        
+        for(String roomId : groupedItems.keySet()) {
+            cartManager.clear();
+            cartManager.getCart().addCartItems(groupedItems.get(roomId));
+            
+            Order order = orderManager.createOrder(address);
+            order.createByManager = "PmsDailyOrderGeneration";
+            order.payment = new Payment();
+            order.payment.paymentId = paymentId;
+
+            Application paymentApplication = storeApplicationPool.getApplication(paymentId);
+            order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            orderManager.saveOrder(order);
+            cartManager.clear();
+            toreturn.add(order.id);
+        }
+        
+        return toreturn;
+    }
+    
+    private HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
+        HashMap<String, List<CartItem>> toReturn = new HashMap();
+        for(CartItem item : cart.getItems()) {
+            List<CartItem> items = toReturn.get(item.getProduct().externalReferenceId);
+            if(items == null) {
+                items = new ArrayList();
+            }
+            items.add(item);
+            toReturn.put(item.getProduct().externalReferenceId, items);
+        }
+        return toReturn;
+    }
+    
 }

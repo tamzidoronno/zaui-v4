@@ -1,0 +1,131 @@
+<?
+/* @var $this ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout */
+$originalCart = $this->getOriginalCartFromSession();
+$currentCart = $this->getCurrentCart();
+$total = $this->getApi()->getCartManager()->getCartTotal($currentCart);
+
+$items = (array)$originalCart->items;
+$i = 0;
+
+if (!count($items)) {
+    echo "Nothing to do";
+    return;
+}
+$this->loadCartFilter();
+echo "<div class='itemsarea'>";
+foreach ($items as $item) {
+    $i++;
+    $lastItem = count($items) == $i ? "last_row" : "";
+    $this->setCurrentItem($item);
+    
+    echo '<div class="cartitem row '.$lastItem.'" cartItemId="'.$item->cartItemId.'">';
+    
+    if ($item->addedByGetShopModule == "pms") {
+        if (isset($item->priceMatrix) && $item->priceMatrix && count($item->priceMatrix)) {
+            $this->includefile("pmswithmatrixitem");
+        } else if(isset($item->itemsAdded) && $item->itemsAdded && count($item->itemsAdded)) {
+            $this->includefile("pmsaddons");
+        } else {
+            $this->includefile("pmsnormalcartitem");
+        }
+    } 
+    
+    echo "</div>";
+}
+echo "</div>";
+?>
+
+<div class='summary'>
+    <? echo $this->__f("Total"); ?>: <span><? echo $total; ?></span>
+</div>
+
+<?
+
+if ($this->isReadOnly()) {
+    return;
+}
+
+
+$paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+?>
+<div gstype='form' method='createOrder'>
+    <div class="payment_options payment_window">
+        <div class="option_content"></div>
+        <div class="options">
+            <select class='gsniceselect1 appendtoorderselection' gsname='appendtoorder'>
+                <option value="">Create a new order</option>
+                <?
+                //Need to find orders that has been created on the bookings and display them here!
+                $roomIds = array();
+                foreach($currentCart->items as $item) {
+                    $roomIds[$item->product->externalReferenceId] = "1";
+                }
+                $orderIds = array();
+                foreach($roomIds as $roomId => $id) {
+                    $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+                    foreach($booking->orderIds as $orderId) {
+                        if(!in_array($orderId, $orderIds)) {
+                            $orderIds[] = $orderId;
+                        }
+                    }
+                }
+                foreach($orderIds as $orderId) {
+                    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                    echo "<option value='$orderId'>Add to order: " . $order->incrementOrderId . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="payment_options payment_window">
+        <div class="option_content"></div>
+        <div class="options">
+            <?php
+            $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+            $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
+            ?>
+            <select class='gsniceselect1 paymentmethodselection' gsname='payment'>
+                <?
+                foreach ($paymentApps as $app) {
+                    $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+                    $selected = $ecomsettings->getConfigurationSetting("defaultPaymentMethod") == $app->id ? "SELECTED" : "";
+                    $name = $appInstance->getName();
+                    if($name == "InvoicePayment") {
+                        $name = "Invoice";
+                    }
+
+                    echo "<option value='".$app->id."' $selected>" . $name . " ". "</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <?php
+    if(isset($_SESSION['groupordercreationtype'])) {
+        $options = array();
+        $options['all'] = "Create one order for all selected rooms";
+        $options['uniqueorder'] = "Every guest pay themself";
+        $options['uniqueordersendpaymentlink'] = "Every guest pay themself and send payment link to guests";
+        ?>
+        <div class="payment_options payment_window">
+            <div class="option_content"></div>
+            <div class="options">
+                <select class='gsniceselect1' style='width:100%;' gsname='paymenttypeselection'>
+                    <?php
+                    foreach($options as $key => $val) {
+                        $selected = "";
+                        if($key == $_SESSION['groupordercreationtype']) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='$key' $selected>$val</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
+    <span class="shop_button continue_checkout" gstype='submit' gs_callback='app.PmsCheckout.orderCreationCompleted'>Create payment</span>
+</div>

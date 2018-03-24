@@ -1,0 +1,141 @@
+<?php
+/* @var $this \ns_9e0bbaa4_961b_4235_8a1f_47eb4414ed91\PmsCleaningConfiguration */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$notificationSettings = $config;
+$days = array();
+$days[1] = "Monday";
+$days[2] = "Tuesday";
+$days[3] = "Wednesday";
+$days[4] = "Thursday";
+$days[5] = "Friday";
+$days[6] = "Saturday";
+$days[7] = "Sunday";
+?>
+<div gstype='form' method='saveCleaningConfig'>
+    <div class='configrow'>
+        <span class='configentry'>
+            <input type='number' style='width: 40px;' class='gsniceinput1' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>
+        </span>
+        Cleaning interval default (0, disabled)
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+            <input type='number' style='width: 40px;' class='gsniceinput1' gsname='closeRoomNotCleanedAtHour' value='<? echo $notificationSettings->closeRoomNotCleanedAtHour; ?>'>
+        </span>
+        If room is not cleaned at hour of day, make it unavailable for booking
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+            <input type='number' style='width: 40px;' class='gsniceinput1' gsname='numberOfCheckoutCleanings' value='<? echo $notificationSettings->numberOfCheckoutCleanings; ?>'>
+        </span>
+        Max number of checkout cleaning possible to do for a day (0, disabled)
+    </div>
+    <div class='configrow'>
+            <span class='configentry'>
+                <?
+                    $checked = "";
+                    if(isset($notificationSettings->markDirtyEvenWhenCodeNotPressed) && $notificationSettings->markDirtyEvenWhenCodeNotPressed) {
+                        $checked = "CHECKED";
+                    }
+                ?>
+                <input type='checkbox' gsname='markDirtyEvenWhenCodeNotPressed' <?php echo $checked; ?>>
+            </span>
+            Mark room as dirty even when the code has not been pressed on the door.
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+            <input type='number' style='width: 40px;' class='gsniceinput1' gsname='numberOfIntervalCleaning' value='<? echo $notificationSettings->numberOfIntervalCleaning; ?>'>
+        </span>
+        Max number of interval cleaning possible to do for a day (0, disabled)
+    </div>
+    <?php for($i=1;$i<=7;$i++) { ?>
+        <div class='configrow'>
+            <span class='configentry'>
+            <?
+                $checked = "";
+                if(isset($notificationSettings->cleaningDays->{$i}) && $notificationSettings->cleaningDays->{$i}) {
+                    $checked = "CHECKED";
+                }
+            ?>
+            <input type='checkbox' gsname='cleaningDays_<?php echo $i; ?>' <? echo $checked; ?>>
+            </span>
+            Cleaning on <?php echo $days[$i]; ?>
+        </div>
+    <?php } ?>
+    <div class='configrow'>
+        <span class='configentry'>
+        <?
+            $checked = "";
+            if(isset($notificationSettings->cleaningNextDay) && $notificationSettings->cleaningNextDay) {
+                $checked = "CHECKED";
+            }
+        ?>
+        <input type='checkbox' gsname='cleaningNextDay' <? echo $checked; ?>>
+        </span>
+        Cleaning is done the day after the stay
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+        <?
+            $checked = "";
+            if($notificationSettings->autoNotifyCareTakerForMissingInventory) {
+                $checked = "CHECKED";
+            }
+        ?>
+        <input type='checkbox' gsname='autoNotifyCareTakerForMissingInventory' <? echo $checked; ?>>
+        </span>
+        Automatically notify caretaker about missing inventory.
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+        <?
+            $checked = "";
+            if($notificationSettings->whenCleaningEndStayForGuestCheckinOut) {
+                $checked = "CHECKED";
+            }
+        ?>
+        <input type='checkbox' gsname='whenCleaningEndStayForGuestCheckinOut' <? echo $checked; ?>>
+        </span>
+        Make sure the booking is ended when the room is marked as clean.
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+        <?
+            $checked = "";
+            if($notificationSettings->autoAddMissingItemsToRoom) {
+                $checked = "CHECKED";
+            }
+        ?>
+        <input type='checkbox' gsname='autoAddMissingItemsToRoom' <? echo $checked; ?>>
+        </span>
+        Automatically create orders for missing invoice.
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+        <?
+            $checked = "";
+            if(isset($notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) && $notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) {
+                $checked = "CHECKED";
+            }
+        ?>
+        <input type='checkbox' gsname='unsetCleaningIfJustSetWhenChangingRooms' <? echo $checked; ?>>
+        </span>
+        Unset rooms marked as dirty when a room is changed within one our (recommended to be switched off)
+    </div>
+    <div class='configrow'>
+        <span class='configentry'>
+        <?
+            $checked = "";
+            if(isset($notificationSettings->automaticallyCloseRoomIfDirtySameDay) && $notificationSettings->automaticallyCloseRoomIfDirtySameDay) {
+                $checked = "CHECKED";
+            }
+        ?>
+        <input type='checkbox' gsname='automaticallyCloseRoomIfDirtySameDay' <? echo $checked; ?>>
+        </span>
+        If room where not cleaned during day hours, mark the room as unavailable for the rest of the day
+    </div>
+    <div style='text-align: right;margin-right: 10px;'>
+        <span class='shop_button' gstype='submit'>Save configuration</span>
+    </div>
+</div>

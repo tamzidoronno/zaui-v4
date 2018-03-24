@@ -11,6 +11,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
+import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,4 +104,7 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public List<CartItem> getAllUnpaidItemsForRoom(String pmsRoomId);
+    
+    @Administrator
+    public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType);
 }

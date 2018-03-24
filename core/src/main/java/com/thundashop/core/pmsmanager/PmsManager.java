@@ -2237,7 +2237,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        sortRooms(result);
+        result = sortRooms(result);
 
         return result;
     }
@@ -2263,7 +2263,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-        sortRooms(rooms);
+        rooms = sortRooms(rooms);
         
         return rooms;
     }
@@ -3131,15 +3131,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return allRooms;
     }
 
-    private void sortRooms(List<PmsBookingRooms> result) {
-        Collections.sort(result, new Comparator<PmsBookingRooms>() {
+    private List<PmsBookingRooms> sortRooms(List<PmsBookingRooms> result) {
+        List<PmsBookingRooms> toSort = new ArrayList();
+        List<PmsBookingRooms> notAdded = new ArrayList();
+        for(PmsBookingRooms r : result) {
+            if (r.item != null) {
+                toSort.add(r);
+            } else {
+                notAdded.add(r);
+            }
+        }
+        
+        Collections.sort(toSort, new Comparator<PmsBookingRooms>() {
             public int compare(PmsBookingRooms o1, PmsBookingRooms o2) {
-                if (o1.item == null || o2.item == null) {
-                    return 0;
-                }
-                return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
+                return o1.item.bookingItemName.compareToIgnoreCase(o2.item.bookingItemName);
             }
         });
+        
+        notAdded.addAll(toSort);
+        return notAdded;
     }
 
     void makeSureCleaningsAreOkay() {
@@ -7988,9 +7998,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             returnList.add(res);
         }
         
-        for(Date date : additional.markedDirtyDates.keySet()) {
+        for(Long timezone : additional.markedDirtyDatesLog.keySet()) {
+            Date date = new Date();
+            date.setTime(timezone);
             PmsCleaningHistory res = new PmsCleaningHistory();
-            String roomId = additional.markedDirtyDates.get(date);
+            String roomId = additional.markedDirtyDatesLog.get(date);
             if(roomId != null) {
                 PmsBooking booking = getBookingFromRoom(roomId);
                 PmsBookingRooms room = booking.getRoom(roomId);
@@ -8263,5 +8275,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         room.priceMatrix = priceMatrix;
         logEntry("Prices changed", booking.id, room.bookingItemId, room.pmsBookingRoomId, "price");
+    }
+
+    @Override
+    public void checkInRoom(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        room = changeDates(room.pmsBookingRoomId, booking.id, new Date(), room.date.end);
+        if(room != null) {
+            logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");
+            room.checkedin = true;
+            saveBooking(booking);
+        }
     }
 }

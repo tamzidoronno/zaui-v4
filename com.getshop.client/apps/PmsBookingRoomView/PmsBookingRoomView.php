@@ -977,8 +977,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         $selectedRoom = null;
         
-        $id = $this->getSelectedRoom()->orderUnderConstructionId;
-        $this->getApi()->getOrderManager()->clearOrderUnderConstruction($id);
+        $this->getApi()->getCartManager()->clear();
         
         $this->refreshCartForRoom();
         
@@ -994,23 +993,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             die("Could not find the room.");
         }
         
-        if (!$selectedRoom->orderUnderConstructionId) {
-            if (isset($_SESSION['orderUnderConstructionId'])) {
-                $selectedRoom->orderUnderConstructionId = $_SESSION['orderUnderConstructionId'];
-            } else {
-                $selectedRoom->orderUnderConstructionId = $this->uuidV4();
-            }
-            
-            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
-        }
         
-        echo $selectedRoom->orderUnderConstructionId;
-
-        $_SESSION['orderUnderConstructionId'] = $selectedRoom->orderUnderConstructionId;
-   
-        $cart = $this->getApi()->getCartManager()->getCart();
-
-        $this->getApi()->getOrderManager()->updateCartOnOrderUnderConstruction($selectedRoom->orderUnderConstructionId, $selectedRoom->pmsBookingRoomId, $cart);
         $this->setData(true);
     }
     
@@ -1245,7 +1228,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $filter->avoidOrderCreation = true;
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
         $filter->pmsRoomIds = array();
-        $filter->pmsRoomIds[]  = $this->getSelectedRoom()->pmsBookingRoomId;
+        $filter->pmsRoomId  = $this->getSelectedRoom()->pmsBookingRoomId;
         unset($_SESSION['groupordercreationtype']);
         if(isset($_POST['data']['multipleadd'])) {
             $_SESSION['groupordercreationtype'] = $_POST['data']['paymenttypeselection'];
@@ -1256,6 +1239,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 }
             }
         }
+        echo "<pre>";
+        print_r($filter);
+        echo "</pre>";
+        
         
         $this->getApi()->getCartManager()->clear();
         $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $booking->id, $filter);    
@@ -1364,42 +1351,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
     }
 
-    public function showKaiPalSimple($text, $needAttentionToPayment, $canSendLink) {
-        ?>
-        <div class="isnotactive">
-            <div class="kaipal infobox">
-                // faces: happy,sad,talking,danger
-                <div class="image happy"></div>
-                <div class="textbox">
-                    <div class="header"><? echo $this->__f("Automatically payment"); ?></div>
-                    
-                    <div class="text">
-                        <?
-                        echo $this->__f($text);
-                        
-                        if ($needAttentionToPayment) {
-                        ?> 
-                        
-                            <div class="buttonarea">
-                                <div class="buttonareaheader"><? echo $this->__f("Please handle your payment options"); ?></div>
-                                <div class="shop_button"><i class=""></i> <? echo $this->__f("Show payment request log"); ?></div>
-                                <?
-                                if($needAttentionToPayment) {
-                                    ?>
-                                        <div class="shop_button addselecteditemstocart"><i class=""></i> <? echo $this->__f("Start payment process"); ?></div>
-                                    <?
-                                }
-                                ?>
-                            </div>
-                        <?
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?
-    }
 
     public function needToCreateOrders() {
         $this->refreshCartForRoom();
@@ -1456,5 +1407,28 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         return $selectedType;
     }
+    
+    public function checkinoutguest() {
+        $roomid = $_POST['data']['roomId'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId != $roomid) {
+                continue;
+            }
+            if($room->checkedin) {
+                $this->getApi()->getPmsManager()->checkOutRoom($this->getSelectedMultilevelDomainName(), $roomid);
+            } else {
+                $this->getApi()->getPmsManager()->checkInRoom($this->getSelectedMultilevelDomainName(), $roomid);
+            }
+            $this->removeTmpRoom($room->pmsBookingRoomId);
+        }
+    }
+
+    public function startingToday($room) {
+        $now = date("dmy", time());
+        $roomstart = date("dmy", strtotime($room->date->start));
+        return $now == $roomstart;
+    }
+
 }
 ?>

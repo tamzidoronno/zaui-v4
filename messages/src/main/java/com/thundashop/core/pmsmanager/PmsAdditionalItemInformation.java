@@ -16,7 +16,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     private Date lastUsed = null;
     private Date lastCleaned = null;
     private List<Date> cleaningDates = new ArrayList();
-    public HashMap<Date, String> markedDirtyDates = new HashMap();
+    public HashMap<Long, String> markedDirtyDatesLog = new HashMap();
     public HashMap<String, PmsInventory> inventory = new HashMap();
     public HashMap<Long, String> cleanedByUser = new HashMap();
     public String itemId = "";
@@ -59,7 +59,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     
     public void markDirty(String pmsBookingRoomId) {
         lastUsed = new Date();
-        markedDirtyDates.put(new Date(), pmsBookingRoomId);
+        markedDirtyDatesLog.put(new Date().getTime(), pmsBookingRoomId);
     }
 
     private boolean isCleanedToday() {

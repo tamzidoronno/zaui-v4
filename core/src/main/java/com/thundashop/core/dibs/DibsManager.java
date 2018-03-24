@@ -518,7 +518,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 if(diff > 5 || diff < -5) {
                     throw new Exception("Invalid amount amount: " + toCapture + " - " + (amount*100));
                 }
-                if(result != 5) {
+                if(result != 5 && result != 12) {
                     throw new Exception("Invalid response code from dibs code: " + result);
                 }
                 if(!polledResult.get("currency").equals("NOK")) {

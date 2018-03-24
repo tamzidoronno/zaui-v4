@@ -1,0 +1,56 @@
+<?/* @var $this ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout */
+$item = $this->getCurrentItem();
+$roomNumber = $item->product->additionalMetaData;
+
+$itemsAdded = (array)$item->itemsAdded;
+$guestName = $item->product->metaData;
+usort($itemsAdded, array('ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout','sortByDate'));
+if($roomNumber) {
+    $roomNumber = " (" . $roomNumber . ")";
+}
+if(trim($guestName)) {
+    $guestName = "<div style='color:#bbb;'>" . $guestName . "</div>";
+}
+
+?>
+
+<div class='cartitemrow pmsaddonsrow'>
+    <i class='fa fa-trash-o removeitem'></i>
+    <b><? echo $item->count; ?> x <? echo $item->product->name;  echo $roomNumber; ?></b>
+    <?php
+    echo $guestName;
+    $i = 0;
+    foreach ($itemsAdded as $addon) {
+        $i++;
+        $oddClass = $i % 2 ? "even" : "odd";
+        $date = $addon->date;
+        if($date) {
+            $date = date("d.m.Y", strtotime($date));
+        }
+
+        ?>
+        <div class='entryrow addonlist_row <? echo $oddClass; ?> ' addonid='<? echo $addon->addonId; ?>'>
+            <input type='checkbox' checked='true' class='item_checkbox addon_checked gsnicecheckbox1'> 
+            <span><? echo $date; ?></span>
+            
+            <span class='addon_inputs'>
+                <?
+                if ($this->isReadOnly()) {
+                    ?>
+                    <span class="addon_count"><? echo $addon->count; ?></span>
+                    x <span class="addon_price"><? echo $addon->price; ?></span>
+                    <?
+                } else {
+                ?>
+                    <input type='textfield' class='gsniceinput1 addon_count' value="<? echo $addon->count; ?>">
+                    x <input type='textfield' class='gsniceinput1 addon_price' value="<? echo $addon->price; ?>">    
+                <?
+                }
+                ?>
+            </span>
+            <div style="clear:both"></div>
+        </div>
+        <?
+    }
+    ?>
+</div>

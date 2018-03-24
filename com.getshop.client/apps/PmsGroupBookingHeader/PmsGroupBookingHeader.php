@@ -4,9 +4,19 @@ namespace ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f;
 class PmsGroupBookingHeader extends \MarketingApplication implements \Application {
     private $currentBooking = null;
     public $notChangedError = array();
+    public $addedConferenceRoom = false;
     
     public function getDescription() {
         
+    }
+    
+    public function addconferenceroom() {
+        $item = $_POST['data']['room'];
+        $bookingId = $this->getCurrentBooking()->id;
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $_POST['data']['startTime']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $_POST['data']['endTime']));
+        $res = $this->getApi()->getPmsManager()->addBookingItem($this->getSelectedMultilevelDomainName(), $bookingId, $item, $start, $end);
+        $this->addedConferenceRoom = false;
     }
 
     public function addAddons() {
@@ -137,6 +147,12 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
             }
         }
         $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedMultilevelDomainName(), $confdata);        
+    }
+    
+    public function removeConferenceRoom() {
+        $bookingId = $this->getCurrentBooking()->id;
+        $roomId = $_POST['data']['roomid'];
+        $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $bookingId, $roomId);
     }
     
     public function addactionpoint() {

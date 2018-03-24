@@ -2,6 +2,7 @@
 /* @var $this \ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
 $booking = $this->getCurrentBooking();
 $startDate = null;
+
 foreach($booking->rooms as $room) {
     if($startDate == null || strtotime($room->date->start) < $startDate) {
         $startDate = strtotime($room->date->start);
@@ -31,22 +32,52 @@ if(sizeof($conferenceRooms) == 0) {
         </div>
     </div>
     <?php
+    
     } else {
     ?>
-        <input type='text' class='gsniceinput1' gsname='start' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
-        <input type='text' class='gsniceinput1' gsname='startTime' style='width:40px;' value='12:00'> - 
-        <input type='text' class='gsniceinput1' gsname='end' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
-        <select class='gsniceselect1' style='height:37px;'>
-            <?php
-            foreach($conferenceRooms as $confRoom) {
-                echo "<option value='".$confRoom->id."'>" . $confRoom->bookingItemName . "</option>";
-            }
-            ?>
-        </select>
-        <input type='text' class='gsniceinput1' gsname='endTime' style='width:40px;' value='14:00' style='width:50px;'>&nbsp;&nbsp;
-        <span class='shop_button'>Add confernce room</span>
+        <div gstype='form' method='addconferenceroom'>
+            <input type='text' class='gsniceinput1' gsname='start' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
+            <input type='text' class='gsniceinput1' gsname='startTime' style='width:40px;' value='12:00'> - 
+            <input type='text' class='gsniceinput1' gsname='end' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
+            <select class='gsniceselect1' style='height:37px;' gsname='room'>
+                <?php
+                foreach($conferenceRooms as $confRoom) {
+                    echo "<option value='".$confRoom->id."'>" . $confRoom->bookingItemName . "</option>";
+                }
+                ?>
+            </select>
+            <input type='text' class='gsniceinput1' gsname='endTime' style='width:40px;' value='14:00' style='width:50px;'>&nbsp;&nbsp;
+            <span class='shop_button' gstype='submit'>Add conference room</span>
+        </div>
     <?php
+    if(isset($_POST['event']) && $_POST['event'] == "addconferenceroom" && !$this->addedConferenceRoom) {
+        echo "<div style='color:red; margin-top: 10px;'>Sorry, its not possible to add this conference room, it is already in user, go to the availability view to have a look at who is using it.</div>";
     }
+
+    $found = false;
+    $rows = "";
+    foreach($booking->rooms as $room) {
+        if($room->deleted) {
+            continue;
+        }
+        if($room->bookingItemTypeId == "gsconference") {
+            $found = true;
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+            $row = "<td><i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' method='removeConferenceRoom' gsname='roomid' gsvalue='".$room->pmsBookingRoomId."'></i> " . $item->bookingItemName . "</td>";
+            $row .= "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</td>";
+            $end = date("d.m.Y H:i", strtotime($room->date->end));
+            if(date("d.m.Y", strtotime($room->date->start)) == date("d.m.Y", strtotime($room->date->end))) {
+                $end = date("H:i", strtotime($room->date->end));
+            }
+            $row .= "<td> - " . $end . "</td>";
+            $rows .= "<tr>" . $row . "</tr>";
+        }
+    }
+    if($found) {
+        echo "<h2>Conference rooms added</h2>";
+        echo "<table>" . $rows . "</table>";
+    }
+}
 ?>
 
 <h1>Action points</h1>

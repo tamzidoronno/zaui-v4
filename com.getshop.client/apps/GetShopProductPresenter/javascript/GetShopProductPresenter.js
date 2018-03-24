@@ -58,6 +58,8 @@ app.GetShopProductPresenter = {
     },
     
     selectionChanged: function(me) {
+        $(me).closest('.roundbox').find('.mouseover').hide();
+        $(me).closest('.roundbox').find('.briefdesc').hide();
         var activeModules = [];
         
         $(".GetShopProductPresenter .roundbox.active").each(function() {
@@ -81,13 +83,6 @@ app.GetShopProductPresenter = {
         var event = thundashop.Ajax.createEvent(null, "showDescription", me, data);
         
         $('.GetShopProductPresenter .descriptions').html("<i class='fa fa-spin fa-spinner'></i>");
-        
-        event['synchron'] = true;
-        thundashop.Ajax.post(event, function(res) {
-            $('.GetShopProductPresenter .descriptions').html(res);
-        })
-        thundashop.Ajax.simplePost()
-        
         $('.GetShopProductPresenter .selectionform .description[selectiontype="'+string+'"]').show();
     }
 }

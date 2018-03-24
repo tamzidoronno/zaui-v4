@@ -39,23 +39,56 @@
     bottom: 0px;
     top: 0px;
     border-radius: 100px;
-    padding-top: 20px;
+    background-color: rgba(0,0,0,0.8);
     display: none;
 }
 
-.GetShopProductPresenter .roundbox:hover .mouseover {
-    display: block;
+
+
+.GetShopProductPresenter .roundbox:hover {
+    
 }
 
+
+.GetShopProductPresenter .roundbox:hover .briefdesc {
+    display: block;
+}
+.GetShopProductPresenter .roundbox:hover .mouseover {
+    display: block;
+    z-index: 2;
+    
+}
+
+
+
 .GetShopProductPresenter .roundbox .mouseover .innerbutton {
-    background-color: #a0d0ed;
+    
     color: #FFF;
     margin-bottom: 5px;
     padding: 5px;
-    width: 70px;
+    width: 131px;
     display: inline-block;
     border: solid 1px #555;
     cursor: pointer;
+    border-radius: 0px 0px 100px 100px;
+    box-sizing: border-box;
+    width: 100%;
+    line-height: 59px;
+    height: 67px;
+}
+
+.GetShopProductPresenter .roundbox .mouseover .innerbutton.activate {
+    color: #FFF;
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 131px;
+    display: inline-block;
+    border: solid 1px #555;
+    cursor: pointer;
+    border-radius: 100px 100px 0px 0px;
+    box-sizing: border-box;
+    width: 100%;
+    line-height: 59px;
 }
 
 .GetShopProductPresenter .roundbox i {
@@ -76,20 +109,39 @@
 }
 
 .GetShopProductPresenter .selectionform {
-    display: none;
-}
-    
-.GetShopProductPresenter .selectionform {
     border: solid 1px #DDD;
     width: 500px;
     margin: 0px auto;
     padding: 20px;
     margin-top: 30px;
+    display: none;
 }
 
 .GetShopProductPresenter .descriptions {
-   
     color: green;
+}
+.GetShopProductPresenter .roundbox .briefdesc {
+position: absolute;
+    border: dashed 2px #DDD;
+    border-left: 0px;
+    border-radius: 0px 20px 20px 0px;
+    z-index: 1;
+    top: 30px;
+    height: 80px;
+    bottom: 30px;
+    width: 250px;
+    left: 128px;
+    background-color: #FFF;
+    text-align: left;
+    padding-left: 20px;
+    display: none;
+    background-color: rgba(255,255,255,1);
+    color: #333;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+
 }
 .GetShopProductPresenter .roundbox .removedtorequirement {
     background-color: red;

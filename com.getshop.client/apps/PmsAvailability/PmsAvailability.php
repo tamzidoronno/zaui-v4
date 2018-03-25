@@ -13,6 +13,12 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function loadTitleOnConferenceRoom() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingengineid']);
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        echo $user->fullName;
+    }
 
     public function getName() {
         return "PmsAvailability";

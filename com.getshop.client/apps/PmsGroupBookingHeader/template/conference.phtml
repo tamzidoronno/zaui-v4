@@ -15,71 +15,91 @@ foreach($allItems as $item) {
         $conferenceRooms[] = $item;
     }
 }
+$confdata = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedMultilevelDomainName(), $this->getCurrentBooking()->id);
+
 ?>
-<h1>Conference rooms</h1>
-<?php
-if(sizeof($conferenceRooms) == 0) {
-    ?>
-     <div class="kaipal infobox">
-        <div class="image sad"></div>
-        <div class="textbox">
-            <div class="header"><? echo $this->__f("Add a conference room"); ?></div>
-            <div class="text">
-                <?
-                echo $this->__f("You do not have any conference rooms registered yet, go to room configuration and add your first conference room.");
-                ?>    
-            </div>
-        </div>
-    </div>
-    <?php
-    
-    } else {
-    ?>
-        <div gstype='form' method='addconferenceroom'>
-            <input type='text' class='gsniceinput1' gsname='start' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
-            <input type='text' class='gsniceinput1' gsname='startTime' style='width:40px;' value='12:00'> - 
-            <input type='text' class='gsniceinput1' gsname='end' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
-            <select class='gsniceselect1' style='height:37px;' gsname='room'>
-                <?php
-                foreach($conferenceRooms as $confRoom) {
-                    echo "<option value='".$confRoom->id."'>" . $confRoom->bookingItemName . "</option>";
-                }
+<table width='100%'>
+    <tr>
+        <td valign='top' width='50%'>
+            <h1>Conference rooms</h1>
+            <?php
+            if(sizeof($conferenceRooms) == 0) {
                 ?>
-            </select>
-            <input type='text' class='gsniceinput1' gsname='endTime' style='width:40px;' value='14:00' style='width:50px;'>&nbsp;&nbsp;
-            <span class='shop_button' gstype='submit'>Add conference room</span>
-        </div>
-    <?php
-    if(isset($_POST['event']) && $_POST['event'] == "addconferenceroom" && !$this->addedConferenceRoom) {
-        echo "<div style='color:red; margin-top: 10px;'>Sorry, its not possible to add this conference room, it is already in user, go to the availability view to have a look at who is using it.</div>";
-    }
+                 <div class="kaipal infobox">
+                    <div class="image sad"></div>
+                    <div class="textbox">
+                        <div class="header"><? echo $this->__f("Add a conference room"); ?></div>
+                        <div class="text">
+                            <?
+                            echo $this->__f("You do not have any conference rooms registered yet, go to room configuration and add your first conference room.");
+                            ?>    
+                        </div>
+                    </div>
+                </div>
+                <?php
 
-    $found = false;
-    $rows = "";
-    foreach($booking->rooms as $room) {
-        if($room->deleted) {
-            continue;
-        }
-        if($room->bookingItemTypeId == "gsconference") {
-            $found = true;
-            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
-            $row = "<td><i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' method='removeConferenceRoom' gsname='roomid' gsvalue='".$room->pmsBookingRoomId."'></i> " . $item->bookingItemName . "</td>";
-            $row .= "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</td>";
-            $end = date("d.m.Y H:i", strtotime($room->date->end));
-            if(date("d.m.Y", strtotime($room->date->start)) == date("d.m.Y", strtotime($room->date->end))) {
-                $end = date("H:i", strtotime($room->date->end));
+                } else {
+                ?>
+                    <div gstype='form' method='addconferenceroom'>
+                        <input type='text' class='gsniceinput1 start_date_input' gsname='start' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
+                        <input type='text' class='gsniceinput1' gsname='startTime' style='width:40px;' value='12:00'> - 
+                        <input type='text' class='gsniceinput1 end_date_input' gsname='end' style='width:80px;' value='<?php echo date("d.m.Y", $startDate); ?>'>
+                        <select class='gsniceselect1' style='height:37px;' gsname='room'>
+                            <?php
+                            foreach($conferenceRooms as $confRoom) {
+                                echo "<option value='".$confRoom->id."'>" . $confRoom->bookingItemName . "</option>";
+                            }
+                            ?>
+                        </select>
+                        <input type='text' class='gsniceinput1' gsname='endTime' style='width:40px;' value='14:00' style='width:50px;'>&nbsp;&nbsp;
+                        <span class='shop_button' gstype='submit'>Add conference room</span>
+                    </div>
+                <?php
+                if(isset($_POST['event']) && $_POST['event'] == "addconferenceroom" && !$this->addedConferenceRoom) {
+                    echo "<div style='color:red; margin-top: 10px;'>Sorry, its not possible to add this conference room, it is already in user, go to the availability view to have a look at who is using it.</div>";
+                }
+
+                $found = false;
+                $rows = "";
+                foreach($booking->rooms as $room) {
+                    if($room->deleted) {
+                        continue;
+                    }
+                    if($room->bookingItemTypeId == "gsconference") {
+                        $found = true;
+                        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+                        $row = "<td><i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' method='removeConferenceRoom' gsname='roomid' gsvalue='".$room->pmsBookingRoomId."'></i> " . $item->bookingItemName . "</td>";
+                        $row .= "<td>" . date("d.m.Y H:i", strtotime($room->date->start)) . "</td>";
+                        $end = date("d.m.Y H:i", strtotime($room->date->end));
+                        if(date("d.m.Y", strtotime($room->date->start)) == date("d.m.Y", strtotime($room->date->end))) {
+                            $end = date("H:i", strtotime($room->date->end));
+                        }
+                        $row .= "<td> - " . $end . "</td>";
+                        $rows .= "<tr>" . $row . "</tr>";
+                    }
+                }
+                if($found) {
+                    echo "<h2>Conference rooms added</h2>";
+                    echo "<table>" . $rows . "</table>";
+                }
             }
-            $row .= "<td> - " . $end . "</td>";
-            $rows .= "<tr>" . $row . "</tr>";
-        }
-    }
-    if($found) {
-        echo "<h2>Conference rooms added</h2>";
-        echo "<table>" . $rows . "</table>";
-    }
-}
-?>
-
+            ?>
+        </td>
+        <td valign='top'>
+            <div gstype='form' method='saveEvent'>
+                <h1>Conference details</h1>
+                Name of event:<br>
+                <input type='text' class='gsniceinput1' gsnane='nameOfEvent' value='<?php echo $confdata->nameOfEvent; ?>' style='width:100%;box-sizing: border-box'>
+                Description / note:<br>
+                <textarea gsname='note' style='width:100%; height:100px; box-sizing: border-box;border: solid 1px #efefef'><?php echo $confdata->note; ?></textarea>
+                <span gstype='submit' class='shop_button' style='width:100%;box-sizing: border-box;;'>Save note and name</span>
+            </div>
+        </td>
+    </tr>
+</table>
+<br>
+<br>
+<br>
 <h1>Action points</h1>
 <div gstype='form' method='addactionpoint'>
     <input type='hidden' gsname='bookingid' value='<?php echo $this->getCurrentBooking()->id; ?>'>
@@ -99,7 +119,6 @@ if(sizeof($conferenceRooms) == 0) {
 <br>
 
 <?php
-$confdata = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedMultilevelDomainName(), $this->getCurrentBooking()->id);
 if(!$confdata->days || sizeof($confdata->days) == 0) {
     echo "<h2>Start setting up your conference by adding action points above.</h2>";
 }
@@ -131,3 +150,29 @@ foreach($confdata->days as $day) {
     }
 }
 ?>
+<script>
+$('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText) {
+       var date = moment(dateText, "DD.MM.YYYY");
+       var month = (moment(date).get('month')+1);
+       if(month < 10) {
+           month = "0" + month;
+       }
+       var currentEnd = $('.end_date_input').val();
+       var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+       var diff = endMoment.diff(date, "minutes");
+       if(diff < 0) {
+           var day = moment(date).get('date');
+           if(day < 10) {
+               day = "0" + day;
+           }
+           $('.end_date_input').val(day + "." + month + "." + moment(date).get('year'));
+       }
+     }
+});
+$('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+$('[method="addactionpoint"] [gsname="date"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+$('.start_cal').on('click', function() { $('.start_date_input').focus(); });
+$('.end_cal').on('click', function() { $('.end_date_input').focus(); });
+</script>

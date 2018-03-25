@@ -107,6 +107,52 @@ foreach ($types as $type) {
     </div>
 <?
 }
+
+
+$conferenceRooms = array();
+foreach($items as $item) {
+    if($item->bookingItemTypeId == "gsconference") {
+        $conferenceRooms[] = $item;
+    }
+}
+if(sizeof($conferenceRooms) > 0) {
+    $filter = $this->getSelectedFilter();
+    $toPrint = array();
+    foreach($conferenceRooms as $confRoom) {
+        $start = $this->convertToJavaDate(strtotime($filter->start));
+        $end = $this->convertToJavaDate(strtotime($filter->end));
+        $reservations = $this->getApi()->getBookingEngine()->getAllBookingsByBookingItemInDateRange($this->getSelectedMultilevelDomainName(), 
+                $confRoom->id, $start, $end);
+        foreach((array)$reservations as $reservation) {
+            $entry = new ns_e8fedc44_b227_400b_8f4d_52d52e58ecfe\DayViewCalendarEntry();
+            $entry->start = strtotime($reservation->startDate);
+            $entry->end = strtotime($reservation->endDate);
+            $entry->roomId = $confRoom->id;
+            $entry->id = $reservation->id;
+            $entry->type = "reservation";
+            $toPrint[] = $entry;
+        }
+    }
+    
+    echo "<h3>Conference room overview</h3>";
+    
+    $app = new \ns_e8fedc44_b227_400b_8f4d_52d52e58ecfe\DayViewCalendar();
+    $app->setNumberOfRooms(sizeof($conferenceRooms));
+    $app->setDateRange($filter->start, $filter->end);
+    $app->setEvents($toPrint);
+    foreach($conferenceRooms as $confRoom) {
+        $color = $app->getColorForRoomId($confRoom->id);
+        if(!$color) {
+            echo "<span class='availabilitylabel' style='color:#aaa;'> " . $confRoom->bookingItemName . " (not in use)</span>";
+        } else {
+            echo "<span class='availabilitylabel' style='color:$color;'> " . $confRoom->bookingItemName . "</span>";
+        }
+    }
+    $app->render();
+}
+
+
+
 ?>
 <script>
 $(document).ready(function() {

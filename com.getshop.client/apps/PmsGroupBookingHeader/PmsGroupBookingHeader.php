@@ -10,13 +10,25 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         
     }
     
+    public function saveEvent() {
+        $confdata = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedMultilevelDomainName(), $this->getCurrentBooking()->id);
+        $confdata->note = $_POST['data']['note'];
+        $confdata->nameOfEvent = $_POST['data']['nameOfEvent'];
+        $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedMultilevelDomainName(), $confdata);
+    }
+    
     public function addconferenceroom() {
         $item = $_POST['data']['room'];
         $bookingId = $this->getCurrentBooking()->id;
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $_POST['data']['startTime']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $_POST['data']['endTime']));
         $res = $this->getApi()->getPmsManager()->addBookingItem($this->getSelectedMultilevelDomainName(), $bookingId, $item, $start, $end);
-        $this->addedConferenceRoom = false;
+        if(!$res) {
+            $this->addedConferenceRoom = true;
+        } else {
+            $this->addedConferenceRoom = false;
+        }
+        $this->currentBooking = null;
     }
 
     public function addAddons() {
@@ -153,6 +165,7 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         $bookingId = $this->getCurrentBooking()->id;
         $roomId = $_POST['data']['roomid'];
         $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $bookingId, $roomId);
+        $this->currentBooking = null;
     }
     
     public function addactionpoint() {

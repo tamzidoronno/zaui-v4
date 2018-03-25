@@ -1,0 +1,69 @@
+<?php
+/* @var $this \ns_e8fedc44_b227_400b_8f4d_52d52e58ecfe\DayViewCalendar */
+$start = $this->getStart();
+$end = $this->getEnd();
+$events = $this->getEvents();
+
+
+$time = strtotime($start);
+echo "<div class='hourcontainer'>";
+echo "<div class='timeheader'></div>";
+for($i = 0;$i < 24;$i++) {
+    $text = $i;
+    if($i < 10) {
+        $text = "0" . $i;
+    }
+    echo "<div class='hourarea'>$text</div>";
+}
+echo "</div>";
+
+echo "<div class='timeview'>";
+echo "<div class='timeviewinnner'>";
+$days = 0;
+
+
+while(true) {
+    echo "<div class='daycontainer'>";
+    echo "<div class='dateheader'>".date("d.m.Y", $time)."</div>";
+    $day = date("d.m.Y", $time);
+    $events = $this->getEventsForDay($day);
+    foreach($events as $event) {
+        $this->printEvent($event, $day);
+    }
+    for($i = 0;$i < 48;$i++) {
+        $secondary = $i % 2 == 0;
+        $secondaryClass = "";
+        if($secondary) {
+            $secondaryClass = "secondary";
+        }
+        echo "<div class='halfhourarea $secondaryClass'></div>";
+    }
+    echo "</div>";
+    $time += 86400;
+    $days++;
+    if($time > strtotime($end)+86400) {
+        break;
+    }
+}
+echo "</div>";
+echo "</div>";
+?>
+
+<style>
+    .dateheader { border-bottom: solid 1px #bbb; text-align: center; height: 25px; line-height: 25px; background-color:#fff; }
+    .timeheader { border-bottom: solid 1px #bbb; text-align: center; height: 25px; line-height: 25px; }
+    .daycontainer { width: 150px; display:inline-block; height: 650px; border-left: solid 1px #bbb; position:relative;  }
+    .halfhourarea { border-bottom: solid 1px #bbb; height: 12px;background-color:#fff;  }
+    .halfhourarea.secondary { border-bottom: solid 1px #efefef; }
+    .hourarea { border-bottom: solid 1px #bbb; height: 25px; }
+    .timeview {  height: 680px; overflow: hidden; overflow-x: scroll;}
+    .timeviewinnner {border-right: solid 1px #bbb; border-top: solid 1px #bbb; display:inline-block; }
+    .hourcontainer { float:left; width: 75px; padding-top: 1px; text-align: center; }
+    .halfhourarea:hover { background-color:green; cursor: pointer; }
+</style>
+
+<script>
+<?php
+    echo "$('.timeviewinnner').css('width','".($days*151)."px');";
+?>
+</script>

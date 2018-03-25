@@ -1,30 +1,116 @@
 <?php
+/* @var $this \ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
 $pmsBooking = $this->getCurrentBooking();
+$booking = $pmsBooking;
 $user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
 
 $extraArgs = array();
 $extraArgs['userid'] = $user->id;
 
 ?>
-<div class="title"><? echo $this->__("BOOKER OWNER"); ?></div>
-<div class="row">
-    <div class="col col1"><? echo $this->__("Name"); ?></div>
-    <div class="col col2">
-        <?
-        $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
-        $quser->setUser($user);
-        $quser->setExtraArgs($extraArgs);
-        $quser->renderApplication(true, $this);
+<input type='hidden' id='pmsbookingid' value='<?php echo $booking->id; ?>'>
+<div style='width:50%; float:left; padding-right:10px;box-sizing: border-box;'>
+    <div style='background-color:#fff;'>
+        <div class="title"><? echo $this->__("Information about the the one owning this booking"); ?></div>
+        <div class="row">
+            <div class="col col1"><? echo $this->__("Name"); ?></div>
+            <div class="col col2">
+                <?
+                $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+                $quser->setUser($user);
+                $quser->setExtraArgs($extraArgs);
+                $quser->renderApplication(true, $this);
+                ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col1"><? echo $this->__("Email"); ?></div>
+            <div class="col col2"><? echo $user->emailAddress ?></div>
+        </div>
+
+        <div class="row">
+            <div class="col col1"><? echo $this->__("Phone number"); ?></div>
+            <div class="col col2"><? echo $user->cellPhone ?></div>
+        </div>
+
+        <div class="row">
+            <div class="col col1"><? echo $this->__("Adress"); ?></div>
+            <div class="col col2"><? if(isset($user->address)) { echo $user->address->address; } ?></div>
+        </div>
+
+        <div class="row">
+            <div class="col col1"><? echo $this->__("Postal code"); ?></div>
+            <div class="col col2"><? if(isset($user->address)) { echo $user->address->postCode; }?></div>
+        </div>
+
+        <div class="row">
+            <div class="col col1"><? echo $this->__("City"); ?></div>
+            <div class="col col2"><? if(isset($user->address)) { echo $user->address->city; } ?></div>
+        </div>
+
+        <div class="row">
+            <div class="col col1"><? echo $this->__("Country"); ?></div>
+            <div class="col col2"><? if(isset($user->address)) { echo $user->address->countrycode; } ?></div>
+        </div>
+        <div class="row" style='padding:10px; border-top: solid 1px #bbb;'>
+            This is the information that will be registered when creating orders and invoices. When creating an invoice, make sure the above information is correct before continuing. An invoice can't be changed when it has been sent.
+       </div>
+    </div>
+</div>
+<div style='width:50%; float:left;background-color:#fff;'>
+    <div class="title"><? echo $this->__("GUESTS"); ?></div>
+    <?php
+
+    foreach($booking->rooms as $room) {
+        echo "<div class='roomrowouter'>";
+        echo "<div class='roomrow' roomid='".$room->pmsBookingRoomId."'>";
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+        echo "<div class='header'>";
+        echo $type->name;
+        if($room->bookingItemId) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+            echo " (" . $item->bookingItemName . ")";
+        }
+
+        echo "<span class='date'>" . date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end)) . "</span>";
+        echo "</div>";
+        ?>
+        <span class='rowheader' style='margin-right:15px;'>Name</span>
+        <span class='rowheader' style='width:197px;'>Email</span>
+        <span class='rowheader rowheaderprefix' style='width:62px;'>Prefix</span>
+        <span class='rowheader'>Phone</span>
+        <?php
+        for($i = 0; $i < $room->numberOfGuests; $i++) {
+            $guest = new core_pmsmanager_PmsGuests();
+            if(isset($room->guests[$i])) {
+                $guest = $room->guests[$i];
+            }
+            $this->printGuestRow($guest);
+        }
+        echo "</div>";
+        echo "<span style='color:blue; cursor:pointer;' class='addanotherguest'>Add another guest</span>";
+        echo "</div>";
+    }
+    ?>
+    <div style="text-align:right;">
+        <span class='shop_button updateguestinformation'>Update guest information</span>
+    </div>
+
+    <div class="guestrowtemplate">
+        <?php
+         $guest = new core_pmsmanager_PmsGuests();
+         $this->printGuestRow($guest);
         ?>
     </div>
 </div>
 
-<div class="row">
-    <div class="col col1"><? echo $this->__("Email"); ?></div>
-    <div class="col col2"><? echo $user->emailAddress ?></div>
-</div>
-
-<div class="row">
-    <div class="col col1"><? echo $this->__("Phone number"); ?></div>
-    <div class="col col2"><? echo $user->cellPhone ?></div>
-</div>
+<style>
+    .header { font-weight: bold; border-bottom: solid 1px #bbb; font-size: 16px; padding: 10px; margin-bottom: 5px;padding-left:0px; }
+    .date {
+        float:right;
+    }
+    .rowheader { width: 220px; display:inline-block; font-weight: bold;}
+    .roomrowouter { padding-left: 10px; padding-right: 10px; }
+    .guestrowtemplate { display:none; }
+</style>

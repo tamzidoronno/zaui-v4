@@ -3641,7 +3641,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         foreach ($guests as $guest) {
             if(isset($guest)) {
-                echo (isset($guest->name) && $guest->name) ? $guest->name : "No name";
+                echo (isset($guest->name) && trim($guest->name)) ? $guest->name : "No name";
             }
             echo "<br>";
         }

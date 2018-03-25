@@ -16,6 +16,7 @@ import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -84,6 +85,13 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     @Override
     public List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
         return deepClone(bookingEngineAbstract.getAllBookingsByBookingItem(bookingItemId));
+    }
+    
+    @Override
+    public List<Booking> getAllBookingsByBookingItemInDateRange(String bookingItemId, Date start, Date end) {
+        List<Booking> bookings = getAllBookingsByBookingItem(bookingItemId);
+        bookings.stream().filter(item -> item.interCepts(start,end)).collect(Collectors.toList());
+        return bookings;
     }
     
     public void removeBookingsWhereUserHasBeenDeleted(String bookingItemId) {

@@ -108,6 +108,9 @@ public interface IBookingEngine {
     @Administrator
     public List<Booking> getAllBookingsByBookingItem(String bookingItemId);
     
+    @Administrator
+    public List<Booking> getAllBookingsByBookingItemInDateRange(String bookingItemId, Date start, Date end);
+    
     public void checkConsistency();
     
     @Administrator

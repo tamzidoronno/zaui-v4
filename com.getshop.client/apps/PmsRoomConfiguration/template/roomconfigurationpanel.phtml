@@ -17,15 +17,19 @@ $hideFromCleaning = $additional->hideFromCleaningProgram ? "CHECKED" : "";
                 <input type="txt" class="gsniceinput1" style="width:100%;box-sizing: border-box;" value="<?php echo $item->bookingItemName; ?>" gsname='name'>
             </td>
             <td width="45%">
-                Type<br>
-                <select type="txt" class="gsniceselect1" style="width:100%;box-sizing: border-box;height: 38px;" gsname='itemtype'>
-                    <?php
-                    foreach($types as $type) {
-                        $selected = $item->bookingItemTypeId == $type->id ? "SELECTED" : "";
-                        echo "<option value='" .$type->id. "' $selected>" . $type->name . "</option>";
-                    }
+                <?php
+                if($item->bookingItemTypeId != "gsconference") {
                     ?>
-                </select>
+                    Type<br>
+                    <select type="txt" class="gsniceselect1" style="width:100%;box-sizing: border-box;height: 38px;" gsname='itemtype'>
+                        <?php
+                        foreach($types as $type) {
+                            $selected = $item->bookingItemTypeId == $type->id ? "SELECTED" : "";
+                            echo "<option value='" .$type->id. "' $selected>" . $type->name . "</option>";
+                        }
+                        ?>
+                    </select>
+                <?php } ?>
             </td>
             <td width="10%">
                 Square metres<br>

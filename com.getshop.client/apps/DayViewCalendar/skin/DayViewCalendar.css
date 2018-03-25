@@ -1,0 +1,9 @@
+.gsdayevent {
+    position:absolute;
+    border: solid 1px;
+    width: 150px;
+    box-sizing: border-box;
+    background-color:pink;
+    color:#fff;
+    text-align: center;
+}

@@ -19,6 +19,37 @@ app.PmsNewBooking = {
                 $('.moreThenAvailableWarning').fadeIn();
             }
         });
+        $(document).on('keyup','.PmsNewBooking [gsname="nameofholder"]',app.PmsNewBooking.checkForExisting);
+        $(document).on('click','.PmsNewBooking .selectuser',app.PmsNewBooking.selectUser);
+        $(document).on('click','.PmsNewBooking .selecteduser .fa-trash-o',app.PmsNewBooking.removeSelectedUser);
+    },
+    
+    removeSelectedUser : function() {
+        $('.PmsNewBooking [gsname="nameofholder"]').val("");
+        $('.PmsNewBooking [gsname="nameofholder"]').show();
+        $('.PmsNewBooking .selecteduser').hide();
+    },
+    
+    selectUser : function() {
+        var userid = $(this).closest('tr').attr('userid');
+        $('.PmsNewBooking [gsname="nameofholder"]').val(userid);
+        $('.PmsNewBooking [gsname="nameofholder"]').hide();
+        $('.PmsNewBooking .selecteduser').show();
+        $('.PmsNewBooking .selecteduser').find('.name').html($(this).closest('tr').attr('name'));
+    },
+    
+    checkForExisting : function() {
+        var text = $(this).val();
+        if(text.length < 3) {
+            return;
+        }
+        
+        var event = thundashop.Ajax.createEvent('','checkForExisiting',$(this), {
+            "text" : text
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsNewBooking .alreadyexists').html(res);
+        });
     },
     reloadAvailability : function() {
         var event = thundashop.Ajax.createEvent('','reloadAvailability',$('.PmsNewBooking'), {

@@ -5,6 +5,26 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.PmsGroupBookingHeader .removeguestrow', app.PmsGroupBookingHeader.removeGuestRow);
         $(document).on('click', '.PmsGroupBookingHeader .groupedactioncheckbox', app.PmsGroupBookingHeader.updateGroupedAction);
         $(document).on('click', '.manipulateroomoptions .shop_button', app.PmsGroupBookingHeader.doAction);
+        $(document).on('click', '.PmsGroupBookingHeader .updateguestinformation', app.PmsGroupBookingHeader.updateGuestInformation);
+    },
+    updateGuestInformation : function() {
+        var data = {};
+        $('.guestrow').each(function() {
+            var rowId = $(this).closest('.roomrow').attr('roomid');
+            if(!data[rowId]) {
+                data[rowId] = [];
+            }
+            var guest = thundashop.framework.createGsArgs($(this));
+            data[rowId].push(guest);
+        });
+        var event = thundashop.Ajax.createEvent('','massUpdateGuests', $(this), {
+            "guests" : data,
+            "bookingid" : $('#pmsbookingid').val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.Alert('Guest information updated');
+        });
     },
     doAction : function() {
         if($(this).hasClass('disabled')) {
@@ -44,7 +64,7 @@ app.PmsGroupBookingHeader = {
         $(this).closest('.guestrow').remove();
     },
     addAnotherGuest : function() {
-        var row = $(this).closest('.guestinforows');
+        var row = $(this).closest('.roomrowouter').find('.roomrow');
         var template = $('.guestrowtemplate').find('.guestrow').clone();
         row.append(template);
     },

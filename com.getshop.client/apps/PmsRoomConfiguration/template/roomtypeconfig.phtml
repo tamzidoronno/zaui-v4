@@ -1,11 +1,11 @@
 <?php 
 /* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
 ?>
-<span style="float:right;" gstype='form' method='createType'>
-    <input type="txt" class="gsniceinput1" placeholder='Double room' gsname='name'>
-    <input type="button" value="Create a new room type" style="padding:9px;" gstype='submit'>
-</span>
 <h2>Room types <span class='opentypesorting' style='cursor:pointer;'>(open sorting)</span></h2>
+<span gstype='form' method='createType'>
+    <input type="txt" class="gsniceinput1" placeholder='Double room' gsname='name'>
+    <span class='shop_button' gstype='submit'>Create a new room type</span>
+</span>
 <?php
     $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
     $unsorted = array();

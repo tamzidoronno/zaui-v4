@@ -1,0 +1,46 @@
+.SrsCartCheckout .count {
+    width: 20px;
+    text-align: center;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
+.SrsCartCheckout .price {
+    width: 80px;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
+.SrsCartCheckout .cartitem {
+    padding-left: 14px;
+    border-bottom: solid 1px #DDD;
+    
+}
+
+.SrsCartCheckout .productdesc {
+    width: calc(100% - 158px);
+    display: inline-block;
+}
+
+.SrsCartCheckout .totalrow .productdesc {
+    padding-top: 10px;
+    padding-left: 14px;
+}
+
+.SrsCartCheckout .totalrow  {
+    background-color: #EFEFEF;
+    padding-bottom: 10px;
+}
+
+.SrsCartCheckout .paymentbutton {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1px;
+}
+
+.SrsCartCheckout .totalrow .totalprice {
+    width: 100px;
+    display: inline-block;
+    font-weight: bold;
+    padding-left: 0px;
+}

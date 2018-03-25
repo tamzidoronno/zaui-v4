@@ -130,7 +130,9 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         if (to != null && !to.isEmpty()) {
             if (to.contains(";")) {
                 for (String email : to.split(";")) {
-                    MailFactoryImpl mfi = createMailFactory(from, email, title, content, message);
+                    message = createMailMessage(email, from, title, content);
+                    String useFrom = from.contains(";") ? email : from;
+                    MailFactoryImpl mfi = createMailFactory(useFrom, email, title, content, message);
                     new Thread(mfi).start();    
                 }
             } else {

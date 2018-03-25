@@ -1,0 +1,187 @@
+<?
+/* @var $this ns_3f40fb50_ab55_47c3_abcb_72d161eb93ee\GetShopProductPresenter */
+?>
+
+<div class="products">
+    <h2>
+        <? echo $this->__f("Reduce costs, automate your hotel, we got the tools! Select on your needs and fill out the form below"); ?>
+        <br/><? echo $this->__f("Much more than just a world leading PMS!"); ?>
+        
+    </h2>
+    <div class="roundbox apac" module="apac">
+        <i class="gsicon-key"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("Access Control");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require=""><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="apacinfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            A smart cloud based access control system.
+        </div>
+    </div>
+    
+    
+    <div class="roundbox srs" module="resturant">
+        <i class="gsicon-receipt"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("Restaurant System");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require=""><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="srsinfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            Serve your guests with this restaurantsystem
+        </div>
+    </div>
+    
+    <div class="roundbox pms" module="pms">
+        <i class="gsicon-bed"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("PMS System");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require=""><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="pmssystem">More info</div>
+        </div>
+        <div class="briefdesc">
+            A fully featured property management system.
+        </div>
+    </div>
+    
+    <div class="roundbox sct" module="sct">
+        <i class="gsicon-self-timer"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("Self Checkin Terminals");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require="apac,pms"><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="sctinfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            Terminals/Kiosks that can be used for self-service
+        </div>
+    </div>
+    <br/>
+    <div class="roundbox cms" module="cms">
+        <i class="fa fa-html5"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("HTML5 Webpage");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require=""><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="cmsinfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            Get your own webpage directly in the same system.
+        </div>
+    </div>
+    
+    <div class="roundbox pga" module="pga">
+        <i class="gsicon-smartphone-embed"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("PGA")."<br/>(".$this->__f("Coming").")";
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require="pms"><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="pgainfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            Personal Guest Assistant - Interact with your guests.
+        </div>
+    </div>
+    
+    <div class="roundbox cc" module="onlinepayment">
+        <i class="fa fa-credit-card"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("Online Booking");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require="pms"><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="onlinepaymentinfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            Allow your guests to book and pay online.
+        </div>
+    </div>
+    
+    <div class="roundbox channelmangement"  module="channelmangement">
+        <i class="gsicon-link"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("Channel manager");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require="pms"><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="channelmanagementinfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            Automate your channels, booking.com, Expedia, etc.
+        </div>
+    </div>
+    
+    <div class="roundbox conference" module="conference">
+        <i class="gsicon-group-work"></i>
+        
+        <div class="text">
+            <?
+            echo $this->__f("Conference System");
+            ?>
+        </div>
+        <div class="mouseover">
+            <div class="innerbutton activate" require="pms"><div class='activate_innner'>Select</div><div class='deactivate_innner'>Deselect</div></div>
+            <div class="innerbutton" gs_show_modal="conferenceinfo">More info</div>
+        </div>
+        <div class="briefdesc">
+            Keep track of your conferences.
+        </div>
+    </div>
+</div>
+
+<?
+if (isset($_POST['event']) && $_POST['event'] == "sendRequest") {
+    echo "<div class='requestconfirmation'>Thank you, you will be contacted by one of our support constulants</div>";
+}
+?>
+
+<div gstype="form" method="sendRequest">
+    <div class="selectionform">
+        Let us demostrate how your selection would best work with your needs.
+        <br/>
+        <br/>
+        <input type="hidden" gsname="modules" value=""/>        
+        Your name
+        <br/> <input class="gsniceinput1" gsname="name"/>
+        <br/> Email
+        <br/> <input class="gsniceinput1" gsname="email" />
+        <br/> Your phone number
+        <br/> <input class="gsniceinput1" placeholder="+47 12345678"  gsname="phonenumber"/>
+        <br/> <div class='gserrorfield' id='errorMessage'></div>
+        <br/> <div class="shop_button" gstype="submit">Sign up for a demostration!</div>
+    </div>
+</div>

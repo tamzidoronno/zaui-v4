@@ -1,0 +1,24 @@
+<?
+/* @var $this \ns_3480a8d0_955e_4ad8_8c51_0eb88997fe6b\SrsFoodList */
+$lists = $this->getProductList(); 
+$personnumber = $this->getCurrentPersonNumber();
+
+$standalone = false;
+if (!$standalone) {
+?>
+<div>
+    <div style="display: inline-block;"><? echo $this->__f("Person").": ".$personnumber ?></div> 
+    <div class="gs_shop_small_icon" gsclick="decrementPerson" synchron='true' gs_callback='app.SrsFoodList.personNumberChanged'><i class="fa fa-minus"></i></div>
+    <div class="gs_shop_small_icon" gsclick="incrementPerson" synchron='true' gs_callback='app.SrsFoodList.personNumberChanged'><i class="fa fa-plus"></i></div>
+</div>
+<?
+}
+foreach ($lists as $list) {
+    echo "<h2>".$list->listName."</h2>";
+    
+    foreach ($list->productIds as $productId) {
+        $product = $this->getProduct($productId);
+        echo "<div synchron='true' gs_callback='app.SrsFoodList.updated' gsclick='addProductToTable' productid='$productId' class='product' personnumber='$personnumber'>".$product->name."</div>";
+    }
+}
+?>

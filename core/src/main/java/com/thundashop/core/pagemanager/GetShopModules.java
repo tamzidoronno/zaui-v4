@@ -27,6 +27,7 @@ public class GetShopModules {
         addModule("apac", "APAC", true, 6, "affd0624-7311-480c-93bc-06b72459b45d", "icon-key"); // GetShopModuleApacTheme
         addModule("settings", "Settings", true, 7, "75f4dc38-a356-4d04-866c-c8bc4e11d7ab", "icon-gs-gears"); // GetShopModuleSettingsTheme
         addModule("account", "Accounting", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-receipt"); // AccountingModuleTheme
+        addModule("srs", "Resturant", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-dinner"); // AccountingModuleTheme
         addModule("ticket", "TicketSystem", true, 9, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-lifebuoy"); // TicketTheme
     }
 

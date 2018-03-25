@@ -1,0 +1,33 @@
+<?
+/* @var $this ns_74a61004_afeb_4627_b563_9c85b880b6ed\SrsCartCheckout */
+
+$cart = $this->getApi()->getCartManager()->getCart();
+foreach ($cart->items as $item) {
+    echo "<div class='cartitem' cartitemid='$item->cartItemId'>";
+    echo "<div class='productdesc'>".$item->product->name."</div>";
+    $price = $item->product->price;
+    echo "<input class='gsniceinput1 count' type='text' value='$item->count'/>";
+    echo " x <input class='gsniceinput1 price' type='text' value='$price'/>";
+    echo "</div>";
+}
+?>
+
+<div class='totalrow'>
+    <div class='productdesc'><? echo $this->__f("Total"); ?></div>
+    <div class='totalprice'>
+        <? 
+        echo $this->getApi()->getCartManager()->getCartTotal($cart);
+        ?>
+        
+    </div>
+</div>
+
+<br/>
+<br/>
+<?
+$paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+foreach ($paymentApps as $paymentApp) {
+    $instance = $this->getFactory()->getApplicationPool()->createInstace($paymentApp);
+    echo "<div gsclick='doPayment' paymentid='$paymentApp->id' class='shop_button paymentbutton'>".$instance->getName()."</div>";
+}
+?>

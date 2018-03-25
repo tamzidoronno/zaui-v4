@@ -235,7 +235,7 @@ public class AcculogixDataImporter {
         order.orderDriverDeliveries = !data[57].isEmpty() ? Integer.parseInt(data[57]) : 0;
         order.quantity = !data[58].isEmpty() ? Integer.parseInt(data[58]) : 0;
         order.originalQuantity = !data[32].isEmpty() ? Integer.parseInt(data[32]) : 0;
-        order.referenceNumber = data[33];
+        order.referenceNumber = data[33].trim();
         order.podBarcode = data[34];
         
         System.out.println(data[32] + " | " + order.podBarcode);
@@ -320,7 +320,7 @@ public class AcculogixDataImporter {
         PickupOrder order = new PickupOrder();
         order.comment =  data[59];
         order.instruction = data[22] + " " + data[53];
-        order.referenceNumber = data[33];
+        order.referenceNumber = data[33].trim();
         order.podBarcode = data[34];
         order.container = !data[60].isEmpty();
         order.mustScanBarcode = data[67].toLowerCase().equals("scan");

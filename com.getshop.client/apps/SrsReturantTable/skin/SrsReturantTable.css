@@ -1,0 +1,20 @@
+.SrsReturantTable .productHeader {
+    border-bottom: solid 1px #EFEFEF;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.SrsReturantTable .productlist {
+    background-color: #f4f7f9;
+    padding: 20px;
+    
+}
+
+.SrsReturantTable .productlist .GetShopModuleTable {
+    margin-left: 0px;
+    max-width: 100%;
+}
+
+.SrsReturantTable {
+    margin: 20px;
+}

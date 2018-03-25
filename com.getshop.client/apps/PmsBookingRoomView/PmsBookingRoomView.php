@@ -1256,9 +1256,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 }
             }
         }
-        echo "<pre>";
-        print_r($filter);
-        echo "</pre>";
         
         
         $this->getApi()->getCartManager()->clear();
@@ -1268,6 +1265,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function printOrderList() {
         $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
         $orderlist->setOrderIds($this->pmsBooking->orderIds);
+        $orderlist->setPaymentLinkCallBack("app.PmsBookingRoomView.refresh");
         $ids = array();
         $ids[] = $this->selectedRoom->pmsBookingRoomId;
         $orderlist->setExternalReferenceIds($ids);

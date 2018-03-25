@@ -46,7 +46,8 @@ app.EcommerceOrderList = {
         var orderid = $(this).attr('orderid');
         var event = thundashop.Ajax.createEvent('','loadPaymentLinkConfig',$(this),{
             "roomid" : roomId,
-            "orderid" : orderid
+            "orderid" : orderid,
+            "callback" : btn.attr('callback')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             btn.parent().find('.sendpaymentlinkwindow').html(res);

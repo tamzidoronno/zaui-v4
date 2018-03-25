@@ -5,6 +5,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     private $selectedOrder;
     private $orderIds = null;
     private $externalReferenceIds = array();
+    public $paymentLinkCallback = "";
 
     public function getDescription() {
         
@@ -120,7 +121,10 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     
     public function formatPaymentType($order) {
         $arr = explode("\\", $order->payment->paymentType);
-        return $arr[1];
+        if(isset($arr[1])) {
+            return $arr[1];
+        }
+        return "";
     }
 
     public function printTable() {
@@ -162,6 +166,9 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
      */
     public function formatShipmentDate($order) {
         $text = str_replace("\\", "\\\\", $order->payment->paymentType) . "()";
+        if(!$order->payment->paymentType) {
+            return;
+        }
         $text = "\\" . $order->payment->paymentType;
         $instance = new $text();
         
@@ -199,7 +206,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         }
         
         if($instance->hasPaymentLink()) {
-            $text .= " <span><i class='fa fa-forward dontExpand sendpaymentlink' roomid='".$roomid."' orderid='".$order->id."' title='Send now' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span></span> ";
+            $text .= " <span><i class='fa fa-forward dontExpand sendpaymentlink' roomid='".$roomid."' callback='".$this->paymentLinkCallback."' orderid='".$order->id."' title='Send now' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span></span> ";
         } else if($instance->hasAttachment()) {
             $text .= " <span><i class='fa fa-forward dontExpand sendemail' roomid='".$roomid."' orderid='".$order->id."' title='Send now' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span></span> ";
         }
@@ -261,6 +268,10 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
 
     public function setExternalReferenceIds($ids) {
         $this->externalReferenceIds = $ids;
+    }
+
+    public function setPaymentLinkCallBack($callback) {
+        $this->paymentLinkCallback = $callback;
     }
 
 }

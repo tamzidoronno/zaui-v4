@@ -1997,7 +1997,8 @@ class Page {
         
         echo "<div class='gsarea gs_modalouter' area='$areaname'>";
             echo "<div class='".$areaname."_inner gs_modalinner gs_page_width'>";
-            echo "<div class='gs_close_modal' gsclick='closemodal'><i class='fa fa-close'></i></div>";
+            $dontreprint = isset($_POST['data']['gs_modal_dontreprintonclose']) && $_POST['data']['gs_modal_dontreprintonclose'] == "true" ? "gs_callback='thundashop.common.nullOutput' synchron='true'" : "";
+            echo "<div class='gs_close_modal' $dontreprint gsclick='closemodal'><i class='fa fa-close'></i></div>";
             $page->printArea($layout->areas->{$areaname}, false);
             echo "</div>";
         echo "</div>";

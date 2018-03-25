@@ -194,6 +194,10 @@ thundashop.common.removeNotificationProgress = function(id) {
     });
 };
 
+thundashop.common.nullOutput = function(res) {
+    thundashop.common.closeModal(null);
+};
+
 thundashop.common.showModal = function(modalName, data) {
     if (typeof(data) == "undefined") {
         data = {};

@@ -31,7 +31,6 @@ public class BookingItemType extends DataCommon {
     public String pageId;
     public Boolean visibleForBooking = true;
     public Boolean autoConfirm = false;
-    public Boolean internal = false;
     public Integer addon = BookingItemAddonTypes.NONE;
     public Integer size = 0;
     public RegistrationRules rules = null;
@@ -44,5 +43,8 @@ public class BookingItemType extends DataCommon {
     public Integer capacity = 0;
     public Integer minStay = 0;
     public String eventItemGroup = "";
+    
+    //0 = default hotel room, 1 = conference room, 2 = restaurant
+    public Integer systemCategory = 0;
 
 }

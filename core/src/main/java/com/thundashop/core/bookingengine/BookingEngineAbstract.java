@@ -80,7 +80,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItemType> allItems = new ArrayList();
         for(BookingItemType type : result) {
-            if(type.internal) {
+            if(type.systemCategory != 0) {
                 continue;
             }
             allItems.add(type);

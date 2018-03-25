@@ -85,7 +85,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
                 $type->id = "gsconference";
                 $type->visibleForBooking = false;
                 $type->name = "Conference rooms";
-                $type->internal = true;
+                $type->systemCategory = 1;
                 $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
             }
         }

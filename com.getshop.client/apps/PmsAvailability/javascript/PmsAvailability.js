@@ -3,11 +3,25 @@ app.PmsAvailability = {
     isMarking : 0,
     startMarkingElement : null,
     init: function() {
-        $(document).on('mouseenter', '.PmsAvailability .gsdayevent', this.mouseOverConferenceRoom);
+        $(document).on('mousedown', '.PmsAvailability .gsdayevent', this.navigateToBooking);
+        $(document).on('mouseover', '.PmsAvailability .gsdayevent', this.mouseOverConferenceRoom);
         $(document).on('mouseenter', '.PmsAvailability .contains_booking', this.mouseOver);
         $(document).on('mouseleave', '.PmsAvailability .contains_booking', this.mouseOut);
 //        $(document).on('click', '.PmsAvailability .contains_booking', this.showMenuBox);
         
+    },
+    navigateToBooking : function() {
+        var area = $(this);
+        if(area.attr('title')) {
+            return;
+        }
+        var event = JSON.parse($(this).attr('event'));
+        event = thundashop.Ajax.createEvent('','getIdForBooking', $(this), {
+            "bookingengineid" : event.id
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.goToPageLink('/?page=groupbooking&bookingId='+res);
+        });
     },
     mouseOverConferenceRoom : function() {
         var area = $(this);
@@ -19,7 +33,7 @@ app.PmsAvailability = {
             "bookingengineid" : event.id
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            area.attr('title', res);
+            area.html(res);
         });
     },
     

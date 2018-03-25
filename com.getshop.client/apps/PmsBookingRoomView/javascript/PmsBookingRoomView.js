@@ -32,6 +32,22 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .createafterstaybtn', this.createOrderAfterStay);
         $(document).on('click', '.PmsBookingRoomView .checkinguest', this.checkInCheckOutGuest);
         $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
+        $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
+    },
+    
+    saveAddonsOnRoom : function() {
+        var toPost = {};
+        $('.addonitemrow').each(function() {
+            var addonId = $(this).attr('addonid');
+            var row = thundashop.framework.createGsArgs($(this));
+            toPost[addonId] = row;
+        });
+        
+        var event = thundashop.Ajax.createEvent('','saveAddonItems',$(this),toPost);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.Alert('Saved');
+            app.PmsBookingRoomView.refresh(true);
+        });
     },
     
     checkInCheckOutGuest : function() {
@@ -246,12 +262,12 @@ app.PmsBookingRoomView = {
         });
     },
     removeSelectedAddons : function() {
-        var productIds = [];
+        var addonIds = [];
         $(".fa-check-square").each(function() {
-            productIds.push($(this).closest('.row').attr('productId'));
+            addonIds.push($(this).attr('addonid'));
         });
         var event = thundashop.Ajax.createEvent('','removeSelectedAddons',$(this), {
-            productIds : productIds
+            addonIds : addonIds
         });
         
         thundashop.Ajax.postWithCallBack(event, function() {
@@ -268,12 +284,27 @@ app.PmsBookingRoomView = {
         });
     },
     toggleRemoveAddonCheckBox : function() {
-        if($(this).hasClass('fa-square-o')) {
-            $(this).removeClass('fa-square-o');
-            $(this).addClass('fa-check-square');
+        if($(this).hasClass('forGroup')) {
+            var productId = $(this).closest('.row').attr('productid');
+            if($(this).hasClass('fa-square-o')) {
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").removeClass('fa-square-o');
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").addClass('fa-check-square');
+                $(this).removeClass('fa-square-o');
+                $(this).addClass('fa-check-square');
+            } else {
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").addClass('fa-square-o');
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").removeClass('fa-check-square');
+                $(this).addClass('fa-square-o');
+                $(this).removeClass('fa-check-square');
+            }
         } else {
-            $(this).addClass('fa-square-o');
-            $(this).removeClass('fa-check-square');
+            if($(this).hasClass('fa-square-o')) {
+                $(this).removeClass('fa-square-o');
+                $(this).addClass('fa-check-square');
+            } else {
+                $(this).addClass('fa-square-o');
+                $(this).removeClass('fa-check-square');
+            }
         }
         $('.removeselectedaddons').effect( "bounce", { times: 3 } );
     },

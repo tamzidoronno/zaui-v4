@@ -87,12 +87,24 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $text = "";
         if ($order->closed) {
             $text = '<i class="fa fa-lock"></i>';
+            $text .= '<i class="fa fa-history dontExpand creditOrder" orderid="'.$order->id.'" title="Credit order"></i>';
         } else {
             $text = '<i class="fa fa-unlock"></i>';
             $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' orderid='".$order->id."'></i>";
         }
         $text .= "<i class='fa fa-download dontExpand' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'></i>";
         return $text;
+    }
+    
+    public function creditOrder() {
+        $creditedOrder = $this->getApi()->getOrderManager()->creditOrder($_POST['data']['id']);
+        $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        if($booking) {
+            $creditedOrder->closed = true;
+            $booking->orderIds[] = $creditedOrder->id;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+            $this->getApi()->getOrderManager()->saveOrder($creditedOrder);
+        }
     }
     
     public function formatRowCreatedDate($order) {

@@ -844,11 +844,28 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         echo "</span>";
     }
     
+    public function saveAddonItems() {
+        $booking = $this->getPmsBooking();
+        $roomId = $this->getSelectedRoomId();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId != $roomId) {
+                continue;
+            }
+            foreach($room->addons as $addon) {
+                $addon->isIncludedInRoomPrice = $_POST['data'][$addon->addonId]['includedinroomprice'];
+                $addon->price = $_POST['data'][$addon->addonId]['price'];
+                $addon->count = $_POST['data'][$addon->addonId]['count'];
+                $addon->date = $this->convertToJavaDate(strtotime($_POST['data'][$addon->addonId]['date']));
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function removeSelectedAddons() {
         $room = $this->getSelectedRoom();
         foreach($room->addons as $addon) {
-            if(in_array($addon->productId, $_POST['data']['productIds'])) {
-                $this->getApi()->getPmsManager()->removeAddonFromRoom($this->getSelectedMultilevelDomainName(), $addon->addonId, $room->pmsBookingRoomId);
+            if(in_array($addon->addonId, $_POST['data']['addonIds'])) {
+                $this->getApi()->getPmsManager()->removeAddonFromRoomById($this->getSelectedMultilevelDomainName(), $addon->addonId, $room->pmsBookingRoomId);
             }
         }
     }

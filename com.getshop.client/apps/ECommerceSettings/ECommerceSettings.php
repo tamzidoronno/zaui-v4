@@ -135,7 +135,8 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
             return "€ ".number_format((float)$price, $numberOfDecimals, '.', '').",-";
         }
         
-        echo "Price $".$price;
+        $price = round($price, 2);
+        return "Price $".$price;
     }
 
     public static function setApplicationInstance() {

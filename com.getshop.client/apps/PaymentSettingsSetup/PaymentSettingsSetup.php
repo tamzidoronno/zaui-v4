@@ -18,6 +18,12 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
         $this->getApi()->getStoreApplicationPool()->activateApplication($_POST['data']['id']);
     }
 
+    public function saveDefaultPaymentMethod() {
+        $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+        $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
+        $ecomsettings->setConfigurationSetting("defaultPaymentMethod", $_POST['data']['defualtmethod']);
+    }
+    
     public function render() {
         $this->includefile("printapplications");
         $this->includefile("activatedpaymentmethods");

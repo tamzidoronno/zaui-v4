@@ -253,7 +253,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             }
             $room->priceMatrix = $newPricesRoom->priceMatrix;
         }
-        
         $this->setTmpSelectedRoom($room);
 
     }
@@ -1443,6 +1442,28 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $now = date("dmy", time());
         $roomstart = date("dmy", strtotime($room->date->start));
         return $now == $roomstart;
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     * @return boolean
+     */
+    public function isValidSelection($room) {
+        $start = $room->date->start;
+        $end = $room->date->end;
+        $available = (array)$this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(),
+                $start, 
+                $end, 
+                $room->bookingId);
+        
+        foreach($available as $av) {
+            /* @var $av \core_bookingengine_data_BookingItem */
+            if($av->bookingItemTypeId == $room->bookingItemTypeId) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

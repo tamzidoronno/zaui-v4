@@ -4,6 +4,8 @@
     margin-top: 50px;
     margin-bottom: 50px;
 }
+.PmsBookingRoomView .notvalidselection { font-size: 30px; color: red; font-weight: bold; margin-top: 20px; line-height: 30px; }
+
 .PmsBookingRoomView .grouppaymentprocess {
     position: absolute;
     background-color: #fff;

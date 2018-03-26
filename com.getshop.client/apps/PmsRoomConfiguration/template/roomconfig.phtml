@@ -1,6 +1,7 @@
 <?php 
 /* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+
 ?>
 <br>
 <br>
@@ -10,9 +11,18 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     <select gsname='type' class="gsniceselect1" style="height:34px;">
         <?php
         foreach($types as $type) {
-            echo "<option value='".$type->id."'>" . $type->name . "</option>";
+            $selected = "";
+            if(isset($_POST['data']['type']) && $_POST['data']['type'] == $type->id) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='".$type->id."' $selected>" . $type->name . "</option>";
         }
-        echo "<option value='gsconference'>Conference room</option>";
+        
+        $selected = "";
+        if(isset($_POST['data']['type']) && $_POST['data']['type'] == "gsconference") {
+            $selected = "SELECTED";
+        }
+        echo "<option value='gsconference' $selected>Conference room</option>";
         ?>
     </select>
     <input type="txt" class="gsniceinput1" placeholder='101' gsname='name'>

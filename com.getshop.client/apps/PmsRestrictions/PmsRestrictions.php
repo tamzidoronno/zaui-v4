@@ -50,8 +50,33 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
     public function render() {
         $this->includefile("createrestriction");
         $this->printRestrictions();
+        $this->includefile("wubookrestrictions");
+    }
+    
+    public function removeRestriction() {
+        $this->getApi()->getWubookManager()->deleteRestriction($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
     }
 
+    public function addWubookRestriction() {
+        $startTime = $_POST['data']['start'];
+        $endTime = $_POST['data']['end'];
+        if(!$endTime || !$startTime) {
+            echo "Please select a start and end date";
+        } else {
+            $restriction = new \core_wubook_WubookAvailabilityRestrictions();
+            $restriction->start = $this->convertToJavaDate(strtotime($startTime  . " 14:00"));
+            $restriction->end = $this->convertToJavaDate(strtotime($endTime . "  11:00"));
+            
+            foreach($_POST['data'] as $key => $event) {
+                if(stristr($key, "type_") && $event == "true") {
+                    $typeId = str_replace("type_", "", $key);
+                    $restriction->types[] = $typeId;
+                }
+            }
+            $this->getApi()->getWubookManager()->addRestriction($this->getSelectedMultilevelDomainName(), $restriction);
+        }        
+    }
+    
     
     public function getRepeatingSummary($data) {
         $text = "";

@@ -566,4 +566,12 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
         return total;
     }    
+
+    @Override
+    public void filterByDate(Date start, Date end) {
+        Cart cart = getCart();
+        for(CartItem item : cart.getItems()) {
+            item.keepOnlyDateRange(start, end);
+        }
+    }
 }

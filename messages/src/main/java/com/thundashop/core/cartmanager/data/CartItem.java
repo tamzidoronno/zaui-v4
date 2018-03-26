@@ -5,15 +5,18 @@
 package com.thundashop.core.cartmanager.data;
 
 import com.google.gson.Gson;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -471,5 +474,63 @@ public class CartItem implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public void keepOnlyDateRange(Date start, Date end) {
+        if(startDate == null || endDate == null) {
+            return;
+        }
+        if(!sameDay(start, startDate) && startDate.before(start)) {
+            startDate = start;
+        }
+        if(!sameDay(end, endDate) && endDate.after(end)) {
+            endDate = end;
+        }
+        
+        int counter = 0;
+        double price = 0.0;
+        if(priceMatrix != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            List<String> toRemove = new ArrayList();
+            for(String dateString : priceMatrix.keySet()) {
+                try {
+                    Date date = formatter.parse(dateString);
+                    if(!sameDay(date, startDate) && date.before(startDate)) {
+                        toRemove.add(dateString);
+                    } else if(!sameDay(date, endDate) && date.after(endDate)) {
+                        toRemove.add(dateString);
+                    } else {
+                        counter++;
+                        price += product.price;
+                    }
+                }catch(Exception e) {
+                    GetShopLogHandler.logStack(e, null);
+                }
+            }
+            for(String remove : toRemove) {
+                priceMatrix.remove(remove);
+            }
+        }
+        
+        if(itemsAdded != null) {
+            List<PmsBookingAddonItem> removeItems = new ArrayList();
+            for(PmsBookingAddonItem item : itemsAdded) {
+                if(item.date == null) {
+                    continue;
+                }
+                if(!sameDay(item.date, startDate) && item.date.before(startDate)) {
+                    removeItems.add(item);
+                } else if(!sameDay(item.date, endDate) && item.date.after(endDate)) {
+                    removeItems.add(item);
+                } else {
+                    counter += item.count;
+                    price += (item.price * item.count);
+                }
+            }
+            itemsAdded.removeAll(removeItems);
+        }
+        
+        this.count = counter;
+        this.product.price = price / counter;
     }
 }

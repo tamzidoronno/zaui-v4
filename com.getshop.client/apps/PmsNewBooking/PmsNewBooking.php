@@ -49,7 +49,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $this->msg = "";
             $this->msg .= "<div style='border: solid 1px; background-color:red; padding: 10px; font-size: 16px; color:#fff;'>";
             $this->msg .= "<i class='fa fa-warning'></i> ";
-            $this->msg .= "Unable to comply, your selection is a possible.";
+            $this->msg .= "Unable to comply, your selection is not possible.";
             $this->msg .= "</div>";
         } else {
             $bookingEngineId = "";

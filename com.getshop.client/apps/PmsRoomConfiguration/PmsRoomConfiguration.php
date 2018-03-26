@@ -15,6 +15,11 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
     
 
+    public function deleteroom() {
+        $roomid = $_POST['data']['gsroomid'];
+        $this->getApi()->getBookingEngine()->deleteBookingItem($this->getSelectedMultilevelDomainName(), $roomid);
+    }
+    
     public function getName() {
         return "PmsRoomConfiguration";
     }

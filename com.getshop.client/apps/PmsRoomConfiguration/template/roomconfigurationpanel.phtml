@@ -44,6 +44,7 @@ $hideFromCleaning = $additional->hideFromCleaningProgram ? "CHECKED" : "";
     Description:<br>
     <textarea gsname='description' style="width:100%;box-sizing: border-box;height: 80px; border: solid 1px #bbb; padding: 10px;"><?php echo $item->description; ?></textarea>
     <div style="text-align:right">
-        <input type="button" value="Save" style="padding: 8px; width: 200px;" gstype="submit">
+        <span class='shop_button' style='background-color: red; float:left;' gsclick='deleteroom' gs_confirm='Are you sure?' gsroomid='<?php echo $itemId; ?>'>Delete this room</span>
+        <span class='shop_button' style="width: 200px;" gstype="submit">Save</span>
     </div>
 </div>

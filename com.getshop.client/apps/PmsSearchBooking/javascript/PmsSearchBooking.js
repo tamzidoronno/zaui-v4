@@ -2,6 +2,16 @@ app.PmsSearchBooking = {
     init : function() {
         $(document).on('click','.GetShopModuleTable .quickfunction',app.PmsSearchBooking.doQuickFunction);
         $(document).on('click','.GetShopModuleTable .unsettledamountwarning',app.PmsSearchBooking.loadUnpaidPriceView);
+        $(document).on('click','.GetShopModuleTable .toggleallrooms',app.PmsSearchBooking.toggleAllRooms);
+    },
+    toggleAllRooms : function() {
+        if($(this).is(':checked')) {
+            $('.groupedactioncheckbox').attr('checked','checked');
+            $('.manipulateroomoptions .shop_button').removeClass('disabled');
+        } else {
+            $('.groupedactioncheckbox').attr('checked',null);
+            $('.manipulateroomoptions .shop_button').addClass('disabled');
+        }
     },
     loadUnpaidPriceView : function() {
         var event = thundashop.Ajax.createEvent('','loadUnpaidView',$(this), {

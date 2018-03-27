@@ -1,0 +1,69 @@
+<?php
+
+namespace ns_deab499e_b133_4cb6_a1b2_532018c31d46;
+
+$taxes = $this->getApi()->getProductManager()->getTaxes();
+if (!is_array($taxes)) {
+    $taxes = [];
+}
+
+$shipment = isset($taxes[0]) ? $taxes[0]->taxRate : "";
+$group1 = isset($taxes[1]) ? $taxes[1]->taxRate : "";
+$group2 = isset($taxes[2]) ? $taxes[2]->taxRate : "";
+$group3 = isset($taxes[3]) ? $taxes[3]->taxRate : "";
+$group4 = isset($taxes[4]) ? $taxes[4]->taxRate : "";
+$group5 = isset($taxes[5]) ? $taxes[5]->taxRate : "";
+
+/* @var $this \ns_deab499e_b133_4cb6_a1b2_532018c31d46\Taxes */
+?>
+
+<div gstype='form' method='saveTaxes'>
+    <div class="gss_settings_header">
+        <i class="fa fa-dollar"></i>
+
+        <div class="gss_settings_header_description">
+            <div class="gss_settings_header_title"> <? echo $this->__f("Taxes"); ?></div>
+
+            <div class="gss_settings_header_description_inner">
+                <? echo $this->getDescription(); ?>
+            </div>
+        </div>	
+    </div>
+
+
+    <div class='gss_settings_content'>
+        <div class="textfield gss_setting" id="title">
+            <input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="group1" value="<? echo $group1; ?>" value="<? echo $group2; ?>">
+            <span class="title"><?php echo $this->__("Taxgroup") . " 1 (". $this->__f("Default").")"; ?></span>
+        </div>
+
+
+        <div class="textfield gss_setting" id="title">
+            <input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="group2" value="<? echo $group2; ?>">
+            <span class="title"><?php echo $this->__("Taxgroup") . " 2"; ?></span>
+        </div>
+
+
+        <div class="textfield gss_setting" id="title">
+            <input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="group3"  value="<? echo $group3; ?>">
+            <span class="title"><?php echo $this->__("Taxgroup") . " 3"; ?></span>
+        </div>
+
+
+        <div class="textfield gss_setting" id="title">
+            <input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="group4"  value="<? echo $group4; ?>">
+            <span class="title"><?php echo $this->__("Taxgroup") . " 4"; ?></span>
+        </div>
+
+
+        <div class="textfield gss_setting" id="title">
+            <input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="group5"  value="<? echo $group5; ?>">
+            <span class="title"><?php echo $this->__("Taxgroup") . " 5"; ?></span>
+        </div>
+
+
+        <div class='gss_button_area'>
+            <span class='shop_button' gstype='submit'><i class='fa fa-save'></i> Save taxes setup</span>
+        </div>
+    </div>
+</div>

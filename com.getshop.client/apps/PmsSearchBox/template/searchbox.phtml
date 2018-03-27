@@ -163,7 +163,7 @@ if($filter->groupByBooking) {
 
 
 <script>
-    $('#startdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+    $('#startdate').datepicker({ dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
             var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
@@ -178,7 +178,7 @@ if($filter->groupByBooking) {
         }
     });
     
-    $('#enddate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+    $('#enddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
             var curStart = moment($('#startdate').val(), "DD.MM.YYYY");

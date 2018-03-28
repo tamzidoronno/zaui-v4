@@ -197,7 +197,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     }
     
     public function removeEntry() {
-        $this->getApi()->getPmsEventManager()->deleteEntry($this->getSelectedName(), $_POST['data']['id']);
+        $this->getApi()->getPmsEventManager()->deleteEntry($this->getSelectedName(), $_POST['data']['id'], null);
         $list = $this->getEventList();
         foreach($list as $entry) {
             if(@$entry->name == $_POST['data']['id']) {

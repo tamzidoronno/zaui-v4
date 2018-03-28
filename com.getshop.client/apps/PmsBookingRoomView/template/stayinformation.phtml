@@ -13,7 +13,45 @@ $endDate = date('d.m.Y H:i', strtotime($room->date->end));
 </div>
 
 <script>
-    $('.PmsBookingRoomView .startdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true});
-    $('.PmsBookingRoomView .enddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true});
+    $('.PmsBookingRoomView .startdate').datepicker({ dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+           var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentEnd = $('.PmsBookingRoomView .enddate').val();
+           var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+           var diff = endMoment.diff(date, "minutes");
+           if(diff < 0) {
+               var day = moment(date).get('date')+1;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('.PmsBookingRoomView .enddate').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }
+    });
+    $('.PmsBookingRoomView .enddate').datepicker({ dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+           var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentStart = $('.PmsBookingRoomView .startdate').val();
+           var endMoment = moment(currentStart, "DD.MM.YYYY");
+
+           var diff = endMoment.diff(date, "minutes");
+           if(diff > 0) {
+               var day = moment(date).get('date')-1;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('.PmsBookingRoomView .startdate').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }
+    });
 </script>
     

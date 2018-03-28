@@ -132,9 +132,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function formatCheck($row) {
-//        echo "<pre>";
-//        print_r($row);
-//        echo "</pre>";
         return "<input type='checkbox' class='dontExpand groupedactioncheckbox' roomid='".$row->pmsRoomId."'></input>";
     }
     
@@ -151,7 +148,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             
             $attributes = array(
                 array('id', 'gs_hidden', 'pmsRoomId'),
-                array('check', '', null, 'formatCheck'),            
+                array('check', '<input type="checkbox" class="toggleallrooms">', null, 'formatCheck'),            
                 array('state', 'STATE', null, 'formatState'),            
                 array('roomId', 'gs_hidden', 'roomId', 'formatRoomId'),
                 array('reg', 'REG', 'regDate', 'formatRegDate'),

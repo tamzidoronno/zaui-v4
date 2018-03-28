@@ -253,7 +253,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             }
             $room->priceMatrix = $newPricesRoom->priceMatrix;
         }
-        
         $this->setTmpSelectedRoom($room);
 
     }
@@ -844,11 +843,28 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         echo "</span>";
     }
     
+    public function saveAddonItems() {
+        $booking = $this->getPmsBooking();
+        $roomId = $this->getSelectedRoomId();
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId != $roomId) {
+                continue;
+            }
+            foreach($room->addons as $addon) {
+                $addon->isIncludedInRoomPrice = $_POST['data'][$addon->addonId]['includedinroomprice'];
+                $addon->price = $_POST['data'][$addon->addonId]['price'];
+                $addon->count = $_POST['data'][$addon->addonId]['count'];
+                $addon->date = $this->convertToJavaDate(strtotime($_POST['data'][$addon->addonId]['date']));
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function removeSelectedAddons() {
         $room = $this->getSelectedRoom();
         foreach($room->addons as $addon) {
-            if(in_array($addon->productId, $_POST['data']['productIds'])) {
-                $this->getApi()->getPmsManager()->removeAddonFromRoom($this->getSelectedMultilevelDomainName(), $addon->addonId, $room->pmsBookingRoomId);
+            if(in_array($addon->addonId, $_POST['data']['addonIds'])) {
+                $this->getApi()->getPmsManager()->removeAddonFromRoomById($this->getSelectedMultilevelDomainName(), $addon->addonId, $room->pmsBookingRoomId);
             }
         }
     }
@@ -1239,9 +1255,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 }
             }
         }
-        echo "<pre>";
-        print_r($filter);
-        echo "</pre>";
         
         
         $this->getApi()->getCartManager()->clear();
@@ -1251,6 +1264,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function printOrderList() {
         $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
         $orderlist->setOrderIds($this->pmsBooking->orderIds);
+        $orderlist->setPaymentLinkCallBack("app.PmsBookingRoomView.refresh");
         $ids = array();
         $ids[] = $this->selectedRoom->pmsBookingRoomId;
         $orderlist->setExternalReferenceIds($ids);
@@ -1428,6 +1442,28 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $now = date("dmy", time());
         $roomstart = date("dmy", strtotime($room->date->start));
         return $now == $roomstart;
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     * @return boolean
+     */
+    public function isValidSelection($room) {
+        $start = $room->date->start;
+        $end = $room->date->end;
+        $available = (array)$this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(),
+                $start, 
+                $end, 
+                $room->bookingId);
+        
+        foreach($available as $av) {
+            /* @var $av \core_bookingengine_data_BookingItem */
+            if($av->bookingItemTypeId == $room->bookingItemTypeId) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

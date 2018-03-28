@@ -4,12 +4,22 @@ app.EcommerceOrderList = {
         $(document).on('click','.EcommerceOrderList .sendemail', app.EcommerceOrderList.sendEmail);
         $(document).on('click','.EcommerceOrderList .closesendpaymentlink', app.EcommerceOrderList.closesendpaymentlink);
         $(document).on('click','.EcommerceOrderList .deleteOrder', app.EcommerceOrderList.deleteOrder);
+        $(document).on('click','.EcommerceOrderList .creditOrder', app.EcommerceOrderList.creditOrder);
     },
     deleteOrder : function() {
         var confirmed = confirm("Are you sure you want to delete this order?");
         if(confirmed) {
             var orderid = $(this).attr('orderid');
             thundashop.Ajax.simplePost($(this), "deleteOrder", {
+                "id" : orderid
+            });
+        }
+    },
+    creditOrder : function() {
+        var confirmed = confirm("Are you sure you want to credit this order?");
+        if(confirmed) {
+            var orderid = $(this).attr('orderid');
+            thundashop.Ajax.simplePost($(this), "creditOrder", {
                 "id" : orderid
             });
         }
@@ -36,7 +46,8 @@ app.EcommerceOrderList = {
         var orderid = $(this).attr('orderid');
         var event = thundashop.Ajax.createEvent('','loadPaymentLinkConfig',$(this),{
             "roomid" : roomId,
-            "orderid" : orderid
+            "orderid" : orderid,
+            "callback" : btn.attr('callback')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             btn.parent().find('.sendpaymentlinkwindow').html(res);

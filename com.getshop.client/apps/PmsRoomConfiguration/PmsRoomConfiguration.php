@@ -15,6 +15,11 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
     
 
+    public function deleteroom() {
+        $roomid = $_POST['data']['gsroomid'];
+        $this->getApi()->getBookingEngine()->deleteBookingItem($this->getSelectedMultilevelDomainName(), $roomid);
+    }
+    
     public function getName() {
         return "PmsRoomConfiguration";
     }
@@ -85,7 +90,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
                 $type->id = "gsconference";
                 $type->visibleForBooking = false;
                 $type->name = "Conference rooms";
-                $type->internal = true;
+                $type->systemCategory = 1;
                 $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
             }
         }

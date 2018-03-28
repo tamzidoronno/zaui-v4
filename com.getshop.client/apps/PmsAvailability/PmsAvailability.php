@@ -50,6 +50,11 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $this->includefile("movebooking");
     }
 
+    public function getIdForBooking() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingengineid']);
+        echo $booking->id;
+    }
+    
     public function showBookingInformation() {
         $this->setData();
 

@@ -9,6 +9,7 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.Address;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,9 @@ public interface ICartManager {
     public CartItem addProductWithSource(String productId, int count, String source) throws ErrorException;
     
     public CartItem addProductItem(String productId, int count) throws ErrorException;
+    
+    
+    public void filterByDate(Date start, Date end);
     
     /**
      * Fetch the total amount of price to use when calculating shipping price.

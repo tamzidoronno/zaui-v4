@@ -124,4 +124,7 @@ public interface IBookingEngine {
     
     @Administrator
     public List<TimeRepeaterData> getOpeningHoursWithType(String itemId, Integer timePeriodeType);
+    
+    @Administrator
+    public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType);
 }

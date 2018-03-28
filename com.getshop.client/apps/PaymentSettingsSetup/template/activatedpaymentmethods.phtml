@@ -1,7 +1,24 @@
 <?php
 /* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
 $apps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+
+$ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+$ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
 ?>
+<div style="clear:both;"></div>
+<div gstype='form' method='saveDefaultPaymentMethod'>
+    <h1><?php echo $this->__f("Please select the default payment method"); ?></h1>
+    <select class="config gsniceselect1" gs_model='ecommercesettings' gsname='defualtmethod' style='height: 36px;'>
+        <option value="">Select payment method</option>
+        <? foreach ($paymentMethods as $key => $method) { 
+            $selected = $ecomsettings->getConfigurationSetting("defaultPaymentMethod") == $method->id ? "SELECTED" : "";
+            ?>
+            <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
+        <? } ?>
+    </select>
+    <span class='shop_button' gstype='submit'>Save default payment settings</span>
+</div>
 
 <div style="clear:both;"></div>
 <h1>Activated payment methods</h1>
@@ -14,5 +31,4 @@ foreach($apps as $app) {
         echo "</div>";
     }
 }
- 
 ?>

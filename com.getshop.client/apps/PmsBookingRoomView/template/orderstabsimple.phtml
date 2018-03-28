@@ -14,14 +14,8 @@ $email = $user->emailAddress;
 $deleted = $pmsSelectedRoom->deleted;
 
 $canCreateOrders = true;
-$itemsUnpaid = (array)$this->getApi()->getPmsInvoiceManager()->getAllUnpaidItemsForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId);
 $unsettled = 0.0;
 $roomPaid = false;
-foreach($itemsUnpaid as $tmp) {
-    if(!$tmp->orderId) {
-        $unsettled += ($tmp->count * $tmp->product->price);
-    }
-}
 ?>
 
 <div>

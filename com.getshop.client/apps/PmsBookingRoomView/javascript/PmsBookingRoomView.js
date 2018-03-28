@@ -32,6 +32,22 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .createafterstaybtn', this.createOrderAfterStay);
         $(document).on('click', '.PmsBookingRoomView .checkinguest', this.checkInCheckOutGuest);
         $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
+        $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
+    },
+    
+    saveAddonsOnRoom : function() {
+        var toPost = {};
+        $('.addonitemrow').each(function() {
+            var addonId = $(this).attr('addonid');
+            var row = thundashop.framework.createGsArgs($(this));
+            toPost[addonId] = row;
+        });
+        
+        var event = thundashop.Ajax.createEvent('','saveAddonItems',$(this),toPost);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.Alert('Saved');
+            app.PmsBookingRoomView.refresh(true);
+        });
     },
     
     checkInCheckOutGuest : function() {
@@ -246,12 +262,12 @@ app.PmsBookingRoomView = {
         });
     },
     removeSelectedAddons : function() {
-        var productIds = [];
+        var addonIds = [];
         $(".fa-check-square").each(function() {
-            productIds.push($(this).closest('.row').attr('productId'));
+            addonIds.push($(this).attr('addonid'));
         });
         var event = thundashop.Ajax.createEvent('','removeSelectedAddons',$(this), {
-            productIds : productIds
+            addonIds : addonIds
         });
         
         thundashop.Ajax.postWithCallBack(event, function() {
@@ -259,21 +275,43 @@ app.PmsBookingRoomView = {
         });
     },
     refresh : function(avoidSpinner) {
-        var event = thundashop.Ajax.createEvent('','reloadApp',$('.PmsBookingRoomView'), {});
+        var view = null;
+        $('.PmsBookingRoomView').each(function() {
+            if($(this).is(':visible')) {
+                view = $(this);
+            }
+        });
+        
+        var event = thundashop.Ajax.createEvent('','reloadApp',view, {});
         if(!avoidSpinner) {
-            $('.PmsBookingRoomView').html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
+            view.html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
         }
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            $('.PmsBookingRoomView').html(res);
+            view.html(res);
         });
     },
     toggleRemoveAddonCheckBox : function() {
-        if($(this).hasClass('fa-square-o')) {
-            $(this).removeClass('fa-square-o');
-            $(this).addClass('fa-check-square');
+        if($(this).hasClass('forGroup')) {
+            var productId = $(this).closest('.row').attr('productid');
+            if($(this).hasClass('fa-square-o')) {
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").removeClass('fa-square-o');
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").addClass('fa-check-square');
+                $(this).removeClass('fa-square-o');
+                $(this).addClass('fa-check-square');
+            } else {
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").addClass('fa-square-o');
+                $(".toggleRemoveAddonCheckBox[productid='"+productId+"']").removeClass('fa-check-square');
+                $(this).addClass('fa-square-o');
+                $(this).removeClass('fa-check-square');
+            }
         } else {
-            $(this).addClass('fa-square-o');
-            $(this).removeClass('fa-check-square');
+            if($(this).hasClass('fa-square-o')) {
+                $(this).removeClass('fa-square-o');
+                $(this).addClass('fa-check-square');
+            } else {
+                $(this).addClass('fa-square-o');
+                $(this).removeClass('fa-check-square');
+            }
         }
         $('.removeselectedaddons').effect( "bounce", { times: 3 } );
     },
@@ -363,22 +401,31 @@ app.PmsBookingRoomView = {
     },
    
     updateAvailability: function(onlyPrices) {
-        $('.PmsBookingRoomView .itemview').addClass('update_in_progress');
+        var view = null;
+        $('.PmsBookingRoomView').each(function() {
+            if($(this).is(':visible')) {
+                view = $(this);
+            }
+        });
+        if(!view) {
+            alert('wtf');
+        }
+        view.find('.itemview').addClass('update_in_progress');
         
-        var typeid = $('.PmsBookingRoomView .gs_selected').closest('.movetotype').attr('typeid');
-        var itemId = $('.PmsBookingRoomView .gs_selected').attr('itemId');
+        var typeid = view.find('.gs_selected').closest('.movetotype').attr('typeid');
+        var itemId = view.find('.gs_selected').attr('itemId');
         
         var data = {
-            bookingid: $('.PmsBookingRoomView .itemview').attr('bookingid'),
-            start : $('.PmsBookingRoomView .startdate').val() + " " + $('.PmsBookingRoomView .starttime').val(),
-            end : $('.PmsBookingRoomView .enddate').val() + " " + $('.PmsBookingRoomView .endtime').val(),
-            roomId: $('.PmsBookingRoomView .itemview').attr('roomid'),
+            bookingid: view.find('.itemview').attr('bookingid'),
+            start : view.find('.startdate').val() + " " + view.find('.starttime').val(),
+            end : view.find('.enddate').val() + " " + view.find('.endtime').val(),
+            roomId: view.find('.itemview').attr('roomid'),
         };
         
         data.typeId = typeid;
         data.itemId = itemId;
         
-        var event = thundashop.Ajax.createEvent(null, "updateAvialablity", $('.PmsBookingRoomView'), data);
+        var event = thundashop.Ajax.createEvent(null, "updateAvialablity", view, data);
         thundashop.Ajax.postWithCallBack(event, function() {
             app.PmsBookingRoomView.refresh(true);
         });

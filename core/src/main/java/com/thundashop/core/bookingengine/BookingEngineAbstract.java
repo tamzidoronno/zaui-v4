@@ -66,6 +66,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
     public List<BookingItemType> getBookingItemTypes() {
+        return getBookingItemTypesWithSystemType(0);
+    }
+    
+    public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType) {
         List<BookingItemType> result = new ArrayList(types.values());
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
             public int compare(BookingItemType c1, BookingItemType c2) {
@@ -80,7 +84,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItemType> allItems = new ArrayList();
         for(BookingItemType type : result) {
-            if(type.internal) {
+            if(type.systemCategory != systemType) {
                 continue;
             }
             allItems.add(type);

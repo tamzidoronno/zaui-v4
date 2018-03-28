@@ -9,6 +9,10 @@ $extraArgs = array();
 $extraArgs['userid'] = $user->id;
 $extraArgs['id'] = $bookingEngineBooking->id;
 $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
+//echo "<pre>";
+//print_r($pmsBooking);
+//echo "</pre>";
+
 ?>
 
 <div class="bookinginformation">
@@ -19,6 +23,26 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
             <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
             <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
         </div>
+        
+        <?php
+            if($pmsBooking->wubookchannelreservationcode) {
+                ?>
+                <div class="row odd">
+                    <div class="col col1"><? echo $this->__f("Channel reservation id"); ?></div>
+                    <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode; ?></div>    
+                </div>
+                <?php
+            }
+            if($pmsBooking->wubookreservationid) {
+                ?>
+                <div class="row odd">
+                    <div class="col col1"><? echo $this->__f("Wubook id"); ?></div>
+                    <div class="col col2"><? echo $pmsBooking->wubookreservationid . " (<a href='https://wubook.net/bookings/".$pmsBooking->wubookreservationid."' target='_new'>Open in wubook</a>)"; ?></div>    
+                </div>
+                <?php
+            }
+
+        ?>
 
         <div class="row">
             <div class="col col1"><? echo $this->__f("Date created"); ?></div>
@@ -48,6 +72,19 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
                 ?>
             </div>
         </div>
+
+        <div class="row odd">
+            <div class="col col1"><span><? echo $this->__f("Registration information"); ?></span></div>
+            <div class="col col2" onclick='$(".registeredinformation").toggle();' style='cursor:pointer;'>Display registration information</div>
+            <div class='registeredinformation' style='display:none;'>
+                <?php
+                foreach($pmsBooking->registrationData->resultAdded as $key => $val) {
+                    echo "<div>" . $key . " : " . $val . "</div>";
+                }
+                ?>
+            </div>
+        </div>
+        
         <div style='padding-top:10px;text-align: right;'>
             <?php
             if(!$pmsSelectedRoom->deleted) {
@@ -57,6 +94,8 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
             }
             ?>
         </div>
+        
+
     </div>
     
     

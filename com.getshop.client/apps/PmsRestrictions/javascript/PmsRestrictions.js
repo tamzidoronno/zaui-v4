@@ -2,6 +2,17 @@ app.PmsRestrictions = {
     init : function() {
         $(document).on('change', '.PmsRestrictions .restrictiontype', app.PmsRestrictions.changeBookingType);
         $(document).on('change', '.PmsRestrictions .repeat_type', app.PmsRestrictions.changeRepeatType);
+        $(document).on('click', '.PmsRestrictions .checkallclosingtypes', app.PmsRestrictions.checkallclosingtypes);
+    },
+    checkallclosingtypes : function() {
+        var checked = $(this).is(':checked');
+        $('.closeforota').each(function() {
+            if(checked) {
+                $(this).attr('checked','checked');
+            } else {
+                $(this).attr('checked',null);
+            }
+        });
     },
     changeRepeatType : function() {
         var option = $(this).val();

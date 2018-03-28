@@ -6,7 +6,20 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.PmsGroupBookingHeader .groupedactioncheckbox', app.PmsGroupBookingHeader.updateGroupedAction);
         $(document).on('click', '.manipulateroomoptions .shop_button', app.PmsGroupBookingHeader.doAction);
         $(document).on('click', '.PmsGroupBookingHeader .updateguestinformation', app.PmsGroupBookingHeader.updateGuestInformation);
+        $(document).on('click', '.PmsGroupBookingHeader .startpaymentprocessallrooms', app.PmsGroupBookingHeader.startPaymentProcess);
     },
+    startPaymentProcess : function() {
+        var event = thundashop.Ajax.createEvent('','startPaymentProcessAllRooms', $(this), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            var data = {};
+            thundashop.framework.showRightWidgetPanel('gs_modul_pmscart', data);
+        });
+    },
+    
+    refreshPayments : function() {
+        $('[areatype="payments"]').click();
+    },
+    
     updateGuestInformation : function() {
         var data = {};
         $('.guestrow').each(function() {

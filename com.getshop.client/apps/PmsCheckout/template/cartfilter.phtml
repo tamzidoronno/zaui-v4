@@ -22,11 +22,11 @@ if($end) { $endDate = date("d.m.Y", $end); }
 <div gstype='form' method='filterCartByDate'>
     <label class='cartfilterdate'>
         Start date
-        <input type='txt' class='gsniceinput1' id='startdate' gsname='end' value='<?php echo $startDate; ?>'>
+        <input type='txt' class='gsniceinput1' id='startdate' gsname='start' value='<?php echo $startDate; ?>'>
     </label>
     <label class='cartfilterdate'>
         End date
-        <input type='txt' class='gsniceinput1 enddate' id='enddate' gsname='start' value='<?php echo $endDate; ?>'>
+        <input type='txt' class='gsniceinput1 enddate' id='enddate' gsname='end' value='<?php echo $endDate; ?>'>
     </label>
     <span class="shop_button" style='float:right; margin-top: 17px;' gstype='submit'>Apply dates</span>
 </div>

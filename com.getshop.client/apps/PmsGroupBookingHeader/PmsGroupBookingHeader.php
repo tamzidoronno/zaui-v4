@@ -10,6 +10,16 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         
     }
     
+    public function startPaymentProcessAllRooms() {
+        $createorder = new \core_pmsmanager_NewOrderFilter();
+        $createorder->createNewOrder = true;
+        $createorder->avoidOrderCreation = true;
+        $bookingId = $this->getCurrentBooking()->id;
+        $this->getApi()->getCartManager()->clear();
+        $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $createorder);
+        
+    }
+    
     public function saveEvent() {
         $confdata = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedMultilevelDomainName(), $this->getCurrentBooking()->id);
         $confdata->note = $_POST['data']['note'];

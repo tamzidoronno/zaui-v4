@@ -320,6 +320,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public boolean supportsDailyPmsInvoiceing(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        if(booking.priceType != PmsBooking.PriceType.daily) {
+            return false;
+        }
         String plugin = findPricePluginForBooking(booking);
         
         if(!plugin.equals("pmsdailyordergeneration")) {

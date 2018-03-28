@@ -17,7 +17,7 @@ $endDate = strtotime($room->date->end);
 
 
 function canUseItem($item, $availeableitems) {
-    foreach ($availeableitems as $available) {
+    foreach ((array)$availeableitems as $available) {
         if ($available->id == $item->id) {
             return true;
         }
@@ -26,7 +26,7 @@ function canUseItem($item, $availeableitems) {
     return false;
 }
 
-if(!isset($room->tmpModified)) {
+if(!isset($room->tmpModified) || !$this->isValidSelection($room)) {
     $warnAboutUnchanges = "display:none;";
 }
 ?>
@@ -66,7 +66,9 @@ if(!isset($room->tmpModified)) {
         } else {
             echo $this->__f("Floating");
         }
-
+        if(!$this->isValidSelection($room)) {
+            echo "<div class='notvalidselection'>This room selection is not valid.</div>";
+        }
 
         ?>
         <?

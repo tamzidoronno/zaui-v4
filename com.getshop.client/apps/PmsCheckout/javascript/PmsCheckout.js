@@ -23,6 +23,7 @@ app.PmsCheckout = {
     },
     orderCreationCompleted : function() {
         app.PmsBookingRoomView.refresh();
+        $('[areatype="payments"]').click();
         thundashop.framework.toggleRightWidgetPanel('gs_modul_cart');
     },
     removeCartItem : function() {

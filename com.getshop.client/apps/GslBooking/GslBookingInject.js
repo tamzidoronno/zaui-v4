@@ -518,7 +518,7 @@ function getshop_logout(e) {
         }
     });
 }
-function egtshop_changeBookingType(e) {
+function getshop_changeBookingType(e) {
     if(getshop_avoiddoubletap(e)) { return; }
     $('.errormessage').hide();
     $('.invalidinput').removeClass('invalidinput');
@@ -528,7 +528,7 @@ function egtshop_changeBookingType(e) {
     $('.guesttypeselection').hide();
     $('.guesttypeselection[type="'+type+'"]').show();
 //    This causes a infinity loop, whats is it suppose to do?
-//    $(this).find('input').click();
+    $(this).find('input').attr('checked',true);
     if(type !== "gotAccount") {
         $('.agreetotermsbox').show();
         $('.overview_confirmation').show();

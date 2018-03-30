@@ -1095,7 +1095,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
         
          if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
-            bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
+//            bookingsWithinDaterange = new HashSet(getAllBookbookingsOfType(typeId));
         }
 
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);

@@ -131,7 +131,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         cal2.add(Calendar.DAY_OF_YEAR, duedays);
         Date dueDate = cal2.getTime();
 
-        String eiendelsKonto = getConfig("code");
+        String eiendelsKonto = getConfig("eiendelskonto");
         if(eiendelsKonto == null || eiendelsKonto.isEmpty()) {
             eiendelsKonto = "1510";
         }

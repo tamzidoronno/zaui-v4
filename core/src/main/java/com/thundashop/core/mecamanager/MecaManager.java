@@ -896,4 +896,13 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             }
         }
     }
+
+    @Override
+    public void setCommentOnCar(String carId, String comment) {
+        MecaCar car = getCar(carId);
+        if (car != null) {
+            car.comment = comment;
+            saveObject(car);
+        }
+    }
 }

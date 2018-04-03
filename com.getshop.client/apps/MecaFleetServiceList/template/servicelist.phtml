@@ -56,7 +56,13 @@ $cars = $this->getCarList();
             <div style="<? echo $pkkStyleColor; ?>"><? echo isset($car->nextControll) ? date('d/m-Y', strtotime($car->nextControll)) : 'N/A'; ?></div>
 
 
-            <div>
+            <div style="position: relative" class="outercommentfield">
+                <div class="gs_shop_small_icon show_comment_field <? echo $car->comment ? 'hasdata' : 'nodata'; ?>"><i class="fa fa-comment-o"></i></div>
+                <div class="commentfield" gstype="form" method="saveComment">
+                    <input type="hidden" value="<? echo $car->id; ?>" gsname="carid">
+                    <textarea gsname="comment"><? echo @$car->comment; ?></textarea>
+                    <div class="shop_button" gstype="submit"><? echo $this->__f("Save Comment"); ?></div>
+                </div>
                 <?
                 $used = false;
                 if ($agreementStatus === "red") {

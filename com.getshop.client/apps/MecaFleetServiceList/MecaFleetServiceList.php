@@ -61,6 +61,10 @@ class MecaFleetServiceList extends \MarketingApplication implements \Application
         }
 
     }
+    
+    public function saveComment() {
+        $this->getApi()->getMecaManager()->setCommentOnCar($_POST['data']['carid'], $_POST['data']['comment']);
+    }
 
 }
 ?>

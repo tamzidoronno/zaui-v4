@@ -25,10 +25,42 @@
 .MecaFleetServiceList .servicerow div:nth-child(4) { width: 150px; }
 .MecaFleetServiceList .servicerow div:nth-child(5) { width: 210px; }
 .MecaFleetServiceList .servicerow div:nth-child(6) { width: 150px; }
-.MecaFleetServiceList .servicerow div:nth-child(7) { width: 230px;}
-.MecaFleetServiceList .servicerow div:nth-child(8) { width: 150px; text-align: right;}
+.MecaFleetServiceList .servicerow div:nth-child(7) { width: 210px;}
+.MecaFleetServiceList .servicerow div:nth-child(8) { width: 170px; text-align: right;}
 
+.MecaFleetServiceList .servicerow div:nth-child(8) .shop_button {
+    width: 113px;
+    display: inline-block;
+    box-sizing: border-box;
+}
 
+.MecaFleetServiceList .servicerow .show_comment_field.hasdata {
+    color: green;
+}
+
+.MecaFleetServiceList .servicerow .commentfield {
+    display: none;
+    width: 500px !important;
+    position: absolute;
+    border: solid 1px #DDD;
+    background-color: #FFF;
+    right: 0px;
+    top: 50px;
+    z-index: 1;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.MecaFleetServiceList .servicerow .commentfield textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 200px;
+}
+.MecaFleetServiceList .servicerow .commentfield .shop_button {
+    width: 100%;
+}
 .MecaFleetServiceList .servicerow.red {
     color: #FFF;
     background-color: #ff0000;

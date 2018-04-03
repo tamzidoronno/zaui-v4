@@ -86,6 +86,7 @@ public class MecaCar extends DataCommon {
     @Transient
     public boolean controlDateRejected;
     
+    public String comment = "";
 
     /**
      * Caluclate the next EU Controll, service date etc.

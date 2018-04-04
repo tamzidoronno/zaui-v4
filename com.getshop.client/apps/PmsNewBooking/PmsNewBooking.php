@@ -94,49 +94,54 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     }
     
     public function addRoom() {
-        
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
         $app->setStartDate($_POST['data']['from']);
         $app->setEndDate($_POST['data']['to']);
         
-        $type = $_POST['data']['type'];
-        $from = $_POST['data']['from'];
-        $to = $_POST['data']['to'];
-        $numberOfRooms = $_POST['data']['numberOfRooms'];
-        
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-        $start = $this->convertToJavaDate(strtotime($from. " " . $config->defaultStart));
-        $end = $this->convertToJavaDate(strtotime($to. " " . $config->defaultEnd));
-        
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-        $bookingItemType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $type);
         
-        for($i = 0; $i < $numberOfRooms; $i++) {
-            $room = new \core_pmsmanager_PmsBookingRooms();
-            $room->date = new \core_pmsmanager_PmsBookingDateRange();
-            $room->date->start = $start;
-            $room->date->end = $end;
-            $room->bookingItemTypeId = $bookingItemType->id;
-            $currentBooking->rooms[] = $room;
-        }
-        
-        foreach($currentBooking->rooms as $room) {
-            $room->addedToWaitingList = false;
-        }
-        
-        $available = $this->getNumberOfAvailableForType($bookingItemType, $currentBooking, $start, $end);
-        $prefix = sizeof($currentBooking->rooms);
-        for($i = $available; $i < 0; $i++) {
-            $prefix--;
-            $currentBooking->rooms[$prefix]->addedToWaitingList = true;
+        foreach($types as $type) {
+            $from = $_POST['data']['from'];
+            $to = $_POST['data']['to'];
+            $numberOfRooms = $_POST['data']['count_'.$type->id];
+
+            $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+            $start = $this->convertToJavaDate(strtotime($from. " " . $config->defaultStart));
+            $end = $this->convertToJavaDate(strtotime($to. " " . $config->defaultEnd));
+
+            for($i = 0; $i < $numberOfRooms; $i++) {
+                $room = new \core_pmsmanager_PmsBookingRooms();
+                $room->date = new \core_pmsmanager_PmsBookingDateRange();
+                $room->date->start = $start;
+                $room->date->end = $end;
+                $room->bookingItemTypeId = $type->id;
+                $currentBooking->rooms[] = $room;
+            }
+
+            foreach($currentBooking->rooms as $room) {
+                $room->addedToWaitingList = false;
+            }
+
+            $available = $this->getNumberOfAvailableForType($type, $currentBooking, $start, $end);
+            $prefix = sizeof($currentBooking->rooms);
+            for($i = $available; $i < 0; $i++) {
+                $prefix--;
+                $currentBooking->rooms[$prefix]->addedToWaitingList = true;
+            }
         }
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
     }
 
+    public function removeAllSelectedRooms() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking->rooms = array();
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function getNumberOfAvailableForType($type,$current,$start,$end) {
-        $rooms = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedMultilevelDomainName(), $type->id, $start, $end);
-        $size = sizeof($rooms);
+        $size = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $type->id, $start, $end, false);
 
         foreach($current->rooms as $room) {
             if($room->bookingItemTypeId == $type->id) {

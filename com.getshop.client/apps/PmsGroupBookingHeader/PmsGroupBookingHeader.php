@@ -10,6 +10,40 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         
     }
     
+    public function createNewUser(){
+        $name = $_POST['data']['name'];
+        $bookingId = $this->getCurrentBooking()->id;
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, "");
+        return $this->getUserForBooking();
+    }
+   
+    public function createCompany() {
+        $name = $_POST['data']['companyname'];
+        $vat = $_POST['data']['vatnumber'];
+        $bookingId = $this->getCurrentBooking()->id;
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, $vat);
+        
+        return $this->getUserForBooking();
+    }   
+    
+    public function saveUser($user) {
+    }
+    
+    
+    public function changeUser($user) {
+        $booking = $this->getCurrentBooking();
+        $booking->userId = $user->id;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
+    
+    public function getUserForBooking() {
+        $this->currentBooking = null;
+        return $this->getApi()->getUserManager()->getUserById($this->getCurrentBooking()->userId);
+    }
+    
     public function startPaymentProcessAllRooms() {
         $createorder = new \core_pmsmanager_NewOrderFilter();
         $createorder->createNewOrder = true;

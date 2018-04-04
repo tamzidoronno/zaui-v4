@@ -41,7 +41,6 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
-import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
 import com.thundashop.core.getshoplocksystem.MasterUserSlot;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -49,11 +48,11 @@ import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
-import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.ratemanager.BookingComRateManagerManager;
+import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.ticket.Ticket;
 import com.thundashop.core.ticket.TicketManager;
@@ -80,7 +79,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.apache.axis.handlers.LogMessage;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -190,6 +188,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     private SmsHistoryManager smsHistoryManager;
+
+    @Autowired
+    WebManager webManager;
     
     @Autowired
     Database dataBase;
@@ -770,6 +771,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public PmsBooking getBooking(String bookingId) {
+//        crawlVisbook();
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -8287,5 +8289,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.checkedin = true;
             saveBooking(booking);
         }
+    }
+
+    private void crawlVisbook() {
+        String url = "https://booking.visbook.com/";
+        int count = 0;
+        for(int i = 0; i < 2000; i++) {
+            try {
+                 webManager.htmlGet(url + i);
+                 System.out.println("Found:" + url + i);
+                 count++;
+                 Thread.sleep(500);
+            }catch(Exception e) {
+                
+            }
+        }
+        System.out.println(count + " found");
+        System.exit(0);
     }
 }

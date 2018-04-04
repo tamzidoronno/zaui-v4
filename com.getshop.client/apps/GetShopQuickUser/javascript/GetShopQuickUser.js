@@ -51,12 +51,6 @@ app.GetShopQuickUser = {
     },
     
       
-    userUpdated: function(result) {
-        app.GetShopQuickUser.updateFieldsAfterUserChangedOrCreated(result);
-        app.GetShopQuickUser.toggleEditUser();
-        return false;
-    },
-        
     userCreated: function(result) {
         app.GetShopQuickUser.updateFieldsAfterUserChangedOrCreated(result);
         app.GetShopQuickUser.closeChangeUser();

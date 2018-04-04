@@ -57,6 +57,19 @@ public class VismaeaccountingCustomer {
             InvoiceCountryCode = user.address.countrycode;
             InvoicePostalCode = user.address.postCode;
         }
+        if(InvoiceAddress1 == null || InvoiceAddress1.trim().isEmpty()) {
+            InvoiceAddress1 = "unknown";
+        }
+        if(InvoiceCity == null || InvoiceCity.trim().isEmpty()) {
+            InvoiceCity = "Oslo";
+        }
+        if(InvoiceCountryCode == null || InvoiceCountryCode.trim().isEmpty()) {
+            InvoiceCountryCode = "NO";
+        }
+        if(InvoicePostalCode == null || InvoicePostalCode.trim().isEmpty()) {
+            InvoicePostalCode = "0001";
+        }
+        
         Name = user.fullName;
         IsPrivatePerson = true;
         if(user.companyObject != null) {

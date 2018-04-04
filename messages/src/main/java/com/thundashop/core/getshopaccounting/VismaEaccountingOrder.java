@@ -30,6 +30,7 @@ public class VismaEaccountingOrder {
     public String InvoicePostalCode = "";
     public String InvoiceAddress1 = "";
     public String InvoiceCity = "";
+    public String DeliveryPostalCode = "NO";
 
     VismaEaccountingOrder(Order order, String customerId) {
         DecimalFormat df = new DecimalFormat("#.##"); 
@@ -49,5 +50,21 @@ public class VismaEaccountingOrder {
         if(InvoiceAddress1.length() > 50) {
             InvoiceAddress1 = InvoiceAddress1.substring(0, 49);
         }
+        
+    
+        if(InvoiceAddress1 == null || InvoiceAddress1.trim().isEmpty()) {
+            InvoiceAddress1 = "unknown";
+        }
+        if(InvoiceCity == null || InvoiceCity.trim().isEmpty()) {
+            InvoiceCity = "Oslo";
+        }
+        if(InvoiceCountryCode == null || InvoiceCountryCode.trim().isEmpty()) {
+            InvoiceCountryCode = "NO";
+        }
+        if(InvoicePostalCode == null || InvoicePostalCode.trim().isEmpty()) {
+            InvoicePostalCode = "0001";
+        }
+        
+        
     }
 }

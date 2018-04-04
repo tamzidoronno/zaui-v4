@@ -5,7 +5,6 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
 ?>
 <br><bR>
 <h3>Rooms ready to be added</h3>
-
 <?php
 $found = false;
 
@@ -40,6 +39,9 @@ $attributes = array(
 if(!$found) {
     echo "No rooms added yet, add one or more rooms above.";
 } else {
+    ?>
+    <span class='shop_button' gstype='clicksubmit' method='removeAllSelectedRooms'>Remove all rooms</span>
+    <?php
     $table = new \GetShopModuleTable($this, null,null, null, $attributes);
     $table->setData($rows);
     $table->render();

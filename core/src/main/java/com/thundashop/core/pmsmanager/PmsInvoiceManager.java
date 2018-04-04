@@ -62,7 +62,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Autowired
     StoreManager storeManager;
-
+    
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
         for(PmsBookingAddonItem item : room.addons) {

@@ -27,9 +27,11 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,14 +40,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class TripleTexExcel extends AccountingSystemBase {
+public class TripleTexCsv extends AccountingSystemBase {
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     private TripleTextExcelMap excelHeaders = new TripleTextExcelMap();
     private int rowNumber = 0;
     
     @Override
     public String getSystemName() {
-        return "TripleTex - excel";
+        return "TripleTex - csv";
     }
 
     @Override
@@ -77,7 +79,7 @@ public class TripleTexExcel extends AccountingSystemBase {
                 addOrder(sheet, order);
             }
 
-            file.base64Excel = getBase64Encoded(wb);
+            file.result = getCsv(wb);
             retFiles.add(file);
         }
         
@@ -86,7 +88,7 @@ public class TripleTexExcel extends AccountingSystemBase {
 
     @Override
     public SystemType getSystemType() {
-        return SystemType.TRIPLETEX_EXCEL;
+        return SystemType.TRIPLETEX_CSV;
     }
 
     private void createHeaders(Sheet sheet) {
@@ -221,6 +223,39 @@ public class TripleTexExcel extends AccountingSystemBase {
     @Override
     public void handleDirectTransfer(String orderId) {
         throw new ErrorException(1049);
+    }
+
+    private List<String> getCsv(Workbook wb) {
+        HSSFSheet sheet = (HSSFSheet) wb.getSheetAt(0);
+
+        List<String> result = new ArrayList();
+        int deliveryDateField = getCellNumber("DELIVERY DATE");
+        for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+            HSSFRow row = sheet.getRow(i);
+
+            StringBuilder strBuff = new StringBuilder();
+            for (short j = 0; j <= row.getLastCellNum(); j++) {
+                HSSFCell cell = row.getCell(j);
+                String cellField = "";
+                if(cell != null) {
+                    if(cell.getCellType()==XSSFCell.CELL_TYPE_NUMERIC) {
+                        if(j == deliveryDateField) {
+                            cellField = formatter.format(cell.getDateCellValue())+ "";
+                        } else {
+                            cellField = cell.getNumericCellValue() + "";
+                        }
+                    } else {
+                        cellField = cell.getStringCellValue()+ "";
+                    }
+                }
+                cellField = cellField.replaceAll(",", "");
+                cellField += ",";
+                strBuff.append(cellField);
+            }
+            result.add(strBuff.toString() + "\n");
+
+        }
+        return result;
     }
 
 }

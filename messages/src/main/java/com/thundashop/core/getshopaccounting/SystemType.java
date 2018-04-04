@@ -13,6 +13,7 @@ public enum SystemType {
      GBAT10,
      XLEDGER,
      TRIPLETEX_EXCEL,
+     TRIPLETEX_CSV,
      FIKEN_API,
      POWEROFFICEGO_API,
      VISMAEACCOUNTING_API

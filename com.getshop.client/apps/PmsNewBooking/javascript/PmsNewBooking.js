@@ -22,8 +22,31 @@ app.PmsNewBooking = {
         $(document).on('keyup','.PmsNewBooking [gsname="nameofholder"]',app.PmsNewBooking.checkForExisting);
         $(document).on('click','.PmsNewBooking .selectuser',app.PmsNewBooking.selectUser);
         $(document).on('click','.PmsNewBooking .selecteduser .fa-trash-o',app.PmsNewBooking.removeSelectedUser);
+        $(document).on('keyup','.PmsNewBooking .roomtypecount',app.PmsNewBooking.countRoomsToAdd);
+        $(document).on('click','.PmsNewBooking .totalcount',app.PmsNewBooking.selectAllRooms);
     },
-    
+    selectAllRooms : function() {
+        $('.roomstoaddrow').each(function() {
+            var count = $(this).find('.roomsleftfield').attr('original');
+            $(this).find('.roomtypecount').val(count);
+        });
+        app.PmsNewBooking.countRoomsToAdd();
+    },
+    countRoomsToAdd : function() {
+        var total = 0;
+        $('.roomstoaddrow').each(function() {
+            var count = 0;
+            var row = $(this);
+            var left = parseInt(row.find('.roomsleftfield').attr('original'));
+            if(row.find('.roomtypecount').val()) {
+                count = parseInt(row.find('.roomtypecount').val());
+                total += count;
+            }
+            left = left - count;
+            row.find('.roomsleftfield').text(left);
+        });
+        $('.totalcount').html(total);
+    },
     removeSelectedUser : function() {
         $('.PmsNewBooking [gsname="nameofholder"]').val("");
         $('.PmsNewBooking [gsname="nameofholder"]').show();

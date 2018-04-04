@@ -1,0 +1,59 @@
+<div style='text-align:center; padding-right: 10px;' gstype='form' method='updatefilter'>
+    <?php
+    /* @var $this \ns_3746f382_0450_414c_aed5_51262ae85307\InvoiceOverview */
+    $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    $start = date("d.m.Y", strtotime(date("01.m.Y", time())));
+    $end = date("d.m.Y", strtotime(date("t.m.Y", time())));
+
+    $states = array();
+    $states['0'] = "All";
+    $states['1'] = "Created";
+    $states['2'] = "Waiting for payment";
+    $states['3'] = "Payment failed";
+    $states['4'] = "Completed";
+    $states['5'] = "Canceled";
+    $states['6'] = "Sent";
+    $states['7'] = "Payment completed";
+    $states['8'] = "Collection failed";
+    $states['9'] = "Need collecting";
+    $states['10'] = "Send to invoice";
+
+    $filterType = array();
+    
+    echo "<select class='gsniceselect1' style='height:38px;' gsname='paymentmethod'>";
+    foreach($paymentMethods as $pmethod) {
+        $selected = "";
+        if($pmethod->id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+            $selected = "SELECTED";
+        }
+        echo  "<option value='".$pmethod->id."' $selected>" . $pmethod->appName . "</option>";
+    }
+    echo "</select> ";
+    echo "<select class='gsniceselect1' style='height:38px;'>";
+    foreach($states as $id => $state) {
+        $selected = "";
+        if($pmethod->id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+            $selected = "SELECTED";
+        }
+        echo  "<option value='$id' $selected>" . $state . "</option>";
+    }
+    echo "</select> ";
+    ?>
+    <input type="txt" class='gsniceinput1' gsname='startdate' value='<?php echo $start; ?>'>
+    <input type="txt" class='gsniceinput1' gsname='enddate' value='<?php echo $end; ?>'>
+    <?php
+    
+    $filterTypes = array();
+    $filterTypes['createddate'] = "Order created date";
+    $filterTypes['whenordered'] = "Shipment date";
+    $filterTypes['paymentdate'] = "Payment date";
+    
+    echo "<select class='gsniceselect1' style='height:38px;' gsname='filtertype'>";
+    foreach($filterTypes as $id => $state) {
+        $selected = "";
+        echo  "<option value='$id' $selected>" . $state . "</option>";
+    }
+    echo "</select>";
+    ?>
+    <span class='shop_button' gstype='submit'>Load result</span>
+</div>

@@ -2,17 +2,13 @@ package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.oauthmanager.OAuthManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
-import static java.awt.SystemColor.text;
 import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,11 +174,6 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
     private String sendUserToVismaEaccounting(User user) {
         VismaeaccountingCustomer customer = new VismaeaccountingCustomer();
         customer.setUser(user);
-        
-        if(!customer.getInvalidText().isEmpty()) {
-            addToLog(customer.getInvalidText());
-            return "";
-        }
         
         Gson gson = new Gson();
         HashMap<String, String> headerData = new HashMap();

@@ -2,7 +2,6 @@
 /* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 ?>
-<h3>Create a new room reservation</h3>
 <div gstype='form' method='addRoom'>
     <div class="gs_headerbox">
         <div>
@@ -28,34 +27,52 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
         <i class="gsicon-calendar-text"></i>
     </div>
 
-    <div class="gs_headerbox">
-        <div>
-            <?
-            echo $this->__f("Room type");
-            ?>
-        </div>
-        <select class='gsniceselect2' gsname='type'>
-            <?php
-            foreach($types as $type) {
-                echo "<option value='".$type->id."'>" . $type->name . "</option>";
+    <div>
+        <?php
+        echo "<table width='100%'>";
+        echo "<tr>";
+        echo "<th style='text-align:left;'>Room</th>";
+        echo "<th>Rooms left</th>";
+        echo "<th>Count</th>";
+        echo "</tr>";
+        
+        $start = $this->getStartDate();
+        $end = $this->getEndDate();
+        $number = 0;
+
+
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $start = $this->convertToJavaDate(strtotime($start. " " . $config->defaultStart));
+        $end = $this->convertToJavaDate(strtotime($end. " " . $config->defaultEnd));
+
+        $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $total = 0;
+
+        foreach($types as $type) {
+            $size = $this->getNumberOfAvailableForType($type,$current,$start,$end);
+            $disabled = "";
+            if($size <= 0) {
+                $disabled = "disabled";
             }
-            ?>
-        </select>
+            $total += $size;
+            echo "<tr class='roomstoaddrow'>";
+            echo "<td>" . $type->name . "</td>";
+            echo "<td style='text-align:center;' class='roomsleftfield' original='$size'>$size</td>";
+            echo "<td style='width:90px'><input type='txt' class='gsniceinput1 roomtypecount' style='width:90px' gsname='count_".$type->id."'></td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td style='text-align:center;'><span class='totalcount' style='cursor:pointer;'>Select all</span></td>";
+        echo "<td><span class='shop_button' style='cursor:pointer; width:90px;' gstype='submit'>Add room</span></td>";
+        echo "</tr>";
+        echo "</table>";
+        ?>
     </div>
-
+    
     <div class="gs_headerbox">
         <div>
-            <?
-            echo $this->__f("Number of rooms");
-            ?>
         </div>
-        <input type='text' class='gsniceinput1' value='0' style='width: 70px;text-align: center;' gsname='numberOfRooms' class='numberofrooms'>
-    </div>
-
-    <div class="gs_headerbox">
-        <div>
-        </div>
-        <span class='shop_button' style='cursor:pointer;' gstype='submit'>Add room</span>
     </div>
     <div class='moreThenAvailableWarning'>
         <div class="isnotactive">

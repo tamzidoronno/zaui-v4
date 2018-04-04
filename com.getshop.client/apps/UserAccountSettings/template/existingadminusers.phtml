@@ -1,0 +1,25 @@
+<div style='text-align:right; padding: 20px;border-bottom: solid 1px #bbb;' gstype='form' method='createAdministrator'>
+    <input type='text' class='gsniceinput1' gsname='name' placeholder="Name">
+    <input type='text' class='gsniceinput1' gsname='email' placeholder='Email'>
+    <input type='text' class='gsniceinput1' gsname='password' placeholder='Password'>
+    <span class='shop_button'>Create a new administrator</span>
+</div>
+<?php
+/* @var $this ns_27656859_aeed_41f7_9941_f01d0f860212\UserAccountSettings */
+$users = $this->getApi()->getUserManager()->getUsersByType(100);
+$modules = $this->getApi()->getPageManager()->getModules();
+//print_r($users);
+$attributes = array(
+    array('id', 'gs_hidden', 'id'),
+    array('fullName', 'fullName', 'fullName', null)
+);
+
+foreach($modules as $module) {
+    $row = array($module->id, $module->id, null, "format".$module->id);
+    $attributes[] = $row;
+}
+
+$table = new \GetShopModuleTable($this, 'UserAccountSettings', 'loadUser', 'loadUser', $attributes);
+$table->setData($users);
+$table->render();
+?>

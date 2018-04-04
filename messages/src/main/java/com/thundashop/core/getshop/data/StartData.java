@@ -18,4 +18,10 @@ public class StartData {
     public String password;
     public String color = "";
     public String language = "";
+    public String emailSubject = "";
+    public String emailText = "";
+    public String timeZone = "";
+    public String prefix = "";
+    public String currency = "";
+    public String country = "";
 }

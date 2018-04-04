@@ -487,4 +487,6 @@ public interface IUserManager {
     public User logonUsingTotp(String username, String password, int oneTimeCode);
     
     public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode);
+    
+    public boolean updatePasswordByResetCode(String resetCode, String newPassword);
 }

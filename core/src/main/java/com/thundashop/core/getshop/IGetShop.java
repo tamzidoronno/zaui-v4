@@ -95,4 +95,7 @@ public interface IGetShop {
     
     @GetShopNotSynchronized
     public void triggerPullRequest(String storeId);
+    
+    @GetShopNotSynchronized
+    public void createNewStore(StartData startData);
 }

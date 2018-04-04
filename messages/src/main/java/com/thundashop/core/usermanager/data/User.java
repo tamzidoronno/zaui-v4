@@ -73,6 +73,11 @@ public class User extends DataCommon implements Comparable<User> {
     public String totpKey;
     public int lastTotpVerificationCodeUsed = 0;
  
+    @Administrator
+    public String passwordResetCode = "";
+    
+    public boolean emailVerified = false;
+    
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);
         cleanWhiteSpace(emailAddressToInvoice);

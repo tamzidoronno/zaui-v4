@@ -537,14 +537,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     public void deleteBookingItem(String id) {
         BookingItem bookingItem = getBookingItem(id);
         if (bookingItem == null) {
-            throw new BookingEngineException("Can not delete a booking that does not exists");
+            throw new BookingEngineException("Can not delete a bookingitem that does not exists");
         }
         
-        long count = bookings.values().stream()
+        List<Booking> bookingsConnectedToItem = bookings.values().stream()
                 .filter(o -> o.bookingItemId != null && o.bookingItemId.equals(id))
-                .count();
+                .collect(Collectors.toList());
         
-        if (count > 0 && shouldThrowException()) {
+        
+        if (!bookingsConnectedToItem.isEmpty() && shouldThrowException()) {
             throw new BookingEngineException("Can not delete a bookingItem when there is bookings connected to it");
         }
         
@@ -809,10 +810,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 }
             }
             
-            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
+            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
                 checkBookings = getAllBookingsOfType(bookingTypeId);
             }
-            
+ 
             BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id), shouldThrowException(), storeId);
             
             // This throws exception if not possible.
@@ -1094,11 +1095,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
         
-         if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
-//            bookingsWithinDaterange = new HashSet(getAllBookbookingsOfType(typeId));
+        if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
+            bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
         }
-
+            
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);
+        
         return assigner;
     }
     
@@ -1164,7 +1166,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                     .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
                     .collect(Collectors.toList());
             
-            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
+            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
                 toCheck = getAllBookingsOfType(type.id);
             }
             
@@ -1322,6 +1324,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
     
+    
     private List<Booking> getAllBookingsOfType(String typeId) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -1331,7 +1334,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         List<Booking> bookingsOfType = bookings.values()
                 .stream()
                 .filter(o -> o.bookingItemTypeId.equals(typeId))
-                .filter(o -> o.startDate.after(yesterday))
+                .filter(o -> o.startDate.after(yesterday) || o.interCepts(yesterday, new Date()))
                 .collect(Collectors.toList());
         return bookingsOfType;
     }

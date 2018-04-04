@@ -2161,4 +2161,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean updatePasswordByResetCode(String resetCode, String newPassword) {
+        if (resetCode.isEmpty())
+            return false;
+        
+        List<User> users = getUserStoreCollection(storeId).getAllUsers();
+        User user = users.stream()
+                .filter(o -> o.passwordResetCode.equals(resetCode))
+                .findFirst()
+                .orElse(null);
+        
+        if (user != null) {
+            updatePasswordSecure(user.id, newPassword);
+            return true;
+        }
+        
+        return false;
+    }
+
 }

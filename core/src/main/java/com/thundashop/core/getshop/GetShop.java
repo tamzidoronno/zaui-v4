@@ -15,7 +15,6 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.StoreHandler;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -316,7 +315,6 @@ public class GetShop extends ManagerBase implements IGetShop {
         if (!frameworkConfig.productionMode) {
             newAddress = nextStoreId + ".3.0.local.getshop.com";
         }
-        
         
         try {
             String newStoreId = copyStore(startData.storeId, newAddress, startData);
@@ -705,5 +703,52 @@ public class GetShop extends ManagerBase implements IGetShop {
         toAdd.orderId = orderId;
         saveObject(toAdd);
         listToAdd.add(toAdd);
+    }
+
+    @Override
+    public void createNewStore(StartData startData) {
+        int nextStoreId = storePool.incrementStoreCounter();
+        
+        String newAddress = nextStoreId + ".getshop.com";
+        if (!frameworkConfig.productionMode) {
+            newAddress = nextStoreId + ".3.0.local.getshop.com";
+        }
+        
+        try {
+            String newStoreId = copyStore("47522cce-8fda-4538-9b61-84eb72faf03f", newAddress, startData);
+            storePool.loadStore(newStoreId, newAddress);
+            
+            GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+            User user = createUser(startData, newStoreId, newAddress);
+            
+            String resetCode = UUID.randomUUID().toString();
+            
+            user.passwordResetCode = resetCode;
+            
+            scope.setStoreId(newStoreId, "", null);
+            UserManager userManager = AppContext.appContext.getBean(UserManager.class);
+            userManager.saveUser(user);
+            
+            OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
+            orderManager.clear();
+            
+            MecaManager mecaManager = AppContext.appContext.getBean(MecaManager.class);
+            mecaManager.clear();
+            
+            saveCustomerToGetShop(user, scope);
+        
+            String resetLink = "https://"+newAddress+"/resetPassword.php?resetCode="+user.passwordResetCode;
+            String text = startData.emailText.replaceAll("{VerifyLink}", "<a href='"+resetLink+"'>"+resetLink+"</a>");
+            text = text.replaceAll("{Name}", user.fullName);
+            mailFactory.send(startData.email, startData.email, startData.emailSubject, text);
+            mailFactory.send("post@getshop.com", "post@getshop.com", startData.emailSubject, text);
+            
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        } catch (ErrorException ex) {
+            throw ex;
+        }
+        
+        
     }
 }

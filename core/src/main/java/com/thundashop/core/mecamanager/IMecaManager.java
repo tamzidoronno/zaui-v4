@@ -117,4 +117,7 @@ public interface IMecaManager {
     
     @Editor
     public void setManuallyServiceDate(String carId, Date date);
+    
+    @Editor
+    public void setCommentOnCar(String carId, String comment);
 }

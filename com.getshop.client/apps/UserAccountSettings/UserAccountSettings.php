@@ -72,7 +72,7 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
     
     public function UserAccountSettings_loadUser() {
         $_SESSION['usersrow_selectedarea'] = "modules";
-        $app = new \ns_7b68e527_b6fe_4d56_8628_0f981e0b87eb\UsersRow();
+        $app = new \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView();
         $app->loadUser($_POST['data']['id']);
         $app->renderApplication(true, $this);
     }

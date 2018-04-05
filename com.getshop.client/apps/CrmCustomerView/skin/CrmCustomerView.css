@@ -22,3 +22,4 @@
     padding-bottom: 4px;
 }
 .CrmCustomerView .checkbox { width: 20px; height: 20px; }
+.CrmCustomerView .bookings .col { width: 120px !important; }

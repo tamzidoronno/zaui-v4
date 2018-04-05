@@ -9,12 +9,15 @@ if ($user && $user->isTransferredToAccountSystem && $config->denyUpdateUserWhenT
     $disabled = "DISABLED";
 }
 $paymentApps = (array) $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-if ($user && $user->type > 10) {
+if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
     $disabled = "DISABLED";
 }
 ?>
 <div gstype="form" method="saveUser">
     <?
+    if($disabled) {
+        echo "<div style='color:red; font-weight: bold; text-align:center; font-size: 16px;'>You can not change the values for this user.</div>";
+    }
     foreach ($extraArgs as $key => $value) {
         ?>
         <input type="hidden" gsname="<? echo $key; ?>" value="<? echo $value; ?>"/>

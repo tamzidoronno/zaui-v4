@@ -5,7 +5,7 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
     public function getDescription() {
         
     }
-
+    
     public function getName() {
         return "UserAccountSettings";
     }

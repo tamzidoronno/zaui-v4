@@ -81,6 +81,12 @@ app.PmsNewBooking = {
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.availablerooms').html(res);
+            $('.availableroomscounter').each(function() {
+                var roomtype = $(this).attr('roomtype');
+                var count = $(this).text();
+                $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').attr('original', count);
+                $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').text(count);
+            })
         });
     }
 };

@@ -10,6 +10,54 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         
     }
     
+    public function formatRooms($booking) {
+        return sizeof($booking->rooms);
+    }
+    
+    /** @param \core_pmsmanager_PmsBooking $booking */
+    public function formatGuests($booking) {
+        $guest = "";
+        $guests = array();
+        $count = 0;
+        foreach($booking->rooms as $room) {
+            $count += $room->numberOfGuests;
+           foreach($room->guests as $guest) {
+               if($guest->name) {
+                   $guests[] = $guest->name;
+               }
+           }
+        }
+        $title = join(", ", $guests);
+        return "<span title='$title'>" . $count . "</span>";
+    }
+    
+    public function formatCreated($booking) {
+        return date("d.m.Y", strtotime($booking->rowCreatedDate));
+    }
+    /** @param \core_pmsmanager_PmsBooking $booking */
+    public function formatbookingCost($booking) {
+        return $booking->totalPrice;
+    }
+    
+    /** @param \core_pmsmanager_PmsBooking $booking */
+    public function formatpaymentCost($booking) {
+        $total = $booking->totalPrice - $booking->totalUnsettledAmount;
+        return $total;
+    }
+    
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBooking $booking
+     * @return type
+     */
+    public function formatOrders($booking) {
+        return sizeof($booking->orderIds);
+    }
+    
+    public function formatRoomNames() {
+        return "";
+    }
+    
     public function setUserId() {
         $_SESSION['usersrow_lastuserid'] = $_POST['data']['id'];
     }

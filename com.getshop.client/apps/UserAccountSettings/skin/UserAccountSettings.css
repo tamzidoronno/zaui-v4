@@ -1,0 +1,2 @@
+.UserAccountSettings .GetShopModuleTable .col { width: 70px; text-align: center; }
+.UserAccountSettings .GetShopModuleTable .col_fullName { width: calc(100% - 990px); text-align: left; }

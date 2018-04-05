@@ -2,21 +2,26 @@
 /* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
 $user = $this->getUser();
 ?>
-<div class="insideheader"><? echo $this->__f("Accounting details"); ?></div>
-<div class="row">
-    <div class="col col1">
-        <? echo $this->__f("Accounting user id"); ?>
+<div gstype='form' method='saveAccountingDetails'>
+    <div class="insideheader"><? echo $this->__f("Accounting details"); ?></div>
+    <div class="row">
+        <div class="col col1">
+            <? echo $this->__f("Accounting user id"); ?>
+        </div>
+        <div class="col col2">
+            <input class="gsniceinput1" gsname="accountingId" value="<? echo $user->accountingId; ?>"/>
+        </div>
     </div>
-    <div class="col col2">
-        <input class="gsniceinput1" gsname="accountingId" value="<? echo $user->accountingId; ?>"/>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col col1">
-        <? echo $this->__f("External accounting id"); ?>
+    <div class="row">
+        <div class="col col1">
+            <? echo $this->__f("External accounting id"); ?>
+        </div>
+        <div class="col col2">
+            <input class="gsniceinput1" gsname="externalAccountingId" value="<? echo $user->externalAccountingId; ?>"/>
+        </div>
     </div>
-    <div class="col col2">
-        <input class="gsniceinput1" gsname="externalAccountingId" value="<? echo $user->externalAccountingId; ?>"/>
+    <div class='footer'>
+        <span class='shop_button' gstype='submit' gs_callback='app.CrmCustomerView.success'>Save accounting settings</span>
     </div>
 </div>

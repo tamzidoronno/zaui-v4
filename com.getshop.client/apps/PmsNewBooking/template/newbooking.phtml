@@ -55,7 +55,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
                 $disabled = "disabled";
             }
             $total += $size;
-            echo "<tr class='roomstoaddrow'>";
+            echo "<tr class='roomstoaddrow' roomtype='".$type->id."'>";
             echo "<td>" . $type->name . "</td>";
             echo "<td style='text-align:center;' class='roomsleftfield' original='$size'>$size</td>";
             echo "<td style='width:90px'><input type='txt' class='gsniceinput1 roomtypecount' style='width:90px' gsname='count_".$type->id."'></td>";

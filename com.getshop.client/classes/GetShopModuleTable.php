@@ -56,8 +56,9 @@ class GetShopModuleTable {
         if (!method_exists($res, $this->functionName)) {
             return;
         }
-
-        $this->data = call_user_func_array(array($res, $this->functionName), $this->args);
+        if($this->functionName) {
+            $this->data = call_user_func_array(array($res, $this->functionName), $this->args);
+        }
     }
 
     private function renderTable($renderPaging = false) {

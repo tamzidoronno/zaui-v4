@@ -1,0 +1,35 @@
+<?php
+/* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
+?>
+<div class='header'>Payments and invoices
+    <div class="shop_button" style='float:right;'><? echo $this->__f("Create a new payment"); ?></div>
+</div>
+<br><br>
+<?php
+
+$user = $this->getUser();
+$orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($user->id);
+if(sizeof($orders) == 0) {
+    ?>
+<div class="kaipal infobox">
+        <div class="image sad"></div>
+        <div class="textbox">
+            <div class="text">
+                <?
+                echo $this->__f("It seems like this user has no orders added to its account yet.");
+                ?>    
+
+            </div>
+        </div>
+    </div>
+    <?php
+} else {
+    $ids = array();
+    foreach($orders as $order) {
+        $ids[] = $order->id;
+    }
+    $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+    $orderlist->setOrderIds($ids);
+    $orderlist->renderApplication(true, $this);
+}
+?>

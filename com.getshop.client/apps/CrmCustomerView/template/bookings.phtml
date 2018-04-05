@@ -1,0 +1,34 @@
+<?php
+/* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
+$domains = $this->getDomains();
+$user = $this->getUser();
+?>
+<div class='header'>Bookings registered</div>
+<div class='bookings'>
+    <?php
+    foreach($domains as $domain) {
+        $filter = new core_pmsmanager_PmsBookingFilter();
+        $filter->userId = $user->id;
+        $bookings = $this->getApi()->getPmsManager()->getAllBookings($domain, $filter);
+
+        if(sizeof($bookings) == 0) {
+            continue;
+        }
+
+        $attributes = array(
+            array('id', 'gs_hidden', 'id'),
+            array('created', 'created', 'created', 'formatCreated'),
+            array('rooms', 'rooms', 'rooms', 'formatRooms'),
+            array('orders', 'payments', 'orders', 'formatOrders'),
+            array('guests', 'guests', 'guests', 'formatGuests'),
+            array('bookingCost', 'bookingCost', 'bookingCost', 'formatbookingCost'),
+            array('paymentCost', 'total payments', 'paymentCost', 'formatpaymentCost')
+        );
+
+
+        $table = new \GetShopModuleTable($this, 'CrmCustomerView', 'loadBooking', 'loadUser', $attributes);
+        $table->setData($bookings);
+        $table->render();
+    }
+    ?>
+</div>

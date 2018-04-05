@@ -1,55 +1,16 @@
-
-.CrmCustomerView .menuarea,
-.CrmCustomerView .workarea {
-    width: 500px;
-    display: inline-block;
-    vertical-align: top;
-    font-size: 13px;
-}
-
-.CrmCustomerView .workarea {
-    width: calc(100% - 200px);
-    box-sizing: border-box;
-}
-
-.CrmCustomerView .menuarea {
-    width: 200px;
-    box-sizing: border-box;
-    padding: 30px;
-    padding-left: 10px;
-}
-
-.CrmCustomerView .menuarea .menuentry i{
-    font-size: 30px;
-    display: none;
-}
-.CrmCustomerView .menuarea .menuentry {
-    text-align: left;
-    padding: 5px;
-    cursor: pointer;
-    color: #82cdf3;
-    text-decoration: dotted;
-    text-decoration: none;
-    width: inherit;
-    display: inline-block;
-    margin-left: 20px;
-    margin-bottom: 5px;
-    margin-top: 0px;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.CrmCustomerView .menuarea .menuentry span {
+.CrmCustomerView .crmmenuentry {  
     border-bottom: 2px dotted #82cdf3;
     padding-left: 1px;
     padding-right: 1px;
-    padding: 3px;
-    margin-left: 20px;
-}
-
-.CrmCustomerView .menuarea .menuentry.active span {
+    padding: 3px; 
+    cursor:pointer;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+ }
+.CrmCustomerView .header { font-size: 20px; border-bottom: solid 2px #000; width:100%; line-height: 30px; padding-bottom: 10px; margin-bottom: 10px; }
+.CrmCustomerView .footer { padding-top: 10px; text-align: right; }
+.CrmCustomerView .selectedmenuentry { 
     border-bottom: 2px dotted transparent;
-    display: inline-block;
     background-color: #2a324e;
     color: #FFF;
     border-radius: 20px;
@@ -60,34 +21,5 @@
     padding-top: 4px;
     padding-bottom: 4px;
 }
-
-.CrmCustomerView .userinformation {
-    display: none;
-}
-
-.CrmCustomerView .userinformation.active {
-    display: block;
-}
-
-.CrmCustomerView .tab.active {
-    background-color: #FFF;
-}
-
-.CrmCustomerView .insideheader {
-    font-size: 20px;
-    border-bottom: solid 2px #333;
-    padding-bottom: 5px;
-    margin-bottom: 20px;
-    margin-top: 30px;
-}
-
-.CrmCustomerView .buttonarea {
-    margin-top: 30px;
-    text-align: left;
-}
-
-.CrmCustomerView .row .col { display: inline-block; padding: 0px;}
-.CrmCustomerView .row .col1 { width: 130px; }
-
-.CrmCustomerView .row .col2 { width: calc(100% - 134px); box-sizing: border-box; }
-.CrmCustomerView .row .col2 input { width: 100%; box-sizing: border-box;}
+.CrmCustomerView .checkbox { width: 20px; height: 20px; }
+.CrmCustomerView .bookings .col { width: 120px !important; }

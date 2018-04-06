@@ -14,6 +14,31 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         return sizeof($booking->rooms);
     }
     
+    
+    public function saveDiscountPreferences() {
+        $domain = $_POST['data']['domain'];
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
+        $user->showExTaxes = $_POST['data']['showExTaxes'] == "true";
+        $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
+        $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
+        $discount->discountType = 0;
+        $discount->pricePlan = $_POST['data']['pricePlan'];
+        $discount->attachedDiscountCode = $_POST['data']['attachedDiscountCode'];
+        
+        if($_POST['data']['discounttype'] == "fixedprice") {
+            $discount->discountType = 1;
+        }
+        foreach($_POST['data'] as $index => $val) {
+            if(stristr($index, "discount_")) {
+                $room = str_replace("discount_", "", $index);
+                $discount->discounts->{$room} = $val;
+            }
+        }
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($domain, $discount);
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     /** @param \core_pmsmanager_PmsBooking $booking */
     public function formatGuests($booking) {
         $guest = "";

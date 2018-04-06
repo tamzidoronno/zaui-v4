@@ -1,1 +1,149 @@
-<div class='header'>Discounts</div>
+<?php
+/* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
+$domains = $this->getDomains();
+$user = $this->getUser();
+$paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+
+foreach ($domains as $domain) {
+    echo "<h1>$domain</h1>";
+    $rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($domain);
+    $discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
+    ?>
+    <div class='header'>Discounts</div>
+    <div class='dashboard_panel' gstype='form' method='saveDiscountPreferences'>
+        <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
+        <input type='hidden' gsname='domain' value='<?php echo $domain; ?>'>
+        <div class='dashboard_panel_body'>
+            <table width='100%' cellspacing='0' cellpadding='0'>
+                <tr>
+                    <?php
+                    $afterStayChecked = $discounts->supportInvoiceAfter ? "CHECKED" : "";
+                    ?>
+
+                    <td>
+                        <b>Create order after stay</b><br>
+                        When a booking is completed the order will be created after the stay has been completed.
+                    </td>
+                    <td class='rowinput'>
+                        <div>
+                            <input type='checkbox' class='largecheckbox' id="createorderafterstay" gsname='createAfterStay' <?php echo $afterStayChecked; ?>>
+                            <label for="createorderafterstay"></label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Preferred payment type</b><br>
+                        What payment method should be default when booking?<br>
+                    <td  class='rowinput'>
+                        <select class='gsniceselect1' gsname='preferredPaymentType'>
+                            <?php
+                            echo "<option value=''>Default</option>";
+                            foreach ($paymentApps as $id => $type) {
+                                $selected = "";
+                                $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+                                if ($type->id == $user->preferredPaymentType) {
+                                    $selected = "SELECTED";
+                                }
+                                if (method_exists($instance, "getName")) {
+                                    echo "<option value='" . $type->id . "' $selected>" . $instance->getName() . "</option>";
+                                }
+                            }
+                            ?>                                    
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Price plan</b><br>
+                        Specify a specific price plan for this user<br>
+                    <td class='rowinput'>
+                        <select class='gsniceselect1' gsname='pricePlan'>
+                            <?php
+                            echo "<option value=''>Default</option>";
+                            $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($domain);
+                            foreach ($priceCodes as $code) {
+                                if ($code == "default") {
+                                    continue;
+                                }
+                                $selected = "";
+                                if ($discounts->pricePlan == $code) {
+                                    $selected = "SELECTED";
+                                }
+                                echo "<option value='" . $code . "' $selected>" . $code . "</option>";
+                            }
+                            ?>                                    
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Attached discount code</b><br>
+                        Attach a discount code for this user, all bookings with the attached discounts will be booked on this user<br>
+                    <td class='rowinput'>
+                        <select class='gsniceselect1' gsname='attachedDiscountCode'>
+                            <?php
+                            echo "<option value=''>None</option>";
+                            $coupons = $this->getApi()->getCartManager()->getCoupons();
+                            foreach ($coupons as $coupon) {
+                                $selected = "";
+                                if ($discounts->attachedDiscountCode == $coupon->code) {
+                                    $selected = "SELECTED";
+                                }
+                                echo "<option value='" . $coupon->code . "' $selected>" . $coupon->code . "</option>";
+                            }
+                            ?>                                    
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Discount type</b><br>
+                        Percentage or fixed price discount?<br>
+                    <td class='rowinput'>
+                        <select class='gsniceselect1' gsname='discounttype'>
+                            <option value='percentage'>Percentage</option>
+                            <option value='fixedprice' <?php
+                            if ($discounts->discountType == 1) {
+                                echo "SELECTED";
+                            }
+                            ?>>Fixed price</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <?php
+                    $afterStayChecked = $user->showExTaxes ? "CHECKED" : "";
+                    ?>
+
+                    <td>
+                        <b>Prices are without taxes</b><br>
+                        If this is active the prices will be shown without taxes in the booking process.
+                    </td>
+                    <td class='rowinput'>
+                        <div>
+                            <input type='checkbox' class='largecheckbox' id="showpricesextaxes" gsname='showExTaxes' <?php echo $afterStayChecked; ?>>
+                            <label for="showpricesextaxes"></label>
+                        </div>
+                    </td>
+                </tr>
+
+                <?php
+                foreach ($rooms as $room) {
+                    $amount = "";
+                    if (isset($discounts->discounts->{$room->id})) {
+                        $amount = $discounts->discounts->{$room->id};
+                    }
+                    echo "<tr>";
+                    echo "<td>" . $room->name . "</td>";
+                    echo "<td class='rowinput'><input type='txt' class='gsniceinput1' style='width:50px;' value='$amount' gsname='discount_" . $room->id . "'></td>";
+                    echo "</tr>";
+                }
+                ?>
+            </table>
+        </div>
+        <div class='footer'>
+            <span class='shop_button dashboardpmsbutton' gstype='submit' gs_callback='app.PmsManagement.saveSuccess'>Save</span>
+        </div>
+    </div>
+    <?php
+}
+?>
+    

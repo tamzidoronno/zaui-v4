@@ -113,7 +113,7 @@ public class Route extends DataCommon {
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(completedInfo.completedTimeStamp);
-        cal.add(Calendar.DAY_OF_WEEK, 5);
+        cal.add(Calendar.HOUR, 180);
         Date dateToPass = cal.getTime();
         
         Date now = new Date();

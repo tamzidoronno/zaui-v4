@@ -14,6 +14,59 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         return sizeof($booking->rooms);
     }
     
+    public function printCards($userId) {
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $res = (array)$user->savedCards;
+        if(sizeof($res) == 0) {
+            echo "<br>";
+            echo "We have no cards registered on this customer.";
+        }
+        foreach($user->savedCards as $card) {
+            echo "<i class='fa fa-trash-o deletecardbutton' cardid='".$card->id."' userid='$userId'></i> " . $card->mask . " - " . $card->expireMonth . "/" . $card->expireYear . "<br>";
+        }
+    }
+    
+    public function updateRestrictions() {
+        $userId = $_POST['data']['userid'];
+        $domain = $_POST['data']['domain'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($domain);
+        $toAdd = array();
+        foreach($_POST['data'] as $key => $val) {
+            if($val != "true") {
+                continue;
+            }
+            if(stristr($key, "area_")) {
+                $toAdd[] = str_replace("area_", "", $key);
+            }
+        }
+        $config->mobileViewRestrictions->{$userId} = $toAdd;
+        $this->getApi()->getPmsManager()->saveConfiguration($domain, $config);
+    }
+    
+    public function saveDiscountPreferences() {
+        $domain = $_POST['data']['domain'];
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
+        $user->showExTaxes = $_POST['data']['showExTaxes'] == "true";
+        $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
+        $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
+        $discount->discountType = 0;
+        $discount->pricePlan = $_POST['data']['pricePlan'];
+        $discount->attachedDiscountCode = $_POST['data']['attachedDiscountCode'];
+        
+        if($_POST['data']['discounttype'] == "fixedprice") {
+            $discount->discountType = 1;
+        }
+        foreach($_POST['data'] as $index => $val) {
+            if(stristr($index, "discount_")) {
+                $room = str_replace("discount_", "", $index);
+                $discount->discounts->{$room} = $val;
+            }
+        }
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($domain, $discount);
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     /** @param \core_pmsmanager_PmsBooking $booking */
     public function formatGuests($booking) {
         $guest = "";

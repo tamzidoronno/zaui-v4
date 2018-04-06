@@ -23,3 +23,5 @@
 }
 .CrmCustomerView .checkbox { width: 20px; height: 20px; }
 .CrmCustomerView .bookings .col { width: 120px !important; }
+.CrmCustomerView .rowinput { text-align: right; }
+.CrmCustomerView .largecheckbox { width: 25px; height: 25px; }

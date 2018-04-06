@@ -1,1 +1,21 @@
+<?php
+/* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
+$user = $this->getUser();
+?>
 <div class='header'>Saved cards</div>
+
+<div class='dashboard_panel' gstype='form' method='saveDiscountPreferences'>
+    <div class='dashboard_panel_header'><i class='fa fa-lock'></i> Saved cards
+        <span class='pmsbutton dashboardpmsbutton' onclick="$('.importcardpanel').show();">Import card from other user</span>
+    </div>
+    <div class="importcardpanel">
+        <input type="text" placeholder="Four last digits of card" class='searchinput gsniceinput1'>
+        <span class='shop_button' class="searchbutton" userid='<?php echo $user->id; ?>'>Search</span>
+        <span class="searcharea">
+
+        </span>
+    </div>
+    <span class='cardlist'>
+        <?php $this->printCards($user->id); ?>
+    </span>
+</div>

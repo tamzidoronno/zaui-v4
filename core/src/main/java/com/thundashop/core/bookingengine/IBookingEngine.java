@@ -32,6 +32,9 @@ public interface IBookingEngine {
     public void deleteBookingItemType(String id);
     
     @Administrator
+    public boolean canAddBooking(Booking bookingsToAdd);
+    
+    @Administrator
     public Booking getBooking(String bookingId);
 
     @Administrator

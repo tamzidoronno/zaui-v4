@@ -2,6 +2,8 @@
 namespace ns_74220775_43f4_41de_9d6e_64a189d17e35;
 
 class PmsNewBooking extends \WebshopApplication implements \Application {
+    public $canNotAddConferenceRoom = false;
+    
     public function getDescription() {
         
     }
@@ -10,15 +12,57 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         return "PmsNewBooking";
     }
     
+    public function addConferenceRoom() {
+        $start = strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']);
+        $end = strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']);
+        
+        $start = $this->convertToJavaDate($start);
+        $end = $this->convertToJavaDate($end);
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $_POST['data']['item']);
+        
+        $booking = new \core_bookingengine_data_Booking();
+        $booking->bookingItemId = $item->id;
+        $booking->bookingItemTypeId = $item->bookingItemTypeId;
+        $booking->startDate = $start;
+        $booking->endDate = $end;
+
+        if(!$this->getApi()->getBookingEngine()->canAddBooking($this->getSelectedMultilevelDomainName(), $booking)) {
+            $this->canNotAddConferenceRoom = true;
+        } else {
+            $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+            $room = new \core_pmsmanager_PmsBookingRooms();
+            $room->date = new \core_pmsmanager_PmsBookingDateRange();
+            $room->date->start = $start;
+            $room->date->end = $end;
+            $room->bookingItemId = $item->id;
+            $room->bookingItemTypeId = $item->bookingItemTypeId;
+            $currentBooking->rooms[] = $room;
+            $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
+        }
+    }
+    
     public function render() {
         if(isset($this->msg)) {
             echo $this->msg;
         }
+        $conferncerooms = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), 1);
+        $hasConferenceClass = "";
+        if(sizeof($conferncerooms) > 0) {
+            $hasConferenceClass = "hasconference";
+        }
+        
+        
+        
         echo "<div style='max-width:1500px; margin:auto;' class='dontExpand'>";
-        echo "<div class='addnewroom'>";
+        echo "<div class='addnewroom $hasConferenceClass'>";
         $this->includefile("newbooking");
         echo "</div>";
-        echo "<div class='availablerooms'>";
+        if($hasConferenceClass) {
+            echo "<div class='conferenceroom'>";
+            $this->includefile("conferencerooms");
+            echo "</div>";
+        }
+        echo "<div class='availablerooms $hasConferenceClass'>";
         $this->showAvailableRooms();
         echo "</div>";
         echo "<div style='clear:both;'></div>";

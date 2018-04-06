@@ -12,7 +12,13 @@ $rows = array();
 $canBeAdded = true;
 foreach($booking->rooms as $room) {
     $row = new stdClass();
-    $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$room->pmsBookingRoomId."' method='removeRoom'></i> " . $types[$room->bookingItemTypeId]->name;
+    if($room->bookingItemId) {
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+        $name = $item->bookingItemName;
+    } else {
+        $name = $types[$room->bookingItemTypeId];
+    }
+    $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$room->pmsBookingRoomId."' method='removeRoom'></i> " . $name;
     $row->start = date("d.m.Y H:i", strtotime($room->date->start));
     $row->end = date("d.m.Y H:i", strtotime($room->date->end));
     if($room->canBeAdded && !$room->addedToWaitingList) {
@@ -40,7 +46,6 @@ if(!$found) {
     echo "No rooms added yet, add one or more rooms above.";
 } else {
     ?>
-    <span class='shop_button' gstype='clicksubmit' method='removeAllSelectedRooms'>Remove all rooms</span>
     <?php
     $table = new \GetShopModuleTable($this, null,null, null, $attributes);
     $table->setData($rows);
@@ -50,6 +55,7 @@ if(!$found) {
     <div style='text-align: right; margin-top: 25px;' gstype='form' method='completequickreservation'>
         <span class='selecteduser' style='display:none;'><i class='fa fa-trash-o' style='cursor:pointer;'></i> <span class='name'></span></span>
         <input type='text' class='gsniceinput1' placeholder="Name of group holder" gsname='nameofholder'>
+    <span class='shop_button' gstype='clicksubmit' method='removeAllSelectedRooms' style='float:left;background-color:red;'>Remove all rooms</span>
     <span class='shop_button' gstype='submit'>Continue, reservation details is added in the next step <i class='fa fa-arrow-right'></i></span>
     <div class='alreadyexists'></div>
     </div>

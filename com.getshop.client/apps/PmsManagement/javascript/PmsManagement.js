@@ -329,8 +329,7 @@ app.PmsManagement = {
         if($('.managementviewfilter').css('display') === 'none'){
             $('.managementviewfilter').slideDown();
             $('.managementviewfilter').css('display','inline-block');
-        }
-        else{
+        } else {
             $('.managementviewfilter').slideUp();
             $('.managementviewfilter').css('display','none');
         }

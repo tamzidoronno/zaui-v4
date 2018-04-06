@@ -23,6 +23,11 @@ public class BookingItemType extends DataCommon {
         public static Integer ONETIME = 1;
         public static Integer FORTIME = 2;
     }
+    public static class BookingSystemCategory {
+        public static Integer PMS = 0;
+        public static Integer CONFERENCE = 1;
+        public static Integer RESTAURANT = 2;
+    }
     
     @Translation
     public String name;

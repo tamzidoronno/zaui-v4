@@ -1,1 +1,55 @@
 <div class='header'>GetShop.express</div>
+<?php
+/* @var $this ns_dc1e5211_da31_4b50_b0f8_b2c5a3b8453a\CrmCustomerNew */
+
+$user = $this->getUser();
+if($user->type < 100) {
+    echo "User need to be an administrator to have access to https://getshop.express";
+    return;
+}
+
+$domains = $this->getDomains();
+
+$vareas = array();
+$vareas['userdata'] = "<i class='fa fa-user' title='Deny access to user data'></i> Deny user data access";
+$vareas['otherinstruction'] = "Instructions";
+$vareas['findguest'] = "Guests";
+$vareas['fire'] = "Fire";
+$vareas['sms'] = "Sms";
+$vareas['log'] = "Log";
+$vareas['doors'] = "Doors";
+$vareas['cleaning'] = "Cleaning";
+$vareas['caretaker'] = "Caretaker";
+$vareas['timeregistering'] = "Time registering";
+$vareas['conference'] = "Conference system";
+
+
+foreach($domains as $domain) {
+    $config = $this->getApi()->getPmsManager()->getConfiguration($domain);
+    echo "<h1>" . $domain . "</h1>";
+    echo "<div gstype='form' method='updateRestrictions'>";
+    echo "<input type='hidden' gsname='domain' value='$domain'>";
+    echo "<input type='hidden' gsname='userid' value='".$user->id."'>";
+        foreach($vareas as $id => $text) {
+            $checked = "";
+            if($id == "userdata" && in_array("ExcludePersonalInformation", (array)$user->annotionsAdded)) {
+                $checked = "CHECKED";
+            }
+            if(isset($config->mobileViewRestrictions->{$user->id}) && in_array($id, $config->mobileViewRestrictions->{$user->id})) {
+                $checked = "CHECKED";
+            }
+
+            ?>
+            <div style='clear:both;'>
+                <?php echo $text; ?>
+                <input type='checkbox' class='largecheckbox' style='float:right;' gsname='area_<?php echo $id; ?>' <?php echo $checked; ?>>
+            </div>
+            <?php
+        }
+        ?>
+        <div class='footer' style='padding-top:20px;'>
+            <span class='shop_button' gstype='submit' gs_callback='app.CrmCustomerView.success'>Save settings</span>
+        </div>
+    <?php
+    echo "</div>";
+}

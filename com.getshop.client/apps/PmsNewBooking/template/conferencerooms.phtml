@@ -1,0 +1,79 @@
+<h1>Add a conference room</h1>
+<div gstype='form' method='addConferenceRoom'>
+    <?php
+    /* @var $this \ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
+    $conferncerooms = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), 1);
+    $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+    $date = date("d.m.Y", time());
+    
+    $startDate = $date;
+    $startTime = "12:00";
+    $endDate = $date;
+    $endTime = "13:00";
+    
+    if(isset($_POST['data']['startdate'])) {
+        $startDate = $_POST['data']['startdate'];
+        $startTime = $_POST['data']['starttime'];
+    }
+    if(isset($_POST['data']['enddate'])) {
+        $endDate = $_POST['data']['enddate'];
+        $endTime = $_POST['data']['endtime'];
+    }
+    
+    echo "<select class='gsniceselect1' style=' width: 340px;' gsname='item'>";
+    foreach($conferncerooms as $confroomtype) {
+        foreach($items as $item) {
+            if($item->bookingItemTypeId != $confroomtype->id) {
+                continue;
+            }
+            echo "<option value='".$item->id."'>" . $item->bookingItemName ."</option>";
+        }
+    }
+    echo "</select>";
+    ?>
+    <br>
+    <br>
+    <div>
+        <span style='width:180px; display:inline-block;'>Starting</span>
+        <span>Ending</span>
+    </div>
+    <input class='startdate gsniceinput1' style='width:70px;' value='<?php echo $startDate; ?>' gsname='startdate'>
+    <input class='starttime gsniceinput1' style='width:40px;' value='<?php echo $startTime; ?>' gsname='starttime'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input class='enddate gsniceinput1' style='width:70px;' value='<?php echo $endDate; ?>' gsname='enddate'>
+    <input class='endtime gsniceinput1' style='width:40px;' value='<?php echo $endTime; ?>' gsname='endtime'> 
+    <br>
+    <br>
+    <span class='shop_button' style='width:100%; width: 320px;' gstype='submit'>Add conference room</span>
+</div>
+<?php
+if($this->canNotAddConferenceRoom) {
+    echo "<div class='warninnotabletoadd'>Sorry, this conference room is taken by someone else.</div>";
+}
+?>
+
+<script>
+    $('.startdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            var curEnd = moment($('.enddate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            var diff = curEnd.valueOf() - date.valueOf();
+            if(diff <= 0) {
+                $('.enddate').val(date.format('DD.MM.YYYY')); 
+            }
+        }
+    });
+    
+    $('.enddate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            var curStart = moment($('.startdate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            var diff = date.valueOf() - curStart.valueOf();
+            if(diff <= 0) {
+                $('.startdate').val(date.format('DD.MM.YYYY')); 
+            }
+        }
+    });
+    $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function() {
+        $(this).closest('div').find('input').focus();
+    });
+</script>

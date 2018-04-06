@@ -23,6 +23,19 @@ app.CrmCustomerView = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.CrmCustomerView .mainarea').html(res);
         });
+    },
+    deleteCard : function() {
+        var confirmed = confirm("Are you sure you want to remove this card? This action can not be reverted");
+        if(!confirmed) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','deleteCard', $(this), {
+            "userid" : $(this).attr('userid'),
+            "cardid" : $(this).attr('cardid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.cardlist').html(res);
+        });
     }
 }
 app.CrmCustomerView.init();

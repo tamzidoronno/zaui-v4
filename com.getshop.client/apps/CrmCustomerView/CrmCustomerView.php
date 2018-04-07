@@ -140,6 +140,55 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         echo "</tr>";
         echo "</table>";
     }
+    
+    public function saveCumsterDetails() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        
+        /*
+            [userid] => 2a3edf2e-7811-44a4-8687-58576c09526e
+            [fullName] => ACCON AS
+            [emailAddress] => kristine@accon.no
+            [prefix] => 47
+            [cellPhone] => 97141516
+            [emailAddressToInvoice] => 
+            [address_fullname] => ACCON AS
+            [address_address] => Bjørnsons vei 6A
+            [address_postcode] => 3117
+            [address_city] => TØNSBERG
+            [vatNumber] => 915136613
+            [invoiceReference] => 
+            [invoice_address] => 
+            [invoice_postcode] => 
+            [invoice_city] => 
+         */
+        
+        $user->fullName = $_POST['data']['fullName'];
+        $user->emailAddress = $_POST['data']['emailAddress'];
+        $user->prefix = $_POST['data']['prefix'];
+        $user->cellPhone = $_POST['data']['cellPhone'];
+        $user->emailAddressToInvoice = $_POST['data']['emailAddressToInvoice'];
+        if(!$user->address) {
+            $user->address = new \core_usermanager_data_Address();
+        }
+        $user->address->address = $_POST['data']['address_address'];
+        $user->address->fullName = $_POST['data']['address_fullname'];
+        $user->address->city = $_POST['data']['address_city'];
+        $user->address->postCode = $_POST['data']['address_postcode'];
+        
+        
+        $company = $user->companyObject;
+        $company->invoiceReference = $_POST['data']['invoiceReference'];
+        
+        if(!$company->invoiceAddress) {
+            $company->invoiceAddress = new \core_usermanager_data_Address();
+        }
+        $company->invoiceAddress->address = $_POST['data']['invoice_address'];
+        $company->invoiceAddress->postCode = $_POST['data']['invoice_postcode'];
+        $company->invoiceAddress->city = $_POST['data']['invoice_city'];
+        $company->invoiceAddress->countrycode = $_POST['data']['invoice_countrycode'];
+        $this->getApi()->getUserManager()->saveCompany($company);
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 
     public function changeArea() {
         $_SESSION['usersrow_selectedarea'] = $_POST['data']['area'];

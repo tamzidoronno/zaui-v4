@@ -1,1 +1,70 @@
-No company connected to this profile yet.
+<div class='header'>Company details</div>
+<?php
+/* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
+$user = $this->getUser(); 
+
+if(sizeof((array)$user->company) == 0) {
+    echo "We have not registered this customer as a company, if this is a company click on the add company button to register is as a company.";
+    echo "<span class='shop_button' style='background-color:green; width:100%; box-sizing:border-box; margin-top: 20px;'>Connect a company to this user</span>";
+    return;
+}
+
+if($user->primaryCompanyUser) {
+    ?>
+    <div class='companydetailsarea'>
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Vat number"); ?>
+            </div>
+            <div class="col col2">
+                <input class="gsniceinput1" gsname="vatNumber" value="<? echo $user->companyObject->vatNumber; ?>" disabled/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col1">
+                <? echo $this->__f("Invoice reference"); ?>
+            </div>
+            <div class="col col2">
+                <input class="gsniceinput1" gsname="invoiceReference" value="<? echo $user->companyObject->invoiceReference; ?>"/>
+            </div>
+        </div>
+    </div>
+
+    <div class='header'>Invoice address</div>
+    <div class="row">
+        <div class="col col1">
+            <? echo $this->__f("Address"); ?>
+        </div>
+        <div class="col col2">
+            <input class="gsniceinput1" gsname="invoice_address" value="<? echo @$user->companyObject->invoiceAddress->address; ?>"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col1">
+            <? echo $this->__f("Postbox"); ?>
+        </div>
+        <div class="col col2">
+            <input class="gsniceinput1" gsname="invoice_postcode" value="<? echo @$user->companyObject->invoiceAddress->postCode; ?>"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col1">
+            <? echo $this->__f("City"); ?>
+        </div>
+        <div class="col col2">
+            <input class="gsniceinput1" gsname="invoice_city" value="<? echo @$user->companyObject->invoiceAddress->city; ?>"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col1">
+            <? echo $this->__f("Country"); ?>
+        </div>
+        <div class="col col2">
+            <input class="gsniceinput1" gsname="invoice_countrycode" value="<? echo @$user->companyObject->invoiceAddress->countrycode; ?>"/>
+        </div>
+    </div>
+    <?php
+} else {
+    echo "You can not update company details since this is connected to a subaccount.";
+}
+?>

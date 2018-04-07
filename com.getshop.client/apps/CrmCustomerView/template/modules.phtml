@@ -1,7 +1,15 @@
+<div class='header'>Modules</div>
+<?php
+/* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
+$user = $this->getUser();
+if($user->type < 100) {
+    echo "User need to be an administrator to have access to modules";
+    return;
+}
+?>
 <div gstype='form' method='updateUsersRight'>
     <?php
     $modules = $this->getApi()->getPageManager()->getModules();
-    echo "<div class='header'>Restrictions</div>";
     $user = $this->getUser();
     foreach($modules as $module) {
         echo "<div style='clear:both;'>";

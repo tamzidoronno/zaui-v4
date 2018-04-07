@@ -1,7 +1,16 @@
 <?php
  /* @var $this \ns_7b68e527_b6fe_4d56_8628_0f981e0b87eb\UsersRow */
+$user = $this->getUser();
 ?>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "overview") { echo "selectedmenuentry"; } ?>' area='overview'>Overview</div>
+<?php
+if($user->primaryCompanyUser) {
+    ?>
+    <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "subaccounts") { echo "selectedmenuentry"; } ?>' area='subaccounts'>Subaccounts</div>
+    <?php
+}
+?>
+<div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "password") { echo "selectedmenuentry"; } ?>' area='password'>Password</div>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "payments") { echo "selectedmenuentry"; } ?>' area='payments'>Payments</div>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "bookings") { echo "selectedmenuentry"; } ?>' area='bookings'>Bookings</div>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "discounts") { echo "selectedmenuentry"; } ?>' area='discounts'>Discounts</div>

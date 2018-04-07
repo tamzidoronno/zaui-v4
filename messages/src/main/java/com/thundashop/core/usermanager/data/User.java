@@ -37,6 +37,8 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean visibleOnlyInMainCompany = false;
     public boolean primaryCompanyUser = false;
     public boolean showExTaxes = false;
+    public Date lastBooked = null;
+    public Date lastOrdered = null;
     
     public HashMap<String,UserOAuthorization> oAuths = new HashMap();
     
@@ -215,6 +217,70 @@ public class User extends DataCommon implements Comparable<User> {
             suspended = false;
             company = res.companyIds;
         }
+    }
+
+    public boolean matchSelectionType(FilterOptions filterOptions) {
+        if(filterOptions == null) {
+            return true;
+        }
+        
+        if(filterOptions.extra == null) {
+            return true;
+        }
+
+        String type = filterOptions.extra.get("selectiontype");
+        if(type == null) {
+            return true;
+        }
+        
+        if(type.equals("companies") && (company == null || company.isEmpty())) {
+            return false;
+        }
+        if(type.equals("private") && (company != null && !company.isEmpty())) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    public boolean bookedBetween(Date startDate, Date endDate) {
+        if(lastBooked == null) {
+            return false;
+        }
+        
+        if (lastBooked.equals(rowCreatedDate)) {
+            return true;
+        }
+
+        if (lastBooked.equals(rowCreatedDate)) {
+            return true;
+        }
+
+        if (lastBooked.before(rowCreatedDate) && lastBooked.after(rowCreatedDate)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean orderedBetween(Date startDate, Date endDate) {
+        if(lastBooked == null) {
+            return false;
+        }
+        
+        if (lastBooked.equals(rowCreatedDate)) {
+            return true;
+        }
+
+        if (lastBooked.equals(rowCreatedDate)) {
+            return true;
+        }
+
+        if (lastBooked.before(rowCreatedDate) && lastBooked.after(rowCreatedDate)) {
+            return true;
+        }
+
+        return false;
     }
 
  

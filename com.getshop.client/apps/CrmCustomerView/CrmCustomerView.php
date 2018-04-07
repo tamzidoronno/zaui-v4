@@ -189,6 +189,12 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $this->getApi()->getUserManager()->saveCompany($company);
         $this->getApi()->getUserManager()->saveUser($user);
     }
+    
+    public function connectToUser() {
+        $vatNumber = $_POST['data']['vatnumber'];
+        $userid = $_POST['data']['userid'];
+        $this->getApi()->getUserManager()->connectCompanyToUser($userid, $vatNumber);
+    }
 
     public function changeArea() {
         $_SESSION['usersrow_selectedarea'] = $_POST['data']['area'];
@@ -296,6 +302,10 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         }
         
         return $this->getApi()->getStoreManager()->getMultiLevelNames();
+    }
+    
+    public function formatRowCreatedDate($user) {
+        return \GetShopModuleTable::formatDate($user->rowCreatedDate);
     }
 
 }

@@ -4,8 +4,17 @@
 $user = $this->getUser(); 
 
 if(sizeof((array)$user->company) == 0) {
-    echo "We have not registered this customer as a company, if this is a company click on the add company button to register is as a company.";
-    echo "<span class='shop_button' style='background-color:green; width:100%; box-sizing:border-box; margin-top: 20px;'>Connect a company to this user</span>";
+    ?>
+    We have not registered this customer as a company, if this is a company click on the add company button to register is as a company.
+    <span class='shop_button' style='background-color:green; width:100%; box-sizing:border-box; margin-top: 20px;'>Connect a company to this user</span>
+    <br><br>
+    <div gstype='form' method='connectToUser'>
+        <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
+        Vat number:<br>
+        <input type="text" class='gsniceinput1' gsname='vatnumber'>
+        <span class='shop_button' gstype='submit'>Connect to customer</span>
+    </div>
+    <?php
     return;
 }
 

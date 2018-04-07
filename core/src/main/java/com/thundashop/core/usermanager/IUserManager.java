@@ -69,6 +69,9 @@ public interface IUserManager {
     public User logOn(String username, String password) throws ErrorException;
     
     @Administrator
+    public void connectCompanyToUser(String userId, String taxNumber);
+    
+    @Administrator
     public List<User> getSubUsers(String userId);
     
     public void updateUserCounter(Integer counter, String password);

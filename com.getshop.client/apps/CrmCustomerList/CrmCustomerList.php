@@ -50,11 +50,35 @@ class CrmCustomerList extends \MarketingApplication implements \Application {
         $view->setUserId($_POST['data']['id']);
         $view->renderApplication(true, $this);
     }
+    
+    /**
+     * 
+     * @param \core_usermanager_data_User $user
+     * @return type
+     */
+    public function formatFullName($user) {
+        $name = $user->fullName;
+        if($user->primaryCompanyUser) {
+            $name = "<i class='fa fa-industry'></i> " . $name;
+        }
+        return $name;
+    }
 
     public function renderTable() {
+        $filterApp = new \ns_9f8483b1_eed4_4da8_b24b_0f48b71512b9\CrmListFilter();
+        $crmFilter = $filterApp->getSelectedFilter();
+        
         $filter = new \core_common_FilterOptions();
         $filter->pageSize = 20;
         $filter->pageNumber = 1;
+        
+        if($crmFilter['start']) {
+            $filter->startDate = $this->convertToJavaDate(strtotime($crmFilter['start']));
+            $filter->endDate = $this->convertToJavaDate(strtotime($crmFilter['end']));
+        }
+        $filter->searchWord = $crmFilter['keyword'];
+        $filter->extra = $crmFilter;
+        
         
         $args = array($filter);
         
@@ -62,7 +86,7 @@ class CrmCustomerList extends \MarketingApplication implements \Application {
             array('id', 'gs_hidden', 'id'),
             array('rowCreatedDate', 'CREATED', null, 'formatRowCreatedDate'),
             array('type', 'TYPE', null, 'renderType'),
-            array('fullname', 'NAME', 'fullName'),
+            array('fullname', 'NAME', 'fullName', 'formatFullName'),
             array('email', 'EMAIL', 'emailAddress'),
             array('callPhone', 'PHONE', 'cellPhone'),
             array('company', 'COMPANY', null, 'formatCompany')

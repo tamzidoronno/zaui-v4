@@ -1,0 +1,58 @@
+<?php
+/* @var $this ns_9f8483b1_eed4_4da8_b24b_0f48b71512b9\CrmListFilter */
+$whens = array();
+$whens['whenregistered'] = "When registered";
+$whens['whenbooked'] = "When booked";
+
+$types = array();
+$types['all'] = "All types";
+$types['companies'] = "Companies only";
+$types['private'] = "Private only";
+
+$filter = $this->getSelectedFilter();
+$keyword = "";
+$start = "";
+$end = "";
+$when = "";
+$selectiontype = "";
+if(isset($filter['keyword'])) { $keyword = $filter['keyword']; }
+if(isset($filter['start'])) { $start = $filter['start']; }
+if(isset($filter['end'])) { $end = $filter['end']; }
+if(isset($filter['when'])) { $when = $filter['when']; }
+if(isset($filter['selectiontype'])) { $selectiontype = $filter['selectiontype']; }
+
+?>
+<div style='text-align: center; margin-bottom:20px;' gstype='form' method='applyFilter'>
+    <h3>Filter</h3>
+    <input type="text" gsname='start' class='gsniceinput1 startdate' placeholder='start' value='<?php echo $start; ?>'>
+    <input type="text" gsname='end' class='gsniceinput1 enddate' placeholder='end' value='<?php echo $end; ?>'>
+    <select class='gsniceselect1' style='height:35px;' gsname='when'>
+        <?php
+        foreach($whens as $idx => $text) {
+            $selected = "";
+            if($when == $idx) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$idx' $selected>$text</option>";
+        }
+        ?>
+    </select>
+    <select class='gsniceselect1' style='height:35px;' gsname='selectiontype'>
+        <?php
+        foreach($types as $idx => $val) {
+            $selected = "";
+            if($selectiontype == $idx) { $selected = "SELECTED"; }
+            echo "<option value='$idx' $selected>$val</option>";
+        }
+        ?>
+    </select>
+    <input type="text" gsname='keyword' class="gsniceinput1" placeholder='Search word' value='<?php echo $keyword; ?>'>
+    <span class='shop_button' gstype='submit'>Load filter</span>
+
+    <h3>Result</h3>
+</div>
+
+<script>
+     $('.startdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+     $('.enddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

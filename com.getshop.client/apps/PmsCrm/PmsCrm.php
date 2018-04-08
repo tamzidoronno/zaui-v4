@@ -143,11 +143,13 @@ class PmsCrm extends \WebshopApplication implements \Application {
         $filter->pageSize = 20;
         $filter->pageNumber = 1;
         
-        if($crmFilter['start']) {
+        if(isset($crmFilter['start']) && $crmFilter['start']) {
             $filter->startDate = $this->convertToJavaDate(strtotime($crmFilter['start']));
             $filter->endDate = $this->convertToJavaDate(strtotime($crmFilter['end']));
         }
-        $filter->searchWord = $crmFilter['keyword'];
+        if(isset($crmFilter['keyword'])) {
+            $filter->searchWord = $crmFilter['keyword'];
+        }
         $filter->extra = $crmFilter;
         
         

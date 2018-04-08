@@ -1,0 +1,4 @@
+.CrmListFilter .nextstep { display:none; }
+.CrmListFilter .companytypeselection { display:none; }
+.CrmListFilter .successcreate { color:green; font-size: 22px; text-align: left; }
+.CrmListFilter .failedcreate { color:red; font-size: 22px;  text-align: left;}

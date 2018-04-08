@@ -2,6 +2,9 @@
 namespace ns_9f8483b1_eed4_4da8_b24b_0f48b71512b9;
 
 class CrmListFilter extends \WebshopApplication implements \Application {
+    public $createdCustomer = false;
+    public $createdCustomerFailed = false;
+    
     public function getDescription() {
         
     }
@@ -14,6 +17,29 @@ class CrmListFilter extends \WebshopApplication implements \Application {
         $this->includefile("filter");
     }
     
+    public function createNewPrivateCustomer() {
+        $name = $_POST['data']['name'];
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $name;
+        $this->getApi()->getUserManager()->createUser($user);
+        $this->setNewCustomerFilter();
+        if($user) {
+            $this->createdCustomer = true;
+        }
+    }
+    
+    public function createNewCompanyCustomer() {
+        $vatnumber = $_POST['data']['vatnumber'];
+        $name = $_POST['data']['name'];
+        
+        $user = $this->getApi()->getUserManager()->createCompany($vatnumber, $name);
+        if($user) {
+            $this->createdCustomer = true;
+        } else {
+            $this->createdCustomerFailed = true;
+        }
+    }
+    
     public function applyFilter() {
         $_SESSION['crmlistfilter'] = json_encode($_POST['data']);
     }
@@ -24,5 +50,13 @@ class CrmListFilter extends \WebshopApplication implements \Application {
         }
         return array();
     }
+
+    public function setNewCustomerFilter() {
+        $filter = array();
+        $filter['when'] = "whenregistered"; 
+        $filter['sorttype'] = "regdesc";
+        $_SESSION['crmlistfilter'] = json_encode($filter);
+    }
+
 }
 ?>

@@ -22,8 +22,9 @@ if(isset($filter['when'])) { $when = $filter['when']; }
 if(isset($filter['selectiontype'])) { $selectiontype = $filter['selectiontype']; }
 
 ?>
-<div style='text-align: center; margin-bottom:20px;' gstype='form' method='applyFilter'>
+<div style='text-align: center; margin-bottom:20px; max-width:1500px; margin:auto;' gstype='form' method='applyFilter'>
     <h3>Filter</h3>
+    <span class='shop_button newcustomerbutton' style='float:left; background-color:green;'>Add a new customer</span>
     <input type="text" gsname='start' class='gsniceinput1 startdate' placeholder='start' value='<?php echo $start; ?>'>
     <input type="text" gsname='end' class='gsniceinput1 enddate' placeholder='end' value='<?php echo $end; ?>'>
     <select class='gsniceselect1' style='height:35px;' gsname='when'>
@@ -48,6 +49,16 @@ if(isset($filter['selectiontype'])) { $selectiontype = $filter['selectiontype'];
     </select>
     <input type="text" gsname='keyword' class="gsniceinput1" placeholder='Search word' value='<?php echo $keyword; ?>'>
     <span class='shop_button' gstype='submit'>Load filter</span>
+    
+    <?php
+    $this->includefile("newcustomer");
+    if($this->createdCustomer) {
+        echo "<div class='successcreate'><i class='fa fa-check'></i> Customer has been created, look in the list below.</div>";
+    }
+    if($this->createdCustomerFailed) {
+        echo "<div class='failedcreate'><i class='fa fa-warning'></i> Customer has not been created, it most likely exists already.</div>";
+    }
+    ?>
 
     <h3>Result</h3>
 </div>
@@ -55,4 +66,9 @@ if(isset($filter['selectiontype'])) { $selectiontype = $filter['selectiontype'];
 <script>
      $('.startdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
      $('.enddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+     
+     setTimeout(function() {
+         $('.successcreate').fadeOut();
+         $('.failedcreate').fadeOut();
+     }, "3000");
 </script>

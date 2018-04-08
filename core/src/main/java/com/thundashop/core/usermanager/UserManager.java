@@ -1347,12 +1347,37 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .filter(filterUserByPaymentType(filterOptions))
                 .filter(filterBySelectionType(filterOptions))
                 .collect(Collectors.toList());
+        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
+            Collections.sort(allUsers, compareByReg(true));
+        } else {
+            Collections.sort(allUsers, compareByName());
+        }
+        FilteredData res = pageIt(allUsers, filterOptions);
         
-        Collections.sort(allUsers, compareByName());
-        return pageIt(allUsers, filterOptions);
-
+        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
+            Collections.sort(res.datas, compareByReg(true));
+        } else {
+            Collections.sort(res.datas, compareByName());
+        }
+        
+        return res;
     }
 
+    private Comparator<User> compareByReg(boolean desc) {
+        return (User a, User b) -> {
+            if (a == null || a.rowCreatedDate == null)
+                return 1;
+            
+            if (b == null || b.rowCreatedDate == null)
+                return -1;
+            
+            if(desc) {
+                return b.rowCreatedDate.compareTo(a.rowCreatedDate);
+            }
+            return a.rowCreatedDate.compareTo(b.rowCreatedDate);
+        };
+    }
+    
     private Comparator<User> compareByName() {
         return (User a, User b) -> {
             if (a == null || a.fullName == null || a.fullName.isEmpty())
@@ -2223,6 +2248,28 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return false;
+    }
+
+    @Override
+    public User createCompany(String vatNumber, String name) {
+        List<Company> company = getCompaniesByVatNumber(vatNumber);
+        if(company != null && !company.isEmpty()) {
+            return null;
+        }
+        
+        User user = new User();
+        user.fullName = name;
+        user = createUser(user);
+        
+        Company comp = new Company();
+        comp.name = name;
+        comp.vatNumber = vatNumber;
+        saveCompany(comp);
+        user.company.add(comp.id);
+        saveUser(user);
+        finalizeUser(user);
+        
+        return user;
     }
 
     

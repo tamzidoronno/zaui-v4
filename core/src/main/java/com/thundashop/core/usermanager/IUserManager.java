@@ -487,6 +487,9 @@ public interface IUserManager {
     @Administrator
     public void createGoogleTotpForUser(String userId);
     
+    @Administrator
+    public User createCompany(String vatNumber, String name);
+    
     public User logonUsingTotp(String username, String password, int oneTimeCode);
     
     public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode);

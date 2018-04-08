@@ -30,6 +30,8 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.
@@ -7086,7 +7088,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return count.keySet().size();
     }
-
+   
     @Override
     public List<PmsCustomerRow> getAllUsers(PmsBookingFilter filter) {
         
@@ -8311,5 +8313,54 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         System.out.println(count + " found");
         System.exit(0);
+    }
+
+    @Override
+    public FilteredData getAllCrmUsers(FilterOptions filter) {
+        HashMap<String, Integer> bookingCount = new HashMap();
+        HashMap<String, Integer> roomCount = new HashMap();
+        HashMap<String, Integer> guestCount = new HashMap();
+        for(PmsBooking booking : bookings.values()) {
+            Integer bcount = bookingCount.get(booking.userId);
+            Integer rcount = roomCount.get(booking.userId);
+            Integer gcount = guestCount.get(booking.userId);
+            if(rcount == null) { rcount = 0; }
+            if(bcount == null) { bcount = 0; }
+            if(gcount == null) { gcount = 0; }
+            bcount++;
+            rcount += booking.rooms.size();
+            for(PmsBookingRooms r : booking.rooms) {
+                gcount += r.numberOfGuests;
+            }
+            
+            bookingCount.put(booking.userId, bcount);
+            roomCount.put(booking.userId, rcount);
+            guestCount.put(booking.userId, gcount);
+        }
+        
+        FilteredData result = userManager.getAllUsersFiltered(filter);
+        for(User usr : (List<User>)result.datas) {
+            AdditionalCrmData additional = new AdditionalCrmData();
+            additional.numberOfBookings = bookingCount.get(usr.id);
+            additional.numberOfRooms = roomCount.get(usr.id);
+            additional.numberOfGuests = guestCount.get(usr.id);
+            
+            PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(usr.id);
+            additional.invoiceAfterStay = discount.supportInvoiceAfter;
+            additional.hasDiscount = discount.discounts.keySet().size() > 0;
+            additional.discountType = discount.discountType;
+            if(additional.hasDiscount) {
+                Double discountPrice = 0.0;
+                for(Double disc : discount.discounts.values()) {
+                    discountPrice += disc;
+                }
+                additional.discount = (discountPrice / discount.discounts.size());
+            }
+            
+            usr.additionalCrmData = additional;
+        }
+        
+        
+        return result;
     }
 }

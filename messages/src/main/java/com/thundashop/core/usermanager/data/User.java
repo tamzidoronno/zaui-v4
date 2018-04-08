@@ -12,6 +12,7 @@ import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.pmsmanager.AdditionalCrmData;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,6 +80,7 @@ public class User extends DataCommon implements Comparable<User> {
     public String passwordResetCode = "";
     
     public boolean emailVerified = false;
+    public AdditionalCrmData additionalCrmData;
     
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

@@ -1501,7 +1501,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<User> getUsersByCompanyId(String companyId) {
-        if(getSession() == null) {
+        if(getSession() == null || getSession().currentUser == null) {
             return new ArrayList();
         }
         Company company = getCompany(companyId);

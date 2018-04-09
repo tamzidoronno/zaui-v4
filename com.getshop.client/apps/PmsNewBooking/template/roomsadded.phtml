@@ -16,7 +16,7 @@ foreach($booking->rooms as $room) {
         $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
         $name = $item->bookingItemName;
     } else {
-        $name = $types[$room->bookingItemTypeId];
+        $name = $types[$room->bookingItemTypeId]->name;
     }
     $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$room->pmsBookingRoomId."' method='removeRoom'></i> " . $name;
     $row->start = date("d.m.Y H:i", strtotime($room->date->start));

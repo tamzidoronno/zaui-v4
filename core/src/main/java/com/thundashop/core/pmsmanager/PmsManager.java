@@ -549,7 +549,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         User user = userManager.getUserById(booking.userId);
         user.lastBooked = new Date();
-        userManager.saveUser(user);
+        userManager.saveUserSecure(user);
         
         return 0;
     }

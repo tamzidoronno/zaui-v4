@@ -511,6 +511,7 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .overview_addons .addaddonsonallroombutton {width:25%;}
     
     .GslBooking .gslfront_1 .guestbox .guestentry {display:none;} 
+    .GslBooking .gslfront_1 .guestbox .guestRows .guestentry {display:block;} 
     .GslBooking .gslfront_1 .roomentry .guestentry {padding-top:40px;}
     .GslBooking .gslfront_1 .roomheading {font-size:16px;}
     .GslBooking .gslfront_1 .guestentry div{width:100% !important;left:0;font-size:14px;}

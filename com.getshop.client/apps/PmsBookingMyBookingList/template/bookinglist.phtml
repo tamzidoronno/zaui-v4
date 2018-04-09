@@ -111,8 +111,12 @@ foreach($allRooms as $roomArray) {
         echo "<td>" . $types[$room->bookingItemTypeId]->name . "</td>";
         if($config->requirePayments) {
             echo "<td>".$room->price ."</td>";
-            if($room->invoicedTo) {
-                echo "<td>".date("d.m.Y", strtotime($room->invoicedTo)) ."</td>";
+            if($room->invoicedTo || $booking->unsettled == 0) {
+                $invoicedTo = $room->invoicedTo;
+                if(!$room->invoicedTo) {
+                    $invoicedTo = $room->date->end;
+                }
+                echo "<td>".date("d.m.Y", strtotime($invoicedTo)) ."</td>";
             } else {
                 echo "<td>".$this->__w("Not invoiced yet")."</td>";
             }

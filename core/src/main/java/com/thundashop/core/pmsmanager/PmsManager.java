@@ -2779,6 +2779,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms room = new PmsBookingRooms();
+        booking.rooms.add(room);
         BookingItemType typeToAdd = bookingEngine.getBookingItemType(type);
         room.bookingItemTypeId = type;
         room.date = new PmsBookingDateRange();
@@ -2805,7 +2806,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.overbooking = true;
         }
         
-        booking.rooms.addAll(toAdd);
         addDefaultAddonsToRooms(toAdd);
         
         saveBooking(booking);
@@ -3734,8 +3734,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
+        List<PmsRoomSimple> res = new ArrayList();
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
-        List<PmsRoomSimple> res = filtering.filterRooms(filter);
+        res = filtering.filterRooms(filter);
         doSorting(res, filter);
         List<PmsRoomSimple> remove = new ArrayList();
         if(filter.includeCleaningInformation) {

@@ -112,8 +112,13 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
     public function addRoomToGroup() {
         $type = $_POST['data']['type'];
         $count = $_POST['data']['count'];
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $startTime = $config->defaultStart;
+        $endTime = $config->defaultEnd;
+        
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']. " " . $startTime));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']. " " . $endTime));
         $bookingId = $this->getCurrentBooking()->id;
         $guestInfoRoom = $_POST['data']['guestInfoOnRoom'];
         

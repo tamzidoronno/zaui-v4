@@ -107,10 +107,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             return;
         }
         
-        if (!$this->isGroupBookingView()) {
-//            $this->renderFilterBox();
-        }
-        
         return $this->renderDataTable();
     }
     
@@ -141,12 +137,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     private function renderDataTable() {   
-//        $this->setData();
         $filter = $this->getSelectedFilter();
         $domainName = $this->getSelectedMultilevelDomainName();
         $args = array($domainName, $filter);
-        
-        
+//        
+//        
         $functionToUse = "getSimpleRooms";
         
         if ($this->isGroupBookingView()) {

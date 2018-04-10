@@ -199,7 +199,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $toPrint = ob_get_contents();
         ob_end_clean();
-        if(sizeof($data)) {
+        if(sizeof($data) == 0) {
             $this->includefile("noresultfound");
         } else {
             echo $toPrint;

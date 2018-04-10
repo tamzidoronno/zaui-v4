@@ -8,6 +8,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         
     }
 
+    public function searchbrreg() {
+        $company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['name']);
+        echo json_encode($company);
+    }
+    
     public function getName() {
         return "PmsNewBooking";
     }

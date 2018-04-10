@@ -12,3 +12,13 @@
 
 .PmsNewBooking .nextstep { display:none; }
 .PmsNewBooking .selectedbutton { background-color:green; }
+.PmsNewBooking .searchbrregbutton { color: blue; cursor:pointer; }
+.PmsNewBooking .searchbrregarea {
+    position: absolute;
+    border: solid 1px;
+    display: inline-block;
+    display:none;
+    padding: 10px;
+    background-color:#fff;
+    border-color: #bbb;
+}

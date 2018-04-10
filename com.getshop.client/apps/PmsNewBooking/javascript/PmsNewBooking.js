@@ -26,6 +26,17 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .totalcount',app.PmsNewBooking.selectAllRooms);
         $(document).on('click','.PmsNewBooking .newcustomertypebutton', app.PmsNewBooking.loadNewCustomerType);
         $(document).on('click','.PmsNewBooking .newcustomerbutton', app.PmsNewBooking.loadNewCustomerField);
+        $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
+    },
+    showBrregSearch : function() {
+        $('.searchbrregarea').slideDown();
+    },
+    searchResult : function(res) {
+        if(res) {
+            $('[gsname="vatnumber"]').val(res.vatNumber);
+            $('[gsname="name"]').val(res.name);
+            $('.searchbrregarea').hide();
+        }
     },
     loadNewCustomerField : function() {
         $('.nextstep').hide();

@@ -17,6 +17,10 @@ class CrmListFilter extends \WebshopApplication implements \Application {
         $this->includefile("filter");
     }
     
+    public function searchbrreg() {
+        $company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['name']);
+        echo json_encode($company);
+    }
     public function createNewPrivateCustomer() {
         $name = $_POST['data']['name'];
         $user = new \core_usermanager_data_User();

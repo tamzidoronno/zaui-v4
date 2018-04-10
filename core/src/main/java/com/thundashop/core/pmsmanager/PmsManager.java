@@ -2805,6 +2805,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.overbooking = true;
         }
         
+        booking.rooms.addAll(toAdd);
         addDefaultAddonsToRooms(toAdd);
         
         saveBooking(booking);

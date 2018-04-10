@@ -102,6 +102,14 @@ public class PmsBooking extends DataCommon {
         return totalPrice;
     }
     
+    public boolean hasRoom(String roomId) {
+        for(PmsBookingRooms r : rooms) {
+            if(r.pmsBookingRoomId.equals(roomId)) {
+                return true;
+            }
+        }
+        return false;
+    }
         
     public List<PmsBookingRooms> getRoomsWithForcedAccess() {
         List<PmsBookingRooms> res = new ArrayList();

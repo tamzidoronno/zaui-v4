@@ -1,0 +1,19 @@
+<div class="isnotactive" style='width:1500px; margin:auto;'>
+    <div class="kaipal infobox">
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Ready to start configuring your rooms."); ?></div>
+            <div class="text">
+                <?
+                echo "<div>" . $this->__f("It all starts with a room type (category), for example Double room, Single room, family room, etc, go ahead and create your first room type now.") . "</div>";
+                echo "<div>" . $this->__f("After that you can connect a room to the category and start selling it.") . "</div>";
+                ?>
+                <br><br>
+                <span gstype='form' method='createType'>
+                    <input type="txt" class="gsniceinput1" placeholder='Double room' gsname='name'>
+                    <span class='shop_button' gstype='submit'>Create a new room type</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

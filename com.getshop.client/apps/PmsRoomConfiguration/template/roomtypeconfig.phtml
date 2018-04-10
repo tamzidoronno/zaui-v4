@@ -1,5 +1,6 @@
 <?php 
 /* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 ?>
 <h2>Room types <span class='opentypesorting' style='cursor:pointer;'>(open sorting)</span></h2>
 <span gstype='form' method='createType'>

@@ -1,6 +1,12 @@
 
 <?
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$methods = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$hasPaymentMethods = false;
+if(sizeof($methods) > 0) {
+    $hasPaymentMethods = true;
+}
+
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $booking = $this->getBookingEngineBooking();
@@ -50,12 +56,14 @@ if(sizeof($pmsBooking->rooms) > 1) {
 <div>
         <?php
         if(!$pmsBooking->createOrderAfterStay) {
-        ?>
-            <span style='position:absolute; right: 0px; z-index: 5;'>
-                <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create order after stay"); ?></span>
-                <span class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Start payment process"); ?></span>
-    |       </span>
-        <?php
+            if($hasPaymentMethods) {
+            ?>
+                <span style='position:absolute; right: 0px; z-index: 5;'>
+                    <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create order after stay"); ?></span>
+                    <span class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Start payment process"); ?></span>
+               </span>
+            <?php
+            }
         } else {
             ?>
             <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;position:absolute; right: 10px;z-index:2;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
@@ -90,15 +98,19 @@ if(sizeof($pmsBooking->rooms) > 1) {
 <script>
     app.PmsBookingRoomView.activateSelectedTabSubOrders('<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>');
 </script>
-
-<div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
-<?
-if (!count($this->pmsBooking->orderIds)) {
-    echo "No orders has been created yet, create an order by pressing the Start payment process button.";
+<?php if($hasPaymentMethods) { ?>
+    <div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
+    <?
+    if (!count($this->pmsBooking->orderIds)) {
+        echo "No orders has been created yet, create an order by pressing the Start payment process button.";
+    } else {
+        $this->printOrderList();
+    }
 } else {
-    $this->printOrderList();
+    $this->includefile("nopaymentmethodsyet");
 }
 ?>
+    
 <style>
     .pricetext { display:inline-block; width: 130px; }
     .pricetag { display:inline-block; width: 80px; }

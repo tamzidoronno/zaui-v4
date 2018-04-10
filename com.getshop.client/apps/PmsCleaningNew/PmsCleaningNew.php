@@ -41,7 +41,7 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         echo "<div style='max-width:1500px;margin:auto;'>";
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         if($config->cleaningInterval == 0) {
-            echo "Cleaning interval is set to 0, this means it is disabled and need to be configured.";
+            $this->includefile("notsetupyet");
         } else {
             $this->includefile("cleaningpanel");
         }

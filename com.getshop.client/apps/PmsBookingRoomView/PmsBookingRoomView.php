@@ -208,7 +208,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $roomId = $this->setStay($selectedRoom);
         $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId, $selectedRoom->priceMatrix);
         $this->removeTmpRoom($selectedRoom->pmsBookingRoomId);
-        echo $roomId;
     }
     
     public function updateBooking() {

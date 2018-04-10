@@ -25,8 +25,13 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("filter");
-        $this->includefile("timelines");
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+        if(sizeof($items) == 0) {
+            $this->includefile("noitemsyet");
+        } else {
+            $this->includefile("filter");
+            $this->includefile("timelines");
+        }
     }
 
     public function getData() {

@@ -39,6 +39,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $room->date = new \core_pmsmanager_PmsBookingDateRange();
             $room->date->start = $start;
             $room->date->end = $end;
+            $room->numberOfGuests = 1;
             $room->bookingItemId = $item->id;
             $room->bookingItemTypeId = $item->bookingItemTypeId;
             $currentBooking->rooms[] = $room;
@@ -47,6 +48,13 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     }
     
     public function render() {
+        
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+        if(sizeof($items) == 0) {
+            $this->includefile("noroomscreatedyet");
+            return;
+        }
+        
         if(isset($this->msg)) {
             echo $this->msg;
         }

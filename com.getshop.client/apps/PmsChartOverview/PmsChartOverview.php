@@ -95,15 +95,25 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         $stats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $_SESSION['savedcoveragestats'] = json_encode($stats);
         $res = array();
-        $res['today'] = $stats->entries[0]->totalPrice;
-        $res['tomorrow'] = $stats->entries[1]->totalPrice;
+        if(sizeof($stats->entries) > 0) {
+            $res['today'] = $stats->entries[0]->totalPrice;
+            $res['tomorrow'] = $stats->entries[1]->totalPrice;
+        } else {
+            $res['today'] = 0;
+            $res['tomorrow'] = 0;
+        }
         return $res;
     }
 
     public function getCoverage() {
         $stats = json_decode($_SESSION['savedcoveragestats']);
-        $res['today'] = $stats->entries[0]->coverage;
-        $res['tomorrow'] = $stats->entries[1]->coverage;
+        if(sizeof($stats->entries) > 0) {
+            $res['today'] = $stats->entries[0]->coverage;
+            $res['tomorrow'] = $stats->entries[1]->coverage;
+        } else {
+            $res['today'] = 0;
+            $res['tomorrow'] = 0;
+        }
         return $res;
         
     }

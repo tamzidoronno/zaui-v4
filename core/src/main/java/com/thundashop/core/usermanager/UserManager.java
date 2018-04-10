@@ -2245,6 +2245,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user != null) {
             updatePasswordSecure(user.id, newPassword);
             logOn(user.emailAddress, newPassword);
+            user.passwordResetCode = "";
+            saveUserSecure(user);
             return user;
         }
         

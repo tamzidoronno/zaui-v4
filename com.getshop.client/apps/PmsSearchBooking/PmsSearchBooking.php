@@ -102,8 +102,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public function render() {
         $this->setDefaults();
         
-        if (!$this->isGroupBookingView()) {
-//            $this->renderFilterBox();
+        if($this->getApi()->getPmsManager()->hasNoBookings($this->getSelectedMultilevelDomainName())) {
+            $this->includefile("nobookingsyet");
+            return;
         }
         
         return $this->renderDataTable();
@@ -136,12 +137,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     private function renderDataTable() {   
-//        $this->setData();
         $filter = $this->getSelectedFilter();
         $domainName = $this->getSelectedMultilevelDomainName();
         $args = array($domainName, $filter);
-        
-        
+//        
+//        
         $functionToUse = "getSimpleRooms";
         
         if ($this->isGroupBookingView()) {
@@ -179,9 +179,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             );
         }
         
+        ob_start();
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
         $table->render();
-        $data = $table->getDate();
+        $data = (array)$table->getDate();
         
         $rowCount = 0;
         $guests = 0;
@@ -189,9 +190,15 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $rowCount++;
             $guests += $row->numberOfGuests;
         }
-        
-        
         echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests</div>";
+        
+        $toPrint = ob_get_contents();
+        ob_end_clean();
+        if(sizeof($data) == 0) {
+            $this->includefile("noresultfound");
+        } else {
+            echo $toPrint;
+        }
     }
     
     public function getAllProducts() {

@@ -154,10 +154,7 @@ app.PmsBookingRoomView = {
         var event = thundashop.Ajax.createEvent('','saveRoom', $(this),{
             "roomid" : $(this).attr('roomid')
         });
-        thundashop.Ajax.postWithCallBack(event, function(roomId) {
-            $('.menuarea').attr('roomId', roomId)
-            app.PmsBookingRoomView.refresh(true);
-        });
+        thundashop.Ajax.post(event);
     },
 
     seeChangesOnBooking : function() {
@@ -174,10 +171,11 @@ app.PmsBookingRoomView = {
     },
     
     doMassUpdatePrices : function() {
-        var type = $('.masseditpricestay').val();
-        var value = $('.massupdatepricevalue').val();
+        var box = $(this).closest('.masseditpricesbox');
+        var type = box.find('.masseditpricestay').val();
+        var value =  box.find('.massupdatepricevalue').val();
 
-        var event = thundashop.Ajax.createEvent('','updatePriceMatrixWithPeriodePrices', $(this), {
+        var event = thundashop.Ajax.createEvent('','updatePriceMatrixWithPeriodePrices', box, {
             "periodePriceType" : type,
             "periodePrice" : value
         });

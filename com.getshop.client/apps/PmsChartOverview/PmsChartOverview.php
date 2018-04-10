@@ -95,21 +95,31 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         $stats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $_SESSION['savedcoveragestats'] = json_encode($stats);
         $res = array();
-        $res['today'] = $stats->entries[0]->totalPrice;
-        $res['tomorrow'] = $stats->entries[1]->totalPrice;
+        if(sizeof($stats->entries) > 0) {
+            $res['today'] = $stats->entries[0]->totalPrice;
+            $res['tomorrow'] = $stats->entries[1]->totalPrice;
+        } else {
+            $res['today'] = 0;
+            $res['tomorrow'] = 0;
+        }
         return $res;
     }
 
     public function getCoverage() {
         $stats = json_decode($_SESSION['savedcoveragestats']);
-        $res['today'] = $stats->entries[0]->coverage;
-        $res['tomorrow'] = $stats->entries[1]->coverage;
+        if(sizeof($stats->entries) > 0) {
+            $res['today'] = $stats->entries[0]->coverage;
+            $res['tomorrow'] = $stats->entries[1]->coverage;
+        } else {
+            $res['today'] = 0;
+            $res['tomorrow'] = 0;
+        }
         return $res;
         
     }
 
     public function getJanitor() {
-        $tasks = $this->getApi()->getPmsManager()->getCareTakerJobs($this->getSelectedMultilevelDomainName());
+        $tasks = (array)$this->getApi()->getPmsManager()->getCareTakerJobs($this->getSelectedMultilevelDomainName());
         $notCompleted = 0;
         $completed = 0;
         foreach($tasks as $task) {
@@ -131,7 +141,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time())));
         $filter->filterType = "checkin";
         $filter->includeDeleted = false;
-        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+        $rooms = (array)$this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
         
         $today = 0;
         foreach($rooms as $room) {
@@ -142,7 +152,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
 
         $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()+86400)));
         $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time()+86400)));
-        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+        $rooms = (array)$this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
         $tomorrow = 0;
         foreach($rooms as $room) {
             if(sizeof($room->bookingComments) > 0) {

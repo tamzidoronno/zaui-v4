@@ -1,0 +1,14 @@
+.PmsCrm .GetShopModuleTable .col_2 { width: 80px; }
+.PmsCrm .GetShopModuleTable .col_3 { width: calc(100% - 1150px); }
+.PmsCrm .GetShopModuleTable .col_6 { width: calc(100% - 1150px); }
+.PmsCrm .GetShopModuleTable .col_5 { width: 120px; }
+.PmsCrm .GetShopModuleTable .col_7 { width: 90px; }
+.PmsCrm .GetShopModuleTable .col_8,
+.PmsCrm .GetShopModuleTable .col_9,
+.PmsCrm .GetShopModuleTable .col_10,
+.PmsCrm .GetShopModuleTable .col_12,
+.PmsCrm .GetShopModuleTable .col_13,
+.PmsCrm .GetShopModuleTable .col_14
+{ width: 50px; text-align: center; }
+
+.PmsCrm .GetShopModuleTable .col_11 { width: 80px; text-align: right; }

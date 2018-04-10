@@ -11,7 +11,6 @@ class CrmCustomerNew extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        
     }
 }
 ?>

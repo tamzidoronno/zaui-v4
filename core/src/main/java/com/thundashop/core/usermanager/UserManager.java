@@ -146,6 +146,27 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 //        doubleCheckUniqueCustomerIds();
     }
 
+    @Override
+    public void connectCompanyToUser(String userId, String taxNumber) {
+        User user = getUserById(userId);
+        if(user.primaryCompanyUser) {
+            logPrint("Can not connect a company to an existing company user");
+            return;
+        }
+        
+        List<Company> company = getCompaniesByVatNumber(taxNumber);
+        if(company != null && company.size() == 1) {
+            user.company.add(company.get(0).id);
+            saveUser(user);
+        } else {
+            Company comp = new Company();
+            comp.vatNumber = taxNumber;
+            saveCompany(comp);
+            user.company.add(comp.id);
+            saveUser(user);
+        }
+    }
+    
     private void addGetShopAdmins() throws ErrorException {
         if (getUserStoreCollection(storeId).getAllUsers().size() > 0) {
             for (User user : gsAdmins.getAllAdmins()) {
@@ -1009,6 +1030,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(user);
         }
         
+        if(user.company != null && user.company.size() == 1) {
+            List<User> companyUsers = getUsersByCompanyId(user.company.get(0));
+            if(companyUsers.size() == 1) {
+                user.primaryCompanyUser = true;
+                user.mainCompanyId = user.company.get(0);
+            }
+        }
+        
         user.subUserList.clear();
         for(String userid : user.subUsers) {
             user.subUserList.add(getUserById(userid));
@@ -1315,14 +1344,40 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .filter(filterUsersByDate(filterOptions))
                 .filter(filterUsersBySearchWord(filterOptions))
                 .filter(filterUsersByStatus(filterOptions))
-                .filter(filterUsersByExtras(filterOptions))
+                .filter(filterUserByPaymentType(filterOptions))
+                .filter(filterBySelectionType(filterOptions))
                 .collect(Collectors.toList());
+        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
+            Collections.sort(allUsers, compareByReg(true));
+        } else {
+            Collections.sort(allUsers, compareByName());
+        }
+        FilteredData res = pageIt(allUsers, filterOptions);
         
-        Collections.sort(allUsers, compareByName());
-        return pageIt(allUsers, filterOptions);
-
+        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
+            Collections.sort(res.datas, compareByReg(true));
+        } else {
+            Collections.sort(res.datas, compareByName());
+        }
+        
+        return res;
     }
 
+    private Comparator<User> compareByReg(boolean desc) {
+        return (User a, User b) -> {
+            if (a == null || a.rowCreatedDate == null)
+                return 1;
+            
+            if (b == null || b.rowCreatedDate == null)
+                return -1;
+            
+            if(desc) {
+                return b.rowCreatedDate.compareTo(a.rowCreatedDate);
+            }
+            return a.rowCreatedDate.compareTo(b.rowCreatedDate);
+        };
+    }
+    
     private Comparator<User> compareByName() {
         return (User a, User b) -> {
             if (a == null || a.fullName == null || a.fullName.isEmpty())
@@ -1345,7 +1400,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (filterOptions.startDate == null || filterOptions.endDate == null) {
             return o -> o != null;
         }
-        
+        if(filterOptions.extra != null && filterOptions.extra.containsKey("when")) {
+            String when = filterOptions.extra.get("when");
+            if(when.equals("whenbooked")) {
+                return o -> o.bookedBetween(filterOptions.startDate, filterOptions.endDate);
+            }
+            if(when.equals("whenordered")) {
+                return o -> o.orderedBetween(filterOptions.startDate, filterOptions.endDate);
+            }
+        }
         return o -> o.createdBetween(filterOptions.startDate, filterOptions.endDate);
     }
     
@@ -1353,7 +1416,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return o -> o.matchByString(filterOptions.searchWord);
     }
     
-    private Predicate<? super User> filterUsersByExtras(FilterOptions filterOptions) {
+    private Predicate<? super User> filterBySelectionType(FilterOptions filterOptions) {
+        return o -> o.matchSelectionType(filterOptions);
+    }
+    
+    private Predicate<? super User> filterUserByPaymentType(FilterOptions filterOptions) {
         return o -> o.matchByPaymentType(filterOptions);
     }
 
@@ -1434,6 +1501,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<User> getUsersByCompanyId(String companyId) {
+        if(getSession() == null || getSession().currentUser == null) {
+            return new ArrayList();
+        }
         Company company = getCompany(companyId);
         if (company == null) {
             return new ArrayList();
@@ -2180,5 +2250,27 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return null;
     }
-    
+
+    @Override
+    public User createCompany(String vatNumber, String name) {
+        List<Company> company = getCompaniesByVatNumber(vatNumber);
+        if(company != null && !company.isEmpty()) {
+            return null;
+        }
+        
+        User user = new User();
+        user.fullName = name;
+        user = createUser(user);
+        
+        Company comp = new Company();
+        comp.name = name;
+        comp.vatNumber = vatNumber;
+        saveCompany(comp);
+        user.company.add(comp.id);
+        saveUser(user);
+        finalizeUser(user);
+        
+        return user;
+    }
+
 }

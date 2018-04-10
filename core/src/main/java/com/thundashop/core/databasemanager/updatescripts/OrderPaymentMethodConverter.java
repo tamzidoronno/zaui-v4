@@ -29,7 +29,7 @@ public class OrderPaymentMethodConverter extends UpdateScriptBase implements Upd
     
     @Override
     public String getId() {
-        return "9ba3dce5-ebc3-44c7-965b-85a09030ce50";
+        return "9ba3dce5-ebc3-44c7-965b-85a09030ce51";
     }
 
     @SuppressWarnings("empty-statement")
@@ -70,7 +70,7 @@ public class OrderPaymentMethodConverter extends UpdateScriptBase implements Upd
         "b3dce8c9-b77b-4c4b-a398-af98863c2f91",
         allowed2,
         " ",
-        Application.Type.Payment, true);
+        Application.Type.Webshop, true);
         OrderPaymentMethodConverter.isPublic = true;
         OrderPaymentMethodConverter.isFrontend = true;
         OrderPaymentMethodConverter.moduleId = "ecommerce";

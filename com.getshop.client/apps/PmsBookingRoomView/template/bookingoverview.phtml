@@ -37,7 +37,7 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     echo "</div>";
 }
 
-if($numberOfRooms > 1 && !$this->isGroupBookingView()) {
+if($numberOfRooms > 0 && !$this->isGroupBookingView()) {
     echo "<div class='isgroupinformation'>";
     echo "This room is part of a group of " . $numberOfRooms . " rooms, <a href='/?page=groupbooking&bookingId=".$pmsBooking->id."' style='color:blue;'>open group</a>.";
     echo "</div>";

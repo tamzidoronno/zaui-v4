@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.storemanager.data.Store;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -32,7 +33,11 @@ public class PmsMailStatistics extends GetShopSchedulerBase {
             return;
         }
         
-        String storeAddr = getApi().getStoreManager().getMyStore().getDefaultWebAddress();
+        Store store = getApi().getStoreManager().getMyStore();
+        if(!store.id.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
+            return;
+        }
+        String storeAddr = store.getDefaultWebAddress();
         if(!storeAddr.startsWith("http")) {
             storeAddr = "http://" + storeAddr;
         }

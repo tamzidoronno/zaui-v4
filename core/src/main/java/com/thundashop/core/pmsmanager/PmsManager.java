@@ -30,6 +30,8 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.
@@ -544,6 +546,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
+        
+        User user = userManager.getUserById(booking.userId);
+        user.lastBooked = new Date();
+        userManager.saveUserSecure(user);
+        
         return 0;
     }
 
@@ -1698,6 +1705,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
+        if(hasNoBookings()) {
+            return new PmsStatistics();
+        }
         if(!filter.includeNonBookable && filter.typeFilter.isEmpty()) {
             List<BookingItemType> types = bookingEngine.getBookingItemTypes();
             for(BookingItemType type : types) {
@@ -2769,6 +2779,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms room = new PmsBookingRooms();
+        booking.rooms.add(room);
         BookingItemType typeToAdd = bookingEngine.getBookingItemType(type);
         room.bookingItemTypeId = type;
         room.date = new PmsBookingDateRange();
@@ -3723,8 +3734,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
+        List<PmsRoomSimple> res = new ArrayList();
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
-        List<PmsRoomSimple> res = filtering.filterRooms(filter);
+        res = filtering.filterRooms(filter);
         doSorting(res, filter);
         List<PmsRoomSimple> remove = new ArrayList();
         if(filter.includeCleaningInformation) {
@@ -7081,7 +7093,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return count.keySet().size();
     }
-
+   
     @Override
     public List<PmsCustomerRow> getAllUsers(PmsBookingFilter filter) {
         
@@ -8306,5 +8318,69 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         System.out.println(count + " found");
         System.exit(0);
+    }
+
+    @Override
+    public FilteredData getAllCrmUsers(FilterOptions filter) {
+        HashMap<String, Integer> bookingCount = new HashMap();
+        HashMap<String, Integer> roomCount = new HashMap();
+        HashMap<String, Integer> guestCount = new HashMap();
+        for(PmsBooking booking : bookings.values()) {
+            Integer bcount = bookingCount.get(booking.userId);
+            Integer rcount = roomCount.get(booking.userId);
+            Integer gcount = guestCount.get(booking.userId);
+            if(rcount == null) { rcount = 0; }
+            if(bcount == null) { bcount = 0; }
+            if(gcount == null) { gcount = 0; }
+            bcount++;
+            rcount += booking.rooms.size();
+            for(PmsBookingRooms r : booking.rooms) {
+                gcount += r.numberOfGuests;
+            }
+            
+            bookingCount.put(booking.userId, bcount);
+            roomCount.put(booking.userId, rcount);
+            guestCount.put(booking.userId, gcount);
+        }
+        
+        FilteredData result = userManager.getAllUsersFiltered(filter);
+        for(User usr : (List<User>)result.datas) {
+            AdditionalCrmData additional = new AdditionalCrmData();
+            additional.numberOfBookings = bookingCount.get(usr.id);
+            additional.numberOfRooms = roomCount.get(usr.id);
+            additional.numberOfGuests = guestCount.get(usr.id);
+            
+            PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(usr.id);
+            additional.invoiceAfterStay = discount.supportInvoiceAfter;
+            additional.hasDiscount = discount.discounts.keySet().size() > 0;
+            additional.discountType = discount.discountType;
+            if(additional.hasDiscount) {
+                Double discountPrice = 0.0;
+                for(Double disc : discount.discounts.values()) {
+                    discountPrice += disc;
+                }
+                additional.discount = (discountPrice / discount.discounts.size());
+            }
+            
+            usr.additionalCrmData = additional;
+        }
+        
+        
+        return result;
+    }
+    
+    public boolean hasNoBookings() {
+        boolean hasNoBooking = true;
+        if(bookings.size() < 10) {
+            for(PmsBooking book : bookings.values()) {
+                if(book.isCompletedBooking()) {
+                    hasNoBooking = false;
+                }
+            }
+        } else {
+            hasNoBooking = false;
+        }
+        
+        return hasNoBooking;
     }
 }

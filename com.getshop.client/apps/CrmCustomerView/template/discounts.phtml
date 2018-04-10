@@ -1,3 +1,4 @@
+<div class='header'>Discounts</div>
 <?php
 /* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
 $domains = $this->getDomains();
@@ -9,7 +10,6 @@ foreach ($domains as $domain) {
     $rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($domain);
     $discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
     ?>
-    <div class='header'>Discounts</div>
     <div class='dashboard_panel' gstype='form' method='saveDiscountPreferences'>
         <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
         <input type='hidden' gsname='domain' value='<?php echo $domain; ?>'>

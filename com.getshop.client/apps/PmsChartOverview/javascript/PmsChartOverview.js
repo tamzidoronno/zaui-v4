@@ -48,7 +48,11 @@ app.PmsChartOverview = {
 
             thundashop.Ajax.postWithCallBack(event, function(res) {
                 viewloaded[field] = "loaded";
-                var json = JSON.parse(res);
+                if(res) {
+                    var json = JSON.parse(res);
+                } else {
+                    var json = {};
+                }
 
                 var timerCounter = 0;
                 var countertoday = 1;

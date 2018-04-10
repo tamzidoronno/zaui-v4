@@ -24,7 +24,32 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .selecteduser .fa-trash-o',app.PmsNewBooking.removeSelectedUser);
         $(document).on('keyup','.PmsNewBooking .roomtypecount',app.PmsNewBooking.countRoomsToAdd);
         $(document).on('click','.PmsNewBooking .totalcount',app.PmsNewBooking.selectAllRooms);
+        $(document).on('click','.PmsNewBooking .newcustomertypebutton', app.PmsNewBooking.loadNewCustomerType);
+        $(document).on('click','.PmsNewBooking .newcustomerbutton', app.PmsNewBooking.loadNewCustomerField);
+        $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
     },
+    showBrregSearch : function() {
+        $('.searchbrregarea').slideDown();
+    },
+    searchResult : function(res) {
+        if(res) {
+            $('[gsname="vatnumber"]').val(res.vatNumber);
+            $('[gsname="name"]').val(res.name);
+            $('.searchbrregarea').hide();
+        }
+    },
+    loadNewCustomerField : function() {
+        $('.nextstep').hide();
+        $('.companytypeselection').slideDown();
+    },
+    loadNewCustomerType : function() {
+        $('.selectedbutton').removeClass('selectedbutton');
+        $(this).addClass('selectedbutton');
+        $('.nextstep').hide();
+        var type = $(this).attr('type');
+        $('.'+type).show();
+    },
+    
     selectAllRooms : function() {
         $('.roomstoaddrow').each(function() {
             var count = $(this).find('.roomsleftfield').attr('original');

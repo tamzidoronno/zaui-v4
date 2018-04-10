@@ -8,6 +8,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         
     }
 
+    public function searchbrreg() {
+        $company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['name']);
+        echo json_encode($company);
+    }
+    
     public function getName() {
         return "PmsNewBooking";
     }
@@ -34,6 +39,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $room->date = new \core_pmsmanager_PmsBookingDateRange();
             $room->date->start = $start;
             $room->date->end = $end;
+            $room->numberOfGuests = 1;
             $room->bookingItemId = $item->id;
             $room->bookingItemTypeId = $item->bookingItemTypeId;
             $currentBooking->rooms[] = $room;
@@ -42,6 +48,13 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     }
     
     public function render() {
+        
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+        if(sizeof($items) == 0) {
+            $this->includefile("noroomscreatedyet");
+            return;
+        }
+        
         if(isset($this->msg)) {
             echo $this->msg;
         }
@@ -194,9 +207,40 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         }
         return $size;
     }
-
+    
+    public function createNewCompanyCustomer() {
+        $vatnumber = $_POST['data']['vatnumber'];
+        $name = $_POST['data']['name'];
+        
+        $user = $this->getApi()->getUserManager()->createCompany($vatnumber, $name);
+        if($user) {
+            
+            $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+            $currentBooking->userId = $user->id;
+            $currentBooking->quickReservation = true;
+            $currentBooking->avoidCreateInvoice = true;
+            $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
+            $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedMultilevelDomainName());
+            
+            $this->msg = "";
+            $this->msg .= "<script>";
+            $this->msg .= "thundashop.common.goToPageLink('/?page=groupbooking&bookingId=".$res->id."');";
+            $this->msg .= "</script>";
+        } else {
+            $this->msg = "";
+            $this->msg .= "<div style='border: solid 1px; background-color:red; padding: 10px; font-size: 16px; color:#fff;'>";
+            $this->msg .= "<i class='fa fa-warning'></i> ";
+            $this->msg .= "Unable to comply, the company you tried to create already exists.";
+            $this->msg .= "</div>";
+            $this->createdCustomerFailed = true;
+        }
+    }
+    
     public function createSetUser() {
-        $name = $_POST['data']['nameofholder'];
+        $name = "";
+        if(isset($_POST['data']['nameofholder'])) {
+            $name = $_POST['data']['nameofholder'];
+        }
         if(!$name) {
             return "quickreservation";
         }

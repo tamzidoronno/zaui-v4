@@ -2,131 +2,131 @@
 /* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 ?>
-<h1>Add a hotel room</h1>
-<div gstype='form' method='addRoom'>
-    <div class="gs_headerbox">
-        <div>
-            <?
-            echo $this->__f("From");
-            ?>
+<h3>Step 1. Add a rooms</h3>
+<div class="section" style='width:100%;'>
+    <div gstype='form' method='addRoom'>
+        <div class="gs_headerbox">
+            <div>
+                <?
+                echo $this->__f("From");
+                ?>
+            </div>
+
+            <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>" gsname='from'/>
+
+            <i class="gsicon-calendar-text"></i>
         </div>
 
-        <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>" gsname='from'/>
+        <div class="gs_headerbox">
+            <div>
+                <?
+                echo $this->__f("To");
+                ?>
+            </div>
 
-        <i class="gsicon-calendar-text"></i>
-    </div>
+            <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>" gsname='to'/>
 
-    <div class="gs_headerbox">
-        <div>
-            <?
-            echo $this->__f("To");
-            ?>
+            <i class="gsicon-calendar-text"></i>
         </div>
-
-        <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>" gsname='to'/>
-
-        <i class="gsicon-calendar-text"></i>
-    </div>
-
-    <div>
-        <?php
-        echo "<table width='100%'>";
-        echo "<tr>";
-        echo "<th style='text-align:left;'>Room</th>";
-        echo "<th>Rooms left</th>";
-        echo "<th>Count</th>";
-        echo "</tr>";
-        
-        $start = $this->getStartDate();
-        $end = $this->getEndDate();
-        $number = 0;
-
-
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-        $start = $this->convertToJavaDate(strtotime($start. " " . $config->defaultStart));
-        $end = $this->convertToJavaDate(strtotime($end. " " . $config->defaultEnd));
-
-        $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-        $total = 0;
-
-        foreach($types as $type) {
-            $size = $this->getNumberOfAvailableForType($type,$current,$start,$end);
-            $disabled = "";
-            if($size <= 0) {
-                $disabled = "disabled";
-            }
-            $total += $size;
-            echo "<tr class='roomstoaddrow' roomtype='".$type->id."'>";
-            echo "<td>" . $type->name . "</td>";
-            echo "<td style='text-align:center;' class='roomsleftfield' original='$size'>$size</td>";
-            echo "<td style='width:90px'><input type='txt' class='gsniceinput1 roomtypecount' style='width:90px' gsname='count_".$type->id."'></td>";
+        <br>
+        <br>
+        <div>
+            <?php
+            echo "<table width='100%'>";
+            echo "<tr>";
+            echo "<th style='text-align:left;'>Room</th>";
+            echo "<th>Rooms left</th>";
+            echo "<th>Count</th>";
             echo "</tr>";
-        }
-        echo "<tr>";
-        echo "<td></td>";
-        echo "<td style='text-align:center;'><span class='totalcount' style='cursor:pointer;'>Select all</span></td>";
-        echo "<td><span class='shop_button' style='cursor:pointer; width:90px;' gstype='submit'>Add room</span></td>";
-        echo "</tr>";
-        echo "</table>";
-        ?>
-    </div>
-    
-    <div class="gs_headerbox">
-        <div>
+
+            $start = $this->getStartDate();
+            $end = $this->getEndDate();
+            $number = 0;
+
+
+            $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+            $start = $this->convertToJavaDate(strtotime($start . " " . $config->defaultStart));
+            $end = $this->convertToJavaDate(strtotime($end . " " . $config->defaultEnd));
+
+            $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+            $total = 0;
+
+            foreach ($types as $type) {
+                $size = $this->getNumberOfAvailableForType($type, $current, $start, $end);
+                $disabled = "";
+                if ($size <= 0) {
+                    $disabled = "disabled";
+                }
+                $total += $size;
+                echo "<tr class='roomstoaddrow' roomtype='" . $type->id . "'>";
+                echo "<td>" . $type->name . "</td>";
+                echo "<td style='text-align:center;' class='roomsleftfield' original='$size'>$size</td>";
+                echo "<td style='width:90px'><input type='txt' class='gsniceinput1 roomtypecount' style='width:90px' gsname='count_" . $type->id . "'></td>";
+                echo "</tr>";
+            }
+            echo "<tr>";
+            echo "<td></td>";
+            echo "<td style='text-align:center;'><span class='totalcount' style='cursor:pointer;'>Select all</span></td>";
+            echo "<td><span class='shop_button' style='cursor:pointer; width:90px;' gstype='submit'>Add room</span></td>";
+            echo "</tr>";
+            echo "</table>";
+            ?>
+        </div>
+
+        <div class="gs_headerbox">
+            <div>
+            </div>
+        </div>
+        <div class='moreThenAvailableWarning'>
+            <div class="isnotactive">
+                <div class="kaipal infobox">
+                    <div class="image sad"></div>
+                    <div class="textbox">
+                        <div class="header">Hey there, we have a problem.</div>
+                        <div class="text">
+                            You want me to create <span class='numberofrooms'></span> rooms. But I can only give you <span class='maxrooms'></span> rooms of type: <span class='typename'></span>. I will put <span class='roomsdiff'></span> rooms into a waiting list.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class='moreThenAvailableWarning'>
-        <div class="isnotactive">
-            <div class="kaipal infobox">
-               // faces: happy,sad,talking,danger
-               <div class="image sad"></div>
-               <div class="textbox">
-                   <div class="header">Hey there, we have a problem.</div>
-                   <div class="text">
-                       You want me to create <span class='numberofrooms'></span> rooms. But I can only give you <span class='maxrooms'></span> rooms of type: <span class='typename'></span>. I will put <span class='roomsdiff'></span> rooms into a waiting list.
-                   </div>
-               </div>
-           </div>
-        </div>
-        
-    </div>
-    
 </div>
 
 
 
 <script>
-    $('#startdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
-        onSelect: function(dateText) {
+    $('#startdate').datepicker({dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function (dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
             var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
             var date = moment(dateText, "DD.MM.YYYY");
-            
+
             var diff = curEnd.valueOf() - date.valueOf();
-            if(diff <= 0) {
+            if (diff <= 0) {
                 date.add(1, 'days');
-                $('#enddate').val(date.format('DD.MM.YYYY')); 
+                $('#enddate').val(date.format('DD.MM.YYYY'));
                 app.PmsNewBooking.reloadAvailability();
             }
         }
     });
-    
-    $('#enddate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
-        onSelect: function(dateText) {
+
+    $('#enddate').datepicker({dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function (dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
             var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
             var date = moment(dateText, "DD.MM.YYYY");
-            
+
             var diff = date.valueOf() - curStart.valueOf();
-            if(diff <= 0) {
+            if (diff <= 0) {
                 date.add(-1, 'days');
-                $('#startdate').val(date.format('DD.MM.YYYY')); 
+                $('#startdate').val(date.format('DD.MM.YYYY'));
                 app.PmsNewBooking.reloadAvailability();
             }
             app.PmsNewBooking.reloadAvailability();
         }
     });
-    $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function() {
+    $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function () {
         $(this).closest('div').find('input').focus();
     });
 </script>

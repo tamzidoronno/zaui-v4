@@ -25,6 +25,18 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+        if(sizeof($types) == 0) {
+            echo "<br><br>";
+            $this->includefile("firsttypecreation");
+            return;
+        }
+        
+        if(sizeof($items) == 0) {
+            $this->includefile("itemsnotaddedyet");
+        }
+
         $this->includefile("roomtypeconfig");
         $this->includefile("roomconfig");
     }

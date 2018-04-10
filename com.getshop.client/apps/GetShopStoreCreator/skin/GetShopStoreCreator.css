@@ -1,0 +1,15 @@
+.GetShopStoreCreator .label {
+    display: block;
+    height: 10px;
+}
+.GetShopStoreCreator .gsniceselect1,
+.GetShopStoreCreator .gsniceinput1 {
+    width: 100%;
+    box-sizing: border-box;
+}
+.GetShopStoreCreator .gserrorfield {
+    color: #ff6161;
+    border: solid 1px;
+    margin-top: 5px;
+    text-align: center;
+}

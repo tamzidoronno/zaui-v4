@@ -11,11 +11,11 @@ $doubleauth = $settingsInstance->getConfigurationSetting("doubleauthentication")
 $username = "";
 $password = "";
 
-if(isset($_GET['username'])) {
+if (isset($_GET['username'])) {
     $username = $_GET['username'];
 }
 
-if(isset($_GET['password'])) {
+if (isset($_GET['password'])) {
     $password = $_GET['password'];
 }
 
@@ -35,127 +35,171 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
         echo "<div class='error_login_info'>A new pincode has been sent to your phone.</div>";
     }
 }
-
 ?>
 
 <head>
     <meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
+
 <style>
-    body { background-color:#3a99d7; }
-    input { padding: 3px; width: 80%; font-size: 16px; }
-</style>
-<style type="text/css">
-    .error_login_info,
-    .error_login_problem {
-        width: 450px;
-        box-sizing: border-box;
-        border: solid 2px red;
-        margin: 0 auto;
-        padding: 30px;
-        color: #FFF;
-        font-size: 16px;
+    .form-style-6{
+        font: 95% Arial, Helvetica, sans-serif;
+        max-width: 400px;
+        margin: 10px auto;
+        padding: 16px;
+        background: #F7F7F7;
+    }
+    .form-style-6 h1{
+        background: #43D1AF;
+        padding: 20px 0;
+        font-size: 140%;
+        font-weight: 300;
         text-align: center;
+        color: #fff;
+        margin: -16px -16px 16px -16px;
     }
-    
-    .error_login_info {
-        border: solid 2px green;
+    .form-style-6 input[type="text"],
+    .form-style-6 input[type="password"],
+    .form-style-6 input[type="date"],
+    .form-style-6 input[type="datetime"],
+    .form-style-6 input[type="email"],
+    .form-style-6 input[type="number"],
+    .form-style-6 input[type="search"],
+    .form-style-6 input[type="time"],
+    .form-style-6 input[type="url"],
+    .form-style-6 textarea,
+    .form-style-6 select 
+    {
+        -webkit-transition: all 0.30s ease-in-out;
+        -moz-transition: all 0.30s ease-in-out;
+        -ms-transition: all 0.30s ease-in-out;
+        -o-transition: all 0.30s ease-in-out;
+        outline: none;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        width: 100%;
+        background: #fff;
+        margin-bottom: 4%;
+        border: 1px solid #ccc;
+        padding: 3%;
+        color: #555;
+        font: 95% Arial, Helvetica, sans-serif;
     }
-    
-    .button {
-        -moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
-        -webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
-        box-shadow:inset 0px 1px 0px 0px #97c4fe;
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0) );
-        background:-moz-linear-gradient( center top, #3d94f6 5%, #1e62d0 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0');
-        background-color:#3d94f6;
-        -webkit-border-top-left-radius:2px;
-        -moz-border-radius-topleft:2px;
-        border-top-left-radius:2px;
-        -webkit-border-top-right-radius:2px;
-        -moz-border-radius-topright:2px;
-        border-top-right-radius:2px;
-        -webkit-border-bottom-right-radius:2px;
-        -moz-border-radius-bottomright:2px;
-        border-bottom-right-radius:2px;
-        -webkit-border-bottom-left-radius:2px;
-        -moz-border-radius-bottomleft:2px;
-        border-bottom-left-radius:2px;
-        text-indent:0;
-        display:inline-block;
-        color:#ffffff;
-        font-family:Arial;
-        font-size:16px;
-        font-weight:bold;
-        font-style:normal;
-        height:35px;
-        line-height:35px;
-        width:82%;
-        text-decoration:none;
-        text-align:center;
-        text-shadow:1px 1px 0px #1570cd;
+    .form-style-6 input[type="text"]:focus,
+    .form-style-6 input[type="password"]:focus,
+    .form-style-6 input[type="date"]:focus,
+    .form-style-6 input[type="datetime"]:focus,
+    .form-style-6 input[type="email"]:focus,
+    .form-style-6 input[type="number"]:focus,
+    .form-style-6 input[type="search"]:focus,
+    .form-style-6 input[type="time"]:focus,
+    .form-style-6 input[type="url"]:focus,
+    .form-style-6 textarea:focus,
+    .form-style-6 select:focus
+    {
+        box-shadow: 0 0 5px #43D1AF;
+        padding: 3%;
+        border: 1px solid #43D1AF;
     }
-    .button:hover {
-        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6) );
-        background:-moz-linear-gradient( center top, #1e62d0 5%, #3d94f6 100% );
-        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e62d0', endColorstr='#3d94f6');
-        background-color:#1e62d0;
-    }.button:active {
-        position:relative;
-        top:1px;
-    }</style>
+
+    .form-style-6 input[type="submit"],
+    .form-style-6 input[type="button"]{
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        width: 100%;
+        padding: 3%;
+        background: #43D1AF;
+        border-bottom: 2px solid #30C29E;
+        border-top-style: none;
+        border-right-style: none;
+        border-left-style: none;    
+        color: #fff;
+    }
+    .form-style-6 input[type="submit"]:hover,
+    .form-style-6 input[type="button"]:hover{
+        background: #2EBC99;        background: #43D1AF;
+    }
+
+    .error {
+        color: red;
+        margin-bottom: 15px;
+    }
+</style>
 
 <div style="text-align: center;padding:10px;">
     <img src="https://www.getshop.com/displayImage.php?id=78c64104-ffe0-45d0-a554-87573d34ae7f&height=100&width=100"></img>
-                    <br>
-                    <br>
+    <br>
+    <br>
     <div class="inner <? echo $notloggedInClass; ?>">
-        <div  style="max-width: 400px; width:100%; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #000; border-radius: 5px; padding: 20px; text-align:left;">
+        <div  class="form-style-6" >
+            <h1>
+                <? 
+                $text = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? "Welcome Back" : "Please log in";
+                echo $factory->__f($text); ?>
+            
+            </h1>
             <form id='getshoploginform' method="POST" action="/login.php<? echo $doubleauth ? "?doubleauth=true" : ""; ?>" name="loginform" class="loginform">
-                
+
                 <?php
                 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
                     $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
-                    echo "<center>Welcome back ".$user->fullName."<br>"
-                            . "Please wait while we are logging you on.</center>";
+
+                    $modules = array();
+                    
+                    if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
+                        $modules = $factory->getApi()->getPageManager()->getModules();
+                    }
+                    
+                    if (sizeof($modules) > 1) {
+                        echo "Please select a module: <br/><br/>";
+                        foreach ($modules as $module) {
+                            echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=" . strtolower($module->id) . "&scopeid=NEW' style='text-decoration:none;'>";
+                            echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span> " . $module->name . "</div>";
+                        }
+                    } else {
+                        echo "<br> Please wait while we are logging you on.</center>";
+                    
+                        $module = $modules[0];
+                        echo "<script>document.location = '/?changeGetShopModule=" . strtolower($module->id) . "&scopeid=NEW'</script>";
+                    }
+
                 } else {
                     ?>
                     <div class="form">
-                        <div class="username">Username / Email<br><input id='gsloginusername' class="tstextfield" name="username" type="textfield" value='<? echo $username; ?>' style="height:40px;width:100%;"></input></div>
+                        <div class="username"><input id='gsloginusername' class="tstextfield" name="username" type="text" placeholder="Username / Email" value='<? echo $username; ?>' style="height:40px;width:100%;"></input></div>
                         <bR>
-                        <div class="password">Password<br><input class="tstextfield" name="password" type="password" value='<? echo $password; ?>' style="height:40px;width:100%;"></input></div>
+                        <div class="password"><input class="tstextfield" name="password" type="password" placeholder="Password" value='<? echo $password; ?>' style="height:40px;width:100%;"></input></div>
                         <input type="hidden" name="loginbutton" value="true"/>
                         <?
                         if ($doubleauth) {
-                        ?>
-                        <bR>
-                        <div class="pincode">Pincode<br><input class="tstextfield" name="pincode" type="password" value='' style="height:40px;width:100%;"></input></div>
-                        <input class="loginbutton" type="submit" name='pincoderequest' value="Request new pincode" style="height:40px; margin-top: 20px;width:100%;"/>                
+                            ?>
+                            <bR>
+                            <div class="pincode">Pincode<br><input class="tstextfield" name="pincode" type="password" value='' style="height:40px;width:100%;"></input></div>
+                            <input class="loginbutton" type="submit" name='pincoderequest' value="Request new pincode" style="height:40px; margin-top: 20px;width:100%;"/>                
 
-                        <?
+                            <?
                         }
                         ?>
-                        
+
                         <input class="loginbutton" type="submit" value="login" style="height:40px; margin-top: 20px;width:100%;"/>                
                     </div>
 
-                <?php
+                    <?php
                 }
-                
                 ?>
             </form>
         </div>
     </div>
 </div>
 <?php
-
-if(isset($_POST['username'])) {
-    if(!ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+if (isset($_POST['username'])) {
+    if (!ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
         echo "<center><h1 id='loginfailed'>Login failed</h1></center>";
         ?>
         <script>
-            setTimeout(function() {
+            setTimeout(function () {
                 var element = document.getElementById("loginfailed");
                 element.parentNode.removeChild(element);
             }, "1000");
@@ -164,26 +208,12 @@ if(isset($_POST['username'])) {
     }
 }
 
-if(isset($_GET['autologin'])) { 
+if (isset($_GET['autologin'])) {
     ?>
     <script>
         document.getElementById("getshoploginform").submit();
     </script>
 <? }
-
-if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
-    $modules = $factory->getApi()->getPageManager()->getModules();
-    if(sizeof($modules) > 1) {
-        echo "<center><h1>Select a module</h1></center>";
-        foreach($modules as $module) {
-            echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW' style='text-decoration:none;'>";
-            echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" .$module->fontAwesome . "'></span> " . $module->name . "</div>";
-        }
-    } else {
-        $module = $modules[0];
-        echo "<script>document.location = '/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW'</script>";
-    }
-}
 ?>
 <script>
     document.getElementById("gsloginusername").focus();

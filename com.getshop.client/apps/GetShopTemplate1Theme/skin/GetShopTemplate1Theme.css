@@ -1,0 +1,54 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.gs_page_width {
+    width: 1377px;
+    margin: 0 auto;
+}
+
+.gscell_11.gsuicell {
+    border-radius: 100px;
+    background-color: #a0d0ed;
+    color: #FFF;
+    text-align: center;
+    padding: 30px;
+    font-size: 30px;
+}
+
+.gscell_9.gsuicell:before {
+    content: "\f112";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    color: #a0d0ed;    
+    font-size: 77px;
+    font-family: fontawesome;
+    transform: rotate(200deg);
+}
+
+.gscell_9.gsuicell {
+    padding-left: 100px;
+}
+
+.gsarea[area="header"] .Menu .entry a {
+    color: #444;
+}
+
+.gsarea[area="header"] .Menu .entry {
+    margin-left: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 18px;
+}
+
+.gsarea[area="header"] .Menu {
+    text-align: right;
+}
+
+.gsarea[area="footer"] {
+    background-color: #a0d0ed;
+    padding-top: 20px;
+    color: #FFF;
+    font-size: 16px;
+}

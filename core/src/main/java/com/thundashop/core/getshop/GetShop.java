@@ -724,10 +724,14 @@ public class GetShop extends ManagerBase implements IGetShop {
             String resetCode = UUID.randomUUID().toString();
             
             user.passwordResetCode = resetCode;
+            user.type = User.Type.ADMINISTRATOR;
+            user.hasAccessToModules.add("cms");
+            user.hasAccessToModules.add("pms");
+           
             
             scope.setStoreId(newStoreId, "", null);
             UserManager userManager = AppContext.appContext.getBean(UserManager.class);
-            userManager.saveUser(user);
+            userManager.saveUserSecure(user);
             
             OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
             orderManager.clear();
@@ -737,9 +741,9 @@ public class GetShop extends ManagerBase implements IGetShop {
             
             saveCustomerToGetShop(user, scope);
         
-            String resetLink = "https://"+newAddress+"/resetPassword.php?resetCode="+user.passwordResetCode;
-            String text = startData.emailText.replaceAll("{VerifyLink}", "<a href='"+resetLink+"'>"+resetLink+"</a>");
-            text = text.replaceAll("{Name}", user.fullName);
+            String resetLink = "https://"+newAddress+"/scripts/resetPassword.php?resetCode="+user.passwordResetCode;
+            String text = startData.emailText.replace("{VerifyLink}", "<a href='"+resetLink+"'>"+resetLink+"</a>");
+            text = text.replace("{Name}", user.fullName);
             mailFactory.send(startData.email, startData.email, startData.emailSubject, text);
             mailFactory.send("post@getshop.com", "post@getshop.com", startData.emailSubject, text);
             

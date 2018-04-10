@@ -598,6 +598,7 @@ public class BookingItemAssignerOptimal {
                     linesOverBooked.add(line);
                 }
                 if (itemToUse == null && throwException) {
+                    printBookingLines(bookingLines);
                     throw new BookingEngineException("Not enough space for this booking");
                 } else {
                     if (itemToUse != null) {

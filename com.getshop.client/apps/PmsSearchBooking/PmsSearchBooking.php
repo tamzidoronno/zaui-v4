@@ -102,6 +102,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public function render() {
         $this->setDefaults();
         
+        if($this->getApi()->getPmsManager()->hasNoBookings($this->getSelectedMultilevelDomainName())) {
+            $this->includefile("nobookingsyet");
+            return;
+        }
+        
         if (!$this->isGroupBookingView()) {
 //            $this->renderFilterBox();
         }
@@ -194,10 +199,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $toPrint = ob_get_contents();
         ob_end_clean();
-        if(sizeof($data) > 0) {
-            echo $toPrint;
+        if(sizeof($data)) {
+            $this->includefile("noresultfound");
         } else {
-            $this->includefile("nobookingsyet");
+            echo $toPrint;
         }
     }
     

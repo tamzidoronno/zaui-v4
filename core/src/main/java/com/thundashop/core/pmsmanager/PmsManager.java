@@ -1705,6 +1705,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
+        if(hasNoBookings()) {
+            return new PmsStatistics();
+        }
         if(!filter.includeNonBookable && filter.typeFilter.isEmpty()) {
             List<BookingItemType> types = bookingEngine.getBookingItemTypes();
             for(BookingItemType type : types) {
@@ -8362,5 +8365,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         
         return result;
+    }
+    
+    public boolean hasNoBookings() {
+        boolean hasNoBooking = true;
+        if(bookings.size() < 10) {
+            for(PmsBooking book : bookings.values()) {
+                if(book.isCompletedBooking()) {
+                    hasNoBooking = false;
+                }
+            }
+        } else {
+            hasNoBooking = false;
+        }
+        
+        return hasNoBooking;
     }
 }

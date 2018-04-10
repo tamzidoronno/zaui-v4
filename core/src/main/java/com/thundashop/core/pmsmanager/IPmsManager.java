@@ -505,4 +505,5 @@ public interface IPmsManager {
 
     public void orderCreated(String orderId);
     public void orderChanged(String orderId);    
+    public boolean hasNoBookings();    
 }

@@ -58,6 +58,8 @@ echo "12. GetShop Settings";
 echo "13. Accounting";
 echo "14. Ticket";
 echo "15. CRM";
+echo "16. INVOICING";
+
 read moduleNumber
 
 module=other
@@ -112,6 +114,11 @@ if [ $moduleNumber = "15" ]; then
     module=crm
     defaultActivated=true
 fi
+if [ $moduleNumber = "16" ]; then 
+    module=invoice
+    defaultActivated=true
+fi
+
 
 echo "Building files and folders."
 mkdir ../com.getshop.client/apps/$name

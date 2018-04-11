@@ -712,12 +712,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         double total = room.totalCost;
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
-            if(order.status != Order.Status.PAYMENT_COMPLETED && avoidPaid) {
-                continue;
-            }
-            for(CartItem item : order.cart.getItemsUnfinalized()) {
-                if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
-                    total -= item.getTotalAmount();
+            if(order != null) {
+                if(order.status != Order.Status.PAYMENT_COMPLETED && avoidPaid) {
+                    continue;
+                }
+                for(CartItem item : order.cart.getItemsUnfinalized()) {
+                    if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                        total -= item.getTotalAmount();
+                    }
                 }
             }
         }

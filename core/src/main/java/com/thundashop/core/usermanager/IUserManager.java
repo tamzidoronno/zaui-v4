@@ -494,5 +494,5 @@ public interface IUserManager {
     
     public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode);
     
-    public boolean updatePasswordByResetCode(String resetCode, String newPassword);
+    public User updatePasswordByResetCode(String resetCode, String newPassword);
 }

@@ -9,12 +9,15 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Setting;
+import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -29,6 +32,7 @@ import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
@@ -44,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
@@ -76,6 +81,8 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Autowired
     private MailFactory mailFactory;
     
+    @Autowired
+    private StoreManager storeManager;
     
     @Override
     public List<GetshopStore> getStores(String code) {
@@ -724,10 +731,23 @@ public class GetShop extends ManagerBase implements IGetShop {
             String resetCode = UUID.randomUUID().toString();
             
             user.passwordResetCode = resetCode;
+            user.type = User.Type.ADMINISTRATOR;
+            user.hasAccessToModules.add("cms");
+            user.hasAccessToModules.add("pms");
+            user.hasAccessToModules.add("crm");
+            user.hasAccessToModules.add("account");
+            user.hasAccessToModules.add("apac");
+           
             
             scope.setStoreId(newStoreId, "", null);
             UserManager userManager = AppContext.appContext.getBean(UserManager.class);
-            userManager.saveUser(user);
+            userManager.saveUserSecure(user);
+            
+            Store store = storePool.getStore(newStoreId);
+            store.country = startData.country;
+            store.timeZone = startData.timeZone;
+            
+            storePool.saveStore(store);
             
             OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
             orderManager.clear();
@@ -735,13 +755,21 @@ public class GetShop extends ManagerBase implements IGetShop {
             MecaManager mecaManager = AppContext.appContext.getBean(MecaManager.class);
             mecaManager.clear();
             
+            StoreApplicationPool applicationPool = AppContext.appContext.getBean(StoreApplicationPool.class);
+           
+            Setting setting = createStoreSetting("currencycode", startData);
+            
+            applicationPool.setSetting("d755efca-9e02-4e88-92c2-37a3413f3f41", setting);
+            
             saveCustomerToGetShop(user, scope);
         
-            String resetLink = "https://"+newAddress+"/resetPassword.php?resetCode="+user.passwordResetCode;
-            String text = startData.emailText.replaceAll("{VerifyLink}", "<a href='"+resetLink+"'>"+resetLink+"</a>");
-            text = text.replaceAll("{Name}", user.fullName);
-            mailFactory.send(startData.email, startData.email, startData.emailSubject, text);
-            mailFactory.send("post@getshop.com", "post@getshop.com", startData.emailSubject, text);
+            
+            String resetLink = "https://"+newAddress+"/scripts/resetPassword.php?resetCode="+user.passwordResetCode;
+            String text = startData.emailText.replace("{VerifyLink}", "<a href='"+resetLink+"'>"+resetLink+"</a>");
+            text = text.replace("{Name}", user.fullName);
+
+            InitializeStoreThreadWhenCreate start = new InitializeStoreThreadWhenCreate(newStoreId, "", user, mailFactory, startData, text);
+            start.start();
             
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
@@ -750,5 +778,14 @@ public class GetShop extends ManagerBase implements IGetShop {
         }
         
         
+    }
+
+    private Setting createStoreSetting(String key, StartData startData) {
+        Setting setting = new Setting();
+        setting.id = key;
+        setting.value = startData.currency;
+        setting.name = key;
+        setting.secure = false;
+        return setting;
     }
 }

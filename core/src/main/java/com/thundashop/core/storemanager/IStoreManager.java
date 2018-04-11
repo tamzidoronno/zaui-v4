@@ -29,6 +29,8 @@ public interface IStoreManager {
      */
     public Store initializeStore(String webAddress, String initSessionId) throws ErrorException;
     
+    public void acceptGDPR();
+    
     /**
      * Initializing this api. This will identify the webshop and will act as the root for everything in this api.
      * @param initSessionId The session id to identify to this user.

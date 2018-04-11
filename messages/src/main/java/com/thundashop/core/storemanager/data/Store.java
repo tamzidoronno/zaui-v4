@@ -4,6 +4,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.User;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  *
@@ -40,6 +41,10 @@ public class Store extends DataCommon {
      */
     public boolean isTemplate = false;
     public User registrationUser;
+    public String country;
+    public String timeZone;
+    public boolean acceptedGDPR = false;
+    public String acceptedByUser = "";
 
     public String getDefaultMailAddress() {
         if (configuration.emailAdress == null || configuration.emailAdress.isEmpty()) {
@@ -63,5 +68,13 @@ public class Store extends DataCommon {
         }
         
         return null;
+    }
+    
+    public TimeZone getTimeZone() {
+        if (timeZone == null || timeZone.isEmpty()) {
+            return TimeZone.getTimeZone("Europe/Oslo");
+        }
+        
+        return TimeZone.getTimeZone(timeZone);
     }
 }

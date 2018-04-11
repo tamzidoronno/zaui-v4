@@ -677,6 +677,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         try {
             getTimeLinesForItemWithOptimal(startDate, endDate, false);
         } catch (BookingEngineException ex) {
+            ex.printStackTrace();
             booking.bookingItemId = oldItemId;
             booking.bookingItemTypeId = oldBookingItemTypeId;
         }

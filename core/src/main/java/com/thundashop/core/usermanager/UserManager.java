@@ -2232,9 +2232,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
-    public boolean updatePasswordByResetCode(String resetCode, String newPassword) {
+    public User updatePasswordByResetCode(String resetCode, String newPassword) {
         if (resetCode.isEmpty())
-            return false;
+            return null;
         
         List<User> users = getUserStoreCollection(storeId).getAllUsers();
         User user = users.stream()
@@ -2244,10 +2244,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         if (user != null) {
             updatePasswordSecure(user.id, newPassword);
-            return true;
+            logOn(user.emailAddress, newPassword);
+            user.passwordResetCode = "";
+            saveUserSecure(user);
+            return user;
         }
         
-        return false;
+        return null;
     }
 
     @Override
@@ -2271,7 +2274,5 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return user;
     }
-
-    
 
 }

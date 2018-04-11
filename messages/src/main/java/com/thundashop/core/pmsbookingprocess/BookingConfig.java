@@ -11,4 +11,6 @@ package com.thundashop.core.pmsbookingprocess;
  */
 public class BookingConfig {
     public Integer childAge = 0;
+    public String phonePrefix = "47";
+    public String currencyText = "NOK";
 }

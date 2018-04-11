@@ -899,6 +899,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsConfiguration config = pmsManager.getConfiguration();
         BookingConfig retval = new BookingConfig();
         retval.childAge = config.childMaxAge;
+        retval.phonePrefix = "49";
+        retval.currencyText = "EUR";
         return retval;
     }
 

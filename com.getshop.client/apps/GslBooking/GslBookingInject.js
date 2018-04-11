@@ -43,6 +43,11 @@ function getshop_setBookingTranslation() {
                     $('.excludeChildSelection').css('display','block');
                     $('.switchAdultToGuest').css('display','none');
                 }
+                $("[gsname='prefix']").val(config.phonePrefix);
+                $("[gsname='user_prefix']").val(config.phonePrefix);
+                $("[gsname='company_prefix']").val(config.phonePrefix);
+                $("[gstranslationfield='currency']").html(config.currencyText);
+                
             }
         });    
         getshop_confirmGuestInfoBox(); 

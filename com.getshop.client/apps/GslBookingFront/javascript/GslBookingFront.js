@@ -120,7 +120,7 @@ function getshop_setBookingTranslationFront() {
                 text = text.replace("{age}", config.childAge);
                 $("[gstranslationfield='agebelow']").html(text);
             }
-        });    
+        });
 
     });
 }

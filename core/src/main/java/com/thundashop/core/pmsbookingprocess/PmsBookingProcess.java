@@ -31,6 +31,8 @@ import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.verifonemanager.VerifoneManager;
@@ -66,6 +68,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     ProductManager productManager;
+    
+    @Autowired
+    StoreManager storeManager;
     
     @Autowired
     UserManager userManager;
@@ -463,7 +468,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
-        result.textualSummary.add("{totalprice} : " + Math.round(booking.getTotalPrice()));
+        result.textualSummary.add("{totalprice} ({currency}) : " + Math.round(booking.getTotalPrice()));
         
     }
 
@@ -896,11 +901,17 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public BookingConfig getConfiguration() {
+        Store store = storeManager.getMyStore();
+        Application settings = getStoreSettingsApplication();
+        String currencycode = settings.getSetting("currencycode");
+        if(currencycode == null || currencycode.isEmpty()) {
+            currencycode = "NOK";
+        }
         PmsConfiguration config = pmsManager.getConfiguration();
         BookingConfig retval = new BookingConfig();
         retval.childAge = config.childMaxAge;
-        retval.phonePrefix = "49";
-        retval.currencyText = "EUR";
+        retval.phonePrefix = "" + store.configuration.defaultPrefix;
+        retval.currencyText = currencycode;
         return retval;
     }
 

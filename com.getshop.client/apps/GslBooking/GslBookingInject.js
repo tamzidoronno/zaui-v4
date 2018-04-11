@@ -287,6 +287,7 @@ function getshop_loadTextualSummary(res) {
         }
         if(typeof(translation['totalprice']) !== "undefined") {
             text = text.replace("{totalprice}", translation['totalprice']);
+            text = text.replace("{currency}", getshop_bookingconfiguration.currencyText);
         }
         $('.yourstaysummary').append(text + "<br>");
     }

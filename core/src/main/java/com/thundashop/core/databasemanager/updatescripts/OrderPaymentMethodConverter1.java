@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class OrderPaymentMethodConverter extends UpdateScriptBase implements UpdateScript {
+public class OrderPaymentMethodConverter1 extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
@@ -49,7 +49,7 @@ public class OrderPaymentMethodConverter extends UpdateScriptBase implements Upd
     }
     
     public static void main(String[] args) {
-        new OrderPaymentMethodConverter().runSingle();
+        new OrderPaymentMethodConverter1().runSingle();
     }
     
     @Override

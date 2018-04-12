@@ -27,17 +27,28 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .newcustomertypebutton', app.PmsNewBooking.loadNewCustomerType);
         $(document).on('click','.PmsNewBooking .newcustomerbutton', app.PmsNewBooking.loadNewCustomerField);
         $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
+        $(document).on('click','.PmsNewBooking .brregsearchresultrow', app.PmsNewBooking.selectBrregResult);
     },
-    showBrregSearch : function() {
-        $('.searchbrregarea').slideDown();
+    selectBrregResult : function() {
+        var name = $(this).attr('name');
+        var vatnumber = $(this).attr('vatnumber');
+        $('[gsname="vatnumber"]').val(vatnumber);
+        $('[gsname="name"]').val(name);
+        $('.searchbrregarea').hide();
     },
     searchResult : function(res) {
         if(res) {
-            $('[gsname="vatnumber"]').val(res.vatNumber);
-            $('[gsname="name"]').val(res.name);
-            $('.searchbrregarea').hide();
+            $('.brregsearchresult').html('');
+            for(var k in res) {
+                var company = res[k];
+                var row = $('<div class="brregsearchresultrow" vatnumber="'+company.vatNumber+'" name="'+company.name+'"><span>' + company.vatNumber + "</span> - <span>" + company.name + "</span></div>");
+                $('.brregsearchresult').append(row);
+            }
         }
     },
+    showBrregSearch : function() {
+        $('.searchbrregarea').slideDown();
+    },    
     loadNewCustomerField : function() {
         $('.nextstep').hide();
         $('.companytypeselection').slideDown();

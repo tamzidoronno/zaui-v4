@@ -3,9 +3,11 @@
 .CrmListFilter .successcreate { color:green; font-size: 22px; text-align: left; }
 .CrmListFilter .failedcreate { color:red; font-size: 22px;  text-align: left;}
 .CrmListFilter .searchbrregbutton { color: blue; cursor:pointer; }
+.CrmListFilter .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}
 .CrmListFilter .searchbrregarea {
     position: absolute;
     border: solid 1px;
+    z-index:2;
     display: inline-block;
     display:none;
     padding: 10px;

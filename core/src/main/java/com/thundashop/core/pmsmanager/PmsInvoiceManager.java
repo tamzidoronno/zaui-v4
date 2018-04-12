@@ -419,6 +419,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Double calculateLongTermDiscount(PmsBooking booking, Double price, PmsBookingRooms room) {
+        if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
+            return price;
+        }
+        
         PmsPricing plan = pmsManager.getPriceObject(booking.pmsPricingCode);
         int percentages = 0;
         int daysUsed = 0;

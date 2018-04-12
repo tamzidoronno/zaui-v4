@@ -574,6 +574,14 @@ class Factory extends FactoryBase {
         $this->runPreprocess();
         $this->renderContent($json);
         $this->runPostProcess();
+        
+        if (isset($_GET['rewrite'])) {
+            $name = str_replace("+", "%2b", $_GET['rewrite']);
+            $name = urldecode($name);
+            $name = str_replace("_''", "\"", $name);
+            $this->getApi()->getTrackerManager()->logTracking("FrameWork", "pageloaded", $name, "Page loaded");
+        }
+        
     }
 
     public function isExtendedMode() {

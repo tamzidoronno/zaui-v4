@@ -1411,7 +1411,18 @@ thundashop.common.cancelImpersonation = function() {
     window.location = "/impersonate.php?action=cancel&page=" + pageId;
 }
 
+thundashop.common.gsLog = function() {
+    var data = {
+        gslog_type: $(this).attr('gslog_type'),
+        gslog_value: $(this).attr('gslog_value'),
+        gslog_description: $(this).attr('gslog_description'),
+    }
+    var event = thundashop.Ajax.createEvent(null, 'gsLog', this, data);
+    thundashop.Ajax.post(event, null, null, true);
+}
+
 $(document).on('click', '.cancelImpersonation', thundashop.common.cancelImpersonation)
+$(document).on('click', '[gslog_type]', thundashop.common.gsLog)
 $(document).on('change', '.gs_select_session_company', thundashop.common.setSelectedCompany)
 
 $(document).ready(function() {

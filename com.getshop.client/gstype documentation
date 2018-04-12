@@ -165,3 +165,6 @@ KaiPal template:
         </div>
     </div>
 </div>
+
+Logging:
+gslog_type="" gslog_value="" gslog_description=""

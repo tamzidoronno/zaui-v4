@@ -30,6 +30,7 @@ public class GetShopModules {
         addModule("srs", "Resturant", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-dinner"); // AccountingModuleTheme
         addModule("ticket", "TicketSystem", true, 9, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-lifebuoy"); // TicketTheme
         addModule("invoice", "Invoicing", true, 10, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-money-bill"); // Invoicing system
+        addModule("analytics", "Analytics", true, 11, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-chart-growth"); // Invoicing system
     }
 
     private void addModule(String nameAndId, String displayName, boolean externalPageTemplate, int sequence, String themeApplicationId, String fontAwesome) {

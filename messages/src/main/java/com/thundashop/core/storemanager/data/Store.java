@@ -43,6 +43,8 @@ public class Store extends DataCommon {
     public User registrationUser;
     public String country;
     public String timeZone;
+    public boolean acceptedGDPR = false;
+    public String acceptedByUser = "";
 
     public String getDefaultMailAddress() {
         if (configuration.emailAdress == null || configuration.emailAdress.isEmpty()) {

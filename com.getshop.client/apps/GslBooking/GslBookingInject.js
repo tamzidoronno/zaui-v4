@@ -43,6 +43,11 @@ function getshop_setBookingTranslation() {
                     $('.excludeChildSelection').css('display','block');
                     $('.switchAdultToGuest').css('display','none');
                 }
+                $("[gsname='prefix']").val(config.phonePrefix);
+                $("[gsname='user_prefix']").val(config.phonePrefix);
+                $("[gsname='company_prefix']").val(config.phonePrefix);
+                $("[gstranslationfield='currency']").html(config.currencyText);
+                
             }
         });    
         getshop_confirmGuestInfoBox(); 
@@ -282,6 +287,7 @@ function getshop_loadTextualSummary(res) {
         }
         if(typeof(translation['totalprice']) !== "undefined") {
             text = text.replace("{totalprice}", translation['totalprice']);
+            text = text.replace("{currency}", getshop_bookingconfiguration.currencyText);
         }
         $('.yourstaysummary').append(text + "<br>");
     }

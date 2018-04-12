@@ -15,14 +15,19 @@ if(isset($_SESSION['quickaddaddons'])) {
     foreach($types as $type) {
         $productsToExclude[] = $type->productId;
     }
+    $found = false;
     $products = $this->getApi()->getProductManager()->getAllProducts();
     foreach($products as $product) {
         if(in_array($product->id, $productsToExclude)) {
             continue;
         }
+        $found = true;
         echo "<div class='addonsrow'>" . $product->name;
         echo "<span class='shop_button addAddonsToRoom' productid='".$product->id."' quickadd='$quickadd'>Add</span>";
         echo "</div>";
+    }
+    if(!$found) {
+        echo "<div style='padding: 10px;'>No addons has been created yet<br>Go to settings -> Products / Addons to set up addons.</div>";
     }
     ?>
 </div>

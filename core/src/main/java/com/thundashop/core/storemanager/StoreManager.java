@@ -562,6 +562,13 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         store.defaultMultilevelName = multilevelname;
         storePool.saveStore(store);
     }
+    
+    public void acceptGDPR() {
+        Store store = getMyStore();
+        store.acceptedGDPR = true;
+        store.acceptedByUser = getSession().currentUser.id;
+        storePool.saveStore(store);
+    }
 
     
 }

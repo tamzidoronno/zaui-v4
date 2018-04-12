@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class OrderPaymentMethodConverter extends UpdateScriptBase implements UpdateScript {
+public class GetShopPriceModel extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
-        return getDate("01/04-2018");
+        return getDate("11/04-2018");
     }
     
     @Override
     public String getId() {
-        return "9ba3dce5-ebc3-44c7-965b-85a09030ce53";
+        return "edc01777-9b7a-454d-9200-002b0111f65d";
     }
 
     @SuppressWarnings("empty-statement")
@@ -49,7 +49,7 @@ public class OrderPaymentMethodConverter extends UpdateScriptBase implements Upd
     }
     
     public static void main(String[] args) {
-        new OrderPaymentMethodConverter().runSingle();
+        new GetShopPriceModel().runSingle();
     }
     
     @Override
@@ -66,16 +66,16 @@ public class OrderPaymentMethodConverter extends UpdateScriptBase implements Upd
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        Application OrderPaymentMethodConverter = createSettings("OrderPaymentMethodConverter",
-        "b3dce8c9-b77b-4c4b-a398-af98863c2f91",
+        Application GetShopPriceModel = createSettings("GetShopPriceModel",
+        "94c0992f-85d5-4a63-a30c-685ee0f8b17e",
         allowed2,
         " ",
         Application.Type.Webshop, true);
-        OrderPaymentMethodConverter.isPublic = true;
-        OrderPaymentMethodConverter.isFrontend = true;
-        OrderPaymentMethodConverter.moduleId = "ecommerce";
-        OrderPaymentMethodConverter.defaultActivate = true;
-        OrderPaymentMethodConverter.storeId = "all";
-        database.save(OrderPaymentMethodConverter, credentials);
+        GetShopPriceModel.isPublic = true;
+        GetShopPriceModel.isFrontend = true;
+        GetShopPriceModel.moduleId = "cms";
+        GetShopPriceModel.defaultActivate = false;
+        GetShopPriceModel.storeId = "all";
+        database.save(GetShopPriceModel, credentials);
     }
 }

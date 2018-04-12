@@ -17,7 +17,8 @@ if(sizeof($addons) == 0 && !$pickerOpen) {
             <div class="header"><? echo $this->__f("No addons added yet"); ?></div>
             <div class="text">
                 <?
-                echo $this->__f("Hi, we do not have any addons added to this room yet.");
+                echo "<div>" . $this->__f("Hi, we do not have any addons added to this room yet.") . "</div>";
+                echo "<div>" . $this->__f("Addons are an excelent way to charge more, for example parking, dinner, extra bed, etc.") . "</div>";
                 ?>    
                 <div class="buttonarea">
                     <div class="buttonareaheader"><? echo $this->__f("What would you like to do?"); ?></div>

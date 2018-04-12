@@ -155,7 +155,6 @@ KaiPal template:
                 echo $this->__f("I have found a clean room and confirmed that the guest has paid for the stay. As soon as the guest checkin-time has passed I will send him/her the code by SMS and email.");
                 ?>    
 
-
                 <div class="buttonarea">
                     <div class="buttonareaheader"><? echo $this->__f("Do you want me to do something else?"); ?></div>
                     <div class="shop_button"><? echo $this->__f("Block access"); ?></div>

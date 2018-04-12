@@ -58,6 +58,8 @@ echo "12. GetShop Settings";
 echo "13. Accounting";
 echo "14. Ticket";
 echo "15. CRM";
+echo "16. SRS";
+echo "17. Analythics";
 read moduleNumber
 
 module=other
@@ -110,6 +112,14 @@ if [ $moduleNumber = "14" ]; then
 fi
 if [ $moduleNumber = "15" ]; then 
     module=crm
+    defaultActivated=true
+fi
+if [ $moduleNumber = "16" ]; then 
+    module=srs
+    defaultActivated=true
+fi
+if [ $moduleNumber = "17" ]; then 
+    module=analytics
     defaultActivated=true
 fi
 

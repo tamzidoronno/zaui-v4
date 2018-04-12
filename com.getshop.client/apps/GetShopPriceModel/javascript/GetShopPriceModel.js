@@ -16,6 +16,8 @@ app.GetShopPriceModel = {
         var getshopinstalllocks = $('.getshopinstalllocks').is(':checked');
         var getshoptraining = $('.getshoptraining').is(':checked');
         
+        app.GetShopPriceModel.logRequest(rooms, locks, entrancelocks, selfcheckinindoor, selfcheckinoutdoor, pgas, customwebsite, integrationtoaccounting, getshopdosetup, getshopinstalllocks, getshoptraining, this);
+        
         var roomLicense = 4.49;
         var lockLicense = 3.72;
         var accountinglicense = 128.36;
@@ -71,6 +73,25 @@ app.GetShopPriceModel = {
         $('.numberofservers').html(servers);
         $('.repeaters').html(repeaters);
         
+    }, 
+    
+    logRequest: function(rooms, locks, entrancelocks, selfcheckinindoor, selfcheckinoutdoor, pgas, customwebsite, integrationtoaccounting, getshopdosetup, getshopinstalllocks, getshoptraining, from) {
+        var data = {
+            'rooms': rooms, 
+            'locks': locks, 
+            'entrancelocks': entrancelocks, 
+            'selfcheckinindoor': selfcheckinindoor, 
+            'selfcheckinoutdoor': selfcheckinoutdoor, 
+            'pgas': pgas, 
+            'customwebsite': customwebsite, 
+            'integrationtoaccounting': integrationtoaccounting, 
+            'getshopdosetup': getshopdosetup, 
+            'getshopinstalllocks': getshopinstalllocks, 
+            'getshoptraining': getshoptraining
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, 'log', from, data);
+        thundashop.Ajax.post(event, null, null, true, true);
     }
 };
 

@@ -1418,7 +1418,7 @@ thundashop.common.gsLog = function() {
         gslog_description: $(this).attr('gslog_description'),
     }
     var event = thundashop.Ajax.createEvent(null, 'gsLog', this, data);
-    thundashop.Ajax.post(event, null, null, true);
+    thundashop.Ajax.post(event, null, null, true, true);
 }
 
 $(document).on('click', '.cancelImpersonation', thundashop.common.cancelImpersonation)

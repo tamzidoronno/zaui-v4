@@ -13,5 +13,10 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
     public function render() {
         $this->includefile("calculator");
     }
+    
+    public function log() {
+        $data = json_encode($_POST['data']);
+        $this->getApi()->getTrackerManager()->logTracking("GetShopPriceModel", "getshop_price_model", "changed", $data);
+    }
 }
 ?>

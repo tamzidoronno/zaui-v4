@@ -39,15 +39,40 @@ class GetShopCmsAnalytics extends \MarketingApplication implements \Application 
             }
         }
     }
-
+    
+    private function isJson($data) {
+         $res = json_decode(trim($data));
+         
+         if ($res) {
+             return "OK";
+         } else {
+             return false;
+         }
+    }
+    
+    function formatDescription($data) {
+        $jsonData = $this->isJson($data->textDescription);
+        if ($jsonData) {
+            return $jsonData;
+        }
+        
+        return $data->textDescription;
+    }
+    
+    public function GetShopCmsAnalytics_guestInfo() {
+        $data = html_entity_decode($_POST['data']['description']);
+//        echo $data;
+        echo nl2br(json_encode(json_decode($data), JSON_PRETTY_PRINT));
+    }
+    
     public function printGuestActivity($datas, $i) {
         $args = array();
         $attributes = array(
+            array('applicationName', 'APPPLICATION', 'applicationName', null),
             array('date', 'DATE', 'date', null),
             array('type', 'TYPE', 'type', null),
             array('value', 'VALUE', 'value', null),
-            array('description', 'DESCRIPTION', 'textDescription', null),
-            array('sessionId', 'sessionId', 'sessionId', null)
+            array('description', 'DESCRIPTION', null, 'formatDescription')
         );
         
         echo "<h1> Visitor: ".$i."</h1>";

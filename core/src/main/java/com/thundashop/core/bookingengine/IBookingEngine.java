@@ -35,6 +35,9 @@ public interface IBookingEngine {
     public boolean canAddBooking(Booking bookingsToAdd);
     
     @Administrator
+    public boolean canAddBookings(List<Booking> bookingsToAdd);
+    
+    @Administrator
     public Booking getBooking(String bookingId);
 
     @Administrator

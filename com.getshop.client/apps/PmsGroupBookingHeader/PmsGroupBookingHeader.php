@@ -18,6 +18,30 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         return $this->getUserForBooking();
     }
    
+    public function checkIfCanAdd() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $bookings = array();
+        for($i = 0;$i < $_POST['data']['count'];$i++) {
+            $startTime = $config->defaultStart;
+            $endTime = $config->defaultEnd;
+
+            $start = $this->convertToJavaDate(strtotime($_POST['data']['start']. " " . $startTime));
+            $end = $this->convertToJavaDate(strtotime($_POST['data']['end']. " " . $endTime));            
+            
+            $booking = new \core_bookingengine_data_Booking();
+            $booking->startDate = $start;
+            $booking->endDate = $end;
+            $booking->bookingItemTypeId = $_POST['data']['type'];
+            $bookings[] = $booking;
+        }
+        $canadd = $this->getApi()->getBookingEngine()->canAddBookings($this->getSelectedMultilevelDomainName(), $bookings);
+        if($canadd && sizeof($bookings) > 0) {
+            echo "yes";
+        } else {
+            echo "no";
+        }
+    }
+    
     public function createCompany() {
         $name = $_POST['data']['companyname'];
         $vat = $_POST['data']['vatnumber'];

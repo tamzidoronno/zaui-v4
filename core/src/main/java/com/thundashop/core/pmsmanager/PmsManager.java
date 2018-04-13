@@ -3286,7 +3286,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean bookingIsOK(PmsBooking booking) {
         finalize(booking);
         for (PmsBookingRooms room : booking.getActiveRooms()) {
-            if (room.booking == null) {
+            if (room.booking == null && !room.deleted && !room.addedToWaitingList) {
                 messageManager.sendErrorNotification("Booking failure for booking: " + booking.id + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
                 return false;
             }

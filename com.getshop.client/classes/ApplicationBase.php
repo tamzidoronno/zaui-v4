@@ -747,5 +747,12 @@ class ApplicationBase extends FactoryBase {
     public function handleGetShopModulePaging() {
         
     }
+    
+    public function gsLog() {
+        $appName = get_class($this);
+        $appNameArr = explode("\\", $appName);
+        $appName = $appNameArr[1];
+        $this->getApi()->getTrackerManager()->logTracking($appName, $_POST['data']['gslog_type'], $_POST['data']['gslog_value'], $_POST['data']['gslog_description']);
+    }
 }
 ?>

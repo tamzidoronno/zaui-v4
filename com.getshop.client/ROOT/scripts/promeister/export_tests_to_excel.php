@@ -11,7 +11,7 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $users = $factory->getApi()->getUserManager()->getAllUsers();
-$tests = $factory->getApi()->getQuestBackManager()->getTests();
+$tests = $factory->getApi()->getQuestBackManager()->getAllTests();
 $cats = $factory->getApi()->getQuestBackManager()->getCategories();
 
 function getAverage($answers) {
@@ -26,6 +26,7 @@ function getAverage($answers) {
 function getValue($a) {
     return str_replace(',', '', $a).";";
 }
+
 
 echo ";;;;";
 foreach ($cats as $cat) {

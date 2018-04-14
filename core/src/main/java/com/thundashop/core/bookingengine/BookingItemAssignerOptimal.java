@@ -105,12 +105,7 @@ public class BookingItemAssignerOptimal {
         if (getBookingItemsFlatten().size() == 1 && storeId.equals(k1StoreId)) {
             addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
         } else {
-            if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329"))) {
-                squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
-            } else {
-                addUnassignedBookingsToLine(bookingLines, unassignedBookings);
-            }
-
+            squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
             setItemIdsToLines(bookingLines);
         }
         

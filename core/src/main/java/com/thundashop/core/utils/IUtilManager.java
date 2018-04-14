@@ -32,4 +32,6 @@ public interface IUtilManager {
     public boolean isInProductionMode();
     
     public int getStartupCount();
+    
+    public void sendPriceOffer(String link, String email);
 }

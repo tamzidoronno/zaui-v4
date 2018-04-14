@@ -1,4 +1,8 @@
+<?
+/* @var $this ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e\GetShopPriceModel */
+?>
 <h1>Pricing</h1>
+
 <div class='row'>
     <div class='col1'>Number of rooms</div>
     <div class='col2'><input type='text' class='gsniceinput1 inputvalue rooms' value='0'></div>
@@ -60,6 +64,29 @@
 <div>Total monthly licensing is $ <span class='totalmonthlycost'>0</span></div>
 <div>Number of servers included in the offer : <span class='numberofservers'>0</span></div>
 <div>Number of range extenders in the offer : <span class='repeaters'>0</span></div>
+
+
+<div class="emailoffer" link='' gstype="form" method="sendOffer">
+    <h2><? echo $this->__f("Save this offer for later"); ?></h2>
+    <input type="hidden" gsname="link" value=""/>
+    <input class="gsniceinput1" type="" gsname="email" placeholder="Your email address"/>
+    <br/>
+    <br/><div class="shop_button" gstype="submit">Send offer to me</div>
+    
+    <?
+    if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        ?>
+        <hr/>
+        <br/>Discount total cost %: <input gsname="discounttotal" class="inputvalue gsniceinput1"/>
+        <br/>Discount license %: <input gsname="discountlicense" type='textfield' class="inputvalue gsniceinput1"/> 
+        <br/>Currency: <select id="currency" class="inputvalue gsniceselect1"><option value="USD">USD</option><option class="NOK">NOK</option></select>
+        <br/><br/><a target='_blank' class='gs_ignorenavigate' id='downloadlink' href=""><div class='shop_button'>Download offer</div></a>
+        <?
+    }
+    ?>
+</div>
+
+
 
 <style>
     .row { clear:  both; margin-bottom: 5px; }

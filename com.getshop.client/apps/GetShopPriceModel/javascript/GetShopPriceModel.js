@@ -16,14 +16,12 @@ app.GetShopPriceModel = {
         var getshopinstalllocks = $('.getshopinstalllocks').is(':checked');
         var getshoptraining = $('.getshoptraining').is(':checked');
         
-        app.GetShopPriceModel.logRequest(rooms, locks, entrancelocks, selfcheckinindoor, selfcheckinoutdoor, pgas, customwebsite, integrationtoaccounting, getshopdosetup, getshopinstalllocks, getshoptraining, this);
-        
         var roomLicense = 4.49;
         var lockLicense = 3.72;
         var accountinglicense = 128.36;
         var lockPrice = 353.04;
-        var websitePrice = 5777.10;
-        var bookingPrice = 5777.10;
+        var websitePrice = 3729.10;
+        var bookingPrice = 3729.10;
         var terminalIndoorPrice = 7450.10;
         var terminalOutdoorPrice = 12588.10;
         var trainingProgramPrice = 1156;
@@ -40,7 +38,7 @@ app.GetShopPriceModel = {
         if(integrationtoaccounting) {
             totalMonthly += accountinglicense;
         }
-        if(totalMonthly < 65) {
+        if(totalMonthly < 65 && totalMonthly > 0) {
             totalMonthly = 65;
         }
         $('.totalmonthlycost').html(Math.round(totalMonthly));
@@ -66,6 +64,8 @@ app.GetShopPriceModel = {
             servers = locks / 30;
             repeaters = Math.round(repeaters);
             if(servers < 1) { servers = 1; }
+            servers = Math.ceil(servers);
+            
             totalSetupCost += (repeaters * repeaterPrice);
             totalSetupCost += (servers * serverPrice);
         }
@@ -73,9 +73,27 @@ app.GetShopPriceModel = {
         $('.numberofservers').html(servers);
         $('.repeaters').html(repeaters);
         
+        app.GetShopPriceModel.logRequest(rooms, locks, entrancelocks, selfcheckinindoor, selfcheckinoutdoor, pgas, customwebsite, integrationtoaccounting, getshopdosetup, getshopinstalllocks, getshoptraining, this);
+        
     }, 
     
     logRequest: function(rooms, locks, entrancelocks, selfcheckinindoor, selfcheckinoutdoor, pgas, customwebsite, integrationtoaccounting, getshopdosetup, getshopinstalllocks, getshoptraining, from) {
+        
+        
+        try {
+            var somethingToShow = parseInt($('.GetShopPriceModel .totalstartupcost').html());
+            var monthly = parseInt($('.GetShopPriceModel .totalmonthlycost').html());
+            
+            if (somethingToShow || monthly) {
+                $('.GetShopPriceModel .emailoffer').show();
+            } else {
+                $('.GetShopPriceModel .emailoffer').hide();
+            }
+        } catch (ex) {
+            $('.GetShopPriceModel .emailoffer').hide();
+        }
+        
+        
         var data = {
             'rooms': rooms, 
             'locks': locks, 
@@ -90,8 +108,22 @@ app.GetShopPriceModel = {
             'getshoptraining': getshoptraining
         }
         
+        if ($('[gsname="discounttotal"]')) {
+            data.discounttotal = $('[gsname="discounttotal"]').val();
+            data.discountlicense = $('[gsname="discountlicense"]').val();
+            data.currency = $('.GetShopPriceModel #currency').val();
+        }
+        
+        console.log(data);
+        
         var event = thundashop.Ajax.createEvent(null, 'log', from, data);
-        thundashop.Ajax.post(event, null, null, true, true);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.GetShopPriceModel .emailoffer').attr('link', res);
+            $('.GetShopPriceModel [gsname="link"]').val(res);
+            $('.GetShopPriceModel #downloadlink').attr('href', "/scripts/downloadPriceCalculator.php?link="+res);
+        }, null, true, true);
     }
 };
 

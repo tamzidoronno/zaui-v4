@@ -174,7 +174,8 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function convertToJavaDate($time) {
-        return date("M d, Y h:i:s A", $time);
+        $res = date("c", $time);
+        return $res;
     }
     
     /**

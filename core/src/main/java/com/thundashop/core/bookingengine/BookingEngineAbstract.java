@@ -811,7 +811,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 }
             }
             
-            checkBookings = getAllBookingsOfType(bookingTypeId);
+            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")  || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
+                checkBookings = getAllBookingsOfType(bookingTypeId);
+            }
           
             BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id), shouldThrowException(), storeId);
             
@@ -1094,7 +1096,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
         
-        bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
+        if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")  || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
+            bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
+        }
             
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);
         
@@ -1163,7 +1167,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                     .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
                     .collect(Collectors.toList());
             
-            toCheck = getAllBookingsOfType(type.id);
+            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
+                toCheck = getAllBookingsOfType(type.id);
+            }
             
             new BookingItemAssignerOptimal(type, toCheck, bookingItems, shouldThrowException(), storeId).canAssign();
         }

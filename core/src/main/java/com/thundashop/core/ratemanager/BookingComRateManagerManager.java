@@ -118,9 +118,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 11);
         
-        String time = pmsManager.getConfigurationSecure().defaultEnd;
+        String time = pmsManager.getConfigurationSecure().getDefaultEnd();
         if(start) {
-            time = pmsManager.getConfigurationSecure().defaultStart;
+            time = pmsManager.getConfigurationSecure().getDefaultStart();
         }
         if(time != null && time.contains(":")) {
             String[] times = time.split(":");

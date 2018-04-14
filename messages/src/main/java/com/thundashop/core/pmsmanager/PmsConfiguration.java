@@ -6,8 +6,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 public class PmsConfiguration extends DataCommon {
+
+    @Transient
+    private String timezone = "";
+    
+    void setTimeZone(String timeZone) {
+        this.timezone = timeZone;
+    }
 
 
 
@@ -43,7 +51,7 @@ public class PmsConfiguration extends DataCommon {
     public Integer numberOfHoursToExtendLateCheckout = 3;
     public Integer minStay = 1;
     public Integer defaultNumberOfDaysBack = 3;
-    public Integer hourOfDayToStartBoarding = 12;
+    private Integer hourOfDayToStartBoarding = 12;
     public boolean supportMoreDates = false;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
@@ -108,8 +116,8 @@ public class PmsConfiguration extends DataCommon {
     public int warnIfOrderNotPaidFirstTimeInHours = 0;
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
-    public String defaultStart = "15:00";
-    public String defaultEnd = "12:00";
+    private String defaultStart = "15:00";
+    private String defaultEnd = "12:00";
     public String extraField = "";
     public String smsName = "GetShop";
     public Integer childMaxAge = 6;
@@ -163,7 +171,7 @@ public class PmsConfiguration extends DataCommon {
 
     
     //Cleaning options
-    public Integer closeRoomNotCleanedAtHour = 16;
+    private Integer closeRoomNotCleanedAtHour = 16;
     public Integer cleaningInterval = 0;
     public HashMap<Integer, Boolean> cleaningDays = new HashMap();
     public Integer numberOfCheckoutCleanings = 0;
@@ -204,6 +212,23 @@ public class PmsConfiguration extends DataCommon {
         }
         return false;
     }
+    
+    /**
+     * Timezone related data.
+     */
+    public Integer getBoardingHour() {
+        return hourOfDayToStartBoarding;
+    }
+    public String getDefaultEnd() {
+        return defaultEnd;
+    }
+    public String getDefaultStart() {
+        return defaultStart;
+    }
+    public Integer getCloseRoomNotCleanedAtHour() {
+        return closeRoomNotCleanedAtHour;
+    }
+    
     
     boolean channelExists(String channel) {
         return channelConfiguration.containsKey(channel);

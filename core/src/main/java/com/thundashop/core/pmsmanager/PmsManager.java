@@ -2700,8 +2700,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBookingDateRange getDefaultDateRange() {
 
-        String[] defaultTimeStart = getConfiguration().defaultStart.split(":");
-        String[] defaultEndStart = getConfiguration().defaultEnd.split(":");
+        String[] defaultTimeStart = getConfiguration().getDefaultStart().split(":");
+        String[] defaultEndStart = getConfiguration().getDefaultEnd().split(":");
 
         Calendar calStart = Calendar.getInstance();
         if (getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
@@ -3827,6 +3827,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsConfiguration getConfigurationSecure() {
+        String timeZone = storeManager.getMyStore().timeZone;
+        configuration.setTimeZone(timeZone);
         return configuration;
     }
 
@@ -4734,7 +4736,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void changeTimeFromAddon(PmsBookingAddonItem addonConfig, PmsBookingRooms room, boolean remove) {
         if (addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
-            String[] defaultStartSplitted = configuration.defaultStart.split(":");
+            String[] defaultStartSplitted = configuration.getDefaultStart().split(":");
             int hour = new Integer(defaultStartSplitted[0]);
             if (!remove) {
                 hour = hour - 3;
@@ -4751,7 +4753,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         if (addonConfig.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
-            String[] defaultEndSplitted = configuration.defaultEnd.split(":");
+            String[] defaultEndSplitted = configuration.getDefaultEnd().split(":");
             Integer addHours = getConfigurationSecure().numberOfHoursToExtendLateCheckout;
             int hour = new Integer(defaultEndSplitted[0]);
             if (!remove) {
@@ -5081,11 +5083,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!getConfigurationSecure().automaticallyCloseRoomIfDirtySameDay) {
             return;
         }
-        Integer closeHour = getConfigurationSecure().closeRoomNotCleanedAtHour;
+        Integer closeHour = getConfigurationSecure().getCloseRoomNotCleanedAtHour();
         Date start = new Date();
         Calendar cal = Calendar.getInstance();
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
-        if (hourOfDay < closeHour || hourOfDay > 20) {
+        if (hourOfDay < closeHour || hourOfDay > (closeHour+2)) {
             return;
         }
 

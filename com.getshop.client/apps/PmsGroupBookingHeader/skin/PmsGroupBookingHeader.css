@@ -10,6 +10,7 @@
     max-width: 1500px;
     margin: auto;
 }
+.PmsGroupBookingHeader .notavailablerooms { color:red; font-size: 18px; display:none; }
 
 .PmsGroupBookingHeader .datarow_extended_content { padding: 0px !important; }
 

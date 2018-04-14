@@ -10,6 +10,12 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         return "PmsSendMessagesConfiguration";
     }
     
+    public function savepaymentlinksetup() {
+        $paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedMultilevelDomainName());
+        $paymentProductConfig->webAdress = $_POST['data']['webadress'];
+        $this->getApi()->getPmsInvoiceManager()->savePaymentLinkConfig($this->getSelectedMultilevelDomainName(), $paymentProductConfig);
+    }
+    
     public function updateRoomMessage() {
         $item = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
         $item->textMessageDescription = $_POST['data']['textMessageDescription'];

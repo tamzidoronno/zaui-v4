@@ -41,7 +41,9 @@ $booking = $this->getCurrentBooking();
         ?>
     </select>
     <input type='txt' class='gsniceinput1' gsname='count' value="1" style="width:30px;"> 
-    <span class='shop_button' gstype="submit">Add room</span>
+    <span class='shop_button doaddroomtogroup' gstype="submit">Add room</span>
+    
+    <div class="notavailablerooms">I am sorry, you can not add room using the above selection, there are not enough rooms for that.</div>
 </div>
 
 <?php
@@ -60,6 +62,33 @@ $roomView->renderApplication(true,$this);
 </style>
 
 <script>
-    $('[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $('[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, 
+        onSelect: function(dateText) {
+            var curEnd = moment($('[gsname="end"]').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = curEnd.valueOf() - date.valueOf();
+            if(diff <= 0) {
+                date.add(1, 'days');
+                $('[gsname="end"]').val(date.format('DD.MM.YYYY')); 
+            }
+            
+            app.PmsGroupBookingHeader.checkIfCanAddRoom();
+        }
+    });
+    
+    $('[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, 
+        onSelect: function(dateText) {
+            $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
+            var curStart = moment($('[gsname="start"]').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = date.valueOf() - curStart.valueOf();
+            if(diff <= 0) {
+                date.add(-1, 'days');
+                $('[gsname="start"]').val(date.format('DD.MM.YYYY')); 
+            }     
+            app.PmsGroupBookingHeader.checkIfCanAddRoom();
+        }
+    });
 </script>

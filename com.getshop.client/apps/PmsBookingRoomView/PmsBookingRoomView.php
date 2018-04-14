@@ -17,6 +17,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function togglerefundable() {
+        $booking = $this->getPmsBooking();
+        $booking->nonrefundable = !$booking->nonrefundable;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+
     public function toggleCreateAfterStay() {
         $this->setData();
         $booking = $this->getPmsBooking();

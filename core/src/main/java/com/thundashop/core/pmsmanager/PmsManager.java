@@ -8306,18 +8306,32 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void crawlVisbook() {
         String url = "https://booking.visbook.com/";
         int count = 0;
-        for(int i = 2000; i < 4000; i++) {
+        for(int i = 2000; i < 10000; i++) {
             try {
-                 webManager.htmlGet(url + i);
-                 System.out.println("Found:" + url + i);
-                 count++;
-                 Thread.sleep(500);
+                 String res = webManager.htmlGet(url + i);
+                 String lines[] = res.split("<div");
+                 boolean found = false;
+                 String email = "";
+                 String webaddr = "";
+                 try {
+                    for(String l : lines) {
+                        if(l.contains("View_CompanyInformation_EmailPnl")) {
+                            email = l.substring(l.indexOf("href=\"")+6, l.indexOf("</a", l.indexOf("href=\"")));
+                        }
+                        if(l.contains("View_CompanyInformation_WebAddressPnl")) {
+                            webaddr = l.substring(l.indexOf("href=\"")+6, l.indexOf("</a", l.indexOf("href=\"")));
+                        }
+                    }
+                }catch(Exception d) {
+                     
+                }
+                System.out.println(i + "\t" + email + "\t" + webaddr);
+                count++;
+                Thread.sleep(500);
             }catch(Exception e) {
                 
             }
         }
-        System.out.println(count + " found");
-        System.exit(0);
     }
 
     @Override

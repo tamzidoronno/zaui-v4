@@ -7,6 +7,9 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.manipulateroomoptions .shop_button', app.PmsGroupBookingHeader.doAction);
         $(document).on('click', '.PmsGroupBookingHeader .updateguestinformation', app.PmsGroupBookingHeader.updateGuestInformation);
         $(document).on('click', '.PmsGroupBookingHeader .startpaymentprocessallrooms', app.PmsGroupBookingHeader.startPaymentProcess);
+        $(document).on('change', '.PmsGroupBookingHeader [gsname="type"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
+        $(document).on('change', '.PmsGroupBookingHeader [gsname="guestInfoOnRoom"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
+        $(document).on('keyup', '.PmsGroupBookingHeader [gsname="count"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
     },
     startPaymentProcess : function() {
         var event = thundashop.Ajax.createEvent('','startPaymentProcessAllRooms', $(this), {});
@@ -15,7 +18,20 @@ app.PmsGroupBookingHeader = {
             thundashop.framework.showRightWidgetPanel('gs_modul_pmscart', data);
         });
     },
-    
+    checkIfCanAddRoom : function() {
+        var form = $('.addroombox');
+        var args = thundashop.framework.createGsArgs(form);
+        var event = thundashop.Ajax.createEvent('','checkIfCanAdd', form, args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(res === "no") {
+                $('.notavailablerooms').show();
+                $('.doaddroomtogroup').addClass('disabled');
+            } else {
+                $('.notavailablerooms').hide();
+                $('.doaddroomtogroup').removeClass('disabled');
+            }
+        });
+    },
     refreshPayments : function() {
         $('[areatype="payments"]').click();
     },

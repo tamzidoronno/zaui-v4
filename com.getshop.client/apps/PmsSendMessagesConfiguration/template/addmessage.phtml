@@ -56,7 +56,7 @@ if($hasArx) {
 if($hasEventCalendar) {
     $notifications['booking_eventcalendar_'.$langauge] = "Message to send to event helder in the event calendar";
 }
-//$notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
+$notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
 $notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link";
 $notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge card";
 
@@ -127,6 +127,15 @@ $types['smses'] = "Messages sent by sms";
 $types['emails'] = "Messages sent by email";
 $types['adminmessages'] = "Messages sent to you";
 
+echo "<h1>Payment link adress (web adress)</h1>";
+
+$paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedMultilevelDomainName());
+?>
+<div gstype='form' method='savepaymentlinksetup'>
+    <input class='webadressclass gsniceinput1' type='text' gsname='webadress' value='<?php echo $paymentProductConfig->webAdress; ?>' class=''>
+    <span class="shop_button" gstype='submit' gs_callback='alert("saved");'>Save</span>
+</div>
+<?php
 foreach($types as $type => $text) {
     echo "<h1>$text</h1>";
     $found = false;

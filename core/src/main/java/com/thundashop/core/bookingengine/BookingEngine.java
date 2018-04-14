@@ -363,4 +363,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public boolean canAddBooking(Booking bookingsToAdd) {
         return canAdd(bookingsToAdd);
     }
+    
+    @Override
+    public boolean canAddBookings(List<Booking> bookingsToAdd) {
+        return canAdd(bookingsToAdd);
+    }
 }

@@ -44,6 +44,21 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 
         ?>
 
+        <div class="row odd">
+            <div class="col col1"><? echo $this->__f("Non refundable"); ?></div>
+            <?php 
+            if($pmsBooking->nonrefundable) {
+                ?>
+                <div class="col col2">Yes, <span style='color:blue;cursor:pointer;' gsclick='togglerefundable'>make it refundable</span></div>    
+                <?php
+            } else {
+                ?>
+                <div class="col col2">No, <span style='color:blue;cursor:pointer;' gsclick='togglerefundable'>make it non refundable</span></div>    
+                <?php
+            }
+            ?>
+        </div>
+        
         <div class="row">
             <div class="col col1"><? echo $this->__f("Date created"); ?></div>
             <div class="col col2"><? echo GetShopModuleTable::formatDate($pmsBooking->rowCreatedDate); ?></div>    

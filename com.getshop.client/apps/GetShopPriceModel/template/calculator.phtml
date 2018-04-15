@@ -1,69 +1,100 @@
 <?
 /* @var $this ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e\GetShopPriceModel */
+
+$rooms = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms'] : 0;
+$locks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks'] : 0;
+$entrancelocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks'] : 0;
+$selfcheckinindoor = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor'] : 0;
+$selfcheckinoutdoor = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor'] : 0;
+$pgas = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas'] : 0;
+$customwebsite = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite'] === "true";
+$integrationtoaccounting = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting'] === "true";
+$getshopdosetup = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup'] === "true";
+$getshopinstalllocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks'] === "true";
+$getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining'] === "true";
+$currency = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency'] : "1";
+
+$customwebsite = $customwebsite ? 'checked="true"' : "";
+$integrationtoaccounting = $integrationtoaccounting ? 'checked="true"' : "";
+$getshopdosetup = $getshopdosetup ? 'checked="true"' : "";
+$getshopinstalllocks = $getshopinstalllocks ? 'checked="true"' : "";
+$getshoptraining = $getshoptraining ? 'checked="true"' : "";
 ?>
+
 <h1>Pricing</h1>
 
 <div class='row'>
+    <div class='col1'>Currency</div>
+    <div class='col2'>
+        <select class='gsniceselect1 inputvalue currency' >
+            <option value='1' <? echo $currency == "1" ? 'selected="true"' : ""; ?>>USD</option>
+            <option value='2' <? echo $currency == "2" ? 'selected="true"' : ""; ?>>NOK</option>
+            <option value='3' <? echo $currency == "3" ? 'selected="true"' : ""; ?>>EUR</option>
+        </select>
+    </div>
+</div>
+
+<div class='row'>
     <div class='col1'>Number of rooms</div>
-    <div class='col2'><input type='text' class='gsniceinput1 inputvalue rooms' value='0'></div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue rooms' value='<? echo $rooms; ?>'></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Number of locks (hotel room)</div>
-    <div class='col2'><input type='text' class='gsniceinput1 inputvalue locks' value='0'></div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue locks' value='<? echo $locks; ?>'></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Number of locks (common entrance)</div>
-    <div class='col2'><input type='text' class='gsniceinput1 inputvalue entrancelocks' value='0'></div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue entrancelocks' value='<? echo $entrancelocks; ?>'></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Number of self check in terminal (indoor)</div>
-    <div class='col2'><input type='text' class='gsniceinput1 inputvalue selfcheckinindoor' value='0'></div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue selfcheckinindoor' value='<? echo $selfcheckinindoor; ?>'></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Number of self check in terminal (outdoor)</div>
-    <div class='col2'><input type='text' class='gsniceinput1 inputvalue selfcheckinoutdoor' value='0'></div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue selfcheckinoutdoor' value='<? echo $selfcheckinoutdoor; ?>'></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Number of PGA's</div>
-    <div class='col2'><input type='text' class='gsniceinput1 inputvalue pgas' value='0'></div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue pgas' value='<? echo $pgas; ?>'></div>
 </div>
 
 <div class='row'>
     <div class='col1'>I want a custom made website</div>
-    <div class='col2'><input type='checkbox' class='selection inputvalue customwebsite'></div>
+    <div class='col2'><input type='checkbox' class='selection inputvalue customwebsite' <? echo $customwebsite; ?> ></div>
 </div>
 
 <div class='row'>
     <div class='col1'>I need integration to accounting</div>
-    <div class='col2'><input type='checkbox' class='selection inputvalue integrationtoaccounting'></div>
+    <div class='col2'><input type='checkbox' class='selection inputvalue integrationtoaccounting' <? echo $integrationtoaccounting; ?>></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Have GetShop set up the booking system</div>
-    <div class='col2'><input type='checkbox' class='selection inputvalue getshopdosetup'></div>
+    <div class='col2'><input type='checkbox' class='selection inputvalue getshopdosetup' <? echo $getshopdosetup; ?>></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Have GetShop install the locks</div>
-    <div class='col2'><input type='checkbox' class='selection inputvalue getshopinstalllocks'></div>
+    <div class='col2'><input type='checkbox' class='selection inputvalue getshopinstalllocks' <? echo $getshoptraining; ?>></div>
 </div>
 
 <div class='row'>
     <div class='col1'>Include GetShop's training program</div>
-    <div class='col2'><input type='checkbox' class='selection inputvalue getshoptraining'></div>
+    <div class='col2'><input type='checkbox' class='selection inputvalue getshoptraining' <? echo $customwebsite; ?>></div>
 </div>
 <br>
 <br>
 <br>
-<div>Total startup cost is $ <span class='totalstartupcost'>0</span></div>
-<div>Total monthly licensing is $ <span class='totalmonthlycost'>0</span></div>
-<div>Number of servers included in the offer : <span class='numberofservers'>0</span></div>
-<div>Number of range extenders in the offer : <span class='repeaters'>0</span></div>
+<div class="summary">
+    <? $this->includefile("summary"); ?>
+</div>
+
 
 
 <div class="emailoffer" link='' gstype="form" method="sendOffer">
@@ -79,8 +110,7 @@
         <hr/>
         <br/>Discount total cost %: <input gsname="discounttotal" class="inputvalue gsniceinput1"/>
         <br/>Discount license %: <input gsname="discountlicense" type='textfield' class="inputvalue gsniceinput1"/> 
-        <br/>Currency: <select id="currency" class="inputvalue gsniceselect1"><option value="USD">USD</option><option class="NOK">NOK</option></select>
-        <br/><br/><a target='_blank' class='gs_ignorenavigate' id='downloadlink' href=""><div class='shop_button'>Download offer</div></a>
+        <br/><br/><div class='shop_button' gstype="downloadpdf" filename="GetShop Offer.pdf" method="downloadPdf">Download offer</div>
         <?
     }
     ?>

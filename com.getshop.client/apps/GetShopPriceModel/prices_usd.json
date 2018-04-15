@@ -1,0 +1,19 @@
+{
+    "roomLicense" : 4.49,
+    "lockLicense" : 3.72,
+    "accountinglicense" : 128.36,
+    "lockPrice" : 353.04,
+    "websitePrice" : 3729.10,
+    "bookingPrice" : 3729.10,
+    "terminalIndoorPrice" : 7450.10,
+    "terminalOutdoorPrice" : 12588.10,
+    "trainingProgramPrice" : 1156,
+    "installLockPrice" : 115.6,
+    "mainEntrancePrice" : 1027,
+    "pgaPrice" : 257,
+    "repeaterPrice" : 64.22,
+    "serverPrice" : 192.81,
+    "integrationToAccountingPrice" : 3083.04,
+    "minMonthlyCost" : 65,
+    "currency" : "USD"
+}

@@ -194,12 +194,9 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     }
 
     @Override
-    public void sendPriceOffer(String link, String email) {
-        byte[] decoded = Base64.decodeBase64(link);
-        String decodedStringLink = new String(decoded);
-        String url = "https://no.getshop.com/"+decodedStringLink+"&id="+getSession().id;
+    public void sendPriceOffer(String base64EncodedDocument, String email) {
         HashMap<String, String> attachments = new HashMap();
-        attachments.put("Priceoffer.pdf", getBase64EncodedPDFWebPage(url));
+        attachments.put("Priceoffer.pdf", base64EncodedDocument);
         messageManager.sendMailWithAttachments(email, email, "Price offer from GetShop attached", "Thank you for checking the prices with us, attached is your offer.", "post@getshop.com", "post@getshop.com", attachments);
         messageManager.sendMailWithAttachments("post@getshop.com", "post@getshop.com", "Price offer from GetShop attached", "Thank you for checking the prices with us, attached is your offer.", "post@getshop.com", "post@getshop.com", attachments);
     }

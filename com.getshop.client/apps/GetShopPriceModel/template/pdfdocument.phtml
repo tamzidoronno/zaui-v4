@@ -1,136 +1,21 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-session_id($_GET['id']);
+/* @var $this ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e\GetShopPriceModel */
+$prices = $this->getPriceMatrix();
+$priceMatrix = $this->genereatePriceMatrix();
 
-//chdir("../");
-//include '../loader.php';
-//$factory = IocContainer::getFactorySingelton();
+$rooms = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms'];
+$locks = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks'];
+$entrancelocks = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks'];
+$selfcheckinindoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor'];
+$selfcheckinoutdoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor'];
+$pgas = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas'];
+$customwebsite = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite'] === "true";
+$integrationtoaccounting = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting'] === "true";
+$getshopdosetup = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup'] === "true";
+$getshopinstalllocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks'] === "true";
+$getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining'] === "true";
 
-// Defined prices
-$roomLicense = 4.49;
-$lockLicense = 3.72;
-$accountinglicense = 128.36;
-$lockPrice = 353.04;
-$websitePrice = 3729.10;
-$bookingPrice = 3729.10;
-$terminalIndoorPrice = 7450.10;
-$terminalOutdoorPrice = 12588.10;
-$trainingProgramPrice = 1156;
-$installLockPrice = 115.6;
-$mainEntrancePrice = 1027;
-$pgaPrice = 257;
-$repeaterPrice = 64.22;
-$serverPrice = 192.81;
-$integrationToAccountingPrice = 3083.04;
-$minMonthlyCost = 65;
-
-$currency = isset($_GET['currency']) ? $_GET['currency'] : "USD";
-
-
-if ($currency === "NOK") {
-    $roomLicense = 35;
-    $lockLicense = 29;
-    $accountinglicense = 1000;
-    $lockPrice = 2750;
-    $websitePrice = 29000;
-    $bookingPrice = 29000;
-    $terminalIndoorPrice = 58000;
-    $terminalOutdoorPrice = 90000;
-    $trainingProgramPrice = 9000;
-    $installLockPrice = 900;
-    $mainEntrancePrice = 9000;
-    $pgaPrice = 2000;
-    $repeaterPrice = 500;
-    $serverPrice = 1500;
-    $integrationToAccountingPrice = 24000;
-    $minMonthlyCost = 500;
-}
-
-
-// CALCS
-
-$rooms=$_GET['rooms'];
-$locks=$_GET['locks'];
-$entrancelocks=$_GET['entrancelocks'];
-$selfcheckinindoor=$_GET['selfcheckinindoor'];
-$selfcheckinoutdoor=$_GET['selfcheckinoutdoor'];
-$pgas=$_GET['pgas'];
-$customwebsite=isset($_GET['customwebsite']) &&  $_GET['customwebsite'] === "true";
-$integrationtoaccounting=isset($_GET['integrationtoaccounting']) &&  $_GET['integrationtoaccounting'] === "true";
-$getshopdosetup=isset($_GET['getshopdosetup']) &&  $_GET['getshopdosetup'] === "true";
-$getshopinstalllocks=isset($_GET['getshopinstalllocks']) &&  $_GET['getshopinstalllocks'] === "true";
-$getshoptraining=isset($_GET['getshoptraining']) &&  $_GET['getshoptraining'] === "true";
-
-$roomLicenceCost = ($roomLicense * $rooms);
-$locksLicenceCost = ($lockLicense * $locks);
-
-$totalMonthly = 0.0;
-$totalMonthly += $roomLicenceCost;
-$totalMonthly += $locksLicenceCost;
-if($integrationtoaccounting) {
-    $totalMonthly += $accountinglicense;
-}
-if($totalMonthly < 65 && $totalMonthly > 0) {
-    $totalMonthly = $minMonthlyCost;
-}
-
-$lockPriceStartup = ($lockPrice * $locks);
-$entranceDoorPriceTotal = ($entrancelocks * $mainEntrancePrice);
-$terminalIndoorCosts = ($terminalIndoorPrice * $selfcheckinindoor);
-$terminalOutdoorCosts = ($terminalOutdoorPrice * $selfcheckinoutdoor);
-$pgatotalcosts = ($pgas * $pgaPrice);
-$installationPrice = ($locks * $installLockPrice);
-
-$totalSetupCost = 0;
-$totalSetupCost += $lockPriceStartup;
-$totalSetupCost += $terminalIndoorCosts;
-$totalSetupCost += $terminalOutdoorCosts;
-$totalSetupCost += $pgatotalcosts;
-$totalSetupCost += $entranceDoorPriceTotal;
-if($getshopinstalllocks) {
-    $totalSetupCost += $installationPrice;
-}
-if($customwebsite) { $totalSetupCost += $websitePrice; }
-if($getshopdosetup) { $totalSetupCost += $bookingPrice; }
-if($getshoptraining) { $totalSetupCost += $trainingProgramPrice; }
-if($integrationtoaccounting) { $totalSetupCost += $integrationToAccountingPrice; }
-
-$repeaters = 0;
-$servers = 0;
-if($locks > 0) {
-    $repeaters = $locks / 6;
-    $servers = $locks / 30;
-    $repeaters = round($repeaters);
-    if($servers < 1) { $servers = 1; }
-    $servers = ceil($servers);
-
-    $totalSetupCost += ($repeaters * $repeaterPrice);
-    $totalSetupCost += ($servers * $serverPrice);
-}
-
-//if ($factory->getStore()->id !== "13442b34-31e5-424c-bb23-a396b7aeb8ca") {
-//    return "";
-//}
-
-$discountTotal = 0;
-$discountMonthlyTotal = 0;
-if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-    $discountTotal = isset($_GET['discounttotal']) && $_GET['discounttotal'] ? $totalSetupCost * ($_GET['discounttotal']/100) : 0;
-    $discountMonthlyTotal = isset($_GET['discountlicense']) && $_GET['discountlicense'] ? $totalMonthly * ($_GET['discountlicense']/100) : 0;
-}
-
-if ($discountTotal) {
-    $discountTotal = round($discountTotal);
-}
-
-if ($discountMonthlyTotal) {
-    $discountMonthlyTotal = round($discountMonthlyTotal);
-}
 ?>
 
 <style>
@@ -163,32 +48,71 @@ if ($discountMonthlyTotal) {
     }
     
     h2 {
-        margin-top: 50px;
         padding-bottom: 10px;
         border-bottom: solid 2px;
         text-align: center;
     }
-    
-    @media print {
-        .new-page {
-          page-break-before: always;
-        }
+
+    .introduction {
+        margin-top: 100px;
+        font-size: 20px;
     }
+    
+    .introduction2 {
+        margin-top: 50px;
+        font-size: 20px;
+    }
+    
+     .new-page {
+    clear: both;
+    display: block;
+    border :1px solid transparent;
+    page-break-after: always;
+        }
 </style>
 <div class="page">
     <div class='pagetitle'>
         <img src="https://www.getshop.com/displayImage.php?id=3e2e2471-3911-4827-b268-578246282137&crop=true&x=19&x2=290&y=20&y2=119&rotation=0&width=285"/>
     </div>
     
+    <div class='introduction'>
+        <b>A offer created by GetShop.</b>
+        <br/> <b>Created:</b> <? echo date('d/m-Y'); ?>
+        <br/> <b>Source:</b> www.getshop.com/pricing.html
+    </div>
+    
+    <div class='introduction2'>
+        <b>Introduction:</b>
+        <br/>GetShop's vision is to make a complete hotel system as possible. To accomplish this goal we are contiguously developing more features, more systems and 
+        connect everything together to make your guest experience as seemless as possible. Our focus is on making all parts of your job as automated as possible.
+    </div>
+    
+    <div style="margin-top: 30px; font-size: 20px;" >
+        <b>Content:</b>
+        <br/> This offer consists of two parts
+        <br/> Page 2 - Onetime cost for gettings started with GetShop Solutions
+        <br/> Page 3 - Monthly license fee.
+        <br/>
+        <br/>
+        This offer is valid until <span style="color: green; font-weight: bold;"> <? echo date('d/m-Y', strtotime("+14 day")); ?> 23:00 UTC-01:00</span> and is created from prices in www.getshop.com/pricing.html, to adjust the offer you can go back to this page at any time.
+    </div>
+    
+    <div style='border: solid 1px; margin-top: 100px; padding: 20px;'>
+        If you have any questions regarding this offer you can contact us at post@getshop.com or by phone +47 33 20 08 08
+
+        <br/>
+        <br/> We wish you a happy day and looking forward to hear from you.
+    </div>
+
     <div class="headertext">
         <div style="font-weight: bold; font-size: 20px; color: red; font-style: italic; border: solid 1px red; padding: 10px; text-align: center;">
             All prices are excluded TAX / VAT.
         </div>
-        <br/>
-        <br/>
-        This offer is valid until <span style="color: green; font-weight: bold;"> <? echo date('d/m-Y', strtotime("+14 day")); ?> 23:00 UTC−01:00</span> and is created from prices in www.getshop.com/pricing.html, to adjust the offer you can go back to this page at any time.
     </div>
+
+    <div style="border: solid 1px red; padding: 10px; text-align: center; font-weight: bold; color: red;"> See page 2 for monthly costs</div>
     
+    <div class='new-page'></div><br/>
     <h2>Startup Costs</h2>
     
     <?
@@ -199,10 +123,10 @@ if ($discountMonthlyTotal) {
             Locks
         </div>
         <div class="count">
-            <? echo $locks." x ".$lockPrice; ?>
+            <? echo $locks." x ".$prices->lockPrice; ?>
         </div>
         <div class="price">
-            <? echo $lockPriceStartup." ".$currency; ?>
+            <? echo $priceMatrix['lockPriceStartup']." ".$prices->currency; ?>
         </div>
         <div class="description">
             We provide you with <? echo $locks; ?> locks. Additionally you need batteries, 4 batteries for each lock.
@@ -220,10 +144,10 @@ if ($discountMonthlyTotal) {
             Common entrance access controller
         </div>
         <div class="count">
-            <? echo $entrancelocks." x ".$mainEntrancePrice; ?>
+            <? echo $entrancelocks." x ".$prices->mainEntrancePrice; ?>
         </div>
         <div class="price">
-            <? echo $entranceDoorPriceTotal." ".$currency; ?>
+            <? echo $priceMatrix['entranceDoorPriceTotal']." ".$prices->currency; ?>
         </div>
         <div class="description">
             A WIFI, Ethernet, 2 doors access controller. Can connect to swing door operators etc, and has possibility to hold all your guests codes.
@@ -241,10 +165,10 @@ if ($discountMonthlyTotal) {
             Indoor checkin terminal
         </div>
         <div class="count">
-            <? echo $selfcheckinindoor." x ".$terminalIndoorPrice; ?>
+            <? echo $selfcheckinindoor." x ".$prices->terminalIndoorPrice; ?>
         </div>
         <div class="price">
-            <? echo $terminalIndoorCosts." ".$currency; ?>
+            <? echo $priceMatrix['terminalIndoorCosts']." ".$prices->currency; ?>
         </div>
         <div class="description">
             Let your guest do the checkin work for you, they can book, pay and checkin themself by using this indoor machine
@@ -262,10 +186,10 @@ if ($discountMonthlyTotal) {
             Outdoor checkin terminal
         </div>
         <div class="count">
-            <? echo $selfcheckinoutdoor." x ".$terminalOutdoorPrice; ?>
+            <? echo $selfcheckinoutdoor." x ".$prices->terminalOutdoorPrice; ?>
         </div>
         <div class="price">
-            <? echo $terminalOutdoorCosts." ".$currency; ?>
+            <? echo $priceMatrix['terminalOutdoorCosts']." ".$prices->currency; ?>
         </div>
         <div class="description">
             A 32 inch waterproof and weatherproof terminal with creditcard reader, build for outdoor usage. Your guests can book, pay and receive a receipt with an accesscode trough this terminal.
@@ -283,10 +207,10 @@ if ($discountMonthlyTotal) {
             PGA - Personal Guest Assistant
         </div>
         <div class="count">
-            <? echo $pgas." x ".$pgaPrice; ?>
+            <? echo $pgas." x ".$prices->pgaPrice; ?>
         </div>
         <div class="price">
-            <? echo $pgatotalcosts." ".$currency; ?>
+            <? echo $priceMatrix['pgatotalcosts']." ".$prices->currency; ?>
         </div>
         <div class="description">
             The PGA's are used at the hotel-rooms where guests can do a few operations themself, like request late checkout, personal wifi, etc.
@@ -304,10 +228,10 @@ if ($discountMonthlyTotal) {
             Installation of locks
         </div>
         <div class="count">
-            <? echo $locks." x ".$installLockPrice; ?>
+            <? echo $locks." x ".$prices->installLockPrice; ?>
         </div>
         <div class="price">
-            <? echo $installationPrice." ".$currency; ?>
+            <? echo $priceMatrix['installationPrice']." ".$prices->currency; ?>
         </div>
         <div class="description">
             GetShop personal travels to your hotel and do the installation for you of the locks, include them into the network and do a fully test of the system. Teaches you how to maintain the locks and how they works. 
@@ -326,10 +250,10 @@ if ($discountMonthlyTotal) {
             Custom HTML5 Webpage.
         </div>
         <div class="count">
-            <? echo "1 x ".$websitePrice; ?>
+            <? echo "1 x ".$prices->websitePrice; ?>
         </div>
         <div class="price">
-            <? echo $websitePrice." ".$currency; ?>
+            <? echo $prices->websitePrice." ".$prices->currency; ?>
         </div>
         <div class="description">
             GetShop consulatant will setup a custom website with your designtheme or help you design a custom page for you. Fonts, Skin, colors, pictures and text are 100% customized according to your need. This will be done so in the GetShop CMS system.
@@ -347,10 +271,10 @@ if ($discountMonthlyTotal) {
             Integration with Accounting System.
         </div>
         <div class="count">
-            <? echo "1 x ".$integrationToAccountingPrice; ?>
+            <? echo "1 x ".$prices->integrationToAccountingPrice; ?>
         </div>
         <div class="price">
-            <? echo $integrationToAccountingPrice." ".$currency; ?>
+            <? echo $prices->integrationToAccountingPrice." ".$prices->currency; ?>
         </div>
         <div class="description">
             GetShop will connect your system to an accounting system. Contact post@getshop.com to check if your accountingsystem is supported.
@@ -368,10 +292,10 @@ if ($discountMonthlyTotal) {
             Configuration and setup by GetShop
         </div>
         <div class="count">
-            <? echo "1 x ".$bookingPrice; ?>
+            <? echo "1 x ".$prices->bookingPrice; ?>
         </div>
         <div class="price">
-            <? echo $bookingPrice." ".$currency; ?>
+            <? echo $prices->bookingPrice." ".$prices->currency; ?>
         </div>
         <div class="description">
             A GetShop consultant do all the initial configuration, setup and connects your system to the channel manager.
@@ -389,14 +313,56 @@ if ($discountMonthlyTotal) {
             Online or onsite training. 
         </div>
         <div class="count">
-            <? echo "1 x ".$trainingProgramPrice; ?>
+            <? echo "1 x ".$prices->trainingProgramPrice; ?>
         </div>
         <div class="price">
-            <? echo $trainingProgramPrice." ".$currency; ?>
+            <? echo $prices->trainingProgramPrice." ".$prices->currency; ?>
         </div>
         <div class="description">
             GetShop offers a 9 hours traning program to help you get started with the system and to get the most of it. 
             <br/>* Travel charges will be charged additionally unless else agreed upon
+        </div>
+    </div>
+    <?
+    }
+    ?>
+    
+    <?
+    if($priceMatrix['serversCost']) {
+    ?>
+    <div class="row">
+        <div class="type">
+            Lock controllers.
+        </div>
+        <div class="count">
+            <? echo $priceMatrix['servers']." x ".$prices->serverPrice; ?>
+        </div>
+        <div class="price">
+            <? echo $priceMatrix['serversCost']." ".$prices->currency; ?>
+        </div>
+        <div class="description">
+            This controllers are installed locally in your hotel. They are used as a proxy between the GetShop cloud platform and your locks.
+        </div>
+    </div>
+    <?
+    }
+    ?>
+    
+    <?
+    if($priceMatrix['repeatersCost']) {
+    ?>
+    <div class="row">
+        <div class="type">
+            Lock controllers.
+        </div>
+        <div class="count">
+            <? echo $priceMatrix['repeaters']." x ".$prices->repeaterPrice; ?>
+        </div>
+        <div class="price">
+            <? echo $priceMatrix['repeatersCost']." ".$prices->currency; ?>
+        </div>
+        <div class="description">
+            This controllers are installed locally in your hotel. They are used as a proxy between the GetShop cloud platform and your locks.
         </div>
     </div>
     <?
@@ -410,22 +376,22 @@ if ($discountMonthlyTotal) {
         <div class="count">
         </div>
         <div class="price">
-            <? echo $totalSetupCost." ".$currency; ?>
+            <? echo $priceMatrix['totalSetupCost']." ".$prices->currency; ?>
         </div>
         <div class="description"></div>
     </div>
     
     <?
-    if ($discountTotal) {
+    if ($priceMatrix['discountTotal']) {
     ?>
         <div class="row">
             <div class="type">
-                Discount ( <? echo $_GET['discounttotal']; ?> % )
+                Discount ( <? echo $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['discounttotal']; ?> % )
             </div>
             <div class="count">
             </div>
             <div class="price">
-                <? echo "- ".$discountTotal." ".$currency; ?>
+                <? echo "- ".$priceMatrix['discountTotal']." ".$prices->currency; ?>
             </div>
             <div class="description">
                 * Discount is given based upon the current selection, removing features, functions etc might affect the discount
@@ -434,39 +400,39 @@ if ($discountMonthlyTotal) {
     
         <div class="row" style='font-weight: bold; color: green; font-size: 20px;'>
             <div class="type">
-                Total price after discount
+                Total startup price after discount
             </div>
             <div class="count">
             </div>
             <div class="price">
-                <? echo ($totalSetupCost - $discountTotal)." ".$currency; ?>
+                <? echo ($priceMatrix['totalSetupCost'] - $priceMatrix['discountTotal'])." ".$prices->currency; ?>
             </div>
             <div class="description"></div>
         </div>
     <?
     }
     ?>
-    <div style="border: solid 2px red; padding: 10px; text-align: center; font-weight: bold; color: red;"> See page 2 for monthly costs</div>
     
-    <div class='new-page'><br/></div>
+    <div class='new-page'></div>
+    <br/>
     <h2>Monthly costs</h2>
     We charge monthly in advance for the following.
     
     <?
-    if ($_GET['rooms']) {
+    if ($rooms) {
     ?>
     <div class="row">
         <div class="type">
             Rooms
         </div>
         <div class="count">
-            <? echo $_GET['rooms']; ?>
+            <? echo $rooms; ?>
         </div>
         <div class="price">
-            <? echo $roomLicenceCost." ".$currency." / Month"; ?>
+            <? echo $priceMatrix['roomLicenceCost']." ".$prices->currency." / Month"; ?>
         </div>
         <div class="description">
-            Create as many categories for the rooms you want and add <? echo $_GET['rooms']; ?> rooms to your bookingsystem.
+            Create as many categories for the rooms you want and add <? echo $rooms; ?> rooms to your bookingsystem.
         </div>
     </div>
     <?
@@ -485,7 +451,7 @@ if ($discountMonthlyTotal) {
             <? echo $locks; ?>
         </div>
         <div class="price">
-            <? echo $locksLicenceCost." ".$currency." / Month"; ?>
+            <? echo $priceMatrix['locksLicenceCost']." ".$prices->currency." / Month"; ?>
         </div>
         <div class="description">
             You have <? echo $locks; ?> connected to the cloud system.
@@ -507,7 +473,7 @@ if ($discountMonthlyTotal) {
             1
         </div>
         <div class="price">
-            <? echo $accountinglicense." ".$currency." / Month"; ?>
+            <? echo $prices->accountinglicense." ".$prices->currency." / Month"; ?>
         </div>
         <div class="description">
             Your PMS will be connected with an accounting system.
@@ -525,7 +491,7 @@ if ($discountMonthlyTotal) {
             
         </div>
         <div class="price" style="font-weight: bold; color: green;">
-            <? echo $totalMonthly." ".$currency." / Month"; ?>
+            <? echo $priceMatrix['totalMonthly']." ".$prices->currency." / Month"; ?>
         </div>
         <div class="description">
             
@@ -533,17 +499,17 @@ if ($discountMonthlyTotal) {
     </div>
     
     <?
-    if ($discountMonthlyTotal) {
+    if ($priceMatrix['discountMonthlyTotal']) {
     ?>
     <div class="row">
         <div class="type">
-            Discount ( <? echo $_GET['discountlicense']; ?> % )
+            Discount ( <? echo $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['discountlicense']; ?> % )
         </div>
         <div class="count">
             
         </div>
         <div class="price">
-            <? echo "- ".$discountMonthlyTotal." ".$currency." / Month"; ?>
+            <? echo "- ".$priceMatrix['discountMonthlyTotal']." ".$prices->currency." / Month"; ?>
         </div>
         <div class="description">
             * Discount is given based upon the current selection, removing features, functions etc might affect the discount
@@ -558,7 +524,7 @@ if ($discountMonthlyTotal) {
             
         </div>
         <div class="price">
-            <? echo ($totalMonthly - $discountMonthlyTotal)." ".$currency." / Month"; ?>
+            <? echo ($priceMatrix['totalMonthly'] - $priceMatrix['discountMonthlyTotal'])." ".$prices->currency." / Month"; ?>
         </div>
         <div class="description">
             
@@ -574,9 +540,3 @@ if ($discountMonthlyTotal) {
 ?>
  
 
-<div style='border: solid 1px; margin-top: 100px; margin: 30px; padding: 20px;'>
-    If you have any questions regarding this offer you can contact us at post@getshop.com or by phone +47 33 20 08 08
-    
-    <br/>
-    <br/> We wish you a happy day and looking forward to hear from you.
-</div>

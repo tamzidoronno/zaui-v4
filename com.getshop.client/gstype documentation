@@ -52,7 +52,7 @@ attribute gstypes;
         example: <div gstype="clicksubmitToInfoBox" method="renameEntry" gsname="id" gsvalue="somevalue">
         example: <div gstype="forceClicksubmitToInfoBox" method="renameEntry" gsname="id" gsvalue="somevalue">
         example (php): <span gstype='clicksubmit' method='renameEntry' gsname='id' gsvalue='somevalue'>Click</span>
-        example: <input type='checkbox' gstype="clicksubmitforce" method="renameEntry" gsname="id" gsvalue="somevalue">
+       example: <input type='checkbox' gstype="clicksubmitforce" method="renameEntry" gsname="id" gsvalue="somevalue">
         example submits on enter: <input gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">
        
     gsclick (posts all attributes),
@@ -167,3 +167,6 @@ KaiPal template:
 
 Logging:
 gslog_type="" gslog_value="" gslog_description=""
+
+Download PDF:
+<div class='shop_button' gstype='downloadpdf' filename='file.pdf' method="methodToGenerateBase64PDF"> download </div>

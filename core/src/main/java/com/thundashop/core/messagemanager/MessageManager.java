@@ -79,8 +79,10 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     
     @Override
     public String sendMail(String to, String toName, String subject, String content, String from, String fromName) {
-        
-        if(content == null || content.trim().isEmpty() || subject == null || subject.trim().isEmpty()) {
+        if(subject == null || subject.trim().isEmpty()) {
+            subject = "No subject";
+        }
+        if(content == null || content.trim().isEmpty()) {
             logPrint("Sending empty email. Throw exception.");
             logPrintException(new Exception());
             return null;

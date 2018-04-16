@@ -2196,4 +2196,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         return toReturn;
     }
+
+    public Double getTotalAmountForUser(String id) {
+        double total = 0.0;
+        for(Order ord : orders.values()) {
+            if(ord.userId.equals(id)) {
+                total += getTotalAmountExTaxes(ord);
+            }
+        }
+        return total;
+    }
 }

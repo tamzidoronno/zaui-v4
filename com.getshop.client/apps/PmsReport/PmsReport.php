@@ -166,6 +166,34 @@ class PmsReport extends \MarketingApplication implements \Application {
             $data = $this->data;
         }
         
+        
+        $usersoverview = (array)$data->usersTotal;
+        arsort($usersoverview);
+        
+        $i = 0;
+        echo "<table>";
+        foreach($usersoverview as $userId => $val) {
+            $user = $this->getApi()->getUserManager()->getUserById($userId);
+            if($user->type > 50) {
+                continue;
+            }
+            $display = "";
+            if($i > 0) {
+                $display = "display:none";
+            }
+            echo "<tr style='$display' class='profitablecustomers'>";
+            echo "<td>" . $user->fullName . "</td><td>" . round($val) . "</td>";
+            if(!$display) {
+                echo "<td onclick='$(\".profitablecustomers\").toggle()' style='cursor:pointer;'><- the most profitable customer, click here to load top 30 most profitable customers</td>";
+            }
+            echo "</tr>";
+            $i++;
+            if($i > 30) {
+                break;
+            }
+        }
+        echo "</table>";
+        
         $rows = array();
         $products = array();
         $allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());

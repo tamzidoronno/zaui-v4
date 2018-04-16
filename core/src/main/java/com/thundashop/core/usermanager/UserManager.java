@@ -11,6 +11,7 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.GetShopModule;
@@ -76,6 +77,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     private PageManager pageManager;
+    
+    @Autowired
+    private OrderManager orderManager;
     
     @Autowired
     private BrRegEngine brRegEngine;
@@ -1347,18 +1351,26 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .filter(filterUserByPaymentType(filterOptions))
                 .filter(filterBySelectionType(filterOptions))
                 .collect(Collectors.toList());
-        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
-            Collections.sort(allUsers, compareByReg(true));
-        } else {
-            Collections.sort(allUsers, compareByName());
-        }
-        FilteredData res = pageIt(allUsers, filterOptions);
         
-        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
-            Collections.sort(res.datas, compareByReg(true));
-        } else {
-            Collections.sort(res.datas, compareByName());
-        }
+        addOrderAmount(allUsers);
+        
+//        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
+//            Collections.sort(allUsers, compareByReg(true));
+//        } else if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("orderamountdesc")) {
+        Collections.sort(allUsers, compareByOrderAmount(true));
+//        } else {
+//            Collections.sort(allUsers, compareByName());
+//        }
+        FilteredData res = pageIt(allUsers, filterOptions);
+//        
+//        if(filterOptions.extra.get("sorttype") != null && filterOptions.extra.get("sorttype").equals("regdesc")) {
+//            Collections.sort(res.datas, compareByReg(true));
+//        } else {
+//            Collections.sort(res.datas, compareByName());
+//        }
+        Collections.sort(res.datas, compareByOrderAmount(true));
+        
+        
         
         return res;
     }
@@ -1393,6 +1405,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 return -1;
             
             return a.fullName.trim().toLowerCase().compareTo(b.fullName.trim().toLowerCase());
+        };
+    }
+    
+    private Comparator<User> compareByOrderAmount(boolean desc) {
+        if(desc) {
+            return (User a, User b) -> {
+                return b.orderAmount.compareTo(a.orderAmount);
+            };
+            
+        }
+        return (User a, User b) -> {
+            return a.orderAmount.compareTo(b.orderAmount);
         };
     }
 
@@ -2273,6 +2297,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         finalizeUser(user);
         
         return user;
+    }
+
+    private void addOrderAmount(List<User> allUsers) {
+        for(User usr : allUsers) {
+            usr.orderAmount = orderManager.getTotalAmountForUser(usr.id);
+        }
     }
 
 }

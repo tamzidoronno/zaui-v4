@@ -40,6 +40,36 @@ thundashop.Ajax = {
         $(document).on('click','*[gs_downloadExcelReport]', thundashop.Ajax.createExcelFile);
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
         $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
+        $(document).on('click','*[gstype="downloadpdf"]', thundashop.Ajax.downloadPdf);
+    },
+    
+    downloadPdf: function() {
+        var method = $(this).attr('method');
+        var filename = $(this).attr('filename');
+        
+        var data = {};
+        $.each(this.attributes, function(i, attrib) {
+            var name = attrib.name;
+            var value = attrib.value;
+            data[name] = value;
+        });
+        
+        var event = thundashop.Ajax.createEvent(null, method, this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            var base64 = thundashop.base64.encode(res);
+            var url = '/scripts/html2pdf.php';
+            var form = $('<form method="POST" action="' + url + '">');
+            form.attr('target', '_blank');
+            form.append($('<input type="hidden" name="data" value="' + base64 + '">'));
+            form.append($('<input type="hidden" name="filename" value="' + filename + '">'));
+            
+            $('body').append(form);
+            
+            form.submit();
+            form.remove();
+        });
     },
     
     showFunnyMessage: function() {

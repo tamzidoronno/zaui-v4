@@ -110,7 +110,6 @@ public class BookingItemAssignerOptimal {
             } else {
                 addUnassignedBookingsToLine(bookingLines, unassignedBookings);
             }
-
             setItemIdsToLines(bookingLines);
         }
         

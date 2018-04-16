@@ -14,6 +14,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.usermanager.data.Company;
 import java.io.BufferedReader;
@@ -44,6 +45,9 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     
     @Autowired
     private StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    private MessageManager messageManager;
             
     private int currentStartup;
 
@@ -187,6 +191,14 @@ public class UtilManager extends ManagerBase implements IUtilManager {
                     .orElse(null);
         }
         
+    }
+
+    @Override
+    public void sendPriceOffer(String base64EncodedDocument, String email) {
+        HashMap<String, String> attachments = new HashMap();
+        attachments.put("Priceoffer.pdf", base64EncodedDocument);
+        messageManager.sendMailWithAttachments(email, email, "Price offer from GetShop attached", "Thank you for checking the prices with us, attached is your offer.", "post@getshop.com", "post@getshop.com", attachments);
+        messageManager.sendMailWithAttachments("post@getshop.com", "post@getshop.com", "Price offer from GetShop attached", "Thank you for checking the prices with us, attached is your offer.", "post@getshop.com", "post@getshop.com", attachments);
     }
 
 }

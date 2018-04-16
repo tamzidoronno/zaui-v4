@@ -1,0 +1,19 @@
+{
+    "roomLicense" : 35,
+    "lockLicense" : 29,
+    "accountinglicense" : 1000,
+    "lockPrice" : 2750,
+    "websitePrice" : 29000,
+    "bookingPrice" : 29000,
+    "terminalIndoorPrice" : 58000,
+    "terminalOutdoorPrice" : 90000,
+    "trainingProgramPrice" : 9000,
+    "installLockPrice" : 900,
+    "mainEntrancePrice" : 9000,
+    "pgaPrice" : 2000,
+    "repeaterPrice" : 500,
+    "serverPrice" : 1500,
+    "integrationToAccountingPrice" : 24000,
+    "minMonthlyCost" : 500,
+    "currency" : "NOK"
+}

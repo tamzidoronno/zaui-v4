@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class TotpHandler {
-    private String storeIdToCheckUsersAgainst = "b703b793-c7f4-4803-83bb-106cab891d6c";
+    private String storeIdToCheckUsersAgainst = "13442b34-31e5-424c-bb23-a396b7aeb8ca";
     
     @Autowired
     private Database database;

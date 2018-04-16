@@ -814,7 +814,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")  || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
                 checkBookings = getAllBookingsOfType(bookingTypeId);
             }
- 
+          
             BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, checkBookings, getItemsByType(type.id), shouldThrowException(), storeId);
             
             // This throws exception if not possible.

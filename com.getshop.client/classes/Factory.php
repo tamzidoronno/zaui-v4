@@ -583,14 +583,14 @@ class Factory extends FactoryBase {
         $this->runPostProcess();
         
         if (isset($_GET['page']) && $_GET['page']) {
-            $this->getApi()->getTrackerManager()->logTracking("FrameWork", "pageloaded",  $_GET['page'], "Page loaded");
+            $this->getApi()->getTrackerManager()->logTracking("FrameWork", "pageloaded",  $_GET['page'], "Page loaded, Agent: ".@$_SERVER['HTTP_USER_AGENT']);
         }
         
         if (isset($_GET['rewrite']) && $this->isCmsMode()) {
             $name = str_replace("+", "%2b", $_GET['rewrite']);
             $name = urldecode($name);
             $name = str_replace("_''", "\"", $name);
-            $this->getApi()->getTrackerManager()->logTracking("FrameWork", "pageloaded", $name, "Page loaded");
+            $this->getApi()->getTrackerManager()->logTracking("FrameWork", "pageloaded", $name, "Page loaded, Agent: ".@$_SERVER['HTTP_USER_AGENT']);
         }
         
     }

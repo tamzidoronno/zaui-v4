@@ -1,0 +1,10 @@
+<?
+/* @var $this ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e\GetShopPriceModel */
+$priceMatrix = $this->genereatePriceMatrix();
+$prices = $this->getPriceMatrix();
+?>
+
+<div>Total startup cost is <? echo $prices->currency; ?> <span class='totalstartupcost'><? echo $priceMatrix['totalSetupCost']; ?></span></div>
+<div>Total monthly licensing is <? echo $prices->currency; ?> <span class='totalmonthlycost'><? echo $priceMatrix['totalMonthly']; ?></span></div>
+<div>Number of servers included in the offer : <span class='numberofservers'><? echo $priceMatrix['servers'] ?></span></div>
+<div>Number of range extenders in the offer : <span class='repeaters'><? echo $priceMatrix['repeaters']; ?></span></div>

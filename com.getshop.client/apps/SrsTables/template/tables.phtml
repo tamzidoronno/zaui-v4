@@ -50,6 +50,8 @@ if (isset($_SESSION['SrsTables_currentdate'])) {
                 $entry->end = strtotime($event->end);
                 $entry->type = "reservation";
                 $entry->roomId = $table->id;
+                $entry->shortDisplayTitle = $event->referenceName;
+                $entry->link = "/?page=restaurant&reservertionid=".$event->reservationId."&tableid=".$table->id;
                 $events[] = $entry;
             }
 
@@ -57,6 +59,7 @@ if (isset($_SESSION['SrsTables_currentdate'])) {
             $app->setNumberOfRooms(1);
             $app->setCalendarId($table->id);
             $app->setEvents($events);
+            $app->setColumnWidth(80);
             
             $dt = new DateTime($currentDate);
             $dt->sub(new DateInterval('P1D'));

@@ -7,13 +7,16 @@ package com.thundashop.core.resturantmanager;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  *
  * @author ktonder
  */
-public class TableEvent implements Serializable {
+public class TableReservation implements Serializable {
+    public String reservationId = UUID.randomUUID().toString();
     public Date start;
     public Date end;
     public String tableSessionId;
+    public String referenceName;
 }

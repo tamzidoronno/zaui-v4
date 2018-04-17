@@ -16,5 +16,5 @@ import java.util.List;
 public class RestaurantTableDay extends DataCommon {
     public String date;
     public String tableId; 
-    public List<TableEvent> events = new ArrayList();
+    public List<TableReservation> events = new ArrayList();
 }

@@ -84,4 +84,7 @@ interface IResturantManager {
     
     @Editor
     public RestaurantTableDay getTableDayData(Date date, String tableId);
+    
+    @Editor
+    public TableReservation getTableReservation(String reservationId);
 }

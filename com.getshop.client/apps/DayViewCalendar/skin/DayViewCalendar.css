@@ -7,3 +7,15 @@
     color:#fff;
     text-align: center;
 }
+
+.gsdayevent_inner {
+    position: relative;
+}
+
+.gsdayevent_shorttitle {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}

@@ -565,9 +565,10 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     public void bookNewTableSession(Date start, Date end, String name, String tableId) {
         RestaurantTableDay dayData = getTableDayData(start, tableId);
         
-        TableEvent event = new TableEvent();
+        TableReservation event = new TableReservation();
         event.start = start;
         event.end = end;
+        event.referenceName = name;
         
         dayData.events.add(event);
         saveObject(dayData);
@@ -596,6 +597,28 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         
         return res;
     }
-    
+
+    @Override
+    public TableReservation getTableReservation(String reservationId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", RestaurantTableDay.class.getCanonicalName());
+        query.put("events.reservationId", reservationId);
+        
+        RestaurantTableDay res = database.query(ResturantManager.class.getSimpleName(), storeId, query)
+                .stream()
+                .map(o -> (RestaurantTableDay)o)
+                .findFirst()
+                .orElse(null);
+        
+        if (res != null) {
+            return res.events.stream()
+                    .filter(o -> o.reservationId.equals(reservationId))
+                    .findFirst()
+                    .orElse(null);
+        }
+        
+        return null;
+    }
+
     
 }

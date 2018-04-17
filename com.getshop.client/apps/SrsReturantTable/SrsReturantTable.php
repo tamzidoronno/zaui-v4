@@ -11,7 +11,13 @@ class SrsReturantTable extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        if (isset($_GET['tableid'])) {
+        if (isset($_GET['reservertionid'])) {
+            $reservation = $this->getApi()->getResturantManager()->getTableReservation($_GET['reservertionid']);
+            echo "<pre>";
+            print_r($reservation);
+            echo "</pre>";
+            $this->includefile("header");
+            
             $this->setCurrentTableId();
         }
         $this->loadCart();

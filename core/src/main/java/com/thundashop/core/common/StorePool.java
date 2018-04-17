@@ -344,6 +344,9 @@ public class StorePool {
     }
 
     private boolean isAdministrator(JsonObject2 object) {
+        if (object.sessionId == null || object.sessionId.isEmpty())
+            return false;
+        
         StoreHandler storeHandler = getStoreHandler(object.sessionId);
         if (storeHandler == null) {
             return false;

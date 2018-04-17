@@ -45,5 +45,7 @@ public interface LockServer {
     public void deactivatePrioritingOfLock();
 
     public void finalizeServer();
+
+    public void markCodeAsUpdatedOnLock(String lockId, int slotId);
     
 }

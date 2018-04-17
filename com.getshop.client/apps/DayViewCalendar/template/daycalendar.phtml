@@ -23,8 +23,9 @@ $days = 0;
 
 
 while(true) {
-    echo "<div class='daycontainer'>";
-    echo "<div class='dateheader'>".date("d.m.Y", $time)."</div>";
+    $displayDate = date("d.m.Y", $time);
+    echo "<div class='daycontainer' date='$displayDate' calendarid='$this->calendarId'>";
+    echo "<div class='dateheader'>".$displayDate."</div>";
     $day = date("d.m.Y", $time);
     $events = $this->getEventsForDay($day);
     foreach($events as $event) {
@@ -33,10 +34,13 @@ while(true) {
     for($i = 0;$i < 48;$i++) {
         $secondary = $i % 2 == 0;
         $secondaryClass = "";
+        $minutes = 30;
         if($secondary) {
+            $minutes = 0;
             $secondaryClass = "secondary";
         }
-        echo "<div class='halfhourarea $secondaryClass'></div>";
+        $hour = (int)($i / 2);
+        echo "<div hour='$hour' minutes='$minutes' class='halfhourarea $secondaryClass'></div>";
     }
     echo "</div>";
     $time += 86400;

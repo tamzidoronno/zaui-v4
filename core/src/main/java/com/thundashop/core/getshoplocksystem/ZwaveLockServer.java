@@ -57,12 +57,15 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                     .findFirst()
                     .orElse(null);
             
-            if (oldLock != null) {
-                lock.setUserSlots(oldLock.getUserSlots());
-                lock.id = oldLock.id;
+            if (oldLock == null) {
+                locks.put(lock.id, lock);
+                return;
             } 
 
-            locks.put(lock.id, lock);
+            oldLock.maxnumberOfCodes = lock.maxnumberOfCodes;
+            oldLock.name = lock.name;
+            lock.id = oldLock.id;
+            
         });
         
         saveMe();
@@ -302,6 +305,12 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
             .forEach(l -> {
                 l.prioritizeLockUpdate = false;
             });
+        
+    }
+
+    @Override
+    public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
+        super.markCodeAsUpdatedOnLock(lockId, slotId);
         
     }
 

@@ -5,13 +5,11 @@
 package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSession;
-import org.owasp.validator.html.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -25,27 +23,13 @@ import java.util.UUID;
  * @author ktonder
  */
 public class StorePool {
-
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
-    private final AntiSamy antiySamy;
-    private Policy policy;
-
+    
     public StorePool() {
         if (AppContext.appContext != null) {
             this.storePool = AppContext.appContext.getBean(com.thundashop.core.storemanager.StorePool.class);
         }
-        
-        try {
-             policy = Policy.getInstance(getClass().getResource("/antisamy-myspace-1.4.4.xml"));
-        } catch (Exception ex) {
-            GetShopLogHandler.logPrintStatic("Could not find the antisamy policy file, can not continue unsecurly", null);
-            ex.printStackTrace();
-            System.exit(1);
-        }
-        
-        antiySamy = new AntiSamy();
-        
     }
 
     private Type[] getArgumentsTypes(JsonObject2 object) throws ErrorException {
@@ -122,41 +106,18 @@ public class StorePool {
     public Object ExecuteMethod(String message, String addr) throws ErrorException {
         return ExecuteMethod(message, addr, null);
     }
-
-    private Object scan(Object objectToScan) throws IllegalArgumentException, IllegalAccessException, ScanException, PolicyException {
-        if (objectToScan == null) {
-            return objectToScan;
-        }
-        
-        if (objectToScan instanceof String) {
-            CleanResults result2 = antiySamy.scan(objectToScan.toString(), policy);
-            return result2.getCleanHTML();
-        } else if( objectToScan.getClass().isEnum()) {
-            return objectToScan;
-        } else {
-            for (Field field : objectToScan.getClass().getFields()) {
-                if (field.getType().equals(String.class)) {
-                    String text = (String) field.get(objectToScan);
-                    if (text == null) {
-                        field.set(objectToScan, text);
-                    } else {
-                        CleanResults result2 = antiySamy.scan(text, policy);
-                        field.set(objectToScan, result2.getCleanHTML());
-                    }
-                } else if(isWrapperType(objectToScan.getClass())) {
-                    return objectToScan;
-                } else {
-                    field.set(objectToScan, scan(field.get(objectToScan)));
-                }
-            }
-        }
-        
-        return objectToScan;
-    }
-    
+  
     public Object ExecuteMethod(String message, String addr, String sessionId) throws ErrorException {
-        Gson gson = new GsonBuilder().serializeNulls().create();
-
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .create();
+        
+        Gson gsonWithVirusScanner = new GsonBuilder()
+                .serializeNulls()
+                .registerTypeAdapter(String.class, new VirusScanner())
+                .create();
+                
+        
         Type type = new TypeToken<JsonObject2>() {
         }.getType();
 
@@ -177,7 +138,7 @@ public class StorePool {
         }catch(Exception e) {
             //invalid mulitlevelname.
         }
-
+       
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
         Class[] types = getArguments(object);
@@ -189,7 +150,8 @@ public class StorePool {
                 GetShopLogHandler.logPrintStatic("test", null);
             }
             try {
-                 Object argument = gson.fromJson(object.args.get(parameter), casttypes[i]);
+                Gson useGson = isAdministrator(object) ? gson : gsonWithVirusScanner;
+                Object argument = useGson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -224,31 +186,11 @@ public class StorePool {
 
         return result;
     }
-    
-    private Object[] runTroughAntiSamy(JsonObject2 object, Object[] argumentValues) throws ErrorException {
-        StoreHandler storeHandler = getStoreHandler(object.sessionId);
-        
-        if (storeHandler != null && (storeHandler.isAdministrator(object.sessionId, object) || storeHandler.isEditor(object.sessionId, object))) {
-            return argumentValues;
-        }
-        
-        Object[] cleanOject = new Object[argumentValues.length];
-        int i = 0;
-        for (Object arg : argumentValues) {
-            try { 
-                cleanOject[i] = scan(arg); 
-            } catch (Exception ex) { ex.printStackTrace(); }
-            i++;
-        }
-        return cleanOject;
-    }
 
     private Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues) throws ErrorException {
         if (object.interfaceName.equals("core.usermanager.UserManager") && object.method.equals("getPingoutTime")) {
             return handleSpecialTimeoutCheck(object, types, argumentValues);
         }
-        
-        argumentValues = runTroughAntiSamy(object, argumentValues);
         
         Object res;
         if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
@@ -399,5 +341,15 @@ public class StorePool {
                 .forEach(handler -> {
                     handler.sessionRemoved(sessionId);
                 });
+    }
+
+    private boolean isAdministrator(JsonObject2 object) {
+        StoreHandler storeHandler = getStoreHandler(object.sessionId);
+        if (storeHandler == null) {
+            return false;
+        }
+        
+        boolean isAdmin = storeHandler.isAdministrator(object.sessionId, object);
+        return isAdmin;
     }
 }

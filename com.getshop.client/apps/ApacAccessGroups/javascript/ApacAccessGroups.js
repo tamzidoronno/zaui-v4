@@ -18,7 +18,7 @@ app.ApacAccessGroups = {
     saveGroup: function() {
         var servers = {};
         
-        $('.servergroup').each(function() {
+        $(this).closest('.locks').find('.servergroup').each(function() {
             var serverid = $(this).attr('serverid');
             
             var lockIds = [];

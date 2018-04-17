@@ -166,5 +166,13 @@ class ApacLocks extends \MarketingApplication implements \Application {
             $this->getApi()->getGetShopLockSystemManager()->markCodeForResending($_POST['data']['serverid'], $_POST['data']['lockid'], $slot->slotId);
         }
     }
+    
+    public function markCodeAsSent() {
+        $this->getApi()->getGetShopLockSystemManager()->markCodeAsUpdatedOnLock($_POST['data']['serverid'], $_POST['data']['lockid'], $_POST['data']['slotid']);
+    }
+
+    public function markCodeForResend() {
+        $this->getApi()->getGetShopLockSystemManager()->markCodeForResending($_POST['data']['serverid'], $_POST['data']['lockid'], $_POST['data']['slotid']);
+    }
 }
 ?>

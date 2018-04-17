@@ -11,6 +11,18 @@ class DayViewCalendarEntry {
     
     //Room1, room2, room3, etc.
     public $roomId;
+    
+    /**
+     * Is used for displaying name in the calendar.
+     * 
+     * @var String
+     */
+    public $shortDisplayTitle="";
+    
+    /**
+     * When filled out the events will be clickable in the calendar
+     */
+    public $link = "";
 }
 
 ?>

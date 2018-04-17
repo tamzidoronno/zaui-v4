@@ -9,8 +9,14 @@ class DayViewCalendar extends \WebshopApplication implements \Application {
     public $dayEvents = array();
     public $numberOfRooms = 1;
     public $roomIndex = array();
-    
+    public $calendarId = "";
+    private $columnWidth = 150;
+
     public function getDescription() {
+    }
+    
+    public function setCalendarId($id) {
+        $this->calendarId = $id;
     }
     
     public function getEventsForDay($day) {
@@ -77,9 +83,22 @@ class DayViewCalendar extends \WebshopApplication implements \Application {
         
         $index = $this->getRoomIndex($event->roomId);
         $color = $this->getColorForIndex($index);
-        $width = 150 / $this->numberOfRooms;
+        $width = $this->getColumnWidth() / $this->numberOfRooms;
         $left = ($index * $width);
         echo "<span class='gsdayevent' style='top:".$top."px; height:".$height."px; width:".$width."px;left:".$left."px; background-color:".$color."' event='".json_encode($event)."'>";
+            if ($event->link) {
+                echo "<a href='$event->link'>";
+            }
+            echo "<div class='gsdayevent_inner'>";
+                if ($event->shortDisplayTitle) {
+                    echo "<span class='gsdayevent_shorttitle'>".$event->shortDisplayTitle."</span>";
+                }
+            echo "</div>";
+            
+            if ($event->link) {
+                echo "</a>";
+            }
+        
         echo "</span>";
     }
     
@@ -89,8 +108,8 @@ class DayViewCalendar extends \WebshopApplication implements \Application {
      */
     public function setEvents($eventsToPrint) {
         $this->events = $eventsToPrint;
-        
         $eventsIndex = array();
+        
         foreach($this->events as $event) {
             $eventsIndex[$event->roomId] = 1;
         }
@@ -150,6 +169,7 @@ class DayViewCalendar extends \WebshopApplication implements \Application {
         
         foreach($this->getEvents() as $event) {
             $time = strtotime(date("d.m.Y 00:00", $event->start));
+            
             while(true) {
                 $day = date("d.m.Y", $time);
                 if(!isset($this->dayEvents[$day])) {
@@ -174,6 +194,14 @@ class DayViewCalendar extends \WebshopApplication implements \Application {
             return "";
         }
         return $this->getColorForIndex($idx);
+    }
+
+    public function getColumnWidth() {
+        return $this->columnWidth;
+    }
+    
+    public function setColumnWidth($width) {
+        $this->columnWidth = $width;
     }
 
 }

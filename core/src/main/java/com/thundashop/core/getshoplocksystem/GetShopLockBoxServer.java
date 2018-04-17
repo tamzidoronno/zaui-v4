@@ -95,5 +95,10 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
             });
         });
     }
+
+    @Override
+    public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

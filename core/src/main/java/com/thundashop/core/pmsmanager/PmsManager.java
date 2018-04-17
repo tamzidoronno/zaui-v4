@@ -5183,6 +5183,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void addProductToRoom(String productId, String pmsRoomId, Integer count) {
         PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        if(booking == null) {
+            return;
+        }
         PmsBookingRooms room = booking.findRoom(pmsRoomId);
         if (count == 0) {
             List<PmsBookingAddonItem> toRemove = new ArrayList();

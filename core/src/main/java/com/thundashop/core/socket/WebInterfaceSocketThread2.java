@@ -19,8 +19,11 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  *
@@ -80,6 +83,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 builder.disableInnerClassSerialization();
                 builder.serializeSpecialFloatingPointValues();
                 builder.setExclusionStrategies(new AnnotationExclusionStrategy(null));
+                builder.registerTypeAdapter(Date.class, new GsonUTCDateAdapter()).create();
                 Gson gson = builder.create();
                 json = gson.toJson((Object) result);
             }catch(Exception e) {

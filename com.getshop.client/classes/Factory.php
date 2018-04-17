@@ -570,6 +570,13 @@ class Factory extends FactoryBase {
     }
 
     public function run($json = false) {
+        
+
+        $timezone = $this->getStore()->timeZone;
+        if($timezone) {
+            date_default_timezone_set($timezone);
+        }
+        
         $this->sendCurrentLanguage();
         $this->runPreprocess();
         $this->renderContent($json);

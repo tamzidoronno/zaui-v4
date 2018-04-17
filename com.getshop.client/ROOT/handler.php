@@ -56,6 +56,14 @@ checkCreateApp();
 
 $factory = IocContainer::getFactorySingelton();
 $handler = new handler();
+
+
+$timezone = $factory->getStore()->timeZone;
+if($timezone) {
+    date_default_timezone_set($timezone);
+}
+
+
 if (isset($_POST['core']['appid']) && $_POST['core']['appid']) {
     $handler->route($factory);
 } else {

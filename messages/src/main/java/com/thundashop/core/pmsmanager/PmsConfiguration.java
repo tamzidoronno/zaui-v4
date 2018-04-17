@@ -3,11 +3,48 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
+import org.mongodb.morphia.annotations.Transient;
 
 public class PmsConfiguration extends DataCommon {
+
+    @Transient
+    private String timezone = "";
+    
+    void setTimeZone(String timeZone) {
+        this.timezone = timeZone;
+    }
+
+    private String calculcateTimeZone(String toCheck) {
+        String[] splitted = toCheck.split(":");
+        Integer hour = new Integer(splitted[0]);
+        Integer minute = new Integer(splitted[1]);
+        
+        TimeZone tz1 = TimeZone.getTimeZone(timezone);
+        TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
+        long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
+        if(timeDifference != 0) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            cal.set(Calendar.MINUTE, minute);
+            long seconds = timeDifference / 1000;
+            cal.add(Calendar.SECOND, (int)seconds);
+            int min = cal.get(Calendar.MINUTE);
+            int hourTime = cal.get(Calendar.HOUR_OF_DAY);
+            String minuteToReturn = min + "";
+            if(min < 10) { minuteToReturn = "0" + minuteToReturn; }
+            String hourToReturn = hourTime + "";
+            if(hourTime < 10) { hourToReturn = "0" + hourTime; }
+            String res = hourToReturn + ":" + minuteToReturn;
+            return res;
+        }
+        return toCheck;
+
+    }
 
 
 
@@ -43,7 +80,7 @@ public class PmsConfiguration extends DataCommon {
     public Integer numberOfHoursToExtendLateCheckout = 3;
     public Integer minStay = 1;
     public Integer defaultNumberOfDaysBack = 3;
-    public Integer hourOfDayToStartBoarding = 12;
+    private Integer hourOfDayToStartBoarding = 12;
     public boolean supportMoreDates = false;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
@@ -108,8 +145,8 @@ public class PmsConfiguration extends DataCommon {
     public int warnIfOrderNotPaidFirstTimeInHours = 0;
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
-    public String defaultStart = "15:00";
-    public String defaultEnd = "12:00";
+    private String defaultStart = "15:00";
+    private String defaultEnd = "12:00";
     public String extraField = "";
     public String smsName = "GetShop";
     public Integer childMaxAge = 6;
@@ -163,7 +200,7 @@ public class PmsConfiguration extends DataCommon {
 
     
     //Cleaning options
-    public Integer closeRoomNotCleanedAtHour = 16;
+    private Integer closeRoomNotCleanedAtHour = 16;
     public Integer cleaningInterval = 0;
     public HashMap<Integer, Boolean> cleaningDays = new HashMap();
     public Integer numberOfCheckoutCleanings = 0;
@@ -204,6 +241,54 @@ public class PmsConfiguration extends DataCommon {
         }
         return false;
     }
+    
+    /**
+     * Timezone related data.
+     */
+    public Integer getBoardingHour() {
+        if(timezone != null && !timezone.isEmpty()) {
+            TimeZone tz1 = TimeZone.getTimeZone(timezone);
+            TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
+            long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
+            if(timeDifference != 0) {
+                long seconds = timeDifference / 1000;
+                long minutes = seconds / 60;
+                long hours = minutes / 60;
+                minutes = minutes - (hours*60);
+                return hourOfDayToStartBoarding + (int)hours;
+            }
+        }
+        return hourOfDayToStartBoarding;
+    }
+    public String getDefaultEnd() {
+        if(timezone != null && !timezone.isEmpty() && defaultEnd != null && defaultEnd.contains(":")) {
+            return calculcateTimeZone(defaultEnd);
+        }
+        
+        return defaultEnd;
+    }
+    public String getDefaultStart() {
+        if(timezone != null && !timezone.isEmpty() && defaultEnd != null && defaultEnd.contains(":")) {
+            return calculcateTimeZone(defaultStart);
+        }
+        return defaultStart;
+    }
+    public Integer getCloseRoomNotCleanedAtHour() {
+        if(timezone != null && !timezone.isEmpty()) {
+            TimeZone tz1 = TimeZone.getTimeZone(timezone);
+            TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
+            long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
+            if(timeDifference != 0) {
+                long seconds = timeDifference / 1000;
+                long minutes = seconds / 60;
+                long hours = minutes / 60;
+                minutes = minutes - (hours*60);
+                return closeRoomNotCleanedAtHour + (int)hours;
+            }
+        }
+        return closeRoomNotCleanedAtHour;
+    }
+    
     
     boolean channelExists(String channel) {
         return channelConfiguration.containsKey(channel);

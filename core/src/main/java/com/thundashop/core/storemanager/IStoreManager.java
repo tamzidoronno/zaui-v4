@@ -207,4 +207,7 @@ public interface IStoreManager {
     
     @Administrator
     public void setDefaultMultilevelName(String multilevelname);
+    
+    @Administrator
+    public void changeTimeZone(String timezone);
 }

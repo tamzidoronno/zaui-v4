@@ -14,6 +14,7 @@ import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.socket.GsonUTCDateAdapter;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -23,10 +24,12 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -492,6 +495,7 @@ public class StoreHandler {
         Gson gson = new GsonBuilder()
                 .serializeNulls()
                 .serializeSpecialFloatingPointValues()
+                .registerTypeAdapter(Date.class, new GsonUTCDateAdapter())
                 .disableInnerClassSerialization()
                 .setExclusionStrategies(new AnnotationExclusionStrategy(user))
                 .create();

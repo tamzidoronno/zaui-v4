@@ -21,8 +21,8 @@ public class PmsWebBookingManager extends GetShopSessionBeanNamed implements IPm
     public List<PmsWebRoom> getAllRooms(Date start, Date end) {
         List<PmsWebRoom> rooms = new ArrayList();
         
-        String[] defaultStart = pmsManager.getConfigurationSecure().defaultStart.split(":");
-        String[] defaultEnd = pmsManager.getConfigurationSecure().defaultEnd.split(":");
+        String[] defaultStart = pmsManager.getConfigurationSecure().getDefaultStart().split(":");
+        String[] defaultEnd = pmsManager.getConfigurationSecure().getDefaultEnd().split(":");
         
         Calendar calStart = Calendar.getInstance();
         calStart.setTime(start);

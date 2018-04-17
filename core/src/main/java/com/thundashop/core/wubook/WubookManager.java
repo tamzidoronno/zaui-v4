@@ -1026,9 +1026,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        String starttime = pmsManager.getConfigurationSecure().defaultStart;
+        String starttime = pmsManager.getConfigurationSecure().getDefaultStart();
         if(!start) {
-            starttime = pmsManager.getConfigurationSecure().defaultEnd;
+            starttime = pmsManager.getConfigurationSecure().getDefaultEnd();
         } 
         
         String[] starting = starttime.split(":");
@@ -1741,9 +1741,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 11);
         
-        String time = pmsManager.getConfigurationSecure().defaultEnd;
+        String time = pmsManager.getConfigurationSecure().getDefaultEnd();
         if(start) {
-            time = pmsManager.getConfigurationSecure().defaultStart;
+            time = pmsManager.getConfigurationSecure().getDefaultStart();
         }
         if(time != null && time.contains(":")) {
             String[] times = time.split(":");

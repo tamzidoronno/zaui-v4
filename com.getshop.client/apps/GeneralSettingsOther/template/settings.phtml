@@ -1,0 +1,35 @@
+<?php /* @var $this ns_afbe1ef5_6c62_45c7_a5a0_fd16d380d7cb\GeneralSettingsOther */ 
+
+$timezone = $this->getApi()->getStoreManager()->getMyStore()->timeZone;
+?>
+
+<div gstype='form' method='save'>
+    <div class='row'>
+        <div class='col col1'>Timezone</div>
+        <div class='col col2'>
+            <select id='timezones' class='gsniceselect1' gsname='timezone' currentzone='<?php echo $timezone; ?>'></select>
+        </div>
+        <div class='spacer'></div>
+    </div>
+    <div style='text-align: right; margin-right: 10px; margin-top:10px;'>
+        <span class='shop_button' gstype='submit'>Save</span>
+    </div>
+</div>
+
+<script>
+var arrayToPrint = [];
+for(var k in timezones) {
+    var zone = timezones[k];
+    for(var toAddKey in zone.utc) {
+        var toAdd = zone.utc[toAddKey];
+        arrayToPrint.push(toAdd);
+    }
+}
+arrayToPrint.sort();
+for(var k in arrayToPrint) {
+    var zone = arrayToPrint[k];
+    $('#timezones').append("<option value='"+zone+"'>"+zone+ "</option>");
+}
+$('#timezones').val($('#timezones').attr('currentzone'));
+</script>
+

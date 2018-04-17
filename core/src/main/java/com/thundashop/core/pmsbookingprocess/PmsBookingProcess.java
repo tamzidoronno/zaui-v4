@@ -336,8 +336,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private Date normalizeDate(Date date, boolean isStart) {
-        String[] defaultStart = pmsManager.getConfigurationSecure().defaultStart.split(":");
-        String[] defaultEnd = pmsManager.getConfigurationSecure().defaultEnd.split(":");
+        String[] defaultStart = pmsManager.getConfigurationSecure().getDefaultStart().split(":");
+        String[] defaultEnd = pmsManager.getConfigurationSecure().getDefaultEnd().split(":");
         if(isStart) {
             Calendar calStart = Calendar.getInstance();
             calStart.setTime(date);

@@ -294,7 +294,7 @@ public class PmsManagerProcessor {
                 
                 //If it is possible to let customers check in earlier than specified, do it.
                 int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                int boardingHour = manager.getConfigurationSecure().hourOfDayToStartBoarding;
+                int boardingHour = manager.getConfigurationSecure().getBoardingHour();
                 if(boardingHour >= 0) {
                     boolean boardingStarted = (hourNow >= boardingHour);
                     if(!room.isStarted() && boardingStarted && room.isStartingToday()) {

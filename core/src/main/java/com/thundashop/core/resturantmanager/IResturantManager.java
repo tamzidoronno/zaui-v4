@@ -11,6 +11,7 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsRoomSimple;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,4 +79,9 @@ interface IResturantManager {
     
     @Editor
     public void createCartForTable(String tableId);
+    
+    public void bookNewTableSession(Date start, Date end, String name, String tableId);
+    
+    @Editor
+    public RestaurantTableDay getTableDayData(Date date, String tableId);
 }

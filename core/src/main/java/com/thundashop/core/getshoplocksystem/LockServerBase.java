@@ -235,4 +235,8 @@ public abstract class LockServerBase extends DataCommon {
     public void startUpdatingOfLocks() {
         
     }
+    
+    public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
+        getLock(lockId).markCodeAsUpdatedOnLock(slotId);
+    }
 }

@@ -305,4 +305,10 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         
     }
 
+    @Override
+    public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
+        super.markCodeAsUpdatedOnLock(lockId, slotId);
+        
+    }
+
 }

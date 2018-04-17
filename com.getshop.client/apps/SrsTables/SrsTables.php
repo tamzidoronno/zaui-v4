@@ -54,5 +54,14 @@ class SrsTables extends \MarketingApplication implements \Application {
         $_SESSION['SrSTable_selected_room'] = $_POST['data']['roomid'];
     }
 
+    public function setCurrentDate() {
+        $_SESSION['SrsTables_currentdate'] = $_POST['data']['date'];
+    }
+    
+    public function createNewTableSession() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $this->getApi()->getResturantManager()->bookNewTableSession($start, $end, $_POST['data']['name'], $_POST['data']['tableid']);
+    }
 }
 ?>

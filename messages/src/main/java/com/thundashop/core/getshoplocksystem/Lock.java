@@ -241,4 +241,10 @@ public class Lock {
     public Date getDontUpdateUntil() {
         return dontUpdateUntil;
     }
+
+    void markCodeAsUpdatedOnLock(int slotId) {
+        if (userSlots.get(slotId) != null) {
+            userSlots.get(slotId).codeAddedSuccesfully();
+        }
+    }
 }

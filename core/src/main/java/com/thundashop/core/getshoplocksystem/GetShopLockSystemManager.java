@@ -481,4 +481,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         saveObject(user);
         users.put(user.id, user);
     }
+
+    @Override
+    public void markCodeAsUpdatedOnLock(String serverId, String lockId, int slotId) {
+         LockServer server = lockServers.get(serverId);
+        
+        if (server != null) {
+            server.markCodeAsUpdatedOnLock(lockId, slotId);
+        }
+    }
 }

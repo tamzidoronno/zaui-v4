@@ -51,6 +51,9 @@ public interface IGetShopLockSystemManager {
     public void markCodeForResending(String serverId, String lockId, int slotId);
     
     @Administrator
+    public void markCodeAsUpdatedOnLock(String serverId, String lockId, int slotId);
+    
+    @Administrator
     public void createNewLockGroup(String name, int maxUsersInGroup);   
     
     /**

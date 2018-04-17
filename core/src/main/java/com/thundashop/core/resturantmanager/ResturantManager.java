@@ -7,6 +7,9 @@ package com.thundashop.core.resturantmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.CartManager;
@@ -28,10 +31,13 @@ import com.thundashop.core.printmanager.StorePrintManager;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.trackermanager.TrackLog;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +59,8 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     private Map<String, ResturantTable> tables = new HashMap();
     private Map<String, TableSession> sessions = new HashMap();
     private Map<String, PaymentTransaction> payments = new HashMap();
-
+    
+    
     public SessionFactory sessionFactory;
     
     @Autowired
@@ -552,6 +559,42 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         cartManager.clear();
         cartManager.getCart().addCartItems(items);
 //        addCartItems(new ArrayList(res.cartItems), false);
+    }
+
+    @Override
+    public void bookNewTableSession(Date start, Date end, String name, String tableId) {
+        RestaurantTableDay dayData = getTableDayData(start, tableId);
+        
+        TableEvent event = new TableEvent();
+        event.start = start;
+        event.end = end;
+        
+        dayData.events.add(event);
+        saveObject(dayData);
+    }
+
+    public RestaurantTableDay getTableDayData(Date start, String tableId) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        String date = sdf.format(start);
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", RestaurantTableDay.class.getCanonicalName());
+        query.put("date", date);
+        query.put("tableId", tableId);
+        
+        RestaurantTableDay res = database.query(ResturantManager.class.getSimpleName(), storeId, query)
+                .stream()
+                .map(o -> (RestaurantTableDay)o)
+                .findFirst()
+                .orElse(null);
+        
+        if (res == null) {
+            res = new RestaurantTableDay();
+            res.date = date;
+            res.tableId = tableId;
+        }
+        
+        return res;
     }
     
     

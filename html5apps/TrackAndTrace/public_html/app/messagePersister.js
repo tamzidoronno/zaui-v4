@@ -152,45 +152,6 @@ messagePersister = {
         if (!this.messages) {
             this.messages = [];
         }
-    },
-    
-    /**
-     * 
-     * @param String start - YYYY-MM-DD HH:MM:SS
-     * @param String end - YYYY-MM-DD HH:MM:SS
-     */
-    get1000LatestMessages: function(callback, api) {
-        if (!db) {
-            return;
-        }
-        
-        db.transaction(function (tx) {
-//            var count = "SELECT * FROM SentMessages WHERE dateCreated >= Datetime('"+start+"') AND dateCreated <= Datetime('"+end+"')";
-            var count = "SELECT * FROM SentMessages Limit 3000";
-            
-            
-            tx.executeSql(count, [], function(tx, res) {
-                var retMessages = [];
-                
-                for(var x = 0; x < res.rows.length; x++) {
-                    var toAdd = JSON.parse(res.rows.item(x).data);
-                    retMessages.push(toAdd);
-                }
-                
-                callback(retMessages, api);
-            },
-            
-            
-            
-            function(tx, error) {
-                alert('UPDATE error: ' + error.message);
-            });
-            
-        }, function(error) {
-            console.log('transaction error: ' + error.message);
-            alert("error messeg" + error.message);
-        }, function() {
-        });
     }
 };
 

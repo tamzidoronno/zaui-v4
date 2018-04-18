@@ -98,14 +98,14 @@ public class BookingItemAssignerOptimal {
         Collections.sort(assignedBookings, Booking.sortByStartDate());
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
-        
+             
         String k1StoreId = "26c65d63-e353-4997-83df-488cc2fa3550";
         
         // Optimalisation as there is only one room of a category, so there is no point trying to make it optimal.
         if (getBookingItemsFlatten().size() == 1 && storeId.equals(k1StoreId)) {
             addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
         } else {
-            if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329"))) {
+            if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329") || storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec"))) {
                 squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
             } else {
                 addUnassignedBookingsToLine(bookingLines, unassignedBookings);
@@ -660,10 +660,14 @@ public class BookingItemAssignerOptimal {
         List<OptimalBookingTimeLine> linesToCheck = bookingLines.stream()
                 .collect(Collectors.toList());
         
+        
+        int i = 0;
         for (OptimalBookingTimeLine timeLine : linesToCheck) {
             HashMap<Date, Date> dateRangeToOptimizeBookingsIn = timeLine.getDatesBetweenAssignedBokings();
             
             for (Date start : dateRangeToOptimizeBookingsIn.keySet()) {
+                i++;
+                
                 Date end = dateRangeToOptimizeBookingsIn.get(start);
                 
                 List<Booking> bookingsToBruteforce = unassignedBookings.stream()

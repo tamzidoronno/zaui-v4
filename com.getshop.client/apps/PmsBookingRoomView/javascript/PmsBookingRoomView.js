@@ -94,8 +94,18 @@ app.PmsBookingRoomView = {
         }
     },
     showRoomsToSelect: function() {
+        $('.PmsBookingRoomView .roomstoselect').html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
         $('.PmsBookingRoomView .roomstoselect').show();
         $('.PmsBookingRoomView .outerstay').hide();
+        
+        var data = {}
+        var event = thundashop.Ajax.createEvent(null, 'showItemView', this, data);
+        event['synchron'] = true;
+        
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.PmsBookingRoomView .roomstoselect').html(res);
+        })
     },
     
     dosplitchange : function() {

@@ -983,13 +983,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data) {
-        PmsBookingFilter filter = new PmsBookingFilter();
         if(data.reference.length() < 7) {
             return null;
         }
         
+        PmsBookingFilter filter = new PmsBookingFilter();
         filter.searchWord = data.reference;
-        List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
+        List<PmsBooking> bookings = pmsManager.getAllBookingsInternal(filter);
         if(bookings.size() == 0) {
             return null;
         }
@@ -1004,8 +1004,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             double amount = -1.0;
             for(String orderId : booking.orderIds) {
-                Order order = orderManager.getOrder(orderId);
-                if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                Order order = orderManager.getOrderSecure(orderId);
+                if(order != null && order.status != Order.Status.PAYMENT_COMPLETED) {
                     amount = orderManager.getTotalAmount(order);
                     if(amount > 0) {
                         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));

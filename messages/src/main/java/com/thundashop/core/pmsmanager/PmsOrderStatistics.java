@@ -7,11 +7,14 @@ import com.thundashop.core.usermanager.data.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import org.mongodb.morphia.annotations.Transient;
 
 public class PmsOrderStatistics implements Serializable  {
@@ -19,6 +22,7 @@ public class PmsOrderStatistics implements Serializable  {
     private List<String> roomProducts = new ArrayList();
     private final HashMap<String, User> users;
     private HashMap<String, Boolean> canUseNew = new HashMap();
+    private HashMap<String, Double> usersTotal = new HashMap();
     
     public PmsOrderStatistics(List<String> roomProducts, HashMap<String, User> users) {
         this.roomProducts = roomProducts;
@@ -34,6 +38,29 @@ public class PmsOrderStatistics implements Serializable  {
             cal.add(Calendar.DAY_OF_YEAR, 1);
             if(cal.getTime().after(filter.end)) {
                 break;
+            }
+        }
+        
+        HashMap<String, Order> orderMap = new HashMap();
+        for(Order ord : ordersToUse) {
+            orderMap.put(ord.id, ord);
+        }
+        
+        System.out.println("Done, now summize on orders");
+        for(PmsOrderStatisticsEntry entry : entries) {
+            for(String productId : entry.priceExOrders.keySet()) {
+                HashMap<String, Double> ordersHashMap = entry.priceExOrders.get(productId);
+                for(String orderId : ordersHashMap.keySet()) {
+                    Order order = orderMap.get(orderId);
+                    String userId = order.userId;
+                    
+                    Double totalOnCustomer = 0.0;
+                    if(usersTotal.containsKey(userId)) {
+                        totalOnCustomer = usersTotal.get(userId);
+                    }
+                    totalOnCustomer += ordersHashMap.get(orderId);
+                    usersTotal.put(userId, totalOnCustomer);
+               }
             }
         }
     }

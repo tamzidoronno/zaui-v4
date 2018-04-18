@@ -40,6 +40,7 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean showExTaxes = false;
     public Date lastBooked = null;
     public Date lastOrdered = null;
+    public Double orderAmount = 0.0;
     
     public HashMap<String,UserOAuthorization> oAuths = new HashMap();
     

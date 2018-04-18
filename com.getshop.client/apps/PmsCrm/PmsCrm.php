@@ -112,10 +112,12 @@ class PmsCrm extends \WebshopApplication implements \Application {
      * @param \core_usermanager_data_User $user
      */
     public function formatExTax($user) {
+        $res = round($user->orderAmount);
         if($user->showExTaxes) {
-            return "<i class='fa fa-check'></i>";
+            $res .= "<br><i class='fa fa-check'></i>";
         }
-        return "";
+        
+        return $res;
     }
     
     /**

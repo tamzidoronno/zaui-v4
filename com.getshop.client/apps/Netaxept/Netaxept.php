@@ -22,6 +22,10 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function getAvailablePositions() {
         return "left";
     }
+    
+    public function hasPaymentLink() {
+        return true;
+    }
 
     public function getName() {
         return "Netaxept";
@@ -184,15 +188,10 @@ class Netaxept extends \PaymentApplication implements \Application {
         $okpage = false;
         $canceledpage = false;
         $paymentfailed = false;
-        if ($this->getConfigurationSetting("okpage")) {
-            $okpage = "/?page=".$this->getConfigurationSetting("okpage");
-        }
-        if ($this->getConfigurationSetting("paymentfailed")) {
-            $paymentfailed = "/?page=".$this->getConfigurationSetting("paymentfailed");
-        }
-        if ($this->getConfigurationSetting("canceledpage")) {
-            $canceledpage = "/?page=".$this->getConfigurationSetting("canceledpage");
-        }
+        $okpage = "/?page=payment_success";
+        $paymentfailed = "/?page=payment_failed";
+        $canceledpage = "/?page=payment_canceled";
+
         $found = false;
         if ($code == "OK") {
             $authing = $this->processPaymentExtended($this->getAmount(), $_GET['transactionId'], $orderId, "AUTH");

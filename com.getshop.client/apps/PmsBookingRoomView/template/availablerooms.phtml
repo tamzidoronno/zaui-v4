@@ -11,6 +11,15 @@ $endDate = $this->convertToJavaDate(strtotime($room->date->end));
 
 $isSameDayStart = date('Y-m-d', strtotime($startDate)) == date('Y-m-d', time());
 
+function canUseItem($item, $availeableitems) {
+    foreach ((array)$availeableitems as $available) {
+        if ($available->id == $item->id) {
+            return true;
+        }
+    }
+    
+    return false;
+}
 
 $warnAboutUnchanges = "";
 $startDateToCheckOn = $startDate;

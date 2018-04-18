@@ -76,7 +76,7 @@ if($diff < -1 || $diff > 1) {
     <input type='hidden' gsname='roomId' value='<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>'/>
     <div class="menuarea" roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" bookingEngineId="<? echo $bookingEngineBooking->id; ?>">
         <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Booking"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay") . $stayPrice; ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" clearTabContent="true" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay") . $stayPrice; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . " " . $addonsPriceToDisplay; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>

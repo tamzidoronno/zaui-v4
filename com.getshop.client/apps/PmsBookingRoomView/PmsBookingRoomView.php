@@ -1471,5 +1471,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return false;
     }
 
+    public function showItemView() {
+        $this->includefile("availablerooms");
+        die();
+    }
 }
 ?>

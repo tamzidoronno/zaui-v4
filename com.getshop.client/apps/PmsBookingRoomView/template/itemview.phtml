@@ -15,18 +15,9 @@ $warnAboutUnchanges = "";
 $startDate = strtotime($room->date->start);
 $endDate = strtotime($room->date->end);
 
+$validSelection = $this->isValidSelection($room);
 
-function canUseItem($item, $availeableitems) {
-    foreach ((array)$availeableitems as $available) {
-        if ($available->id == $item->id) {
-            return true;
-        }
-    }
-    
-    return false;
-}
-
-if(!isset($room->tmpModified) || !$this->isValidSelection($room)) {
+if(!isset($room->tmpModified) || !$validSelection) {
     $warnAboutUnchanges = "display:none;";
 }
 ?>
@@ -66,7 +57,7 @@ if(!isset($room->tmpModified) || !$this->isValidSelection($room)) {
         } else {
             echo $this->__f("Floating");
         }
-        if(!$this->isValidSelection($room)) {
+        if(!$validSelection) {
             echo "<div class='notvalidselection'>This room selection is not valid.</div>";
         }
 
@@ -83,9 +74,5 @@ if(!isset($room->tmpModified) || !$this->isValidSelection($room)) {
         <? $this->includefile("prices"); ?>
     </div>
 </div>
-<div class="itemview_inner roomstoselect" style="display: none;">
-    <? 
-    $this->includefile("availablerooms");
-    ?>
-</div>
+<div class="itemview_inner roomstoselect" style="display: none;"></div>
 <div style="border: solid 1px; text-align: right;background-color:red; color:#fff; <?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>

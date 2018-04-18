@@ -10,6 +10,7 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     $scope.name = "";
     $scope.datarepository = datarepository;
     $scope.routes = [];
+    $scope.completedRoutes = [];
     
     $scope.init = function($api) {
         $scope.name = "";
@@ -22,6 +23,8 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
             var route = datarepository.routes[i];
             if (!route.completedInfo.completed) {
                 $scope.routes.push(route);
+            } else {
+                $scope.completedRoutes.push(route);
             }
         }
     }

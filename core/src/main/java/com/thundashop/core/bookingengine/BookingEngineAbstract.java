@@ -1099,6 +1099,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")  || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329") || storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec")) {
             bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
         }
+        
+        // Lets try a magic cutter to make the data set a bit less sizy.
+        if (storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec")) {
+            removeBookingsAfterMagicCutDate(bookingsWithinDaterange, start, end);
+        }
             
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);
         
@@ -1338,5 +1343,13 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(o -> o.startDate.after(yesterday) || o.interCepts(yesterday, new Date()))
                 .collect(Collectors.toList());
         return bookingsOfType;
+    }
+
+    private void removeBookingsAfterMagicCutDate(Set<Booking> bookingsWithinDaterange, Date start, Date end) {
+        CompletlyOpeningFinder open = new CompletlyOpeningFinder(new ArrayList(bookingsWithinDaterange), start, end);
+        Date date = open.getCutDate();
+        if (date != null) {
+            bookingsWithinDaterange.removeIf(o -> o.startDate.after(date));
+        }
     }
 }

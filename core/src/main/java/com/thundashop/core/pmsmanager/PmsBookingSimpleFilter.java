@@ -160,7 +160,7 @@ public class PmsBookingSimpleFilter {
             simple.ownersEmail = user.emailAddress;
         }
         simple.guest = room.guests;
-        if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+        if(room.bookingItemId != null && !room.bookingItemId.isEmpty() && manager.bookingEngine.getBookingItem(room.bookingItemId) != null) {
             simple.room = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         }
         if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {

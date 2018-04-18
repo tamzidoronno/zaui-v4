@@ -70,6 +70,23 @@ public class BookingTimeLineFlatten implements Serializable {
 
         return timeLines;
     }
+    
+    public List<BookingTimeLine> getTimelinesIncludedNulls() {
+        sortBookings();
+        List<Date> markers = getMarkers();
+
+        List<BookingTimeLine> timeLines = new ArrayList();
+        Date prev = null;
+        for (Date marker : markers) {
+            if (prev != null) {
+                BookingTimeLine timeLine = createTimeLine(prev, marker);
+                timeLines.add(timeLine);
+            }
+            prev = marker;
+        }
+
+        return timeLines;
+    }
 
     public boolean canAdd(Booking booking) {
         for (BookingTimeLine itemLine : getTimelines()) {

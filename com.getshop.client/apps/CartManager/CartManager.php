@@ -590,9 +590,7 @@ class CartManager extends \SystemApplication implements \Application {
         $this->startAdminImpersonation("OrderManager", "getOrder");
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         $this->stopImpersionation();
-        echo "<pre>";
-        print_r($order);
-        echo "</pre>";
+
         if (!$order) {
             echo "<center><br/><br/><br/>";
             echo "<h1>Fant ikke denne bestillingen, ta kontakt med oss.</h1>";

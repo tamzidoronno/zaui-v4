@@ -42,6 +42,8 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     @Autowired
     public FrameworkConfig frameworkConfig;
     
+    HashMap<String, VerifonePaymentApp> activePaymentApps = new HashMap();
+    
     @Override
     public void chargeOrder(String orderId, String terminalId) {
         if(orderToPay != null) {
@@ -57,9 +59,16 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         Double total = orderManager.getTotalAmount(order) * 100;
         Integer amount = total.intValue();
         
-        VerifonePaymentApp app = new VerifonePaymentApp();
-        if (verifoneListener == null) {
-            createListener();
+        VerifonePaymentApp app = null;
+        if(!activePaymentApps.containsKey(terminalId)) {
+            app = new VerifonePaymentApp();
+            if (verifoneListener == null) {
+                createListener();
+            }
+
+            activePaymentApps.put(terminalId, app);
+        } else {
+            app = activePaymentApps.get(terminalId);
         }
         
         List<Application> activePaymentMethods = storeApplicationPool.getActivatedPaymentApplications();
@@ -161,8 +170,6 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         saveOrderSomeHow(orderToPay);
         orderToPay = null;
     }
-
-    
     
     private void saveOrderSomeHow(Order orderToPay) {
         System.out.println("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
@@ -171,6 +178,12 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     private void createListener() {
         this.verifoneListener = new VerifoneTerminalListener(storeId, null, null, this);
+    }
+
+    @Override
+    public void cancelPaymentProcess(String terminalId) {
+        VerifonePaymentApp app = activePaymentApps.get(terminalId);
+        app.closeCom();
     }
     
 }

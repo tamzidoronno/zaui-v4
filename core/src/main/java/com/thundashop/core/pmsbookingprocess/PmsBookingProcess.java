@@ -1027,4 +1027,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         return null;
     }
+
+    @Override
+    public void cancelPaymentProcess(StartPaymentProcess data) {
+        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
+        verifoneManager.cancelPaymentProcess(settings.verifoneTerminalId);
+    }
 }

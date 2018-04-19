@@ -1476,6 +1476,21 @@ function getshop_tryChangingDate(e) {
     });
 }
 
+function getshop_cancelPayment() {
+    $.ajax('/scripts/bookingprocess.php?method=cancelPaymentProcess', {
+        dataType: 'jsonp',
+        data: {
+            "body" :  {
+                "terminalid" : localStorage.getItem("getshopterminalid")
+            }
+        },
+        success : function(res) {
+            window.location.href="paymentterminal.php";
+        }
+
+    });
+}
+
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
 
 $(document).on('touchend click', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
@@ -1500,6 +1515,7 @@ $(document).on('touchend click', '.GslBooking .gslfront_1 .trychangingdate', get
 $(document).on('touchend click', '.GslBooking [gsname="ischild"]', getshop_changeChildSettings);
 $(document).on('touchend click', getshop_hideGuestSelectionBox);
 $(document).on('touchend click', '.GslBooking .displayeditroom', getshop_showEditRoomOptions);
+$(document).on('touchend click', '.GslBooking .cancelpaymentbutton', getshop_cancelPayment);
 
 
 function getshop_doEvent(functiontorun) {

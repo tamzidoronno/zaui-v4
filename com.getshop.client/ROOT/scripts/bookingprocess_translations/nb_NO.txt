@@ -12,6 +12,7 @@
     "adults" : "Voksne",
     "children" : "Barn",
     "agebelow" : "Under {age} år",
+    "cancelpayment" : "Avbryt betalingsprocessen",
     "apply" : "Oppdater",
     "search" : "Søk",
     "logout" : "Logg ut",

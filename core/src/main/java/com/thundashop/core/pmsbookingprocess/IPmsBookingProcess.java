@@ -34,4 +34,5 @@ public interface IPmsBookingProcess {
     public GuestAddonsSummary logOut();
     public void printReciept(BookingPrintRecieptData data);
     public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data);
+    public void cancelPaymentProcess(StartPaymentProcess data);
 }

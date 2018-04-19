@@ -54,6 +54,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1, .GslBooking .gslfront_1 input, .GslBooking .gslfront_1 select{font-family: 'Montserrat', sans-serif;}
 .GslBooking .gslfront_1 .nights .fa { font-size: 25px; cursor:pointer; }
 .GslBooking #nightscounter { padding: 0px;width: 30px;text-align: center; }
+.GslBooking .picker_header { position:absolute; padding-top:2px; padding-left: 5px; top: -25px; font-size: 14px; }
 .GslBooking .gslfront_1 .nights { border-right: solid 1px #ddd;
     height: 60px;
     text-align: center;

@@ -12,6 +12,7 @@
     "adults" : "Adults",
     "children" : "Children",
     "cancelpayment" : "Cancel payment process",
+    "checkin_checkout" : "Checking in / Checking out",
     "agebelow" : "Below {age} year",
     "apply" : "Apply",
     "search" : "Search",

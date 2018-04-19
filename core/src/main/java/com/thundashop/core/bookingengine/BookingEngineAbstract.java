@@ -56,6 +56,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     @Autowired
     public UserManager userManager;
     
+    public static ArrayList<String> usingNewSystem = new ArrayList();
+    
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
     private final Map<String, BookingItem> items = new HashMap();
@@ -140,7 +142,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         bookings.remove("8e2d9936-6cc6-418c-9f3c-43e1b67fe6fb");
         bookings.remove("0e46b786-8b00-4b11-a001-40c06bda41f0");
         bookings.remove("b303c63a-b928-4e49-b7f7-49aea9075443");
-       
+        
+        usingNewSystem.add("b6949f70-5e41-4c5e-abcf-d595450f8048");
+        usingNewSystem.add("87cdfab5-db67-4716-bef8-fcd1f55b770b");
+        usingNewSystem.add("178330ad-4b1d-4b08-a63d-cca9672ac329");
+        usingNewSystem.add("32f280c2-ae25-4263-8529-624df2f01dec");
+        usingNewSystem.add("75e5a890-1465-4a4a-a90a-f1b59415d841");
     }
     
     public Availability getAvailbility(String id) {
@@ -811,7 +818,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 }
             }
             
-            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")  || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329") || storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec")) {
+            if (usingNewSystem.contains(storeId)) {
                 checkBookings = getAllBookingsOfType(bookingTypeId);
             }
           
@@ -1096,7 +1103,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
         
-        if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")  || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329") || storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec")) {
+        if (usingNewSystem.contains(storeId)) {
             bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
         }
         
@@ -1172,7 +1179,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                     .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
                     .collect(Collectors.toList());
             
-            if (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329") || storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec")) {
+            if (usingNewSystem.contains(storeId)) {
                 toCheck = getAllBookingsOfType(type.id);
             }
             

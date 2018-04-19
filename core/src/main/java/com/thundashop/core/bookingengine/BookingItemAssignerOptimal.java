@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.bookingengine;
 
+import static com.thundashop.core.bookingengine.BookingEngineAbstract.usingNewSystem;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -105,7 +106,7 @@ public class BookingItemAssignerOptimal {
         if (getBookingItemsFlatten().size() == 1 && storeId.equals(k1StoreId)) {
             addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
         } else {
-            if (storeId != null && (storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") || storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329") || storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec"))) {
+            if (usingNewSystem.contains(storeId)) {
                 squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
             } else {
                 addUnassignedBookingsToLine(bookingLines, unassignedBookings);

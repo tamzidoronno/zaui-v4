@@ -15,4 +15,7 @@ import com.thundashop.core.common.GetShopApi;
 public interface IVerifoneManager {
     @Administrator
     public void chargeOrder(String orderId, String terminalId);
+    
+    @Administrator
+    public void cancelPaymentProcess(String terminalId);
 }

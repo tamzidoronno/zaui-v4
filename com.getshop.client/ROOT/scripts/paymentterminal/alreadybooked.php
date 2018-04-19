@@ -37,6 +37,10 @@ include("header.php");
         ?>
         <div class='verifonefeedbackdata' style='font-size:12px;font-style: italic;padding-top: 10px; padding-bottom: 10px; display:none;'></div>
         <i class='fa fa-spin fa-spinner'></i>
+        <br><br>
+            <div style='text-align:center;margin-top: 10px;margin-bottom:10px;'>
+                <span class='cancelpaymentbutton dopaymentbutton' style='border: solid 1px; padding: 10px; border-radius:5px;'><?php echo $factory->__w("Cancel payment process"); ?></span>
+            </div>
         </span>
     </div>    
 
@@ -58,6 +62,22 @@ include("header.php");
         </div>
 
         <script>
+            $('.cancelpaymentbutton').on('click', function() {
+                $.ajax('/scripts/bookingprocess.php?method=cancelPaymentProcess', {
+                    dataType: 'jsonp',
+                    data: {
+                        "body" :  {
+                            "terminalid" : localStorage.getItem("getshopterminalid")
+                        }
+                    },
+                    success : function(res) {
+                        window.location.href="paymentterminal.php";
+                    }
+                    
+                });
+                
+            });
+            
             $('.dopaymentbutton').on('click', function() {
                 $.ajax('/scripts/bookingprocess.php?method=startPaymentProcess', {
                     dataType: 'jsonp',

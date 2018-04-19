@@ -598,141 +598,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        boolean unsettled = false;
-        if (filter != null && filter.filterType != null && filter.filterType.equals("unsettled")) {
-            unsettled = true;
-            filter.filterType = "checkout";
-        }
-        if (filter != null && filter.searchWord != null) {
-            filter.searchWord = filter.searchWord.trim();
-        }
-
-        if (!initFinalized) {
-            finalizeList(new ArrayList(bookings.values()));
-            initFinalized = true;
-        }
-        if (filter == null) {
-            return finalizeList(new ArrayList(bookings.values()));
-        }
-        if (filter.state == null) {
-            filter.state = 0;
-        }
-
-        List<PmsBooking> result = new ArrayList();
-        gsTiming("searching");
-
-        if (filter.searchWord != null && !filter.searchWord.isEmpty()) {
-
-            for (PmsBooking booking : bookings.values()) {
-                User user = userManager.getUserById(booking.userId);
-                if (booking.id != null && booking.id.equals(filter.searchWord)) {
-                    result.add(booking);
-                } else if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
-                    result.add(booking);
-                    continue;
-                } else if (booking.containsSearchWord(filter.searchWord)) {
-                    result.add(booking);
-                    continue;
-                }
-
-                for (PmsBookingRooms room : booking.getActiveRooms()) {
-                    boolean found = false;
-                    if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                        BookingItem item = bookingEngine.getBookingItemUnfinalized(room.bookingItemId);
-                        if (item != null && item.bookingItemName != null && item.bookingItemName.contains(filter.searchWord)) {
-                            if (!result.contains(booking)) {
-                                result.add(booking);
-                                found = true;
-                            }
-                        }
-                        if (room.containsSearchWord(filter.searchWord)) {
-                            result.add(booking);
-                            found = true;
-                        }
-                    }
-                    if (found) {
-                        continue;
-                    }
-                }
-            }
-        } else if (filter.filterType == null || filter.filterType.isEmpty() || filter.filterType.equals("registered")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
-                    if (filter.userId == null || filter.userId.isEmpty()) {
-                        result.add(booking);
-                    } else if (filter.userId.equals(booking.userId)) {
-                        result.add(booking);
-                    }
-                }
-            }
-        } else if (filter.filterType.equals("active")
-                || filter.filterType.equals("inhouse")
-                || filter.filterType.equals("unpaid")
-                || filter.filterType.equals("afterstayorder")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
-                    result.add(booking);
-                }
-            }
-        } else if (filter.filterType.equals("waiting")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (booking.isActiveInPeriode(filter.startDate, filter.endDate) && booking.hasWaitingRooms()) {
-                    result.add(booking);
-                }
-            }
-        } else if (filter.filterType.equals("requestedending")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (booking.hasRequestedEnding(filter.startDate, filter.endDate)) {
-                    result.add(booking);
-                }
-            }
-        } else if (filter.filterType.equals("uncofirmed")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (!booking.confirmed) {
-                    result.add(booking);
-                }
-            }
-        } else if (filter.filterType.equals("checkin")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (booking.checkingInBetween(filter.startDate, filter.endDate)) {
-                    result.add(booking);
-                }
-            }
-        } else if (filter.filterType.equals("checkout")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (booking.checkingOutBetween(filter.startDate, filter.endDate)) {
-                    result.add(booking);
-                }
-            }
-        } else if (filter.filterType.equals("deleted")) {
-            for (PmsBooking booking : bookings.values()) {
-                if (booking.isDeleted) {
-                    result.add(booking);
-                }
-            }
-        } else {
-            for (PmsBooking booking : bookings.values()) {
-                if (!booking.isDeleted) {
-                    result.add(booking);
-                }
-            }
-        }
-        gsTiming("done searching");
-
-        removeInactive(filter, result);
-
-        List<PmsBooking> finalized = finalizeList(result);
-        finalized = filterTypes(finalized, filter.typeFilter);
-        finalized = filterByUser(finalized, filter.userId);
-        finalized = filterByChannel(finalized, filter.channel);
-        finalized = filterByBComRateManager(finalized, filter);
-        finalized = filterByUnpaid(finalized, filter);
-        if (unsettled) {
-            finalized = filterByUnsettledAmounts(finalized);
-        }
-        gsTiming("done finalizing new list");
-
-        return finalized;
+        return getAllBookingsInternal(filter);
     }
 
     private void removeNotConfirmed(PmsBookingFilter filter, List<PmsBooking> result) {
@@ -8428,5 +8294,143 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return hasNoBooking;
+    }
+
+    public List<PmsBooking> getAllBookingsInternal(PmsBookingFilter filter) {
+
+        boolean unsettled = false;
+        if (filter != null && filter.filterType != null && filter.filterType.equals("unsettled")) {
+            unsettled = true;
+            filter.filterType = "checkout";
+        }
+        if (filter != null && filter.searchWord != null) {
+            filter.searchWord = filter.searchWord.trim();
+        }
+
+        if (!initFinalized) {
+            finalizeList(new ArrayList(bookings.values()));
+            initFinalized = true;
+        }
+        if (filter == null) {
+            return finalizeList(new ArrayList(bookings.values()));
+        }
+        if (filter.state == null) {
+            filter.state = 0;
+        }
+
+        List<PmsBooking> result = new ArrayList();
+        gsTiming("searching");
+
+        if (filter.searchWord != null && !filter.searchWord.isEmpty()) {
+
+            for (PmsBooking booking : bookings.values()) {
+                User user = userManager.getUserById(booking.userId);
+                if (booking.id != null && booking.id.equals(filter.searchWord)) {
+                    result.add(booking);
+                } else if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
+                    result.add(booking);
+                    continue;
+                } else if (booking.containsSearchWord(filter.searchWord)) {
+                    result.add(booking);
+                    continue;
+                }
+
+                for (PmsBookingRooms room : booking.getActiveRooms()) {
+                    boolean found = false;
+                    if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                        BookingItem item = bookingEngine.getBookingItemUnfinalized(room.bookingItemId);
+                        if (item != null && item.bookingItemName != null && item.bookingItemName.contains(filter.searchWord)) {
+                            if (!result.contains(booking)) {
+                                result.add(booking);
+                                found = true;
+                            }
+                        }
+                        if (room.containsSearchWord(filter.searchWord)) {
+                            result.add(booking);
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        continue;
+                    }
+                }
+            }
+        } else if (filter.filterType == null || filter.filterType.isEmpty() || filter.filterType.equals("registered")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
+                    if (filter.userId == null || filter.userId.isEmpty()) {
+                        result.add(booking);
+                    } else if (filter.userId.equals(booking.userId)) {
+                        result.add(booking);
+                    }
+                }
+            }
+        } else if (filter.filterType.equals("active")
+                || filter.filterType.equals("inhouse")
+                || filter.filterType.equals("unpaid")
+                || filter.filterType.equals("afterstayorder")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
+                    result.add(booking);
+                }
+            }
+        } else if (filter.filterType.equals("waiting")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.isActiveInPeriode(filter.startDate, filter.endDate) && booking.hasWaitingRooms()) {
+                    result.add(booking);
+                }
+            }
+        } else if (filter.filterType.equals("requestedending")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.hasRequestedEnding(filter.startDate, filter.endDate)) {
+                    result.add(booking);
+                }
+            }
+        } else if (filter.filterType.equals("uncofirmed")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (!booking.confirmed) {
+                    result.add(booking);
+                }
+            }
+        } else if (filter.filterType.equals("checkin")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.checkingInBetween(filter.startDate, filter.endDate)) {
+                    result.add(booking);
+                }
+            }
+        } else if (filter.filterType.equals("checkout")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.checkingOutBetween(filter.startDate, filter.endDate)) {
+                    result.add(booking);
+                }
+            }
+        } else if (filter.filterType.equals("deleted")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.isDeleted) {
+                    result.add(booking);
+                }
+            }
+        } else {
+            for (PmsBooking booking : bookings.values()) {
+                if (!booking.isDeleted) {
+                    result.add(booking);
+                }
+            }
+        }
+        gsTiming("done searching");
+
+        removeInactive(filter, result);
+
+        List<PmsBooking> finalized = finalizeList(result);
+        finalized = filterTypes(finalized, filter.typeFilter);
+        finalized = filterByUser(finalized, filter.userId);
+        finalized = filterByChannel(finalized, filter.channel);
+        finalized = filterByBComRateManager(finalized, filter);
+        finalized = filterByUnpaid(finalized, filter);
+        if (unsettled) {
+            finalized = filterByUnsettledAmounts(finalized);
+        }
+        gsTiming("done finalizing new list");
+        return finalized;
     }
 }

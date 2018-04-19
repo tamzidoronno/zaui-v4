@@ -11,6 +11,7 @@
     "loggedonas" : "Logged on as ",
     "adults" : "Adults",
     "children" : "Children",
+    "cancelpayment" : "Cancel payment process",
     "agebelow" : "Below {age} year",
     "apply" : "Apply",
     "search" : "Search",

@@ -114,8 +114,7 @@ public class VerifonePaymentApp implements PayPointListener, ActionListener{
 	}
 	
 	void handleException(Exception e){
-		tResult.setText("Failed:\n");
-		tResult.append(e.toString());
+            System.out.println(e.toString());
 	}
 	
 	void performTransaction(byte transType, int amountTotal, int amountPurchase){
@@ -174,6 +173,18 @@ public class VerifonePaymentApp implements PayPointListener, ActionListener{
 		} catch(TerminalInBankModeException e){
 			handleException(e);
 		}
+	}
+        
+	void closeCom(){
+            try {
+                if(payPoint.isOpen()) {
+                    payPoint.cancelRequest();
+                }
+            } catch(NoListenerRegisteredException e){
+                    handleException(e);
+            } catch (TerminalInLocalModeException ex) {
+                Logger.getLogger(VerifonePaymentApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
 	}
 
 

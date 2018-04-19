@@ -2,6 +2,8 @@
 namespace ns_686d5674_8c58_46a5_b38f_09772c9e5e02;
 
 class SrsReturantTable extends \MarketingApplication implements \Application {
+    private $reservation;
+    
     public function getDescription() {
         
     }
@@ -12,14 +14,9 @@ class SrsReturantTable extends \MarketingApplication implements \Application {
 
     public function render() {
         if (isset($_GET['reservertionid'])) {
-            $reservation = $this->getApi()->getResturantManager()->getTableReservation($_GET['reservertionid']);
-            echo "<pre>";
-            print_r($reservation);
-            echo "</pre>";
-            $this->includefile("header");
-            
-            $this->setCurrentTableId();
+            $_SESSION['SrsRestaurantTable_reservationid'] = $_GET['reservertionid'];
         }
+        
         $this->loadCart();
         $this->includefile("table");
     }
@@ -80,9 +77,16 @@ class SrsReturantTable extends \MarketingApplication implements \Application {
     }
     
     public function loadCart() {
-        $tableId = $_SESSION['SrsReturantTable_tableid'];
-        $this->getApi()->getResturantManager()->createCartForTable($tableId);        
+        $this->reservation = $this->getApi()->getResturantManager()->getTableReservation($_SESSION['SrsRestaurantTable_reservationid']);
+        $this->getApi()->getResturantManager()->createCartForReservation($this->reservation->reservationId);        
     }
 
+    /**
+     * 
+     * @return \core_resturantmanager_TableReservation
+     */
+    public function getCurrentReservation() {
+        return $this->reservation;
+    }
 }
 ?>

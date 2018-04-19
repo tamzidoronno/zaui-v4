@@ -11,6 +11,10 @@ class SrsCartCheckout extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        if ($this->getModalVariable("reservationid")) {
+            $this->getApi()->getResturantManager()->createCartForReservation($this->getModalVariable("reservationid")); 
+        }
+        
         echo "<div class='checkoutarea'>";
         $this->includefile("checkout");
         echo "</div>";

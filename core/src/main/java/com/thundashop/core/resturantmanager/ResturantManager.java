@@ -562,16 +562,19 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     }
 
     @Override
-    public void bookNewTableSession(Date start, Date end, String name, String tableId) {
+    public void startNewReservation(Date start, Date end, String name, String tableId) {
         RestaurantTableDay dayData = getTableDayData(start, tableId);
         
-        TableReservation event = new TableReservation();
-        event.start = start;
-        event.end = end;
-        event.referenceName = name;
+        TableReservation reservation = new TableReservation();
+        reservation.start = start;
+        reservation.end = end;
+        reservation.referenceName = name;
+        reservation.tableId = tableId;
         
-        dayData.events.add(event);
+        dayData.events.add(reservation);
         saveObject(dayData);
+        
+        startSessionForReservation(reservation.reservationId);
     }
 
     public RestaurantTableDay getTableDayData(Date start, String tableId) {
@@ -600,15 +603,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
 
     @Override
     public TableReservation getTableReservation(String reservationId) {
-        BasicDBObject query = new BasicDBObject();
-        query.put("className", RestaurantTableDay.class.getCanonicalName());
-        query.put("events.reservationId", reservationId);
-        
-        RestaurantTableDay res = database.query(ResturantManager.class.getSimpleName(), storeId, query)
-                .stream()
-                .map(o -> (RestaurantTableDay)o)
-                .findFirst()
-                .orElse(null);
+        RestaurantTableDay res = getTableDayDataByReservation(reservationId);
         
         if (res != null) {
             return res.events.stream()
@@ -620,5 +615,84 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         return null;
     }
 
+    private RestaurantTableDay getTableDayDataByReservation(String reservationId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", RestaurantTableDay.class.getCanonicalName());
+        query.put("events.reservationId", reservationId);
+        RestaurantTableDay res = database.query(ResturantManager.class.getSimpleName(), storeId, query)
+                .stream()
+                .map(o -> (RestaurantTableDay)o)
+                .findFirst()
+                .orElse(null);
+        return res;
+    }
     
+    
+
+    @Override
+    public void createCartForReservation(String reservationId) {
+        TableReservation reservation = getTableReservation(reservationId);
+        
+        TableData res = getCurrentTableData(reservation.tableId);
+        List<CartItem> items = getGroupedCartItems(res.cartItems, true);
+        cartManager.clear();
+        cartManager.getCart().addCartItems(items);
+    }
+    
+    private void startSessionForReservation(String reservationId) {
+        TableReservation reservation = getTableReservation(reservationId);
+        
+        if (reservation.tableSessionId == null || reservation.tableSessionId.isEmpty()) {
+            
+            TableSession tableSession = new TableSession();
+            tableSession.tableId = reservation.tableId;
+            tableSession.createdByUserId = getSession().currentUser.id;
+
+            saveObject(tableSession);
+            sessions.put(tableSession.id, tableSession);
+            
+            reservation.tableSessionId = tableSession.id;
+            
+            saveReservation(reservationId, reservation);
+        }
+    }
+
+    private void saveReservation(String reservationId, TableReservation reservation) throws ErrorException {
+        RestaurantTableDay dayData = getTableDayDataByReservation(reservation.reservationId);
+        dayData.replace(reservation);
+        saveObject(dayData);
+    }
+
+    @Override
+    public void addCartItemsToReservation(List<ResturantCartItem> cartItems, String reservationId) {
+        TableReservation reservation = getTableReservation(reservationId);
+        
+        TableSession session = sessions.get(reservation.tableSessionId);
+        if (session == null) {
+            startSessionForReservation(reservationId);
+        }
+        session.changeCartItems(cartItems);
+        saveObject(session);
+        sendRefreshMessage(reservation.tableId);
+        
+        try {
+            generateKitchenNote(session);
+        } catch (Exception ex) {
+            logPrintException(ex);
+        }
+    }
+
+    @Override
+    public TableData getTableDataForReservation(String reservationId) {
+        TableReservation reservation = getTableReservation(reservationId);
+        
+        TableData data = new TableData();
+        if (sessions.get(reservation.tableSessionId) != null) {
+            data.cartItems = sessions.get(reservation.tableSessionId).getCartItems();
+        }
+        
+        data.tableId = reservation.tableId;
+        return data;
+    }
+
 }

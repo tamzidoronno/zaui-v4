@@ -19,4 +19,5 @@ public class TableReservation implements Serializable {
     public Date end;
     public String tableSessionId;
     public String referenceName;
+    public String tableId = "";
 }

@@ -1,0 +1,25 @@
+<?
+/* @var $this \ns_f52bea98_9616_4b43_bd28_32e62fa95c91\ProductView */
+$product = $this->getProduct();
+$productLists = $this->getApi()->getProductManager()->getProductLists();
+
+foreach ($productLists as $productlist) {
+    $status = in_array($product->id, $productlist->productIds) ? "on" : "off";
+    ?>
+    <div class="onoff gss_setting" id="fadein">
+        <span class="title"><? echo $productlist->listName; ?></span>
+        <div class="gss_onoff" gs_model="productmodel" gs_model_attr="productlist_<? echo $productlist->id; ?>">
+            <? echo $this->__f("Off"); ?><i class="fa fa-toggle-<? echo $status; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description"></div>
+    </div>
+    <?
+}
+?>
+<div>
+    <br/>
+    <? echo $this->__f("All lists hare are setup from the Product Lists in the menu."); ?>
+    <br/>
+    <br/> <div onclick='app.ProductLists.gssinterface.showListManagement()' class="gss_button"><i class='fa fa-arrow-right'></i><? echo $this->__f("Go to product lists"); ?></div>
+    <br/>
+</div>

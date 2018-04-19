@@ -1,0 +1,188 @@
+<?
+/* @var $this \ns_f52bea98_9616_4b43_bd28_32e62fa95c91\ProductView */
+$product = $this->getProduct();
+?>
+
+<div class="textfield setting"  id="title">
+    <span class="title"><?php echo $this->__f("Product title"); ?></span>
+    <input type="textfield" class='gsniceinput1'  gs_model='productmodel' gs_model_attr='title' value="<? echo $product->name; ?>" placeholder="">
+    <div class="description">
+        <?php echo $this->__("This is the title of the product, example \"White cute teddy bear\" "); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="price">
+    <span class="title"><?php echo $this->__f("Price (inc taxes)"); ?></span>
+    <input type="textfield" class='gsniceinput1'  gs_model='productmodel' gs_model_attr='price' value="<? echo $product->price; ?>"  placeholder="">
+    <div class="description">
+        <?php
+        echo $this->__("The total cost of the product, included taxes.");
+
+        if (count($product->prices)) {
+
+            echo "<div class='dynamicpricing'>";
+            echo "Dynamic pricemodel";
+            ?>
+            <div class="textfield setting"  id="admin">
+                <span class="title"><?php echo $this->__f("Progressive pricemodel?"); ?></span>
+                <div class="gss_onoff" gs_model="productmodel" gs_model_attr="isProgressive">
+                    <?
+                    $faclass = $product->progressivePriceModel ? "fa-toggle-on" : "fa-toggle-off";
+                    ?>
+                    Off<i class="fa <? echo $faclass; ?>"></i>On
+                </div>
+                <br/>
+                <div style="position: relative; width: 929px; height: 50px; padding-top: 18px;">
+                    <span class="title"><?php echo $this->__f("Is values below entered in discount-percentage?"); ?></span>
+                    <div class="gss_onoff" gs_model="productmodel" gs_model_attr="dynamicPriceInPercent">
+                        <?
+                        $faclass = $product->dynamicPriceInPercent ? "fa-toggle-on" : "fa-toggle-off";
+                        ?>
+                        Off<i class="fa <? echo $faclass; ?>"></i>On
+                    </div>    
+                </div>
+
+            </div>
+            <?
+            echo "<table><th>" . $this->__f("From") . "</th><th>" . $this->__f("To") . "</th><th>" . $this->__f("Price") . "</th>";
+            foreach ($product->prices as $dynamicePrice) {
+                echo "<tr>"
+                . "<td><input gs_model='productmodel' gs_model_attr='price_from_$dynamicePrice->id' type='text' value='$dynamicePrice->from'/></td>"
+                . "<td><input gs_model='productmodel' gs_model_attr='price_to_$dynamicePrice->id' type='text' value='$dynamicePrice->to'/></td>"
+                . "<td><input gs_model='productmodel' gs_model_attr='price_price_$dynamicePrice->id' type='text' value='$dynamicePrice->price'/></td></tr>";
+            }
+            echo "</table></div>";
+        }
+        ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="title">
+    <span class="title"><?php echo $this->__f("Current discounted price (exlusive taxes)"); ?></span>
+    <input type="textfield" class='gsniceinput1'  gs_model='productmodel' gs_model_attr='discountedPrice' value="<? echo $product->discountedPrice; ?>" placeholder="">
+    <div class="description">
+        <?php echo $this->__("Enter the discounted price you want to sell this product for."); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="sku">
+    <span class="title"><?php echo $this->__f("SKU"); ?></span>
+    <?
+    if (!HelperCart::hasVariations($product)) {
+        ?>
+        <input type="textfield" class='gsniceinput1'  gs_model='productmodel' gs_model_attr='sku' value="<? echo $product->sku; ?>" placeholder=''>
+        <div class="description">
+            <?php echo $this->__("A unique identifier for the product."); ?>
+        </div>
+
+        <?
+    } else {
+        ?>
+
+        <div class="gss_button sku_button save_sku" productId="<? echo $product->id; ?>"><i class='fa fa-save'></i><? echo $this->__f("Save SKUs"); ?></div>
+        <div class="gss_button sku_button open_sku"><i class='fa fa-arrow-down'></i></div>
+        <div class="description">
+            <?php echo $this->__("A unique identifier for the product's variations."); ?>
+        </div>
+        <div class="combination_wrapper combinations_hidden">
+            <?
+            $variationCombinations = ProductHelper::getVariationCombinations($this->getApi(), $product->id);
+
+            foreach ($variationCombinations as $combination) {
+                ?>
+                <div class="combinationSetting">    
+                    <?
+                    $combinationId = "";
+                    foreach ($combination as $value) {
+                        $combinationId .= $value["value"]->id;
+                        echo $value["name"]->text . ": " . $value["value"]->text . " | ";
+                    }
+                    ?>
+
+                    <input type="textfield" class='gsniceinput1'  class="combinationSku" combination_id='<? echo $combinationId; ?>' value="<? echo isset($product->variationCombinations->{$combinationId}) ? $product->variationCombinations->{$combinationId} : ""; ?>" placeholder=''>
+                </div>
+                <?
+            }
+            ?>
+        </div>
+        <?
+    }
+    ?>
+</div>
+
+<div class="textfield setting"  id="accountingSystemId">
+    <span class="title"><?php echo $this->__f("Accounting product id."); ?></span>
+    <input type="textfield" class='gsniceinput1'  gs_model='productmodel' gs_model_attr='accountingSystemId' value="<? echo $product->accountingSystemId; ?>" placeholder=''>
+    <div class="description">
+        <?php echo $this->__("If you have a integration with an accounting system, use this field to match getshop product with accounting system ids."); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="stockQuantity">
+    <span class="title"><?php echo $this->__f("Stock Quantity"); ?></span>
+    <input type="textfield" class='gsniceinput1'  gs_model='productmodel' gs_model_attr='stockQuantity' value="<? echo $product->stockQuantity; ?>" placeholder=''>
+    <div class="description">
+        <?php echo $this->__("The current stock quantity."); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="minPeriode">
+    <span class="title"><?php echo $this->__f("Binding periode"); ?></span>
+    <input type="textfield" class='gsniceinput1'  gs_model='productmodel' gs_model_attr='minPeriode' value="<? echo $product->minPeriode; ?>" placeholder=''>
+    <div class="description">
+        <?php echo $this->__("Minimum periode for in seconds (used for binding the customer)"); ?>
+    </div>
+</div>
+
+<div class="textfield setting">
+    <span class="title"><?php echo $this->__f("Is food?"); ?></span>
+    <div class="gss_onoff" gs_model="productmodel" gs_model_attr="isfood">
+        <? $faclass = $product->isFood ? "fa-toggle-on" : "fa-toggle-off"; ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__("Activate this if this if food, used for communication with the kitchen."); ?>
+    </div>
+</div>
+
+<div class="setting" id="taxgroup">
+    <div class="text inline title"><?php echo $this->__f("Please select a tax group"); ?></div>
+
+    <div class="gss_dropdown">
+        <select class="config" gs_model='productmodel' gs_model_attr='taxgroup'>
+            <?
+            $taxes = $this->getApi()->getProductManager()->getTaxes();
+            foreach ($taxes as $tax) {
+                $selected = $product->taxgroup == -1 && $tax->groupNumber == 1 ? "selected='true'" : "";
+                $selected = $product->taxgroup == $tax->groupNumber ? "selected='true'" : $selected;
+                echo '<option ' . $selected . ' value="' . $tax->groupNumber . '">' . $this->__f("Tax group") . " " . $tax->groupNumber . " (" . $tax->taxRate . "%)" . '</option>';
+            }
+            ?>
+
+        </select>
+    </div>
+</div>
+
+<div class="setting" id="taxgroup">
+    <div class="text inline title"><?php echo $this->__f("Product template"); ?></div>
+
+    <div class="gss_dropdown">
+        <select class="config" gs_model='productmodel' gs_model_attr='producttemplate'>
+            <?
+            foreach ($templates as $template) {
+                $selected = $product->selectedProductTemplate == $template ? "selected='true'" : "";
+                echo '<option ' . $selected . ' value="' . $template . '">' . $template . '</option>';
+            }
+            ?>
+
+        </select>
+    </div>
+</div>
+
+<div class="textarea setting"  id="listviewdescription">
+    <span class="title"><?php echo $this->__f("Listview description"); ?></span>
+    <textarea class='gss_mediumsize' gs_model='productmodel' gs_model_attr='lisviewdescription'><? echo $product->shortDescription; ?></textarea>
+    <div class="description">
+        <?php echo $this->__("This description will show up in list views, if blank it will take the first part of the larger description."); ?>
+    </div>
+</div>

@@ -61,7 +61,7 @@ class SrsTables extends \MarketingApplication implements \Application {
     public function createNewTableSession() {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
-        $this->getApi()->getResturantManager()->bookNewTableSession($start, $end, $_POST['data']['name'], $_POST['data']['tableid']);
+        $this->getApi()->getResturantManager()->startNewReservation($start, $end, $_POST['data']['name'], $_POST['data']['tableid']);
     }
 }
 ?>

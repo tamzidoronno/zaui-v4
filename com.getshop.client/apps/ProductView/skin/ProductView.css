@@ -1,0 +1,96 @@
+.ProductView .menuarea,
+.ProductView .workarea {
+    width: 500px;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 13px;
+}
+
+.ProductView .workarea {
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
+.ProductView .menuarea {
+    width: 200px;
+    box-sizing: border-box;
+    padding: 30px;
+    padding-left: 10px;
+}
+
+.ProductView .menuarea .menuentry i{
+    font-size: 30px;
+    display: none;
+}
+.ProductView .menuarea .menuentry {
+    text-align: left;
+    padding: 5px;
+    cursor: pointer;
+    color: #82cdf3;
+    text-decoration: dotted;
+    text-decoration: none;
+    width: inherit;
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.ProductView .menuarea .menuentry span {
+    border-bottom: 2px dotted #82cdf3;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding: 3px;
+    margin-left: 20px;
+}
+
+.ProductView .menuarea .menuentry.active span {
+    border-bottom: 2px dotted transparent;
+    display: inline-block;
+    background-color: #2a324e;
+    color: #FFF;
+    border-radius: 20px;
+    border: solid 0px;
+    margin-left: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.ProductView .productinformation {
+    display: none;
+}
+
+.ProductView .productinformation.active {
+    display: block;
+}
+
+.ProductView .title {
+    display: inline-block;
+    width: calc(100% - 200px);
+}
+
+.ProductView .setting {
+    position: relative;
+    border-bottom: solid 1px #EFEFEF;
+    min-height: 50px;
+    margin-bottom: 10px;
+}
+
+.ProductView .setting .description {
+    color: #AAA;
+}
+.ProductView .setting .title {
+    font-size: 16px;
+    color: #333;
+}
+
+.ProductView .setting textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    height: 200px;
+}

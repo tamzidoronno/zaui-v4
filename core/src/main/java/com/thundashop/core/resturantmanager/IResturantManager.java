@@ -80,11 +80,20 @@ interface IResturantManager {
     @Editor
     public void createCartForTable(String tableId);
     
-    public void bookNewTableSession(Date start, Date end, String name, String tableId);
+    @Editor
+    public void createCartForReservation(String reservationId);
+    
+    public void startNewReservation(Date start, Date end, String name, String tableId);
     
     @Editor
     public RestaurantTableDay getTableDayData(Date date, String tableId);
     
     @Editor
     public TableReservation getTableReservation(String reservationId);
+    
+    @Editor
+    public void addCartItemsToReservation(List<ResturantCartItem> cartItems, String reservationId);
+    
+    @Customer 
+    public TableData getTableDataForReservation(String reservationId);
 }

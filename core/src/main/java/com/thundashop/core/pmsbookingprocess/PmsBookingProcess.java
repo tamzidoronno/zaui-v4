@@ -998,6 +998,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             if(booking.getEndDate().before(new Date())) {
                 continue;
             }
+            if(booking.isDeleted || booking.getActiveRooms().isEmpty()) {
+                continue;
+            }
             
             if(booking.payedFor) {
                 continue;

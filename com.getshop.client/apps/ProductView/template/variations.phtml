@@ -1,0 +1,19 @@
+<?
+/* @var $this \ns_f52bea98_9616_4b43_bd28_32e62fa95c91\ProductView */
+$product = $this->getProduct();
+?>
+
+
+<div id="variationslistlist_<? echo $product->id; ?>">
+<?
+$list = $this->getApi()->getListManager()->getJsTree("variationslist_product_".$product->id);
+$generator = new JsTreeGenerator();
+$generator->printTree($list);
+?>
+</div>
+
+<div style='clear:both;'></div>
+
+<script>
+    getshop.jstree.initJsTree("variationslistlist_<? echo $product->id; ?>", "variationslist_product_<? echo $product->id; ?>");
+</script>

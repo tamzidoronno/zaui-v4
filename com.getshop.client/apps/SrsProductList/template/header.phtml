@@ -1,0 +1,12 @@
+<?
+/* @var $this \ns_4b66e3c1_1f99_42f2_8262_9359f74d9675\SrsProductList */
+$searchWord = $this->getSearchWord();
+?>
+
+<div class='header' gstype='form' method='setSearchWord'>
+    <?
+    echo $this->__f("Search").": ";
+    ?>
+    <input type='text' class='gsniceinput1' gsname='searchword'  gstype='submitenter' placeholder='product...' value="<? echo $searchWord; ?>"/>
+    <div class='gs_shop_small_icon' gstype='submit'><i class='fa fa-search'></i></div>
+</div>

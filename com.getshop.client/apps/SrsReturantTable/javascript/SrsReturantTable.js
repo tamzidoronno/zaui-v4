@@ -4,7 +4,9 @@ app.SrsReturantTable =  {
     },
     
     startPaymentProcess: function() {
-        thundashop.framework.toggleRightWidgetPanel('gs_modul_cart');
+        thundashop.framework.toggleRightWidgetPanel('gs_modul_cart', {
+            reservationid : $(this).attr('reservationid')
+        });
     }
 }
 

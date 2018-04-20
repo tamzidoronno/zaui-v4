@@ -128,8 +128,14 @@ class SrsFoodList extends \MarketingApplication implements \Application {
     }
     
     public function saveCurrentTable() {
-        $tableId = $this->getModalVariable("tableid");
-        $this->getApi()->getResturantManager()->addCartItems($this->getItems(), $tableId);
+        if ($this->getModalVariable("reservationid")) {
+            $resId = $this->getModalVariable("reservationid");
+            $this->getApi()->getResturantManager()->addCartItemsToReservation($this->getItems(), $resId);
+        } else {
+            $tableId = $this->getModalVariable("tableid");
+            $this->getApi()->getResturantManager()->addCartItems($this->getItems(), $tableId);    
+        }
+        
     }
 
 }

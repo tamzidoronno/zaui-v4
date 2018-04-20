@@ -3,6 +3,8 @@ package com.thundashop.core.productmanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
@@ -402,5 +404,11 @@ public class ProductManager extends AProductManager implements IProductManager {
             }
         }
         return result;
+    }
+
+    @Override
+    public FilteredData getAllProductsForRestaurant(FilterOptions filterOptions) {
+        List<Product> products = search(filterOptions.searchWord, 10000000, 1).products;
+        return pageIt(products, filterOptions);
     }
 }

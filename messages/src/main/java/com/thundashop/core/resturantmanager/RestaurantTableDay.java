@@ -17,4 +17,9 @@ public class RestaurantTableDay extends DataCommon {
     public String date;
     public String tableId; 
     public List<TableReservation> events = new ArrayList();
+
+    void replace(TableReservation reservation) {
+        events.removeIf(e -> e.reservationId.equals(reservation.reservationId));
+        events.add(reservation);
+    }
 }

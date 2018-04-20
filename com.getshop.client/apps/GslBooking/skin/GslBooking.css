@@ -469,6 +469,7 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .guestentry input:-ms-input-placeholder{color:#c8c8c8;}
 }
 @media only all and (max-width:800px){
+    .GslBookingFront .picker_header { display:none; }
     .GslBooking .gslfront_1 .agreetotermserrormessage {padding-bottom:40px;}
     .GslBooking .gslfront_1 .errormessage { padding-bottom: 10px; }
     .GslBooking .gslfront_1 .agreetotermcheckboxline { padding-top: 10px; padding-bottom: 10px; font-size: 17px; }

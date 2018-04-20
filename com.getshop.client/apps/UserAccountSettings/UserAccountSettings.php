@@ -70,6 +70,10 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
         }
     }
     
+    public function formatanalytics() {
+        return "";
+    }
+    
     public function UserAccountSettings_loadUser() {
         $_SESSION['usersrow_selectedarea'] = "modules";
         $app = new \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView();

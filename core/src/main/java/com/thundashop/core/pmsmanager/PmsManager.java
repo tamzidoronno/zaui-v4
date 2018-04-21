@@ -1036,15 +1036,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             room.lastBookingChangedItem = new Date();
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
-            boolean sameCheck = false;
-            if(room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
-                sameCheck = true;
-            }
             if (room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
-                if(!sameCheck) {
-                    resetBookingItem(room, itemId, booking);
-                }
+                resetBookingItem(room, itemId, booking);
             } else {
                 BookingItem item = bookingEngine.getBookingItem(itemId);
                 if (item != null) {
@@ -8153,6 +8147,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void resetDoorLockCode(PmsBookingRooms room) {
+        if (room.addedToArx) {
+            if (room.isStarted() && !room.isEnded()) {
+                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                    room.forceUpdateLocks = true;
+                }
+            }
+        }
         room.addedToArx = false;
         try {
             if (room.bookingItemId != null && room.codeObject != null) {

@@ -60,10 +60,14 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     
     public function formatPaymentDate($order) {
         $text = "";
-        if ($order->paymentDate) {
-            $text = \GetShopModuleTable::formatDate($order->paymentDate);
+        if($order->status != 7) {
+            $text = "<b style='color:red;'>NOT PAID</b>";
         } else {
-            $text = "N/A";
+            if ($order->paymentDate) {
+                $text = \GetShopModuleTable::formatDate($order->paymentDate);
+            } else {
+                $text = "N/A";
+            }
         }
         $text = "<div>" . $text . "</div>";
         if($order->recieptEmail) {

@@ -48,6 +48,9 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
             unset($notificationSettings->{$_POST['data']['type']}->{$_POST['data']['key']});
         } else {
             $notificationSettings->{$_POST['data']['type']}->{$_POST['data']['key']} = $_POST['data']['message'];
+            if(isset($_POST['data']['title'])) {
+                $notificationSettings->{'emailTitles'}->{$_POST['data']['key']} = $_POST['data']['title'];
+            }
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notificationSettings);
     }

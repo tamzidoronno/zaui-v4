@@ -301,7 +301,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsAdditionalItemInformation) {
                 PmsAdditionalItemInformation res = (PmsAdditionalItemInformation) dataCommon;
-                addiotionalItemInfo.put(res.itemId, res);
+                addiotionalItemInfo.put(res.itemId, res);  
             }
         }
 
@@ -1036,10 +1036,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             room.lastBookingChangedItem = new Date();
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
+            boolean sameCheck = false;
+            if(room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
+                sameCheck = true;
+            }
             if (room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
-                logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId, "changestay");
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
-                resetBookingItem(room, itemId, booking);
+                if(!sameCheck) {
+                    resetBookingItem(room, itemId, booking);
+                }
             } else {
                 BookingItem item = bookingEngine.getBookingItem(itemId);
                 if (item != null) {
@@ -3100,6 +3105,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void resetBookingItem(PmsBookingRooms room, String itemId, PmsBooking booking) {
         if (room.isStarted() && !room.isEnded()) {
+            logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId, "changestay");
             resetDoorLockCode(room);
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
             if (!hasLockSystemActive()) {

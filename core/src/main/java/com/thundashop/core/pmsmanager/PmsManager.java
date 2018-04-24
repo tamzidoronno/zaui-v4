@@ -4809,13 +4809,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (getConfigurationSecure().isArx()) {
             long end = System.currentTimeMillis();
             long start = end - (1000 * 60 * 25);
-            HashMap<String, List<AccessLog>> doors = doorManager.getLogForAllDoor(start, end);
-            for (List<AccessLog> log : doors.values()) {
-                for (AccessLog l : log) {
-                    if (l.card != null && !l.card.isEmpty()) {
-                        markAsArrived(l.card);
+            try {
+                HashMap<String, List<AccessLog>> doors = doorManager.getLogForAllDoor(start, end);
+                for (List<AccessLog> log : doors.values()) {
+                    for (AccessLog l : log) {
+                        if (l.card != null && !l.card.isEmpty()) {
+                            markAsArrived(l.card);
+                        }
                     }
                 }
+            }catch(Exception e) {
+                //Ignore this message.
             }
         }
         if (getConfigurationSecure().isGetShopHotelLock()) {

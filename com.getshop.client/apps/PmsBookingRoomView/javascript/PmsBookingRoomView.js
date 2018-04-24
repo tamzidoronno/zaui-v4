@@ -33,6 +33,11 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .checkinguest', this.checkInCheckOutGuest);
         $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
         $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
+        $(document).on('click', '.PmsBookingRoomView .expandmessage', this.expandmessage);
+    },
+    
+    expandmessage : function() {
+        $(this).closest('.messagelogentry').find('.messagelogtext').css('max-height','100%');
     },
     
     saveAddonsOnRoom : function() {

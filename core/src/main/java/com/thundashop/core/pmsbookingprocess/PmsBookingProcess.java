@@ -93,6 +93,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
+
         Gson gson = new Gson();
         logPrint(gson.toJson(arg));
         if(arg.getGuests() < arg.rooms) {
@@ -108,6 +109,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
         arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);
+        
+        if(arg.start.after(arg.end)) {
+            arg.end = correctToDayAfter(arg);
+        }
         
         StartBookingResult result = new StartBookingResult();
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
@@ -1035,5 +1040,17 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public void cancelPaymentProcess(StartPaymentProcess data) {
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
         verifoneManager.cancelPaymentProcess(settings.verifoneTerminalId);
+    }
+
+    private Date correctToDayAfter(StartBooking arg) {
+        Date start = arg.start;
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(start);
+        
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(arg.end);
+        endCal.set(Calendar.DAY_OF_YEAR, startCal.get(Calendar.DAY_OF_YEAR)+1);
+        endCal.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
+        return endCal.getTime();
     }
 }

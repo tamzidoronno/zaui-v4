@@ -1,6 +1,6 @@
 getshop_endpoint = "";
-if(localStorage.getItem('getshop_endpoint')) {
-    getshop_endpoint = localStorage.getItem('getshop_endpoint');
+if(sessionStorage.getItem('getshop_endpoint')) {
+    getshop_endpoint = sessionStorage.getItem('getshop_endpoint');
 }
 var leftInterval;
 var getshop_handledevent = false;
@@ -393,7 +393,7 @@ function getshop_continueToSummary(e) {
         $('.addons_overview').fadeIn('400');
         $('.GslBooking .ordersummary').slideUp();
         $('.GslBooking .gslbookingHeader').slideUp();
-        localStorage.setItem('gslcurrentpage','summary');
+        sessionStorage.setItem('gslcurrentpage','summary');
         getshop_loadAddonsAndGuestSumaryView();
         
         var padding = $('.gslbookingBody').position().top;
@@ -411,8 +411,8 @@ function getshop_createSticky(sticky) {
         var paddingBox = $('.productoverview');
         var stopPos = (stopperbox.offset().top - sticky.height());
         var positionPaddingTop = 0;
-        if(localStorage.getItem('getshop_topstickyposition')) {
-            positionPaddingTop = parseInt(localStorage.getItem('getshop_topstickyposition'));
+        if(sessionStorage.getItem('getshop_topstickyposition')) {
+            positionPaddingTop = parseInt(sessionStorage.getItem('getshop_topstickyposition'));
         }
 
         $('.GslBooking #order-sticky').css('width', $('.GslBooking #order-sticky').outerWidth());
@@ -705,7 +705,7 @@ function getshop_saveBookerInformation() {
             "body": data
         },
         success: function (res) {
-            localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
+            sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             dfr.resolve(res);
         }
     });
@@ -714,7 +714,7 @@ function getshop_saveBookerInformation() {
 
 function getshop_showAddonsPage() {
     getshop_saveBookerInformation();
-    localStorage.setItem('gslcurrentpage','summary');
+    sessionStorage.setItem('gslcurrentpage','summary');
     $('.overview').hide();
     $('.productoverview').fadeOut('400', function () {
         $('.addons_overview').fadeIn('400');
@@ -776,7 +776,7 @@ function getshop_showProductList() {
     });
 }
 function getshop_showOverviewPage() {
-    localStorage.setItem('gslcurrentpage','overview');
+    sessionStorage.setItem('gslcurrentpage','overview');
     var saving = getshop_saveGuestInformation();
     var padding = $('.gslbookingBody').position().top;
     var body = $('.gslbookingBody').offset().top;
@@ -1173,7 +1173,7 @@ var gslbookingcurresult = null;
 function getshop_goToOverviewPage() {
     $('.gslbookingBody').show();
     $('.addons_overview').show();
-    gslbookingcurresult = JSON.parse(localStorage.getItem('gslcurrentbooking'));
+    gslbookingcurresult = JSON.parse(sessionStorage.getItem('gslcurrentbooking'));
     getshop_showOverviewPage();
     getshop_loadAddonsAndGuestSumaryView();
 }
@@ -1181,7 +1181,7 @@ function getshop_goToOverviewPage() {
 function getshop_goToAddonsPage() {
     $('.gslbookingBody').show();
     $('.addons_overview').show();
-    gslbookingcurresult = JSON.parse(localStorage.getItem('gslcurrentbooking'));
+    gslbookingcurresult = JSON.parse(sessionStorage.getItem('gslcurrentbooking'));
     getshop_loadAddonsAndGuestSumaryView();
 }
 
@@ -1202,7 +1202,7 @@ function getshop_searchRooms(e) {
     
     getshop_confirmGuestInfoBox();
     
-    localStorage.setItem('gslcurrentpage','search');
+    sessionStorage.setItem('gslcurrentpage','search');
     $('.GslBooking .ordersummary').hide();
     var btn = $(this);
     var btnText = btn.text();
@@ -1238,7 +1238,7 @@ function getshop_searchRooms(e) {
             $('.gslbookingBody').show();
             $('#productentry').html('');
             gslbookingcurresult = res;
-            localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
+            sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             $('.noroomsfound').hide();
             if(!res || (parseInt(res.roomsSelected) === 0)) {
                 $('.noroomsfound').show();
@@ -1481,7 +1481,7 @@ function getshop_cancelPayment() {
         dataType: 'jsonp',
         data: {
             "body" :  {
-                "terminalid" : localStorage.getItem("getshopterminalid")
+                "terminalid" : sessionStorage.getItem("getshopterminalid")
             }
         },
         success : function(res) {

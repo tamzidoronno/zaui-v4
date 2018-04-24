@@ -1,0 +1,23 @@
+<?
+/* @var $this \ns_480bdbdd_4da9_44ca_95c9_2fcb044eaf22\SrsBarSystem */
+
+$productLists = $this->getApi()->getProductManager()->getProductLists();
+$products = $this->getProducts();
+
+foreach ($productLists as $list) {
+    echo "<div class='productlist'>";
+        echo "<h2>".$list->listName."</h2>";
+        foreach ($products as $product) {
+            if (in_array($product->id, $list->productIds)) {
+                ?>
+                <div class="product">
+                    <?
+                    echo $product->name;
+                    ?>
+                </div>
+                <?
+            }
+        }
+    echo "</div>";
+}
+?>

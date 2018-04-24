@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -131,6 +135,22 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         return new Comparator<Booking>() {
             @Override
             public int compare(Booking o1, Booking o2) {
+                return o1.getStayLength().compareTo(o2.getStayLength());
+            }
+        };
+    }
+    
+    public static Comparator sortStayLength(List<Booking> bookings) {
+        Map<String, Booking> bookingMap = new HashMap<String, Booking>();
+        
+        bookings.stream()
+                .forEach(o -> bookingMap.put(o.id, o));
+        
+        return new Comparator<String>() {
+            @Override
+            public int compare(String id1, String id2) {
+                Booking o1 = bookingMap.get(id1);
+                Booking o2 = bookingMap.get(id2);
                 return o1.getStayLength().compareTo(o2.getStayLength());
             }
         };

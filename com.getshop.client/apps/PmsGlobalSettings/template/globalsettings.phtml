@@ -84,7 +84,15 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
             * The same day of arrival the system will try to automatically give the guest the best selected room, the sorted list is found in the configuration section for the rooms.<br><br>
         </span>
     </div>
-    
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='smsName' value='<?php echo $config->smsName; ?>' style='width: 80px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Sms name<br>
+            * Send sms'es from this name/number (max 8 characters).
+        </span>
+    </div>    
     <h1>Payment and order creation</h1>
     <div class='container'>
         <span class='option'>

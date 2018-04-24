@@ -82,6 +82,7 @@
 .GslBookingFront .mobilecheckinheading{box-shadow: 1px 0px 0px 0px #ddd;}
 
 @media only all and (max-width:800px){
+    .GslBookingFront .picker_header { display:none; }
     .GslBookingFront .datepickermobile{display: block;}
     .GslBookingFront #date_picker,
     .GslBookingFront #faholder_date,

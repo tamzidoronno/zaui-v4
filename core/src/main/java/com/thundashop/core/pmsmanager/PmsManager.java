@@ -301,7 +301,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsAdditionalItemInformation) {
                 PmsAdditionalItemInformation res = (PmsAdditionalItemInformation) dataCommon;
-                addiotionalItemInfo.put(res.itemId, res);
+                addiotionalItemInfo.put(res.itemId, res);  
             }
         }
 
@@ -1037,7 +1037,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.lastBookingChangedItem = new Date();
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if (room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
-                logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId, "changestay");
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
                 resetBookingItem(room, itemId, booking);
             } else {
@@ -3100,6 +3099,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void resetBookingItem(PmsBookingRooms room, String itemId, PmsBooking booking) {
         if (room.isStarted() && !room.isEnded()) {
+            logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId, "changestay");
             resetDoorLockCode(room);
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
             if (!hasLockSystemActive()) {
@@ -4809,13 +4809,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (getConfigurationSecure().isArx()) {
             long end = System.currentTimeMillis();
             long start = end - (1000 * 60 * 25);
-            HashMap<String, List<AccessLog>> doors = doorManager.getLogForAllDoor(start, end);
-            for (List<AccessLog> log : doors.values()) {
-                for (AccessLog l : log) {
-                    if (l.card != null && !l.card.isEmpty()) {
-                        markAsArrived(l.card);
+            try {
+                HashMap<String, List<AccessLog>> doors = doorManager.getLogForAllDoor(start, end);
+                for (List<AccessLog> log : doors.values()) {
+                    for (AccessLog l : log) {
+                        if (l.card != null && !l.card.isEmpty()) {
+                            markAsArrived(l.card);
+                        }
                     }
                 }
+            }catch(Exception e) {
+                //Ignore this message.
             }
         }
         if (getConfigurationSecure().isGetShopHotelLock()) {
@@ -8147,6 +8151,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void resetDoorLockCode(PmsBookingRooms room) {
+        if (room.addedToArx) {
+            if (room.isStarted() && !room.isEnded()) {
+                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                    room.forceUpdateLocks = true;
+                }
+            }
+        }
         room.addedToArx = false;
         try {
             if (room.bookingItemId != null && room.codeObject != null) {

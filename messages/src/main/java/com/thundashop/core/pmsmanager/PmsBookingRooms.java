@@ -855,7 +855,7 @@ public class PmsBookingRooms implements Serializable {
         }
         
         for(int i = numberOfGuests-children; i < numberOfGuests;i++) {
-            if(guests.size() > i) {
+            if(guests.size() > i && guests.get(i) != null) {
                 guests.get(i).isChild = true;
                 childrenSet++;
             }

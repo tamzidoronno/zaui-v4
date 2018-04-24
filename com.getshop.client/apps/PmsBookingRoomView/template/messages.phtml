@@ -61,30 +61,7 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 <h3>Message log</h3>
 <?php
 $logs = $this->getSelectedRoomLog();
-$printed = false;
-foreach($logs as $log) {
-    $type = $log->logType;
-    if(stristr($type, "sms") || stristr($type, "email")) {
-        $printed = true;
-        $text = $log->logText;
-        $text = preg_replace('/^(?:<br\s*\/?>\s*)+/', '', $text);
-        echo "<div class='messagelogentry'>";
-        echo $text;
-        echo "<div class='messagelogfooter'>";
-        echo "<span style='float:left;'>" . $log->rowCreatedDate . "</span>";
-        echo $log->logType . "<div style='clear:both;'></div></div>";
-        echo "</div>";
-    }
-}
-if(!$printed) {
-    echo "No messages sent yet";
-}
+$this->setLogEntries($logs);
+$this->includefile("logentries");
+
 ?>
-<style>
-    .messagelogentry {
-        border: solid 1px #ddd;
-        padding: 10px;
-        margin: 10px;
-    }
-    .messagelogfooter { text-align: right; color:#aaa; border-top: solid 1px;  padding-top: 5px; margin-top: 10px;}
-    </style>

@@ -4,6 +4,13 @@ $room = null;
 if(isset($_POST['data']['roomid']) && $_POST['data']['roomid']) {
     $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
 }
+
+$start = date("d.m.Y", strtotime($_POST['data']['start']));
+$end = $_POST['data']['end'];
+if($end == $_POST['data']['start']) {
+    $end = date("d.m.Y", strtotime($_POST['data']['end'])+86400);
+}
+
 if($booking) {
     foreach($booking->rooms as $tmpRoom) {
         if($tmpRoom->pmsBookingRoomId == $_POST['data']['roomid']) {
@@ -55,9 +62,9 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
                     <input type='hidden' value='<?php echo $_POST['data']['bookingitemid']; ?>' gsname='bookingitemid'>
                     <br>
                     Start<br>
-                    <input type='txt' value='<?php echo $_POST['data']['start']; ?>' gsname='start' class='gsniceinput1' style='width:100%;box-sizing:border-box;'>
+                    <input type='txt' value='<?php echo $start; ?>' gsname='start' class='gsniceinput1' style='width:100%;box-sizing:border-box;'>
                     End:<br>
-                    <input type='txt' value='<?php echo $_POST['data']['end']; ?>' gsname='end' class='gsniceinput1' style='width:100%;box-sizing:border-box;'><br>
+                    <input type='txt' value='<?php echo $end; ?>' gsname='end' class='gsniceinput1' style='width:100%;box-sizing:border-box;'><br>
                     Why do you close this room?<br>
                     <textarea  style='width:100%;box-sizing:border-box; border: solid 1px #bbb; height:100px;' gsname='comment'></textarea>
                     <span class="shop_button" style='width:100%;box-sizing:border-box;' gstype='submit'>Close room</span>

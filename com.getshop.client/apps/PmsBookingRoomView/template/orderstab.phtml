@@ -98,7 +98,7 @@ if(sizeof($pmsBooking->rooms) > 1) {
 <script>
     app.PmsBookingRoomView.activateSelectedTabSubOrders('<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>');
 </script>
-<?php if($hasPaymentMethods) { ?>
+<?php if($hasPaymentMethods) { ?>
     <div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
     <?
     if (!count($this->pmsBooking->orderIds)) {

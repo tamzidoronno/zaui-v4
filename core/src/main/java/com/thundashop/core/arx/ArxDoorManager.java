@@ -114,11 +114,11 @@ public class ArxDoorManager implements IDoorManager {
             NodeList nodeList = document.getDocumentElement().getChildNodes();
             doors = recursiveFindDoors(nodeList, 0);
         }catch(SAXParseException e) {
-            if (pmsManager != null) {
-                GetShopLogHandler.logStack(e, pmsManager.getStoreId());
-            } else {
-                GetShopLogHandler.logStack(e, null);
-            }
+//            if (pmsManager != null) {
+//                GetShopLogHandler.logStack(e, pmsManager.getStoreId());
+//            } else {
+//                GetShopLogHandler.logStack(e, null);
+//            }
         } finally {
             is.close();
         }

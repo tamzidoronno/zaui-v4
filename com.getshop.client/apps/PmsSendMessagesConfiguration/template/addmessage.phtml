@@ -153,6 +153,12 @@ foreach($types as $type => $text) {
                     <i class='fa fa-trash-o' gstype="submit" gsvalue="remove"></i>
                 </div>
                 <div class="body">
+                    <?php
+                    if($type == "emails") {
+                        $title = $notificationSettings->{'emailTitles'}->{$key};
+                        echo "<input type='txt' gsname='title' class='gsniceinput1' style='width:100%;box-sizing:border-box; margin-bottom:2px;' value='$title'>";
+                    }
+                    ?>
                     <textarea gsname="message"><?php echo $value; ?></textarea>
                 </div>
                 <div class="footer">

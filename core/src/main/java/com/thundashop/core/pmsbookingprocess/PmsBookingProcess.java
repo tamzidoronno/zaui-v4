@@ -983,7 +983,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data) {
-        if(data.reference.length() < 7) {
+        if(data.reference.length() < 4) {
             return null;
         }
         
@@ -996,6 +996,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         for(PmsBooking booking : bookings) {
             if(booking.getEndDate().before(new Date())) {
+                continue;
+            }
+            if(booking.isDeleted || booking.getActiveRooms().isEmpty()) {
                 continue;
             }
             

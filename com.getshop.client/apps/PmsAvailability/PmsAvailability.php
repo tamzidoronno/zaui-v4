@@ -249,8 +249,8 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     }
     
     public function closeroom() {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 22:00"));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 03:00"));
         $itemid = $_POST['data']['bookingitemid'];
         $user = $this->getApi()->getUserManager()->getLoggedOnUser();
         

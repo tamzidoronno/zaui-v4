@@ -83,6 +83,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private int tokenCount;
     private Date availabiltyyHasBeenChangedEnd;
     private Date availabiltyyHasBeenChangedStart;
+    private boolean forceUpdate = false;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -107,6 +108,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Override
     public boolean updateAvailability() throws Exception {
+        forceUpdate = true;
         return updateAvailabilityInternal(370);
     }
     
@@ -1445,12 +1447,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private boolean updateAvailabilityInternal(int numberOfDays) throws Exception {
-        if(availabilityLastUpdated != null && numberOfDays < 700) {
+        if(availabilityLastUpdated != null && numberOfDays < 700 && !forceUpdate) {
             long diff = System.currentTimeMillis() - availabilityLastUpdated.getTime();
             if(diff < (120*60*1000)) {
                 return false;
             }
         }
+        
+        forceUpdate = false;
+        
         availabilityLastUpdated = new Date();
         
         if(!frameworkConfig.productionMode) { return false; }

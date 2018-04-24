@@ -8,6 +8,7 @@
 
 .PmsBookingRoomView .grouppaymentprocess {
     position: absolute;
+    display:none;
     background-color: #fff;
     border: solid 1px #bbb;
     z-index: 8;

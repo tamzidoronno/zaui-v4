@@ -2200,6 +2200,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Double getTotalAmountForUser(String id) {
         double total = 0.0;
         for(Order ord : orders.values()) {
+            if(ord == null || ord.userId == null) {
+                continue;
+            }
             if(ord.userId.equals(id)) {
                 total += getTotalAmountExTaxes(ord);
             }

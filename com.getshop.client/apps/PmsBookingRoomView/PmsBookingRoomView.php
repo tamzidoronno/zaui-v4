@@ -7,12 +7,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     private $items = array();
     
+    private $logEntries = array();
     
     
     /* @var $selectedRoom \core_pmsmanager_PmsBookingRooms */
     public $selectedRoom;
     public $pmsBooking;
-    
+
     public function getDescription() {
         
     }
@@ -1469,6 +1470,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             }
         }
         return false;
+    }
+
+    public function setLogEntries($logs) {
+        $this->logEntries = $logs;
+    }
+
+    public function getLogEntries() {
+        return $this->logEntries;
     }
 
     public function showItemView() {

@@ -760,9 +760,6 @@ public class BookingItemAssignerOptimal {
 
                     time.bookings.add(booking);
                     unassignedBookings.removeIf(b -> b.id.equals(booking.id));
-                    if (booking.id.equals("38963d6b-32c5-4e05-90fd-6e6eeb02e8b8")) {
-                        System.out.println("Added: " + booking.getHumanReadableDates() + " to line: " + time.bookingItemId + " id: " + booking.id);
-                    }
                     foundAny = true;
                 }
             }

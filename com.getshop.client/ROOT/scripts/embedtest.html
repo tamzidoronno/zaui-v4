@@ -1,17 +1,21 @@
 <body>
-    <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://www.getshop.com/js/getshop.bookingembed.js"></script>
-    </head>
+<head>
+</head>
 
-    <div style="margin:auto; width: 1200px; padding: 30px;">
-        <h1>Booking process</h1>
-        <div id='bookingprocess'></div>
-    </div>
-    
-    <script>
-    $( "#bookingprocess" ).getshopbooking({
-        "endpoint" : "https://www.getshop.com"
+<div id='bookingprocess'></div>
+
+<script>
+    $ = jQuery;
+    jQuery(function ($) {
+        $.getScript("/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+            $("#bookingprocess").getshopbooking(
+                    {
+                        "endpoint": "http://finsnesgaard.3.0.local.getshop.com",
+                        "jsendpoint": "http://finsnesgaard.3.0.local.getshop.com",
+                        "nextPage": "booking.html"
+                    }
+            );
+        });
     });
-    </script>
+</script>
 </body>

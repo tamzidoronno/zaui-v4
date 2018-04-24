@@ -58,6 +58,7 @@ function load_getBookingTranslations() {
     var def = $.Deferred();
     $.ajax({
         "dataType": "jsonp",
+        async: false,
         "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
         success: function (res) {
             getshop_translationMatrixLoaded = res;
@@ -862,6 +863,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     var header = "<tr style='font-weight:bold;box-shadow: inset 0px -1px 0px #efeff0;'><td style='text-align:left;'>"+chosenRoomText['chosenRoom']+"</td><td>"+chosenRoomText['numberofguests']+"</td><td>"+chosenRoomText['price']+"</td></tr>";
     var row = "";
     var translationMatrix = getshop_getBookingTranslations();
+    console.log(translationMatrix);
     var roomsSelected = 0;
     for(var k in res.rooms) {
         var room = res.rooms[k];
@@ -1185,13 +1187,26 @@ function getshop_goToAddonsPage() {
     getshop_loadAddonsAndGuestSumaryView();
 }
 
+function getshop_goToNextPage(page) {
+    var startDate = $('#date_picker').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var endDate = $('#date_picker').data('daterangepicker').endDate.format('YYYY-MM-DD');
+    var rooms = $('#count_room').val();
+    var adults = $('#count_adult').val();
+    var children = $('#count_child').val();
+    var discountCode = $('#coupon_input').val();
+    var link = page + "#start=" + startDate + "&end=" + endDate + "&rooms=" + rooms + "&adults=" + adults + "&children=" + children + "&discount=" + discountCode;
+    window.location.href = link;
+}
 
 function getshop_searchRooms(e) {
     if(getshop_avoiddoubletap(e)) { return; }
     if($(this).find('.fa-spin').length > 0) {
         return;
-    }    
-    
+    }
+    if(typeof(getshop_nextPage) !== "undefined") {
+        getshop_goToNextPage(getshop_nextPage);
+        return;
+    }
     var rooms = $('#count_room').val();
     var adults = parseInt($('#count_adult').val());
     var children = parseInt($('#count_child').val());

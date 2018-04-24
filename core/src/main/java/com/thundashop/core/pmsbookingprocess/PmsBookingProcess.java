@@ -983,10 +983,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data) {
-        if(data.reference.length() < 7) {
-            return null;
-        }
-        
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.searchWord = data.reference;
         List<PmsBooking> bookings = pmsManager.getAllBookingsInternal(filter);

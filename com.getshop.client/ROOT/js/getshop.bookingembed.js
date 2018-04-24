@@ -28,37 +28,6 @@
         
     };
 }( jQuery ));
-(function ( $ ) {
-        $.fn.getshopbookingfront = function( options ) {
-            
-        var jsendpoint = "https://www.getshop.com/";
-        if(options.jsendpoint) {
-            jsendpoint = options.jsendpoint;
-        }
-
-        $('<link/>', {
-           rel: 'stylesheet',
-           type: 'text/css',
-           href: jsendpoint+'/scripts/booking/bookingstylesfront.php'
-        }).appendTo('head');
-
-            
-        var box = $(this);
-        sessionStorage.setItem('getshop_endpoint',options.endpoint);
-        getshop_endpoint = options.endpoint;
-        getshop_urltonextpage = options.nextpage;
-        $.ajax({
-            "type": "get",
-            async: false,
-            "url": jsendpoint+'/scripts/booking/bookingcontentfront.php',
-            success: function (form) {
-                box.html("<span class='GslBookingFront'>" + form + "</span>");
-            }
-        });
-        
-    };
-
-}( jQuery ));
 
 $('<link/>', {
    rel: 'stylesheet',

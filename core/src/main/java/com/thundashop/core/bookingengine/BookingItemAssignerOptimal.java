@@ -107,6 +107,7 @@ public class BookingItemAssignerOptimal {
             addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
         } else {
             if (usingNewSystem.contains(storeId)) {
+                assignAllBookingsThatHasSinglePointOfPosition(bookingLines, unassignedBookings);
                 squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
             } else {
                 addUnassignedBookingsToLine(bookingLines, unassignedBookings);
@@ -672,8 +673,9 @@ public class BookingItemAssignerOptimal {
                 Date end = dateRangeToOptimizeBookingsIn.get(start);
                 
                 List<Booking> bookingsToBruteforce = unassignedBookings.stream()
-                        .filter(b -> b.startDate.after(start) || b.startDate.equals(b))
+                        .filter(b -> b.startDate.after(start) || b.startDate.equals(start))
                         .filter(b -> b.endDate.before(end) || b.endDate.equals(end))
+                        .filter(b -> timeLine.canAddBooking(b))
                         .collect(Collectors.toList());
                 
                 if (bookingsToBruteforce.isEmpty()) {
@@ -735,6 +737,34 @@ public class BookingItemAssignerOptimal {
                 OptimalBookingTimeLine newLine = new OptimalBookingTimeLine();
                 newLine.bookings.add(booking);
                 bookingLines.add(newLine);
+            }
+        }
+    }
+
+    private void assignAllBookingsThatHasSinglePointOfPosition(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        boolean foundAny = true;
+        
+        while(foundAny) {
+            List<Booking> bookingsToCheck = new ArrayList(unassignedBookings);
+            foundAny = false;
+            for (Booking booking : bookingsToCheck) {
+                long count = bookingLines.stream()
+                        .filter(o -> o.canAddBooking(booking))
+                        .count();
+
+                if (count == 1) {
+                    OptimalBookingTimeLine time = bookingLines.stream()
+                        .filter(o -> o.canAddBooking(booking))
+                        .findFirst()
+                        .orElse(null);
+
+                    time.bookings.add(booking);
+                    unassignedBookings.removeIf(b -> b.id.equals(booking.id));
+                    if (booking.id.equals("38963d6b-32c5-4e05-90fd-6e6eeb02e8b8")) {
+                        System.out.println("Added: " + booking.getHumanReadableDates() + " to line: " + time.bookingItemId + " id: " + booking.id);
+                    }
+                    foundAny = true;
+                }
             }
         }
     }

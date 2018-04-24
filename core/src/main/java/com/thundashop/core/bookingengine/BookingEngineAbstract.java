@@ -148,6 +148,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         usingNewSystem.add("178330ad-4b1d-4b08-a63d-cca9672ac329");
         usingNewSystem.add("32f280c2-ae25-4263-8529-624df2f01dec");
         usingNewSystem.add("75e5a890-1465-4a4a-a90a-f1b59415d841");
+        usingNewSystem.add("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0");
     }
     
     public Availability getAvailbility(String id) {
@@ -885,7 +886,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             if (!assigner.getLinesOverBooked().isEmpty()) {
                 assigner.printBookingLines(assigner.getLinesOverBooked());
-//                messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
+                messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
             }
             
             for (BookingItem item : items.values()) {

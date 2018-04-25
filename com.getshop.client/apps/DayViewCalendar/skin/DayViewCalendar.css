@@ -1,10 +1,10 @@
 .gsdayevent {
     position:absolute;
-    border: solid 1px;
+    border: solid 0px;
     width: 150px;
     box-sizing: border-box;
     background-color:pink;
-    color:#fff;
+    color:#000;
     text-align: center;
 }
 
@@ -18,4 +18,8 @@
     right: 0px;
     top: 0px;
     bottom: 0px;
+    background-color:#000;
+    border: solid 1px #bbb;
 }
+
+.gsdayevent .titlearea { color:#fff; position:absolute; right: 0px; background-color:#000; padding: 5px; display:none; }

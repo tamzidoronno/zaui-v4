@@ -86,6 +86,7 @@ class DayViewCalendar extends \WebshopApplication implements \Application {
         $width = $this->getColumnWidth() / $this->numberOfRooms;
         $left = ($index * $width);
         echo "<span class='gsdayevent' style='top:".$top."px; height:".$height."px; width:".$width."px;left:".$left."px; background-color:".$color."' event='".json_encode($event)."'>";
+            echo "<span class='titlearea'></span>";
             if ($event->link) {
                 echo "<a href='$event->link'>";
             }

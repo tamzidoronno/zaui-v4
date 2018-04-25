@@ -4,7 +4,8 @@
         getshop_endpoint = options.endpoint;
         getshop_viewmode = options.viewmode;
         getshop_terminalid = options.terminalid;
-        localStorage.setItem('getshop_endpoint',options.endpoint);
+        getshop_nextPage = options.nextPage;
+        sessionStorage.setItem('getshop_endpoint',options.endpoint);
         var jsendpoint = "https://www.getshop.com/";
         if(options.jsendpoint) {
             jsendpoint = options.jsendpoint;
@@ -43,7 +44,7 @@
 
             
         var box = $(this);
-        localStorage.setItem('getshop_endpoint',options.endpoint);
+        sessionStorage.setItem('getshop_endpoint',options.endpoint);
         getshop_endpoint = options.endpoint;
         getshop_urltonextpage = options.nextpage;
         $.ajax({

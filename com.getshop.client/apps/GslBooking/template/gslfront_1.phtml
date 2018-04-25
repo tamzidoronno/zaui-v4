@@ -320,7 +320,7 @@
 
 //Reset page on load.
     $(function() {
-        localStorage.setItem('gslcurrentpage','');
+        sessionStorage.setItem('gslcurrentpage','');
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
        $.getScript( "{getshop_endpoint}/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        

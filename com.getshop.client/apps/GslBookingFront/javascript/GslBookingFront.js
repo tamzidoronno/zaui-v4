@@ -1,4 +1,4 @@
-var getshop_endpoint = localStorage.getItem('getshop_endpoint');
+var getshop_endpoint = sessionStorage.getItem('getshop_endpoint');
 
 function showGuestBox() {
     $('.guestInfoBox').show();

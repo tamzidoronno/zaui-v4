@@ -1,6 +1,6 @@
 getshop_endpoint = "";
-if(localStorage.getItem('getshop_endpoint')) {
-    getshop_endpoint = localStorage.getItem('getshop_endpoint');
+if(sessionStorage.getItem('getshop_endpoint')) {
+    getshop_endpoint = sessionStorage.getItem('getshop_endpoint');
 }
 var leftInterval;
 var getshop_handledevent = false;
@@ -58,6 +58,7 @@ function load_getBookingTranslations() {
     var def = $.Deferred();
     $.ajax({
         "dataType": "jsonp",
+        async: false,
         "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
         success: function (res) {
             getshop_translationMatrixLoaded = res;
@@ -393,7 +394,7 @@ function getshop_continueToSummary(e) {
         $('.addons_overview').fadeIn('400');
         $('.GslBooking .ordersummary').slideUp();
         $('.GslBooking .gslbookingHeader').slideUp();
-        localStorage.setItem('gslcurrentpage','summary');
+        sessionStorage.setItem('gslcurrentpage','summary');
         getshop_loadAddonsAndGuestSumaryView();
         
         var padding = $('.gslbookingBody').position().top;
@@ -411,8 +412,8 @@ function getshop_createSticky(sticky) {
         var paddingBox = $('.productoverview');
         var stopPos = (stopperbox.offset().top - sticky.height());
         var positionPaddingTop = 0;
-        if(localStorage.getItem('getshop_topstickyposition')) {
-            positionPaddingTop = parseInt(localStorage.getItem('getshop_topstickyposition'));
+        if(sessionStorage.getItem('getshop_topstickyposition')) {
+            positionPaddingTop = parseInt(sessionStorage.getItem('getshop_topstickyposition'));
         }
 
         $('.GslBooking #order-sticky').css('width', $('.GslBooking #order-sticky').outerWidth());
@@ -705,7 +706,7 @@ function getshop_saveBookerInformation() {
             "body": data
         },
         success: function (res) {
-            localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
+            sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             dfr.resolve(res);
         }
     });
@@ -714,7 +715,7 @@ function getshop_saveBookerInformation() {
 
 function getshop_showAddonsPage() {
     getshop_saveBookerInformation();
-    localStorage.setItem('gslcurrentpage','summary');
+    sessionStorage.setItem('gslcurrentpage','summary');
     $('.overview').hide();
     $('.productoverview').fadeOut('400', function () {
         $('.addons_overview').fadeIn('400');
@@ -776,7 +777,7 @@ function getshop_showProductList() {
     });
 }
 function getshop_showOverviewPage() {
-    localStorage.setItem('gslcurrentpage','overview');
+    sessionStorage.setItem('gslcurrentpage','overview');
     var saving = getshop_saveGuestInformation();
     var padding = $('.gslbookingBody').position().top;
     var body = $('.gslbookingBody').offset().top;
@@ -862,6 +863,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     var header = "<tr style='font-weight:bold;box-shadow: inset 0px -1px 0px #efeff0;'><td style='text-align:left;'>"+chosenRoomText['chosenRoom']+"</td><td>"+chosenRoomText['numberofguests']+"</td><td>"+chosenRoomText['price']+"</td></tr>";
     var row = "";
     var translationMatrix = getshop_getBookingTranslations();
+    console.log(translationMatrix);
     var roomsSelected = 0;
     for(var k in res.rooms) {
         var room = res.rooms[k];
@@ -1173,7 +1175,7 @@ var gslbookingcurresult = null;
 function getshop_goToOverviewPage() {
     $('.gslbookingBody').show();
     $('.addons_overview').show();
-    gslbookingcurresult = JSON.parse(localStorage.getItem('gslcurrentbooking'));
+    gslbookingcurresult = JSON.parse(sessionStorage.getItem('gslcurrentbooking'));
     getshop_showOverviewPage();
     getshop_loadAddonsAndGuestSumaryView();
 }
@@ -1181,17 +1183,30 @@ function getshop_goToOverviewPage() {
 function getshop_goToAddonsPage() {
     $('.gslbookingBody').show();
     $('.addons_overview').show();
-    gslbookingcurresult = JSON.parse(localStorage.getItem('gslcurrentbooking'));
+    gslbookingcurresult = JSON.parse(sessionStorage.getItem('gslcurrentbooking'));
     getshop_loadAddonsAndGuestSumaryView();
 }
 
+function getshop_goToNextPage(page) {
+    var startDate = $('#date_picker').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var endDate = $('#date_picker').data('daterangepicker').endDate.format('YYYY-MM-DD');
+    var rooms = $('#count_room').val();
+    var adults = $('#count_adult').val();
+    var children = $('#count_child').val();
+    var discountCode = $('#coupon_input').val();
+    var link = page + "#start=" + startDate + "&end=" + endDate + "&rooms=" + rooms + "&adults=" + adults + "&children=" + children + "&discount=" + discountCode;
+    window.location.href = link;
+}
 
 function getshop_searchRooms(e) {
     if(getshop_avoiddoubletap(e)) { return; }
     if($(this).find('.fa-spin').length > 0) {
         return;
-    }    
-    
+    }
+    if(typeof(getshop_nextPage) !== "undefined") {
+        getshop_goToNextPage(getshop_nextPage);
+        return;
+    }
     var rooms = $('#count_room').val();
     var adults = parseInt($('#count_adult').val());
     var children = parseInt($('#count_child').val());
@@ -1202,7 +1217,7 @@ function getshop_searchRooms(e) {
     
     getshop_confirmGuestInfoBox();
     
-    localStorage.setItem('gslcurrentpage','search');
+    sessionStorage.setItem('gslcurrentpage','search');
     $('.GslBooking .ordersummary').hide();
     var btn = $(this);
     var btnText = btn.text();
@@ -1238,7 +1253,7 @@ function getshop_searchRooms(e) {
             $('.gslbookingBody').show();
             $('#productentry').html('');
             gslbookingcurresult = res;
-            localStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
+            sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             $('.noroomsfound').hide();
             if(!res || (parseInt(res.roomsSelected) === 0)) {
                 $('.noroomsfound').show();
@@ -1481,7 +1496,7 @@ function getshop_cancelPayment() {
         dataType: 'jsonp',
         data: {
             "body" :  {
-                "terminalid" : localStorage.getItem("getshopterminalid")
+                "terminalid" : sessionStorage.getItem("getshopterminalid")
             }
         },
         success : function(res) {

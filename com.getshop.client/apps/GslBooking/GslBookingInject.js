@@ -28,6 +28,9 @@ function getshop_setBookingTranslation() {
         
         $.ajax({
             "dataType": "jsonp",
+            data: {
+                "sessionid" : getshop_getsessionid()
+            },
             "url": getshop_endpoint + '/scripts/bookingprocess.php?method=getConfiguration',
             success: function (config) {
                 getshop_bookingconfiguration = config;
@@ -57,6 +60,9 @@ function getshop_setBookingTranslation() {
 function load_getBookingTranslations() {
     var def = $.Deferred();
     $.ajax({
+        data: {
+            "sessionid" : getshop_getsessionid()
+        },
         "dataType": "jsonp",
         async: false,
         "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
@@ -117,7 +123,6 @@ $(document).on('click', '.GslBooking .gallery-image', function (e) {
         featuredImage.find('.featured-image').css('backgroundImage', e.target.style.backgroundImage);
     }
 });
-
 $(document).on('mouseenter', '.GslBooking .move-btn', function () {
     var target = $(this);
     var imageWidth = 22;
@@ -153,7 +158,6 @@ $(document).on('mouseenter', '.GslBooking .move-btn', function () {
 $(document).on('mouseleave', '.GslBooking .move-btn', function () {
     getshop_clearInterval(leftInterval);
 });
-
 $(document).on('keyup', '.GslBooking #guest_zipcode', getshop_updateZipCode);
 
 function getshop_updateZipCode() {
@@ -162,6 +166,9 @@ var val = $(this).val();
         return;
     }
     $.ajax({
+        data: {
+            "sessionid" : getshop_getsessionid()
+        },
         "dataType": "jsonp",
         "url": "https://api.bring.com/shippingguide/api/postalCode.json?clientUrl=insertYourClientUrlHere&country=no&pnr=" + val,
         "success": function (data) {
@@ -186,7 +193,8 @@ function getshop_loadAddonsAndGuestSumaryView() {
     $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=getAddonsSummary', {
         dataType: 'jsonp',
         data: {
-            "body": toPush
+            "body": toPush,
+            "sessionid" : getshop_getsessionid()
         },
         success: function (res) {
             getshop_loadAddonsAndGuestSummaryByResult(res);
@@ -474,7 +482,7 @@ function getshop_addRemoveAddons(btn) {
         if (btn.hasClass('added_addon') || btn.hasClass('active_addon')) {
            $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=removeAddons', {
                 dataType: 'jsonp',
-                data: { body: body },
+                data: { body: body, "sessionid" : getshop_getsessionid() },
                 success: function (res) {
                     getshop_loadAddonsAndGuestSummaryByResult(res);
                 }
@@ -482,7 +490,7 @@ function getshop_addRemoveAddons(btn) {
         } else {
             $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=addAddons', {
                 dataType: 'jsonp',
-                data: { body: body },
+                data: { body: body, "sessionid" : getshop_getsessionid() },
                 success: function (res) {
                     getshop_loadAddonsAndGuestSummaryByResult(res);
                 }
@@ -496,6 +504,7 @@ function getshop_logon(e) {
     $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=logOn', {
         dataType: 'jsonp',
         data : {
+            "sessionid" : getshop_getsessionid(),
             body : {
                 "username" : $("input[gsname='username']").val(),
                 "password" : $("input[gsname='password']").val()
@@ -517,6 +526,9 @@ function getshop_logout(e) {
     if(getshop_avoiddoubletap(e)) { return; }
     $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=logOut', {
         dataType: 'jsonp',
+        data : {
+            "sessionid" : getshop_getsessionid()
+        },
         success: function (res) {
             getshop_loadAddonsAndGuestSummaryByResult(res);
             $('.overview_confirmation').hide();
@@ -612,6 +624,9 @@ function getshop_completeBooking() {
    var def = $.Deferred();
    $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=completeBooking', {
         dataType: 'jsonp',
+        data : {
+            "sessionid" : getshop_getsessionid()
+        },
         body : "",
         success: function (res) {
             def.resolve(res);
@@ -703,7 +718,8 @@ function getshop_saveBookerInformation() {
     $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=setGuestInformation', {
         dataType: 'jsonp',
         data: {
-            "body": data
+            "body": data,
+            "sessionid" : getshop_getsessionid()
         },
         success: function (res) {
             sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
@@ -756,7 +772,8 @@ function getshop_saveGuestInformation() {
     $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=saveGuestInformation', {
         dataType: 'jsonp',
         data: {
-            "body": toSave
+            "body": toSave,
+            "sessionid" : getshop_getsessionid()
         },
         success: function (res) {
             dfd.resolve(res);
@@ -820,8 +837,9 @@ function getshop_startPaymentTerminalProcess() {
         dataType: 'jsonp',
         data: { 
             "body" :  {
-                "terminalId" : getshop_terminalid
-            }
+                "terminalId" : getshop_terminalid,
+            },
+            "sessionid" : getshop_getsessionid()
         },
         success: function (res) {
             getshop_currentorderid = res.orderid;
@@ -1123,7 +1141,8 @@ function getshop_changeNumberOfRooms() {
                 "guests" : $(this).attr('guests'),
                 "start" : startDate,
                 "end" : endDate
-            }
+            },
+            "sessionid" : getshop_getsessionid()
         },
         success: function (res) {
             gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = count;            
@@ -1198,6 +1217,23 @@ function getshop_goToNextPage(page) {
     window.location.href = link;
 }
 
+function getshop_getsessionid() {
+    var check = sessionStorage.getItem("getshop_sessionid");
+    if(check) {
+        return check;
+    }
+    
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+         .toString(16)
+         .substring(1);
+    }
+    var sessid = s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+     
+    sessionStorage.setItem("getshop_sessionid", sessid);
+    return sessid;
+}
+
 function getshop_searchRooms(e) {
     if(getshop_avoiddoubletap(e)) { return; }
     if($(this).find('.fa-spin').length > 0) {
@@ -1244,7 +1280,8 @@ function getshop_searchRooms(e) {
     $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=startBooking', {
         dataType: 'jsonp',
         data: {
-            "body": data
+            "body": data,
+            "sessionid" : getshop_getsessionid()
         },
         success: function (res) {
             if(btnText) {
@@ -1373,7 +1410,8 @@ function getshop_removeGroupedRooms(e) {
             body : {
                 "roomId": roomId,
                 "guestCount" : guest
-            }
+            },
+            sessionid : getshop_getsessionid()
         },
         success : function(res) {
             console.log('---------------');
@@ -1400,7 +1438,8 @@ function getshop_removeRoom(e) {
             $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=removeRoom', {
                 dataType: 'jsonp',
                 data: {
-                    "body": id
+                    "body": id,
+                    "sessionid" : getshop_getsessionid()
                 },
                 success : function(res) {
                     getshop_loadAddonsAndGuestSummaryByResult(res);
@@ -1448,7 +1487,8 @@ function getshop_displayVerifoneFeedBack(res) {
         $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=printReciept', {
             dataType: 'jsonp',
             data: {
-                "body": tosend
+                "body": tosend,
+                "sessionid" : getshop_getsessionid()
             },
             success: function (res) {}
         });
@@ -1482,7 +1522,8 @@ function getshop_tryChangingDate(e) {
         $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=changeDateOnRoom', {
             dataType: 'jsonp',
             data: {
-                "body": data
+                "body": data,
+                "sessionid" : getshop_getsessionid()
             },
             success: function (res) {
                 getshop_loadAddonsAndGuestSummaryByResult(res);
@@ -1496,8 +1537,9 @@ function getshop_cancelPayment() {
         dataType: 'jsonp',
         data: {
             "body" :  {
-                "terminalid" : sessionStorage.getItem("getshopterminalid")
-            }
+                "terminalid" : sessionStorage.getItem("getshopterminalid"),
+            },
+            "sessionid" : getshop_getsessionid()
         },
         success : function(res) {
             window.location.href="paymentterminal.php";

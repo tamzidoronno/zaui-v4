@@ -886,7 +886,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             if (!assigner.getLinesOverBooked().isEmpty()) {
                 assigner.printBookingLines(assigner.getLinesOverBooked());
-                messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
+//                messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
             }
             
             for (BookingItem item : items.values()) {

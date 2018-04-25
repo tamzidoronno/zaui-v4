@@ -807,7 +807,6 @@ public class BookingItemAssignerOptimal {
         
         long maxAllowedGap = 12*60*60*1000;
         if (closestBooking < maxAllowedGap) {
-            System.out.println(closestBooking + " | " + closestBookingObject.getHumanReadableDates() + " > " + booking.getHumanReadableDates() );
             return closestBookingObject;
         }
         

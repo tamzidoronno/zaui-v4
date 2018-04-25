@@ -67,6 +67,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
+    private Date lastSentErrorNotification = new Date();
+    
     public List<BookingItemType> getBookingItemTypes() {
         return getBookingItemTypesWithSystemType(0);
     }
@@ -886,7 +888,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             if (!assigner.getLinesOverBooked().isEmpty()) {
                 assigner.printBookingLines(assigner.getLinesOverBooked());
-                messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
+                sendErrorNotificationAboutInvalidView(start, end);
             }
             
             for (BookingItem item : items.values()) {
@@ -919,6 +921,19 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         return retList;
+    }
+
+    private void sendErrorNotificationAboutInvalidView(Date start, Date end) {
+        Date time = new Date();
+        long diff = time.getTime() - lastSentErrorNotification.getTime();
+        long oneHour = 60*60*1000;
+        
+        if (diff > oneHour) {
+            lastSentErrorNotification = new Date();
+            messageManager.sendErrorNotification("An availabilityview has been shown with invalid data... startdate: " + start + ", end: " + end, null);
+        }
+        
+        
     }
 
     void saveRules(RegistrationRules rules) {

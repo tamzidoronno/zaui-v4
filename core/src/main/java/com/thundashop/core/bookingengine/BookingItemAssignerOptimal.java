@@ -108,6 +108,7 @@ public class BookingItemAssignerOptimal {
         } else {
             if (usingNewSystem.contains(storeId)) {
                 assignAllBookingsThatHasSinglePointOfPosition(bookingLines, unassignedBookings);
+                assignBookingsByDistance(bookingLines, unassignedBookings);
                 squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
             } else {
                 addUnassignedBookingsToLine(bookingLines, unassignedBookings);
@@ -326,15 +327,15 @@ public class BookingItemAssignerOptimal {
     }
     
     public void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
-        int i = 1;
-        for (OptimalBookingTimeLine bookings : bookingLines) {
-            GetShopLogHandler.logPrintStatic("Line " + i + " - " + bookings.bookingItemId, null);
-            Collections.sort(bookings.bookings, Booking.sortByStartDate());
-            for (Booking booking : bookings.bookings) {
-                GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + ",created : " + booking.rowCreatedDate + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
-            }
-            i++;
-        }
+//        int i = 1;
+//        for (OptimalBookingTimeLine bookings : bookingLines) {
+//            GetShopLogHandler.logPrintStatic("Line " + i + " - " + bookings.bookingItemId, null);
+//            Collections.sort(bookings.bookings, Booking.sortByStartDate());
+//            for (Booking booking : bookings.bookings) {
+//                GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + ",created : " + booking.rowCreatedDate + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
+//            }
+//            i++;
+//        }
     }
 
     private boolean overlappingBooking(Booking booking, List<Booking> bookingLine) {
@@ -760,13 +761,56 @@ public class BookingItemAssignerOptimal {
 
                     time.bookings.add(booking);
                     unassignedBookings.removeIf(b -> b.id.equals(booking.id));
-                    if (booking.id.equals("38963d6b-32c5-4e05-90fd-6e6eeb02e8b8")) {
-                        System.out.println("Added: " + booking.getHumanReadableDates() + " to line: " + time.bookingItemId + " id: " + booking.id);
-                    }
                     foundAny = true;
                 }
             }
         }
+    }
+
+    private void assignBookingsByDistance(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        for (OptimalBookingTimeLine timeline : bookingLines) {
+            boolean found = true;
+            while(found) {
+                found = false;
+                List<Booking> bookingsToCheck = new ArrayList(timeline.bookings);
+                for (Booking booking : bookingsToCheck) {
+                    Booking closePrevBooking = getClosePrevBooking(booking, unassignedBookings, timeline);
+                    if (closePrevBooking != null) {
+                        timeline.bookings.add(closePrevBooking);
+                        unassignedBookings.removeIf(b -> b.id.equals(closePrevBooking.id));
+                        found = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private Booking getClosePrevBooking(Booking booking, List<Booking> unassignedBookings, OptimalBookingTimeLine timeline) {
+        long closestBooking = Long.MAX_VALUE;
+        Booking closestBookingObject = null;
+        
+        for (Booking iBooking : unassignedBookings) {
+            long timeBetween = booking.startDate.getTime() - iBooking.endDate.getTime();
+            
+            if (!timeline.canAddBooking(iBooking)) {
+                continue;
+            }
+            
+            if (timeBetween < 0)
+                continue;
+            
+            if (timeBetween < closestBooking) {
+                closestBooking = timeBetween;
+                closestBookingObject = iBooking;
+            }
+        }
+        
+        long maxAllowedGap = 12*60*60*1000;
+        if (closestBooking < maxAllowedGap) {
+            return closestBookingObject;
+        }
+        
+        return null;
     }
 
 

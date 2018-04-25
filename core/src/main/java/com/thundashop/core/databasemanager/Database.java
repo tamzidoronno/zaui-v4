@@ -84,7 +84,7 @@ public class Database extends StoreComponent {
         
         DBObject object = collection.findOne(query);
         
-        return morphia.fromDBObject(type, object);
+        return (T)morphia.fromDBObject(DataCommon.class, object);
     }
     
     public Database() throws UnknownHostException {
@@ -236,6 +236,7 @@ public class Database extends StoreComponent {
         List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
         obj.add(new BasicDBObject("deleted", null));
         
+        obj.add(addBannedClass("com.thundashop.core.ordermanager.data.Order"));
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
         andQuery.put("$and", obj);

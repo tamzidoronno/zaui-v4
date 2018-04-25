@@ -7,9 +7,13 @@ package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionObject;
+import com.mongodb.BasicDBObject;
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderLight;
+import com.thundashop.core.ordermanager.data.Payment;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +39,22 @@ public class OrderDatabase extends ManagerBase {
                 orders.put(order.id, order);
             }
         }
-        
-        return orders.get(orderId);
+//        
+        return  orders.get(orderId);
     }
+
+    public OrderLight orderSaved(Order order, OrderLight lightOrder) {
+        if (lightOrder == null) {
+            OrderLight light = new OrderLight(order);
+            light.storeId = storeId;
+            database.save("OrderManager", "col_"+storeId, light);
+            return light;
+        } else {
+            lightOrder.update(order);
+            database.save("OrderManager", "col_"+storeId, lightOrder);
+            return lightOrder;
+        }
+    }
+
+  
 }

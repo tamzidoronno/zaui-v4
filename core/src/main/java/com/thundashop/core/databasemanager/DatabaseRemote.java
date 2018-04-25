@@ -18,7 +18,9 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
+import static com.thundashop.core.databasemanager.Database.mongoPort;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import java.io.BufferedReader;
@@ -100,6 +102,10 @@ public class DatabaseRemote extends StoreComponent {
                 new MongoClientURI(connectionString)
         );
     }
+    
+    private void connectLocal() throws UnknownHostException {
+        mongo = new Mongo("localhost", Database.mongoPort);
+    }
 
     private void checkId(DataCommon data) throws ErrorException {
         if (data.id == null || data.id.isEmpty()) {
@@ -150,8 +156,14 @@ public class DatabaseRemote extends StoreComponent {
     }
 
     public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
+        
         try {
-            connect();
+            if (GetShopLogHandler.isDeveloper) {
+                connectLocal();
+            } else {
+                connect();
+            }
+            
             DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId + "_" + moduleName);
             Stream<DataCommon> retlist = col.find().toArray().stream()
                     .map(o -> morphia.fromDBObject(DataCommon.class, o));

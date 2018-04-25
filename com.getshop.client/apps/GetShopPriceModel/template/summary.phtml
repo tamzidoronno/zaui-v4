@@ -2,9 +2,27 @@
 /* @var $this ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e\GetShopPriceModel */
 $priceMatrix = $this->genereatePriceMatrix();
 $prices = $this->getPriceMatrix();
+$names = $this->getNames();
 ?>
 
 <div>Total startup cost is <? echo $prices->currency; ?> <span class='totalstartupcost'><? echo $priceMatrix['totalSetupCost']; ?></span></div>
 <div>Total monthly licensing is <? echo $prices->currency; ?> <span class='totalmonthlycost'><? echo $priceMatrix['totalMonthly']; ?></span></div>
 <div>Number of servers included in the offer : <span class='numberofservers'><? echo $priceMatrix['servers'] ?></span></div>
 <div>Number of range extenders in the offer : <span class='repeaters'><? echo $priceMatrix['repeaters']; ?></span></div>
+
+<?php
+if($priceMatrix['totalSetupCost']) { ?>
+    <div style="font-weight: bold; margin-top: 20px;">A detailed summary shown below:</div>
+    <?php
+    $this->includefile("pdfdocument");
+    ?>
+    <style>
+        .page { margin: 0px; }
+        .page .pagetitle,
+        .page .introduction,
+        .page .introduction2,
+        .page .introduction3,
+        .page .introduction4,
+        .page .introduction { display:none; }
+    </style>
+<? } ?>

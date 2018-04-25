@@ -9,6 +9,7 @@ $locks = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks'];
 $entrancelocks = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks'];
 $selfcheckinindoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor'];
 $selfcheckinoutdoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor'];
+$restaurantEntryPoints = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['restaurantEntryPoints'];
 $pgas = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas'];
 $customwebsite = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite'] === "true";
 $integrationtoaccounting = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting'] === "true";
@@ -87,7 +88,7 @@ $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calc
         is seamless merged into the ultimate tool for you. 
     </div>
     
-    <div style="margin-top: 30px; font-size: 20px;" >
+    <div style="margin-top: 30px; font-size: 20px;" class="introduction3" >
         <b>Content:</b>
         <br/> This offer consists of two parts
         <br/> Page 2 - Onetime cost for gettings started with GetShop Solutions
@@ -97,7 +98,7 @@ $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calc
         This offer is valid until <span style="color: green; font-weight: bold;"> <? echo date('d/m-Y', strtotime("+14 day")); ?> 23:00 UTC-01:00</span> and is created from prices in www.getshop.com/pricing.html, to adjust the offer you can go back to this page at any time.
     </div>
     
-    <div style='border: solid 1px; margin-top: 100px; padding: 20px;'>
+    <div style='border: solid 1px; margin-top: 100px; padding: 20px;' class="introduction4">
         If you have any questions regarding this offer you can contact us at post@getshop.com or by phone +47 33 20 08 08
 
         <br/>
@@ -219,6 +220,39 @@ $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calc
     <?
     }
     ?>
+    <?
+    if ($restaurantEntryPoints) {
+    ?>
+    <div class="row">
+        <div class="type">
+            Restaurant kiosks
+        </div>
+        <div class="count">
+            <? echo $restaurantEntryPoints." x ".$prices->restaurantEntryPoints; ?>
+        </div>
+        <div class="price">
+            <? echo $priceMatrix['restaurantEntryPoints']." ".$prices->currency; ?>
+        </div>
+        <div class="description">
+            The restaurant kiosk are standalone kiosks for handling orders on the restaurant.
+        </div>
+    </div>
+    <div class="row">
+        <div class="type">
+            Restaurant startup
+        </div>
+        <div class="count">
+        </div>
+        <div class="price">
+            <? echo $priceMatrix['restaurantCost']." ".$prices->currency; ?>
+        </div>
+        <div class="description">
+            The startup cost are all costs related to initially setting up the restaurant system.
+        </div>
+    </div>
+    <?
+    }
+    ?>
     
     <?
     if($getshopinstalllocks) {
@@ -236,6 +270,7 @@ $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calc
         <div class="description">
             GetShop personal travels to your hotel and do the installation for you of the locks, include them into the network and do a fully test of the system. Teaches you how to maintain the locks and how they works. 
             <br/>* Travel charges will be charged additionally unless else agreed upon.
+            <br/>* Bed and board are covered by the customer unless else agreed upon.
         </div>
     </div>
     <?

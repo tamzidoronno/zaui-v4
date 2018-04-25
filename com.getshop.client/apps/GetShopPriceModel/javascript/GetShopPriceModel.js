@@ -11,6 +11,7 @@ app.GetShopPriceModel = {
             'entrancelocks' : $('.entrancelocks').val(),
             'selfcheckinindoor' : $('.selfcheckinindoor').val(),
             'selfcheckinoutdoor' : $('.selfcheckinoutdoor').val(),
+            'restaurantEntryPoints' : $('.restaurantEntryPoints').val(),
             'pgas' : $('.pgas').val(),
             'customwebsite' : $('.customwebsite').is(':checked'),
             'integrationtoaccounting' : $('.integrationtoaccounting').is(':checked'),

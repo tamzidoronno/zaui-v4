@@ -43,10 +43,10 @@ include("header.php");
             "endpoint" : "<?php echo $endpoint; ?>",
             "viewmode" : "terminal",
             "jsendpoint" : "<?php echo $jsEnpoint; ?>",
-            "terminalid" : sessionStorage.getItem("getshopterminalid")
+            "terminalid" : localStorage.getItem("getshopterminalid")
         });
         
-        if(!sessionStoragege.getItem("getshopterminalid")) {
+        if(!localStorage.getItem("getshopterminalid")) {
             alert('no getshopterminalid set: getshopterminalid');
         }
         </script>

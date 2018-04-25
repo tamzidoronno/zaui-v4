@@ -1,7 +1,7 @@
 <?php
 if(isset($_GET['terminalid'])) {
     echo "<script>";
-    echo 'sessionStorage.setItem("getshopterminalid","'.$_GET['terminalid'].'")';
+    echo 'localStorage.setItem("getshopterminalid","'.$_GET['terminalid'].'")';
     echo "</script>";
 }
 

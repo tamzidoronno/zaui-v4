@@ -67,7 +67,7 @@ include("header.php");
                     dataType: 'jsonp',
                     data: {
                         "body" :  {
-                            "terminalid" : sessionStorage.getItem("getshopterminalid")
+                            "terminalid" : localStorage.getItem("getshopterminalid")
                         }
                     },
                     success : function(res) {
@@ -83,7 +83,7 @@ include("header.php");
                     dataType: 'jsonp',
                     data: {
                         "body" :  {
-                            "terminalid" : sessionStorage.getItem("getshopterminalid"),
+                            "terminalid" : localStorage.getItem("getshopterminalid"),
                             "reference" : $('#bookingreferenceid').val()
                         }
                     },

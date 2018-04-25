@@ -67,6 +67,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
     public HashMap<String, String> getConfigOptions() {
        HashMap<String, String> ret = new HashMap();
         ret.put("eiendelskonto", "Eiendelskonto (default 1510)");
+        ret.put("brukkundeinstedenforeiendelskonto", "Før mot kunde istedenfor eiendelskonto, settes til 1");
         return ret;
     }
         
@@ -135,6 +136,14 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         if(eiendelsKonto == null || eiendelsKonto.isEmpty()) {
             eiendelsKonto = "1510";
         }
+
+        String brukKundeIstedenforEiendel = getConfig("brukkundeinstedenforeiendelskonto");
+        if(brukKundeIstedenforEiendel != null && brukKundeIstedenforEiendel.equals("1")) {
+            eiendelsKonto = getAccountingAccountId(user.id) + "";
+        }
+        
+        
+        
         
         HashMap<Integer, String> line = new HashMap();
         line.put(0, "GBAT10");

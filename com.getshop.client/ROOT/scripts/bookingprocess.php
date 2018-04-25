@@ -1,7 +1,13 @@
 <?php
+if(isset($_GET['sessionid'])) {
+//    echo "Setting session id : " . $_GET['sessionid'];
+    session_id($_GET['sessionid']);
+}
+
 chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
+
 
 $storeId = $factory->getStore()->id;
 $domain = "default";

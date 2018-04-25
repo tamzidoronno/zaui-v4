@@ -7112,16 +7112,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void removeProductFromRoom(String pmsBookingRoomId, String productId) {
         PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
-        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        List<PmsBookingAddonItem> toRemove = new ArrayList();
-        for (PmsBookingAddonItem item : room.addons) {
-            if (item.productId.equals(productId)) {
-                toRemove.add(item);
+        if(booking != null) {
+            PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+            List<PmsBookingAddonItem> toRemove = new ArrayList();
+            for (PmsBookingAddonItem item : room.addons) {
+                if (item.productId.equals(productId)) {
+                    toRemove.add(item);
+                }
             }
+            room.addons.removeAll(toRemove);
+            logEntry("Removed addon from room:" + productManager.getProduct(productId).name, booking.id, room.bookingItemId, room.pmsBookingRoomId, "removeaddon");
+            saveBooking(booking);
         }
-        room.addons.removeAll(toRemove);
-        logEntry("Removed addon from room:" + productManager.getProduct(productId).name, booking.id, room.bookingItemId, room.pmsBookingRoomId, "removeaddon");
-        saveBooking(booking);
     }
 
     private int numberOfYearsBetween(Date start, Date end) {

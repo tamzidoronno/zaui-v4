@@ -52,6 +52,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $rooms = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms'];
         $locks = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks'];
         $entrancelocks = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks'];
+        $restaurantEntryPoints = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['restaurantEntryPoints'];
         $selfcheckinindoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor'];
         $selfcheckinoutdoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor'];
         $pgas = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas'];
@@ -72,6 +73,13 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         }
         if ($totalMonthly < 65 && $totalMonthly > 0) {
             $totalMonthly = $priceObject->minMonthlyCost;
+        }
+        
+        $restaurantkiosksprice = 0;
+        $restaurantcost = 0;
+        if($restaurantEntryPoints > 0) {
+            $restaurantcost = $priceObject->restaurantCost;
+            $restaurantkiosksprice += ($restaurantEntryPoints * $priceObject->restaurantEntryPoints);
         }
 
         $lockPriceStartup = ($priceObject->lockPrice * $locks);
@@ -133,6 +141,9 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
             $discountMonthlyTotal = round($discountMonthlyTotal);
         }
         
+        $totalSetupCost += $restaurantkiosksprice;
+        $totalSetupCost += $restaurantcost;
+        
         $priceMatrix = array();
         $priceMatrix['totalSetupCost'] = $totalSetupCost;
         $priceMatrix['lockPriceStartup'] = $lockPriceStartup;
@@ -151,10 +162,35 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         
         $priceMatrix['serversCost'] = $servers * $priceObject->serverPrice;
         $priceMatrix['repeatersCost'] = $repeaters * $priceObject->repeaterPrice;
+        $priceMatrix['restaurantCost'] = $restaurantcost;
+        $priceMatrix['restaurantEntryPoints'] = $restaurantkiosksprice;
 
         return $priceMatrix;
     }
 
+    public function getNames() {
+        $names = array();
+        $names['totalSetupCost'] = "Total startup cost";
+        $names['lockPriceStartup'] = "Locks";
+        $names['entranceDoorPriceTotal'] = "Entrance door";
+        $names['terminalIndoorCosts'] = "Terminals (indoor)";
+        $names['terminalOutdoorCosts'] = "Terminals (outdoor)";
+        $names['pgatotalcosts'] = "Pgas";
+        $names['installationPrice'] = "Installation";
+        $names['roomLicenceCost'] = "Room license";
+        $names['locksLicenceCost'] = "Lock license";
+        $names['discountTotal'] = "Discounts";
+        $names['discountMonthlyTotal'] = "Discounts monthly fee";
+        $names['servers'] = "Servers";
+        $names['repeaters'] = "Repeaters";
+        $names['totalMonthly'] = "Total monthly cost";
+        $names['serversCost'] = "Server costs";
+        $names['repeatersCost'] = "Repeaters";
+        $names['restaurantCost'] = "Resturant startup";
+        $names['restaurantEntryPoints'] = "Resturant kiosks";
+        return $names;
+    }
+    
     public function getPriceMatrix() {
         $appname = get_class($this);
         if (strpos($appname, "\\")) {

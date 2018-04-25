@@ -3,6 +3,7 @@
 
 $rooms = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms'] : 0;
 $locks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks'] : 0;
+$restaurantEntryPoints = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['restaurantEntryPoints']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['restaurantEntryPoints'] : 0;
 $entrancelocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks'] : 0;
 $selfcheckinindoor = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor'] : 0;
 $selfcheckinoutdoor = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor'] : 0;
@@ -22,7 +23,7 @@ $getshoptraining = $getshoptraining ? 'checked="true"' : "";
 ?>
 
 <h1>Pricing</h1>
-
+* Enter what you need below, the total will be shown under.
 <div class='row'>
     <div class='col1'>Currency</div>
     <div class='col2'>
@@ -57,6 +58,11 @@ $getshoptraining = $getshoptraining ? 'checked="true"' : "";
 <div class='row'>
     <div class='col1'>Number of self check in terminal (outdoor)</div>
     <div class='col2'><input type='text' class='gsniceinput1 inputvalue selfcheckinoutdoor' value='<? echo $selfcheckinoutdoor; ?>'></div>
+</div>
+
+<div class='row'>
+    <div class='col1'>Number of restaurant kiosks</div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue restaurantEntryPoints' value='<? echo $restaurantEntryPoints; ?>'></div>
 </div>
 
 <div class='row'>

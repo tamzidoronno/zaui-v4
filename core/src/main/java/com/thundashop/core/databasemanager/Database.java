@@ -76,6 +76,17 @@ public class Database extends StoreComponent {
         return mongo;
     }
 
+    public <T> T get(String id, Class manager, String storeId, Class<T> type) {
+        DBCollection collection = mongo.getDB(manager.getSimpleName()).getCollection(collectionPrefix + storeId);
+        
+        BasicDBObject query = new BasicDBObject();
+	query.put("_id", id);
+        
+        DBObject object = collection.findOne(query);
+        
+        return morphia.fromDBObject(type, object);
+    }
+    
     public Database() throws UnknownHostException {
         try {
             createDataFolder();

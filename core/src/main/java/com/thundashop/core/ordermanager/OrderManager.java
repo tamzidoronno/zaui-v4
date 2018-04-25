@@ -127,6 +127,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private PaymentManager paymentManager;
+    
+    @Autowired
+    private OrderDatabase orderDatabase;
 
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -280,7 +283,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void markAsPaid(String orderId, Date date) {
-        Order order = orders.get(orderId);
+        Order order = orderDatabase.getOrder(orderId);
         markAsPaidInternal(order, date);
         saveOrder(order);
     }
@@ -616,7 +619,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
         if (password.equals("1Fuck1nG_H4T3_4ppl3!!TheySuckBigTime")) {
-            Order order = orders.get(orderId);
+            Order order = orderDatabase.getOrder(orderId);
             
             if (order.cart.getTotal(false) == price) {
                 changeOrderStatus(order.id, status);
@@ -691,7 +694,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void changeOrderStatus(String id, int status) throws ErrorException {
-        Order order = orders.get(id);
+        Order order = orderDatabase.getOrder(id);
         validateOrder(order);
         if (order == null) {
             order = getByTransactionId(id);
@@ -1190,7 +1193,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public Order getOrderSecure(String orderId) throws ErrorException {
-        Order order = orders.get(orderId);
+        Order order = orderDatabase.getOrder(orderId);
         if(order != null) {
             order.doFinalize();
         }
@@ -1211,7 +1214,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void validatePaymentStatus(Order order) {
-        Order inMemoryOrder = orders.get(order.id);
+        Order inMemoryOrder = orderDatabase.getOrder(order.id);
         
         if (inMemoryOrder == null) {
             return;
@@ -1792,7 +1795,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(!password.equals("fdsafnbbo45453gbsdsdgfHTRYTnvnvvqerqw98ngvdjsgndfl8345()")) {
             return;
         }
-        Order object = orders.get(orderId);
+        Order object = orderDatabase.getOrder(orderId);
         forceDeleteOrder(object);
     }
 

@@ -1375,4 +1375,19 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             bookingsWithinDaterange.removeIf(o -> o.startDate.after(date));
         }
     }
+
+    List<BookingItem> getAllAvailbleItemsWithBookingConsideredParalized(Date start, Date end, String bookingid) {
+        List<BookingItem> res = new ArrayList();
+        List<BookingItemType> types = getBookingItemTypes();
+        types.stream()
+                .parallel()
+                .forEach(type -> {
+                    long time = System.currentTimeMillis();
+                    List<BookingItem> found = getAvailbleItemsWithBookingConsidered(type.id, start, end, bookingid);
+                    res.addAll(found);
+                    System.out.println("Used for type: " + type.name + " | " + (System.currentTimeMillis() - time));            
+                });
+        
+        return res;
+    }
 }

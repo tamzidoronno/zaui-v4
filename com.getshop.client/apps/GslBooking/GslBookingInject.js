@@ -42,6 +42,8 @@ function getshop_setBookingTranslation() {
                     $('.pfbox').css('width','33.33%').css('padding','0 5%');
                     $('.excludeChildSelection').css('display','block');
                     $('.switchAdultToGuest').css('display','none');
+                } else {
+                    $('.excludeChildSelection').css('display','none');
                 }
                 $("[gsname='prefix']").val(config.phonePrefix);
                 $("[gsname='user_prefix']").val(config.phonePrefix);

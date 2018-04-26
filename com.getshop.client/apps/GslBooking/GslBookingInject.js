@@ -635,7 +635,9 @@ function getshop_completeBooking(paylater) {
         data : {
             "sessionid" : getshop_getsessionid()
         },
-        body : "",
+        body : {
+            "payLater" : paylater
+        },
         success: function (res) {
             def.resolve(res);
         },
@@ -1295,6 +1297,12 @@ function getshop_searchRooms(e) {
             if(btnText) {
                 btn.html(btnText);
             }
+            if(res.supportPayLaterButton) {
+                $('.paylater_button').show();
+            } else {
+                $('.paylater_button').hide();
+            }
+            
             $('.gslbookingBody').show();
             $('#productentry').html('');
             gslbookingcurresult = res;

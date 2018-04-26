@@ -124,7 +124,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         });
 
-        
         PmsBooking existing = pmsManager.getCurrentBooking();
         
         boolean isAdministrator = false;
@@ -179,10 +178,41 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         selectMostSuitableRooms(result, arg);
         result.totalAmount = pmsManager.getCurrentBooking().getTotalPrice();
+        result.supportPayLaterButton = checkIfSupportPayLater();
         
         return result;
     }
 
+    private boolean checkIfSupportPayLater() {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        if(booking == null) {
+            return false;
+        }
+        Date startDate = booking.getStartDate();
+        if(startDate == null) {
+            return false;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
+        Integer ignoreDays = config.ignorePaymentWindowDaysAheadOfStay;
+        if(ignoreDays <= 0) {
+            return false;
+        }
+        
+        long now = System.currentTimeMillis();
+        long diff = cal.getTimeInMillis() - now;
+        
+        int days = (int) ((diff / 1000) / 86400);
+        
+        if(days > ignoreDays) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     private void selectMostSuitableRooms(StartBookingResult result, StartBooking arg) {
         System.out.println("Need to find: " + arg.rooms + " rooms for :" + arg.getGuests());
         
@@ -716,6 +746,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         booking = pmsManager.completeCurrentBooking();
+        
         BookingResult res = new BookingResult();
         res.success = 1;
         if(res == null) {
@@ -729,6 +760,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 res.continuetopayment = 0;
             }
         }
+        
+        if(input.payLater) {
+            booking.avoidAutoDelete = true;
+            pmsManager.saveBooking(booking);
+            pmsManager.logEntry("Pay later button pressed", booking.id, null);
+            res.continuetopayment = 0;
+        }
+        
         return res;
     }
 

@@ -603,7 +603,13 @@ function getshop_gotopayment(e) {
             if(btn.hasClass('fa-spin')) {
                 return;
             }
-            var completing = getshop_completeBooking();
+            
+            var paylater = false;
+            if(btn.hasClass('paylater_button')) {
+                paylater = true;
+            }
+            
+            var completing = getshop_completeBooking(paylater);
             btn.html('<i class="fa fa-spin fa-spinner"></i>');
             completing.done(function(res) {
                 if(res.continuetopayment == 1) {
@@ -618,11 +624,11 @@ function getshop_gotopayment(e) {
                 $('.errorcompleted').show();
             })
         }
-    });    
+    });
 }
 
 
-function getshop_completeBooking() {
+function getshop_completeBooking(paylater) {
    var def = $.Deferred();
    $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=completeBooking', {
         dataType: 'jsonp',
@@ -1561,6 +1567,7 @@ $(document).on('touchend click','.GslBooking .removeroom', getshop_removeRoom);
 $(document).on('touchend click', '.GslBooking .destination_line', getshop_changedestination);
 $(document).on('touchend click', '.GslBooking #guests', getshop_showGuestBox);
 $(document).on('touchend click', '.GslBooking #destination', getshop_showDesitinationBox);
+$(document).on('touchend click', '.GslBooking .paylater_button', getshop_gotopayment);
 $(document).on('touchend click', '.GslBooking .go_to_payment_button', getshop_gotopayment);
 $(document).on('touchend click', '.GslBooking #search_rooms', getshop_searchRooms);
 $(document).on('touchend click', '.GslBooking .addguest', getshop_addGuest);

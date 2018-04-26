@@ -620,7 +620,11 @@ function getshop_completeBooking(paylater) {
    var def = $.Deferred();
    $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=completeBooking', {
         dataType: 'jsonp',
-        body : "",
+        data : {
+            body : {
+                "payLater" : paylater
+            }
+        },
         success: function (res) {
             def.resolve(res);
         },
@@ -1258,6 +1262,12 @@ function getshop_searchRooms(e) {
             if(btnText) {
                 btn.html(btnText);
             }
+            if(res.supportPayLaterButton) {
+                $('.paylater_button').show();
+            } else {
+                $('.paylater_button').hide();
+            }
+            
             $('.gslbookingBody').show();
             $('#productentry').html('');
             gslbookingcurresult = res;

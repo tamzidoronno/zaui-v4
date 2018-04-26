@@ -11,6 +11,7 @@ public class StartBookingResult {
     public Integer roomsSelected = 0;
     public Double totalAmount = 0.0;
     public Integer numberOfDays = 0;
+    public boolean supportPayLaterButton = false;
     
     public List<RoomsSelected> getRoomsSelected() {
         List<RoomsSelected> res = new ArrayList();

@@ -700,7 +700,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     
     @Override
-    public BookingResult completeBooking() {
+    public BookingResult completeBooking(CompleteBookingInput input) {
         User loggedOn = userManager.getLoggedOnUser();
         PmsBooking booking = null;
         if(loggedOn != null) {

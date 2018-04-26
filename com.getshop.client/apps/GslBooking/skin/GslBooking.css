@@ -150,6 +150,10 @@ Error      : #de5353; red
     border-radius:2px;
     display: inline-block;}
 .GslBooking .gslfront_1 .gsl_button.return:hover{background-color:#5fb892;}
+.GslBooking .gslfront_1 .gsl_button.paylater_button{
+    top:-85px; 
+}
+
 .GslBooking .gslfront_1 .gsl_button.continue{
     width: 68%;
     position: absolute;

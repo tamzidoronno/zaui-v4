@@ -101,7 +101,7 @@ app.PmsBooking = {
         $(this).closest('.inner').find('.count').val(count);
     },
     getshop_setBookingTranslation : function() {
-        var loadTranslation = load_getBookingTranslations();
+        var loadTranslation = app.PmsBooking.load_getBookingTranslations();
         loadTranslation.done(function(translations) {
             for(var key in translations) {
                 var field = $('[gstype="bookingtranslation"][gstranslationfield="'+key+'"]');

@@ -1,6 +1,7 @@
 app.CrmCustomerView = {
     init : function() {
         $(document).on('click','.CrmCustomerView .crmmenuentry', app.CrmCustomerView.loadArea);
+        $(document).on('click','.CrmCustomerView .paymentmethodbtn', app.CrmCustomerView.toggleButton);
     },
     loadArea : function() {
         var area = $(this).attr('area');
@@ -36,6 +37,15 @@ app.CrmCustomerView = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.cardlist').html(res);
         });
+    },
+    toggleButton : function() {
+        if($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            $(this).attr('gsvalue','false');
+        } else {
+            $(this).addClass('selected');
+            $(this).attr('gsvalue','true');
+        }
     }
 }
 app.CrmCustomerView.init();

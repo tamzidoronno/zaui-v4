@@ -5,8 +5,12 @@ $domains = $this->getDomains();
 $user = $this->getUser();
 $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 
+
+
 foreach ($domains as $domain) {
-    echo "<h1>$domain</h1>";
+    if(sizeof($domains) > 1) {
+        echo "<h1>$domain</h1>";
+    }
     $rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($domain);
     $discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
     ?>
@@ -50,6 +54,27 @@ foreach ($domains as $domain) {
                             }
                             ?>                                    
                         </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Payment options</b><br>
+                        Select the payment methods that should be enabled for this customer<br>
+                    <td  class='rowinput'>
+                        <?php
+                        foreach ($paymentApps as $id => $type) {
+                            $selected = "";
+                            $gsvalue = "false";
+                            $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+                            
+                            if(in_array($type->id, $user->enabledPaymentOptions)) {
+                                $selected = "selected";
+                                $gsvalue = "true";
+                            }
+                            if (method_exists($instance, "getName")) {
+                                echo "<span method='" . $type->id . "' class='paymentmethodbtn $selected' gsname='enabledpmethod_".$type->id."' gsvalue='$gsvalue'>" . $instance->getName() . "</span>";
+                            }
+                        }
+                        ?>                                    
                     </td>
                 </tr>
                 <tr>

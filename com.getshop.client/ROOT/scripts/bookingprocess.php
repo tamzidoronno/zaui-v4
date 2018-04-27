@@ -17,6 +17,20 @@ if($storeId == "e625c003-9754-4d66-8bab-d1452f4d5562" || $storeId == "a152b5bd-8
     $domain = "demo";
 }
 
+if(isset($_GET['paymetmethodnames'])) {
+    $paymentApps = (array)$factory->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    $result = array();
+    foreach ($paymentApps as $id => $type) {
+        $instance = $factory->getApplicationPool()->createInstace($type);
+        if (method_exists($instance, "getName")) {
+            $result[$type->id] = $instance->getName();
+        }
+    }
+    echo json_encode($result);
+    return;
+}
+
+
 $method = $_GET['method'];
 if(isset($_GET['body'])) {
     $data = json_encode($_GET['body']);

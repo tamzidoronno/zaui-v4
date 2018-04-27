@@ -173,6 +173,11 @@
                     <div class="gsl_button return" onclick="getshop_showAddonsPage()"><i class="fa fa-arrow-left"> </i></div>
                     <div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
                     <div class="gsl_button continue paylater_button"><span gstype='bookingtranslation' gstranslationfield='paylater'></span></div>
+                    
+                    <div class="paymentmethodselection">
+                        <select id='paymentmethodselection'>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="overview_article">
@@ -330,9 +335,12 @@
             $.getScript( "{getshop_endpoint}/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
                 getshop_setDatePicker();
                 getshop_setBookingTranslation();
+                getshop_goToOverviewPage();getshop_showOverviewPage();
+                setTimeout(function() {
+                    getshop_showOverviewPage();
+                }, "1000");
             });
         });
        });
     });
-    
 </script>

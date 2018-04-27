@@ -26,3 +26,14 @@
 .CrmCustomerView .bookings .col { width: 120px !important; }
 .CrmCustomerView .rowinput { text-align: right; }
 .CrmCustomerView .largecheckbox { width: 25px; height: 25px; }
+.CrmCustomerView .paymentmethodbtn {     
+    border: solid 1px;
+    margin-left: 5px;
+    padding: 3px;
+    border-radius: 3px; 
+    color:#bbb;
+    cursor:pointer;
+}
+.CrmCustomerView .paymentmethodbtn.selected {
+    color:green;
+}

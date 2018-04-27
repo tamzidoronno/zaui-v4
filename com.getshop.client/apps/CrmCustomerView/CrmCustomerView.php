@@ -63,6 +63,18 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
                 $discount->discounts->{$room} = $val;
             }
         }
+        $enabledMethods = array();
+        foreach($_POST['data'] as $index => $val) {
+            if(stristr($index, "enabledpmethod_")) {
+                if($val != "true") {
+                    continue;
+                }
+                $id = str_replace("enabledpmethod_", "", $index);
+                $enabledMethods[] = $id;
+            }
+        }
+        $user->enabledPaymentOptions = $enabledMethods;
+        
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($domain, $discount);
         $this->getApi()->getUserManager()->saveUser($user);
     }
@@ -301,7 +313,16 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
             return $this->array;
         }
         
-        return $this->getApi()->getStoreManager()->getMultiLevelNames();
+        $names = $this->getApi()->getStoreManager()->getMultiLevelNames();
+        $realnames = array();
+        foreach($names as $name) {
+            if($this->getApi()->getPmsManager()->isActive($name)) {
+                $realnames[] = $name;
+            }
+        }
+        $this->array = $realnames;
+        return $realnames;
+        
     }
     
     public function formatRowCreatedDate($user) {

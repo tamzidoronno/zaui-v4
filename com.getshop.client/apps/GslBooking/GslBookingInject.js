@@ -796,6 +796,32 @@ function getshop_showOverviewPage() {
     $('.invalidinput').removeClass('invalidinput');
     $('.GslBooking .errormessage').hide();
     saving.done(function(res) {
+        
+        if(gslbookingcurresult.supportedPaymentMethods.length > 0) {
+            
+            $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?paymetmethodnames=true', {
+                dataType: 'jsonp',
+                data: {
+                    "body" :  {
+                        "terminalId" : getshop_terminalid
+                    }
+                },
+                success: function (res) {
+                    getshop_currentorderid = res.orderid;
+                }
+            });
+            
+            var loadNames = $.ajax({
+                
+            });
+            $('.paymentmethodselection').show();
+            for(var k in gslbookingcurresult.supportedPaymentMethods) {
+                $('#paymentmethodselection').append("<option value='"+gslbookingcurresult.supportedPaymentMethods[k]+"'>" + gslbookingcurresult.supportedPaymentMethods[k] + "</option>");
+            }
+        } else {
+            $('.paymentmethodselection').hide();
+        }
+        
         var success = true;
         for(var k in res.fieldsValidation) {
             if(!k.startsWith("guest_")) {
@@ -1330,16 +1356,11 @@ function getshop_searchRooms(e) {
                     user_icon++;
                 }
 
-//                var controller = '';
-//                if (room.images.length > 4) {
-//                    controller = '<div class="controls"><div class="move-btn left"><i class="fa fa-caret-left"></i></div><div class="move-btn right"><i class="fa fa-caret-right"></i></div></div>'
-//                }
                 for (var utility in room.utilities) {
                     utilities += '<i class="fa fa-' + utility + '" title="' + room.utilities[utility] + '"></i>';
                 }
 
                 $('#productentry').append(roomBox);
-//                roomBox.find('.gsgalleryroot').prepend(controller);
                 roomBox.show();
 
                 for (var i = 0; i <= room.images.length - 1; i++) {

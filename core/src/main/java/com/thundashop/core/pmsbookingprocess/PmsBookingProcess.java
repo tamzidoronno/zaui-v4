@@ -769,6 +769,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             res.continuetopayment = 0;
         }
         
+        if(input.paymentMethod != null && !input.paymentMethod.isEmpty() && !booking.orderIds.isEmpty()) {
+            Order order = orderManager.getOrderSecure(booking.orderIds.get(0));
+            Application app = storeApplicationPool.getApplication(input.paymentMethod);
+            order.payment.paymentType = app.getNameSpace();
+        }
+        
         return res;
     }
 

@@ -622,6 +622,7 @@ function getshop_completeBooking(paylater) {
         dataType: 'jsonp',
         data : {
             body : {
+                "paymentMethod" : $('#paymentmethodselection').val(),
                 "payLater" : paylater
             }
         },
@@ -800,24 +801,17 @@ function getshop_showOverviewPage() {
         if(gslbookingcurresult.supportedPaymentMethods.length > 0) {
             
             $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?paymetmethodnames=true', {
-                dataType: 'jsonp',
-                data: {
-                    "body" :  {
-                        "terminalId" : getshop_terminalid
-                    }
-                },
+                dataType: 'json',
                 success: function (res) {
-                    getshop_currentorderid = res.orderid;
+                    $('.paymentmethodselection').show();
+                    $('#paymentmethodselection').html('');
+                    for(var k in gslbookingcurresult.supportedPaymentMethods) {
+                        var id = gslbookingcurresult.supportedPaymentMethods[k];
+                        var name = res[id];
+                        $('#paymentmethodselection').append("<option value='"+id+"'>" + name + "</option>");
+                    }
                 }
             });
-            
-            var loadNames = $.ajax({
-                
-            });
-            $('.paymentmethodselection').show();
-            for(var k in gslbookingcurresult.supportedPaymentMethods) {
-                $('#paymentmethodselection').append("<option value='"+gslbookingcurresult.supportedPaymentMethods[k]+"'>" + gslbookingcurresult.supportedPaymentMethods[k] + "</option>");
-            }
         } else {
             $('.paymentmethodselection').hide();
         }

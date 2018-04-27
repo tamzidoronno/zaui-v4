@@ -179,6 +179,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         selectMostSuitableRooms(result, arg);
         result.totalAmount = pmsManager.getCurrentBooking().getTotalPrice();
         result.supportPayLaterButton = checkIfSupportPayLater();
+        result.supportedPaymentMethods = checkForSupportedPaymentMethods();
         
         return result;
     }
@@ -1091,5 +1092,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         endCal.set(Calendar.DAY_OF_YEAR, startCal.get(Calendar.DAY_OF_YEAR)+1);
         endCal.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
         return endCal.getTime();
+    }
+
+    private List<String> checkForSupportedPaymentMethods() {
+        if(getSession() != null && getSession().currentUser != null) {
+            return getSession().currentUser.enabledPaymentOptions;
+        }
+        return new ArrayList();
     }
 }

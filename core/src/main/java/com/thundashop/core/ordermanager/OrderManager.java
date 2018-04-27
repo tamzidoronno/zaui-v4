@@ -770,6 +770,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public List<CartTax> getTaxes(Order order) throws ErrorException {
+        if(order == null || order.cart == null) {
+            return new ArrayList();
+        }
         return order.cart.getCartTaxes();
     }
     

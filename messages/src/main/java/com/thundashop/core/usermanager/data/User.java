@@ -329,6 +329,7 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean isCompanyMainContact = false;
     public boolean wantToBecomeCompanyOwner = false;
     public String preferredPaymentType = "";
+    public List<String> enabledPaymentOptions = new ArrayList();
     public Integer invoiceDuePeriode = 14;
     public int sessionTimeOut = 180;
     public boolean canChangeLayout = false;

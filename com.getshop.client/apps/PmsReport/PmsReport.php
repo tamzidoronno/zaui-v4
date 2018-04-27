@@ -53,15 +53,22 @@ class PmsReport extends \MarketingApplication implements \Application {
         } else {
             $filter = new \stdClass();
             $filter->type = "coverage";
-            $filter->start = date("d.mY", time());
-            $filter->end = date("d.mY", time());
+            $filter->start = date("d.m.Y", time());
+            $filter->end = date("d.m.Y", time());
             $filter->includeNonBookableRooms = false;
             $filter->view = "daily";
         }
         
+        if(!$filter->start) {
+            $filter->start = time();
+        }
+        
+        if(!$filter->end) {
+            $filter->end = time();
+        }
+        
         $filter->start = date("d.m.Y 00:00", strtotime($filter->start));
         $filter->end = date("d.m.Y 23:59", strtotime($filter->end));
-        
         return $filter;
     }
 

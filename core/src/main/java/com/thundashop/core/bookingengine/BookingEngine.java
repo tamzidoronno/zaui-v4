@@ -289,6 +289,11 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     @Override
     public List<BookingItem> getAllAvailbleItemsWithBookingConsidered(Date start, Date end, String bookingid) {
+        if (storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
+            List<BookingItem> res = bookingEngineAbstract.getAllAvailbleItemsWithBookingConsideredParalized(start, end, bookingid);
+            return deepClone(res);
+        }
+        
         List<BookingItem> res = new ArrayList();
         List<BookingItemType> types = getBookingItemTypes();
         for(BookingItemType type : types) {

@@ -32,9 +32,11 @@ public class LockCode implements Serializable {
     
     public int slotId;
     
-    void generateRandomCode() {
+    void generateRandomCode(int codeSize) {
         Random rnd = new Random();
-        pinCode = 100000 + rnd.nextInt(900000);
+        int start = (int)Math.pow(10, (codeSize - 1));
+        int stop = start * 9;
+        pinCode = start + rnd.nextInt(stop);
     }
 
     void changeCode(int pinCode, String cardId) {

@@ -19,6 +19,7 @@ public class UserSlot implements Serializable {
     public boolean needToBeRemoved = false;
     public Date takenInUseDate = null;
     public boolean isCurrentlyUpdating = false;
+    public int codeSize = 6;
     
     public String comment;
     
@@ -44,7 +45,7 @@ public class UserSlot implements Serializable {
         previouseCode = code;
         
         code = new LockCode();
-        code.generateRandomCode();
+        code.generateRandomCode(codeSize);
         takenInUseDate = null;
         takenInUseTextReference = "";
         takenInUseManagerName = "";

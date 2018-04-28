@@ -24,7 +24,7 @@ public class LockGroup extends DataCommon {
     public int numberOfSlotsInGroup = 5;
     public String name;
 
-    public void rebuildCodeMatrix(List<LockServer> servers) {
+    public void rebuildCodeMatrix(List<LockServer> servers, int codeSize) {
         
         int j = 0;
         
@@ -33,6 +33,7 @@ public class LockGroup extends DataCommon {
             
             if (masterSlot == null) {
                 masterSlot = new MasterUserSlot();
+                masterSlot.codeSize = codeSize;
             }
             
             masterSlot.slotId = i;

@@ -53,6 +53,10 @@ public abstract class LockServerBase extends DataCommon {
         this.getShopLockSystemManager = manager;
     }
 
+    public GetShopLockSystemManager getManager() {
+        return this.getShopLockSystemManager;
+    }
+    
     protected synchronized  void lostConnection() {
         if (hasConnection) {
             connectionDown = new Date();

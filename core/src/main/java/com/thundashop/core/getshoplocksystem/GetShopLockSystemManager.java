@@ -277,7 +277,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     private void rebuildGroupMatrix(LockGroup group) {
         List<LockServer> servers = getLockServers();
-        group.rebuildCodeMatrix(servers);
+        group.rebuildCodeMatrix(servers, getCodeSize());
         saveObject(group);
     }
 
@@ -489,5 +489,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (server != null) {
             server.markCodeAsUpdatedOnLock(lockId, slotId);
         }
+    }
+
+    int getCodeSize() {
+        // Do this better, dont make it hardcoded bu make codesize configurable.
+        if (storeId.equals("7f2c47a4-7ec9-41e2-a070-1e9e8fcf4e38")) {
+            return 4;
+        }
+        
+        return 6;
     }
 }

@@ -45,6 +45,8 @@ public class Lock {
     
     public int maxnumberOfCodes = 20;
     public String name;
+    
+    public int codeSize = 6;
 
     public List<UserSlot> getUserSlots() {
         finalize();
@@ -66,6 +68,7 @@ public class Lock {
                 slot.connectedToServerId = connectedToServerId;
                 slot.connectedToLockId = id;
                 slot.slotId = i;
+                slot.codeSize = codeSize;
                 userSlots.put(slot.slotId, slot);
             } else {
                 userSlots.get(i).connectedToServerId = connectedToServerId;

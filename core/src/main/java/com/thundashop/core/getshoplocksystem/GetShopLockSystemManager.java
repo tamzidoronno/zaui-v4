@@ -283,8 +283,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public String getNameOfGroup(String groupId) {
-        LockGroup group = getGroup(groupId);
-        return group.name;
+        return groups.get(groupId).name;
     }
 
     

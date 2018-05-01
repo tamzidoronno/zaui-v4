@@ -6,6 +6,20 @@
     vertical-align: top;
     
 }
+
+.PmsGroupBookingHeader .searchbrregbutton { color: blue; cursor:pointer; }
+.PmsGroupBookingHeader .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}
+.PmsGroupBookingHeader .searchbrregarea {
+    position: absolute;
+    border: solid 1px;
+    z-index:2;
+    display: inline-block;
+    display:none;
+    padding: 10px;
+    background-color:#fff;
+    border-color: #bbb;
+}
+
 .PmsGroupBookingHeader {
     max-width: 1500px;
     margin: auto;

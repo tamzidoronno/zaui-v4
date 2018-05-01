@@ -15,7 +15,11 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
     public function render() {
         $this->includefile("front");
     }
-
+ 
+    public function searchbrreg() {
+        $company = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['data']['name']);
+        echo json_encode($company);
+    }
     public function setUser($user) {
         $this->user = $user;
     }

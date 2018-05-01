@@ -98,4 +98,7 @@ public interface IGetShop {
     
     @GetShopNotSynchronized
     public void createNewStore(StartData startData);
+    
+    @Administrator
+    public void toggleRemoteEditing();
 }

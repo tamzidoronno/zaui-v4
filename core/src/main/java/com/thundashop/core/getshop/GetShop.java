@@ -32,6 +32,7 @@ import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
@@ -787,5 +788,10 @@ public class GetShop extends ManagerBase implements IGetShop {
         setting.name = key;
         setting.secure = false;
         return setting;
+    }
+
+    @Override
+    public void toggleRemoteEditing() {
+        Runner.AllowedToSaveToRemoteDatabase = !Runner.AllowedToSaveToRemoteDatabase;
     }
 }

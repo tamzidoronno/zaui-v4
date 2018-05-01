@@ -64,5 +64,9 @@ thundashop.Administration = {
     
     toggleSideBarGetShopModules: function() {
         this.toggleSideBar('leftsidebar');
+    },
+    
+    toggleActivationOfRemoteEditing: function() {
+        thundashop.Ajax.simplePost(null, "toggleRemoteEditing", {});
     }
 }

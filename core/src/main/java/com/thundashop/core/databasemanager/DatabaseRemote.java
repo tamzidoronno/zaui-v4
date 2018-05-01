@@ -137,6 +137,15 @@ public class DatabaseRemote extends StoreComponent {
     }
 
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
+        if (!GetShopLogHandler.isDeveloper) {
+            return;
+        }
+        
+        if (!Runner.AllowedToSaveToRemoteDatabase) {
+            System.out.println("WARNING!!!!!!!!!!!!!!!! Data is not stored to remote database because remote activation is not activated");
+            return;
+        }
+        
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
         try {

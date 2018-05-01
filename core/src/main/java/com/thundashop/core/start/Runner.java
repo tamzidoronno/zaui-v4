@@ -25,6 +25,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author k
  */
 public class Runner {
+    public static boolean AllowedToSaveToRemoteDatabase = false;
     public static String OVERALLPASSWORD = UUID.randomUUID().toString();
 
     /**

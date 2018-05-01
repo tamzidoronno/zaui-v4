@@ -1100,5 +1100,9 @@ class ApplicationManager extends FactoryBase {
     public function toggleAccessToModule() {
         $this->getApi()->getUserManager()->toggleModuleForUser($_POST['data']['moduleId'], $_POST['data']['password']);
     }
+    
+    public function toggleRemoteEditing() {
+        $this->getApi()->getGetShop()->toggleRemoteEditing();
+    }
 }
 ?>

@@ -167,13 +167,13 @@ public class DatabaseRemote extends StoreComponent {
     public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
         
         try {
-//            if (GetShopLogHandler.isDeveloper) {
-//                connectLocal();
-//            } else {
+            if (GetShopLogHandler.isDeveloper) {
+                connectLocal();
+            } else {
                 connect();
-//            }
+            }
             
-            DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId + "_" + moduleName);
+            DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
             Stream<DataCommon> retlist = col.find().toArray().stream()
                     .map(o -> morphia.fromDBObject(DataCommon.class, o));
             mongo.close();

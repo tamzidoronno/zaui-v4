@@ -10,6 +10,33 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         return "PmsRestrictions";
     }
 
+    public function closeForPeriode() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $data = new \core_pmsmanager_TimeRepeaterData();
+        $data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
+        $data->firstEvent->start = $start;
+        $data->firstEvent->end = $end;
+        $data->timePeriodeType = 0;
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->closedOfPeriode[] = $data;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
+    public function removeClosedOfUntil() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $newArray = array();
+        foreach($config->closedOfPeriode as $periode) {
+            if($periode->repeaterId == $_POST['data']['id']) {
+                continue;
+            }
+            $newArray[] = $periode;
+        }
+        $config->closedOfPeriode = $newArray;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
     public function createRestriction() {
         $data = new \core_pmsmanager_TimeRepeaterData();
         $data->repeatMonday = $_POST['data']['repeatMonday'] == "true";

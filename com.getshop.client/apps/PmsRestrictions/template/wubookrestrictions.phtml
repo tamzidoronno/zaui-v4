@@ -1,49 +1,73 @@
 <bR>
-<bR>
-<bR>
-<bR>
-<div class='section'>
-    <h2>Closing down OTA's, not bookable trough the channel manager</h2>
-    <div gstype='form' method='addWubookRestriction'>
-        <h3>1. Time periode</h3>
-        <input type='txt' class='startdate gsniceinput1' gsname='start' value='<?php echo date("d.m.Y", time()); ?>'>
-        <input type='txt' class='enddate gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", time()); ?>'>
-        <h3>2. Select rooms to close</h3>
-        <input type='checkbox' class='checkallclosingtypes'> Select all<br>
-        <?php
-        $allRestrictions = $this->getApi()->getWubookManager()->getAllRestriction($this->getSelectedMultilevelDomainName());
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
-        foreach($types as $type) {
-            echo "<input type='checkbox' class='closeforota' gsname='type_".$type->id."'> " . $type->name . "<br>";
-        }
-        ?><bR><br>
-        <input type='button' value='Close selected types for the OTA(s)' gstype="submit" >
-    </div>
-    <?php
-    if($allRestrictions) {
-        echo "<br><br>Closed ota for periode(s):<br>";
-        echo "<table>";
-        foreach($allRestrictions as $res) {
-            echo "<tr>";
-            echo "<td valign='top'><i class='fa fa-trash-o' gstype='clicksubmit' method='removeRestriction' gsname='id' gsvalue='".$res->id."' style='cursor:pointer;'></i></td>";
-            echo "<td valign='top'>" . date("d.m.Y", strtotime($res->start)) . "</td>";
-            echo "<td valign='top'>" . date("d.m.Y", strtotime($res->end)) . "</td>";
-            echo "<td valign='top'>";
-            $names = array();
-            if(is_array($res->types)) {
-                foreach($res->types as $type) {
-                    $names[] = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $type)->name;
+<table width="100%">
+    <tr>
+        <td valign="top" width="50%">
+            <div class='section'>
+                <h2>Closing down OTA's, not bookable trough the channel manager</h2>
+                <div gstype='form' method='addWubookRestriction'>
+                    <h3>1. Time periode</h3>
+                    <input type='txt' class='startdate gsniceinput1' gsname='start' value='<?php echo date("d.m.Y", time()); ?>'>
+                    <input type='txt' class='enddate gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", time()); ?>'>
+                    <h3>2. Select rooms to close</h3>
+                    <input type='checkbox' class='checkallclosingtypes'> Select all<br>
+                    <?php
+                    $allRestrictions = $this->getApi()->getWubookManager()->getAllRestriction($this->getSelectedMultilevelDomainName());
+                    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+                    foreach($types as $type) {
+                        echo "<input type='checkbox' class='closeforota' gsname='type_".$type->id."'> " . $type->name . "<br>";
+                    }
+                    ?><bR><br>
+                    <input type='button' value='Close selected types for the OTA(s)' gstype="submit" >
+                </div>
+                <?php
+                if($allRestrictions) {
+                    echo "<br><br>Closed ota for periode(s):<br>";
+                    echo "<table>";
+                    foreach($allRestrictions as $res) {
+                        echo "<tr>";
+                        echo "<td valign='top'><i class='fa fa-trash-o' gstype='clicksubmit' method='removeRestriction' gsname='id' gsvalue='".$res->id."' style='cursor:pointer;'></i></td>";
+                        echo "<td valign='top'>" . date("d.m.Y", strtotime($res->start)) . "</td>";
+                        echo "<td valign='top'>" . date("d.m.Y", strtotime($res->end)) . "</td>";
+                        echo "<td valign='top'>";
+                        $names = array();
+                        if(is_array($res->types)) {
+                            foreach($res->types as $type) {
+                                $names[] = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $type)->name;
+                            }
+                            echo join(", ", $names);
+                        }
+                        echo "</td>";
+                        echo "</tr>";
+                    }
+                    echo "</table>";
                 }
-                echo join(", ", $names);
-            }
-            echo "</td>";
-            echo "</tr>";
-        }
-        echo "</table>";
-    }
-    ?>
-</div>
-
+                ?>
+            </div>
+        </td>
+        <td valign="top" width="50%">
+            <div class='section'>
+                <h2>Closing down for a specific periode</h2>
+                <div gstype='form' method='closeForPeriode'>
+                    <h3>1. Time periode</h3>
+                    <input type='txt' class='startdate gsniceinput1' gsname='start' value='<?php echo date("d.m.Y", time()); ?>'>
+                    <input type='txt' class='enddate gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", time()); ?>'>
+                    <span class="shop_button" gstype="submit">Close hotel for periode</span>
+                </div>
+                
+                <?php
+                $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+                foreach($config->closedOfPeriode as $row) {
+                    echo "<div style='padding-left:5px;'>";
+                    echo "<i class='fa fa-trash-o' gstype='clicksubmit' style='cursor:pointer;' method='removeClosedOfUntil' gsname='id' gsvalue='".$row->repeaterId."'></i> ";
+                    echo date("d.m.Y", strtotime($row->firstEvent->start)) . " - ";
+                    echo date("d.m.Y", strtotime($row->firstEvent->end));
+                    echo "</div>";
+                }
+                ?>
+            </div>
+        </td>
+    </tr>
+</table>
 
 <script>
     $('.startdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });

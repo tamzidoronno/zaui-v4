@@ -7,9 +7,17 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.manipulateroomoptions .shop_button', app.PmsGroupBookingHeader.doAction);
         $(document).on('click', '.PmsGroupBookingHeader .updateguestinformation', app.PmsGroupBookingHeader.updateGuestInformation);
         $(document).on('click', '.PmsGroupBookingHeader .startpaymentprocessallrooms', app.PmsGroupBookingHeader.startPaymentProcess);
+        $(document).on('click', '.PmsGroupBookingHeader .setsameasbooker', app.PmsGroupBookingHeader.setSameAsBooker);
         $(document).on('change', '.PmsGroupBookingHeader [gsname="type"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
         $(document).on('change', '.PmsGroupBookingHeader [gsname="guestInfoOnRoom"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
         $(document).on('keyup', '.PmsGroupBookingHeader [gsname="count"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
+    },
+    setSameAsBooker : function() {
+        var row = $(this).closest('.roomrow');
+        row.find('[gsname="name"]').val($('.edit_details_directprint [gsname="fullName"]').val());
+        row.find('[gsname="email"]').val($('.edit_details_directprint [gsname="emailAddress"]').val());
+        row.find('[gsname="prefix"]').val($('.edit_details_directprint [gsname="prefix"]').val());
+        row.find('[gsname="phone"]').val($('.edit_details_directprint [gsname="cellPhone"]').val());
     },
     startPaymentProcess : function() {
         var event = thundashop.Ajax.createEvent('','startPaymentProcessAllRooms', $(this), {});

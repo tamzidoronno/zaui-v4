@@ -45,11 +45,11 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); /* IE6-9 */
     cursor:pointer;
 }
-
+.PmsGroupBookingHeader .show_change_user { float:right; background-color: rgba(133,178,211,1); border-top: solid 1px; }
 .PmsGroupBookingHeader .top_box:hover {
     color:#5c2c7e;
 }
-
+.PmsGroupBookingHeader .setsameasbooker { color: blue; cursor:pointer; }
 .PmsGroupBookingHeader .top_box.selected {
     color:#3d463b;
 }

@@ -158,11 +158,11 @@ public class DatabaseRemote extends StoreComponent {
     public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
         
         try {
-            if (GetShopLogHandler.isDeveloper) {
-                connectLocal();
-            } else {
+//            if (GetShopLogHandler.isDeveloper) {
+//                connectLocal();
+//            } else {
                 connect();
-            }
+//            }
             
             DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId + "_" + moduleName);
             Stream<DataCommon> retlist = col.find().toArray().stream()

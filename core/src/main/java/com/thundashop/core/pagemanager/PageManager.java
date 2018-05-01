@@ -107,7 +107,6 @@ public class PageManager extends ManagerBase implements IPageManager {
                 savedCommonPageData = (SavedCommonPageData) obj;
             }
         }
-        createDefaultPages();
         loadCommonData();
     }
 
@@ -139,7 +138,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public Page getPage(String id) throws ErrorException {
-        createDefaultPages();
         Page page = getPagesForCurrentModule().get(id);
 
         gsTiming("After page default page added");
@@ -284,8 +282,11 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addExistingApplicationToPageArea(String pageId, String appId, String cellId) throws ErrorException {
+        ApplicationInstance instance = storeApplicationPool.getApplicationInstance(appId);
+        Page page = getPage(pageId);
+        page.addApplication(cellId, instance.id);
+        savePage(page);
     }
 
     @Override
@@ -487,20 +488,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         page.getCell(cellId).floatingData = data;
         savePage(page);
-    }
-
-    private void createDefaultPages() {
-        createDefaultPage("home");
-        createDefaultPage("productsearch");
-        createDefaultPage("login");
-        createDefaultPage("cart");
-    }
-
-    private void createDefaultPage(String pageId) {
-        Page page = getPagesForCurrentModule().get(pageId);
-        if (page == null) {
-            createPage(pageId);
-        }
     }
 
     @Override

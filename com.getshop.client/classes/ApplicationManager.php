@@ -775,6 +775,11 @@ class ApplicationManager extends FactoryBase {
 
         die($appConfiguration->id);
     }
+    
+    public function addExistingApplication() {
+        $pageId = $this->getPage()->getId();
+        $this->getApi()->getPageManager()->addExistingApplicationToPageArea($pageId, $_POST['data']['appId'], $_POST['data']['cellId']);
+    }
 
     public function displayIntroductionMovie() {
         echo '<iframe border="0" frameborder="0" height="567" scrolling="no" src="http://www.getshop.com/flowplayer/example/index.html" width="790"></iframe>';

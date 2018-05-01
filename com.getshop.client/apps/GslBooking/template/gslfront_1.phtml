@@ -169,16 +169,6 @@
             <div class="overview_room_info">
                 <h4 style="border-bottom: 1px solid #fff;text-align: center;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                 <div class='yourstaysummary'></div>
-                <div class="overview_confirmation">
-                    <div class="gsl_button return" onclick="getshop_showAddonsPage()"><i class="fa fa-arrow-left"> </i></div>
-                    <div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
-                    <div class="gsl_button continue paylater_button"><span gstype='bookingtranslation' gstranslationfield='paylater'></span></div>
-                    
-                    <div class="paymentmethodselection">
-                        <select id='paymentmethodselection'>
-                        </select>
-                    </div>
-                </div>
             </div>
             <div class="overview_article">
                 <div class="overview_loggedon">
@@ -284,6 +274,19 @@
                 <div class='errormessage'><span gstype='bookingtranslation' gstranslationfield='invalidguestinformation'></span></div>
                 <div class='agreetotermserrormessage'><span gstype='bookingtranslation' gstranslationfield='agreetotermserrormessage'></span></div>
                 <div style="clear: both;"></div>
+
+                <div class="overview_room_info">
+                    <div class="overview_confirmation">
+                        <div class="gsl_button return" onclick="getshop_showAddonsPage()"><i class="fa fa-arrow-left"> </i></div>
+                        <div class="gsl_button continue paylater_button"><span gstype='bookingtranslation' gstranslationfield='paylater'></span></div>
+                        <div class="paymentmethodselection">
+                            <select id='paymentmethodselection'>
+                            </select>
+                        </div>
+                        <div class="gsl_button continue go_to_payment_button"><span gstype='bookingtranslation' gstranslationfield='goToPayment'></span></div>
+                    </div>
+                </div>
+                <div style='clear:both;'></div>
             </div>
         </div>
     </div>
@@ -335,10 +338,6 @@
             $.getScript( "{getshop_endpoint}/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
                 getshop_setDatePicker();
                 getshop_setBookingTranslation();
-                getshop_goToOverviewPage();getshop_showOverviewPage();
-                setTimeout(function() {
-                    getshop_showOverviewPage();
-                }, "1000");
             });
         });
        });

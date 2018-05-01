@@ -75,6 +75,12 @@ public class Application extends DataCommon implements Comparator<Application> {
         }
     }
     
+
+    public String getNameSpace() {
+        return "ns_" + id.replace("-", "_") + "\\" + appName;
+    }
+    
+    
     public Application cloneMe() {
         // Dont use GSON cloning, gson clone is a bit slow and this needs to be fast!
         Application applicationClone = new Application();

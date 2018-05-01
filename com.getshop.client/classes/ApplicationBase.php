@@ -238,6 +238,9 @@ class ApplicationBase extends FactoryBase {
         $fromId = "";
         if ($fromApplication) {
             $fromId = isset($fromApplication->configuration) ? $fromApplication->configuration->id : "";
+            if(!$fromId) {
+                $fromId = get_class($fromApplication);
+            }
             $callbackInstance = " fromapplication='$fromId' ";
         }
         
@@ -738,6 +741,10 @@ class ApplicationBase extends FactoryBase {
     public function getCallBackApp() {
         if (!isset($_POST['core']['fromappid'])) {
             return null;
+        }
+        if(stristr($_POST['core']['fromappid'], "\\")) {
+            $callbackApp = new $_POST['core']['fromappid']();
+            return $callbackApp;
         }
         
         $callbackApp = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($_POST['core']['fromappid']);

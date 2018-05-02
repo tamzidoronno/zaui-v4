@@ -106,8 +106,8 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
             if (diff <= 0) {
                 date.add(1, 'days');
                 $('#enddate').val(date.format('DD.MM.YYYY'));
-                app.PmsNewBooking.reloadAvailability();
             }
+            app.PmsNewBooking.reloadAvailability();
         }
     });
 

@@ -11,7 +11,7 @@ app.PmsGroupBookingHeader = {
         $(document).on('change', '.PmsGroupBookingHeader [gsname="type"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
         $(document).on('change', '.PmsGroupBookingHeader [gsname="guestInfoOnRoom"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
         $(document).on('keyup', '.PmsGroupBookingHeader [gsname="count"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
-    },
+    }, 
     setSameAsBooker : function() {
         var row = $(this).closest('.roomrow');
         row.find('[gsname="name"]').val($('.edit_details_directprint [gsname="fullName"]').val());

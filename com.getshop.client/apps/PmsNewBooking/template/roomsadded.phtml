@@ -66,9 +66,18 @@ if($found) { ?>
             </div>
             <span class='shop_button newcustomertypebutton' type='nextstepprivate'>Private person</span>
             <span class='shop_button newcustomertypebutton' type='nextstepcompany'>Company / orginasation</span>
+            <span class='shop_button newcustomertypebutton' type='nextstepexisting'>Existing customer</span>
             <span class='shop_button newcustomertypebutton' gstype='clicksubmit' method='completequickreservation'>Quick reservation</span>
         </div>
 
+        <div class='nextstep nextstepexisting' gstype='form' method='searchExistingCustomer'>
+            <br>
+            Search for an existing customer:<br>
+            <input type='txt' class='gsniceinput1' gstype='submitenter' gs_callback='app.PmsNewBooking.existingSearchResult' gsname='searchword'>
+            <span class='shop_button searchexistingcustomer' gstype='submit' gs_callback='app.PmsNewBooking.existingSearchResult'>Search</span>
+            <div class='existingsearchcustomerresult'></div>
+        </div>
+            
         <div class='nextstep nextstepcompany' gstype='form' method='createNewCompanyCustomer'>
             <input type='hidden' gsname='type' value='company'>
             <div>

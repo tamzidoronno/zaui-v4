@@ -23,7 +23,6 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -61,8 +60,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private long incrementingOrderId = 100000;
     
-    public HashMap<String, OrderLight> orders = new HashMap();
-    
+    public OrderMap orders; 
+   
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
@@ -128,9 +127,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private PaymentManager paymentManager;
-    
-    @Autowired
-    private OrderDatabase orderDatabase;
 
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -205,14 +201,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        orders = new OrderMap(database, storeId, this.getClass());
+        
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
-            }
-            
-            if (dataFromDatabase instanceof OrderLight) {
-                OrderLight order = (OrderLight)dataFromDatabase;
-                orders.put(order.id, order);
             }
             
             if (dataFromDatabase instanceof Order) {
@@ -231,7 +224,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     continue;
                 }
                 order.isMatrixAndItemsValid();
-                
+                orders.put(order.id, order);
             }
         }
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
@@ -277,7 +270,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         saveObject(order);
         boolean newOrder = !orders.containsKey(order.id);
-//        orders.put(order.id, order);
+        orders.put(order.id, order);
         
         if (newOrder) {
             ordersCreated.add(order.id);
@@ -289,9 +282,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void markAsPaid(String orderId, Date date) {
-        long time = System.currentTimeMillis();
-        Order order = orderDatabase.getOrder(orderId);
-        System.out.println("Time used: " + (System.currentTimeMillis() - time));
+        Order order = orders.get(orderId);
         markAsPaidInternal(order, date);
         saveOrder(order);
     }
@@ -557,20 +548,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<Order> getOrders(ArrayList<String> orderIds, Integer page, Integer pageSize) throws ErrorException {
         User user = getSession().currentUser;
         List<Order> result = new ArrayList();
-        for (OrderLight order : orders.values()) {
+        for (Order order : orders.values()) {
             if (orderIds != null && orderIds.size() > 0) {
-                if (!orderIds.contains(order.orderId)) {
+                if (!orderIds.contains(order.id)) {
                     continue;
                 }
             }
             if (user == null) {
                 if (order.session != null && order.session.equals(getSession().id)) {
-                    result.add(orderDatabase.getOrder(order.orderId));
+                    result.add(order);
                 }
             } else if (user.isAdministrator() || user.isEditor()) {
-                result.add(orderDatabase.getOrder(order.orderId));
+                result.add(order);
             } else if (order.userId != null && order.userId.equals(user.id)) {
-                result.add(orderDatabase.getOrder(order.orderId));
+                result.add(order);
             }
         }
         
@@ -627,7 +618,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
         if (password.equals("1Fuck1nG_H4T3_4ppl3!!TheySuckBigTime")) {
-            Order order = orderDatabase.getOrder(orderId);
+            Order order = orders.get(orderId);
             
             if (order.cart.getTotal(false) == price) {
                 changeOrderStatus(order.id, status);
@@ -655,7 +646,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         User user = getSession().currentUser;
         boolean foundOrder = false;
         long foundOrderIncId = -1;
-        
         for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
             String incOrderId = order.incrementOrderId + "";
             if (!order.id.equals(orderId) && !incOrderId.equals(orderId)) {
@@ -692,9 +682,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     private Order getByTransactionId(String transactionId) {
-        for (OrderLight order : orders.values()) {
+        for (Order order : orders.values()) {
             if (order.paymentTransactionId.equals(transactionId)) {
-                return orderDatabase.getOrder(order.orderId);
+                return order;
             }
         }
         
@@ -703,7 +693,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void changeOrderStatus(String id, int status) throws ErrorException {
-        Order order = orderDatabase.getOrder(id);
+        Order order = orders.get(id);
         validateOrder(order);
         if (order == null) {
             order = getByTransactionId(id);
@@ -770,9 +760,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public List<CartTax> getTaxes(Order order) throws ErrorException {
-        if(order == null || order.cart == null) {
-            return new ArrayList();
-        }
         return order.cart.getCartTaxes();
     }
     
@@ -860,11 +847,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order getOrderByReference(String referenceId) throws ErrorException {
-        for (OrderLight order : orders.values()) {
+        for (Order order : orders.values()) {
             if (order.reference.equals(referenceId)) {
-                Order retOrder = orderDatabase.getOrder(order.orderId);
-                retOrder.doFinalize();
-                return retOrder; 
+                order.doFinalize();
+                return order; 
             }
         }
         return null;
@@ -883,9 +869,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         List<Order> returnOrders = new ArrayList();
-        for (OrderLight order : orders.values()) {
+        for (Order order : orders.values()) {
             if ((order.userId != null && order.userId.equals(userId))) {
-                returnOrders.add(orderDatabase.getOrder(order.orderId));
+                returnOrders.add(order);
             }
         }
         sortOrderList(returnOrders);
@@ -920,7 +906,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
             // add orders with name
             orders.values().stream()
-                    .map(o -> orderDatabase.getOrder(o.orderId))
                     .filter(o -> o.cart != null)
                     .filter(o -> o.cart.address != null)
                     .filter(o -> o.cart.address.fullName != null)
@@ -930,7 +915,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (isInteger(searchLower)) {
                 // Add orders that has the integer
                 orders.values().stream()
-                        .map(o -> orderDatabase.getOrder(o.orderId))
                         .filter(o -> o.incrementOrderId == Integer.valueOf(searchLower))
                         .forEach(o -> orderIds.add(o.id));
             }
@@ -1054,6 +1038,60 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return result;
     }    
 
+    private List<Statistic> createStatistic(String productId) {
+        List<Statistic> statistics = new ArrayList();
+        
+        int yearsBack = 3;
+        
+        int j = 0;
+        int month = 0;
+        while (month < 12 && j < yearsBack) {
+            month++;
+            
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.YEAR, (j*-1));
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.MONTH, month);
+            Date startTime = calendar.getTime();
+            
+            calendar.set(Calendar.MONTH, (month+1));
+            Date endTime = calendar.getTime();
+            
+            Calendar yearCalendar = Calendar.getInstance();
+            yearCalendar.setTime(new Date());
+            yearCalendar.add(Calendar.YEAR, j*-1);
+            int year = yearCalendar.get(Calendar.YEAR);
+            
+            int count = 0;
+            for (Order order : orders.values()) {
+                if (order.cart != null && order.cart.getItems() != null) {
+                    for (CartItem item : order.cart.getItems()) {
+                        if (item.getProduct().id.equals(productId) && order.createdDate.after(startTime) && order.createdDate.before(endTime)) {
+                            count += item.getCount();
+                        }
+                    }
+                }
+            }
+            
+            Statistic statistic = new Statistic();
+            
+            statistic.count = count;
+            statistic.id = productId;
+            statistic.month = month;
+            statistic.year = year;
+            
+            statistics.add(statistic);
+            
+            if (month == 12 && j < yearsBack) {
+                j++;
+                month = 0;
+            }
+        }
+        
+        return statistics;
+    }
+
     @Override
     public List<Statistic> getSalesNumber(int year) {
         int i = 0;
@@ -1068,15 +1106,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             Date start = cal.getTime();
             cal.set(Calendar.MONTH, (i + 1));
             Date end = cal.getTime();
-            for (OrderLight order : orders.values()) {
+            for (Order order : orders.values()) {
                 if (!order.useForStatistic()) {
                     continue;
                 }
                 if (order.rowCreatedDate.after(start) && order.rowCreatedDate.before(end)) {
-                    Order realOrder = orderDatabase.getOrder(order.orderId);
-                    if (realOrder != null) {
-                        weekData += cartManager.calculateTotalCost(realOrder.cart);
-                    }
+                    weekData += cartManager.calculateTotalCost(order.cart);
                 }
             }
             i++;
@@ -1091,8 +1126,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     public void clear() {
-        for (OrderLight order : orders.values()) {
-            deleteObject(orderDatabase.getOrder(order.id));
+        for (Order order : orders.values()) {
+            deleteObject(order);
         }
         
         incrementingOrderId = 100000;
@@ -1139,17 +1174,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public List<Order> getAllOrdersOnProduct(String productId) throws ErrorException {
         List<Order> result = new ArrayList();
-        for(OrderLight order : orders.values()) {
+        for(Order order : orders.values()) {
             boolean found = false;
-            Order realOrder = orderDatabase.getOrder(order.orderId);
-            if (realOrder != null) {
-                continue;
-            }
-            Cart cart = realOrder.cart;
-            if (cart == null)
-                continue;
-            
-            for(CartItem item : cart.getItems()) {
+            for(CartItem item : order.cart.getItems()) {
                 if(item != null && item.getProduct() != null) {
                     if(item.getProduct().id.equals(productId)) {
                         found = true;
@@ -1157,7 +1184,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
             }
             if(found) {
-                result.add(orderDatabase.getOrder(order.orderId));
+                result.add(order);
             }
         }
         return result;
@@ -1165,7 +1192,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public Order getOrderSecure(String orderId) throws ErrorException {
-        Order order = orderDatabase.getOrder(orderId);
+        Order order = orders.get(orderId);
         if(order != null) {
             order.doFinalize();
         }
@@ -1176,9 +1203,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public List<Order> getOrdersToCapture() throws ErrorException {
         List<Order> ordersToReturn = new ArrayList();
-        for(OrderLight order : orders.values()) {
+        for(Order order :orders.values()) {
             if(order.status == Order.Status.PAYMENT_COMPLETED && !order.captured && !order.testOrder) {
-                ordersToReturn.add(orderDatabase.getOrder(order.orderId));
+                ordersToReturn.add(order);
             }
         }
         finalize(ordersToReturn);
@@ -1186,7 +1213,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void validatePaymentStatus(Order order) {
-        Order inMemoryOrder = orderDatabase.getOrder(order.id);
+        Order inMemoryOrder = orders.get(order.id);
         
         if (inMemoryOrder == null) {
             return;
@@ -1251,13 +1278,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             Integer year = cal.get(Calendar.YEAR);
             Integer day = cal.get(Calendar.DAY_OF_YEAR);
             SalesStats salestat = new SalesStats();
-            for (OrderLight orderLight : orders.values()) {
-                if (!orderLight.useForStatistic()) {
+            for (Order order : orders.values()) {
+                if (!order.useForStatistic()) {
                     continue;
                 }
 
                 Calendar cal2 = Calendar.getInstance();
-                cal2.setTime(orderLight.createdDate);
+                cal2.setTime(order.createdDate);
                 if (cal2.get(Calendar.YEAR) != year) {
                     continue;
                 }
@@ -1265,10 +1292,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     continue;
                 }
 
-                Order order = orderDatabase.getOrder(orderLight.orderId);
                 if(type != null) {
-                    Payment payment = order.payment;
-                    if(payment != null && payment.paymentType != null && !payment.paymentType.equals(type)) {
+                    if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.equals(type)) {
                         continue;
                     }
                 }
@@ -1301,12 +1326,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         endDate.set(Calendar.HOUR_OF_DAY, 23);
         endDate.set(Calendar.MINUTE, 59);
         
-        for(OrderLight order : orders.values()) {
+        for(Order order : orders.values()) {
             if(!order.useForStatistic() && statistics) {
                 continue;
             }
             if(order.createdDate.after(startDate.getTime()) && order.createdDate.before(endDate.getTime())) {
-                orderresult.add(orderDatabase.getOrder(order.orderId));
+                orderresult.add(order);
             }
         }
         finalize(orderresult);
@@ -1334,8 +1359,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void checkForOrdersToAutoPay(int daysToTryAfterOrderHasStarted) throws ErrorException {
-        for(OrderLight orderLight : orders.values()) {
-            Order order = orderDatabase.getOrder(orderLight.orderId);
+        for(Order order : orders.values()) {
             if(!orderNeedAutoPay(order, daysToTryAfterOrderHasStarted)) {
                 continue;
             }
@@ -1346,7 +1370,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     expired = true;
                     continue;
                 }
-                
                 expired = false;
                 order.payment.transactionLog.put(System.currentTimeMillis(), "trying autopay for order: " + order.incrementOrderId);
                 
@@ -1457,24 +1480,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public FilteredData getOrdersFiltered(FilterOptions filterOptions) {
-        List<OrderLight> allOrders = orders.values().stream()
+        List<Order> allOrders = orders.values().stream()
                 .filter(filterOrdersByDate(filterOptions))
                 .filter(filterOrdersBySearchWord(filterOptions))
                 .filter(filterOrdersByStatus(filterOptions))
                 .filter(filterByOrderIdsInExtra(filterOptions))
                 .collect(Collectors.toList());
         
-        List<Order> newOrderList = allOrders.stream()
-                .map(o -> orderDatabase.getOrder(o.orderId))
-                .collect(Collectors.toList());
-        
         if(filterOptions.extra.containsKey("paymenttype")) {
             String type = filterOptions.extra.get("paymenttype");
-            
+            List<Order> newOrderList = new ArrayList();
             if(type != null) {
                 type = type.replace("-", "_");
-                for(OrderLight orderLight : allOrders) {
-                    Order order = orderDatabase.getOrder(orderLight.orderId);
+                for(Order order : allOrders) {
                     if(order.payment != null && order.payment.paymentType != null) {
                         if(order.payment.paymentType.contains(type)) {
                             newOrderList.add(order);
@@ -1482,14 +1500,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     }
                 }
             }
+            allOrders = newOrderList;
         }
         
-        sortOrderList(newOrderList);
-        finalize(newOrderList);
-        return pageIt(newOrderList, filterOptions);
+        sortOrderList(allOrders);
+        finalize(allOrders);
+        return pageIt(allOrders, filterOptions);
     }
 
-    private Predicate<? super OrderLight> filterOrdersByDate(FilterOptions filterOptions) {
+    private Predicate<? super Order> filterOrdersByDate(FilterOptions filterOptions) {
         if (filterOptions.startDate == null || filterOptions.endDate == null) {
             return order -> order != null;
         }
@@ -1498,11 +1517,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
 
-    private Predicate<? super OrderLight> filterOrdersBySearchWord(FilterOptions filterOptions) {
-        return order -> orderDatabase.getOrder(order.orderId).matchOnString(filterOptions.searchWord);
+    private Predicate<? super Order> filterOrdersBySearchWord(FilterOptions filterOptions) {
+        return order -> order.matchOnString(filterOptions.searchWord);
     }
 
-    private Predicate<? super OrderLight> filterOrdersByStatus(FilterOptions filterOptions) {
+    private Predicate<? super Order> filterOrdersByStatus(FilterOptions filterOptions) {
         if (!filterOptions.extra.containsKey("orderstatus")) {
             return o -> o != null;
         }
@@ -1677,14 +1696,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         grafanaManager.addPoint("webdata", "ordercreated", toAdd);
     }
 
+    @Override
+    public void setExternalRefOnCartItem(String cartItem, String externalId) {
+        for(Order order : orders.values()) {
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getCartItemId().equals(cartItem)) {
+                    item.getProduct().externalReferenceId = externalId;
+                    saveOrder(order);
+                    break;
+                }
+            }
+        }
+    }
 
     @Override
     public List<CartItemDates> getItemDates(Date start, Date end) {
         List<CartItemDates> toreturn = new ArrayList();
         List<String> ordersAdded = new ArrayList();
-        for(OrderLight orderLight : orders.values()) {
-            Order order = orderDatabase.getOrder(orderLight.id);
-            
+        for(Order order : orders.values()) {
             if(order.cart == null) {
                 continue;
             }
@@ -1765,7 +1794,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(!password.equals("fdsafnbbo45453gbsdsdgfHTRYTnvnvvqerqw98ngvdjsgndfl8345()")) {
             return;
         }
-        Order object = orderDatabase.getOrder(orderId);
+        Order object = orders.get(orderId);
         forceDeleteOrder(object);
     }
 
@@ -1790,7 +1819,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<Order> getOrdersPaid(String paymentId, String userId, Date from, Date to) {
         List<Order> retOrderStream = orders.values()
                 .stream()
-                .map(o -> orderDatabase.getOrder(o.orderId))
                 .filter(order -> order.paymentDate != null && order.paymentDateWithin(from, to))
                 .filter(order -> userId.equals("") || order.markedAsPaidByUserId.equals(userId))
                 .filter(order -> paymentId.equals("") || order.payment.paymentType.equals(paymentId))
@@ -1834,10 +1862,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private List<Order> getAllOrderIncludedVirtualNonFinalized() {
-        List<Order> retval = orders.values().stream()
-                .map(o -> orderDatabase.getOrder(o.orderId))
-                .collect(Collectors.toList());
-        
+        List<Order> retval = new ArrayList();
+        retval.addAll(new ArrayList(orders.values()));
         for(VirtualOrder vord : virtualOrders.values()) {
             retval.add(vord.order);
         }
@@ -1917,7 +1943,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public List<Order> getAllUnpaid(String paymentMethod) {
         List<Order> retOrders = orders.values().stream()
-                .map(o -> orderDatabase.getOrder(o.orderId))
                 .filter(order -> !order.isCreditNote)
                 .filter(order -> order.payment != null && order.payment.paymentType.equals(paymentMethod))
                 .filter(order -> order.status != 7)
@@ -1936,11 +1961,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             .forEach(orderToResetId -> {
                 Order orderToReset = getOrder(orderToResetId);
                 for (String credittedOrderId : orderToReset.creditOrderId) {
-                     OrderLight orderToDelete = orders.remove(credittedOrderId);
-                     if (orderToDelete != null) {
-                        deleteObject(orderDatabase.getOrder(orderToDelete.orderId));
-                     }
-                     
+                     Order orderToDelete = orders.remove(credittedOrderId);
+                     deleteObject(orderToDelete);
                 }
                 orderToReset.creditOrderId = new ArrayList();
                 unMarkPaidOrder(orderToReset);
@@ -2045,12 +2067,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public List<String> getPaymentMethodsThatHasOrders() {
         HashMap<String, Integer> maps = new HashMap();
-        for(OrderLight orderLight : orders.values()) {
-            Order order = orderDatabase.getOrder(orderLight.orderId);
-            if(order.payment != null && order.payment.paymentType != null) {
+        for(Order order : orders.values()) {
+           if(order.payment != null && order.payment.paymentType != null) {
                String paymentId = order.payment.getPaymentTypeId();
                maps.put(paymentId, 1);
-            }
+           }
         }
         return new ArrayList(maps.keySet());
     }
@@ -2060,8 +2081,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, -30);
         Date past = cal.getTime();
-        for(OrderLight orderLight : orders.values()) {
-            Order order = orderDatabase.getOrder(orderLight.orderId);
+        for(Order order : orders.values()) {
             if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null && !order.warnedNotAbleToCapture && order.incrementOrderId > 0) {
                 if(past.after(order.needCollectingDate)) {
                     messageManager.sendMessageToStoreOwner("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, "Payment warning");
@@ -2077,7 +2097,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> retOrders = orders.values()
                 .stream()
-                .map(o -> orderDatabase.getOrder(o.orderId))
                 .filter(order -> order.transferredToAccountingSystem == null || !order.transferredToAccountingSystem)
                 .filter(order -> order.transferToAccountingDate != null)
                 .filter(order -> !order.isNullOrder())
@@ -2094,7 +2113,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void updateTransferToAccountingDate() {
         orders.values()
                 .stream()
-                .map(o -> orderDatabase.getOrder(o.orderId))
                 .filter(order -> !order.transferredToAccountingSystem)
                 .forEach(order -> {
                     boolean orderChanged = paymentManager.handleOrder(order);
@@ -2107,8 +2125,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     private void checkChargeAfterDate() {
-        for(OrderLight orderLight : this.orders.values()) {
-            Order ord = orderDatabase.getOrder(orderLight.orderId);
+        for(Order ord : this.orders.values()) {
             if(ord.chargeAfterDate != null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(ord.rowCreatedDate);
@@ -2134,7 +2151,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
 
-    private Predicate<? super OrderLight> filterByOrderIdsInExtra(FilterOptions filterOptions) {
+    private Predicate<? super Order> filterByOrderIdsInExtra(FilterOptions filterOptions) {
         if (filterOptions.extra.get("orderids") == null) {
             return order -> order != null;
         }
@@ -2144,13 +2161,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (orderIds.isEmpty())
             return order -> order != null;
         
-        return order -> orderIds.contains(order.orderId);
+        return order -> orderIds.contains(order.id);
     }
 
     public List<Order> getAllOrders() {
         List<Order> orderList = new ArrayList();
-        for(OrderLight orderLight : orders.values()) {
-            Order order = orderDatabase.getOrder(orderLight.orderId);
+        for(Order order : orders.values()) {
             orderList.add(order);
         }
         return orderList;
@@ -2185,12 +2201,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public Double getTotalAmountForUser(String id) {
         double total = 0.0;
-        for(OrderLight ord : orders.values()) {
+        for(Order ord : orders.values()) {
             if(ord == null || ord.userId == null) {
                 continue;
             }
             if(ord.userId.equals(id)) {
-                total += getTotalAmountExTaxes(orderDatabase.getOrder(ord.orderId));
+                total += getTotalAmountExTaxes(ord);
             }
         }
         return total;
@@ -2201,21 +2217,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
         
         if (data instanceof Order) {
-            OrderLight lightOrder = getLightOrder(data.id);
-            lightOrder = orderDatabase.orderSaved(((Order)data), lightOrder);
-            orders.put(lightOrder.id, lightOrder);
+            orders.save((Order)data);
         }
     }
-
-    private OrderLight getLightOrder(String orderId) {
-        for (OrderLight light : orders.values()) {
-            if (light.orderId.equals(orderId)) {
-                return light;
-            }
-        }
-        
-        return null;
-    }
-    
-    
 }

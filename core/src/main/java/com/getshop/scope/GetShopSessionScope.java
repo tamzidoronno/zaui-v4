@@ -31,6 +31,11 @@ public class GetShopSessionScope implements Scope {
     private Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
     private Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
 
+    public String getCurrentMultilevelName() {
+        long threadId = Thread.currentThread().getId();
+        return threadSessionBeanNames.get(threadId);
+    }
+    
     public <T> T getNamedSessionBean(String multiLevelName, Class className) {
         if (multiLevelName == null || multiLevelName.isEmpty()) {
             throw new RuntimeException("Come on!! name your multilevel beans properly!!!");

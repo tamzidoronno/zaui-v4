@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.ordermanager.data;
-
-import com.thundashop.core.common.LightWeight;
+package com.thundashop.core.common;
 
 /**
  *
  * @author ktonder
  */
-public class OrderLight extends LightWeight {
-    
+public class SmartDataMapData extends DataCommon {
+    public int currentVersion = 0;
 }

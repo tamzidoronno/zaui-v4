@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.ordermanager.data;
+package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.LightWeight;
 
@@ -11,6 +11,6 @@ import com.thundashop.core.common.LightWeight;
  *
  * @author ktonder
  */
-public class OrderLight extends LightWeight {
-    
+public class PmsBookingLight extends LightWeight {
+
 }

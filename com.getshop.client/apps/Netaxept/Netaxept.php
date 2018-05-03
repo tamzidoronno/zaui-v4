@@ -175,6 +175,8 @@ class Netaxept extends \PaymentApplication implements \Application {
             $this->order->captured = true;
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         }
+        
+        return $this->order->captured;
     }
 
     public function paymentCallback() {
@@ -203,7 +205,9 @@ class Netaxept extends \PaymentApplication implements \Application {
                 }
             }
             if (isset($authing) && $authing->ResponseCode == "OK") {
-                $this->saveOrderStatus(7);
+                if($this->collectOrder()) {
+                    $this->saveOrderStatus(7);
+                }
                 if ($okpage) {
                     header('Location: ' . $okpage);
                     $found = true;

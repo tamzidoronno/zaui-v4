@@ -1,0 +1,94 @@
+<?php
+/* @var $this \ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
+$filter = $this->getSelectedFilter();
+$filter->startDate = $this->convertToJavaDate(strtotime($filter->start));
+$filter->endDate = $this->convertToJavaDate(strtotime($filter->end));
+$types = $this->getTypes();
+$items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName()));
+$stats = $this->getApi()->getPmsManager()->getCleaningStatistics($this->getSelectedMultilevelDomainName(), $filter->startDate, $filter->endDate);
+$entries = $this->getApi()->getPmsReportManager()->getCleaningLog($this->getSelectedMultilevelDomainName(), $filter->startDate, $filter->endDate);
+?>
+<div style='max-width: 1500px; margin: auto;'>
+    <h1><?php echo $this->__w("Cleaning count"); ?></h1>
+    <table cellspacing='0' cellpadding='0' width='100%'>
+        <tr>
+            <th>Type</th>
+            <th><?php echo $this->__w("Mo"); ?></th>
+            <th><?php echo $this->__w("Tu"); ?></th>
+            <th><?php echo $this->__w("We"); ?></th>
+            <th><?php echo $this->__w("Th"); ?></th>
+            <th><?php echo $this->__w("Fr"); ?></th>
+            <th><?php echo $this->__w("Sa"); ?></th>
+            <th><?php echo $this->__w("Su"); ?></th>
+            <th><?php echo $this->__w("Total"); ?></th>
+        </tr>
+        <?php
+        $total = array();
+        $total["total"] = 0;
+        foreach ($stats as $cleaningstat) {
+            echo "<tr>";
+            echo "<td>" . $types[$cleaningstat->typeId]->name . "</td>";
+
+            $totalfortype = 0;
+            for ($i = 1; $i <= 7; $i++) {
+                $count = 0;
+                if ($i == 7) {
+                    $index = 0;
+                } else {
+                    $index = $i;
+                }
+
+                if (isset($cleaningstat->cleanings->{$index})) {
+                    $count = $cleaningstat->cleanings->{$index};
+                }
+                echo "<td align='center'>" . $count . "</td>";
+                if (!isset($total[$i])) {
+                    $total[$i] = 0;
+                }
+                $total[$i] += $count;
+                $totalfortype += $count;
+            }
+            $total["total"] += $totalfortype;
+            echo "<td align='center'>" . $totalfortype . "</td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td align='center'></td>";
+        for ($i = 1; $i <= 7; $i++) {
+            if ($i == 7) {
+                $index = 0;
+            } else {
+                $index = $i;
+            }
+            echo "<td align='center'>" . $total[$index] . "</td>";
+        }
+        echo "<td align='center'>" . $total["total"] . "</td>";
+        echo "</tr>";
+        ?>
+    </table>
+    
+    <h1>Cleaning log</h1>
+    <?php
+    echo "<table width='100%'>";
+    echo "<tr>";
+    echo "<th align='left'>Date</th>";
+    echo "<th align='left'>Text</th>";
+    echo "<th align='left'>Room</th>";
+    echo "<th align='left'>User</th>";
+    echo "</tr>";
+    
+    foreach($entries as $entry) {
+        if(!stristr($entry->logText, "Cleaned by")) {
+            continue;
+        }
+        echo "<tr>";
+        echo "<td>" . date("d.m.Y H:i", strtotime($entry->dateEntry)) . "</td>";
+        echo "<td>" . $entry->logText . "</td>";
+        echo "<td>" . $items[$entry->bookingItemId]->bookingItemName . "</td>";
+        echo "<td>" . $entry->userName . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    ?>
+    
+</div>

@@ -702,4 +702,11 @@ public class PmsBooking extends DataCommon {
     public int getTotalGuestCount() {
         return getActiveRooms().stream().mapToInt(room -> room.guests.size()).sum();
     }
+    
+    @Override
+    public PmsBookingLight createLightWeight() {
+        PmsBookingLight light = new PmsBookingLight();
+        light.mainObjectId = id;
+        return light;
+    }
 }

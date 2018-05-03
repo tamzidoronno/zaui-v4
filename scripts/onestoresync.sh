@@ -96,6 +96,5 @@ echo -e " Note: if you wish to run resin on port 80 run: "
 echo -e "   iptables -t nat -A OUTPUT -d localhost -p tcp --dport 80 -j REDIRECT --to-ports 8080";
 
 echo "Importing shared database"
-rm -rf dump;
-mongodump --host clients.getshop.com --port 27017 -u getshopadmin -p commondatabaseadministrator &> /dev/null
-mongorestore --port 27018 &> /dev/null
+mongodump -o shareddump --host clients.getshop.com --port 27017 -u getshopadmin -p commondatabaseadministrator &> /dev/null
+mongorestore --port 27018 shareddump &> /dev/null

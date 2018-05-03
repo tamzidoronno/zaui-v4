@@ -275,7 +275,8 @@ public interface IOrderManager {
     
     public Payment getStorePreferredPayementMethod();
 
-   
+    public void setExternalRefOnCartItem(String cartItem, String externalId);
+    
     public List<Order> getOrdersPaid(String paymentId, String userId, Date from, Date to);
     
     public void printInvoice(String orderId, String printerId);

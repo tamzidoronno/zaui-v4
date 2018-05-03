@@ -143,5 +143,11 @@ class TicketList extends \MarketingApplication implements \Application {
     public function setFilter($filter) {
         $this->filter = $filter;
     }
+    
+    public function unsetTransferred() {
+        $ticket = $this->getApi()->getTicketManager()->getTicket($_POST['data']['id']);
+        $ticket->transferredToAccounting = false;
+        $this->getApi()->getTicketManager()->saveTicket($ticket);
+    }
 }
 ?>

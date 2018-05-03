@@ -12,6 +12,17 @@ html {
     display: none;
     min-height: 150px;
 }
+.GetShopQuickUser .edit_details_directprint {
+    z-index: 1;
+    background-color: #FFF;
+    min-height: 150px;
+}
+.GetShopQuickUser .edit_details_directprint .colbox {
+    width: 49%;
+}
+.GetShopQuickUser .edit_details_directprint .col1 {
+    width: 130px !important;
+}
 
 .GetShopQuickUser .change_user_form .tabs .tab i {
     display: none;

@@ -16,6 +16,7 @@
 .PmsNewBooking .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}
 .PmsNewBooking .searchbrregarea {
     position: absolute;
+    z-index: 1;
     border: solid 1px;
     display: inline-block;
     display:none;

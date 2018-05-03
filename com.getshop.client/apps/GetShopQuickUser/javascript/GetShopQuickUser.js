@@ -4,8 +4,29 @@ app.GetShopQuickUser = {
         $(document).on('click', '.GetShopQuickUser .show_change_user', this.toggleShowChangeUser);
         $(document).on('click', '.GetShopQuickUser .change_user_form [tab]', this.toggleTabClicked);
         $(document).on('click', '.GetShopQuickUser .searchbox .tab', this.changeTab);
+        $(document).on('click','.GetShopQuickUser .searchbrregbutton', app.GetShopQuickUser.showBrregSearch);
+        $(document).on('click','.GetShopQuickUser .brregsearchresultrow', app.GetShopQuickUser.selectBrregResult);
     },
-    
+    selectBrregResult : function() {
+        var name = $(this).attr('name');
+        var vatnumber = $(this).attr('vatnumber');
+        $('[gsname="vatnumber"]').val(vatnumber);
+        $('[gsname="companyname"]').val(name);
+        $('.searchbrregarea').hide();
+    },    
+    searchResult : function(res) {
+        if(res) {
+            $('.brregsearchresult').html('');
+            for(var k in res) {
+                var company = res[k];
+                var row = $('<div class="brregsearchresultrow" vatnumber="'+company.vatNumber+'" name="'+company.name+'"><span>' + company.vatNumber + "</span> - <span>" + company.name + "</span></div>");
+                $('.brregsearchresult').append(row);
+            }
+        }
+    },
+    showBrregSearch : function() {
+        $('.searchbrregarea').slideDown();
+    },
     toggleTabClicked: function() {
         $('.GetShopQuickUser .change_user_form .tab_active').removeClass('tab_active');
         $(this).addClass('tab_active');

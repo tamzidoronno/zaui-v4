@@ -70,7 +70,13 @@ foreach ($extraArgs as $key => $value) {
             <div gstype="form" method="createCompany" callback="app.GetShopQuickUser.userCreated" gs_callback="app.GetShopQuickUser.userCreated">
                 <div class="warning">
                     <i class="fa fa-info"></i> <? echo $this->__f("You can create a new company here."); ?>
+                    <span class='searchbrregbutton'>(search brreg)</span>
                 </div>
+                <span class='searchbrregarea' gstype='form' method='searchbrreg'>
+                    <input type='text' class='gsniceinput1' gsname='name'>
+                    <span class='shop_button' gstype='submit' gs_callback='app.GetShopQuickUser.searchResult'>Search</span>
+                    <div class='brregsearchresult' style='max-height: 100px; overflow-y: auto;'></div>
+                </span>
                 
                 <?
                 foreach ($extraArgs as $key => $value) {

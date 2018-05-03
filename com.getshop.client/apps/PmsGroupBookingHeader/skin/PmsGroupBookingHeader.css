@@ -6,6 +6,20 @@
     vertical-align: top;
     
 }
+
+.PmsGroupBookingHeader .searchbrregbutton { color: blue; cursor:pointer; }
+.PmsGroupBookingHeader .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}
+.PmsGroupBookingHeader .searchbrregarea {
+    position: absolute;
+    border: solid 1px;
+    z-index:2;
+    display: inline-block;
+    display:none;
+    padding: 10px;
+    background-color:#fff;
+    border-color: #bbb;
+}
+
 .PmsGroupBookingHeader {
     max-width: 1500px;
     margin: auto;
@@ -31,11 +45,11 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); /* IE6-9 */
     cursor:pointer;
 }
-
+.PmsGroupBookingHeader .show_change_user { float:right; background-color: rgba(133,178,211,1); border-top: solid 1px; }
 .PmsGroupBookingHeader .top_box:hover {
     color:#5c2c7e;
 }
-
+.PmsGroupBookingHeader .setsameasbooker { color: blue; cursor:pointer; }
 .PmsGroupBookingHeader .top_box.selected {
     color:#3d463b;
 }

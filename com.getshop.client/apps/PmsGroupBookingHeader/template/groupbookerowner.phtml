@@ -11,51 +11,14 @@ $extraArgs['userid'] = $user->id;
 <input type='hidden' id='pmsbookingid' value='<?php echo $booking->id; ?>'>
 <div style='width:50%; float:left; padding-right:10px;box-sizing: border-box;'>
     <div style='background-color:#fff;'>
-        <div class="title"><? echo $this->__("Information about the the one owning this booking"); ?></div>
-        <div class="row">
-            <div class="col col1"><? echo $this->__("Name"); ?></div>
-            <div class="col col2">
-                <?
-                $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
-                $quser->setUser($user);
-                $quser->setExtraArgs($extraArgs);
-                $quser->renderApplication(true, $this);
-                ?>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col col1"><? echo $this->__("Email"); ?></div>
-            <div class="col col2"><? echo $user->emailAddress ?></div>
-        </div>
-
-        <div class="row">
-            <div class="col col1"><? echo $this->__("Phone number"); ?></div>
-            <div class="col col2"><? echo $user->cellPhone ?></div>
-        </div>
-
-        <div class="row">
-            <div class="col col1"><? echo $this->__("Adress"); ?></div>
-            <div class="col col2"><? if(isset($user->address)) { echo $user->address->address; } ?></div>
-        </div>
-
-        <div class="row">
-            <div class="col col1"><? echo $this->__("Postal code"); ?></div>
-            <div class="col col2"><? if(isset($user->address)) { echo $user->address->postCode; }?></div>
-        </div>
-
-        <div class="row">
-            <div class="col col1"><? echo $this->__("City"); ?></div>
-            <div class="col col2"><? if(isset($user->address)) { echo $user->address->city; } ?></div>
-        </div>
-
-        <div class="row">
-            <div class="col col1"><? echo $this->__("Country"); ?></div>
-            <div class="col col2"><? if(isset($user->address)) { echo $user->address->countrycode; } ?></div>
-        </div>
-        <div class="row" style='padding:10px; border-top: solid 1px #bbb;'>
-            This is the information that will be registered when creating orders and invoices. When creating an invoice, make sure the above information is correct before continuing. An invoice can't be changed when it has been sent.
-       </div>
+        <div class="title"><? echo $this->__("Information about the booker"); ?></div>
+        <?
+        $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+        $quser->printEditDirect = true;
+        $quser->setUser($user);
+        $quser->setExtraArgs($extraArgs);
+        $quser->renderApplication(true, $this);
+        ?>
     </div>
 </div>
 <div style='width:50%; float:left;background-color:#fff;'>
@@ -76,7 +39,7 @@ $extraArgs['userid'] = $user->id;
         echo "<span class='date'>" . date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end)) . "</span>";
         echo "</div>";
         ?>
-        <span class='rowheader' style='margin-right:15px;'>Name</span>
+        <span class='rowheader' style='margin-right:15px;'>Name <span class='setsameasbooker'>(set same as guest)</span></span>
         <span class='rowheader' style='width:197px;'>Email</span>
         <span class='rowheader rowheaderprefix' style='width:62px;'>Prefix</span>
         <span class='rowheader'>Phone</span>

@@ -3,19 +3,23 @@
 $name = $this->user ? $this->user->fullName : "N/A";
 ?>
 
-<span class="booked_for"><? echo $name; ?></span>
-<div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
-<div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
-
-
-<div class="edit_details_of_user">
-    <?
-    $this->includefile("edituser");
-    ?>
-</div>
+<?php
+if(!$this->printEditDirect) {
+    ?><span class="booked_for"><? echo $name; ?></span>
+    <div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
+    <div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
+    
+    <div class="edit_details_of_user">
+        <?
+        $this->includefile("edituser");
+        ?>
+    </div>
+<? } ?>
 
 <div class="change_user">
     <?
     $this->includefile("changeuser");
-    ?>
+    if($this->printEditDirect) { ?>
+        <div class="show_change_user shop_button"><i class="fa fa-user"></i> <? echo $this->__f("Change user"); ?></div>
+    <? } ?>
 </div>

@@ -7388,6 +7388,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (avoidSameDayDropIn(start, itemType)) {
             return true;
         }
+        if(closedForPeriode(start, end)) {
+            return true;
+        }
+        
         return false;
     }
 
@@ -8459,4 +8463,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
     
+    private boolean closedForPeriode(Date start, Date end) {
+        List<TimeRepeaterData> closedPeriodes = getConfigurationSecure().closedOfPeriode;
+        if(closedPeriodes == null || closedPeriodes.isEmpty()) {
+            return false;
+        }
+        
+        for(TimeRepeaterData data : closedPeriodes) {
+            TimeRepeater repeater = new TimeRepeater();
+            LinkedList<TimeRepeaterDateRange> timeRanges = repeater.generateRange(data);
+            for(TimeRepeaterDateRange range : timeRanges) {
+                if(range.isBetweenTime(start) || range.isBetweenTime(end)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

@@ -4,6 +4,7 @@ namespace ns_b5e9370e_121f_414d_bda2_74df44010c3b;
 class GetShopQuickUser extends \SystemApplication implements \Application {
     public $user;
     public $extraArgs = array();
+    public $printEditDirect = false;
     
     public function getDescription() {
     }
@@ -14,8 +15,17 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
 
     public function render() {
         $this->includefile("front");
+        if($this->printEditDirect) {
+            echo '<div class="edit_details_directprint">';
+            $this->includefile("edituser");
+            echo "</div>";
+        }
     }
-
+ 
+    public function searchbrreg() {
+        $company = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['data']['name']);
+        echo json_encode($company);
+    }
     public function setUser($user) {
         $this->user = $user;
     }

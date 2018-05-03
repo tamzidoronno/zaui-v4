@@ -1045,6 +1045,9 @@ public class PmsManagerProcessor {
             
             for(String orderId : book.orderIds) {
                 Order order = manager.orderManager.getOrder(orderId);
+                if(order == null) {
+                    continue;
+                }
                 if(order.avoidAutoSending) {
                     continue;
                 }

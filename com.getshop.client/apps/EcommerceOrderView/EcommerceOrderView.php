@@ -157,6 +157,63 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
     }
     
     /**
+     * @param \core_usermanager_data_User $user
+     */
+    public function saveUser($user) {
+        $this->setData();
+        $order = $this->getOrder();
+        $order->cart->address = $user->address;        
+        $order->cart->address->fullName = $user->fullName;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = null;
+    }
+    
+    
+    /**
+     * @param \core_usermanager_data_User $user
+     */
+    public function changeUser($user) {
+        
+        $this->setData();
+        $order = $this->getOrder();
+        $order->userId = $user->id;
+        $order->cart->address = $user->address;
+        $order->cart->address->fullName = $user->fullName;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
+    
+    /**
+     * @param \core_usermanager_data_User $user
+     */
+    public function createNewUser() {
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        $user->address = new \core_usermanager_data_Address();
+        $user = $this->getApi()->getUserManager()->createUser($user);
+        
+        $this->setData();
+        $order = $this->getOrder();
+        $order->userId = $user->id;
+        $order->cart->address = $user->address;
+        $order->cart->address->fullName = $user->fullName;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
+    public function createCompany() {
+        $name = $_POST['data']['name'];
+        $vat = $_POST['data']['vatnumber'];
+        $user = $this->getApi()->getUserManager()->createCompany($vat, $name);
+        
+        $this->setData();
+        $order = $this->getOrder();
+        $order->userId = $user->id;
+        $order->cart->address = $user->address;
+        $order->cart->address->fullName = $user->fullName;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
+    /**
      * 
      * @return \core_ordermanager_data_Order 
      */

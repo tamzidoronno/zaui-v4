@@ -29,6 +29,9 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
         $(document).on('click','.PmsNewBooking .brregsearchresultrow', app.PmsNewBooking.selectBrregResult);
     },
+    existingSearchResult : function(res) {
+        $('.existingsearchcustomerresult').html(res);
+    },
     selectBrregResult : function() {
         var name = $(this).attr('name');
         var vatnumber = $(this).attr('vatnumber');

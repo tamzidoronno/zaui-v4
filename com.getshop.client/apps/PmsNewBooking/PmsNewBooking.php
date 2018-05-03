@@ -8,6 +8,24 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         
     }
 
+    public function searchExistingCustomer() {
+        $users = $this->getApi()->getUserManager()->findUsers($_POST['data']['searchword']);
+        echo "<table>";
+        foreach($users as $user) {
+            echo "<tr>";
+            echo "<td>" . $user->fullName . "</td>";
+            echo "<td>" . $user->emailAddress . "</td>";
+            echo "<td>" ."(" . $user->prefix. ")". $user->cellPhone . "</td>";
+            echo "<td><span class='shop_button' gstype='clicksubmit' method='completeBookingByExistingUser' gsvalue='".$user->id."' gsname='id'>Select</span></td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+    
+    public function completeBookingByExistingUser() {
+        $this->completeByUser($_POST['data']['id']);
+    }
+    
     public function searchbrreg() {
         $company = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['data']['name']);
         echo json_encode($company);
@@ -96,8 +114,12 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     
     
     public function completequickreservation() {
+        $this->completeByUser($this->createSetUser());
+    }
+    
+    private function completeByUser($userId) {
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-        $currentBooking->userId = $this->createSetUser();
+        $currentBooking->userId = $userId;
         $currentBooking->quickReservation = true;
         $currentBooking->avoidCreateInvoice = true;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);

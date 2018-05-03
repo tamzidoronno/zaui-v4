@@ -135,6 +135,23 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     }
 
     @Override
+    public List<PmsLog> getCleaningLog(Date start, Date end) {
+        List<PmsLog> entries = new ArrayList();
+        
+        PmsLog filter = new PmsLog();
+        filter.logType = "cleaning";
+        filter.includeAll = true;
+        
+        List<PmsLog> allEntries = pmsManager.getLogEntries(filter);
+        for(PmsLog entry : allEntries) {
+            if(start.before(entry.dateEntry) && end.after(entry.dateEntry)) {
+                entries.add(entry);
+            }
+        }
+        return entries;
+    }
+    
+    @Override
     public List<PmsMobileRoomCoverage> getRoomCoverage(Date start, Date end) {
         List<BookingItem> items = bookingEngine.getBookingItems();
         

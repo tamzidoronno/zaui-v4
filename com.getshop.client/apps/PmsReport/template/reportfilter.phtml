@@ -32,6 +32,8 @@ $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : "";
         <span type='forecasted_coverage' class='pmsbutton tab <?php if($filter->type == "forecasted_coverage") {echo "selected";}?>'><i class='fa fa-tint'></i> Forcasted coverage</span>
         <span type='incomereport' class='pmsbutton tab <?php if($filter->type == "incomereport") {echo "selected";}?>'><i class='fa fa-money'></i> Income report</span>
         <span type='forecasted_incomereport' class='pmsbutton tab <?php if($filter->type == "forecasted_incomereport") {echo "selected";}?>'><i class='fa fa-dashboard'></i> Forecasted income report</span>
+        <span type='geographical_report' class='pmsbutton tab <?php if($filter->type == "geographical_report") {echo "selected";}?>'><i class='fa fa-language'></i> Stay / Geopgraphical report</span>
+        <span type='cleaning_report' class='pmsbutton tab <?php if($filter->type == "cleaning_report") {echo "selected";}?>'><i class='fa fa-paint-brush'></i> Cleaning report</span>
     </div>
     <div gstype="form" method="setReportFilter">
     <table>

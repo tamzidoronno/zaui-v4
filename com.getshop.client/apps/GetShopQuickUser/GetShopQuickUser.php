@@ -5,6 +5,8 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
     public $user;
     public $extraArgs = array();
     public $printEditDirect = false;
+    public $hideWarning = false;
+    public $avoidSaving = false;
     
     public function getDescription() {
     }
@@ -72,11 +74,13 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
-        $this->getApi()->getUserManager()->saveUser($user);
-        
+        if(!isset($_POST['data']['avoidsaving'])) {
+            $this->getApi()->getUserManager()->saveUser($user);
+        }
+//      
         $instance = $this->getCallBackApp();
         $instance->saveUser($user);
-//        $this->includefile("edituser");
+        $this->includefile("edituser");
 //        die();
         
     }

@@ -3,11 +3,23 @@ namespace ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9;
 
 class PmsReport extends \MarketingApplication implements \Application {
     var $data;
+    var $types;
     
     public function getDescription() {
         
     }
 
+    /**
+     * @return core_bookingengine_data_BookingItemType[]
+     */
+    public function getTypes() {
+        if($this->types) {
+            return $this->types;
+        }
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $this->types = $this->indexList($types);
+        return $this->types;
+    }
     public function getName() {
         return "PmsReport";
     }
@@ -35,16 +47,18 @@ class PmsReport extends \MarketingApplication implements \Application {
         $this->includefile("reportfilter");
         
         $selectedFilter = $this->getSelectedFilter();
-        
         echo "<br><br>";
         echo "<div class='reportview'>";
-        if(strstr($selectedFilter->type, "coverage")) {
+        if($selectedFilter->type == "cleaning_report") {
+            $this->includefile("cleaning_report");
+        } else if($selectedFilter->type == "geographical_report") {
+            $this->includefile("geographical_report");
+        } else if(strstr($selectedFilter->type, "coverage")) {
             $this->printCoverageReport();
         } else {
             $this->printIncomeReport();
         }
         echo "</div>";
-        
     }
 
     public function getSelectedFilter() {

@@ -8067,6 +8067,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         for (PmsBookingRooms room : allRooms) {
             for (PmsBookingAddonItem item : addons.values()) {
+                if(!item.isValidForPeriode(room.date.start, room.date.end, new Date())) {
+                    continue;
+                }
                 if (room.bookingItemTypeId != null) {
                     if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon) {
                         int size = 1;

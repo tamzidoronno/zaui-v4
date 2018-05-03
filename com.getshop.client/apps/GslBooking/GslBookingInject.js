@@ -5,6 +5,23 @@ if(sessionStorage.getItem('getshop_endpoint')) {
 var leftInterval;
 var getshop_handledevent = false;
 
+function load_getBookingTranslations() {
+    var def = $.Deferred();
+    $.ajax({
+        data: {
+            "sessionid" : getshop_getsessionid()
+        },
+        "dataType": "jsonp",
+        async: false,
+        "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
+        success: function (res) {
+            getshop_translationMatrixLoaded = res;
+            def.resolve(res);
+        }
+    });    
+    return def;
+}
+
 function getshop_setBookingTranslation() {
     var loadTranslation = load_getBookingTranslations();
     loadTranslation.done(function(translations) {
@@ -57,23 +74,6 @@ function getshop_setBookingTranslation() {
         });    
         getshop_confirmGuestInfoBox(); 
     });
-}
-
-function load_getBookingTranslations() {
-    var def = $.Deferred();
-    $.ajax({
-        data: {
-            "sessionid" : getshop_getsessionid()
-        },
-        "dataType": "jsonp",
-        async: false,
-        "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
-        success: function (res) {
-            getshop_translationMatrixLoaded = res;
-            def.resolve(res);
-        }
-    });    
-    return def;
 }
 
 function getshop_getBookingTranslations() {

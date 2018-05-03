@@ -31,5 +31,9 @@ public interface IPmsReportManager {
     
     @Administrator
     public PmsMonthlyOrderStatistics getMonthlyStatistics();
+    
+    @Administrator
+    public List<PmsLog> getCleaningLog(Date start, Date end);
+    
    
 }

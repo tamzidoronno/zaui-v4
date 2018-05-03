@@ -2005,6 +2005,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsRoomSimple currentBookerOnRoom = getCurrentRoomOnItem(itemId);
         if (currentBookerOnRoom != null) {
             logEntry("Cleaned by " + cleanersName, currentBookerOnRoom.bookingId, itemId, currentBookerOnRoom.pmsRoomId, "cleaning");
+        } else {
+            logEntry("Cleaned by " + cleanersName, null, itemId, null, "cleaning");
         }
     }
 
@@ -2793,9 +2795,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         continue;
                     }
                 }
-                if (filter.includeAll) {
-                    res.add(log);
-                } else if (!filter.bookingId.isEmpty()) {
+                if (!filter.bookingId.isEmpty()) {
                     if (filter.bookingId.equals(log.bookingId)) {
                         res.add(log);
                     }
@@ -2803,7 +2803,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if (filter.bookingItemId.equals(log.bookingItemId)) {
                         res.add(log);
                     }
+                } else if (!filter.logType.isEmpty()) {
+                    if (filter.logType.equals(log.logType)) {
+                        res.add(log);
+                    }
                 } else if ((!filter.roomId.isEmpty() && filter.roomId.equals(log.roomId)) || log.roomId == null || log.roomId.isEmpty()) {
+                    res.add(log);
+                } else if(filter.includeAll) {
                     res.add(log);
                 }
             }
@@ -2826,7 +2832,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for (PmsLog test : res) {
                 i++;
                 newres.add(test);
-                if (i > 100) {
+                if (i > 100 && !filter.includeAll) {
                     break;
                 }
             }

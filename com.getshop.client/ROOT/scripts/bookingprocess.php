@@ -1,12 +1,17 @@
 <?php
-if(isset($_GET['sessionid'])) {
-//    echo "Setting session id : " . $_GET['sessionid'];
-    session_id($_GET['sessionid']);
-}
 
 chdir("../");
 include '../loader.php';
-$factory = IocContainer::getFactorySingelton();
+if(isset($_GET['sessionid'])) {
+    $factory = IocContainer::getFactorySingelton();
+    if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
+        session_destroy();
+        session_id($_GET['sessionid']);
+        $factory = IocContainer::getFactorySingelton();
+    }
+} else {
+    $factory = IocContainer::getFactorySingelton();
+}
 
 
 $storeId = $factory->getStore()->id;

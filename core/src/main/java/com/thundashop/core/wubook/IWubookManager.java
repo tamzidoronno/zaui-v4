@@ -39,7 +39,7 @@ public interface IWubookManager {
     @Administrator
     public void addBooking(String rcode) throws Exception;
     @Administrator
-    public boolean updateAvailability() throws Exception;
+    public boolean updateAvailabilityFromButton() throws Exception;
     @Administrator
     public String updateShortAvailability() throws Exception;
     @Administrator

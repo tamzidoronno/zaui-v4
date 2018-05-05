@@ -106,8 +106,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         createScheduler("wubookprocessor2", "1 1,5,7,9,12,18,22 * * *", WuBookHourlyProcessor.class);
     }
     
-    @Override
     public boolean updateAvailability() throws Exception {
+        return updateAvailabilityInternal(370);
+    }
+    
+    @Override
+    public boolean updateAvailabilityFromButton() throws Exception {
         forceUpdate = true;
         return updateAvailabilityInternal(370);
     }

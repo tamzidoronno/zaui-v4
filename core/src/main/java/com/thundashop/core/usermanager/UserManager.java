@@ -26,6 +26,7 @@ import com.thundashop.core.usermanager.data.LoginHistory;
 import com.thundashop.core.usermanager.data.SimpleUser;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
+import com.thundashop.core.usermanager.data.UserLight;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.usermanager.data.UserRole;
 import com.thundashop.core.utils.BrRegEngine;
@@ -113,18 +114,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        getUserStoreCollection(storeId).createUserMap(database, this.getClass());
         for (DataCommon dataCommon : data.data) {
             if (!dataCommon.storeId.equals(storeId)) {
                 dataCommon.storeId = storeId;
                 saveObject(dataCommon);
             }
             UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
-            if (dataCommon instanceof User) {
+            if (dataCommon instanceof UserLight) {
                 userStoreCollection.addUserDirect((User) dataCommon);
             }
             if (dataCommon instanceof UserRole) {
                 UserRole role = (UserRole)dataCommon;
                 roles.put(role.id, role);
+            }
+            if (dataCommon instanceof UserLight) {
+                UserLight light = (UserLight)dataCommon;
+                userStoreCollection.add(light);
             }
             if (dataCommon instanceof Company) {
                 Company comp = (Company) dataCommon;
@@ -2304,5 +2310,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             usr.orderAmount = orderManager.getTotalAmountForUser(usr.id);
         }
     }
+
+    @Override
+    public void saveObject(DataCommon data) throws ErrorException {
+        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
+        
+        if (data instanceof User) {
+            getUserStoreCollection(storeId).getUserMap().save((User)data);
+        }
+    }
+    
 
 }

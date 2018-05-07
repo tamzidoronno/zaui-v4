@@ -254,7 +254,15 @@ public class Database extends StoreComponent {
         if (!withHeavyWeightObjects) {
             obj.add(addBannedClass("com.thundashop.core.pmsmanager.PmsBooking"));
             obj.add(addBannedClass("com.thundashop.core.ordermanager.data.Order"));
+            obj.add(addBannedClass("com.thundashop.core.usermanager.data.User"));
+            obj.add(addBannedClass("com.thundashop.core.productmanager.data.Product"));
         }
+        
+        if (GetShopLogHandler.isDeveloper) {
+            obj.add(addBannedClass("com.thundashop.core.getshoplock.GetShopDeviceLog"));
+        }
+        
+        obj.add(addBannedClass("com.thundashop.core.ordermanager.data.VirtualOrder"));
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
         obj.add(addBannedClass("com.thundashop.core.pmsmanager.PmsLog"));

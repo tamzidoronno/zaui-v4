@@ -30,8 +30,10 @@ app.ApacAccessGroups = {
         });
         
         var data = {
-            servers : servers
+            servers : servers,
+            isvirtual: $(this).closest('.locks').find('.isvirtual:checkbox:checked').val()
         };
+        
         
         thundashop.Ajax.simplePost(this, "saveGroup", data);
     }

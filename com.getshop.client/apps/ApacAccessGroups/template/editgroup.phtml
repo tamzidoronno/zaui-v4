@@ -49,8 +49,12 @@ $servers = $this->getServers();
                     }   
                 echo "</div>";
             }
+            
+            $checkedForVirtual = $group->isVirtual ? "checked='true'" : "";
             ?>
-
+            <br/>
+            <input class="isvirtual" type="checkbox" <? echo $checkedForVirtual; ?> value="true"/> <? echo $this->__f("Is this a virtual group?"); ?>
+            <br/>
             <br/><div class="shop_button saveGroup">Save</div>
         </div>
     </div>

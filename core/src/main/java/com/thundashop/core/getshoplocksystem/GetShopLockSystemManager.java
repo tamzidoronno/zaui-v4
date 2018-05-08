@@ -507,7 +507,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             HashMap<Integer, MasterUserSlot> lockCodes = u.getGroupLockCodes();
             for (Integer key : lockCodes.keySet()) {
                 MasterUserSlot master = lockCodes.get(key);
-                if (master.takenInUseDate == null) {
+                if (master.takenInUseDate == null && !u.isVirtual) {
                     continue;
                 }
                 
@@ -520,5 +520,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
         
         return false;
+    }
+
+    @Override
+    public void setGroupVirtual(String groupId, boolean isVirtual) {
+        LockGroup group = getGroup(groupId);
+        group.isVirtual = isVirtual;
+        saveObject(group);
     }
 }

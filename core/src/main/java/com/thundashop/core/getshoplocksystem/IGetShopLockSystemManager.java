@@ -131,4 +131,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public boolean isSlotTakenInUseInAnyGroups(String serverId, String lockId, int slotId);
+    
+    @Administrator
+    public void setGroupVirtual(String groupId, boolean isVirtual);
 }

@@ -963,6 +963,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         retval.childAge = config.childMaxAge;
         retval.phonePrefix = "" + store.configuration.defaultPrefix;
         retval.currencyText = currencycode;
+        retval.startYesterday = isMidleOfNight();
         return retval;
     }
 
@@ -1105,5 +1106,16 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return getSession().currentUser.enabledPaymentOptions;
         }
         return new ArrayList();
+    }
+
+    private boolean isMidleOfNight() {
+        Date now = pmsManager.getConfigurationSecure().getCurrentTimeInTimeZone();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        int hourofday = cal.get(Calendar.HOUR_OF_DAY);
+        if(hourofday < 7) {
+            return true;
+        }
+        return false;
     }
 }

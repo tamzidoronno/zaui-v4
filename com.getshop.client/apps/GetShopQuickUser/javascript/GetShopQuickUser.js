@@ -80,6 +80,7 @@ app.GetShopQuickUser = {
     
     updateFieldsAfterUserChangedOrCreated: function(result) {
         $('.GetShopQuickUser .edit_details_of_user').html(result);
+        $('.GetShopQuickUser .edit_details_directprint').html(result);
         
         var name = $(result).find('.fullName').val();
         $('.GetShopQuickUser span.booked_for').html(name);

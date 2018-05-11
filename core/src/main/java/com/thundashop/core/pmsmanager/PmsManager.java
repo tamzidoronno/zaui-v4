@@ -3578,20 +3578,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return true;
         }
 
-        List<LockGroup> groups = getShopLockSystemManager.getAllGroups();
-        if (groups.size() > 0) {
-            return true;
-        }
-
-        return false;
+        return getShopLockSystemManager.isActivated();
     }
 
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
         List<PmsRoomSimple> res = new ArrayList();
+        gsTiming("filtering 1");
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        gsTiming("filtering 2");
         res = filtering.filterRooms(filter);
+        gsTiming("Before sorting");
         doSorting(res, filter);
+        gsTiming("After sorting");
         List<PmsRoomSimple> remove = new ArrayList();
         if (filter.includeCleaningInformation) {
             for (PmsRoomSimple r : res) {
@@ -3606,8 +3605,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         res.removeAll(remove);
-
+        gsTiming("Before removebycustomercodesandaddons");
         res = removeByCustomersCodesAndAddons(res, filter);
+        gsTiming("After removebycustomercodesandaddons");
 
         return res;
     }

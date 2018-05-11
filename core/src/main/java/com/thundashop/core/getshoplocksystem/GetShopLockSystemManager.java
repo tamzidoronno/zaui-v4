@@ -498,4 +498,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         return 6;
     }
+
+    public boolean isActivated() {
+        if(groups.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 }

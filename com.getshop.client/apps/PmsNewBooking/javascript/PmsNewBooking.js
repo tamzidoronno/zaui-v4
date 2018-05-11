@@ -36,6 +36,7 @@ app.PmsNewBooking = {
             clearTimeout(waitToInsertCode);
         }
         
+        
         var input = $(this);
         waitToInsertCode = setTimeout(function() {
             var event = thundashop.Ajax.createEvent('','setDiscountCode', input, {

@@ -124,11 +124,17 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     }
     
     public function formatPaymentType($order) {
-        $arr = explode("\\", $order->payment->paymentType);
-        if(isset($arr[1])) {
-            return $arr[1];
+        $id = $order->payment->paymentType;
+        $id = substr($id, 0, strpos($id, "\\"));
+        $id = str_replace("ns_", "", $id);
+        $id = str_replace("_", "-", $id);
+        $app = $this->getFactory()->getApplicationPool()->getApplicationSetting($id);
+        $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $name = $appInstance->getName();
+        if($name == "InvoicePayment") {
+            $name = "Invoice";
         }
-        return "";
+        return $name;
     }
 
     public function printTable() {

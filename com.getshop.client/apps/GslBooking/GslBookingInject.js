@@ -6,6 +6,7 @@ var leftInterval;
 var getshop_handledevent = false;
 
 function load_getBookingTranslations() {
+    lang = sessionStorage.getItem("getshop_language");
     var def = $.Deferred();
     $.ajax({
         data: {
@@ -13,7 +14,7 @@ function load_getBookingTranslations() {
         },
         "dataType": "jsonp",
         async: false,
-        "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
+        "url": getshop_endpoint + "/scripts/bookingprocess_translation.php?language="+lang,
         success: function (res) {
             getshop_translationMatrixLoaded = res;
             def.resolve(res);

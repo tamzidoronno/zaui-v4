@@ -56,6 +56,9 @@ public interface IGetShopLockSystemManager {
     @Administrator
     public void createNewLockGroup(String name, int maxUsersInGroup);   
     
+    @Administrator
+    public String restCall(String serverId, String path);
+    
     /**
      * 
      * 

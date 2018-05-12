@@ -15,6 +15,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsMessage;
+import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -40,6 +41,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Autowired
     private MessageManager messageManager;
+    
+    @Autowired
+    private WebManager webManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -504,5 +508,16 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String restCall(String serverId, String path) {
+        LockServer server = lockServers.get(serverId);
+        if(server instanceof ZwaveLockServer) {
+            ZwaveLockServer zwaveserver = (ZwaveLockServer) server;
+            String res = zwaveserver.httpLoginRequestZwaveServer(path);
+            return res;
+        }
+        return "";
     }
 }

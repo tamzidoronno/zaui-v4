@@ -12,6 +12,34 @@ class ApacGateways extends \MarketingApplication implements \Application {
         return "ApacGateways";
     }
 
+    public function doRestCall() {
+        $path = $_POST['data']['path'];
+        $this->loadCurrentServer();
+        echo $this->getApi()->getGetShopLockSystemManager()->restCall($this->getServer()->id, $path);
+    }
+
+    public function startInclusion() {
+        $_POST['data']['id'] = $_POST['data']['serverid'];
+        $this->loadCurrentServer();
+        echo $this->getApi()->getGetShopLockSystemManager()->restCall($this->getServer()->id, "ZWave.zway/Run/controller.AddNodeToNetwork(1)");
+    }
+    public function stopInclusion() {
+        $_POST['data']['id'] = $_POST['data']['serverid'];
+        $this->loadCurrentServer();
+        echo $this->getApi()->getGetShopLockSystemManager()->restCall($this->getServer()->id, "ZWave.zway/Run/controller.AddNodeToNetwork(0)");
+    }
+
+    public function startExclusion() {
+        $_POST['data']['id'] = $_POST['data']['serverid'];
+        $this->loadCurrentServer();
+        echo $this->getApi()->getGetShopLockSystemManager()->restCall($this->getServer()->id, "ZWave.zway/Run/controller.RemoveNodeFromNetwork(1)");
+    }
+    public function stopExclusion() {
+        $_POST['data']['id'] = $_POST['data']['serverid'];
+        $this->loadCurrentServer();
+        echo $this->getApi()->getGetShopLockSystemManager()->restCall($this->getServer()->id, "ZWaveZWave.zway/Run/controller.RemoveNodeFromNetwork(0)");
+    }
+    
     public function render() {
         $this->printServerList();
         $this->includefile("addnewserver");

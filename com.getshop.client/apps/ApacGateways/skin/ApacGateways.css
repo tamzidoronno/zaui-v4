@@ -8,6 +8,15 @@
     width: 50px !important;
     text-align: center;
 }
+.ApacGateways .devicerow:hover { font-weight: bold; }
+.ApacGateways .devicename { display: inline-block; width: 300px; }
+.ApacGateways .isfailed { display: inline-block; width: 30px; cursor:pointer; }
+.ApacGateways .nodeid { display: inline-block; width: 30px;}
+.ApacGateways .queuerow .timer { display:inline-block; width: 40px; text-align: center; }
+.ApacGateways .queuerow .nodeid { display:inline-block; width: 40px; text-align: center; }
+.ApacGateways .queuerow .operation,
+.ApacGateways .queuerow .queueresponse
+{ display:inline-block; width: 200px; text-align: left; }
 
 .ApacGateways .locklist {
     position: relative;

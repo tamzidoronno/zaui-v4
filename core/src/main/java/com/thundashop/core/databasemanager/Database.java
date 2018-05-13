@@ -258,10 +258,6 @@ public class Database extends StoreComponent {
             obj.add(addBannedClass("com.thundashop.core.productmanager.data.Product"));
         }
         
-        if (GetShopLogHandler.isDeveloper) {
-            obj.add(addBannedClass("com.thundashop.core.getshoplock.GetShopDeviceLog"));
-        }
-        
         obj.add(addBannedClass("com.thundashop.core.ordermanager.data.VirtualOrder"));
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));

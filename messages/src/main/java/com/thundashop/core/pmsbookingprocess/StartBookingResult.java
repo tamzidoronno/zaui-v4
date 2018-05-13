@@ -13,6 +13,7 @@ public class StartBookingResult {
     public Integer numberOfDays = 0;
     public boolean supportPayLaterButton = false;
     public List<String> supportedPaymentMethods = new ArrayList();
+    String prefilledContactUser = "";
     
     public List<RoomsSelected> getRoomsSelected() {
         List<RoomsSelected> res = new ArrayList();

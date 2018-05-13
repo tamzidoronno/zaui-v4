@@ -777,6 +777,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return 0.0;
     }
 
+    PmsUserDiscount getUserDiscountByCouponCode(String couponCode) {
+        for(PmsUserDiscount disc : discounts.values()) {
+            if(disc.attachedDiscountCode != null && disc.attachedDiscountCode.equals(couponCode)) {
+                return disc;
+            }
+        }
+        return null;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

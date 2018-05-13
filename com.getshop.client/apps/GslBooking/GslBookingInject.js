@@ -592,7 +592,7 @@ function getshop_gotopayment(e) {
     $('.invalidinput').removeClass('invalidinput');
     saving.done(function(res) {
         for(var field in res.fieldsValidation) {
-            if(field === "agreeterms") {
+            if(field === "agreeterms" || gslbookingcurresult.prefilledContactUser) {
                 continue;
             }
             var errorMessage = res.fieldsValidation[field];
@@ -818,6 +818,13 @@ function getshop_showOverviewPage() {
     $('.invalidinput').removeClass('invalidinput');
     $('.GslBooking .errormessage').hide();
     saving.done(function(res) {
+        
+        $('.prefilled_contact').hide();
+        if(gslbookingcurresult.prefilledContactUser) {
+            $('.overview_contact').hide();
+            $('.prefilled_contact').show();
+            $('.bookingonbehalfname').html(gslbookingcurresult.prefilledContactUser);
+        }
         
         if(gslbookingcurresult.supportedPaymentMethods.length > 0) {
             

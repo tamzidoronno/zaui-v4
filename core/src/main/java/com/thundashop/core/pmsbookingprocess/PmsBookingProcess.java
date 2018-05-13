@@ -179,7 +179,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         selectMostSuitableRooms(result, arg);
         result.totalAmount = pmsManager.getCurrentBooking().getTotalPrice();
         result.supportPayLaterButton = checkIfSupportPayLater();
-        result.supportedPaymentMethods = checkForSupportedPaymentMethods();
+        result.supportedPaymentMethods = checkForSupportedPaymentMethods(booking);
+        result.prefilledContactUser = "";
+        if(booking.userId != null && !booking.userId.isEmpty()) {
+            result.prefilledContactUser = userManager.getUserById(booking.userId).fullName;
+        }
         
         return result;
     }
@@ -808,7 +812,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
-        if(!result.isLoggedOn) {
+        if(!result.isLoggedOn && (booking.userId == null || booking.userId.isEmpty())) {
             String type = result.profileType;
             String prefix = "user_";
             if(type.equals("organization")) {
@@ -1101,10 +1105,16 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         return endCal.getTime();
     }
 
-    private List<String> checkForSupportedPaymentMethods() {
+    private List<String> checkForSupportedPaymentMethods(PmsBooking booking) {
         if(getSession() != null && getSession().currentUser != null) {
             return getSession().currentUser.enabledPaymentOptions;
         }
+        
+        if(booking.userId != null && !booking.userId.isEmpty()) {
+            User bookinguser = userManager.getUserById(booking.userId);
+            return bookinguser.enabledPaymentOptions;
+        }
+        
         return new ArrayList();
     }
 

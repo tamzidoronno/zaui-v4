@@ -19,7 +19,7 @@
 { display:inline-block; width: 200px; text-align: left; }
 
 .ApacGateways .locklist {
-    position: relative;
+    position: relative; 
     min-height: 330px;
     margin-top: 30px;
 }

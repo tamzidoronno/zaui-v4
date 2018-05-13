@@ -138,6 +138,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             BookingProcessRooms room = new BookingProcessRooms();
             room.description = type.description;
+            room.userId = booking.userId;
             String translatedName = type.getTranslationsByKey("description", getSession().language);
             if(translatedName != null && !translatedName.isEmpty()) {
                 room.description = translatedName;
@@ -996,6 +997,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             PmsBooking booking = new PmsBooking();
             booking.priceType = PmsBooking.PriceType.daily;
             booking.couponCode = discountcode;
+            booking.userId = bookingProcessRoom.userId;
             pmsManager.setPriceOnRoom(room, true, booking);
             return room.price;
     }

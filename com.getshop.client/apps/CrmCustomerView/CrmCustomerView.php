@@ -14,6 +14,17 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         return sizeof($booking->rooms);
     }
     
+    public function createDiscountCode() {
+        $coupon = new \core_cartmanager_data_Coupon();
+        $coupon->amount = 0;
+        $coupon->type = "PERCENTAGE";
+        $coupon->code = $_POST['data']['code'];
+        $coupon->timesLeft = 9999;
+        $coupon->priceCode = "default";
+        
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+    
     public function printCards($userId) {
         $user = $this->getApi()->getUserManager()->getUserById($userId);
         $res = (array)$user->savedCards;

@@ -1121,7 +1121,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         price = calculateLongTermDiscount(booking, price, room);
         price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
-        price = getUserPrice(bookingEngineTypeId, price, count);
+        price = getUserPrice(bookingEngineTypeId, price, count, booking);
         
         return price;
     }
@@ -2254,9 +2254,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-    private Double getUserPrice(String typeId, Double price, int count) {
+    private Double getUserPrice(String typeId, Double price, int count, PmsBooking booking) {
+        User user = null;
         if(getSession() != null && getSession().currentUser != null) {
-            PmsUserDiscount discountForUser = getDiscountsForUser(getSession().currentUser.id);
+            user = getSession().currentUser;
+        }
+        
+        if(booking.userId != null && !booking.userId.isEmpty()) {
+            user = userManager.getUserById(booking.userId);
+        }
+        
+        if(user != null) {
+            PmsUserDiscount discountForUser = getDiscountsForUser(user.id);
             Double discount = discountForUser.discounts.get(typeId);
             if(discount != null) {
                 if(discountForUser.discountType.equals(PmsUserDiscount.PmsUserDiscountType.percentage)) {
@@ -2265,7 +2274,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     price = discount * count;
                 }
             }
-            if(getSession().currentUser.showExTaxes) {
+            if(user.showExTaxes) {
                 Product product = productManager.getProduct(bookingEngine.getBookingItemType(typeId).productId);
                 price = price * ((100+product.taxGroupObject.taxRate) / 100);
             }

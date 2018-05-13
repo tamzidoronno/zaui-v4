@@ -5741,6 +5741,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 code = discounts.pricePlan;
             }
         }
+        if (booking.userId != null && !booking.userId.isEmpty()) {
+            PmsUserDiscount discounts = pmsInvoiceManager.getDiscountsForUser(booking.userId);
+            if (discounts != null && discounts.pricePlan != null && !discounts.pricePlan.isEmpty()) {
+                code = discounts.pricePlan;
+            }
+        }
 
         Coupon coupon = getCouponCode(booking);
         if (coupon != null) {

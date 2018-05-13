@@ -2,6 +2,20 @@ app.CrmCustomerView = {
     init : function() {
         $(document).on('click','.CrmCustomerView .crmmenuentry', app.CrmCustomerView.loadArea);
         $(document).on('click','.CrmCustomerView .paymentmethodbtn', app.CrmCustomerView.toggleButton);
+        $(document).on('click','.CrmCustomerView .docreatenewcode', app.CrmCustomerView.doCreateNewDicountCode);
+    },
+    doCreateNewDicountCode : function() {
+        var code = prompt("Enter the new code");
+        if(!code) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','createDiscountCode',$(this), {
+            "code" : code
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            $("[gsname='attachedDiscountCode']").append("<option value='" + code + "'>" + code + "</option>");
+             $("[gsname='attachedDiscountCode']").val(code);
+        });
     },
     loadArea : function() {
         var area = $(this).attr('area');

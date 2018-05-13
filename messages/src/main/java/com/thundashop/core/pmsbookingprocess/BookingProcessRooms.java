@@ -16,4 +16,5 @@ public class BookingProcessRooms {
     public HashMap<String, String> utilities = new HashMap();
     public boolean visibleForBooker = false;
     public double totalPriceForRoom = 0.0;
+    String userId = "";
 }

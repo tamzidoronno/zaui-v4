@@ -94,7 +94,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
-    private PmsBookingMap bookings;
+    private HashMap<String, PmsBooking> bookings = new HashMap();
     private HashMap<String, String> bookingIdMap = new HashMap();
     private HashMap<String, Product> fetchedProducts = new HashMap();
     private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap();
@@ -213,14 +213,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        bookings = new PmsBookingMap(database, storeId, getClass());
-        
         Calendar toCheck = Calendar.getInstance();
 
         for (DataCommon dataCommon : data.data) {
-            if (dataCommon instanceof PmsBookingLight) {
-                PmsBookingLight booking = (PmsBookingLight) dataCommon;
-                bookings.add(booking);
+            if (dataCommon instanceof PmsBooking) {
+                PmsBooking booking = (PmsBooking) dataCommon;
+                bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof ConferenceData) {
                 ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
@@ -463,6 +461,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         saveObject(booking);
+        bookings.put(booking.id, booking);
     }
 
     @Override
@@ -959,8 +958,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         checkAndReportPriceMatrix(booking, "saving invalid price matrix 2");
-
-        bookings.save(booking);
+        bookings.put(booking.id, booking);
 
         try {
             verifyPhoneOnBooking(booking, false);
@@ -3910,8 +3908,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         return res;
     }
-
-    PmsBookingMap getBookingMap() {
+    
+    HashMap<String, PmsBooking> getBookingMap() {
         return bookings;
     }
 
@@ -8457,16 +8455,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         gsTiming("done finalizing new list");
         return finalized;
-    }
-
-    @Override
-    public void saveObject(DataCommon data) throws ErrorException {
-        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
-        
-        if (data instanceof PmsBooking) {
-            PmsBooking booking = (PmsBooking)data;
-            bookings.save(booking);
-        }
     }
     
     private boolean closedForPeriode(Date start, Date end) {

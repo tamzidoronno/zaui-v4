@@ -12,7 +12,6 @@ import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductImage;
-import com.thundashop.core.productmanager.data.ProductLight;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -38,7 +37,7 @@ public abstract class AProductManager extends ManagerBase {
     public HashMap<String, ProductCategory> categories = new HashMap();
     
 
-    public ProductMap products;
+    public Map<String, Product> products = new HashMap();
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
 
@@ -127,12 +126,11 @@ public abstract class AProductManager extends ManagerBase {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        products = new ProductMap(database, storeId, this.getClass());
-        
         for (DataCommon object : data.data) {
-            if (object instanceof ProductLight) {
-                ProductLight product = (ProductLight) object;
-                products.add(product);
+            if (object instanceof Product) {
+                Product product = (Product) object;
+                finalize(product);
+                products.put(product.id, product);
             }
             if (object instanceof ProductList) {
                 ProductList list = (ProductList) object;
@@ -347,15 +345,4 @@ public abstract class AProductManager extends ManagerBase {
             saveObject(product);
         }
     }
-
-    @Override
-    public void saveObject(DataCommon data) throws ErrorException {
-        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
-        
-        if (data instanceof Product) {
-            products.save((Product)data);
-        }
-    }
-    
-    
 }

@@ -114,9 +114,4 @@ public class DataCommon extends TranslationHandler implements Serializable, Clon
     boolean isCms() {
         return getshopModule == null || getshopModule.isEmpty() || getshopModule.equals("cms");
     }
-    
-    public LightWeight createLightWeight() {
-        return null;
-    }
-    
 }

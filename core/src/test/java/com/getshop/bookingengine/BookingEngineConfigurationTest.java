@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import static org.mockito.Matchers.any;
 
 /**
  *

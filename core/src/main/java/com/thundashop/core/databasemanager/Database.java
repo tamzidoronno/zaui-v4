@@ -6,8 +6,6 @@
 package com.thundashop.core.databasemanager;
 
 import com.getshop.scope.GetShopSession;
-import com.getshop.scope.GetShopSessionBeanNamed;
-import com.getshop.scope.GetShopSessionScope;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
@@ -15,7 +13,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -53,7 +50,6 @@ import org.springframework.stereotype.Component;
 public class Database extends StoreComponent {
 
     public static int mongoPort = 27018;
-    private GetShopSessionScope scope;
 //    public static int mongoPort = 27015;
 
     private Mongo mongo;
@@ -80,28 +76,6 @@ public class Database extends StoreComponent {
         return mongo;
     }
 
-    public <T> T get(String id, Class manager, String storeId) {
-        if (scope == null) {
-            scope = AppContext.appContext.getBean(GetShopSessionScope.class);
-        }
-        
-        String dbName = manager.getSimpleName();
-        if (GetShopSessionBeanNamed.class.isAssignableFrom(manager) && scope.getCurrentMultilevelName() != null && !scope.getCurrentMultilevelName().isEmpty()) {
-            dbName += "_"+scope.getCurrentMultilevelName();
-        }
-        DBCollection collection = mongo.getDB(dbName).getCollection(collectionPrefix + storeId);
-        
-        BasicDBObject query = new BasicDBObject();
-	query.put("_id", id);
-        
-        DBObject object = collection.findOne(query);
-        
-        if (object == null) 
-            return null;
-        
-        return (T)morphia.fromDBObject(DataCommon.class, object);
-    }
-    
     public Database() throws UnknownHostException {
         try {
             createDataFolder();
@@ -205,7 +179,7 @@ public class Database extends StoreComponent {
     }
 
     private List<DataCommon> getData(DBCollection collection) {
-        BasicDBObject query = createQuery(false);
+        BasicDBObject query = createQuery();
         
         DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
@@ -246,22 +220,13 @@ public class Database extends StoreComponent {
         return all;
     }
 
-    private BasicDBObject createQuery(boolean withHeavyWeightObjects) {
+    private BasicDBObject createQuery() {
         BasicDBObject andQuery = new BasicDBObject();
         List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
         obj.add(new BasicDBObject("deleted", null));
         
-        if (!withHeavyWeightObjects) {
-            obj.add(addBannedClass("com.thundashop.core.pmsmanager.PmsBooking"));
-            obj.add(addBannedClass("com.thundashop.core.ordermanager.data.Order"));
-            obj.add(addBannedClass("com.thundashop.core.usermanager.data.User"));
-            obj.add(addBannedClass("com.thundashop.core.productmanager.data.Product"));
-        }
-        
-        obj.add(addBannedClass("com.thundashop.core.ordermanager.data.VirtualOrder"));
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
-        obj.add(addBannedClass("com.thundashop.core.pmsmanager.PmsLog"));
         andQuery.put("$and", obj);
         
         return andQuery;
@@ -413,12 +378,7 @@ public class Database extends StoreComponent {
             throw new RuntimeException("storeid not specified");
         }
 
-        String dbName = managerClass.getSimpleName();
-        if (scope.getCurrentMultilevelName() != null && !scope.getCurrentMultilevelName().isEmpty()) {
-            dbName += "_"+scope.getCurrentMultilevelName();
-        }
-        
-        save(dbName, collectionPrefix + data.storeId, data);
+        save(managerClass.getSimpleName(), collectionPrefix + data.storeId, data);
     }
 
     public void save(String database, String collection, DataCommon data) {
@@ -566,22 +526,7 @@ public class Database extends StoreComponent {
 
         Collections.sort(all, new DataCommonSorter());
 
-        return all;    
-    }
-
-    public Stream<DataCommon> getAll(Class manager, String storeId) {
-        String dbName = manager.getSimpleName();
-        if (scope.getCurrentMultilevelName() != null && !scope.getCurrentMultilevelName().isEmpty()) {
-            dbName += "_"+scope.getCurrentMultilevelName();
-        }
-        
-        BasicDBObject query = createQuery(true);
-        
-        DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId);
-        return col.find(query).toArray().stream()
-                .map(o -> morphia.fromDBObject(DataCommon.class, o))
-                .filter(o -> o.deleted == null);
-    }
+        return all;    }
 }
 
 class DataCommonSorter implements Comparator<DataCommon> {

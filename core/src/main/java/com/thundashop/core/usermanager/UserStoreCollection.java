@@ -13,7 +13,6 @@ import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.UserCompanyHistory;
-import com.thundashop.core.usermanager.data.UserLight;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class UserStoreCollection {
     private UserManager userManager;
     private HashMap<String, Group> groups = new HashMap<String, Group>();
     
-    private UserMap users;
+    private HashMap<String, User> users = new HashMap();
 
     
     private List<User> finalize(List<User> users) {
@@ -38,11 +37,7 @@ public class UserStoreCollection {
         }
         return arraylist;
     }
-    
-    public void createUserMap(Database database, Class manager) {
-        users = new UserMap(database, storeId, manager);
-    }
-    
+  
     private User finalize(User user) {
         if (user == null) {
             return user;
@@ -515,13 +510,4 @@ public class UserStoreCollection {
     public User getDeletedUser(String id) {
         return (User)userManager.database.getObject(credentials, id);
     }
-
-    void add(UserLight light) {
-        users.add(light);
-    }
-
-    public UserMap getUserMap() {
-        return users;
-    }
-
 }

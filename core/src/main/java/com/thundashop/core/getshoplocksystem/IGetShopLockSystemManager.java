@@ -131,4 +131,10 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void saveUser(AccessGroupUserAccess user);
+    
+    @Administrator
+    public boolean isSlotTakenInUseInAnyGroups(String serverId, String lockId, int slotId);
+    
+    @Administrator
+    public void setGroupVirtual(String groupId, boolean isVirtual);
 }

@@ -82,6 +82,7 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
     
     public function saveGroup() {
         $this->getApi()->getGetShopLockSystemManager()->setLocksToGroup($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'], $_POST['data']['servers']);
+        $this->getApi()->getGetShopLockSystemManager()->setGroupVirtual($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'], isset($_POST['data']['isvirtual']));
     }
     
     public function deleteGroup() {

@@ -143,7 +143,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 sessionFactory = (SessionFactory) dataCommon;
             }
         }
-        
+
         addGetShopAdmins();
         addCrmAdmins();
         degradeGetSuperShopAdmins();
@@ -2304,5 +2304,4 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             usr.orderAmount = orderManager.getTotalAmountForUser(usr.id);
         }
     }
-
 }

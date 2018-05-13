@@ -60,7 +60,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private long incrementingOrderId = 100000;
     
-    public OrderMap orders; 
+    public HashMap<String, Order> orders = new HashMap(); 
    
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
     
@@ -201,19 +201,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        orders = new OrderMap(database, storeId, this.getClass());
-        
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
             }
-            
+
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
                 if (order.cleanMe()) {
                     saveObject(order);
                 }
-                
+
                 if (order.cart == null) {
                     continue;
                 }
@@ -2212,12 +2210,4 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return total;
     }
 
-    @Override
-    public void saveObject(DataCommon data) throws ErrorException {
-        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
-        
-        if (data instanceof Order) {
-            orders.save((Order)data);
-        }
-    }
 }

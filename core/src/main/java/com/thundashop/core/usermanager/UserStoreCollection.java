@@ -27,7 +27,7 @@ public class UserStoreCollection {
     private UserManager userManager;
     private HashMap<String, Group> groups = new HashMap<String, Group>();
     
-    private HashMap<String, User> users = new HashMap<String, User>();
+    private HashMap<String, User> users = new HashMap();
 
     
     private List<User> finalize(List<User> users) {
@@ -37,7 +37,7 @@ public class UserStoreCollection {
         }
         return arraylist;
     }
-    
+  
     private User finalize(User user) {
         if (user == null) {
             return user;
@@ -510,5 +510,4 @@ public class UserStoreCollection {
     public User getDeletedUser(String id) {
         return (User)userManager.database.getObject(credentials, id);
     }
-
 }

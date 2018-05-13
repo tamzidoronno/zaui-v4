@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -503,6 +504,35 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         return 6;
     }
 
+    @Override
+    public boolean isSlotTakenInUseInAnyGroups(String serverId, String lockId, int slotId) {
+        
+        for (LockGroup u : groups.values()) {
+            HashMap<Integer, MasterUserSlot> lockCodes = u.getGroupLockCodes();
+            for (Integer key : lockCodes.keySet()) {
+                MasterUserSlot master = lockCodes.get(key);
+                if (master.takenInUseDate == null && !u.isVirtual) {
+                    continue;
+                }
+                
+                for (UserSlot slot : master.subSlots) {
+                    if (slot.connectedToLockId.equals(lockId) && slot.connectedToServerId.equals(serverId) && slot.slotId == slotId) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    @Override
+    public void setGroupVirtual(String groupId, boolean isVirtual) {
+        LockGroup group = getGroup(groupId);
+        group.isVirtual = isVirtual;
+        saveObject(group);
+    }
+    
     public boolean isActivated() {
         if(groups.isEmpty()) {
             return false;

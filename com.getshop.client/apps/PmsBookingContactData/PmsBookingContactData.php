@@ -212,7 +212,6 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                             if($ignorePaymentWindow) {
                                 echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
                             } else {
-                        echo "alert(' total: " . $bookingToSend->totalPrice . "');";
                                 echo 'thundashop.common.goToPage("payment_failed");';
                             }
                         }

@@ -10,7 +10,6 @@ import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.LightWeight;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.usermanager.data.User;
@@ -1049,12 +1048,5 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void markAsTransferredToAccounting() {
         transferredToAccountingSystem = true;
         triedTransferredToAccountingSystem  = true;
-    }
-    
-    @Override
-    public LightWeight createLightWeight() {
-        OrderLight light = new OrderLight();
-        light.mainObjectId = id;
-        return light;
     }
 } 

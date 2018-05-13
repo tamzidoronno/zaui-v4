@@ -27,14 +27,13 @@ if (sizeof($coupons) == 0) {
                         <th align='left' width='80'>Restriction</th>
                         <th align='left' width='10'></th>
                         <th align='left' width='80'>Addons</th>
-                        <th align='right'>Channel</th>
+                        <th align='right'>Connected to user</th>
                     </tR>
                     <?php
                     foreach ($coupons as $coupon) {
                         if ($coupon->priceCode != $this->getSelectedPricePlan()) {
                             continue;
                         }
-
                         $text = "";
                         foreach ($coupon->addonsToInclude as $toInclude) {
                             $product = $this->getApi()->getProductManager()->getProduct($toInclude->productId);
@@ -63,13 +62,11 @@ if (sizeof($coupons) == 0) {
                         echo "</td>";
                         echo "<td><span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='$text'>$text</span></td>";
                         echo "<td align='right'>";
-                        echo "<select class='changechanneloncoupon' couponid='" . $coupon->id . "'>";
-                        echo "<option value=''>Connect to channel</option>";
-                        foreach ($channelConfig as $key => $config) {
-                            $selected = ($coupon->channel == $key) ? "SELECTED" : "";
-                            echo "<option value='$key' $selected>" . $config->humanReadableText . "</option>";
+                        $pmsdiscount = $this->getApi()->getPmsInvoiceManager()->getUserDiscountByCouponCode($this->getSelectedMultilevelDomainName(), $coupon->code);
+                        if($pmsdiscount) {
+                            $user = $this->getApi()->getUserManager()->getUserById($pmsdiscount->userId);
+                            echo $user->fullName;
                         }
-                        echo "</select>";
                         echo "</td>";
 
                         echo "</tr>";

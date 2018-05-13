@@ -97,6 +97,9 @@ public interface IPmsInvoiceManager {
     public List<Order> fetchDibsOrdersToAutoPay();
     
     @Administrator
+    public PmsUserDiscount getUserDiscountByCouponCode(String couponCode);
+    
+    @Administrator
     public Double getTotalOnOrdersForRoom(String pmsRoomId, boolean inctaxes);
     
     @Administrator

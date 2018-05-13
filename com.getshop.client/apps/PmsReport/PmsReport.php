@@ -8,6 +8,28 @@ class PmsReport extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function getTotalAddons($saleStats) {
+        $addonsResult = array();
+        foreach($saleStats->entries as $entries) {
+            foreach($entries->addonsCount as $addonId => $val) {
+                @$addonsResult[$addonId]['count'] += $val;
+            }
+            foreach($entries->addonsPrice as $addonId => $val) {
+                @$addonsResult[$addonId]['price'] += $val;
+            }
+        }
+        
+        return $addonsResult;
+    }
+    
+    public function getTotalSlept($saleStats) {
+        $total = 0;
+        foreach($saleStats->entries as $entry) {
+            $total = $entry->{'totalPrice'};
+        }
+        return $total;
+    }
 
     /**
      * @return core_bookingengine_data_BookingItemType[]

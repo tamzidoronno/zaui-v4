@@ -20,6 +20,7 @@ public class Address extends DataCommon {
     }
     
     public String phone = "";
+    public String prefix = "";
     public String emailAddress = "";
     public String fullName = "";
     public String postCode = "";

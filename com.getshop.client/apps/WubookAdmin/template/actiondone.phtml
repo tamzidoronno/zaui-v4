@@ -80,7 +80,7 @@ if($action == "testConnection") {
         echo "Prices has been updated";
     }
 } else if($action == "updateAvailability") {
-    $res = $wubookmgr->updateAvailability($name);
+    $res = $wubookmgr->updateAvailabilityFromButton($name);
     if(!$res) {
         echo "Availability has been updated";
     }

@@ -6,6 +6,7 @@
     "nights" : "night(s)",
     "paylater" : "Pay later",
     "totalprice" : "Total price",
+    "warningstartyesterday" : "Warning, you are booking in the midle of the night! If you want to book a room later today, please select todays date as check in time.",
     "sureremoveroom" : "Are you sure you want to remove this room?",
     "sureremoveguest" : "Are you sure you want to remove this guest?",
     "sameasguest" : "Same as guest",

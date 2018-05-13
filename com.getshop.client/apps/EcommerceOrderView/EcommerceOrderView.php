@@ -164,8 +164,12 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $order = $this->getOrder();
         $order->cart->address = $user->address;        
         $order->cart->address->fullName = $user->fullName;
+        $order->cart->address->emailAddress = $user->emailAddress;
+        $order->cart->address->phone = $user->cellPhone;
+        $order->cart->address->prefix = $user->prefix;
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->order = null;
+        $this->order = $this->getApi()->getOrderManager()->getOrder($order->id);
     }
     
     
@@ -198,10 +202,11 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $order->cart->address = $user->address;
         $order->cart->address->fullName = $user->fullName;
         $this->getApi()->getOrderManager()->saveOrder($order);
+        return $user;
     }
     
     public function createCompany() {
-        $name = $_POST['data']['name'];
+        $name = $_POST['data']['companyname'];
         $vat = $_POST['data']['vatnumber'];
         $user = $this->getApi()->getUserManager()->createCompany($vat, $name);
         
@@ -211,6 +216,7 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $order->cart->address = $user->address;
         $order->cart->address->fullName = $user->fullName;
         $this->getApi()->getOrderManager()->saveOrder($order);
+        return $user;
     }
     
     /**

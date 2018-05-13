@@ -8,6 +8,9 @@ if (!$user) {
     echo $this->__f("Not available");
 } else {
     $user->address = $order->cart->address;
+    $user->emailAddress = $order->cart->address->emailAddress;
+    $user->prefix = $order->cart->address->prefix;
+    $user->cellPhone = $order->cart->address->phone;
     if(isset($order->cart->address->fullName)) {
         $user->fullName = $order->cart->address->fullName;
     }

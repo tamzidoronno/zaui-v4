@@ -7,6 +7,24 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function setDiscountCode() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking->couponCode = $_POST['data']['code'];
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $codes = $this->getApi()->getCartManager()->getCoupons();
+        $found = false;
+        foreach($codes as $code) {
+            if($booking->couponCode == $code->code) {
+                $found = true;
+            }
+        }
+        if($found) {
+            echo "yes";
+        } else {
+            echo "no";
+        }
+    }
 
     public function searchExistingCustomer() {
         $users = $this->getApi()->getUserManager()->findUsers($_POST['data']['searchword']);

@@ -6,6 +6,12 @@
         getshop_terminalid = options.terminalid;
         getshop_nextPage = options.nextPage;
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
+        if(!options.language) {
+            sessionStorage.setItem('getshop_language',"");
+        } else {
+            sessionStorage.setItem('getshop_language',options.language);
+        }
+        console.log(options);
         var jsendpoint = "https://www.getshop.com/";
         if(options.jsendpoint) {
             jsendpoint = options.jsendpoint;

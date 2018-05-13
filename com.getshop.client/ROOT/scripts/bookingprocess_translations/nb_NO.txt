@@ -6,6 +6,7 @@
     "nights" : "netter",
     "paylater" : "Betal senere",
     "sameasguest" : "Samme som gjest",
+    "warningstartyesterday" : "Advarsel, du booker for i natt, hvis du ønsker et rom senere på dagen, vennligst velg dagens dato som innsjekk.",
     "totalprice" : "Total pris",
     "sureremoveroom" : "Er du sikker på at du ønsker å slette dette rommet?",
     "sureremoveguest" : "Er du sikker på at du ønsker å fjerne denne gjesten?",

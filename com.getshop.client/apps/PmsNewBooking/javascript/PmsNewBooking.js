@@ -23,11 +23,34 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .selectuser',app.PmsNewBooking.selectUser);
         $(document).on('click','.PmsNewBooking .selecteduser .fa-trash-o',app.PmsNewBooking.removeSelectedUser);
         $(document).on('keyup','.PmsNewBooking .roomtypecount',app.PmsNewBooking.countRoomsToAdd);
+        $(document).on('keyup','.PmsNewBooking .discountcode',app.PmsNewBooking.setDiscountCode);
         $(document).on('click','.PmsNewBooking .totalcount',app.PmsNewBooking.selectAllRooms);
         $(document).on('click','.PmsNewBooking .newcustomertypebutton', app.PmsNewBooking.loadNewCustomerType);
         $(document).on('click','.PmsNewBooking .newcustomerbutton', app.PmsNewBooking.loadNewCustomerField);
         $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
         $(document).on('click','.PmsNewBooking .brregsearchresultrow', app.PmsNewBooking.selectBrregResult);
+    },
+    setDiscountCode : function() {
+        if(typeof(waitToInsertCode) !== "undefined") {
+            console.log('clearing');
+            clearTimeout(waitToInsertCode);
+        }
+        
+        
+        var input = $(this);
+        waitToInsertCode = setTimeout(function() {
+            var event = thundashop.Ajax.createEvent('','setDiscountCode', input, {
+                "code" : input.val()
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                console.log(res);
+                if(res == "yes") {
+                    input.css('border-color','green');
+                } else {
+                    input.css('border-color','none');
+                }
+            });
+        }, "500");
     },
     existingSearchResult : function(res) {
         $('.existingsearchcustomerresult').html(res);

@@ -1260,8 +1260,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                     $filter->pmsRoomIds[] = $id;
                 }
             }
+            $filter->pmsRoomId = "";
         }
-        
         
         $this->getApi()->getCartManager()->clear();
         $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $booking->id, $filter);    

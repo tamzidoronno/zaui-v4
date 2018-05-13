@@ -11,6 +11,7 @@ foreach ($server->locks as $lock) {
 
 
 <div class='locklist'>
+    <input type="hidden" id="currentserverid" value="<? echo $server->id; ?>">
     <div class='menuarea'>
         <div class='shop_button' gsclick='startFetchingOfLocks' serverid='<? echo $server->id; ?>'><i class='fa fa-lock'></i> Fetch locks</div>
         <div gs_confirm='Are you sure?' class='shop_button' gsclick='deleteServer' serverid='<? echo $server->id; ?>'><i class='fa fa-trash'></i> Delete</div>
@@ -22,6 +23,10 @@ foreach ($server->locks as $lock) {
             <? } ?>
         </div>
         <div class='shop_button' gsclick='runCheck' serverid='<? echo $server->id; ?>'><i class='fa fa-play'></i> Run check</div>
+        <div class='shop_button' gsclick='startInclusion' serverid='<? echo $server->id; ?>'>Start inclusion</div>
+        <div class='shop_button' gsclick='startExclusion' serverid='<? echo $server->id; ?>'>Start exlusion</div>
+        <div class='shop_button' gsclick='stopInclusion' serverid='<? echo $server->id; ?>'>Stop inclusion</div>
+        <div class='shop_button' gsclick='stopExclusion' serverid='<? echo $server->id; ?>'>Stop exclusion</div>
         
         <div class="serverdetails" gstype="form" method="saveConnectionDetails">
             <input type="hidden" gsname="serverid" value="<? echo $server->id; ?>"/>
@@ -34,4 +39,20 @@ foreach ($server->locks as $lock) {
     </div>
     
     <i class="fa fa-lock"></i> <? echo $this->__f("Number of locks in this gateway").": $numberOfLocks"; ?>
+    <table width='100%'>
+        <tr>
+            <td width="50%" valign='top'>
+                <h3>Z-wave queue:</h3>
+                <div class="queuelog"></div>
+            </td>
+            <td width='50%' valign='top'>
+                <h3>Z-wave devices <i class='fa fa-refresh' onclick='app.ApacGateWays.startDevices();' style='cursor:pointer;'></i></h3>
+                <div class='zwavedevices'></div>
+            </td>
+        </tr>
+    </table>
 </div>
+<script>
+    app.ApacGateWays.startQueue();
+    app.ApacGateWays.startDevices();
+</script>

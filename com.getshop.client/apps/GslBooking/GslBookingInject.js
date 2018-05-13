@@ -5,6 +5,24 @@ if(sessionStorage.getItem('getshop_endpoint')) {
 var leftInterval;
 var getshop_handledevent = false;
 
+function load_getBookingTranslations() {
+    lang = sessionStorage.getItem("getshop_language");
+    var def = $.Deferred();
+    $.ajax({
+        data: {
+            "sessionid" : getshop_getsessionid()
+        },
+        "dataType": "jsonp",
+        async: false,
+        "url": getshop_endpoint + "/scripts/bookingprocess_translation.php?language="+lang,
+        success: function (res) {
+            getshop_translationMatrixLoaded = res;
+            def.resolve(res);
+        }
+    });    
+    return def;
+}
+
 function getshop_setBookingTranslation() {
     var loadTranslation = load_getBookingTranslations();
     loadTranslation.done(function(translations) {
@@ -27,6 +45,7 @@ function getshop_setBookingTranslation() {
         }
         
         $.ajax({
+            async: false,
             "dataType": "jsonp",
             data: {
                 "sessionid" : getshop_getsessionid()
@@ -53,27 +72,14 @@ function getshop_setBookingTranslation() {
                 $("[gsname='company_prefix']").val(config.phonePrefix);
                 $("[gstranslationfield='currency']").html(config.currencyText);
                 
+                if(getshop_bookingconfiguration.startYesterday) {
+                    $('#warningstartyesterday').show();
+                }
+                
             }
         });    
         getshop_confirmGuestInfoBox(); 
     });
-}
-
-function load_getBookingTranslations() {
-    var def = $.Deferred();
-    $.ajax({
-        data: {
-            "sessionid" : getshop_getsessionid()
-        },
-        "dataType": "jsonp",
-        async: false,
-        "url": getshop_endpoint + "/scripts/bookingprocess_translation.php",
-        success: function (res) {
-            getshop_translationMatrixLoaded = res;
-            def.resolve(res);
-        }
-    });    
-    return def;
 }
 
 function getshop_getBookingTranslations() {
@@ -911,7 +917,6 @@ function getshop_updateOrderSummary(res, isSearch) {
     var header = "<tr style='font-weight:bold;box-shadow: inset 0px -1px 0px #efeff0;'><td style='text-align:left;'>"+chosenRoomText['chosenRoom']+"</td><td>"+chosenRoomText['numberofguests']+"</td><td>"+chosenRoomText['price']+"</td></tr>";
     var row = "";
     var translationMatrix = getshop_getBookingTranslations();
-    console.log(translationMatrix);
     var roomsSelected = 0;
     for(var k in res.rooms) {
         var room = res.rooms[k];
@@ -1065,12 +1070,18 @@ function getshop_setDatePicker() {
         discountCode.val(result.discount);
     }
     
+    if(getshop_bookingconfiguration.startYesterday) {
+        currentDate.setTime(currentDate.getTime() - 86400000); 
+        endDate.setTime(endDate.getTime() - 86400000); 
+    }
+    
     $('#date_picker_start').val(currentDate.toISOString().substring(0, 10));
     $('#date_picker_end').val(endDate.toISOString().substring(0, 10));
     
     var options = {
         "autoApply": true,
         "showWeekNumbers": true,
+        "startDate": currentDate,
         "minDate": currentDate,
         "endDate": endDate,
         "locale": {
@@ -1104,6 +1115,8 @@ function getshop_setDatePicker() {
         getshop_WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", getshop_displayVerifoneFeedBack);
         
     }
+
+console.log(options);
 
     $('#date_picker').daterangepicker(options);    
     

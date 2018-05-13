@@ -19,6 +19,20 @@ public class PmsConfiguration extends DataCommon {
         this.timezone = timeZone;
     }
 
+    public Date getCurrentTimeInTimeZone() {
+        if(timezone == null || timezone.isEmpty()) {
+            return new Date();
+        }
+        TimeZone tz1 = TimeZone.getTimeZone(timezone);
+        TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
+        long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MILLISECOND, (int)timeDifference);
+        
+        return cal.getTime();
+    }
+    
     private String calculcateTimeZone(String toCheck) {
         String[] splitted = toCheck.split(":");
         Integer hour = new Integer(splitted[0]);

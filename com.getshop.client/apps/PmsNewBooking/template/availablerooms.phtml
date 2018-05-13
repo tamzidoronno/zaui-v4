@@ -41,7 +41,7 @@ if($total <= 0) {
     <div class="textbox">
         <div class="header">This is the rooms we have available</div>
         <div class="text">
-            I have <?php echo $total; ?> rooms available for you between <?php echo $start . " and " . $end; ?> 
+            I have <?php echo $total; ?> rooms available for you between <?php echo date("d.m.Y", strtotime($start)) . " and " . date("d.m.Y", strtotime($end)); ?> 
         </div>
     </div>
 </div>

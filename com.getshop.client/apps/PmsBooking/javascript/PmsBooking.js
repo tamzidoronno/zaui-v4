@@ -15,10 +15,13 @@ app.PmsBooking = {
     },
     hideGuestBox :function(e) {
         var target = $(e.target);
-        
+        if(!$('.PmsBooking .guestInfoBox').is(':visible')) {
+            return;
+        }
         if(target.attr('id') == "guests" || target.closest('#guests').length > 0) {
             return;
         }
+
 
         if(target.closest('.guestInfoBox').length > 0 || target.hasClass('guestInfoBox')) {
             return;

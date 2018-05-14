@@ -2807,7 +2807,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if (filter.bookingItemId.equals(log.bookingItemId)) {
                         res.add(log);
                     }
-                } else if (!filter.logType.isEmpty()) {
+                } else if (filter.logType != null && !filter.logType.isEmpty()) {
                     if (filter.logType.equals(log.logType)) {
                         res.add(log);
                     }

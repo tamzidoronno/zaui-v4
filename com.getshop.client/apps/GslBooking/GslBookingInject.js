@@ -13,7 +13,6 @@ function load_getBookingTranslations() {
             "sessionid" : getshop_getsessionid()
         },
         "dataType": "jsonp",
-        async: false,
         "url": getshop_endpoint + "/scripts/bookingprocess_translation.php?language="+lang,
         success: function (res) {
             getshop_translationMatrixLoaded = res;
@@ -45,7 +44,6 @@ function getshop_setBookingTranslation() {
         }
         
         $.ajax({
-            async: false,
             "dataType": "jsonp",
             data: {
                 "sessionid" : getshop_getsessionid()

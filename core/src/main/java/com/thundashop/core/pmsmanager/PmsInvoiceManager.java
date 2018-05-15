@@ -1684,6 +1684,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
+        pmsManager.dumpRenaTrening();
         PmsBooking booking = pmsManager.getBooking(bookingId);
         if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
             if(filter.addToOrderId.equals("createafterstay")) {

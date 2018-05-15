@@ -583,7 +583,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
         gsTiming("start");
-
         if (filter != null && filter.bookingId != null && !filter.bookingId.isEmpty()) {
             List<PmsBooking> res = new ArrayList();
             res.add(getBooking(filter.bookingId));
@@ -3173,14 +3172,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
-        return getNumberOfAvailable(itemType, start, end, true);
+        return getNumberOfAvailable(itemType, start, end, true, true);
     }
 
-    public Integer getNumberOfAvailable(String itemType, Date start, Date end, boolean includeMinMaxStay) {
+    public Integer getNumberOfAvailable(String itemType, Date start, Date end, boolean includeMinMaxStay, boolean adminOverride) {
         if (start.after(end)) {
             return 0;
         }
-        if (hasRestriction(itemType, start, end)) {
+        if (hasRestriction(itemType, start, end, adminOverride)) {
             return 0;
         }
         if (includeMinMaxStay) {
@@ -3308,7 +3307,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean canAdd(List<Booking> toCheck) {
         for (Booking book : toCheck) {
-            if (hasRestriction(book.bookingItemTypeId, book.startDate, book.endDate)) {
+            if (hasRestriction(book.bookingItemTypeId, book.startDate, book.endDate, true)) {
                 return false;
             }
         }
@@ -7385,9 +7384,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private boolean hasRestriction(String itemType, Date start, Date end) {
+    private boolean hasRestriction(String itemType, Date start, Date end, boolean adminOverride) {
         //Check for user.
-        if (getSession() != null && getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
+        if (getSession() != null && getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor()) && adminOverride) {
             return false;
         }
         if (!isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.open)) {
@@ -7963,7 +7962,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return cal.getTime();
     }
 
-    private void dumpRenaTrening() {
+    public void dumpRenaTrening() {
         System.out.println("------------------");
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.startDate = new Date();
@@ -7992,6 +7991,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 //Meldem siden
                 SimpleDateFormat sm = new SimpleDateFormat("dd-MM-yyyy");
                 System.out.print(sm.format(room.date.start) + "\t");
+                
+                System.out.print(sm.format(room.date.end) + "\t");
 
                 //Binding
                 Calendar cal = Calendar.getInstance();

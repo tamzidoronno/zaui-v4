@@ -1462,7 +1462,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         availabilityLastUpdated = new Date();
         
-        if(!frameworkConfig.productionMode) { return false; }
+//        if(!frameworkConfig.productionMode) { return false; }
         
         if(!connectToApi()) {
             return false; 
@@ -1488,7 +1488,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 Date end = endCal.getTime();
                 int count = 0;
                 try {
-                    count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end);
+                    count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end, true, false);
                 }catch(BookingEngineException e) {
                     
                 }
@@ -1580,7 +1580,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 
                 int count = 0;
                 try {
-                    count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end, false);
+                    count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end, false, false);
                 }catch(BookingEngineException e) {
                     
                 }

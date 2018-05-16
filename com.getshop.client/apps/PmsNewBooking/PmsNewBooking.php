@@ -214,7 +214,6 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $end = $this->convertToJavaDate(strtotime($to. " " . $config->defaultEnd));
 
             $available = $this->getNumberOfAvailableForType($type, $currentBooking, $start, $end);
-            echo "Number of available: " . $available;
             for($i = 0; $i < $numberOfRooms; $i++) {
                 $room = new \core_pmsmanager_PmsBookingRooms();
                 $room->date = new \core_pmsmanager_PmsBookingDateRange();

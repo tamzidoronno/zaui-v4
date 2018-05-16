@@ -4,6 +4,7 @@ namespace ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9;
 class PmsReport extends \MarketingApplication implements \Application {
     var $data;
     var $types;
+    var $orderIds;
     
     public function getDescription() {
         
@@ -187,34 +188,73 @@ class PmsReport extends \MarketingApplication implements \Application {
         return $filter;
     }
 
+    public function downloadIncomeReportExTaxes() {
+        $this->downloadIncomeReport(true);
+    }
+
+    public function downloadIncomeReportIncTaxes() {
+        $this->downloadIncomeReport(false);
+    }
+    
+    public function downloadIncomeReport($exTaxes) {
+        $res = $this->setIncomeReportData();
+        $rows = array();
+        $header = array();
+        $header[] = "Date";
+        $header[] = "Orderid";
+        
+        $products = array();
+        foreach($res->entries as $entry) {
+            foreach($entry->priceExOrders as $prodId => $values) {
+                $products[$prodId] = 1;
+            }
+        }
+        $idx = 2;
+        foreach($products as $prodId => $val) {
+            $header[] = $this->getApi()->getProductManager()->getProduct($prodId)->name;
+            $prodIdx[$prodId] = $idx;
+            $idx++;
+        }
+        
+        $rows[] = $header;
+        
+        
+        foreach($res->entries as $entry) {
+            $dayRows = $this->createDayRows($entry, $header);
+            $array = $entry->priceExOrders;
+            if(!$exTaxes) {
+                $array = $entry->priceIncOrders;
+            }
+            foreach($array as $prodId => $orders) {
+                foreach($orders as $orderId => $amount) {
+                    if(isset($dayRows[$orderId])) {
+                        $dayRows[$orderId][$prodIdx[$prodId]] = round($amount,2);
+                    } else {
+                        echo "Not created";
+                    }
+                }
+            }
+            foreach($dayRows as $r) { $rows[] = $r; }
+        }
+        
+        echo json_encode($rows);
+    }
     
 
     public function printIncomeReport() {
-        $selectedFilter = $this->getSelectedFilter();
-        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
-        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
-        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
-        $filter->includeVirtual = false;
-        $filter->savedPaymentMethod = "allmethods";
-        $filter = $this->addPaymentTypeToFilter($filter);
-        $filter->displayType = "dayslept";
-        $filter->priceType = "extaxes";
-
-        if(stristr($selectedFilter->type, "forecasted")) {
-            $filter->includeVirtual = true;
-        }
-        if(!$this->data) {
-            $data = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedMultilevelDomainName(), $filter);
-        } else {
-            $data = $this->data;
-        }
-        
+        $this->setIncomeReportData();
+        $data = $this->data;
         
         $usersoverview = (array)$data->usersTotal;
         arsort($usersoverview);
         
         $i = 0;
-        echo "<table>";
+        echo "<div style=' width: 1500px; margin: auto;text-align:right; color:blue; cursor:pointer;'>";
+        echo "<span gs_downloadExcelReport='downloadIncomeReportExTaxes' gs_fileName='incomereport'>Download to excel ex taxes</span> - ";
+        echo "<span gs_downloadExcelReport='downloadIncomeReportIncTaxes' gs_fileName='incomereport'>Download to excel inc taxes</span>";
+        echo "</div>";
+        
+        echo "<table style='width:1500px; margin:auto;'>";
         foreach($usersoverview as $userId => $val) {
             $user = $this->getApi()->getUserManager()->getUserById($userId);
             if($user->type > 50) {
@@ -225,9 +265,10 @@ class PmsReport extends \MarketingApplication implements \Application {
                 $display = "display:none";
             }
             echo "<tr style='$display' class='profitablecustomers'>";
-            echo "<td>" . $user->fullName . "</td><td>" . round($val) . "</td>";
-            if(!$display) {
-                echo "<td onclick='$(\".profitablecustomers\").toggle()' style='cursor:pointer;'><- the most profitable customer, click here to load top 30 most profitable customers</td>";
+            if($display) {
+                echo "<td>" . $user->fullName . "</td><td>" . round($val) . "</td>";
+            } else {
+                echo "<td onclick='$(\".profitablecustomers\").toggle()' style='cursor:pointer;'>The most profitable customer is ".$user->fullName." (" .round($val) .") , click here to load top 30 most profitable customers</td>";
             }
             echo "</tr>";
             $i++;
@@ -365,6 +406,68 @@ class PmsReport extends \MarketingApplication implements \Application {
         }
         $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
         return $filter;
+    }
+
+    /**
+     * 
+     * @return \core_pmsmanager_PmsOrderStatistics
+     */
+    public function setIncomeReportData() {
+        $selectedFilter = $this->getSelectedFilter();
+        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
+        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
+        $filter->includeVirtual = false;
+        $filter->savedPaymentMethod = "allmethods";
+        $filter = $this->addPaymentTypeToFilter($filter);
+        $filter->displayType = "dayslept";
+        $filter->priceType = "extaxes";
+
+        if(stristr($selectedFilter->type, "forecasted")) {
+            $filter->includeVirtual = true;
+        }
+        if(!$this->data) {
+            $data = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedMultilevelDomainName(), $filter);
+        } else {
+            $data = $this->data;
+        }
+        $this->data = $data;
+        return $data;
+    }
+
+    public function createEmptyRow($size) {
+        $row = array();
+        for($i = 0; $i < $size;$i++) {
+            $row[] = "";
+        }
+        return $row;
+    }
+
+    public function createDayRows($entry, $header) {
+        $max = 0;
+        $ordersRow = array();
+        foreach($entry->priceExOrders as $orders) {
+            foreach($orders as $orderId => $val) {
+                $ordersRow[$orderId] = 1;
+            }
+        }
+        $rows = array();
+        foreach($ordersRow as $orderId => $val) {
+            $rows[$orderId] = $this->createEmptyRow(sizeof($header));
+            $rows[$orderId][0] = date("d.m.Y", strtotime($entry->day));
+            $rows[$orderId][1] = $this->getIncOrderOnOrder($orderId);
+        }
+        return $rows;
+    }
+
+    public function getIncOrderOnOrder($orderId) {
+        if(isset($this->orderIds[$orderId])) {
+            return $this->orderIds[$orderId];
+        }
+        
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $this->orderIds[$orderId] = $order->incrementOrderId;
+        return $order->incrementOrderId;
     }
 
 }

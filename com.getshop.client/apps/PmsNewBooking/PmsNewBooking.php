@@ -198,6 +198,12 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         
+
+        foreach($currentBooking->rooms as $room) {
+            $room->addedToWaitingList = false;
+        }
+        
+        $prefix = sizeof($currentBooking->rooms);
         foreach($types as $type) {
             $from = $_POST['data']['from'];
             $to = $_POST['data']['to'];
@@ -207,24 +213,24 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $start = $this->convertToJavaDate(strtotime($from. " " . $config->defaultStart));
             $end = $this->convertToJavaDate(strtotime($to. " " . $config->defaultEnd));
 
+            $available = $this->getNumberOfAvailableForType($type, $currentBooking, $start, $end);
+            echo "Number of available: " . $available;
             for($i = 0; $i < $numberOfRooms; $i++) {
                 $room = new \core_pmsmanager_PmsBookingRooms();
                 $room->date = new \core_pmsmanager_PmsBookingDateRange();
                 $room->date->start = $start;
                 $room->date->end = $end;
                 $room->bookingItemTypeId = $type->id;
+                if($i >= $available) {
+                    $room->addedToWaitingList = true;
+                }
                 $currentBooking->rooms[] = $room;
             }
-
-            foreach($currentBooking->rooms as $room) {
-                $room->addedToWaitingList = false;
-            }
-
-            $available = $this->getNumberOfAvailableForType($type, $currentBooking, $start, $end);
-            $prefix = sizeof($currentBooking->rooms);
-            for($i = $available; $i < 0; $i++) {
-                $prefix--;
-                $currentBooking->rooms[$prefix]->addedToWaitingList = true;
+        }
+        
+        foreach($currentBooking->rooms as $room) {
+            if($room->addedToWaitingList) {
+                echo "added to waiting list";
             }
         }
         

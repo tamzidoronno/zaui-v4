@@ -29,6 +29,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         if(sizeof($items) == 0) {
             $this->includefile("noitemsyet");
         } else {
+            $this->includefile("waitinglist");
             $this->includefile("filter");
             $this->includefile("timelines");
         }

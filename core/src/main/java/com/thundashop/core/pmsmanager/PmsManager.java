@@ -453,10 +453,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         if (booking.sessionStartDate == null) {
-            PmsBookingDateRange range = getDefaultDateRange();
-            booking.sessionStartDate = range.start;
+            booking.sessionStartDate = getConfigurationSecure().getDefaultStart(new Date());
             if (!configuration.hasNoEndDate) {
-                booking.sessionEndDate = range.end;
+                booking.sessionEndDate = getConfigurationSecure().getDefaultEnd(new Date());
             }
         }
 
@@ -5151,6 +5150,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         Integer result = 0;
         try {
+            convertCheckInAndCheckoutToLocalTimeZone(booking);
             checkForMissingEndDate(booking);
 
             gsTiming("Checked for missing end dates");
@@ -8510,5 +8510,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private void convertCheckInAndCheckoutToLocalTimeZone(PmsBooking booking) {
+        for(PmsBookingRooms room : booking.rooms) {
+            room.date.start = getConfigurationSecure().getDefaultStart(room.date.start);
+            room.date.end = getConfigurationSecure().getDefaultEnd(room.date.end);
+        }
     }
 }

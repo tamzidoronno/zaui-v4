@@ -1221,12 +1221,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
 
-        if (storeId.equals("b7951dc0-0387-4b67-87c2-ce4e183ef6b7")) {
-            key = key + "_en_en";
-        } else {
-            key = key + "_" + booking.language;
-        }
-        String message = notify(key, booking, "sms", room);
+        String message = notify(key, booking, "sms", room, booking.language);
         List<String> smsRecp = repicientList;
         String repssms = "";
         for (String rep : smsRecp) {
@@ -1234,7 +1229,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         repicientList.clear();
 
-        String message2 = notify(key, booking, "email", room);
+        String message2 = notify(key, booking, "email", room, booking.language);
         notifyAdmin(key, booking);
 
         specifiedMessage = "";
@@ -1263,13 +1258,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         orderIdToSend = null;
 
         PmsBooking booking = getBooking(bookingId);
-        key = key + "_" + booking.language;
-        String message = getMessageToSend(key, "sms", booking);
+        String message = getMessageToSend(key, "sms", booking, booking.language);
         message = formatMessage(message, booking, null, null);
         return message;
     }
 
-    private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
+    private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room, String language) {
         if (booking != null && booking.silentNotification) {
             return "Not notified, silent booking: " + type;
         }
@@ -1278,7 +1272,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room = getRoomFromOrderToSend();
         }
 
-        String message = getMessageToSend(key, type, booking);
+        String message = getMessageToSend(key, type, booking, language);
         message = formatMessage(message, booking, room, null);
 
         if (message == null || message.trim().isEmpty()) {
@@ -5133,6 +5127,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             rawBooking = gson.toJson(booking);
             gsTiming("Created booking from json object");
         }
+        
+        String lang = getStoreSettingsApplicationKey("language");
+        if(lang == null || lang.isEmpty()) {
+            lang = "en_en";
+        }
+        booking.language = lang;
+        if(getSession().language != null && !getSession().language.isEmpty()) {
+            booking.language = getSession().language;
+        }
+        
         if (getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
             messageManager.sendErrorNotification("Booking completed.", null);
         }
@@ -6246,14 +6250,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return configuration.needConfirmation;
     }
 
-    private String getMessageToSend(String key, String type, PmsBooking booking) {
+    private String getMessageToSend(String key, String type, PmsBooking booking, String language) {
         String message = "";
 
         if (type.equals("email")) {
-            message = configuration.emails.get(key);
+            message = configuration.emails.get(key + "_" + language);
         } else {
-            message = configuration.smses.get(key);
+            message = configuration.smses.get(key + "_" + language);
         }
+        
+        if(message == null || message.isEmpty()) {
+            if (type.equals("email")) {
+                for(String tmpKey : configuration.emails.keySet()) {
+                    if(tmpKey.startsWith(key) && configuration.emails.get(tmpKey) != null && !configuration.emails.get(tmpKey).isEmpty()) {
+                        message = configuration.emails.get(tmpKey);
+                        break;
+                    }
+                }
+            } else {
+                for(String tmpKey : configuration.smses.keySet()) {
+                    if(tmpKey.startsWith(key) && configuration.emails.get(tmpKey) != null && !configuration.emails.get(tmpKey).isEmpty()) {
+                        message = configuration.emails.get(tmpKey);
+                        break;
+                    }
+                }
+            }
+        }
+        
 
         if (messageToSend != null && !messageToSend.isEmpty()) {
             message = messageToSend;

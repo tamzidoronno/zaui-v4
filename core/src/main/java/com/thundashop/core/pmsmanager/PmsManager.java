@@ -5150,7 +5150,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         Integer result = 0;
         try {
-            convertCheckInAndCheckoutToLocalTimeZone(booking);
+            if(booking.priceType != null && booking.priceType.equals(PmsBooking.PriceType.daily)) {
+                convertCheckInAndCheckoutToLocalTimeZone(booking);
+            }
             checkForMissingEndDate(booking);
 
             gsTiming("Checked for missing end dates");

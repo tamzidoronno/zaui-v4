@@ -1279,14 +1279,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         if (room != null) {
-            notifyGuest(booking, message, type, key, room);
+            notifyGuest(booking, message, type, key, room, language);
         } else {
-            notifyBooker(booking, message, type, key);
+            notifyBooker(booking, message, type, key, language);
         }
         return message;
     }
 
-    private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
+    private void notifyBooker(PmsBooking booking, String message, String type, String key, String lang) throws ErrorException {
         User user = userManager.getUserById(booking.userId);
 
         Order order = null;
@@ -1316,7 +1316,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             repicientList.add(phone);
         } else {
-            String title = configuration.emailTitles.get(key);
+            String title = getMessageTitle(key, lang);
             String fromName = getFromName();
             String fromEmail = getFromEmail();
             HashMap<String, String> attachments = new HashMap();
@@ -1372,7 +1372,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private String notifyGuest(PmsBooking booking, String message, String type, String key, PmsBookingRooms roomToNotify) {
+    private String notifyGuest(PmsBooking booking, String message, String type, String key, PmsBookingRooms roomToNotify, String lang) {
         Order order = null;
         if (orderIdToSend != null) {
             order = orderManager.getOrderSecure(orderIdToSend);
@@ -1403,7 +1403,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
 
                     String name = userManager.getUserById(booking.userId).fullName;
-                    String title = configuration.emailTitles.get(key);
+                    String title = getMessageTitle(key, lang);
                     title = formatMessage(title, booking, room, null);
                     messageManager.sendMail(email, name, title, message, getFromEmail(), getFromName());
                     repicientList.add(email);
@@ -8520,5 +8520,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room.date.end = getConfigurationSecure().getDefaultEnd(room.date.end);
             }
         }
+    }
+
+    private String getMessageTitle(String key, String lang) {
+        String title = configuration.emailTitles.get(key + "_" + lang);
+        if(title == null || title.isEmpty()) {
+            for(String titlekey : configuration.emailTitles.keySet()) {
+                title = configuration.emailTitles.get(titlekey);
+                if(title != null && !title.isEmpty()) {
+                    return title;
+                }
+            }
+        } else {
+            return title;
+        }
+        return "";
     }
 }

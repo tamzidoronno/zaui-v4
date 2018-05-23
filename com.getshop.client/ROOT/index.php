@@ -86,14 +86,7 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
-$acceptedGdpr = $factory->getStore()->acceptedGDPR;
-if(!$acceptedGdpr) {
-    echo "<div class='gdpracceptancewarning' style='text-align:center; padding: 10px;background-color:green; color:#fff;'>";
-    echo "A friendly update about GDPR.<br>";
-    echo "As everyone else we need to enforce GDPR. Due to that reason you will have to accept us as a data processor.<br>Without that we will not be able to serve you anymore as your favorite booking system. :(<br>";
-    echo "<span style='color:#e7f516; cursor:pointer;' onclick='window.location.href=\"/scripts/acceptgdpr.php\"'>Please click here to accept us a data processor.</span>";
-    echo "</div>";
-}
+
 
 if ($factory->isEditorMode()) {
     echo '<script src="/js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>';
@@ -260,6 +253,15 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
         
         $modules = $factory->getApi()->getPageManager()->getModules();
         $isLoggedInEditorOrAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
+
+        $acceptedGdpr = $factory->getStore()->acceptedGDPR;
+        if(!$acceptedGdpr && $isLoggedInEditorOrAdministrator) {
+            echo "<div class='gdpracceptancewarning' style='text-align:center; padding: 10px;background-color:green; color:#fff;'>";
+            echo "A friendly update about GDPR.<br>";
+            echo "As everyone else we need to enforce GDPR. Due to that reason you will have to accept us as a data processor.<br>Without that we will not be able to serve you anymore as your favorite booking system. :(<br>";
+            echo "<span style='color:#e7f516; cursor:pointer;' onclick='window.location.href=\"/scripts/acceptgdpr.php\"'>Please click here to accept us a data processor.</span>";
+            echo "</div>";
+        }
         
         if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             $msg = $factory->getApi()->getStoreManager()->getCriticalMessage();

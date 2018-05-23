@@ -2658,7 +2658,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         endDate = adjustDateForCount(endDate, priceType, false);
         
         Double price = 0.0;
-        if(pmsManager.getConfigurationSecure().usePriceMatrixOnOrder) {
+        if(pmsManager.getConfigurationSecure().getUsePriceMatrixOnOrder()) {
             Calendar calStart = Calendar.getInstance();
             updatePriceMatrix(booking, room, priceType);
             calStart.setTime(startDate);

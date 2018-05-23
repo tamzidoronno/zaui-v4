@@ -44,6 +44,7 @@ public class Store extends DataCommon {
     public String country;
     public String timeZone;
     public boolean acceptedGDPR = false;
+    public Date acceptedGDPRDate = null;
     public String acceptedByUser = "";
 
     public String getDefaultMailAddress() {

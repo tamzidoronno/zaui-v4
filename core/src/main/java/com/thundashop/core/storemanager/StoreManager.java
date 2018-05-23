@@ -581,6 +581,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public void acceptGDPR() {
         Store store = getMyStore();
         store.acceptedGDPR = true;
+        store.acceptedGDPRDate = new Date();
         store.acceptedByUser = getSession().currentUser.id;
         storePool.saveStore(store);
     }

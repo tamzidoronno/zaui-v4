@@ -92,7 +92,7 @@ $store = $factory->getStore();
                             For more information about the GDPR have a look <a href='https://www.eugdpr.org/' target='_new'>here</a>.<br>
                             <br>
                             Related to this GetShop is obligated to inform their customers about GetShop's part in the GDPR directive.<br>
-                            The GetShop platfomr need to harvest data for customers all over the world for you and we need your consensus for doing so.<br>
+                            The GetShop platform need to harvest data for customers all over the world for you and we need your consensus for doing so.<br>
                             <br>
                             The following personal information will be stored at GetShop servers as a service for you<br>
                             <ul>
@@ -121,7 +121,7 @@ $store = $factory->getStore();
                         <br>
                         <div style='text-align: center;'>
                             <a href='?iaccept=true'>
-                                <span style='border: solid 1px #bbb;padding: 10px; cursor:pointer;background-color:purple; color:#fff;'>I accept that GetShop can handle this data information for me.</span>
+                                <span style='border: solid 1px #bbb;padding: 10px; cursor:pointer;background-color:purple; color:#fff;'>On behalf of my hotel I accept that GetShop can handle this data information for me.</span>
                             </a>
                         </div>
                 <? } ?>

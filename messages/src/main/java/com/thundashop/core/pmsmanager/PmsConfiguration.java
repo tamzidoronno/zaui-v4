@@ -15,8 +15,15 @@ public class PmsConfiguration extends DataCommon {
     @Transient
     private String timezone = "";
     
+    @Transient
+    private boolean isPikStore = false;
+    
     void setTimeZone(String timeZone) {
         this.timezone = timeZone;
+    }
+    
+    void setIsPikStore(boolean isPikStore) {
+        this.isPikStore = isPikStore;
     }
 
     public Date getCurrentTimeInTimeZone() {
@@ -125,7 +132,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean autoSendInvoice = false;
     public boolean autoMarkCreditNotesAsPaidFor = false;
     public boolean autoCreateInvoices = false;
-    public boolean usePriceMatrixOnOrder = false;
+    private boolean usePriceMatrixOnOrder = false;
     public boolean splitOrderIntoMonths = false;
     public boolean orderEndsFirstInMonth = false;
     public Integer whenInfinteDateFirstOrderTimeUnits = 1;
@@ -172,6 +179,13 @@ public class PmsConfiguration extends DataCommon {
             defaultsv = new PmsLockServer();
         }
         return defaultsv;
+    }
+    
+    public boolean getUsePriceMatrixOnOrder() {
+        if(isPikStore) {
+            return true;
+        }
+        return usePriceMatrixOnOrder;
     }
     
     public PmsLockServer getLockServer(String serverSource) {
@@ -320,6 +334,10 @@ public class PmsConfiguration extends DataCommon {
     
     boolean channelExists(String channel) {
         return channelConfiguration.containsKey(channel);
+    }
+    
+    public boolean isPIKTime(Date storeDate) {
+        return true;
     }
     
     public void finalize() {

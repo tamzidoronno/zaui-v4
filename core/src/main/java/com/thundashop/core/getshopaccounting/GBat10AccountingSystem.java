@@ -99,9 +99,9 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
     private List<HashMap<Integer, String>> generateLine(Order order) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         Calendar cal = Calendar.getInstance();
-        cal.setTime(order.rowCreatedDate);
         
-        Date periodeDate = order.transferToAccountingDate;
+        Date periodeDate = getAccountingPostingDate(order);
+        cal.setTime(periodeDate);
         invoiceManager.generateKidOnOrder(order);
         
         List<HashMap<Integer, String>> lines = new ArrayList();

@@ -112,7 +112,7 @@ $store = $factory->getStore();
                                 <li>GetShop will takes all measures required pursuant to Article 32 of the GDPR.</li>
                                 <li>GetShop will respects the conditions referred to in paragraphs 2 and 4 in the GDPR for engaging another processor.</li>
                                 <li>GetShop will provide all tools nessesary for you to be able to forfill its commitment to the GDPR.</li>
-                                <li>GetShop will assist you to make sure you are compliant with articles 32 to 36 in the GDPR.</li>
+<!--                                <li>GetShop will assist you to make sure you are compliant with articles 32 to 36 in the GDPR.</li>-->
                                 <li>If you choose to leave GetShop we will encrypt or delete all data related your hotel / website.</li>
                                 <li>GetShop will provide all your data by request.</li>
                             </ul> 
@@ -121,7 +121,7 @@ $store = $factory->getStore();
                         <br>
                         <div style='text-align: center;'>
                             <a href='?iaccept=true'>
-                                <span style='border: solid 1px #bbb;padding: 10px; cursor:pointer;background-color:purple; color:#fff;'>On behalf of my hotel I accept that GetShop can handle this data information for me.</span>
+                                <span style='border: solid 1px #bbb;padding: 10px; cursor:pointer;background-color:purple; color:#fff;'>On behalf of my business I accept that GetShop can handle this data information for me.</span>
                             </a>
                         </div>
                 <? } ?>

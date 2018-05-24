@@ -2051,11 +2051,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         additionalInfo.inUseByCleaning = false;
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
 
-        BookingItem bitem = bookingEngine.getBookingItem(additionalInfo.itemId);
-        if (bitem.bookingItemName.equals("205")) {
-            System.out.println(bitem.bookingItemName);
-        }
-
         if (additionalInfo.inUse) {
             BookingTimeLineFlatten timeline = bookingEngine.getTimeLinesForItem(start.getTime(), end.getTime(), additionalInfo.itemId);
             for (Booking book : timeline.getBookings()) {
@@ -2066,8 +2061,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             for (Booking book : timeline.getBookings()) {
                 additionalInfo.closed = false;
+                additionalInfo.closedByCleaningProgram = false;
                 if (book.source != null && book.source.toLowerCase().contains("closed")) {
                     additionalInfo.closed = true;
+                    break;
+                }
+                if (book.source != null && book.source.toLowerCase().contains("cleaning")) {
+                    additionalInfo.closedByCleaningProgram = true;
                     break;
                 }
             }
@@ -5425,7 +5425,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     needInterval = true;
                 }
             }
-            if (room.inUse && !checkoutToday && !room.closed && !checkinToday) {
+            if (room.inUse && !checkoutToday && !room.closed && !checkinToday && !room.closedByCleaningProgram) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.inUse;
             } else if (room.isClean() || room.isUsedToday()) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.isClean;

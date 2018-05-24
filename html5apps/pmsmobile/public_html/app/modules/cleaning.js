@@ -14,14 +14,33 @@ getshop.cleaningController = function ($scope, $state, $stateParams, $sce) {
             $scope.instruction = $sce.trustAsHtml(res.cleaninginstruction);
             $scope.$applyAsync();
         });
-    }
-    
+    },
+    $scope.formatDate = function(date) {
+        var today = date;
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if(dd<10){
+            dd='0'+dd;
+        } 
+        if(mm<10){
+            mm='0'+mm;
+        } 
+        
+        var today = dd+'/'+mm+'/'+yyyy;
+        
+        return today;
+    },
     $scope.loadFutureCleanings = function() {
         var start = new Date();
         var end = new Date();
         end.setDate(end.getDate()+7);
         var loading = getshopclient.PmsManager.getSimpleCleaningOverview(getMultilevelName(), start,end);
         loading.done(function(res) {
+            for(var k in res) {
+                res[k].dateFormatted = $scope.formatDate(new Date(res[k].date));
+            }
             $scope.cleaningstats = res;
         });
     };

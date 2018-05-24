@@ -13,7 +13,6 @@ function load_getBookingTranslations() {
             "sessionid" : getshop_getsessionid()
         },
         "dataType": "jsonp",
-        async: false,
         "url": getshop_endpoint + "/scripts/bookingprocess_translation.php?language="+lang,
         success: function (res) {
             getshop_translationMatrixLoaded = res;
@@ -45,7 +44,6 @@ function getshop_setBookingTranslation() {
         }
         
         $.ajax({
-            async: false,
             "dataType": "jsonp",
             data: {
                 "sessionid" : getshop_getsessionid()
@@ -401,7 +399,7 @@ function getshop_js_yyyy_mm_dd_hh_mm_ss(now) {
   var hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
   var minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
   var second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
-  return day + "." + month + "." + year + " " + hour + "." + minute;
+  return day + "." + month + "." + year;
 }
 
 function getshop_continueToSummary(e) {

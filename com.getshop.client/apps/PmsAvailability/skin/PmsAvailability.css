@@ -6,6 +6,8 @@
 
     width: 200px;
 }
+
+.PmsAvailability .waitinglist { cursor:pointer; }
 .PmsAvailability .gsdayevent { cursor:pointer; }
 
 

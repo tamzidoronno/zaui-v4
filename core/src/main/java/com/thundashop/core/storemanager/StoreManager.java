@@ -83,6 +83,21 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         initialize();
     }
 
+    /**
+     * PikTime is the time when getshop decided to go full product is king style.
+     * The time where customers ruled getshop is over and getshop drives the development.
+     * This will result in less special produced code for specific customers.
+     * @return 
+     */
+    public boolean isPikStore() {
+        Calendar pikTime = Calendar.getInstance();
+        pikTime.set(Calendar.YEAR, 2018);
+        pikTime.set(Calendar.MONTH, 3);
+        pikTime.set(Calendar.DAY_OF_MONTH, 1);
+        
+        return getMyStore().rowCreatedDate.after(pikTime.getTime());
+    }
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon dcommon : data.data) {
@@ -566,6 +581,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public void acceptGDPR() {
         Store store = getMyStore();
         store.acceptedGDPR = true;
+        store.acceptedGDPRDate = new Date();
         store.acceptedByUser = getSession().currentUser.id;
         storePool.saveStore(store);
     }

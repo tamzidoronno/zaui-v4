@@ -15,8 +15,15 @@ public class PmsConfiguration extends DataCommon {
     @Transient
     private String timezone = "";
     
+    @Transient
+    private boolean isPikStore = false;
+    
     void setTimeZone(String timeZone) {
         this.timezone = timeZone;
+    }
+    
+    void setIsPikStore(boolean isPikStore) {
+        this.isPikStore = isPikStore;
     }
 
     public Date getCurrentTimeInTimeZone() {
@@ -33,31 +40,35 @@ public class PmsConfiguration extends DataCommon {
         return cal.getTime();
     }
     
-    private String calculcateTimeZone(String toCheck) {
+    private Date calculcateTimeZone(String toCheck, Date toDiff) {
         String[] splitted = toCheck.split(":");
         Integer hour = new Integer(splitted[0]);
         Integer minute = new Integer(splitted[1]);
         
-        TimeZone tz1 = TimeZone.getTimeZone(timezone);
-        TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
-        long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
-        if(timeDifference != 0) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, hour);
-            cal.set(Calendar.MINUTE, minute);
-            long seconds = timeDifference / 1000;
-            cal.add(Calendar.SECOND, (int)seconds);
-            int min = cal.get(Calendar.MINUTE);
-            int hourTime = cal.get(Calendar.HOUR_OF_DAY);
-            String minuteToReturn = min + "";
-            if(min < 10) { minuteToReturn = "0" + minuteToReturn; }
-            String hourToReturn = hourTime + "";
-            if(hourTime < 10) { hourToReturn = "0" + hourTime; }
-            String res = hourToReturn + ":" + minuteToReturn;
-            return res;
-        }
-        return toCheck;
+        int diff = getTimeDifferenceInTimeZone();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(toDiff);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.add(Calendar.SECOND, diff);
+        
+        return cal.getTime();
 
+    }
+
+    public int getTimeDifferenceInTimeZone() {
+        Date here = new Date();
+        Date timezone = getCurrentTimeInTimeZone();
+        long diff = (here.getTime() - timezone.getTime());
+        return (int)(diff/1000);
+    }
+
+    Date convertToTimeZone(Date timing) {
+        int diff = getTimeDifferenceInTimeZone();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(timing);
+        cal.add(Calendar.HOUR_OF_DAY, diff);
+        return cal.getTime();
     }
 
 
@@ -129,7 +140,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean autoSendInvoice = false;
     public boolean autoMarkCreditNotesAsPaidFor = false;
     public boolean autoCreateInvoices = false;
-    public boolean usePriceMatrixOnOrder = false;
+    private boolean usePriceMatrixOnOrder = false;
     public boolean splitOrderIntoMonths = false;
     public boolean orderEndsFirstInMonth = false;
     public Integer whenInfinteDateFirstOrderTimeUnits = 1;
@@ -176,6 +187,13 @@ public class PmsConfiguration extends DataCommon {
             defaultsv = new PmsLockServer();
         }
         return defaultsv;
+    }
+    
+    public boolean getUsePriceMatrixOnOrder() {
+        if(isPikStore) {
+            return true;
+        }
+        return usePriceMatrixOnOrder;
     }
     
     public PmsLockServer getLockServer(String serverSource) {
@@ -276,17 +294,34 @@ public class PmsConfiguration extends DataCommon {
         return hourOfDayToStartBoarding;
     }
     public String getDefaultEnd() {
-        if(timezone != null && !timezone.isEmpty() && defaultEnd != null && defaultEnd.contains(":")) {
-            return calculcateTimeZone(defaultEnd);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getDefaultEnd(new Date()));
+        
+        int minute = cal.get(Calendar.MINUTE);
+        String minuteText = minute + "";
+        if(minute < 10) {
+            minuteText = "0" + minute;
         }
         
-        return defaultEnd;
+        return cal.get(Calendar.HOUR_OF_DAY) + ":" + minuteText;
     }
     public String getDefaultStart() {
-        if(timezone != null && !timezone.isEmpty() && defaultEnd != null && defaultEnd.contains(":")) {
-            return calculcateTimeZone(defaultStart);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(getDefaultStart(new Date()));
+        
+        int minute = cal.get(Calendar.MINUTE);
+        String minuteText = minute + "";
+        if(minute < 10) {
+            minuteText = "0" + minute;
         }
-        return defaultStart;
+        return cal.get(Calendar.HOUR_OF_DAY) + ":" + minuteText;
+    }
+    
+    public Date getDefaultEnd(Date inputDate) {
+        return calculcateTimeZone(defaultEnd, inputDate);
+    }
+    public Date getDefaultStart(Date inputDate) {
+        return calculcateTimeZone(defaultStart, inputDate);
     }
     public Integer getCloseRoomNotCleanedAtHour() {
         if(timezone != null && !timezone.isEmpty()) {
@@ -307,6 +342,10 @@ public class PmsConfiguration extends DataCommon {
     
     boolean channelExists(String channel) {
         return channelConfiguration.containsKey(channel);
+    }
+    
+    public boolean isPIKTime(Date storeDate) {
+        return true;
     }
     
     public void finalize() {

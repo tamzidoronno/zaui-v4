@@ -33,22 +33,23 @@
         });
         
     };
+
+    $('<link/>', {
+       rel: 'stylesheet',
+       type: 'text/css',
+       href: 'https://s3.amazonaws.com/icomoon.io/135206/GetShopIcons/style.css?tyxklk'
+    }).appendTo('head');
+
+    $('<link/>', {
+       rel: 'stylesheet',
+       type: 'text/css',
+       href: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
+    }).appendTo('head');
+
+    $('<link/>', {
+       rel: 'stylesheet',
+       type: 'text/css',
+       href: 'https://www.getshop.com/js/daterangepicker/daterangepicker.css'
+    }).appendTo('head');
+    
 }( jQuery ));
-
-$('<link/>', {
-   rel: 'stylesheet',
-   type: 'text/css',
-   href: 'https://s3.amazonaws.com/icomoon.io/135206/GetShopIcons/style.css?tyxklk'
-}).appendTo('head');
-
-$('<link/>', {
-   rel: 'stylesheet',
-   type: 'text/css',
-   href: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
-}).appendTo('head');
-
-$('<link/>', {
-   rel: 'stylesheet',
-   type: 'text/css',
-   href: 'https://www.getshop.com/js/daterangepicker/daterangepicker.css'
-}).appendTo('head');

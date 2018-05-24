@@ -33,10 +33,8 @@ app.PmsGroupBookingHeader = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             if(res === "no") {
                 $('.notavailablerooms').show();
-                $('.doaddroomtogroup').addClass('disabled');
             } else {
                 $('.notavailablerooms').hide();
-                $('.doaddroomtogroup').removeClass('disabled');
             }
         });
     },

@@ -1,6 +1,7 @@
 app.PmsBookingRoomView = {
     init: function() {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .close', this.closePreview);
+        $(document).on('click', '.PmsBookingRoomView .opengroup', this.openGroup);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .closebutton', this.closePreview);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .continue', this.continueToBooking);
         $(document).on('click', '.PmsBookingRoomView .menuarea .menuentry', this.menuClicked);
@@ -35,7 +36,10 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
         $(document).on('click', '.PmsBookingRoomView .expandmessage', this.expandmessage);
     },
-    
+    openGroup : function() {
+        thundashop.common.closeModal();
+        window.location.href='/?page=groupbooking&bookingId=' + $(this).attr('bookingid');
+    },
     expandmessage : function() {
         $(this).closest('.messagelogentry').find('.messagelogtext').css('max-height','100%');
     },

@@ -342,7 +342,13 @@
         $.getScript( "{getshop_endpoint}/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
             $.getScript( "{getshop_endpoint}/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
                 getshop_setBookingTranslation();
-                getshop_setDatePicker();
+                var getshop_waitforload = setInterval(function() {
+                    if(typeof(getshop_bookingconfiguration) === "undefined") {
+                        return;
+                    }
+                    getshop_setDatePicker();
+                    clearInterval(getshop_waitforload);
+                }, 50);
             });
         });
        });

@@ -99,7 +99,7 @@
      </div>
     
     <div ng-repeat="stat in cleaningstats">
-        <span class="col-xs-6">{{stat.date}}</span>
+        <span class="col-xs-6">{{stat.dateFormatted}}</span>
         <span class="col-xs-2">{{stat.checkoutCleaningCount}}</span>
         <span class="col-xs-2">{{stat.intervalCleaningCount}}</span>
         <span class="col-xs-2">{{stat.intervalCleaningCount + stat.checkoutCleaningCount}}</span>

@@ -10,6 +10,9 @@ $selected = $this->getFactory()->getSelectedLanguage();
 $factory = $this->getFactory();
 $langauge = $this->getLanguage();
 $hasArx = $notificationSettings->arxHostname;
+if($this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName())) {
+    $hasArx = true;
+}
 $hasEventCalendar = false;
 $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
 if(!$instances) {

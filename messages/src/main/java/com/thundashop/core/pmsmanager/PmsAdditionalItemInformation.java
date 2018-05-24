@@ -39,6 +39,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     @Transient
     boolean inUseByCleaning;
     public boolean closed = false;
+    public boolean closedByCleaningProgram = false;
 
     Boolean isClean() {
         isCleanNotToday = isClean(false);

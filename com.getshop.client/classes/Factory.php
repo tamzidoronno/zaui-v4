@@ -941,6 +941,7 @@ class Factory extends FactoryBase {
         if (isset($_GET['setLanguage'])) {
             $translation = $_GET['setLanguage'];
             $_SESSION['language_selected'] = $translation;
+            $this->getApi()->getStoreManager()->setSessionLanguage($translation);
         } else if (isset($_SESSION['language_selected'])) {
             $translation = $_SESSION['language_selected'];
         }

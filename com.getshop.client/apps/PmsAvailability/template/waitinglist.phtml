@@ -1,0 +1,51 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+
+$bookingfilter = new core_pmsmanager_PmsBookingFilter();
+$bookingfilter->startDate = $this->convertToJavaDate(strtotime($this->getSelectedFilter()->start));
+$bookingfilter->endDate = $this->convertToJavaDate(strtotime($this->getSelectedFilter()->end));
+$bookingfilter->filterType = "waiting";
+$waitingList = (array)$this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $bookingfilter);
+if(sizeof($waitingList) > 0) {
+    echo "<div class='waitinglist' onClick='$(\".PmsAvailability .waitinglistlist\").toggle()'>";
+    echo "You have " . sizeof($waitingList) . " rooms in your waiting list.";
+    echo "</div>";
+    echo "<div class='waitinglistlist'>";
+    echo "<span class='changeroomfromworkspacebox' style='display:none; position:absolute;background-color:#fff; border: solid 1px; padding: 10px;' ></span>";
+    echo "<div style='padding: 10px;'>";
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th>Booker</th>";
+    echo "<th>Guest</th>";
+    echo "<th>Start</th>";
+    echo "<th>End</th>";
+    echo "<th>Action</th>";
+    echo "</tr>";
+
+    foreach($waitingList as $room) {
+        /* @var $room core_pmsmanager_PmsRoomSimple */
+        echo "<tr>";
+        echo "<td style='padding: 5px;'>" . $room->owner . "</td>";
+        if(sizeof((array)$room->guest) > 0) {
+            echo "<td style='padding: 5px;'>" . $room->guest[0]->name . "</td>";
+        } else {
+            echo "<td style='padding: 5px;'>No guest name</td>";
+        }
+        echo "<td style='padding: 5px;'>" . date("d.m.Y", $room->start/1000) . "</td>";
+        echo "<td style='padding: 5px;'>" . date("d.m.Y", $room->end/1000) . "</td>";
+        echo "<td style='padding: 5px; color:blue; cursor:pointer;' class='readdfromworkspace' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."' gs_show_modal='booking_room_view'>Open</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    echo "</div>";
+    echo "</div>";
+    echo "</div>";
+    echo "<br>";
+}
+?>

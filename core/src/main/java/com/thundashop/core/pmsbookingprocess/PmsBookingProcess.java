@@ -145,7 +145,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
 
             
-            room.availableRooms = pmsManager.getNumberOfAvailable(type.id, arg.start, arg.end, true);
+            room.availableRooms = pmsManager.getNumberOfAvailable(type.id, arg.start, arg.end, true, true);
             room.id = type.id;
             room.visibleForBooker = type.visibleForBooking;
             result.totalRooms += room.availableRooms;

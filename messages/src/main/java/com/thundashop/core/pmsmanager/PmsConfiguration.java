@@ -63,6 +63,14 @@ public class PmsConfiguration extends DataCommon {
         return (int)(diff/1000);
     }
 
+    Date convertToTimeZone(Date timing) {
+        int diff = getTimeDifferenceInTimeZone();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(timing);
+        cal.add(Calendar.HOUR_OF_DAY, diff);
+        return cal.getTime();
+    }
+
 
 
     public static class PmsBookingTimeInterval {

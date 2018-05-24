@@ -516,29 +516,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
-        boolean canAdd = canAdd(bookingsToAdd);
-        if (!canAdd && !configuration.deleteAllWhenAdded && !booking.getActiveRooms().isEmpty()) {
-            return -2;
+        bookingEngine.addBookings(bookingsToAdd);
+        booking.attachBookingItems(bookingsToAdd);
+        booking.sessionId = null;
+        if (booking.registrationData.resultAdded.get("company_invoicenote") != null) {
+            booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
         }
-        if (canAdd) {
-            bookingEngine.addBookings(bookingsToAdd);
-            booking.attachBookingItems(bookingsToAdd);
-            booking.sessionId = null;
-            if (booking.registrationData.resultAdded.get("company_invoicenote") != null) {
-                booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
-            }
 
-            if (!needConfirmation(booking)) {
-                booking.confirmed = true;
-            }
+        if (!needConfirmation(booking)) {
+            booking.confirmed = true;
+        }
 
-            User loggedonuser = userManager.getLoggedOnUser();
-            if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
-                booking.confirmed = true;
-            }
-            if (loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
-                booking.confirmed = true;
-            }
+        User loggedonuser = userManager.getLoggedOnUser();
+        if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
+            booking.confirmed = true;
+        }
+        if (loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
+            booking.confirmed = true;
         }
 
         booking.sessionId = "";
@@ -3304,7 +3298,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return false;
             }
         }
-
+        gsTiming("   has restriction passed");
         boolean anyBookingWithId = toCheck.stream()
                 .filter(o -> o.id != null && !o.id.isEmpty())
                 .count() > 0;
@@ -3312,18 +3306,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (anyBookingWithId) {
             return bookingEngine.canAdd(toCheck);
         }
+        gsTiming("   anybookingwith id passed");
 
         if (toCheck.isEmpty()) {
             return true;
         }
 
+        HashMap<String, List<BookingItem>> resultsFound = new HashMap();
+        
         for (Booking book : toCheck) {
-            List<BookingItem> items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
+            String key = book.bookingItemId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
+            List<BookingItem> items = new ArrayList();
+            if(resultsFound.containsKey(key)) {
+                items = resultsFound.get(key);
+            } else {
+                items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
+                resultsFound.put(key, items);
+            }
             HashMap<String, Integer> count = getCountedTypes(toCheck, book.startDate, book.endDate);
             if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
                 return false;
             }
+            gsTiming("   getavailbeitem...");
         }
+        gsTiming("   getavailbeitems passed");
 
         return true;
     }
@@ -5172,8 +5178,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return null;
             }
             gsTiming("Created user for booking");
-            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.hasOverBooking()) {
+            
+            boolean canAdd = canAdd(bookingsToAdd);
+            if(!canAdd) {
+                result = -10;
+                throw new RuntimeException("Failed to add to booking engine");
+            }
+            if (configuration.payAfterBookingCompleted && !booking.createOrderAfterStay && !booking.hasOverBooking()) {
+                gsTiming("get priceobject from booking");
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
+                gsTiming("Got priceobject from booking");
                 pmsInvoiceManager.createPrePaymentOrder(booking);
                 gsTiming("Created payment for order");
             }
@@ -8516,8 +8530,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String profile = getConfigurationSecure().bookingProfile;
         if(profile == null || profile.equals("hotel") || profile.isEmpty()) {
             for(PmsBookingRooms room : booking.rooms) {
-                room.date.start = getConfigurationSecure().getDefaultStart(room.date.start);
-                room.date.end = getConfigurationSecure().getDefaultEnd(room.date.end);
+                if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
+                    room.date.start = getConfigurationSecure().convertToTimeZone(room.date.start);
+                    room.date.end = getConfigurationSecure().convertToTimeZone(room.date.end);
+                } else {
+                    room.date.start = getConfigurationSecure().getDefaultStart(room.date.start);
+                    room.date.end = getConfigurationSecure().getDefaultEnd(room.date.end);
+                }
             }
         }
     }

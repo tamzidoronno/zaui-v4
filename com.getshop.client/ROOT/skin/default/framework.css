@@ -2902,6 +2902,11 @@ select.gsniceselect1:active {
     margin-bottom: 2px;
 }
 
+.gs_privacy_bottom {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
 
 @media only all and (max-width:800px){
     body{

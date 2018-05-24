@@ -138,6 +138,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("cookiewarning",  $_POST['cookiewarning']);
         $this->setConfigurationSetting("automaticPhoneValidationActivated",  $_POST['automaticPhoneValidationActivated']);
         $this->setConfigurationSetting("mainsmsnumber",  $_POST['mainsmsnumber']);
+        $this->setConfigurationSetting("default_gdpr_hotel_declartation",  $_POST['default_gdpr_hotel_declartation']);
         
         $this->getApi()->getStoreManager()->setStoreIdentifier($_POST['identifier']);
     }

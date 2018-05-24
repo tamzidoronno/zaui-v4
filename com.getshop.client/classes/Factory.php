@@ -909,6 +909,14 @@ class Factory extends FactoryBase {
         return $agent;
     }
 
+    public function displayPrivacyDeclaration() {
+        $settings = $this->getSettings();
+
+        if ($this->getSettings()->getConfigurationSetting("default_gdpr_hotel_declartation") === "true") {
+            echo "<div class='gs_privacy_bottom'><a target='_blank' href='/privacy.php'>".$this->__f("Privacy"). " | GDRP"."</a></div>";
+        }
+    }
+    
     public function displayCookieWarning() {
         $settings = $this->getSettings();
 

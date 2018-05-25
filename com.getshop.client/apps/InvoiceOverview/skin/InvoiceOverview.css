@@ -1,0 +1,3 @@
+.InvoiceOverview .GetShopModuleTable .col { width: 100px; }
+.InvoiceOverview .GetShopModuleTable .col_2 { width: 80px; }
+.InvoiceOverview .GetShopModuleTable .col_6 { width: calc(100% - 1000px) !important; }

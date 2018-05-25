@@ -12,6 +12,8 @@ import com.thundashop.core.common.Internal;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderFilter;
+import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -81,6 +83,9 @@ public interface IOrderManager {
     
     @Editor
     public FilteredData getOrdersFiltered(FilterOptions filterOptions);
+    
+    @Editor
+    public List<OrderResult> getOrdersByFilter(OrderFilter filter);
     
     @Administrator
     public List<String> getPaymentMethodsThatHasOrders();

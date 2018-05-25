@@ -435,6 +435,7 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
         <?
         $factory->renderBottom();
         $factory->displayCookieWarning();
+        $factory->displayPrivacyDeclaration();
         ?>
     </body>
 </html>

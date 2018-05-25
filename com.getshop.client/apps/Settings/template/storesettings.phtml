@@ -247,6 +247,17 @@ $states = $factory->getLanguageReadable();
         </div>
     </div>
     
+    <div class="textfield gss_setting" id="">
+        <span class="title"><?php echo $this->__f("Show default GDPR hotel privacy declaration"); ?></span>
+        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="default_gdpr_hotel_declartation">
+            <? $faclass = $this->getConfigurationSetting("default_gdpr_hotel_declartation") == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("GetShop has provided a default GDPR privacy declaration that will be shown at the bottom of the website."); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting" id="singlegrouptouser">
         <span class="title"><?php echo $this->__f("Your favicon"); ?>
         </span>

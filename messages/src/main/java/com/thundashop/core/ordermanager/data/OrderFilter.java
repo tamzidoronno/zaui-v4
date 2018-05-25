@@ -21,6 +21,7 @@ public class OrderFilter {
     public String paymentMethod;
     public Integer state;
     public String type;
+    public String searchWord;
     public List<String> customer = new ArrayList();
 
 }

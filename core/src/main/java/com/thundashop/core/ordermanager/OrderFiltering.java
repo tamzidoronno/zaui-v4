@@ -7,6 +7,7 @@ package com.thundashop.core.ordermanager;
 
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
+import com.thundashop.core.ordermanager.data.OrderResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -28,6 +29,7 @@ public class OrderFiltering {
         filterByDate(filter, toRemove);
         filterByStatus(filter);
         filterByPaymentMethod(filter);
+        filterByUsers(filter);
         return ordersToFilter;
     }
 
@@ -99,6 +101,30 @@ public class OrderFiltering {
             return false;
         }
         return true;
+    }
+
+    public OrderResult sum(List<OrderResult> orderFilterResult) {
+        OrderResult res = new OrderResult();
+        for(OrderResult r : orderFilterResult) {
+            res.amountExTaxes += r.amountExTaxes;
+            res.restAmount = r.restAmount;
+            res.amountIncTaxes = r.amountIncTaxes;
+            res.amountPaid = r.amountPaid;
+        }
+        return res;
+    }
+
+    private void filterByUsers(OrderFilter filter) {
+        if(filter.customer == null || filter.customer.isEmpty()) {
+            return;
+        }
+        List<Order> remove = new ArrayList();
+        for(Order ord : ordersToFilter) {
+            if(!filter.customer.contains(ord.userId)) {
+                remove.add(ord);
+            }
+        }
+        ordersToFilter.removeAll(remove);
     }
     
 }

@@ -1,5 +1,14 @@
 <div style='text-align:right; padding-right: 10px; max-width:1500px; margin: auto; border-bottom: solid 4px #bbb; padding-bottom: 10px; margin-bottom: 10px;' gstype='form' method='updatefilter'>
-    <span class='shop_button' gsname='Search' style='float:left;'>Filter by customer</span>
+    <div class="searchcustomer" gstype='form' method='searchCustomer' style='float:left; display:none;'>
+            <input type="txt" gsname="customer" gsname='customername' class="gsniceinput1" placeholder="Customer name" gs_callback='app.InvoiceOverview.searchCustomerResult' gstype='submitenter'>
+            <span class="shop_button" gstype='submit' gs_callback='app.InvoiceOverview.searchCustomerResult'>Search customer</span>
+            <div class='customersearchresult' style='display:none;'>
+                <i class='fa fa-close close' onclick='$(".customersearchresult").hide()'></i>
+                <div class='customersearchresultinner'></div>
+            </div>
+    </div>
+    
+    <span class='shop_button filterbycustomerbutton' style='float:left;'>Filter by customer</span>
     <?php
     /* @var $this \ns_3746f382_0450_414c_aed5_51262ae85307\InvoiceOverview */
     $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
@@ -14,6 +23,8 @@
 
     $filterType = array();
     
+    
+    echo "<input type='text' class='gsniceinput1' placeholder='Free text search' style='margin-right: 5px;' gsname='searchword' value='".$filter->searchWord."' gstype='submitenter'>";
     echo "<select class='gsniceselect1' style='height:38px;' gsname='paymentmethod'>";
     echo "<option value=''>All</option>";
     foreach($paymentMethods as $pmethod) {
@@ -22,9 +33,7 @@
             if($pmethod->id == $filter->paymentMethod) {
                 $selected = "SELECTED";
             }
-        } else if($pmethod->id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-            $selected = "SELECTED";
-        }
+        } 
         
         echo  "<option value='".$pmethod->id."' $selected>" . $pmethod->appName . "</option>";
     }
@@ -61,7 +70,19 @@
     echo "</select>";
     ?>
     <span class='shop_button' gstype='submit'>Load result</span>
+    <div class='usersfilterresult'>
+        <?php $this->printCustomersOnFilter(); ?>
+    </div>
+
+    <?php
+    if($filter->searchWord) {
+        echo "<div class='searchwordwarning'>";
+        echo "PS: When using free text search all other filteres will be rendered inactive";
+        echo "</div>";
+    }
+    ?>
 </div>
+
 
 <script>
     $('[gsname="startdate"]').datepicker({ dateFormat: "dd.mm.yy"});

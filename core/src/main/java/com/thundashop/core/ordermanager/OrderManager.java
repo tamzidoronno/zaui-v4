@@ -2218,7 +2218,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> ordersToReturn = new ArrayList();
         OrderFiltering filtering = new OrderFiltering();
         filtering.setOrders(new ArrayList(orders.values()));
-        ordersToReturn = filtering.filterOrders(filter);
+        
+        if(filter.searchWord != null && !filter.searchWord.isEmpty()) {
+            ordersToReturn = searchForOrders(filter.searchWord, null, null);
+        } else {
+            ordersToReturn = filtering.filterOrders(filter);
+        }
         
         List<OrderResult> orderFilterResult = new ArrayList();
         for(Order ord : ordersToReturn) {
@@ -2230,6 +2235,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             orderFilterResult.add(res);
         }
+        
+        orderFilterResult.add(filtering.sum(orderFilterResult));
         
         return orderFilterResult;
     }

@@ -16,7 +16,7 @@ $attributes = array(
     array('restAmount', 'Rest', 'restAmount'),
 );
 
-$table = new \GetShopModuleTable($this, 'PmsRoomConfiguration', 'loadRoomConfiguration', null, $attributes);
+$table = new \GetShopModuleTable($this, 'InvoiceOverview', 'loadOrder', null, $attributes);
 $table->setData($result);
 echo "<div class='invoicetable'>";
 $table->render();

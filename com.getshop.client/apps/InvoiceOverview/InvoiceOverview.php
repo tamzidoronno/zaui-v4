@@ -29,7 +29,53 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
      * @return 
      */
     public function formatOrderDate($row) {
+        if(!$row->orderDate) {
+            return "N/A";
+        }
+        
         return date("d.m.Y", strtotime($row->orderDate));
+    }
+    
+    public function InvoiceOverview_loadOrder() {
+        $app = new \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView();
+        $app->loadOrder($_POST['data']['id']);
+        $app->renderApplication(true, $this);
+    }    
+    
+    public function addCustomerToFilter() {
+        $filter = $this->getFilter();
+        $filter->customer[] = $_POST['data']['userid'];
+        $_SESSION['orderfilter'] = json_encode($filter);
+        $this->printCustomersOnFilter();
+    }
+    
+    public function removeCustomerFromFilter() {
+        $filter = $this->getFilter();
+        $newFilter = array();
+        foreach($filter->customer as $id) {
+            if($id == $_POST['data']['userid']) {
+                continue;
+            }
+            $newFilter[] = $id;
+        }
+        $filter->customer = $newFilter;
+        $_SESSION['orderfilter'] = json_encode($filter);
+        $this->printCustomersOnFilter();
+    }
+    
+    public function searchCustomer() {
+        $search = $_POST['data']['customer'];
+        $result = $this->getApi()->getUserManager()->findUsers($search);
+        echo "<table>";
+        foreach($result as $usr) {
+            echo "<tr>";
+            echo "<td>" . $usr->fullName . "</td>";
+            echo "<td>" . $usr->emailAddress . "</td>";
+            echo "<td>" . "+" . $usr->prefix . $usr->cellPhone . "</td>";
+            echo "<td><input type='button' class='addusertofilter' value='Select' userid='".$usr->id."'></td>";
+            echo "</tR>";
+        }
+        echo "</table>";
     }
     
     /**
@@ -68,12 +114,13 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
     }
     
     public function updatefilter() {
-        $filter = new \core_ordermanager_data_OrderFilter();
+        $filter = $this->getFilter();
         $filter->start = $this->convertToJavaDate(strtotime($_POST['data']['startdate']));
         $filter->end = $this->convertToJavaDate(strtotime($_POST['data']['enddate']));
         $filter->state = $_POST['data']['state'];
         $filter->type = $_POST['data']['filtertype'];
         $filter->paymentMethod = $_POST['data']['paymentmethod'];
+        $filter->searchWord = $_POST['data']['searchword'];
         
         $_SESSION['orderfilter'] = json_encode($filter);
         
@@ -81,6 +128,9 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
     
     public function formatStatus($row) {
         $states = $this->getStates();
+        if(!isset($states[$row->status])) {
+            return "";
+        }
         return $states[$row->status];
     }
 
@@ -99,6 +149,14 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
         $states['10'] = "Send to invoice";
 
         return $states;
+    }
+
+    public function printCustomersOnFilter() {
+        $filter = $this->getFilter();
+        foreach((array)$filter->customer as $userId) {
+            $usr = $this->getApi()->getUserManager()->getUserById($userId);
+            echo "<span class='addeduser' userid='".$usr->id."'><i class='fa fa-close'></i> " . $usr->fullName . "</span>";
+        }
     }
 
 }

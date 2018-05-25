@@ -6013,10 +6013,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public List<ConferenceData> getFutureConferenceData() {
+    public List<ConferenceData> getFutureConferenceData(Date fromDate) {
         List<ConferenceData> retList = conferenceDatas.values().stream()
                 .filter(conference -> conference.days != null && !conference.days.isEmpty())
-                .filter(conf -> isInFuture(conf))
+                .filter(conf -> isInFuture(conf, fromDate))
                 .collect(Collectors.toList());
 
         retList.stream().forEach(conf -> finalize(conf));
@@ -6024,10 +6024,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return retList;
     }
 
-    private boolean isInFuture(ConferenceData data) {
+    private boolean isInFuture(ConferenceData data, Date fromDate) {
         PmsBooking booking = getBooking(data.bookingId);
 
-        return booking != null && (!booking.isEnded() || booking.isActiveOnDay(new Date()));
+        return booking != null && (!booking.isEndedBefore(fromDate) || booking.isActiveOnDay(new Date()));
     }
 
     private List<PmsBooking> filterByUnsettledAmounts(List<PmsBooking> finalized) {
@@ -6081,8 +6081,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public Map<Long, List<ConferenceData>> getGroupedConferenceData() {
-        List<ConferenceData> futureConfData = getFutureConferenceData();
+    public Map<Long, List<ConferenceData>> getGroupedConferenceData(Date fromDate) {
+        if(fromDate == null) {
+            fromDate = new Date();
+        }
+        List<ConferenceData> futureConfData = getFutureConferenceData(fromDate);
         List<ConferenceData> eachDayConfData = new ArrayList();
 
         futureConfData.stream().forEach(fut -> eachDayConfData.addAll(fut.getForEachDay()));

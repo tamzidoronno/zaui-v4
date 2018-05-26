@@ -75,6 +75,9 @@ attribute gstypes;
             <div  gsclick="method" gs_scrollToTop="true"/>
 
     
+    sorting in getshop table module:
+        <div class='rowdate1' getshop_sorting='$date'>
+
     gschange (posts all attributes),
         Works for fields that has the change event. 
         example:

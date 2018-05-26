@@ -20,6 +20,10 @@ class ApplicationBase extends FactoryBase {
         return false;
     }
     
+    public function sortGetShopTable() {
+        
+    }
+    
     public function clearSessionOnIdentifierForTable() {
         $identifier = $_POST['data']['functioname'];
         unset($_SESSION['gs_moduletable_'.$identifier]);

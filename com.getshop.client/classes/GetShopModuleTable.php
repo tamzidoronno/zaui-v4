@@ -21,6 +21,7 @@ class GetShopModuleTable {
     private $avoidAutoExpanding = false;
     private $sortByColumn = "";
     private $sortingAscending = true;
+    private $sortingArray = array();
 
     function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes, $extraData = null) {
         $this->attributes = $attributes;
@@ -56,12 +57,21 @@ class GetShopModuleTable {
         if (!method_exists($res, $this->functionName)) {
             return;
         }
-        if($this->functionName) {
+        if ($this->functionName) {
             $this->data = call_user_func_array(array($res, $this->functionName), $this->args);
         }
     }
 
     private function renderTable($renderPaging = false) {
+
+        if (isset($_POST['event']) && $_POST['event'] == "sortGetShopTable") {
+            $this->sortByColumn = $_POST['data']['column'];
+            $this->sortingAscending = false;
+            if ($_POST['data']['sorting'] == "asc") {
+                $this->sortingAscending = true;
+            }
+        }
+
         $dataToPrint = $this->formatDataToPrint();
         $dataToPrint = $this->sortData($dataToPrint);
 
@@ -71,7 +81,23 @@ class GetShopModuleTable {
         $i = 1;
         foreach ($this->attributes as $attribute) {
             if ($attribute[1] !== "gs_hidden") {
-                echo "<div class='col col_$i col_$attribute[0]' index='" . $attribute[0] . "'>$attribute[1]</div>";
+
+                $sort = "";
+                $sortClass = "";
+                if ($this->hasSorting($attribute[0])) {
+                    if ($this->sortByColumn == $attribute[0]) {
+                        if ($this->sortingAscending) {
+                            $sort = "<i class='fa fa-sort-desc'></i> ";
+                        } else {
+                            $sort = "<i class='fa fa-sort-asc'></i> ";
+                        }
+                    } else {
+                        $sort = "<i class='fa fa-sort'></i> ";
+                    }
+                    $sortClass = "hassorting";
+                }
+
+                echo "<div class='headercol col col_$i col_$attribute[0] $sortClass' index='" . $attribute[0] . "'>$sort" . "$attribute[1]</div>";
             }
             $i++;
         }
@@ -121,6 +147,7 @@ class GetShopModuleTable {
         if ($renderPaging) {
             $this->renderPaging();
         }
+        $this->printSortingScript();
         echo "</div>";
     }
 
@@ -208,9 +235,9 @@ class GetShopModuleTable {
             return "";
         }
         if (is_numeric($date)) {
-            return "<div class='rowdate1'>" . date("d.m.y", $date / 1000) . "</div><div class='rowdate2'>" . date("H:i", $date / 1000) . "</div>";
+            return "<div class='rowdate1' getshop_sorting='$date'>" . date("d.m.y", $date / 1000) . "</div><div class='rowdate2'>" . date("H:i", $date / 1000) . "</div>";
         }
-        return "<div class='rowdate1'>" . date("d.m.y", strtotime($date)) . "</div><div class='rowdate2'>" . date("H:i", strtotime($date)) . "</div>";
+        return "<div class='rowdate1' getshop_sorting='".strtotime($date)."'>" . date("d.m.y", strtotime($date)) . "</div><div class='rowdate2'>" . date("H:i", strtotime($date)) . "</div>";
     }
 
     public function renderPagedTable() {
@@ -329,14 +356,14 @@ class GetShopModuleTable {
         if (!$this->sortByColumn) {
             return $dataToPrint;
         }
-        
+
         $columnName = $this->sortByColumn;
         $direction = $this->sortingAscending;
-        
+
         usort($dataToPrint, function($a, $b) use ($columnName, $direction) {
-            $aval = $a[$columnName];
-            $bval = $b[$columnName];
-            
+            $aval = $this->getSortingValue($a[$columnName]);
+            $bval = $this->getSortingValue($b[$columnName]);
+
             if ($direction) {
                 if (is_numeric($aval) && is_numeric($bval)) {
                     return floatval($aval) - floatval($bval);
@@ -351,10 +378,23 @@ class GetShopModuleTable {
                 }
             }
         });
-        
+
         return $dataToPrint;
     }
- 
+
+    public function getSortingValue($val) {
+        if(stristr($val, "getshop_sorting")) {
+            $val = substr($val, strpos($val, "getshop_sorting")+17);
+            if(strpos($val, "'") > 0) {
+                $val = substr($val, 0, strpos($val, "'"));
+            }
+            if(strpos($val, "\"") > 0) {
+                $val = substr($val, 0, strpos($val, "\""));
+            }
+        }
+        return $val;
+    }
+    
     public function formatDataToPrint() {
         $retData = array();
 
@@ -373,11 +413,58 @@ class GetShopModuleTable {
 
                 $postArray[$attribute[0]] = $val;
             }
-            
+
             $retData[] = $postArray;
         }
 
         return $retData;
+    }
+
+    public function formatDataToSort() {
+        $retData = array();
+
+        foreach ($this->data as $data) {
+            $postArray = array();
+
+            foreach ($this->attributes as $attribute) {
+                $val = $data->{$attribute[2]};
+                $postArray[$attribute[0]] = $val;
+            }
+
+            $retData[] = $postArray;
+        }
+
+        return $retData;
+    }
+
+    public function hasSorting($attribute) {
+        if (in_array($attribute, $this->sortingArray)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function setSorting($sortingArray) {
+        $this->sortingArray = $sortingArray;
+    }
+
+    public function printSortingScript() {
+        ?>
+        <script>
+            $('.GetShopModuleTable .hassorting').on('click', function () {
+                var colheader = $(this);
+                var sorting = "asc";
+                if (colheader.find('.fa-sort-desc').length > 0) {
+                    sorting = "desc";
+                }
+                var event = thundashop.Ajax.createEvent('', 'sortGetShopTable', $(this), {
+                    "column": colheader.attr('index'),
+                    "sorting": sorting
+                });
+                thundashop.Ajax.post(event);
+            });
+        </script>
+        <?php
     }
 
 }

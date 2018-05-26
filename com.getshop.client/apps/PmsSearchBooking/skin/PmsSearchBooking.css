@@ -138,7 +138,7 @@
     position:relative;
     width: 500px;
 }
-.PmsSearchBooking .GetShopModuleTable .col_checkin i {
+.PmsSearchBooking .GetShopModuleTable .col_checkin:not(.headercol) i {
     position: absolute;
     right: 10px;
     color: #82cdf3;
@@ -153,12 +153,12 @@
 .PmsSearchBooking .GetShopModuleTable .col_checkout { width: 100px; }
 .PmsSearchBooking .GetShopModuleTable .col_price { width: 50px; }
 .PmsSearchBooking .GetShopModuleTable .col_state { width: 45px; }
-.PmsSearchBooking .GetShopModuleTable .col_totalprice { width: 50px; }
+.PmsSearchBooking .GetShopModuleTable .col_totalprice { width: 55px; }
 .PmsSearchBooking .GetShopModuleTable .col_expandbutton { width: 50px; }
 .PmsSearchBooking .GetShopModuleTable .col_bookedfor { width: 144px; }
 .PmsSearchBooking .GetShopModuleTable .col_room { width: 144px; }
 .PmsSearchBooking .GetShopModuleTable .col_addons { width: 60px; }
-.PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 933px); }
+.PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 940px); }
 
 .gsbody_inner[pageId="a90a9031-b67d-4d98-b034-f8c201a8f496"] .datarow_extended_content {
     padding: 0px;

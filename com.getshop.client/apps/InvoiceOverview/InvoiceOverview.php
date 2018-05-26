@@ -33,7 +33,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
             return "N/A";
         }
         
-        return date("d.m.Y", strtotime($row->orderDate));
+        return "<span getshop_sorting='".strtotime($row->orderDate)."'>" . date("d.m.Y", strtotime($row->orderDate)) . "</span>";
     }
     
     public function InvoiceOverview_loadOrder() {
@@ -87,7 +87,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
         if(!$row->paymentDate) {
             return "N/A";
         }
-        return date("d.m.Y", strtotime($row->paymentDate));
+        return "<span getshop_sorting='".strtotime($row->paymentDate)."'>" . date("d.m.Y", strtotime($row->paymentDate)) . "</span>";
     }
     
     /**
@@ -99,7 +99,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
         if(!$row->dueDate) {
             return "N/A";
         }
-        return date("d.m.Y", strtotime($row->dueDate));
+        return "<span getshop_sorting='".strtotime($row->dueDate)."'>" . date("d.m.Y", strtotime($row->dueDate)) . "</span>";
     }
     
     /**

@@ -17,6 +17,7 @@ $attributes = array(
 );
 
 $table = new \GetShopModuleTable($this, 'InvoiceOverview', 'loadOrder', null, $attributes);
+$table->setSorting(array("id","incOrderId","orderDate","paymentDate","dueDate","user","status","amountExTaxes","amountIncTaxes","amountPaid","restAmount"));
 $table->setData($result);
 echo "<div class='invoicetable'>";
 $table->render();

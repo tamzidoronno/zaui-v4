@@ -515,9 +515,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return pmsInvoiceManager.createPrePaymentOrder(getBooking(bookingId));
     }
 
-    private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
-        bookingEngine.addBookings(bookingsToAdd);
-        booking.attachBookingItems(bookingsToAdd);
+    private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking, boolean canAdd) throws ErrorException {
+        if(canAdd) {
+            bookingEngine.addBookings(bookingsToAdd);
+            booking.attachBookingItems(bookingsToAdd);
+        }
         booking.sessionId = null;
         if (booking.registrationData.resultAdded.get("company_invoicenote") != null) {
             booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
@@ -5180,11 +5182,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Created user for booking");
             
             boolean canAdd = canAdd(bookingsToAdd);
-            if(!canAdd) {
-                result = -10;
-                throw new RuntimeException("Failed to add to booking engine");
-            }
-            if (configuration.payAfterBookingCompleted && !booking.createOrderAfterStay && !booking.hasOverBooking()) {
+            if (configuration.payAfterBookingCompleted && !booking.createOrderAfterStay && !booking.hasOverBooking() && canAdd) {
                 gsTiming("get priceobject from booking");
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
                 gsTiming("Got priceobject from booking");
@@ -5192,7 +5190,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 gsTiming("Created payment for order");
             }
 
-            result = completeBooking(bookingsToAdd, booking);
+            if(configuration.deleteAllWhenAdded || canAdd) {
+                result = completeBooking(bookingsToAdd, booking, canAdd);
+            } else {
+                result = -10;
+            }
             gsTiming("Completed booking");
 
             if (result == 0) {

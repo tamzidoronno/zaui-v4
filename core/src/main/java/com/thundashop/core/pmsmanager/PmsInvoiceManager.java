@@ -779,6 +779,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public PmsUserDiscount getUserDiscountByCouponCode(String couponCode) {
+        if(couponCode == null || couponCode.trim().isEmpty()) {
+            return null;
+        }
         for(PmsUserDiscount disc : discounts.values()) {
             if(disc.attachedDiscountCode != null && disc.attachedDiscountCode.equals(couponCode)) {
                 return disc;

@@ -5170,7 +5170,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Got cupons");
             if (coupon != null) {
                 cartManager.subtractTimesLeft(coupon.code);
-                gsTiming("Subsctracted coupons");
+               gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
             addDefaultAddons(booking);

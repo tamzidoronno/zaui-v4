@@ -1225,7 +1225,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         repicientList.clear();
 
         String message2 = notify(key, booking, "email", room, booking.language);
-        notifyAdmin(key, booking);
+        notifyAdmin(key, booking, booking.language);
 
         specifiedMessage = "";
         List<String> emailRecp = repicientList;
@@ -1483,8 +1483,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return message;
     }
 
-    private void notifyAdmin(String key, PmsBooking booking) {
-        String message = configuration.adminmessages.get(key);
+    private void notifyAdmin(String key, PmsBooking booking, String langauge) {
+        String message = configuration.adminmessages.get(key + "_" + langauge);
+        if (message == null) {
+            for(String k : configuration.adminmessages.keySet()) {
+                if(k.startsWith(key)) {
+                    message = configuration.adminmessages.get(k);
+                    break;
+                }
+            }
+        }
         if (message == null) {
             return;
         }

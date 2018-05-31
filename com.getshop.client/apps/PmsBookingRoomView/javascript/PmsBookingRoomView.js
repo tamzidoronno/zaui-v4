@@ -334,7 +334,7 @@ app.PmsBookingRoomView = {
     },
     
     accessCodeTabUpdated: function(res) {
-        $('.PmsBookingRoomView .guestinformation[tab="accesscodes"]').html(res);
+        $('.PmsBookingRoomView .guestinformation[tab="accesscode"]').html(res);
     },
     
     unitPriceChanged: function(e) {

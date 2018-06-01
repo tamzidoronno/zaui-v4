@@ -3240,6 +3240,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Session sess = getSession();
         if (sess != null && sess.currentUser != null) {
             if (sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser()) {
+                if (periodeType.equals(TimeRepeaterData.TimePeriodeType.open)) {
+                    return true;
+                }
                 return false;
             }
         }

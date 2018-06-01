@@ -160,13 +160,13 @@ class PmsBookingMessageFormatter {
                 simpleRoom += "<td style='font-size:12px;'>" + room.totalCost + "</td>";
             }
             rooms += "\n";
-            simpleRoomList += "<tr bgcolor='#fff'>" + simpleRoom +  "</tr>";
+            simpleRoomList += "<tr bgcolor='#ffffff'>" + simpleRoom +  "</tr>";
             
-            bookingData += "<tr style='font-size: 12px;' bgcolor='#fff'>" + simpleRoom + "</tr>";
+            bookingData += "<tr style='font-size: 12px;' bgcolor='#ffffff'>" + simpleRoom + "</tr>";
             String guests = "";
             for(PmsGuests guest : room.guests) {
                 if(guest.name != null && !guest.name.isEmpty()) {
-                    guests += "<tr style='font-size: 10px;' bgcolor='#fff'>";
+                    guests += "<tr style='font-size: 10px;' bgcolor='#ffffff'>";
                     guests += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + guest.name + "</td>";
                     if(guest.phone != null && !guest.phone.isEmpty()) {
                         guests += "<td style='font-size: 10px;'>+" + guest.prefix + " " + guest.phone + "</td>";
@@ -187,7 +187,7 @@ class PmsBookingMessageFormatter {
                 HashMap<String, Double> addonsPrice = new HashMap(); 
                 String addonText = "";
                 for(PmsBookingAddonItem addon : room.addons) {
-                    addonText += "<tr bgcolor='#fff'>";
+                    addonText += "<tr bgcolor='#ffffff'>";
                     int count = 0;
                     if(addonsCount.get(addon.productId) != null) {
                         count = addonsCount.get(addon.productId);
@@ -205,7 +205,7 @@ class PmsBookingMessageFormatter {
                 for(String prodId : addonsCount.keySet()) {
                     Product product = productManager.getProduct(prodId);
                     if(product != null) {
-                        addonText += "<tr bgcolor='#fff'>";
+                        addonText += "<tr bgcolor='#ffffff'>";
                         if(addonsCount.get(prodId) != null) {
                             addonText += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + addonsCount.get(prodId) + " x " + product.name + "</td>";
                         }
@@ -222,7 +222,7 @@ class PmsBookingMessageFormatter {
             }
         }
         
-        bookingData += "<tr bgcolor='#fff'>";
+        bookingData += "<tr bgcolor='#ffffff'>";
         bookingData += "<td></td>";
         bookingData += "<td></td>";
         bookingData += "<td></td>";

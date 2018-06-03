@@ -130,6 +130,7 @@ class ApacLocks extends \MarketingApplication implements \Application {
             $extraData['serverid'] = $server->id;
             
             $sorting = array();
+            $sorting[] = "zwaveDeviceId";
             $sorting[] = "name";
             $sorting[] = "typeOfLock";
             $sorting[] = "slotsToUpdate";

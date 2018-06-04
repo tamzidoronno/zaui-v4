@@ -720,17 +720,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         Calendar nowCal = Calendar.getInstance();
-        nowCal.add(Calendar.HOUR_OF_DAY, -1);
+        if(booking.isTerminalBooking()) {
+            nowCal.add(Calendar.MINUTE, -15);
+        } else {
+            nowCal.add(Calendar.HOUR_OF_DAY, -1);
+        }
+        
         if (booking.secretBookingId == null || booking.secretBookingId.isEmpty()) {
             booking.secretBookingId = UUID.randomUUID().toString();
             saveObject(booking);
         }
 
-        if (booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) {
-            boolean hardDelete = !booking.rowCreatedDate.after(nowCal.getTime()) && (booking.completedDate == null || booking.completedDate.after(nowCal.getTime()));
-            if (hardDelete) {
+        if ((booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) || booking.isTerminalBooking()) {
+            Date deletionDate = nowCal.getTime();
+            boolean hardDelete = (booking.rowCreatedDate.before(deletionDate) && (booking.completedDate == null || booking.completedDate.before(deletionDate)));
+            if (hardDelete && !booking.payedFor) {
                 hardDeleteBooking(booking, "finalize");
                 return null;
+            }
+            if(hardDelete) { 
+                booking.avoidAutoDelete = true; 
+                saveBooking(booking); 
             }
         }
 
@@ -1826,7 +1836,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             orderManager.saveOrder(order);
         }
 
-        if (booking.sessionId == null || booking.sessionId.isEmpty()) {
+        if ((booking.sessionId == null || booking.sessionId.isEmpty()) && booking.isTerminalBooking()) {
             String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
             text += "<br>";
             text += "<br>";

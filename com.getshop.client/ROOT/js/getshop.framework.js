@@ -2281,6 +2281,8 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
     var event = thundashop.Ajax.createEvent(null, table.attr('method'), this, data);
     event['synchron'] = true;
 
+//    thundashop.common.startTableOverLay($(this));
+
     thundashop.Ajax.post(event, function(res) {
         base.find('.datarow_extended_content').html(res);
     });

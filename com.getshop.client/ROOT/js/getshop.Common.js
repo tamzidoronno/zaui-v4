@@ -178,6 +178,11 @@ thundashop.common.gsToggleButton = function() {
     }
 };
 
+thundashop.common.startTableOverLay = function() {
+    alert('fsdaf');
+}
+
+
 thundashop.common.addNotificationProgress = function(id, text) {
     var infoPanel = $('.upload_information_panel');
     infoPanel.append('<div class="uploading ' + id + '"><img src="/skin/default/images/ajaxloader.gif"> ' + text + "</div>");

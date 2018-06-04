@@ -727,7 +727,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         if (booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) {
-            if (!booking.rowCreatedDate.after(nowCal.getTime()) && (booking.completedDate == null || booking.completedDate.after(nowCal.getTime()))) {
+            boolean hardDelete = !booking.rowCreatedDate.after(nowCal.getTime()) && (booking.completedDate == null || booking.completedDate.after(nowCal.getTime()));
+            if (hardDelete) {
                 hardDeleteBooking(booking, "finalize");
                 return null;
             }
@@ -5073,6 +5074,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void addProductToRoom(String productId, String pmsRoomId, Integer count) {
+        if(productManager.getProductUnfinalized(productId) == null) {
+            return;
+        }
         PmsBooking booking = getBookingFromRoom(pmsRoomId);
         if(booking == null) {
             return;
@@ -7188,8 +7192,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     toRemove.add(item);
                 }
             }
+            Product prod = productManager.getProduct(productId);
+            String name = "deleted product";
+            if(prod != null) {
+                name = prod.name;
+            }
             room.addons.removeAll(toRemove);
-            logEntry("Removed addon from room:" + productManager.getProduct(productId).name, booking.id, room.bookingItemId, room.pmsBookingRoomId, "removeaddon");
+            logEntry("Removed addon from room:" + name, booking.id, room.bookingItemId, room.pmsBookingRoomId, "removeaddon");
             saveBooking(booking);
         }
     }

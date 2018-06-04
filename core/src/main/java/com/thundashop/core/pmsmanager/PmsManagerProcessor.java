@@ -790,7 +790,11 @@ public class PmsManagerProcessor {
                 }catch(Exception e) {}
 
             }
-            boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
+            boolean externalChannel = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
+            if(externalChannel && booking.channel.equals("terminal")) {
+                externalChannel = false;
+            }
+            boolean forceSend = externalChannel;
             if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
                 forceSend = true;
             }

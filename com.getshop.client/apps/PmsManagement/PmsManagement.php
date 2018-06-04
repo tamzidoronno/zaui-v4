@@ -4029,11 +4029,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         $res = array();
         foreach($typesAdded as $prodId => $val) {
-            $title = $val . " x " . $products[$prodId]->name;
+            if(isset($products[$prodId])) {
+                $title = $val . " x " . $products[$prodId]->name;
+            } else {
+                $title = $val . " x deleted";
+            }
             if(isset($products[$prodId]->name)) {
                 $name = $this->getFirstWords($products[$prodId]->name);
-//                $res[] = $name;
                 $res[] = "<span title='$title' style='cursor:pointer;'>($name)</span>";
+            } else {
+                $res[] = "<span title='$title' style='cursor:pointer;'>(deleted product)</span>";
             }
         }
         $text = "";

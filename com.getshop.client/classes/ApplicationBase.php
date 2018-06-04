@@ -271,9 +271,6 @@ class ApplicationBase extends FactoryBase {
             echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
             echo "<div class='order_mask'>";
 
-            echo "<div class='inner'>";
-            echo $this->__f("Drag to reorder");
-            echo "</div>";
             echo "</div>";
         }
         

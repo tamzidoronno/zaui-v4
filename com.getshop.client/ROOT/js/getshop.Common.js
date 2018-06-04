@@ -178,9 +178,41 @@ thundashop.common.gsToggleButton = function() {
     }
 };
 
-thundashop.common.startTableOverLay = function() {
-    alert('fsdaf');
+thundashop.common.stopTableOverlay = function() {
+    $('.getshoptablemoduleoverlay').remove();
+    thundashop.framework.reprintPage();
+    $('html, body').css({ overflow: 'auto' });
+};
+
+thundashop.common.isTableOverLayActive = function() {
+    if($('.getshoptablemoduleoverlay').length > 0) {
+        return true;
+    }
+    return false;
 }
+
+thundashop.common.reloadOverLay = function() {
+    thundashop.Ajax.post(latestOverLayLoadingEvent, function(res) {
+        $('.getshoptableoverlaybody').html(res);
+    });
+}
+
+
+thundashop.common.startTableOverLay = function() {
+    var overlay = $("<div class='getshoptablemoduleoverlay'></div>");
+    overlay.on('click', function(e) {
+        if(!$(e.target).hasClass('getshoptablemoduleoverlay')) {
+            return;
+        }
+        thundashop.common.stopTableOverlay();
+    });
+    
+    overlay.append("<div class='getshoptableoverlaybody'></div>");
+            
+    $("body").prepend(overlay);
+    
+    $('html, body').css({ overflow: 'hidden' });
+};
 
 
 thundashop.common.addNotificationProgress = function(id, text) {

@@ -19,6 +19,7 @@ class GetShopModuleTable {
     private $extraData;
     private $args;
     private $avoidAutoExpanding = false;
+    public $loadContentInOverlay = false;
     private $sortByColumn = "";
     private $sortingAscending = true;
     private $sortingArray = array();
@@ -112,7 +113,11 @@ class GetShopModuleTable {
                 $active = $this->shouldShowRow($j);
                 $activeClass = $active ? "active" : "";
 
-                echo "<div class='datarow $odd $activeClass' rownumber='$j'>";
+                $loadInOverlay = "";
+                if($this->loadContentInOverlay) {
+                    $loadInOverlay = "loadContentInOverlay";
+                }
+                echo "<div class='datarow $odd $activeClass $loadInOverlay' rownumber='$j'>";
                 echo "<div class='datarow_inner'>";
                 $i = 1;
 

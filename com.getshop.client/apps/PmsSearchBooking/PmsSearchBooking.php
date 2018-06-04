@@ -182,6 +182,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         ob_start();
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
         $table->setSorting(array("reg","checkin","checkout","visitor","bookedfor","room","price","totalprice"));
+        $table->loadContentInOverlay = true;
         $table->render();
         $data = (array)$table->getDate();
         

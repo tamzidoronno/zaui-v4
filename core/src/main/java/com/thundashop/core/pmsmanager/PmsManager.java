@@ -1836,7 +1836,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             orderManager.saveOrder(order);
         }
 
-        if ((booking.sessionId == null || booking.sessionId.isEmpty()) && booking.isTerminalBooking()) {
+        if ((booking.sessionId == null || booking.sessionId.isEmpty()) && !booking.isTerminalBooking()) {
             String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
             text += "<br>";
             text += "<br>";

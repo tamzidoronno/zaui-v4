@@ -740,7 +740,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if(hardDelete) { 
                 booking.avoidAutoDelete = true; 
-                saveBooking(booking); 
+                saveObject(booking);
             }
         }
 

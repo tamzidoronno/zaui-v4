@@ -836,7 +836,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         PmsPricing prices = getPriceObjectFromBooking(booking);
-        if (prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && configuration.requirePayments) {
+        if (prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && (configuration.requirePayments || storeManager.isPikStore())) {
             booking.calculateTotalCost();
         }
 
@@ -848,7 +848,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.isAddedToEventList = pmsEventManager.isChecked(booking.id);
 
         booking.makeUniqueIds();
-
+        
         return booking;
     }
 
@@ -924,8 +924,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (start.after(end)) {
             return null;
         }
-
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = null;
+        if(bookingId != null) {
+            booking = getBooking(bookingId);
+        } else {
+            booking = getBookingFromRoom(roomId);
+        }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
             Date oldStart = new Date();
@@ -8289,8 +8293,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void updatePriceMatrixOnRoom(String pmsBookingRoomId, LinkedHashMap<String, Double> priceMatrix) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        room.priceMatrix = priceMatrix;
+        for(PmsBookingRooms r : booking.rooms) {
+            if(r.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                r.priceMatrix = priceMatrix;
+            }
+        }
         logEntry("Prices changed", booking.id, room.bookingItemId, room.pmsBookingRoomId, "price");
+        saveBooking(booking);
+        finalize(booking);
     }
 
     @Override

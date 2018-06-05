@@ -6033,6 +6033,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 data.nameOfEvent = userManager.getUserById(booking.userId).fullName;
             }
         }
+        for(ConferenceDataDay day : data.days) {
+            Collections.sort(day.conferences, new Comparator<ConferenceDataRow>() {
+                @Override
+                public int compare(ConferenceDataRow o1, ConferenceDataRow o2) {
+                    if(o1 == null || o2 == null || o1.from == null || o2.from == null) {
+                        return 0;
+                    }
+                    return o1.from.compareTo(o2.from);
+                }
+            });
+
+        }
+        
     }
 
     @Override

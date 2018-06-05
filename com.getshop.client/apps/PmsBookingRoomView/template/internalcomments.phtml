@@ -1,0 +1,35 @@
+<?php
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+
+    $comments = (array) $pmsBooking->comments;
+    ksort($comments);
+    echo "<div style='overflow:auto; height: 100px; display:inline-block;'>";
+    if(sizeof($comments) == 0) {
+        echo "No comments";
+    }
+    foreach ($comments as $time => $comment) {
+        $style = "";
+        if ($comment->deleted) {
+            $style = "text-decoration: line-through;";
+        }
+        echo "<div style='$style'>";
+        echo $comment->comment;
+        echo "</div>";
+        echo "<div style='color:#bbb;$style'>";
+        echo "<i class='fa fa-trash-o deletecomment' time='$time' style='cursor:pointer;'></i> ";
+        echo date("d.m.Y H:i", $time / 1000);
+        if ($comment->userId) {
+            $commentUser = $this->getApi()->getUserManager()->getUserById($comment->userId);
+            echo "<span style='float:right;$style'>" . $commentUser->fullName . "</span>";
+        }
+        echo "</div>";
+    }
+    echo "</div>";
+    ?>
+    <textarea style='width:100%;height: 35px;box-sizing: border-box;' class='commenttext'></textarea>
+    <div style='text-align: right;'>
+        <span class='shop_button displaylogbutton' style='float:left;'>Display log</span>
+        <span class='shop_button addcommentbutton'>Add comment</span>
+    </div>
+<?php

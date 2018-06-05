@@ -23,8 +23,6 @@ app.PmsCheckout = {
     },
     orderCreationCompleted : function() {
         app.PmsBookingRoomView.refresh();
-        $('[areatype="payments"]').click();
-        thundashop.framework.toggleRightWidgetPanel('gs_modul_cart');
     },
     removeCartItem : function() {
         var item = $(this).closest('.cartitem');
@@ -66,7 +64,7 @@ app.PmsCheckout = {
             addonPrice : addonrow.find('.addon_price').val(),
             matrixPrice : matrixrow.find('.matrix_price').val(),
             matrixDate : matrixrow.find('.matrix_price').attr('date')
-        }
+        };
         var event = thundashop.Ajax.createEvent('','updateItem', $('.PmsCheckout'), data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.PmsCheckout.updateTotal();

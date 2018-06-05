@@ -181,6 +181,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("differenceinroom");
     }
     
+    public function loadCheckout() {
+        $app = new \ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout();
+        $app->renderApplication(true);
+    }
+    
     public function discardChanges() {
         $this->clearCache();
     }
@@ -204,6 +209,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             }
         }
         return null;
+    }
+    
+    public function printAddAddonsArea() {
+        $addAddons = new \ns_b72ec093_caa2_4bd8_9f32_e826e335894e\PmsAddAddonsList();
+        $addAddons->renderApplication(true);
     }
     
     public function reloadAddons() {

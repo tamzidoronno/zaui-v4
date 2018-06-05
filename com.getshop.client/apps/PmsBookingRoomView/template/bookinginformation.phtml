@@ -2,227 +2,88 @@
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
-$bookingEngineBooking = $this->getBookingEngineBooking();
-$user = $this->getUserForBooking();
-
-$extraArgs = array();
-$extraArgs['userid'] = $user->id;
-$extraArgs['id'] = $bookingEngineBooking->id;
-$extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
-//echo "<pre>";
-//print_r($pmsBooking);
-//echo "</pre>";
-
 ?>
-
 <div class="bookinginformation">
-    
-    <div class='guestinfobox'>
-        <div class='insideheader'><? echo $this->__f("General information"); ?></div>
-        <div class="row odd">
-            <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
-            <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
-        </div>
-        
-        <?php
-            if($pmsBooking->wubookchannelreservationcode) {
-                ?>
-                <div class="row odd">
-                    <div class="col col1"><? echo $this->__f("Channel reservation id"); ?></div>
-                    <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode; ?></div>    
-                </div>
-                <?php
-            }
-            if($pmsBooking->wubookreservationid) {
-                ?>
-                <div class="row odd">
-                    <div class="col col1"><? echo $this->__f("Wubook id"); ?></div>
-                    <div class="col col2"><? echo $pmsBooking->wubookreservationid . " (<a href='https://wubook.net/bookings/".$pmsBooking->wubookreservationid."' target='_new'>Open in wubook</a>)"; ?></div>    
-                </div>
-                <?php
-            }
-
-        ?>
-
-        <div class="row odd">
-            <div class="col col1"><? echo $this->__f("Non refundable"); ?></div>
-            <?php 
-            if($pmsBooking->nonrefundable) {
-                ?>
-                <div class="col col2">Yes, <span style='color:blue;cursor:pointer;' gsclick='togglerefundable'>make it refundable</span></div>    
-                <?php
-            } else {
-                ?>
-                <div class="col col2">No, <span style='color:blue;cursor:pointer;' gsclick='togglerefundable'>make it non refundable</span></div>    
-                <?php
-            }
-            ?>
-        </div>
-        
-        <div class="row">
-            <div class="col col1"><? echo $this->__f("Date created"); ?></div>
-            <div class="col col2"><? echo GetShopModuleTable::formatDate($pmsBooking->rowCreatedDate); ?></div>    
-        </div>
-
-        <div class="row odd">
-            <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span></div>
-            <div class="col col2">
-                <?
-                $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
-                $quser->setUser($user);
-                $quser->setExtraArgs($extraArgs);
-                $quser->renderApplication(true, $this);
-                ?>
-            </div>
-        </div>
-        
-        <div class="row odd">
-            <div class="col col1"><span><? echo $this->__f("Adress"); ?></span></div>
-            <div class="col col2">
-                <?php
-                if(isset($user->address)) {
-                    echo $user->address->address . "<br>";
-                    echo $user->address->postCode . " " . $user->address->city . "<br>";
-                }
-                ?>
-            </div>
-        </div>
-
-        <div class="row odd">
-            <div class="col col1"><span><? echo $this->__f("Registration information"); ?></span></div>
-            <div class="col col2" onclick='$(".registeredinformation").toggle();' style='cursor:pointer;'>Display registration information</div>
-            <div class='registeredinformation' style='display:none;'>
-                <?php
-                foreach($pmsBooking->registrationData->resultAdded as $key => $val) {
-                    echo "<div>" . $key . " : " . $val . "</div>";
-                }
-                ?>
-            </div>
-        </div>
-        
-        <div style='padding-top:10px;text-align: right;'>
-            <?php
-            if(!$pmsSelectedRoom->deleted) {
-                ?>
-                <span class="shop_button" style='background-color:red;' gstype='clicksubmit' gsname="id" gsvalue="" method="deleteRoom"><i class='gsicon-trashcan'></i> Delete this room</span>
-            <?php
-            }
-            ?>
-        </div>
-        
-
+<div class="guestinfo">
+    <div class='insideheader'>
+        <? echo $this->__f("Guests"); ?>
+        <div class="gs_shop_small_icon add_more_guests" title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
     </div>
-    
-    
-    
-    
-    <div class="guestinfo">
-        <div class='insideheader'>
-            <? echo $this->__f("Guests"); ?>
-            <div class="gs_shop_small_icon add_more_guests" title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
+    <div class="guest_row header">
+        <div class="guest_col guest_col1">
+            <b><? echo $this->__f("Name"); ?></b>
         </div>
-        <div class="guest_row header">
+
+        <div class="guest_col guest_col2">
+            <b><? echo $this->__f("Email"); ?></b>
+        </div>
+
+        <div class="guest_col guest_col3">
+            <b><? echo $this->__f("Phone"); ?></b>
+        </div>
+
+        <div class="guest_col guest_col4"> 
+
+        </div>
+    </div>
+
+    <div  class="guest_row row_template" style='display: none'>
+        <div class="guest_col guest_col1">
+            <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1" value=""/>
+            <input temp_gsname="guestinfo_name" class="gsniceinput1" value=""/>
+        </div>
+
+        <div class="guest_col guest_col2">
+            <input temp_gsname="guestinfo_email" class="gsniceinput1" value=""/>
+        </div>
+
+        <div class="guest_col guest_col3">
+            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value=""/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
+        </div>
+
+        <div class="guest_col guest_col4">
+            <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
+        </div>
+    </div>
+
+    <?
+    $room = $pmsSelectedRoom;
+    $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+    $roomType = $type->name;
+    $roomName = $room->item ? $room->item->bookingItemName : "Floating";
+
+    $i = 0;
+    echo "<div class='guestinforows'>";
+    foreach ($room->guests as $guest) {
+        $i++;
+        ?>
+        <div class="guest_row" counter='<? echo $i; ?>'>
+
+
             <div class="guest_col guest_col1">
-                <b><? echo $this->__f("Name"); ?></b>
+                <input type="hidden" gsname="guestinfo_<? echo $i; ?>_guestid" class="gsniceinput1 prefix" value="<? echo $guest->guestId; ?>"/>
+                <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" value="<? echo $guest->name; ?>"/>
             </div>
 
             <div class="guest_col guest_col2">
-                <b><? echo $this->__f("Email"); ?></b>
+                <input gsname="guestinfo_<? echo $i; ?>_email" class="gsniceinput1" value="<? echo $guest->email; ?>"/>
             </div>
 
             <div class="guest_col guest_col3">
-                <b><? echo $this->__f("Phone"); ?></b>
-            </div>
-            
-            <div class="guest_col guest_col4"> 
-                
-            </div>
-        </div>
-        
-        <div  class="guest_row row_template" style='display: none'>
-            <div class="guest_col guest_col1">
-                <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1" value=""/>
-                <input temp_gsname="guestinfo_name" class="gsniceinput1" value=""/>
+                <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $guest->prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
             </div>
 
-            <div class="guest_col guest_col2">
-                <input temp_gsname="guestinfo_email" class="gsniceinput1" value=""/>
-            </div>
-
-            <div class="guest_col guest_col3">
-                <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value=""/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
-            </div>
-            
-            <div class="guest_col guest_col4">
+            <div class="guest_col guest_col4">      
                 <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
             </div>
         </div>
-
         <?
-        $room = $pmsSelectedRoom;
-            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
-            $roomType = $type->name;
-            $roomName = $room->item ? $room->item->bookingItemName : "Floating";
+    }
+    echo "</div>";
+    ?>
+    <div style='text-align:right;padding-top:10px;'><span class='shop_button saveguestinformation'>Save guest information</div>
+</div>
 
-            $i = 0;
-            echo "<div class='guestinforows'>";
-            foreach ($room->guests as $guest) {
-                $i++;
-                ?>
-                <div class="guest_row" counter='<? echo $i; ?>'>
-                    
-
-                    <div class="guest_col guest_col1">
-                        <input type="hidden" gsname="guestinfo_<? echo $i; ?>_guestid" class="gsniceinput1 prefix" value="<? echo $guest->guestId; ?>"/>
-                        <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" value="<? echo $guest->name; ?>"/>
-                    </div>
-
-                    <div class="guest_col guest_col2">
-                        <input gsname="guestinfo_<? echo $i; ?>_email" class="gsniceinput1" value="<? echo $guest->email; ?>"/>
-                    </div>
-
-                    <div class="guest_col guest_col3">
-                        <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $guest->prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
-                    </div>
-
-                    <div class="guest_col guest_col4">      
-                        <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
-                    </div>
-                </div>
-            <?
-            }
-            echo "</div>";
-        ?>
-        <div style='text-align:right;padding-top:10px;'><span class='shop_button saveguestinformation'>Save guest information</div>
-        <div class='insideheader'>Internal comments (not exposed to guests)</div>
-        <?php
-        $comments = (array)$pmsBooking->comments;
-        ksort($comments);
-        foreach($comments as $time => $comment) {
-            $style = "";
-            if($comment->deleted) {
-                $style = "text-decoration: line-through;";
-            }
-            echo "<div style='$style'>";
-            echo $comment->comment;
-            echo "</div>";
-            echo "<div style='color:#bbb;$style'>";
-            echo "<i class='fa fa-trash-o deletecomment' time='$time' style='cursor:pointer;'></i> ";
-            echo date("d.m.Y H:i", $time/1000);
-            if($comment->userId) {
-                $commentUser = $this->getApi()->getUserManager()->getUserById($comment->userId);
-                echo "<span style='float:right;$style'>" . $commentUser->fullName . "</span>";
-            }
-            echo "</div>";
-            
-        }
-        ?>
-        <textarea style='width:100%;height: 70px;' class='commenttext'></textarea>
-        <div style='text-align: right;'>
-            <span class='shop_button addcommentbutton'>Add comment</span>
-        </div>
-    </div>
-    
 </div>
 <style>
     .show_edit_user,.show_change_user { float:right; margin-left: 5px; }

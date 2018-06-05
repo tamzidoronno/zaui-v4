@@ -9,7 +9,7 @@ if(isset($_SESSION['gs_currently_showing_rightWidget'])) {
 }
                 
 
-if(sizeof($addons) == 0 && !$pickerOpen) {
+if(sizeof($addons) == 0) {
     ?>
     <div class="kaipal infobox">
         <div class="image sad"></div>
@@ -22,9 +22,11 @@ if(sizeof($addons) == 0 && !$pickerOpen) {
                 ?>    
                 <div class="buttonarea">
                     <div class="buttonareaheader"><? echo $this->__f("What would you like to do?"); ?></div>
-                    <div class="shop_button" onclick="thundashop.framework.toggleRightWidgetPanel('addaddons')"
-                         gstype='clicksubmit' gscached='true' gsname="id" gsvalue="<?php echo $this->bookingEngineBooking->id; ?>" method="reloadAddons"  gstoarea=".addonsArea"
-                         ><? echo $this->__f("Add addon"); ?></div>
+                    <div class="shop_button addaddonsbutton"><? echo $this->__f("Add addon"); ?></div>
+                    <div class='addAddonsArea'>
+                        <i class='fa fa-caret-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
+                        <div class='addAddonsAreaInner'></div>
+                    </div>
                 </div>
                 
 
@@ -32,49 +34,20 @@ if(sizeof($addons) == 0 && !$pickerOpen) {
         </div>
     </div>
     <?php
-} else if($pickerOpen) {
-    ?>
-    <div class="kaipal infobox">
-        <div class="image happy"></div>
-        <div class="textbox">
-            <div class="header"><? echo $this->__f("Yiiihaa! Add some addons!"); ?></div>
-            <div class="text">
-                <?
-                echo $this->__f("Add whatever addons from the menu to the left.");
-                ?>
-                <div class="buttonarea">
-                    <div class="buttonareaheader"><? echo $this->__f("What would you like to do?"); ?></div>
-                    <div class="shop_button" onclick="thundashop.framework.toggleRightWidgetPanel('addaddons')"
-                         gstype='clicksubmit' gscached='true' gsname="id" gsvalue="<?php echo $this->bookingEngineBooking->id; ?>" method="reloadAddons"  gstoarea=".addonsArea"
-                         ><? echo $this->__f("Close addons area"); ?></div>
-                    <?php
-                    if(sizeof($addons) > 0) {
-                        ?>
-                    <div class="shop_button removeselectedaddons"><i class='fa fa-trash-o'></i> <? echo $this->__f("Remove selected addons"); ?></div>
-                    <?php
-                    }?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
 } else {
-    
     ?>
     <div class="kaipal infobox">
         <div class="image talking"></div>
         <div class="textbox">
-            <div class="header"><? echo $this->__f("You have addons added."); ?></div>
             <div class="text">
-                <?
-                echo $this->__f("You can edit the addons by clicking on the edit icon found in at the left of the addons added in the list below, or you could add more addons to the this booking. Last but not least, you can also select addons you would like to remove and have them removed.");
-                ?>
                 <div class="buttonarea">
                     <div class="buttonareaheader"><? echo $this->__f("What would you like to do?"); ?></div>
-                    <div class="shop_button" onclick="thundashop.framework.toggleRightWidgetPanel('addaddons')"
-                         gstype='clicksubmit' gscached='true' gsname="id" gsvalue="<?php echo $this->bookingEngineBooking->id; ?>" method="reloadAddons"  gstoarea=".addonsArea"
-                         ><? echo $this->__f("Add more addons"); ?></div>
+                    <div class="shop_button addaddonsbutton"><? echo $this->__f("Add more addons"); ?></div>
                     <div class="shop_button removeselectedaddons"><i class='fa fa-trash-o'></i> <? echo $this->__f("Remove selected addons"); ?></div>
+                    <div class='addAddonsArea'>
+                        <i class='fa fa-caret-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
+                        <div class='addAddonsAreaInner'></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,8 +113,14 @@ if(sizeof($addons) > 0) {
             echo "</div>";
         }
      }
+     echo "<div style='text-align:right; padding: 10px;'>";
      echo "<span class='shop_button saveaddons'>Save addons</span>";
+     echo "</div>";
 }
 ?>
 
 <span gstype='clicksubmit' gscached='true' gsname="id" gsvalue="<?php echo $this->bookingEngineBooking->id; ?>" method="reloadAddons"  gstoarea=".addonsArea" id='reloadaddonsarea'></span>
+
+<style>
+    .PmsBookingRoomView .addonsArea .col { width: 20%; }
+</style>

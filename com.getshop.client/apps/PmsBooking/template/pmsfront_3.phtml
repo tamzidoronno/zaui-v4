@@ -10,6 +10,11 @@ $appId = str_replace("-", "_", $appId);
 
 $date = date("d.m.Y", time());
 $date2 = date("d.m.Y", time()+(86400*$config->minStay));
+
+if($this->getAppInstanceId() == "3e91f859-ed77-4931-8e64-f3b8c6535b20") { $date2 = date("d.m.Y", time()+(7*86400)); };
+if($this->getAppInstanceId() == "b10d45fa-b356-4a04-95e5-8f1ed2b2f1b8") { $date2 = date("d.m.Y", strtotime("+1 month", time())); };
+if($this->getAppInstanceId() == "dca8905d-7fae-4b25-aca7-b5aa0efc4580") { $date2 = date("d.m.Y", time()+(365*86400)); };
+
 $nextPage = $this->getText("next_page");
 if(!$nextPage) {
     $nextPage = "/?page=booking_" . $this->getSelectedName();
@@ -22,7 +27,7 @@ if(!$nextPage) {
             <div><span class='inputhelpertext'><? echo $this->__w("Check in"); ?></span></div>
             <span class='dates_inner'>
                 <i class='fa fa-calendar start_cal <? echo $appId;?>'></i>
-                <input class='start_date_input <? echo $appId;?>' value='<? echo $date; ?>'></input>
+                <input class='start_date_input <? echo $appId;?>' value='<? echo $date; ?>' appid="<?php echo $this->getAppInstanceId(); ?>"></input>
             </span>
         </span>
     </span>
@@ -62,19 +67,33 @@ if(!$nextPage) {
         onSelect: function(dateText) {
            var date = moment(dateText, "DD.MM.YYYY");
            var month = (moment(date).get('month')+1);
-           if(month < 10) {
-               month = "0" + month;
-           }
+           var year = moment(date).get('year');
+           
+           var appid = $(this).attr('appid');
            var currentEnd = $('.end_date_input.'+'<?echo $appId;?>').val();
            var endMoment = moment(currentEnd, "DD.MM.YYYY");
 
            var diff = endMoment.diff(date, "minutes");
-           if(diff < 0) {
+           if(appid === "3e91f859-ed77-4931-8e64-f3b8c6535b20") { diff -= (7*60*24); }
+           if(appid === "b10d45fa-b356-4a04-95e5-8f1ed2b2f1b8") { diff -= (30*60*24); }
+           if(appid === "dca8905d-7fae-4b25-aca7-b5aa0efc4580") { diff -= (800*60*24); }
+           if(diff <= 0) {
                var day = moment(date).get('date')+1;
-               if(day < 10) {
-                   day = "0" + day;
+               if(appid === "3e91f859-ed77-4931-8e64-f3b8c6535b20") {
+                   day = moment(date).get('date')+8;
                }
-               $('.end_date_input.'+'<?echo $appId;?>').val(day + "." + month + "." + moment(date).get('year'));
+               if(appid === "b10d45fa-b356-4a04-95e5-8f1ed2b2f1b8") {
+                   month = moment(date).get('month')+2;//Month
+                   day = moment(date).get('date')+1;
+               }
+               if(appid === "dca8905d-7fae-4b25-aca7-b5aa0efc4580") {
+                   month = moment(date).get('month')+2;//Month
+                   day = moment(date).get('date')+1;
+                   year = moment(date).get('year')+1;
+               }
+               if(day < 10) { day = "0" + day; }
+               if(month < 10) { month = "0" + month; }
+               $('.end_date_input.'+'<?echo $appId;?>').val(day + "." + month + "." + year);
            }
            loadAvailability();
          }
@@ -114,13 +133,7 @@ if(!$nextPage) {
                 select.html('');
                 for(var k in response) {
                     var room = response[k];
-                    if(room.availableRooms > 0) {
-                        found = true;
-                        select.append("<option value='"+room.roomId+"'>" + room.name + " " + room.price + "kr " + "</option>");
-                    }
-                }
-                if(!found) {
-                    select.append("<option>No rooms available for given periode</option>");
+                    select.append("<option value='"+room.roomId+"'>" + room.name + "</option>");
                 }
             }
         });

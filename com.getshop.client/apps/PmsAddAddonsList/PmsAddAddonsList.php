@@ -43,6 +43,10 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
                 $addon->name = $_POST['data']['name'];
                 $addon->productId = $addonToUse->productId;
                 $addon->addonId = $this->generate_uuid();
+                if($_POST['data']['includedInRoomPrice'] == "true") {
+                    $addon->isIncludedInRoomPrice = true;
+                }
+
                 $newAddons[] = $addon;
             }
         }

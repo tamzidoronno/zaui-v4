@@ -16,9 +16,13 @@
     
     $addonProduct = $this->getApi()->getProductManager()->getProduct($addonItem->productId);
     $perGuest = "";
+    $includedInRoomPrice = "";
     $selectedType = "";
     if($addonItem->dependsOnGuestCount || $addonItem->addonType == 1) {
         $perGuest = "CHECKED";
+    }
+    if($addonItem->isIncludedInRoomPrice) {
+        $includedInRoomPrice = "CHECKED";
     }
     if(!$addonItem->isSingle || $addonItem->addonType == 1) {
         $selectedType = "alldays";
@@ -56,6 +60,9 @@
                 ?>
             </select>
             <input type='checkbox' gsname='isperguest' <?php echo $perGuest; ?>> Is per guest
+            <div>
+                <input type='checkbox' gsname='includedInRoomPrice' <?php echo $includedInRoomPrice; ?>> Is included in room price
+            </div>
             <div class='optionpanel' type='repeat_weekly'>
                 <div class='weekdayselectionbox'><input type='checkbox' class='weekdayselection' gsname='repeat_mon'> Monday</div>
                 <div class='weekdayselectionbox'><input type='checkbox' class='weekdayselection' gsname='repeat_tue'> Tuesday</div>

@@ -8154,6 +8154,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     cards = cards.substring(0, cards.length() - 1);
                 }
                 System.out.print(cards + "\t");
+                if(room.bookingItemId != null) {
+                    BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    if(item != null) {
+                        System.out.print(item.bookingItemName);
+                    } else {
+                        System.out.print("");
+                    }
+                }
+                System.out.print(cards + "\t");
 
                 System.out.println();
             }

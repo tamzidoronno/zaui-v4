@@ -185,5 +185,12 @@ $(document).ready(function() {
             $(this).find('.acronyme').fadeIn();
         }
     });
+    document.addEventListener('scroll', function (event) {
+        var line = $(event.target);
+        if($(event.target).hasClass('timeline')) {
+            console.log(line.scrollLeft());
+            $('.timeline').scrollLeft(line.scrollLeft());
+        }
+    }, true /*Capture event*/);
 });
 </script>

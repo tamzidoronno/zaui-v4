@@ -30,7 +30,7 @@ if($filter->groupByBooking) {
             echo $this->__f("From");
             ?>
         </div>
-        <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>" gsname='from'/>
+        <input class="gsniceinput1" id="startdate" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>" gsname='from'/>
         <i class="gsicon-calendar-text"></i>
     </div>
 
@@ -40,7 +40,7 @@ if($filter->groupByBooking) {
             echo $this->__f("To");
             ?>
         </div>
-        <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>" gsname='to'/>
+        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>" gsname='to'/>
         <i class="gsicon-calendar-text"></i>
     </div>
 
@@ -149,7 +149,7 @@ if($filter->groupByBooking) {
 </span>
 <span gstype="form" method="search" class='simplesearch'>
     
-    <div title="<? echo $this->__f("Latest registered users"); ?>" type='registered' class="top-row-icon displaydailydatepicker <? echo !isset($_SESSION['pmfilter']) || !$_SESSION['pmfilter'] ? 'active' : ''; ?>"><i class="gsicon-database-upload"></i></div>
+    <div title="<? echo $this->__f("Latest registered users"); ?>" type='registered' class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "registered" ? 'active' : ''; ?>"><i class="gsicon-database-upload"></i></div>
     <div title="<? echo $this->__f("Users checkin today"); ?>" type='checkin' day="0" class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "checkin" ? 'active' : ''; ?>"><i class="gsicon-enter"></i></div>
     <div title="<? echo $this->__f("Users checkout today"); ?>" type='checkout' day="0" class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "checkout" ? 'active' : ''; ?>"><i class="gsicon-exit"></i></div>
     <input class="gsniceinput1" gstype='submitenter' gsname='searchtext' placeholder="<? echo $this->__f("Search"); ?>" value='<? echo $searchWord; ?>'/>
@@ -170,7 +170,7 @@ if($filter->groupByBooking) {
             var date = moment(dateText, "DD.MM.YYYY");
             
             var diff = curEnd.valueOf() - date.valueOf();
-            if(diff <= 0) {
+            if(diff < 0) {
                 date.add(1, 'days');
                 $('#enddate').val(date.format('DD.MM.YYYY')); 
                 app.PmsNewBooking.reloadAvailability();
@@ -185,8 +185,8 @@ if($filter->groupByBooking) {
             var date = moment(dateText, "DD.MM.YYYY");
             
             var diff = date.valueOf() - curStart.valueOf();
-            if(diff <= 0) {
-                date.add(-1, 'days');
+            if(diff < 0) {
+                date.add(1, 'days');
                 $('#startdate').val(date.format('DD.MM.YYYY')); 
                 app.PmsNewBooking.reloadAvailability();
             }

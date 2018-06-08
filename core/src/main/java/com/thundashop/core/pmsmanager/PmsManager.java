@@ -1789,6 +1789,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         String contract = configuration.contracts.get(booking.language);
         if (contract == null) {
+            for(String k : configuration.contracts.keySet()) {
+                contract = configuration.contracts.get(k);
+                if(contract != null && contract.isEmpty()) {
+                    break;
+                }
+            }
+        }
+        if (contract == null) {
             return "";
         }
         return formatMessage(contract, booking, null, null);
@@ -8162,6 +8170,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         System.out.print("");
                     }
                 }
+                System.out.print("\t");
+                
                 System.out.print(cards + "\t");
 
                 System.out.println();

@@ -29,7 +29,7 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
     
     @Override
     public void generateSmsUsage() {
-        if(!storeId.equals("b703b793-c7f4-4803-83bb-106cab891d6c")) {
+        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
             return;
         }
         HashMap<String, String> stores = getStoresToCheck();

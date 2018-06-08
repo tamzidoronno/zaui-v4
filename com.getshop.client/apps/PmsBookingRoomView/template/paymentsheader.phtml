@@ -1,0 +1,86 @@
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$methods = (array) $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$hasPaymentMethods = false;
+if (sizeof($methods) > 0) {
+    $hasPaymentMethods = true;
+}
+
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+$isgroup = "no";
+if (sizeof($pmsBooking->rooms) > 1) {
+    $isgroup = "yes";
+}
+$endDate = null;
+foreach ($pmsBooking->rooms as $r) {
+    if ($endDate == null || strtotime($r->date->end) > $endDate) {
+        $endDate = strtotime($r->date->end);
+    }
+}
+$totalOnRoom = $pmsSelectedRoom->totalCost;
+$totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
+$unsettledRoom = $totalOnRoom - $totalOrdersRoom;
+
+$totalOnBooking = $pmsBooking->totalPrice;
+$totalMissingOnGroup = 0.0;
+$totalNotPaidOnRoom = 0.0;
+foreach($pmsBooking->orderIds as $ordId) {
+    $order = $this->getApi()->getOrderManager()->getOrder($ordId);
+    $totalNotPaidOnRoom += $this->getApi()->getOrderManager()->getTotalAmount($order);
+}
+$totalMissingOnGroup = $pmsBooking->totalPrice - $totalNotPaidOnRoom;
+
+?>
+<div style='height: 138px; display:inline-block; width:100%;'>
+    <table width='100%'>
+        <tr>
+            <td></td>
+            <td align='center'>For room</td>
+            <td align='center'>For group</td>
+        </tr>
+        <tr>
+            <td>Total value</td>
+            <td align='center'><?php echo $totalOnRoom; ?></td>
+            <td align='center'><?php echo $totalOnBooking; ?></td>
+        </tr>
+        <tr>
+            <td>Missing</td>
+            <td align='center'><?php echo $unsettledRoom; ?></td>
+            <td align='center'><?php echo $totalMissingOnGroup; ?></td>
+        </tr>
+        <tr>
+            <td>Orders</td>
+            <td align='center'><?php echo $totalOrdersRoom; ?></td>
+            <td align='center'><?php echo $totalNotPaidOnRoom; ?></td>
+        </tr>
+    </table>
+</div>
+<?php
+if (!$pmsBooking->createOrderAfterStay) {
+    if ($hasPaymentMethods) {
+        ?>
+        <span>
+            <span class="shop_button listpaymentbutton"><i class=""></i> <? echo $this->__f("List payments"); ?></span>
+            <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Pay after stay"); ?></span>
+            <span class="shop_button addselecteditemstocart" style='margin-top:2px; float:right;' isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create payment"); ?></span>
+        </span>
+        <?php
+    }
+} else {
+    echo "<div>An order of " . $pmsBooking->unsettled . " will be created at " . date("d.m.Y", $endDate) . "</div>";
+    ?>
+    <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;width:100%;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
+    <?php
+}
+?>
+    <div class='checkoutview'>
+        <i class='fa fa-close' onclick='$(".checkoutview").hide();$(".getshoptableoverlaybody").css("height","auto");' style='position:absolute;right:1px; top:1px; cursor:pointer;'></i>
+        <i class='fa fa-caret-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
+        <div class='checkoutviewinner'></div>
+    </div>
+    
+<style>
+    .pricetext { display:inline-block; width: 130px; }
+    .pricetag { display:inline-block; width: 80px; }
+</style>

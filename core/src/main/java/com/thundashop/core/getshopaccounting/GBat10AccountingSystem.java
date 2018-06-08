@@ -68,6 +68,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
        HashMap<String, String> ret = new HashMap();
         ret.put("eiendelskonto", "Eiendelskonto (default 1510)");
         ret.put("brukkundeinstedenforeiendelskonto", "Før mot kunde istedenfor eiendelskonto, settes til 1");
+        ret.put("avdeling", "Avdeling");
         return ret;
     }
         
@@ -142,6 +143,11 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
             eiendelsKonto = getAccountingAccountId(user.id) + "";
         }
         
+        String avdeling = getConfig("avdeling");
+        if(avdeling == null) {
+            avdeling = "";
+        }
+        
         
         
         
@@ -180,6 +186,9 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         line.put(25, "");
         line.put(26, "T");
         line.put(27, df.format(total)+"");
+        if(!avdeling.isEmpty()) {
+            line.put(28, avdeling);
+        }
         lines.add(line);
         
         Double linesTotal = 0.0;
@@ -221,7 +230,10 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
             subLine.put(25, "");
             subLine.put(26, "T");
             subLine.put(27, df.format(item.getProduct().price * item.getCount() * -1)+"");
-            
+            if(!avdeling.isEmpty()) {
+                subLine.put(28, avdeling);
+            }
+
             lines.add(subLine);
 
         }

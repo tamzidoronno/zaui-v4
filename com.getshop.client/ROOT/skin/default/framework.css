@@ -139,7 +139,6 @@ a[href^=tel] { color: inherit; }
 .gswidth_75 { width: 75%; float:left; }
 .gscelllayoutheight_3,.gscelllayoutheight_3 .gswidth_50 { height: 20px; }
 
-
 .header .applicationinner .logged_on_menu a {
     padding-right:4px;
     font-size:12px;

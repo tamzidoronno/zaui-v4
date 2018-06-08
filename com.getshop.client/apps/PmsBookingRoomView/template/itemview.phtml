@@ -54,6 +54,12 @@ if(!isset($room->tmpModified) || !$validSelection) {
         echo "<br>".$this->__f("Selected room").": ";
         if ($selectedItem) {
             echo $selectedItem->bookingItemName;
+            $isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $selectedItem->id);
+            if($isClean) {
+                echo "<div>Room is clean</div>";
+            } else {
+                echo "<div>Room is <b>not</b> clean</div>";
+            }
         } else {
             echo $this->__f("Floating");
         }

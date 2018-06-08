@@ -1,38 +1,47 @@
-<div style='text-align:center; padding-right: 10px;' gstype='form' method='updatefilter'>
+<div style='text-align:right; padding-right: 10px; max-width:1500px; margin: auto; border-bottom: solid 4px #bbb; padding-bottom: 10px; margin-bottom: 10px;' gstype='form' method='updatefilter'>
+    <div class="searchcustomer" gstype='form' method='searchCustomer' style='float:left; display:none;'>
+            <input type="txt" gsname="customer" gsname='customername' class="gsniceinput1" placeholder="Customer name" gs_callback='app.InvoiceOverview.searchCustomerResult' gstype='submitenter'>
+            <span class="shop_button" gstype='submit' gs_callback='app.InvoiceOverview.searchCustomerResult'>Search customer</span>
+            <div class='customersearchresult' style='display:none;'>
+                <i class='fa fa-close close' onclick='$(".customersearchresult").hide()'></i>
+                <div class='customersearchresultinner'></div>
+            </div>
+    </div>
+    
+    <span class='shop_button filterbycustomerbutton' style='float:left;'>Filter by customer</span>
     <?php
     /* @var $this \ns_3746f382_0450_414c_aed5_51262ae85307\InvoiceOverview */
     $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
     $start = date("d.m.Y", strtotime(date("01.m.Y", time())));
     $end = date("d.m.Y", strtotime(date("t.m.Y", time())));
-
-    $states = array();
-    $states['0'] = "All";
-    $states['1'] = "Created";
-    $states['2'] = "Waiting for payment";
-    $states['3'] = "Payment failed";
-    $states['4'] = "Completed";
-    $states['5'] = "Canceled";
-    $states['6'] = "Sent";
-    $states['7'] = "Payment completed";
-    $states['8'] = "Collection failed";
-    $states['9'] = "Need collecting";
-    $states['10'] = "Send to invoice";
+    $filter = $this->getFilter();
+    
+    if(isset($filter->start)) { $start = date("d.m.Y", strtotime($filter->start)); }
+    if(isset($filter->end)) { $end = date("d.m.Y", strtotime($filter->end)); }
+    
+    $states = $this->getStates();
 
     $filterType = array();
     
+    
+    echo "<input type='text' class='gsniceinput1' placeholder='Free text search' style='margin-right: 5px;' gsname='searchword' value='".$filter->searchWord."' gstype='submitenter'>";
     echo "<select class='gsniceselect1' style='height:38px;' gsname='paymentmethod'>";
+    echo "<option value=''>All</option>";
     foreach($paymentMethods as $pmethod) {
         $selected = "";
-        if($pmethod->id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-            $selected = "SELECTED";
-        }
+        if($filter->paymentMethod) {
+            if($pmethod->id == $filter->paymentMethod) {
+                $selected = "SELECTED";
+            }
+        } 
+        
         echo  "<option value='".$pmethod->id."' $selected>" . $pmethod->appName . "</option>";
     }
     echo "</select> ";
-    echo "<select class='gsniceselect1' style='height:38px;'>";
+    echo "<select class='gsniceselect1' style='height:38px;' gsname='state'>";
     foreach($states as $id => $state) {
         $selected = "";
-        if($pmethod->id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+        if(isset($filter->state) && $filter->state == $id) {
             $selected = "SELECTED";
         }
         echo  "<option value='$id' $selected>" . $state . "</option>";
@@ -47,13 +56,35 @@
     $filterTypes['createddate'] = "Order created date";
     $filterTypes['whenordered'] = "Shipment date";
     $filterTypes['paymentdate'] = "Payment date";
+    $filterTypes['duedate'] = "Due date";
     
     echo "<select class='gsniceselect1' style='height:38px;' gsname='filtertype'>";
     foreach($filterTypes as $id => $state) {
         $selected = "";
+        if(isset($filter->type) && $filter->type == $id) {
+            $selected = "SELECTED";
+        }
+        
         echo  "<option value='$id' $selected>" . $state . "</option>";
     }
     echo "</select>";
     ?>
     <span class='shop_button' gstype='submit'>Load result</span>
+    <div class='usersfilterresult'>
+        <?php $this->printCustomersOnFilter(); ?>
+    </div>
+
+    <?php
+    if($filter->searchWord) {
+        echo "<div class='searchwordwarning'>";
+        echo "PS: When using free text search all other filteres will be rendered inactive";
+        echo "</div>";
+    }
+    ?>
 </div>
+
+
+<script>
+    $('[gsname="startdate"]').datepicker({ dateFormat: "dd.mm.yy"});
+    $('[gsname="enddate"]').datepicker({ dateFormat: "dd.mm.yy"});
+</script>

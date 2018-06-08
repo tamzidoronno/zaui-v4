@@ -2253,6 +2253,12 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
         return;
     }
     
+    if ($(e.target).hasClass('loadContentInOverlay') || $(e.target).closest('.loadContentInOverlay').length > 0) {
+        thundashop.framework.loadTableContentOverlay(e, $(this));
+        return;
+    }
+    
+    
     var table = $(this).closest('.GetShopModuleTable');
     var identifier = table.attr('identifier');
     var functioname = table.attr('method');
@@ -2262,7 +2268,7 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
         var event = thundashop.Ajax.createEvent(null, 'clearSessionOnIdentifierForTable', this, {
             "identifier" : identifier,
             "functioname" : functioname
-        });
+    });
         thundashop.Ajax.postWithCallBack(event, function() {});
         return;
     }
@@ -2281,10 +2287,12 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
     var event = thundashop.Ajax.createEvent(null, table.attr('method'), this, data);
     event['synchron'] = true;
 
+//    thundashop.common.startTableOverLay($(this));
+
     thundashop.Ajax.post(event, function(res) {
         base.find('.datarow_extended_content').html(res);
     });
-    
+
     var identifier = table.attr('identifier');
 
     var data = {
@@ -2297,3 +2305,40 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
     var event = thundashop.Ajax.createEvent(null, "setGetShopTableRowId", this, data);
     thundashop.Ajax.post(event, null, null, true);
 });
+
+thundashop.framework.loadTableContentOverlay = function(e, btn) {
+     if ($(e.target).hasClass('dontExpand')) {
+        return;
+    }
+    if($(e.target).closest('.dontExpand').length > 0) {
+        return;
+    }
+    
+    var table = btn.closest('.GetShopModuleTable');
+    var identifier = table.attr('identifier');
+    var functioname = table.attr('method');
+    if(btn.closest('.datarow').hasClass('active')) {
+        btn.closest('.datarow').removeClass('active');
+        table.find('.datarow_extended_content').slideUp();
+        var event = thundashop.Ajax.createEvent(null, 'clearSessionOnIdentifierForTable', this, {
+            "identifier" : identifier,
+            "functioname" : functioname
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {});
+        return;
+    }
+    var target = $(e.target);
+    var base = btn.closest('.datarow');
+    var rowNumber = $(base).attr('rownumber');
+
+    var data = gs_modules_data_array[identifier][rowNumber];
+    data['gscolumn'] = target.attr('index');
+
+    var event = thundashop.Ajax.createEvent(null, table.attr('method'), btn, data);
+    event['synchron'] = true;
+    latestOverLayLoadingEvent = event;
+    thundashop.Ajax.post(event, function(res) {
+        thundashop.common.startTableOverLay();
+        $('.getshoptableoverlaybody').html(res);
+    });
+}

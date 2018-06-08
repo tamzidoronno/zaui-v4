@@ -444,14 +444,14 @@ public interface IPmsManager {
     public void saveConferenceData(ConferenceData data);
     
     @Administrator
-    public List<ConferenceData> getFutureConferenceData();
+    public List<ConferenceData> getFutureConferenceData(Date fromDate);
         
     /**
      * Key = date / day
      * @return 
      */
     @Administrator
-    public Map<Long, List<ConferenceData>> getGroupedConferenceData();
+    public Map<Long, List<ConferenceData>> getGroupedConferenceData(Date fromDate);
     
     @Administrator
     public void detachOrderFromBooking(String bookingId, String orderId);

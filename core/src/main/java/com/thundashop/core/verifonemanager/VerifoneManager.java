@@ -162,11 +162,12 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         if(resultEvent.getResult() == 32) {
             System.out.println("Card succesfully paid");
             orderToPay.status = Order.Status.PAYMENT_COMPLETED;
+            printFeedBack("completed");
         } else {
             System.out.println("Failed to pay");
             orderToPay.status = Order.Status.PAYMENT_FAILED;
+            printFeedBack("payment failed");
         }
-        printFeedBack("completed");
         saveOrderSomeHow(orderToPay);
         orderToPay = null;
     }

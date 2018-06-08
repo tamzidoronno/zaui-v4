@@ -2,9 +2,12 @@ app.PmsBookingRoomView = {
     init: function() {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .close', this.closePreview);
         $(document).on('click', '.PmsBookingRoomView .opengroup', this.openGroup);
+        $(document).on('click', '.PmsBookingRoomView .addaddonsbutton', this.loadAddAddonsArea);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .closebutton', this.closePreview);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .continue', this.continueToBooking);
         $(document).on('click', '.PmsBookingRoomView .menuarea .menuentry', this.menuClicked);
+        $(document).on('click', '.PmsBookingRoomView .listpaymentbutton', this.listPaymentButton);
+        $(document).on('click', '.PmsBookingRoomView .displaylogbutton', this.listLogEntries);
         $(document).on('click', '.PmsBookingRoomView .order_tab_menu', this.menuOrdersClicked);
         $(document).on('click', '.PmsBookingRoomView .editaddon', this.editAddonView);
         $(document).on('click', '.PmsBookingRoomView .bookinginformation .remove_guest', this.removeGuest);
@@ -35,6 +38,21 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
         $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
         $(document).on('click', '.PmsBookingRoomView .expandmessage', this.expandmessage);
+    },
+    loadAddAddonsArea : function() {
+        var event = thundashop.Ajax.createEvent('','printAddAddonsArea',$(this), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsBookingRoomView .addAddonsArea').hide();
+            $('.addAddonsAreaInner').html(res);
+            $('.PmsBookingRoomView .addAddonsArea').fadeIn();
+            $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+        });
+    },
+    listPaymentButton : function() {
+        $('.menuentry[tab="orderstab"]').click();
+    },
+    listLogEntries : function() {
+        $('.menuentry[tab="log"]').click();
     },
     openGroup : function() {
         thundashop.common.closeModal();
@@ -85,13 +103,8 @@ app.PmsBookingRoomView = {
             var data = {
                 orderUnderConstrcutionId : res
             }
-
-            if (!$('[area="gs_modul_cart"]').is(':visible')) {
-                thundashop.framework.showRightWidgetPanel('gs_modul_pmscart', data);
-            } else {
-                thundashop.framework.refreshRightWidget('gs_modul_pmscart', data)
-            }
             $('.grouppaymentprocess').hide();
+            app.PmsBookingRoomView.loadCheckout();
         });
     },
     checkallitems : function() {
@@ -237,25 +250,28 @@ app.PmsBookingRoomView = {
             thundashop.Ajax.postWithCallBack(event, function(res) {
                 paymentpanel.html(res);
                 paymentpanel.show();
+                $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
             });
         } else {
             var event = thundashop.Ajax.createEvent(null, "transferSelectedToCart", this, {});
             event['synchron'] = true;
 
             thundashop.Ajax.post(event, function (res) {
-                var data = {
-                    orderUnderConstrcutionId : res
-                }
-
-                if (!$('[area="gs_modul_cart"]').is(':visible')) {
-                    thundashop.framework.showRightWidgetPanel('gs_modul_pmscart', data);
-                } else {
-                    thundashop.framework.refreshRightWidget('gs_modul_pmscart', data)
-                }
+                app.PmsBookingRoomView.loadCheckout();
             });
         }
     },
     
+    loadCheckout : function() {
+        var event = thundashop.Ajax.createEvent('','loadCheckout',$('.PmsBookingRoomView'), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $(".checkoutview").hide();
+            $('.menuentry[tab="orderstab"]').click();
+            $('.checkoutviewinner').html(res);
+            $(".checkoutview").fadeIn();
+            $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+        });
+    },
     doEditAddonUpdate : function() {
         var panel = $(this).closest('.editaddonpanel');
         var args = thundashop.framework.createGsArgs(panel);
@@ -301,10 +317,11 @@ app.PmsBookingRoomView = {
         
         var event = thundashop.Ajax.createEvent('','reloadApp',view, {});
         if(!avoidSpinner) {
-            view.html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
+//            view.html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
         }
         thundashop.Ajax.postWithCallBack(event, function(res) {
             view.html(res);
+            $('.getshoptableoverlaybody').css('height','auto');
         });
     },
     toggleRemoveAddonCheckBox : function() {
@@ -334,7 +351,7 @@ app.PmsBookingRoomView = {
     },
     
     accessCodeTabUpdated: function(res) {
-        $('.PmsBookingRoomView .guestinformation[tab="accesscodes"]').html(res);
+        $('.PmsBookingRoomView .guestinformation[tab="accesscode"]').html(res);
     },
     
     unitPriceChanged: function(e) {

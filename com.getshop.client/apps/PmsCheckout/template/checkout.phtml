@@ -8,7 +8,25 @@ $items = (array)$originalCart->items;
 $i = 0;
 
 if (!count($items)) {
-    echo "Nothing to do";
+    ?>
+    <div class="kaipal infobox">
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Everything has been handled"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("You can not create more orders, please edit the amount for the booking or remove an existing order.");
+                ?>
+
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Do you want me to do something else?"); ?></div>
+                    <div class="shop_button" onclick='$(".checkoutview").hide();$(".getshoptableoverlaybody").css("height","auto");'><? echo $this->__f("Close payment process"); ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?php
     return;
 }
 $this->loadCartFilter();

@@ -1,0 +1,30 @@
+.InvoiceOverview .GetShopModuleTable .col { width: 100px; }
+.InvoiceOverview .GetShopModuleTable .col_2 { width: 80px; }
+.InvoiceOverview .GetShopModuleTable .col_6 { width: calc(100% - 1000px) !important; }
+.InvoiceOverview .usersfilterresult { text-align: left; padding-top: 5px;}
+.InvoiceOverview .searchwordwarning { text-align: left; color:red; font-weight: bold; padding-top: 10px; font-family: cursive;}
+.InvoiceOverview .fa-close { cursor:pointer; color:#bbb;}
+.InvoiceOverview .addeduser { border: solid 1px #bbb;     padding: 2px; cursor:pointer;
+    margin: 2px;
+    border-radius: 3px;
+    background-color: #efefef; }
+
+.InvoiceOverview .customersearchresult .fa-close {
+    position:absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.InvoiceOverview .customersearchresultinner {
+    max-height: 200px;
+    padding: 10px;
+    overflow: auto;
+}
+.InvoiceOverview .customersearchresult {
+    padding-top: 20px;
+    text-align: left;
+    position: absolute;
+    background-color: #fff;
+    border: solid 1px;
+    top: 67px;
+}

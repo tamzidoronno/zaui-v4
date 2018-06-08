@@ -130,9 +130,13 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $id = str_replace("_", "-", $id);
         $app = $this->getFactory()->getApplicationPool()->getApplicationSetting($id);
         $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
-        $name = $appInstance->getName();
-        if($name == "InvoicePayment") {
-            $name = "Invoice";
+        if(!$appInstance || !method_exists($appInstance, "getName")) {
+            $name = "No method " . $id;
+        } else {
+            $name = $appInstance->getName();
+            if($name == "InvoicePayment") {
+                $name = "Invoice";
+            }
         }
         return $name;
     }

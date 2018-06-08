@@ -285,6 +285,15 @@ public class PmsBooking extends DataCommon {
         return true;
     }
 
+    boolean isEndedBefore(Date date) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.date.end.after(date)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Date getEndDate() {
         Date endDate = null;
         for(PmsBookingRooms room : rooms) {
@@ -606,6 +615,17 @@ public class PmsBooking extends DataCommon {
             ids.put(id, 1);
         }
         orderIds = new ArrayList(ids.keySet());
+    }
+
+    /**
+     * Is payment terminal kiosk.
+     * @return 
+     */
+    boolean isTerminalBooking() {
+        if(channel != null && channel.equals("terminal")) {
+            return true;
+        }
+        return false;
     }
 
     public static class PriceType {

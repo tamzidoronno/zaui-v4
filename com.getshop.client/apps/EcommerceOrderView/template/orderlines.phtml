@@ -44,3 +44,17 @@ if ($order->closed) {
         <span class="price"></span>
     </div>
 </div>
+<?
+if (!$order->closed) {
+    $products = $this->getApi()->getProductManager()->getAllProductsLight();
+    echo "<span gstype='form' method='additemtoorder'>";
+    echo "<input type='hidden' gsname='orderid' value='".$order->id."'>";
+    echo "<select class='gsniceselect1' gsname='productid'>";
+    foreach($products as $product) {
+        echo "<option value='".$product->id."'>" . $product->name . "</option>";
+    }
+    echo "</select> ";
+    echo "<span class='shop_button' gstype='submit'>Add product</span>";
+    echo "</span>";
+}
+?>

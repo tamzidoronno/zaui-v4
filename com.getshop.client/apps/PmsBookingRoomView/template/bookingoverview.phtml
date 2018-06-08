@@ -37,9 +37,29 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     echo "</div>";
 }
 
+$this->includefile("overlayheader");
+
 if($numberOfRooms > 0 && !$this->isGroupBookingView()) {
     echo "<div class='isgroupinformation'>";
+    echo "<i class='fa fa-arrow-down'></i> ";
     echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='color:blue; cursor:pointer;' class='opengroup'>open group</a>.";
+    
+    echo "<span class='roomindication'>";
+    if(sizeof($pmsSelectedRoom->guests) > 0 && $pmsSelectedRoom->guests[0]->name) {
+        echo $pmsSelectedRoom->guests[0]->name . " ";
+    }
+    echo "(" . date("d.m.Y H:i", strtotime($pmsSelectedRoom->date->start)) . " - ";
+    echo date("d.m.Y H:i", strtotime($pmsSelectedRoom->date->end)) . ")";
+    if($pmsSelectedRoom->bookingItemTypeId) {
+        echo " " . $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->bookingItemTypeId)->name;
+    }
+    if($pmsSelectedRoom->bookingItemId) {
+        echo  " (" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->bookingItemId)->bookingItemName . ")";
+    }
+    echo " <i class='fa fa-arrow-down'></i>";
+    
+    echo "</span>";
+    
     echo "</div>";
 }
 
@@ -75,14 +95,14 @@ if($diff < -1 || $diff > 1) {
 <div gstype='form' method="updateBooking" class="bookingoverview_content_row">
     <input type='hidden' gsname='roomId' value='<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>'/>
     <div class="menuarea" roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" bookingEngineId="<? echo $bookingEngineBooking->id; ?>">
-        <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Booking"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Guests"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" clearTabContent="true" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay") . $stayPrice; ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . " " . $addonsPriceToDisplay; ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('accesscodes'); ?>" tab='accesscodes'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('accesscode'); ?>" tab='accesscode'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa gsicon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
-        <div class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
+        <div style='display:none;' class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
+        <div style='display:none;' class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Tickets"); ?></span></div>
     </div>
     
@@ -98,8 +118,8 @@ if($diff < -1 || $diff > 1) {
             <?php $this->printArea("addons"); ?>
         </div>
         
-        <div class="guestinformation <? echo $this->isTabActive('accesscodes'); ?> accesscode" tab='accesscodes'>
-            <?php $this->printArea("accesscodes"); ?>
+        <div class="guestinformation <? echo $this->isTabActive('accesscode'); ?> accesscode" tab='accesscode'>
+            <?php $this->printArea("accesscode"); ?>
         </div>
         
         <div class="guestinformation <? echo $this->isTabActive('messages'); ?>" tab='messages'>
@@ -143,11 +163,6 @@ $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForR
 $unsettledRoom = $totalOnRoom - $totalOrdersRoom;
 if($unsettledRoom > 1 || $unsettledRoom < -1) {
 
-    ?>
-    <div style="text-align: right;">
-        <span class="shop_button addselecteditemstocart quickstartpaymentprocessbutton" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Start payment process") . " (" . $unsettledRoom .")"; ?></span>
-    </div>
-    <?php
 }
 
 if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {

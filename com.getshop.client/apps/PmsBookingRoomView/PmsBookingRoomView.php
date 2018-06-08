@@ -181,6 +181,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("differenceinroom");
     }
     
+    public function loadCheckout() {
+        $app = new \ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout();
+        $app->renderApplication(true);
+    }
+    
     public function discardChanges() {
         $this->clearCache();
     }
@@ -206,14 +211,29 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return null;
     }
     
+    public function printAddAddonsArea() {
+        $addAddons = new \ns_b72ec093_caa2_4bd8_9f32_e826e335894e\PmsAddAddonsList();
+        $addAddons->renderApplication(true);
+    }
+    
     public function reloadAddons() {
         $this->includefile("addons");
     }
     
     public function saveRoom() {
         $selectedRoom = $this->getTmpSelectedRoom($_POST['data']['roomid']);
-        $roomId = $this->setStay($selectedRoom);
+        
+        //Update stay
+        $roomId = $selectedRoom->pmsBookingRoomId;
+        $start = $this->convertToJavaDate(strtotime($selectedRoom->date->start));
+        $end = $this->convertToJavaDate(strtotime($selectedRoom->date->end));
+        $itemId = $selectedRoom->bookingItemId;
+        
+        $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId,$itemId,false, $start, $end);
+        
+        //Update price matrix
         $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId, $selectedRoom->priceMatrix);
+        
         $this->removeTmpRoom($selectedRoom->pmsBookingRoomId);
     }
     
@@ -488,6 +508,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function removeTmpRoom($roomId) {
+        $this->selectedRoom = null;
+        $this->pmsBooking = null;
         unset($_SESSION['tmpselectedroom'][$roomId]);
     }
 
@@ -978,7 +1000,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             return $this->roomLog;
         }
         $filter = new \core_pmsmanager_PmsLog();
-        $filter->roomId = $this->getSelectedRoom()->pmsBookingRoomId;
+        $filter->bookingId = $this->getPmsBooking()->id;
         $logs = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedMultilevelDomainName(), $filter);
         $this->roomLog = $logs;
         return $logs;

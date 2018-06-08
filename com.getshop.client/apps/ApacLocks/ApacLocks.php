@@ -10,6 +10,12 @@ class ApacLocks extends \MarketingApplication implements \Application {
         
     }
     
+    public function typeOfLock($data) {
+        if($data->typeOfLock == "LocstarLock") {
+            return "SmartLock";
+        }
+        return $data->typeOfLock;
+    }
     public function setSlot($slot) {
         $this->slot = $slot;
     }
@@ -111,7 +117,7 @@ class ApacLocks extends \MarketingApplication implements \Application {
             $attributes = array(
                 array("lockid", "gs_hidden", 'id'),
                 array("zwaveDeviceId", "DeviceId", 'zwaveDeviceId'),
-                array("typeOfLock", "Type", 'typeOfLock'),
+                array("typeOfLock", "Type", null, "typeOfLock"),
                 array("name", "Name", 'name'),
                 array("maxnumberOfCodes", "MaxCodes", 'maxnumberOfCodes'),
                 array("slotsToUpdate", "SlotsToUpdate", null, 'getCountOfCodesToUpdate'),
@@ -123,7 +129,18 @@ class ApacLocks extends \MarketingApplication implements \Application {
             $extraData = array();
             $extraData['serverid'] = $server->id;
             
+            $sorting = array();
+            $sorting[] = "zwaveDeviceId";
+            $sorting[] = "name";
+            $sorting[] = "typeOfLock";
+            $sorting[] = "slotsToUpdate";
+            $sorting[] = "slotsInUse";
+            $sorting[] = "slotsToUpdate";
+            $sorting[] = "freeSlots";
+            $sorting[] = "status";
+            
             $table = new \GetShopModuleTable($this, "ApacLocks", "getLockData", null, $attributes, $extraData);
+            $table->setSorting($sorting);
             $table->setData($server->locks);
             $table->sortByColumn('zwaveDeviceId', true);
             $table->render();

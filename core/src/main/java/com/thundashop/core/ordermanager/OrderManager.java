@@ -23,6 +23,8 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderFilter;
+import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -2208,6 +2210,35 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         return total;
+    }
+
+    @Override
+    public List<OrderResult> getOrdersByFilter(OrderFilter filter) {
+        
+        List<Order> ordersToReturn = new ArrayList();
+        OrderFiltering filtering = new OrderFiltering();
+        filtering.setOrders(new ArrayList(orders.values()));
+        
+        if(filter.searchWord != null && !filter.searchWord.isEmpty()) {
+            ordersToReturn = searchForOrders(filter.searchWord, null, null);
+        } else {
+            ordersToReturn = filtering.filterOrders(filter);
+        }
+        
+        List<OrderResult> orderFilterResult = new ArrayList();
+        for(Order ord : ordersToReturn) {
+            OrderResult res = new OrderResult();
+            res.setOrder(ord);
+            User usr = userManager.getUserByIdUnfinalized(ord.userId);
+            if(usr != null) {
+                res.user = usr.fullName;
+            }
+            orderFilterResult.add(res);
+        }
+        
+        orderFilterResult.add(filtering.sum(orderFilterResult));
+        
+        return orderFilterResult;
     }
 
 }

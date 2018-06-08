@@ -260,6 +260,11 @@ thundashop.Ajax = {
         $('.gserrorinput').removeClass('gserrorinput');
         
         PubSub.publish("POSTED_DATA", "");
+        if(thundashop.common.isTableOverLayActive() && (typeof(callback) === "undefined" || callback === undefined || callback === null)) {
+            data['synchron'] = true;
+            callback = thundashop.common.reloadOverLay;
+        }
+        
 
         var file = this.ajaxFile;
         var uploadcallback = false;

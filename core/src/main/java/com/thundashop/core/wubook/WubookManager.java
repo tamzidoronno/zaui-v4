@@ -1,5 +1,6 @@
 package com.thundashop.core.wubook;
 
+import com.thundashop.core.storemanager.StoreManager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
@@ -77,6 +78,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     MessageManager messageManager;
+    
+    @Autowired
+    StoreManager storeManager;
     
     @Autowired
     OrderManager orderManager;
@@ -328,7 +332,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             booking.rooms.add(room);
             
-            if(pmsManager.getConfigurationSecure().usePricesFromChannelManager) {
+            if(pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore()) {
                 Vector roomdays = (Vector) roomtable.get("roomdays");
                 Iterator roomDaysIterator = roomdays.iterator();
                 SimpleDateFormat intoDate = new SimpleDateFormat("dd-MM-yyyy");
@@ -954,7 +958,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
 
-            if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null && doNormalPricing) {
+            if((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore()) && newbooking != null && doNormalPricing) {
                 Date end = new Date();
                 for(String pmsId : pricestoset.keySet()) {
                     PmsBookingRooms pmsroom = newbooking.findRoom(pmsId);

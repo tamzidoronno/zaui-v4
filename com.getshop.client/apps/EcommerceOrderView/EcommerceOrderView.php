@@ -9,6 +9,13 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         
     }
     
+    public function additemtoorder() {
+        $count = 1;
+        $orderId = $_POST['data']['orderid'];
+        $productId = $_POST['data']['productid'];
+        $this->getApi()->getOrderManager()->addProductToOrder($orderId, $productId, $count);
+    }
+    
     public function saveSpecialCartItem() {
         $orderid = $_POST['data']['orderid'];
         $itemid = $_POST['data']['itemid'];

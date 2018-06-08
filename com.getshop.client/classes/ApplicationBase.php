@@ -20,6 +20,10 @@ class ApplicationBase extends FactoryBase {
         return false;
     }
     
+    public function sortGetShopTable() {
+        
+    }
+    
     public function clearSessionOnIdentifierForTable() {
         $identifier = $_POST['data']['functioname'];
         unset($_SESSION['gs_moduletable_'.$identifier]);
@@ -267,9 +271,6 @@ class ApplicationBase extends FactoryBase {
             echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
             echo "<div class='order_mask'>";
 
-            echo "<div class='inner'>";
-            echo $this->__f("Drag to reorder");
-            echo "</div>";
             echo "</div>";
         }
         

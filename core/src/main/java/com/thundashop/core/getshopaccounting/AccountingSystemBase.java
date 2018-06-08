@@ -430,6 +430,10 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     public String getSubType(String paymentId) {
         // InvoicePayment
+        if(paymentId == null) {
+            return "no method";
+        }
+        
         if (paymentId.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
             return "invoice";
         }

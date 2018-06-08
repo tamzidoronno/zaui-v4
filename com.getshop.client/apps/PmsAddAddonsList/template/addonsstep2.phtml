@@ -16,9 +16,13 @@
     
     $addonProduct = $this->getApi()->getProductManager()->getProduct($addonItem->productId);
     $perGuest = "";
+    $includedInRoomPrice = "";
     $selectedType = "";
     if($addonItem->dependsOnGuestCount || $addonItem->addonType == 1) {
         $perGuest = "CHECKED";
+    }
+    if($addonItem->isIncludedInRoomPrice) {
+        $includedInRoomPrice = "CHECKED";
     }
     if(!$addonItem->isSingle || $addonItem->addonType == 1) {
         $selectedType = "alldays";
@@ -44,6 +48,7 @@
     </div>
     <div style='padding: 10px;'>
         <div class='addaddonsstep2'>
+            <span class='shop_button completeAddAddon' style='width:100%; box-sizing: border-box;left:0px; margin-bottom: 5px;'>Add addon</span>
             <input type='hidden' gsname='productId' value='<?php echo $addonItem->productId; ?>'>
             <input type='hidden' gsname='quickadd' value='<?php echo $quickadd; ?>'>
             <select style='width:100%' class='typeofaddon gsniceselect1' gsname='periode_selection'>
@@ -55,6 +60,9 @@
                 ?>
             </select>
             <input type='checkbox' gsname='isperguest' <?php echo $perGuest; ?>> Is per guest
+            <div>
+                <input type='checkbox' gsname='includedInRoomPrice' <?php echo $includedInRoomPrice; ?>> Is included in room price
+            </div>
             <div class='optionpanel' type='repeat_weekly'>
                 <div class='weekdayselectionbox'><input type='checkbox' class='weekdayselection' gsname='repeat_mon'> Monday</div>
                 <div class='weekdayselectionbox'><input type='checkbox' class='weekdayselection' gsname='repeat_tue'> Tuesday</div>
@@ -74,7 +82,6 @@
             <br>
             Text on order<br>
             <input type="text" placeholder="Title" gsname='name' class='gsniceinput1' style="width:100%;box-sizing: border-box;margin-bottom:6px;" value='<?php echo $addonProduct->name; ?> '><br>
-            <span class='shop_button completeAddAddon' style='width:100%; box-sizing: border-box;'>Add addon</span>
         </div>
     </div>
 

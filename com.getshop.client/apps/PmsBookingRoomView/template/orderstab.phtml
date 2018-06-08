@@ -10,12 +10,6 @@ if(sizeof($methods) > 0) {
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $booking = $this->getBookingEngineBooking();
-$endDate = null;
-foreach($pmsBooking->rooms as $r) {
-    if($endDate == null || strtotime($r->date->end) > $endDate) {
-        $endDate = strtotime($r->date->end);
-    }
-}
 $user = $this->getUserForBooking();
 
 $totalOnRoom = $pmsSelectedRoom->totalCost;
@@ -48,47 +42,7 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     return;
 }
 
-$isgroup = "no";
-if(sizeof($pmsBooking->rooms) > 1) {
-    $isgroup = "yes";
-}
 ?>
-<div>
-        <?php
-        if(!$pmsBooking->createOrderAfterStay) {
-            if($hasPaymentMethods) {
-            ?>
-                <span style='position:absolute; right: 0px; z-index: 5;'>
-                    <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create order after stay"); ?></span>
-                    <span class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Start payment process"); ?></span>
-               </span>
-            <?php
-            }
-        } else {
-            ?>
-            <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;position:absolute; right: 10px;z-index:2;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
-            <?php
-            echo "<h1 >An order of " . $pmsBooking->unsettled . " will be created at " . date("d.m.Y", $endDate) . "</h1>";
-        }
-        ?>
-    <div class='insideheader'><? echo $this->__f("Payment overview"); ?></div>
-    <div>
-        <span class='pricetext'>Total for room</span> <span class='pricetag'><?php echo $totalOnRoom; ?></span>
-        <span class='pricetext'>Missing on room</span> <span class='pricetag'><?php echo $unsettledRoom; ?></span>
-            <span class='pricetext'>Orders on room</span> <span class='pricetag'><?php echo $totalOrdersRoom; ?></span>
-    </div>
-    <?php
-    if(sizeof($pmsBooking->rooms) > 1) {
-        ?>
-        <div style='color:#bbb;'>
-            <span class='pricetext'>Total for group</span> <span class='pricetag'><?php echo $totalOnBooking; ?></span>
-            <span class='pricetext'>Missing on group</span> <span class='pricetag'><?php echo $totalMissingOnGroup; ?></span>
-            <span class='pricetext'>Orders for group</span> <span class='pricetag'><?php echo $totalNotPaidOnRoom; ?></span>
-        </div>
-        <?php
-    }
-    ?>
-</div>
 
 <div class="topbuttons">
     <?

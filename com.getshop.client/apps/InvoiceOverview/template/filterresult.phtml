@@ -1,7 +1,26 @@
 <?php
 /* @var $this \ns_3746f382_0450_414c_aed5_51262ae85307\InvoiceOverview */
 $result = $this->getFilteredResult();
-echo "<pre>";
-print_r($result);
-echo "</pre>";
+
+$attributes = array(
+    array('id', 'gs_hidden', 'orderId'),
+    array('incOrderId', 'Id', 'incOrderId'),
+    array('orderDate', 'Date', null, 'formatOrderDate'),
+    array('paymentDate', 'Payment date', null, 'formatPaymentDate'),
+    array('dueDate', 'Due', null, 'formatDueDate'),
+    array('user', 'User', 'user'),
+    array('status', 'Status', null, 'formatStatus'),
+    array('amountExTaxes', 'Ex tax', 'amountExTaxes'),
+    array('amountIncTaxes', 'Inc tax', 'amountIncTaxes'),
+    array('amountPaid', 'Paid', 'amountPaid'),
+    array('restAmount', 'Rest', 'restAmount'),
+);
+
+$table = new \GetShopModuleTable($this, 'InvoiceOverview', 'loadOrder', null, $attributes);
+$table->setSorting(array("id","incOrderId","orderDate","paymentDate","dueDate","user","status","amountExTaxes","amountIncTaxes","amountPaid","restAmount"));
+$table->setData($result);
+echo "<div class='invoicetable'>";
+$table->render();
+echo "</div>";
+
 ?>

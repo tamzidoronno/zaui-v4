@@ -3,8 +3,12 @@
     Conferences
 </div>
 <div class='row'>
+    <input type="date" ng-model="date">
+    <input type="button" ng-click="load()" value="Load from date">
+</div>
+<div class='row'>
     <div ng-repeat="date in dates" class="conferencerow">
-        <div class="conf_title"> {{ date.toLocaleDateString("nb-NO"); }} </div>
+        <div class="conf_title"> {{ formatDate(date); }} week {{ getWeekNumber(date) }} </div>
         
         <div ng-repeat="conf in getConference(date)">
             <div class="conf_title_name"> {{ conf.nameOfEvent }}</div>

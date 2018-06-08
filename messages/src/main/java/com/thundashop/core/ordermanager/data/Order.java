@@ -871,6 +871,16 @@ public class Order extends DataCommon implements Comparable<Order> {
         return total-amount;
     }
 
+    public Date getDueDate() {
+        if(dueDays == null) {
+            dueDays = 14;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(rowCreatedDate);
+        cal.add(Calendar.DAY_OF_YEAR, dueDays);
+        return cal.getTime();
+    }
+
 
     public static class Status  {
         public static int CREATED = 1;

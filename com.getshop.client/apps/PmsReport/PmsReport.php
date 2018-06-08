@@ -55,7 +55,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         if(!$input->date) {
             return "Total";
         }
-        return date("d.m.Y", strtotime($input->date));
+        return "<span getshop_sorting='".strtotime($input->date)."'>" . date("d.m.Y", strtotime($input->date)) . "</span>";
     }
     public function formatRevPar($input) {
         return round($input->revPar);
@@ -136,6 +136,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         );
         
         $table = new \GetShopModuleTable($this, 'PmsManager', 'loadCoverageResult', null, $attributes);
+        $table->setSorting(array("date","avilable","rentedout","guests","avprice","revpar","total","budget","Coverage"));
         $table->setData($data->entries);
         $table->render();
         $_SESSION['latestpmscoverageresult'] = json_encode($data);
@@ -350,7 +351,15 @@ class PmsReport extends \MarketingApplication implements \Application {
         $rows[] = $row;
         $attributes[] = array('total', 'Total', 'total',null);
         
+        $sortAttributes = array("date");
+        $index = 0;
+        foreach($products as $productId => $total) {
+            $sortAttributes[] = "product" . $index;
+            $index++;
+        }
+        
         $table = new \GetShopModuleTable($this, 'PmsManager', 'loadIncomeReportCell', null, $attributes);
+        $table->setSorting($sortAttributes);
         $table->setData($rows);
         $table->render();
         

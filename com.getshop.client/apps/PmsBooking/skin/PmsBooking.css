@@ -50,6 +50,7 @@
 }
 .PmsBooking .pmsfront3 select::-ms-expand {display: none;}
 .PmsBooking .pmsfront3 .select_arrow{position:relative;display: inline;}
+.PmsBooking .pmsfront3 .go_to_page_button.disabled { background:gray; cursor:initial; }
 .PmsBooking .pmsfront3 .select_arrow:after {content:""; width:0; height:0; position:absolute; pointer-events: none;}
 .PmsBooking .pmsfront3 .select_arrow:after {
     border-left: 5px solid transparent;

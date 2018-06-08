@@ -1527,6 +1527,12 @@ function getshop_hideGuestSelectionBox(e) {
 
 function getshop_displayVerifoneFeedBack(res) {
     
+    if(res.msg === "payment failed") {
+        setTimeout(function() {
+            window.location.href="paymentterminal.php";
+        }, "3000");
+    }
+    
     if(res.msg === "completed") {
         var tosend = {
             "orderId" :  getshop_currentorderid,

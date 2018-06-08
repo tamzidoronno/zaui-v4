@@ -3,24 +3,17 @@ $logs = $this->getLogEntries();
 $printed = false;
 foreach($logs as $log) {
     $type = $log->logType;
-    if(stristr($type, "sms") || stristr($type, "email")) {
-        $typeText = str_replace("_email", "", $log->logType);
-        $typeText = str_replace("_sms", "", $typeText);
-        if(stristr($type, "email")) {
-            $typeText .= " email";
-        } else {
-            $typeText .= " sms";
-        }
-        $printed = true;
-        $text = $log->logText;
-        $text = preg_replace('/^(?:<br\s*\/?>\s*)+/', '', $text);
-        echo "<div class='messagelogentry'>";
-        echo "<div class='messagelogtext'>" . $text . "</div>";
-        echo "<div class='messagelogfooter'>";
-        echo "<span style='float:left;'><i class='fa fa-expand expandmessage' style='cursor:pointer;'></i> " . date("d.m.Y H:i:s", strtotime($log->rowCreatedDate)) . "</span>";
-        echo $typeText . "<div style='clear:both;'></div></div>";
-        echo "</div>";
-    }
+    $typeText = str_replace("_email", "", $log->logType);
+    $typeText = str_replace("_sms", "", $typeText);
+    $printed = true;
+    $text = $log->logText;
+    $text = preg_replace('/^(?:<br\s*\/?>\s*)+/', '', $text);
+    echo "<div class='messagelogentry'>";
+    echo "<div class='messagelogtext'>" . $text . "</div>";
+    echo "<div class='messagelogfooter'>";
+    echo "<span style='float:left;'><i class='fa fa-expand expandmessage' style='cursor:pointer;'></i> " . date("d.m.Y H:i:s", strtotime($log->rowCreatedDate)) . "</span>";
+    echo $typeText . "<div style='clear:both;'></div></div>";
+    echo "</div>";
 }
 if(!$printed) {
     echo "No messages sent yet";

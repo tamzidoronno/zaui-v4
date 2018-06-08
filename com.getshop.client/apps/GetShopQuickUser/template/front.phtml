@@ -5,9 +5,10 @@ $name = $this->user ? $this->user->fullName : "N/A";
 
 <?php
 if(!$this->printEditDirect) {
-    ?><span class="booked_for"><? echo $name; ?></span>
-    <div class="gs_shop_small_icon show_edit_user"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></div>
-    <div class="gs_shop_small_icon show_change_user"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></div>
+    ?>
+    <span class="show_edit_user edit_user_btn"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></span>
+    <span class="booked_for"><? echo $name; ?></span>
+    <span class="show_change_user edit_user_btn"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></span>
     
     <div class="edit_details_of_user">
         <?
@@ -23,3 +24,9 @@ if(!$this->printEditDirect) {
         <div class="show_change_user shop_button"><i class="fa fa-user"></i> <? echo $this->__f("Change user"); ?></div>
     <? } ?>
 </div>
+
+    
+<style>
+    .edit_user_btn { color:blue; cursor:pointer; }
+    .edit_user_btn:hover { color:green; }
+</style>

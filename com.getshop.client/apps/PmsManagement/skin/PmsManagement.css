@@ -501,7 +501,6 @@
  
 }
 @media only all and (max-width:800px){
-    .ui-corner-all{display:none !important;}
     .PmsManagement .pmsbutton{padding: 2px;border: 0;border-radius: 0;font-size: 13px;}
     .PmsManagement .managementview_booking_options{overflow-x: auto;}
     .PmsManagement th{padding:0;letter-spacing: 0;font-size: 10px;max-width: 0px !important;font-size:7px;overflow-x: hidden;}

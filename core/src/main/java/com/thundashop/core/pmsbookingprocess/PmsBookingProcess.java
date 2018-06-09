@@ -969,6 +969,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         retval.phonePrefix = "" + store.configuration.defaultPrefix;
         retval.currencyText = currencycode;
         retval.startYesterday = isMidleOfNight();
+        retval.defaultCheckinTime = config.getDefaultStartRaw();
         return retval;
     }
 

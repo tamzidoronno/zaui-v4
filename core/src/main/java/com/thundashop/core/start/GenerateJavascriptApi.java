@@ -73,7 +73,9 @@ public class GenerateJavascriptApi {
         
         String createManagers = "GetShopApiWebSocket.prototype.createManagers = function() {\n";
         for (Class clazz : interfaces) {
-            if(!clazz.getName().contains("IPmsBookingProcess") && createOnlyForbookingProcess) {
+            if(!clazz.getName().contains("IPmsBookingProcess") &&
+                    !clazz.getName().contains("IMessageManager") &&
+                    createOnlyForbookingProcess) {
                 continue;
             }
             String fileName = clazz.getSimpleName().substring(1);

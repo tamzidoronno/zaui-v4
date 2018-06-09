@@ -317,6 +317,14 @@ public class PmsConfiguration extends DataCommon {
         return cal.get(Calendar.HOUR_OF_DAY) + ":" + minuteText;
     }
     
+    /**
+     * Not localized by timezone.
+     * @return 
+     */
+    public String getDefaultStartRaw() {
+        return defaultStart;
+    }
+    
     public Date getDefaultEnd(Date inputDate) {
         return calculcateTimeZone(defaultEnd, inputDate);
     }

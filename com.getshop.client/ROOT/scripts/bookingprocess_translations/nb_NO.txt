@@ -4,6 +4,7 @@
     "failedlogon" : "Beklager, feil brukernavn eller passord",
     "rooms" : "Rom",
     "room" : "Rom",
+    "paymentexplanation" : "Sett inn kortet og følg instruksjonene under. Når betalingen er gjennomført får du en kode på sms og epost etter innsjekk innsjekk klokken {time}.",
     "nights" : "netter",
     "paylater" : "Betal senere",
     "sameasguest" : "Samme som gjest",

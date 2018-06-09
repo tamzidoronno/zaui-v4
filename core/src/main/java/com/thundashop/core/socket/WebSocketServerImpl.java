@@ -50,7 +50,7 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
     @Override
     public void onOpen(WebSocket ws, ClientHandshake ch) {
         try {
-            WebSocketClient client = applicationContext.getBean(WebSocketClient.class);
+             WebSocketClient client = applicationContext.getBean(WebSocketClient.class);
             client.setWs(ws);
             clients.put(ws, client);
         } catch (BeansException ex) {

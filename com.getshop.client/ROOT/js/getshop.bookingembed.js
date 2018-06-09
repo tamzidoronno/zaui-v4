@@ -1,11 +1,18 @@
 (function ( $ ) {
     $.fn.getshopbooking = function( options ) {
+        if(options.endpoint === "https://lofoten.booking.fasthotels.no/") { options.endpoint = "demo"; }
+        if(options.endpoint === "https://svolver.booking.fasthotels.no/") { options.endpoint = "demo"; }
+
+        
         var box = $(this);
         getshop_endpoint = options.endpoint;
         getshop_viewmode = options.viewmode;
         getshop_terminalid = options.terminalid;
         getshop_nextPage = options.nextPage;
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
+        sessionStorage.setItem('getshop_domain',options.domain);
+        
+        
         if(!options.language) {
             sessionStorage.setItem('getshop_language',"");
         } else {
@@ -43,7 +50,13 @@
     $('<link/>', {
        rel: 'stylesheet',
        type: 'text/css',
-       href: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
+       href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
+    }).appendTo('head');
+
+    $('<link/>', {
+       rel: 'stylesheet',
+       type: 'text/css',
+       href: 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css'
     }).appendTo('head');
 
     $('<link/>', {

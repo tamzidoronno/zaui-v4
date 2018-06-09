@@ -76,4 +76,6 @@ public interface IMessageManager  {
     
     @Administrator
     public SmsMessagePage getIncomingMessages(int pageNumber);
+    
+    public void sendErrorNotify(String inText);
 }

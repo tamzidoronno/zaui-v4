@@ -1,7 +1,10 @@
 getshop_endpoint = "";
-getshop_domainname = "demo";
+getshop_domainname = "default";
 if(sessionStorage.getItem('getshop_endpoint')) {
     getshop_endpoint = sessionStorage.getItem('getshop_endpoint');
+}
+if(sessionStorage.getItem('getshop_domain')) {
+    getshop_domainname = sessionStorage.getItem('getshop_domain');
 }
 var leftInterval;
 var getshop_handledevent = false;
@@ -69,6 +72,9 @@ function getshop_setBookingTranslation() {
             if(getshop_bookingconfiguration.startYesterday) {
                 $('#warningstartyesterday').show();
             }
+            var toReplace = translations["paymentexplanation"];
+            toReplace = toReplace.replace("{time}", config.defaultCheckinTime);
+            $("[gstranslationfield='paymentexplanation']").html(toReplace);
         });
         getshop_confirmGuestInfoBox(); 
     });
@@ -1095,6 +1101,53 @@ function getshop_setDatePicker() {
                 $('.GslBooking #search_rooms').click();
             });
         }
+        
+        
+        $('#date_picker_start').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+            onSelect: function(dateText) {
+               var date = moment(dateText, "DD.MM.YYYY");
+               var currentEnd = $('#date_picker_end').val();
+               var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+               var diff = endMoment.diff(date, "minutes");
+               if(diff <= 0) {
+                   var tomorrow = new Date(date);
+                   tomorrow.setDate(tomorrow.getDate() + 1);
+                   var newDate = moment(tomorrow);
+                   var month = newDate.get('month')+1;
+                   var day = newDate.date();
+                   var year = newDate.get('year');
+
+                   if(day < 10) { day = "0" + day; }
+                   if(month < 10) { month = "0" + month; }
+
+                   $('#date_picker_end').val(day + "." + month + "." + year);
+               }
+             }
+         });
+        $('#date_picker_end').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+            onSelect: function(dateText) {
+               var date = moment(dateText, "DD.MM.YYYY");
+               var currentEnd = $('#date_picker_end').val();
+               var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+               var diff = endMoment.diff(date, "minutes");
+               if(diff <= 0) {
+                   var tomorrow = new Date(date);
+                   tomorrow.setDate(tomorrow.getDate()-1);
+                   var newDate = moment(tomorrow);
+                   var month = newDate.get('month')+1;
+                   var day = newDate.date();
+                   var year = newDate.get('year');
+
+                   if(day < 10) { day = "0" + day; }
+                   if(month < 10) { month = "0" + month; }
+
+                   $('#date_picker_start').val(day + "." + month + "." + year);
+               }
+             }
+         });
+        
     }catch(e) { getshop_handleException(e); }
 }
 
@@ -1163,9 +1216,36 @@ function getshop_changeNumberOfRooms() {
 var gslbookingcurresult = null;
 
 function getshop_handleException(e) {
-    alert(e);
+    var getbrowser = getshop_get_browserForDebugging();
+    var text = e.stack + "<br>";
+    text += "Browser:<br>";
+    for(var k in getbrowser) {
+        text += k + " : " + getbrowser[k] + "<br>";
+    }
+    text += e;
+    var client = getshop_getWebSocketClient();
+    client.MessageManager.sendErrorNotify(text);
+    alert('An unknown error occured. :(');
     throw e;
 }
+
+function getshop_get_browserForDebugging() {
+    var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []; 
+    if(/trident/i.test(M[1])){
+        tem=/\brv[ :]+(\d+)/g.exec(ua) || []; 
+        return {name:'IE',version:(tem[1]||'')};
+        }   
+    if(M[1]==='Chrome'){
+        tem=ua.match(/\bOPR|Edge\/(\d+)/)
+        if(tem!=null)   {return {name:'Opera', version:tem[1]};}
+        }   
+    M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+    if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+    return {
+      name: M[0],
+      version: M[1]
+    };
+ }
 
 function getshop_goToOverviewPage() {
     $('.gslbookingBody').show();
@@ -1183,8 +1263,8 @@ function getshop_goToAddonsPage() {
 }
 
 function getshop_goToNextPage(page) {
-    var startDate = $('#date_picker').data('daterangepicker').startDate.format('YYYY-MM-DD');
-    var endDate = $('#date_picker').data('daterangepicker').endDate.format('YYYY-MM-DD');
+    var startDate = $('#date_picker_start').val();
+    var endDate = $('#date_picker_end').val();
     var rooms = $('#count_room').val();
     var adults = $('#count_adult').val();
     var children = $('#count_child').val();
@@ -1220,8 +1300,11 @@ function getshop_getWebSocketClient() {
         if(!hostToUse) {
             hostToUse = window.location.host;
         }
-        console.log(window.location.href);
-//                    getshopclient = new GetShopApiWebSocket("clients.getshop.com", "31332", hostToUse); //Online
+        hostToUse = hostToUse.replace("http://", "");
+        hostToUse = hostToUse.replace("https://", "");
+        hostToUse = hostToUse.replace("/", "");
+
+//        getshopclient = new GetShopApiWebSocket("www.getshop.com", "31332", hostToUse); //Online
         getshopclient = new GetShopApiWebSocket("localhost", "31330", getshop_endpoint); //Local
         getshopclient.identifier = hostToUse;
         getshopclient.shouldConnect = true;
@@ -1276,8 +1359,7 @@ function getshop_searchRooms(e) {
             "discountCode": discountCode,
             "bookingId": ""
         };
-        console.log(data);
-        
+        fdasfasdf;
         var client = getshop_getWebSocketClient();
         var starting = client.PmsBookingProcess.startBooking(getshop_domainname, data);
         starting.done(function(res) {
@@ -1522,7 +1604,7 @@ function getshop_cancelPayment() {
     try {
         var client = getshop_getWebSocketClient();
         var cancelling = client.PmsBookingProcess.cancelPaymentProcess(getshop_domainname, {
-            "terminalid" : sessionStorage.getItem("getshopterminalid"),
+            "terminalid" : localStorage.getItem("getshopterminalid"),
         });
         cancelling.done(function(res) {
             window.location.href="paymentterminal.php";
@@ -1590,7 +1672,7 @@ getshop_WebSocketClient = {
             if(getshop_endpoint) {
                 endpoint = getshop_endpoint;
             }
-            this.socket = new WebSocket("ws://"+endpoint+":31332/");
+            this.socket = new WebSocket("wss://"+endpoint+":31332/");
             this.socket.onopen = getshop_WebSocketClient.connected;
             this.socket.onclose = function() {
                 getshop_WebSocketClient.disconnected();
@@ -1616,6 +1698,9 @@ getshop_WebSocketClient = {
 
 
 
+
+
+
 /* START GetShop Websocket api */
 var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     this.sentMessages =  [];
@@ -1627,7 +1712,7 @@ var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     } else {
         this.port = port;
     }
-
+    
     if (typeof(identifier) === "undefined" || !identifier) {
         this.identifier = this.address;
     } else {
@@ -1646,18 +1731,18 @@ GetShopApiWebSocket.prototype = {
     globalErrorHandler: false,
     messageCountChangedEvent: null,
     listeners: [],
-
+    
     connect: function() {
         if (!this.shouldConnect)
             return;
-
+        
         this.shouldConnect = false;
         this.connectedCalled = true;
         var me = this;
         if (this.connectionEstablished === null) {
             this.fireDisconnectedEvent();
         }
-        var address = "ws://"+this.address+":"+this.port+"/";
+        var address = "wss://"+this.address+":"+this.port+"/";
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);
         this.socket.onclose = function() {
@@ -1666,14 +1751,14 @@ GetShopApiWebSocket.prototype = {
         this.socket.onmessage = function(msg) {
             me.handleMessage(msg);
         };
-
+        
         this.createManagers();
     },
 
     setGlobalErrorHandler: function(globalErrorHandler) {
         this.globalErrorHandler = globalErrorHandler;
     },
-
+    
     guid: function() {
         function s4() {
           return Math.floor((1 + Math.random()) * 0x10000)
@@ -1690,16 +1775,16 @@ GetShopApiWebSocket.prototype = {
             dataObjectName : dataObjectName,
             callback: callback
         }
-
+        
         this.listeners.push(listenObject);
     },
 
     handleMessage: function(msg) {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
-
+        
         var corrolatingMessage = this.getMessage(jsonObject.messageId);
-
+        
         if (typeof(corrolatingMessage) === "undefined") {
             this.handleIncomingMessage(jsonObject);
             return;
@@ -1710,16 +1795,16 @@ GetShopApiWebSocket.prototype = {
         } else {
             corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
         }
-
+        
         if (this.sentMessages.length === 0 && this.transferCompleted) {
             this.transferCompleted();
         }
-
+        
         if (this.sentMessages.length === 0 && this.transferCompletedFirstTimeAfterUnsentMessageSent && this.firstUnsentMessages) {
             this.transferCompletedFirstTimeAfterUnsentMessageSent();
             this.firstUnsentMessages = false;
         }
-
+        
         if (typeof(messagePersister) !== "undefined" && messagePersister) {
             messagePersister.markAsSent(corrolatingMessage);
             this.fireMessageCountChanged();
@@ -1729,7 +1814,7 @@ GetShopApiWebSocket.prototype = {
     handleIncomingMessage: function(msg) {
         if ( typeof msg === "object")
             return;
-
+        
         var dataObject = JSON.parse(msg);
         for (var i in this.listeners) {
             var listener = this.listeners[i];
@@ -1751,24 +1836,24 @@ GetShopApiWebSocket.prototype = {
         };
         setTimeout(exec, 300);
     },
-
+            
     initializeStore: function() {
         if (this.socket.OPEN)
             this.socket.send('initstore:'+this.identifier);
     },
-
+            
     connected: function() {
         this.setSessionId();
         this.initializeStore();
         this.fireConnectedEvent();
         this.connectionEstablished = true;
     },
-
+    
     getUnsentMessageCount: function() {
         if (typeof(messagePersister) !== "undefined" && messagePersister) {
             return messagePersister.getUnsetMessageCount();
         }
-
+        
         return 0;
     },
 
@@ -1776,19 +1861,19 @@ GetShopApiWebSocket.prototype = {
         if (sessionStorage.getItem("getshop.sessionId")) {
             this.sessionId = sessionStorage.getItem("getshop.sessionId");
         }
-
+        
         if (!this.sessionId) {
             this.sessionId = this.guid();
             sessionStorage.setItem("getshop.sessionId", this.sessionId);
         }
-
+        
         if (this.socket.OPEN)
             this.socket.send('sessionid:'+this.sessionId);
     },
-
+          
     disconnected: function() {
         this.sentMessages = [];
-
+        
         this.fireDisconnectedEvent();
         this.connectionEstablished = false;
         this.firstUnsentMessages = false;
@@ -1805,7 +1890,7 @@ GetShopApiWebSocket.prototype = {
             }
         }
     },
-
+            
     fireConnectedEvent: function() {
         if (this.connectionEstablished === null || !this.connectionEstablished && typeof(this.connectedCallback) === "function") {
             if (this.connectedCallback) {
@@ -1813,45 +1898,45 @@ GetShopApiWebSocket.prototype = {
             }
         }
     },
-
+    
     fireMessageCountChanged: function() {
         if (this.messageCountChangedEvent) {
             this.messageCountChangedEvent();
         }
     },
-
+    
     setMessageCountChangedEvent: function(func) {
         this.messageCountChangedEvent = func;
     },
-
+            
     setDisconnectedEvent: function(callback) {
         this.disconnectedCallback = callback;
     },
-
+            
     setConnectedEvent: function(callback) {
         this.connectedCallback = callback;
     },
-
+        
     send: function(message, silent) {
         var deferred = $.Deferred();
         message.messageId = this.makeid();
-
+        
         if (typeof(messagePersister) !== "undefined" && messagePersister) {
             messagePersister.persist(message);
             this.fireMessageCountChanged();
         }
-
+        
         deferred.messageId = message.messageId;
         var messageJson = JSON.stringify(message);
-
+        
         if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
             this.transferStarted();
         }
-
+        
         this.sentMessages.push(deferred);
-
+        
         var loginMessage = this.getLoginMessage();
-
+        
         var sendFunc = function(messageJson, me) {
             if (me.socket.readyState !== 1) {
                 setTimeout(function() {
@@ -1865,14 +1950,14 @@ GetShopApiWebSocket.prototype = {
                 var messageObject = JSON.parse(messageJson);
             }
         }
-
+        
         sendFunc(messageJson, this);
-
+        
         this.sendUnsentMessages();
-
+        
         return deferred;
     },
-
+    
     getLoginMessage: function() {
         if (localStorage.getItem("username") && localStorage.getItem("password")) {
             var data = {
@@ -1883,14 +1968,14 @@ GetShopApiWebSocket.prototype = {
                 method: 'logOn',
                 interfaceName: 'core.usermanager.IUserManager',
             };
-
+            
             data.messageId = this.makeid();
             return JSON.stringify(data);
         }
-
+        
         return false;
     },
-
+    
     sendUnsentMessages: function() {
         var sendFunc = function(messageJson, me) { 
             if (me.socket.readyState !== 1) {
@@ -1901,13 +1986,13 @@ GetShopApiWebSocket.prototype = {
                 me.socket.send(messageJson);
             }
         }
-
+        
          if (typeof(messagePersister) !== "undefined" && messagePersister) {
             var allUnsetMessages = messagePersister.getAllUnsentMessages();
-
+            
             for (var k in allUnsetMessages) {
                 var unsentMessage = allUnsetMessages[k];
-
+                
                 if (!this.inUnsentMessages(unsentMessage.messageId)) {
                     var messageJson2 = JSON.stringify(unsentMessage);
                     var deferred2 = $.Deferred();
@@ -1918,14 +2003,14 @@ GetShopApiWebSocket.prototype = {
             }
         }
     },
-
+    
     inUnsentMessages: function(msgId) {
         for (var i in this.sentMessages) {
             if (this.sentMessages[i].messageId === msgId) {
                 return true;
             }
         }
-
+        
         return false;
     },
 
@@ -1935,12 +2020,12 @@ GetShopApiWebSocket.prototype = {
                 this.messagesToSendJson.splice(i, 1);
             }
         }
-
+        
         if (this.persistMessages) {
             localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
             this.fireMessageCountChanged();
         }
-
+        
         for (var i=0;i<this.sentMessages.length; i++) {
             if (this.sentMessages[i].messageId === id) {
                 var message = this.sentMessages[i];
@@ -1949,7 +2034,7 @@ GetShopApiWebSocket.prototype = {
             }
         }
     },
-
+            
     makeid :  function () {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -1962,6 +2047,185 @@ GetShopApiWebSocket.prototype = {
 }
 
 
+GetShopApiWebSocket.MessageManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.MessageManager.prototype = {
+    'collectEmail' : function(email, gs_silent) {
+        var data = {
+            args : {
+                email : JSON.stringify(email),
+            },
+            method: 'collectEmail',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAllSmsMessages' : function(start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getAllSmsMessages',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getCollectedEmails' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getCollectedEmails',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getIncomingMessages' : function(pageNumber, gs_silent) {
+        var data = {
+            args : {
+                pageNumber : JSON.stringify(pageNumber),
+            },
+            method: 'getIncomingMessages',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getMailMessage' : function(mailMessageId, gs_silent) {
+        var data = {
+            args : {
+                mailMessageId : JSON.stringify(mailMessageId),
+            },
+            method: 'getMailMessage',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getMailSent' : function(from,to,toEmailAddress, gs_silent) {
+        var data = {
+            args : {
+                from : JSON.stringify(from),
+                to : JSON.stringify(to),
+                toEmailAddress : JSON.stringify(toEmailAddress),
+            },
+            method: 'getMailSent',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getSmsCount' : function(year,month, gs_silent) {
+        var data = {
+            args : {
+                year : JSON.stringify(year),
+                month : JSON.stringify(month),
+            },
+            method: 'getSmsCount',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getSmsMessage' : function(smsMessageId, gs_silent) {
+        var data = {
+            args : {
+                smsMessageId : JSON.stringify(smsMessageId),
+            },
+            method: 'getSmsMessage',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getSmsMessagesSentTo' : function(prefix,phoneNumber,fromDate,toDate, gs_silent) {
+        var data = {
+            args : {
+                prefix : JSON.stringify(prefix),
+                phoneNumber : JSON.stringify(phoneNumber),
+                fromDate : JSON.stringify(fromDate),
+                toDate : JSON.stringify(toDate),
+            },
+            method: 'getSmsMessagesSentTo',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'saveIncomingMessage' : function(message,code, gs_silent) {
+        var data = {
+            args : {
+                message : JSON.stringify(message),
+                code : JSON.stringify(code),
+            },
+            method: 'saveIncomingMessage',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'sendErrorNotify' : function(inText, gs_silent) {
+        var data = {
+            args : {
+                inText : JSON.stringify(inText),
+            },
+            method: 'sendErrorNotify',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'sendMail' : function(to,toName,subject,content,from,fromName, gs_silent) {
+        var data = {
+            args : {
+                to : JSON.stringify(to),
+                toName : JSON.stringify(toName),
+                subject : JSON.stringify(subject),
+                content : JSON.stringify(content),
+                from : JSON.stringify(from),
+                fromName : JSON.stringify(fromName),
+            },
+            method: 'sendMail',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'sendMailWithAttachments' : function(to,toName,subject,content,from,fromName,attachments, gs_silent) {
+        var data = {
+            args : {
+                to : JSON.stringify(to),
+                toName : JSON.stringify(toName),
+                subject : JSON.stringify(subject),
+                content : JSON.stringify(content),
+                from : JSON.stringify(from),
+                fromName : JSON.stringify(fromName),
+                attachments : JSON.stringify(attachments),
+            },
+            method: 'sendMailWithAttachments',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'sendMessageToStoreOwner' : function(message,subject, gs_silent) {
+        var data = {
+            args : {
+                message : JSON.stringify(message),
+                subject : JSON.stringify(subject),
+            },
+            method: 'sendMessageToStoreOwner',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.PmsBookingProcess = function(communication) {
     this.communication = communication;
 }
@@ -2184,5 +2448,6 @@ GetShopApiWebSocket.PmsBookingProcess.prototype = {
 }
 
 GetShopApiWebSocket.prototype.createManagers = function() {
+    this.MessageManager = new GetShopApiWebSocket.MessageManager(this);
     this.PmsBookingProcess = new GetShopApiWebSocket.PmsBookingProcess(this);
 }/* END GetShop Websocket api */

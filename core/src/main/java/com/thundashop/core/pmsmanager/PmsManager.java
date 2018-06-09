@@ -5002,11 +5002,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Date start = new Date();
         Calendar cal = Calendar.getInstance();
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
-        if (hourOfDay < closeHour || hourOfDay > (closeHour+4)) {
+        if (hourOfDay < closeHour || hourOfDay > (closeHour+2)) {
             return;
         }
 
         cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 20);
+        start = cal.getTime();
+        
         cal.add(Calendar.DAY_OF_YEAR, 1);
         cal.set(Calendar.HOUR_OF_DAY, 8);
         cal.set(Calendar.MINUTE, 0);

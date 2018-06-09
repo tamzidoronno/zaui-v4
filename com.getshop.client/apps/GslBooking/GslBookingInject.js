@@ -1,4 +1,5 @@
 getshop_endpoint = "";
+getshop_domainname = "default";
 if(sessionStorage.getItem('getshop_endpoint')) {
     getshop_endpoint = sessionStorage.getItem('getshop_endpoint');
 }
@@ -1282,56 +1283,82 @@ function getshop_getsessionid() {
     return sessid;
 }
 
+/**
+ * 
+ * @returns {GetShopApiWebSocket|getshopclient}
+ */
+function getshop_getWebSocketClient() { 
+    if(typeof(getshopclient) === "undefined") {
+        var hostToUse = getshop_endpoint;
+        if(!hostToUse) {
+            hostToUse = window.location.host;
+        }
+        console.log(window.location.href);
+//                    getshopclient = new GetShopApiWebSocket("clients.getshop.com", "31332", hostToUse); //Online
+        getshopclient = new GetShopApiWebSocket("localhost", "31330", getshop_endpoint); //Local
+        getshopclient.identifier = hostToUse;
+        getshopclient.shouldConnect = true;
+        getshopclient.connect();
+    }
+    return getshopclient;
+}
+
+function getshop_handleFunction(processor) {
+    try {
+        processor();
+    }catch (e) {
+        alert('Something failed');
+        console.log(e);
+    }
+}
+
 function getshop_searchRooms(e) {
     if(getshop_avoiddoubletap(e)) { return; }
-    if($(this).find('.fa-spin').length > 0) {
-        return;
-    }
-    if(typeof(getshop_nextPage) !== "undefined") {
-        getshop_goToNextPage(getshop_nextPage);
-        return;
-    }
-    var rooms = $('#count_room').val();
-    var adults = parseInt($('#count_adult').val());
-    var children = parseInt($('#count_child').val());
-    if(rooms > (adults+children)) {
-        alert('It is not possible to select more rooms than guests');
-        return;
-    }
-    
-    getshop_confirmGuestInfoBox();
-    
-    sessionStorage.setItem('gslcurrentpage','search');
-    $('.GslBooking .ordersummary').hide();
     var btn = $(this);
-    var btnText = btn.text();
-    if(btnText) {
-        btn.html('<i class="fa fa-spin fa-spinner"></i>');
-    }
-    $('.productentrybox').remove();
-    var time = new Date().toLocaleTimeString('en-us');
-    var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
-    var endDate = $('#date_picker').data('daterangepicker').endDate.format('MMM DD, YYYY ') + time;
-    var discountCode = $('#coupon_input').val();
-    
-    
-    var data = {
-        "start": startDate,
-        "end": endDate,
-        "rooms": rooms,
-        "adults": adults,
-        "children": children,
-        "discountCode": discountCode,
-        "bookingId": ""
-    };
+    getshop_handleFunction(function() {
+        if(btn.find('.fa-spin').length > 0) {
+            return;
+        }
+        if(typeof(getshop_nextPage) !== "undefined") {
+            getshop_goToNextPage(getshop_nextPage);
+            return;
+        }
+        var rooms = $('#count_room').val();
+        var adults = parseInt($('#count_adult').val());
+        var children = parseInt($('#count_child').val());
+        if(rooms > (adults+children)) {
+            alert('It is not possible to select more rooms than guests');
+            return;
+        }
 
-    $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=startBooking', {
-        dataType: 'jsonp',
-        data: {
-            "body": data,
-            "sessionid" : getshop_getsessionid()
-        },
-        success: function (res) {
+        getshop_confirmGuestInfoBox();
+
+        sessionStorage.setItem('gslcurrentpage','search');
+        $('.GslBooking .ordersummary').hide();
+        var btnText = btn.text();
+        if(btnText) {
+            btn.html('<i class="fa fa-spin fa-spinner"></i>');
+        }
+        $('.productentrybox').remove();
+        var time = new Date().toLocaleTimeString('en-us');
+        var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
+        var endDate = $('#date_picker').data('daterangepicker').endDate.format('MMM DD, YYYY ') + time;
+        var discountCode = $('#coupon_input').val();
+
+
+        var data = {
+            "start": startDate,
+            "end": endDate,
+            "rooms": rooms,
+            "adults": adults,
+            "children": children,
+            "discountCode": discountCode,
+            "bookingId": ""
+        };
+
+        var client = getshop_getWebSocketClient();
+        var starting = client.PmsBookingProcess.startBooking(getshop_domainname, data);
+        starting.done(function(res) {
             if(btnText) {
                 btn.html(btnText);
             }
@@ -1340,7 +1367,7 @@ function getshop_searchRooms(e) {
             } else {
                 $('.paylater_button').hide();
             }
-            
+
             $('.gslbookingBody').show();
             $('#productentry').html('');
             gslbookingcurresult = res;
@@ -1352,7 +1379,7 @@ function getshop_searchRooms(e) {
             } else {
                 getshop_updateOrderSummary(res, true);
             }
-        
+
             for (var k in res.rooms) {
                 var room = res.rooms[k];
                 var firstFile = "";
@@ -1375,9 +1402,9 @@ function getshop_searchRooms(e) {
                 roomBox.find('.roomdescription').html(room.description);
                 roomBox.find('.featured-image').css('background-image','url('+featuredImageUrl+')');              
                 roomBox.attr('index', k);
-                
+
                 var translation = getshop_getBookingTranslations();
-                
+
                 for (var guest in room.pricesByGuests) {
                     var numberofrooms = '';
                     var index = 1;
@@ -1390,7 +1417,7 @@ function getshop_searchRooms(e) {
                         price = parseInt(price);
                         numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';
                     }
-                    
+
                     roomBox.find('.guestselection').show();
                     if(numberofrooms) {
                         numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
@@ -1440,9 +1467,10 @@ function getshop_searchRooms(e) {
                         }
                     });
                 }
-            }
-        }
+            }            
+        });
     });
+
 }
 
 function getshop_removeGroupedRooms(e) {
@@ -1688,3 +1716,576 @@ getshop_WebSocketClient = {
         getshop_WebSocketClient.listeners.push(listenObject);
    }
 };
+
+
+
+/* START GetShop Websocket api */
+var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
+    this.sentMessages =  [];
+    this.messagesToSendJson =  [];
+    this.address = address;
+
+    if (typeof(port) === "undefined" || !port) {
+        this.port = "31330";
+    } else {
+        this.port = port;
+    }
+    
+    if (typeof(identifier) === "undefined" || !identifier) {
+        this.identifier = this.address;
+    } else {
+        this.identifier = identifier; 
+    }
+};
+
+GetShopApiWebSocket.prototype = {
+    websocket: null,
+    connectionEstablished: null,
+    transferCompleted: null,
+    transferStarted: null,
+    shouldConnect: true,
+    sessionId: false,
+    unsentMessageLoaded: false,
+    globalErrorHandler: false,
+    messageCountChangedEvent: null,
+    listeners: [],
+    
+    connect: function() {
+        if (!this.shouldConnect)
+            return;
+        
+        this.shouldConnect = false;
+        this.connectedCalled = true;
+        var me = this;
+        if (this.connectionEstablished === null) {
+            this.fireDisconnectedEvent();
+        }
+        var address = "ws://"+this.address+":"+this.port+"/";
+        this.socket = new WebSocket(address);
+        this.socket.onopen = $.proxy(this.connected, this);
+        this.socket.onclose = function() {
+            me.disconnected();
+        };
+        this.socket.onmessage = function(msg) {
+            me.handleMessage(msg);
+        };
+        
+        this.createManagers();
+    },
+
+    setGlobalErrorHandler: function(globalErrorHandler) {
+        this.globalErrorHandler = globalErrorHandler;
+    },
+    
+    guid: function() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+    },
+
+    addListener : function(dataObjectName, callback, scope) {
+        var listenObject = {
+            gs_session_scope: scope,
+            dataObjectName : dataObjectName,
+            callback: callback
+        }
+        
+        this.listeners.push(listenObject);
+    },
+
+    handleMessage: function(msg) {
+        var data = msg.data;
+        var jsonObject = JSON.parse(data);
+        
+        var corrolatingMessage = this.getMessage(jsonObject.messageId);
+        
+        if (typeof(corrolatingMessage) === "undefined") {
+            this.handleIncomingMessage(jsonObject);
+            return;
+        }
+
+        if (this.globalErrorHandler && jsonObject && jsonObject.object && jsonObject.object.errorCode) {
+            this.globalErrorHandler(jsonObject.object);
+        } else {
+            corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
+        }
+        
+        if (this.sentMessages.length === 0 && this.transferCompleted) {
+            this.transferCompleted();
+        }
+        
+        if (this.sentMessages.length === 0 && this.transferCompletedFirstTimeAfterUnsentMessageSent && this.firstUnsentMessages) {
+            this.transferCompletedFirstTimeAfterUnsentMessageSent();
+            this.firstUnsentMessages = false;
+        }
+        
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            messagePersister.markAsSent(corrolatingMessage);
+            this.fireMessageCountChanged();
+        }
+    },
+
+    handleIncomingMessage: function(msg) {
+        if ( typeof msg === "object")
+            return;
+        
+        var dataObject = JSON.parse(msg);
+        for (var i in this.listeners) {
+            var listener = this.listeners[i];
+            if (listener.dataObjectName === dataObject.coninicalName) {
+                if (listener.gs_session_scope) {
+                    listener.callback.apply(listener.gs_session_scope, [dataObject.payLoad]);
+                } else {
+                    listener.callback(dataObject.payLoad);
+                }
+            }
+        }
+    },
+
+    reconnect: function() {
+        var me = this;
+        this.shouldConnect = true;
+        exec = function() {
+            me.connect();
+        };
+        setTimeout(exec, 300);
+    },
+            
+    initializeStore: function() {
+        if (this.socket.OPEN)
+            this.socket.send('initstore:'+this.identifier);
+    },
+            
+    connected: function() {
+        this.setSessionId();
+        this.initializeStore();
+        this.fireConnectedEvent();
+        this.connectionEstablished = true;
+    },
+    
+    getUnsentMessageCount: function() {
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            return messagePersister.getUnsetMessageCount();
+        }
+        
+        return 0;
+    },
+
+    setSessionId: function() {
+        if (sessionStorage.getItem("getshop.sessionId")) {
+            this.sessionId = sessionStorage.getItem("getshop.sessionId");
+        }
+        
+        if (!this.sessionId) {
+            this.sessionId = this.guid();
+            sessionStorage.setItem("getshop.sessionId", this.sessionId);
+        }
+        
+        if (this.socket.OPEN)
+            this.socket.send('sessionid:'+this.sessionId);
+    },
+          
+    disconnected: function() {
+        this.sentMessages = [];
+        
+        this.fireDisconnectedEvent();
+        this.connectionEstablished = false;
+        this.firstUnsentMessages = false;
+        this.reconnect();
+    },
+
+    setInitConnectionFailed: function(callback) {
+        this.initConnectionFailed = callback;
+    },
+    fireDisconnectedEvent: function() {
+        if (this.connectionEstablished === null || this.connectionEstablished && typeof(this.disconnectedCallback) === "function") {
+            if (this.disconnectedCallback) {
+                this.disconnectedCallback();
+            }
+        }
+    },
+            
+    fireConnectedEvent: function() {
+        if (this.connectionEstablished === null || !this.connectionEstablished && typeof(this.connectedCallback) === "function") {
+            if (this.connectedCallback) {
+                this.connectedCallback();
+            }
+        }
+    },
+    
+    fireMessageCountChanged: function() {
+        if (this.messageCountChangedEvent) {
+            this.messageCountChangedEvent();
+        }
+    },
+    
+    setMessageCountChangedEvent: function(func) {
+        this.messageCountChangedEvent = func;
+    },
+            
+    setDisconnectedEvent: function(callback) {
+        this.disconnectedCallback = callback;
+    },
+            
+    setConnectedEvent: function(callback) {
+        this.connectedCallback = callback;
+    },
+        
+    send: function(message, silent) {
+        var deferred = $.Deferred();
+        message.messageId = this.makeid();
+        
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            messagePersister.persist(message);
+            this.fireMessageCountChanged();
+        }
+        
+        deferred.messageId = message.messageId;
+        var messageJson = JSON.stringify(message);
+        
+        if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
+            this.transferStarted();
+        }
+        
+        this.sentMessages.push(deferred);
+        
+        var loginMessage = this.getLoginMessage();
+        
+        var sendFunc = function(messageJson, me) {
+            if (me.socket.readyState !== 1) {
+                setTimeout(function() {
+                    sendFunc(messageJson, me);
+                }, 50);
+            } else {
+                if (loginMessage) {
+                    me.socket.send(loginMessage);
+                }
+                me.socket.send(messageJson);
+                var messageObject = JSON.parse(messageJson);
+            }
+        }
+        
+        sendFunc(messageJson, this);
+        
+        this.sendUnsentMessages();
+        
+        return deferred;
+    },
+    
+    getLoginMessage: function() {
+        if (localStorage.getItem("username") && localStorage.getItem("password")) {
+            var data = {
+                args : {
+                    username : JSON.stringify(localStorage.getItem("username")),
+                    password : JSON.stringify(localStorage.getItem("password")),
+                },
+                method: 'logOn',
+                interfaceName: 'core.usermanager.IUserManager',
+            };
+            
+            data.messageId = this.makeid();
+            return JSON.stringify(data);
+        }
+        
+        return false;
+    },
+    
+    sendUnsentMessages: function() {
+        var sendFunc = function(messageJson, me) { 
+            if (me.socket.readyState !== 1) {
+                setTimeout(function() {
+                    sendFunc(messageJson, me);
+                }, 50);
+            } else {
+                me.socket.send(messageJson);
+            }
+        }
+        
+         if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            var allUnsetMessages = messagePersister.getAllUnsentMessages();
+            
+            for (var k in allUnsetMessages) {
+                var unsentMessage = allUnsetMessages[k];
+                
+                if (!this.inUnsentMessages(unsentMessage.messageId)) {
+                    var messageJson2 = JSON.stringify(unsentMessage);
+                    var deferred2 = $.Deferred();
+                    deferred2.messageId = unsentMessage.messageId;
+                    this.sentMessages.push(deferred2);
+                    sendFunc(messageJson2, this);
+                }
+            }
+        }
+    },
+    
+    inUnsentMessages: function(msgId) {
+        for (var i in this.sentMessages) {
+            if (this.sentMessages[i].messageId === msgId) {
+                return true;
+            }
+        }
+        
+        return false;
+    },
+
+    getMessage: function(id) {
+        for (var i=0;i<this.messagesToSendJson.length; i++) {
+            if (this.messagesToSendJson[i].messageId === id) {
+                this.messagesToSendJson.splice(i, 1);
+            }
+        }
+        
+        if (this.persistMessages) {
+            localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
+            this.fireMessageCountChanged();
+        }
+        
+        for (var i=0;i<this.sentMessages.length; i++) {
+            if (this.sentMessages[i].messageId === id) {
+                var message = this.sentMessages[i];
+                this.sentMessages.splice(i, 1);
+                return message;
+            }
+        }
+    },
+            
+    makeid :  function () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 35; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+}
+
+
+GetShopApiWebSocket.PmsBookingProcess = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.PmsBookingProcess.prototype = {
+    'addAddons' : function(multilevelname, arg, gs_silent) {
+        var data = {
+            args : {
+                arg : JSON.stringify(arg),
+            },
+            method: 'addAddons',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'cancelPaymentProcess' : function(multilevelname, data, gs_silent) {
+        var data = {
+            args : {
+                data : JSON.stringify(data),
+            },
+            method: 'cancelPaymentProcess',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'changeDateOnRoom' : function(multilevelname, arg, gs_silent) {
+        var data = {
+            args : {
+                arg : JSON.stringify(arg),
+            },
+            method: 'changeDateOnRoom',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'changeNumberOnType' : function(multilevelname, change, gs_silent) {
+        var data = {
+            args : {
+                change : JSON.stringify(change),
+            },
+            method: 'changeNumberOnType',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'completeBooking' : function(multilevelname, input, gs_silent) {
+        var data = {
+            args : {
+                input : JSON.stringify(input),
+            },
+            method: 'completeBooking',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'completeBookingForTerminal' : function(multilevelname, input, gs_silent) {
+        var data = {
+            args : {
+                input : JSON.stringify(input),
+            },
+            method: 'completeBookingForTerminal',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAddonsSummary' : function(multilevelname, arg, gs_silent) {
+        var data = {
+            args : {
+                arg : JSON.stringify(arg),
+            },
+            method: 'getAddonsSummary',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getConfiguration' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getConfiguration',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'logOn' : function(multilevelname, logindata, gs_silent) {
+        var data = {
+            args : {
+                logindata : JSON.stringify(logindata),
+            },
+            method: 'logOn',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'logOut' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'logOut',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'printReciept' : function(multilevelname, data, gs_silent) {
+        var data = {
+            args : {
+                data : JSON.stringify(data),
+            },
+            method: 'printReciept',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'removeAddons' : function(multilevelname, arg, gs_silent) {
+        var data = {
+            args : {
+                arg : JSON.stringify(arg),
+            },
+            method: 'removeAddons',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'removeGroupedRooms' : function(multilevelname, arg, gs_silent) {
+        var data = {
+            args : {
+                arg : JSON.stringify(arg),
+            },
+            method: 'removeGroupedRooms',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'removeRoom' : function(multilevelname, roomId, gs_silent) {
+        var data = {
+            args : {
+                roomId : JSON.stringify(roomId),
+            },
+            method: 'removeRoom',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'saveGuestInformation' : function(multilevelname, arg, gs_silent) {
+        var data = {
+            args : {
+                arg : JSON.stringify(arg),
+            },
+            method: 'saveGuestInformation',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'setGuestInformation' : function(multilevelname, bookerInfo, gs_silent) {
+        var data = {
+            args : {
+                bookerInfo : JSON.stringify(bookerInfo),
+            },
+            method: 'setGuestInformation',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'startBooking' : function(multilevelname, arg, gs_silent) {
+        var data = {
+            args : {
+                arg : JSON.stringify(arg),
+            },
+            method: 'startBooking',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'startPaymentProcess' : function(multilevelname, data, gs_silent) {
+        var data = {
+            args : {
+                data : JSON.stringify(data),
+            },
+            method: 'startPaymentProcess',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
+
+GetShopApiWebSocket.prototype.createManagers = function() {
+    this.PmsBookingProcess = new GetShopApiWebSocket.PmsBookingProcess(this);
+}/* END GetShop Websocket api */

@@ -1103,16 +1103,16 @@ function getshop_setDatePicker() {
         }
         
         
-        $('#date_picker_start').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        $('.date_picker_start_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
             onSelect: function(dateText) {
-               var date = moment(dateText, "DD.MM.YYYY");
+               var date = moment.utc(dateText, "DD.MM.YYYY").local();
                var currentEnd = $('#date_picker_end').val();
                var endMoment = moment(currentEnd, "DD.MM.YYYY");
 
                var diff = endMoment.diff(date, "minutes");
                if(diff <= 0) {
-                   var tomorrow = new Date(date);
-                   tomorrow.setDate(tomorrow.getDate() + 1);
+                   var tomorrow = moment(date);
+                   tomorrow.add(1,'days');
                    var newDate = moment(tomorrow);
                    var month = newDate.get('month')+1;
                    var day = newDate.date();
@@ -1125,9 +1125,9 @@ function getshop_setDatePicker() {
                }
              }
          });
-        $('#date_picker_end').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        $('.date_picker_end_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
             onSelect: function(dateText) {
-               var date = moment(dateText, "DD.MM.YYYY");
+               var date = moment.utc(dateText, "DD.MM.YYYY").local();
                var currentEnd = $('#date_picker_end').val();
                var endMoment = moment(currentEnd, "DD.MM.YYYY");
 

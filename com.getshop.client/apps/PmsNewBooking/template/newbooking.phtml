@@ -100,8 +100,8 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     $('#startdate').datepicker({dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function (dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
-            var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
+            var curEnd = moment.utc($('#enddate').val(), "DD.MM.YYYY").local();
+            var date = moment.utc(dateText, "DD.MM.YYYY").local();
 
             var diff = curEnd.valueOf() - date.valueOf();
             if (diff <= 0) {
@@ -115,8 +115,8 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     $('#enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function (dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
-            var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
+            var curStart = moment.utc($('#startdate').val(), "DD.MM.YYYY").local();
+            var date = moment.utc(dateText, "DD.MM.YYYY").local();
 
             var diff = date.valueOf() - curStart.valueOf();
             if (diff <= 0) {

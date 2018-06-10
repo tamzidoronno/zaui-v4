@@ -372,8 +372,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
                 echo "date not found" . $_POST['data']['date'];
                 
         }
-//        print_r($filter);
-//        
         $this->setCurrentFilter($filter);
     }
 

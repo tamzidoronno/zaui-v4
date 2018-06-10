@@ -54,10 +54,10 @@ if($this->canNotAddConferenceRoom) {
 <script>
     $('.startdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
-            var curEnd = moment($('.enddate').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
+            var curEnd = moment.utc($('.enddate').val(), "DD.MM.YYYY").local();
+            var date = moment.utc(dateText, "DD.MM.YYYY").local();
             var diff = curEnd.valueOf() - date.valueOf();
-            if(diff <= 0) {
+            if(diff < 0) {
                 $('.enddate').val(date.format('DD.MM.YYYY')); 
             }
         }
@@ -65,10 +65,10 @@ if($this->canNotAddConferenceRoom) {
     
     $('.enddate').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
-            var curStart = moment($('.startdate').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
+            var curStart = moment.utc($('.startdate').val(), "DD.MM.YYYY").local();
+            var date = moment.utc(dateText, "DD.MM.YYYY").local();
             var diff = date.valueOf() - curStart.valueOf();
-            if(diff <= 0) {
+            if(diff < 0) {
                 $('.startdate').val(date.format('DD.MM.YYYY')); 
             }
         }

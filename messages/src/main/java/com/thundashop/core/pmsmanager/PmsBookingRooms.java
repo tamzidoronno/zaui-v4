@@ -147,6 +147,8 @@ public class PmsBookingRooms implements Serializable {
         int days = 0;
         Calendar cal = Calendar.getInstance();
         cal.setTime(date.start);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
         while(true) {
             days++;
             cal.add(Calendar.DAY_OF_YEAR, 1);

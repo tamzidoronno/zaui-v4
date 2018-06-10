@@ -188,11 +188,13 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $rowCount = 0;
         $guests = 0;
+        $nightscount = 0;
         foreach($data as $row ){
             $rowCount++;
             $guests += $row->numberOfGuests;
+            $nightscount += $row->numberOfNights;
         }
-        echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests</div>";
+        echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests, nights: $nightscount</div>";
         
         $toPrint = ob_get_contents();
         ob_end_clean();

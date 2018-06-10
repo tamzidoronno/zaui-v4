@@ -11,11 +11,19 @@ import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.DatabaseUpdater;
 import com.thundashop.core.socket.WebInterface2;
 import com.thundashop.core.socket.WebSocketServerImpl;
+import com.thundashop.core.socket.WebSocketServerImplSSL;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.security.KeyStore;
 import java.util.UUID;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -73,7 +81,14 @@ public class Runner {
 
         new WebInterface2(log, storePool, port); //Version 2.        
 
-        context.getBean(WebSocketServerImpl.class).start();
+        WebSocketServerImpl webSocketServer = context.getBean(WebSocketServerImpl.class);
+        webSocketServer.start();
+        
+//        WebSocketServerImplSSL sslWebSocketServer = context.getBean(WebSocketServerImplSSL.class);
+//        sslWebSocketServer.useSSL();
+//        sslWebSocketServer.start();
+
+
         startJettyServer();
     }
 

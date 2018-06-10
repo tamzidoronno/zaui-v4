@@ -1304,8 +1304,8 @@ function getshop_getWebSocketClient() {
         hostToUse = hostToUse.replace("https://", "");
         hostToUse = hostToUse.replace("/", "");
 
-//        getshopclient = new GetShopApiWebSocket("www.getshop.com", "31332", hostToUse); //Online
-        getshopclient = new GetShopApiWebSocket("localhost", "31330", getshop_endpoint); //Local
+        getshopclient = new GetShopApiWebSocket("websocket.getshop.com", "443", hostToUse); //Online
+//        getshopclient = new GetShopApiWebSocket("localhost", "21330", getshop_endpoint); //Local
         getshopclient.identifier = hostToUse;
         getshopclient.shouldConnect = true;
         getshopclient.connect();
@@ -1359,7 +1359,6 @@ function getshop_searchRooms(e) {
             "discountCode": discountCode,
             "bookingId": ""
         };
-        fdasfasdf;
         var client = getshop_getWebSocketClient();
         var starting = client.PmsBookingProcess.startBooking(getshop_domainname, data);
         starting.done(function(res) {
@@ -1672,7 +1671,7 @@ getshop_WebSocketClient = {
             if(getshop_endpoint) {
                 endpoint = getshop_endpoint;
             }
-            this.socket = new WebSocket("wss://"+endpoint+":31332/");
+            this.socket = new WebSocket("wss://"+endpoint+":21330/");
             this.socket.onopen = getshop_WebSocketClient.connected;
             this.socket.onclose = function() {
                 getshop_WebSocketClient.disconnected();
@@ -1708,7 +1707,7 @@ var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     this.address = address;
 
     if (typeof(port) === "undefined" || !port) {
-        this.port = "31330";
+        this.port = "21330";
     } else {
         this.port = port;
     }

@@ -1,7 +1,9 @@
 (function ( $ ) {
     $.fn.getshopbooking = function( options ) {
-        if(options.endpoint === "https://lofoten.booking.fasthotels.no/") { options.endpoint = "demo"; }
-        if(options.endpoint === "https://svolver.booking.fasthotels.no/") { options.endpoint = "demo"; }
+        if(options.endpoint === "https://lofoten.booking.fasthotels.no/") { options.domain = "demo"; }
+        if(options.endpoint === "https://svolver.booking.fasthotels.no/") { options.domain = "demo"; }
+        if(options.endpoint === "http://lofoten.booking.fasthotels.no/") { options.domain = "demo"; }
+        if(options.endpoint === "http://svolver.booking.fasthotels.no/") { options.domain = "demo"; }
 
         
         var box = $(this);

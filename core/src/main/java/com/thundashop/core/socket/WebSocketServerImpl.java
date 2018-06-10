@@ -17,9 +17,13 @@ import com.thundashop.core.websocket.WebSocketClient;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
 import java.util.HashMap;
 
 import org.java_websocket.WebSocket;
+import org.java_websocket.WebSocketImpl;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.springframework.beans.BeansException;
@@ -35,6 +39,7 @@ import org.springframework.stereotype.Component;
 public class WebSocketServerImpl extends WebSocketServer implements Runnable, ApplicationContextAware {
     private HashMap<WebSocket, WebSocketClient> clients = new HashMap();
     private ApplicationContext applicationContext;
+    boolean started = false;
     
     public WebSocketServerImpl() {
         super(new InetSocketAddress(31330));
@@ -47,6 +52,35 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
 //        } 
     }
 
+    public void run() {
+        
+        while(true) {
+            if(canBindToPort()) {
+                System.out.println("Websocket port is available");
+                break;
+            }
+            try { Thread.sleep(5000); }catch(Exception e) {}
+            System.out.println("Waiting for websocket port to become available for binding");
+        }
+        super.run();
+    }
+    
+    public boolean canBindToPort() {
+        try {
+            ServerSocketChannel servertest = ServerSocketChannel.open();
+            servertest.configureBlocking( false );
+            ServerSocket socket = servertest.socket();
+            socket.setReceiveBufferSize( WebSocketImpl.RCVBUF );
+            socket.setReuseAddress( isReuseAddr() );
+            socket.bind( new InetSocketAddress(31330) );
+            socket.close();
+            return true;
+        }catch(Exception e) {
+
+        }
+        return false;
+    }
+    
     @Override
     public void onOpen(WebSocket ws, ClientHandshake ch) {
         try {
@@ -86,6 +120,7 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
 
     @Override
     public void onError(WebSocket ws, Exception excptn) {
+        excptn.printStackTrace();
 //        clients.remove(ws);
     }
 
@@ -113,6 +148,7 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
     @Override
     public void onStart() {
         System.out.println("Unsecure websocket startet on port 31330");
+        started = true;
     }
     
 }

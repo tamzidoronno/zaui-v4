@@ -1152,22 +1152,21 @@ function getshop_setDatePicker() {
 }
 
 function getshop_changeNumberOfRooms() {
-    try {
+     try {
         var index = $(this).closest('.productentrybox').attr('index');
         var guest = $(this).attr('guests');
         var count = $(this).val();
-        var time = new Date().toLocaleTimeString('en-us');
-        var startDate = $('#date_picker').data('daterangepicker').startDate.format('MMM DD, YYYY ') + time;
-        var endDate = $('#date_picker').data('daterangepicker').endDate.format('MMM DD, YYYY ') + time;
-
+        var start = moment.utc($('.date_picker_start_gsl').val(), "DD.MM.YYYY").local();
+        var end = moment.utc($('.date_picker_end_gsl').val(), "DD.MM.YYYY").local();
         var client = getshop_getWebSocketClient();
-        var change = client.PmsBookingProcess.changeNumberOnType(getshop_domainname, {
+        var data = {
             "id": $(this).closest('.productentry').attr('roomid'),
             "numberOfRooms" : $(this).val(),
             "guests" : $(this).attr('guests'),
-            "start" : startDate,
-            "end" : endDate
-        });
+            "start" : start,
+            "end" : end
+        };
+        var change = client.PmsBookingProcess.changeNumberOnType(getshop_domainname, data);
         change.done(function(res) {
             gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = count;            
             var target = $(this);
@@ -1305,7 +1304,7 @@ function getshop_getWebSocketClient() {
         hostToUse = hostToUse.replace("/", "");
 
         getshopclient = new GetShopApiWebSocket("websocket.getshop.com", "443", hostToUse); //Online
-//        getshopclient = new GetShopApiWebSocket("localhost", "21330", getshop_endpoint); //Local
+//        getshopclient = new GetShopApiWebSocket("localhost", "31330", getshop_endpoint); //Local
         getshopclient.identifier = hostToUse;
         getshopclient.shouldConnect = true;
         getshopclient.connect();

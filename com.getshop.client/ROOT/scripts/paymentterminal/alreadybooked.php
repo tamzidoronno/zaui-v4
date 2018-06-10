@@ -33,7 +33,7 @@ include("header.php");
         <span class='content'>
         <?php
         echo "<div style='padding:20px;'>".$factory->__w("Welcome") . " <span class='bookersname'></span></div>";
-        echo "<div style='padding:20px;'>" . $factory->__w("You will recieve the code for the room by sms and email after the payment has been completed.") . "</div>";
+        echo "<div style='padding:20px;'>" . $factory->__w("You will recieve the code for the room by sms and email after the payment has been completed, please insert the card below and follow the instructions") . "</div>";
         ?>
         <div class='verifonefeedbackdata' style='font-size:12px;font-style: italic;padding-top: 10px; padding-bottom: 10px; display:none;'></div>
         <i class='fa fa-spin fa-spinner'></i>

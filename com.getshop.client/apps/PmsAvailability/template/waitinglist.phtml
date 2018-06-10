@@ -11,7 +11,9 @@ $bookingfilter = new core_pmsmanager_PmsBookingFilter();
 $bookingfilter->startDate = $this->convertToJavaDate(strtotime($this->getSelectedFilter()->start));
 $bookingfilter->endDate = $this->convertToJavaDate(strtotime($this->getSelectedFilter()->end));
 $bookingfilter->filterType = "waiting";
+$bookingfilter->includeDeleted = true;
 $waitingList = (array)$this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $bookingfilter);
+
 if(sizeof($waitingList) > 0) {
     echo "<div class='waitinglist' onClick='$(\".PmsAvailability .waitinglistlist\").toggle()'>";
     echo "You have " . sizeof($waitingList) . " rooms in your waiting list.";
@@ -25,6 +27,8 @@ if(sizeof($waitingList) > 0) {
     echo "<th>Guest</th>";
     echo "<th>Start</th>";
     echo "<th>End</th>";
+    echo "<th>State</th>";
+    echo "<th>Type</th>";
     echo "<th>Action</th>";
     echo "</tr>";
 
@@ -39,6 +43,12 @@ if(sizeof($waitingList) > 0) {
         }
         echo "<td style='padding: 5px;'>" . date("d.m.Y", $room->start/1000) . "</td>";
         echo "<td style='padding: 5px;'>" . date("d.m.Y", $room->end/1000) . "</td>";
+        echo "<td style='padding: 5px;'>" . $room->progressState . "</td>";
+        echo "<td style='padding: 5px;'>";
+        if($room->bookingTypeId != null) {
+            echo $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingTypeId)->name;
+        }
+        echo "</td>";
         echo "<td style='padding: 5px; color:blue; cursor:pointer;' class='readdfromworkspace' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."' gs_show_modal='booking_room_view'>Open</td>";
         echo "</tr>";
     }

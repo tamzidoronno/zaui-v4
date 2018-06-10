@@ -274,7 +274,7 @@ public class PmsBookingSimpleFilter {
                 return true;
             }
         } else if (filter.filterType.equals("waiting")) {
-            if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate) && room.addedToWaitingList) {
+            if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate) && (room.addedToWaitingList || room.overbooking)) {
                 return true;
             }
         } else if (filter.filterType.equals("activecheckout")) {

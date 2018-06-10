@@ -234,12 +234,6 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
         }
         
-        foreach($currentBooking->rooms as $room) {
-            if($room->addedToWaitingList) {
-                echo "added to waiting list";
-            }
-        }
-        
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
     }
 

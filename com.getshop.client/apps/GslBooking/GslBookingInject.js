@@ -1101,13 +1101,13 @@ function getshop_setDatePicker() {
                 $('.GslBooking #search_rooms').click();
             });
         }
-        
+        $('.ui-datepicker').remove();
         
         $('.date_picker_start_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
             onSelect: function(dateText) {
                var date = moment.utc(dateText, "DD.MM.YYYY").local();
                var currentEnd = $('#date_picker_end').val();
-               var endMoment = moment(currentEnd, "DD.MM.YYYY");
+               var endMoment = moment.utc(currentEnd, "DD.MM.YYYY").local();
 
                var diff = endMoment.diff(date, "minutes");
                if(diff <= 0) {
@@ -1128,10 +1128,10 @@ function getshop_setDatePicker() {
         $('.date_picker_end_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
             onSelect: function(dateText) {
                var date = moment.utc(dateText, "DD.MM.YYYY").local();
-               var currentEnd = $('#date_picker_end').val();
-               var endMoment = moment(currentEnd, "DD.MM.YYYY");
+               var currentStart = $('.date_picker_start_gsl').val();
+               var endMoment = moment.utc(currentStart, "DD.MM.YYYY").local();
 
-               var diff = endMoment.diff(date, "minutes");
+               var diff = date.diff(endMoment);
                if(diff <= 0) {
                    var tomorrow = new Date(date);
                    tomorrow.setDate(tomorrow.getDate()-1);

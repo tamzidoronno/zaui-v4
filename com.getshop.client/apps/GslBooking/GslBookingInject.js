@@ -1343,10 +1343,10 @@ function getshop_searchRooms(e) {
         var time = new Date().toLocaleTimeString('en-us');
         var discountCode = $('#coupon_input').val();
         
-        var start = moment($('#date_picker_start').val(), "DD.MM.YYYY").add(1, 'days');
+        var start = moment.utc($('#date_picker_start').val(), "DD.MM.YYYY").local();
         var startDate = start.format('MMM DD, YYYY ') + time;
         
-        var end = moment($('#date_picker_end').val(), "DD.MM.YYYY").add(1, 'days');
+        var end = moment.utc($('#date_picker_end').val(), "DD.MM.YYYY").local();
         var endDate = end.format('MMM DD, YYYY ') + time;
 
         var data = {

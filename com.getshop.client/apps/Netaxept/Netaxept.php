@@ -447,8 +447,6 @@ class Netaxept extends \PaymentApplication implements \Application {
     }
 
     public function handleCallBack($transactionId) {
-        //100379___5b1e87046e5e2r
-        echo "transaction id : " . $transactionId;
         $transactionIdSplitted = explode("___", $transactionId);
         $incOrderId = $transactionIdSplitted[0];
         $this->order = $this->getApi()->getOrderManager()->getOrderByincrementOrderIdAndPassword($incOrderId, "fdsafd4e3453ngdgdf");

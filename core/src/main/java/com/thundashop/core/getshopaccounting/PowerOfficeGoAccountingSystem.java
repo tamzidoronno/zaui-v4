@@ -110,6 +110,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
             }
             for(CartItem item : order.cart.getItems()) {
                 Product product = productManager.getProduct(item.getProduct().id);
+                if(product == null) { product = productManager.getDeletedProduct(item.getProduct().id); }
                 if(product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
                     addToLog("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
                     return null;
@@ -236,6 +237,8 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                     /* @TODO HANDLE PROPER WARNING */
                     addToLog("Failed to transfer customer: " + result);
                 }
+            } else {
+                addToLog("Did not transfer files to powerofficego due to developer mode");
             }
         }catch(Exception e) {
             e.printStackTrace();

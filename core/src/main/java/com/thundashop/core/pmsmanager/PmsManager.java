@@ -3348,7 +3348,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         HashMap<String, List<BookingItem>> resultsFound = new HashMap();
         
         for (Booking book : toCheck) {
-            String key = book.bookingItemId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
+            String key = book.bookingItemTypeId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
             List<BookingItem> items = new ArrayList();
             if(resultsFound.containsKey(key)) {
                 items = resultsFound.get(key);

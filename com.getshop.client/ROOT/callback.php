@@ -2,6 +2,24 @@
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
+$cartManager = new ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+if(isset($_GET['useapp']) && $_GET['useapp'] == "netaxept") {
+    $transId = json_decode(file_get_contents("php://input"), true);
+    $transId = $transId['TransactionId'];
+    
+    foreach ($cartManager->getPaymentApplications() as $paymentApp) {
+        if($paymentApp->applicationSettings->appName == "Netaxept") {
+            $netaxept = $paymentApp;
+        }
+    }
+    
+    if(isset($_GET['TransactionId'])) {
+        $transId = $_GET['TransactionId'];
+    }
+    $netaxept->handleCallBack($transId);
+    return;
+}
+
 $data = http_build_query($_GET);
 if(!$data) {
     header("location:/");
@@ -12,8 +30,8 @@ if (!isset($_GET['app'])) {
 }
 
 $id = $_GET['app'];
-$cartManager = new ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
 $application = null;
+
 
 foreach ($cartManager->getPaymentApplications() as $paymentApp) {
     if ($paymentApp->applicationSettings->id == $_GET['app']) {

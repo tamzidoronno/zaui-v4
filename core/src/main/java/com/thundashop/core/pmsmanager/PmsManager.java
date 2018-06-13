@@ -1222,6 +1222,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         doNotification(key, booking, null);
     }
 
+    public void doNotificationFromProcessor(String key, PmsBooking booking, PmsBookingRooms room) {
+        if(phoneToSend != null || emailToSendTo != null) {
+            messageManager.sendErrorNotification("Phone to send not null or email not null" + " Phone: " + phoneToSend + " email: " + emailToSendTo + " id:" + booking.id + ", key:" + key, null);
+            phoneToSend = null;
+            emailToSendTo = null;
+        }
+        prefixToSend = null;
+        doNotification(key, booking, room);
+    }
+    
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         repicientList.clear();
         String addNotificationSent = key;

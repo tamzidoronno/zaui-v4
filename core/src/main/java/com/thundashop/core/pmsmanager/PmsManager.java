@@ -1222,6 +1222,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         doNotification(key, booking, null);
     }
 
+    public void doNotificationFromProcessor(String key, PmsBooking booking, PmsBookingRooms room) {
+        if(phoneToSend != null || emailToSendTo != null) {
+            messageManager.sendErrorNotification("Phone to send not null or email not null" + " Phone: " + phoneToSend + " email: " + emailToSendTo + " id:" + booking.id + ", key:" + key, null);
+            phoneToSend = null;
+            emailToSendTo = null;
+        }
+        prefixToSend = null;
+        doNotification(key, booking, room);
+    }
+    
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         repicientList.clear();
         String addNotificationSent = key;
@@ -1788,6 +1798,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "Booking could not be found";
         }
         String contract = configuration.contracts.get(booking.language);
+        if (contract == null) {
+            for(String k : configuration.contracts.keySet()) {
+                contract = configuration.contracts.get(k);
+                if(contract != null && contract.isEmpty()) {
+                    break;
+                }
+            }
+        }
         if (contract == null) {
             return "";
         }
@@ -3282,9 +3300,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if ((periodeType.equals(TimeRepeaterData.TimePeriodeType.max_stay)
                         || periodeType.equals(TimeRepeaterData.TimePeriodeType.min_stay))) {
                     isBetween = range.isBetweenTime(start);
-                    if (isBetween) {
-                        System.out.println("Is between: " + start + " : " + range.start + " - " + range.end);
-                    }
                 } else {
                     isBetween = range.isBetweenTime(start) || range.isBetweenTime(end);
                 }
@@ -3343,7 +3358,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         HashMap<String, List<BookingItem>> resultsFound = new HashMap();
         
         for (Booking book : toCheck) {
-            String key = book.bookingItemId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
+            String key = book.bookingItemTypeId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
             List<BookingItem> items = new ArrayList();
             if(resultsFound.containsKey(key)) {
                 items = resultsFound.get(key);
@@ -3936,6 +3951,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         res += "Channel: " + booking.channel + "<bR>";
         res += "Channel id: " + booking.wubookChannelReservationId + "<bR>";
         res += "Wubookid: " + booking.wubookreservationid + "<br>";
+        res += "GetShop booking id: " + booking.incrementBookingId + "<br>";
+        res += "Address: " + storeManager.getMyStore().webAddressPrimary + "<br>";
 
         return res;
     }
@@ -4994,11 +5011,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Date start = new Date();
         Calendar cal = Calendar.getInstance();
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
-        if (hourOfDay < closeHour || hourOfDay > (closeHour+4)) {
+        if (hourOfDay < closeHour || hourOfDay > (closeHour+2)) {
             return;
         }
 
         cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 20);
+        start = cal.getTime();
+        
         cal.add(Calendar.DAY_OF_YEAR, 1);
         cal.set(Calendar.HOUR_OF_DAY, 8);
         cal.set(Calendar.MINUTE, 0);
@@ -5219,7 +5239,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 gsTiming("Created payment for order");
             }
 
-            if(configuration.deleteAllWhenAdded || canAdd) {
+            if(configuration.deleteAllWhenAdded || canAdd || booking.hasOverBooking() || booking.hasWaitingRooms()) {
                 result = completeBooking(bookingsToAdd, booking, canAdd);
             } else {
                 result = -10;
@@ -8162,6 +8182,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         System.out.print("");
                     }
                 }
+                System.out.print("\t");
+                
                 System.out.print(cards + "\t");
 
                 System.out.println();
@@ -8517,7 +8539,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         } else if (filter.filterType.equals("waiting")) {
             for (PmsBooking booking : bookings.values()) {
-                if (booking.isActiveInPeriode(filter.startDate, filter.endDate) && booking.hasWaitingRooms()) {
+                if (booking.isActiveInPeriode(filter.startDate, filter.endDate) && (booking.hasWaitingRooms() || booking.hasOverBooking())) {
                     result.add(booking);
                 }
             }

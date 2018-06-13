@@ -179,7 +179,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .validCode{box-shadow: inset 10px 0px 0 #6dc59a !important;}
 .GslBooking .gslfront_1 .non-validCode{box-shadow: inset 10px 0px 0 #de5353 !important;color:#de5353 !important;}
 .GslBooking .gslfront_1 .fa{padding:0 4px;}
-.GslBooking .gslfront_1 .fa_box{position: relative;width: 27%;float:left;}
+.GslBooking .gslfront_1 .fa_box{position: relative;width: 20%;float:left;}
 .GslBooking .gslfront_1 .fa_box::after{
     font-family: fontawesome;
     font-family: 'icomoon' !important;
@@ -202,8 +202,8 @@ Error      : #de5353; red
 
 .GslBooking .gslfront_1 .gslbookingHeader .destination::after{content: "\f041";}
 .GslBooking .gslfront_1 .gslbookingHeader .date::after{content: "\e92f";}
+.GslBooking .gslfront_1 .gslbookingHeader #date_picker_start::after{content: "\e92f";}
 .GslBooking .gslfront_1 .gslbookingHeader .guests::after{content: "\e90f";}
-.GslBooking .gslfront_1 .gslbookingHeader .coupon::after{content: "\e911";}
 
 .GslBooking .gslfront_1 .gslbookingHeader .gsl_button:hover{background-color:#4391dc;}
 .GslBooking .gslfront_1 .gslbookingHeader .gsl_button{
@@ -413,7 +413,6 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .overview_addons .addButton:hover{background-color:#7bbdd3;}
 .GslBooking .secondary_text { font-size: 14px;letter-spacing: 1px;padding-left: 20px;}
 
-.GslBooking .gslfront_1 .mobilecheckinheading, .GslBooking .gslfront_1 .mobilecheckoutheading { color:#bbb; width: 50%; float: left; border-bottom:1px solid #ddd;padding:0 4px;}
 .GslBooking .gslfront_1 .mobilecheckinheading span, .GslBooking .gslfront_1 .mobilecheckoutheading span{position:absolute;}
 .GslBooking .gslfront_1 .mobilecheckinheading{box-shadow: 1px 0px 0px 0px #ddd;}
 .GslBooking .gslfront_1 .overview_addons .addon:last-child{box-shadow: 0 0 0;}
@@ -466,8 +465,6 @@ Error      : #de5353; red
 .GslBooking .pricebox {width:40%;}
 .GslBooking .gslfront_1 .gsl_button.goToPayment{width:68%;padding:8px 0;}
 
-.GslBooking .gslfront_1 .datepickermobile { display:none; }
-
 @media only all and (min-width:800px){
     .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#c8c8c8;}
     .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#c8c8c8 !important;}
@@ -476,6 +473,7 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .overview_confirmation { float :left; box-sizing: border-box; width:100%; }
 }
 @media only all and (max-width:800px){
+    .GslBooking .gslfront_1 .mobilecheckinheading, .GslBooking .gslfront_1 .mobilecheckoutheading { color:#bbb; width: 50%; float: left; border-bottom:1px solid #ddd;padding:0 4px;}
     .GslBooking .gslfront_1 .overview_room_info{padding-left: 0px; }
     .GslBookingFront .picker_header { display:none; }
     .GslBooking .gslfront_1 .agreetotermserrormessage {padding-bottom:40px;}
@@ -490,6 +488,7 @@ Error      : #de5353; red
     .GslBooking .bestValue span[gstranslationfield="bestValue"]{display: none;}
     .GslBooking .totalprice:before{content: "Total ";}
     .GslBooking .failedlogon{font-size: 16px;}
+    .GslBooking .picker_header { display: none; }
     .GslBooking .gslfront_1,
     .GslBooking .gslfront_1 .productentry table td{font-size: 12px;}
 
@@ -502,7 +501,6 @@ Error      : #de5353; red
     }
     .GslBooking .paymentmethodselection #paymentmethodselection { width: 100%; }
     .GslBooking .gslfront_1 h3{font-size: 16px;}
-    .GslBooking .fa_box.date { display:none; }
     
     /*Productentry*/
     .GslBooking .gslfront_1 .productentry {border-top:4px solid #93ccdf;}
@@ -546,7 +544,6 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .guest_phone{padding:10px 0 10px 12px !important;}
     .GslBooking .gslfront_1 .guestentry .phonefield:before {padding:10px 3px;}
     .GslBooking .gslfront_1 .removeguest{right:-1px; top:39px; padding: 12px 12px 13px 12px !important;}
-    .GslBooking .gslfront_1 .datepickermobile { display:block; }
     .GslBooking .gslfront_1 .roomentryframe{margin-bottom:20px;}
     .GslBooking .gslfront_1 .overview_confirmation{width: 100%;bottom:10px;z-index:1;}
     .GslBooking .gslfront_1 .overview_confirmation .gsl_button.continue { right:25%; width:50%;;}

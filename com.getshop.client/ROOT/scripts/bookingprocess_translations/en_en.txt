@@ -6,6 +6,7 @@
     "room" : "Room",
     "nights" : "night(s)",
     "paylater" : "Pay later",
+    "paymentexplanation" : "Please insert card below and follow the instructions. After payment has been completed you will recieve a code for your room after check in time {time}.",
     "totalprice" : "Total price",
     "warningstartyesterday" : "Warning, you are booking in the midle of the night! If you want to book a room later today, please select todays date as check in time.",
     "sureremoveroom" : "Are you sure you want to remove this room?",

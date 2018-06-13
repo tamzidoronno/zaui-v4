@@ -177,6 +177,13 @@ public interface IOrderManager {
     public Order getOrderByincrementOrderId(Integer id) throws ErrorException;
     
     /**
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    public Order getOrderByincrementOrderIdAndPassword(Integer id, String password) throws ErrorException;
+    
+    /**
      * If everything is ok, the price is the same as the order and the currency, then update the status.
      * @param password A predefined password needed to update the status.
      * @param orderId The id of the order to update

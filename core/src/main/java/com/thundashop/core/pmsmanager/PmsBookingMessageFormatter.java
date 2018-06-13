@@ -198,7 +198,7 @@ class PmsBookingMessageFormatter {
                     if(addonsPrice.get(addon.productId) != null) {
                         price = addonsPrice.get(addon.productId);
                     }
-                    price += addon.price;
+                    price += (addon.price * addon.count);
                     addonsCount.put(addon.productId, count);
                     addonsPrice.put(addon.productId, price);
                 }

@@ -7,6 +7,7 @@ package com.thundashop.core.start;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.pmsbookingprocess.IPmsBookingProcess;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -27,6 +28,7 @@ public class GenerateJavascriptApi {
     public static String pathToBuildClasses = "build/classes/main/";
     public static String pathToJavaSource = "src/main/java/";
     public static String storeFileIn = "build/getshopapi.js";
+    public boolean createOnlyForbookingProcess = false;
     private List<Class> interfaces = new ArrayList();
 
     public void start() throws ClassNotFoundException, IOException, URISyntaxException {
@@ -71,7 +73,11 @@ public class GenerateJavascriptApi {
         
         String createManagers = "GetShopApiWebSocket.prototype.createManagers = function() {\n";
         for (Class clazz : interfaces) {
-            
+            if(!clazz.getName().contains("IPmsBookingProcess") &&
+                    !clazz.getName().contains("IMessageManager") &&
+                    createOnlyForbookingProcess) {
+                continue;
+            }
             String fileName = clazz.getSimpleName().substring(1);
             
             createManagers += "    this." + fileName + " = new GetShopApiWebSocket."+fileName+"(this);\n";
@@ -135,7 +141,9 @@ public class GenerateJavascriptApi {
         javascriptFile += "\n";
         javascriptFile += createManagers;
         
-        javascriptFile += createErrorArray();
+        if(!createOnlyForbookingProcess) {
+            javascriptFile += createErrorArray();
+        }
 
         
         Files.write(Paths.get(storeFileIn), javascriptFile.getBytes());
@@ -165,6 +173,12 @@ public class GenerateJavascriptApi {
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
         GenerateJavascriptApi generate = new GenerateJavascriptApi();
+        generate.start();
+    }
+    
+    public static void generateJavascriptForBookingProcess() throws Exception {
+        GenerateJavascriptApi generate = new GenerateJavascriptApi();
+        generate.createOnlyForbookingProcess = true;
         generate.start();
     }
 }

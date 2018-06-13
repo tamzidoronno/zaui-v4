@@ -30,7 +30,7 @@ if($filter->groupByBooking) {
             echo $this->__f("From");
             ?>
         </div>
-        <input class="gsniceinput1" id="startdate" value="<? echo $this->getStartDate(); ?>" gsname='from'/>
+        <input class="gsniceinput1" id="startdate" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>" gsname='from'/>
         <i class="gsicon-calendar-text"></i>
     </div>
 
@@ -40,7 +40,7 @@ if($filter->groupByBooking) {
             echo $this->__f("To");
             ?>
         </div>
-        <input class="gsniceinput1" id="enddate" value="<? echo $this->getEndDate(); ?>" gsname='to'/>
+        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>" gsname='to'/>
         <i class="gsicon-calendar-text"></i>
     </div>
 
@@ -149,7 +149,7 @@ if($filter->groupByBooking) {
 </span>
 <span gstype="form" method="search" class='simplesearch'>
     
-    <div title="<? echo $this->__f("Latest registered users"); ?>" type='registered' class="top-row-icon displaydailydatepicker <? echo !isset($_SESSION['pmfilter']) || !$_SESSION['pmfilter'] ? 'active' : ''; ?>"><i class="gsicon-database-upload"></i></div>
+    <div title="<? echo $this->__f("Latest registered users"); ?>" type='registered' class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "registered" ? 'active' : ''; ?>"><i class="gsicon-database-upload"></i></div>
     <div title="<? echo $this->__f("Users checkin today"); ?>" type='checkin' day="0" class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "checkin" ? 'active' : ''; ?>"><i class="gsicon-enter"></i></div>
     <div title="<? echo $this->__f("Users checkout today"); ?>" type='checkout' day="0" class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "checkout" ? 'active' : ''; ?>"><i class="gsicon-exit"></i></div>
     <input class="gsniceinput1" gstype='submitenter' gsname='searchtext' placeholder="<? echo $this->__f("Search"); ?>" value='<? echo $searchWord; ?>'/>
@@ -166,11 +166,11 @@ if($filter->groupByBooking) {
     $('#startdate').datepicker({ dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
-            var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
+            var curEnd = moment.utc($('#enddate').val(), "DD.MM.YYYY").local();
             var date = moment(dateText, "DD.MM.YYYY");
             
             var diff = curEnd.valueOf() - date.valueOf();
-            if(diff <= 0) {
+            if(diff < 0) {
                 date.add(1, 'days');
                 $('#enddate').val(date.format('DD.MM.YYYY')); 
                 app.PmsNewBooking.reloadAvailability();
@@ -181,12 +181,11 @@ if($filter->groupByBooking) {
     $('#enddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
-            var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
+            var curStart = moment.utc($('#startdate').val(), "DD.MM.YYYY").local();
+            var date = moment.utc(dateText, "DD.MM.YYYY").local();
             
             var diff = date.valueOf() - curStart.valueOf();
-            if(diff <= 0) {
-                date.add(-1, 'days');
+            if(diff < 0) {
                 $('#startdate').val(date.format('DD.MM.YYYY')); 
                 app.PmsNewBooking.reloadAvailability();
             }

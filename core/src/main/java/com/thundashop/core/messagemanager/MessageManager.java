@@ -41,6 +41,7 @@ import static java.util.stream.Collectors.toMap;
 import static java.lang.Math.min;
 import static java.util.stream.Collectors.toMap;
 import static java.lang.Math.min;
+import java.util.Calendar;
 
 /**
  */
@@ -76,6 +77,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     
     @Autowired
     private GrafanaManager grafanaManager;
+    private Date latestSentErrorNotification;
     
     @Override
     public String sendMail(String to, String toName, String subject, String content, String from, String fromName) {
@@ -218,6 +220,18 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
     }
 
+    public void sendErrorNotify(String inText) {
+        if(latestSentErrorNotification != null) {
+            Calendar check = Calendar.getInstance();
+            check.add(Calendar.HOUR_OF_DAY, -1);
+            if(check.getTime().before(latestSentErrorNotification)) {
+                return;
+            }
+        }
+        latestSentErrorNotification = new Date();
+        sendErrorNotification(inText, null);
+    }
+    
     public void sendErrorNotification(String inText, Exception ex) {
         String text = "";
         text += "<br/><b>Message:</b> <br/>";

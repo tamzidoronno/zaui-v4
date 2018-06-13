@@ -3,7 +3,7 @@ body {
 }
 
 .gs_page_width {
-    width: 1377px;
+    max-width: 1377px;
     margin: 0 auto;
 }
 
@@ -117,4 +117,31 @@ body {
     border: 0px;
     border-radius: 0px;
     background-color: #9dd2ef;
+}
+
+@media only all and (max-width: 800px) {
+    .gsinner.gsdepth_0 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .gscell_9.gsuicell {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .Menu .mobilenavigatemenu {
+        text-align: center;
+    }
+    .Menu .menuentries {
+        text-align: left;
+    }
+    .Menu .fa-navicon { font-size: 30px; margin-bottom: 10px; }
+    .ImageDisplayer img { width: 100% !important; }
+    
+    .gsucell .gscell_24.gsuicell { padding-left: 10px !important; padding-right: 10px !important; }
+    .gsucell .gscell_27.gsuicell { padding: 0px !important; }
+    .Contact .shop_button { width: 100%; }
+    .gsucell .gscell_9.gsuicell { padding-top: 90px !important; }
+    h2 { margin: 0px; }
+    .picker_header { display:none; }
 }

@@ -39,16 +39,29 @@ include("header.php");
         </div>
 
         <script>
+            
+        if(!localStorage.getItem("getshopterminalid")) {
+            var terminalid = prompt("Enter terminal id");
+            if(terminalid) {
+                localStorage.setItem("getshopterminalid", terminalid);
+            }
+        }
+        
+        if(!localStorage.getItem("domain")) {
+            var domain = prompt("Enter domain multileveldomain (empty is default)");
+            if(!domain) { domain = "default"; }
+            localStorage.setItem("domain", domain);
+        }
+            
         $( "#bookingprocess" ).getshopbooking({
             "endpoint" : "<?php echo $endpoint; ?>",
             "viewmode" : "terminal",
             "jsendpoint" : "<?php echo $jsEnpoint; ?>",
-            "terminalid" : localStorage.getItem("getshopterminalid")
+            "terminalid" : localStorage.getItem("getshopterminalid"),
+            "domain" : localStorage.getItem("domain")
+            
         });
         
-        if(!localStorage.getItem("getshopterminalid")) {
-            alert('no getshopterminalid set: getshopterminalid');
-        }
         </script>
     </div>
 </body>

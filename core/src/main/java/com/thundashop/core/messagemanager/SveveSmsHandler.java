@@ -47,7 +47,7 @@ public class SveveSmsHandler extends SmsHandlerAbstract implements SmsHandler {
         while ((inputLine = in.readLine()) != null)
             content += inputLine;
         in.close();
-
+ 
         if(!content.trim().startsWith("ID:")) {
             logMessage("failed", content);
         } else {

@@ -1,0 +1,14 @@
+.gs_page_width { max-width: 1024px; margin: auto; }
+body {
+    font-family: 'Lato', sans-serif;
+    font-style: normal;
+    font-size:16px;
+}
+h1 { font-weight: 100; }
+.Menu .fa-navicon { font-size: 25px; cursor:pointer; }
+.Menu .mobilenavigatemenu { display:block; }
+.Menu .menuentries.horizontal {display:none; }
+.Menu .entries { position:absolute; background-color:#000; color:#fff; z-index: 2; }
+.Menu .menuentries .entry { display:block !important; }
+.Menu .menuentries .entry a { color:#fff !important; padding: 10px; border-bottom: solid 1px #fff; width:100%; display:block; }
+.Menu .menuentries .entry a:hover { color:green !important; } 

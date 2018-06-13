@@ -188,11 +188,13 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $rowCount = 0;
         $guests = 0;
+        $nightscount = 0;
         foreach($data as $row ){
             $rowCount++;
             $guests += $row->numberOfGuests;
+            $nightscount += $row->numberOfNights;
         }
-        echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests</div>";
+        echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests, nights: $nightscount</div>";
         
         $toPrint = ob_get_contents();
         ob_end_clean();
@@ -212,7 +214,17 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
         
     public function getSelectedFilter() {
-        
+        if($_SERVER['PHP_SELF'] == "/json.php") {
+            unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
+            ?>
+            <script>
+                localStorage.setItem('advancesearchtoggled', "false");
+                $('.PmsSearchBox .simplesearch').show();
+                $('.PmsSearchBox .advancesearch').hide();
+                $('input[gsname="searchtext"]').focus();
+            </script>
+            <?php
+        }
         if (isset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()])) {
             return unserialize($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
         }
@@ -221,9 +233,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
-        $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*$config->defaultNumberOfDaysBack));
-        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))+86300);
-        $filter->sorting = "regdate";
+        $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time())));
+        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time())));
+        $filter->filterType = "checkin";
         if($config->bookingProfile == "conferense") {
             $filter->groupByBooking = true;
         }
@@ -331,32 +343,32 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $filter->filterType = $_POST['data']['type'];
         switch($_POST['data']['date']) {
             case "today":
-                $filter->startDate = $this->convertToJavaDate(time());
-                $filter->endDate = $this->convertToJavaDate(time());
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time())));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time())));
                 break;
             case "tomorrow":
-                $filter->startDate = $this->convertToJavaDate(time()+86400);
-                $filter->endDate = $this->convertToJavaDate(time()+86400);
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()+86400)));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time()+86400)));
                 break;
             case "aftertomorrow":
-                $filter->startDate = $this->convertToJavaDate(time()+(2*86400));
-                $filter->endDate = $this->convertToJavaDate(time()+(2*86400));
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()+2*86400)));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time()+2*86400)));
                 break;
             case "yesterday":
-                $filter->startDate = $this->convertToJavaDate(time()-(86400));
-                $filter->endDate = $this->convertToJavaDate(time()-(86400));
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()-(86400))));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time()-(86400))));
                 break;
             case "beforeyesterday":
-                $filter->startDate = $this->convertToJavaDate(time()-(2*86400));
-                $filter->endDate = $this->convertToJavaDate(time()-(2*86400));
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()-(2*86400))));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time()-(2*86400))));
                 break;
             case "pastthreedays":
-                $filter->startDate = $this->convertToJavaDate(time()-(86400*3));
-                $filter->endDate = $this->convertToJavaDate(time());
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()-(3*86400))));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time())));
                 break;
             case "nextthreedays":
-                $filter->startDate = $this->convertToJavaDate(time());
-                $filter->endDate = $this->convertToJavaDate(time()+(86400*3));
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time())));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time()+(86400*3))));
                 break;
             default:
                 echo "date not found" . $_POST['data']['date'];

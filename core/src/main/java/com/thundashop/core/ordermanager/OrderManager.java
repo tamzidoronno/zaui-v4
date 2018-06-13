@@ -2241,4 +2241,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return orderFilterResult;
     }
 
+    @Override
+    public Order getOrderByincrementOrderIdAndPassword(Integer id, String password) throws ErrorException {
+        if(!password.equals("fdsafd4e3453ngdgdf")) {
+            return null;
+        }
+        return getOrderByincrementOrderId(id);
+    }
+
 }

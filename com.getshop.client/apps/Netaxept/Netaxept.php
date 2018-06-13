@@ -102,7 +102,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $RegisterRequest->Recurring = null; // Optional parameter
         $RegisterRequest->ServiceType = null;
         $RegisterRequest->Terminal = $this->createTerminal();
-        $RegisterRequest->TransactionId = null; // Optional parameter
+        $RegisterRequest->TransactionId = $this->order->incrementOrderId . "___" . uniqid(); // Optional parameter
         $RegisterRequest->TransactionReconRef = null; // Optional parameter
         ####  ARRAY WITH REGISTER PARAMETERS  ####
         $InputParametersOfRegister = array
@@ -143,8 +143,10 @@ class Netaxept extends \PaymentApplication implements \Application {
 
     public function collectOrder() {
         $order = $this->order;
-        
         if (!$this->isOrderPaidByThisPaymentMethod()) {
+            return;
+        }
+        if($this->order->status == 7) {
             return;
         }
         
@@ -154,7 +156,6 @@ class Netaxept extends \PaymentApplication implements \Application {
         
         $orderId = $this->order->id;
         $amount = (int)($this->getApi()->getOrderManager()->getTotalAmount($this->getOrder()) * 100);
-        
         /* var $order \core_ordermanager_data_Order */
         $result = $this->processPaymentExtended($amount, $order->paymentTransactionId, $orderId, "CAPTURE");
         if (!$result) {
@@ -183,7 +184,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $orderId = $_GET['orderId'];
         $code = $_GET['responseCode'];
         
-        if (isset($_GET['orderId'])) {
+        if (isset($_GET['orderId']) && !$this->order) {
             $this->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
         }
 
@@ -444,6 +445,20 @@ class Netaxept extends \PaymentApplication implements \Application {
         echo '</div></div>';
         
     }
+
+    public function handleCallBack($transactionId) {
+        $transactionIdSplitted = explode("___", $transactionId);
+        $incOrderId = $transactionIdSplitted[0];
+        $this->order = $this->getApi()->getOrderManager()->getOrderByincrementOrderIdAndPassword($incOrderId, "fdsafd4e3453ngdgdf");
+        $this->order->paymentTransactionId = $transactionId;
+        $_GET['orderId'] = $incOrderId;
+        $_GET['responseCode'] = "OK";
+        $_GET['transactionId'] = $transactionId;
+        if($this->order->status != 7) {
+            $this->paymentCallback();
+        }
+    }
+
 }
 
 ?>

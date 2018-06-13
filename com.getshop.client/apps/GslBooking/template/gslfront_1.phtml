@@ -1,8 +1,8 @@
 <div class='gslfront_1'>
     <div style='display:none' class='terminalpaymentprocess'>
-        <span class='content'><i class='fa fa-spin fa-spinner'></i> Payment process.
+        <span class='content'><i class='fa fa-spin fa-spinner'></i>
+            <div><span gstype='bookingtranslation' gstranslationfield='paymentexplanation'></span></div>
         <div class='verifonefeedbackdata' style='font-size:12px;font-style: italic;padding-top: 10px; padding-bottom: 10px; display:none;'></div>
-        
         <br><br>
             <div style='text-align:center;margin-top: 10px;margin-bottom:10px;'>
                 <span class='cancelpaymentbutton dopaymentbutton' style='border: solid 1px; padding: 10px; border-radius:5px;' gstype='bookingtranslation' gstranslationfield='cancelpayment'></span>
@@ -13,24 +13,16 @@
     </div>
     
     <div class='gslbookingHeader'>
-        <div class="fa_box date">
-            <span class='picker_header' gstype='bookingtranslation' gstranslationfield='checkin_checkout'></span>
-            <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
+
+        <div class='fa_box mobilecheckinheading date'>
+            <span class='picker_header' gstype='bookingtranslation' gstranslationfield='checkin'></span>
+            <input id="date_picker_start" class='date_picker_start_gsl' type='txt'>
         </div>
-        <div class="fa_box nights" style='display:none;'>
-            <i class='fa fa-minus-circle'></i> <input type='txt' value='1' id='nightscounter'/> <span gstype='bookingtranslation' gstranslationfield='nights'></span> <i class='fa fa-plus-circle'></i>
+        <div class='fa_box mobilecheckoutheading date'>
+            <span class='picker_header' gstype='bookingtranslation' gstranslationfield='checkout'></span>
+            <input id="date_picker_end" class='date_picker_end_gsl' type='txt'>
         </div>
-       
-        <div class='datepickermobile'>
-            <div class='mobilecheckinheading'>
-                <span gstype='bookingtranslation' gstranslationfield='checkin'></span>
-                <input id="date_picker_start" type='date'>
-            </div>
-            <div class='mobilecheckoutheading'>
-                <span gstype='bookingtranslation' gstranslationfield='checkout'></span>
-                <input id="date_picker_end" type='date'>
-            </div>
-        </div>
+        
         <div class="fa_box guests">
             <span class='picker_header' gstype='bookingtranslation' gstranslationfield='numberofguests'></span>
             <input id="guests" value="" style="border-right:1px solid #ddd;" readonly>
@@ -329,7 +321,6 @@
     <div style="clear:both;"></div>
 </div>
 
-<link rel="stylesheet" type="text/css" media="all" href="{getshop_endpoint}/js/daterangepicker/daterangepicker.css" />
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <script>
 
@@ -338,19 +329,20 @@
         sessionStorage.setItem('gslcurrentpage','');
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
-       $.getScript( "{getshop_endpoint}/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
-        $.getScript( "{getshop_endpoint}/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
-            $.getScript( "{getshop_endpoint}/js/daterangepicker/daterangepicker.js", function( data, textStatus, jqxhr ) {
-                getshop_setBookingTranslation();
-                var getshop_waitforload = setInterval(function() {
-                    if(typeof(getshop_bookingconfiguration) === "undefined") {
-                        return;
-                    }
-                    getshop_setDatePicker();
-                    clearInterval(getshop_waitforload);
-                }, 50);
+        $.getScript( "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function( data, textStatus, jqxhr ) {
+            $.getScript( "{getshop_endpoint}/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
+                 $.getScript( "{getshop_endpoint}/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
+                    getshop_setBookingTranslation();
+                    var getshop_waitforload = setInterval(function() {
+                        if(typeof(getshop_bookingconfiguration) === "undefined") {
+                            return;
+                        }
+                        clearInterval(getshop_waitforload);
+                        getshop_setDatePicker();
+                    }, 50);
+                    
+               });
             });
-        });
        });
     });
 </script>

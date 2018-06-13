@@ -155,7 +155,7 @@ public class PmsManagerProcessor {
                 }
                 booking = manager.finalize(booking);
                 save = true;
-                manager.doNotification(key, booking, room);
+                manager.doNotificationFromProcessor(key, booking, room);
                 room.notificationsSent.add(key);
                 if(hoursAhead == 0 && !manager.hasLockSystemActive()) {
                     manager.markRoomAsDirty(room.bookingItemId);
@@ -220,7 +220,7 @@ public class PmsManagerProcessor {
                 }
                 booking = manager.finalize(booking);
                 save = true;
-                manager.doNotification(key, booking, room);
+                manager.doNotificationFromProcessor(key, booking, room);
                 room.notificationsSent.add(key);
             }
             if (save) {
@@ -324,7 +324,7 @@ public class PmsManagerProcessor {
                             save = true;
                             room.forceUpdateLocks = false;
                             if(notifyRoomAddedToArx(room.cardformat)) {
-                                manager.doNotification("room_added_to_arx", booking, room);
+                                manager.doNotificationFromProcessor("room_added_to_arx", booking, room);
                             }
                         }
                     }
@@ -345,7 +345,7 @@ public class PmsManagerProcessor {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
-                        manager.doNotification("room_removed_from_arx", booking, room);
+                        manager.doNotificationFromProcessor("room_removed_from_arx", booking, room);
                     }
                 }
             }
@@ -814,7 +814,7 @@ public class PmsManagerProcessor {
                 booking.payedFor = payedfor;
                 if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
                     if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
-                        manager.doNotification("booking_completed", booking.id);
+                        manager.doNotificationFromProcessor("booking_completed", booking, null);
                         needSaving = true;
                     }
                 }
@@ -857,7 +857,7 @@ public class PmsManagerProcessor {
                     if(threeDaysAhead.after(item.startDate)) {
                         String key = order.id + "_order_unabletopaywithsavecardwarning";
                         if(!booking.notificationsSent.contains(key)) {
-                            manager.doNotification("order_unabletopaywithsavecardwarning", booking.id);
+                            manager.doNotificationFromProcessor("order_unabletopaywithsavecardwarning", booking, null);
                             needSaving = true;
                             booking.notificationsSent.add(key);
                             manager.saveBooking(booking);
@@ -866,7 +866,7 @@ public class PmsManagerProcessor {
                     if(new Date().after(item.startDate)) {
                         String key = order.id + "_order_unabletopaywithsavecard";
                         if(!booking.notificationsSent.contains(key)) {
-                            manager.doNotification("order_unabletopaywithsavecard", booking.id);
+                            manager.doNotificationFromProcessor("order_unabletopaywithsavecard", booking, null);
                             needSaving = true;
                             booking.notificationsSent.add(key);
                             manager.saveBooking(booking);
@@ -1262,7 +1262,7 @@ public class PmsManagerProcessor {
                 if(checkDate.after(order.rowCreatedDate)) {
                     order.warnedNotPaid = true;
                     manager.orderManager.saveOrder(order);
-                    manager.doNotification("warnfirstordernotpaid", booking.id);
+                    manager.doNotificationFromProcessor("warnfirstordernotpaid", booking, null);
                 }
             }
         }
@@ -1342,7 +1342,7 @@ public class PmsManagerProcessor {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 String greetingMessage = "room_morning_message";
                 if(room.isStartingToday() && !room.notificationsSent.contains(greetingMessage)) {
-                    manager.doNotification(key, booking, room);
+                    manager.doNotificationFromProcessor(key, booking, room);
                     room.notificationsSent.add(key);
                     save = true;
                 }

@@ -84,6 +84,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     }
     
     public function render() {
+        if($_SERVER['PHP_SELF'] == "/json.php") {
+            $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
+            $app->setStartDate(date("d.m.Y", time()));
+            $app->setEndDate(date("d.m.Y", time()+86400));
+        }
         
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
         if(sizeof($items) == 0) {
@@ -99,6 +104,8 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         if(sizeof($conferncerooms) > 0) {
             $hasConferenceClass = "hasconference";
         }
+        
+        
         
         
         
@@ -224,12 +231,6 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
                     $room->addedToWaitingList = true;
                 }
                 $currentBooking->rooms[] = $room;
-            }
-        }
-        
-        foreach($currentBooking->rooms as $room) {
-            if($room->addedToWaitingList) {
-                echo "added to waiting list";
             }
         }
         

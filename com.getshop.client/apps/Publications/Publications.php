@@ -29,6 +29,11 @@ class Publications extends \MarketingApplication implements \Application {
         $_SESSION['ns_da9f257b_fc83_4cb1_9422_3ee2d7d2bf20_publications_filelist'][] = $fileId;
     }
     
+    public function changeDate() {
+        $javaDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $this->getApi()->getNewsManager()->changeDateOfNews($_POST['data']['id'], $javaDate);
+    }
+    
     public function fileDeleted($fileId) {
         if($key = array_search($fileId, $_SESSION['ns_da9f257b_fc83_4cb1_9422_3ee2d7d2bf20_publications_filelist']) !== false){
             $array = $_SESSION['ns_da9f257b_fc83_4cb1_9422_3ee2d7d2bf20_publications_filelist'];

@@ -2,6 +2,16 @@ app.Publications = {
     init : function(){
         $(document).on('click', '.Publications .publicationShellSubmit', $.proxy(this.addEvent, app.Publications));
         $(document).on('click', '.Publications .gs_button.small.delete', this.deleteEvent );
+        $(document).on('click', '.Publications .dateforpublication', this.toggleChangeDate );
+    },
+    toggleChangeDate: function() {
+        var form = $(this).parent().find('.chagnedate');
+        
+        if ($(form).is(':visible')) {
+            $(form).hide();
+        } else {
+            $(form).show();
+        }
     },
     addEvent: function() {
         var authors = $('.Publications #authors').val();

@@ -8,6 +8,7 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,4 +85,7 @@ public interface INewsManager {
     public void applyUserFilter(String newsListId, String userId);
     
     public boolean isFiltered(String newsListId, String userId);
+    
+    @Administrator
+    public void changeDateOfNews(String id, Date date);
 }

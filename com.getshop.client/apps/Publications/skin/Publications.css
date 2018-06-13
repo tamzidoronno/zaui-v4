@@ -74,6 +74,7 @@
     padding:10px;
     background-color:#efefef;
     border-bottom: 1px solid #d7d8da;
+    position: relative;
 }
 .Publications .publicationlistShell:last-child{
     border-width: 0;
@@ -121,6 +122,15 @@
     padding: 0;
     float:none;
 }
+.Publications .chagnedate {
+    position: absolute;
+    display: none;
+    border: solid 1px;
+    background-color: #CCC;
+    padding: 5px;
+    right: 80px;
+}
+
 .Publications .SimpleFileUpload .noFilesAdded{display:none;}
 .Publications .SimpleFileUpload .progressBarsTd{padding: 0 !important;}
 .Publications .SimpleFileUpload .progressbar .meter{background: rgba(246, 146, 95, 0.5);}

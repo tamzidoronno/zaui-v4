@@ -11,6 +11,11 @@ class GslBooking extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        $lang = $this->getFactory()->getCurrentLanguage();
+        echo "<script>";
+        echo 'sessionStorage.setItem("getshop_language","'.$lang.'");';
+        echo "</script>";
+        
         ob_start();
         $this->includefile("gslfront_1");
         $content = ob_get_contents();

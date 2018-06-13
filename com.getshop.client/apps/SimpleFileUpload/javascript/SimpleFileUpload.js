@@ -1,6 +1,6 @@
 app.SimpleFileUpload = {
     init : function() {
-        $(document).on('change', '.SimpleFileUpload #file_upload_selector', app.SimpleFileUpload.doUpload);
+        $(document).on('change', '.SimpleFileUpload .file_upload_selector', app.SimpleFileUpload.doUpload);
         $(document).on('click', '.SimpleFileUpload .fa-trash-o', app.SimpleFileUpload.deleteObject);
         $(document).on('click', '.SimpleFileUpload .fa-edit', app.SimpleFileUpload.renameObject);
     },
@@ -63,7 +63,7 @@ app.SimpleFileUpload = {
                        PubSub.publish('SIMPELFILEUPLOAD_COMPLETED', data);
                        var event = thundashop.Ajax.createEvent('','reloadFileList',apptoload, {});
                        thundashop.Ajax.postWithCallBack(event, function(result) {
-                           $('.filelist').html(result);
+                           apptoload.closest('.app').find('.filelist').html(result);
                        });
                    },
                    xhr: function() {  // custom xhr

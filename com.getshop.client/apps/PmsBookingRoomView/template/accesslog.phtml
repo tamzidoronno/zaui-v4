@@ -11,9 +11,12 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMu
 if (!$item->lockGroupId) {
     return;
 }
+if (!$room->codeObject)
+    return;
+
 $startDate = $bookingEngineBooking->startDate;
 $endDate = $bookingEngineBooking->endDate;
-$results = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate);
+$results = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate, $room->codeObject->slotId);
 ?>
 
 

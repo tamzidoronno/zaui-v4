@@ -51,7 +51,8 @@ class ApacGateways extends \MarketingApplication implements \Application {
                 $_POST['data']['hostname'], 
                 $_POST['data']['username'], 
                 $_POST['data']['password'], 
-                $_POST['data']['servername']);
+                $_POST['data']['servername'],
+                $_POST['data']['token']);
     }
     
     public function createNewServer() {
@@ -60,7 +61,8 @@ class ApacGateways extends \MarketingApplication implements \Application {
                 $_POST['data']['hostname'], 
                 $_POST['data']['username'], 
                 $_POST['data']['password'], 
-                $_POST['data']['name']);
+                $_POST['data']['name'],
+                $_POST['data']['token']);
     }
 
     public function formatEditButton($server) {

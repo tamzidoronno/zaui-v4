@@ -42,6 +42,7 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
+import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
 import com.thundashop.core.getshoplocksystem.MasterUserSlot;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -8643,5 +8644,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return title;
         }
         return "";
+    }
+
+    @Override
+    public void transferFromOldCodeToNew(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        
+        for (PmsBookingRooms room : booking.getActiveRooms()) {
+            if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                if (room.code == null || room.code.isEmpty())
+                    continue;
+                
+                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                if (item == null)
+                    continue;
+                
+                LockCode lockCode = getShopLockSystemManager.getCodeAndMarkAsInUse(item.lockGroupId, room.pmsBookingRoomId, PmsManagerProcessor.class.getSimpleName(), "Automatically assigned by PMS processor", room.code);
+                if (lockCode == null)
+                    continue;
+                
+                room.addedToArx = true;
+                markRoomAsDirty(room.bookingItemId);
+                room.forceUpdateLocks = false;
+                room.code = ""+lockCode.pinCode;
+                room.codeObject = lockCode;
+            }
+        }
+        
+        saveBooking(booking);
     }
 }

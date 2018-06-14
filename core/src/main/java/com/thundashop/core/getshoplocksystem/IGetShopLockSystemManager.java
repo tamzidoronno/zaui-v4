@@ -21,7 +21,7 @@ import java.util.Map;
 public interface IGetShopLockSystemManager {
     
     @Administrator
-    public void createServer(String type, String hostname, String userName, String password, String givenName);
+    public void createServer(String type, String hostname, String userName, String password, String givenName, String token);
     
     @Administrator
     public List<LockServer> getLockServers();
@@ -33,7 +33,7 @@ public interface IGetShopLockSystemManager {
     public void startFetchingOfLocksFromServer(String serverId);
     
     @Administrator
-    public void updateConnectionDetails(String serverId, String hostname, String username, String password, String givenName);
+    public void updateConnectionDetails(String serverId, String hostname, String username, String password, String givenName, String token);
     
     @Administrator
     public Lock getLock(String serverId, String lockId);
@@ -54,7 +54,7 @@ public interface IGetShopLockSystemManager {
     public void markCodeAsUpdatedOnLock(String serverId, String lockId, int slotId);
     
     @Administrator
-    public void createNewLockGroup(String name, int maxUsersInGroup);   
+    public LockGroup createNewLockGroup(String name, int maxUsersInGroup);   
     
     @Administrator
     public String restCall(String serverId, String path);
@@ -137,4 +137,9 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void setGroupVirtual(String groupId, boolean isVirtual);
+    
+    public void addTransactionHistory(String tokenId, String lockId, Date timeStamp, int userSlot);
+    
+    @Administrator
+    public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId);
 }

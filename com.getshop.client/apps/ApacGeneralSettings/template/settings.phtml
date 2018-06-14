@@ -1,0 +1,18 @@
+
+<h2>Transfer from old lock system! Be careful with this!</h2>
+Multilevelname: <input class="domainname gsniceinput1" type="textfield" gsname="domain"/>
+<br/><br/><div gs_also="domainname" gsclick="transferGateways" class="shop_button" gstype="submit">1. <? echo $this->__f("Transfer gateways"); ?></div>
+
+<br/> 
+<br/> <b>Then make sure all locks are fetched for all gateways before going to step 2.</b>
+<br/><br/><div gs_also="domainname" gsclick="updateFromOldSystem" class="shop_button" gstype="submit">2. <? echo $this->__f("Create lock groups"); ?></div>
+
+<br/>
+<br/> <b>Control that groups and codes looks goods</b>
+<br/><br/><div gs_also="domainname" gsclick="deleteOldLockSystem" class="shop_button" gstype="submit">3. <? echo $this->__f("Delete the old lock system"); ?></div>
+
+<br/>
+<br/> <b>Transfer active bookings to new APAC</b>
+<br/><br/><div gs_also="domainname" gsclick="transferActiveBookings" class="shop_button" gstype="submit">4. <? echo $this->__f("Transfer active bookings"); ?></div>
+
+

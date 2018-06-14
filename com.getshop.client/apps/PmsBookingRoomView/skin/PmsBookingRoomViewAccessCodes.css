@@ -22,6 +22,7 @@ and open the template in the editor.
 .PmsBookingRoomView .accesscode .isnotactive {
     padding-left: 20px;
 }
+
 .PmsBookingRoomView .accesscode .code {
     color: #87caf0;
     font-size: 30px;

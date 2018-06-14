@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface LockServer {
     
     public void setManger(GetShopLockSystemManager manager);
     
-    public void setDetails(String hostname, String userName, String password, String givenName);
+    public void setDetails(String hostname, String userName, String password, String givenName, String token);
 
     public Lock getLock(String lockId);
 
@@ -47,5 +48,6 @@ public interface LockServer {
     public void finalizeServer();
 
     public void markCodeAsUpdatedOnLock(String lockId, int slotId);
-    
+
+    public void addTransactionHistory(String tokenId, String lockId, Date accessTime, int userSlot);
 }

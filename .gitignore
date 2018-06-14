@@ -144,3 +144,8 @@ html5apps/*/node_modules
 html5apps/*/build
 html5apps/*/nbproject/privat*
 html5apps/*/public_html/bower_components
+
+python/**/*.db
+python/**/*.pyc
+python/getshop/token.txt
+**/*.swp

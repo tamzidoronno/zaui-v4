@@ -18,7 +18,7 @@
 .SimpleFileUpload .progressbar .filename {margin-left: 10px;color: #000;}
 .SimpleFileUpload .percentage{color:#000;}
 .SimpleFileUpload .filelist a { color:#0048bb; cursor: pointer; }
-.SimpleFileUpload #file_upload_selector{
+.SimpleFileUpload .file_upload_selector{
     display:none;
     opacity: 0;
     visibility: hidden;

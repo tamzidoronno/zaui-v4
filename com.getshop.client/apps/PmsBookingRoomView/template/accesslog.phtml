@@ -1,0 +1,41 @@
+<?
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$room = $this->getSelectedRoom();
+$bookingEngineBooking = $this->getBookingEngineBooking();
+
+if (!$room->bookingItemId) {
+    return;
+}
+
+$item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+if (!$item->lockGroupId) {
+    return;
+}
+if (!$room->codeObject)
+    return;
+
+$startDate = $bookingEngineBooking->startDate;
+$endDate = $bookingEngineBooking->endDate;
+$results = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate, $room->codeObject->slotId);
+?>
+
+
+<br/>
+<div class="kaipal infobox">
+    <div class="image happy"></div>
+    <div class="textbox">
+        <div class="header"><? echo $this->__f("Access log"); ?></div>
+        <div class="text">
+            <?
+            if (!count($results)) {
+                echo $this->__f("The guest has not used his code yet.");
+            } else {
+                foreach ($results as $result) {
+                    $time = date('d.m.Y H:i', strtotime($result->time));
+                    echo "<div>The guest accessed $result->doorName at $time</div>";
+                }
+            }
+            ?>
+        </div>
+    </div>
+</div>

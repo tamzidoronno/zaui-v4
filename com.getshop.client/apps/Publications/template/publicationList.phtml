@@ -104,7 +104,14 @@ if (is_array($publications)) {
             if(isset($PMID) && $PMID != ""){
                 echo "<div>PMID: <a href='https://www.ncbi.nlm.nih.gov/pubmed/?term=".$PMID."' target='_blank'>".$PMID."</a></div>";
             }
-            echo "<div class='publicationListFooter'>".date("d. M", $time)."</div>";
+            echo "<div class='publicationListFooter dateforpublication'>".date("d. M", $time)."</div>";
+            ?>
+                <div gstype="form" method="changeDate" class="chagnedate">
+                    <input type="hidden" gsname="id" value="<? echo $id; ?>"/>
+                    <input gsname="date" value="<? echo date("d.m.Y", $time); ?>"/>
+                    <button gstype="submit">Change</button>
+                </div>
+            <?
             echo "<br>";
             echo "</div>";
         }

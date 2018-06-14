@@ -264,4 +264,13 @@ public class NewsManager extends ManagerBase implements INewsManager {
     public boolean isFiltered(String newsListId, String userId) {
         return getFilters(newsListId).contains(userId);
     }
+
+    @Override
+    public void changeDateOfNews(String id, Date date) {
+        NewsEntry entry = entries.get(id);
+        if (entry != null) {
+            entry.date = date;
+            saveObject(entry);
+        }
+    }
 }

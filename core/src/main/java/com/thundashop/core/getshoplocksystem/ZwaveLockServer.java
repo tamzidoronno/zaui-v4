@@ -16,6 +16,7 @@ import com.thundashop.core.common.ExcludeFromJson;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveJobPriotizer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -312,7 +313,29 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     @Override
     public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
         super.markCodeAsUpdatedOnLock(lockId, slotId);
+    }
+
+    @Override
+    public void addTransactionHistory(String tokenId, String deviceId, Date accessTime, int userSlot) {
+        if (checkToken(tokenId))
+            return;
         
+        Lock lock = getLockByDeviceId(deviceId);
+        
+        if (lock != null) {
+            addAccessHistory(lock.id, userSlot, accessTime);
+        }
+    }
+
+
+
+    private Lock getLockByDeviceId(String deviceId) {
+        int deviceIdInt = Integer.parseInt(deviceId);
+        
+        return locks.values().stream()
+                .filter(l -> l.zwaveDeviceId == deviceIdInt)
+                .findFirst()
+                .orElse(null);
     }
 
 }

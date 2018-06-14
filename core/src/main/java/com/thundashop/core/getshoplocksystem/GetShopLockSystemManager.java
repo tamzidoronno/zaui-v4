@@ -6,6 +6,9 @@
 package com.thundashop.core.getshoplocksystem;
 
 import com.getshop.scope.GetShopSession;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
@@ -15,6 +18,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsMessage;
+import com.thundashop.core.trackermanager.TrackLog;
 import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,27 +89,27 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
     
     @Override
-    public void createServer(String type, String hostname, String userName, String password, String givenName) {
+    public void createServer(String type, String hostname, String userName, String password, String givenName, String token) {
         if (type.equals("zwaveserver")) {
-            createZwaveServer(hostname, userName, password, givenName);
+            createZwaveServer(hostname, userName, password, givenName, token);
         }
         
         if (type.equals("getshoplockbox")) {
-            createGetShopLockBoxServer(hostname, userName, password, givenName);
+            createGetShopLockBoxServer(hostname, userName, password, givenName, token);
         }
     }   
 
-    private void createZwaveServer(String hostname, String userName, String password, String givenName) throws ErrorException {
+    private void createZwaveServer(String hostname, String userName, String password, String givenName, String token) throws ErrorException {
         ZwaveLockServer server = new ZwaveLockServer();
-        server.setDetails(hostname, userName, password, givenName);
+        server.setDetails(hostname, userName, password, givenName, token);
         server.setManger(this);
         saveObject(server);
         lockServers.put(server.id, server);
     }
     
-    private void createGetShopLockBoxServer(String hostname, String userName, String password, String givenName) throws ErrorException {
+    private void createGetShopLockBoxServer(String hostname, String userName, String password, String givenName, String token) throws ErrorException {
         GetShopLockBoxServer server = new GetShopLockBoxServer();
-        server.setDetails(hostname, userName, password, givenName);
+        server.setDetails(hostname, userName, password, givenName, token);
         server.setManger(this);
         saveObject(server);
         lockServers.put(server.id, server);
@@ -134,10 +138,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     @Override
-    public void updateConnectionDetails(String serverId, String hostname, String username, String password, String givenName) {
+    public void updateConnectionDetails(String serverId, String hostname, String username, String password, String givenName, String token) {
         LockServer server = lockServers.get(serverId);
         if (server != null) {
-            server.setDetails(hostname, username, password, givenName);
+            server.setDetails(hostname, username, password, givenName, token);
         }
     }
 
@@ -196,12 +200,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     @Override
-    public void createNewLockGroup(String name, int maxUsersInGroup) {
+    public LockGroup createNewLockGroup(String name, int maxUsersInGroup) {
         LockGroup group = new LockGroup();
         group.name = name;
         group.numberOfSlotsInGroup = maxUsersInGroup;
         saveObject(group);
         getFinalizedGroups().put(group.id, group);
+        return group;
     }
 
     @Override
@@ -225,7 +230,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public LockGroup getGroup(String groupId) {
-        return getFinalizedGroups().get(groupId);
+        LockGroup group = groups.get(groupId);
+        if (group == null)
+            return null;
+        
+        group.finalize(lockServers);
+        
+        return group;
     }
 
     @Override
@@ -362,7 +373,34 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         return slot.code;
     }
-    //358047
+    
+    public LockCode getCodeAndMarkAsInUse(String groupId, String reference, String managerName, String textReference, String pinCode) {
+        LockGroup group = getFinalizedGroups().get(groupId);
+        if (group == null) {
+            throw new ErrorException(1042);
+        }
+        
+        int ipinCode = Integer.parseInt(pinCode);
+        MasterUserSlot slot = group.getGroupLockCodes().values()
+                .stream()
+                .filter(s -> s.takenInUseDate == null)
+                .filter(s -> s.allCodesAdded)
+                .filter(s -> s.code != null)
+                .filter(s -> s.code.pinCode == ipinCode)
+                .findAny()
+                .orElse(null);
+        
+        if (slot == null)
+            return null;
+        
+        slot.takenInUseDate = new Date();
+        slot.takenInUseReference = reference;
+        slot.takenInUseManagerName = managerName;
+        slot.takenInUseTextReference = textReference;
+        saveObject(group);
+        
+        return slot.code;
+    }
     
     @Override
     public void renewCodeForSlot(String groupId, int slotId) {
@@ -552,5 +590,68 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             return res;
         }
         return "";
+    }
+
+    @Override
+    public void addTransactionHistory(String tokenId, String lockId, Date timeStamp, int userSlot) {
+        lockServers.values().stream()
+                .forEach(server -> {
+                    server.addTransactionHistory(tokenId, lockId, timeStamp, userSlot);
+                });
+        
+        
+    }
+
+    @Override
+    public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId) {
+        LockGroup group = getGroup(groupId);
+        
+        List<AccessHistoryResult> history = new ArrayList();
+        Map<String, List<Integer>> groupedLocksAndSlots = new HashMap();
+        
+        if (group != null) {
+            MasterUserSlot masterUserSlot = group.getGroupLockCodes().get(groupSlotId);
+            for (UserSlot subSlot : masterUserSlot.subSlots) {
+                List<Integer> slots = groupedLocksAndSlots.get(subSlot.connectedToLockId);
+                if (slots == null) {
+                    slots = new ArrayList();
+                    groupedLocksAndSlots.put(subSlot.connectedToLockId, slots);
+                }
+
+                slots.add(subSlot.slotId);
+            }
+        }
+        
+        for (String lockId : groupedLocksAndSlots.keySet()) {
+            BasicDBObject query = new BasicDBObject();
+            DBObject dateQuery = BasicDBObjectBuilder.start("$gte", start).add("$lte", end).get();
+                
+            query.put("className", AccessHistory.class.getCanonicalName());
+            query.put("accessTime", dateQuery);
+            query.put("lockId", lockId);
+            query.put("userSlot", new BasicDBObject("$in", groupedLocksAndSlots.get(lockId)));
+//        
+            List<AccessHistoryResult> hist = database.query(getClass().getSimpleName(), getStoreId(), query).stream()
+                .map(o -> (AccessHistory)o)
+                .map(o -> o.toResult(getDoorName(o.serverId, o.lockId)))
+                .collect(Collectors.toList());
+            
+            history.addAll(hist);
+        }
+        
+        return history;
+    }
+
+    private String getDoorName(String serverId, String lockId) {
+        LockServer server = getLockServer(serverId);
+        if (server == null)
+            return "N/A";
+        
+        Lock lock = server.getLock(lockId);
+        
+        if (lock == null)
+            return "N/A";
+        
+        return lock.name;
     }
 }

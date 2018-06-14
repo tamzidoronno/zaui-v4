@@ -6,6 +6,7 @@
 package com.thundashop.core.getshoplocksystem;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,19 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
 
     @Override
     public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Nothing to do yet.
+    }
+
+    @Override
+    public void addTransactionHistory(String tokenId, String lockId, Date accessTime, int userSlot) {
+        if (checkToken(tokenId))
+            return;
+        
+        Lock lock = getLock(lockId);
+        
+        if (lock != null) {
+            addAccessHistory(lockId, userSlot, accessTime);
+        }
     }
     
 }

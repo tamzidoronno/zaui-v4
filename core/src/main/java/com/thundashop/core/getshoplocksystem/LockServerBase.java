@@ -5,14 +5,20 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBObject;
 import static com.thundashop.core.arx.WrapClient.wrapClient;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ExcludeFromJson;
+import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.trackermanager.TrackLog;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.axis.encoding.Base64;
@@ -41,6 +47,8 @@ public abstract class LockServerBase extends DataCommon {
     public String hostname;
     public String username;
     public String givenName;
+    
+    public String token;
     
     @Administrator
     public String password;
@@ -150,11 +158,12 @@ public abstract class LockServerBase extends DataCommon {
         startUpdatingOfLocks();
     }
     
-    public void setDetails(String hostname, String userName, String password, String givenName) {
+    public void setDetails(String hostname, String userName, String password, String givenName, String token) {
         this.hostname = hostname;
         this.password = password;
         this.username = userName;
         this.givenName = givenName;
+        this.token = token;
         saveMe();
     }
     
@@ -220,7 +229,7 @@ public abstract class LockServerBase extends DataCommon {
                 boolean changed = lock.setCodeObject(slot.slotId, groupCode.code);
                 
                 if (changed) {
-                    lock.markCodeForResending(slotId);
+                    lock.markCodeForResending(slot.slotId);
                 }
             }
         });
@@ -242,5 +251,46 @@ public abstract class LockServerBase extends DataCommon {
     
     public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
         getLock(lockId).markCodeAsUpdatedOnLock(slotId);
+    }
+    
+    public void addAccessHistory(String lockId, int slotId, Date time) {
+        AccessHistory history = new AccessHistory();
+        history.lockId = lockId;
+        history.userSlot = slotId;
+        history.code = getCodeForSlot(time, slotId, lockId);
+        history.accessTime = time;
+        history.serverId = getId();
+        getShopLockSystemManager.saveObject(history);
+    }
+
+    private String getCodeForSlot(Date time, int slotId, String lockId) {
+        Lock lock = getLock(lockId);
+        if (lock == null)
+            return "";
+        
+        UserSlot slot = lock.getUserSlot(slotId);
+        if (slot == null) {
+            return "";
+        }
+        
+        if (slot.code == null) {
+            return "";
+        }
+        
+        if (slot.code.addedDate.after(time) && (slot.code.removedDate == null || slot.code.removedDate.before(time))) {
+            return ""+slot.code.pinCode;
+        }
+        
+        return "";
+    }
+
+    public boolean checkToken(String tokenId) {
+        if (tokenId == null || tokenId.isEmpty()) {
+            return true;
+        }
+        if (!tokenId.equals(this.token)) {
+            return true;
+        }
+        return false;
     }
 }

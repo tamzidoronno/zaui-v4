@@ -731,7 +731,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveObject(booking);
         }
 
-        if ((booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) || booking.isTerminalBooking()) {
+        if ((booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) || (booking.isTerminalBooking() && !booking.isOld(60))) {
             Date deletionDate = nowCal.getTime();
             boolean hardDelete = (booking.rowCreatedDate.before(deletionDate) && (booking.completedDate == null || booking.completedDate.before(deletionDate)));
             if (hardDelete && !booking.payedFor) {
@@ -1223,11 +1223,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void doNotificationFromProcessor(String key, PmsBooking booking, PmsBookingRooms room) {
-        if(phoneToSend != null || emailToSendTo != null) {
-            messageManager.sendErrorNotification("Phone to send not null or email not null" + " Phone: " + phoneToSend + " email: " + emailToSendTo + " id:" + booking.id + ", key:" + key, null);
-            phoneToSend = null;
-            emailToSendTo = null;
-        }
+        phoneToSend = null;
+        emailToSendTo = null;
         prefixToSend = null;
         doNotification(key, booking, room);
     }
@@ -1848,9 +1845,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void hardDeleteBooking(PmsBooking booking, String source) {
-        logPrint("Deleting, source: " + source);
+        logPrint("Deleting, source: " + source + " id: " + booking.id);
         bookings.remove(booking.id);
         booking.deletedBySource = source;
+        
+        
+        for(PmsBookingRooms r : booking.rooms) {
+            if(r.bookingId != null && !r.bookingId.isEmpty()) {
+                //Also delete bookings from booking engine.
+                bookingEngine.deleteBooking(r.bookingId);
+                r.bookingId = null;
+            }
+        }
 
         for (String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);

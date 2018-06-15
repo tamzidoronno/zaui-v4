@@ -3659,6 +3659,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         res = removeByCustomersCodesAndAddons(res, filter);
         gsTiming("After removebycustomercodesandaddons");
 
+        res = sortDeletedLast(res);
+        
         return res;
     }
 
@@ -8678,5 +8680,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         saveBooking(booking);
+    }
+
+    private List<PmsRoomSimple> sortDeletedLast(List<PmsRoomSimple> res) {
+        List<PmsRoomSimple> newRes = new ArrayList();
+        for(PmsRoomSimple s : res) {
+            if(s.progressState != null && !s.progressState.equals("deleted")) {
+                newRes.add(s);
+            }
+        }
+        for(PmsRoomSimple s : res) {
+            if(s.progressState != null && s.progressState.equals("deleted")) {
+                newRes.add(s);
+            }
+        }
+        return newRes;
     }
 }

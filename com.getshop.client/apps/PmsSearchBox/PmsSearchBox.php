@@ -14,6 +14,12 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $this->includefile("searchbox");
     }
     
+    public function runProcessor() {
+        $this->getApi()->getPmsManager()->processor($this->getSelectedMultilevelDomainName());
+        $this->getApi()->getPmsManager()->hourlyProcessor($this->getSelectedMultilevelDomainName());
+        $this->getApi()->getPmsManager()->checkIfGuestHasArrived($this->getSelectedMultilevelDomainName());
+    }
+    
     public function search() {
         $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
         $pms->searchBooking();

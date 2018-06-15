@@ -1,18 +1,32 @@
 <?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $logs = $this->getLogEntries();
 $printed = false;
 foreach($logs as $log) {
     $type = $log->logType;
+    $messageForm = "";
+    if(stristr($log->logType, "_email")) { $messageForm = "email"; }
+    if(stristr($log->logType, "_sms")) { $messageForm = "sms"; }
     $typeText = str_replace("_email", "", $log->logType);
     $typeText = str_replace("_sms", "", $typeText);
     $printed = true;
     $text = $log->logText;
-    $text = preg_replace('/^(?:<br\s*\/?>\s*)+/', '', $text);
+    $text = str_replace("<br>", "", $text);
     echo "<div class='messagelogentry'>";
-    echo "<div class='messagelogtext'>" . $text . "</div>";
+    echo "<div class='messagelogtext'>";
+    echo $text . "</div>";
     echo "<div class='messagelogfooter'>";
-    echo "<span style='float:left;'><i class='fa fa-expand expandmessage' style='cursor:pointer;'></i> " . date("d.m.Y H:i:s", strtotime($log->rowCreatedDate)) . "</span>";
-    echo $typeText . "<div style='clear:both;'></div></div>";
+    echo "<span style='float:left;'><i class='fa fa-expand expandmessage' style='cursor:pointer;'></i> " . date("d.m.Y H:i:s", strtotime($log->rowCreatedDate));
+    echo " by ";
+    if($log->userId == "gs_system_scheduler_user") { echo "System scheduler"; } else {
+        echo $this->getApi()->getUserManager()->getUserById($log->userId)->fullName;
+    }
+    echo "</span>";
+    echo $typeText;
+    if($messageForm) {
+        echo " (" . $messageForm . ")";
+    }
+    echo "<div style='clear:both;'></div></div>";
     echo "</div>";
 }
 if(!$printed) {
@@ -25,10 +39,6 @@ if(!$printed) {
     border: solid 1px #ddd;
     padding: 10px;
     margin: 10px;
-}
-.messagelogtext {         
-    max-height: 100px;
-    overflow: auto;
 }
 .messagelogfooter { text-align: right; color:#aaa; border-top: solid 1px;  padding-top: 5px; margin-top: 10px;}
 </style>

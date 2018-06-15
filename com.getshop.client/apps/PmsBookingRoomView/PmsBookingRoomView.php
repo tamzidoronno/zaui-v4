@@ -103,7 +103,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         if($error) {
             $this->errors[] = $error;
         }
-        $this->setData(true);
+        $this->pmsBooking = null;
+        $this->selectedRoom = null;
     }
     
     public function updateGuestData() {

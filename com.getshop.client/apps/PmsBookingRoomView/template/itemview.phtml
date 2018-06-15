@@ -66,12 +66,12 @@ if(!isset($room->tmpModified) || !$validSelection) {
         }
 
         ?>
-        <?
-    //    $this->includefile("availablerooms")
-        ?>
         <br/>
         <br/>
         <div class="shop_button showroomstoselect"><? echo $this->__f("Change room or category"); ?></div>
+        <?php if(!$savedRoom->deleted) { ?>
+           <span class='shop_button' gsclick='deleteRoom' style='bottom:-27px;background-color:red;'>Cancel this room</span>
+        <?php } ?>
     </div>
 
     <div class='itemview_inner pricesview'>

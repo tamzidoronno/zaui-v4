@@ -81,7 +81,7 @@ foreach($config->addonConfiguration as $item) {
     ?>
     <tr class='settingsForProduct' productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
         <td style="width:300px;text-align: left;position:relative;">
-            <i class="fa fa-info-circle" style="color:green; cursor:pointer;" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();"></i>
+            <i class="fa fa-info-circle loadExtendedProductInformation" style="color:green; cursor:pointer;"></i>
             <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gstype="forceClicksubmitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
             <?php echo $product->name;
             $translationcount = 0;
@@ -113,39 +113,7 @@ foreach($config->addonConfiguration as $item) {
                 echo "(limited to " . sizeof($addonItem->onlyForBookingItems) . " rooms) ";
             }
             ?>
-            <span class="extendedinformation">
-                <div class="extendedinforow">
-                    Description on web page <input type="txt" class="settings" gsname="descriptionWeb" value="<?php echo $addonItem->descriptionWeb; ?>">
-                </div>
-                <div class="extendedinforow">
-                    Booking process icon <input type="txt" class="settings" gsname="bookingicon" value="<?php echo $addonItem->bookingicon; ?>">
-                </div>
-                <div class="extendedinforow">
-                    Text to identify addon in the channel manager <input type="txt" class="settings" gsname="channelManagerAddonText" value="<?php echo $addonItem->channelManagerAddonText; ?>">
-                </div>
-                <div class="extendedinforow">
-                    Count (max selection) <input type="txt" class="settings" gsname="count" value="<?php echo $addonItem->count; ?>">
-                </div>
-                <div class="extendedinforow">
-                    <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">
-                    Hide, <b>remember to save settings</b> in<br> bottom of page to save this changes.
-                </div>
-                
-                <?php
-                echo "Only available for the following rooms:<br>";
-                foreach($allItems as $item) {
-                    $selectedItem = "";
-                    if(in_array($item->id, $addonItem->onlyForBookingItems)) {
-                        $selectedItem = "selectedItem";
-                    }
-                    echo "<span class='onlyavailableforitem $selectedItem' itemid='".$item->id."'>".$item->bookingItemName."</span>";
-                }
-                ?>
-                <div style='clear:both;'></div>
-                <hr>
-                <span class='shop_button readdaddon'>Readd on all bookings (WARNING: ON YOUR OWN RISK)</span>
-                
-            </span>
+            <span class="extendedinformation"></span>
             
         </td>
         <td><input type="checkbox" <?php echo $selectedDaily; ?> gsname='daily'></td>

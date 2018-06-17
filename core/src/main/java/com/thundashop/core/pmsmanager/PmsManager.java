@@ -1904,6 +1904,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter) {
         PmsIntervalResult res = new PmsIntervalResult();
+        
+        Date defaultStart = getConfigurationSecure().getDefaultStart(new Date());
+        Date defaultEnd = getConfigurationSecure().getDefaultEnd(new Date());
+        
+        Calendar defaultStartCal = Calendar.getInstance();
+        defaultStartCal.setTime(defaultStart);
+        Calendar defaultEndCal = Calendar.getInstance();
+        defaultEndCal.setTime(defaultEnd);
+        
+        long diffInMillis = (defaultEnd.getTime() - defaultStart.getTime());
+        int diff = (int)(diffInMillis / 1000);
+        
+        Calendar toAdjust = Calendar.getInstance();
+        toAdjust.setTime(filter.start);
+        toAdjust.set(Calendar.HOUR_OF_DAY, defaultStartCal.get(Calendar.HOUR_OF_DAY));
+        toAdjust.set(Calendar.MINUTE, defaultStartCal.get(Calendar.MINUTE));
+        toAdjust.set(Calendar.SECOND, 0);
+        toAdjust.set(Calendar.MILLISECOND, 0);
+        toAdjust.add(Calendar.SECOND, 1);
+        filter.start = toAdjust.getTime();
+        
+        toAdjust.setTime(filter.end);
+        toAdjust.set(Calendar.HOUR_OF_DAY, defaultEndCal.get(Calendar.HOUR_OF_DAY));
+        toAdjust.set(Calendar.MINUTE, defaultEndCal.get(Calendar.MINUTE));
+        toAdjust.set(Calendar.SECOND, 0);
+        toAdjust.set(Calendar.MILLISECOND, 0);
+        filter.end = toAdjust.getTime();
+        
         List<String> types = new ArrayList();
         if (filter.selectedDefinedFilter != null && !filter.selectedDefinedFilter.isEmpty()) {
             PmsBookingFilter bookingfilter = getPmsBookingFilter(filter.selectedDefinedFilter);
@@ -1915,7 +1943,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 continue;
             }
             BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
-            res.typeTimeLines.put(type.id, line.getTimelines(filter.interval - 21600, 21600));
+            res.typeTimeLines.put(type.id, line.getTimelines(filter.interval - (int)diff, (int)diff));
         }
         gsTiming("Checking types 2");
 
@@ -8252,8 +8280,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String res = addBookingToBookingEngine(booking, room);
         if (res.isEmpty()) {
             room.addedToWaitingList = false;
+            room.deleted = false;
             saveBooking(booking);
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addToWaitingList(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        if (room.addedToWaitingList) {
+            return true;
+        }
+
+        try {
+            removeFromBooking(booking.id, room.pmsBookingRoomId);
+            room.addedToWaitingList = true;
+            saveBooking(booking);
+            return true;
+        }catch(Exception e) {
+            logPrintException(e);
         }
         return false;
     }

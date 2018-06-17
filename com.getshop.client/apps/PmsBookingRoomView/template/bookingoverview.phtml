@@ -68,9 +68,7 @@ if($pmsSelectedRoom->addedToWaitingList) {
     echo "<div class='isgroupinformation'>";
     echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try to remove it from waiting list</a>.";
     echo "</div>";
-}
-
-if($pmsSelectedRoom->deleted) {
+} else if($pmsSelectedRoom->deleted) {
     echo "<div class='isdeletedinformation'>";
     echo "This room has been cancelled / deleted, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to undelete it</a>.";
     echo "</div>";

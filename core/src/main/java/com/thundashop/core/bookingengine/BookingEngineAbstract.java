@@ -133,6 +133,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             if (dataCommon instanceof Booking) {
                 Booking booking = (Booking)dataCommon;
+                booking.stripSeconds(); //Can be removed at any time.
                 bookings.put(booking.id, booking);
             }
         }
@@ -327,6 +328,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         for (Booking booking : bookings) {
+            booking.stripSeconds();
             saveObject(booking);
             bookingGroup.bookingIds.add(booking.id);
         
@@ -615,13 +617,14 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         Booking newBooking = deepClone(booking);
         newBooking.startDate = start;
         newBooking.endDate = end;
+        newBooking.stripSeconds();
         
         
         validateChange(newBooking);
         
         booking.startDate = start;
         booking.endDate = end;
-        
+        booking.stripSeconds();
         saveObject(booking);
     }
 
@@ -769,6 +772,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         newBooking.startDate = start;
         newBooking.endDate = end;
         newBooking.bookingItemId = itemId;
+        newBooking.stripSeconds();
         
         validateChange(newBooking);
         

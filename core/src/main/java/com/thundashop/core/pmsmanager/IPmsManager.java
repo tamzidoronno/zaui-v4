@@ -129,6 +129,9 @@ public interface IPmsManager {
     public boolean removeFromWaitingList(String pmsRoomId);
     
     @Administrator
+    public boolean addToWaitingList(String pmsRoomId);
+    
+    @Administrator
     public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date);
     
     @Administrator

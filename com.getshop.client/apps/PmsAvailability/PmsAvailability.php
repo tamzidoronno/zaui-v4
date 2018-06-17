@@ -259,6 +259,19 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $this->includefile("markedareabox");
     }
     
+    public function addToWaitingList() {
+        $this->getApi()->getPmsManager()->addToWaitingList($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+    }
+    
+    public function updateStayTime() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']));
+        $roomId = $_POST['data']['roomid'];
+        $bookingId = $_POST['data']['bookingid'];
+        $itemId = $_POST['data']['itemid'];
+        $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId, $itemId, false, $start, $end);
+    }
+    
     public function closeroom() {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 22:00"));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 03:00"));

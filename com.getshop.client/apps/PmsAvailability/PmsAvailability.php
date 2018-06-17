@@ -231,7 +231,9 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $date = strtotime($_SESSION['PmsAvailability_startDate']);
         }
 
-        return strtotime(date("d.m.Y 16:00", $date));
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        
+        return strtotime(date("d.m.Y " . $config->defaultStart, $date));
     }
 
     public function getEndDate() {
@@ -241,7 +243,8 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $date = strtotime($_SESSION['PmsAvailability_endDate']);
         }
 
-        return strtotime(date("d.m.Y 12:00", $date));
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        return strtotime(date("d.m.Y " . $config->defaultEnd, $date));
     }
 
     public function setStartDate($date) {

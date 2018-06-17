@@ -133,7 +133,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             if (dataCommon instanceof Booking) {
                 Booking booking = (Booking)dataCommon;
-                booking.stripSeconds(); //Can be removed at any time.
                 bookings.put(booking.id, booking);
             }
         }

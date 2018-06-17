@@ -24,6 +24,21 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         return "PmsAvailability";
     }
 
+    public function removeClosedOfUntil() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $newArray = array();
+        foreach($config->closedOfPeriode as $periode) {
+            if($periode->repeaterId == $_POST['data']['id']) {
+                continue;
+            }
+            $newArray[] = $periode;
+        }
+        $config->closedOfPeriode = $newArray;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
+    
+    
     public function render() {
         if($_SERVER['PHP_SELF'] == "/json.php") {
             $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();

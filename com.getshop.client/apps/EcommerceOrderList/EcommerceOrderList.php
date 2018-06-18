@@ -89,15 +89,33 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
      * @return string
      */
     public function formatState($order) {
+        
+        $roomid = "";
+        if($this->externalReferenceIds) {
+            $roomid = $this->externalReferenceIds[0];
+        }
+        
+        $text = str_replace("\\", "\\\\", $order->payment->paymentType) . "()";
+        if(!$order->payment->paymentType) {
+            return;
+        }
+        $text = "\\" . $order->payment->paymentType;
+        $instance = new $text();
+        
         $text = "";
         if ($order->closed) {
-            $text = '<i class="fa fa-lock"></i>';
+            $text = '<i class="fa fa-lock" title="Order has been locked"></i>';
             $text .= '<i class="fa fa-history dontExpand creditOrder" orderid="'.$order->id.'" title="Credit order"></i>';
         } else {
             $text = '<i class="fa fa-unlock"></i>';
-            $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' orderid='".$order->id."'></i>";
+            $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' orderid='".$order->id."' title='Delete order'></i>";
         }
-        $text .= "<i class='fa fa-download dontExpand' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'></i>";
+        $text .= "<i class='fa fa-download dontExpand' title='Download order' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'></i>";
+        $text .= "<i class='fa fa-forward dontExpand sendemail' roomid='".$roomid."' orderid='".$order->id."' title='Send order / reciept' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span> ";
+        if($instance->hasPaymentLink()) {
+            $text .= "<i class='fa fa-arrow-right dontExpand sendpaymentlink' roomid='".$roomid."' callback='".$this->paymentLinkCallback."' orderid='".$order->id."' title='Send payment link' style='cursor:pointer;'></i> ";
+        }
+        
         return $text;
     }
     
@@ -165,7 +183,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             array('payment', 'PAYMENT', null, 'formatPaymentType'),
             array('inctaxes', 'INC TAXES', null, 'formatIncTaxes'),
             array('extaxes', 'EX TAXES', null, 'formatExTaxes'),
-            array('state', 'STATE', null, 'formatState')
+            array('state', 'OPTIONS', null, 'formatState')
         );
         
         $table = new \GetShopModuleTable($this, 'OrderManager', 'getOrdersFiltered', $args, $attributes);
@@ -219,11 +237,6 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             $roomid = $this->externalReferenceIds[0];
         }
         
-        if($instance->hasPaymentLink()) {
-            $text .= " <span><i class='fa fa-forward dontExpand sendpaymentlink' roomid='".$roomid."' callback='".$this->paymentLinkCallback."' orderid='".$order->id."' title='Send now' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span></span> ";
-        } else if($instance->hasAttachment()) {
-            $text .= " <span><i class='fa fa-forward dontExpand sendemail' roomid='".$roomid."' orderid='".$order->id."' title='Send now' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span></span> ";
-        }
         $text .= "<div class='sentdate'><span title='Where sent at $sentDate'>" . $sentDate."</span></div>";
         return $text;
     }

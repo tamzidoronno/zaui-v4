@@ -9,7 +9,7 @@
 .EcommerceOrderList .col_state { width: 100px !important; }
 .EcommerceOrderList .col_payment { width: 100px !important; }
 .EcommerceOrderList .sentdate { color:#bbb; }
-.EcommerceOrderList .col_state .fa { font-size: 25px !important;margin-right: 10px; }
+.EcommerceOrderList .col_state .fa { font-size: 16px !important;margin-right: 10px; }
 
 .EcommerceOrderList .fullname { overflow: hidden; white-space: nowrap;
   text-overflow: ellipsis;
@@ -24,4 +24,5 @@
     border: solid 1px #bbb; 
     display:none;
     z-index: 2;
+    right: 0px;
 }

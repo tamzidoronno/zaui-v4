@@ -1262,14 +1262,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room != null) {
             roomId = room.pmsBookingRoomId;
         }
+        boolean logged = false;
         if (message != null && !message.isEmpty()) {
             logEntry(message + " recipients: " + repssms, booking.id, null, roomId, key + "_sms");
+            logged = true;
         }
         if (message2 != null && !message2.isEmpty()) {
             logEntry(message2 + " recipients: " + repemail, booking.id, null, roomId, key + "_email");
+            logged = true;
         }
         emailToSendTo = null;
         booking.notificationsSent.add(addNotificationSent);
+        
+        if(!logged && key != null && (key.contains("booking_completed") || key.contains("sendreciept") || key.contains("sendinvoice") || key.contains("room_added_to_arx"))) {
+            logEntry("Message not sent since it has not been configured properly yet.", booking.id, null, roomId, key);
+        }
+        
     }
 
     public String getMessage(String bookingId, String key) {

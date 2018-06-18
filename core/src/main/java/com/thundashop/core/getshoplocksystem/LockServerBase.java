@@ -94,7 +94,11 @@ public abstract class LockServerBase extends DataCommon {
     public synchronized String httpLoginRequestZwaveServer(String address) {
         
         try {
-            address = URLEncoder.encode(address, "UTF-8");
+            if(address.contains("data.givenName.value")) {
+                address = URLEncoder.encode(address, "UTF-8").replace("+", "%20");
+            } else {
+                address = URLEncoder.encode(address, "UTF-8");
+            }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(LockServerBase.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -12,10 +12,17 @@ class ApacGateways extends \MarketingApplication implements \Application {
         return "ApacGateways";
     }
 
+    public function renameNode() {
+        $serverId = $_POST['data']['serverid'];
+        $path = "ZWave.zway/Run/devices[". $_POST['data']['nodeid']."].data.givenName.value=\"".$_POST['data']['name']."\"";
+//        $path = "ZWaveAPI/Run/devices[". $_POST['data']['nodeid']."].data.givenName.value=".urlencode($_POST['data']['name']);
+        $this->getApi()->getGetShopLockSystemManager()->restCall($serverId, $path);
+        echo $serverId . " : " . $path;
+    }
+    
     public function doRestCall() {
         $path = $_POST['data']['path'];
-        $this->loadCurrentServer();
-        echo $this->getApi()->getGetShopLockSystemManager()->restCall($this->getServer()->id, $path);
+        echo $this->getApi()->getGetShopLockSystemManager()->restCall($_POST['data']['id'], $path);
     }
 
     public function startInclusion() {

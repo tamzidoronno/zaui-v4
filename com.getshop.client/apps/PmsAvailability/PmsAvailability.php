@@ -306,10 +306,12 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             return;
         }
         
+        $booking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+        
         $this->getApi()->getBookingEngine()->changeDatesOnBooking($this->getSelectedMultilevelDomainName(), 
                 $_POST['data']['bookingid'], 
-                $this->convertToJavaDate(strtotime($_POST['data']['start'])), 
-                $this->convertToJavaDate(strtotime($_POST['data']['end'])));
+                $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . date("H:i", strtotime($booking->startDate)))), 
+                $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . date("H:i", strtotime($booking->endDate)))));
         
         $this->getApi()->getBookingEngine()->changeSourceOnBooking($this->getSelectedMultilevelDomainName(), 
                 $_POST['data']['bookingid'], $_POST['data']['source']);

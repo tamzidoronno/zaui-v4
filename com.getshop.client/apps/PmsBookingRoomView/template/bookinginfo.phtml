@@ -66,6 +66,15 @@ if ($pmsBooking->wubookreservationid) {
 </div>
 
 <div class="row odd">
+    <div class="col col1"><span><? echo $this->__f("Phone"); ?></span></div>
+    <div class="col col2"><?php echo "+" . $user->prefix . " " . $user->cellPhone; ?></div>
+</div>
+<div class="row odd">
+    <div class="col col1"><i class="fa fa-info-circle" title="This email is used to send payment link, invoice and reciepts to"></i> <span><? echo $this->__f("Email (for payments)"); ?></span></div>
+    <div class="col col2"><?php echo $user->emailAddress; ?></div>
+</div>
+
+<div class="row odd">
     <div class="col col1"><span><? echo $this->__f("Adress"); ?></span></div>
     <div class="col col2">
         <?php

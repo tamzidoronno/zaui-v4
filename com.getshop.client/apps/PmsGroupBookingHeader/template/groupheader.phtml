@@ -24,40 +24,41 @@ foreach($pmsBooking->rooms as $room) {
     <?php 
     echo "Grouped booking for " . $user->fullName; 
     echo ", total : " . round($pmsBooking->totalPrice); 
+    $area = $this->getArea();
     ?>
     </h1>
 
-    <div class="top_box selected" areatype="owner">
+    <div class="top_box <?php if($area == "owner") { echo "selected"; } ?>" areatype="owner">
         <div class="title">Guest(s)</div>
         <i class="fa fa-user"></i>
     </div>
     
-    <div class="top_box" areatype="rooms">
+    <div class="top_box <?php if($area == "rooms") { echo "selected"; } ?>" areatype="rooms">
         <div class="title">Rooms</div>
         <i class="fa fa-building"></i> <? echo $rooms; ?>
     </div>
     
-    <div class="top_box" areatype="payments">
+    <div class="top_box <?php if($area == "payments") { echo "selected"; } ?>" areatype="payments">
         <div class="title displayorders">Payments</div>
         <i class="fa fa-shopping-bag"></i> <? echo $orderCount; ?>
     </div>
     
-    <div class="top_box" areatype="stay">
+    <div class="top_box <?php if($area == "stay") { echo "selected"; } ?>" areatype="stay">
         <div class="title displayorders">Stay</div>
         <i class="fa fa-bed"></i>
     </div>
     
-    <div class="top_box" areatype="addons">
+    <div class="top_box <?php if($area == "addons") { echo "selected"; } ?>" areatype="addons">
         <div class="title displayorders">Addons</div>
         <i class="fa fa-plus-square"></i>
     </div>
     
-    <div class="top_box" areatype="conference">
+    <div class="top_box <?php if($area == "conference") { echo "selected"; } ?>" areatype="conference">
         <div class="title displayorders">Conference</div>
         <i class="fa fa-table"></i>
     </div>
 </div>
 
-<div class="booker_main_user" areatype="owner"><?php $this->includeSelectedArea(); ?></div>
+<div class="booker_main_user <?php if($area == "owner") { echo "selected"; } ?>" areatype="owner"><?php $this->includeSelectedArea(); ?></div>
 <div style='clear:both;'></div>
 

@@ -403,13 +403,18 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
     }
 
     public function includeSelectedArea() {
+        $area = $this->getArea();
+        if(!isset($_POST['data']) || !$_POST['data']) { $_POST['data'] = array(); }
+        $_POST['data']['area'] = $area;
+        $this->loadArea();
+    }
+
+    public function getArea() {
         $area = "owner";
         if(isset($_SESSION['currentgroupbookedarea'])) {
             $area = $_SESSION['currentgroupbookedarea'];
         }
-        
-        $_POST['data']['area'] = $area;
-        $this->loadArea();
+        return $area;
     }
 
 }

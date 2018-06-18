@@ -36,6 +36,7 @@
 $booking = $this->getCurrentBooking();
 echo "<div gstype='form' method='updateStayPeriode'>";
 foreach($booking->rooms as $room) {
+    if($room->deleted) { continue; }
     echo "<div class='roomrow' roomid='".$room->pmsBookingRoomId."'>";
     $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
     $start = date("d.m.Y H:i", strtotime($room->date->start));

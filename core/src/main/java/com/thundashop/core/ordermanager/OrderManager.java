@@ -2249,4 +2249,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return getOrderByincrementOrderId(id);
     }
 
+    @Override
+    public Order getOrderWithIdAndPassword(String orderId, String password) throws ErrorException {
+        if(!password.equals("gfdsg9o3454835nbsfdg")) {
+            return null;
+        }
+        return getOrderSecure(orderId);
+    }
+
 }

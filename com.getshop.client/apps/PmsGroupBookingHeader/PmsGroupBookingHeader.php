@@ -18,6 +18,18 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         return $this->getUserForBooking();
     }
    
+    public function massUpdateRoomPrice() {
+        $price = $_POST['data']['price'];
+        $booking = $this->getCurrentBooking();
+        foreach($booking->rooms as $room) {
+            foreach($room->priceMatrix as $day => $val) {
+                $room->priceMatrix->{$day} = $price;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->currentBooking = null;
+    }
+    
     public function checkIfCanAdd() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
         $bookings = array();
@@ -391,13 +403,18 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
     }
 
     public function includeSelectedArea() {
+        $area = $this->getArea();
+        if(!isset($_POST['data']) || !$_POST['data']) { $_POST['data'] = array(); }
+        $_POST['data']['area'] = $area;
+        $this->loadArea();
+    }
+
+    public function getArea() {
         $area = "owner";
         if(isset($_SESSION['currentgroupbookedarea'])) {
             $area = $_SESSION['currentgroupbookedarea'];
         }
-        
-        $_POST['data']['area'] = $area;
-        $this->loadArea();
+        return $area;
     }
 
 }

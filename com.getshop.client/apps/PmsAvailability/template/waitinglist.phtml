@@ -14,6 +14,44 @@ $bookingfilter->filterType = "waiting";
 $bookingfilter->includeDeleted = true;
 $waitingList = (array)$this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $bookingfilter);
 
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$closedtext = "";
+
+$selectedStartMillis = strtotime($bookingfilter->startDate);
+$selectedEndMillis = strtotime($bookingfilter->endDate);
+
+foreach($config->closedOfPeriode as $row) {
+    $startTime = strtotime($row->firstEvent->start);
+    $endTime = strtotime($row->firstEvent->end);
+    
+    $found = false;
+    if($selectedStartMillis <= $startTime && $startTime <= $selectedEndMillis) {
+        //Start is in timerange
+        $found = true;
+    }
+    if($selectedStartMillis <= $endTime && $endTime <= $selectedEndMillis) {
+        //End is in timerange
+        $found = true;
+    }
+    if($selectedStartMillis >= $startTime && $endTime >= $selectedEndMillis) {
+        //End is in timerange
+        $found = true;
+    }
+    
+    if($found) {
+        $closedtext .= "<div style='padding-left:5px;'>";
+        $closedtext .= "<i class='fa fa-trash-o' gstype='clicksubmit' style='cursor:pointer;' method='removeClosedOfUntil' gsname='id' gsvalue='".$row->repeaterId."'></i> ";
+        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->start)) . " - ";
+        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->end));
+        $closedtext .= "</div>";
+    }
+}
+if($closedtext) {
+    echo "<h3>There are closed of periodes in the given timeframe (closed in all channels):</h3>";
+    echo $closedtext;
+    echo "<bR><bR>";
+}
+
 if(sizeof($waitingList) > 0) {
     echo "<div class='waitinglist' onClick='$(\".PmsAvailability .waitinglistlist\").toggle()'>";
     echo "You have " . sizeof($waitingList) . " rooms in your waiting list.";

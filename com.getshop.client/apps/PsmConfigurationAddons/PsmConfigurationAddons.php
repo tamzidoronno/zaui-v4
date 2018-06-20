@@ -5,9 +5,13 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
     public function getDescription() {
         
     }
+    
+    public function loadExtendedProductInfo() {
+        $this->includefile("extendedproductinfo");
+    }
 
     public function test() {
-        return "TESWT";
+        return "TESWT"; 
     }
     
     public function readAddons() {
@@ -102,54 +106,93 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             $found = false;
             foreach($config->addonConfiguration as $addon) {
                 /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
-                if($addon->productId == $productId) {
-                    $addon->onlyForBookingItems = array();
-                    if(isset($res['onlyForItems'])) {
-                        $addon->onlyForBookingItems = $res['onlyForItems'];
-                    }
-                    
+                if ($addon->productId == $productId) {
                     $found = true;
                     $addon->isSingle = $res['daily'] != "true";
                     $addon->price = $res['price'];
                     $addon->dependsOnGuestCount = $res['perguest'] == "true";
                     $addon->noRefundable = $res['nonrefundable'] == "true";
-                    
+
                     $isIncluded = array();
-                    foreach($res as $id => $isSelected) {
-                        if(stristr($id, "includeinroom_") && $isSelected == "true") {
+                    foreach ($res as $id => $isSelected) {
+                        if (stristr($id, "includeinroom_") && $isSelected == "true") {
                             $isIncluded[] = str_replace("includeinroom_", "", $id);
                         }
                     }
-                    
+
                     $displayInBookingProcess = array();
-                    foreach($res as $id => $isSelected) {
-                        if(stristr($id, "sellonroom_") && $isSelected == "true") {
+                    foreach ($res as $id => $isSelected) {
+                        if (stristr($id, "sellonroom_") && $isSelected == "true") {
                             $displayInBookingProcess[] = str_replace("sellonroom_", "", $id);
                         }
                     }
                     $addon->includedInBookingItemTypes = $isIncluded;
-                    $addon->descriptionWeb = $res['descriptionWeb'];
-                    $addon->bookingicon = $res['bookingicon'];
-                    $addon->count = $res['count'];
                     $addon->displayInBookingProcess = $displayInBookingProcess;
-                    $addon->channelManagerAddonText = $res['channelManagerAddonText'];
                 }
-                
             }
-            if(!$found) {
+            if (!$found) {
                 echo "Not found: " . $productId;
             }
-            
+
             $product = $this->getApi()->getProductManager()->getProduct($productId);
             $product->price = $res['price'];
             $product->taxgroup = $res['taxgroup'];
             $this->getApi()->getProductManager()->saveProduct($product);
         }
-        
+
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
         
     }
 
+    public function removeValidTimeRange() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($config->addonConfiguration as $conf) {
+            if($_POST['data']['id'] == $conf->productId) {
+                foreach($conf->validDates as $idx => $vdate) {
+                    if($vdate->id == $_POST['data']['rangeid']) {
+                        unset($conf->validDates[$idx]);
+                    }
+                }
+                $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+                break;
+            }
+        }
+
+        $this->includefile("singleProductConfig");
+    }
+    
+    public function addDateRangeForm() {
+        if($_POST['data']['start'] && $_POST['data']['end']) {
+            $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+            foreach($config->addonConfiguration as $conf) {
+                if($_POST['data']['id'] == $conf->productId) {
+                    $range = new \core_pmsmanager_PmsBookingAddonItemValidDateRange();
+                    $range->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+                    $range->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+                    $range->validType = $_POST['data']['validtype'];
+                    $conf->validDates[] = $range;
+                    $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+                    break;
+                }
+            }
+        }
+    }
+    
+    public function saveExtendedProductInfo() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($config->addonConfiguration as $addon) {
+            if($addon->productId != $_POST['data']['productId']) {
+                continue;
+            }
+            $addon->onlyForBookingItems = $_POST['data']['onlyForItems'];
+            $addon->descriptionWeb = $_POST['data']['descriptionWeb'];
+            $addon->bookingicon = $_POST['data']['bookingicon'];
+            $addon->count = $_POST['data']['count'];
+            $addon->channelManagerAddonText = $_POST['data']['channelManagerAddonText'];
+        }
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
     /**
      * 
      * @param type $productId

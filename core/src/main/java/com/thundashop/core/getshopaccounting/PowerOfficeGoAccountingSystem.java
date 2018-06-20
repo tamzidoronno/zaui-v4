@@ -271,7 +271,10 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
             for(CartItem item : order.cart.getItems()) {
                 PowerOfficeGoSalesOrderLines line = new PowerOfficeGoSalesOrderLines();
                 line.description = createLineText(item);
-                line.productCode = productManager.getProduct(item.getProduct().id).accountingSystemId;
+                
+                Product prod = productManager.getProduct(item.getProduct().id);
+                if(prod == null) { prod = productManager.getDeletedProduct(item.getProduct().id); };
+                line.productCode = prod.accountingSystemId;
                 line.quantity = item.getCount();
                 line.salesOrderLineUnitPrice = item.getProduct().priceExTaxes;
                 goOrder.salesOrderLines.add(line);

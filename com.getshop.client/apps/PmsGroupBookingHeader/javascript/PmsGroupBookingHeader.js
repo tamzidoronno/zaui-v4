@@ -11,7 +11,38 @@ app.PmsGroupBookingHeader = {
         $(document).on('change', '.PmsGroupBookingHeader [gsname="type"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
         $(document).on('change', '.PmsGroupBookingHeader [gsname="guestInfoOnRoom"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
         $(document).on('keyup', '.PmsGroupBookingHeader [gsname="count"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
+        $(document).on('click', '.PmsGroupBookingHeader .domassupdate', app.PmsGroupBookingHeader.doMassUpdate);
+        $(document).on('click', '.PmsGroupBookingHeader .doextendstay', app.PmsGroupBookingHeader.extendStay);
     }, 
+    extendStay : function() {
+        var days = parseInt($('.extendstaydaysinput').val());
+        var checkoutday = $('.checkoutdate').val();
+        $('.roomsenddate').each(function () {
+            if($(this).val() !== checkoutday) { return; }
+            var date = moment.utc($(this).val(),"DD.MM.YYYY").local();
+            date = date.add('days', days);
+            var month = date.get('month')+1;
+            var day = date.date();
+            var year = date.get('year');
+            if(day < 10) { day = "0" + day; }
+            if(month < 10) { month = "0" + month; }
+            var newdate = day + "." + month + "." + year;
+            console.log(newdate);
+            $(this).val(newdate);
+        });
+    },
+    doMassUpdate : function() {
+        var form = $(this).closest('.massupdatedateform');
+        var date = form.find('.datecheck').val();
+        var time = form.find('.timecheck').val();
+        if($(this).attr('type') === "start") {
+            $('.roomstartdate').val(date);
+            $('.roomstarttime').val(time);
+        } else {
+            $('.roomsenddate').val(date);
+            $('.roomsendtime').val(time);
+        }
+    },
     setSameAsBooker : function() {
         var row = $(this).closest('.roomrow');
         row.find('[gsname="name"]').val($('.edit_details_directprint [gsname="fullName"]').val());

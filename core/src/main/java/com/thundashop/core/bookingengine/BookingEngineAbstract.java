@@ -330,6 +330,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         for (Booking booking : bookings) {
+            booking.stripSeconds();
             saveObject(booking);
             bookingGroup.bookingIds.add(booking.id);
         
@@ -622,13 +623,14 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         Booking newBooking = deepClone(booking);
         newBooking.startDate = start;
         newBooking.endDate = end;
+        newBooking.stripSeconds();
         
         
         validateChange(newBooking);
         
         booking.startDate = start;
         booking.endDate = end;
-        
+        booking.stripSeconds();
         saveObject(booking);
     }
 
@@ -776,7 +778,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         newBooking.startDate = start;
         newBooking.endDate = end;
         newBooking.bookingItemId = itemId;
-
+        newBooking.stripSeconds();
         validateChange(newBooking);
         
         booking.bookingItemId = itemId;
@@ -1134,7 +1136,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (usingNewSystem.contains(storeId)) {
             bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
         }
-        
+
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);
         
         return assigner;

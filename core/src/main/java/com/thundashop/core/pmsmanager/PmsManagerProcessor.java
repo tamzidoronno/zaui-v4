@@ -819,6 +819,10 @@ public class PmsManagerProcessor {
                     }
                 }
             }
+            if(booking.payedFor && !booking.avoidAutoDelete) {
+                booking.avoidAutoDelete = true;
+                needSaving = true;
+            }
             if(needSaving) {
                 manager.saveBooking(booking);
             }

@@ -1,0 +1,84 @@
+<?php
+/* @var \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$allItems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+foreach($config->addonConfiguration as $item) {
+    if($item->productId == $_POST['data']['productId']) {
+        $addonItem = $item;
+    }
+}
+$rangetype = array();
+$rangetype[1] = "On stay";
+$rangetype[2] = "On booking";
+?>
+<div class='saveExtendedInformationForm'>
+    <input type='hidden' gsname='productId' value='<?php echo $_POST['data']['productId']; ?>'>
+    <div class="extendedinforow">
+        Description on web page <input type="txt" class="settings" gsname="descriptionWeb" value="<?php echo $addonItem->descriptionWeb; ?>">
+    </div>
+    <div class="extendedinforow">
+        Booking process icon <input type="txt" class="settings" gsname="bookingicon" value="<?php echo $addonItem->bookingicon; ?>">
+    </div>
+    <div class="extendedinforow">
+        Text to identify addon in the channel manager <input type="txt" class="settings" gsname="channelManagerAddonText" value="<?php echo $addonItem->channelManagerAddonText; ?>">
+    </div>
+    <div class="extendedinforow">
+        Count (max selection) <input type="txt" class="settings" gsname="count" value="<?php echo $addonItem->count; ?>">
+    </div>
+    <div class="extendedinforow">
+        <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">
+    </div>
+    <br>
+
+    <?php
+    echo "Only available for the following rooms:<br>";
+    foreach($allItems as $item) {
+        $selectedItem = "";
+        if(in_array($item->id, $addonItem->onlyForBookingItems)) {
+            $selectedItem = "selectedItem";
+        }
+        echo "<span class='onlyavailableforitem $selectedItem' itemid='".$item->id."'>".$item->bookingItemName."</span>";
+    }
+    ?>
+    <div style='clear:both;'></div>
+    <hr>
+    <span class='shop_button readdaddon'>Readd on all bookings (WARNING: ON YOUR OWN RISK)</span>
+    <span class='shop_button saveExtendedInformation' style='float:right; background-color:green;'>Save</span>
+</div>
+Restricted to dates:<br>
+
+<?php
+$validDateranges = (array)$addonItem->validDates;
+if(empty($validDateranges)) {
+    echo "Valid for all dates<br>";
+} else {
+    echo "<div gstype='form' class='removeValidTimeRange'>";
+    echo "<input type='hidden' value='".$_POST['data']['productId']."' type='hidden' gsname='id'>";
+    foreach($validDateranges as $vdate) {
+        echo "<i class='fa fa-trash-o removeRestrictionRange' style='cursor:pointer;' rangeid='".$vdate->id."'></i> ";
+        echo date("d.m.Y", strtotime($vdate->start));
+        echo " - ";
+        echo date("d.m.Y", strtotime($vdate->end));
+        echo " (" . $rangetype[$vdate->validType]. ")<br>";
+    }
+    echo "</div>";
+}
+echo "<br>";
+?>
+
+<div gstype="form" class="addDateRangeForm">
+    <input type="hidden" value="<?php echo $_POST['data']['productId']; ?>" gsname="id">
+    <input type="text" gsname="start" class="start_date_input">
+    <input type="text" gsname="end" class="end_date_input">
+    <select gsname="validtype">
+        <option value="1">On stay</option>
+        <option value="2">On booking</option>
+    </select> 
+    <input type="button" class='addNewDateRange' value="Set valid date range">
+</div>
+
+
+<script>
+     $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
+     $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
+</script>

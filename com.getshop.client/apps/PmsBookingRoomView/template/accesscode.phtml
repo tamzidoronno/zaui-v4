@@ -7,7 +7,7 @@ $isEnded = strtotime($bookingEngineBooking->endDate) <= time();
 
 $blockSureMessage = $this->__f("Are you sure you want to block this guest?");
 
-$isSameDayStart = date('Y-m-d', strtotime($bookingEngineBooking->startDate)) == date('Y-m-d', time());
+$isSameDayStart = date('Y-m-d', strtotime($bookingEngineBooking->startDate)) <= date('Y-m-d', time());
 $isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
 $isPaid = $this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId) || $room->forceAccess;
 

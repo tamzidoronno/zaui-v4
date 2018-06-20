@@ -218,4 +218,22 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     public boolean isAssigned() {
         return !isUnassigned();
     }
+
+    public void stripSeconds() {
+        Calendar cal = Calendar.getInstance();
+        if(startDate != null) {
+            cal.setTime(startDate);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            startDate = cal.getTime();
+        }
+        if(endDate != null) {
+            cal.setTime(endDate);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            endDate = cal.getTime();
+        }
+        
+        
+    }
 }

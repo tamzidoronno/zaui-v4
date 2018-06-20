@@ -514,6 +514,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return "";
     }
 
+    @Override
     public String updateMinStay() throws Exception {
         if(!connectToApi()) {
             return "failed to connect to api";
@@ -550,7 +551,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             for(int i = 0;i < (365*2); i++) {
                 Double minstay = getMinStay(cal.getTime(), rdata.bookingEngineTypeId);
                 if(minstay == null) {
-                    return "";
+                    minstay = 1.0;
                 }
                 for(String roomId : roomIds) {
                     Vector list = results.get(roomId);
@@ -988,6 +989,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 } else {
                     newbooking.rowCreatedDate = new Date();
                     String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>" + pmsManager.dumpBooking(newbooking);
+                    
+                    text += "<br><br>";
+                    text += "For more information about overbooking, see: https://getshop.com/double_booking_error.html"; 
                     String email = getStoreEmailAddress();
                     String content = "Possible overbooking happened:<br>" + text;
                     messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);

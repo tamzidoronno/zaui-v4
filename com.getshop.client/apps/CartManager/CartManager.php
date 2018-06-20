@@ -30,7 +30,7 @@ class CartManager extends \SystemApplication implements \Application {
     
     public function checkIfOrderHasBeenCompleted() {
         $this->getApi()->getVippsManager()->checkForOrdersToCapture();
-        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($_POST['data']['orderid'], "gfdsg9o3454835nbsfdg");
         if($order->status == 7) {
             echo "yes";
         } else {
@@ -63,7 +63,7 @@ class CartManager extends \SystemApplication implements \Application {
         }
             
         if (isset($_GET['payOrderId'])) {
-            $this->order = $this->getApi()->getOrderManager()->getOrder($_GET['payOrderId']);
+            $this->order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($_GET['payOrderId'], "gfdsg9o3454835nbsfdg");
         }
         
         if (isset($_GET['action'])) {
@@ -588,7 +588,7 @@ class CartManager extends \SystemApplication implements \Application {
             $orderId = $_GET['incid'];
         }
         $this->startAdminImpersonation("OrderManager", "getOrder");
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($orderId, "gfdsg9o3454835nbsfdg");
         $this->stopImpersionation();
 
         if (!$order) {

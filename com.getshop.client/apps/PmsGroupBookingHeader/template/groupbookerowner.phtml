@@ -26,6 +26,7 @@ $extraArgs['userid'] = $user->id;
     <?php
 
     foreach($booking->rooms as $room) {
+        if($room->deleted) { continue; }
         echo "<div class='roomrowouter'>";
         echo "<div class='roomrow' roomid='".$room->pmsBookingRoomId."'>";
         $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);

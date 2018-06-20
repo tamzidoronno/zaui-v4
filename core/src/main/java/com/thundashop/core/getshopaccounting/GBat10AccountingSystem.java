@@ -69,6 +69,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         ret.put("eiendelskonto", "Eiendelskonto (default 1510)");
         ret.put("brukkundeinstedenforeiendelskonto", "Før mot kunde istedenfor eiendelskonto, settes til 1");
         ret.put("avdeling", "Avdeling");
+        ret.put("momsKontoHovedPost", "Moms konto hovedpost");
         return ret;
     }
         
@@ -149,7 +150,10 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         }
         
         
-        
+        String momskontohovedpost = getConfig("momsKontoHovedPost");
+        if(momskontohovedpost == null || momskontohovedpost.isEmpty()) {
+            momskontohovedpost = "1";
+        }
         
         HashMap<Integer, String> line = new HashMap();
         line.put(0, "GBAT10");
@@ -159,7 +163,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         line.put(4, firstMonth + "");
         line.put(5, year + "");
         line.put(6, eiendelsKonto);
-        line.put(7, "1");
+        line.put(7, momskontohovedpost);
         line.put(8, df.format(total)+"");
         line.put(9, customerId+"");
         line.put(10, "");

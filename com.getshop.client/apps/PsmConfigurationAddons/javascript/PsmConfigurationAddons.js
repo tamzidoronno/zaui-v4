@@ -3,6 +3,58 @@ app.PsmConfigurationAddons = {
         $(document).on('click', '.PsmConfigurationAddons .doSaveSettings', app.PsmConfigurationAddons.saveSettings);
         $(document).on('click', '.PsmConfigurationAddons .onlyavailableforitem', app.PsmConfigurationAddons.selectOnlyForItem);
         $(document).on('click', '.PsmConfigurationAddons .readdaddon', app.PsmConfigurationAddons.readdaddon);
+        $(document).on('click', '.PsmConfigurationAddons .loadExtendedProductInformation', app.PsmConfigurationAddons.loadExtendedProductInfo);
+        $(document).on('click', '.PsmConfigurationAddons .saveExtendedInformation', app.PsmConfigurationAddons.saveExtendedInformation);
+        $(document).on('click', '.PsmConfigurationAddons .addNewDateRange', app.PsmConfigurationAddons.addNewDateRange);
+        $(document).on('click', '.PsmConfigurationAddons .removeRestrictionRange', app.PsmConfigurationAddons.removeRestrictionRange);
+    },
+    removeRestrictionRange : function() {
+        var row = $(this).closest('tr');
+        var id = $(this).attr('rangeid');
+        var data = {
+            "rangeid" : id,
+            "id" : row.attr('productid')
+        }
+        var event = thundashop.Ajax.createEvent('','removeValidTimeRange', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PsmConfigurationAddons.loadExtendedProductInfoFromRow(row);
+        });
+
+    },
+    addNewDateRange : function() {
+        var data = thundashop.framework.createGsArgs($(this).closest('.saveExtendedInformationForm'));
+        var form = $(this).closest('.addDateRangeForm');
+        var row = $(this).closest('tr');
+        var data = thundashop.framework.createGsArgs(form);
+        var event = thundashop.Ajax.createEvent('','addDateRangeForm', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PsmConfigurationAddons.loadExtendedProductInfoFromRow(row);
+        });
+    },
+    saveExtendedInformation : function() {
+        var row = $(this).closest('tr');
+        var data = thundashop.framework.createGsArgs(row.find('.saveExtendedInformationForm'));
+        data['onlyForItems'] =  [];
+        $('.selectedItem').each(function() {
+            data['onlyForItems'].push(row.find('.loadExtendedProductInformation').attr('itemid'));
+        });
+        var event = thundashop.Ajax.createEvent('','saveExtendedProductInfo', row, data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            row.find('.extendedinformation').fadeOut();
+        });
+    },
+    loadExtendedProductInfo : function() {
+        var row = $(this).closest('tr');
+        app.PsmConfigurationAddons.loadExtendedProductInfoFromRow(row);
+    },
+    loadExtendedProductInfoFromRow : function(row) {
+        var event = thundashop.Ajax.createEvent('',"loadExtendedProductInfo", row, {
+            "productId" : row.attr('productid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            row.find('.extendedinformation').html(res);
+            row.find('.extendedinformation').show();
+        });
     },
     readdaddon : function() {
         var event = thundashop.Ajax.createEvent('','readAddons',$(this), {

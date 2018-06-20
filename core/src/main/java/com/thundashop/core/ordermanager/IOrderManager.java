@@ -103,6 +103,8 @@ public interface IOrderManager {
     
     public Order getOrder(String orderId) throws ErrorException;
     
+    public Order getOrderWithIdAndPassword(String orderId, String password) throws ErrorException;
+    
     /**
      * Fetch a single order based on its id.
      * @param orderId

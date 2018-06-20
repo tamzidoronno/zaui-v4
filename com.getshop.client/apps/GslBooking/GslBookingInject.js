@@ -721,7 +721,7 @@ function getshop_saveBookerInformation() {
     var dfr = $.Deferred();
     
     var client = getshop_getWebSocketClient();
-    var setGuestInfo = client.PmsBookingProcess.setGuestInformation(getshop_endpoint, data);
+    var setGuestInfo = client.PmsBookingProcess.setGuestInformation(getshop_domainname, data);
     setGuestInfo.done(function(res) {
         sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
         dfr.resolve(res);

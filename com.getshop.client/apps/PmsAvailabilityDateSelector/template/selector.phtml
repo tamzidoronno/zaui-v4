@@ -36,9 +36,16 @@
     <select>
         <option>All</option>
     </select>
-    
 </div>
-
+<i class="fa fa-ban" style='margin-right:25px; cursor:pointer;' onclick='$(".closeforperiodebox").toggle();'></i>
+<div>
+    <div gstype='form' method='closeForPeriode' class='closeforperiodebox' style='position:Absolute; width: 500px; text-align: left;z-index:2;background-color:#fff; border: solid 1px #bbb; padding: 10px;right:25px; display:none;'>
+        <div>Sometimes it comes in handy to close down the hotel for a given timeframe. For example you need to do restructuring of all bookings, to avoid more bookings you can close the hotel for new bookings meanwhile</div>
+        <input type='txt' class='startdate gsniceinput1' gsname='start' value='<? echo $this->getStartDate(); ?>' style='width:80px;'>
+        <input type='txt' class='enddate gsniceinput1' gsname='end' value='<? echo $this->getEndDate(); ?>' style='width:80px;'>
+        <span class="shop_button" gstype="submit">Close hotel for periode</span>
+    </div>
+</div>
 <script>
     $('#startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {

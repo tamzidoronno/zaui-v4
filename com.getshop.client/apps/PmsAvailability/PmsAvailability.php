@@ -24,6 +24,21 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         return "PmsAvailability";
     }
 
+    public function removeClosedOfUntil() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $newArray = array();
+        foreach($config->closedOfPeriode as $periode) {
+            if($periode->repeaterId == $_POST['data']['id']) {
+                continue;
+            }
+            $newArray[] = $periode;
+        }
+        $config->closedOfPeriode = $newArray;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
+    
+    
     public function render() {
         if($_SERVER['PHP_SELF'] == "/json.php") {
             $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
@@ -231,7 +246,9 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $date = strtotime($_SESSION['PmsAvailability_startDate']);
         }
 
-        return strtotime(date("d.m.Y 16:00", $date));
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        
+        return strtotime(date("d.m.Y " . $config->defaultStart, $date));
     }
 
     public function getEndDate() {
@@ -241,7 +258,8 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $date = strtotime($_SESSION['PmsAvailability_endDate']);
         }
 
-        return strtotime(date("d.m.Y 12:00", $date));
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        return strtotime(date("d.m.Y " . $config->defaultEnd, $date));
     }
 
     public function setStartDate($date) {
@@ -254,6 +272,19 @@ class PmsAvailability extends \MarketingApplication implements \Application {
 
     public function loadMarkedAreaBox() {
         $this->includefile("markedareabox");
+    }
+    
+    public function addToWaitingList() {
+        $this->getApi()->getPmsManager()->addToWaitingList($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+    }
+    
+    public function updateStayTime() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']));
+        $roomId = $_POST['data']['roomid'];
+        $bookingId = $_POST['data']['bookingid'];
+        $itemId = $_POST['data']['itemid'];
+        $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId, $itemId, false, $start, $end);
     }
     
     public function closeroom() {
@@ -275,10 +306,12 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             return;
         }
         
+        $booking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+        
         $this->getApi()->getBookingEngine()->changeDatesOnBooking($this->getSelectedMultilevelDomainName(), 
                 $_POST['data']['bookingid'], 
-                $this->convertToJavaDate(strtotime($_POST['data']['start'])), 
-                $this->convertToJavaDate(strtotime($_POST['data']['end'])));
+                $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . date("H:i", strtotime($booking->startDate)))), 
+                $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . date("H:i", strtotime($booking->endDate)))));
         
         $this->getApi()->getBookingEngine()->changeSourceOnBooking($this->getSelectedMultilevelDomainName(), 
                 $_POST['data']['bookingid'], $_POST['data']['source']);

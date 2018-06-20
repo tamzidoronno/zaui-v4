@@ -44,7 +44,7 @@ foreach ($server->locks as $lock) {
         <tr>
             <td width="50%" valign='top'>
                 <h3>Z-wave queue:</h3>
-                <div class="queuelog"></div>
+                <div class="queuelog" serverid='<? echo $server->id; ?>'></div>
             </td>
             <td width='50%' valign='top'>
                 <h3>Z-wave devices <i class='fa fa-refresh' onclick='app.ApacGateWays.startDevices();' style='cursor:pointer;'></i></h3>

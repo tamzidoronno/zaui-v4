@@ -15,11 +15,19 @@ $warnAboutUnchanges = "";
 $startDate = strtotime($room->date->start);
 $endDate = strtotime($room->date->end);
 
+$booking = $this->getPmsBooking();
 $validSelection = $this->isValidSelection($room);
 
 if(!isset($room->tmpModified) || !$validSelection) {
     $warnAboutUnchanges = "display:none;";
 }
+
+if(stristr($booking->channel, "wubook_")) {
+    echo "<div style='padding: 10px; background-color:red; color:white;'>";
+    echo "Be careful doing changes in this area. The booking is connected to an OTA and should be changed by them. They can be overwritten and in worse case cenario cause overbooking, read more about overbookings <a href='https://getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
+    echo "</div>";
+}
+
 ?>
 
 <div style="border: solid 1px; text-align: right;background-color:red; color:#fff;<?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>
@@ -66,12 +74,12 @@ if(!isset($room->tmpModified) || !$validSelection) {
         }
 
         ?>
-        <?
-    //    $this->includefile("availablerooms")
-        ?>
         <br/>
         <br/>
         <div class="shop_button showroomstoselect"><? echo $this->__f("Change room or category"); ?></div>
+        <?php if(!$savedRoom->deleted) { ?>
+           <span class='shop_button' gsclick='deleteRoom' style='bottom:-27px;background-color:red;'>Cancel this room</span>
+        <?php } ?>
     </div>
 
     <div class='itemview_inner pricesview'>

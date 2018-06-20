@@ -162,16 +162,21 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         $res['dirty'] = 0;
         
         $additional = $this->getAdditionalInfo();
+        $roomsNeedCleaning = $this->getApi()->getPmsManager()->getAllRoomsNeedCleaningToday($this->getSelectedMultilevelDomainName());
+        foreach($roomsNeedCleaning as $tmpr) {
+            $roomsNeedCleaning[$tmpr->roomId] = $tmpr;
+        }
         $items = $this->getItems();
         echo "<span class='notclean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
         echo "<span class='clean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
         echo "<span class='inUse' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
         foreach($additional as $add) {
             $isClean = "notclean roomNotReady";
-            if($add->inUse && !$add->inUseByCleaning) {
+            $state = $roomsNeedCleaning[$add->itemId]->cleaningState;
+            if($state == 2) {
                 $isClean = "inUse roomNotReady";
                 $res['inuse']++;
-            } else if($add->isClean) {
+            } else if($state == 1) {
                 $isClean = "clean";
                 $res['isclean']++;
             } else {

@@ -88,6 +88,7 @@ public class BookingsBetweenCalculator {
             if (stayLength > highest) {
                 bestCombo = bookings;
                 bestComboLength = stayLength;
+                highest = stayLength;
             }
         }
         
@@ -130,4 +131,4 @@ public class BookingsBetweenCalculator {
         
         coveragePercent = (double)bestComboLength / (double)totalLength;
     }
-}
+    }

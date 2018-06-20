@@ -57,6 +57,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     public UserManager userManager;
     
     public static ArrayList<String> usingNewSystem = new ArrayList();
+    public static ArrayList<String> usingNewSystem2 = new ArrayList();
     
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
@@ -147,10 +148,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         usingNewSystem.add("b6949f70-5e41-4c5e-abcf-d595450f8048");
         usingNewSystem.add("87cdfab5-db67-4716-bef8-fcd1f55b770b");
-//        usingNewSystem.add("178330ad-4b1d-4b08-a63d-cca9672ac329");
-        usingNewSystem.add("32f280c2-ae25-4263-8529-624df2f01dec");
         usingNewSystem.add("75e5a890-1465-4a4a-a90a-f1b59415d841");
         usingNewSystem.add("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0");
+        
+        // The newest one.
+        usingNewSystem2.add("a6c4029c-485e-4407-b7ad-8de3b17a951c");
+        usingNewSystem2.add("32f280c2-ae25-4263-8529-624df2f01dec");
     }
     
     public Availability getAvailbility(String id) {
@@ -360,8 +363,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private void preProcessBookings(List<Booking> bookings) {
         validateBookings(bookings);
         checkIfCanAddBookings(bookings);
-        checkIfAssigningPossible(bookings);
-        checkIfAvailableBookingItemsOnlyEmptyBookings(bookings);
+        
+        if (!usingNewSystem2.contains(storeId)) {
+            checkIfAssigningPossible(bookings);
+        }
+        
+        checkIfAvailableBookingItemsOnlyNewBookings(bookings);
         checkIfItemIsReallyAvailable(bookings);       
     }
 
@@ -769,7 +776,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         newBooking.startDate = start;
         newBooking.endDate = end;
         newBooking.bookingItemId = itemId;
-        
+
         validateChange(newBooking);
         
         booking.bookingItemId = itemId;
@@ -779,7 +786,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         }
         
-        tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
+        if (!usingNewSystem2.contains(storeId)) {
+            tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
+        }
         
         saveObject(booking);
     }
@@ -1029,6 +1038,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
     
     List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
+       
         BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(typeId, start, end, null);
 
         List<BookingItem> retList = assigner.getAvailableItems(bookingId, start, end).stream()
@@ -1037,7 +1047,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         List<BookingItem> retList2 = new ArrayList(retList);
         
-        removeItemIfCurrentAssignedBookingCanNoLongerBeOnTheItem(bookingId, start, end, retList2);
+        if (!usingNewSystem2.contains(storeId)) {
+            removeItemIfCurrentAssignedBookingCanNoLongerBeOnTheItem(bookingId, start, end, retList2);
+        }
         
         return retList2;
     }
@@ -1123,11 +1135,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
         }
         
-        // Lets try a magic cutter to make the data set a bit less sizy.
-        if (storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec")) {
-            removeBookingsAfterMagicCutDate(bookingsWithinDaterange, start, end);
-        }
-            
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);
         
         return assigner;
@@ -1267,7 +1274,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
-    private void checkIfAvailableBookingItemsOnlyEmptyBookings(List<Booking> bookings) {
+    private void checkIfAvailableBookingItemsOnlyNewBookings(List<Booking> bookings) {
         for (Booking booking : bookings) {
             if (booking.id != null && !booking.id.isEmpty()) {
                 

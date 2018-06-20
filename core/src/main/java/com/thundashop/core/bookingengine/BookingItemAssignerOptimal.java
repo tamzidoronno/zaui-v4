@@ -6,12 +6,15 @@
 package com.thundashop.core.bookingengine;
 
 import static com.thundashop.core.bookingengine.BookingEngineAbstract.usingNewSystem;
+import static com.thundashop.core.bookingengine.BookingEngineAbstract.usingNewSystem2;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.GetShopLogHandler;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -106,7 +109,10 @@ public class BookingItemAssignerOptimal {
         if (getBookingItemsFlatten().size() == 1 && storeId.equals(k1StoreId)) {
             addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
         } else {
-            if (usingNewSystem.contains(storeId)) {
+            if (usingNewSystem2.contains(storeId)) {
+                addBestCombosBetweenAssignedBookings(bookingLines, unassignedBookings);
+                addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+            } else if (usingNewSystem.contains(storeId)) {
                 assignAllBookingsThatHasSinglePointOfPosition(bookingLines, unassignedBookings);
                 assignBookingsByDistance(bookingLines, unassignedBookings);
                 squeezeInBestPossibleBookingsBetweenAssignedBookingsInLines(bookingLines, unassignedBookings);
@@ -811,6 +817,52 @@ public class BookingItemAssignerOptimal {
         }
         
         return null;
+    }
+
+    private void addBestCombosBetweenAssignedBookings(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        
+        List<BookingsBetweenCalculator> datesToCheck = new ArrayList();
+        
+        for (OptimalBookingTimeLine timeline : bookingLines) {
+            HashMap<Date, Date> datesBetween = timeline.getDatesBetweenAssignedBokings();
+            for (Date start : datesBetween.keySet() ) {
+                Date end = datesBetween.get(start);
+                
+                BookingsBetweenCalculator ret = new BookingsBetweenCalculator(start, end, unassignedBookings, timeline);
+                
+                if (start.equals(new Date(0))) {
+                    continue;
+                }
+                
+                if (end.equals(new Date(Long.MAX_VALUE))) {
+                    continue;
+                }
+                
+                datesToCheck.add(ret);
+            }
+        }
+        
+        while(!datesToCheck.isEmpty()) {
+            datesToCheck.parallelStream()
+                    .forEach(o -> {
+                        o.setUnassignedBookings(unassignedBookings);
+                        o.process();
+                });
+            
+            Collections.sort(datesToCheck, (BookingsBetweenCalculator a, BookingsBetweenCalculator b) -> {
+                Double l1 = new Double(a.getCoveragePercent());
+                Double l2 = new Double(b.getCoveragePercent());
+                return l2.compareTo(l1);
+            });
+            
+            BookingsBetweenCalculator use = datesToCheck.get(0);
+            List<Booking> bookings = use.getBestCombo();
+            use.getTimeLine().bookings.addAll(bookings);
+            unassignedBookings.removeAll(bookings);
+            datesToCheck.remove(use);
+//            System.out.println("SIze: " + unassignedBookings.size() + " Bookings: " + bookings.size() + " | " + datesToCheck.size() + " § time: " + use.getTotalTimeAvailableWithBestCombo());
+        }
+
     }
 
 

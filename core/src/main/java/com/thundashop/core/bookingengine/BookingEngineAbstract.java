@@ -148,7 +148,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         usingNewSystem.add("b6949f70-5e41-4c5e-abcf-d595450f8048");
         usingNewSystem.add("87cdfab5-db67-4716-bef8-fcd1f55b770b");
 //        usingNewSystem.add("178330ad-4b1d-4b08-a63d-cca9672ac329");
-        usingNewSystem.add("32f280c2-ae25-4263-8529-624df2f01dec");
         usingNewSystem.add("75e5a890-1465-4a4a-a90a-f1b59415d841");
         usingNewSystem.add("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0");
     }
@@ -1124,11 +1123,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         if (usingNewSystem.contains(storeId)) {
             bookingsWithinDaterange = new HashSet(getAllBookingsOfType(typeId));
-        }
-        
-        // Lets try a magic cutter to make the data set a bit less sizy.
-        if (storeId.equals("32f280c2-ae25-4263-8529-624df2f01dec")) {
-            removeBookingsAfterMagicCutDate(bookingsWithinDaterange, start, end);
         }
             
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException(), storeId);

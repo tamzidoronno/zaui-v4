@@ -338,4 +338,9 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                 .orElse(null);
     }
 
+    @Override
+    public void saveLocstarLock(LocstarLock lock) {
+        locks.put(lock.id, lock);
+    }
+
 }

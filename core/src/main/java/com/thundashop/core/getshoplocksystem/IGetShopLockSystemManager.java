@@ -54,10 +54,16 @@ public interface IGetShopLockSystemManager {
     public void markCodeAsUpdatedOnLock(String serverId, String lockId, int slotId);
     
     @Administrator
+    public void saveLocstarLock(String serverId, LocstarLock lock);
+    
+    @Administrator
     public LockGroup createNewLockGroup(String name, int maxUsersInGroup);   
     
     @Administrator
     public String restCall(String serverId, String path);
+    
+    @Administrator
+    public void updateZwaveRoute(String serverId, String lockId);
     
     /**
      * 

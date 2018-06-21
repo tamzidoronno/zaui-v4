@@ -40,6 +40,23 @@ foreach ($server->locks as $lock) {
     </div>
     
     <i class="fa fa-lock"></i> <? echo $this->__f("Number of locks in this gateway").": $numberOfLocks"; ?>
+    <div gstype="form" method="assignRoute">
+        <br><b>Manually assign a route:</b><br>
+        <input type="hidden" gsname="serverid" value="<?php echo $server->id; ?>">
+        <select gsname="root" class="gsniceselect1" style="width:100px;height:34px !important;">
+            <?php 
+            foreach($server->locks as $lock) {
+                echo "<option value='".$lock->id."'>" . $lock->name . "</option>";
+            }
+            ?>
+        </select>
+        <input type="txt" class="gsniceinput1" style="width:50px" gsname="node1" placeholder="jmp1">
+        <input type="txt" class="gsniceinput1" style="width:50px" gsname="node2" placeholder="jmp2">
+        <input type="txt" class="gsniceinput1" style="width:50px" gsname="node3" placeholder="jmp3">
+        <input type="txt" class="gsniceinput1" style="width:50px" gsname="node4" placeholder="jmp4">
+        <span class="shop_button" gstype="submit">Manually assign route</span>
+    </div>
+    
     <table width='100%'>
         <tr>
             <td width="50%" valign='top'>
@@ -54,4 +71,4 @@ foreach ($server->locks as $lock) {
     </table>
 </div>
 
-<div class="shop_button" onclick="app.ApacGateWays.startQueue(); app.ApacGateWays.startDevices(); alert('started');"> Start zwave log fetcher</div>
+<div class="shop_button" onclick="app.ApacGateWays.startQueue(); app.ApacGateWays.startDevices();"> Start zwave log fetcher</div>

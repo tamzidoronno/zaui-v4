@@ -48,6 +48,8 @@ public class Lock {
     
     public int codeSize = 6;
 
+    public List<Integer> routing = new ArrayList();
+    
     public List<UserSlot> getUserSlots() {
         finalize();
         return new ArrayList(userSlots.values());

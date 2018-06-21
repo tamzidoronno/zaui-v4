@@ -12,6 +12,19 @@ class ApacGateways extends \MarketingApplication implements \Application {
         return "ApacGateways";
     }
 
+    public function assignRoute() {
+        $routing = array();
+        if(isset($_POST['data']['node1']) && $_POST['data']['node1']) { $routing[] = $_POST['data']['node1']; } else { $routing[] = "0"; } 
+        if(isset($_POST['data']['node2']) && $_POST['data']['node2']) { $routing[] = $_POST['data']['node2']; } else { $routing[] = "0"; } 
+        if(isset($_POST['data']['node3']) && $_POST['data']['node3']) { $routing[] = $_POST['data']['node3']; } else { $routing[] = "0"; } 
+        if(isset($_POST['data']['node4']) && $_POST['data']['node4']) { $routing[] = $_POST['data']['node4']; } else { $routing[] = "0"; } 
+        
+        $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($_POST['data']['serverid'], $_POST['data']['root']);
+        $lock->routing = $routing;
+        $this->getApi()->getGetShopLockSystemManager()->saveLocstarLock($_POST['data']['serverid'], $lock);
+        $this->getApi()->getGetShopLockSystemManager()->updateZwaveRoute($_POST['data']['serverid'], $_POST['data']['root']);
+    }
+    
     public function renameNode() {
         $serverId = $_POST['data']['serverid'];
         $path = "ZWave.zway/Run/devices[". $_POST['data']['nodeid']."].data.givenName.value=\"".$_POST['data']['name']."\"";

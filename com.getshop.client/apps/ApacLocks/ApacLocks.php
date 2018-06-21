@@ -119,6 +119,7 @@ class ApacLocks extends \MarketingApplication implements \Application {
                 array("zwaveDeviceId", "DeviceId", 'zwaveDeviceId'),
                 array("typeOfLock", "Type", null, "typeOfLock"),
                 array("name", "Name", 'name'),
+                array("routing", "Route", null, "routing", "formatRouting"),
                 array("maxnumberOfCodes", "MaxCodes", 'maxnumberOfCodes'),
                 array("slotsToUpdate", "SlotsToUpdate", null, 'getCountOfCodesToUpdate'),
                 array("slotsInUse", "SlotsInUse", null, 'formatSlotsInUse'),
@@ -148,6 +149,10 @@ class ApacLocks extends \MarketingApplication implements \Application {
         
     }
 
+    public function routing($row) {
+        return join(",", $row->routing);
+    }
+    
     public function getLock() {
         return $this->lock;
     }

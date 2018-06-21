@@ -50,4 +50,6 @@ public interface LockServer {
     public void markCodeAsUpdatedOnLock(String lockId, int slotId);
 
     public void addTransactionHistory(String tokenId, String lockId, Date accessTime, int userSlot);
+
+    public void saveLocstarLock(LocstarLock lock);
 }

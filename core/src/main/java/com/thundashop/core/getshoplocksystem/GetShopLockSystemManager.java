@@ -654,4 +654,29 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         return lock.name;
     }
+
+    @Override
+    public void saveLocstarLock(String serverId, LocstarLock lock) {
+        LockServer server = lockServers.get(serverId);
+       
+        if (server != null) {
+            server.saveLocstarLock(lock);
+            server.save();
+        }
+    }
+
+    @Override
+    public void updateZwaveRoute(String serverId, String lockId) {
+        Lock lock = getLock(serverId, lockId);
+        String ids = "";
+        if(lock.routing.size() > 0) { ids += lock.routing.get(0) + ","; } else { ids += "0,"; }
+        if(lock.routing.size() > 1) { ids += lock.routing.get(1) + ","; } else { ids += "0,"; }
+        if(lock.routing.size() > 2) { ids += lock.routing.get(2) + ","; } else { ids += "0,"; }
+        if(lock.routing.size() > 3) { ids += lock.routing.get(3); } else { ids += "0"; }
+        
+        LocstarLock lstrlock = (LocstarLock) lock;
+        
+        String path = "JS/Run/zway.SetPriorityRoute("+lstrlock.zwaveDeviceId+","+ids+",3)";
+        restCall(serverId, path);
+    }
 }

@@ -26,7 +26,7 @@ public class BookingTimeLine implements Comparable<BookingTimeLine>, Serializabl
     public Integer count;
     public Date start;
     public Date end;
-    public final int totalAvailableSpots;
+    public int totalAvailableSpots;
 
     public BookingTimeLine(int totalAvailableSpots) {
         this.totalAvailableSpots = totalAvailableSpots;

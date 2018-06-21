@@ -225,11 +225,11 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      * @return 
      */
     public Integer getNumberOfAvailableWeakButFaster(String itemType, Date start, Date end) {
-//        if (BookingEngineAbstract.usingNewSystem2.contains(storeId)) {
-//            return bookingEngineAbstract.getNumberOfPossibleBookings(itemType, start, end);
-//        } else {
+        if (BookingEngineAbstract.usingNewSystem2.contains(storeId)) {
+            return bookingEngineAbstract.getNumberOfPossibleBookings(itemType, start, end);
+        } else {
             return bookingEngineAbstract.getNumberOfAvailable(itemType, start, end);
-//        }
+        }
         
     }
 

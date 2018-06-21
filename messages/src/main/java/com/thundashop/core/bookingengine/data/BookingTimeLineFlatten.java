@@ -454,4 +454,34 @@ public class BookingTimeLineFlatten implements Serializable {
         
         return true;
     }
+
+    public int getMaxCount() {
+        int max = Integer.MAX_VALUE;
+        
+        List<BookingTimeLine> timeLines = getTimelines();
+
+        for (BookingTimeLine timeline : timeLines) {
+            int freeSpots = timeline.getAvailableSpots();
+            if (freeSpots < max) {
+                max = freeSpots;
+            }
+        }
+        
+        long distinctItemsAssigned = bookings.stream()
+                .filter(b -> b.isAssigned())
+                .map(b -> b.bookingItemId)
+                .distinct()
+                .count();
+        
+        long maxDueToAssigned = totalAvailableSpots - distinctItemsAssigned;
+        
+        if (maxDueToAssigned < max) {
+            return (int)maxDueToAssigned;
+        }
+        
+      
+        return max;
+    }
+
+
 }

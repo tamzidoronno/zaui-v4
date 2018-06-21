@@ -1399,4 +1399,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         return res;
     }
+
+    public int getNumberOfPossibleBookings(String itemType, Date start, Date end) {
+        BookingTimeLineFlatten res = getTimelines(itemType, start, end);
+        return res.getMaxCount();
+    }
 }

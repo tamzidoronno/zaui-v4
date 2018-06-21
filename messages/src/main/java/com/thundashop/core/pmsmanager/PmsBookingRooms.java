@@ -865,4 +865,11 @@ public class PmsBookingRooms implements Serializable {
         return childrenSet;
     }
 
+    boolean bookingConnected() {
+        if(bookingId == null || bookingId.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -62,8 +62,6 @@ if($numberOfRooms > 0 && !$this->isGroupBookingView()) {
     
     echo "</div>";
 }
-
-
 if($pmsSelectedRoom->addedToWaitingList) {
     echo "<div class='isgroupinformation'>";
     echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try to remove it from waiting list</a>.";
@@ -71,6 +69,10 @@ if($pmsSelectedRoom->addedToWaitingList) {
 } else if($pmsSelectedRoom->deleted) {
     echo "<div class='isdeletedinformation'>";
     echo "This room has been cancelled / deleted, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to undelete it</a>.";
+    echo "</div>";
+} else if($pmsSelectedRoom->overbooking) {
+    echo "<div class='isdeletedinformation'>";
+    echo "This room has been marked as overbooked, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to unmark it as overbooked</a>.";
     echo "</div>";
 }
 

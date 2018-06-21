@@ -2254,6 +2254,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(!password.equals("gfdsg9o3454835nbsfdg")) {
             return null;
         }
+        
+        try {
+            Integer incordid = new Integer(orderId);
+            return getOrderByincrementOrderId(incordid);
+        }catch(Exception e) {
+            
+        }
+        
         return getOrderSecure(orderId);
     }
 

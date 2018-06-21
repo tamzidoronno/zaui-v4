@@ -5,8 +5,11 @@
  */
 package com.thundashop.core.bookingengine.data;
 
+import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.GetShopLogHandler;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -324,6 +327,131 @@ public class BookingTimeLineFlatten implements Serializable {
         return makeOneLine(nextLine, nextBookingId, concattedLine, depth, allLines, combos, dropBookingIds);
     }
 
+    public void setEnd(Date end) {
+        this.end = end;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    /**
+     * Will return all the possible combinations of bookings between start and end date.
+     * @return 
+     */
+    public List<String> getAllPossibleCombos() {
+ 
+        List<BookingTimeLine> timeLines = getTimelines();
+        
+        makeDistinct(timeLines);
+       
+        if (timeLines.isEmpty())
+            return new ArrayList();
+        
+        List<String> result = new ArrayList();
+        
+        for (String bookingId : timeLines.get(0).bookingIds) {
+            try {
+                getNextCombination(0, bookingId, timeLines, bookingId, result);
+            } catch (BookingEngineException ex) {
+                return new ArrayList();
+            }
+        }
+        
+        return result;
+    }
     
 
+    private boolean getNextCombination(int counter, String currentBookingId, List<BookingTimeLine> timeLines, String prevResult, List<String> result) {
+        
+        BookingTimeLine nextLine = timeLines.get(counter);
+        
+        int nextCounter = counter + 1;
+        if (timeLines.size() <= nextCounter) {
+            result.add(prevResult);
+            if (result.size() > 100000) {
+                result.clear();
+                throw new BookingEngineException("Overflow");
+            }
+            return false;
+        }
+        
+        if (nextLine.bookingIds.contains(currentBookingId)) {
+            getNextCombination(nextCounter, currentBookingId, timeLines, ""+prevResult, result);
+            return true;
+        }
+        
+        boolean found = false;
+        int i = 0;
+        for (String bookingId : nextLine.bookingIds) {
+            String nextResult = prevResult;
+            
+            if (i > 4) {
+                break;
+            }
+            
+            if (isInPrevTimeLine(bookingId, timeLines, counter))
+                continue;
+            
+            if (nextResult.isEmpty()) {
+                nextResult += bookingId;
+            } else {
+                nextResult += "," + bookingId;
+            }
+            
+            getNextCombination(nextCounter, bookingId, timeLines, ""+nextResult, result);
+            
+            found = true;
+            
+            i++;
+        }
+        
+        if (!found)
+            return getNextCombination(nextCounter, currentBookingId, timeLines, prevResult, result);
+        else
+            return false;
+    }
+
+    private boolean isInPrevTimeLine(String bookingId, List<BookingTimeLine> timeLines, int count) {
+        if (count < 1)
+            return false;
+        
+        BookingTimeLine line = timeLines.get((count-1));
+        return line.bookingIds.contains(bookingId);
+        
+    }
+
+    private void makeDistinct(List<BookingTimeLine> timeLines) {
+        for (BookingTimeLine line : timeLines) {
+            String bookingIdOnlyInGroup = null;
+            
+            List<String> canBeRemoved = new ArrayList();
+            
+            for (String id : line.bookingIds) {
+                if (isOnlyInTimeLine(line, timeLines, id)) {
+                    if (bookingIdOnlyInGroup == null) {
+                        bookingIdOnlyInGroup = id;
+                    } else {
+                        canBeRemoved.add(id);
+                    }
+                }
+            }
+            
+            line.bookingIds.removeAll(canBeRemoved);
+        }
+    }
+
+    private boolean isOnlyInTimeLine(BookingTimeLine line, List<BookingTimeLine> timeLines, String id) {
+        for (BookingTimeLine iLine : timeLines) {
+            if (iLine.equals(line)) {
+                continue;
+            }
+            
+            if (iLine.bookingIds.contains(id)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
 }

@@ -80,6 +80,14 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         return (StartDate1 < EndDate2) && (StartDate2 < EndDate1);
     }
 
+    /**
+     * Checks if the input start and end date is completly 
+     * within the booking itself start and end.
+     * 
+     * @param start
+     * @param end
+     * @return 
+     */
     public boolean completlyWithin(Date start, Date end) {
         if (start == null || end == null || this.startDate == null || this.endDate == null) {
             return false;
@@ -97,6 +105,28 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         if (start.after(startDate) && end.equals(endDate))
             return true;
 
+        return false;
+    }
+    
+    /**
+     * Checks if the input start and end date is completly 
+     * within the booking itself start and end.
+     * 
+     * @param start
+     * @param end
+     * @return 
+     */
+    public boolean bookingIsWithinOrEqual(Date start, Date end) {
+        if (start == null || end == null || this.startDate == null || this.endDate == null) {
+            return false;
+        }
+        
+        if (start.equals(startDate) && end.equals(endDate))
+            return true;
+        
+        if (startDate.after(start) && endDate.before(end))
+            return true;
+     
         return false;
     }
 

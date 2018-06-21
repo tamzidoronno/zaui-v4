@@ -6334,6 +6334,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean needConfirmation(PmsBooking booking) {
+        if(storeManager.isPikStore()) {
+            return false;
+        }
+        
         if (configuration.needConfirmationInWeekEnds && booking.isWeekendBooking() && booking.isStartingToday()) {
             return true;
         }

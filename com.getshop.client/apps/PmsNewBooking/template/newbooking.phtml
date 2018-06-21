@@ -36,6 +36,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
             echo "<table width='100%'>";
             echo "<tr>";
             echo "<th style='text-align:left;'>Room</th>";
+            echo "<th>Price</th>";
             echo "<th>Rooms left</th>";
             echo "<th>Count</th>";
             echo "</tr>";
@@ -51,21 +52,25 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 
             $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
             $total = 0;
+            $roomTypes = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedMultilevelDomainName(), $start, $end);
 
-            foreach ($types as $type) {
-                $size = $this->getNumberOfAvailableForType($type, $current, $start, $end);
+            
+            foreach ($roomTypes as $type) {
+                $size = $this->getNumberOfAvailableForType($type->type, $current, $start, $end);
                 $disabled = "";
                 if ($size <= 0) {
                     $disabled = "disabled";
                 }
                 $total += $size;
-                echo "<tr class='roomstoaddrow' roomtype='" . $type->id . "'>";
-                echo "<td>" . $type->name . "</td>";
+                echo "<tr class='roomstoaddrow' roomtype='" . $type->type->id . "'>";
+                echo "<td>" . $type->type->name . "</td>";
+                echo "<td style='width:90px;text-align:center;'>".$type->price."</td>";
                 echo "<td style='text-align:center;' class='roomsleftfield' original='$size'>$size</td>";
-                echo "<td style='width:90px'><input type='txt' class='gsniceinput1 roomtypecount' style='width:90px' gsname='count_" . $type->id . "'></td>";
+                echo "<td style='width:90px'><input type='txt' class='gsniceinput1 roomtypecount' style='width:90px' gsname='count_" . $type->type->id . "'></td>";
                 echo "</tr>";
             }
             echo "<tr>";
+            echo "<td></td>";
             echo "<td></td>";
             echo "<td style='text-align:center;'><span class='totalcount' style='cursor:pointer;'>Select all</span></td>";
             echo "<td><span class='shop_button' style='cursor:pointer; width:90px;' gstype='submit'>Add room</span></td>";

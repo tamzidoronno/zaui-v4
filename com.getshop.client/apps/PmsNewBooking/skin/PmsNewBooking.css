@@ -1,4 +1,8 @@
-.PmsNewBooking .GetShopModuleTable .col { width: 20%; }
+.PmsNewBooking .GetShopModuleTable .col { width: 125px; }
+.PmsNewBooking .GetShopModuleTable .col.col_4 { width: 70px; }
+.PmsNewBooking .GetShopModuleTable .col.col_5 { text-align: center; }
+.PmsNewBooking .GetShopModuleTable .col.col_4 input { width: 40px; text-align: center;}
+.PmsNewBooking .GetShopModuleTable .col.col_1 { width: 300px; }
 .PmsNewBooking .addnewroom { width: 68%; float:left;}
 .PmsNewBooking .availablerooms {    display: inline-block;width: 30%;float: right; }
 .PmsNewBooking .availablerooms.hasconference { display:none; }

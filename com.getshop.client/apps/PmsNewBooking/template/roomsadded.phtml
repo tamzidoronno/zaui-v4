@@ -22,6 +22,9 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
         $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='" . $room->pmsBookingRoomId . "' method='removeRoom'></i> " . $name;
         $row->start = date("d.m.Y H:i", strtotime($room->date->start));
         $row->end = date("d.m.Y H:i", strtotime($room->date->end));
+        $row->numberOfGuests = $room->numberOfGuests;
+        $row->cost = $room->totalCost;
+        $row->roomid = $room->pmsBookingRoomId;
         if ($room->canBeAdded && !$room->addedToWaitingList) {
             $row->available = "<i class='fa fa-check'></i>";
         } else {
@@ -40,7 +43,9 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
         array('type', 'Room type', 'type', null),
         array('checkin', 'Check in', 'start', null),
         array('checkout', 'Check out', 'end', null),
-        array('available', 'Available', 'available', null)
+        array('guests', 'Guest count', 'numberOfGuests', "formatNumberOfGuests"),
+        array('available', 'Available', 'available', null),
+        array('cost', 'Cost', 'cost', null)
     );
     if (!$found) {
         echo "No rooms added yet, add one or more rooms above.";

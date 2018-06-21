@@ -8,6 +8,29 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         
     }
     
+    public function formatNumberOfGuests($row) {
+        $guests = $row->numberOfGuests;
+        return "<input type='txt' class='gsniceinput1 guestcounter' roomid='".$row->roomid."' value='". $guests . "'>";
+    }
+    
+    public function updateGuestCount() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $r->numberOfGuests = $_POST['data']['count'];
+            }
+        }
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                echo $r->totalCost;
+            }
+        }
+    }
+    
     public function setDiscountCode() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->couponCode = $_POST['data']['code'];

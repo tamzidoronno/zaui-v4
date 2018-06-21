@@ -24,11 +24,24 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .selecteduser .fa-trash-o',app.PmsNewBooking.removeSelectedUser);
         $(document).on('keyup','.PmsNewBooking .roomtypecount',app.PmsNewBooking.countRoomsToAdd);
         $(document).on('keyup','.PmsNewBooking .discountcode',app.PmsNewBooking.setDiscountCode);
+        $(document).on('keyup','.PmsNewBooking .guestcounter',app.PmsNewBooking.changeGuestCount);
         $(document).on('click','.PmsNewBooking .totalcount',app.PmsNewBooking.selectAllRooms);
         $(document).on('click','.PmsNewBooking .newcustomertypebutton', app.PmsNewBooking.loadNewCustomerType);
         $(document).on('click','.PmsNewBooking .newcustomerbutton', app.PmsNewBooking.loadNewCustomerField);
         $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
         $(document).on('click','.PmsNewBooking .brregsearchresultrow', app.PmsNewBooking.selectBrregResult);
+    },
+    changeGuestCount : function() {
+        var count = $(this).val();
+        var roomId = $(this).attr('roomid');
+        var event = thundashop.Ajax.createEvent('','updateGuestCount', $(this), {
+            "roomid" : roomId,
+            "count" : count
+        });
+        var row = $(this).closest('.datarow');
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            row.find('[index="cost"]').html(res);
+        });
     },
     setDiscountCode : function() {
         if(typeof(waitToInsertCode) !== "undefined") {

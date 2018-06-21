@@ -1470,7 +1470,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         availabilityLastUpdated = new Date();
         
-//        if(!frameworkConfig.productionMode) { return false; }
+        if(!frameworkConfig.productionMode) { return false; }
         
         if(!connectToApi()) {
             return false; 

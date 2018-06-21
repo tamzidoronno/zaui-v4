@@ -1093,7 +1093,6 @@ function getshop_setDatePicker() {
             $('.GslBooking .nights').show();
             options.singleDatePicker = true;
             $('.GslBooking .gslfront_1 .fa_box').css('width','20%');
-            getshop_WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", getshop_displayVerifoneFeedBack);
         }
 
         if(result.start) {
@@ -1308,6 +1307,7 @@ function getshop_getWebSocketClient() {
         getshopclient.identifier = hostToUse;
         getshopclient.shouldConnect = true;
         getshopclient.connect();
+        getshopclient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", getshop_displayVerifoneFeedBack);
     }
     return getshopclient;
 }

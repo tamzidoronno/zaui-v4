@@ -10,6 +10,8 @@ public class StatisticsEntry {
     public Double totalPrice = 0.0;
     public Double avgPrice = 0.0;
     public Integer roomsRentedOut = 0;
+    public Integer arrivals = 0;
+    public Integer departures = 0;
     public Integer spearRooms = 0;
     public Integer totalRooms = 0;
     public Integer coverage = 0;

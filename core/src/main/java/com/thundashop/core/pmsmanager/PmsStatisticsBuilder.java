@@ -106,7 +106,6 @@ class PmsStatisticsBuilder {
                         continue;
                     }
                     if(room.isActiveOnDay(cal.getTime())) {
-                        
                         entry.roomsIncluded.add(room.pmsBookingRoomId);
                         Double price = room.getDailyPrice(booking.priceType, cal);
                         if(!pricesExTax) {
@@ -115,11 +114,17 @@ class PmsStatisticsBuilder {
                         entry.roomsPrice.put(room.pmsBookingRoomId, price);
                         entry.totalPrice += price;
                         entry.roomsRentedOut++;
+                        if(room.checkingInAtDay(cal.getTime())) {
+                            entry.arrivals++;
+                        }
                         addGuests(entry, room, booking);
                         if(!roomsAddedForGuests.contains(room.pmsBookingRoomId)) {
                             addUniqueGuests(entry, room, booking);
                             roomsAddedForGuests.add(room.pmsBookingRoomId);
                         }
+                    }
+                    if(room.isEndingToday(cal.getTime())) {
+                        entry.departures++;
                     }
                 }
                  for(PmsBookingRooms room : booking.getActiveRooms()) {

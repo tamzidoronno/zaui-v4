@@ -872,4 +872,19 @@ public class PmsBookingRooms implements Serializable {
         return true;
     }
 
+
+    boolean checkingOutAtDay(Date time) {
+        if(date == null || date.end == null) {
+            return false;
+        }
+        return isSameDay(date.end, time);
+    }
+
+    boolean checkingInAtDay(Date time) {
+        if(date == null || date.start == null) {
+            return false;
+        }
+        return isSameDay(date.start, time);
+    }
+
 }

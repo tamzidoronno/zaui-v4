@@ -1,5 +1,8 @@
 <?
 /* @var $this ns_a5599ed1_60be_43f4_85a6_a09d5318638f\PmsAvailabilityDateSelector */
+$app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
+$types = $app->getTypes();
+$cats = $app->getCategoryFilter();
 ?>
 
 <div class="gs_headerbox">
@@ -29,12 +32,13 @@
 <div class="gs_headerbox">
     <div>
         <?
-        echo $this->__f("Room");
+        echo $this->__f("Sorting");
         ?>
     </div>
     
-    <select>
-        <option>All</option>
+    <select id='sorting'>
+        <option value='category'>By category</option>
+        <option value='room' <?php if($app->getSortType() == "room") { echo "selected"; }?>>By room</option>
     </select>
 </div>
 <i class="fa fa-ban" style='margin-right:25px; cursor:pointer;' onclick='$(".closeforperiodebox").toggle();'></i>
@@ -46,6 +50,20 @@
         <span class="shop_button" gstype="submit">Close hotel for periode</span>
     </div>
 </div>
+
+<div style='font-size: 12px;padding-top:5px;'>
+    <?php
+    foreach($types as $type) {
+        $checked = "";
+        if(in_array($type->id, $cats)) {
+            $checked = "CHECKED";
+        }
+        echo "<span style='margin-right:20px;margin-top:5px;'><input type='checkbox' class='typesinput' typeid='".$type->id."' $checked>" . $type->name . "</span>";
+    }
+    echo "<input type='button' value='Update' style='cursor:pointer;' class='updateavailability'>";
+    ?>
+</div>
+
 <script>
     $('#startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
@@ -57,7 +75,7 @@
                 date.add(7, 'days');
                 $('#enddate').val(date.format('DD.MM.YYYY')); 
             }
-            app.PmsAvailabilityDateSelector.changed();
+//            app.PmsAvailabilityDateSelector.changed();
         }
     });
     $('#enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
@@ -70,7 +88,7 @@
                 date.add(-7, 'days');
                 $('#startdate').val(date.format('DD.MM.YYYY')); 
             }
-            app.PmsAvailabilityDateSelector.changed();
+//            app.PmsAvailabilityDateSelector.changed();
         }
     });
 </script>

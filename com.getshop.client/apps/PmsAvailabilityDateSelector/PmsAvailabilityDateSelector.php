@@ -38,6 +38,12 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
         $app->setStartDate($_POST['data']['from']);
         $app->setEndDate($_POST['data']['to']);
+        $app->setSortType($_POST['data']['sorting']);
+        if(isset($_POST['data']['categories'])) {
+            $app->setCategoryFilter($_POST['data']['categories']);
+        } else {
+            $app->setCategoryFilter(array());
+        }
     }
     
     public function getStartDate() {

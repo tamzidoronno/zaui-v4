@@ -6,8 +6,17 @@
 $items = $this->getItems();
 $timelines = $this->getData();
 $types = $this->getTypes();
-
+$typesIndexed = $this->indexList($types);
+$sorting = $this->getSortType();
+$allInOne = false;
+if($sorting == "room") {
+    $allInOne = true;
+}
+$cats = $this->getCategoryFilter();
 foreach ($types as $type) {
+    if(sizeof($cats) > 0 && !in_array($type->id, $cats) && !$allInOne) {
+        continue;
+    }
 ?>
    
     <div class='type_line'>
@@ -15,14 +24,23 @@ foreach ($types as $type) {
         <div class='timeline_item_name'>
             
             <?
-            echo "<div class='category_name'>".$type->name."</div>";
+            echo "<div class='category_name'>";
+            if(!$allInOne) {
+                echo $type->name;
+            }
+            echo "</div>";
             
             foreach ($items as $item) {
-                if ($item->bookingItemTypeId != $type->id) {
+                if ($item->bookingItemTypeId != $type->id && !$allInOne) {
                     continue;
                 }
-
-                echo "<div class='item_name'>".$item->bookingItemName."</div>";
+                if($allInOne && sizeof($cats) > 0 && !in_array($item->bookingItemTypeId, $cats)) {
+                    continue;
+                }
+                
+                echo "<div class='item_name'>";
+                echo $item->bookingItemName . " " . $typesIndexed[$item->bookingItemTypeId]->name;
+                echo "</div>";
             }
             ?>
         </div>
@@ -33,7 +51,11 @@ foreach ($types as $type) {
             $j = 0;
             foreach ($items as $item) {
                 
-                if ($item->bookingItemTypeId != $type->id) {
+                if ($item->bookingItemTypeId != $type->id && !$allInOne) {
+                    continue;
+                }
+                
+                if($allInOne && sizeof($cats) > 0 && !in_array($item->bookingItemTypeId, $cats)) {
                     continue;
                 }
                 
@@ -106,6 +128,9 @@ foreach ($types as $type) {
         </div>
     </div>
 <?
+    if($allInOne) {
+        break;
+    }
 }
 
 

@@ -14,6 +14,27 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         
     }
     
+    public function setCategoryFilter($list) {
+        $_SESSION['pmsavailbility_categories'] = json_encode($list);
+    }
+    public function getCategoryFilter() {
+         if(isset($_SESSION['pmsavailbility_categories'])) {
+            return json_decode($_SESSION['pmsavailbility_categories'], true);
+        }
+        return array();
+    }
+    
+    public function setSortType($type) {
+        $_SESSION['pmsavailbility_sorttype'] = $type;
+    }
+    
+    public function getSortType() {
+        if(isset($_SESSION['pmsavailbility_sorttype'])) {
+            return $_SESSION['pmsavailbility_sorttype'];
+        }
+        return "category";
+    }
+    
     public function loadTitleOnConferenceRoom() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingengineid']);
         $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
@@ -360,7 +381,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
 
         $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $booking->id, $_POST['data']['roomid']);
     }
-    
+
 }
 
 ?>

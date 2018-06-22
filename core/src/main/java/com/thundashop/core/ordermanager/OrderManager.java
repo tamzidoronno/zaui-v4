@@ -213,6 +213,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (order.cleanMe()) {
                     saveObject(order);
                 }
+                if(storeId != null && storeId.equals("9099f6db-3095-4495-8616-a04551cabd89")) {
+                    if(order.payment != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8//Dibs")) {
+                        order.payment.paymentType = "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs";
+                        saveObject(order);
+                    }
+                }
 
                 if (order.cart == null) {
                     continue;

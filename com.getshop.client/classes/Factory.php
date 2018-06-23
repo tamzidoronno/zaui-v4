@@ -338,6 +338,10 @@ class Factory extends FactoryBase {
     }
 
     private function getCurrentModuleId() {
+        if(!ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor()) {
+            return "cms";
+        }
+        
         if (isset($_SESSION['getshop_current_module_id'])) {
             return $_SESSION['getshop_current_module_id'];
         }

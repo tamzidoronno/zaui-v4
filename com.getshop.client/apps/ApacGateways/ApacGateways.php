@@ -89,6 +89,9 @@ class ApacGateways extends \MarketingApplication implements \Application {
         return "<i class='fa fa-edit' gsclick='showServer' serverid='$server->id'></i>";
     }
     
+    public function checkDeadCodes() {
+        $this->getApi()->getPmsManager()->checkForDeadCodesApac($this->getSelectedMultilevelDomainName());
+    }
     
     public function GetShopLockSystemManager_getLockServers() {
         $this->loadCurrentServer();

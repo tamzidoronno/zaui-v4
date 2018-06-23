@@ -1,4 +1,5 @@
 app.ApacGateWays = {
+    lastId : null,
     currentTimeOutRunning : null,
     init : function() {
         $(document).on('click', '.ApacGateways .isfailed', app.ApacGateWays.checkNoOp);
@@ -25,7 +26,7 @@ app.ApacGateWays = {
         var nodeId = row.attr('nodeid');
         var event = thundashop.Ajax.createEvent('','doRestCall',$('.ApacGateways'), {
             "path" : "ZWave.zway/Run/devices["+nodeId+"].SendNoOperation()",
-            "id" : $('#currentserverid').val()
+            "id" : $('.datarow_extended_content:visible').find('#currentserverid').val()
         });
 
         thundashop.Ajax.postWithCallBack(event, function(res) {
@@ -37,6 +38,11 @@ app.ApacGateWays = {
     },
     startQueue : function() {
         var curid = $('.datarow_extended_content:visible').find('#currentserverid').val();
+        if(app.ApacGateWays.lastId != null && curid != app.ApacGateWays.lastId) {
+            app.ApacGateWays.lastId = null;
+            return;
+        }
+        app.ApacGateWays.lastId = curid;
         var event = thundashop.Ajax.createEvent('','doRestCall',$('.ApacGateways'), {
             "path" : "ZWave.zway/InspectQueue",
             "id" : curid
@@ -56,7 +62,7 @@ app.ApacGateWays = {
     startDevices : function() {
         var event = thundashop.Ajax.createEvent('','doRestCall',$('.ApacGateways'), {
             "path" : "ZWave.zway/Data/0",
-            "id" : $('#currentserverid').val()
+            "id" : $('.locklist:visible').find('#currentserverid').val()
         });
 
         thundashop.Ajax.postWithCallBack(event, function(res) {
@@ -85,7 +91,16 @@ app.ApacGateWays = {
         }
     },
     printQueue : function(queue) {
+        if(!Array.isArray(queue)) {
+            return;
+        }
         $('.queuelog').html('');
+        var queuelog = $('.queuelog:visible');
+        queuelog.html('');
+        if(queue.length == 0) {
+            queuelog.html('Queue is empty');
+            return;
+        }
         for(var k in queue) {
             if(!queue[k][4]) {
                 queue[k][4]= "";
@@ -93,7 +108,7 @@ app.ApacGateWays = {
             if(Math.round(queue[k][0]) == 0) {
                 queue[k][4] = "waiting";
             }
-            $('.queuelog').append("<div class='queuerow'><span class='timer'>"+Math.round(queue[k][0])+"</span><span class='nodeid'>"+queue[k][2]+"</span><span class='operation'>"+queue[k][3]+"</span><span class='queueresponse'>"+queue[k][4]+"</span></div>");
+            queuelog.append("<div class='queuerow'><span class='timer'>"+Math.round(queue[k][0])+"</span><span class='nodeid'>"+queue[k][2]+"</span><span class='operation'>"+queue[k][3]+"</span><span class='queueresponse'>"+queue[k][4]+"</span></div>");
         }
     }
 };

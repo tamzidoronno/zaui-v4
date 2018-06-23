@@ -346,6 +346,12 @@ public class PmsManagerProcessor {
                         room.addedToArx = false;
                         save = true;
                         manager.doNotificationFromProcessor("room_removed_from_arx", booking, room);
+                        
+                        if(room.codeObject != null) {
+                            BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+                            manager.getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
+                            room.codeObject = null;
+                        }
                     }
                 }
             }
@@ -1137,6 +1143,7 @@ public class PmsManagerProcessor {
         if(!manager.getConfigurationSecure().isGetShopHotelLock()) {
             return;
         }
+        
         List<PmsBooking> bookings = manager.getAllBookingsFlat();
         List<GetShopDevice> allLocks = manager.getShopLockManager.getAllLocks(null);
         for(GetShopDevice lock : allLocks) {

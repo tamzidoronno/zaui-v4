@@ -642,7 +642,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
-//        crawlVisbook();
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -8326,6 +8325,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         }
 
+        for(PmsBooking booking : bookings) {
+            boolean save = false;
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.isEnded() && !room.isEndingToday()) {
+                    if(room.codeObject != null) {
+                        room.codeObject = null;
+                        save = true;
+                    }
+                }
+            }
+            if(save) {
+                saveBooking(booking);
+            }
+        }
+        
         List<LockGroup> groups = getShopLockSystemManager.getAllGroups();
 
         groups.stream().forEach(group -> {
@@ -8426,37 +8440,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");
             room.checkedin = true;
             saveBooking(booking);
-        }
-    }
-
-    private void crawlVisbook() {
-        String url = "https://booking.visbook.com/";
-        int count = 0;
-        for (int i = 2000; i < 10000; i++) {
-            try {
-                String res = webManager.htmlGet(url + i);
-                String lines[] = res.split("<div");
-                boolean found = false;
-                String email = "";
-                String webaddr = "";
-                try {
-                    for (String l : lines) {
-                        if (l.contains("View_CompanyInformation_EmailPnl")) {
-                            email = l.substring(l.indexOf("href=\"") + 6, l.indexOf("</a", l.indexOf("href=\"")));
-                        }
-                        if (l.contains("View_CompanyInformation_WebAddressPnl")) {
-                            webaddr = l.substring(l.indexOf("href=\"") + 6, l.indexOf("</a", l.indexOf("href=\"")));
-                        }
-                    }
-                } catch (Exception d) {
-
-                }
-                System.out.println(i + "\t" + email + "\t" + webaddr);
-                count++;
-                Thread.sleep(500);
-            } catch (Exception e) {
-
-            }
         }
     }
 

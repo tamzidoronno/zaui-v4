@@ -320,6 +320,7 @@ public class PmsManagerProcessor {
                     if(payedfor && !room.deleted) {
                         if (pushToLock(room, false)) {
                             room.addedToArx = true;
+                            room.forceAccess = false;
                             manager.markRoomAsDirty(room.bookingItemId);
                             save = true;
                             room.forceUpdateLocks = false;

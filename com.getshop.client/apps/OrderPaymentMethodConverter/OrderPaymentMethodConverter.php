@@ -27,7 +27,7 @@ class OrderPaymentMethodConverter extends \PaymentApplication implements \Applic
                 $methodToConvertTo = $m;
             }
         }
-        $namespace = "ns_" . $totype . "//" . $methodToConvertTo->appName;
+        $namespace = "ns_" . $totype . "\\" . $methodToConvertTo->appName;
         
         foreach($orders as $order) {
             if(stristr($order->payment->paymentType, $fromtype)) {

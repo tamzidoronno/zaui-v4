@@ -8,7 +8,21 @@ app.PmsAvailability = {
         $(document).on('mouseleave', '.PmsAvailability .gsdayevent', this.mouseOutConferenceRoom);
         $(document).on('mouseenter', '.PmsAvailability .contains_booking', this.mouseOver);
         $(document).on('mouseleave', '.PmsAvailability .contains_booking', this.mouseOut);
+        $(document).on('click', '.PmsAvailability .markRoomClean', this.markRoomClean);
 //        $(document).on('click', '.PmsAvailability .contains_booking', this.showMenuBox);
+        
+    },
+    markRoomClean : function() {
+        var confirmed = confirm("Are you sure you want to mark this room as cleaned?");
+        if(!confirmed) {
+            return;
+        }
+        
+        var cell = $(this);
+        var event = thundashop.Ajax.createEvent('','markRoomCleaned',$(this), {
+            "itemid" : cell.closest('.col_outer').attr('bookingitemid')
+        });
+        thundashop.Ajax.post(event);
         
     },
     navigateToBooking : function() {

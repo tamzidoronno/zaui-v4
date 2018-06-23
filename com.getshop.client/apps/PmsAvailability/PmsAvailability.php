@@ -338,6 +338,11 @@ class PmsAvailability extends \MarketingApplication implements \Application {
                 $_POST['data']['bookingid'], $_POST['data']['source']);
     }
     
+    public function markRoomCleaned() {
+        $itemid = $_POST['data']['itemid'];
+        $this->getApi()->getPmsManager()->markRoomAsCleaned($this->getSelectedMultilevelDomainName(), $itemid);
+    }
+    
     public function createNameOfBooker($data) {
         
         $words = explode(" ", ucwords($data->name));
@@ -349,7 +354,9 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             }
         }
         if ($data->state !== "normal") {
-            return "<div class='bookername'><span class='fullname'>" . $data->name . "</span><span class='acronyme'>$acronym</span></div>";
+            $markCleaning = "";
+            if($data->state == "cleaning") { $markRoomClean = "<i class='fa fa-trash-o markRoomClean'></i> "; }
+            return "<div class='bookername'><span class='fullname'>$markRoomClean" . $data->name . "</span><span class='acronyme'>$acronym</span></div>";
         }
 
         $header = "<div class='bookername'><span class='fullname'>" . $data->name . "</span><span class='acronyme'>$acronym</span></div>";

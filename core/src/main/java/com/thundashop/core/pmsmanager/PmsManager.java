@@ -8318,6 +8318,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
+    @Override
     public void checkForDeadCodesApac() {
         List<PmsBooking> bookings = getAllBookingsFlat();
 

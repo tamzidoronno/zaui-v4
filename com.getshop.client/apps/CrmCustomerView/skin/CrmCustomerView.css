@@ -22,6 +22,8 @@
     padding-top: 4px;
     padding-bottom: 4px;
 }
+.UserAccountSettings .GetShopModuleTable .settingsarea .col1 { text-align: left; width: 200px; }
+
 .CrmCustomerView .checkbox { width: 20px; height: 20px; }
 .CrmCustomerView .bookings .col { width: 120px !important; }
 .CrmCustomerView .rowinput { text-align: right; }

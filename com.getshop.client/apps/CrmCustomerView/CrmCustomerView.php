@@ -246,6 +246,10 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $this->includefile($area);
     }
     
+    public function deleteUser() {
+        $this->getApi()->getUserManager()->deleteUser($_POST['data']['userid']);
+    }
+    
     public function saveUserSettings() {
         $user = $this->getUser();
         $user->type = $_POST['data']['type'];
@@ -253,7 +257,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
          if (isset($_POST['data']['canchangepagelayout'])) {
             $user->canChangeLayout = $_POST['data']['canchangepagelayout'];
          }
-        
+        $user->sessionTimeOut = $_POST['data']['sessionTimeOut'];
         $this->getApi()->getUserManager()->saveUser($user);
         $this->user = $this->getApi()->getUserManager()->getUserById($user->id);
 

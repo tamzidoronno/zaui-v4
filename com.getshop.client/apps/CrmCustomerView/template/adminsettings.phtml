@@ -18,6 +18,16 @@ $user = $this->getUser();
 
 <div class="row">
     <div class="col col1">
+        <? echo $this->__f("Logout expire time"); ?>
+    </div>
+    
+    <div class="col col2">
+        <input gsname="sessionTimeOut" value='<? echo $user->sessionTimeOut; ?>' class="gsniceinput1" style='width:50px;'/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col1">
         <? echo $this->__f("Google Authenticator"); ?>
     </div>
     
@@ -37,6 +47,6 @@ $user = $this->getUser();
         <?
         }
         ?>
-        <div class='gs_shop_small_icon' gsclick='regeneratTotpKey'><i class='fa fa-refresh'></i> <? echo $this->__f("Regenerate key"); ?></div>
+        <div class='gs_shop_small_icon' gsclick='regeneratTotpKey' style='width:300px;'><i class='fa fa-refresh'></i> <? echo $this->__f("Regenerate key"); ?></div>
     </div>
 </div>

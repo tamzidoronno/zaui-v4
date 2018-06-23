@@ -74,6 +74,15 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
         return "";
     }
     
+    public function createAdministrator() {
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        $user->password = $_POST['data']['password'];
+        $user->emailAddress = $_POST['data']['email'];
+        $user->type = 100;
+        $this->getApi()->getUserManager()->createUser($user);
+    }
+    
     public function UserAccountSettings_loadUser() {
         $_SESSION['usersrow_selectedarea'] = "modules";
         $app = new \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView();

@@ -1,4 +1,5 @@
 <?php
+/* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $user = $this->getUserForBooking();
@@ -51,6 +52,25 @@ if ($pmsBooking->wubookreservationid) {
 <div class="row">
     <div class="col col1"><? echo $this->__f("Date created"); ?></div>
     <div class="col col2"><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?></div>    
+</div>
+
+<div class="row">
+    <div class="col col1"><? echo $this->__f("Booked by"); ?></div>
+    <?php if($pmsBooking->bookedByUserId) { 
+        
+        if($pmsBooking->bookedByUserId == "gs_system_scheduler_user") {
+            ?>
+            <div class="col col2">OTA</div>    
+            <?php            
+        } else {
+            $name = $this->getApi()->getUserManager()->getUserById($pmsBooking->bookedByUserId)->fullName;
+            if(!$name) { $name = "No name"; }
+            ?>
+            <div class="col col2"><? echo $name; ?></div>    
+    <?php } ?>
+    <?php } else { ?>
+        <div class="col col2"><?php echo $user->fullName; ?></div>    
+    <?php } ?>
 </div>
 
 <div class="row odd">

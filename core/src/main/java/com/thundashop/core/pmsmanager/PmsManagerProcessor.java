@@ -320,6 +320,7 @@ public class PmsManagerProcessor {
                     if(payedfor && !room.deleted) {
                         if (pushToLock(room, false)) {
                             room.addedToArx = true;
+                            room.forceAccess = false;
                             manager.markRoomAsDirty(room.bookingItemId);
                             save = true;
                             room.forceUpdateLocks = false;
@@ -339,19 +340,10 @@ public class PmsManagerProcessor {
                         (manager.storeManager.getStoreId().equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b") && 
                         !manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
                         (room.blocked && room.addedToArx)) {
-                    if(room.forceAccess) {
-                        continue;
-                    }
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
                         manager.doNotificationFromProcessor("room_removed_from_arx", booking, room);
-                        
-                        if(room.codeObject != null) {
-                            BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
-                            manager.getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
-                            room.codeObject = null;
-                        }
                     }
                 }
             }

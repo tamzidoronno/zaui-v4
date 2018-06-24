@@ -5294,7 +5294,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (result == 0) {
                 if (!configuration.payAfterBookingCompleted) {
                     if (bookingIsOK(booking)) {
-                        if (!booking.confirmed) {
+                        if (!booking.confirmed || storeManager.isPikStore()) {
                             doNotification("booking_completed", booking, null);
                         } else {
                             doNotification("booking_confirmed", booking, null);

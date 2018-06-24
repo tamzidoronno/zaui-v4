@@ -100,7 +100,13 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     }
     $_SESSION['checkifloggedout'] = true;
 }
-
+echo "<script>";
+if(!$factory->isProductionMode()) {
+    echo "gsisdevmode=true;";
+} else {
+    echo "gsisdevmode=false;";
+}
+echo "</script>";
 
 $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : ""; 
 

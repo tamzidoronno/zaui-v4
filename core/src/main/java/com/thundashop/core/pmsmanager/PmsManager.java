@@ -8331,6 +8331,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(PmsBookingRooms room : booking.rooms) {
                 if(room.isEnded() && !room.isEndingToday()) {
                     if(room.codeObject != null) {
+                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                        getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
                         room.codeObject = null;
                         save = true;
                     }
@@ -8343,6 +8345,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<LockGroup> groups = getShopLockSystemManager.getAllGroups();
 
+        for (LockGroup group : groups) {
+            if (group.name.equals("507")) {
+                System.out.println("OK");
+            }
+        }
+        
         groups.stream().forEach(group -> {
             group.getGroupLockCodes().values()
                     .stream()

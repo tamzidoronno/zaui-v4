@@ -148,12 +148,13 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         usingNewSystem.add("b6949f70-5e41-4c5e-abcf-d595450f8048");
         usingNewSystem.add("87cdfab5-db67-4716-bef8-fcd1f55b770b");
-        usingNewSystem.add("75e5a890-1465-4a4a-a90a-f1b59415d841");
+        
         usingNewSystem.add("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0");
         
         // The newest one.
         usingNewSystem2.add("a6c4029c-485e-4407-b7ad-8de3b17a951c");
         usingNewSystem2.add("32f280c2-ae25-4263-8529-624df2f01dec");
+        usingNewSystem2.add("75e5a890-1465-4a4a-a90a-f1b59415d841");
     }
     
     public Availability getAvailbility(String id) {

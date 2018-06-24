@@ -17,6 +17,16 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
         $this->includefile("addlockgroup");
     }
     
+    public function formatInUse($lockGroup) {
+        $count = 0;
+        foreach ($lockGroup->groupLockCodes as $group) {
+            if ($group->takenInUseDate) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+    
     public function formatStatus($lockGroup) {
         $ret = "";
         
@@ -41,6 +51,7 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
             array('name', 'Group Name', 'name'),
             array('numberOfSlotsInGroup', 'Slotsize', 'numberOfSlotsInGroup'),
             array(null, 'Status', null, 'formatStatus'),
+            array(null, 'Slots in use', null, 'formatInUse'),
         );
         
         $table = new \GetShopModuleTable($this, 'GetShopLockSystemManager', 'getAllGroups', $args, $attributes);

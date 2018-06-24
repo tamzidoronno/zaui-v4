@@ -8318,6 +8318,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
+    /**
+     * This function is manually invoked from
+     * Apac -> Gateway and then the button
+     * name "check for dead codes"
+     */
     @Override
     public void checkForDeadCodesApac() {
         List<PmsBooking> bookings = getAllBookingsFlat();
@@ -8331,9 +8336,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(PmsBookingRooms room : booking.rooms) {
                 if(room.isEnded() && !room.isEndingToday()) {
                     if(room.codeObject != null) {
-                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                        getShopLockSystemManager.renewCodeForSlot(item.lockGroupId, room.codeObject.slotId);
                         room.codeObject = null;
+                        room.code = "";
                         save = true;
                     }
                 }
@@ -8345,23 +8349,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<LockGroup> groups = getShopLockSystemManager.getAllGroups();
 
-        for (LockGroup group : groups) {
-            if (group.name.equals("507")) {
-                System.out.println("OK");
-            }
-        }
-        
         groups.stream().forEach(group -> {
             group.getGroupLockCodes().values()
                     .stream()
                     .filter(masterUserSlot -> masterUserSlot.takenInUseDate != null)
-                    .filter(masterUserSlot -> masterUserSlot.takenInUseManagerName != null && masterUserSlot.takenInUseManagerName.equals(getClass().getSimpleName()))
+                    .filter(masterUserSlot -> masterUserSlot.takenInUseManagerName != null && masterUserSlot.takenInUseManagerName.equals("PmsManagerProcessor"))
                     .forEach(masterUserSlot -> {
                         boolean isSlotInUse = isMasterUserSlotInUse(group, masterUserSlot, bookings);
                         if (!isSlotInUse) {
                             String logCode = masterUserSlot.code != null ? "" + masterUserSlot.code.pinCode : "";
                             logPrint("Dead code found, removing from group: " + group.name + ", code: " + logCode);
-                            messageManager.sendErrorNotification("Dead code removed for: " + group.name + ", Code: " + logCode, null);
                             getShopLockSystemManager.renewCodeForSlot(group.id, masterUserSlot.slotId);
                         }
                     });

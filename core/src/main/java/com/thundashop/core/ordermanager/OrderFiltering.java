@@ -107,9 +107,9 @@ public class OrderFiltering {
         OrderResult res = new OrderResult();
         for(OrderResult r : orderFilterResult) {
             res.amountExTaxes += r.amountExTaxes;
-            res.restAmount = r.restAmount;
-            res.amountIncTaxes = r.amountIncTaxes;
-            res.amountPaid = r.amountPaid;
+            res.restAmount += r.restAmount;
+            res.amountIncTaxes += r.amountIncTaxes;
+            res.amountPaid += r.amountPaid;
         }
         return res;
     }

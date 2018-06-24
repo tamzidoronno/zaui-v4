@@ -168,7 +168,7 @@ public interface IOrderManager {
     
     
     @Editor
-    public void markAsPaid(String orderId, Date date);
+    public void markAsPaid(String orderId, Date date, Double amount);
     
     /**
      * @param id
@@ -214,6 +214,8 @@ public interface IOrderManager {
      */
     public Double getTotalAmount(Order order);
     public Double getTotalAmountExTaxes(Order order);
+    
+    public Double getRestToPay(Order order);
     
     public List<CartItemDates> getItemDates(Date start, Date end);
     

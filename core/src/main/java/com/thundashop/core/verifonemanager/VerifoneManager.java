@@ -11,6 +11,7 @@ import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.storemanager.data.SettingsRow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import no.point.paypoint.PayPoint;
@@ -161,8 +162,8 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         System.out.println("Result event: " + resultEvent);
         if(resultEvent.getResult() == 32) {
             System.out.println("Card succesfully paid");
-            orderToPay.status = Order.Status.PAYMENT_COMPLETED;
             printFeedBack("completed");
+            orderManager.markAsPaid(orderToPay.id, new Date(), orderToPay.getTotalAmount());
         } else {
             System.out.println("Failed to pay");
             orderToPay.status = Order.Status.PAYMENT_FAILED;

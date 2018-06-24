@@ -76,6 +76,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public MailFactory mailFactory;
     
     @Autowired
+    public StoreManager StoreManager;
+    
+    @Autowired
     private UserManager userManager;
     
     @Autowired
@@ -272,7 +275,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if(order.status == Order.Status.PAYMENT_COMPLETED && order.paymentDate == null) {
-            markAsPaidInternal(order, new Date());
+            markAsPaidInternal(order, new Date(), 0.0);
         }
         saveObject(order);
         boolean newOrder = !orders.containsKey(order.id);
@@ -287,13 +290,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void markAsPaid(String orderId, Date date) {
+    public void markAsPaid(String orderId, Date date, Double amount) {
         Order order = orders.get(orderId);
-        markAsPaidInternal(order, date);
-        saveOrder(order);
+        
+        if(amount != null && amount != 0.0) {
+            String userId = "";
+            if(getSession() != null && getSession().currentUser != null) {
+                userId = getSession().currentUser.id;
+            }
+            order.registerTransaction(date, amount, userId);
+            feedGrafanaPaymentAmount(amount);
+            if(order.isFullyPaid()) {
+                markAsPaidInternal(order, date,amount);
+                saveOrder(order);
+            } else {
+                messageManager.sendErrorNotification("Not fully paid order detected." + order.incrementOrderId, null);
+            }
+
+        } else {
+            markAsPaidInternal(order, date,amount);
+            saveOrder(order);
+        }
     }
     
-    public void markAsPaidInternal(Order order, Date date) {
+    public void markAsPaidInternal(Order order, Date date, Double amount) {
         checkPaymentDateValidation(order, date);
         
         order.paymentDate = date;
@@ -1686,6 +1706,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
     }
+    
+    private void feedGrafanaPaymentAmount(Double amountPaid) {
+        Application ecommerceSettings = storeApplicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+
+        String currency = ecommerceSettings.getSetting("currencycode");
+        if(currency == null || currency.isEmpty()) {
+            currency = "NOK";
+        }
+        
+        
+        HashMap<String, Object> toAdd = new HashMap();
+        toAdd.put("amount", (Number)amountPaid);
+        toAdd.put("storeid", (String)storeId);
+        toAdd.put("currency", (String)currency);
+        
+        GrafanaFeederImpl feeder = new GrafanaFeederImpl();
+        grafanaManager.addPoint("webdata", "orderpayment", toAdd);
+    }
 
     private void feedGrafana(Order order) {
         HashMap<String, Object> toAdd = new HashMap();
@@ -1990,8 +2028,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         orderIds.stream().forEach(orderId -> { 
             Order order = getOrder(orderId);
             Order creditedOrder = createCreatditOrder(orderId, "ordermanager_merged_order"); 
-            markAsPaid(orderId, new Date()); 
-            markAsPaid(creditedOrder.id, new Date()); 
+            markAsPaid(orderId, new Date(), 0.0); 
+            markAsPaid(creditedOrder.id, new Date(), 0.0);
             order.closed = true;
             saveObject(order);
         });
@@ -2269,6 +2307,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return getOrderSecure(orderId);
+    }
+
+    @Override
+    public Double getRestToPay(Order order) {
+        return order.getTotalAmount() - order.getTransactionAmount();
     }
 
 }

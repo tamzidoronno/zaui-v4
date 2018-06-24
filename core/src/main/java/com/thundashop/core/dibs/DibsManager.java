@@ -286,7 +286,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         if (response.get("status").equals("ACCEPT")) {
             order.captured = true;
             order.payment.captured = true;
-            orderManager.markAsPaid(order.id, new Date());
+            orderManager.markAsPaid(order.id, new Date(), new Double(amount) / 100);
         } else if (response.get("status").equals("DECLINE")) {
             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Declined to capture order (" + order.incrementOrderId + ")", respresult, "post@getshop.com", "post@getshop.com");
             order.status = Order.Status.COLLECTION_FAILED;

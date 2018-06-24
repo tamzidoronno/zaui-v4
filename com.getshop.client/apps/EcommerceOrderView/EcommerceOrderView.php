@@ -72,7 +72,13 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
     }
 
     public function markAsPaid() {
-        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($_POST['data']['date'])));
+        $amount = $_POST['data']['amount'];
+        if(!$amount) {
+            $amount = 0.0;
+        } else {
+            $amount = str_replace(",",".", $amount);
+        }
+        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($_POST['data']['date'])), $amount);
     }
     
     public function getName() {

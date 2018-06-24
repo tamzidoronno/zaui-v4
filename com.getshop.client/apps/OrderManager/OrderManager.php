@@ -20,7 +20,7 @@ class OrderManager extends GSTableCommon implements \Application {
     public function updatePaidDate( ){
         $date = $this->convertToJavaDate(strtotime($_POST['newDate']));
         $orderId = $_POST['value'];
-        $this->getApi()->getOrderManager()->markAsPaid($orderId, $date);
+        $this->getApi()->getOrderManager()->markAsPaid($orderId, $date, 0.0);
     }
 
     public static function getOrderStatuses() {

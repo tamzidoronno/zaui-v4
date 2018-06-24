@@ -5,6 +5,20 @@ echo "<h1>Transaction log</h1>";
 foreach($order->payment->transactionLog as $time => $log) {
     echo "<div>" . date("d.m.Y H:i", $time/1000) . " : " . $log . "</div>";
 }
+foreach($order->orderTransactions as $transactionObject) {
+    $name = "";
+    if($transactionObject->userId) {
+        $user = $this->getApi()->getUserManager()->getUserById($transactionObject->userId);
+        $name = $user->fullName;
+    }
+    echo "<div>" . date("d.m.Y", strtotime($transactionObject->date)) . " : " . $transactionObject->amount;
+    if($name) {
+        echo "(" .$name. ")";
+    }
+    echo "</div>";
+}
+
+
 echo "<h1>Shipment log</h1>";
 foreach($order->shipmentLog as $log) {
     $date = "";

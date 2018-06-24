@@ -1167,7 +1167,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function markPaid() {
         $dateDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
-        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $dateDate);
+        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $dateDate, 0.0);
         $this->showBookingInformation();
     }
     

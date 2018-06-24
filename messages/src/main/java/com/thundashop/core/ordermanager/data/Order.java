@@ -80,6 +80,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean warnedNotAbleToPay = false;
     public String attachedToRoom = null;
     public LinkedList<OrderShipmentLogEntry> shipmentLog = new LinkedList();
+    public List<OrderTransaction> orderTransactions = new ArrayList();
     
     /**
      * This will be populated if the order is created by merging multiple 
@@ -879,6 +880,31 @@ public class Order extends DataCommon implements Comparable<Order> {
         cal.setTime(rowCreatedDate);
         cal.add(Calendar.DAY_OF_YEAR, dueDays);
         return cal.getTime();
+    }
+
+    public void registerTransaction(Date date, Double amount, String userId) {
+        OrderTransaction transaction = new OrderTransaction();
+        transaction.date = date;
+        transaction.amount = amount;
+        transaction.userId = userId;
+        orderTransactions.add(transaction);
+    }
+
+    public double getTransactionAmount() {
+        double amountPaid = 0.0;
+        for(OrderTransaction trans : orderTransactions) {
+            amountPaid += trans.amount;
+        }
+        return amountPaid;
+    }
+
+    public boolean isFullyPaid() {
+        double transactionAmount = getTransactionAmount();
+        double total = getTotalAmount();
+        if(total > transactionAmount) {
+            return false;
+        }
+        return true;
     }
 
 

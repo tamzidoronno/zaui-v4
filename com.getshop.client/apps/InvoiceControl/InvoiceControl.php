@@ -33,7 +33,7 @@ class InvoiceControl extends \MarketingApplication implements \Application {
 
     public function markpaid() {
         $date = $this->convertToJavaDate(strtotime($_POST['data']['paymentdate']));
-        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $date);
+        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $date, 0.0);
     }
     
     public function getGroupedOrders() {

@@ -17,6 +17,8 @@ public class OrderResult {
    public double restAmount = 0;
 
     public void setOrder(Order ord) {
+        amountPaid = ord.getTransactionAmount();
+        
         incOrderId = ord.incrementOrderId;
         userId = ord.userId;
         status = ord.status;

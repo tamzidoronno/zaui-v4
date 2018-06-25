@@ -332,15 +332,10 @@
         $.getScript( "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function( data, textStatus, jqxhr ) {
             $.getScript( "{getshop_endpoint}/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
                  $.getScript( "{getshop_endpoint}/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
-                    getshop_setBookingTranslation();
-                    var getshop_waitforload = setInterval(function() {
-                        if(typeof(getshop_bookingconfiguration) === "undefined") {
-                            return;
-                        }
-                        clearInterval(getshop_waitforload);
+                    var loading = getshop_setBookingTranslation();
+                    loading.done(function() {
                         getshop_setDatePicker();
-                    }, 50);
-                    
+                    });
                });
             });
        });

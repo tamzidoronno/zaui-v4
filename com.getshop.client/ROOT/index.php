@@ -101,7 +101,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $_SESSION['checkifloggedout'] = true;
 }
 echo "<script>";
-if(!$factory->isProductionMode()) {
+if(!$factory->getApi()->getStoreManager()->isProductMode()) {
     echo "gsisdevmode=true;";
 } else {
     echo "gsisdevmode=false;";

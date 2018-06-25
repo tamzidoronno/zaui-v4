@@ -122,7 +122,6 @@ app.PmsManagement = {
         $(document).on('click','.informationbox .completeRoomReservation', app.PmsManagement.completeRoomReservation);
         $(document).on('click','.PmsManagement .managementviewbanner .fa-plus-square', app.PmsManagement.loadQuickReservation);
         $(document).on('click','.PmsManagement .deleteComment', app.PmsManagement.deleteComment);
-        getshop.WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", app.PmsManagement.displayVerifoneFeedBack);
     },
     calculateTax : function() {
         var taxValue = parseInt($(this).closest('.editmode').find('.taxvalue').val());

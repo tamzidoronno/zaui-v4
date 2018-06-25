@@ -28,6 +28,7 @@ public class GenerateJavascriptPal {
             GenerateJavascriptApi.generateJavascriptForBookingProcess();
             String content = new String(Files.readAllBytes(Paths.get(GenerateJavascriptApi.storeFileIn)));
             String bookingProcessFileContent = new String(Files.readAllBytes(Paths.get(pathToBookingProcessFile)));
+            content = content.replaceAll("GetShopApiWebSocket", "GetShopApiWebSocketEmbeddedBooking");
             content = replaceMatching(bookingProcessFileContent, "/* START GetShop Websocket api */", "/* END GetShop Websocket api */", content);
             Files.write(Paths.get(pathToBookingProcessFile), content.getBytes());
         } else {

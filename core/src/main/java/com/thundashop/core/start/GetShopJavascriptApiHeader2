@@ -41,7 +41,7 @@ GetShopApiWebSocket.prototype = {
         if(typeof(gsisdevmode) !== "undefined" && gsisdevmode) {
             var address = "ws://localhost:31330/";
         } else {
-            var address = "wss://"+this.address+":"+this.port+"/";
+            var address = "wss://websocket.getshop.com/";
         }
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);

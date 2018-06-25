@@ -27,6 +27,7 @@ function load_getBookingTranslations() {
 }
 
 function getshop_setBookingTranslation() {
+    var loading = $.Deferred();
     var loadTranslation = load_getBookingTranslations();
     loadTranslation.done(function(translations) {
         for(var key in translations) {
@@ -75,9 +76,11 @@ function getshop_setBookingTranslation() {
             var toReplace = translations["paymentexplanation"];
             toReplace = toReplace.replace("{time}", config.defaultCheckinTime);
             $("[gstranslationfield='paymentexplanation']").html(toReplace);
+            loading.resolve(config);
         });
         getshop_confirmGuestInfoBox(); 
     });
+    return loading;
 }
 
 function getshop_getBookingTranslations() {
@@ -1302,7 +1305,7 @@ function getshop_getWebSocketClient() {
         hostToUse = hostToUse.replace("https://", "");
         hostToUse = hostToUse.replace("/", "");
 
-        getshopclient = new GetShopApiWebSocket("websocket.getshop.com", "443", hostToUse); //Online
+        getshopclient = new GetShopApiWebSocketEmbeddedBooking("websocket.getshop.com", "443", hostToUse); //Online
 //        getshopclient = new GetShopApiWebSocket("localhost", "31330", getshop_endpoint); //Local
         getshopclient.identifier = hostToUse;
         getshopclient.shouldConnect = true;
@@ -1699,14 +1702,15 @@ getshop_WebSocketClient = {
 
 
 
+
 /* START GetShop Websocket api */
-var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
+var GetShopApiWebSocketEmbeddedBooking = function(address, port, identifier, persistMessages) {
     this.sentMessages =  [];
     this.messagesToSendJson =  [];
     this.address = address;
 
     if (typeof(port) === "undefined" || !port) {
-        this.port = "21330";
+        this.port = "31330";
     } else {
         this.port = port;
     }
@@ -1718,7 +1722,7 @@ var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     }
 };
 
-GetShopApiWebSocket.prototype = {
+GetShopApiWebSocketEmbeddedBooking.prototype = {
     websocket: null,
     connectionEstablished: null,
     transferCompleted: null,
@@ -1743,7 +1747,7 @@ GetShopApiWebSocket.prototype = {
         if(typeof(gsisdevmode) !== "undefined" && gsisdevmode) {
             var address = "ws://localhost:31330/";
         } else {
-            var address = "wss://"+this.address+":"+this.port+"/";
+            var address = "wss://websocket.getshop.com/";
         }
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);
@@ -2049,11 +2053,11 @@ GetShopApiWebSocket.prototype = {
 }
 
 
-GetShopApiWebSocket.MessageManager = function(communication) {
+GetShopApiWebSocketEmbeddedBooking.MessageManager = function(communication) {
     this.communication = communication;
 }
 
-GetShopApiWebSocket.MessageManager.prototype = {
+GetShopApiWebSocketEmbeddedBooking.MessageManager.prototype = {
     'collectEmail' : function(email, gs_silent) {
         var data = {
             args : {
@@ -2228,11 +2232,11 @@ GetShopApiWebSocket.MessageManager.prototype = {
     },
 
 }
-GetShopApiWebSocket.PmsBookingProcess = function(communication) {
+GetShopApiWebSocketEmbeddedBooking.PmsBookingProcess = function(communication) {
     this.communication = communication;
 }
 
-GetShopApiWebSocket.PmsBookingProcess.prototype = {
+GetShopApiWebSocketEmbeddedBooking.PmsBookingProcess.prototype = {
     'addAddons' : function(multilevelname, arg, gs_silent) {
         var data = {
             args : {
@@ -2449,7 +2453,7 @@ GetShopApiWebSocket.PmsBookingProcess.prototype = {
 
 }
 
-GetShopApiWebSocket.prototype.createManagers = function() {
-    this.MessageManager = new GetShopApiWebSocket.MessageManager(this);
-    this.PmsBookingProcess = new GetShopApiWebSocket.PmsBookingProcess(this);
+GetShopApiWebSocketEmbeddedBooking.prototype.createManagers = function() {
+    this.MessageManager = new GetShopApiWebSocketEmbeddedBooking.MessageManager(this);
+    this.PmsBookingProcess = new GetShopApiWebSocketEmbeddedBooking.PmsBookingProcess(this);
 }/* END GetShop Websocket api */

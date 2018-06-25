@@ -13,7 +13,11 @@ GetShopApiWebSocket.prototype = {
         if (this.connectionEstablished === null) {
             this.fireDisconnectedEvent();
         }
-        var address = "ws://"+this.address+":31330/";
+        if(typeof(gsisdevmode) !== "undefined" && gsisdevmode) {
+            var address = "ws://localhost:31330/";
+        } else {
+            var address = "wss://websocket.getshop.com/";
+        }
         this.socket = new WebSocket(address);
         this.socket.onopen = function() {
             me.connected();

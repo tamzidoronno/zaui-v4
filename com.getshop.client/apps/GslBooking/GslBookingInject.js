@@ -631,7 +631,7 @@ function getshop_completeBooking(paylater) {
    var def = $.Deferred();
    
    var client = getshop_getWebSocketClient();
-   var completing = client.PmsBookingProcess.completeBooking(getshop_endpoint, {
+   var completing = client.PmsBookingProcess.completeBooking(getshop_domainname, {
         "payLater" : paylater,
         "paymentMethod" : $('#paymentmethodselection').val()
     });

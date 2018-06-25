@@ -135,10 +135,7 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         
         
         if(sizeof($this->booking->rooms) > 0) {
-            foreach($this->booking->rooms as $room) {
-                $room->date->start = $this->booking->sessionStartDate;
-                $room->date->end = $this->booking->sessionEndDate;
-            }
+            $this->booking->rooms = array();
         }
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $this->booking);

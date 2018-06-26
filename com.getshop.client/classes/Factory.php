@@ -110,7 +110,6 @@ class Factory extends FactoryBase {
         if (!$this->language) {
             $this->language = "en_en";
         }
-
         return $this->language;
     }
 
@@ -938,6 +937,15 @@ class Factory extends FactoryBase {
         }
     }
 
+    public function setLanguage($lang) {
+        $this->language = $lang;
+        $_SESSION['language_selected'] = $lang;
+        $this->getApi()->getStoreManager()->setSessionLanguage($lang);
+        $this->getSelectedTranslation();
+        $this->read_csv_translation();
+        
+    }
+    
     public function getSelectedTranslation() {
         $translation = $this->getSelectedLanguage();
         $this->translation = new GetShopTranslation();

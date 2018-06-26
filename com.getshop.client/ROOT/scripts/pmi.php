@@ -23,7 +23,8 @@ if($_GET['type'] == "roomrevenue") {
         $day = array();
         $day['propertyid'] = $storeId;
         $day['date'] = date("d.m.Y", strtotime($s->date));
-        $day['code'] = "notsure";
+        $day['code'] = "";
+        $day['segment'] = "losji";
         $day['roomnights'] = $s->roomsRentedOut;
         $day['guestnights'] = $s->guestCount;
         $day['guestnightsadults'] = $s->guestCount;
@@ -77,7 +78,8 @@ if($_GET['type'] == "reservations") {
         $day['propertyid'] = $storeId;
         $day['snapshotdate'] = date("d.m.Y", time());
         $day['date'] = date("d.m.Y", strtotime($s->date));
-        $day['code'] = "notsure";
+        $day['code'] = "";
+        $day['segment'] = "losji";
         $day['roomnights'] = $s->roomsRentedOut;
         $day['guestnights'] = $s->guestCount;
         $day['guestnightsadults'] = $s->guestCount;

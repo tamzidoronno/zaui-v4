@@ -199,7 +199,55 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
     }
     
     public function toggleSortByDeliveryDate() {
-        $this->getApi()->getTrackAndTraceManager()->setSortingOfRoutes("deliveryDate");
+        if (isset($_SESSION['sorting'])) {
+            unset($_SESSION['sorting']);
+        } else {
+            $_SESSION['sorting'] = "servicedatedescending";
+        }
     }
+
+    public static function sortByName($a, $b) {
+        $routeA = substr($a->name, 0, 4);
+        $routeB = substr($b->name, 0, 4);
+        
+        if ($routeA == $routeB) {
+            if (!$a->deliveryServiceDate) {
+                return 1;
+            }
+            if (!$b->deliveryServiceDate) {
+                return -1;
+            }
+            $time1 = strtotime($a->deliveryServiceDate);
+            $time2 = strtotime($b->deliveryServiceDate);
+            return $time2 - $time1;
+        }
+        return strcmp($routeA, $routeB);
+    }
+    
+    public static function sortByServiceDate($a, $b) {
+        if (!$a->deliveryServiceDate) {
+            return 1;
+        }
+        if (!$b->deliveryServiceDate) {
+            return -1;
+        }
+
+        $time1 = strtotime($a->deliveryServiceDate);
+        $time2 = strtotime($b->deliveryServiceDate);
+        
+        if ($time1 == $time2) {
+            return strcmp($a->name, $b->name);
+        }
+        return $time2 - $time1;
+    }
+    
+    public function getSortingFunction() {
+        if (isset($_SESSION['sorting']) && $_SESSION['sorting'] == "servicedatedescending") {
+            return array("ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement", "sortByServiceDate");    
+        }
+        
+        return array("ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement", "sortByName");
+    }
+
 }
 ?>

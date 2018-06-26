@@ -3,6 +3,10 @@
 
 $routes = $this->getApi()->getTrackAndTraceManager()->getAllRoutes();
 
+if ($this->getSortingFunction()) {
+    usort($routes, $this->getSortingFunction());
+}
+
 if ($routes) {
    
     echo "<div class='routelist'>";

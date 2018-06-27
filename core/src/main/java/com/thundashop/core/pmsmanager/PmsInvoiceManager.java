@@ -485,7 +485,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             payedfor = false;
         } 
        
-        if(!hasOrders && (pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid || pmsManager.storeManager.isPikStore())) {
+        if(!hasOrders && (pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid || storeManager.isPikStore())) {
             payedfor = false;
         }
         

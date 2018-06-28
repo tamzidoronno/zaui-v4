@@ -679,4 +679,26 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         String path = "JS/Run/zway.SetPriorityRoute("+lstrlock.zwaveDeviceId+","+ids+",3)";
         restCall(serverId, path);
     }
+
+    @Override
+    public List<UserSlot> getCodesInUse(String serverId, String lockId) {
+        List<UserSlot> slotsToReturn = new ArrayList();
+        
+        for (LockGroup group : groups.values()) {
+            group.finalize(lockServers);
+            
+            if (!group.isConnectedToLock(serverId, lockId)) {
+                continue;
+            }
+            
+            List<MasterUserSlot> add = group.getGroupLockCodes().values()
+                    .stream()
+                    .filter(masterSlot -> masterSlot.takenInUseDate != null || group.isVirtual)
+                    .collect(Collectors.toList());
+            
+            slotsToReturn.addAll(add);
+        };
+        
+        return slotsToReturn;
+    }
 }

@@ -19,6 +19,11 @@ import java.util.Map;
  */
 public class LockGroup extends DataCommon {
     private HashMap<Integer, MasterUserSlot> groupLockCodes = new HashMap();
+    
+    /**
+     * Key = lock server id.
+     * Value (List<String>) = List of all locks on that server.
+     */
     public Map<String, List<String>> connectedToLocks = new HashMap();
     
     public int numberOfSlotsInGroup = 5;
@@ -138,5 +143,13 @@ public class LockGroup extends DataCommon {
         }
         
         return false;
+    }
+
+    boolean isConnectedToLock(String serverId, String lockId) {
+        if (connectedToLocks.get(serverId) == null) {
+            return false;
+        }
+        
+        return connectedToLocks.get(serverId).contains(lockId);
     }
 }

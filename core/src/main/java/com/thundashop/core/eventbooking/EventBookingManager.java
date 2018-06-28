@@ -15,6 +15,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.encryption.EncryptionManager;
 import com.thundashop.core.scormmanager.Scorm;
 import com.thundashop.core.scormmanager.ScormManager;
 import com.thundashop.core.scormmanager.ScormPackage;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +92,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     
     @Autowired
     public ScormManager scormManager;
+    
+    @Autowired
+    private EncryptionManager encryptionManager;
     
     @Override
     public void dataFromDatabase(DataRetreived datas) {
@@ -777,6 +782,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         event.markedAsReady = true;
+        event.encryptedPersonalIds.clear();
         saveObject(event);
         log("MARK_AS_READY", event, null);
     }
@@ -2565,7 +2571,33 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .filter(o -> o.eventId.equals(eventId) && o.userId.equals(userId))
                 .count()  > 0;
     }
-    
-    
 
+    @Override
+    public void addPersonalIdToEvent(String eventId, String userId, String personalId) {
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
+        Event event  = getEvent(eventId);
+        if (event != null) {
+            byte[] personalIdEncryptedId = encryptionManager.encrypt(personalId);
+            event.encryptedPersonalIds.put(userId, personalIdEncryptedId);
+            saveObject(event);
+        }
+    }
+
+    @Override
+    public Map<String, String> decodePersonalIds(String eventId, String privateKey) {
+        Event event  = getEvent(eventId);
+        Map<String, String> returnMap = new HashMap();
+        
+        if (event != null) {
+            for (String userId : event.encryptedPersonalIds.keySet()) {
+                User user = userManager.getUserById(userId);
+                String decryptedPersonalId = encryptionManager.decryption(privateKey, event.encryptedPersonalIds.get(userId));
+                returnMap.put(decryptedPersonalId, user.fullName);
+            }
+        }
+        
+        return returnMap;
+    }
 }

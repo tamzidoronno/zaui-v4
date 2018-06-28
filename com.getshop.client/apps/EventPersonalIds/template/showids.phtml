@@ -1,0 +1,35 @@
+<?
+/* @var $this \ns_50c1d218_2ba4_4ea6_b96b_f2061434cd41\EventPersonalIds */
+
+?>
+
+<form method="post" enctype="multipart/form-data">
+    1. Select your private key:  <input name="privatekey" type="file" id="privatekey">
+    <br/> 2. <input type="submit" value="Decrypt" name="submit"/>
+</form>
+
+<?
+if (!isset($_FILES["privatekey"])) {
+    return;
+}
+
+
+$target_dir = "/tmp/";
+$target_file = $target_dir . basename($_FILES["privatekey"]["name"]);
+$uploadOk = 1;
+$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+// Check if image file is a actual image or fake image
+if(isset($_POST["submit"])) {
+    echo "<h2> Personal Ids </h2>";
+    $content = file_get_contents($_FILES["privatekey"]["tmp_name"]);
+    $base64key = base64_encode($content);
+    
+    $ids = $this->getApi()->getEventBookingManager()->decodePersonalIds("booking", $this->getModalVariable("eventid"), $base64key);
+    
+    foreach ($ids as $personalId => $name) {
+        echo $personalId." - ".$name."<br/>";
+    }
+    
+}
+?>

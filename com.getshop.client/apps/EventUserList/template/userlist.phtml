@@ -4,7 +4,8 @@ $event = $this->getEvent();
 $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $event->id);
 $waitingListUsers = $this->getApi()->getEventBookingManager()->getUsersForEventWaitinglist($this->getBookingEngineName(), $event->id);
 $invoiceGroups = $this->getApi()->getEventBookingManager()->getInvoiceGroups($this->getBookingEngineName(), $event->id);
-
+$metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($this->getBookingEngineName(), $event->bookingItemType->id);
+        
 if (!$waitingListUsers) {
     $waitingListUsers = array();
 }
@@ -64,6 +65,12 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
     ?>
         <div class='shop_button' gs_show_modal="modifyGroupInvoice" eventid="<? echo $event->id; ?>"><? echo $this->__f("Create invoicegroup"); ?></div>
     <?
+    }
+    
+    if ($metaData->requirePersonalId) {
+        ?>
+        <div class='shop_button' gs_show_modal="showDecryptIds" eventid="<? echo $event->id; ?>"><? echo $this->__f("Show personal ids"); ?></div>
+        <?
     }
     ?>
 </div>

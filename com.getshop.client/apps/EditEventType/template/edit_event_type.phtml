@@ -99,7 +99,12 @@ $metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($t
         echo "</div>";
     }
     
+    
+    $checkedRequirePersonalId = $metaData->requirePersonalId ? "checked='true'" : "";
     ?>
+    
+    <br/>
+    <br/> <input type="checkbox" <? echo  $checkedRequirePersonalId; ?> gsname="requirePersonalId"/> Require personal identificator. (Will be stored encrypted in the database with a 2048 bit encryption)
     
     <br/><br/><div class="shop_button" gstype="submit">Save</div>
 </div>

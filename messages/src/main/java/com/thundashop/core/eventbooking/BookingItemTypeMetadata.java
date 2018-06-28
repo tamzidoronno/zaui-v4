@@ -52,4 +52,6 @@ public class BookingItemTypeMetadata extends DataCommon {
     public String bookingItemTypeId = "";
     
     public String questBackId = "";
+    
+    public boolean requirePersonalId = false;
 }

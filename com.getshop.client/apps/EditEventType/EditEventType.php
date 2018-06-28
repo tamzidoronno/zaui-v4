@@ -53,11 +53,15 @@ class EditEventType extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
             $metaData->publicVisible = $_POST['data']['public_visible'];
             $metaData->visibleForGroup->{$groupId} = $_POST['data']['visible_'.$groupId];
             $metaData->mandatoryForGroup->{$groupId} = $_POST['data']['mandatory_'.$groupId];
-            $metaData->groupWarningInformation->{$groupId} = $_POST['data']['extrainfo_'.$groupId];
+            $metaData->groupWarningInformation->{$groupId} = $_POST['data']['extrainfo_'.$groupId];            
         }
         
         if (isset($_POST['data']['questBackId'])) {
             $metaData->questBackId = $_POST['data']['questBackId'];
+        }
+        
+        if (isset($_POST['data']['requirePersonalId'])) {
+            $metaData->requirePersonalId = $_POST['data']['requirePersonalId'];
         }
         
         $this->getApi()->getEventBookingManager()->saveBookingTypeMetaData($this->getBookingEngineName(), $metaData);

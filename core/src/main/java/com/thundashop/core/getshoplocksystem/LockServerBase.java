@@ -104,6 +104,7 @@ public abstract class LockServerBase extends DataCommon {
         }
         
         String loginUrl = "http://"+hostname+":8083/"+address;
+        this.getShopLockSystemManager.logPrint("Executing: " + loginUrl);
         
         HttpParams my_httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);

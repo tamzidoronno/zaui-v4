@@ -1,5 +1,6 @@
 <?
 /* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$this->setData();
 $order = $this->getOrder();
 
 $user = $this->getApi()->getUserManager()->getUserById($order->userId);

@@ -901,7 +901,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean isFullyPaid() {
         double transactionAmount = getTransactionAmount();
         double total = getTotalAmount();
-        if(total > transactionAmount) {
+        double diff = total - transactionAmount;
+        if(diff > 1 || diff < -1) {
             return false;
         }
         return true;

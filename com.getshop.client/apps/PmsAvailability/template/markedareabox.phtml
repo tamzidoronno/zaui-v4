@@ -82,8 +82,8 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
             } else {
                 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
                 echo "<div style='text-align:center;padding-bottom: 10px; margin-bottom: 10px;'>" . $user->fullName . "</div>";
-                echo "<div>Check-in <span style='float:right;'>" . date("d.m.Y H:i", strtotime($room->date->start)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();'></i></span></div>";
-                echo "<div>Check-out <span style='float:right;'>" . date("d.m.Y H:i", strtotime($room->date->end)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();'></i></span></div>";
+                echo "<div>Check-in <span style='float:right;'>" . date("d.m.Y H:i:s", strtotime($room->date->start)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();'></i></span></div>";
+                echo "<div>Check-out <span style='float:right;'>" . date("d.m.Y H:i:s", strtotime($room->date->end)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();'></i></span></div>";
                 echo "<div>Total price <span style='float:right;'>" . $room->totalCost . "</span></div>";
                 echo "<br>";
                 

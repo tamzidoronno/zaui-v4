@@ -98,9 +98,15 @@ public class BookingsBetweenCalculator {
         if (bookings == null)
             return -1;
         
-        return bookings.stream()
+        long stayLength = bookings.stream()
                 .mapToLong(o -> o.getStayLength())
                 .sum();
+        
+        if (bookings.size() > 1) {
+            stayLength -= bookings.size() * 1000;
+        }
+        
+        return stayLength;
     }
 
     private void printBestCombo() {

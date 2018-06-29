@@ -19,6 +19,7 @@ import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
@@ -134,6 +135,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             if (dataCommon instanceof Booking) {
                 Booking booking = (Booking)dataCommon;
+                booking.stripSeconds();
                 bookings.put(booking.id, booking);
             }
         }
@@ -158,7 +160,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         usingNewSystem2.add("9099f6db-3095-4495-8616-a04551cabd89");
         usingNewSystem2.add("a152b5bd-80b6-417b-b661-c7c522ccf305");
         usingNewSystem2.add("3b647c76-9b41-4c2a-80db-d96212af0789");
-//        usingNewSystem2.add("e625c003-9754-4d66-8bab-d1452f4d5562");
+        usingNewSystem2.add("e625c003-9754-4d66-8bab-d1452f4d5562");
 
     }
     
@@ -336,7 +338,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         for (Booking booking : bookings) {
-            booking.stripSeconds();
             saveObject(booking);
             bookingGroup.bookingIds.add(booking.id);
         
@@ -631,12 +632,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         newBooking.endDate = end;
         newBooking.stripSeconds();
         
-        
         validateChange(newBooking);
         
         booking.startDate = start;
         booking.endDate = end;
-        booking.stripSeconds();
+        
         saveObject(booking);
     }
 
@@ -676,7 +676,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (bookingItem != null)
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         
-        tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
+        if (!usingNewSystem2.contains(storeId)) {
+            tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
+        }
         
         saveObject(booking);
     }
@@ -784,7 +786,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         newBooking.startDate = start;
         newBooking.endDate = end;
         newBooking.bookingItemId = itemId;
-        newBooking.stripSeconds();
         validateChange(newBooking);
         
         booking.bookingItemId = itemId;
@@ -800,8 +801,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         saveObject(booking);
     }
-    
 
+    @Override
+    public void saveObject(DataCommon data) throws ErrorException {
+        if (data instanceof Booking) {
+            ((Booking)data).stripSeconds();
+        }
+        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public void deleteBookingItemType(String id) {
         BookingItemType type = types.get(id);
         if (type != null) {
@@ -1131,6 +1139,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                     .collect(Collectors.toList());
             
             bookingsWithinDaterange.addAll(overlapping);
+            
+            for (Booking ibooking2 : overlapping) {
+                List<Booking> overlapping2 = bookingOfTypes.stream()
+                        .filter(booking -> booking.interCepts(ibooking2.startDate, ibooking2.endDate))
+                        .collect(Collectors.toList());
+
+                bookingsWithinDaterange.addAll(overlapping2);
+
+            }
         }
         
         if (bookingId != null && !bookingId.isEmpty()) {

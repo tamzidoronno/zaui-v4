@@ -8678,13 +8678,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String profile = getConfigurationSecure().bookingProfile;
         if(profile == null || profile.equals("hotel") || profile.isEmpty()) {
             for(PmsBookingRooms room : booking.rooms) {
-                if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
-                    room.date.start = getConfigurationSecure().convertToTimeZone(room.date.start);
-                    room.date.end = getConfigurationSecure().convertToTimeZone(room.date.end);
-                } else {
-                    room.date.start = getConfigurationSecure().getDefaultStart(room.date.start);
-                    room.date.end = getConfigurationSecure().getDefaultEnd(room.date.end);
+                if(room.isSameDay(room.date.start, room.date.end)) {
+                    continue;
                 }
+                room.date.start = getConfigurationSecure().getDefaultStart(room.date.start);
+                room.date.end = getConfigurationSecure().getDefaultEnd(room.date.end);
             }
         }
     }

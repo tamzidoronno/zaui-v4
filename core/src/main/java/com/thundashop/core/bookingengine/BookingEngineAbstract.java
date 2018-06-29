@@ -676,9 +676,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (bookingItem != null)
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         
-        if (!usingNewSystem2.contains(storeId)) {
-            tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
-        }
+        tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
         
         saveObject(booking);
     }

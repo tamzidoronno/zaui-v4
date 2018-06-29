@@ -3,7 +3,6 @@
 $originalCart = $this->getOriginalCartFromSession();
 $currentCart = $this->getCurrentCart();
 $total = $this->getApi()->getCartManager()->getCartTotal($currentCart);
-
 $items = (array)$originalCart->items;
 $i = 0;
 
@@ -54,7 +53,7 @@ echo "</div>";
 ?>
 
 <div class='summary'>
-    <? echo $this->__f("Total"); ?>: <span><? echo $total; ?></span>
+    <? echo $this->__f("Total"); ?>: <span><? echo round($total); ?></span>
 </div>
 
 <?

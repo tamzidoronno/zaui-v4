@@ -15,6 +15,11 @@ foreach($instances as $instance) {
         $hasEventCalendar = true;
     }
 }
+$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+$disableCheckinCheckoutTime = "DISABLED";
+if(stristr($user->emailAddress, "@getshop.com")) {
+    $disableCheckinCheckoutTime = "";
+}
 
 $locktype = array();
 $locktype['arx'] = "Arx";
@@ -601,13 +606,13 @@ if($notificationSettings->requirePayments) {
         </div>
         <div class='configrow'>
             <span class='configentry'>
-                <input style='width: 40px;' gsname='defaultStart' value='<? echo $notificationSettings->defaultStart; ?>'>
+                <input style='width: 40px;' gsname='defaultStart' value='<? echo $notificationSettings->defaultStart; ?>' <?php echo $disableCheckinCheckoutTime; ?>>
             </span>
             Default start
         </div>
         <div class='configrow'>
             <span class='configentry'>
-                <input style='width: 40px;' gsname='defaultEnd' value='<? echo $notificationSettings->defaultEnd; ?>'>
+                <input style='width: 40px;' gsname='defaultEnd' value='<? echo $notificationSettings->defaultEnd; ?>' <?php echo $disableCheckinCheckoutTime; ?>>
             </span>
             Default end
         </div>

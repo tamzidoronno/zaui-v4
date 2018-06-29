@@ -1,6 +1,11 @@
 <?php
 /* @var $this \ns_9cea7eba_7807_4e4c_8d60_e7d58fbad13a\PmsGlobalSettings */
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+$disableCheckinCheckoutTime = "DISABLED";
+if(stristr($user->emailAddress, "@getshop.com")) {
+    $disableCheckinCheckoutTime = "";
+}
 ?>
 <h1>Global settings</h1>
 <div class='settingsform' style='padding-right: 50px;' method='saveSettings' gstype='form'>
@@ -47,19 +52,19 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
     </div>
     <div class='container'>
         <span class='option'>
-            <input type='text' class='gsniceinput1' gsname='defaultStart' value='<?php echo $config->defaultStart; ?>' style='width: 50px; text-align: center;'>
+            <input type='text' class='gsniceinput1' gsname='defaultStart' value='<?php echo $config->defaultStart; ?>' style='width: 50px; text-align: center;' <?php echo $disableCheckinCheckoutTime; ?>>
         </span>
         <span class='title'>
-            Default start<br>
+            Default start <b>(send an email to post@getshop.com to get this value changed)</b><br>
             * Default check in time.
         </span>
     </div>
     <div class='container'>
         <span class='option'>
-            <input type='text' class='gsniceinput1' gsname='defaultEnd' value='<?php echo $config->defaultEnd; ?>' style='width: 50px; text-align: center;'>
+            <input type='text' class='gsniceinput1' gsname='defaultEnd' value='<?php echo $config->defaultEnd; ?>' style='width: 50px; text-align: center;' <?php echo $disableCheckinCheckoutTime; ?>>
         </span>
         <span class='title'>
-            Default end<br>
+            Default end <b>(send an email to post@getshop.com to get this value changed)</b><br>
             * Default check out time.
         </span>
     </div>

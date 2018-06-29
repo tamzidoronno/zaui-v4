@@ -8,6 +8,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.socket.WebSocketServerImpl;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.SettingsRow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +30,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     @Autowired
     OrderManager orderManager;
+    
+    @Autowired
+    StoreManager storeManager;
     
     @Autowired
     StoreApplicationPool storeApplicationPool;
@@ -57,6 +61,14 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         orderManager.saveOrder(order);
         System.out.println("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
+
+        if(!storeManager.isProductMode()) {
+            order.status = Order.Status.PAYMENT_COMPLETED;
+            saveOrderSomeHow(orderToPay);
+            orderToPay = null;
+            return;
+        }
+
         Double total = orderManager.getTotalAmount(order) * 100;
         Integer amount = total.intValue();
         

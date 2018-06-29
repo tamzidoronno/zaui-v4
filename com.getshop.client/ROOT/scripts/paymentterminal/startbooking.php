@@ -3,7 +3,7 @@ chdir("../../");
 include '../loader.php';
 
 $factory = IocContainer::getFactorySingelton();
-$isProdMode = $factory->isProductionMode();
+$isProdMode = $factory->getApi()->getStoreManager()->isProductMode();
 $endpoint = "https://www.getshop.com";
 $jsEnpoint = "https://www.getshop.com";
 $storeId = $factory->getApi()->getStoreManager()->getStoreId();
@@ -13,6 +13,13 @@ if(!$isProdMode) {
     $jsEnpoint = "http://" . $_SERVER['SERVER_NAME'] ."/";
 }
 include("header.php");
+echo "<script>";
+if(!$isProdMode) {
+    echo "gsisdevmode=true;";
+} else {
+    echo "gsisdevmode=false;";
+}
+echo "</script>";
 ?>
 <body>
     <head>

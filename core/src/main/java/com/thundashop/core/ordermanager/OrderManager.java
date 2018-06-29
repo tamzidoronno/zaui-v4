@@ -1685,9 +1685,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void updateAddressIfNotClosed(Order order) {
-        if (!order.closed && order.userId != null && !order.userId.isEmpty() && order.cart != null && order.cart.address != null) {
+        if (!order.closed && order.userId != null && !order.userId.isEmpty() && order.cart != null) {
             try {
+                if(order.cart.address == null) {
+                    order.cart.address = new Address();
+                }
+                
                 User user = userManager.getUserById(order.userId);
+                user.address.emailAddress = user.emailAddress;
+                user.address.prefix = user.prefix;
+                user.address.phone = user.cellPhone;
+                
                 if (user == null || user.address == null)
                     return;
                 

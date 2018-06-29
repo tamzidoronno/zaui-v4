@@ -16,6 +16,12 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $this->getApi()->getOrderManager()->addProductToOrder($orderId, $productId, $count);
     }
     
+    public function saveInvoiceNote() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->invoiceNote = $_POST['data']['invoiceNote'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function saveSpecialCartItem() {
         $orderid = $_POST['data']['orderid'];
         $itemid = $_POST['data']['itemid'];
@@ -173,16 +179,7 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
      * @param \core_usermanager_data_User $user
      */
     public function saveUser($user) {
-        $this->setData();
-        $order = $this->getOrder();
-        $order->cart->address = $user->address;        
-        $order->cart->address->fullName = $user->fullName;
-        $order->cart->address->emailAddress = $user->emailAddress;
-        $order->cart->address->phone = $user->cellPhone;
-        $order->cart->address->prefix = $user->prefix;
-        $this->getApi()->getOrderManager()->saveOrder($order);
-        $this->order = null;
-        $this->order = $this->getApi()->getOrderManager()->getOrder($order->id);
+        $this->getApi()->getUserManager()->saveUser($user);
     }
     
     

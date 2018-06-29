@@ -11,6 +11,7 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -18,12 +19,16 @@ import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.webmanager.WebManager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +53,15 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     
     @Autowired
     private StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    private StoreManager storeManager;
+    
+    @Autowired
+    private WebManager webManager;
+    
+    @Autowired
+    private GetShop getShop;
 
     @Override
     public void createInvoice(String orderId) throws ErrorException {
@@ -96,6 +110,9 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Override
     public String getBase64EncodedInvoice(String orderId) {
+        if(storeManager.isPikStore()) {
+            return generateInvoiceByPHP(orderId);
+        }
         Order order = orderManager.getOrder(orderId);
         checkForNullNameOnProduct(order);
         AccountingDetails details = getAccountingDetails();
@@ -201,6 +218,34 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
                 item.getProduct().name = productManager.getProduct(item.getProduct().id).name;
             }
         }
+    }
+
+    private String generateInvoiceByPHP(String orderId) {
+        try {
+            Order order = orderManager.getOrder(orderId);
+            String addr = "http://www.3.0.local.getshop.com/scripts/invoicetemplates/template1.php";
+            if(storeManager.isProductMode()) {
+                addr = "http://www.getshop.com/scripts/invoicetemplates/template1.php";
+            }
+            addr += "?status=" + order.status;
+            String base = webManager.htmlGet(addr);
+            InvoiceFormatter formatter = new InvoiceFormatter(base);
+            formatter.setUser(userManager.getUserById(order.userId));
+            formatter.setOrder(order);
+            formatter.setAccountingDetails(getAccountingDetails());
+            formatter.replaceVariables();
+            formatter.setOrderLines();
+            formatter.setTaxesLines();
+            base = formatter.getBase();
+            
+            byte[] encoded = Base64.encodeBase64(base.getBytes());
+            String encodedString = new String(encoded);
+            
+            return getShop.getBase64EncodedPDFWebPageFromHtml(encodedString);
+        } catch (Exception ex) {
+            logPrintException(ex);
+        }
+        return "";
     }
 
 }

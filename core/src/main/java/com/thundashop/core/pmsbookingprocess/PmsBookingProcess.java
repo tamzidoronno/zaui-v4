@@ -700,7 +700,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             text += "\r\n";
             text += "\r\n";
             text += "\r\n";
-            webManager.htmlPost(url, text, false, "UTF-8");
+            if(storeManager.isProductMode()) {
+                webManager.htmlPost(url, text, false, "UTF-8");
+            } else {
+                System.out.println("Printing reciept to url: " + url);
+                System.out.println(text);
+            }
         }catch(Exception e) {
             
         }
@@ -1092,6 +1097,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void cancelPaymentProcess(StartPaymentProcess data) {
+        if(!storeManager.isProductMode()) {
+            return;
+        }
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
         verifoneManager.cancelPaymentProcess(settings.verifoneTerminalId);
     }

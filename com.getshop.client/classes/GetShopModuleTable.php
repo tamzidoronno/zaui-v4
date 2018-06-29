@@ -65,11 +65,19 @@ class GetShopModuleTable {
 
     private function renderTable($renderPaging = false) {
 
+        if(isset($_SESSION['lastsorttype']) && !isset($_POST['data']['column'])) {
+            $this->sortByColumn = $_SESSION['lastsorttype'];
+            $this->sortingAscending = $_SESSION['lastsorttypeasc'] == "true";
+        }
+        
         if (isset($_POST['event']) && $_POST['event'] == "sortGetShopTable") {
+            $_SESSION['lastsorttype'] = $_POST['data']['column'];
             $this->sortByColumn = $_POST['data']['column'];
             $this->sortingAscending = false;
+            $_SESSION['lastsorttypeasc'] = "false";
             if ($_POST['data']['sorting'] == "asc") {
                 $this->sortingAscending = true;
+                $_SESSION['lastsorttypeasc'] = "true";
             }
         }
 

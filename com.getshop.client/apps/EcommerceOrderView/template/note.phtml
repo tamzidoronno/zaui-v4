@@ -2,7 +2,11 @@
 /* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
 $order = $this->getOrder();
 ?>
-<div class="insideheader">
-    <? echo $this->__f("Note"); ?>
+<div gstype='form' method='saveInvoiceNote'>
+    <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+    <div class="insideheader">
+        <? echo $this->__f("Note"); ?>
+    </div>
+    <textarea gsname='invoiceNote' class='gsniceinput1 invoiceNote'><? echo isset($order->invoiceNote) ? $order->invoiceNote : ""; ?></textarea>
+    <span class='shop_button' gstype='submit'>Save</span>
 </div>
-<textarea gsname='invoiceNote' class='gsniceinput1 invoiceNote'><? echo isset($order->invoiceNote) ? $order->invoiceNote : ""; ?></textarea>

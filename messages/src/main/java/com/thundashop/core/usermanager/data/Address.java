@@ -44,6 +44,7 @@ public class Address extends DataCommon {
                 && checkField(address.postCode, this.postCode)
                 && checkField(address.address, this.address)
                 && checkField(address.address2, this.address2)
+                && checkField(address.prefix, this.prefix)
                 && checkField(address.city, this.city)
                 && checkField(address.type, this.type)
                 && checkField(address.countrycode, this.countrycode)

@@ -158,7 +158,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         usingNewSystem2.add("9099f6db-3095-4495-8616-a04551cabd89");
         usingNewSystem2.add("a152b5bd-80b6-417b-b661-c7c522ccf305");
         usingNewSystem2.add("3b647c76-9b41-4c2a-80db-d96212af0789");
-        usingNewSystem2.add("e625c003-9754-4d66-8bab-d1452f4d5562");
+//        usingNewSystem2.add("e625c003-9754-4d66-8bab-d1452f4d5562");
 
     }
     

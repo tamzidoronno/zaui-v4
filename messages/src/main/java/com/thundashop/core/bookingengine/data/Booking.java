@@ -124,6 +124,12 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         if (start.equals(startDate) && end.equals(endDate))
             return true;
         
+        if (start.equals(startDate) && endDate.before(end))
+            return true;
+        
+        if (startDate.after(start) && end.equals(endDate))
+            return true;
+        
         if (startDate.after(start) && endDate.before(end))
             return true;
      

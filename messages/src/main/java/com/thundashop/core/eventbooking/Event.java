@@ -54,6 +54,9 @@ public class Event extends DataCommon {
     public List<EntryComment> eventComments = new ArrayList();
     
     @Editor
+    public HashMap<String, byte[]> encryptedPersonalIds = new HashMap();
+    
+    @Editor
     public HashMap<String, List<UserComment>> comments = new HashMap();
     
     @Editor

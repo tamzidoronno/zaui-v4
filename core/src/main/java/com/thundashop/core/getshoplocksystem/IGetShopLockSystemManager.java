@@ -148,4 +148,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId);
+    
+    @Administrator
+    public List<UserSlot> getCodesInUse(String serverId, String lockId);
 }

@@ -16,6 +16,8 @@ import com.thundashop.core.common.Writing;
 import com.thundashop.core.usermanager.data.User;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import javax.xml.ws.soap.Addressing;
 
 /**
  *
@@ -287,4 +289,9 @@ public interface IEventBookingManager {
     public boolean isWaitingForConfirmation(String eventId, String userId);
     
     public List<Event> getEventsForPdf();
+    
+    public void addPersonalIdToEvent(String eventId, String userId, String personalId);
+    
+    @Administrator
+    public Map<String, String> decodePersonalIds(String eventId, String privateKey);
 }

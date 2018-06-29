@@ -20,8 +20,25 @@ if ($extraWarning) {
 }
 ?>
 
+
 <div gstype='form' method="confirmBooking">
+    <div style="border: solid 1px; text-align: center; padding: 10px;margin-bottom: 10px;" class='gserrorfield' id='errorMessage'></div>
     <table>
+        <?
+        if ($metaData->requirePersonalId) {
+            ?>
+            <tr>
+                <td class='col1' style="font-size: 16px">Personnr (11 siffer)</td>
+                <td class='col2'>
+                    <input class='gsniceinput1' type='textfield' gsname='personalid' value=''/>
+                    <br/> <span style="font-style: italic; font-weight: bold; color: red; padding-bottom: 10px;">Vi lagrer personnret kryptert og sletter det etter vi har rapport deltakelsen til Staten.</span>
+                    <br/>
+                    <br/>
+            </tr>    
+            <?
+        }
+        ?>
+
         <tr>
             <td class='col1'><? $this->wrapApp("320ada5b-a53a-46d2-99b2-9b0b26a7105a", "textfield1"); ?></td>
             <td class='col2'><input class='gsniceinput1' type='textfield' gsname='alergic' value='<? echo @$user->metaData->{'event_signon_alergic'}; ?>'/>

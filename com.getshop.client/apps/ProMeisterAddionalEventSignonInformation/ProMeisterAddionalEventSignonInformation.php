@@ -21,6 +21,13 @@ class ProMeisterAddionalEventSignonInformation extends \ns_d5444395_4535_4854_9d
     public function confirmBooking() {
         $userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
         
+        if (isset($_POST['data']['personalid']) && strlen($_POST['data']['personalid']) != 11) {
+            $obj = $this->getStdErrorObject(); // Get a default error message
+            $obj->fields->errorMessage = "Personnr må være 11 siffer"; // The message you wish to display in the gserrorfield
+            $obj->gsfield->personalid = 1; // Will highlight the field that has gsname "hours"
+            $this->doError($obj); // Code will stop here.
+        }
+        
         if ($this->getModalVariable("userid")) {
             $userId = $this->getModalVariable("userid");
         }
@@ -29,6 +36,10 @@ class ProMeisterAddionalEventSignonInformation extends \ns_d5444395_4535_4854_9d
         $this->getApi()->getUserManager()->addMetaData($userId, "event_signon_specialfoodrequest", $_POST['data']['specialfoodrequest']);
         $this->getApi()->getUserManager()->addMetaData($userId, "event_signon_additionalinfo", $_POST['data']['additionalinfo']);
         $this->getApi()->getEventBookingManager()->addUserToEvent($this->getBookingEngineName(), $this->getModalVariable("eventid"), $userId, false, "web");
+        
+        if (isset($_POST['data']['personalid']) && $_POST['data']['personalid']) {
+            $this->getApi()->getEventBookingManager()->addPersonalIdToEvent($this->getBookingEngineName(), $this->getModalVariable("eventid"), $userId, $_POST['data']['personalid']);
+        }
     }
 }
 ?>

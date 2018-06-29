@@ -8,6 +8,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -29,7 +30,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
+import org.apache.commons.discovery.tools.ClassUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -118,7 +121,11 @@ public class StoreHandler {
         setSessionObject(inObject.sessionId, userManager);
 
         Class aClass = loadClass(inObject.interfaceName);
-        Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
+        Class getShopApiInterface = getGetShopApiInterface(aClass);
+        if (getShopApiInterface == null) {
+            throw new ErrorException(26);
+        }
+        Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues, getShopApiInterface);
 
         try {
             User user = findUser(getShopInterfaceClass, inObject);
@@ -181,8 +188,21 @@ public class StoreHandler {
         }
     }
     
-    private Method getMethodToExecute(Class aClass, String method, Class[] types, Object[] argumentValues) throws ErrorException {
+    private Method getMethodToExecute(Class aClass, String method, Class[] types, Object[] argumentValues, Class getShopApiInterface) throws ErrorException {
         try {
+            boolean found = false;
+            
+            for (Method emethod : getShopApiInterface.getMethods()) {
+                if (emethod != null && emethod.getName().equals(method) && emethod.getParameterTypes().length == argumentValues.length) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                throw new ErrorException(82);
+            }
+            
             for (Method emethod : aClass.getMethods()) {
                 if (emethod != null && emethod.getName().equals(method) && emethod.getParameterTypes().length == argumentValues.length) {
                     return emethod;
@@ -606,6 +626,17 @@ public class StoreHandler {
 
     public void sessionRemoved(String sessionId) {
         sessions.remove(sessionId);
+    }
+
+    private Class getGetShopApiInterface(Class aClass) {
+        Set<TypeToken> tt = TypeToken.of(aClass).getTypes().interfaces();
+        for (TypeToken t : tt) {
+            if (t.getRawType().isAnnotationPresent(GetShopApi.class)) {
+                return t.getRawType();
+            }
+        }
+        
+       return null;
     }
 
 }

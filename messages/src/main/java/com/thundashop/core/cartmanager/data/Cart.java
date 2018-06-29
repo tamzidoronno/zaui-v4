@@ -203,6 +203,10 @@ public class Cart extends DataCommon {
                 isShippingFree = false;
                 return;
             }
+            Double priceExTax = new Double(item.getProduct().priceExTaxes);
+            if(priceExTax.isNaN()) {
+                item.getProduct().priceExTaxes = 0.0;
+            }
         }
         
         isShippingFree = true;

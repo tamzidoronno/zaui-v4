@@ -501,7 +501,7 @@ public class CartItem implements Serializable {
                         toRemove.add(dateString);
                     } else {
                         counter++;
-                        price += product.price;
+                        price += priceMatrix.get(dateString);
                     }
                 }catch(Exception e) {
                     GetShopLogHandler.logStack(e, null);

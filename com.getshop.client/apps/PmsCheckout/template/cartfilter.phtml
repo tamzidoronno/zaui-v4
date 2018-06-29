@@ -29,7 +29,7 @@ if($end) { $endDate = date("d.m.Y", $end); }
         <input type='txt' class='gsniceinput1 enddate' id='enddate' gsname='end' value='<?php echo $endDate; ?>'>
     </label>
     <div>
-        <span class="shop_button" style='width:100%; margin-top: 17px;box-sizing: border-box;' gstype='submit'>Apply dates</span>
+        <span class="shop_button" style='width:100%; margin-top: 17px;box-sizing: border-box;' gstype='submit' gs_callback='app.PmsCheckout.reloadCheckoutArea'>Apply dates</span>
     </div>
 </div>
 <bR>
@@ -41,28 +41,26 @@ if($end) { $endDate = date("d.m.Y", $end); }
 <script>
     $('#startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
-            var curEnd = moment($('#enddate').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
+            var curEnd = moment.utc($('#enddate').val(), "DD.MM.YYYY").local();
+            var date = moment.utc(dateText, "DD.MM.YYYY").local();
             
             var diff = curEnd.valueOf() - date.valueOf();
-            if(diff <= 0) {
+            if(diff < 0) {
                 date.add(7, 'days');
                 $('#enddate').val(date.format('DD.MM.YYYY')); 
             }
-            app.PmsAvailabilityDateSelector.changed();
         }
     });
     $('#enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
-            var curStart = moment($('#startdate').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
+            var curStart = moment.utc($('#startdate').val(), "DD.MM.YYYY").local();
+            var date = moment.utc(dateText, "DD.MM.YYYY").local();
             
             var diff = date.valueOf() - curStart.valueOf();
-            if(diff <= 0) {
+            if(diff < 0) {
                 date.add(-7, 'days');
                 $('#startdate').val(date.format('DD.MM.YYYY')); 
             }
-            app.PmsAvailabilityDateSelector.changed();
         }
     });
 </script>

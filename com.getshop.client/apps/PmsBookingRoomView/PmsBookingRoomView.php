@@ -224,13 +224,34 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function saveRoom() {
         $selectedRoom = $this->getTmpSelectedRoom($_POST['data']['roomid']);
         
+        $curRoom = null;
+        $curBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId);
+        foreach($curBooking->rooms as $r) {
+            if($r->pmsBookingRoomId != $selectedRoom->pmsBookingRoomId) {
+                continue;
+            }
+            $curRoom = $r;
+        }
+        
         //Update stay
         $roomId = $selectedRoom->pmsBookingRoomId;
         $start = $this->convertToJavaDate(strtotime($selectedRoom->date->start));
         $end = $this->convertToJavaDate(strtotime($selectedRoom->date->end));
         $itemId = $selectedRoom->bookingItemId;
         
-        $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId,$itemId,false, $start, $end);
+        $changed = false;
+        if($curRoom->bookingItemId != $itemId) {
+            $changed = true;
+        }
+        if(date("dmyHi", strtotime($start)) != date("dmyHi", strtotime($curRoom->date->start))) {
+            $changed = true;
+        }
+        if(date("dmyHi", strtotime($end)) != date("dmyHi", strtotime($curRoom->date->end))) {
+            $changed = true;
+        }
+        if($changed) {
+            $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId,$itemId,false, $start, $end);
+        }
         
         //Update price matrix
         $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId, $selectedRoom->priceMatrix);
@@ -1348,9 +1369,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                     $datediff = $end - $start;
                     $days = floor($datediff / (60 * 60 * 24));
                     $avg = $amount / $days;
-                    
-                    echo date("d.m.Y", $start) . " - ";
-                    echo date("d.m.Y", $end) . " ($days)" . "<br>";
                     
                     foreach($room->priceMatrix as $day => $val) {
                         $dayInTime = strtotime($day . " 23:59");

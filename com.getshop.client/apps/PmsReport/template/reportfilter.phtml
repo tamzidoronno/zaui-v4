@@ -67,5 +67,28 @@ $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : "";
 </div>
 
 <script>
-$('.PmsReport .endcal,.PmsReport .startcal').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true});
+$('.PmsReport .startcal').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText) {
+        var curEnd = moment.utc($('.PmsReport .endcal').val(), "DD.MM.YYYY").local();
+        var date = moment.utc(dateText, "DD.MM.YYYY").local();
+
+        var diff = curEnd.valueOf() - date.valueOf();
+        if(diff <= 0) {
+            date.add(7, 'days');
+            $('.PmsReport .endcal').val(date.format('DD.MM.YYYY')); 
+        }
+    }
+});
+$('.PmsReport .endcal').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText) {
+        var curStart = moment.utc($('.PmsReport .startcal').val(), "DD.MM.YYYY").local();
+        var date = moment.utc(dateText, "DD.MM.YYYY").local();
+
+        var diff = date.valueOf() - curStart.valueOf();
+        if(diff <= 0) {
+            date.add(-7, 'days');
+            $('.PmsReport .startcal').val(date.format('DD.MM.YYYY')); 
+        }
+    }
+});
 </script>

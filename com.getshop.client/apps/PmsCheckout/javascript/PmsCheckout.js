@@ -21,6 +21,9 @@ app.PmsCheckout = {
             $('[gsname="paymenttypeselection"]').show();
         }
     },
+    reloadCheckoutArea : function(res) {
+        $('.checkoutarea').html(res);
+    },
     orderCreationCompleted : function() {
         app.PmsBookingRoomView.refresh();
     },

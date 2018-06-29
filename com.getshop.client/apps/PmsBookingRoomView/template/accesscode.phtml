@@ -114,6 +114,19 @@ if (!$isSameDayStart) {
                 echo $this->__f("I will not grant acess to this guest as he/she is not arriving today.");
                 echo "<br/><br/>".$this->__f("Guest is arriving in")." $daysToArrival ".$this->__f("days time");
                 ?>    
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
+                    <?php
+                    if(!$room->forceAccess) {
+                    ?>
+                        <div class="shop_button" gsclick="forceAccessRegardlessOfPayment" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Force access regardless of payment"); ?></div>
+                    <?php } else {
+                        ?>
+                        * Access has been forced, and the code will be sent regardless of payment at the day of arrival.<br>
+                        <div class="shop_button" gsclick="ungrantPayment" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Ungrant access regardless of payment"); ?></div>
+                        <?
+                    } ?>  
+                </div>
             </div>
         </div>
     </div>

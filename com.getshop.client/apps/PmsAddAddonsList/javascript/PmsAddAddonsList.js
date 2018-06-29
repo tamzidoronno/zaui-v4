@@ -11,12 +11,10 @@ app.PmsAddAddonsList = {
         var event = thundashop.Ajax.createEvent('','addAdvancedAddons', $(this), args);
         if(args.quickadd === "true") {
             thundashop.Ajax.postWithCallBack(event, function() {
-                thundashop.framework.toggleRightWidgetPanel('addaddons');
                 thundashop.framework.reprintPage();
             });
         } else {
             thundashop.Ajax.postWithCallBack(event, function(res){
-                thundashop.framework.toggleRightWidgetPanel('addaddons');
                 app.PmsBookingRoomView.refresh();
             });
         }

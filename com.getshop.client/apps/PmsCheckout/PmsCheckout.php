@@ -107,6 +107,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
         $this->getApi()->getCartManager()->filterByDate($start, $end);
+        $this->includefile("checkout");
     }
 
     public function removeItem() {

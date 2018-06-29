@@ -45,7 +45,9 @@ app.PmsBookingRoomView = {
             $('.PmsBookingRoomView .addAddonsArea').hide();
             $('.addAddonsAreaInner').html(res);
             $('.PmsBookingRoomView .addAddonsArea').fadeIn();
-            $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+            if($('.getshoptableoverlaybody').length > 0) {
+                $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+            }
         });
     },
     listPaymentButton : function() {
@@ -250,7 +252,9 @@ app.PmsBookingRoomView = {
             thundashop.Ajax.postWithCallBack(event, function(res) {
                 paymentpanel.html(res);
                 paymentpanel.show();
-                $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+                if($('.getshoptableoverlaybody').length > 0) {
+                    $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+                }
             });
         } else {
             var event = thundashop.Ajax.createEvent(null, "transferSelectedToCart", this, {});
@@ -269,7 +273,9 @@ app.PmsBookingRoomView = {
             $('.menuentry[tab="orderstab"]').click();
             $('.checkoutviewinner').html(res);
             $(".checkoutview").fadeIn();
-            $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+            if($('.getshoptableoverlaybody').length > 0) {
+                $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
+            }
         });
     },
     doEditAddonUpdate : function() {
@@ -321,7 +327,9 @@ app.PmsBookingRoomView = {
         }
         thundashop.Ajax.postWithCallBack(event, function(res) {
             view.html(res);
-            $('.getshoptableoverlaybody').css('height','auto');
+            if($('.getshoptableoverlaybody').length > 0) {
+                $('.getshoptableoverlaybody').css('height','auto');
+            }
         });
     },
     toggleRemoveAddonCheckBox : function() {

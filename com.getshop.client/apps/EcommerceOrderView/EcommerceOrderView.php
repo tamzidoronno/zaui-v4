@@ -16,6 +16,12 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $this->getApi()->getOrderManager()->addProductToOrder($orderId, $productId, $count);
     }
     
+    public function saveInvoiceNote() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->invoiceNote = $_POST['data']['invoiceNote'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function saveSpecialCartItem() {
         $orderid = $_POST['data']['orderid'];
         $itemid = $_POST['data']['itemid'];

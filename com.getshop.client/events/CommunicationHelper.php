@@ -150,7 +150,7 @@ class CommunicationHelper {
             $result['interfaceName'] = $event['interfaceName'];
             $this->errors[] = $result;
             $this->errorCodes[] = $object->jsonDecodeErorCode;
-            
+            echo $res;
             if (isset($_POST['synchron'])) {
                 http_response_code(400);
                 echo json_encode($result);

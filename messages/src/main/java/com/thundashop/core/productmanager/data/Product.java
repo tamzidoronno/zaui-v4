@@ -227,10 +227,17 @@ public class Product extends DataCommon implements Comparable<Product>  {
         if(Double.isNaN(discountedPrice)) {
             discountedPrice = 0.0;
         }
+        double divident = 0.0;
         if(taxGroupObject != null && taxGroupObject.taxRate != null) {
-            priceExTaxes = price / (1 + (taxGroupObject.taxRate/100));
+            divident = (1 + (taxGroupObject.taxRate/100));
+        }
+        if(taxGroupObject != null && taxGroupObject.taxRate != null && divident != 0.0 && price != 0.0) {
+            priceExTaxes = price / divident;
         } else {
             priceExTaxes = price;
+        }
+        if(Double.isNaN(priceExTaxes)) {
+            priceExTaxes = 0.0;
         }
     }
 }

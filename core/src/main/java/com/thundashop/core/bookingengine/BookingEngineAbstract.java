@@ -156,7 +156,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         usingNewSystem2.add("32f280c2-ae25-4263-8529-624df2f01dec");
         usingNewSystem2.add("75e5a890-1465-4a4a-a90a-f1b59415d841");
         usingNewSystem2.add("9099f6db-3095-4495-8616-a04551cabd89");
-//        usingNewSystem2.add("a152b5bd-80b6-417b-b661-c7c522ccf305");
+        usingNewSystem2.add("a152b5bd-80b6-417b-b661-c7c522ccf305");
         usingNewSystem2.add("3b647c76-9b41-4c2a-80db-d96212af0789");
         usingNewSystem2.add("e625c003-9754-4d66-8bab-d1452f4d5562");
 
@@ -676,7 +676,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (bookingItem != null)
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         
-        tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
+        if (!usingNewSystem2.contains(storeId)) {
+            tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
+        }
         
         saveObject(booking);
     }

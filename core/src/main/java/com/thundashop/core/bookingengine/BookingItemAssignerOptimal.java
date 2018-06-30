@@ -828,6 +828,10 @@ public class BookingItemAssignerOptimal {
             for (Date start : datesBetween.keySet() ) {
                 Date end = datesBetween.get(start);
                 
+                if (start.equals(end)) {
+                    continue;
+                }
+                
                 BookingsBetweenCalculator ret = new BookingsBetweenCalculator(start, end, unassignedBookings, timeline);
                 
                 if (start.equals(new Date(0))) {

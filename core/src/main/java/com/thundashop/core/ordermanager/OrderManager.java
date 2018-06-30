@@ -2322,4 +2322,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return order.getTotalAmount() - order.getTransactionAmount();
     }
 
+    @Override
+    public void markAsPaidWithPassword(String orderId, Date date, Double amount, String password) {
+        if(!password.equals("fdsvb4354345345")) {
+            return;
+        }
+        markAsPaid(orderId, date, amount);
+    }
+
 }

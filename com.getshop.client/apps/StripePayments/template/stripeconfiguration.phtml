@@ -1,0 +1,43 @@
+<?
+/* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+
+$key = $this->getConfigurationSetting("key");
+$title = $this->getConfigurationSetting("title");
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-cc-visa'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <?php echo $this->getName(); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php echo $this->getDescription(); ?>
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="key">
+            <span class="title"><?php echo $this->__f("Key"); ?></span>
+            <input type="textfield" gs_model='stripemodal' gs_model_attr='key' value="<? echo $key; ?>">
+            <div class="description">
+                <?php  echo $this->__f("Register an account at stripe and create a private key"); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="title">
+            <span class="title"><?php echo $this->__f("Title"); ?></span>
+            <input type="textfield" gs_model='stripemodal' gs_model_attr='title' value="<? echo $title; ?>">
+            <div class="description">
+                <?php  echo $this->__f("Title of the store"); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="dibsmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

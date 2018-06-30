@@ -8091,7 +8091,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Date date = new Date();
             date.setTime(timezone);
             PmsCleaningHistory res = new PmsCleaningHistory();
-            String roomId = additional.markedDirtyDatesLog.get(date);
+            String roomId = additional.markedDirtyDatesLog.get(timezone);
             if (roomId != null) {
                 PmsBooking booking = getBookingFromRoom(roomId);
                 PmsBookingRooms room = booking.getRoom(roomId);

@@ -228,14 +228,16 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
                 addr = "http://www.getshop.com/scripts/invoicetemplates/template1.php";
             }
             addr += "?status=" + order.status;
+            AccountingDetails details = getAccountingDetails();
             String base = webManager.htmlGet(addr);
             InvoiceFormatter formatter = new InvoiceFormatter(base);
             formatter.setUser(userManager.getUserById(order.userId));
             formatter.setOrder(order);
-            formatter.setAccountingDetails(getAccountingDetails());
+            formatter.setAccountingDetails(details);
             formatter.replaceVariables();
             formatter.setOrderLines();
             formatter.setTaxesLines();
+            formatter.setTranslation(details.useLanguage);
             base = formatter.getBase();
             
             byte[] encoded = Base64.encodeBase64(base.getBytes());

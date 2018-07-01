@@ -30,7 +30,7 @@ $total = "{total}";
 $netAmount = "{netAmount}";
 
 function doTranslation($key) {
-    return $key;
+    return "<text>$key</text>";
 }
 
 ?>

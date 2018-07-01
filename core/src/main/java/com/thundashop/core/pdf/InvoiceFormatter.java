@@ -172,4 +172,18 @@ public class InvoiceFormatter {
     private String getTranslation(String key) {
         return key;
     }
+
+    void setTranslation(String lang) {
+        InvoiceLanguages invoicelang = new InvoiceLanguages();
+        HashMap<String, String> languageMatrix = invoicelang.getLanguageMatrix(lang);
+
+        for(String key : languageMatrix.keySet()) {
+            if(!languageMatrix.get(key).isEmpty()) {
+                base = base.replace("<text>" + key + "</text>", languageMatrix.get(key));
+            } else {
+                base = base.replace("<text>" + key + "</text>", key);
+            }
+        }
+    }
+    
 }

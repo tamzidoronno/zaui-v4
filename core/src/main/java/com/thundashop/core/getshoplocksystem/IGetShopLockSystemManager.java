@@ -151,4 +151,10 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public List<UserSlot> getCodesInUse(String serverId, String lockId);
+    
+    @Administrator
+    public void setCodeSize(int codeSize);
+    
+    @Administrator
+    public int getCodeSize();
 }

@@ -88,37 +88,65 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     $scope.startRoute = function($routeToUse) {
         var confirmed = confirm("Are you sure you want to start this route?");
         
-        var inputDate = new Date($routeToUse.deliveryServiceDate);
-        var todaysDate = new Date();
-        
-        var sameDay = inputDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0);
-        var later = todaysDate.getTime() > inputDate.getTime();
-        
-        if (!sameDay && !later) {
-            alert("This route is not scheduled for today");
-            return;
-        }
+//        var inputDate = new Date($routeToUse.deliveryServiceDate);
+//        var todaysDate = new Date();
+//        
+//        var sameDay = inputDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0);
+//        var later = todaysDate.getTime() > inputDate.getTime();
+//        
+//        if (!sameDay && !later) {
+//            alert("This route is not scheduled for today");
+//            return;
+//        }
+
+        $routeToUse.startInProgress = true;
         
         if (confirmed) {
-            $routeToUse.startInfo.started = true;
-            $routeToUse.startInfo.startedTimeStamp = new Date();
-
-            $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
             
             navigator.geolocation.getCurrentPosition(function(position) {
-                $routeToUse.startInfo.lon = position.coords.longitude;
-                $routeToUse.startInfo.lat = position.coords.latitude;  
-                $scope.$evalAsync();
-               
-                $api.getApi().TrackAndTraceManager.markRouteAsStarted($routeToUse.id, new Date(), $routeToUse.startInfo.lon, $routeToUse.startInfo.lat);
-                datarepository.save();
+                $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), $routeToUse.startInfo.lon, $routeToUse.startInfo.lat).done(function(res) {
+                    $routeToUse.startInProgress = false;
+                    
+                    if (res === "SERVICEDATE_IN_FUTURE") {
+                        alert("Can not start the route as the service date is in the future");
+                    }
+                   
+                    if (res === "true") {
+                        $routeToUse.startInfo.started = true;
+                        $routeToUse.startInfo.startedTimeStamp = new Date();
+
+                        $routeToUse.startInfo.lon = position.coords.longitude;
+                        $routeToUse.startInfo.lat = position.coords.latitude;  
+                        $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
+
+                        datarepository.save();
+                    }
+                    
+                    $scope.$evalAsync();
+                })
+                
             }, function(failare, b, c) {
-                $routeToUse.startInfo.started = true;
-                $routeToUse.startInfo.startedTimeStamp = new Date();
-                $scope.$evalAsync();
-               
-                $api.getApi().TrackAndTraceManager.markRouteAsStarted($routeToUse.id, new Date(), 0, 0);
-                datarepository.save();
+                $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), 0, 0).done(function() {
+                    $routeToUse.startInProgress = false;
+                    
+                    if (res === "SERVICEDATE_IN_FUTURE") {
+                        alert("Can not start the route as the service date is in the future");
+                        return;
+                    }
+                    
+                    if (res === "true") {
+                        $routeToUse.startInfo.started = true;
+                        $routeToUse.startInfo.startedTimeStamp = new Date();
+
+                        $routeToUse.startInfo.lon = position.coords.longitude;
+                        $routeToUse.startInfo.lat = position.coords.latitude;  
+                        $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
+
+                        datarepository.save();
+                    }
+                    
+                    $scope.$evalAsync();
+                });
             }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
         }
     }

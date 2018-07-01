@@ -14733,6 +14733,20 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         };
         return this.communication.send(data, gs_silent);
     },
+    
+    'markRouteAsStartedWithCheck' : function(routeId,startedTimeStamp,lon,lat, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+                startedTimeStamp : JSON.stringify(startedTimeStamp),
+                lon : JSON.stringify(lon),
+                lat : JSON.stringify(lat),
+            },
+            method: 'markRouteAsStartedWithCheck',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
 
     'markTaskWithExceptionDeliverd' : function(taskId,exceptionId, gs_silent) {
         var data = {

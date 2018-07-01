@@ -163,6 +163,9 @@ public interface ITrackAndTraceManager {
     public void markRouteAsStarted(String routeId, Date startedTimeStamp, double lon, double lat);
     
     @Customer
+    public String markRouteAsStartedWithCheck(String routeId, Date startedTimeStamp, double lon, double lat);
+    
+    @Customer
     public void markAsArrived(String destinationId, Date startedTimeStamp, double lon, double lat);
     
     @Customer

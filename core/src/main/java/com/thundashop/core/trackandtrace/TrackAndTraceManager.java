@@ -1226,6 +1226,26 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         notifyRoute(route);
     }
+    
+    @Override
+    public String markRouteAsStartedWithCheck(String routeId, Date startedTimeStamp, double lon, double lat) {
+        Route route = getRouteById(routeId);
+        
+        if (route == null) {
+            return "false";
+        }
+        
+        if (getSession() == null || getSession().currentUser == null)
+            return "false";
+        
+        if (!route.serviceDateToDayOrInPast()) {
+            return "SERVICEDATE_IN_FUTURE";
+        }
+        
+        markRouteAsStarted(routeId, startedTimeStamp, lon, lat);
+        
+        return "true";
+    }
 
     @Override
     public void acceptTodaysInstruction(String routeId) {

@@ -1692,9 +1692,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
                 
                 User user = userManager.getUserById(order.userId);
-                user.address.emailAddress = user.emailAddress;
-                user.address.prefix = user.prefix;
-                user.address.phone = user.cellPhone;
+                if(user.address != null) {
+                    user.address.emailAddress = user.emailAddress;
+                    user.address.prefix = user.prefix;
+                    user.address.phone = user.cellPhone;
+                }
                 
                 if (user == null || user.address == null)
                     return;

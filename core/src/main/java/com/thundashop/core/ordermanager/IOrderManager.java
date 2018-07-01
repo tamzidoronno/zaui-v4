@@ -170,6 +170,9 @@ public interface IOrderManager {
     @Editor
     public void markAsPaid(String orderId, Date date, Double amount);
     
+    
+    public void markAsPaidWithPassword(String orderId, Date date, Double amount, String password);
+   
     /**
      * @param id
      * @return

@@ -583,7 +583,10 @@ class CartManager extends \SystemApplication implements \Application {
     }
     
     public function payOrderDirect() {
-        $orderId = $_GET['payorder'];
+        $orderId = "";
+        if(isset($_GET['payorder'])) {
+            $orderId = $_GET['payorder'];
+        }
         if(isset($_GET['incid'])) {
             $orderId = $_GET['incid'];
         }

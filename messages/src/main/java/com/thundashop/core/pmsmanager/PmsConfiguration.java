@@ -67,7 +67,7 @@ public class PmsConfiguration extends DataCommon {
         int diff = getTimeDifferenceInTimeZone();
         Calendar cal = Calendar.getInstance();
         cal.setTime(timing);
-        cal.add(Calendar.HOUR_OF_DAY, diff);
+        cal.add(Calendar.SECOND, diff);
         return cal.getTime();
     }
 

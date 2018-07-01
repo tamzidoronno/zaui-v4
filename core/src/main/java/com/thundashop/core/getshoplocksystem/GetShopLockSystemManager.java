@@ -18,7 +18,6 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsMessage;
-import com.thundashop.core.trackermanager.TrackLog;
 import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +25,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,7 +41,8 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     private HashMap<String, AccessGroupUserAccess> users = new HashMap();
     private HashMap<String, SmsMessage> smsMessage = new HashMap();
     private HashMap<String, MailMessage> mailMessage = new HashMap();
-
+    private GetShopLockSystemSettings settings = new GetShopLockSystemSettings();
+    
     @Autowired
     private MessageManager messageManager;
     
@@ -69,6 +68,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             if (iData instanceof AccessGroupUserAccess) {
                 AccessGroupUserAccess access = (AccessGroupUserAccess)iData;                
                 users.put(access.id, access);
+            }
+            if (iData instanceof GetShopLockSystemSettings) {
+                settings = (GetShopLockSystemSettings)iData;
             }
         }
         
@@ -533,16 +535,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
     }
 
-    int getCodeSize() {
-        // Do this better, dont make it hardcoded bu make codesize configurable.
-        if (storeId.equals("7f2c47a4-7ec9-41e2-a070-1e9e8fcf4e38")) {
-            return 4;
-        }
-        if (storeId.equals("31e0a6ff-656e-4ef5-8973-945ffae8edd0")) {
-            return 4;
-        }
-        
-        return 6;
+    @Override
+    public int getCodeSize() {
+        return settings.getCodeSize();
     }
 
     @Override
@@ -700,5 +695,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         };
         
         return slotsToReturn;
+    }
+
+    @Override
+    public void setCodeSize(int codeSize) {
+        settings.setCodeSize(codeSize);
+        saveObject(settings);
     }
 }

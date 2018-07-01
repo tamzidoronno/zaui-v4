@@ -239,5 +239,9 @@ class ApacGeneralSettings extends \MarketingApplication implements \Application 
             }
         }
     }
+    
+    public function setCodeSize() {
+        $this->getApi()->getGetShopLockSystemManager()->setCodeSize($_POST['data']['codeSize']);
+    }
 }
 ?>

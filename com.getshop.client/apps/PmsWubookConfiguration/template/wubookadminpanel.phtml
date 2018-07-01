@@ -76,6 +76,13 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
                             </td>
                         </tr>
                         <tr>
+                            <td>Avoid sending noshow to booking.com
+                            </td>
+                            <?php $checked = $config->ignoreNoShow == true ? "CHECKED" : ""; ?>
+                            <td><input type="checkbox" class='gsniceinput1' gsname="ignoreNoShow" <?php echo $checked; ?>> 
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
                             </td>
                             <td><span class='gsmodulebutton' gstype="submit" style='width:190px;'>Save Credentials</span>

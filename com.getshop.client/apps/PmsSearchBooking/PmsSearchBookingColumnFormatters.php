@@ -161,7 +161,7 @@ class PmsSearchBookingColumnFormatters {
         $date = \GetShopModuleTable::formatDate($room->regDate);
         $date = "<div class='rowdate1'>".date("d.m.y", strtotime($room->regDate))."</div> <div class='rowdate2'>".date("H:i", strtotime($room->regDate))."</div>";
         if(!$room->bookingEngineId) {
-            $date .= "<i class='fa fa-warning' title='Booking not added to booking engine' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
+            $date .= "<i class='fa fa-warning dontExpand' title='Booking not added to booking engine' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
         }
         return $date;
     }

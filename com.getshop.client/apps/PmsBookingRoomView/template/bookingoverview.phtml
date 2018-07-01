@@ -64,7 +64,8 @@ if($numberOfRooms > 0 && !$this->isGroupBookingView()) {
 }
 if($pmsSelectedRoom->addedToWaitingList) {
     echo "<div class='isgroupinformation'>";
-    echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try to remove it from waiting list</a>.";
+    echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try adding this room.</a>.";
+    echo "<span style='float:right; background-color:red; color:#fff; padding-left:5px; padding-right: 5px; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='deleteWaitingListRoom'>Delete from waiting list</span>";
     echo "</div>";
 } else if($pmsSelectedRoom->deleted) {
     echo "<div class='isdeletedinformation'>";

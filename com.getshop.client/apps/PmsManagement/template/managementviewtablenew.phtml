@@ -153,7 +153,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
 
         $row['regdate'] = date("d.m.y H:i", strtotime($room->regDate));
         if(!$room->bookingEngineId) {
-            $row['regdate'] .= "<i class='fa fa-warning' title='Booking not added to booking engine' style='cursor:pointer;' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
+            $row['regdate'] .= "<i class='fa fa-warning dontExpand' title='Booking not added to booking engine' style='cursor:pointer;' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
         }
         $diff = ($room->end - $room->start)/1000;
         if($diff < 40000) {

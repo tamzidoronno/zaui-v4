@@ -8,7 +8,7 @@ $endpoint = "https://www.getshop.com";
 $jsEnpoint = "https://www.getshop.com";
 $storeId = $factory->getApi()->getStoreManager()->getStoreId();
 $cssStore = str_replace("-", "", $storeId);
-if(!$isProdMode) {
+if($isProdMode) {
     $endpoint = "";
     $jsEnpoint = "http://" . $_SERVER['SERVER_NAME'] ."/";
 }

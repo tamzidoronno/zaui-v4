@@ -24,7 +24,7 @@ if($_GET['type'] == "roomrevenue") {
         $day['propertyid'] = $storeId;
         $day['date'] = date("d.m.Y", strtotime($s->date));
         $day['code'] = "";
-        $day['segment'] = "losji";
+        $day['segment'] = "Total";
         $day['roomnights'] = $s->roomsRentedOut;
         $day['guestnights'] = $s->guestCount;
         $day['guestnightsadults'] = $s->guestCount;
@@ -50,14 +50,18 @@ if($_GET['type'] == "allrevenue") {
     $list = array();
     
     foreach($res->entries as $s) {
-        $revenue = round(array_sum((array)$s->priceEx));
+        $revenue = 0.0;
+        foreach($s->priceExOrders as $productId => $orders) {
+            $revenue = array_sum((array)$orders);
+            $revenue = round($revenue, 2);
+            $day = array();
+            $day['propertyid'] = $storeId;
+            $day['transactiondate'] = date("d.m.Y", strtotime($s->day));
+            $day['department'] = $factory->getApi()->getProductManager()->getProduct($productId)->name;
+            $day['revenue'] = $revenue;
+            $list[] = $day;
+        }
         
-        $day = array();
-        $day['propertyid'] = $storeId;
-        $day['transactiondate'] = date("d.m.Y", strtotime($s->day));
-        $day['department'] = "unkown";
-        $day['revenue'] = $revenue;
-        $list[] = $day;
     }
     echo json_encode($list);
 }

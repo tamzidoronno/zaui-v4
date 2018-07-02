@@ -57,7 +57,9 @@ if($_GET['type'] == "allrevenue") {
             $day = array();
             $day['propertyid'] = $storeId;
             $day['transactiondate'] = date("d.m.Y", strtotime($s->day));
-            $day['department'] = $factory->getApi()->getProductManager()->getProduct($productId)->name;
+            $day['department'] = "";
+            $day['productName'] = $factory->getApi()->getProductManager()->getProduct($productId)->name;
+            $day['productId'] = $productId;
             $day['revenue'] = $revenue;
             $list[] = $day;
         }
@@ -83,7 +85,7 @@ if($_GET['type'] == "reservations") {
         $day['snapshotdate'] = date("d.m.Y", time());
         $day['date'] = date("d.m.Y", strtotime($s->date));
         $day['code'] = "";
-        $day['segment'] = "losji";
+        $day['segment'] = "Total";
         $day['roomnights'] = $s->roomsRentedOut;
         $day['guestnights'] = $s->guestCount;
         $day['guestnightsadults'] = $s->guestCount;

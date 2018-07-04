@@ -1466,11 +1466,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         
+        if(!frameworkConfig.productionMode && !forceUpdate) { return false; }
+        
         forceUpdate = false;
         
         availabilityLastUpdated = new Date();
         
-        if(!frameworkConfig.productionMode) { return false; }
         
         if(!connectToApi()) {
             return false; 

@@ -5485,7 +5485,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         RoomCleanedInformation cleaning = new RoomCleanedInformation();
         List<RoomCleanedInformation> result = new LinkedList();
         List<PmsAdditionalItemInformation> allRooms = getAllAdditionalInformationOnRooms();
-
+        
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkout";
         filter.startDate = new Date();
@@ -5499,6 +5499,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingRooms> intervalCleanings = getRoomsNeedingIntervalCleaning(new Date());
 
         for (PmsAdditionalItemInformation room : allRooms) {
+            
+            if(room.itemId.equals("4544add4-13da-42cf-aa16-6455a3983092")) {
+                System.out.println("check");
+            }
+
+            
             RoomCleanedInformation info = new RoomCleanedInformation();
             info.roomId = room.itemId;
             info.hideFromCleaningProgram = room.hideFromCleaningProgram;

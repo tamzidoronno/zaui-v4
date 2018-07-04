@@ -225,7 +225,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             Order order = orderManager.getOrder(orderId);
             String addr = "http://www.3.0.local.getshop.com/scripts/invoicetemplates/template1.php";
             if(storeManager.isProductMode()) {
-                addr = "http://www.getshop.com/scripts/invoicetemplates/template1.php";
+                addr = "https://www.getshop.com/scripts/invoicetemplates/template1.php";
             }
             addr += "?status=" + order.status;
             AccountingDetails details = getAccountingDetails();

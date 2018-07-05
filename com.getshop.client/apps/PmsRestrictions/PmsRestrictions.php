@@ -11,8 +11,9 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
     }
 
     public function closeForPeriode() {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00"));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59"));
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $config->defaultStart));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " "  . $config->defaultEnd));
         $data = new \core_pmsmanager_TimeRepeaterData();
         $data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
         $data->firstEvent->start = $start;
@@ -88,12 +89,13 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
     public function addWubookRestriction() {
         $startTime = $_POST['data']['start'];
         $endTime = $_POST['data']['end'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
         if(!$endTime || !$startTime) {
             echo "Please select a start and end date";
         } else {
             $restriction = new \core_wubook_WubookAvailabilityRestrictions();
-            $restriction->start = $this->convertToJavaDate(strtotime($startTime  . " 14:00"));
-            $restriction->end = $this->convertToJavaDate(strtotime($endTime . "  11:00"));
+            $restriction->start = $this->convertToJavaDate(strtotime($startTime  . " " . $config->defaultStart));
+            $restriction->end = $this->convertToJavaDate(strtotime($endTime . " " . $config->defaultEnd));
             
             foreach($_POST['data'] as $key => $event) {
                 if(stristr($key, "type_") && $event == "true") {

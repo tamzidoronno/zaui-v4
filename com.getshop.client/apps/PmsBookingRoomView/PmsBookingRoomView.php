@@ -18,6 +18,18 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function deleteWaitingListRoom() {
+        $id = $_POST['data']['id'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $id);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $id) {
+                $room->deleted = true;
+                $room->addedToWaitingList = false;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function togglerefundable() {
         $booking = $this->getPmsBooking();
         $booking->nonrefundable = !$booking->nonrefundable;

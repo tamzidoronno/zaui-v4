@@ -26,8 +26,8 @@
                     foreach($allRestrictions as $res) {
                         echo "<tr>";
                         echo "<td valign='top'><i class='fa fa-trash-o' gstype='clicksubmit' method='removeRestriction' gsname='id' gsvalue='".$res->id."' style='cursor:pointer;'></i></td>";
-                        echo "<td valign='top'>" . date("d.m.Y", strtotime($res->start)) . "</td>";
-                        echo "<td valign='top'>" . date("d.m.Y", strtotime($res->end)) . "</td>";
+                        echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($res->start)) . "</td>";
+                        echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($res->end)) . "</td>";
                         echo "<td valign='top'>";
                         $names = array();
                         if(is_array($res->types)) {
@@ -59,8 +59,8 @@
                 foreach($config->closedOfPeriode as $row) {
                     echo "<div style='padding-left:5px;'>";
                     echo "<i class='fa fa-trash-o' gstype='clicksubmit' style='cursor:pointer;' method='removeClosedOfUntil' gsname='id' gsvalue='".$row->repeaterId."'></i> ";
-                    echo date("d.m.Y", strtotime($row->firstEvent->start)) . " - ";
-                    echo date("d.m.Y", strtotime($row->firstEvent->end));
+                    echo date("d.m.Y H:i", strtotime($row->firstEvent->start)) . " - ";
+                    echo date("d.m.Y H:i", strtotime($row->firstEvent->end));
                     echo "</div>";
                 }
                 ?>

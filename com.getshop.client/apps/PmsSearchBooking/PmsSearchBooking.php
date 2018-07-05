@@ -18,6 +18,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
 
     public function getDescription() {   
     }
+    
+    public function tryAddToBookingEngine() {
+       $this->getApi()->getPmsManager()->tryAddToEngine($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+    }
 
     public function loadUnpaidView() {
         $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();

@@ -157,9 +157,6 @@ public class PmsManagerProcessor {
                 save = true;
                 manager.doNotificationFromProcessor(key, booking, room);
                 room.notificationsSent.add(key);
-                if(hoursAhead == 0 && !manager.hasLockSystemActive()) {
-                    manager.markRoomAsDirty(room.bookingItemId);
-                }
             }
             if (save) {
                 manager.saveBooking(booking);

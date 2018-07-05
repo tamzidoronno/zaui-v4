@@ -30,6 +30,7 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
         $config->wubookusername = $_POST['data']['username'];
         $config->wubookpassword = $_POST['data']['password'];
         $config->wubooklcode = $_POST['data']['lcode'];
+        $config->ignoreNoShow = $_POST['data']['ignoreNoShow'] == "true";
         $config->increaseByPercentage = $_POST['data']['increaseByPercentage'];
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }

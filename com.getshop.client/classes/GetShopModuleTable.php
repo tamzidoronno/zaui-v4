@@ -83,7 +83,7 @@ class GetShopModuleTable {
 
         $dataToPrint = $this->formatDataToPrint();
         $dataToPrint = $this->sortData($dataToPrint);
-
+        
         echo "<div class='GetShopModuleTable' identifier='" . $this->getIdentifier() . "' method='" . $this->manangerName . "_" . $this->functionName . "'>";
 
         echo "<div class='attributeheader datarow'>";
@@ -374,9 +374,15 @@ class GetShopModuleTable {
         $direction = $this->sortingAscending;
 
         usort($dataToPrint, function($a, $b) use ($columnName, $direction) {
-            $aval = $this->getSortingValue($a[$columnName]);
-            $bval = $this->getSortingValue($b[$columnName]);
-
+            $aval = 0;
+            $bval = 0;
+            if(isset($a[$columnName])) {
+                $aval = $this->getSortingValue($a[$columnName]);
+            }
+            if(isset($b[$columnName])) {
+                $bval = $this->getSortingValue($b[$columnName]);
+            }
+                
             if ($direction) {
                 if (is_numeric($aval) && is_numeric($bval)) {
                     return floatval($aval) - floatval($bval);

@@ -1458,16 +1458,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         Vector result = executeClient("get_otas", params);
         Integer responseCode = (Integer) result.get(0);
-        Vector channels = (Vector) result.get(1);
         List<WubookOta> returnChannels = new ArrayList();
-        for(Integer offset = 0; offset < channels.size(); offset++) {
-            Hashtable table = (Hashtable) channels.get(offset);
-            WubookOta ota = new WubookOta();
-            ota.channel = new Integer((int) table.get("ctype")) + "";
-            ota.tag = (String) table.get("tag");
-            ota.id = (int)table.get("id");
-            ota.running = (int) table.get("running");
-            returnChannels.add(ota);
+        if(responseCode == 0) {
+            Vector channels = (Vector) result.get(1);
+            for(Integer offset = 0; offset < channels.size(); offset++) {
+                Hashtable table = (Hashtable) channels.get(offset);
+                WubookOta ota = new WubookOta();
+                ota.channel = new Integer((int) table.get("ctype")) + "";
+                ota.tag = (String) table.get("tag");
+                ota.id = (int)table.get("id");
+                ota.running = (int) table.get("running");
+                returnChannels.add(ota);
+            }
         }
         return returnChannels;
     }

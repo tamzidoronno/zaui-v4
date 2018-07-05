@@ -6,6 +6,11 @@ app.EcommerceOrderView = {
         $(document).on('click', '.EcommerceOrderView .specialedit', app.EcommerceOrderView.specialEditRow);
         $(document).on('click', '.EcommerceOrderView .savespecialcartitem', app.EcommerceOrderView.saveSpecialItem);
     },
+    
+    markPaidCompleted : function() {
+        $('.markaspaidarea').hide();
+        thundashop.framework.reprintPage();
+    },
     saveSpecialItem : function() {
         var form = $(this).closest('[gstype="form"]');
         var data = thundashop.framework.createGsArgs(form);

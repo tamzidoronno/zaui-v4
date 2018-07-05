@@ -4,6 +4,15 @@
     min-height: 800px;
 }
 
+.PmsSearchBooking .GetShopModuleTableHeader {
+    text-align: right;
+    padding: 10px;
+    padding-right:0px;
+    border-bottom: solid 1px #bbb;
+    border-top: solid 1px #bbb;
+}
+.PmsSearchBooking .GetShopModuleTableHeader .gsniceinput1 { width: 400px; }
+
 .GetShopModuleTable .quickmenuoption {  
     position: absolute;
     right: 0px;
@@ -15,12 +24,24 @@
     display:none;
     z-index:2;
 }
-.GetShopModuleTable .quickfunctions {     display: none;
+.GetShopModuleTable .addedtocheckout {
     position: absolute;
+    bottom: 0px;
+    padding-left: 10px;
+    color: green;
+    display:none;
+}
+
+.GetShopModuleTable .quickfunctions {     
+    width: 100%;
+    visibility: hidden;
     color: #bbb;
     right: 0px;
+    padding-top: 3px;
+    text-align: right;
+    display:block;
     bottom: 0px; }
-.GetShopModuleTable .datarow_inner:hover .quickfunctions { display:block; }
+.GetShopModuleTable .datarow_inner:hover .quickfunctions { visibility: visible; }
 .GetShopModuleTable .datarow_inner .quickfunctions .fa:hover { color:#000; cursor:pointer; }
 .PmsSearchBooking .channelDesc { color: #888; }
 .PmsSearchBooking .GetShopModuleTable .col_expandbutton i {

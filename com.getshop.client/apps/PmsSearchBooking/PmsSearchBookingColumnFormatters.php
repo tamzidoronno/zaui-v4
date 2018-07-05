@@ -72,7 +72,11 @@ class PmsSearchBookingColumnFormatters {
         $vistorText = "";
         $vistorText = "<span class='quickmenuoption dontExpand'></span><div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='gsicon-user'></i></div>$checkedIn</div>";
         
-        $vistorText .= "<div class='guestinfo2'>";
+        $name = "";
+        if(isset($guest[0]->name)) {
+            $name = $guest[0]->name;
+        }
+        $vistorText .= "<div class='guestinfo2' getshop_sorting='".$name."'>";
             foreach($room->guest as $guest) {
                 $vistorText .= "<div class='guestname'>".$guest->name."</div>";
                 if($guest->email) { $vistorText .= "<div class='guestemail'>" . $guest->email."</div>"; }
@@ -91,7 +95,10 @@ class PmsSearchBookingColumnFormatters {
                 $vistorText .=  '<div>+ ' . ($room->numberOfRoomsInBooking-1) . " addititional entries.</div>";
             }
             
+            $vistorText .= "<span class='addedtocheckout dontExpand' roomid='".$room->pmsRoomId."'><i class='fa fa-check'></i> Added to checkout</span>";
+            
         $vistorText .= "<span class='quickfunctions' roomid='".$room->pmsRoomId."'>";
+        $vistorText .= "<span style='float:left;padding-left:10px;' class='startcheckout dontExpand'>Start checkout</span>";
         if($room->progressState != "deleted") {
             $vistorText .= "<i class='fa fa-trash-o dontExpand quickfunction' title='Delete room' type='delete'></i> ";
             $vistorText .= "<i class='fa fa-exchange dontExpand quickfunction' title='Change stay' type='changestay'></i> ";

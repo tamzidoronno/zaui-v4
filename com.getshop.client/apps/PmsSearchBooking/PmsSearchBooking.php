@@ -184,6 +184,12 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         
         ob_start();
+        
+        echo "<div class='GetShopModuleTableHeader'>";
+        echo "<span style='float:left;font-size:26px; color:#bbb;'><span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
+        echo "<input type='txt' class='gsniceinput1 tablefilterinput' placeholder='Do filter on table below by entering a text here'>";
+        echo "</div>";
+        
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
         $table->setSorting(array("reg","checkin","checkout","visitor","bookedfor","room","price","totalprice"));
         $table->loadContentInOverlay = true;
@@ -200,7 +206,15 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests, nights: $nightscount</div>";
         
+        echo "<script>";
+        echo "$('.tablefilterinput').val(localStorage.getItem('filterKeyword'));";
+        echo "app.PmsSearchBooking.filterRows();";
+        echo "app.PmsSearchBooking.printAddedToCheckout();";
+        echo "</script>";
+        
         $toPrint = ob_get_contents();
+        
+        
         ob_end_clean();
         if(sizeof($data) == 0) {
             $this->includefile("noresultfound");

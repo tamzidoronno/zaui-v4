@@ -123,7 +123,6 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $creditedOrder = $this->getApi()->getOrderManager()->creditOrder($_POST['data']['id']);
         $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
         if($booking) {
-            $creditedOrder->closed = true;
             $booking->orderIds[] = $creditedOrder->id;
             $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
             $this->getApi()->getOrderManager()->saveOrder($creditedOrder);

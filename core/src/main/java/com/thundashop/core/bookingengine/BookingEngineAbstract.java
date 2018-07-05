@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class BookingEngineAbstract extends GetShopSessionBeanNamed {
+public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IBookingEngineAbstract {
     
     @Autowired
     public PageManager pageManager;
@@ -71,10 +71,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     private Date lastSentErrorNotification = new Date();
     
+    @Override
     public List<BookingItemType> getBookingItemTypes() {
         return getBookingItemTypesWithSystemType(0);
     }
     
+    @Override
     public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType) {
         List<BookingItemType> result = new ArrayList(types.values());
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
@@ -99,6 +101,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return allItems;
     }
     
+    @Override
     public BookingItemType createABookingItemType(String name) {
         BookingItemType type = new BookingItemType();
         type.name = name;
@@ -112,6 +115,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return type;
     }
     
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof BookingEngineConfiguration) {
@@ -164,14 +168,17 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     }
     
+    @Override
     public Availability getAvailbility(String id) {
         return availabilities.get(id);  
     }
     
+    @Override
     public BookingItemType getBookingItemType(String bookingTypeId) {
         return types.get(bookingTypeId);
     }
     
+    @Override
     public void changeBookingItemType(String itemId, String newTypeId) {
         unassignAllFutureBookings();
         
@@ -203,6 +210,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         unassignAllFutureBookings();
     }
     
+    @Override
     public BookingItem saveBookingItem(BookingItem item) {
         ensureNotOverwritingParameters(item);
         validate(item);
@@ -229,10 +237,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
+    @Override
     public BookingItem getBookingItem(String id) {
         return finalize(items.get(id));
     }
 
+    @Override
     public BookingItem getBookingItemUnfinalized(String id) {
         return items.get(id);
     }
@@ -244,6 +254,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
+    @Override
     public Availability addAvailability(String bookingItemId, Availability availability) {
         BookingItem item = getBookingItem(bookingItemId);
         
@@ -311,10 +322,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return item;
     }
 
+    @Override
     public boolean isConfirmationRequired() {
         return config.confirmationRequired;
     }
 
+    @Override
     public void setConfirmationRequired(boolean confirmationRequired ) {
         config.confirmationRequired = confirmationRequired;
         saveObject(config);
@@ -396,10 +409,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
+    @Override
     public Booking getBooking(String id) {
         return bookings.get(id);
     }
     
+    @Override
     public List<Booking> getConfirmationList(String bookingItemTypeId) {
         return bookings.values().stream()
                 .filter(booking -> booking.bookingItemTypeId.equals(bookingItemTypeId))
@@ -408,6 +423,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
     }
     
+    /**
+     *
+     * @param bookingId
+     */
     public void confirmBooking(String bookingId) {
         Booking booking = getBooking(bookingId);
         booking.needConfirmation = false;
@@ -509,6 +528,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return savedItem;
     }
 
+    @Override
     public List<BookingItem> getBookingItems() {
         List<BookingItem> list = new ArrayList(items.values());
         Comparator<BookingItem> comparator = new Comparator<BookingItem>() {
@@ -521,10 +541,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return list;
     }
 
+    @Override
     public BookingEngineConfiguration getConfig() {
         return config;
     }
 
+    @Override
     public boolean canAdd(List<Booking> bookingsToAdd) {
         try {
             preProcessBookings(bookingsToAdd);
@@ -535,11 +557,14 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return true;
     }
 
+    @Override
     public List<Booking> getAllBookings() {
         ArrayList result = new ArrayList(bookings.values());
         return result;
     }
 
+
+    @Override
     public boolean deleteBooking(String id) {
         Booking booking = getBooking(id);
         bookings.remove(id);
@@ -559,6 +584,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return false;
     }
 
+    @Override
     public void deleteBookingItem(String id) {
         BookingItem bookingItem = getBookingItem(id);
         if (bookingItem == null) {
@@ -578,6 +604,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         deleteObject(deleted);
     }
     
+    @Override
     public void changeTypeOnBooking(String bookingId, String itemTypeId) {
         Booking booking = getBooking(bookingId);
         if (booking == null) {
@@ -621,6 +648,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
     
+    @Override
     public void changeDatesOnBooking(String bookingId, Date start, Date end) {
         Booking booking = getBooking(bookingId);
         if (booking == null) {
@@ -640,6 +668,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         saveObject(booking);
     }
 
+    @Override
     public void changeBookingItemOnBooking(String bookingId, String itemId) {
         Booking booking = getBooking(bookingId);
         
@@ -745,6 +774,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             });        
     }
     
+    @Override
     public void forceUnassignBookingInfuture() {
         unassignAllFutureBookings();
         
@@ -763,6 +793,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 });
     }
     
+    @Override
     public void changeBookingItemAndDateOnBooking(String bookingId, String itemId, Date start, Date end) {
         Booking booking = getBooking(bookingId);
         
@@ -885,7 +916,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .collect(Collectors.toList()); 
     }
 
-    BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
+    @Override
+    public BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
         BookingItem item = getBookingItem(itemId);
         BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
         line.start = start;
@@ -897,11 +929,13 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return line;
     }
    
-    List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrors(Date start, Date end) {
+    @Override
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrors(Date start, Date end) {
         return getTimeLinesForItemWithOptimal(start, end, true);
     }
     
-    List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end, boolean ignoreErrors) {
+    @Override
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end, boolean ignoreErrors) {
         List<BookingTimeLineFlatten> retList = new ArrayList();        
         
         for (String bookingItemTypeId : types.keySet()) {
@@ -961,7 +995,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
     }
 
-    void saveRules(RegistrationRules rules) {
+    @Override
+    public void saveRules(RegistrationRules rules) {
         config.rules = rules;
         saveObject(config);
     }
@@ -976,6 +1011,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
+    @Override
     public List<TimeRepeaterData> getOpeningHours(String typeId) {
         List<TimeRepeaterData> result = new ArrayList();
         if(typeId == null || typeId.isEmpty()) {
@@ -991,7 +1027,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
     }
     
-    void saveOpeningHours(TimeRepeaterData time, String typeId) {
+    @Override
+    public void saveOpeningHours(TimeRepeaterData time, String typeId) {
         if(time == null) {
             time = new TimeRepeaterData();
         }
@@ -1005,6 +1042,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
  
+    @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
         BookingTimeLineFlatten timeline = getTimelines(itemType, start, end);
         int higest = 9999;
@@ -1022,13 +1060,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return higest;
     }
 
+    @Override
     public List<BookingItem> getBookingItemsByType(String typeId) {
         return items.values().stream()
                 .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(typeId))
                 .collect(Collectors.toList());
     }
 
-    List<BookingItem> getAvailbleItems(Date start, Date end) {
+    @Override
+    public List<BookingItem> getAvailbleItems(Date start, Date end) {
         List<String> typeIds = new ArrayList();
         for(BookingItemType type : getBookingItemTypes()) {
             typeIds.add(type.id);
@@ -1048,12 +1088,13 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return res;
     }
     
-    
-    List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
+    @Override
+    public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
         return getAvailbleItemsWithBookingConsidered(typeId, start, end, null);
     }
     
-    List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
+    @Override
+    public List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
        
         BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(typeId, start, end, null);
 
@@ -1165,7 +1206,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return assigner;
     }
     
-    List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
+    @Override
+    public List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
         return bookings.values().stream()
                 .filter(booking -> booking.bookingItemId != null && booking.bookingItemId.equals(bookingItemId))
                 .collect(Collectors.toList());
@@ -1184,7 +1226,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
-    void deleteOpeningHours(String repeaterId) {
+    @Override
+    public void deleteOpeningHours(String repeaterId) {
         List<BookingItemType> allTypes = getBookingItemTypes();
         for(BookingItemType type :allTypes) {
             if(type.openingHoursData.containsKey(repeaterId)) {
@@ -1210,6 +1253,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
     
+    @Override
     public void checkConsistency() {
         try {
             checkAllBookings();
@@ -1246,7 +1290,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return true;
     }
 
-    boolean canAdd(Booking bookingToAdd) {
+    @Override
+    public boolean canAdd(Booking bookingToAdd) {
         List<Booking> toCheck = new ArrayList();
         toCheck.add(bookingToAdd);
         return canAdd(toCheck);
@@ -1282,6 +1327,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return bookingGroup;
     }
     
+    @Override
     public void removeBookingsWhereUserHasBeenDeleted(String bookingItemId) {
         List<Booking> bookings = getAllBookingsByBookingItem(bookingItemId);
         for (Booking booking : bookings) {
@@ -1355,7 +1401,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return unassignedBookings;
     }
 
-    boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
+    @Override
+    public boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
         Booking ret = bookings.values().stream()
                 .filter(book -> book.interCepts(start, end))
                 .filter(book -> book.bookingItemId != null && book.bookingItemId.equals(itemId))
@@ -1365,7 +1412,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return ret != null;
     }
 
-    void changeSourceOnBooking(String bookingId, String source) {
+    @Override
+    public void changeSourceOnBooking(String bookingId, String source) {
         Booking booking = getBooking(bookingId);
         booking.source = source;
         saveObject(config);
@@ -1408,7 +1456,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
     }
 
-    List<BookingItem> getAllAvailbleItemsWithBookingConsideredParalized(Date start, Date end, String bookingid) {
+    @Override
+    public List<BookingItem> getAllAvailbleItemsWithBookingConsideredParalized(Date start, Date end, String bookingid) {
         List<BookingItem> res = new ArrayList();
         List<BookingItemType> types = getBookingItemTypes();
         types.stream()
@@ -1423,6 +1472,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return res;
     }
 
+    @Override
     public int getNumberOfPossibleBookings(String itemType, Date start, Date end) {
         BookingTimeLineFlatten res = getTimelines(itemType, start, end);
         return res.getMaxCount();

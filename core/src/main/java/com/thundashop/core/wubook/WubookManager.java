@@ -1447,6 +1447,36 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return newbooking;
     }
 
+    @Override
+    public List<WubookOta> getOtas() throws Exception {
+        if(!connectToApi()) {
+            return new ArrayList();
+        }
+        Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        
+        Vector result = executeClient("get_otas", params);
+        Integer responseCode = (Integer) result.get(0);
+        Vector channels = (Vector) result.get(1);
+        List<WubookOta> returnChannels = new ArrayList();
+        for(Integer offset = 0; offset < channels.size(); offset++) {
+            Hashtable table = (Hashtable) channels.get(offset);
+            WubookOta ota = new WubookOta();
+            ota.channel = new Integer((int) table.get("ctype")) + "";
+            ota.tag = (String) table.get("tag");
+            ota.id = (int)table.get("id");
+            ota.running = (int) table.get("running");
+            returnChannels.add(ota);
+        }
+        return returnChannels;
+    }
+    
+    @Override
+    public boolean newOta(String type) {
+        return false;
+    }
+    
     public void setAvailabilityChanged(Date start, Date end) {
         if(availabiltyyHasBeenChangedStart == null || (start != null && start.before(availabiltyyHasBeenChangedStart))) {
             availabiltyyHasBeenChangedStart = start;
@@ -2046,5 +2076,45 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return -1;
         }
     }
+
+    @Override
+    public List<WubookRoomRateMap> getRoomRates(Integer channelId, Integer channelType) throws Exception {
+        if(!connectToApi()) {
+            return new ArrayList();
+        }
+        Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        params.addElement(channelId);
+        
+        Vector result = null;
+        if(channelType == 2) {
+            result = executeClient("bcom_rooms_rates", params);
+        }
+        if(channelType == 1) {
+            result = executeClient("exp_rooms_rates", params);
+        }
+        Integer responseCode = (Integer) result.get(0);
+        Hashtable mapping = (Hashtable) result.get(1);
+        Hashtable rooms = (Hashtable) mapping.get("rooms");
+        List<WubookRoomRateMap> returnChannels = new ArrayList();
+        for (Iterator it = rooms.keySet().iterator(); it.hasNext();) {
+            String offset = (String) it.next();
+            WubookRoomRateMap rate = new WubookRoomRateMap();
+            Hashtable rateObject = (Hashtable) rooms.get(offset);
+            rate.name = (String) rateObject.get("name");
+            rate.wubookRoomId = (Integer) rateObject.get("wbroom");
+            rate.id = new Integer(offset);
+            returnChannels.add(rate);
+        }
+        
+        return returnChannels;    
+    }
+
+    @Override
+    public void setRoomRates(Integer channelId, List<WubookRoomRateMap> rates, Integer channelType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }

@@ -314,6 +314,24 @@ class PmsCheckout extends \WebshopApplication implements \Application {
         return;
     }
 
+    public function isGroupPayment() {
+        $group = $this->getBookingGroup();
+        return count($group) > 1;
+    }
+
+    public function processGroupPayment() {
+        $group = $this->getBookingGroup();
+    }
+
+    public function getBookingGroup() {
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $group = array();
+        foreach($cart->items as $item) {
+            $group[$item->pmsBookingId] = 1;
+        }
+        return array_keys($group);
+    }
+
 }
 
 ?>

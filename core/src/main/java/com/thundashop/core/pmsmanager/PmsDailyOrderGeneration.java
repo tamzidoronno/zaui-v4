@@ -56,12 +56,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     /* This is where it all begins */
     public String createCart(String bookingId, NewOrderFilter filter) {
-        try {
-            dumpData(bookingId);
-        }catch(Exception e) {
-            logPrintException(e);
-        }
-        
         if(filter.itemsToCreate != null && !filter.itemsToCreate.isEmpty()) {
             List<CartItem> itemsToRemove = new ArrayList();
             for(CartItem item : cartManager.getCart().getItems()) {
@@ -89,7 +83,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         calculateRoomPrices();
-        updateCart();
+        updateCart(filter);
         return "";
     }
     
@@ -362,6 +356,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         if(item != null) {
             item.startDate = start;
             item.endDate = end;
+            item.pmsBookingId = pmsManager.getBookingFromRoom(room.pmsBookingRoomId).id;
             item.getProduct().externalReferenceId = room.pmsBookingRoomId;
             item.getProduct().metaData = guestName;
             item.getProduct().additionalMetaData = roomName;
@@ -420,8 +415,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         return item;
     }
 
-    private void updateCart() {
-        cartManager.getCart().clear();
+    private void updateCart(NewOrderFilter filter) {
+        if(!filter.avoidClearingCart) {
+            cartManager.getCart().clear();
+        }
         cartManager.getCart().addCartItems(generatedCartItems);
     }
 

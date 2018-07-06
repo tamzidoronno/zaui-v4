@@ -136,6 +136,41 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $roomView->renderApplication(true, $this);
     }
     
+    public function startPaymentProcessForSelectedRooms() {
+        
+        $foundBookings = array();
+        foreach($_POST['data']['rooms'] as $room) {
+            if(in_array($room, array_keys($foundBookings))) {
+                continue;
+            }
+            $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $room);
+            foreach($booking->rooms as $r) {
+                $foundBookings[$r->pmsBookingRoomId] = $booking->id;
+            }
+        }
+        
+        $bookingIds = array_unique($foundBookings);
+        $this->getApi()->getCartManager()->clear();
+        $bookings = array_values($bookingIds);
+        foreach($bookings as $bookingId) {
+            $pmsRooms = array();
+            foreach($_POST['data']['rooms'] as $room) {
+                if($foundBookings[$room] != $bookingId) {
+                    continue;
+                }
+                $pmsRooms[] = $room;
+            }
+            
+            $filter = new \core_pmsmanager_NewOrderFilter();
+            $filter->avoidClearingCart = true;
+            $filter->pmsRoomIds = $pmsRooms;
+            $filter->avoidOrderCreation = true;
+            $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);
+        }
+        $app = new \ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout();
+        $app->renderApplication(true);
+    }
+    
     public function formatCheck($row) {
         return "<input type='checkbox' class='dontExpand groupedactioncheckbox' roomid='".$row->pmsRoomId."'></input>";
     }
@@ -186,8 +221,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         ob_start();
         
         echo "<div class='GetShopModuleTableHeader'>";
-        echo "<span style='float:left;font-size:26px; color:#bbb;'><span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
+        echo "<span style='float:left;font-size:26px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
         echo "<input type='txt' class='gsniceinput1 tablefilterinput' placeholder='Do filter on table below by entering a text here'>";
+        echo "<div class='pmscheckoutforrooms checkoutview'>";
+        echo "<div style='text-align:right;'><i class='fa fa-close' onclick='$(\".checkoutview\").hide();' style='cursor:pointer;'></i></div>";
+        echo "<div class='innercheckout'></div></div>";
         echo "</div>";
         
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);

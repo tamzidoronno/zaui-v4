@@ -9,12 +9,6 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
 if(trim($roomNumber)) {
     $roomNumber = " (" . $roomNumber . ")";
 }
-if(trim($guestName)) {
-    $guestName = "<div style='color:#bbb;'>" . $guestName . "</div>";
-}
-echo "<i class='fa fa-trash-o removeitem'></i>";
-echo "<b>".$item->count." x ".$item->product->name." $roomNumber</b>";
-echo $guestName;
 foreach ($priceMatrix as $date => $value) {
     $i++;
     $oddClass = $i % 2 ? "even" : "odd";
@@ -32,6 +26,7 @@ foreach ($priceMatrix as $date => $value) {
             <input type='checkbox' checked='true' class='item_checkbox matrix_input gsnicecheckbox1'> 
             <span><? echo trim($date);?></span>
             <input type='textfield' class='gsniceinput1 matrix_item matrix_price' value="<? echo $value; ?>" date="<?php echo $date; ?>">
+            <div style="clear:both"></div>
         <?
         }
         ?>

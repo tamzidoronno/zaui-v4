@@ -4,6 +4,16 @@ $originalCart = $this->getOriginalCartFromSession();
 $currentCart = $this->getCurrentCart();
 $total = $this->getApi()->getCartManager()->getCartTotal($currentCart);
 $items = (array)$originalCart->items;
+
+$groupedByExternalId = array();
+foreach($items as $item) {
+    if(!isset($groupedByExternalId[$item->product->externalReferenceId])) {
+        $groupedByExternalId[$item->product->externalReferenceId] = array();
+    }
+    $groupedByExternalId[$item->product->externalReferenceId][] = $item;
+}
+
+
 $i = 0;
 
 if (!count($items)) {
@@ -29,27 +39,57 @@ if (!count($items)) {
     return;
 }
 $this->loadCartFilter();
-echo "<div class='itemsarea'>";
-foreach ($items as $item) {
-    $i++;
-    $lastItem = count($items) == $i ? "last_row" : "";
-    $this->setCurrentItem($item);
-    
-    echo '<div class="cartitem row '.$lastItem.'" cartItemId="'.$item->cartItemId.'">';
-    
-    if ($item->addedByGetShopModule == "pms") {
-        if (isset($item->priceMatrix) && $item->priceMatrix && count($item->priceMatrix)) {
-            $this->includefile("pmswithmatrixitem");
-        } else if(isset($item->itemsAdded) && $item->itemsAdded && count($item->itemsAdded)) {
-            $this->includefile("pmsaddons");
-        } else {
-            $this->includefile("pmsnormalcartitem");
+foreach($groupedByExternalId as $roomId => $items) {
+
+    $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+    $room = "";
+    foreach($booking->rooms as $r) {
+        if($r->pmsBookingRoomId == $roomId) {
+            $room = $r;
         }
-    } 
+    }
     
+    echo date("d.m.Y H:i", strtotime($r->date->start));
+    echo " - ";
+    echo date("d.m.Y H:i", strtotime($r->date->end)) . " ";
+    if($room->bookingItemId) {
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+        echo "room: " . $item->bookingItemName. " ";
+    }
+    if($room->bookingItemTypeId) {
+        $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+        echo "type: " . $item->name . " ";
+    }
+    $guestNames = array();
+    foreach($room->guests as $guest) {
+        $guestNames[] = $guest->name;
+    }
+    $guests = join(",", (array)$guestNames);
+    echo "<span style='float:right;'>" . $guests . "</span>";
+    
+    echo "<div class='itemsarea'>";
+    foreach ($items as $item) {
+        $i++;
+        $lastItem = count($items) == $i ? "last_row" : "";
+        $this->setCurrentItem($item);
+
+        echo '<div class="cartitem row '.$lastItem.'" cartItemId="'.$item->cartItemId.'">';
+
+        if ($item->addedByGetShopModule == "pms") {
+            if (isset($item->priceMatrix) && $item->priceMatrix && count($item->priceMatrix)) {
+                $this->includefile("pmswithmatrixitem");
+            } else if(isset($item->itemsAdded) && $item->itemsAdded && count($item->itemsAdded)) {
+                $this->includefile("pmsaddons");
+            } else {
+                $this->includefile("pmsnormalcartitem");
+            }
+        } 
+
+        echo "</div>";
+    }
     echo "</div>";
+    echo "<br>";
 }
-echo "</div>";
 ?>
 
 <div class='summary'>
@@ -67,7 +107,6 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
 ?>
 <div gstype='form' method='createOrder'>
     <div class="payment_options payment_window">
-        <div class="option_content"></div>
         <div class="options">
             <select class='gsniceselect1 appendtoorderselection' gsname='appendtoorder'>
                 <option value="">Create a new order</option>
@@ -88,7 +127,9 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
                 }
                 foreach($orderIds as $orderId) {
                     $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-                    echo "<option value='$orderId'>Add to order: " . $order->incrementOrderId . "</option>";
+                    if(!$this->isGroupPayment()) {
+                        echo "<option value='$orderId'>Add to order: " . $order->incrementOrderId . "</option>";
+                    }
                 }
                 ?>
             </select>
@@ -96,7 +137,6 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
     </div>
 
     <div class="payment_options payment_window">
-        <div class="option_content"></div>
         <div class="options">
             <?php
             $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
@@ -121,12 +161,17 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
     <?php
     if(isset($_SESSION['groupordercreationtype'])) {
         $options = array();
-        $options['all'] = "Create one order for all selected rooms";
+        if($this->isGroupPayment()) {
+            $options['merged'] = "Create one MERGED order for all rooms.";
+        } else {
+            $options['all'] = "Create one order for all rooms";
+        }
         $options['uniqueorder'] = "Every guest pay themself";
         $options['uniqueordersendpaymentlink'] = "Every guest pay themself and send payment link to guests";
+        
+        
         ?>
         <div class="payment_options payment_window">
-            <div class="option_content"></div>
             <div class="options">
                 <select class='gsniceselect1' style='width:100%;' gsname='paymenttypeselection'>
                     <?php

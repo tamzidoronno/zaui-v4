@@ -11,7 +11,9 @@
     border-bottom: solid 1px #bbb;
     border-top: solid 1px #bbb;
 }
-.PmsSearchBooking .GetShopModuleTableHeader .gsniceinput1 { width: 400px; }
+.PmsSearchBooking .GetShopModuleTableHeader .tablefilterinput { width: 400px; }
+
+.PmsSearchBooking .pmscheckoutforrooms { text-align:left; border: solid 1px; background-color:#fff; padding: 5px; position:absolute; display:none; z-index: 2; width:800px; }
 
 .GetShopModuleTable .quickmenuoption {  
     position: absolute;

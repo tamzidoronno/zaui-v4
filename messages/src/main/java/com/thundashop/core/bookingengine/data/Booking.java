@@ -242,4 +242,18 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         
         
     }
+
+    public boolean endedSevenDaysAgoOrMore() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.HOUR, 0);
+        cal.add(Calendar.DAY_OF_MONTH, -7);
+        
+        Date toCompareDate = cal.getTime();
+        
+        return endDate.before(toCompareDate);
+    }
 }

@@ -162,7 +162,7 @@ public class ManagerSubBase {
         
         boolean databaseFunctionInUse = isDatabaseMethodInUse();
                 
-        if (database != null && !credentials.manangerName.equals("LoggerManager") && databaseFunctionInUse) {
+        if (database != null && !credentials.manangerName.equals("LoggerManager") && databaseFunctionInUse && shouldLoadData()) {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             
@@ -519,5 +519,9 @@ public class ManagerSubBase {
         }
         
         return false;
+    }
+
+    public boolean shouldLoadData() {
+        return true;
     }
 }

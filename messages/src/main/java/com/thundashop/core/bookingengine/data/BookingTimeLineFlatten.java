@@ -38,6 +38,7 @@ public class BookingTimeLineFlatten implements Serializable {
     public String bookingItemId = "";
     public Date end;
     public Date start;
+    public boolean overFlow = false;
 
     public BookingTimeLineFlatten(int totalAvailableSpots, String bookingItemTypeId) {
         this.totalAvailableSpots = totalAvailableSpots;
@@ -483,5 +484,7 @@ public class BookingTimeLineFlatten implements Serializable {
         return max;
     }
 
-
+    public String getBookingItemTypeId() {
+        return bookingItemTypeId;
+    }
 }

@@ -9,6 +9,7 @@ import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.app.contentmanager.data.ContentData;
+import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
@@ -1476,5 +1477,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     public int getNumberOfPossibleBookings(String itemType, Date start, Date end) {
         BookingTimeLineFlatten res = getTimelines(itemType, start, end);
         return res.getMaxCount();
+    }
+    
+    @Override
+    public boolean shouldLoadData() {
+        return !useNewEngine.contains(storeId);
     }
 }

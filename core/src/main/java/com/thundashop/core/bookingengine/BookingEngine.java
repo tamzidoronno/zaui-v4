@@ -28,10 +28,24 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEngine {
 
+    public static List<String> useNewEngine = new ArrayList();
+
+    public BookingEngine() {
+        useNewEngine.add("3b647c76-9b41-4c2a-80db-d96212af0789");
+    }
+    
     @Autowired
-    public IBookingEngineAbstract bookingEngineAbstract;
+    public BookingEngineAbstract bookingEngineAbstract;
+    
+    
+    @Autowired
+    public BookingEngineNew bookingEngineNew;
     
     private IBookingEngineAbstract getBookingEngine() {
+        if (useNewEngine.contains(storeId)) {
+            return bookingEngineNew;
+        }
+        
         return bookingEngineAbstract;
     }
     
@@ -228,12 +242,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      * @return 
      */
     public Integer getNumberOfAvailableWeakButFaster(String itemType, Date start, Date end) {
-        if (BookingEngineAbstract.usingNewSystem2.contains(storeId)) {
-            return getBookingEngine().getNumberOfPossibleBookings(itemType, start, end);
-        } else {
-            return getBookingEngine().getNumberOfAvailable(itemType, start, end);
-        }
-        
+        return getBookingEngine().getNumberOfAvailable(itemType, start, end);
     }
 
     /**

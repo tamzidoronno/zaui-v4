@@ -77,8 +77,8 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $this->includefile("timelines");
         }
     }
-
-    public function getData() {
+ 
+   public function getData() {
         $filter = $this->getSelectedFilter();
         $result = $this->getApi()->getPmsManager()->getIntervalAvailability($this->getSelectedMultilevelDomainName(), $filter);
         return $result;
@@ -355,6 +355,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         }
         if ($data->state !== "normal") {
             $markCleaning = "";
+            $markRoomClean = "";
             if($data->state == "cleaning") { $markRoomClean = "<i class='fa fa-trash-o markRoomClean'></i> "; }
             return "<div class='bookername'><span class='fullname'>$markRoomClean" . $data->name . "</span><span class='acronyme'>$acronym</span></div>";
         }

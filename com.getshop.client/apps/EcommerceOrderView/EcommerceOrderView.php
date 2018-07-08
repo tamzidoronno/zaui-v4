@@ -14,6 +14,8 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $orderId = $_POST['data']['orderid'];
         $productId = $_POST['data']['productid'];
         $this->getApi()->getOrderManager()->addProductToOrder($orderId, $productId, $count);
+        $this->setData();
+        $this->printOrderLines();
     }
     
     public function saveInvoiceNote() {
@@ -123,6 +125,10 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->order = $this->getApi()->getOrderManager()->getOrder($order->id);
+    }
+    public function refreshOrderLines() {
+        $this->setData();
+        $this->printOrderLines();
     }
     
     public function setData() {
@@ -278,5 +284,15 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $order = $this->getOrder();
         $this->getApi()->getOrderManager()->changeOrderType($order->id, $_POST['data']['paymentappid']);
     }
+
+    public function printOrderLines() {
+        $order = $this->getOrder();
+        if ($order->closed) {
+            $this->includefile("closedorderlines");
+        } else {
+            $this->includefile("openorderlines");
+        }
+    }
+
 }
 ?>

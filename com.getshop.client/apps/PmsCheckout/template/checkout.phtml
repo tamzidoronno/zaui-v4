@@ -49,9 +49,6 @@ foreach($groupedByExternalId as $roomId => $items) {
         }
     }
     
-    echo date("d.m.Y H:i", strtotime($r->date->start));
-    echo " - ";
-    echo date("d.m.Y H:i", strtotime($r->date->end)) . " ";
     if($room->bookingItemId) {
         $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
         echo "room: " . $item->bookingItemName. " ";
@@ -60,6 +57,10 @@ foreach($groupedByExternalId as $roomId => $items) {
         $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
         echo "type: " . $item->name . " ";
     }
+    echo " ";
+    echo date("d.m.Y H:i", strtotime($r->date->start));
+    echo " - ";
+    echo date("d.m.Y H:i", strtotime($r->date->end)) . " ";
     $guestNames = array();
     foreach($room->guests as $guest) {
         $guestNames[] = $guest->name;
@@ -88,6 +89,7 @@ foreach($groupedByExternalId as $roomId => $items) {
         echo "</div>";
     }
     echo "</div>";
+    echo "<div style='clear:both;'></div>";
     echo "<br>";
 }
 ?>
@@ -159,28 +161,50 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
         </div>
     </div>
     <?php
-    if(isset($_SESSION['groupordercreationtype'])) {
-        $options = array();
-        if($this->isGroupPayment()) {
-            $options['merged'] = "Create one MERGED order for all rooms.";
-        } else {
-            $options['all'] = "Create one order for all rooms";
+    $options = array();
+    if($this->isGroupPayment()) {
+        $options['merged'] = "Create one MERGED order for all rooms.";
+    } else {
+        $options['all'] = "Create one order for all rooms";
+    }
+    $options['uniqueorder'] = "Every guest pay themself";
+    $options['uniqueordersendpaymentlink'] = "Every guest pay themself and send payment link to guests";
+
+
+    ?>
+    <div class="payment_options payment_window">
+        <div class="options">
+            <select class='gsniceselect1' style='width:100%;' gsname='paymenttypeselection'>
+                <?php
+                foreach($options as $key => $val) {
+                    $selected = "";
+                    if($key == $_SESSION['groupordercreationtype']) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$key' $selected>$val</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <?php
+    if($this->isGroupPayment()) {
+        $groups = $this->getBookingGroup();
+        $usersIds = array();
+        foreach($groups as $tmpBookingId) {
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $tmpBookingId);
+            $usersIds[$booking->userId] = 1;
         }
-        $options['uniqueorder'] = "Every guest pay themself";
-        $options['uniqueordersendpaymentlink'] = "Every guest pay themself and send payment link to guests";
-        
-        
+        $usersIds = array_unique(array_keys($usersIds));
         ?>
+        <br>Connect this order to the following user:
         <div class="payment_options payment_window">
             <div class="options">
-                <select class='gsniceselect1' style='width:100%;' gsname='paymenttypeselection'>
+                <select class='gsniceselect1' style='width:100%;' gsname='userid'>
                     <?php
-                    foreach($options as $key => $val) {
-                        $selected = "";
-                        if($key == $_SESSION['groupordercreationtype']) {
-                            $selected = "SELECTED";
-                        }
-                        echo "<option value='$key' $selected>$val</option>";
+                    foreach($usersIds as $usrid) {
+                        $usr = $this->getApi()->getUserManager()->getUserById($usrid);
+                        echo "<option value='".$usr->id."'>".$usr->fullName."</option>";
                     }
                     ?>
                 </select>

@@ -172,6 +172,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $currentBooking->avoidCreateInvoice = true;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
         $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedMultilevelDomainName());
+        unset($_SESSION['currentgroupbookedarea']);
         if(!$res) {
             $this->msg = "";
             $this->msg .= "<div style='border: solid 1px; background-color:red; padding: 10px; font-size: 16px; color:#fff;'>";
@@ -290,6 +291,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $currentBooking->avoidCreateInvoice = true;
             $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
             $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedMultilevelDomainName());
+            unset($_SESSION['currentgroupbookedarea']);
             
             $this->msg = "";
             $this->msg .= "<script>";

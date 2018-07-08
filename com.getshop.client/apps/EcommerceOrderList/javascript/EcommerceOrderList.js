@@ -6,12 +6,29 @@ app.EcommerceOrderList = {
         $(document).on('click','.EcommerceOrderList .deleteOrder', app.EcommerceOrderList.deleteOrder);
         $(document).on('click','.EcommerceOrderList .creditOrder', app.EcommerceOrderList.creditOrder);
     },
+    refreshOrderRow : function(orderId) {
+        var event = thundashop.Ajax.createEvent('','reloadRow',$('.EcommerceOrderList'), {
+            "id" : orderId
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            res = JSON.parse(res);
+            var row = $('[hiddenorderid="'+orderId+'"]').closest('.datarow_inner');
+            for(var k in res) {
+                row.find("[index='"+k+"']").html(res[k]);
+            }
+        });
+    },
     deleteOrder : function() {
         var confirmed = confirm("Are you sure you want to delete this order?");
         if(confirmed) {
+            var row = $(this).closest('.datarow');
             var orderid = $(this).attr('orderid');
-            thundashop.Ajax.simplePost($(this), "deleteOrder", {
+            var event = thundashop.Ajax.createEvent('','deleteOrder', $(this), {
                 "id" : orderid
+            });
+            thundashop.Ajax.postWithCallBack(event, function() {
+                row.remove();
             });
         }
     },
@@ -24,13 +41,19 @@ app.EcommerceOrderList = {
             });
         }
     },
+    doneSendingPaymentLink : function() {
+        $('.currentsentdate').html('<i class="fa fa-check"></i> Just sent');
+        $('.currentsentdate').closest('.datarow').find('.sendpaymentlinkwindow').slideUp();
+    },
     sendEmail : function() {
         var btn = $(this);
         var roomId = $(this).attr('roomid');
         var orderid = $(this).attr('orderid');
+        $('.currentsentdate').removeClass('currentsentdate');
+        $(this).closest('.datarow').find('.sentdate').addClass('currentsentdate');
         var event = thundashop.Ajax.createEvent('','loadSendEmail',$(this),{
             "roomid" : roomId,
-            "orderid" : orderid
+            "id" : orderid
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             btn.parent().find('.sendpaymentlinkwindow').html(res);
@@ -43,10 +66,13 @@ app.EcommerceOrderList = {
     sendPaymentLink : function() {
         var btn = $(this);
         var roomId = $(this).attr('roomid');
+        var bookingId = $(this).attr('bookingid');
         var orderid = $(this).attr('orderid');
+        $('.currentsentdate').removeClass('currentsentdate');
+        $(this).closest('.datarow').find('.sentdate').addClass('currentsentdate');
         var event = thundashop.Ajax.createEvent('','loadPaymentLinkConfig',$(this),{
             "roomid" : roomId,
-            "orderid" : orderid,
+            "id" : orderid,
             "callback" : btn.attr('callback')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {

@@ -15,7 +15,7 @@
 .PmsCheckout .appendtoorderselection,
 .PmsCheckout .display_cart_filter,
 .PmsCheckout .continue_checkout { box-sizing: border-box; width: 100%; margin-top: 5px; }
-.PmsCheckout .checkoutarea .itemsarea { max-height: 250px; overflow: auto; border: solid 1px #bbb;background-color:#fff; }
+.PmsCheckout .checkoutarea .itemsarea { max-height: 167px; overflow: auto; border: solid 1px #bbb;background-color:#fff; }
 .PmsCheckout .checkoutarea { 
     margin-left: 10px;
     margin-right: 10px;
@@ -87,7 +87,6 @@
 }
 .PmsCheckout .summary {
     font-size: 30px;
-    margin-top: 50px;
     margin-right: 10px;
 }
 

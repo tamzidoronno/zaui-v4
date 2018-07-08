@@ -15,6 +15,7 @@ app.PmsSearchBooking = {
             "rooms" : rooms 
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsSearchBooking.clearCheckoutProcess();
             $('.pmscheckoutforrooms').find('.innercheckout').html(res);
             $('.pmscheckoutforrooms').show();
         });
@@ -25,17 +26,8 @@ app.PmsSearchBooking = {
         app.PmsSearchBooking.printAddedToCheckout();
     },
     removeFromStartCheckout : function() {
-        var list = app.PmsSearchBooking.getAddedToCheckoutList();
         var toRemove = $(this).attr('roomid');
-        var newList = [];
-        for(var k in list) {
-            var roomId = list[k];
-            if(toRemove === roomId) {
-                continue;
-            }
-            newList.push(roomId);
-        }
-        localStorage.setItem("addedtocheckout", JSON.stringify(newList));
+        app.PmsSearchBooking.quickRemoveToStartCheckout(toRemove);
         app.PmsSearchBooking.printAddedToCheckout();
     },
     printAddedToCheckout : function() {
@@ -66,14 +58,30 @@ app.PmsSearchBooking = {
         }
         return added;
     },
-    addToStartCheckout : function() {
+    quickAddToStartCheckout : function(roomId) {
         var added = app.PmsSearchBooking.getAddedToCheckoutList();
-        var roomId = $(this).closest('.quickfunctions').attr('roomid');
         if(added.indexOf(roomId) >= 0) {
             return;
         }
         added.push(roomId);
         localStorage.setItem("addedtocheckout", JSON.stringify(added));
+        
+    },
+    quickRemoveToStartCheckout : function(toRemove) {
+        var list = app.PmsSearchBooking.getAddedToCheckoutList();
+        var newList = [];
+        for(var k in list) {
+            var roomId = list[k];
+            if(toRemove === roomId) {
+                continue;
+            }
+            newList.push(roomId);
+        }
+        localStorage.setItem("addedtocheckout", JSON.stringify(newList));
+    },
+    addToStartCheckout : function() {
+        var roomId = $(this).closest('.quickfunctions').attr('roomid');
+        app.PmsSearchBooking.quickAddToStartCheckout(roomId);
         app.PmsSearchBooking.printAddedToCheckout();
     },
     filterRows : function() {
@@ -97,10 +105,19 @@ app.PmsSearchBooking = {
         if($(this).is(':checked')) {
             $('.groupedactioncheckbox').attr('checked','checked');
             $('.manipulateroomoptions .shop_button').removeClass('disabled');
+            $('.groupedactioncheckbox').each(function() {
+                var roomid = $(this).attr('roomid');
+                app.PmsSearchBooking.quickAddToStartCheckout(roomid);
+            });
         } else {
             $('.groupedactioncheckbox').attr('checked',null);
             $('.manipulateroomoptions .shop_button').addClass('disabled');
+            $('.groupedactioncheckbox').each(function() {
+                var roomid = $(this).attr('roomid');
+                app.PmsSearchBooking.quickRemoveToStartCheckout(roomid);
+            });
         }
+        app.PmsSearchBooking.printAddedToCheckout();
     },
     loadUnpaidPriceView : function() {
         var event = thundashop.Ajax.createEvent('','loadUnpaidView',$(this), {

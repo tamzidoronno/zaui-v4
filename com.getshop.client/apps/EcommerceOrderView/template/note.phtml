@@ -8,5 +8,5 @@ $order = $this->getOrder();
         <? echo $this->__f("Note"); ?>
     </div>
     <textarea gsname='invoiceNote' class='gsniceinput1 invoiceNote'><? echo isset($order->invoiceNote) ? $order->invoiceNote : ""; ?></textarea>
-    <span class='shop_button' gstype='submit'>Save</span>
+    <span class='shop_button' gstype='submit' gs_callback="app.EcommerceOrderList.refreshOrderRow('<?php echo $order->id; ?>')">Save</span>
 </div>

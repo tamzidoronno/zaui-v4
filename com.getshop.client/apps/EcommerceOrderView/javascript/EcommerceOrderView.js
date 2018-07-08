@@ -7,9 +7,10 @@ app.EcommerceOrderView = {
         $(document).on('click', '.EcommerceOrderView .savespecialcartitem', app.EcommerceOrderView.saveSpecialItem);
     },
     
-    markPaidCompleted : function() {
+    markPaidCompleted : function(orderId) {
         $('.markaspaidarea').hide();
-        thundashop.framework.reprintPage();
+        app.EcommerceOrderList.refreshOrderRow(orderId);
+        
     },
     saveSpecialItem : function() {
         var form = $(this).closest('[gstype="form"]');
@@ -18,7 +19,6 @@ app.EcommerceOrderView = {
         var event = thundashop.Ajax.createEvent('','saveSpecialCartItem',form, data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
             res = JSON.parse(res);
-            console.log(res);
             form.closest('.cartitem').find(".count").val(res.count);
             form.closest('.cartitem').find(".price").val(res.price);
             $('.specialeditview').hide();
@@ -41,6 +41,18 @@ app.EcommerceOrderView = {
     saveSpecialCartItem : function(res) {
         
     },
+    refreshOrderLines : function(orderId) {
+        var event = thundashop.Ajax.createEvent('','refreshOrderLines', $('.EcommerceOrderView'), {
+            "orderid" : orderId
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.orderlinesarea').html(res);
+        });
+    },
+    addedProduct : function(orderId, res) {
+        app.EcommerceOrderView.refreshOrderLines(orderId);
+        app.EcommerceOrderList.refreshOrderRow(orderId);
+    },
     removeItem : function() {
         var confirmed = confirm("Are you sure you want to remove this item?");
         var btn = $(this);
@@ -55,6 +67,7 @@ app.EcommerceOrderView = {
         });
         thundashop.Ajax.postWithCallBack(event, function() {
             btn.closest('.cartitem').remove();
+            app.EcommerceOrderList.refreshOrderRow(orderid);
         });
     },
     showPaymentMethods: function() {

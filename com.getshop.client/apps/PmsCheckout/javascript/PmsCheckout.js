@@ -24,8 +24,13 @@ app.PmsCheckout = {
     reloadCheckoutArea : function(res) {
         $('.checkoutarea').html(res);
     },
-    orderCreationCompleted : function() {
-        app.PmsBookingRoomView.refresh();
+    orderCreationCompleted : function(res) {
+        if($('.getshoptableoverlaybody').is(':visible') || $('.gs_modalinner').is(':visible')) {
+            app.PmsBookingRoomView.refresh();
+        } else {
+            $('.checkoutarea').html(res);
+            $(window).scrollTop(0);
+        }
     },
     removeCartItem : function() {
         var item = $(this).closest('.cartitem');

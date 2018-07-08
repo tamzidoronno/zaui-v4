@@ -58,15 +58,29 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsManager()->orderChanged($this->getSelectedMultilevelDomainName(), $orderid);
     }
     
+    public function reloadRow() {
+        $order = $this->getSelectedOrder();
+        $result = array();
+        $result['rowCreatedDate'] = $this->formatRowCreatedDate($order);
+        $result['paymentDate'] = $this->formatPaymentDate($order);
+        $result['user'] = $this->formatUser($order);
+        $result['shipmentdate'] = $this->formatShipmentDate($order);
+        $result['payment'] = $this->formatPaymentType($order);
+        $result['inctaxes'] = $this->formatIncTaxes($order);
+        $result['extaxes'] = $this->formatExTaxes($order);
+        $result['state'] = $this->formatState($order);
+        echo json_encode($result);
+    }
+    
     public function formatPaymentDate($order) {
-        $text = "";
+        $text = "<span style='display:none;' hiddenorderid='".$order->id."'></span>";
         if($order->status != 7) {
-            $text = "<b style='color:red;'>NOT PAID</b>";
+            $text .= "<b style='color:red;'>NOT PAID</b>";
         } else {
             if ($order->paymentDate) {
-                $text = \GetShopModuleTable::formatDate($order->paymentDate);
+                $text .= \GetShopModuleTable::formatDate($order->paymentDate);
             } else {
-                $text = "N/A";
+                $text .= "N/A";
             }
         }
         $text = "<div>" . $text . "</div>";
@@ -89,7 +103,6 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
      * @return string
      */
     public function formatState($order) {
-        
         $roomid = "";
         if($this->externalReferenceIds) {
             $roomid = $this->externalReferenceIds[0];
@@ -105,15 +118,18 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $text = "";
         if ($order->closed) {
             $text = '<i class="fa fa-lock" title="Order has been locked"></i>';
-            $text .= '<i class="fa fa-history dontExpand creditOrder" orderid="'.$order->id.'" title="Credit order"></i>';
+            $text .= '<i class="fa fa-history dontExpand creditOrder" style="cursor:pointeR;" orderid="'.$order->id.'" title="Credit order"></i>';
         } else {
             $text = '<i class="fa fa-unlock"></i>';
-            $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' orderid='".$order->id."' title='Delete order'></i>";
+            $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' style='cursor:pointeR;' orderid='".$order->id."' title='Delete order'></i>";
         }
-        $text .= "<i class='fa fa-download dontExpand' title='Download order' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'></i>";
+        $text .= "<i class='fa fa-download dontExpand' title='Download order' style='cursor:pointeR;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'></i>";
         $text .= "<i class='fa fa-forward dontExpand sendemail' roomid='".$roomid."' orderid='".$order->id."' title='Send order / reciept' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span> ";
         if($instance->hasPaymentLink()) {
             $text .= "<i class='fa fa-arrow-right dontExpand sendpaymentlink' roomid='".$roomid."' callback='".$this->paymentLinkCallback."' orderid='".$order->id."' title='Send payment link' style='cursor:pointer;'></i> ";
+        }
+        if(@$order->invoiceNote) {
+            $text .= "<i class='fa fa-sticky-note' title='".$order->invoiceNote."'></i>";
         }
         
         return $text;
@@ -186,6 +202,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         );
         
         $table = new \GetShopModuleTable($this, 'OrderManager', 'getOrdersFiltered', $args, $attributes);
+        $table->avoidAutoExpanding();
         $table->sortByColumn("incrementOrderId", false);
         $table->renderPagedTable();
     }

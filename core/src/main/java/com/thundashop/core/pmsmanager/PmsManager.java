@@ -3417,24 +3417,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return true;
         }
 
-//        HashMap<String, List<BookingItem>> resultsFound = new HashMap();
-//        
-//        for (Booking book : toCheck) {
-//            String key = book.bookingItemTypeId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
-//            List<BookingItem> items = new ArrayList();
-//            if(resultsFound.containsKey(key)) {
-//                items = resultsFound.get(key);
-//            } else {
-//                items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
-//                resultsFound.put(key, items);
-//            }
-//            HashMap<String, Integer> count = getCountedTypes(toCheck, book.startDate, book.endDate);
-//            if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
-//                return false;
-//            }
-//            gsTiming("   getavailbeitem...");
-//        }
-//        gsTiming("   getavailbeitems passed");
+        HashMap<String, List<BookingItem>> resultsFound = new HashMap();
+        
+        for (Booking book : toCheck) {
+            String key = book.bookingItemTypeId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
+            List<BookingItem> items = new ArrayList();
+            if(resultsFound.containsKey(key)) {
+                items = resultsFound.get(key);
+            } else {
+                items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
+                resultsFound.put(key, items);
+            }
+            HashMap<String, Integer> count = getCountedTypes(toCheck, book.startDate, book.endDate);
+            if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
+                return false;
+            }
+            gsTiming("   getavailbeitem...");
+        }
+        gsTiming("   getavailbeitems passed");
 
         return true;
     }

@@ -2854,11 +2854,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 logEntry("Autoasigned item " + item.bookingItemName, bookingId, null);
             }
         } catch (Exception d) {
-            if (!warnedAboutAutoassigning) {
-                messageManager.sendErrorNotification("Exception happened while autoassigning room.", null);
-                logPrintException(d);
-                warnedAboutAutoassigning = true;
-            }
+		if (!warnedAboutAutoassigning) {
+	             messageManager.sendErrorNotification("Exception happened while autoassigning room.", null);
+	             logPrintException(d);
+	             warnedAboutAutoassigning = true;
+	        }
         }
     }
 

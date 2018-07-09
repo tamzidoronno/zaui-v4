@@ -21,6 +21,7 @@ import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import java.io.File;
@@ -227,6 +228,7 @@ public class Database extends StoreComponent {
         
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
+        obj.add(addBannedClass("com.thundashop.core.ordermanager.data.VirtualOrder"));
         andQuery.put("$and", obj);
         
         return andQuery;
@@ -382,6 +384,11 @@ public class Database extends StoreComponent {
     }
 
     public void save(String database, String collection, DataCommon data) {
+        
+        if (data instanceof VirtualOrder) {
+            return;
+        }
+        
         checkId(data);
         DBCollection col = mongo.getDB(database).getCollection(collection);
         DBObject dbObject = morphia.toDBObject(data);

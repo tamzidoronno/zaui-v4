@@ -611,7 +611,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for (BookingItemType type : types) {
             String added = "";
             WubookRoomData data = getWubookRoomData(type.id);
-            if(data.addedToWuBook) {
+            if(data.addedToWuBook && data.wubookroomid != -1) {
                 added = updateRoom(type);
             } else {
                 added = insertRoom(type);
@@ -1974,6 +1974,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private void insertVirtualRooms(WubookRoomData data, BookingItemType type) {
+        if(type.size > 10) {
+            return;
+        }
         System.out.println("Virtual rooms, number of guests: " + type.size + ";roomid: " + data.rid + ", data virtualroom ids:" + data.virtualWubookRoomIds);
         String[] virtualRooms = data.virtualWubookRoomIds.split(";");
         String virtualRoomIds = data.wubookroomid + "";

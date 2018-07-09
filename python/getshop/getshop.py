@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import logging
 
 from getshop.WebServer import WebServer
@@ -9,7 +10,7 @@ if __name__ == "__main__":
     
     config = config();
 
-    text_file = open("token.txt", "w")
+    text_file = open("/storage/getshop/token.txt", "w")
     text_file.write("{ \"token\" : \""+config.token+"\" }")
     text_file.close()
     

@@ -1967,51 +1967,67 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
 
             BookingTimeLineFlatten line = lines.stream()
-                    .filter(li -> li.bookingItemId.equals(item.id))
+                    .filter(li -> li.bookingItemId != null && li.bookingItemId.equals(item.id))
                     .findFirst()
                     .orElse(null);
 
             gsTiming("Before looping");
+            LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
+            res.itemTimeLines.put(item.id, retLines);
+        }
+        
+        List<BookingTimeLineFlatten> overflowedLines = lines.stream()
+                .filter(l -> l.overFlow)
+                .collect(Collectors.toList());
+        
+        int j = 0;
+        for (BookingTimeLineFlatten line : overflowedLines) {
+            j++;
+            LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
+            res.overFlowLines.add(retLines);
+        }
+        
+        return res;
+    }
 
-            List<BookingTimeLine> timelines = line.getTimelines(filter.interval - 21600, 21600);
-            LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
-            for (BookingTimeLine tl : timelines) {
-                IntervalResultEntry tmpres = new IntervalResultEntry();
-                tmpres.bookingIds = tl.bookingIds;
-                tmpres.count = tl.count;
-                tmpres.time = tl.start.getTime();
-
-                addVirtuallyAssignedBookingIds(tmpres, tl);
-
-                if (!tmpres.bookingIds.isEmpty()) {
-                    Booking bookingEngineBooking = bookingEngine.getBooking(tmpres.bookingIds.get(0));
-                    tmpres.state = bookingEngineBooking.getSourceState();
-
-                    if (bookingEngineBooking.source != null && !bookingEngineBooking.source.isEmpty()) {
-                        tmpres.name = bookingEngineBooking.source;
-                    } else {
-                        PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
-                        if (booking != null && booking.userId != null) {
-                            User user = userManager.getUserById(booking.userId);
-                            if (user != null) {
-                                tmpres.name = user.fullName;
-                            }
-
-                            for (PmsBookingRooms room : booking.rooms) {
-                                if (bookingEngineBooking.id.equals(room.bookingId)) {
-                                    tmpres.roomId = room.pmsBookingRoomId;
-                                }
+    private LinkedHashMap<Long, IntervalResultEntry> getTimeLine(BookingTimeLineFlatten line, PmsIntervalFilter filter) throws ErrorException {
+        List<BookingTimeLine> timelines = line.getTimelines(filter.interval - 21600, 21600);
+        LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
+        for (BookingTimeLine tl : timelines) {
+            IntervalResultEntry tmpres = new IntervalResultEntry();
+            tmpres.bookingIds = tl.bookingIds;
+            tmpres.count = tl.count;
+            tmpres.time = tl.start.getTime();
+            tmpres.typeId = line.getBookingItemTypeId();
+            
+            addVirtuallyAssignedBookingIds(tmpres, tl);
+            
+            if (!tmpres.bookingIds.isEmpty()) {
+                Booking bookingEngineBooking = bookingEngine.getBooking(tmpres.bookingIds.get(0));
+                tmpres.state = bookingEngineBooking.getSourceState();
+                
+                if (bookingEngineBooking.source != null && !bookingEngineBooking.source.isEmpty()) {
+                    tmpres.name = bookingEngineBooking.source;
+                } else {
+                    PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
+                    if (booking != null && booking.userId != null) {
+                        User user = userManager.getUserById(booking.userId);
+                        if (user != null) {
+                            tmpres.name = user.fullName;
+                        }
+                        
+                        for (PmsBookingRooms room : booking.rooms) {
+                            if (bookingEngineBooking.id.equals(room.bookingId)) {
+                                tmpres.roomId = room.pmsBookingRoomId;
                             }
                         }
                     }
                 }
-
-                itemCountLine.put(tl.start.getTime(), tmpres);
             }
-            res.itemTimeLines.put(item.id, itemCountLine);
+            
+            itemCountLine.put(tl.start.getTime(), tmpres);
         }
-
-        return res;
+        return itemCountLine;
     }
 
     private void addVirtuallyAssignedBookingIds(IntervalResultEntry tmpres, BookingTimeLine tl) {
@@ -3403,21 +3419,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         HashMap<String, List<BookingItem>> resultsFound = new HashMap();
         
-        for (Booking book : toCheck) {
-            String key = book.bookingItemTypeId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
-            List<BookingItem> items = new ArrayList();
-            if(resultsFound.containsKey(key)) {
-                items = resultsFound.get(key);
-            } else {
-                items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
-                resultsFound.put(key, items);
+        if (!BookingEngine.useNewEngine.contains(storeId)) {
+            for (Booking book : toCheck) {
+                String key = book.bookingItemTypeId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
+                List<BookingItem> items = new ArrayList();
+                if(resultsFound.containsKey(key)) {
+                    items = resultsFound.get(key);
+                } else {
+                    items = bookingEngine.getAvailbleItems(book.bookingItemTypeId, book.startDate, book.endDate);
+                    resultsFound.put(key, items);
+                }
+                HashMap<String, Integer> count = getCountedTypes(toCheck, book.startDate, book.endDate);
+                if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
+                    return false;
+                }
+                gsTiming("   getavailbeitem...");
             }
-            HashMap<String, Integer> count = getCountedTypes(toCheck, book.startDate, book.endDate);
-            if (items.isEmpty() || items.size() < count.get(book.bookingItemTypeId)) {
-                return false;
-            }
-            gsTiming("   getavailbeitem...");
         }
+        
         gsTiming("   getavailbeitems passed");
 
         return true;

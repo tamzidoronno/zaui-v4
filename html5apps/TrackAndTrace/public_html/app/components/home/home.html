@@ -23,7 +23,16 @@
         <br/> Destinations {{ getUncompletedTasksNumber(route) }} / {{ route.destinations.length }}
 
         <div ng-mobile-click="openRoute(route.id)" ><div class="button showroutebutton" ng-if="route.startInfo.started"><i class="fa fa-arrow-right"></i></div></div>
-        <div class="button startbutton" ng-if="!route.startInfo.started" ng-mobile-click="startRoute(route)">Start</div>
+        <div class="button startbutton" ng-if="!route.startInfo.started" ng-mobile-click="startRoute(route)">
+            <span ng-if="route.startInProgress">
+                Starting...
+            </span>
+            <span ng-if="!route.startInProgress">
+                Start
+            </span>
+            
+        
+        </div>
     </div>
     
   

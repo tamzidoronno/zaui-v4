@@ -13,13 +13,14 @@ if($sorting == "room") {
     $allInOne = true;
 }
 $cats = $this->getCategoryFilter();
+
 foreach ($types as $type) {
     if(sizeof($cats) > 0 && !in_array($type->id, $cats) && !$allInOne) {
         continue;
     }
 ?>
    
-    <div class='type_line'>
+    <div class='type_line' typeid="<? echo $type->id; ?>">
         
         <div class='timeline_item_name'>
             
@@ -48,6 +49,8 @@ foreach ($types as $type) {
         <div class='timeline'>
             <?
             
+            $count = array();
+            
             $j = 0;
             foreach ($items as $item) {
                 
@@ -71,6 +74,7 @@ foreach ($types as $type) {
                         $header = "";
                         $colDate = date("d.m.y", $time/1000);
                         $colDate2 = date("m/d/y", $time/1000);
+                        $colTime = $time;
                         
                         if ($j == 0) {
                             $header = "<div class='header col_width'>$colDate</div>";
@@ -114,13 +118,12 @@ foreach ($types as $type) {
                         if($canShowModal) {
                             $dragging .= " draggable='true' ";
                         }
-                        echo "<div typeid='$type->id' col='$i' bookingitemid='$item->id' date='$colDate2' row='$j' class='col_outer $noData $firstInRowOuter $lastInRowOuter'><div $canShowModal bookingid='$bookingId' roomid='$data->roomId' $dragging class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
+                        echo "<div typeid='$type->id' col='$i' bookingitemid='$item->id' date='$colDate2' row='$j' time='$time' class='col_outer $noData $firstInRowOuter $lastInRowOuter'><div $canShowModal bookingid='$bookingId' roomid='$data->roomId' $dragging class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
                         $prevBookingIds = $data->bookingIds;
                         $i++;
                     }
                     $j++;
                 echo "</div>";
-
             }
             ?>
         </div>
@@ -175,6 +178,10 @@ if(sizeof($conferenceRooms) > 0) {
 }
 
 
+$jsonLines = json_encode($timelines->overFlowLines);
+echo "<script>";
+echo "var overflowAvailabilityLines = ".$jsonLines;
+echo "</script>";
 
 ?>
 <script>
@@ -208,12 +215,57 @@ $(document).ready(function() {
             $(this).find('.acronyme').fadeIn();
         }
     });
-    document.addEventListener('scroll', function (event) {
-        var line = $(event.target);
-        if($(event.target).hasClass('timeline')) {
-            console.log(line.scrollLeft());
-            $('.timeline').scrollLeft(line.scrollLeft());
+    if (typeof(alreadyAddedScrollAvailability) === "undefined") {
+        alreadyAddedScrollAvailability = true;
+        document.addEventListener('scroll', function (event) {
+            var line = $(event.target);
+            if($(event.target).hasClass('timeline')) {
+                $('.timeline').scrollLeft(line.scrollLeft());
+            }
+        }, true /*Capture event*/);
+    }
+    
+    
+    for (var i in overflowAvailabilityLines) {
+        var row = overflowAvailabilityLines[i];
+        for (var j in row) {
+            var data = row[j];
+            if (data.count < 1) {
+                continue;
+            }
+            
+            var toUse = $('.type_line[typeid="'+data.typeId+'"] .col_outer.nodata[time="'+data.time+'"]');
+            
+            if (toUse.size() < 1) {
+                alert("There are bookings that we are not able to show you because you dont have enough rooms");
+                continue;
+            }
+            
+            toUse = $(toUse[0]);
+           
+            var toUseInner = toUse.find('div');
+            toUseInner.addClass('contains_booking');
+            toUseInner.addClass('reservedfloating');
+            toUseInner.attr('bookingid', data.bookingIds[0]);
+            toUseInner.attr('roomId', data.roomId);
+            toUse.removeClass('nodata');
+            toUse.addClass('col_data');
+            
+            var words, acronym, nextWord;
+
+            var s = data.name;
+            words = s.split(' ');
+            acronym= "";
+            index = 0
+            while (index<words.length) {
+                nextWord = words[index];
+                acronym = acronym + nextWord.charAt(0);
+                index = index + 1 ;
+            }
+            
+            toUseInner.append("<div class='bookername'><span class='fullname'></span><span class='acronyme' style='display:block;'>"+acronym+"</span></div>");
         }
-    }, true /*Capture event*/);
+    }
+    
 });
 </script>

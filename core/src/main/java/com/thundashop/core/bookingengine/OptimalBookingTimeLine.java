@@ -22,6 +22,7 @@ public class OptimalBookingTimeLine {
     public String uuid = UUID.randomUUID().toString();
     public List<Booking> bookings = new ArrayList();
     public String bookingItemId = "";
+    public boolean overFlowed = false;
 
     long getLongestDistanceBetweenBookings(Booking booking) {
         long retVal = 0;

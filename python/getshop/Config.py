@@ -10,7 +10,7 @@ import pickledb
 
 class config:
     def __init__(self):
-        commondatabase = pickledb.load('getshop.db', True);
+        commondatabase = pickledb.load('/storage/getshop/getshop.db', True);
         self.token = commondatabase.get('token')
         self.remoteHostName = commondatabase.get('remotehostname')
 

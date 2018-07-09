@@ -129,7 +129,7 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
         echo "</div>";
     }
     
-    echo "<span class='complete_button'>$completeText</span>";
+    echo "<span class='complete_button' id='reserveroom'>$completeText</span>";
 } else {
     echo "<h2 class='paymentheaders'>".$this->__w("Contact information") . "</h2>";
     echo "<div class='chooseregform'>";
@@ -220,14 +220,14 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
         if($this->isEditorMode() && $pmsconfig->requirePayments && !$pmsconfig->autoCreateInvoices) {
             echo "<span class='col-50' style='padding-right:0px;'><span style='margin-top: 5px;' class='complete_button' gsvalue='nopay'>".$this->__w("Continue")."</span>";
         } else {
-            echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button'>$completeText</span>";
+            echo "<span class='col-50' style='padding-right:0px;'><span class='complete_button' id='reserveroom'>$completeText</span>";
         }
         echo "</div>";
     } else {
         if($this->isEditorMode() && $pmsconfig->requirePayments && !$pmsconfig->autoCreateInvoices) {
             echo "<span style='margin-top: 5px;'  class='complete_button' gsvalue='nopay'>".$this->__w("Continue")."</span>";
         } else {
-            echo "<span class='complete_button'>$completeText</span>";
+            echo "<span class='complete_button' id='reserveroom'>$completeText</span>";
         }
     }
     echo "</div>";

@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
-import org.omg.CORBA.Current;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -41,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ManagerSubBase {
     protected String storeId = "";
     protected Credentials credentials = null;
+    private String overrideCollectionName;
     
     @Autowired
     protected Logger log; 
@@ -81,6 +81,10 @@ public class ManagerSubBase {
         return database;
     }
 
+    public void setOverrideCollectionName(String overrideCollectionName) {
+        this.overrideCollectionName = overrideCollectionName;
+    }
+    
     public Application getStoreSettingsApplication() {
         Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
         return settingsApplication;
@@ -139,6 +143,9 @@ public class ManagerSubBase {
         long start = System.currentTimeMillis();
         Credentials credentials = new Credentials(this.getClass());
         credentials.manangerName = this.getClass().getSimpleName();
+        if (overrideCollectionName != null) {
+            credentials.manangerName = overrideCollectionName;
+        }
         credentials.password = UUID.randomUUID().toString();
         credentials.storeid = storeId;
 
@@ -155,7 +162,7 @@ public class ManagerSubBase {
         
         boolean databaseFunctionInUse = isDatabaseMethodInUse();
                 
-        if (database != null && !credentials.manangerName.equals("LoggerManager") && databaseFunctionInUse) {
+        if (database != null && !credentials.manangerName.equals("LoggerManager") && databaseFunctionInUse && shouldLoadData()) {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             
@@ -512,5 +519,9 @@ public class ManagerSubBase {
         }
         
         return false;
+    }
+
+    public boolean shouldLoadData() {
+        return true;
     }
 }

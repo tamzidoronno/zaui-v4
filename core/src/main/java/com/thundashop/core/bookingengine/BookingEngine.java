@@ -28,68 +28,85 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEngine {
 
+    public static List<String> useNewEngine = new ArrayList();
+
+    public BookingEngine() {
+        useNewEngine.add("3b647c76-9b41-4c2a-80db-d96212af0789");
+    }
+    
     @Autowired
     public BookingEngineAbstract bookingEngineAbstract;
     
     
+    @Autowired
+    public BookingEngineNew bookingEngineNew;
+    
+    private IBookingEngineAbstract getBookingEngine() {
+        if (useNewEngine.contains(storeId)) {
+            return bookingEngineNew;
+        }
+        
+        return bookingEngineAbstract;
+    }
+    
     @Override
     public BookingItemType createABookingItemType(String name) {
-        return deepClone(bookingEngineAbstract.createABookingItemType(name));
+        return deepClone(getBookingEngine().createABookingItemType(name));
     }
 
     @Override
     public List<BookingItemType> getBookingItemTypes() {
-        return deepClone(bookingEngineAbstract.getBookingItemTypes());
+        return deepClone(getBookingEngine().getBookingItemTypes());
     }
 
     @Override
     public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType) {
-        return deepClone(bookingEngineAbstract.getBookingItemTypesWithSystemType(systemType));
+        return deepClone(getBookingEngine().getBookingItemTypesWithSystemType(systemType));
     }
 
     @Override
     public BookingItemType updateBookingItemType(BookingItemType type) {
-        return deepClone(bookingEngineAbstract.updateBookingItemType(type));
+        return deepClone(getBookingEngine().updateBookingItemType(type));
     }
 
     @Override
     public BookingItem saveBookingItem(BookingItem item) {
-        return deepClone(bookingEngineAbstract.saveBookingItem(item));
+        return deepClone(getBookingEngine().saveBookingItem(item));
     }
 
     @Override
     public BookingItem getBookingItem(String id) {
-        return deepClone(bookingEngineAbstract.getBookingItem(id));
+        return deepClone(getBookingEngine().getBookingItem(id));
     }
 
     @Override
     public List<BookingItem> getBookingItems() {
-        return deepClone(bookingEngineAbstract.getBookingItems());
+        return deepClone(getBookingEngine().getBookingItems());
     }
 
     @Override
     public void deleteBookingItem(String id) {
-        bookingEngineAbstract.deleteBookingItem(id);
+        getBookingEngine().deleteBookingItem(id);
     }
 
     @Override
     public void setConfirmationRequired(boolean confirmationRequired) {
-        bookingEngineAbstract.setConfirmationRequired(confirmationRequired);
+        getBookingEngine().setConfirmationRequired(confirmationRequired);
     }
 
     @Override
     public BookingEngineConfiguration getConfig() {
-        return deepClone(bookingEngineAbstract.getConfig());
+        return deepClone(getBookingEngine().getConfig());
     }
 
     @Override
     public List<Booking> getAllBookings() {
-        return deepClone(bookingEngineAbstract.getAllBookings());
+        return deepClone(getBookingEngine().getAllBookings());
     }
     
     @Override
     public List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
-        return deepClone(bookingEngineAbstract.getAllBookingsByBookingItem(bookingItemId));
+        return deepClone(getBookingEngine().getAllBookingsByBookingItem(bookingItemId));
     }
     
     @Override
@@ -100,79 +117,79 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
     
     public void removeBookingsWhereUserHasBeenDeleted(String bookingItemId) {
-        bookingEngineAbstract.removeBookingsWhereUserHasBeenDeleted(bookingItemId);
+        getBookingEngine().removeBookingsWhereUserHasBeenDeleted(bookingItemId);
     }
 
     @Override
     public void changeTypeOnBooking(String bookingId, String itemTypeId) {
-        bookingEngineAbstract.changeTypeOnBooking(bookingId, itemTypeId);
+        getBookingEngine().changeTypeOnBooking(bookingId, itemTypeId);
     }
 
     @Override
     public void changeDatesOnBooking(String bookingId, Date start, Date end) {
-        bookingEngineAbstract.changeDatesOnBooking(bookingId, start, end);
+        getBookingEngine().changeDatesOnBooking(bookingId, start, end);
     }
 
     @Override
     public void changeBookingItemOnBooking(String booking, String item) {
-        bookingEngineAbstract.changeBookingItemOnBooking(booking, item);
+        getBookingEngine().changeBookingItemOnBooking(booking, item);
     }
 
     @Override
     public void changeBookingItemAndDateOnBooking(String booking, String item, Date start, Date end) {
-        bookingEngineAbstract.changeBookingItemAndDateOnBooking(booking, item,start,end);
+        getBookingEngine().changeBookingItemAndDateOnBooking(booking, item,start,end);
     }
 
     public boolean isConfirmationRequired() {
-        return bookingEngineAbstract.isConfirmationRequired();
+        return getBookingEngine().isConfirmationRequired();
     }
 
     public boolean canAdd(List<Booking> bookingsToAdd) {
-        return bookingEngineAbstract.canAdd(bookingsToAdd);
+        return getBookingEngine().canAdd(bookingsToAdd);
     }
 
     public BookingGroup addBookings(List<Booking> bookingsToAdd) {
-        return deepClone(bookingEngineAbstract.addBookings(bookingsToAdd));
+        return deepClone(getBookingEngine().addBookings(bookingsToAdd));
     }
 
     @Override
     public Booking getBooking(String bookingId) {
-        return deepClone(bookingEngineAbstract.getBooking(bookingId));
+        return deepClone(getBookingEngine().getBooking(bookingId));
     }
 
     @Override
     public boolean  deleteBooking(String id) {
-        return bookingEngineAbstract.deleteBooking(id);
+        return getBookingEngine().deleteBooking(id);
     }
 
     @Override
     public BookingItemType getBookingItemType(String id) {
-        return deepClone(bookingEngineAbstract.getBookingItemType(id));
+        return deepClone(getBookingEngine().getBookingItemType(id));
     }
 
     public void addAvailability(String bookingItemId, Availability availability) {
-        bookingEngineAbstract.addAvailability(bookingItemId, availability);
+        getBookingEngine().addAvailability(bookingItemId, availability);
     }
 
     public Availability getAvailbility(String id) {
-        return deepClone(bookingEngineAbstract.getAvailbility(id));
+        return deepClone(getBookingEngine().getAvailbility(id));
     }
 
     public List<Booking> getConfirmationList(String bookingItemTypeId) {
-        return deepClone(bookingEngineAbstract.getConfirmationList(bookingItemTypeId));
+        return deepClone(getBookingEngine().getConfirmationList(bookingItemTypeId));
     }
     
     public void confirmBooking(String bookingItemTypeId) {
-        bookingEngineAbstract.confirmBooking(bookingItemTypeId);
+        getBookingEngine().confirmBooking(bookingItemTypeId);
     }
 
     public BookingTimeLineFlatten getTimelines(String id, Date startDate, Date endDate) {
-        return deepClone(bookingEngineAbstract.getTimelines(id, startDate, endDate));
+        return deepClone(getBookingEngine().getTimelines(id, startDate, endDate));
     }
 
     @Override
     public void deleteBookingItemType(String id) {
-        bookingEngineAbstract.deleteBookingItemType(id);
+        getBookingEngine().deleteBookingItemType(id);
     }
 
     /**
@@ -183,11 +200,11 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      * @return 
      */
     public BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
-        return deepClone(bookingEngineAbstract.getTimeLinesForItem(start,end,itemId));
+        return deepClone(getBookingEngine().getTimeLinesForItem(start,end,itemId));
     }
     
     public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end) {
-        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimal(start,end, false));
+        return deepClone(getBookingEngine().getTimeLinesForItemWithOptimal(start,end, false));
     }
     
     @Override
@@ -201,7 +218,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     public boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
-        return bookingEngineAbstract.itemInUseBetweenTime(start, end, itemId);
+        return getBookingEngine().itemInUseBetweenTime(start, end, itemId);
     }
 
     /**
@@ -213,7 +230,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
-        return bookingEngineAbstract.getAvailbleItems(itemType, start, end).size();
+        return getBookingEngine().getAvailbleItems(itemType, start, end).size();
     }
 
     /**
@@ -225,12 +242,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      * @return 
      */
     public Integer getNumberOfAvailableWeakButFaster(String itemType, Date start, Date end) {
-        if (BookingEngineAbstract.usingNewSystem2.contains(storeId)) {
-            return bookingEngineAbstract.getNumberOfPossibleBookings(itemType, start, end);
-        } else {
-            return bookingEngineAbstract.getNumberOfAvailable(itemType, start, end);
-        }
-        
+        return getBookingEngine().getNumberOfAvailable(itemType, start, end);
     }
 
     /**
@@ -239,7 +251,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     @Override
     public RegistrationRules getDefaultRegistrationRules() {
-        return bookingEngineAbstract.getConfig().rules;
+        return getBookingEngine().getConfig().rules;
     }
 
      /**
@@ -248,18 +260,18 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     @Override
     public void saveDefaultRegistrationRules(RegistrationRules rules) {
-        bookingEngineAbstract.saveRules(rules);
+        getBookingEngine().saveRules(rules);
     }
 
     @Override
     public void saveOpeningHours(TimeRepeaterData time, String itemId) {
-        bookingEngineAbstract.saveOpeningHours(time, itemId);
+        getBookingEngine().saveOpeningHours(time, itemId);
     }
 
     @Override
     public List<TimeRepeaterData> getOpeningHoursWithType(String itemId, Integer timePeriodeType) {
         List<TimeRepeaterData> toReturn = new ArrayList();
-        List<TimeRepeaterData> openingHours = deepClone(bookingEngineAbstract.getOpeningHours(itemId));
+        List<TimeRepeaterData> openingHours = deepClone(getBookingEngine().getOpeningHours(itemId));
         for(TimeRepeaterData data : openingHours) {
             if(timePeriodeType == null || data.timePeriodeType.equals(timePeriodeType)) {
                 toReturn.add(data);
@@ -274,28 +286,28 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     public List<BookingItem> getBookingItemsByType(String typeId) {
-        return bookingEngineAbstract.getBookingItemsByType(typeId);
+        return getBookingEngine().getBookingItemsByType(typeId);
     }
 
     @Override
     public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
-        return deepClone(bookingEngineAbstract.getAvailbleItems(typeId, start, end));
+        return deepClone(getBookingEngine().getAvailbleItems(typeId, start, end));
     }
     
     @Override
     public List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
-        return deepClone(bookingEngineAbstract.getAvailbleItemsWithBookingConsidered(typeId, start, end, bookingId));
+        return deepClone(getBookingEngine().getAvailbleItemsWithBookingConsidered(typeId, start, end, bookingId));
     }
 
     @Override
     public List<BookingItem> getAllAvailbleItems(Date start, Date end) {
-        return deepClone(bookingEngineAbstract.getAvailbleItems(start, end));
+        return deepClone(getBookingEngine().getAvailbleItems(start, end));
     }
 
     @Override
     public List<BookingItem> getAllAvailbleItemsWithBookingConsidered(Date start, Date end, String bookingid) {
         if (storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
-            List<BookingItem> res = bookingEngineAbstract.getAllAvailbleItemsWithBookingConsideredParalized(start, end, bookingid);
+            List<BookingItem> res = getBookingEngine().getAllAvailbleItemsWithBookingConsideredParalized(start, end, bookingid);
             return deepClone(res);
         }
         
@@ -311,35 +323,35 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     @Override
     public void deleteOpeningHours(String repeaterId) {
-        bookingEngineAbstract.deleteOpeningHours(repeaterId);
+        getBookingEngine().deleteOpeningHours(repeaterId);
     }
 
     @Override
     public void checkConsistency() {
-        bookingEngineAbstract.checkConsistency();
+        getBookingEngine().checkConsistency();
     }
 
     public boolean canAdd(Booking bookingToAdd) {
-        return bookingEngineAbstract.canAdd(bookingToAdd);
+        return getBookingEngine().canAdd(bookingToAdd);
     }
 
     public BookingItem getBookingItemUnfinalized(String id) {
-        return deepClone(bookingEngineAbstract.getBookingItemUnfinalized(id));
+        return deepClone(getBookingEngine().getBookingItemUnfinalized(id));
     }
 
     @Override
     public void changeBookingItemType(String itemId, String newTypeId) {
-        bookingEngineAbstract.changeBookingItemType(itemId, newTypeId);
+        getBookingEngine().changeBookingItemType(itemId, newTypeId);
     }
 
     @Override
     public void changeSourceOnBooking(String bookingId, String source) {
-        bookingEngineAbstract.changeSourceOnBooking(bookingId, source);
+        getBookingEngine().changeSourceOnBooking(bookingId, source);
     }
 
     @Override
     public void forceUnassignBookingInfuture() {
-        bookingEngineAbstract.forceUnassignBookingInfuture();
+        getBookingEngine().forceUnassignBookingInfuture();
     }
     
     /**
@@ -366,7 +378,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrors(Date start, Date end) {
-        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimalIngoreErrors(start,end));
+        return deepClone(getBookingEngine().getTimeLinesForItemWithOptimalIngoreErrors(start,end));
     }
 
     @Override

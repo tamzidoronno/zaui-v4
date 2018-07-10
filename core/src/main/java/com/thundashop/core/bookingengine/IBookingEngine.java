@@ -107,6 +107,9 @@ public interface IBookingEngine {
     public List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId);
     
     @Administrator
+    public List<BookingItem> getAvailbleItemsWithBookingConsideredAndShuffling(String typeId, Date start, Date end, String bookingId);
+    
+    @Administrator
     public List<BookingItem> getAllAvailbleItemsWithBookingConsidered(Date start, Date end, String bookingid);
     
     public List<TimeRepeaterData> getOpeningHours(String itemId);

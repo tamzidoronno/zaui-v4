@@ -204,10 +204,11 @@
 }
 
 .PmsBookingRoomView .roomandcats .shop_button {
-    position: absolute;
     bottom: 18px;
     right: 20px;
     left: 20px;
+    width: 200px;
+    margin-bottom: 20px;
 }
 
 .PmsBookingRoomView .roomandcats {

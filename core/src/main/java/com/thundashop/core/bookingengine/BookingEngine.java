@@ -390,4 +390,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public boolean canAddBookings(List<Booking> bookingsToAdd) {
         return canAdd(bookingsToAdd);
     }
+
+    @Override
+    public List<BookingItem> getAvailbleItemsWithBookingConsideredAndShuffling(String typeId, Date start, Date end, String bookingId) {
+        return deepClone(getBookingEngine().getAvailbleItemsWithBookingConsideredAndShuffling(typeId, start, end, bookingId));
+    }
 }

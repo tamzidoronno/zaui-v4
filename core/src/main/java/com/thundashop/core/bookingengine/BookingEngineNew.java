@@ -8,6 +8,7 @@ package com.thundashop.core.bookingengine;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
+import static com.thundashop.core.bookingengine.BookingEngineAbstract.usingNewSystem2;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
@@ -1027,5 +1028,18 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     @Override
     public boolean shouldLoadData() {
         return useNewEngine.contains(storeId);
+    }
+
+    @Override
+    public List<BookingItem> getAvailbleItemsWithBookingConsideredAndShuffling(String typeId, Date start, Date end, String bookingId) {
+        BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(typeId, start, end, null);
+
+        List<BookingItem> retList = assigner.getAvailableItems(bookingId, start, end).stream()
+                .map(o -> items.get(o))
+                .collect(Collectors.toList());
+        
+        List<BookingItem> retList2 = new ArrayList(retList);
+
+        return retList2;
     }
 }

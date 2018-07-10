@@ -54,6 +54,9 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     private Application cachedThemeApp = null;
     private Date cachedThemeAppExpire = new Date();
     
+    @Autowired
+    private StoreApplicationInstancePool instancePool;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         getShopApplicationPool.addListener(this);
@@ -71,6 +74,13 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     public List<Application> getApplications() {
         List<Application> finalizedList = new ArrayList();
         getApplicationsInternally().forEach(app -> finalizedList.add(finalizeApplication(app)));
+        
+        if (!isCmsModule()) {
+            List<String> ids = instancePool.getDistinctApplicationsUsedForPool();
+            ids.add("b5e9370e-121f-414d-bda2-74df44010c3b");
+            finalizedList.removeIf(app -> !ids.contains(app.id));
+        }
+        
         return finalizedList;
     }
 

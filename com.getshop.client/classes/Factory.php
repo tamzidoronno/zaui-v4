@@ -523,10 +523,15 @@ class Factory extends FactoryBase {
 
     private function renderContent($json) {
         if ($json) {
-            ob_start();
-            $this->page->loadSkeleton();
-            $content = ob_get_contents();
-            ob_end_clean();
+            
+            if (!isset($_SESSION['gs_currently_showing_modal'])) {
+                ob_start();
+                $this->page->loadSkeleton();
+                $content = ob_get_contents();
+                ob_end_clean();
+            } else {
+                $content = "gs_modal_active";
+            }
             
             $modal = "";
             if (isset($_SESSION['gs_currently_showing_modal'])) {
@@ -646,8 +651,6 @@ class Factory extends FactoryBase {
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);
 
-        $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
-        
         $appinstance = $this->getApplicationPool()->getSelectedThemeApp();
         if(isset($_GET['removeextracss'])) {
             unset($_SESSION['includeextracss']);
@@ -1036,6 +1039,10 @@ class Factory extends FactoryBase {
     public function includeSeo() {
         $settings = $this->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
         $instance = $this->getApplicationPool()->createInstace($settings);
+        
+        if (!$instance) {
+            return "";
+        }
         
         $singleOnGroup = $instance->getConfigurationSetting("seo");
 

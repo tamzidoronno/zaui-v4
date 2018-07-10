@@ -394,7 +394,10 @@ thundashop.Ajax = {
         if (response.errors) {
             thundashop.Ajax.showErrorMessage(response.errors)
         } else {
-            $('#gsbody').html(response.content);
+            if (response.content !== "gs_modal_active") {
+                $('#gsbody').html(response.content);
+            }
+            
             $('#dynamicmodal').html(response.modal);
             $('.gsrightwidgetbody').html(response.rightWidget);
             PubSub.publish('NAVIGATION_COMPLETED', {response: response});

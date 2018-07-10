@@ -267,4 +267,13 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
             });
         });
     }
+
+    public List<String> getDistinctApplicationsUsedForPool() {
+        return getCurrentApplicationInstances()
+                .values()
+                .stream()
+                .map(i -> i.appSettingsId)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }

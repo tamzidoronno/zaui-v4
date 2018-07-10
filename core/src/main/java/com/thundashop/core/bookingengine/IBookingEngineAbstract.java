@@ -57,6 +57,7 @@ public interface IBookingEngineAbstract {
     public void saveRules(RegistrationRules rules);
     public List<BookingItem> getBookingItemsByType(String typeId);
     public List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId);
+    public List<BookingItem> getAvailbleItemsWithBookingConsideredAndShuffling(String typeId, Date start, Date end, String bookingId);
     public List<BookingItem> getAvailbleItems(Date start, Date end);
     public List<BookingItem> getAllAvailbleItemsWithBookingConsideredParalized(Date start, Date end, String bookingid);
     public void checkConsistency();

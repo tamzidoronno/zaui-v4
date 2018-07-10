@@ -1887,8 +1887,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void printInvoice(String orderId, String printerId) {
-        Printer printer = storePrintManager.getPrinter(printerId);
         Order order = getOrder(orderId);
+        printOrderToPrinter(order, printerId);
+    }
+
+    public void printOrderToPrinter(Order order, String printerId) throws ErrorException, RuntimeException {
+        Printer printer = storePrintManager.getPrinter(printerId);
         
         if (printer == null)
             throw new RuntimeException("Printer not found");

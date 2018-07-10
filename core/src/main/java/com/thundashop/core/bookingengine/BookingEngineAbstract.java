@@ -1486,4 +1486,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     public boolean shouldLoadData() {
         return !useNewEngine.contains(storeId);
     }
+
+    @Override
+    public List<BookingItem> getAvailbleItemsWithBookingConsideredAndShuffling(String typeId, Date start, Date end, String bookingId) {
+        return getAvailbleItemsWithBookingConsidered(typeId, start, end, bookingId);
+    }
 }

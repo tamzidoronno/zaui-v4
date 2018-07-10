@@ -96,4 +96,7 @@ interface IResturantManager {
     
     @Customer 
     public TableData getTableDataForReservation(String reservationId);
+    
+    @Editor
+    public void prePrint(String paymentMethodId, List<ResturantCartItem> cartItemIds, String printerId);
 }

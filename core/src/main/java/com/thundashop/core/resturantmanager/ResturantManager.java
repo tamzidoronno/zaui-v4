@@ -409,6 +409,18 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         for (CartItem cartItem : groupedCartItems) {
             pmsManager.addCartItemToRoom(cartItem, room.pmsRoomId, ResturantManager.class.getSimpleName());
         }
+        
+        List<Printer> printers = storePrintManager.getPrinters();
+        for (Printer printer : printers) {
+            if (printer.type.equals("receipt")) {
+                PutOnRoomNote note = new PutOnRoomNote(productManager, groupedCartItems);
+                PrintJob job = new PrintJob();
+                job.printerId = printer.id;
+                job.content = note.createFile(room.room, getSession().currentUser);
+                job.convertAdaFruit();
+                printManager.addPrintJob(job);        
+            }
+        }
     }
     
     private PmsManager getPmsManager() throws NullPointerException {
@@ -693,6 +705,12 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         
         data.tableId = reservation.tableId;
         return data;
+    }
+
+    @Override
+    public void prePrint(String paymentMethodId, List<ResturantCartItem> cartItemIds, String printerId) {
+        Order dummyOrder = createOrderInternally(paymentMethodId, cartItemIds, true);
+        orderManager.printOrderToPrinter(dummyOrder, printerId);
     }
 
 }

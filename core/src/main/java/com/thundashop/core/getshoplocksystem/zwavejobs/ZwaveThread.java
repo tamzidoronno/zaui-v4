@@ -78,10 +78,8 @@ public abstract class ZwaveThread implements Runnable {
             } catch (Exception ex) {
                 if (ex instanceof ZwaveThreadExecption) {
                     server.threadFailed(this);
-                } else {
-                    ex.printStackTrace();
-                }
-
+                } 
+                
                 break;
             }
 

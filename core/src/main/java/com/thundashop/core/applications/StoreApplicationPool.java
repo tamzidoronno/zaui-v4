@@ -78,7 +78,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         if (!isCmsModule()) {
             List<String> ids = instancePool.getDistinctApplicationsUsedForPool();
             ids.add("b5e9370e-121f-414d-bda2-74df44010c3b");
-            finalizedList.removeIf(app -> !ids.contains(app.id));
+            finalizedList.removeIf(app -> !ids.contains(app.id) && !app.type.equals(Application.Type.Payment));
         }
         
         return finalizedList;

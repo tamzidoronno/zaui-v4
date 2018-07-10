@@ -78,8 +78,10 @@ public abstract class ZwaveThread implements Runnable {
             } catch (Exception ex) {
                 if (ex instanceof ZwaveThreadExecption) {
                     server.threadFailed(this);
-                } 
-                
+                } else {
+                    ex.printStackTrace();
+                }
+
                 break;
             }
 
@@ -178,6 +180,12 @@ public abstract class ZwaveThread implements Runnable {
         Gson gson = new Gson();
         try {
             ZwaveStatusDevice device = gson.fromJson(res, ZwaveStatusDevice.class);
+            if (device == null) {
+                lock.dead = true;
+                lock.markedDateAtDate = new Date();
+                return true;
+            }
+            
             boolean dead = device.data.isFailed.value;
             
             if (dead) {

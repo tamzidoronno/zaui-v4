@@ -79,7 +79,7 @@ public abstract class ZwaveThread implements Runnable {
                 if (ex instanceof ZwaveThreadExecption) {
                     server.threadFailed(this);
                 } else {
-                    ex.printStackTrace();
+                    GetShopLogHandler.logStack(ex, storeId);
                 }
 
                 break;

@@ -949,7 +949,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-        return sdf.format(createdDate);
+        return sdf.format(rowCreatedDate);
     }
     
     public void setStatusCreated() {

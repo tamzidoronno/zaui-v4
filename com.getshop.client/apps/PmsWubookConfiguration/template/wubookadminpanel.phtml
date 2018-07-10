@@ -101,22 +101,31 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
     <h2>Room map</h2>
     <div gstype="form" method="updateRoomData">
     <?php
+        $otas = $this->getApi()->getWubookManager()->getOtas($this->getSelectedMultilevelDomainName());
         $data = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedMultilevelDomainName());
         $items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $roommap = array();
         $items = $this->indexList($items);
-        echo "<table width='100%'>";
-        echo "<tr>";
-        echo "<th align='left'>Added</th>";
-        echo "<th align='left'>Type</th>";
-        echo "<th align='right'>Room id (wubook), virtual rooms is separated with ;</th>";
+        echo "<table width='100%' cellspacing='1' cellpadding='0' bgcolor='#ffffff'>";
+        echo "<tr bgcolor='#efefef'>";
+         echo "<th align='left'>GetShop room category</th>";
+        echo "<th align='center' width='10'>Room id (wubook)</th>";
+        foreach($otas as $ota) {
+            echo "<th>";
+            if($ota->channel == 1) { echo "Expedia"; }
+            if($ota->channel == 2) { echo "Booking.com"; }
+            echo  " (" . $ota->id . ")";
+            echo "</th>";
+            $roommap[$ota->id] = $this->getApi()->getWubookManager()->getRoomRates($this->getSelectedMultilevelDomainName(), $ota->id, $ota->channel);
+        }
         echo "</tr>";
 
         foreach($data as $id => $rdata) {
+            if(!isset($items[$rdata->bookingEngineTypeId])) {
+                continue;
+            }
             /* @var $rdata core_wubook_WubookRoomData */
-            echo "<tr>";
-            echo "<td align='left'>";
-            echo $rdata->addedToWuBook ? "yes" : "no";
-            echo "</td>";
+            echo "<tr bgcolor='#efefef'>";
             echo "<td align='left'>";
             if(isset($items[$rdata->bookingEngineTypeId])) {
                echo $items[$rdata->bookingEngineTypeId]->name;
@@ -125,16 +134,42 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
             }
             echo "</td>";
             if($rdata->virtualWubookRoomIds) {
-                echo "<td align='right'><input type='txt' value='".$rdata->virtualWubookRoomIds."' gsname='".$id."' class='gsniceinput1'></td>";
+                echo "<td align='right'><input type='txt' value='".$rdata->virtualWubookRoomIds."' gsname='".$id."' class='gsniceinput1' disabled></td>";
             } else {
-                echo "<td align='right'><input type='txt' value='".$rdata->wubookroomid."' gsname='".$id."' class='gsniceinput1'></td>";
+                echo "<td align='right'><input type='txt' value='".$rdata->wubookroomid."' gsname='".$id."' class='gsniceinput1' disabled></td>";
             }
             echo "</td>";
+            
+            foreach($otas as $ota) {
+                echo "<td align='center'>";
+                if(isset($roommap[$ota->id])) {
+                    $map = $roommap[$ota->id];
+                    $mapped = false;
+                    foreach($map as $room) {
+                        if(stristr($rdata->virtualWubookRoomIds, $room->wubookRoomId) || $room->wubookRoomId == $rdata->wubookroomid) {
+                            echo $room->name . " (" . $room->id . ")";
+                            $mapped = true;
+                        }
+                    }
+                    if(!$mapped) {
+                        echo "<b style='color:red;'>Not mapped</b>";
+                    }
+                }
+                echo "</td>";
+            }
             echo "</tr>";
         }
+        echo "<tr bgcolor='#efefef'>";
+        echo "<td></td>";
+        echo "<td></td>";
+        
+        foreach($otas as $ota) {
+//            echo "<td align='center' style='cursor:pointer;color:blue;'>remap</td>";
+        }
+        echo "</tr>";
         echo "</table>";
         ?> <br><br>
-    <div style="text-align:right;">
+    <div style="text-align:right; display:none;">
         <span class='gsmodulebutton' gstype="submit">Save settings</span>
     </div>
 </div>

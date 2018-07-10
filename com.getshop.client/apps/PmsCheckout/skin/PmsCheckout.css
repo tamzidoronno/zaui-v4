@@ -6,7 +6,7 @@
 
 .PmsCheckout .removeitem { float: right; color: #bbb; cursor: pointer; }
 .PmsCheckout .cartsummary .row { border-bottom: solid 1px #DDD;}
-.PmsCheckout .cartitem { margin-bottom: 10px;}
+.PmsCheckout .cartitem { margin-bottom: 2px;}
 .PmsCheckout .cartsummary .row.row_last { border-bottom: solid 0px #DDD;}
 .PmsCheckout .cartsummary .col1 { width: 30px; text-align: right; }
 .PmsCheckout .cartsummary .col2 { width: calc(100% - 200px); }
@@ -15,7 +15,7 @@
 .PmsCheckout .appendtoorderselection,
 .PmsCheckout .display_cart_filter,
 .PmsCheckout .continue_checkout { box-sizing: border-box; width: 100%; margin-top: 5px; }
-.PmsCheckout .checkoutarea .itemsarea { max-height: 250px; overflow: auto; border: solid 1px #bbb; padding: 10px;background-color:#fff; }
+.PmsCheckout .checkoutarea .itemsarea { max-height: 167px; overflow: auto; border: solid 1px #bbb;background-color:#fff; }
 .PmsCheckout .checkoutarea { 
     margin-left: 10px;
     margin-right: 10px;
@@ -33,10 +33,9 @@
 }
 .PmsCheckout .addonlist_row,
 .PmsCheckout .pricematrix_row {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px;
     position: relative;
-    background-color: #EFEFEF;
+    border-bottom: solid 1px #EFEFEF;
     
 }
 
@@ -46,14 +45,14 @@
 }
 
 .PmsCheckout .pricematrix_row .matrix_item {
-    position: absolute; 
-    right: 0px;
-    top: 0px;
-    padding: 7px;
-    padding-bottom: 6px;
+    float:right;
 }
 
 
+.PmsCheckout .matrix_price {
+    padding: 7px;
+    padding-bottom: 6px;
+}
 .PmsCheckout .addonlist_row .addon_inputs input {
     padding: 7px;
     padding-bottom: 6px;
@@ -88,7 +87,6 @@
 }
 .PmsCheckout .summary {
     font-size: 30px;
-    margin-top: 50px;
     margin-right: 10px;
 }
 

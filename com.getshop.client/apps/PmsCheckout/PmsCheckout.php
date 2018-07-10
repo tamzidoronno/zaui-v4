@@ -115,6 +115,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
     }
 
     public function createOrder() {
+        $orderIds = array();
         if (isset($_POST['data']['appendtoorder']) && $_POST['data']['appendtoorder']) {
             $originalCart = $this->getOriginalCartFromSession();
             $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['appendtoorder']);
@@ -122,6 +123,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
                 $order->cart->items[] = $item;
             }
             $this->getApi()->getOrderManager()->saveOrder($order);
+            $orderIds[] = $order->id;
         } else {
             $id = $this->getModalVariable("orderUnderConstrcutionId");
             $type = "all";
@@ -129,6 +131,13 @@ class PmsCheckout extends \WebshopApplication implements \Application {
                 $type = $_POST['data']['paymenttypeselection'];
             }
             $orderIds = $this->getApi()->getPmsInvoiceManager()->convertCartToOrders($this->getSelectedMultilevelDomainName(), $id, null, $_POST['data']['payment'], $type);
+            
+            if ($type == "merged") {
+                //Do something here.
+                $mainorder = $this->getApi()->getOrderManager()->mergeAndCreateNewOrder($_POST['data']['userid'], $orderIds, $_POST['data']['payment'], "");
+                $orderIds[] = $mainorder->id;
+            }
+            
             foreach ($orderIds as $orderId) {
                 $this->getApi()->getPmsManager()->orderCreated($this->getSelectedMultilevelDomainName(), $orderId);
                 $order = $this->getApi()->getOrderManager()->getOrder($orderId);
@@ -142,6 +151,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
                 }
             }
         }
+        $this->printCreatedOrders($orderIds);
     }
 
     /**
@@ -312,6 +322,33 @@ class PmsCheckout extends \WebshopApplication implements \Application {
             }
         }
         return;
+    }
+
+    public function isGroupPayment() {
+        $group = $this->getBookingGroup();
+        return count($group) > 1;
+    }
+
+    public function processGroupPayment() {
+        $group = $this->getBookingGroup();
+    }
+
+    public function getBookingGroup() {
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $group = array();
+        foreach($cart->items as $item) {
+            $group[$item->pmsBookingId] = 1;
+        }
+        return array_keys($group);
+    }
+
+    public function printCreatedOrders($orderIds) {
+        echo "<h1 style='text-align:center; border-bottom: solid 1px; margin:0px;'>Orders created</h1>";
+        $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        $ids = array();
+        $orderlist->setOrderIds($orderIds);
+        $orderlist->setExternalReferenceIds($ids);
+        $orderlist->renderApplication(true, $this);
     }
 
 }

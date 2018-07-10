@@ -1,15 +1,19 @@
 <?php
+/* @var $this \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList */
 $roomId = $_POST['data']['roomid'];
-$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+$booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
 $room = null;
 foreach ($booking->rooms as $r) {
     if ($r->pmsBookingRoomId == $roomId) {
         $room = $r;
     }
 }
-$guests = $room->guests;
+$guests = array();
+if($room != null) {
+    $guests = $room->guests;
+}
 $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
-$order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+$order = $this->getSelectedOrder();
 
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $invoiceEmail = $user->emailAddress;
@@ -23,9 +27,9 @@ $bookerName = $user->fullName;
 <span class='sendpaymentlinkbox dosendbox dontExpand' gstype='form' method='sendEmail'>
     <div style='padding-bottom: 10px;'>
         <i class='fa fa-close closesendpaymentlink' style='float:right;cursor:pointer;'></i>
-        <input type='txt' gsname="bookerEmail" value="<?php echo $invoiceEmail; ?>">
+        <input type='txt' gsname="bookerEmail" value="<?php echo $invoiceEmail; ?>" placeholder="Email">
         <input type='hidden' gsname="bookingid" value="<?php echo $booking->id; ?>">
         <input type='hidden' gsname="orderid" value="<?php echo $order->id; ?>">
-        <input type="button" gstype='submit' value='Send'>
+        <input type="button" gstype='submit' value='Send' gs_callback='app.EcommerceOrderList.doneSendingPaymentLink'>
     </div>
 </span>

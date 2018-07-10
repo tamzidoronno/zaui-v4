@@ -269,10 +269,10 @@ app.PmsBookingRoomView = {
     loadCheckout : function() {
         var event = thundashop.Ajax.createEvent('','loadCheckout',$('.PmsBookingRoomView'), {});
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            $(".checkoutview").hide();
+            $(".pmsroomcheckoutview.checkoutview").hide();
             $('.menuentry[tab="orderstab"]').click();
-            $('.checkoutviewinner').html(res);
-            $(".checkoutview").fadeIn();
+            $('.pmsroomcheckoutview .checkoutviewinner').html(res);
+            $(".pmsroomcheckoutview.checkoutview").fadeIn();
             if($('.getshoptableoverlaybody').length > 0) {
                 $('.getshoptableoverlaybody').css('height',$('.getshoptableoverlaybody').get(0).scrollHeight+50);
             }

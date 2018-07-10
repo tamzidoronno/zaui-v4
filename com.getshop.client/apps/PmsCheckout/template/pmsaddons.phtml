@@ -15,10 +15,7 @@ if(trim($guestName)) {
 ?>
 
 <div class='cartitemrow pmsaddonsrow'>
-    <i class='fa fa-trash-o removeitem'></i>
-    <b><? echo $item->count; ?> x <? echo $item->product->name;  echo $roomNumber; ?></b>
     <?php
-    echo $guestName;
     $i = 0;
     foreach ($itemsAdded as $addon) {
         $i++;
@@ -32,7 +29,7 @@ if(trim($guestName)) {
         <div class='entryrow addonlist_row <? echo $oddClass; ?> ' addonid='<? echo $addon->addonId; ?>'>
             <input type='checkbox' checked='true' class='item_checkbox addon_checked gsnicecheckbox1'> 
             <span><? echo $date; ?></span>
-            
+            <?php echo "<span style='color:#bbb;font-weight:bold;'>".$item->product->name. "</span>"; ?>
             <span class='addon_inputs'>
                 <?
                 if ($this->isReadOnly()) {

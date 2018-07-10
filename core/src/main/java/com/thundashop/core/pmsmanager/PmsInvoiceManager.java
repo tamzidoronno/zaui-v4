@@ -2582,6 +2582,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.setProduct(product.clone());
         item.getProduct().externalReferenceId = roomId;
         item.setCount(count);
+        item.pmsBookingId = pmsManager.getBookingFromRoom(roomId).id;
         roomIdsInCart.add(roomId);
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
@@ -3081,6 +3082,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(orderCreationType != null && (orderCreationType.equals("uniqueorder") || orderCreationType.equals("uniqueordersendpaymentlink"))) {
             groupedItems = groupItemsOnOrder(cart);
+        } else if(orderCreationType != null && orderCreationType.equals("merged")) {
+            groupedItems = groupItemsOnBookingId(cart);
+            paymentId = "cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba";
         } else {
             groupedItems.put("allrooms", cart.getItems());
         }
@@ -3102,6 +3106,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         return toreturn;
+    }
+    
+    private HashMap<String, List<CartItem>> groupItemsOnBookingId(Cart cart) {
+        HashMap<String, List<CartItem>> toReturn = new HashMap();
+        for(CartItem item : cart.getItems()) {
+            List<CartItem> items = toReturn.get(item.pmsBookingId);
+            if(items == null) {
+                items = new ArrayList();
+            }
+            items.add(item);
+            toReturn.put(item.pmsBookingId, items);
+        }
+        return toReturn;
     }
     
     private HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {

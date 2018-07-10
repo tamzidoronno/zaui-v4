@@ -77,7 +77,7 @@ attribute gstypes;
     
     sorting in getshop table module:
         <div class='rowdate1' getshop_sorting='$date'>
-
+gs_callback
     gschange (posts all attributes),
         Works for fields that has the change event. 
         example:

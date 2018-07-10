@@ -23,14 +23,11 @@ if (!count($cart->items)) {
     <span class="count"><? echo $this->__f("Count"); ?></span>
     x <span class="price"><? echo $this->__f("Price"); ?></span>
 </div>
-<?
-
-if ($order->closed) {
-    $this->includefile("closedorderlines");
-} else {
-    $this->includefile("openorderlines");
-}
-?>
+<div class="orderlinesarea">
+    <?
+    $this->printOrderLines();
+    ?>
+</div>
 
 <div class='ordersummary'>
     <div class="cartitem header">
@@ -54,7 +51,7 @@ if (!$order->closed) {
         echo "<option value='".$product->id."'>" . $product->name . "</option>";
     }
     echo "</select> ";
-    echo "<span class='shop_button' gstype='submit'>Add product</span>";
+    echo "<span class='shop_button' gstype='submit' gs_callback='app.EcommerceOrderView.addedProduct(\"".$order->id."\")'>Add product</span>";
     echo "</span>";
 }
 ?>

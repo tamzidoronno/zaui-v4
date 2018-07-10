@@ -81,4 +81,16 @@ public interface IWubookManager {
     @Administrator
     public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws Exception;
     
+    @Administrator
+    public List<WubookOta> getOtas() throws Exception;
+    
+    @Administrator
+    public boolean newOta(String type) throws Exception;
+    
+    @Administrator
+    public List<WubookRoomRateMap> getRoomRates(Integer channelId, Integer channelType) throws Exception;
+    
+    @Administrator
+    public void setRoomRates(Integer channelId, List<WubookRoomRateMap> rates, Integer channelType);
+    
 }

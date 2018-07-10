@@ -59,7 +59,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         Order order = orderManager.getOrderSecure(orderId);
         order.payment.paymentType = "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\\VerifoneTerminal";
         orderManager.saveOrder(order);
-        System.out.println("Start charging: " + order.payment.paymentType);
+        logPrint("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
 
         if(!storeManager.isProductMode()) {
@@ -153,7 +153,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     }
 
     public void actionPerformed(ActionEvent e) {
-        System.out.println("Action performed: " + e);
+        logPrint("Action performed: " + e);
     }
 
     private void printFeedBack(String string) {
@@ -161,7 +161,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         feedBack.msg = string;
         webSocketServer.sendMessage(feedBack);
         orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);
-        System.out.println("\t" + string);
+        logPrint("\t" + string);
         
     }
 
@@ -171,13 +171,13 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     }
 
     private void handleResultEvent(PayPointResultEvent resultEvent) {
-        System.out.println("Result event: " + resultEvent);
+        logPrint("Result event: " + resultEvent);
         if(resultEvent.getResult() == 32) {
-            System.out.println("Card succesfully paid");
+            logPrint("Card succesfully paid");
             printFeedBack("completed");
             orderManager.markAsPaid(orderToPay.id, new Date(), orderToPay.getTotalAmount());
         } else {
-            System.out.println("Failed to pay");
+            logPrint("Failed to pay");
             orderToPay.status = Order.Status.PAYMENT_FAILED;
             printFeedBack("payment failed");
         }
@@ -186,7 +186,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     }
     
     private void saveOrderSomeHow(Order orderToPay) {
-        System.out.println("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
+        logPrint("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
         orderManager.saveOrderInternal(orderToPay);
     }
 

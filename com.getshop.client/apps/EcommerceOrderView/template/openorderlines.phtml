@@ -12,7 +12,7 @@ foreach ($cart->items as $item) {
     if(sizeof($ids) > 0) {
         if(!in_array($item->product->externalReferenceId, $ids)) {
             $moreItems++;
-            $display = false;
+//            $display = false;
         } else {
             $totalcount += $item->count;
             $totalcost += ($item->count * $item->product->price);
@@ -75,11 +75,11 @@ if($moreItems > 0) {
         &nbsp;&nbsp;&nbsp;<span class="price"><? echo $totalcost; ?></span>
     </div>
     <?php
-    echo "There are " . $moreItems . " more items to this order, <span style='color:blue; cursor:pointer;' onclick='$(\".cartitem\").show();'>display them.</span>";
+//    echo "There are " . $moreItems . " more items to this order, <span style='color:blue; cursor:pointer;' onclick='$(\".cartitem\").show();'>display them.</span>";
 }
 ?>
 <div style='text-align: right; margin-top:10px;'>
-    <span class='shop_button' gstype='submit'>Save orderlines</span>
+    <span class='shop_button' gstype='submit' gs_callback="app.EcommerceOrderList.refreshOrderRow('<?php echo $order->id; ?>')">Save orderlines</span>
 </div>
 
 

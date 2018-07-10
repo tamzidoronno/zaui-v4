@@ -120,6 +120,15 @@ app.PmsGroupBookingHeader = {
                 checked = true;
             }
         });
+
+        var roomid = $(this).attr('roomid');
+        if($(this).is(':checked')) {
+            app.PmsSearchBooking.quickAddToStartCheckout(roomid);
+        } else {
+            app.PmsSearchBooking.quickRemoveToStartCheckout(roomid);
+        }
+        app.PmsSearchBooking.printAddedToCheckout();
+         
         if(checked) {
             $('.manipulateroomoptions .shop_button').removeClass('disabled');
         } else {

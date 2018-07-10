@@ -49,6 +49,7 @@ public class CartItem implements Serializable {
     public boolean hideDates = false;
     public boolean disabled = false;
     public String addedByGetShopModule = "";
+    public String pmsBookingId = "";
     
     @Transient
     public String orderId;

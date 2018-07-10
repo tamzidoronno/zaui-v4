@@ -28,4 +28,5 @@ public class NewOrderFilter implements Serializable {
     public String userId = new String();
     public Double totalAmount = null;
     public Date chargeCardAfter = null;
+    boolean avoidClearingCart = false;
 }

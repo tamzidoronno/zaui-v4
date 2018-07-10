@@ -41,7 +41,8 @@
     position: absolute;
     background: #c7f7f9;
     z-index: 1;
-    width: 400px;
+    width: 800px;
+    right: 10px;
     border: solid 1px #bbb;
     margin-top:5px;
     display:none;

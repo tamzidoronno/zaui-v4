@@ -252,8 +252,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $itemId = $selectedRoom->bookingItemId;
         
         $changed = false;
+        $bookingItemChanged = false;
         if($curRoom->bookingItemId != $itemId) {
             $changed = true;
+            $bookingItemChanged = true;
         }
         if(date("dmyHi", strtotime($start)) != date("dmyHi", strtotime($curRoom->date->start))) {
             $changed = true;
@@ -261,8 +263,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         if(date("dmyHi", strtotime($end)) != date("dmyHi", strtotime($curRoom->date->end))) {
             $changed = true;
         }
-        if($changed) {
+        if($changed && $bookingItemChanged) {
             $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId,$itemId,false, $start, $end);
+        } else if($changed) {
+            $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $curRoom->pmsBookingRoomId, $curBooking->id, $start, $end);
         }
         
         //Update price matrix

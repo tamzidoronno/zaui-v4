@@ -46,7 +46,6 @@ public class PmsOrderStatistics implements Serializable  {
             orderMap.put(ord.id, ord);
         }
         
-        System.out.println("Done, now summize on orders");
         for(PmsOrderStatisticsEntry entry : entries) {
             for(String productId : entry.priceExOrders.keySet()) {
                 HashMap<String, Double> ordersHashMap = entry.priceExOrders.get(productId);

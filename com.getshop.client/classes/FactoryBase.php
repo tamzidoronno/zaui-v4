@@ -107,6 +107,11 @@ class FactoryBase {
     }
 
     public function isEditorMode() {
+        
+        if (!$this->getFactory()->isCmsMode() && $this->getFactory()->getApi()->getStoreManager()->isProductMode()) {
+            return false;
+        }
+        
         if ($this->getFactory()->isProductionMode() && !$this->getFactory()->isCmsMode()) {
             return false;
         }

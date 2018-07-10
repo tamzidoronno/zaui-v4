@@ -615,6 +615,7 @@ public class PmsBookingRooms implements Serializable {
         deleted = true;
         deletedDate = new Date();
         overbooking = false;
+//        addedToWaitingList = false;
     }
 
     public boolean isDeleted() {

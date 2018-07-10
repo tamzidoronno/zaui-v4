@@ -2303,7 +2303,9 @@ $(document).on('click','.GetShopModuleTable .datarow .datarow_inner', function(e
     }
 
     var event = thundashop.Ajax.createEvent(null, "setGetShopTableRowId", this, data);
-    thundashop.Ajax.post(event, null, null, true);
+    thundashop.Ajax.postWithCallBack(event, function() {
+        
+    }, true);
 });
 
 thundashop.framework.loadTableContentOverlay = function(e, btn) {

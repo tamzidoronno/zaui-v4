@@ -383,7 +383,7 @@ public class InvoiceFrontPage {
         }
         
         Calendar c = Calendar.getInstance();
-        c.setTime(this.order.createdDate);
+        c.setTime(this.order.rowCreatedDate);
         if(order.dueDays != null) {
             c.add(Calendar.DATE, order.dueDays);
         } else {

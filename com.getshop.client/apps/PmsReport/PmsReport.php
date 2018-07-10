@@ -237,6 +237,27 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
             foreach($dayRows as $r) { $rows[] = $r; }
         }
+        echo json_encode($rows);
+    }
+    
+    public function downloadReportRaw() {
+        $rows = $this->getIncomeReportRows();
+        $products = $this->getProductsArray();
+        
+        $headerrow = array();
+        $headerrow[] = "Date";
+        
+        foreach($products as $prodId => $total) {
+            if($prodId == "total") {
+                $headerrow[] = "Total";
+            } else {
+                $headerrow[] = $this->getApi()->getProductManager()->getProduct($prodId)->name;
+            }
+        }
+        
+        $rows = array_reverse($rows);
+        $rows[] = $headerrow;
+        $rows = array_reverse($rows);
         
         echo json_encode($rows);
     }
@@ -251,7 +272,8 @@ class PmsReport extends \MarketingApplication implements \Application {
         
         $i = 0;
         echo "<div style=' width: 1500px; margin: auto;text-align:right; color:blue; cursor:pointer;'>";
-        echo "<span gs_downloadExcelReport='downloadIncomeReportExTaxes' gs_fileName='incomereport'>Download to excel ex taxes</span> - ";
+        echo "<span gs_downloadExcelReport='downloadReportRaw' gs_fileName='incomereport'>Download this report to excel</span> - ";
+        echo "<span gs_downloadExcelReport='downloadIncomeReportExTaxes' gs_fileName='incomereportraw'>Download to excel ex taxes with </span> - ";
         echo "<span gs_downloadExcelReport='downloadIncomeReportIncTaxes' gs_fileName='incomereport'>Download to excel inc taxes</span>";
         echo "</div>";
         
@@ -278,54 +300,17 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
         }
         echo "</table>";
-        
-        $rows = array();
-        $products = array();
+ 
+        $sortAttributes = array("date");
+        $index = 0;
         $allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());
-        
-        $total = 0;
-        
-        //Creating product array.
-        foreach($data->entries as $entry) {
-            foreach($entry->priceEx as $productId => $val) {
-                if(!isset($products[$productId])) {
-                    $products[$productId] = 0;
-                }
-                $products[$productId] += $val;
-                $total += $val;
-            }
+        $products = $this->getProductsArray();
+        foreach($products as $productId => $total) {
+            $sortAttributes[] = "product" . $index;
+            $index++;
         }
-        $products["total"] = $total;
-        foreach($products as $productId => $val) {
-            $products[$productId] = round($val);
-        }
-        $idx = 0;
-        $prodsInUse = array();
-        foreach($products as $productId => $val) {
-            $prodsInUse["product".$idx] = $productId;
-            $idx++;
-        }
-        $_SESSION['pmsreport_productsinuse'] = json_encode($prodsInUse);
-        $_SESSION['pmsreport_dataresult'] = json_encode($data);
-        
-        //Creating daily rows.
-        foreach($data->entries as $entry) {
-            $row = new \stdClass();
-            $row->date = date("d.m.Y", strtotime($entry->day));
-            $index = 0;
-            $total = 0;
-            foreach($products as $productId => $val) {
-                if(isset($entry->priceEx->{$productId})) {
-                    $total += $entry->priceEx->{$productId};
-                    $row->{"product".$index} = round($entry->priceEx->{$productId});
-                } else {
-                    $row->{"product".$index} = "0";
-                }
-                $index++;
-            }
-            $row->{"total"} = round($total);
-            $rows[] = $row;
-        }
+               
+        $rows = $this->getIncomeReportRows();
         
         //Creating attributes.
         $attributes = array(array('date', 'Date', 'date',null));
@@ -335,28 +320,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             $attributes[] = array("product".$index, @$allProducts[$productId]->name, "product". $index, null);
             $index++;
         }
-        
-        //Adding total bottom row.
-        $row = new \stdClass();
-        $totalAllDays = 0;
-        $totalAllDays += $total;
-        $row->date = "Total";
-        $index = 0;
-        foreach($products as $productId => $total) {
-            if($productId == "total") { continue; }
-            $row->{"product".$index} = $total;
-            $index++;
-        }
-        $row->{"total"} = $totalAllDays;
-        $rows[] = $row;
         $attributes[] = array('total', 'Total', 'total',null);
-        
-        $sortAttributes = array("date");
-        $index = 0;
-        foreach($products as $productId => $total) {
-            $sortAttributes[] = "product" . $index;
-            $index++;
-        }
         
         $table = new \GetShopModuleTable($this, 'PmsManager', 'loadIncomeReportCell', null, $attributes);
         $table->setSorting($sortAttributes);
@@ -477,6 +441,85 @@ class PmsReport extends \MarketingApplication implements \Application {
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         $this->orderIds[$orderId] = $order->incrementOrderId;
         return $order->incrementOrderId;
+    }
+
+    public function getIncomeReportRows() {
+        $this->setIncomeReportData();
+        $data = $this->data;
+
+        $rows = array();
+        $products = $this->getProductsArray();
+        $idx = 0;
+        $prodsInUse = array();
+        foreach($products as $productId => $val) {
+            $prodsInUse["product".$idx] = $productId;
+            $idx++;
+        }
+        $_SESSION['pmsreport_productsinuse'] = json_encode($prodsInUse);
+        $_SESSION['pmsreport_dataresult'] = json_encode($data);
+        
+        //Creating daily rows.
+        foreach($data->entries as $entry) {
+            $row = new \stdClass();
+            $row->date = date("d.m.Y", strtotime($entry->day));
+            $index = 0;
+            $total = 0;
+            foreach($products as $productId => $val) {
+                if($productId == "total") {
+                    continue;
+                }
+                if(isset($entry->priceEx->{$productId})) {
+                    $total += $entry->priceEx->{$productId};
+                    $row->{"product".$index} = round($entry->priceEx->{$productId});
+                } else {
+                    $row->{"product".$index} = "0";
+                }
+                $index++;
+            }
+            $row->{"total"} = round($total);
+            $rows[] = $row;
+        }
+        
+        //Adding total bottom row.
+        $row = new \stdClass();
+        $totalAllDays = 0;
+        $row->date = "Total";
+        $index = 0;
+        foreach($products as $productId => $total) {
+            if($productId == "total") { continue; }
+            $row->{"product".$index} = $total;
+            $totalAllDays += $total;
+            $index++;
+        }
+        $row->{"total"} = $totalAllDays;
+        $rows[] = $row;
+        
+        return $rows;        
+    }
+
+    public function getProductsArray() {
+        $this->setIncomeReportData();
+        $data = $this->data;
+
+        $products = array();
+        
+        $total = 0;
+        
+        //Creating product array.
+        foreach($data->entries as $entry) {
+            foreach($entry->priceEx as $productId => $val) {
+                if(!isset($products[$productId])) {
+                    $products[$productId] = 0;
+                }
+                $products[$productId] += $val;
+                $total += $val;
+            }
+        }
+        $products["total"] = $total;
+        foreach($products as $productId => $val) {
+            $products[$productId] = round($val);
+        }
+        return $products;
     }
 
 }

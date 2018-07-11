@@ -1864,6 +1864,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     public double calculateTaxes(String bookingItemTypeId) {
         BookingItemType type = bookingEngine.getBookingItemType(bookingItemTypeId);
+        if(type == null) {
+            return -3.0;
+        }
         if (type.productId != null && !type.productId.isEmpty()) {
             Product product = productManager.getProduct(type.productId);
             if (product != null && product.taxGroupObject != null) {

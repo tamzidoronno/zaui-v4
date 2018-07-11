@@ -488,7 +488,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 copy.setTime(calStart.getTime());
                 list = createRoomPriceList(rdata, pricesForType,copy,list,guests);
                 if(!list.isEmpty()) {
-                    if(!roomId.equals("-1")) {
+                    if(!roomId.equals("-1") && !roomId.isEmpty()) {
                         table.put(roomId, list);
                     }
                 }
@@ -563,7 +563,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 cal.add(Calendar.DAY_OF_YEAR, 1);
             }
             for(String roomId : results.keySet()) {
-                if(!roomId.equals("-1")) {
+                if(!roomId.equals("-1") && !roomId.isEmpty()) {
                     table.put(roomId + "", results.get(roomId));
                 }
             }

@@ -24,7 +24,7 @@ class ApplicationPool {
     public function setApplicationInstances($javaAppinstances) {
         if (isset($javaAppinstances)) {
             foreach ($javaAppinstances as $instance) {
-                $this->loadApplicationInstance($instance->id);
+                $this->setAppInstance($instance);
             }
         }
     }
@@ -53,8 +53,15 @@ class ApplicationPool {
         }
 
         $appInstanceRaw = $this->factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($applicationInstanceId);
-
+        $this->setAppInstance($appInstanceRaw);
+    }
+    
+    private function setAppInstance($appInstanceRaw) {
         if ($appInstanceRaw != null) {
+            if (array_key_exists($appInstanceRaw->id, $this->addedApplicationInstances)) {
+                return;
+            }
+
             $appInstance = $this->createAppInstance($appInstanceRaw);
             if ($appInstance) {
                 $this->addedApplicationInstances[$appInstanceRaw->id] = $appInstance;

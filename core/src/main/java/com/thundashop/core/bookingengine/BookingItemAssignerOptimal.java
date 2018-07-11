@@ -109,7 +109,7 @@ public class BookingItemAssignerOptimal {
         if (getBookingItemsFlatten().size() == 1 && storeId.equals(k1StoreId)) {
             addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
         } else {
-            if (usingNewSystem2.contains(storeId)) {
+            if (usingNewSystem2.contains(storeId) || BookingEngine.useNewEngine.contains(storeId)) {
                 addBestCombosBetweenAssignedBookings(bookingLines, unassignedBookings);
                 addUnassignedBookingsToLine(bookingLines, unassignedBookings);
             } else if (usingNewSystem.contains(storeId)) {

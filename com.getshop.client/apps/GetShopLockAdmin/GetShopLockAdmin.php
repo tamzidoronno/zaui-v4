@@ -34,11 +34,16 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
                 } else if(!$code->addedToLock) {
                     $code->addedToLock = $this->convertToJavaDate(time());
                 }
-                $code->needToBeRemoved = ($_POST['data']['needToBeRemoved_'.$key] == "true");
+                if($_POST['data']['needToBeRemoved_'.$key] == "true") {
+                    $code->needToBeRemoved = $this->convertToJavaDate(time());
+                } else {
+                    $code->needToBeRemoved = "";
+                }
                 $code->forceRemove = ($_POST['data']['forceRemove_'.$key] == "true");
                 if($_POST['data']['code_'.$key] != $code->code) {
                     $code->code = $_POST['data']['code_'.$key];
-                    $code->addedToLock = (boolean)false;
+                    $code->addedToLock = "";
+                    echo "Changed to : " . $_POST['data']['code_'.$key] . " key: " . $key . "<br>";
                 }
                 $newarray[$key] = $code;
             }

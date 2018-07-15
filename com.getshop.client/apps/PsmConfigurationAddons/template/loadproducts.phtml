@@ -123,7 +123,7 @@ foreach($config->addonConfiguration as $item) {
             <select gsname='taxgroup'>
             <?php
             foreach($taxgroups as $group) {
-                if($group->taxRate > 0) {
+                if($group->taxRate >= 0) {
                     $selectedTax = ($product->taxGroupObject->groupNumber == $group->groupNumber) ? "SELECTED" : "";
                     echo "<option value='".$group->groupNumber."' $selectedTax>" . $group->taxRate . "%</option>";
                 }

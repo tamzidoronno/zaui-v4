@@ -17,7 +17,13 @@ if(isset($_SESSION['quickaddaddons'])) {
     }
     $found = false;
     $products = $this->getApi()->getProductManager()->getAllProducts();
-    foreach($products as $product) {
+    $newproducts = array();
+    foreach($products as $prod) {
+        $newproducts[$prod->name] = $prod;
+    }
+    ksort($newproducts);
+    
+    foreach($newproducts as $product) {
         if(in_array($product->id, $productsToExclude)) {
             continue;
         }

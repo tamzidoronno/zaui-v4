@@ -703,7 +703,7 @@ public class PmsBookingRooms implements Serializable {
         return total;
     }
     
-    public void calculateTotalCost(Integer priceType) {
+    public void calculateTotalCost(Integer priceType, boolean isNoRefundable) {
         totalCost = 0.0;
         Integer days = getNumberOfNights();
         
@@ -716,18 +716,25 @@ public class PmsBookingRooms implements Serializable {
             if(item.isIncludedInRoomPrice) {
                 continue;
             }
+            if(isDeleted() && !item.noRefundable) {
+                continue;
+            }
             if (item.price != null && item.count != null) {
                 totalCost += (item.price * item.count);
             }
         }
         
-        if(priceType.equals(PriceType.daily)) {
-            double cost = 0.0;
-            for(Double price : priceMatrix.values()) {
-                cost += price;
-            }
-            if(priceMatrix.keySet().size() > 0) {
-                price = cost / priceMatrix.keySet().size();
+        if(isDeleted() && !isNoRefundable) {
+            price = 0.0;
+        } else {
+            if(priceType.equals(PriceType.daily)) {
+                double cost = 0.0;
+                for(Double price : priceMatrix.values()) {
+                    cost += price;
+                }
+                if(priceMatrix.keySet().size() > 0) {
+                    price = cost / priceMatrix.keySet().size();
+                }
             }
         }
     }

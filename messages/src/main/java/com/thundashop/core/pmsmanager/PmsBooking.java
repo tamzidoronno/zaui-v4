@@ -504,11 +504,7 @@ public class PmsBooking extends DataCommon {
             if(room.deletedByChannelManagerForModification) {
                 continue;
             }
-            room.calculateTotalCost(priceType);
-            if(room.isDeleted() && !nonrefundable) {
-                total += room.calculateNonRefundAddons();
-                continue;
-            }
+            room.calculateTotalCost(priceType, nonrefundable);
             total += room.totalCost;
         }
         

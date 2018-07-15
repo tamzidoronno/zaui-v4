@@ -149,3 +149,4 @@ python/**/*.db
 python/**/*.pyc
 python/getshop/token.txt
 **/*.swp
+/com.getshop.printclient/nbproject/private/

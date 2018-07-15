@@ -1100,14 +1100,23 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     @Override
     public boolean markAsCompletedWithTimeStampAndPassword(String routeId, double lat, double lon, Date date, String password) {
-        if (userManager.checkUserNameAndPassword(getSession().currentUser.username, password) != null
-            || userManager.checkUserNameAndPassword(getSession().currentUser.emailAddress, password) != null
-            || userManager.checkUserNameAndPassword(getSession().currentUser.cellPhone, password) != null
-            ) {
+        User currentUser = getSession().currentUser;
+        
+        if (currentUser.username != null && !currentUser.username.isEmpty() && userManager.checkUserNameAndPassword(currentUser.username, password) != null) {
             markAsCompletedWithTimeStamp(routeId, lat, lon, date);
             return true;
         }
         
+        if (currentUser.emailAddress != null && !currentUser.emailAddress.isEmpty() && userManager.checkUserNameAndPassword(currentUser.emailAddress, password) != null) {
+            markAsCompletedWithTimeStamp(routeId, lat, lon, date);
+            return true;
+        }
+        
+        if (currentUser.cellPhone != null && !currentUser.cellPhone.isEmpty() && userManager.checkUserNameAndPassword(currentUser.cellPhone, password) != null) {
+            markAsCompletedWithTimeStamp(routeId, lat, lon, date);
+            return true;
+        }
+
         return false;
     }
     

@@ -165,6 +165,13 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         alert("The order created is not the same amount as what you have stored on your device, check if the products are updated. This should not happen and will cause problems.");
     }
     
+    $scope.prePrintInvoice = function(printer) {
+        var ids = $scope.getIds();
+        $api.getApi().ResturantManager.prePrint($scope.paymentMethodId, ids, printer.id).done(function(res) {
+            alert("Forhåndsvisning skrevet ut."); 
+       });
+    }
+    
     $scope.completePayment = function() {
         var ids = $scope.getIds();
         

@@ -24,6 +24,15 @@
     <br/>
     <br/>
     <div class='button' ng-click="completePayment()">Betalingen er gjennomført.</div>
+    
+    <div ng-if="printers.length">
+        <br/>
+        <br/> Skriv ut forhåndsvisning
+        <div ng-repeat='printer in printers' class='button' ng-if='printer.type == "receipt" ' ng-click="prePrintInvoice(printer)">
+            {{ printer.name }}
+        </div>    
+    </div>
+    
 </div>
 
 <div class='paymentaction' ng-if='paymentMethodId == "565ea7bd-c56b-41fe-b421-18f873c63a8f"'>

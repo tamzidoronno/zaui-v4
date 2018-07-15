@@ -75,6 +75,9 @@ app.PmsCheckout = {
         };
         var event = thundashop.Ajax.createEvent('','updateItem', $('.PmsCheckout'), data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(!data.checked) {
+                row.slideUp();
+            }
             app.PmsCheckout.updateTotal();
         });
     },

@@ -60,35 +60,64 @@ class PmsCheckout extends \WebshopApplication implements \Application {
         foreach ($cart->items as $item) {
             if ($item->cartItemId == $_POST['data']['itemid']) {
                 if (isset($_POST['data']['matrixPrice'])) {
-                    $item->priceMatrix->{$_POST['data']['matrixDate']} = $_POST['data']['matrixPrice'];
+                    if($_POST['data']['checked'] == "false") {
+                        unset($item->priceMatrix->{$_POST['data']['matrixDate']});
+                    } else {
+                        $item->priceMatrix->{$_POST['data']['matrixDate']} = $_POST['data']['matrixPrice'];
+                    }
                 }
+                $newAddonsMatrix = array();
                 if (isset($_POST['data']['addonid'])) {
                     foreach ((array) $item->itemsAdded as $addonItem) {
                         if ($addonItem->addonId == $_POST['data']['addonid']) {
+                            if($_POST['data']['checked'] == "false") {
+                                continue;
+                            }
+                            
                             $addonItem->count = $_POST['data']['addonCount'];
                             $addonItem->price = $_POST['data']['addonPrice'];
+                            $newAddonsMatrix[] = $addonItem;
                         }
                     }
                 }
-
-                $item->disabled = $_POST['data']['checked'] == "false";
+                $item->itemsAdded = $newAddonsMatrix;
 
                 $total = 0;
                 $count = 0;
 
-                $count += sizeof($item->priceMatrix);
+                $startDate = null;
+                $endDate = null;
                 foreach ((array) $item->priceMatrix as $date => $val) {
+                    $startDate = $this->checkIfStartDate($date, $startDate);
+                    $endDate = $this->checkIfEndDate($date, $endDate);
                     $count++;
                     $total += $val;
                 }
                 foreach ((array) $item->itemsAdded as $addonItem) {
+                    $startDate = $this->checkIfStartDate($addonItem->date, $startDate);
+                    $endDate = $this->checkIfEndDate($addonItem->date, $endDate);
+                    
                     $count += $addonItem->count;
                     $total += ($addonItem->count * $addonItem->price);
+                    
                 }
-
                 $item->count = $count;
-                $item->product->price = ($total / $count);
-
+                if($count > 0) {
+                    $item->product->price = ($total / $count);
+                } else {
+                    $item->product->price = 0;
+                }
+                
+                $item->startDate = $this->convertToJavaDate(strtotime($startDate));
+                if(sizeof((array)$item->priceMatrix) > 0) {
+                    $item->endDate = $this->convertToJavaDate(strtotime($endDate)+86400);
+                } else {
+                    $item->endDate = $this->convertToJavaDate(strtotime($endDate));
+                }
+                
+                if(!$endDate) { $item->endDate = null; }
+                if(!$startDate) { $item->startDate = null; }
+                
                 $this->getApi()->getCartManager()->updateCartItem($item);
             }
         }
@@ -349,6 +378,20 @@ class PmsCheckout extends \WebshopApplication implements \Application {
         $orderlist->setOrderIds($orderIds);
         $orderlist->setExternalReferenceIds($ids);
         $orderlist->renderApplication(true, $this);
+    }
+
+    public function checkIfEndDate($date, $curDate) {
+        if(!$curDate || strtotime($curDate) < strtotime($date)) {
+            return $date;
+        }
+        return $curDate;
+    }
+
+    public function checkIfStartDate($date, $curDate) {
+        if(!$curDate || strtotime($curDate) > strtotime($date)) {
+            return $date;
+        }
+        return $curDate;
     }
 
 }

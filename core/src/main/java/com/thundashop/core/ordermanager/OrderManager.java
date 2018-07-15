@@ -1698,6 +1698,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     user.address.emailAddress = user.emailAddress;
                     user.address.prefix = user.prefix;
                     user.address.phone = user.cellPhone;
+                    user.address.fullName = user.fullName;
                 }
                 
                 if (user == null || user.address == null)

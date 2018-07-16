@@ -462,6 +462,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(!rdata.addedToWuBook) {
                 continue;
             }
+            BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+            if(type == null) {
+                //Type has been deleted.
+                continue;
+            }
+            
             Calendar cal = Calendar.getInstance();
             Date now = cal.getTime();
             cal.add(Calendar.DAY_OF_YEAR, 365*2);

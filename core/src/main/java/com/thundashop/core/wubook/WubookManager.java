@@ -537,7 +537,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(!rdata.addedToWuBook) {
                 continue;
             }
-            
+            BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+            if(type == null) {
+                //Type has been deleted.
+                continue;
+            }
             String[] roomIds = new String[1];
             roomIds[0] = rdata.wubookroomid + "";
             if(rdata.newRoomPriceSystem) {
@@ -1522,6 +1526,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(!rdata.addedToWuBook) {
                 continue;
             }
+            BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+            if(type == null) {
+                //Type has been deleted.
+                continue;
+            }            
             Hashtable roomToUpdate = new Hashtable();
             roomToUpdate.put("id", rdata.wubookroomid);
 
@@ -1602,7 +1611,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(!rdata.addedToWuBook) {
                 continue;
             }
-            
+            BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+            if(type == null) {
+                //Type has been deleted.
+                continue;
+            }
 
             Calendar startcal = getCalendar(true);
             Calendar endCal = getCalendar(false);
@@ -1658,6 +1671,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(!rdata.addedToWuBook) {
                 continue;
             }
+            BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+            if(type == null) {
+                //Type has been deleted.
+                continue;
+            }            
             Vector days = new Vector();
             for(WubookAvailabilityField field : fieldsUpdated) {
                 if(!field.roomId.equals(rdata.wubookroomid)) {

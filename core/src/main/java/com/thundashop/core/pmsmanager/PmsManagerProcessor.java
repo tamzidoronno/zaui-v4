@@ -1012,6 +1012,7 @@ public class PmsManagerProcessor {
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_YEAR, days);
         filter.endDate = cal.getTime();
+        filter.normalizeStartEndDateByBeginningEndOfDay(manager.getConfigurationSecure().getTimeDifferenceInTimeZone());
         
         List<PmsBooking> bookingsCheckingIn = manager.getAllBookings(filter);
         List<PmsBooking> nonRefBookings = getLatestNonRefBookings();

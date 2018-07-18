@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.DataCommon;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,25 @@ public class PmsBookingFilter extends DataCommon {
             }
         }
         return false;
+    }
+
+    public void normalizeStartEndDateByBeginningEndOfDay(int differenceInTimeZoneSeconds) {
+        Calendar cal = Calendar.getInstance();
+        if(startDate != null) {
+            cal.setTime(startDate);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.add(Calendar.SECOND, differenceInTimeZoneSeconds);
+        }
+        
+        if(endDate != null) {
+            cal.setTime(endDate);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.add(Calendar.SECOND, differenceInTimeZoneSeconds);
+        }
     }
 
     public static class PmsBookingFilterTypes {

@@ -56,6 +56,10 @@ public class PmsConfiguration extends DataCommon {
 
     }
 
+    /**
+     * Difference in seconds between our timezone and the customers timezone.
+     * @return 
+     */
     public int getTimeDifferenceInTimeZone() {
         Date here = new Date();
         Date timezone = getCurrentTimeInTimeZone();

@@ -5516,6 +5516,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.filterType = "checkout";
         filter.startDate = new Date();
         filter.endDate = new Date();
+        filter.normalizeStartEndDateByBeginningEndOfDay();
         
         List<PmsRoomSimple> checkoutRooms = getSimpleRooms(filter);
 

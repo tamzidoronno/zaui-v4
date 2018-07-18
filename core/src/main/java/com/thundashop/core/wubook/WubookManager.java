@@ -1143,6 +1143,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return;
         }
         filter.filterType = "checkin";
+        filter.normalizeStartEndDateByBeginningEndOfDay();
         
         cal.add(Calendar.DAY_OF_YEAR, -1);
         

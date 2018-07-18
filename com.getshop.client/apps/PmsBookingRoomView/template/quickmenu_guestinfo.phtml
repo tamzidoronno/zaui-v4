@@ -37,11 +37,15 @@ $currentRoom = null;
         if($i+1 > $currentRoom->numberOfGuests) {
             $display = "display:none;";
         }
+        $prefix = $guest->prefix;
+        if(!$prefix) {
+            $prefix = $this->getDefaultPrefix();
+        }
         ?>
         <div style='width:700px; <?php echo $display; ?>' guest='<?php echo $i; ?>'>
             <input type='text' class='gsniceinput1' gsname='name_<?php echo $i; ?>' value='<?php echo $guest->name; ?>'>
             <input type='text' class='gsniceinput1' gsname='email_<?php echo $i; ?>' value='<?php echo $guest->email; ?>'>
-            <input type='text' class='gsniceinput1' style='width:50px;' gsname='prefix_<?php echo $i; ?>' value='<?php echo $guest->prefix; ?>'>
+            <input type='text' class='gsniceinput1' style='width:50px;' gsname='prefix_<?php echo $i; ?>' value='<?php echo $prefix; ?>'>
             <input type='text' class='gsniceinput1'  gsname='phone_<?php echo $i; ?>' value='<?php echo $guest->phone; ?>'>
             <input type='hidden' class='gsniceinput1'  gsname='guestid_<?php echo $i; ?>' value='<?php echo $guest->guestId; ?>'>
         </div>

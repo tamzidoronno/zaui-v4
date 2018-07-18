@@ -290,7 +290,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
         $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time())));
-        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time())));
+        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 23:59", time())));
         $filter->filterType = "checkin";
         if($config->bookingProfile == "conferense") {
             $filter->groupByBooking = true;

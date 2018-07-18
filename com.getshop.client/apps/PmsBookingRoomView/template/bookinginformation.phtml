@@ -38,7 +38,7 @@ $pmsSelectedRoom = $this->getSelectedRoom();
         </div>
 
         <div class="guest_col guest_col3">
-            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value=""/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
+            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value="<?php echo $this->getDefaultPrefix(); ?> "/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
         </div>
 
         <div class="guest_col guest_col4">
@@ -70,7 +70,13 @@ $pmsSelectedRoom = $this->getSelectedRoom();
             </div>
 
             <div class="guest_col guest_col3">
-                <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $guest->prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
+                <?php
+                $prefix = $guest->prefix;
+                if(!$prefix) {
+                    $prefix = $this->getDefaultPrefix();
+                }
+                ?>
+                <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
             </div>
 
             <div class="guest_col guest_col4">      

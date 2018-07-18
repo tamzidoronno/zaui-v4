@@ -83,8 +83,19 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         $roomsTomorrow = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
         
         $res = array();
-        $res['today'] = sizeof($rooms);
-        $res['tomorrow'] = sizeof($roomsTomorrow);
+        if($type == "checkin" || $type == "checkout") {
+            $res['today'] = 0;
+            foreach($rooms as $r) {
+                $res['today'] += $r->numberOfGuests;
+            }
+            $res['tomorrow'] = 0;
+            foreach((array)$roomsTomorrow as $r) {
+                $res['tomorrow'] += $r->numberOfGuests;
+            }
+        } else {
+            $res['today'] = sizeof($rooms);
+            $res['tomorrow'] = sizeof($roomsTomorrow);
+        }
         return $res;
     }
 

@@ -9,6 +9,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     private $logEntries = array();
     
+    private $defaultPrefix;
+    
     
     /* @var $selectedRoom \core_pmsmanager_PmsBookingRooms */
     public $selectedRoom;
@@ -1541,5 +1543,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("availablerooms");
         die();
     }
+
+    public function getDefaultPrefix() {
+        if($this->defaultPrefix) {
+            return $this->defaultPrefix;
+        }
+        
+        $this->defaultPrefix = $this->getFactory()->getStoreConfiguration()->defaultPrefix;
+        return $this->defaultPrefix;
+    }
+
 }
 ?>

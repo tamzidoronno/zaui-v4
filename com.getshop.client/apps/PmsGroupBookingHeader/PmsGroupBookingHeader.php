@@ -5,6 +5,7 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
     private $currentBooking = null;
     public $notChangedError = array();
     public $addedConferenceRoom = false;
+    public $defaultPrefix = false;
     
     public function getDescription() {
         
@@ -392,11 +393,15 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
     }
     
     public function printGuestRow($guest) {
+        $prefix = $guest->prefix;
+        if(!$prefix) {
+            $prefix = $this->getDefaultPrefix();
+        }
         echo "<div style='margin-bottom: 2px;' class='guestrow'>";
         echo "<span class='shop_button removeguestrow' style='margin-right:5px;border-radius:5px;'><i class='fa fa-trash-o'></i></span>";
         echo "<input type='text' class='gsniceinput1' gsname='name' value='".$guest->name."' style='margin-right: 10px;'>";
         echo "<input type='text' class='gsniceinput1' gsname='email' value='".$guest->email."' style='margin-right: 10px;'>";
-        echo "<input type='text' class='gsniceinput1' gsname='prefix' value='".$guest->prefix."' style='width: 30px;margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='prefix' value='".$prefix."' style='width: 30px;margin-right: 10px;'>";
         echo "<input type='text' class='gsniceinput1' gsname='phone' value='".$guest->phone."' style='margin-right: 10px;'>";
         echo "<input type='hidden' class='gsniceinput1' gsname='guestId' value='".$guest->guestId."'>";
         echo "</div>";
@@ -417,5 +422,13 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         return $area;
     }
 
+    public function getDefaultPrefix() {
+        if($this->defaultPrefix) {
+            return $this->defaultPrefix;
+        }
+        
+        $this->defaultPrefix = $this->getFactory()->getStoreConfiguration()->defaultPrefix;
+        return $this->defaultPrefix;
+    }
 }
 ?>

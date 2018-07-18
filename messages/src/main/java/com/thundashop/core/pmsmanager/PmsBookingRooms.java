@@ -501,9 +501,7 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean checkingInBetween(Date startDate, Date endDate) {
-        if(date != null && date.start != null && (date.start.after(startDate) && date.start.before(endDate)) || 
-            isSameDay(date.start, endDate) ||
-            isSameDay(date.start, startDate)) {
+        if(date != null && date.start != null && (date.start.after(startDate) && date.start.before(endDate))) {
             return true;
         }
         return false;

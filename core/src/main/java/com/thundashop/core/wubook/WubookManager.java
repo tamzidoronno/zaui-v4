@@ -1161,7 +1161,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             boolean arrived = false;
             
             for(PmsBookingRooms room : book.getAllRooms()) {
-                if(room.checkedin) {
+                if(room.checkedin || room.addedToArx) {
                     arrived = true;
                 }
             }

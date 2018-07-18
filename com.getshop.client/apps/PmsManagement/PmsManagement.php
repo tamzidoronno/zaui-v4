@@ -2078,29 +2078,29 @@ class PmsManagement extends \WebshopApplication implements \Application {
         } else {
             $filter = $this->getSelectedFilter();
             $filter->filterType = $_POST['data']['type'];
-            $filter->startDate = $this->convertToJavaDate(time());
-            $filter->endDate = $this->convertToJavaDate(time());
+            $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time())));
+            $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time())));
             if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
                 if($stattype == "thismonth") {
-                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
-                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y 00:00", strtotime($filter->startDate))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y 23:59", strtotime($filter->endDate))));
                 }
                 if($stattype == "nextmonth") {
-                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " +1month"))));
-                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " +1month"))));
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y 00:00", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " +1month"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y 23:59", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " +1month"))));
                 }
                 if($stattype == "prevmonth") {
-                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1month"))));
-                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1month"))));
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y 00:00", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1month"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y 23:59", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1month"))));
                 }
                 if($stattype == "thisyear") {
-                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y", strtotime($filter->startDate))));
-                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime($filter->endDate))));
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y 00:00", strtotime($filter->startDate))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y 23:59", strtotime($filter->endDate))));
                     $filter->timeInterval = "monthly";
                 }
                 if($stattype == "pastyear") {
-                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1year"))));
-                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1year"))));
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y 00:00", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1year"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y 23:59", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1year"))));
                     $filter->timeInterval = "monthly";
                 }
             }

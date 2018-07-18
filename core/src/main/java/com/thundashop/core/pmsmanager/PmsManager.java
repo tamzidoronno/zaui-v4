@@ -2803,6 +2803,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     void autoAssignItem(PmsBookingRooms room) {
         try {
+            if(room.bookingId == null || room.bookingId.isEmpty()) {
+                return;
+            }
             List<BookingItem> items = bookingEngine.getAvailbleItemsWithBookingConsideredAndShuffling(room.bookingItemTypeId, room.date.start, room.date.end, room.bookingId);
 
             Collections.sort(items, new Comparator<BookingItem>() {

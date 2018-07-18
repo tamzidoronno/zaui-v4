@@ -130,6 +130,12 @@ class PmsSearchBookingColumnFormatters {
         } else if ($room->progressState == "notpaid") {
             $waiting = $this->pmsSearchBooking->__f("Room not paid");
             $text = "<span title='$waiting'><i class='gsicon-bag-dollar' style='color: red'></i></span>";
+        } else if ($room->progressState == "overbook") {
+            $waiting = $this->pmsSearchBooking->__f("Rooms has been overbooked");
+            $text = "<span title='Room is overbooked'><i class='fa fa-book' style='color: red'></i></span>";
+        } else if ($room->progressState == "replaced") {
+            $waiting = $this->pmsSearchBooking->__f("Booking has been replaced with a new booking by the OTA");
+            $text = "<span title='Booking has been replaced with a new booking by the OTA'><i class='fa fa-unlink' style='color: gray'></i></span>";
         } else if ($room->progressState == "ended") {
             $waiting = $this->pmsSearchBooking->__f("Ended");
             $text = "<span title='$waiting'><i class='gsicon-checkered-flag'></i style='color: green'></span>";

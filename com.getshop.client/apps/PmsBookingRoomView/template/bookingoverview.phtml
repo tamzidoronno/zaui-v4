@@ -19,9 +19,7 @@ if(!$addonsPriceToDisplay) {$addonsPriceToDisplay = "";} else {$addonsPriceToDis
 
 $numberOfRooms = 0;
 foreach($pmsBooking->rooms as $room) {
-    if(!$room->deleted) {
-        $numberOfRooms++;
-    }
+    $numberOfRooms++;
 }
 
 if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
@@ -67,15 +65,16 @@ if($pmsSelectedRoom->addedToWaitingList) {
     echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try adding this room.</a>.";
     echo "<span style='float:right; background-color:red; color:#fff; padding-left:5px; padding-right: 5px; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='deleteWaitingListRoom'>Delete from waiting list</span>";
     echo "</div>";
-} else if($pmsSelectedRoom->deleted) {
+} 
+
+if($pmsSelectedRoom->deleted) {
     echo "<div class='isdeletedinformation'>";
     echo "This room has been cancelled / deleted, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to undelete it</a>.";
+    if($pmsSelectedRoom->overbooking) {
+        echo "<span class='tryundeleteroom' style='float:right; color:#be99d7;cursor:pointer;'>remove it from overbooking list</a>.";
+    }
     echo "</div>";
-} else if($pmsSelectedRoom->overbooking) {
-    echo "<div class='isdeletedinformation'>";
-    echo "This room has been marked as overbooked, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to unmark it as overbooked</a>.";
-    echo "</div>";
-}
+} 
 
 $totalOrdersOnRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
 

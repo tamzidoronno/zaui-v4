@@ -1729,7 +1729,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         for (PmsBookingRooms remove : toRemove) {
-            if (!remove.isDeleted() && remove.bookingConnected() && !remove.overbooking) {
+            if (!remove.isDeleted() && !remove.overbooking) {
                 bookingEngine.deleteBooking(remove.bookingId);
                 remove.delete();
                 logEntry(roomName + " removed from booking ", bookingId, null);

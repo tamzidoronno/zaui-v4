@@ -78,17 +78,23 @@ getshop.cleaningController = function ($scope, $state, $stateParams, $sce) {
     },
     $scope.loadGuest = function(type) {
         var filter = {};
+        var start = new Date();
+        start.setHours(0,0,0,0);
+
+        var end = new Date();
+        end.setHours(23,59,59,999);
+        
         if(type == "checkin") {
             filter.filterType = "checkin";
             filter.sorting = "room";
-            filter.startDate = new Date();
-            filter.endDate = new Date();
+            filter.startDate = start;
+            filter.endDate = end;
         }
         if(type == "checkout") {
             filter.filterType = "checkout";
             filter.sorting = "room";
-            filter.startDate = new Date();
-            filter.endDate = new Date();
+            filter.startDate = start;
+            filter.endDate = end;
         }
         filter.includeCleaningInformation = true;
         var loadGuests = getshopclient.PmsManager.getSimpleRooms(getMultilevelName(), filter);

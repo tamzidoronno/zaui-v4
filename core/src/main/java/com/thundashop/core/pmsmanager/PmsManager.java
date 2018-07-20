@@ -3063,8 +3063,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Integer day = cal.get(Calendar.DAY_OF_YEAR);
         String warningString = bookingItemName + "-" + day;
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
-        messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName + "(" + room.date.start + " - " + room.date.end + ")", "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
-        messageManager.sendMail("pal@getshop.com", copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+//        messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName + "(" + room.date.start + " - " + room.date.end + ")", "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+//        messageManager.sendMail("pal@getshop.com", copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
         warnedAbout.add(warningString);
     }
 

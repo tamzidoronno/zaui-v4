@@ -43,13 +43,14 @@ public class PmsBookingFilter extends DataCommon {
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
+            startDate = cal.getTime();
         }
-        
         if(endDate != null) {
             cal.setTime(endDate);
             cal.set(Calendar.HOUR_OF_DAY, 23);
             cal.set(Calendar.MINUTE, 59);
             cal.set(Calendar.SECOND, 59);
+            endDate = cal.getTime();
         }
     }
 

@@ -1005,6 +1005,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     String email = getStoreEmailAddress();
                     String content = "Possible overbooking happened:<br>" + text;
                     messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
+                    messageManager.sendMail("pal@getshop.com","pal@getshop.com", "Warning: possible overbooking happened", content,"pal@getshop.com","pal@getshop.com");
 
                 }
             }

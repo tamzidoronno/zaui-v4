@@ -74,7 +74,7 @@ class PmsSearchBookingColumnFormatters {
         return $vistorText;
     }
     
-    public function formatVistior($room) {
+    public function formatVistior($room, $hasSamleFakturaApp = false) {
         $vistorText = "";
         $name = "";
         if(isset($guest[0]->name)) {
@@ -102,7 +102,9 @@ class PmsSearchBookingColumnFormatters {
             $vistorText .= "<span class='addedtocheckout dontExpand' roomid='".$room->pmsRoomId."'><i class='fa fa-check'></i> Added to checkout</span>";
             
         $vistorText .= "<span class='quickfunctions' roomid='".$room->pmsRoomId."'>";
-        $vistorText .= "<span style='float:left;padding-left:10px;' class='startcheckout dontExpand'>Start checkout</span>";
+        if($hasSamleFakturaApp) {
+            $vistorText .= "<span style='float:left;padding-left:10px;' class='startcheckout dontExpand'>Start checkout</span>";
+        }
         if($room->progressState != "deleted") {
             $vistorText .= "<i class='fa fa-trash-o dontExpand quickfunction' title='Delete room' type='delete'></i> ";
             $vistorText .= "<i class='fa fa-exchange dontExpand quickfunction' title='Change stay' type='changestay'></i> ";

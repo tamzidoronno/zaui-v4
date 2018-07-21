@@ -64,7 +64,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function formatVistior($room) {
-        return $this->formatter->formatVistior($room);
+        
+        return $this->formatter->formatVistior($room, $this->hasSamleFaktura());
     }
     
     public function formatGuests($room) {
@@ -226,7 +227,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         ob_start();
         
         echo "<div class='GetShopModuleTableHeader'>";
-        echo "<span style='float:left;font-size:26px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
+        if($this->hasSamleFaktura()) {
+            echo "<span style='float:left;font-size:26px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
+        }
         echo "<input type='txt' class='gsniceinput1 tablefilterinput' placeholder='Do filter on table below by entering a text here'>";
         echo "<div class='nothinginfilertodisplay'>No result found, please choose a different filter string or clear this filter</div>";
         echo "<div class='pmscheckoutforrooms checkoutview'>";
@@ -437,6 +440,12 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
                 
         }
         $this->setCurrentFilter($filter);
+    }
+
+    public function hasSamleFaktura() {
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba");
+        if($app) { return true; }
+        return false;
     }
 
 }

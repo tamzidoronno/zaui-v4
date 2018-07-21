@@ -87,6 +87,7 @@ app.PmsSearchBooking = {
     filterRows : function() {
         var filter = $('.PmsSearchBooking .tablefilterinput').val().toLowerCase();
         localStorage.setItem("filterKeyword", filter);
+        var shown = 0;
         $('.datarow').each(function(res) {
             if($(this).hasClass('attributeheader')) {
                 return;
@@ -96,10 +97,16 @@ app.PmsSearchBooking = {
             text += " " + $(this).find('.col_bookedfor').text().toLowerCase();
             if( text.indexOf(filter) >= 0){
                 $(this).show();
+                shown++;
             } else {
                 $(this).hide();
             }
         });
+        if(shown === 0) {
+            $('.nothinginfilertodisplay').show();
+        } else {
+            $('.nothinginfilertodisplay').hide();
+        }
     },
     toggleAllRooms : function() {
         if($(this).is(':checked')) {

@@ -37,6 +37,7 @@ body { background-color:#3a99d7; box-sizing: border-box; }
 .roomrow.notpaid { background-color:red; color:#fff !important;  }
 .roombox { border: solid 1px; border-radius: 3px; margin: 3px; text-align: center; padding: 3px; cursor:pointer; }
 .roombox.notclean { background-color:#35280d; color:#fff; }
+.roombox.notcleancheckedout { background-color:#35280d; color:#fff; }
 .roombox.clean {background-color:green; color:#fff; }
 .roombox.inUse {background-color:purple; color:#fff; }
 .roombox.needInterval { background-color:#35280d !important; color:#fff; }

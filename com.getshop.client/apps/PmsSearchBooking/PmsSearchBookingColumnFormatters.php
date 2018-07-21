@@ -63,7 +63,7 @@ class PmsSearchBookingColumnFormatters {
         return $vistorText;
     }
     
-    public function formatVistior($room) {
+    public function formatGuests($room) {
         $checkedIn = "";
         if($room->checkedIn) {
             $checkedIn = "<div class='guesticon checkedin'><i class='fa fa-smile-o' title='Guest has checked in'></i></div>";
@@ -71,7 +71,11 @@ class PmsSearchBookingColumnFormatters {
         
         $vistorText = "";
         $vistorText = "<span class='quickmenuoption dontExpand'></span><div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='gsicon-user'></i></div>$checkedIn</div>";
-        
+        return $vistorText;
+    }
+    
+    public function formatVistior($room) {
+        $vistorText = "";
         $name = "";
         if(isset($guest[0]->name)) {
             $name = $guest[0]->name;

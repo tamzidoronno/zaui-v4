@@ -9,6 +9,9 @@ $accessories = (array)$this->getApi()->getPmsManager()->getAccesories($this->get
 $languages = $this->getFactory()->getLanguageCodes();
 $languages[] = $this->getFactory()->getCurrentLanguage();
 $readable = $this->getFactory()->getLanguageReadable();
+$product = $this->getApi()->getProductManager()->getProduct($type->productId);
+$taxes = $this->getApi()->getProductManager()->getTaxes();
+
 ?>
 <div gstype='form' method='saveTypeSettings'>
     <input type='hidden' gsname='id' value='<?php echo $id; ?>'>
@@ -45,6 +48,7 @@ $readable = $this->getFactory()->getLanguageReadable();
             <th>Max beds</th>
             <th>Max beds for children</th>
             <th>Visible for booking</th>
+            <th>Tax group</th>
         </tr>
         <tr style='text-align:center;'>
             <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $type->size; ?>' gsname='size'></td>
@@ -55,6 +59,19 @@ $readable = $this->getFactory()->getLanguageReadable();
             <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->maxNumberOfBeds; ?>' gsname='maxNumberOfBeds'></td>
             <td><input type='txt' class='gsniceinput1' style='width: 40px;text-align:center;' value='<?php echo $additional->maxNumberOfChildBeds; ?>' gsname='maxNumberOfChildBeds'></td>
             <td><select class='gsniceselect1' gsname='visibleForBooking'><option value='yes'>Yes</option><option value='no' <?php echo $notVisible; ?>>No</option></select></td>
+            <td>
+                <select class="gsniceselect1" gsname="tax">
+                    <?php
+                    foreach($taxes as $tax) {
+                        $sel = "";
+                        if($product->taxgroup == $tax->groupNumber) {
+                            $sel = "SELECTED";
+                        }
+                        echo "<option value='" . $tax->groupNumber . "' $sel>" . $tax->taxRate . "</option>";
+                    }
+                    ?>
+                </select>
+            </td>
         </tr>
     </table>
     <b>Accesories: <span class='createnewaccessory' style='cursor:pointer;'>(create new)</span></b><br>

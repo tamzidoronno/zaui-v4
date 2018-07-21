@@ -218,6 +218,11 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         }
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
         $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedMultilevelDomainName(), $additional);
+        
+        $product = $this->getApi()->getProductManager()->getProduct($type->productId);
+        $product->taxgroup = $_POST['data']['tax'];
+        $this->getApi()->getProductManager()->saveProduct($product);
+        
     }
     
     public function changeIcon() {

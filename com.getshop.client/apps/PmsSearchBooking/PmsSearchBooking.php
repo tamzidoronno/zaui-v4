@@ -67,6 +67,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         return $this->formatter->formatVistior($room);
     }
     
+    public function formatGuests($room) {
+        return $this->formatter->formatGuests($room);
+    }
+    
     public function formatState($room) {
         return $this->formatter->formatState($room);
     }
@@ -193,12 +197,13 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
                 array('reg', 'REG', 'regDate', 'formatRegDate'),
                 array('checkin', 'CHECKIN', null, 'formatStartPeriode'),
                 array('checkout', 'CHECKOUT', null, 'formatEndPeriode'),
-                array('visitor', 'VISITORS', null, 'formatVistior'),
+                array('guest', '<span title="Guest count">GC</span>', null, 'formatGuests'),
+                array('visitor', 'GUEST NAME', null, 'formatVistior'),
                 array('addons', 'ADDONS', null, 'formatAddons'),
                 array('room', 'ROOM', null, 'formatRoom'),
                 array('price', 'PRICE', null, 'formatPrice'),
-                array('totalprice', 'TOTAL', null, 'formatTotalPrice'),
-                array('expandbutton', '', null, 'formatExpandButton')
+                array('totalprice', 'TOTAL', null, 'formatTotalPrice')
+
             );
         } else {
             $attributes = array(
@@ -208,13 +213,13 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
                 array('reg', 'REG', 'regDate', 'formatRegDate'),
                 array('checkin', 'CHECKIN', null, 'formatStartPeriode'),
                 array('checkout', 'CHECKOUT', null, 'formatEndPeriode'),
+                array('guest', '<span title="Guest count">GC</span>', null, 'formatGuests'),
                 array('visitor', 'VISITORS', null, 'formatVistior'),
                 array('addons', 'ADDONS', null, 'formatAddons'),
                 array('bookedfor', 'BOOKED FOR', null, 'formatBookedFor'),
                 array('room', 'ROOM', null, 'formatRoom'),
                 array('price', 'PRICE', null, 'formatPrice'),
-                array('totalprice', 'TOTAL', null, 'formatTotalPrice'),
-                array('expandbutton', '', null, 'formatExpandButton')
+                array('totalprice', 'TOTAL', null, 'formatTotalPrice')
             );
         }
         
@@ -223,13 +228,14 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         echo "<div class='GetShopModuleTableHeader'>";
         echo "<span style='float:left;font-size:26px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
         echo "<input type='txt' class='gsniceinput1 tablefilterinput' placeholder='Do filter on table below by entering a text here'>";
+        echo "<div class='nothinginfilertodisplay'>No result found, please choose a different filter string or clear this filter</div>";
         echo "<div class='pmscheckoutforrooms checkoutview'>";
         echo "<div style='text-align:right;'><i class='fa fa-close' onclick='$(\".checkoutview\").hide();' style='cursor:pointer;'></i></div>";
         echo "<div class='innercheckout'></div></div>";
         echo "</div>";
         
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
-        $table->setSorting(array("reg","checkin","checkout","visitor","bookedfor","room","price","totalprice"));
+        $table->setSorting(array("reg","checkin","guest","checkout","visitor","bookedfor","room","price","totalprice"));
         $table->loadContentInOverlay = true;
         $table->render();
         $data = (array)$table->getDate();

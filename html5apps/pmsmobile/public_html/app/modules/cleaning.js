@@ -76,6 +76,14 @@ getshop.cleaningController = function ($scope, $state, $stateParams, $sce) {
     $scope.showReportPanel = function() {
         $scope.reportPanel = !$scope.reportPanel;
     },
+            
+    $scope.printCheckedOut = function(guest) {
+        console.log(guest);
+        if(guest.end > time()) {
+            return true;
+        }
+        return false;
+    },
     $scope.loadGuest = function(type) {
         var filter = {};
         var start = new Date();
@@ -128,6 +136,8 @@ getshop.cleaningController = function ($scope, $state, $stateParams, $sce) {
                                 room.inUseState = "clean";
                             } else if(addinfoitem.cleaningState === 4) {
                                 room.inUseState = "needInterval";
+                            } else if(addinfoitem.cleaningState === 5) {
+                                room.inUseState = "notcleancheckedout";
                             } else {
                                 room.inUseState = "notclean";
                             }

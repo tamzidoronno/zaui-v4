@@ -108,10 +108,18 @@ class PmsStatisticsBuilder {
                     if(room.isActiveOnDay(cal.getTime())) {
                         entry.roomsIncluded.add(room.pmsBookingRoomId);
                         Double price = room.getDailyPrice(booking.priceType, cal);
+                        if(filter.removeAddonsIncludedInRoomPrice) {
+                            price = room.getPriceForDayWithoutAddonsIncluded(booking.priceType, cal);
+                        } else {
+                            price = room.getPriceForDay(booking.priceType, cal);
+                        }
+                        
+                        
                         if(!pricesExTax) {
                             price /= 1 + (room.taxes/100);
                         }
-                        entry.roomsPrice.put(room.pmsBookingRoomId, price);
+                        entry.roomsPrice.put(room.pmsBookingRoomId, price); 
+                        entry.roomsPriceForecasted.put(room.pmsBookingRoomId, price);
                         entry.totalPrice += price;
                         entry.roomsRentedOut++;
                         if(room.checkingInAtDay(cal.getTime())) {

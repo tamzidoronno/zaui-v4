@@ -7838,7 +7838,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         total += productPrice;
                     }
+                    statEntry.totalForcasted = statEntry.totalPrice;
                     statEntry.totalPrice = (double) Math.round(total);
+                    statEntry.totalRemaining = statEntry.totalForcasted - statEntry.totalPrice;
                     if (statEntry.roomsRentedOut == 0) {
                         statEntry.avgPrice = 0.0;
                     } else {

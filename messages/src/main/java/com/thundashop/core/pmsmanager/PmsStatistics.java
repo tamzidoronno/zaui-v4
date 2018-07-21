@@ -32,6 +32,10 @@ public class PmsStatistics implements Serializable {
             total.spearRooms += entry.spearRooms;
             total.coverage += entry.coverage;
             total.revPar += entry.revPar;
+            total.totalRemaining += entry.totalRemaining;
+            total.arrivals += entry.arrivals;
+            total.departures += entry.departures;
+            total.totalForcasted += entry.totalForcasted;
             total.guestCount += entry.guestCount;
             sleepoverstats.nighsSlept += entry.roomsRentedOut;
             

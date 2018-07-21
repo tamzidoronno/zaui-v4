@@ -19,7 +19,6 @@ $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : "";
                 <br>
                 Ps: it is important to understand this report only include the rooms that has been paid for and future bookings. If you want to include orders not yet created, click on the forcasted report.<br>
                 <b>Coverage:</b> Coverage in the hotel,earned until now + future bookings.<br>
-                <b>Forecasted coverage:</b> All money possible to earn if you collect all the money.<br>
                 <b>Income report:</b> All money earned until now.<br>
                 <b>Forecasted income report:</b> All money potentially possible to earn if you collect all the money.<br>
             </div>
@@ -29,7 +28,6 @@ $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : "";
     
     <div style='height: 38px; border-bottom: solid 1px #bbb;'>
         <span type='coverage' class='pmsbutton tab <?php if($filter->type == "coverage") {echo "selected";}?>'><i class='fa fa-line-chart'></i> Coverage</span>
-        <span type='forecasted_coverage' class='pmsbutton tab <?php if($filter->type == "forecasted_coverage") {echo "selected";}?>'><i class='fa fa-tint'></i> Forcasted coverage</span>
         <span type='incomereport' class='pmsbutton tab <?php if($filter->type == "incomereport") {echo "selected";}?>'><i class='fa fa-money'></i> Income report</span>
         <span type='forecasted_incomereport' class='pmsbutton tab <?php if($filter->type == "forecasted_incomereport") {echo "selected";}?>'><i class='fa fa-dashboard'></i> Forecasted income report</span>
         <span type='geographical_report' class='pmsbutton tab <?php if($filter->type == "geographical_report") {echo "selected";}?>'><i class='fa fa-language'></i> Stay / Geopgraphical report</span>

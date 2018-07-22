@@ -891,4 +891,19 @@ public class PmsBookingRooms implements Serializable {
         return isSameDay(date.start, time);
     }
 
+    Double getPriceForDayWithoutAddonsIncluded(Integer priceType, Calendar cal) {
+        double removeFromPrice = 0.0;
+        for(PmsBookingAddonItem item : addons) {
+            if(!item.isIncludedInRoomPrice) {
+                continue;
+            }
+            if(sameDay(cal.getTime(), item.date)) {
+                removeFromPrice += (item.price * item.count);
+            }
+        }
+        double toreturn = getPriceForDay(priceType, cal);
+        toreturn -= removeFromPrice;
+        return toreturn;
+    }
+
 }

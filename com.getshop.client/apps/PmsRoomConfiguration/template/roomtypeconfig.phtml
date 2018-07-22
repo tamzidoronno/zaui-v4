@@ -9,6 +9,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 </span>
 <?php
     $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+    $taxes = $this->getApi()->getProductManager()->getTaxes();
     $unsorted = array();
     $sortList = array();
     
@@ -32,12 +33,18 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     $rows = array();
     $rowNumber = 0;
     foreach($types as $type) {
+        $product = $this->getApi()->getProductManager()->getProduct($type->productId);
         $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $type->id);
         $additional->rowNumber = $rowNumber;
         $additional->name = $type->name;
         $additional->guests = $type->size;
         $additional->description = $type->description;
         $additional->rowCreatedDate = $type->rowCreatedDate;
+        foreach($taxes as $tax) {
+            if($tax->groupNumber == $product->taxgroup) {
+                $additional->tax = $tax->taxRate . "%";
+            }
+        }
         $rows[$rowNumber] = $additional;
         $rowNumber++;
     }
@@ -53,6 +60,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
         array('bedsforchildren', 'Beds for children', 'defaultNumberOfChildBeds', null),
         array('maxbeds', 'Max beds', 'maxNumberOfBeds', null),
         array('maxchildbeds', 'Max childbeds', 'numberOfChildren', null),
+        array('tax', 'Tax', 'tax', null),
     );
     
     $table = new \GetShopModuleTable($this, 'PmsManager', 'loadTypeResult', null, $attributes);
@@ -64,7 +72,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 
 <style>
     .roomtypeconfigtable .GetShopModuleTable .col { width: 5%; text-align: center; }
-    .roomtypeconfigtable .GetShopModuleTable .col.col_3 { width: 53%; text-align: left; }
+    .roomtypeconfigtable .GetShopModuleTable .col.col_3 { width:calc(100% - 800px); text-align: left; }
 </style>
 
 <script>

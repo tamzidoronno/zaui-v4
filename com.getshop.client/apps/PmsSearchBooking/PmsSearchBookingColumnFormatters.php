@@ -63,7 +63,7 @@ class PmsSearchBookingColumnFormatters {
         return $vistorText;
     }
     
-    public function formatVistior($room) {
+    public function formatGuests($room) {
         $checkedIn = "";
         if($room->checkedIn) {
             $checkedIn = "<div class='guesticon checkedin'><i class='fa fa-smile-o' title='Guest has checked in'></i></div>";
@@ -71,7 +71,11 @@ class PmsSearchBookingColumnFormatters {
         
         $vistorText = "";
         $vistorText = "<span class='quickmenuoption dontExpand'></span><div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='gsicon-user'></i></div>$checkedIn</div>";
-        
+        return $vistorText;
+    }
+    
+    public function formatVistior($room, $hasSamleFakturaApp = false) {
+        $vistorText = "";
         $name = "";
         if(isset($guest[0]->name)) {
             $name = $guest[0]->name;
@@ -98,7 +102,9 @@ class PmsSearchBookingColumnFormatters {
             $vistorText .= "<span class='addedtocheckout dontExpand' roomid='".$room->pmsRoomId."'><i class='fa fa-check'></i> Added to checkout</span>";
             
         $vistorText .= "<span class='quickfunctions' roomid='".$room->pmsRoomId."'>";
-        $vistorText .= "<span style='float:left;padding-left:10px;' class='startcheckout dontExpand'>Start checkout</span>";
+        if($hasSamleFakturaApp) {
+            $vistorText .= "<span style='float:left;padding-left:10px;' class='startcheckout dontExpand'>Start checkout</span>";
+        }
         if($room->progressState != "deleted") {
             $vistorText .= "<i class='fa fa-trash-o dontExpand quickfunction' title='Delete room' type='delete'></i> ";
             $vistorText .= "<i class='fa fa-exchange dontExpand quickfunction' title='Change stay' type='changestay'></i> ";

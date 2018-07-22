@@ -39,6 +39,8 @@
                     <i class="fa fa-bed" ng-show="guest.childbed"></i>
 
                      {{guest.room}}
+                     
+                     <i class="fa fa-sign-out" ng-show="printCheckedOut(guest)"></i>
                      <span ng-show="cleaningList.type=='checkin'">{{getCheckinTime(guest.start, guest, false) }}</span>
                     <span ng-show="cleaningList.type=='checkout'">{{getCheckinTime(guest.end, guest, true) }}</span>
                      {{guest.guest[0].name}} 
@@ -69,6 +71,7 @@
             <i class="fa fa-check" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'clean'"></i>
             <i class="fa fa-ban" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'inuse'"></i>
             <i class="fa fa-warning" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'notclean'"></i>
+            <i class="fa fa-sign-out" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'notcleancheckedout'"></i>
             <i class="fa fa-refresh" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'needInterval'"></i>
             {{room.bookingItemName}}</div>
     </div>
@@ -76,10 +79,11 @@
 
 <div class='col-md-6'>
     <br><bR><span style='font-size: 16px;'> <b>Explantions:</b></span><br><br>
-    <div class='roombox clean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-check" ></i>&nbsp;&nbsp;&nbsp;Rooms is clean</div>
-    <div class='roombox inuse' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-ban"></i>&nbsp;&nbsp;&nbsp;Rooms is in use by long therm stay</div>
-    <div class='roombox notclean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-warning"></i>&nbsp;&nbsp;&nbsp;Rooms is not clean</div>
-    <div class='roombox needInterval' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Rooms need interval cleaning</div>
+    <div class='roombox clean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-check" ></i>&nbsp;&nbsp;&nbsp;Room is clean</div>
+    <div class='roombox inuse' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-ban"></i>&nbsp;&nbsp;&nbsp;Room is in use by long therm stay</div>
+    <div class='roombox notclean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-warning"></i>&nbsp;&nbsp;&nbsp;Room is not clean</div>
+    <div class='roombox notclean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-sign-out"></i>&nbsp;&nbsp;&nbsp;Room is not clean(checked out)</div>
+    <div class='roombox needInterval' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Room need interval cleaning</div>
     
     <div class='row' style='padding: 10px;'>
         <i class="fa fa-clock-o"></i>  Early check in, priority room.<br>

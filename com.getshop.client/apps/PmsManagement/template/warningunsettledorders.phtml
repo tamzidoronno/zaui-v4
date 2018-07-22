@@ -88,7 +88,7 @@ if($amount != 0) {
             
             if($amount > 0) {
                 foreach($user->savedCards as $card) {
-                    echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
+                    echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "(" . $card->expireMonth . " / " . $card->expireYear . ")" . "</option>";
                 }
             }
             

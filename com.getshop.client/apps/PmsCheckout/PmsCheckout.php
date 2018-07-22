@@ -144,6 +144,16 @@ class PmsCheckout extends \WebshopApplication implements \Application {
     }
 
     public function createOrder() {
+        $payment = $_POST['data']['payment'];
+        $cardId = "";
+        if(stristr($payment, "savedcard_")) {
+            $cardId = str_replace("savedcard_", "", $payment);
+            $card = $this->getApi()->getUserManager()->getCard($cardId);
+            if(strtolower($card->savedByVendor) == "stripe") { $payment = "3d02e22a-b0ae-4173-ab92-892a94b457ae"; };
+            if(strtolower($card->savedByVendor) == "dibs") { $payment = "d02f8b7a-7395-455d-b754-888d7d701db8"; };
+            if(strtolower($card->savedByVendor) == "epay") { $payment = "8f5d04ca-11d1-4b9d-9642-85aebf774fee"; };
+        }
+        
         $orderIds = array();
         if (isset($_POST['data']['appendtoorder']) && $_POST['data']['appendtoorder']) {
             $originalCart = $this->getOriginalCartFromSession();
@@ -159,11 +169,11 @@ class PmsCheckout extends \WebshopApplication implements \Application {
             if (isset($_POST['data']['paymenttypeselection'])) {
                 $type = $_POST['data']['paymenttypeselection'];
             }
-            $orderIds = $this->getApi()->getPmsInvoiceManager()->convertCartToOrders($this->getSelectedMultilevelDomainName(), $id, null, $_POST['data']['payment'], $type);
+            $orderIds = $this->getApi()->getPmsInvoiceManager()->convertCartToOrders($this->getSelectedMultilevelDomainName(), $id, null, $payment, $type);
             
             if ($type == "merged") {
                 //Do something here.
-                $mainorder = $this->getApi()->getOrderManager()->mergeAndCreateNewOrder($_POST['data']['userid'], $orderIds, $_POST['data']['payment'], "");
+                $mainorder = $this->getApi()->getOrderManager()->mergeAndCreateNewOrder($_POST['data']['userid'], $orderIds, $payment, "");
                 $orderIds[] = $mainorder->id;
             }
             
@@ -177,6 +187,12 @@ class PmsCheckout extends \WebshopApplication implements \Application {
                             $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), $orderId, $room->pmsBookingRoomId, $guest->email, $guest->prefix, $guest->phone);
                         }
                     }
+                }
+            }
+            
+            if($cardId) {
+                foreach($orderIds as $orderId) {
+                    $this->getApi()->getOrderManager()->payWithCard($orderId, $cardId);
                 }
             }
         }

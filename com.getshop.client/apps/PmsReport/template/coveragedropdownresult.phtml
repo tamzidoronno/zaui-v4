@@ -4,19 +4,24 @@
 <table width="100%">
     <tr>
         <th align='left'>Guests</th>
-        <th align='left'>Price</th>
+        <th align='left'>Billed</th>
+        <th align='left'>Room price</th>
+        <th align='left'>Remaining</th>
         <th align='left'>Room type</th>
         <th align='left'>Room</th>
     </tr>
     <?php
     $data = json_decode($_SESSION['latestpmscoverageresult']);
     $total = 0;
+    $totalForcasted = 0;
+    $totalRemaining = 0;
     foreach($data->entries as $entry) {
-        if(date("d.m.Y", strtotime($entry->date)) == $_POST['data']['date']) {
+        if(date("d.m.Y", strtotime($entry->date)) == date("d.m.Y", strtotime($_POST['data']['rowdate']))) {
             foreach($entry->roomsIncluded as $roomIncluded) {
                 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomIncluded);
                 foreach($booking->rooms as $room) {
                     if($room->pmsBookingRoomId == $roomIncluded) {
+                        $remaining = 0;
                         echo "<tr>";
                         echo "<td valign='top'>";
                         echo $room->guests[0]->name . "<br>";
@@ -26,6 +31,14 @@
                         echo round($price);
                         $total += $price;
                         echo "</td>";
+                        echo "<td>";
+                        $pricef = $entry->roomsPriceForecasted->{$room->pmsBookingRoomId};
+                        $remaining = $pricef-$price;
+                        echo round($pricef);
+                        $totalForcasted += $pricef;
+                        $totalRemaining += $remaining;
+                        echo "</td>";
+                        echo "<td>".round($remaining)."</td>";
                         echo "<td>";
                         if($room->bookingItemTypeId) {
                             $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId)->name;
@@ -50,6 +63,8 @@
     echo "<tr>";
     echo "<td></td>";
     echo "<td>".round($total)."</td>";
+    echo "<td>".round($totalForcasted)."</td>";
+    echo "<td>".round($totalRemaining)."</td>";
     echo "</tr>";
     ?>
 </table>

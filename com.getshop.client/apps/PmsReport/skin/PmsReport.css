@@ -1,6 +1,6 @@
 .PmsReport .pmsbutton { border: solid 0px; padding: 10px;background-color:green; color:#fff; cursor:pointer; float:left; border-right: solid 1px; }
 .PmsReport .pmsbutton.selected { background-color: yellow !important; color:#000; border-color: green; border-color:#fff; }
-.PmsReport .GetShopModuleTable .col { width: 10% !important; text-align: center; }
+.PmsReport .GetShopModuleTable .col { width: 7.3% !important; text-align: center; }
 .PmsReport .GetShopModuleTable .col_date { text-align: left; }
 .PmsReport .GetShopModuleTable .headercol {
     white-space: nowrap;

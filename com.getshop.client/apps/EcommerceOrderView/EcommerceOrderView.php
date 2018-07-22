@@ -9,6 +9,12 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         
     }
     
+    public function chargeBySavedCard() {
+        $orderId = $_POST['data']['orderid'];
+        $cardId = $_POST['data']['savedcard'];
+        $charged = $this->getApi()->getOrderManager()->payWithCard($orderId, $cardId);
+    }
+    
     public function additemtoorder() {
         $count = 1;
         $orderId = $_POST['data']['orderid'];

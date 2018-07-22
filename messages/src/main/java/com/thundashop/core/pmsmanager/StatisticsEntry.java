@@ -23,6 +23,7 @@ public class StatisticsEntry {
     public HashMap<Integer, Integer> addonsCount = new HashMap();
     public HashMap<Integer, Double> addonsPrice = new HashMap();
     public HashMap<String, Double> roomsPrice = new HashMap();
+    public HashMap<String, Double> roomsPriceForecasted = new HashMap();
     public HashMap<Integer, Double> addonsPriceEx = new HashMap();
     
     public HashMap<String, Integer> uniqueGuests = new HashMap();
@@ -35,6 +36,8 @@ public class StatisticsEntry {
     boolean isTotal = false;
     public Integer squareMetres = 0;
     public Integer totalRoomsOriginal;
+    public Double totalForcasted = 0.0;
+    public double totalRemaining = 0.0;
     
     public void finalize() {
         

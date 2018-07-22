@@ -124,19 +124,23 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter = $this->getCoverageFilter();
         $data = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $attributes = array(
+            array('rowdate', 'gs_hidden', 'date'),
             array('date', 'Date', null, 'formatDate'),
-            array('avilable', 'Available rooms', 'spearRooms', null),
+            array('avilable', 'Available', 'spearRooms', null),
             array('rentedout', 'Rented out', 'roomsRentedOut', null),
+            array('arrivals', 'Arrivals', 'arrivals', null),
+            array('departures', 'Departures', 'departures', null),
             array('guests', 'Guests', 'guestCount', null),
             array('avprice', 'Avg. price', "avgPrice", null),
             array('revpar', 'RevPar', 'revPar', "formatRevPar"),
-            array('total', 'Total', 'totalPrice', null),
-            array('budget', 'Budget', 'bugdet', null),
+            array('total', 'Total', 'totalForcasted', null),
+            array('totalbilled', 'Billed', 'totalPrice', null),
+            array('totalremaining', 'Remaining', 'totalRemaining', null),
             array('Coverage', 'Coverage', 'coverage', null)
         );
         
         $table = new \GetShopModuleTable($this, 'PmsManager', 'loadCoverageResult', null, $attributes);
-        $table->setSorting(array("date","avilable","rentedout","guests","avprice","revpar","total","budget","Coverage"));
+        $table->setSorting(array("date","total","totalbilled", "totalremaining","arrivals", "departures","avilable","rentedout","guests","avprice","revpar","total","budget","Coverage"));
         $table->setData($data->entries);
         $table->render();
         $_SESSION['latestpmscoverageresult'] = json_encode($data);
@@ -373,6 +377,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->endDate = $this->convertToJavaDate(strtotime($selectedFilter->end));
         $filter->timeInterval = $selectedFilter->view;
         $filter->includeVirtual = false;
+        $filter->removeAddonsIncludedInRoomPrice = true;
         
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;

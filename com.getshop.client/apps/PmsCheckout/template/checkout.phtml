@@ -13,6 +13,10 @@ foreach($items as $item) {
     $groupedByExternalId[$item->product->externalReferenceId][] = $item;
 }
 
+$roomIds = array();
+foreach($currentCart->items as $item) {
+    $roomIds[$item->product->externalReferenceId] = "1";
+}
 
 $i = 0;
 
@@ -114,10 +118,6 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
                 <option value="">Create a new order</option>
                 <?
                 //Need to find orders that has been created on the bookings and display them here!
-                $roomIds = array();
-                foreach($currentCart->items as $item) {
-                    $roomIds[$item->product->externalReferenceId] = "1";
-                }
                 $orderIds = array();
                 foreach($roomIds as $roomId => $id) {
                     $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
@@ -153,9 +153,23 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
                     if($name == "InvoicePayment") {
                         $name = "Invoice";
                     }
-
                     echo "<option value='".$app->id."' $selected>" . $name . " ". "</option>";
                 }
+                if($total > 0) {
+                    $userIds = array();
+                    foreach($roomIds as $roomId => $id) {
+                        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+                        if(in_array($booking->userId, $userIds)) {
+                            continue;
+                        }
+                        echo "<option value=''>". $booking->userId . "</option>";
+                        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+                        foreach($user->savedCards as $card) {
+                            echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "(" . $card->expireMonth . " / " . $card->expireYear . ")" . "</option>";
+                        }
+                        $userIds[] = $user->id;
+                    }
+                }                    
                 ?>
             </select>
         </div>

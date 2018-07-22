@@ -5536,12 +5536,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             info.roomId = room.itemId;
             info.hideFromCleaningProgram = room.hideFromCleaningProgram;
             boolean checkoutToday = false;
+            boolean checkedoutToday = false;
             boolean checkinToday = false;
             boolean needInterval = false;
 
             for (PmsRoomSimple simple : checkoutRooms) {
                 if (simple.bookingItemId != null && simple.bookingItemId.equals(room.itemId)) {
                     checkoutToday = true;
+                    if(simple.checkedOut || simple.end < System.currentTimeMillis()) {
+                        checkedoutToday = true;
+                    }
                 }
             }
             for (PmsRoomSimple simple : checkinRooms) {
@@ -5559,7 +5563,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             } else if (room.isClean() || room.isUsedToday()) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.isClean;
             } else {
-                info.cleaningState = RoomCleanedInformation.CleaningState.needCleaning;
+                if(checkedoutToday) {
+                    info.cleaningState = RoomCleanedInformation.CleaningState.needCleaningCheckedOut;
+                } else {
+                    info.cleaningState = RoomCleanedInformation.CleaningState.needCleaning;
+                }
             }
             if (needInterval && !room.isClean(true)) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.needIntervalCleaning;
@@ -7830,7 +7838,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         total += productPrice;
                     }
+                    statEntry.totalForcasted = statEntry.totalPrice;
                     statEntry.totalPrice = (double) Math.round(total);
+                    statEntry.totalRemaining = statEntry.totalForcasted - statEntry.totalPrice;
                     if (statEntry.roomsRentedOut == 0) {
                         statEntry.avgPrice = 0.0;
                     } else {

@@ -36,28 +36,10 @@ class StripePayments extends \PaymentApplication implements \Application {
     }
 
     public function completeCheckout() {
-        require('../apps/StripePayments/stripe-php-6.10.0/init.php');
-        \Stripe\Stripe::setApiKey("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
-
-        // Token is created using Checkout or Elements!
-        // Get the payment token ID submitted by the form:
         $token = $_POST['data']['token'];
-        $order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($_POST['data']['orderid'], "gfdsg9o3454835nbsfdg");
-        $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
-        $amount *= 100;
-        $amount = round($amount);
-        $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
-
-        $charge = \Stripe\Charge::create([
-            'amount' => $amount,
-            'currency' => $currency,
-            'description' => 'GetShop order' . $order->incrementOrderId,
-            'source' => $token,
-        ]);
-        
-        if($charge['paid'] == 1) {
-            $amount = $charge['amount'] / 100;
-            $this->getApi()->getOrderManager()->markAsPaidWithPassword($order->id, $this->convertToJavaDate(time()), $amount, "fdsvb4354345345");
+        $orderId = $_POST['data']['orderid'];
+        $paid = $this->getApi()->getStripeManager()->createAndChargeCustomer($orderId, $token);
+        if($paid) {
             echo "1";
         } else {
             echo "0";
@@ -76,6 +58,10 @@ class StripePayments extends \PaymentApplication implements \Application {
         $key = $this->getConfigurationSetting("key");
         $title = $this->getConfigurationSetting("title");
         
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            $key = "pk_test_g6do5S237ekq10r65BnxO6S0";
+            $title = "TEST";
+        }
         ?>
         <div style='text-align: center; font-size: 16px;'>
             <i class='fa fa-spin fa-spinner'></i>
@@ -94,7 +80,7 @@ class StripePayments extends \PaymentApplication implements \Application {
               });
 
               thundashop.Ajax.postWithCallBack(event,function(res) {
-                  if(res == "1") {
+                  if(res === "1") {
                       window.location.href='?page=payment_success';
                   } else {
                       window.location.href='?page=payment_failed';

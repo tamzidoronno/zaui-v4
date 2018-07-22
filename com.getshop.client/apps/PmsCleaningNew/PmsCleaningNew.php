@@ -167,15 +167,19 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
             $roomsNeedCleaning[$tmpr->roomId] = $tmpr;
         }
         $items = $this->getItems();
-        echo "<span class='notclean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
-        echo "<span class='clean' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
-        echo "<span class='inUse' style='color:#fff !important; width:130px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
+        echo "<span class='notclean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
+        echo "<span class='notcleancheckedout' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean checked out</span><br>";
+        echo "<span class='clean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
+        echo "<span class='inUse' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
         foreach($additional as $add) {
             $isClean = "notclean roomNotReady";
             $state = $roomsNeedCleaning[$add->itemId]->cleaningState;
             if($state == 2) {
                 $isClean = "inUse roomNotReady";
                 $res['inuse']++;
+            } else if($state == 5) {
+                $isClean = "notcleancheckedout";
+                $res['dirty']++;
             } else if($state == 1) {
                 $isClean = "clean";
                 $res['isclean']++;
@@ -276,6 +280,7 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         }
         echo "</td>";
         echo "<td>";
+        if(time() > strtotime($room->date->end)) { echo '<i class="fa fa-sign-out" title="Guest has checked out"></i> '; }
         foreach($room->guests as $guest) {
             echo $guest->name . " - " . $guest->phone . " - " . $guest->email . "<br>";
             break;

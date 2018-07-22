@@ -16,6 +16,7 @@ import com.thundashop.core.usermanager.data.GroupInformation;
 import com.thundashop.core.usermanager.data.SimpleUser;
 
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.usermanager.data.UserRole;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +42,8 @@ public interface IUserManager {
      */
     public User createUser(User user) throws ErrorException;
     
+    @Administrator
+    public UserCard getCard(String cardId);
     
     /**
      * Check if its possible to create the user
@@ -73,6 +76,8 @@ public interface IUserManager {
     
     @Administrator
     public List<User> getSubUsers(String userId);
+    
+    public void addCardToUser(String userId, UserCard card);
     
     public void updateUserCounter(Integer counter, String password);
     

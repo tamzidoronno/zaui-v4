@@ -3,7 +3,7 @@
 $order = $this->getOrder();
 $paymentApps = $this->getAvailablePaymentMethods();
 $total = $this->getApi()->getOrderManager()->getRestToPay($order);
-
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
 
 
 if ($order->closed) {
@@ -33,6 +33,10 @@ if ($order->closed) {
 if($order->status != 7) {
     ?>
     <div class="gs_shop_small_icon" onclick='$(".EcommerceOrderView .markaspaidarea").toggle();' style='margin-top:2px;'><i class="fa fa-check-square markorderaspaid" ></i> <? echo $this->__f("Mark order as paid"); ?></div>
+    <?php 
+    if(sizeof($user->savedCards) > 0) { ?>
+        <div class="gs_shop_small_icon" onclick='$(".EcommerceOrderView .chargebysavedcard").toggle();' style='margin-top:2px;'><i class="fa fa-check-square markorderaspaid" ></i> <? echo $this->__f("Pay using saved card"); ?></div>
+    <?php } ?>
     <div class='markaspaidarea' gstype='form' method='markAsPaid'>
         <div style="text-align:left;">
             <span style='display:inline-block; width:95px;'>Date</span>
@@ -41,6 +45,17 @@ if($order->status != 7) {
         <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
         <input type='text' class='gsniceinput1' value='<?php echo date("d.m.Y", time()); ?>' style='width:70px' gsname='date'>
         <input type='text' class='gsniceinput1' value='<?php echo $total; ?>' style='width:70px;text-align: center' gsname='amount'>
+        <span class='shop_button' gstype='submit' gs_callback="app.EcommerceOrderView.markPaidCompleted('<?php echo $order->id; ?>')">Mark as paid</span>
+    </div>
+    <div class='chargebysavedcard' gstype='form' method='chargeBySavedCard'>
+        <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+        <select gsname="savedcard" class="gsniceselect1">
+        <?php
+        foreach($user->savedCards as $card) {
+            echo "<option value='".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "(" . $card->expireMonth . " / " . $card->expireYear . ")" . "</option>";
+        }
+        ?>
+        </select>
         <span class='shop_button' gstype='submit' gs_callback="app.EcommerceOrderView.markPaidCompleted('<?php echo $order->id; ?>')">Mark as paid</span>
     </div>
     <?php

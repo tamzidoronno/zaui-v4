@@ -25,6 +25,7 @@ import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.LoginHistory;
 import com.thundashop.core.usermanager.data.SimpleUser;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.usermanager.data.UserRole;
@@ -2303,5 +2304,24 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         for(User usr : allUsers) {
             usr.orderAmount = orderManager.getTotalAmountForUser(usr.id);
         }
+    }
+
+    @Override
+    public void addCardToUser(String userId, UserCard card) {
+        User user = getUserByIdUnfinalized(userId);
+        user.savedCards.add(card);
+        saveUserSecure(user);
+    }
+
+    @Override
+    public UserCard getCard(String cardId) {
+        for(User usr : userStoreCollections.get(storeId).getAllUsersNotFinalized()) {
+            for(UserCard card : usr.savedCards) {
+                if(card.id.equals(cardId)) {
+                    return card;
+                }
+            }
+        }
+        return null;
     }
 }

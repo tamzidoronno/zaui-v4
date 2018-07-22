@@ -43,6 +43,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.stripe.StripeManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
@@ -113,6 +114,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private EpayManager epayManager;
+    
+    @Autowired
+    private StripeManager stripeManager;
     
     @Autowired
     private GrafanaManager grafanaManager;
@@ -1414,6 +1418,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                             dibsManager.payWithCard(order, card);
                         }
                     }
+                    if(card.savedByVendor.equals("stripe")) {
+                        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("stripe")) {
+                            stripeManager.chargeOrder(order.id, card.id);
+                        }
+                    }
                     if(card.savedByVendor.equals("EPAY")) {
                         epayManager.payWithCard(order, card);
                     }
@@ -1835,6 +1844,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             res = dibsManager.payWithCard(order, cardToUse);
         } else if(cardToUse.savedByVendor.equalsIgnoreCase("epay")) {
             res = epayManager.payWithCard(order, cardToUse);
+        } else if(cardToUse.savedByVendor.equalsIgnoreCase("stripe")) {
+            res = stripeManager.chargeOrder(order.id, cardToUse.id);
         } else {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Pay with saved card is not supported by this vendor: " + cardToUse.card + " expire: " + cardToUse.expireMonth + "/" + cardToUse.expireYear + " (" + cardToUse.savedByVendor + ")");
         }

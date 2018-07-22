@@ -1,0 +1,232 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 21, 2018, 12:15:20 PM
+    Author     : ktonder
+*/
+
+body,table,td,th  {
+    margin: 0px;
+    font-size: 13px;
+}
+
+
+input.gsniceinput1 {
+  padding: 10px;
+  border: solid 1px #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+  box-sizing: inherit;
+}
+input.gsniceinput1:focus,
+input.gsniceinput1.focus {
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}
+
+select.gsniceselect1 {
+    font-size: 15px;
+    border: 1px solid lightblue;
+    border-radius: 0px;
+    color: black;
+    padding: 8px;
+    padding-right: 30px;
+    -webkit-appearance: none;
+
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px'><polyline points='46.139,15.518 25.166,36.49 4.193,15.519'/></svg>") right no-repeat;
+    
+    background-color: #FFF;
+    background-transparency: 0.5;
+    background-position: right 8px top 10px;
+    background-size: 18px 18px;
+    
+    height: 51px;
+}
+select.gsniceselect1:active {
+    border: 1px solid #000;
+}
+
+.gsniceselect2{
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.gsniceselect2 select{
+    background-color: #2985c0;
+    color:rgba(255,255,255,.8);
+    font-size: inherit;
+    padding: .5em;
+    padding-right: 2.5em;	
+    border: 0;
+    margin: 0;
+    text-indent: 0.01px;
+    text-overflow: '';
+    /*Hiding the select arrow for firefox*/
+    -moz-appearance: none;
+    /*Hiding the select arrow for chrome*/
+    -webkit-appearance:none;
+    /*Hiding the select arrow default implementation*/
+    appearance: none;
+}
+
+/*Hiding the select arrow for IE10*/
+.gsniceselect2 select::-ms-expand {
+    display: none;
+}
+
+.gsniceselect2::before,
+.gsniceselect2::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    color:#fff;
+}
+
+.gsniceselect2::after { /*  Custom dropdown arrow */
+    content: "\25BC";
+    height: 1em;
+    font-size: .625em;
+    line-height: 1;
+    right: 1.2em;
+    top: 50%;
+    margin-top: -.5em;
+}
+
+.gsniceselect2::before { /*  Custom dropdown arrow cover */
+    width: 2em;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 0 3px 3px 0;
+    background-color: rgba(0,0,0,.2);
+}
+
+.gsniceselect2::after {
+    color: rgba(255,255,255,.8);
+}
+
+.gs_shop_small_icon {
+    display: inline-block;
+    border: solid 1px #DDD;
+    border-radius: 5px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+
+    color: #333;
+    
+    cursor: pointer;
+}
+
+.gs_shop_small_icon:active {
+    background: #eeeeee;
+}
+
+.gs_shop_small_icon:hover {
+    background: rgb(238,238,238); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+}
+
+a {
+    text-decoration: none;
+    color:#000000;
+}
+
+.gs_page_col {
+    display: inline-block;
+}
+
+.gs_page_col.col1 { width: 100%; }
+.gs_page_col.col2 { width: 50%; }
+.gs_page_col.col3 { width: 33%; }
+.gs_page_col.col4 { width: 25%; }
+
+.gsoverlay {
+    display: none;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+.gsoverlay.active {
+    display: block;
+}
+
+.gsoverlay .gsoverlayinner {
+    background-color: #FFF;
+    margin: 0px auto;
+    width: 70%;
+    margin-top: 40px;
+}
+
+.app .mask,
+.application_settings {
+    display: none;
+}
+
+
+.shop_button {
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 7px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: inline-block;
+    
+    background: -moz-linear-gradient(top,  rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 53%, rgba(255,255,255,0.1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.6)), color-stop(50%,rgba(255,255,255,0.3)), color-stop(53%,rgba(255,255,255,0.15)), color-stop(100%,rgba(255,255,255,0.1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99ffffff', endColorstr='#1affffff',GradientType=0 ); /* IE6-9 */
+}
+
+.gs_body[hasleftmenu="yes"] .Menu {
+    width: 200px;
+    display: inline-block;
+    vertical-align: top;
+    border-right: solid 1px #DDD;
+}
+
+.gs_body[hasleftmenu="yes"] .Menu .entry {
+    border-bottom: solid 1px #DDD;
+    
+}
+
+.gs_body[hasleftmenu="yes"] .Menu .entry a div {
+    padding: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.gs_body[hasleftmenu="yes"] .Menu .entry a div:hover {
+    background-color: #EFEFEF;
+}
+
+.gs_body[hasleftmenu="yes"] .gs_body_inner {
+    width: calc(100% - 210px);
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    padding-left: 50px;
+}

@@ -55,5 +55,11 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
         return date('d.m.Y', $app->getEndDate());
     }
+    
+    public function gsAlsoUpdate() {
+        $ret = array();
+        $ret[] = "28886d7d-91d6-409a-a455-9351a426bed5";
+        return $ret;
+    }
 }
 ?>

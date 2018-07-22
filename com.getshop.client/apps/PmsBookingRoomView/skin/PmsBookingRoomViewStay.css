@@ -215,6 +215,5 @@
     height: 270px;
     border-left: solid 1px #DDD;
     border-right: solid 1px #DDD;
-    min-height: 100%;
     position: relative;
 }

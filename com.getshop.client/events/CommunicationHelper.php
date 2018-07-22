@@ -106,6 +106,8 @@ class CommunicationHelper {
 
     public function sendMessage($event, $debug=false) {
         $event["sessionId"] = $this->sessionId;
+        $event["getShopModuleName"] = \PageFactory::$moduleId;
+        
         $data = json_encode($event);
         $res = "";
         $this->connect();
@@ -180,6 +182,8 @@ class CommunicationHelper {
             return $this->createThundashopObject($object);
         }
     }
+
+   
 }
 
 ?>

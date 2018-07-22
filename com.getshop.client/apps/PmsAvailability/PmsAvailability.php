@@ -67,8 +67,11 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $app->setEndDate(date("d.m.Y", time()+(86400*7)));
         }
 
-        
+
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+
+      
+                
         if(sizeof($items) == 0) {
             $this->includefile("noitemsyet");
         } else {

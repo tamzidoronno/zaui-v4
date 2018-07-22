@@ -235,6 +235,65 @@ class ApplicationBase extends FactoryBase {
         $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
         $id = isset($this->configuration) ? $this->configuration->id : "";
         $callbackInstance = "";
+        $normalId = "";
+        
+        if ($appNotAddedToPage) {
+            $id = get_class($this);
+            $arrId = explode("\\", $id);
+            $normalId = str_replace("_", "-", str_replace("ns_", "",$arrId[0]));
+        }
+        
+        $fromId = "";
+        if ($fromApplication) {
+            $fromId = isset($fromApplication->configuration) ? $fromApplication->configuration->id : "";
+            if(!$fromId) {
+                $fromId = get_class($fromApplication);
+            }
+            $callbackInstance = " fromapplication='$fromId' ";
+        }
+        
+        if (isset($_GET['onlyShowApp']) && isset($id) && $id != $_GET['onlyShowApp']) {
+            return;
+        }
+        
+        $className = get_class($this);
+        if(strrpos($className, "\\")) {
+            $className = substr($className, strrpos($className, "\\")+1);
+            $_SESSION['cachedClasses'][$fromId] = get_class($this);
+            $_SESSION['cachedClasses'][$id] = get_class($this);
+        } else {
+            $_SESSION['cachedClasses'][$fromId] = $fromId;
+            $_SESSION['cachedClasses'][$id] = $id;
+        }
+        
+        if(!isset($_SESSION['cachedClasses'])) {
+            $_SESSION['cachedClasses'] = array();
+        }
+
+        echo "<div $callbackInstance appid='$id' ".$this->getExtraAttributesToAppArea()." app='" . $className . "' class='app $changeable " . $className . "' appid2='$normalId' appsettingsid='$appSettingsId'>";
+        if($this->isEditorMode() && !$this->getFactory()->isMobile()) {
+            echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
+            echo "<div class='order_mask'>";
+
+            echo "</div>";
+        }
+        
+        echo "<div class='applicationinner'>";
+        if($this->isEditorMode() && !$changeable && !$this->getFactory()->isMobile()) {
+            if($this->hasWriteAccess()) {
+                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:18px;'></i></div>";
+            }
+        }
+        $this->render();
+        echo "</div>";
+        echo "</div>";
+    }
+    
+    public function renderApp($appNotAddedToPage=false, $fromApplication=false) {
+        $changeable = '';
+        $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
+        $id = isset($this->configuration) ? $this->configuration->id : "";
+        $callbackInstance = "";
         
         if ($appNotAddedToPage) {
             $id = get_class($this);
@@ -266,21 +325,11 @@ class ApplicationBase extends FactoryBase {
             $_SESSION['cachedClasses'] = array();
         }
 
-        echo "<div $callbackInstance appid='$id' ".$this->getExtraAttributesToAppArea()." app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
-        if($this->isEditorMode() && !$this->getFactory()->isMobile()) {
-            echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
-            echo "<div class='order_mask'>";
+        $hasInstance = $this->getConfiguration() ? "yes" : "no";
+        echo "<div $callbackInstance appid='$id' hasinstance='$hasInstance' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
 
-            echo "</div>";
-        }
-        
         echo "<div class='applicationinner'>";
-        if($this->isEditorMode() && !$changeable && !$this->getFactory()->isMobile()) {
-            if($this->hasWriteAccess()) {
-                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:18px;'></i></div>";
-            }
-        }
-        $this->render();
+        echo "<center><i class='fa fa-spinner fa-spin'></i></center>";
         echo "</div>";
         echo "</div>";
     }
@@ -762,6 +811,10 @@ class ApplicationBase extends FactoryBase {
         $appNameArr = explode("\\", $appName);
         $appName = $appNameArr[1];
         $this->getApi()->getTrackerManager()->logTracking($appName, $_POST['data']['gslog_type'], $_POST['data']['gslog_value'], $_POST['data']['gslog_description']);
+    }
+    
+    public function gsAlsoUpdate() {
+        return array();
     }
 }
 ?>

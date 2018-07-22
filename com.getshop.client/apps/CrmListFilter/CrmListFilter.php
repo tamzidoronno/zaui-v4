@@ -62,5 +62,10 @@ class CrmListFilter extends \WebshopApplication implements \Application {
         $_SESSION['crmlistfilter'] = json_encode($filter);
     }
 
+    public function gsAlsoUpdate() {
+        $ret = array();
+        $ret[] = "dcc56763-43cf-470f-87c3-ee305a5a517b";
+        return $ret;
+    }
 }
 ?>

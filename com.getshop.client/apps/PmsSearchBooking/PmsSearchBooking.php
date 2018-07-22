@@ -115,6 +115,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function isGroupBookingView() {
+        if (isset($this->page)) {
+            return $this->page->getId() == "groupbooking";
+        }
         return $this->getPage()->getId() == "groupbooking";
     }
 
@@ -432,6 +435,5 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         $this->setCurrentFilter($filter);
     }
-
 }
 ?>

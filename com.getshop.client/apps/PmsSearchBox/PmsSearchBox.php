@@ -98,5 +98,10 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         return $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
     }
 
+    public function gsAlsoUpdate() {
+        $alsoUpdate = array();
+        $alsoUpdate[] = '961efe75-e13b-4c9a-a0ce-8d3906b4bd73';
+        return $alsoUpdate;
+    }
 }
 ?>

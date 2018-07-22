@@ -13,6 +13,7 @@ public class JsonObject2 implements Serializable {
     public String interfaceName;
     public String sessionId;
     public String multiLevelName;
+    public String getShopModuleName;
     public Map<String,String> args;
     
     public String addr;

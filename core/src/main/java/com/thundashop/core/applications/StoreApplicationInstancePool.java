@@ -276,4 +276,18 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
                 .distinct()
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ApplicationInstance getApplicationInstanceWithModule(String applicationInstanceId, String moduleName) {
+        ApplicationInstance instance = moduleApplicationInstances.get(moduleName).get(applicationInstanceId);
+        if (instance == null) {
+            return null;
+        }
+
+        if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50) {
+            return checkSecurity(instance);
+        }
+        
+        return checkSecurity(instance.secureClone());
+    }
 }

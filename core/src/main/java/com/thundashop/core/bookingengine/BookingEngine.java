@@ -35,6 +35,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         useNewEngine.add("a152b5bd-80b6-417b-b661-c7c522ccf305");
         useNewEngine.add("e625c003-9754-4d66-8bab-d1452f4d5562");
         useNewEngine.add("178330ad-4b1d-4b08-a63d-cca9672ac329"); // utsikten
+        useNewEngine.add("a6c4029c-485e-4407-b7ad-8de3b17a951c"); // lilandtunet
     }
     
     @Autowired

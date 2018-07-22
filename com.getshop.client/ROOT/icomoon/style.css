@@ -1,0 +1,237 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?s7pai8');
+  src:  url('fonts/icomoon.eot?s7pai8#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.woff2?s7pai8') format('woff2'),
+    url('fonts/icomoon.ttf?s7pai8') format('truetype'),
+    url('fonts/icomoon.woff?s7pai8') format('woff'),
+    url('fonts/icomoon.svg?s7pai8#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="gsicon-"], [class*=" gsicon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gsicon-trashcan:before {
+  content: "\e932";
+}
+.gsicon-search:before {
+  content: "\e91d";
+}
+.gsicon-search2:before {
+  content: "\e91e";
+}
+.gsicon-key:before {
+  content: "\e910";
+}
+.gsicon-basket:before {
+  content: "\e90e";
+}
+.gsicon-checkered-flag:before {
+  content: "\e916";
+}
+.gsicon-document-file-html:before {
+  content: "\e90b";
+}
+.gsicon-flag-checkered:before {
+  content: "\e917";
+}
+.gsicon-glass-cocktail:before {
+  content: "\e93a";
+}
+.gsicon-chart-growth:before {
+  content: "\e939";
+}
+.gsicon-link:before {
+  content: "\e938";
+}
+.gsicon-smartphone-embed:before {
+  content: "\e937";
+}
+.gsicon-self-timer:before {
+  content: "\e936";
+}
+.gsicon-library2:before {
+  content: "\e935";
+}
+.gsicon-list2:before {
+  content: "\e934";
+}
+.gsicon-dinner:before {
+  content: "\e933";
+}
+.gsicon-bubble-pencil:before {
+  content: "\e931";
+}
+.gsicon-brain:before {
+  content: "\e930";
+}
+.gsicon-calendar-text:before {
+  content: "\e92f";
+}
+.gsicon-man-woman:before {
+  content: "\e92e";
+}
+.gsicon-typewriter:before {
+  content: "\e92d";
+}
+.gsicon-crown:before {
+  content: "\e92c";
+}
+.gsicon-king:before {
+  content: "\e92c";
+}
+.gsicon-queen:before {
+  content: "\e92c";
+}
+.gsicon-chevron-left-circle:before {
+  content: "\e92b";
+}
+.gsicon-chevron-right-circle:before {
+  content: "\e92a";
+}
+.gsicon-right:before {
+  content: "\e92a";
+}
+.gsicon-group-work:before {
+  content: "\e929";
+}
+.gsicon-factory:before {
+  content: "\e928";
+}
+.gsicon-build:before {
+  content: "\e928";
+}
+.gsicon-generate:before {
+  content: "\e928";
+}
+.gsicon-cart-exchange:before {
+  content: "\e927";
+}
+.gsicon-user-lock:before {
+  content: "\e926";
+}
+.gsicon-database-upload:before {
+  content: "\e925";
+}
+.gsicon-exit2:before {
+  content: "\e923";
+}
+.gsicon-enter:before {
+  content: "\e924";
+}
+.gsicon-exit:before {
+  content: "\e922";
+}
+.gsicon-door:before {
+  content: "\e922";
+}
+.gsicon-sign-out:before {
+  content: "\e922";
+}
+.gsicon-log-out:before {
+  content: "\e922";
+}
+.gsicon-logout:before {
+  content: "\e922";
+}
+.gsicon-calendar-user:before {
+  content: "\e91f";
+}
+.gsicon-user-minus:before {
+  content: "\e920";
+}
+.gsicon-user-plus:before {
+  content: "\e921";
+}
+.gsicon-library:before {
+  content: "\e91c";
+}
+.gsicon-book:before {
+  content: "\e91b";
+}
+.gsicon-hdd-down:before {
+  content: "\e91a";
+}
+.gsicon-chevrons-expand-vertical:before {
+  content: "\e919";
+}
+.gsicon-list:before {
+  content: "\e918";
+}
+.gsicon-bag-dollar:before {
+  content: "\e915";
+}
+.gsicon-clipboard-check:before {
+  content: "\e914";
+}
+.gsicon-gs-user:before {
+  content: "\e913";
+}
+.gsicon-lifebuoy:before {
+  content: "\e912";
+}
+.gsicon-receipt:before {
+  content: "\e911";
+}
+.gsicon-users:before {
+  content: "\e90f";
+}
+.gsicon-cashier:before {
+  content: "\e90d";
+}
+.gsicon-bed:before {
+  content: "\e90c";
+}
+.gsicon-hotel:before {
+  content: "\e90c";
+}
+.gsicon-sleep:before {
+  content: "\e90c";
+}
+.gsicon-menu:before {
+  content: "\e908";
+}
+.gsicon-flag:before {
+  content: "\e90a";
+}
+.gsicon-gs-logo:before {
+  content: "\e909";
+}
+.gsicon-gs-availability:before {
+  content: "\e900";
+}
+.gsicon-gs-booking:before {
+  content: "\e901";
+}
+.gsicon-gs-cleaning:before {
+  content: "\e902";
+}
+.gsicon-gs-dashboard:before {
+  content: "\e903";
+}
+.gsicon-gs-gears:before {
+  content: "\e904";
+}
+.gsicon-gs-new:before {
+  content: "\e905";
+}
+.gsicon-gs-prices:before {
+  content: "\e906";
+}
+.gsicon-gs-reports:before {
+  content: "\e907";
+}

@@ -118,7 +118,8 @@ public class StoreHandler {
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
         Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
         IUserManager userManager = getManager(IUserManager.class, getShopInterfaceClass, inObject);
-        setSessionObject(inObject.sessionId, userManager);
+        String moduleName = isFromSynchronizedCall ? inObject.getShopModuleName : null;
+        setSessionObject(inObject.sessionId, userManager, moduleName);
 
         Class aClass = loadClass(inObject.interfaceName);
         Class getShopApiInterface = getGetShopApiInterface(aClass);
@@ -282,7 +283,7 @@ public class StoreHandler {
         }
     }
 
-    private void setSessionObject(String sessionId, IUserManager userManager) {
+    private void setSessionObject(String sessionId, IUserManager userManager, String getShopModuleName) {
 
         Session session = getSession(sessionId);
                 
@@ -324,6 +325,10 @@ public class StoreHandler {
             session.currentUser = userManager.getLoggedOnUser();
         } catch (ErrorException ex) {
             session.currentUser = null;
+        }
+        
+        if (getShopModuleName != null && !getShopModuleName.isEmpty()) {
+            session.put("currentGetShopModule", getShopModuleName);
         }
         
         setDefaultLanguageIfNotSet(session);
@@ -605,11 +610,11 @@ public class StoreHandler {
         initMultiLevels(storeId, getSession(sessionId)); 
         scope.setStoreId(storeId, thread.getMultiLevelName(), getSession(sessionId));
         UserManager manager = getManager(UserManager.class, null, null);
-        setSessionObject(sessionId, manager);
+        setSessionObject(sessionId, manager, null);
         
         if (thread.getUserId() != null) {
             manager.addUserLoggedOnSecure(thread.getUserId());
-            setSessionObject(sessionId, manager);
+            setSessionObject(sessionId, manager, null);
         }
         
         try {

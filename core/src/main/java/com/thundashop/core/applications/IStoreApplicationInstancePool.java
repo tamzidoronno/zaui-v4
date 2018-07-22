@@ -29,4 +29,6 @@ public interface IStoreApplicationInstancePool {
     
     @Editor
     public List<ApplicationInstance> getApplicationInstances(String applicationId);
+    
+    public ApplicationInstance getApplicationInstanceWithModule(String applicationInstanceId, String moduleName);
 }

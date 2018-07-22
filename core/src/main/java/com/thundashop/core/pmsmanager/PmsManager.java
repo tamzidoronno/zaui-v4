@@ -1738,24 +1738,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     Booking tmpbook = createBooking(remove);
                     List<Booking> toAdd = new ArrayList();
                     toAdd.add(tmpbook);
-                    bookingEngine.addBookings(toAdd);
-                    remove.undelete();
-                    booking.isDeleted = false;
-                    remove.overbooking = false;
-                    remove.credited = false;
-                    remove.setBooking(tmpbook);
-                    remove.deleted = false;
-                    if (remove.priceMatrix.keySet().isEmpty()) {
-                        setPriceOnRoom(remove, true, booking);
+                    if(bookingEngine.canAdd(toAdd)) {
+                        bookingEngine.addBookings(toAdd);
+                        remove.undelete();
+                        booking.isDeleted = false;
+                        remove.overbooking = false;
+                        remove.credited = false;
+                        remove.setBooking(tmpbook);
+                        remove.deleted = false;
+                        if (remove.priceMatrix.keySet().isEmpty()) {
+                            setPriceOnRoom(remove, true, booking);
+                        }
+                        logEntry(roomName + " readded to booking ", bookingId, null);
                     }
-                    logEntry(roomName + " readded to booking ", bookingId, null);
                 } catch (BookingEngineException ex) {
                     addResult = ex.getMessage();
                 }
             }
         }
-
-        booking.unmarkOverBooking();
 
         saveObject(booking);
 
@@ -3423,7 +3423,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         HashMap<String, List<BookingItem>> resultsFound = new HashMap();
         
-        if (!BookingEngine.useNewEngine.contains(storeId)) {
+        if (BookingEngine.useNewEngine.contains(storeId)) {
+            return bookingEngine.canAdd(toCheck);
+        } else {
             for (Booking book : toCheck) {
                 String key = book.bookingItemTypeId + "_" + book.startDate.getTime() + "-" + book.endDate.getTime();
                 List<BookingItem> items = new ArrayList();

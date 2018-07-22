@@ -69,9 +69,9 @@ if($pmsSelectedRoom->addedToWaitingList) {
 
 if($pmsSelectedRoom->deleted) {
     echo "<div class='isdeletedinformation'>";
-    echo "This room has been cancelled / deleted, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to undelete it</a>.";
+    echo "This room has been cancelled / deleted, <span class='tryundeleteroom' style='color:#be99d7;cursor:pointer;'>try to undelete it</span>.";
     if($pmsSelectedRoom->overbooking) {
-        echo "<span class='tryundeleteroom' style='float:right; color:#be99d7;cursor:pointer;'>remove it from overbooking list</a>.";
+        echo "<span gsclick='removeFromOverBookingList' style='float:right; color:#be99d7;cursor:pointer;' gs_confirm='Warning, this will not readd the booking, just remove it from the list, use undelete it to make sure it is readded.'>remove it from overbooking list</span>.";
     }
     echo "</div>";
 } 

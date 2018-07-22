@@ -121,6 +121,19 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->selectedRoom = null;
     }
     
+    public function removeFromOverBookingList() {
+        $room = $this->getSelectedRoom();
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $r) {
+            if($room->pmsBookingRoomId == $r->pmsBookingRoomId) {
+                $room->overbooking = false;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->pmsBooking = null;
+        $this->selectedRoom = null;
+    }
+    
     public function updateGuestData() {
         $room = $this->getSelectedRoom();
         $i = 0;

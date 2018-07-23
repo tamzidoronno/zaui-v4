@@ -39,7 +39,7 @@ class PmsDayOverview extends \WebshopApplication implements \Application {
         $start = strtotime(date("d.m.Y 00:00", $this->getSelectedDate()));
         $start += 86400 *$daysAhead;
         $filter->startDate = $this->formatTimeToJavaDate($start);
-        $filter->endDate = $this->formatTimeToJavaDate($start+86400);
+        $filter->endDate = $this->formatTimeToJavaDate($start+82400);
         if($checkin) {
             $filter->filterType = "checkin";
         } else {

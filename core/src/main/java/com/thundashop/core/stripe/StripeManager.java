@@ -158,6 +158,8 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             stripecard.setId(card);
             //Somehow put this into the source and create the customer.
             Customer customer = Customer.create(chargeParams);
+        }catch(Exception e) {
+            
         }
         
     }

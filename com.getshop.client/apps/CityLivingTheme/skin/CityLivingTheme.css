@@ -1,0 +1,149 @@
+
+html{overflow-x:hidden;}
+body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
+.gsmobileheader { display:none; }
+.sticky{position:fixed !important;top:-65px !important;}
+.gs_language_selection{border:0;right:10px;top:-54px;}
+.gs_language_selection .gs_lang_code_nb_NO{
+    background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_norwegian.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;gsgss
+    width: 18px;
+    background-size: 35px;
+}
+.gs_language_selection .gs_lang_code_en_en{
+    background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_english.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}
+.selectcolors { display:none; }
+.gs_page_width {max-width: 1100px;margin: 0 auto;}
+.Menu .menuentries.horizontal, .Menu .menu_simple_menu, .Menu .menuentries.horizontal .entry { padding-top: 2px; }
+.gsarea[area="header"] {position:absolute;background-color:rgba(0,0,0,0);z-index: 2;top:0px;width: 100%;text-align: center; padding-top:30px;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entry.active .entries a div{opacity:1 !important;border-bottom:0 !important;}
+.gsarea[area="header"] .Menu .entry .entries .entry.active a div{opacity:0.7 !important;border-bottom:0 !important;}
+.gsarea[area="header"] .Menu .entry.active a div{opacity:1 !important;border-bottom:3px solid #333;}
+.gsarea[area="header"] .Menu .entry .entries {top: 30px;background:rgba(255,255,255,1);}
+.gsarea[area="header"] .Menu .entry .entries div {padding: 0px;width: 200px;text-align: left;}
+.gsarea[area="header"] .Menu .entry div i {display: block;font-size: 30px;}
+.gsarea[area="header"] .Menu .entry div {font-size: 14px;line-height: 25px;margin: 15px 0 15px 0;padding: 0 20px 0 20px;text-align: center;color:#555;}
+
+.gsarea[area="body"]{margin-top:150px;}
+
+.gsarea[area="footer"] {background: #f5f5f5;box-shadow: 0px 0px 3px #bbb;color:#555;min-height: 150px;}
+
+.PmsBooking .pmsfront1{font-size:13px;}
+.shop_button,
+.PmsPricing .pmsbutton,
+.PmsManagement .pmsbutton,
+.BookingEngineManagement .pmsbutton,
+.PmsConfiguration .pmsbutton{
+    display:inline-block;
+    color:#fff;
+    background:#44c767;
+    border:1px solid #e6e6e6;
+    border-radius: 2px;
+    line-height:25px;
+    height:25px;
+    font-size:16px;
+    font-family: Arial;
+    text-shadow: 0px 1px 0px rgba(47, 102, 39, 0.5);
+    padding:2px 10px 2px 10px;
+    margin-top:5px;
+}
+.shop_button:hover,
+.PmsPricing .pmsbutton:hover,
+.PmsManagement .pmsbutton:hover,
+.BookingEngineManagement .pmsbutton:hover,
+.PmsConfiguration .pmsbutton:hover{
+    background-color:#43bb63;
+    border-color:0;
+}
+.PmsConfiguration .pmsbutton.active{background-color:#fff;color:#44c767;border-color:#44c767;}
+.PmsPricing .selectedpriceplan{background-color:#fff;color:#44c767;border-color:#44c767;}
+.PmsPricing .selectedpriceplan:hover{background-color:#fff;color:#44c767;border-color:#44c767;}
+
+.ProductLists .slidelist .product {font-size: 16px;}
+.ProductLists .slidelist .product .price {position: absolute;top: 0px;right: 120px;font-size: 26px;font-weight: bold;}
+.ProductLists .slidelist .product .title {font-size: 25px;}
+.ProductLists .slidelist .product .image {display: inline-block;padding: 20px;}
+.ProductLists .slidelist .product .image img {width: 430px;display: inline-block;vertical-align: top;border-radius: 15px;}
+.ProductLists .slidelist .product .descriptionarea {
+    display: inline-block;
+    width: 500px;
+    border: solid 1px #F1F1F1;
+    vertical-align: top;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/*ColorTheme of the site*/
+.PmsBooking .pmsfront .fa-calendar,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBooking .pmsfront .check_available_button,
+.PmsBookingCalendar .calendar .calendar_header{
+    background-color:#ffcc62;
+    color:#333;
+}
+/*-------------------*/
+
+.BookingEngineManagement .roomlist{max-height:600px;overflow-y:auto;}
+.BookingEngineManagement .addGroupOptions input,
+
+.PmsManagement .pmsinput{padding:3px;}
+.PmsManagement .bookinginfo select,
+.PmsManagement .bookinginfo input{font-size:14px;border:1px solid #bdbdbd;background-color:#fff;}
+.PmsManagement .pmsbutton[gstype="submitToInfoBox"]{line-height:15px;height:15px;font-size: 13px;max-width: 90px;box-sizing: initial !important;}
+.PmsManagement .pmsbutton.closeadduser{line-height:15px;height:15px;font-size: 14px;max-width: 90px;box-sizing: initial !important;}
+.PmsManagement .pmsbutton.showlog{background-color: #146da6 !important;color:#fff !important;}
+.PmsManagement .tabs .tab{border-color:#fff;margin-right:5px;border-radius: 0;background-color:#146da6;color:#fff;font-weight:700;letter-spacing:1.5px;}
+.PmsManagement .tabs .tab.selected{border-color:#146da6;color:#146da6;}
+.PmsManagement .tabarea{border-top-color:#146da6;}
+.PmsManagement .viewmode:hover { color:#146da6;}
+.PmsManagement .selectedbooker{background-color:#146da6;}
+
+.PmsConfiguration .createPmsViewinput {position:relative;top:-2px;padding:5px;margin-right:5px;}
+.PmsConfiguration .paymentlinks input{width:49.2%!important;height:23px !important;}
+.PmsConfiguration .paymentlinks .webadressclass{width:42%!important;height:23px !important;}
+.PmsConfiguration #createproductinput{position:relative;top:-1px;padding:5px;}
+.PmsConfiguration .configentry select[gsname="locktype"]{width:172px;}
+.PmsConfiguration .configentry select[gsname="bookingProfile"]{width:125px;}
+.PmsConfiguration .pmsbutton.active{border-width: 2px;border-radius: 4px;padding: 1px 10px 1px 10px;}
+
+.PmsBookingCalendar .day.disabled{background-color:#fff;}
+.PmsBookingSummary .addAddonOnRoom {font-size: 18px;font-weight: bold;}
+
+@media only all and (max-width:800px){
+    .sticky{position:absolute !important;top:0px !important;}
+    .gs_language_selection{right:50px;margin-top:10px;}
+    .gscell_1.gsucell{height:50px;position:absolute;width:100%;}
+    .gscell_1.gsuicell img{width:80px;float:left;margin-left:10px;}
+    
+    .gsarea[area="header"] .mobilenavigatemenu .fa{visibility:hidden;position:relative;right:-50px;top:-32px;z-index:30;font-size:27px;user-select:none;color:#fff;float:right;}
+    .gsarea[area="header"] .mobilenavigatemenu .fa:before{visibility:visible;}
+    .gsarea[area="header"] .Menu{display:inline-block;width:100%;margin:0;padding:0;}
+    .gsarea[area="header"] .Menu .entry  div{line-height:34px; margin:0;padding:2px;letter-spacing:0;font-size:16px;text-align:center !important;}
+    .gsarea[area="header"] .Menu .entry .entries{top:0;}
+    .gsarea[area="header"] .Menu .menuentries .entry{padding:0;}
+    .gsarea[area="header"] .Menu .menuentries.horizontal{background-color:#fff;}
+    .gsarea[area="header"] .Menu .menuentries.horizontal .entries .entry.active a div{border-bottom:1px solid #f1f1f1 !important;color:#030338;}
+    .gsarea[area="header"] .Menu .entries .entries{border:0;box-shadow:0 0 0;}
+    .gsarea[area="header"] .Menu .entries .entries div{width:100%;}
+    
+    .gsarea[area="body"] {margin:50px 0 0 0;padding:0 4% 0 4%;min-height:350px;}
+    
+    .PmsBookingProductList .productentry .name{position:relative;background-color:rgba(0,0,0,0);}
+    .PmsBookingProductList .imgcontainer{top:15px;}
+    
+    .PmsBooking .inputblock,
+    .PmsBooking .pmsfront .check_available_button,
+    .PmsBooking .pmsfront .dates.start_date,
+    .PmsBooking .pmsfront .dates.end_date,
+    .PmsBooking .pmsfront .dates .dates_inner {width: 100%;}
+}

@@ -37,4 +37,4 @@
 .PmsCleaningNew .notclean { background-color: #35280d; }
 .PmsCleaningNew .inUse { background-color: purple; }
 .PmsCleaningNew .clean { background-color: green; }
-.PmsCleaningNew .notcleancheckedout { background-color: orange; }
+.PmsCleaningNew .notcleancheckedout { background-color: orange;cursor:pointer;  }

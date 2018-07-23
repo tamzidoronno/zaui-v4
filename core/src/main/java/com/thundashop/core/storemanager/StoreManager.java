@@ -190,6 +190,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                 store.additionalDomainNames.remove(store.webAddressPrimary);
             }
         }
+        if (store.webAddress.equalsIgnoreCase(domainName)) {
+            store.webAddress = "";
+        }
         storePool.saveStore(store);
         return store;
     }

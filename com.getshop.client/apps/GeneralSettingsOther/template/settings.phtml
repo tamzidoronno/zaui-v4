@@ -236,6 +236,28 @@ $timezone = $this->getApi()->getStoreManager()->getMyStore()->timeZone;
     <div style='text-align: right; margin-right: 10px; margin-top:10px;'>
         <span class='shop_button' gstype='submit'>Save</span>
     </div>
+    <br>
+    <div style="font-size:16px;text-align: left;">Web adresses added</div>
+    <div gstype="form" method="saveWebAdress">
+        <input type="txt" class="gsniceinput1" gsname="domain">
+        <span class="shop_button" gstype="submit">Add address</span>
+    </div>
+    
+    <div style="text-align: left">
+        <?php
+        $store = $this->getApi()->getStoreManager()->getMyStore();
+        if($store->webAddress) {
+            echo "<div><i class='fa fa-trash-o' gsclick='removeDomain' domain='".$store->webAddress."' style='cursor:pointer;'></i> " . $store->webAddress . "</div>";
+        }
+        if($store->webAddressPrimary) {
+            echo "<div><i class='fa fa-trash-o' gsclick='removeDomain' domain='".$store->webAddressPrimary."' style='cursor:pointer;'></i> " . $store->webAddressPrimary . "</div>";
+        }
+        foreach($store->additionalDomainNames as $domain) {
+            echo "<div><i class='fa fa-trash-o' gsclick='removeDomain' domain='".$domain."' style='cursor:pointer;'></i> " . $domain . "</div>";
+        }
+        ?>
+    </div>    
+   
 </div>
 
 <script>

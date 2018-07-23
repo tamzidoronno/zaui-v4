@@ -139,4 +139,27 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         return false;
     }
     
+    public void saveCard(String card, Integer expMonth, Integer expYear) {
+        if(storeManager.isProductMode()) {
+            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
+            Stripe.apiKey = stripeApp.getSetting("key");
+        } else {
+            Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
+        }
+
+        try {
+            // Create a Customer:
+            Map<String, Object> chargeParams = new HashMap<>();
+            chargeParams.put("source", "tok_mastercard");
+            chargeParams.put("email", "paying.user@example.com");
+            Card stripecard = new Card();
+            stripecard.setExpMonth(expMonth);
+            stripecard.setExpYear(expYear);
+            stripecard.setId(card);
+            //Somehow put this into the source and create the customer.
+            Customer customer = Customer.create(chargeParams);
+        }
+        
+    }
+    
 }

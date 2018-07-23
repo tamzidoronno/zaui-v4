@@ -15,7 +15,15 @@ class GeneralSettingsOther extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
     
+    public function removeDomain() {
+        $domain = $_POST['data']['domain'];
+        $this->getApi()->getStoreManager()->removeDomainName($domain);
+    }
     
+    public function saveWebAdress() {
+        $domain = $_POST['data']['domain'];
+        $this->getApi()->getStoreManager()->setPrimaryDomainName($domain);
+    }
     
     public function getStoreSettingsApp() {
         if (!$this->storeSettingsInstance) {

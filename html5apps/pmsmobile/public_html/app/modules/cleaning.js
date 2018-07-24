@@ -78,8 +78,8 @@ getshop.cleaningController = function ($scope, $state, $stateParams, $sce) {
     },
             
     $scope.printCheckedOut = function(guest) {
-        console.log(guest);
-        if(guest.end > time()) {
+        var d = new Date();
+        if(guest.end < d.getTime()) {
             return true;
         }
         return false;

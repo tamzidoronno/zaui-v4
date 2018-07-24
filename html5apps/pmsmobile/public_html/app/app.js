@@ -97,3 +97,29 @@ angular.module('app', ['ui.router'])
 })
 .value('$routerRootComponent', 'app')
 
+
+angular.module('app')
+ .run( function($rootScope, $location) {
+    $rootScope.$on("$locationChangeSuccess",function(event, next, current){
+        window.scroll(0,0);
+    });
+    
+    if ( localStorage.getItem("address") == null || localStorage.getItem("username") == null || localStorage.getItem("password") === "") {
+        $location.path( "/login" );
+    } else if ($location.$$path === "") {
+        $location.path( "/home" );
+    }
+ })
+ 
+ angular.module('app').factory('$exceptionHandler', 
+
+    function($injector) {
+
+    return function(exception, cause) {
+        var $state = $injector.get("$state");
+        console.error("ERROR DETECTED!!!!! HANDLED IN app.js and routed back to loginscreen");
+        console.error(cause);
+        console.error(exception);
+        $state.transitionTo('login');
+    };
+});

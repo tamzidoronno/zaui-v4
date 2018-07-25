@@ -4,10 +4,13 @@
  */
 package com.getshop.scope;
 
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.common.StoreComponent;
+import com.thundashop.core.storemanager.StorePool;
+import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GetShopSessionScope implements Scope {
-    
+    private StorePool storePool = null;
     private Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
     private Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
     private Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
@@ -69,6 +72,20 @@ public class GetShopSessionScope implements Scope {
         
         if (storeId == null) {
             throw new NullPointerException("There is scoped bean created without being in a context of a store, object: " + name);
+        }
+        
+        if (AppContext.appContext != null && storePool == null) {
+            storePool = AppContext.appContext.getBean(StorePool.class);
+        }
+        
+        if (storePool != null) {
+            if (name != null && name.equals("scopedTarget.userManager") && storePool != null) {
+                Store slaveStore = storePool.getStore(storeId);
+                Store masterStore = storePool.getStore(slaveStore.masterStoreId);
+                if (slaveStore.masterStoreId != null && !slaveStore.masterStoreId.isEmpty() && masterStore.acceptedSlaveIds.contains(storeId)) {
+                    storeId = slaveStore.masterStoreId;
+                }
+            }    
         }
         
         String nameWithStoreId = name + "_" + storeId;
@@ -192,5 +209,4 @@ public class GetShopSessionScope implements Scope {
             objectMap.remove(key);
         }
     }
-
 }

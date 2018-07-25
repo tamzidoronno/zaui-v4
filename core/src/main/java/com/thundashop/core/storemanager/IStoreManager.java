@@ -8,6 +8,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.storemanager.data.KeyData;
+import com.thundashop.core.storemanager.data.SlaveStore;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCriticalMessage;
@@ -210,4 +211,13 @@ public interface IStoreManager {
     
     @Administrator
     public void changeTimeZone(String timezone);
+    
+    @Administrator
+    public List<SlaveStore> getSlaves();
+    
+    @Administrator
+    public void setMasterStoreId(String masterStoreId);
+    
+    @Administrator
+    public void acceptSlave(String slaveStoreId);
 }

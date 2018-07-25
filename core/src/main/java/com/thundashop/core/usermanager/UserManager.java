@@ -670,6 +670,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public boolean isCaptain(String id) throws ErrorException {
+        System.out.println("Size: " + orderManager.getAllOrders().size() + " Session id: " + getSession().id + ", Manager: " + this);
+        
         User user = getUserById(id);
         if(user == null || user.fullName == null) {
             return false;
@@ -1029,10 +1031,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         user.prefix = trimIt(user.prefix);
         
         if(user.customerId == -1) {
-            user.customerId = counter.counter;
-            counter.counter++;
-            saveObject(counter);
-            saveObject(user);
+            // Has been added to synchronized function to avoid problem
+            // with multithreading.
+            setUserCounterAndUpdate(user);
         }
         
         if(user.company != null && user.company.size() == 1) {
@@ -1047,6 +1048,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         for(String userid : user.subUsers) {
             user.subUserList.add(getUserById(userid));
         }
+    }
+
+    private synchronized void setUserCounterAndUpdate(User user) throws ErrorException {
+        user.customerId = counter.counter;
+        counter.counter++;
+        saveObject(counter);
+        saveObject(user);
     }
 
     @Override
@@ -1992,7 +2000,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
     }
 
-    public Integer getNextAccountingId() {
+    public synchronized int setNextAccountingId(String userId, int idToUse) {
+        User user = getUserById(userId);
+        int next = getNextAccountingId();
+        if(next < idToUse) {
+            next = idToUse;
+        }
+        user.accountingId = next + "";
+        saveUser(user);
+        return next;
+    }
+    
+    private Integer getNextAccountingId() {
         int next = -1;
         List<User> users = userStoreCollections.get(storeId).getAllUsersNotFinalized();
         for(User user : users) {

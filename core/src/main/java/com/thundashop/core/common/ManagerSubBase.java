@@ -16,6 +16,7 @@ import com.thundashop.core.databasemanager.DatabaseRemote;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.GetShopModules;
+import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
@@ -44,9 +45,6 @@ public class ManagerSubBase {
     
     @Autowired
     protected Logger log; 
-    
-    @Autowired
-    private GetShopSessionScope scope;
     
     @Autowired
     public StoreApplicationPool applicationPool;
@@ -523,5 +521,9 @@ public class ManagerSubBase {
 
     public boolean shouldLoadData() {
         return true;
+    }
+    
+    public Store getStore() {
+        return storePool.getStore(storeId);
     }
 }

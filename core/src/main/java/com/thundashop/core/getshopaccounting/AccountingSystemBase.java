@@ -253,13 +253,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
         if(accountingId >= idToUse) {
             return accountingId;
         } else {
-            int next = userManager.getNextAccountingId();
-            if(next < idToUse) {
-                next = idToUse;
-            }
-            user.accountingId = next + "";
-            userManager.saveUser(user);
-            return next;
+            return userManager.setNextAccountingId(userId, idToUse);
         }
     }
     

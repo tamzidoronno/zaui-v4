@@ -17,6 +17,7 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.ModuleHomePages;
+import com.thundashop.core.storemanager.data.SlaveStore;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCriticalMessage;
@@ -37,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.annotation.PostConstruct;
@@ -596,5 +598,35 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         storePool.saveStore(store);
     }
 
-    
+    @Override
+    public List<SlaveStore> getSlaves() {
+        List<SlaveStore> retList = new ArrayList();
+
+        storePool.getAllStores()
+                .stream()
+                .filter(store -> store.masterStoreId.equals(storeId))
+                .forEach(slaveStoreObject -> {
+                    SlaveStore slaveStore = new SlaveStore();
+                    slaveStore.slaveStoreId = slaveStoreObject.id;
+                    slaveStore.accepted = getStore().acceptedSlaveIds.contains(slaveStoreObject.id);
+                    retList.add(slaveStore);
+                });
+        
+        return retList;
+    }
+
+    @Override
+    public void setMasterStoreId(String masterStoreId) {
+        Store store = getStore();
+        store.masterStoreId = masterStoreId;
+        storePool.saveStore(store);
+    }
+
+    @Override
+    public void acceptSlave(String slaveStoreId) {
+        Store store = getStore();
+        store.acceptedSlaveIds.removeIf(o -> o.equals(slaveStoreId));
+        store.acceptedSlaveIds.add(slaveStoreId);
+        storePool.saveStore(store);
+    }
 }

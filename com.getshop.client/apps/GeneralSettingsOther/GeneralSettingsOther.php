@@ -61,6 +61,19 @@ class GeneralSettingsOther extends \WebshopApplication implements \Application {
         $selected = $this->getCurrencyCode() == $currency ? "selected='true'" : "";
         echo $selected;
     }
+    
+    public function saveMasterStoreId() {
+        $storeId = $_POST['data']['masterstoreid'];
+        $this->getApi()->getStoreManager()->setMasterStoreId($storeId);
+    }
 
+    public function disconnectMaster() {
+        $storeId = $_POST['data']['masterstoreid'];
+        $this->getApi()->getStoreManager()->setMasterStoreId("");
+    }
+    
+    public function acceptSlave() {
+        $this->getApi()->getStoreManager()->acceptSlave($_POST['data']['slavestoreid']);
+    }
 }
 ?>

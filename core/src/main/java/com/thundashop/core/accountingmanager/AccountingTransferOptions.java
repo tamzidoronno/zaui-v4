@@ -56,13 +56,8 @@ class AccountingTransferOptions {
                 //DO NOT CREATE NEW IDS IN NON PRODUCTION MODE
                 return -100000;
             }
-            int next = managers.userManager.getNextAccountingId();
-            if(next < idToUse) {
-                next = idToUse;
-            }
-            user.accountingId = next + "";
-            managers.userManager.saveUser(user);
-            return next;
+            
+            return managers.userManager.setNextAccountingId(user.id, idToUse);
         }
     }
     

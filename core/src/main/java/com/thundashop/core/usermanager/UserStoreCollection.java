@@ -14,6 +14,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.UserCompanyHistory;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,9 +26,9 @@ public class UserStoreCollection {
     private Credentials credentials;
     private String storeId;
     private UserManager userManager;
-    private HashMap<String, Group> groups = new HashMap<String, Group>();
+    private ConcurrentHashMap<String, Group> groups = new ConcurrentHashMap<String, Group>();
     
-    private HashMap<String, User> users = new HashMap();
+    private ConcurrentHashMap<String, User> users = new ConcurrentHashMap();
 
     
     private List<User> finalize(List<User> users) {

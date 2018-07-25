@@ -2,6 +2,7 @@ package com.thundashop.core.storemanager.data;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.User;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -25,6 +26,8 @@ public class Store extends DataCommon {
     public boolean premium = false;
     public boolean mobileApp = false;
     public String favicon = "";
+    public String masterStoreId = "";
+    public List<String> acceptedSlaveIds = new ArrayList();
     
     /**
      * If this is set the it will default to this 

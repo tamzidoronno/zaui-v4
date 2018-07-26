@@ -55,6 +55,7 @@ Avg.<br>price;-;Gjsnitt<br>pris
 Back to page;-;Tilbake til siden
 Background color;-;Bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
+Best deal;-;Beste prisen
 Birth Date;-;Fødselsdato
 Body title;-;Tittel
 Book;-;Bestill
@@ -75,6 +76,7 @@ Can not create account, it already exists.;-;Kan ikke opprette konto, denne kont
 Cancel booking;-;Avbryt bookingen
 Cancel event;-;Kanseler event
 Cancel order;-;Kanselert ordre
+Cancel payment process;-;Kanseler betalingsprosessen
 Cancelation possibility;-;Mulighet for avbestilling
 Canceled;-;Kanselert
 Cards / Bambora;-;Kort / Bambora
@@ -171,6 +173,7 @@ Delete opening hours;-;Slett åpningstider
 Delete row;-;Slett raden
 Delete selected slide;-;Slett valgte slide
 Discount;-;Rabatt
+Discount code;-;Rabattkode
 Display numbers on dots;-;Vis tall på dottene
 Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
 Display this cell when logged on (it will always be visible for administrators);-;Vis denne cellen når du er logget på (den vil alltid være synlig for administratorer)
@@ -667,7 +670,6 @@ You have successfully paid with vipps.;-;Du har fullført betalingen med vipps.
 You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 You should recieve a payment message in your vipps application.;-;Du vil nå motta informasjon om hvordan du betaler via din vipps app.
-You will recieve the code for the room by sms and email after the payment has been completed.;-;Du vill motta en kode på sms og epost for rommet ditt når betalingen har blitt gjennomført.
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
 Your name;-;Ditt navn

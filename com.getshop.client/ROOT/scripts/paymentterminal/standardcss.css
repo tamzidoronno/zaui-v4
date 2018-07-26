@@ -1,5 +1,5 @@
 body { margin: 0px; }
-.paymentterminal { background-color:#9dd2ef; color:#fff; text-align: center; height: 100%; overflow: auto; }
+.paymentterminal { background-color:#9dd2ef; color:#fff; text-align: center; min-height:1000px; }
 .paymentterminal h1 { font-size : 80px; margin: 10px; }
 .paymentterminal .nextpagebutton {border: solid 1px #bbb; background-color:#4391dc; padding: 20px; font-size: 50px; width: 485px;  display:inline-block; margin-right: 10px; margin-left: 10px; cursor:pointer; color:#fff;}
 .paymentterminal .explaintext { color:#000; padding: 20px; }

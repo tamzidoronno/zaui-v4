@@ -8,4 +8,5 @@ package com.thundashop.core.pmsbookingprocess;
 public class StartPaymentProcessResult {
     public String name;
     public Double amount;
+    public String orderId;
 }

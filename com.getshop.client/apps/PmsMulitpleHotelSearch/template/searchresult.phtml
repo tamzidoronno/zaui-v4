@@ -1,0 +1,36 @@
+<div class="resulttempate gstemplate">
+    <div class='hotelname'></div>
+    <div class="resultimage"></div>
+    <div class="roomresultrowtemplate gstemplate">
+        <div class="name"></div>
+        <div class="availabilty"></div>
+        <div class="price"></div>
+    </div>
+    <div class='roomsarea'></div>
+    <div style='clear:both;'></div>
+    <div class='bestpricedealrow'>
+        <?php echo $this->__w("Best deal"); ?>
+        <span class='bestdealprice'></span>
+        <span class='continuebutton'><?php echo $this->__w("Continue"); ?></span>
+    </div>
+</div>
+
+<div class="resultarea"></div>
+
+<div style='clear:both;'></div>
+<style>
+    .gstemplate { display:none; }
+    .resulttempate { background-color:#fff; margin-top: 10px; box-sizing: border-box; width:calc(50% - 5px); float:left; box-sizing: border-box;}
+    .resulttempate.odd { margin-right: 5px; }
+    .resulttempate.even { margin-left: 5px; }
+    .resulttempate .hotelname {  border-bottom: solid 1px #bbb; text-align: center; box-sizing: border-box; font-size: 20px; font-weight: bold; padding-top: 10px; padding-bottom: 10px; }
+    .roomresultrowtemplate .name,
+    .roomresultrowtemplate .availabilty,
+    .roomresultrowtemplate .price { display:inline-block; float:left; padding: 5px; border-bottom: solid 1px #bbb; box-sizing: border-box; }
+    .resulttempate .continuebutton { float:right; cursor:pointer; font-weight: bold; color: blue; }
+    .roomresultrowtemplate .name { width: 80%; }
+    .roomresultrowtemplate .availabilty {width: 10%; }
+    .roomresultrowtemplate .price { width: 10%; }
+    .resulttempate .resultimage { height: 250px;background-size: cover; }
+    .bestpricedealrow { padding: 5px; box-sizing: border-box; font-size: 20px; }
+</style>

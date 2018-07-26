@@ -109,6 +109,14 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     </div>
     <div class='container'>
         <span class='option'>
+            <input type='checkbox' gsname='doNotRecommendBestPrice' <?php if($config->doNotRecommendBestPrice) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Do not recommend best possible price for the guest, give them a choice to choose themself.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
             <input type='text' class='gsniceinput1' gsname='numberOfDaysToSendPaymentLinkAheadOfStay' value='<?php echo $config->numberOfDaysToSendPaymentLinkAheadOfStay; ?>' style='width: 50px; text-align: center;'>
         </span>
         <span class='title'>

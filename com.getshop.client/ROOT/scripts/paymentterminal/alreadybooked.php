@@ -16,6 +16,9 @@ $cssStore = str_replace("-", "", $storeId);
 
 include("header.php");
 ?>
+<script>
+    getshop_manuallycancelledbutton = false;
+ </script>
 <body>
     <head>
         <link rel="stylesheet" href="https://s3.amazonaws.com/icomoon.io/135206/GetShopIcons/style.css?tyxklk">
@@ -63,6 +66,7 @@ include("header.php");
 
         <script>
             $('.cancelpaymentbutton').on('click', function() {
+                getshop_manuallycancelledbutton = true;
                 $.ajax('/scripts/bookingprocess.php?method=cancelPaymentProcess', {
                     dataType: 'jsonp',
                     data: {
@@ -70,14 +74,11 @@ include("header.php");
                             "terminalid" : localStorage.getItem("getshopterminalid")
                         }
                     },
-                    success : function(res) {
-                        window.location.href="paymentterminal.php";
-                    }
+                    success : function(res) {}
                     
                 });
                 
             });
-            
             $('.dopaymentbutton').on('click', function() {
                 $.ajax('/scripts/bookingprocess.php?method=startPaymentProcess', {
                     dataType: 'jsonp',
@@ -94,6 +95,7 @@ include("header.php");
                                 $('.noresultfound').fadeOut();
                             }, "5000");
                         } else {
+                            getshop_currentorderid = res.orderId;
                             $('.bookersname').html(res.name);
                             $('.terminalpaymentprocess').show();
                         }
@@ -202,8 +204,32 @@ getshop_WebSocketClient = {
 
 function getshop_displayVerifoneFeedBack(res) {
     
+    if(res.msg === "payment failed") {
+        if(getshop_manuallycancelledbutton) {
+            window.location.href="paymentterminal.php";
+            return;
+        }
+        alert('Payment failed, please try again!');
+        $('.dopaymentbutton').click();
+    }
+
     if(res.msg === "completed") {
+        var tosend = {
+            "orderId" :  getshop_currentorderid,
+            "terminalId" : localStorage.getItem("getshopterminalid")
+        }
+        
+        $.ajax(getshop_endpoint + '/scripts/bookingprocess.php?method=printReciept', {
+            dataType: 'jsonp',
+            data: {
+                "body": tosend,
+                "sessionid" : getshop_getsessionid()
+            },
+            success: function (res) {}
+        });
+        
         setTimeout(function() {
+            alert('Thank you for your payment, the room number and code for the room will be sent to you by sms and email');
             window.location.href="paymentterminal.php";
         }, "2000");
     } else {

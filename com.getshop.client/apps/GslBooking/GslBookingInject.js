@@ -1,5 +1,7 @@
 getshop_endpoint = "";
 getshop_domainname = "default";
+getshop_manuallycancelledbutton = false;
+getshop_hasstickyscroll = false;
 if(sessionStorage.getItem('getshop_endpoint')) {
     getshop_endpoint = sessionStorage.getItem('getshop_endpoint');
 }
@@ -420,6 +422,9 @@ function getshop_continueToSummary(e) {
 }
 
 function getshop_createSticky(sticky) {
+    if(getshop_hasstickyscroll) {
+        return;
+    }
     if (typeof sticky !== "undefined") {
         var pos = sticky.offset().top;
         var win = $(window);
@@ -431,11 +436,11 @@ function getshop_createSticky(sticky) {
             positionPaddingTop = parseInt(sessionStorage.getItem('getshop_topstickyposition'));
         }
 
-        $('.GslBooking #order-sticky').css('width', $('.GslBooking #order-sticky').outerWidth());
+        $('.GslBooking #order-sticky').css('width', $('.GslBooking .gslbookingHeader').outerWidth());
         if(!$('.GslBooking #order-sticky').is(':visible')) {
             return;
         }
-        
+        getshop_hasstickyscroll = true;
         win.on("scroll", function () {
             if(win.scrollTop() > pos && win.scrollTop() <= stopPos) {
                 sticky.css({
@@ -943,6 +948,7 @@ function getshop_updateOrderSummary(res, isSearch) {
         $('.noRoomSelected').hide();
         if(!isSearch) {
             $('.gsl_button.continue.active').effect( "shake" );
+            getshop_createSticky($("#order-sticky"));
         }
     }
 
@@ -1293,7 +1299,7 @@ function getshop_getsessionid() {
 
 /**
  * 
- * @returns {GetShopApiWebSocket|getshopclient}
+ * @returns {GetShopApiWebSocketEmbeddedBooking|getshopclient}
  */
 function getshop_getWebSocketClient() { 
     if(typeof(getshopclient) === "undefined") {
@@ -1378,7 +1384,8 @@ function getshop_searchRooms(e) {
             gslbookingcurresult = res;
             sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             $('.noroomsfound').hide();
-            if(!res || (parseInt(res.roomsSelected) === 0)) {
+            console.log(res);
+            if(!res || (parseInt(res.totalRooms) === 0)) {
                 $('.noroomsfound').show();
                 $('.GslBooking .hide').hide();
             } else {
@@ -1554,9 +1561,16 @@ function getshop_hideGuestSelectionBox(e) {
 function getshop_displayVerifoneFeedBack(res) {
 
     if(res.msg === "payment failed") {
-        setTimeout(function() {
+        if(getshop_manuallycancelledbutton) {
             window.location.href="paymentterminal.php";
-        }, "3000");
+            return;
+        }
+        alert('Payment failed, please try again!');
+        var client = getshop_getWebSocketClient();
+        client.PmsBookingProcess.chargeOrderWithVerifoneTerminal(getshop_domainname, getshop_currentorderid,getshop_terminalid);
+        getAddons.done(function(res) {
+            getshop_loadAddonsAndGuestSummaryByResult(res);
+        });
     }
 
     if(res.msg === "completed") {
@@ -1568,6 +1582,7 @@ function getshop_displayVerifoneFeedBack(res) {
         var client = getshop_getWebSocketClient();
         var printing = client.PmsBookingProcess.printReciept(getshop_domainname, tosend);
         setTimeout(function() {
+            alert('Thank you for your payment, the room number and code for the room will be sent to you by sms and email');
             window.location.href="paymentterminal.php";
         }, "2000");
     } else {
@@ -1603,12 +1618,10 @@ function getshop_tryChangingDate(e) {
 
 function getshop_cancelPayment() {
     try {
+        getshop_manuallycancelledbutton = true;
         var client = getshop_getWebSocketClient();
         var cancelling = client.PmsBookingProcess.cancelPaymentProcess(getshop_domainname, {
             "terminalid" : localStorage.getItem("getshopterminalid"),
-        });
-        cancelling.done(function(res) {
-            window.location.href="paymentterminal.php";
         });
     }catch(e) { getshop_handleException(e); }
 }
@@ -1696,6 +1709,7 @@ getshop_WebSocketClient = {
         getshop_WebSocketClient.listeners.push(listenObject);
    }
 };
+
 
 
 
@@ -2279,6 +2293,19 @@ GetShopApiWebSocketEmbeddedBooking.PmsBookingProcess.prototype = {
                 change : JSON.stringify(change),
             },
             method: 'changeNumberOnType',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'chargeOrderWithVerifoneTerminal' : function(multilevelname, orderId,terminalId, gs_silent) {
+        var data = {
+            args : {
+                orderId : JSON.stringify(orderId),
+                terminalId : JSON.stringify(terminalId),
+            },
+            method: 'chargeOrderWithVerifoneTerminal',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
         };

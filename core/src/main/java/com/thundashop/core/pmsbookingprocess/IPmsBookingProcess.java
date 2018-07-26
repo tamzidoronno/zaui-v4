@@ -35,4 +35,5 @@ public interface IPmsBookingProcess {
     public void printReciept(BookingPrintRecieptData data);
     public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data);
     public void cancelPaymentProcess(StartPaymentProcess data);
+    public void chargeOrderWithVerifoneTerminal(String orderId, String terminalId);
 }

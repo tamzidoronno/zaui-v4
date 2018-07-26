@@ -56,6 +56,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             printFeedBack("A payment is already being processed");
             return;
         }
+        printFeedBack("Starting payment process");
         Order order = orderManager.getOrderSecure(orderId);
         order.payment.paymentType = "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\\VerifoneTerminal";
         orderManager.saveOrder(order);
@@ -160,7 +161,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         VerifoneFeedback feedBack = new VerifoneFeedback();
         feedBack.msg = string;
         webSocketServer.sendMessage(feedBack);
-        orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);
+        if(orderToPay != null && orderToPay.payment != null) {
+            orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);
+        }
         logPrint("\t" + string);
         
     }

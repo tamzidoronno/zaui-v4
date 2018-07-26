@@ -4,13 +4,15 @@ include '../loader.php';
 
 $factory = IocContainer::getFactorySingelton();
 $isProdMode = $factory->getApi()->getStoreManager()->isProductMode();
-$endpoint = "https://www.getshop.com";
-$jsEnpoint = "https://www.getshop.com";
+$endpoint = "";
+$jsEnpoint = "http://" . $_SERVER['SERVER_NAME'];
+$scriptSource = "";
 $storeId = $factory->getApi()->getStoreManager()->getStoreId();
 $cssStore = str_replace("-", "", $storeId);
 if($isProdMode) {
     $endpoint = "";
-    $jsEnpoint = "http://" . $_SERVER['SERVER_NAME'] ."/";
+    $scriptSource = "https://www.getshop.com";
+    $jsEnpoint = "https://www.getshop.com";
 }
 include("header.php");
 echo "<script>";
@@ -25,12 +27,12 @@ echo "</script>";
     <head>
         <link rel="stylesheet" href="https://s3.amazonaws.com/icomoon.io/135206/GetShopIcons/style.css?tyxklk">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="<?php echo $endpoint; ?>/js/getshop.bookingembed.js"></script>
+        <script src="<?php echo $scriptSource; ?>/js/getshop.bookingembed.js"></script>
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="standardcss.css" rel="stylesheet">
         <link href="storecss/<?php echo $cssStore; ?>.css" rel="stylesheet">
-        <script src="<?php echo $endpoint; ?>/scripts/booking/bookingscripts.php"></script>
-        <link rel="stylesheet" href="<?php echo $endpoint; ?>/scripts/booking/bookingstyles.php">
+        <script src="<?php echo $scriptSource; ?>/scripts/booking/bookingscripts.php"></script>
+        <link rel="stylesheet" href="<?php echo $scriptSource; ?>/scripts/booking/bookingstyles.php">
     </head>
 
     <div class="paymentterminal">

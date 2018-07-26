@@ -1,0 +1,229 @@
+<label class="dosearchbox">
+    <?php echo $this->__w("Check in"); ?>
+    <input type="text" class="inputsearch start_date_input" value="<?php echo date("d.m.Y", time()); ?>">
+</label>
+<label class="dosearchbox">
+    <?php echo $this->__w("Check out"); ?>
+    <input type="text" class="inputsearch end_date_input" value="<?php echo date("d.m.Y", time()+86400); ?>">
+</label>
+<div class="dosearchbox">
+    <span class="guestselectionbox"><div class='guestselectiontext'><?php echo $this->__w("Room"); ?></div>
+        <div>
+            <span class="btn docounter minus"><i class="fa fa-minus"></i></span>
+            <input type="text" class="countselection" value="1" gsname='rooms'>
+            <span class="btn docounter"><i class="fa fa-plus"></i></span>
+        </div>
+    </span>
+    <span class="guestselectionbox"><div class='guestselectiontext'><?php echo $this->__w("Guests"); ?></div>
+        <div>
+            <span class="btn docounter minus"><i class="fa fa-minus"></i></span>
+            <input type="text" class="countselection" value="1" gsname='guests'>
+            <span class="btn docounter"><i class="fa fa-plus"></i></span>
+        </div>
+    </span>
+</div>
+<label class="dosearchbox">
+    <?php echo $this->__w("Discount code"); ?>
+    <input type="text" class="inputsearch" gsname='discountcode'>
+</label>
+<label class="dosearchbox lastone">
+    &nbsp;
+    <div class="dosearchbutton"><?php echo $this->__w("Search"); ?></div>
+</label>
+<div style="clear:both;"></div>
+
+<style>
+    .dosearchbox { width: 20%; display:inline-block;box-sizing: border-box; float:left; height: 70px; padding: 10px; background-color:#fff; border-right: solid 1px #bbb; font-size: 12px; }
+    .dosearchbox.lastone { border-right: solid 0px; }
+    .dosearchbox input.inputsearch { width:100%; box-sizing: border-box; font-size: 18px;    border: solid 1px #bbb;    padding: 6px;}
+    .countselection { width: 30px; font-size:18px; text-align: center; float:left; height: 27px; box-sizing: border-box; margin-right: 3px; margin-left: 3px; border-radius: 3px;}
+    .guestselectionbox { display:inline-block; width:50%; box-sizing: border-box; float:left; }
+    .guestselectiontext {padding-left: 25px; }
+    .guestselectionbox .btn { text-align: center; width: 25px; display: inline-block; float:left; line-height: 25px; cursor:pointer;}
+    .dosearchbutton {
+        cursor:pointer;
+        color:#fff;
+        text-align: center;
+        height: 35px;
+        line-height: 35px;
+        letter-spacing: 1px;
+        float: right;
+        background: #329ad6;
+        width: 100%;
+        border-radius: 0;
+        font-size: 18px;
+    }
+</style>
+
+<script>
+    
+function getshop_getsessionid() {
+    var check = sessionStorage.getItem("getshop_sessionid");
+    if(check) {
+        return check;
+    }
+    
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+         .toString(16)
+         .substring(1);
+    }
+    var sessid = s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+     
+    sessionStorage.setItem("getshop_sessionid", sessid);
+    return sessid;
+}
+
+    $('.dosearchbutton').on('click', function() {
+        var time = new Date().toLocaleTimeString('en-us');
+
+        var start = moment.utc($('.start_date_input').val(), "DD.MM.YYYY").local();
+        var startDate = start.format('MMM DD, YYYY ') + time;
+        
+        var end = moment.utc($('.end_date_input').val(), "DD.MM.YYYY").local();
+        var endDate = end.format('MMM DD, YYYY ') + time;
+        
+        var data = {
+            "start": startDate,
+            "end": endDate,
+            "rooms": parseInt($('[gsname="rooms"]').val()),
+            "adults": parseInt($('[gsname="guests"]').val()),
+            "children": 0,
+            "discountCode": parseInt($('[gsname="discountcode"]').val()),
+            "bookingId": ""
+        };
+        
+        var endpoints = [];
+        endpoints.push({
+            "name" : 'F2 harstad',
+            "endpoint" : "https://f2harstad.getshop.com/",
+            "image" : "https://f2hotel.no/wp-content/uploads/2018/02/F2-FASADE-07-gammelt-1024x777.jpg",
+            "nextpage" : "/?page=f2"
+        });
+        endpoints.push({
+            "name" : 'Kongsvinger budget hotel',
+            "endpoint" : "https://20356.getshop.com/",
+            "image" : "http://www.kongsvingerbudgethotel.no/displayImage.php?id=6132d5d9-68fb-43a1-b6d3-51b4fd7e3075",
+            "nextpage" : "/?page=kongsvinger"
+        });
+        $('.resultarea').html('');
+        gsglobaldooddrow=true;
+        for(var k in endpoints) {
+            var dataObject = endpoints[k];
+            $.ajax(dataObject.endpoint + '/scripts/bookingprocess.php?method=startBooking', {
+                dataType: 'jsonp',
+                internaldataobject : dataObject,
+                data: {
+                    "body": data,
+                    "sessionid" : getshop_getsessionid()
+                },
+                success: function (res) {
+                    var hotel = $('.resulttempate.gstemplate').clone();
+                    hotel.find('.hotelname').html(this.internaldataobject.name);
+                    hotel.removeClass('gstemplate');
+                    hotel.find('.resultimage').css('background-image','url("'+this.internaldataobject.image+'")');
+                    for(var roomId in res.rooms) {
+                        var room = res.rooms[roomId];
+                        var roomRow = hotel.find('.roomresultrowtemplate.gstemplate').clone();
+                        roomRow.removeClass('gstemplate');
+                        roomRow.find('.name').html(room.name);
+                        roomRow.find('.price').html(room.pricesByGuests[1]);
+                        roomRow.find('.availabilty').html(room.availableRooms);
+                        hotel.find('.roomsarea').append(roomRow);
+                        hotel.find('.continuebutton').attr('nextpage',this.internaldataobject.nextpage);
+                        var room = res.rooms[roomId];
+                    }
+                    hotel.find('.bestdealprice').html(res.totalAmount);
+                    if(!gsglobaldooddrow) {
+                        hotel.addClass('even');
+                        gsglobaldooddrow=true;
+                    } else {
+                        gsglobaldooddrow=false;
+                        hotel.addClass('odd');
+                    }
+                    $('.resultarea').append(hotel); 
+                   console.log(res);
+                }
+            });
+        }
+        
+    });
+    $(document).on('click','.continuebutton', function() {
+        var nextpage = $(this).attr('nextpage');
+        var rooms = parseInt($('[gsname="rooms"]').val());
+        var adults = parseInt($('[gsname="guests"]').val());
+        var children = 0;
+        var discountcode = $('[gsname="discountcode"]').val();
+        var end = $('.end_date_input').val().replace(".","-");
+        var start = $('.start_date_input').val().replace(".","-");
+        window.location.href=nextpage + "#start="+start+"&end="+end+"&rooms="+rooms+"&adults="+adults+"&children="+children+"&discount="+discountcode;
+    });
+    
+    $('.docounter').on('click', function() {
+        var counterbox = $(this).closest('.guestselectionbox').find('.countselection');
+        var counter = counterbox.val();
+        counter = parseInt(counter);
+        if($(this).hasClass('minus')) {
+            counter--;
+        } else {
+            counter++;
+        }
+        
+        if(counter <= 0) {
+            counter = 1;
+        }
+        if(counterbox.attr('gsname') === "rooms") {
+            var guests = parseInt($('[gsname="guests"]').val());
+            if(counter > guests) {
+                 $('[gsname="guests"]').val(counter);
+            }
+        }
+        if(counterbox.attr('gsname') === "guests") {
+            var rooms = parseInt($('[gsname="rooms"]').val());
+            if(counter < rooms) {
+                 $('[gsname="rooms"]').val(counter);
+            }
+        }
+        $(this).closest('.guestselectionbox').find('.countselection').val(counter);
+    });
+    
+    $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+           var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentEnd = $('.end_date_input').val();
+           var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+           var diff = endMoment.diff(date, "minutes");
+           if(diff <= 0) {
+               var day = moment(date).get('date')+1;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('.end_date_input').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }
+    });
+    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+           var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentEnd = $('.start_date_input').val();
+           var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+           var diff = endMoment.diff(date, "minutes");
+           if(diff >= 0) {
+               var day = moment(date).get('date')-1;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('.start_date_input').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }});
+</script>

@@ -1042,6 +1042,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         if(res.orderid != null && !res.orderid.isEmpty()) {
             chargeOrderWithVerifoneTerminal(res.orderid, input.terminalId + "");
         }
+        res.goToCompleted = !storeManager.isProductMode();
         
         return res;
     }
@@ -1077,9 +1078,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 if(order != null && order.status != Order.Status.PAYMENT_COMPLETED) {
                     amount = orderManager.getTotalAmount(order);
                     if(amount > 0) {
-                        chargeOrderWithVerifoneTerminal(order.id, data.terminalid);
                         orderIdToReturn = order.id;
-                        break;
+                        if(!storeManager.isProductMode()) {
+                            orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order));
+                            break;
+                        } else {
+                            chargeOrderWithVerifoneTerminal(order.id, data.terminalid);
+                            break;
+                        }
                     }
                 }
                 
@@ -1090,6 +1096,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 result.name = user.fullName;
                 result.amount = amount;
                 result.orderId = orderIdToReturn;
+                result.goToCompleted = !storeManager.isProductMode();
                 return result;
             }
         }

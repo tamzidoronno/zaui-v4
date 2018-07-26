@@ -9,4 +9,5 @@ public class StartPaymentProcessResult {
     public String name;
     public Double amount;
     public String orderId;
+    boolean goToCompleted = false;
 }

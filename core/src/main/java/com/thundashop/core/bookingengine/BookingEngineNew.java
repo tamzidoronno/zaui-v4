@@ -843,7 +843,14 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
 
     @Override
     public List<BookingItem> getAvailbleItems(Date start, Date end) {
-        throw new BookingEngineException("Not in use");
+        List<BookingItem> retList = new ArrayList();
+        
+        types.values().stream()
+                .forEach(type -> {
+                    retList.addAll(getAvailbleItems(type.id, start, end));
+                });
+        
+        return retList;
     }
     
     @Override

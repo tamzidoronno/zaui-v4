@@ -1421,7 +1421,11 @@ function getshop_searchRooms(e) {
                 roomBox.attr('index', k);
 
                 var translation = getshop_getBookingTranslations();
-
+                var currency = getshop_bookingconfiguration.currencyText;
+                console.log(getshop_bookingconfiguration);
+                if(!currency) {
+                    currency = "NOK";
+                }
                 for (var guest in room.pricesByGuests) {
                     var numberofrooms = '';
                     var index = 1;
@@ -1432,7 +1436,7 @@ function getshop_searchRooms(e) {
                     for (var i = 1; i <= room.availableRooms; i++) {
                         var price = room.pricesByGuests[guest] * i;
                         price = parseInt(price);
-                        numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; (NOK ' + price + ')</option>';
+                        numberofrooms += '<option value="' + i + '" data-price="' + price + '">' + i + '&nbsp;&nbsp; ('+currency+' ' + price + ')</option>';
                     }
 
                     roomBox.find('.guestselection').show();

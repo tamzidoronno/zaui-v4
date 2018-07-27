@@ -105,7 +105,7 @@ include("header.php");
                             getshop_currentorderid = res.orderId;
                             $('.bookersname').html(res.name);
                             $('.terminalpaymentprocess').show();
-                            if(res.goToCompleted) {
+                            if(res.goToCompleted === true) {
                                 var toSend = {};
                                 res.msg = "completed";
                                 getshop_displayVerifoneFeedBack(res);

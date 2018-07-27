@@ -864,7 +864,7 @@ function getshop_startPaymentTerminalProcess() {
     var completeForTerminal =  client.PmsBookingProcess.completeBookingForTerminal(getshop_domainname, { "terminalId" : getshop_terminalid });
     completeForTerminal.done(function(res) {
         getshop_currentorderid = res.orderid;
-        if(res.goToCompleted) {
+        if(res.goToCompleted === true) {
             var toSend = {};
             res.msg = "completed";
             getshop_displayVerifoneFeedBack(res);

@@ -11,7 +11,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public $bookingEngineBooking = null;
     
     public $selectedRoom = null;
-    
+    public $avoidGroupedBookingOptions = false;
+
     function __construct() {
         $this->formatter = new PmsSearchBookingColumnFormatters($this);
     }
@@ -121,9 +122,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     
     public function isGroupBookingView() {
         if (isset($this->page)) {
-            return $this->page->getId() == "groupbooking";
+            return ($this->page->getId() == "groupbooking") && !$this->avoidGroupedBookingOptions;
         }
-        return $this->getPage()->getId() == "groupbooking";
+        return ($this->getPage()->getId() == "groupbooking") && !$this->avoidGroupedBookingOptions;
     }
 
     
@@ -132,7 +133,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
 
     public function PmsManager_getSimpleRooms() {
+        
         $roomView = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $roomView->removeGroupView();
         $roomView->setRoomId($_POST['data']['id']);
         $roomView->renderApplication(true, $this);
         

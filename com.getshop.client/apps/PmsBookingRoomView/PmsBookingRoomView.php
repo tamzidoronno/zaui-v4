@@ -1567,7 +1567,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function toggleListGroupRooms() {
-        $_SESSION['pmsroomviewlistgrouproom'] = $_POST['data']['roomid'];
+        if($_SESSION['pmsroomviewlistgrouproom']) {
+            $_SESSION['pmsroomviewlistgrouproom'] = false;
+        } else {
+            $_SESSION['pmsroomviewlistgrouproom'] = $_POST['data']['roomid'];
+        }
     }
     
     public function listGroupRooms() {

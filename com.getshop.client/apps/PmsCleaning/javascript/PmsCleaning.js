@@ -1,6 +1,7 @@
 app.PmsCleaning = {
     init : function() {
-        $(document).on('click', '.PmsCleaningNew .notcleancheckedout', app.PmsCleaning.confirmCleaning);
+        $(document).on('click', '.PmsCleaning .roomNotReady', app.PmsCleaning.confirmCleaning);
+        $(document).on('click', '.PmsCleaning .posponeuntiltomorrow', app.PmsCleaning.posponeuntiltomorrow);
    },
    posponeuntiltomorrow: function() {
        var confirmed = confirm("Are you sure you want to pospone the cleaning until tomorrow? This will make the room reappera tomorrow in the cleaning table.");

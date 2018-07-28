@@ -1,0 +1,66 @@
+
+<div gstype='form' method="updateBooking" class="bookingoverview_content_row">
+    <input type='hidden' gsname='roomId' value='<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>'/>
+    <div class="menuarea" roomId="<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>" bookingEngineId="<? echo $bookingEngineBooking->id; ?>">
+        <div class="menuentry <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'><i class="fa fa-info"></i> <span><? echo $this->__f("Guests"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" clearTabContent="true" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay") . $stayPrice; ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . " " . $addonsPriceToDisplay; ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('accesscode'); ?>" tab='accesscode'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('accesslog'); ?>" tab='accesslog'><i class="fa fa-key"></i> <span><? echo $this->__f("Access log"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa gsicon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
+        <div style='display:none;' class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
+        <div style='display:none;' class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
+        <div class="menuentry <? echo $this->isTabActive('ticket'); ?>" needAllSaved='true' tab='ticket'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Tickets"); ?></span></div>
+    </div>
+    
+    <div class="workarea">
+ 
+        <div class="guestinformation <? echo $this->isTabActive('bookinginformation'); ?>" tab='bookinginformation'>
+            <?
+            $this->includefile("bookinginformation");
+            ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('addons'); ?>" tab='addons'>
+            <?php $this->printArea("addons"); ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('accesscode'); ?> accesscode" tab='accesscode'>
+            <?php $this->printArea("accesscode"); ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('accesslog'); ?> accesslog" tab='accesslog'>
+            <?php $this->printArea("accesslog"); ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('messages'); ?>" tab='messages'>
+            <?php $this->printArea("messages"); ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'>
+            <?php $this->printArea("cleaning"); ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('orderstab'); ?>" tab='orderstab'>
+            <?php $this->printArea("orderstab"); ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('ticket'); ?>" tab='ticket'>
+            <?php $this->printArea("ticket"); ?>
+        </div>
+        
+        <div class="guestinformation <? echo $this->isTabActive('log'); ?>" tab='log'>
+            <?
+            if ($_SESSION['currentSubMenu'] == "log") {
+                $this->printArea("log");
+            }
+            ?>
+        </div>
+        
+        <div class="stayinformation PmsAvailability <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'>
+            <br>
+            <?php $this->printArea("stayinformation"); ?>
+        </div>
+    </div>
+</div>

@@ -5,4 +5,5 @@ public class BookingResult {
     int continuetopayment;
     int success;
     String orderid;
+    boolean goToCompleted = false;
 }

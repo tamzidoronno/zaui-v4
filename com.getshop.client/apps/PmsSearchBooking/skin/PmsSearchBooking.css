@@ -16,7 +16,6 @@
 .PmsSearchBooking .pmscheckoutforrooms { box-sizing: border-box; text-align:left; border: solid 1px; background-color:#fff; padding: 5px; position:relative; display:none; z-index: 2; width:100%; }
 .GetShopModuleTable .quickmenuoption {  
     position: absolute;
-    right: 0px;
     border: solid 1px;
     padding: 2px;
     background-color: #fff;

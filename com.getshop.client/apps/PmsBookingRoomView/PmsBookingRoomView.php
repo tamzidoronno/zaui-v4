@@ -1566,5 +1566,27 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $this->defaultPrefix;
     }
 
+    public function toggleListGroupRooms() {
+        if($_SESSION['pmsroomviewlistgrouproom']) {
+            $_SESSION['pmsroomviewlistgrouproom'] = false;
+        } else {
+            $_SESSION['pmsroomviewlistgrouproom'] = $_POST['data']['roomid'];
+        }
+    }
+    
+    public function listGroupRooms() {
+        if(isset($_SESSION['pmsroomviewlistgrouproom'])) {
+            return $_SESSION['pmsroomviewlistgrouproom'];
+        }
+        return false;
+    }
+
+    public function removeGroupView() {
+        if($_SESSION['pmsroomviewlistgrouproom'] == $_POST['data']['roomId']) {
+            return;
+        }
+        $_SESSION['pmsroomviewlistgrouproom'] = false;
+    }
+
 }
 ?>

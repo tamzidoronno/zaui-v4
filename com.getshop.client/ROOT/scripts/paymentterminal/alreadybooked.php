@@ -3,7 +3,7 @@ chdir("../../");
 include '../loader.php';
 
 $factory = IocContainer::getFactorySingelton();
-$isProdMode = $factory->isProductionMode();
+$isProdMode = $factory->getApi()->getStoreManager()->isProductMode();
 $endpoint = "https://www.getshop.com";
 $jsEnpoint = "https://www.getshop.com";
 if(!$isProdMode) {
@@ -18,6 +18,13 @@ include("header.php");
 ?>
 <script>
     getshop_manuallycancelledbutton = false;
+    <?php
+    if($isProdMode) {
+        echo "gsisdevmode=false;";
+    } else {
+        echo "gsisdevmode=true;";
+    }
+    ?>
  </script>
 <body>
     <head>
@@ -98,6 +105,12 @@ include("header.php");
                             getshop_currentorderid = res.orderId;
                             $('.bookersname').html(res.name);
                             $('.terminalpaymentprocess').show();
+                            if(res.goToCompleted === true) {
+                                var toSend = {};
+                                res.msg = "completed";
+                                getshop_displayVerifoneFeedBack(res);
+                                alert('sending to completed');
+                            }
                         }
                     }
                     
@@ -177,7 +190,11 @@ getshop_WebSocketClient = {
             if(getshop_endpoint) {
                 endpoint = getshop_endpoint;
             }
-            this.socket = new WebSocket("ws://"+endpoint+":31330/");
+            if(gsisdevmode == true) {
+                this.socket = new WebSocket("ws://"+endpoint+":31330/");
+            } else {
+                this.socket = new WebSocket("wss://websocket.getshop.com/");
+            }
             this.socket.onopen = getshop_WebSocketClient.connected;
             this.socket.onclose = function() {
                 getshop_WebSocketClient.disconnected();

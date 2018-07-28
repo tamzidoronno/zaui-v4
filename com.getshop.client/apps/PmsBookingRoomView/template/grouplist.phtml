@@ -1,0 +1,13 @@
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$booking = $this->getPmsBooking();
+
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->includeDeleted = true;
+$filter->bookingId = $booking->id;
+$roomView = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+$roomView->avoidGroupedBookingOptions = true;
+$roomView->setCurrentFilter($filter);
+$roomView->renderApplication(true,$this);
+
+?>

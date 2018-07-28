@@ -32,10 +32,15 @@ $appInstance = $page->getAppInstance($_POST['core']['instanceid']);
 if (isset($_POST['core']['appid2']) && $_POST['core']['appid2']) {
     $appInstance = $page->getExtraApplication($_POST['core']['appid2']);
 }
+if (isset($_POST['core']['appid2']) && $_POST['core']['appid2']) {
+    $appInstance = $page->getExtraApplication($_POST['core']['appid2']);
+}
 
 if (isset($_POST['event']) && $_POST['event']) {
     $appInstance->{$_POST['event']}();
 }
+
+$appInstance->page = $page;
 
 if (isset($_POST['synchron'])) {
     die();

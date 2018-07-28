@@ -31,6 +31,57 @@ if (typeof(thundashop) == "undefined") {
     thundashop = {}
 }
 
+thundashop.Namespace.Register('thundashop.common');
+
+thundashop.common = {
+    
+    init: function() {
+        $(document).on('click', '#messagebox .okbutton', thundashop.common.closeAlert)
+    },
+    
+    closeModal: function() {
+//        getshop.hideOverlay();
+    },
+    
+    Alert: function(title, message, error, autoHide) {
+        $("#messagebox").find('.title').html(title);
+        if (typeof(message) === "undefined")
+            message = "";
+
+        $("#messagebox").removeClass('error');
+        if (error === true)
+            $("#messagebox").addClass('error');
+
+        $("#messagebox").find('.description').html(message);
+        $("#messagebox").show();
+
+        if (!error)
+            $("#messagebox").delay(2000).fadeOut(200);
+
+        if (autoHide) 
+            $("#messagebox").delay(autoHide).fadeOut(200);
+    },
+    
+    goToPageLink: function(link, callback) {
+        var url=location.href;
+        var urlFilename = url.substring(url.lastIndexOf('/')+1, url.indexOf('?'));
+        
+        debugger;
+        if (link[0] == "/") {
+            link = link.substring(1);
+        }
+        
+        document.location = "/"+urlFilename+link;
+    },
+    
+    closeAlert: function() {
+        $('#messagebox').fadeOut(200);
+    }
+
+}
+
+thundashop.common.init();
+
 thundashop.base64 = {
 
     // private property
@@ -245,7 +296,7 @@ thundashop.Ajax = {
 
     
     closeModal: function() {
-        thundashop.common.closeModal();
+        alert("Not yet implemented");
     },
     
     handleImprovedErrorHandling: function(errorObject) {
@@ -265,7 +316,7 @@ thundashop.Ajax = {
     
     reloadApp: function(appInstanceId, firstLoad) {
         var app = $('.app[appsettingsid="'+appInstanceId+'"]');
-        app.html("<center><i class='fa fa-spinner fa-spin'></i></center>");
+        $('.gs_loading_spinner').addClass('active');    
         thundashop.Ajax.simplePost(app, "", {}, firstLoad);
     },
     
@@ -282,7 +333,7 @@ thundashop.Ajax = {
     },
     
     openModal: function(modalName, data) {
-        getshop.showOverlay();
+        getshop.showOverlay("1");
         
         var event = {};
         event.application = "";
@@ -293,9 +344,9 @@ thundashop.Ajax = {
         event.synchron = true;
 //        
         thundashop.Ajax.post(event, function(res) {
-            $('.gsoverlay .gsoverlayinner').attr('pageid', modalName);
-            $('.gsoverlay .gsoverlayinner').html(res);
-            $('.gsoverlay .gsoverlayinner .app[appid]').each(function() {
+            $('.gsoverlay1 .gsoverlayinner').attr('pageid', modalName);
+            $('.gsoverlay1 .gsoverlayinner .content').html(res);
+            $('.gsoverlay1 .gsoverlayinner .app[appid]').each(function() {
                 thundashop.Ajax.reloadApp($(this).attr('appsettingsid'), true);
             });
         });
@@ -444,6 +495,16 @@ thundashop.Ajax = {
         $('.gserrorfield').hide();
         $('.gserrorinput').removeClass('gserrorinput');
         
+        if($('.gsoverlay2 .gsoverlayinner').is(':visible') && (typeof(callback) === "undefined" || callback === undefined || callback === null)) {
+            data['synchron'] = true;
+            callback = thundashop.framework.reloadOverLayType2;
+        }
+        
+        if($('.gsoverlay1 .gsoverlayinner').is(':visible') && (typeof(callback) === "undefined" || callback === undefined || callback === null) && !data.firstLoad) {
+            data['synchron'] = true;
+            callback = thundashop.framework.reloadOverLayType1;
+        }
+        
         var file = "data.php";
         var uploadcallback = false;
         if (xtra !== undefined) {
@@ -453,8 +514,13 @@ thundashop.Ajax = {
                 uploadcallback = xtra.uploadcallback;
         }
 
-        if (!(typeof(dontShowLoaderBox) !== "undefined" && dontShowLoaderBox === true))
+        if (!(typeof(dontShowLoaderBox) !== "undefined" && dontShowLoaderBox === true)) {
             $('#loaderbox').show();
+            
+            if (typeof(data.firstLoad) === "undefined" || !data.firstLoad) {
+                $('.gs_body_inner .gs_loading_spinner').addClass('active');
+            }
+        }
 
         if (data['core']['fromappid']) {
             data['synchron'] = true;
@@ -562,8 +628,8 @@ thundashop.Ajax = {
             retevent.core.fromappid = $(fromDomElement).closest('.app').attr('fromapplication');
             retevent.core.closestappwithinstance = $(fromDomElement).closest('.app[hasinstance="yes"]').attr('appsettingsid');
             
-            if ($('.gsoverlay .gsoverlayinner').is(':visible') && $('.gsoverlay .gsoverlayinner').attr('pageid')) {
-                retevent.core.pageid = $('.gsoverlay .gsoverlayinner').attr('pageid');
+            if ($('.gsoverlay1 .gsoverlayinner').is(':visible') && $('.gsoverlay1 .gsoverlayinner').attr('pageid')) {
+                retevent.core.pageid = $('.gsoverlay1 .gsoverlayinner').attr('pageid');
             } else {
                 retevent.core.pageid = $('html').attr('pageid');
             }
@@ -600,8 +666,11 @@ thundashop.Ajax = {
             }
         }
         
-        if (event['core']['fromappid']) {
+        $('.gs_loading_spinner').removeClass('active');
+        
+        if (event.core.closestappwithinstance && !event.core.instanceid && $('.gsoverlay1 .gsoverlayinner').is(':visible') ) {
             thundashop.Ajax.reloadApp(event.core.closestappwithinstance);
+            
         }
     },
     navigateWithJavascript: function(scope) {
@@ -683,7 +752,8 @@ app = {};
 
 getshop = {
     init: function() {
-        $(document).on('click', '.gsoverlay', getshop.hideOverlay);
+        $(document).on('click', '.gsoverlay1', getshop.hideOverlay);
+        $(document).on('click', '.gsoverlay2', getshop.hideOverlay);
     },
     
     documentLoaded : function() {
@@ -696,14 +766,27 @@ getshop = {
         });
     },
     
-    showOverlay: function() {
-        $('.gsoverlay').addClass('active');
-        $('.gsoverlay .gsoverlayinner').html('<div style="padding: 30px; text-align: center;"><i style="font-size: 30px;" class="fa fa-spin fa-spinner"></i></div>');
+    showOverlay: function(overlaytype) {
+        $('.gsoverlay' + overlaytype).addClass('active');
+        $('.gsoverlay'+overlaytype+' .gsoverlayinner .content').html('<div style="padding: 30px; text-align: center;"><i style="font-size: 30px;" class="fa fa-spin fa-spinner"></i></div>');
     },
     
     hideOverlay: function(target) {
-        if ($(target.target).hasClass('gsoverlay')) {
-            $('.gsoverlay').removeClass('active');
+        if ($(target.target).hasClass('gsoverlay1')) {
+            $('.gsoverlay1').removeClass('active');
+            var closingPage = $('.gsoverlay1 .gsoverlayinner .gs_page_area').attr('gs_page_content_id');
+            
+            if (closingPage) {
+                var event = thundashop.Ajax.createEvent(null, "gs_close_modal", null, {modalname: closingPage});
+                thundashop.Ajax.post(event);
+            }
+            
+            $('.gsoverlay1 .gsoverlayinner .content').html("");
+            getshop.loadApps();
+        }
+        
+        if ($(target.target).hasClass('gsoverlay2')) {
+            $('.gsoverlay2').removeClass('active');
             var closingPage = $('.gsoverlay .gsoverlayinner .gs_page_area').attr('gs_page_content_id');
             
             if (closingPage) {
@@ -711,7 +794,7 @@ getshop = {
                 thundashop.Ajax.post(event);
             }
             
-            $('.gsoverlay .gsoverlayinner').html("");
+            $('.gsoverlay2 .gsoverlayinner .content').html("");
             getshop.loadApps();
         }
     }
@@ -840,9 +923,9 @@ getshop.Table = {
         var event = thundashop.Ajax.createEvent(null, table.attr('method'), btn, data);
         event['synchron'] = true;
         latestOverLayLoadingEvent = event;
-        getshop.showOverlay();
+        getshop.showOverlay("2");
         thundashop.Ajax.post(event, function (res) {
-            $('.gsoverlay .gsoverlayinner').html(res);
+            $('.gsoverlay2 .gsoverlayinner .content').html(res);
         });
     }
 }
@@ -1029,6 +1112,24 @@ thundashop.framework = {
         }
 
         return null;
+    },
+    
+    reloadOverLayType2: function() {
+        if (typeof(latestOverLayLoadingEvent) === "undefined") {
+            return;
+        }
+        
+        $('.gs_loading_spinner').addClass('active');
+        
+        thundashop.Ajax.post(latestOverLayLoadingEvent, function(res) {
+            $('.gsoverlay2 .gsoverlayinner .content').html(res);
+        });
+    },
+    
+    reloadOverLayType1: function() {
+        $('.gsoverlay1 .gsoverlayinner .app').each(function() {
+            thundashop.Ajax.reloadApp($(this).attr('appsettingsid'), true);
+        });
     }
 }
 

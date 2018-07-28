@@ -99,6 +99,23 @@ class PageFactory {
         $row->addColumn("c9a0671d-2eef-4a8e-8e69-523bcfc263e1", "1014ab15-00d1-4d7d-b1a1-aa0f58f34ead");
         $this->pages['e03b19de-d1bf-4d1c-ac40-8c100ef53366'] = $page;   
         
+        // GROUP BOOKING
+        $page = new \ModulePage("groupbooking");
+        $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
+        $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
+        $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+        $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe'); 
+        $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73'); 
+        
+        $page->createRow()->addText('Group booking');
+        
+        $row = $page->createRow();
+        $row->addColumn("cbcf3e53-c035-43c2-a1ca-c267b4a8180f", "7406cbfc-b046-4b3e-bc5b-b41fd54088cc");
+        $this->pages['groupbooking'] = $page;   
+                
         // CRM
         $page = new \ModulePage("4f66aad0-08a0-466c-9b4c-71337c1e00b7");
         
@@ -218,6 +235,9 @@ class PageFactory {
      * @return \ModulePage
      */
     public function getPage($pageId) {
+        if (!$pageId) {
+            $pageId = "home";
+        }
         $page = $this->pages[$pageId];
         $page->createApplicationInstances();
         $page->setModuleId();

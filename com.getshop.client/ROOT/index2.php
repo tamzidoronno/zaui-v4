@@ -2,7 +2,7 @@
 include '../loader.php';
 session_start();
 $pageFactory = new \PageFactory();
-$page = $pageFactory->getPage($_GET['page']);
+$page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="<? echo \PageFactory::getGetShopModule(); ?>">
@@ -21,18 +21,50 @@ $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
         <script type="text/javascript" src="js/jquery-1.9.0.js"></script>
         <script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
+        <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>
     
     <body>
-        <div class="gsoverlay <? echo $showingModal; ?>">
+        
+        <div id="loaderbox" style="display: none; position: absolute; z-index: 9999999999999999;"><img src="skin/default/images/loader.gif"/></div>
+        <script>
+            $(document).bind('mousemove', function(e) {
+                $('#loaderbox').css({
+                    left: e.pageX + 15,
+                    top: e.pageY + 15
+                });
+            });
+        </script>
+        
+        <div id="messagebox" class="ok">
+            <div class="inner">
+                <div class="title"></div>
+                <div class="icon inline"></div>
+                <div class="description inline"></div>
+                <div class="okbutton"></div>
+            </div>
+        </div>
+        
+        <div class="gsoverlay1 <? echo $showingModal; ?>">
+            
             <div class="gsoverlayinner">
-                <? if ($showingModal) {
-                    $modalPage = $pageFactory->getPage($_SESSION['gs_currently_showing_modal']);
-                    $modalPage->renderPage(); 
-                }
-                ?>
+                <div class='gs_loading_spinner'><i class='fa fa-spin'></i></div>
+                <div class='content'>
+                    <? if ($showingModal) {
+                        $modalPage = $pageFactory->getPage($_SESSION['gs_currently_showing_modal']);
+                        $modalPage->renderPage(); 
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        
+        <div class="gsoverlay2">
+            <div class="gsoverlayinner">
+                <div class='gs_loading_spinner'><i class='fa fa-spin'></i></div>
+                <div class='content'></div>
             </div>
         </div>
         

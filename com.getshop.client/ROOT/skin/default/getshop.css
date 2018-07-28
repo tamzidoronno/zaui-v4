@@ -153,7 +153,8 @@ a {
 .gs_page_col.col3 { width: 33%; }
 .gs_page_col.col4 { width: 25%; }
 
-.gsoverlay {
+.gsoverlay2,
+.gsoverlay1 {
     display: none;
     position: fixed;
     top: 0px;
@@ -164,15 +165,35 @@ a {
     z-index: 2;
 }
 
-.gsoverlay.active {
+.gsoverlay2.active,
+.gsoverlay1.active {
     display: block;
 }
 
-.gsoverlay .gsoverlayinner {
+.gsoverlay2 .gsoverlayinner,
+.gsoverlay1 .gsoverlayinner {
     background-color: #FFF;
     margin: 0px auto;
     width: 70%;
     margin-top: 40px;
+    position: relative;
+}
+
+.gsoverlay2 .gs_loading_spinner,
+.gsoverlay1 .gs_loading_spinner {
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    z-index: 11;
+    display: none;
+}
+
+.gsoverlay2 .gs_loading_spinner.active,
+.gsoverlay1 .gs_loading_spinner.active {
+    display: block;
 }
 
 .app .mask,
@@ -229,4 +250,74 @@ a {
     vertical-align: top;
     box-sizing: border-box;
     padding-left: 50px;
+}
+
+#messagebox { 
+    width: 613px; 
+    height: 186px; 
+    position: fixed;
+    margin: 0 auto;
+    z-index: 100000000;
+    left: 50%; margin: 0 0 0 -306px; 
+    top: 50px;
+}
+#messagebox.ok { 
+    background-image: url('/skin/default/images/messageboxbackground.png'); 
+}
+
+#messagebox.error { 
+    background-image: url('/skin/default/images/messageboxbackground-error.png'); 
+}
+
+#messagebox {
+    display: none;
+}
+
+#messagebox .inner {
+    position: relative;
+    width: 613px;
+    height: 186px;
+}
+
+#messagebox .icon { 
+    background-image: url('/skin/default/images/checkicon.png'); 
+    width: 120px;
+    height: 120px;
+    margin-left: 30px;
+    margin-top: 0px;
+}
+
+#messagebox.error .icon { 
+    background-image: url('/skin/default/images/warning.png'); 
+}
+
+#messagebox.ok .okbutton { 
+    display: none;
+}
+
+#messagebox.error .okbutton { 
+    display: block;    
+    position: absolute;
+    right: 22px;
+    bottom: 44px;
+    background-image: url('/skin/default/images/grey-ok-button.png'); 
+    width: 106px;
+    height: 35px;
+    cursor: pointer;
+}
+
+#messagebox .description { 
+    width: 420px;
+    margin-left: 10px;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+#messagebox .title {
+    margin-top: 23px;
+    margin-left: 22px;
+    width: 565px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
 }

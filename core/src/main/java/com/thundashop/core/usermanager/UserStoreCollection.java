@@ -127,6 +127,10 @@ public class UserStoreCollection {
     }
 
     public User getUser(String userId) throws ErrorException {
+        if (userId == null) {
+            return null;
+        }
+        
         return finalize(users.get(userId));
     }
 

@@ -3,11 +3,13 @@ package com.thundashop.core.arx;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.core.apacmanager.ApacManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopLockCode;
 import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.getshoplock.GetShopLockManager;
+import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -37,11 +39,31 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     @Autowired
     BookingEngine bookingEngine;
     
+    @Autowired
+    private GetShopLockSystemManager apacManager;
+    
     private List<Door> doorList = new ArrayList();
     private Date lastClosed;
     
     @Override
     public List<Door> getAllDoors() throws Exception {
+        if (apacManager.isActivated()) {
+            List<Door> doorsToRet = new ArrayList();
+            apacManager.getLockServers()
+                    .stream()
+                    .forEach(server -> {
+                        server.getLocks().stream()
+                                .forEach(lock -> {
+                                    Door door = new Door();
+                                    door.name = lock.name;
+                                    door.serverSource = server.getId();
+                                    door.externalId = lock.id;
+                                    doorsToRet.add(door);
+                                });
+                    });
+            return doorsToRet;
+        }
+        
         List<Door> cachedDoors = getCachedDoors();
         if(!cachedDoors.isEmpty()) {
             return cachedDoors;
@@ -68,7 +90,14 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
 
     @Override
     public void doorAction(String externalId, String state) throws Exception {
-        getDoorManager().doorAction(externalId, state);
+        if (apacManager.isActivated()) {
+            if (state.equals("forceOpenOn"))
+                apacManager.openLock(externalId);
+            else
+                apacManager.closeLock(externalId);
+        } else {
+            getDoorManager().doorAction(externalId, state);
+        }
     }
 
     @Override

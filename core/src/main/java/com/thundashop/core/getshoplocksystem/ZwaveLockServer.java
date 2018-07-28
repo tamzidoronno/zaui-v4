@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.thundashop.core.common.ExcludeFromJson;
 import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.getshoplock.GetshopLockCom;
 import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveJobPriotizer;
 import java.util.ArrayList;
 import java.util.Date;
@@ -342,5 +343,22 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     public void saveLocstarLock(LocstarLock lock) {
         locks.put(lock.id, lock);
     }
+
+    @Override
+    public void openLock(String lockId) {
+        Lock lock = getLock(lockId);
+        if (lock != null) {
+            System.out.println("To implement open lock");
+        }
+    }
+
+    @Override
+    public void closeLock(String lockId) {
+        Lock lock = getLock(lockId);
+        if (lock != null) {
+            System.out.println("To implement close lock");
+        }
+    }
+
 
 }

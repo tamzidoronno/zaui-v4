@@ -702,4 +702,25 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         settings.setCodeSize(codeSize);
         saveObject(settings);
     }
+
+    public void openLock(String lockId) {
+        lockServers.values()
+                .stream()
+                .forEach(server -> {
+                    server.openLock(lockId);
+                });
+    }
+
+    public void closeLock(String lockId) {
+        lockServers.values()
+            .stream()
+            .forEach(server -> {
+                server.closeLock(lockId);
+            });
+    }
+
+    @Override
+    public void renameLock(String serverId, String lockId, String name) {
+        getLockServer(serverId).renameLock(lockId, name);
+    }
 }

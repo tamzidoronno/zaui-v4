@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
+import com.thundashop.core.getshoplock.GetshopLockCom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -118,4 +119,35 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void openLock(String lockId) {
+        Lock lock = getLock(lockId);
+        if (lock != null) {
+            String postfix = "?username="+username+"&password="+password+"&deviceid=1&forceopen=on";
+            String address = "http://"+hostname+":18080/" + postfix;
+            try {
+                httpLoginRequest(address, username, password);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void closeLock(String lockId) {
+        Lock lock = getLock(lockId);
+        if (lock != null) {
+            String postfix = "?username="+username+"&password="+password+"&deviceid=1&forceopen=off";
+            String address = "http://"+hostname+":18080/" + postfix;
+            try {
+                httpLoginRequest(address, username, password);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private String httpLoginRequest(String address, String username, String password) throws Exception {
+        return GetshopLockCom.httpLoginRequest(address, username, password);
+    }
 }

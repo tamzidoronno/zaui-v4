@@ -157,4 +157,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public int getCodeSize();
+    
+    @Administrator
+    public void renameLock(String serverId, String lockId, String name);
 }

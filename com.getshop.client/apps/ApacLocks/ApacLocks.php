@@ -196,5 +196,9 @@ class ApacLocks extends \MarketingApplication implements \Application {
     public function markCodeForResend() {
         $this->getApi()->getGetShopLockSystemManager()->markCodeForResending($_POST['data']['serverid'], $_POST['data']['lockid'], $_POST['data']['slotid']);
     }
+    
+    public function saveName() {
+        $this->getApi()->getGetShopLockSystemManager()->renameLock($_POST['data']['serverid'], $_POST['data']['lockid'], $_POST['data']['name']);
+    }
 }
 ?>

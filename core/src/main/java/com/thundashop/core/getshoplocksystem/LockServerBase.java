@@ -298,4 +298,12 @@ public abstract class LockServerBase extends DataCommon {
         }
         return false;
     }
+    
+    public void renameLock(String lockId, String name) {
+        Lock lock = getLock(lockId);
+        if (lock != null) {
+            lock.name = name;
+            saveMe();
+        }
+    }
 }

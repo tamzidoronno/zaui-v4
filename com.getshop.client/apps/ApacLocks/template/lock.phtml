@@ -16,6 +16,13 @@ $this->setLock($lock);
         Serverid: <? echo $this->getServer()->id; ?>
         <br/>Lockid: <? echo $lock->id; ?>
     </div>
+    <div gstype='form' method='saveName'>
+        <input type='hidden' gsname='lockid' value='<? echo $lock->id; ?>'/>
+        <input type='hidden' gsname='serverid' value='<? echo $this->getServer()->id; ?>'/>
+        Lock Name: <input gsname='name' class='gsniceinput1' value='<? echo $lock->name; ?>'/>
+        <br/> <div gstype='submit'>Save</div>
+    </div>
+        
     <div class='slots'>
         <h2>Codes and slots</h2>
         <?

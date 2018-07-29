@@ -49,7 +49,7 @@ include("header.php");
         <i class='fa fa-spin fa-spinner'></i>
         <br><br>
             <div style='text-align:center;margin-top: 10px;margin-bottom:10px;'>
-                <span class='cancelpaymentbutton dopaymentbutton' style='border: solid 1px; padding: 10px; border-radius:5px;'><?php echo $factory->__w("Cancel payment process"); ?></span>
+                <span class='cancelpaymentbutton' style='border: solid 1px; padding: 10px; border-radius:5px;'><?php echo $factory->__w("Cancel payment process"); ?></span>
             </div>
         </span>
     </div>    

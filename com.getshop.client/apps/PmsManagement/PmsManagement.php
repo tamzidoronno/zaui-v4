@@ -1019,7 +1019,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function processVerifonePayment() {
-          $this->getApi()->getVerifoneManager()->chargeOrder($_POST['data']['orderid'], 0);
+          $this->getApi()->getVerifoneManager()->chargeOrder($_POST['data']['orderid'], 0, false);
 //        echo "TEST";
     }
     

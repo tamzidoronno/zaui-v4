@@ -81,9 +81,11 @@ public class GetShopSessionScope implements Scope {
         if (storePool != null) {
             if (name != null && name.equals("scopedTarget.userManager") && storePool != null) {
                 Store slaveStore = storePool.getStore(storeId);
-                Store masterStore = storePool.getStore(slaveStore.masterStoreId);
-                if (slaveStore.masterStoreId != null && !slaveStore.masterStoreId.isEmpty() && masterStore.acceptedSlaveIds.contains(storeId)) {
-                    storeId = slaveStore.masterStoreId;
+                if(slaveStore!= null) {
+                    Store masterStore = storePool.getStore(slaveStore.masterStoreId);
+                    if (slaveStore.masterStoreId != null && !slaveStore.masterStoreId.isEmpty() && masterStore.acceptedSlaveIds.contains(storeId)) {
+                        storeId = slaveStore.masterStoreId;
+                    }
                 }
             }    
         }

@@ -91,6 +91,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Autowired
     WebManager webManager;
     
+    public boolean testTerminalPrinter = true;
+    public boolean testTerminalPaymentTerminal = true;
+    
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
 
@@ -702,9 +705,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             text += "\r\n";
             text += "\r\n";
             text += "\r\n";
-            if(storeManager.isProductMode()) {
+            boolean addToLog = false;
+            if(order != null && order.payment != null && order.payment.transactionLog != null) {
+                addToLog = true;
+            }
+            if(storeManager.isProductMode() || testTerminalPrinter) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (" + url + ")");
                 webManager.htmlPost(url, text, false, "UTF-8");
             } else {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (dev mode)");
                 System.out.println("Printing reciept to url: " + url);
                 System.out.println(text);
             }
@@ -1039,12 +1048,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
+        
+        
         if(res.orderid != null && !res.orderid.isEmpty()) {
             Order order = orderManager.getOrderSecure(res.orderid);
             res.amount = orderManager.getTotalAmount(order);
             chargeOrderWithVerifoneTerminal(res.orderid, input.terminalId + "");
         }
-        res.goToCompleted = !storeManager.isProductMode();
+        res.goToCompleted = !storeManager.isProductMode() && !testTerminalPaymentTerminal;
         
         return res;
     }
@@ -1093,7 +1104,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     amount = orderManager.getTotalAmount(order);
                     if(amount > 0) {
                         orderIdToReturn = order.id;
-                        if(!storeManager.isProductMode()) {
+                        if(!storeManager.isProductMode() && !testTerminalPaymentTerminal) {
                             orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order));
                             break;
                         } else {
@@ -1110,7 +1121,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 result.name = user.fullName;
                 result.amount = amount;
                 result.orderId = orderIdToReturn;
-                result.goToCompleted = !storeManager.isProductMode();
+                result.goToCompleted = !storeManager.isProductMode() && !testTerminalPaymentTerminal;
                 return result;
             }
         }
@@ -1120,7 +1131,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void cancelPaymentProcess(StartPaymentProcess data) {
-        if(!storeManager.isProductMode()) {
+        if(!storeManager.isProductMode() && !testTerminalPaymentTerminal) {
             verifoneManager.getTerminalMessages().add("payment failed");
             return;
         }
@@ -1167,7 +1178,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public void chargeOrderWithVerifoneTerminal(String orderId, String terminalId) {
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(terminalId));
-        verifoneManager.chargeOrder(orderId, settings.verifoneTerminalId);
+        verifoneManager.chargeOrder(orderId, settings.verifoneTerminalId, testTerminalPaymentTerminal);
     }
 
     @Override

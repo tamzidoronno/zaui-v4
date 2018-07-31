@@ -53,7 +53,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     private List<String> terminalMessages = new ArrayList();
     
     @Override
-    public void chargeOrder(String orderId, String terminalId) {
+    public void chargeOrder(String orderId, String terminalId, boolean overrideDevMode) {
         if(orderToPay != null) {
             //Only one order at a time.
             printFeedBack("A payment is already being processed");
@@ -66,7 +66,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         logPrint("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
 
-        if(!storeManager.isProductMode()) {
+        if(!storeManager.isProductMode() && !overrideDevMode) {
             order.status = Order.Status.PAYMENT_COMPLETED;
             saveOrderSomeHow(orderToPay);
             orderToPay = null;
@@ -173,8 +173,10 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     }
 
     private void addToOrder(String resultText) {
-        orderToPay.payment.transactionLog.put(System.currentTimeMillis()-1, resultText);
-        saveOrderSomeHow(orderToPay);
+        if(orderToPay != null && orderToPay.payment != null) {
+            orderToPay.payment.transactionLog.put(System.currentTimeMillis()-1, resultText);
+            saveOrderSomeHow(orderToPay);
+        }
     }
 
     private void handleResultEvent(PayPointResultEvent resultEvent) {
@@ -182,10 +184,14 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         if(resultEvent.getResult() == 32) {
             logPrint("Card succesfully paid");
             printFeedBack("completed");
-            orderManager.markAsPaid(orderToPay.id, new Date(), orderToPay.getTotalAmount());
+            if(orderToPay != null) {
+                orderManager.markAsPaid(orderToPay.id, new Date(), orderToPay.getTotalAmount());
+            }
         } else {
             logPrint("Failed to pay");
-            orderToPay.status = Order.Status.PAYMENT_FAILED;
+            if(orderToPay != null) {
+                orderToPay.status = Order.Status.PAYMENT_FAILED;
+            }
             printFeedBack("payment failed");
         }
         saveOrderSomeHow(orderToPay);
@@ -193,8 +199,10 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     }
     
     private void saveOrderSomeHow(Order orderToPay) {
-        logPrint("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
-        orderManager.saveOrderInternal(orderToPay);
+        if(orderToPay!= null) {
+            logPrint("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
+            orderManager.saveOrderInternal(orderToPay);
+        }
     }
 
     private void createListener() {
@@ -205,6 +213,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     public void cancelPaymentProcess(String terminalId) {
         VerifonePaymentApp app = activePaymentApps.get(terminalId);
         app.closeCom();
+        orderToPay = null;
     }
 
     public List<String> getTerminalMessages() {

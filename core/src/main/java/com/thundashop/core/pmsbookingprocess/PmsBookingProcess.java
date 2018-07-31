@@ -1040,6 +1040,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         if(res.orderid != null && !res.orderid.isEmpty()) {
+            Order order = orderManager.getOrderSecure(res.orderid);
+            res.amount = orderManager.getTotalAmount(order);
             chargeOrderWithVerifoneTerminal(res.orderid, input.terminalId + "");
         }
         res.goToCompleted = !storeManager.isProductMode();
@@ -1056,8 +1058,20 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.searchWord = data.reference;
         List<PmsBooking> bookings = pmsManager.getAllBookingsInternal(filter);
-        if(bookings.size() == 0) {
+        
+        if(bookings.isEmpty()) {
             return null;
+        }
+        
+        boolean allPaidFor = bookings.stream()
+                .filter(b -> !b.payedFor)
+                .count() == 0;
+        
+        if (allPaidFor) {
+            StartPaymentProcessResult result = new StartPaymentProcessResult();
+            result.paidFor = true;
+            result.pmsBookingId = bookings.get(0).id;
+            return result;
         }
         
         for(PmsBooking booking : bookings) {
@@ -1107,6 +1121,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public void cancelPaymentProcess(StartPaymentProcess data) {
         if(!storeManager.isProductMode()) {
+            verifoneManager.getTerminalMessages().add("payment failed");
             return;
         }
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
@@ -1153,5 +1168,53 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public void chargeOrderWithVerifoneTerminal(String orderId, String terminalId) {
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(terminalId));
         verifoneManager.chargeOrder(orderId, settings.verifoneTerminalId);
+    }
+
+    @Override
+    public List<String> getTerminalMessages() {
+        ArrayList retList = new ArrayList<String>(verifoneManager.getTerminalMessages());
+        verifoneManager.getTerminalMessages().clear();
+        return retList;
+    }
+
+    @Override
+    public void addTestMessagesToQueue(String message) {
+        if(storeManager.isProductMode()) {
+            return;
+        }
+        
+        verifoneManager.getTerminalMessages().add(message);
+    }
+
+    @Override
+    public List<BookingProcessRoomStatus> getBooking(String pmsBookingId) {
+        PmsBooking booking = pmsManager.getBookingUnsecure(pmsBookingId);
+        Date now = new Date();
+        List<BookingProcessRoomStatus> retList = new ArrayList();
+        
+        if (booking != null) {
+            booking.rooms.stream()
+                .forEach(room -> {
+                    BookingProcessRoomStatus status = new BookingProcessRoomStatus();
+                    status.checkin = room.date.start;
+                    status.checkout = room.date.end;
+                    status.checkinDateOk = room.isStarted() && !room.isEnded();
+                    if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+                        status.roomIsClean = false;
+                    } else {
+                        status.roomIsClean = pmsManager.isClean(room.bookingItemId);
+                    }
+                    status.paymentCompleted = booking.payedFor;
+                    retList.add(status);
+                });
+        }
+        
+        return retList;
+    }
+
+    @Override
+    public void setBookingItemToCurrentBooking(String roomId, String itemId) {
+        String bookingId = pmsManager.getCurrentBooking().id;
+        pmsManager.setBookingItem(roomId, bookingId, itemId, false);
     }
 }

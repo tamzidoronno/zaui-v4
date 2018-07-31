@@ -12,6 +12,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.SettingsRow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,8 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     public FrameworkConfig frameworkConfig;
     
     HashMap<String, VerifonePaymentApp> activePaymentApps = new HashMap();
+    
+    private List<String> terminalMessages = new ArrayList();
     
     @Override
     public void chargeOrder(String orderId, String terminalId) {
@@ -161,6 +164,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         VerifoneFeedback feedBack = new VerifoneFeedback();
         feedBack.msg = string;
         webSocketServer.sendMessage(feedBack);
+        terminalMessages.add(string);
         if(orderToPay != null && orderToPay.payment != null) {
             orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);
         }
@@ -202,5 +206,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         VerifonePaymentApp app = activePaymentApps.get(terminalId);
         app.closeCom();
     }
-    
+
+    public List<String> getTerminalMessages() {
+        return terminalMessages;
+    }
+
 }

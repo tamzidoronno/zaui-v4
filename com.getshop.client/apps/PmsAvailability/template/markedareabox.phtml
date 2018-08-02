@@ -7,7 +7,7 @@ if(isset($_POST['data']['roomid']) && $_POST['data']['roomid']) {
 
 $start = date("d.m.Y", strtotime($_POST['data']['start']));
 $end = date("d.m.Y", strtotime($_POST['data']['end']));
-if($end == $_POST['data']['start']) {
+if($end == $start) {
     $end = date("d.m.Y", strtotime($_POST['data']['end'])+86400);
 }
 

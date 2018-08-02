@@ -10,4 +10,6 @@ public class StartPaymentProcessResult {
     public Double amount;
     public String orderId;
     boolean goToCompleted = false;
+    boolean paidFor = false;
+    public String pmsBookingId = "";
 }

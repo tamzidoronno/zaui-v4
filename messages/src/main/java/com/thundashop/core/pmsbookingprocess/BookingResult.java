@@ -6,4 +6,5 @@ public class BookingResult {
     int success;
     String orderid;
     boolean goToCompleted = false;
+    double amount = 0;
 }

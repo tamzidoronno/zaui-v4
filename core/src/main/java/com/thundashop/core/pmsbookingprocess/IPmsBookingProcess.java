@@ -36,4 +36,8 @@ public interface IPmsBookingProcess {
     public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data);
     public void cancelPaymentProcess(StartPaymentProcess data);
     public void chargeOrderWithVerifoneTerminal(String orderId, String terminalId);
+    public List<String> getTerminalMessages();
+    public void addTestMessagesToQueue(String message);
+    public List<BookingProcessRoomStatus> getBooking(String pmsBookingId);
+    public void setBookingItemToCurrentBooking(String roomId, String itemId);
 }

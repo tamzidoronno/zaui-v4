@@ -10,9 +10,6 @@ var pga = {
         $(document).on('focusin', '.gstextfield', pga.activateKeyBoard)
         $(document).on('focusout', '.gstextfield', pga.deactivateKeyBoard)
         
-        $(document).ready(function() {
-            $('#keyboard').jkeyboard({layout: "norwegian"});
-        });
         
         pga.resetTimeout();
     },
@@ -36,6 +33,12 @@ var pga = {
     },
     
     activateKeyBoard: function(e) {
+        if ($(this).attr('numpad')) {
+            $('#keyboard').jkeyboard({layout: "numpad"});
+        } else {
+            $('#keyboard').jkeyboard({layout: "norwegian"});
+        }
+        
         var paddingBottom = 0;
         var positionFromBottom = window.innerHeight - $(e.target).offset().top;
         

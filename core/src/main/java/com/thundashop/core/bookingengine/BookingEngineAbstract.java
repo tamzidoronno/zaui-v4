@@ -74,7 +74,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     
     @Override
     public List<BookingItemType> getBookingItemTypes() {
-        return getBookingItemTypesWithSystemType(0);
+        List<BookingItemType> normalBookingTypes = new ArrayList();
+        normalBookingTypes.addAll(getBookingItemTypesWithSystemType(0));
+        normalBookingTypes.addAll(getBookingItemTypesWithSystemType(3));
+        return normalBookingTypes; 
     }
     
     @Override
@@ -526,6 +529,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
         savedItem.eventItemGroup = type.eventItemGroup;
         savedItem.minStay = type.minStay;
         savedItem.historicalProductIds = type.historicalProductIds;
+        savedItem.systemCategory = type.systemCategory;
         savedItem.setTranslationStrings(type.getTranslations());
         saveObject(savedItem);
         return savedItem;

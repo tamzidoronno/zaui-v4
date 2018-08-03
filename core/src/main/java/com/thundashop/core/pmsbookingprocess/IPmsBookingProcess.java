@@ -20,6 +20,7 @@ public interface IPmsBookingProcess {
     public StartBookingResult startBooking(StartBooking arg);
     public GuestAddonsSummary getAddonsSummary(List<RoomsSelected> arg);
     public GuestAddonsSummary changeNumberOnType(BookingTypeChange change);
+    public GuestAddonsSummary changeGuestCountForRoom(String roomId, int guestCount);
     public GuestAddonsSummary addAddons(AddAddons arg);
     public GuestAddonsSummary removeAddons(AddAddons arg);
     public GuestAddonsSummary saveGuestInformation(List<RoomInformation> arg);

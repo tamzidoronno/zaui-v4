@@ -150,6 +150,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             
             room.availableRooms = pmsManager.getNumberOfAvailable(type.id, arg.start, arg.end, true, true);
             room.id = type.id;
+            room.systemCategory = type.systemCategory;
             room.visibleForBooker = type.visibleForBooking;
             result.totalRooms += room.availableRooms;
             try {
@@ -414,6 +415,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             returnroom.roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
             returnroom.maxGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
             returnroom.totalCost = room.totalCost;
+            returnroom.bookingItemTypeId = room.bookingItemTypeId;
             
             for(PmsGuests guest : room.guests) {
                 GuestInfo info = new GuestInfo();
@@ -1070,6 +1072,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         filter.searchWord = data.reference;
         List<PmsBooking> bookings = pmsManager.getAllBookingsInternal(filter);
         
+        if (bookings.isEmpty()) {
+            PmsBooking book = pmsManager.getBookingWithOrderId(data.reference);
+            if (book != null) {
+                bookings.add(book);
+            }
+        }
+        
         if(bookings.isEmpty()) {
             return null;
         }
@@ -1227,5 +1236,23 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public void setBookingItemToCurrentBooking(String roomId, String itemId) {
         String bookingId = pmsManager.getCurrentBooking().id;
         pmsManager.setBookingItem(roomId, bookingId, itemId, false);
+    }
+
+    @Override
+    public GuestAddonsSummary changeGuestCountForRoom(String roomId, int guestCount) {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        
+        PmsBookingRooms room = booking.getRoom(roomId);
+        if (room != null) {
+            room.numberOfGuests = guestCount;
+        }
+        
+        try {
+            pmsManager.setBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return generateSummary();
     }
 }

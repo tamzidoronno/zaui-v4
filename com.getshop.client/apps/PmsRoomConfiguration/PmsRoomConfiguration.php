@@ -191,6 +191,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $type->size = $_POST['data']['size'];
         $type->name = $_POST['data'][$current.'_name'];
         $type->description = $_POST['data'][$current.'_description'];
+        $type->systemCategory = $_POST['data']['systemCategory'];
         
         foreach($languages as $key) {
             $type->translationStrings->{$key. "_name"} = json_encode($_POST['data'][$key.'_name']);

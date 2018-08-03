@@ -15,4 +15,5 @@ public class RoomInfo {
     public String roomName = "";
     public HashMap<String, AddonItem> addonsAvailable = new HashMap();
     public Double totalCost = 0.0;
+    public String bookingItemTypeId = "";
 }

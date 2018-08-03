@@ -94,6 +94,15 @@ $taxes = $this->getApi()->getProductManager()->getTaxes();
             ?>
         </tr>
     </table>
+    <div style="margin-top: 50px; padding-top: 50px; border-top: solid 1px #dcdcdc;">
+        <b>Type: </b>
+        <select gsname='systemCategory' class="gsniceselect1">
+            <? $selected = $type->systemCategory == 0 ? "selected='true'" : "";?>
+            <option value="0" <? echo $selected; ?>>Room</option>
+            <? $selected = $type->systemCategory == 3 ? "selected='true'" : "";?>
+            <option value="3" <? echo $selected; ?>>Camping.</option>
+        </select>
+    </div>
     <div style='text-align:right;padding-top: 20px;'>
         <input type='button' style='padding:9px; width: 200px;' gstype='submit' value='Save'>
     </div>

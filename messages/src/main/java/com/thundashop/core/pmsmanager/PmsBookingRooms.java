@@ -451,6 +451,24 @@ public class PmsBookingRooms implements Serializable {
                     if(guest.phone.toLowerCase().contains(searchWord)) {
                         return true;
                     }
+                    String phoneWithoutStartingZeros = searchWord.replaceFirst("^0+(?!$)", "");
+                    if(guest.phone.toLowerCase().contains(phoneWithoutStartingZeros)) {
+                        return true;
+                    }
+                    
+                    if(guest.prefix != null && !guest.prefix.isEmpty()) {
+                        String leftPaddedPrefix = "00"+guest.prefix;
+                        String longNumberWithPrefix = leftPaddedPrefix + guest.phone.toLowerCase();
+                        if(longNumberWithPrefix.toLowerCase().contains(searchWord)) {
+                            return true;
+                        }
+                        
+                        longNumberWithPrefix = leftPaddedPrefix + longNumberWithPrefix;
+                        if(longNumberWithPrefix.toLowerCase().contains(searchWord)) {
+                            return true;
+                        }
+                    }
+                    
                     if(guest.prefix != null) {
                         String testSearchWord = searchWord;
                         if(testSearchWord.startsWith("+")) {

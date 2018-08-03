@@ -70,7 +70,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", time())));
         $filter->filterType = $type;
         $filter->includeDeleted = false;
-        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+        $rooms = (array)$this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
         
         if($type == "registered") {
             $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()-86400)));

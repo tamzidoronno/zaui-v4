@@ -951,6 +951,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     } else {
         $('.roomSelected').show();
         $('.noRoomSelected').hide();
+        $('.GslBooking .ordersummary .continue').show();
         if(!isSearch) {
             $('.gsl_button.continue.active').effect( "shake" );
             getshop_createSticky($("#order-sticky"));
@@ -1389,7 +1390,6 @@ function getshop_searchRooms(e) {
             gslbookingcurresult = res;
             sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             $('.noroomsfound').hide();
-            console.log(res);
             if(!res || (parseInt(res.totalRooms) === 0)) {
                 $('.noroomsfound').show();
                 $('.GslBooking .hide').hide();
@@ -1574,7 +1574,7 @@ function getshop_displayVerifoneFeedBack(res) {
             window.location.href="paymentterminal.php";
             return;
         }
-        alert('Payment failed, please try again!');
+//        alert('Payment failed, please try again!');
         var client = getshop_getWebSocketClient();
         client.PmsBookingProcess.chargeOrderWithVerifoneTerminal(getshop_domainname, getshop_currentorderid,getshop_terminalid);
         getAddons.done(function(res) {

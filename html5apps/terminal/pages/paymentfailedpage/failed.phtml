@@ -1,0 +1,17 @@
+<div class='heading'>
+    <?php
+    echo $this->__f("Payment failed");
+    ?>
+</div>
+<div class='warning'>
+    <span class="icon-shield-alert"></span>
+    <br/>
+    <?php
+    echo $this->__f("Something went wrong during the transaction, please try again");
+    ?>
+</div>
+
+<div class='buttonarea'>
+    <a href='/?page=bookingfrontpage'><div class='button red'><?php echo $this->__f("Cancel booking"); ?></div></a>
+    <a href='/?page=paymentprocesspage&retry=true&orderid=<?php echo $_GET['orderid']; ?>&amount=<?php echo $_GET['amount'];?>'><div class='button'><?php echo $this->__f("Try again"); ?></div></a>
+</div>

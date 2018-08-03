@@ -1,0 +1,57 @@
+<?php
+/* @var $this CheckBookingPage */
+$bookings = $this->getApi()->getPmsBookingProcess()->getBooking($this->getBookingEngineName(), $_GET['bookingid']);
+?>
+<div class="heading">
+    <?php
+    echo $this->__f("Welcome");
+    ?>
+</div>
+<div>
+    <?php
+        
+        $i = 0;
+        foreach ($bookings as $room) {
+            $cleanText = $room->roomIsClean ? $this->__f("Your room is clean and ready to be used") : $this->__f("Your room is not yet cleaned, you will receive code by sms and email as soon as it is ready");
+            $cleaningClass = $room->roomIsClean ? 'green' : "";
+            
+            $timeText = $room->checkinDateOk ? $this->__f("Check-in time is all good") : $this->__f("You are a bit early, we will send you a sms and email as soon as the room is ready");
+            $timeClass = $room->checkinDateOk ? 'green' : "";
+            
+            $paidText = $room->paymentCompleted ? $this->__f("Your room is already paid") : $this->__f("You have to pay for your stay before we can give you access.");
+            $paidClass = $room->paymentCompleted ? 'green' : "";
+            
+            $start = date("d/m-Y H:i", strtotime($room->checkin));
+            $end = date("d/m-Y H:i", strtotime($room->checkout));
+            $i++;
+            
+            echo "<div class='room'>";
+                echo "<div class='roomtitle'>".$this->__f("Room").": $i"." $start - $end</div>"; 
+                ?>
+
+                <div class="infobox <?php echo $cleaningClass; ?>">
+                    <span class="icon-broom"></span>
+                    <div class="desc"><?php echo $cleanText; ?></div>
+                </div>
+
+                <div class="infobox <?php echo $timeClass; ?>">
+                    <span class="icon-clock"></span>
+                    <div class="desc"><?php echo $timeText; ?></div>
+                </div>
+
+                <div class="infobox <?php echo $paidClass; ?>">
+                    <span class="icon-bag-dollar"></span>
+                    <div class="desc"><?php echo $paidText; ?></div>
+                </div>
+
+                <?php
+            echo "</div>";
+        }
+    ?>   
+    
+    <div class="buttonarea">
+        <a href="/?page=bookingfrontpage"><div class="button"><?php echo $this->__f("Cancel"); ?></div></a>
+    </div>
+    
+</div>
+

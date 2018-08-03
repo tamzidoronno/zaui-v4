@@ -1,0 +1,25 @@
+<?php
+/* @var $this AlreadyBookedPage */
+?>
+<div class="heading">
+    <?php
+    echo $this->__f("Enter reference code or phonenumber");
+    ?>
+</div>
+
+<div class="searcharea">
+    <div type="text" tabindex="0" class='gstextfield reference' id="search_field"><div class="inner"></div></div>
+    <div class="button searchbooking"><?php echo $this->__f("Search"); ?></div>
+    <a href='/?page=bookingfrontpage'><div class="button red"><?php echo $this->__f("Cancel"); ?></div></a>
+    <?php
+        if ($this->processingReference && !$this->result) {
+            echo "<div class='warning'>".$this->__f("Booking not found, please try again.")."</div>";
+        }
+    ?>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#search_field').focus();
+    });
+</script>

@@ -1,0 +1,20 @@
+<?php
+/* @var $this Settings */
+?>
+<div class='heading'>
+    <?php
+    echo $this->__f("Settings");
+    ?>
+</div>
+
+<div class='settings'>
+    <div class='label'><?php echo $this->__f("Multilevel name"); ?></div>
+    <br/> <div type="text" tabindex="0" class='gstextfield reference' id="multilevelname"><div class="inner"><?php echo $this->database->getMultiLevelName(); ?></div></div>    
+    <br/>
+    <br/>
+    <div class='label'><?php echo $this->__f("Terminal id"); ?></div>
+    <br/> <div type="text" tabindex="0" class='gstextfield reference' id="terminalid"><div class="inner"><?php echo $this->database->getTerminalId(); ?></div></div>    
+    <br/>
+    <br/>
+    <div class='button save'><?php echo $this->__f("Save"); ?></div>
+</div>

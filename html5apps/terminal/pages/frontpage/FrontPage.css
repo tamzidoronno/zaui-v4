@@ -1,0 +1,24 @@
+
+.languageselector {
+    text-align: center;
+}
+
+.language {
+    width: 400px;
+    height: 250px;
+    
+    display: inline-block;
+    margin: 30px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5)
+}
+
+.language.langno { background-image: url('images/flag_no.jpg'); }
+
+.language.langeng { background-image: url('images/flag_en.jpg'); }
+
+.commercial {
+    padding-top: 30px;
+    text-align: center;
+    font-size: 30px;
+    font-style: oblique;
+}

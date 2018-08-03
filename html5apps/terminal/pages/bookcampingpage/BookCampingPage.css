@@ -1,0 +1,117 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 31, 2018, 12:37:43 PM
+    Author     : ktonder
+*/
+
+.datepicker {
+    text-align: center;
+}
+
+.bookingitems {
+    text-align: center;
+    margin-bottom: 50px;
+    border: solid 1px rgba(0,0,0,0.2);
+}
+
+.bookingitem {
+    display: inline-block;
+    padding: 20px;
+    margin: 20px;
+    background-color: rgba(0,0,0,0.1);
+    width: 100px;
+    text-align: center;
+    position: relative;
+    
+}
+
+.cattitle {
+    background-color: rgba(0,0,0,0.1);
+    font-size: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+
+.bookingitem.inuse:before, .bookingitem.inuse:after {
+    position: absolute;
+    content: '';
+    background: red;
+    display: block;
+    width: 50%;
+    height: 2px;
+    -webkit-transform: rotate(-40deg);
+    transform: rotate(-40deg);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.bookingitem.inuse:after {
+    -webkit-transform: rotate(40deg);    
+    transform: rotate(40deg);
+}
+
+.headerinfo {
+    border: solid 1px rgba(0,0,0,0.1);
+    padding: 50px;
+    margin-bottom: 50px;
+    font-size: 30px;
+    position: relative;
+}
+
+.headerinfo .changecheckoutdate {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.headerinfo .cancelbooking {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.contactinfo {
+    text-align: center;
+}
+
+.contactinfo .gstextfield {
+    margin-bottom: 30px;
+}
+
+.contactinfo .label {
+    font-size: 24px;
+    height: 15px;
+    text-align: left;
+}
+
+.contactinfo #prefix {
+    width: 50px;
+}
+
+.contactinfo span {
+    font-size: 40px;
+    line-height: 60px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.contactinfo .col {
+    display: inline-block;
+    vertical-align: top;
+    padding-right: 5px;
+}
+
+.summary {
+    background-color: #f6ffb6;
+    margin: 20px;
+    margin-right: 23px;
+    padding: 10px;
+}

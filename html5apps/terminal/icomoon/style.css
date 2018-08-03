@@ -1,0 +1,87 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?7zcfqr');
+  src:  url('fonts/icomoon.eot?7zcfqr#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.woff2?7zcfqr') format('woff2'),
+    url('fonts/icomoon.ttf?7zcfqr') format('truetype'),
+    url('fonts/icomoon.woff?7zcfqr') format('woff'),
+    url('fonts/icomoon.svg?7zcfqr#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-x:before {
+  content: "\e905";
+}
+.icon-close:before {
+  content: "\e904";
+}
+.icon-undo:before {
+  content: "\e90c";
+}
+.icon-redo:before {
+  content: "\e90d";
+}
+.icon-trash:before {
+  content: "\e90b";
+}
+.icon-bag-dollar:before {
+  content: "\e90a";
+}
+.icon-clock:before {
+  content: "\e909";
+}
+.icon-broom:before {
+  content: "\e908";
+}
+.icon-shield-check:before {
+  content: "\e907";
+}
+.icon-shield-alert:before {
+  content: "\e906";
+}
+.icon-delete:before {
+  content: "\e903";
+}
+.icon-bed:before {
+  content: "\e902";
+}
+.icon-landscape:before {
+  content: "\e901";
+}
+.icon-nature:before {
+  content: "\e901";
+}
+.icon-mountains:before {
+  content: "\e901";
+}
+.icon-outdoors:before {
+  content: "\e901";
+}
+.icon-painting:before {
+  content: "\e901";
+}
+.icon-camping:before {
+  content: "\e901";
+}
+.icon-hiking:before {
+  content: "\e901";
+}
+.icon-tablet:before {
+  content: "\e900";
+}

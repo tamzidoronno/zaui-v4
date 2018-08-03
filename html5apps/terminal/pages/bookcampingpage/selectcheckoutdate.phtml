@@ -1,0 +1,36 @@
+<?php
+/* @var $this BookCampingPage */
+?>
+<div class='heading'>
+    <?php
+    echo $this->__f("Please select your checkout date");
+    ?>
+</div>
+<div class="datepicker">
+    ( <?php echo $this->__f("Tap textfield if calender is not showing"); ?> )
+    <br/>
+    <br/>
+    <input style='text-align: center' class="gsniceinput" id="checkoutdate"/>
+    
+    <br/>
+    <br/><label><?php echo $this->__f("Discount code"); ?></label>
+    <br/>
+    <div type="text" tabindex="0" class='gstextfield reference' id="discountcode">
+        <div class="inner"><?php echo isset($_SESSION['discountcode']) ? $_SESSION['discountcode'] : ""; ?></div>
+    </div>
+    <br/>
+    <br/>
+    <div class='button setcheckoutdate'><?php echo $this->__f("Next"); ?></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        flatpickr('#checkoutdate',  {
+             disableMobile: "true",
+             dateFormat: "d/m-Y",
+             defaultDate: "<?php echo $this->getDefaultStartDate(); ?>",
+             minDate: "<?php echo $this->getDefaultStartDate(); ?>"
+        });    
+    })
+    
+</script>

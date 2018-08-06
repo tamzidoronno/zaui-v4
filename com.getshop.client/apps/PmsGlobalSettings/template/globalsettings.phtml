@@ -101,14 +101,6 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     <h1>Payment and order creation</h1>
     <div class='container'>
         <span class='option'>
-            <input type='checkbox' gsname='payAfterBookingCompleted' <?php if($config->payAfterBookingCompleted) { echo "CHECKED"; } ?>>
-        </span>
-        <span class='title'>
-            Go to payment window after booking has been completed (force payment)
-        </span>
-    </div>
-    <div class='container'>
-        <span class='option'>
             <input type='checkbox' gsname='doNotRecommendBestPrice' <?php if($config->doNotRecommendBestPrice) { echo "CHECKED"; } ?>>
         </span>
         <span class='title'>
@@ -167,14 +159,6 @@ if(stristr($user->emailAddress, "@getshop.com")) {
         </span>
         <span class='title'>
             Automatically summarize items in cart when create order (credits and debets).
-        </span>
-    </div>
-    <div class='container'>
-        <span class='option'>
-            <input type='checkbox' gsname='markBookingsWithNoOrderAsUnpaid' <?php if($config->markBookingsWithNoOrderAsUnpaid) { echo "CHECKED"; } ?>>
-        </span>
-        <span class='title'>
-            If a booking has no order, mark it as unpaid.
         </span>
     </div>
     

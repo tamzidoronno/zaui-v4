@@ -461,9 +461,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
  
     public boolean isRoomPaidForWithBooking(String pmsRoomId, PmsBooking booking) {
-        if(pmsRoomId.equals("31afd494-b9b2-4d6e-ac45-1450bcaeb760") || booking.id.equals("31afd494-b9b2-4d6e-ac45-1450bcaeb760")) {
-            System.out.println("no");
-        }
         if(booking == null) {
             return false;
         }
@@ -485,7 +482,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             payedfor = false;
         } 
        
-        if(!hasOrders && (pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid || storeManager.isPikStore())) {
+        if(!hasOrders && (pmsManager.getConfigurationSecure().getMarkBookingsWithNoOrderAsUnpaid())) {
             payedfor = false;
         }
         

@@ -120,7 +120,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean autoDeleteUnpaidBookings = false;
     public boolean deleteAllWhenAdded = false;
     public boolean manualcheckincheckout = false;
-    public boolean markBookingsWithNoOrderAsUnpaid = false;
+    private boolean markBookingsWithNoOrderAsUnpaid = false;
     public boolean fastCheckIn = false;
     public boolean denyUpdateUserWhenTransferredToAccounting = false;
     public boolean functionsEnabled = false;
@@ -155,9 +155,9 @@ public class PmsConfiguration extends DataCommon {
     public int numberOfDaysToTryToPayWithCardAfterStayOrderHasBeenCreated = 1;
     public int warnWhenOrderNotPaidInDays = 3;
     public Integer chargeOrderAtDayInMonth = 0;
-    public boolean prepayment = false;
+    private boolean prepayment = false;
     public boolean payAfterBookingCompleted = false;
-    public boolean requirePayments = false;
+    private boolean requirePayments = false;
     public boolean updatePriceWhenChangingDates = false;
     public Integer prepaymentDaysAhead = -1;
     public Integer increaseUnits = -1;
@@ -199,6 +199,27 @@ public class PmsConfiguration extends DataCommon {
             return true;
         }
         return usePriceMatrixOnOrder;
+    }
+    
+    public boolean getRequirePayments() {
+        if(isPikStore) {
+            return true;
+        }
+        return requirePayments;
+    }
+    
+    public boolean getMarkBookingsWithNoOrderAsUnpaid() {
+        if(isPikStore) {
+            return true;
+        }
+        return markBookingsWithNoOrderAsUnpaid;
+    }
+    
+    public boolean getPrepayment() {
+        if(isPikStore) {
+            return true;
+        }
+        return prepayment;
     }
     
     public PmsLockServer getLockServer(String serverSource) {

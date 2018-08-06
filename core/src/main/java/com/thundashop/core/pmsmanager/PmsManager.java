@@ -836,7 +836,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         PmsPricing prices = getPriceObjectFromBooking(booking);
-        if (prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && (configuration.requirePayments || storeManager.isPikStore())) {
+        if (prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && (configuration.getRequirePayments() || storeManager.isPikStore())) {
             booking.calculateTotalCost();
         }
 
@@ -1160,7 +1160,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             filter.maxAutoCreateDate = filter.endInvoiceAt;
             filter.autoGeneration = true;
             filter.increaseUnits = configuration.increaseUnits;
-            filter.prepayment = configuration.prepayment;
+            filter.prepayment = configuration.getPrepayment();
         }
         filter.fromAdministrator = true;
 

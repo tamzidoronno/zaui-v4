@@ -695,7 +695,7 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(config.requirePayments && booking.createOrderAfterStay && booking.isEnded()) {
+            if(config.getRequirePayments() && booking.createOrderAfterStay && booking.isEnded()) {
                 NewOrderFilter filter = new NewOrderFilter();
                 filter.createNewOrder = true;
                 filter.endInvoiceAt = booking.getEndDate();
@@ -707,7 +707,7 @@ public class PmsManagerProcessor {
             boolean payedfor = true; 
             boolean firstDate = true;
             boolean forceAccess = false;
-            if(config.requirePayments) {
+            if(config.getRequirePayments()) {
                 boolean needCapture = false;
                 for(String orderId : booking.orderIds) {
                     Order order = manager.orderManager.getOrderSecure(orderId);
@@ -766,7 +766,7 @@ public class PmsManagerProcessor {
                     booking.needCapture = needCapture;
                     needSaving = true;
                 }
-                if(config.markBookingsWithNoOrderAsUnpaid && config.prepayment && booking.orderIds.isEmpty()) {
+                if((config.getMarkBookingsWithNoOrderAsUnpaid() && config.getPrepayment() && booking.orderIds.isEmpty())) {
                     payedfor = false;
                 }
                 if(booking.createOrderAfterStay) {

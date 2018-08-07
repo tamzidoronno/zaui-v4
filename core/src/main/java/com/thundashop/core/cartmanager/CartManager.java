@@ -418,8 +418,13 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
         
         if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
-            start = registrationDate;
-            end = registrationDate;
+            if(registrationDate != null) {
+                start = registrationDate;
+                end = registrationDate;
+            } else {
+                start = new Date();
+                end = new Date();
+            }
         }
         
         TimeRepeater repeater = new TimeRepeater();

@@ -89,9 +89,7 @@ public class TimeRepeater {
             DateTime starting = startTime.withDayOfWeek(DateTimeConstants.MONDAY);
             DateTime ending = endTime.withDayOfWeek(DateTimeConstants.MONDAY);
             if(data.repeatMonday && ending.toDate().before(data.endingAt)) {
-                range = new TimeRepeaterDateRange();
-                range.start = starting.toDate();
-                range.end = ending.toDate();
+                range = createWeeklyDateRangeFromDate(starting, data.firstEvent);
                 if(range.start.after(start)) {
                     list.add(range);
                 }
@@ -100,9 +98,7 @@ public class TimeRepeater {
             starting = startTime.withDayOfWeek(DateTimeConstants.TUESDAY);
             ending = endTime.withDayOfWeek(DateTimeConstants.TUESDAY);
             if(data.repeatTuesday && ending.toDate().before(data.endingAt) && starting.isAfter(startingAt.getTime())) {
-                range = new TimeRepeaterDateRange();
-                range.start = starting.toDate();
-                range.end = ending.toDate();
+                range = createWeeklyDateRangeFromDate(starting, data.firstEvent);
                 if(range.start.after(start))
                     list.add(range);
             }
@@ -110,9 +106,7 @@ public class TimeRepeater {
             starting = startTime.withDayOfWeek(DateTimeConstants.WEDNESDAY);
             ending = endTime.withDayOfWeek(DateTimeConstants.WEDNESDAY);
             if(data.repeatWednesday && ending.toDate().before(data.endingAt) && starting.isAfter(startingAt.getTime())) {
-                range = new TimeRepeaterDateRange();
-                range.start = starting.toDate();
-                range.end = ending.toDate();
+                range = createWeeklyDateRangeFromDate(starting, data.firstEvent);
                 if(range.start.after(start))
                     list.add(range);
             }
@@ -120,9 +114,7 @@ public class TimeRepeater {
             starting = startTime.withDayOfWeek(DateTimeConstants.THURSDAY);
             ending = endTime.withDayOfWeek(DateTimeConstants.THURSDAY);
             if(data.repeatThursday && ending.toDate().before(data.endingAt) && starting.isAfter(startingAt.getTime())) {
-                range = new TimeRepeaterDateRange();
-                range.start = starting.toDate();
-                range.end = ending.toDate();
+                range = createWeeklyDateRangeFromDate(starting, data.firstEvent);
                 if(range.start.after(start))
                     list.add(range);
             }
@@ -130,9 +122,7 @@ public class TimeRepeater {
             starting = startTime.withDayOfWeek(DateTimeConstants.FRIDAY);
             ending = endTime.withDayOfWeek(DateTimeConstants.FRIDAY);
             if(data.repeatFriday && ending.toDate().before(data.endingAt) && starting.isAfter(startingAt.getTime())) {
-                range = new TimeRepeaterDateRange();
-                range.start = starting.toDate();
-                range.end = ending.toDate();
+                range = createWeeklyDateRangeFromDate(starting, data.firstEvent);
                 if(range.start.after(start))
                     list.add(range);
             }
@@ -140,9 +130,7 @@ public class TimeRepeater {
             starting = startTime.withDayOfWeek(DateTimeConstants.SATURDAY);
             ending = endTime.withDayOfWeek(DateTimeConstants.SATURDAY);
             if(data.repeatSaturday && ending.toDate().before(data.endingAt) && starting.isAfter(startingAt.getTime())) {
-                range = new TimeRepeaterDateRange();
-                range.start = starting.toDate();
-                range.end = ending.toDate();
+                range = createWeeklyDateRangeFromDate(starting, data.firstEvent);
                 if(range.start.after(start))
                     list.add(range);
             }
@@ -150,9 +138,7 @@ public class TimeRepeater {
             starting = startTime.withDayOfWeek(DateTimeConstants.SUNDAY);
             ending = endTime.withDayOfWeek(DateTimeConstants.SUNDAY);
             if(data.repeatSunday && ending.toDate().before(data.endingAt) && starting.isAfter(startingAt.getTime())) {
-                range = new TimeRepeaterDateRange();
-                range.start = starting.toDate();
-                range.end = ending.toDate();
+                range = createWeeklyDateRangeFromDate(starting, data.firstEvent);
                 if(range.start.after(start))
                     list.add(range);
             }
@@ -215,5 +201,23 @@ public class TimeRepeater {
                 return true;
         }
         return false;
+    }
+
+    private TimeRepeaterDateRange createWeeklyDateRangeFromDate(DateTime starting, TimeRepeaterDateRange firstEvent) {
+        Calendar firstDate = Calendar.getInstance();
+        firstDate.setTime(firstEvent.start);
+        
+        TimeRepeaterDateRange result = new TimeRepeaterDateRange();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(starting.toDate());
+        cal.set(Calendar.HOUR_OF_DAY, firstDate.get(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, firstDate.get(Calendar.MINUTE));
+        cal.set(Calendar.MILLISECOND, firstDate.get(Calendar.MILLISECOND));
+        cal.set(Calendar.SECOND, firstDate.get(Calendar.SECOND));
+        result.start = cal.getTime();
+        
+        cal.add(Calendar.SECOND, (int)((firstEvent.end.getTime()-firstEvent.start.getTime())/1000));
+        result.end = cal.getTime();
+        return result;
     }
 }

@@ -110,8 +110,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             logPrintException(e);
         }
         
-        arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
-        arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);
+        arg.start = pmsManager.getConfigurationSecure().getDefaultStart(arg.start);
+        arg.end = pmsManager.getConfigurationSecure().getDefaultEnd(arg.end);
         
         if(arg.start.after(arg.end)) {
             arg.end = correctToDayAfter(arg);

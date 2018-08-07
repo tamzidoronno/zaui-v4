@@ -3672,10 +3672,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Coupon getCouponCode(PmsBooking booking) {
         String couponCode = booking.couponCode;
-        if (booking.discountType == null || booking.discountType.isEmpty() || booking.discountType.equals("none")) {
-            return null;
-        }
-        if (booking.discountType.equals("partnership")) {
+        if (booking.discountType !=null && booking.discountType.equals("partnership")) {
             if (couponCode.contains(":")) {
                 String[] couponCodes = couponCode.split(":");
                 if (couponCodes.length > 1) {

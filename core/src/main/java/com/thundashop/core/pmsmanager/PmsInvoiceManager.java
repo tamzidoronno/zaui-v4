@@ -1449,6 +1449,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
                     Double price = priceMatrix.get(key);
                     Date day = PmsBookingRooms.convertOffsetToDate(key);
+                    day = pmsManager.getConfigurationSecure().getDefaultStart(day);
                     price = calculateDiscounts(booking, price, room.bookingItemTypeId, 1, room, day, day);
                     room.priceMatrix.put(key, price);
                     priceMatrix.put(key, price);

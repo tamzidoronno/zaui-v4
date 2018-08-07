@@ -1,0 +1,118 @@
+<?php
+/* @var $this ns_4c8e3fe7_3c81_4a74_b5f6_442f841a0cb1\PmsPricingNew */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+
+$plan = new core_pmsmanager_PmsAdvancePriceYield();
+$defaultStart = date("d.m.Y", time());
+$defaultEnd = date("d.m.Y", time() + (86400*365));
+
+if(isset($_POST['data']['id']) && $_POST['data']['id']) {
+    $plan = $this->getApi()->getPmsInvoiceManager()->getAdvancePriceYieldPlan($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+    $defaultStart = date("d.m.Y", strtotime($plan->start));
+    $defaultEnd = date("d.m.Y", strtotime($plan->end));
+}
+
+
+$days = array();
+$days['0'] = "Day of arrival";
+$days['1'] = "1 day prior";
+$days['2'] = "2 days prior";
+$days['3'] = "3 days prior";
+$days['4'] = "4 days prior";
+$days['5'] = "5 days prior";
+$days['6'] = "6 days prior";
+$days['7'] = "7 days prior";
+$days['14'] = "7 - 14 days prior";
+$days['21'] = "14 - 21 days prior";
+$days['28'] = "21 - 28 days prior";
+$days['90'] = "28 - 90 days prior";
+$days['180'] = "90 - 180 days prior";
+$days['365'] = "180 - 365 days prior";
+$days['730'] = "365 - 730 days prior";
+
+$yeldingoptions = array();
+$yeldingoptions[10] = "0-10%";
+$yeldingoptions[20] = "10-20%";
+$yeldingoptions[30] = "20-30%";
+$yeldingoptions[40] = "30-40%";
+$yeldingoptions[50] = "40-50%";
+$yeldingoptions[60] = "50-60%";
+$yeldingoptions[70] = "60-70%";
+$yeldingoptions[75] = "70-75%";
+$yeldingoptions[80] = "75-80%";
+$yeldingoptions[85] = "80-85%";
+$yeldingoptions[90] = "85-90%";
+$yeldingoptions[95] = "90-95%";
+$yeldingoptions[100] = "95-100%";
+
+?>
+<div style='position:relative;'>
+    <div class="priceyieldconfigpanel" gstype='form' method='saveYieldPlan'>
+        <input type='hidden' gsname='planid' value='<?php echo $plan->id; ?>'>
+        <i class='fa fa-close' style='float:right; cursor:pointer;' onclick='$(".outerpriceyieldplan").toggle();$(".pmsbutton.editadvanceyieldplan").show();'></i>
+        <br>
+        <div>
+            <b>Valid for periode</b><br>
+            <input class="gsniceinput1" gsname='startyielddate' value='<?php echo $defaultStart; ?>'>
+            <input class="gsniceinput1" gsname='endyeilddate' value='<?php echo $defaultEnd; ?>'>
+        </div>
+        <br>
+        <div>
+            <b>Valid for categories</b><br>
+            
+            <?php
+            foreach($types as $type) {
+                $checked = "";
+                if(in_array($type->id, $plan->types)) {
+                    $checked = "CHECKED";
+                }
+                echo "<input type='checkbox' gsname='validforcategory_".$type->id."' $checked>" . $type->name;
+            }
+            ?>
+        </div>
+        <br>
+        
+        
+        <table width='100%'>
+            <tr>
+                <td><b>Occupancy level</b></td>
+                <?php
+                foreach($yeldingoptions as $option => $text) {
+                    echo "<td valign='center'><b>$text</b></td>";
+                }
+                ?>
+            </tr>
+            <?php
+            foreach($days as $day => $text) {
+                ?>
+                <tr>
+                    <td><?php echo $text; ?></td>
+                    <?php
+                    foreach($yeldingoptions as $option => $text) {
+                        $value = "100%";
+                        $key = "$day"."_"."$option";
+                        if(isset($plan->yeilds->{$key})) {
+                            $value = $plan->yeilds->{$key}->yield ."%";
+                        }
+                        echo "<td><input class='percentagesetup gsniceinput1' gsname='yield_$key' value='$value'></td>";
+                    }
+                    ?>
+                </tr>
+                <?php
+            }
+            ?>
+        </table>
+        <div style='text-align: right; margin-top: 10px;'>
+            <span class='shop_button' gstype='submit'>Create / update advanced price yielding</span>
+        </div>
+    </div>
+</div>
+
+<style>
+    .percentagesetup { width: 40px; padding: 3px !important; text-align: center; }
+    .priceyieldconfigpanel { position:absolute; z-index: 2; border: solid 1px #bbb; right: 0px; background-color:#fff; width: 860px; padding: 10px; border-radius: 3px; }
+</style>
+<script>
+    $("[gsname='startyielddate']").datepicker({ dateFormat: "dd.mm.yy"});
+    $("[gsname='endyeilddate']").datepicker({ dateFormat: "dd.mm.yy"});
+</script>

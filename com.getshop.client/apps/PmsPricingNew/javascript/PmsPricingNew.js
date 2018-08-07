@@ -12,6 +12,18 @@ app.PmsPricingNew = {
         $(document).on('click','.PmsPricingNew .togglerepeatbox', app.PmsPricingNew.closeTheRepeatBox);
         $(document).on('change','.PmsPricingNew .repeat_type', app.PmsPricingNew.changeRepeatType);
         $(document).on('click','.PmsPricingNew .displayEditPriceCode', app.PmsPricingNew.toggleShow);
+        $(document).on('click','.PmsPricingNew .editadvanceyieldplan', app.PmsPricingNew.startEditPricePlan);
+    },
+    startEditPricePlan : function() {
+        var event = thundashop.Ajax.createEvent('','loadAdvancedPricePlan', $(this), {
+            "id" : $(this).attr('planid')
+        });
+        $('.pmsbutton.editadvanceyieldplan').hide();
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.outerpriceyieldplan').html(res);
+            $('.outerpriceyieldplan').show();
+        });
     },
     toggleShow : function() {
         var code = $(this).attr('code');

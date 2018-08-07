@@ -9,7 +9,47 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     public function getName() {
         return "PmsPricingNew";
     }
+    
+    public function loadAdvancedPricePlan() {
+        $this->includefile("priceyieldpanel");
+    }
 
+    public function saveYieldPlan() {
+        $plan = new \core_pmsmanager_PmsAdvancePriceYield();
+        $plan->id = $_POST['data']['planid'];
+        $plan->start = $this->convertToJavaDate(strtotime($_POST['data']['startyielddate']));
+        $plan->end = $this->convertToJavaDate(strtotime($_POST['data']['endyeilddate']));
+        $plan->yeilds = array();
+        
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "yield_")) {
+                $key = str_replace("yield_", "", $key);
+                $offsets = explode("_", $key);
+                $entry = new \core_pmsmanager_YieldEntry();
+                $entry->daysPrior = $offsets[0];
+                $entry->occupancy = $offsets[1];
+                $entry->yield = str_replace("%", "", $val);
+                $plan->yeilds[$key] = $entry;
+            }
+        }
+        
+        $plan->types = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "validforcategory_")) {
+                $room = str_replace("validforcategory_", "", $key);
+                if($val == "true") {
+                    $plan->types[] = $room;
+                }
+            }
+        }
+        
+        
+        $this->getApi()->getPmsInvoiceManager()->saveAdvancePriceYield($this->getSelectedMultilevelDomainName(), $plan);
+    }
+    
+    public function deleteAdvancePricePlan() {
+        $this->getApi()->getPmsInvoiceManager()->deleteYieldPlan($this->getSelectedMultilevelDomainName(), $_POST['data']['planid']);
+    }
     
     public function deletePricePlan() {
         $code = $_POST['data']['code'];

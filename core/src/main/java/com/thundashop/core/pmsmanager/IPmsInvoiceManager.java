@@ -110,4 +110,16 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType);
+    
+    @Administrator
+    public void saveAdvancePriceYield(PmsAdvancePriceYield yieldPlan);
+    
+    @Administrator
+    public List<PmsAdvancePriceYield> getAllAdvancePriceYields();
+    
+    @Administrator
+    public PmsAdvancePriceYield getAdvancePriceYieldPlan(String id);
+    
+    @Administrator
+    public void deleteYieldPlan(String id);
 }

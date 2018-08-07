@@ -95,12 +95,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     @Override
     public boolean chargeOrder(String orderId, String cardId) {
         try {
-            if(storeManager.isProductMode()) {
+//            if(storeManager.isProductMode()) {
                 Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
                 Stripe.apiKey = stripeApp.getSetting("key");
-            } else {
-                Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
-            }
+//            } else {
+//                Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
+//            }
 
             
             Application ecommerceSettings = storeApplicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
@@ -140,12 +140,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
     
     public void saveCard(String card, Integer expMonth, Integer expYear) {
-        if(storeManager.isProductMode()) {
+//        if(storeManager.isProductMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
-        } else {
-            Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
-        }
+//        } else {
+//            Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
+//        }
 
         try {
             // Create a Customer:

@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PmsAdvancePriceYield extends DataCommon {
-    
-   
-    
     public List<String> types = new ArrayList();
     public Date start;
     public Date end;

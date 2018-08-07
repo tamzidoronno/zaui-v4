@@ -63,9 +63,15 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
         try {
             // Create a Customer:
+            User usr = userManager.getUserById(order.userId);
+            String email = usr.emailAddress;
+            if(email == null || email.isEmpty()) {
+                email = "dummy@email.com";
+            }
+            
             Map<String, Object> chargeParams = new HashMap<>();
-            chargeParams.put("source", "tok_mastercard");
-            chargeParams.put("email", "paying.user@example.com");
+            chargeParams.put("source", token);
+            chargeParams.put("email", email);
             Customer customer = Customer.create(chargeParams);
 
             List<ExternalAccount> data = customer.getSources().getData();
@@ -95,12 +101,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     @Override
     public boolean chargeOrder(String orderId, String cardId) {
         try {
-//            if(storeManager.isProductMode()) {
+            if(storeManager.isProductMode()) {
                 Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
                 Stripe.apiKey = stripeApp.getSetting("key");
-//            } else {
-//                Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
-//            }
+            } else {
+                Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
+            }
 
             
             Application ecommerceSettings = storeApplicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
@@ -140,12 +146,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
     
     public void saveCard(String card, Integer expMonth, Integer expYear) {
-//        if(storeManager.isProductMode()) {
+        if(storeManager.isProductMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
-//        } else {
-//            Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
-//        }
+        } else {
+            Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
+        }
 
         try {
             // Create a Customer:

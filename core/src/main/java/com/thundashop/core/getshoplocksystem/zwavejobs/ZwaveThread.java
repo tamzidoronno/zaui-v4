@@ -56,7 +56,13 @@ public abstract class ZwaveThread implements Runnable {
         lock.currentlyUpdating = true;
         lock.dead = false;
        
-        sendNoOperationSignal();
+        try {
+            sendNoOperationSignal();
+        } catch (Exception ex) {
+            lock.currentlyUpdating = false;
+            server.threadDone(this);
+            return;
+        }
         
         for (int i = 0; i < attempts; i++) {
             if (shouldStop) {

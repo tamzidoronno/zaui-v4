@@ -816,6 +816,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return advancePriceYields.get(id);
     }
 
+    private Double increasePriceByAdvanceCoverage(String typeId, Date start, Double price) {
+        Integer coverage = bookingEngine.getCoverageForDate(start);
+        AdvancePriceYieldCalculator calculator = new AdvancePriceYieldCalculator(advancePriceYields);
+        return calculator.doCalculation(price, coverage,typeId, start);
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -1325,6 +1331,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(dataCommon instanceof PmsUserDiscount) {
                 PmsUserDiscount res = (PmsUserDiscount)dataCommon;
                 discounts.put(res.userId, res);
+            }
+            if(dataCommon instanceof PmsAdvancePriceYield) {
+                PmsAdvancePriceYield res = (PmsAdvancePriceYield)dataCommon;
+                advancePriceYields.put(res.id, res);
             }
             if(dataCommon instanceof PmsOrderStatsFilter) {
                 PmsOrderStatsFilter res = (PmsOrderStatsFilter)dataCommon;
@@ -2343,6 +2353,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(pmsManager.getConfigurationSecure().enableCoveragePrices) {
                 price = increasePriceOnCoverage(price, cal.getTime(), prices);
             }
+            price = increasePriceByAdvanceCoverage(typeId, start, price);
             cal.add(Calendar.DAY_OF_YEAR,1);
             
             result.put(dateToUse, price);

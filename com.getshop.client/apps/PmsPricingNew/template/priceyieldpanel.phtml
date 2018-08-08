@@ -63,7 +63,8 @@ $yeldingoptions[100] = "95-100%";
             <?php
             foreach($types as $type) {
                 $checked = "";
-                if(in_array($type->id, $plan->types)) {
+                $typesarray = (array)$plan->types;
+                if(in_array($type->id, $typesarray)) {
                     $checked = "CHECKED";
                 }
                 echo "<input type='checkbox' gsname='validforcategory_".$type->id."' $checked>" . $type->name;

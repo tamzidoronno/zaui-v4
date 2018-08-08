@@ -59,6 +59,9 @@ public class PmsBookingRooms implements Serializable {
     @Editor
     public LockCode codeObject = null;
     
+    @Editor
+    public List<LockCode> codeObjectHistory = new ArrayList();
+    
     public String cardformat = "";
     public Integer intervalCleaning = null;
     public boolean addedByRepeater = false;

@@ -9,12 +9,14 @@ import com.thundashop.core.common.Administrator;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author ktonder
  */
-public class LockCode implements Serializable {
+public class LockCode implements Serializable, Cloneable {
     public Date addedDate = null;
     public Date removedDate = null;
     
@@ -43,5 +45,16 @@ public class LockCode implements Serializable {
         this.cardId = cardId;
         this.pinCode = pinCode;
     }
+
+    @Override
+    public LockCode clone() {
+        try {
+            return (LockCode) super.clone(); //To change body of generated methods, choose Tools | Templates.
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(LockCode.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     
 }

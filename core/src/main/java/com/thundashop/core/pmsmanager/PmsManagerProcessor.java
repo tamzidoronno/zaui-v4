@@ -1307,6 +1307,10 @@ public class PmsManagerProcessor {
                 room.code = ""+nextUnusedCode.pinCode;
                 room.addedToArx = true;
                 room.codeObject = nextUnusedCode;
+                LockCode clonedCode = nextUnusedCode.clone();
+                if (clonedCode != null) {
+                    room.codeObjectHistory.add(clonedCode);
+                }
                 updated = true;
             }
         }

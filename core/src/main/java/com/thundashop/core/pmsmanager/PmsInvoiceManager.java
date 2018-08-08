@@ -51,6 +51,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
+    private HashMap<String, PmsAdvancePriceYield> advancePriceYields = new HashMap();
     private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
     
@@ -788,6 +789,31 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         return null;
+    }
+
+    @Override
+    public void saveAdvancePriceYield(PmsAdvancePriceYield yieldPlan) {
+        saveObject(yieldPlan);
+        advancePriceYields.put(yieldPlan.id, yieldPlan);
+    }
+
+    @Override
+    public List<PmsAdvancePriceYield> getAllAdvancePriceYields() {
+        return new ArrayList(advancePriceYields.values());
+    }
+
+    @Override
+    public void deleteYieldPlan(String id) {
+        PmsAdvancePriceYield plan = advancePriceYields.get(id);
+        if(plan != null) {
+            deleteObject(plan);
+            advancePriceYields.remove(id);
+        }
+    }
+
+    @Override
+    public PmsAdvancePriceYield getAdvancePriceYieldPlan(String id) {
+        return advancePriceYields.get(id);
     }
 
     class BookingOrderSummary {

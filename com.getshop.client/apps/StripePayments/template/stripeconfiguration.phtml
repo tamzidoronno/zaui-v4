@@ -2,6 +2,7 @@
 /* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
 
 $key = $this->getConfigurationSetting("key");
+$pkey = $this->getConfigurationSetting("pkey");
 $title = $this->getConfigurationSetting("title");
 ?>
 
@@ -22,7 +23,14 @@ $title = $this->getConfigurationSetting("title");
 
     <div class="gss_simple_shipping">
         <div class="textfield gss_setting"  id="key">
-            <span class="title"><?php echo $this->__f("Key"); ?></span>
+            <span class="title"><?php echo $this->__f("Publishable key"); ?></span>
+            <input type="textfield" gs_model='stripemodal' gs_model_attr='pkey' value="<? echo $pkey; ?>">
+            <div class="description">
+                <?php  echo $this->__f("Register an account at stripe and create a publishable key"); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="key">
+            <span class="title"><?php echo $this->__f("Private key"); ?></span>
             <input type="textfield" gs_model='stripemodal' gs_model_attr='key' value="<? echo $key; ?>">
             <div class="description">
                 <?php  echo $this->__f("Register an account at stripe and create a private key"); ?>

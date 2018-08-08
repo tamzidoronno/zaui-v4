@@ -63,9 +63,15 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
         try {
             // Create a Customer:
+            User usr = userManager.getUserById(order.userId);
+            String email = usr.emailAddress;
+            if(email == null || email.isEmpty()) {
+                email = "dummy@email.com";
+            }
+            
             Map<String, Object> chargeParams = new HashMap<>();
-            chargeParams.put("source", "tok_mastercard");
-            chargeParams.put("email", "paying.user@example.com");
+            chargeParams.put("source", token);
+            chargeParams.put("email", email);
             Customer customer = Customer.create(chargeParams);
 
             List<ExternalAccount> data = customer.getSources().getData();

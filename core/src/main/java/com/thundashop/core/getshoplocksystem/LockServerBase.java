@@ -5,18 +5,14 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
 import static com.thundashop.core.arx.WrapClient.wrapClient;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ExcludeFromJson;
-import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.trackermanager.TrackLog;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -56,6 +52,11 @@ public abstract class LockServerBase extends DataCommon {
     @Transient
     @ExcludeFromJson
     private GetShopLockSystemManager getShopLockSystemManager;
+    
+    @Transient
+    @ExcludeFromJson
+    private List<AccessEvent> accessEvents = new ArrayList();
+    
 
     public void setManger(GetShopLockSystemManager manager) {
         this.getShopLockSystemManager = manager;
@@ -305,5 +306,16 @@ public abstract class LockServerBase extends DataCommon {
             lock.name = name;
             saveMe();
         }
+    }
+    
+    public void addEvent(AccessEvent event) {
+        accessEvents.add(event);
+    }
+
+    public List<AccessEvent> getAccessEvents() {
+        List<AccessEvent> events = new ArrayList();
+        events.addAll(accessEvents);
+        accessEvents.clear();
+        return events;
     }
 }

@@ -60,6 +60,7 @@ public class PmsGetShopOverView extends GetShopSessionBeanNamed implements IPmsG
     
     @Override
     public List<CustomerSetupObject> getCustomerToSetup() {
+        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { return null; }
         List<Store> allStores = storePool.getAllStores();
         
         List<CustomerSetupObject> objects = new ArrayList();
@@ -315,12 +316,14 @@ public class PmsGetShopOverView extends GetShopSessionBeanNamed implements IPmsG
 
     @Override
     public void saveCustomerObject(CustomerSetupObject object) {
+        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { return; }
         saveObject(object);
         customers.put(object.customerStoreId, object);
     }
 
     @Override
     public CustomerSetupObject getCustomerObject(String storeId) {
+        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { return null; }
         if(customers.containsKey(storeId)) {
             return customers.get(storeId);
         }

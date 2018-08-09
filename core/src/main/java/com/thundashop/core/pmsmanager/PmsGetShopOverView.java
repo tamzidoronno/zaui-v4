@@ -325,7 +325,10 @@ public class PmsGetShopOverView extends GetShopSessionBeanNamed implements IPmsG
     public CustomerSetupObject getCustomerObject(String storeId) {
         if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { return null; }
         if(customers.containsKey(storeId)) {
-            return customers.get(storeId);
+            CustomerSetupObject res = customers.get(storeId);
+            if(res != null) {
+                return res;
+            }
         }
         return new CustomerSetupObject();
     }

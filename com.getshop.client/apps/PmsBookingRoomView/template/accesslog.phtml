@@ -11,12 +11,25 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMu
 if (!$item->lockGroupId) {
     return;
 }
-if (!$room->codeObject)
+
+if (!$room->codeObject && !count($room->codeObjectHistory)) {
+    echo "Code not used";
     return;
+}
 
 $startDate = $bookingEngineBooking->startDate;
 $endDate = $bookingEngineBooking->endDate;
-$results = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate, $room->codeObject->slotId);
+$results = array();
+
+if (!$room->codeObject) {
+    foreach ($room->codeObjectHistory as $codeObject) {
+        $results2 = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate, $codeObject->slotId);
+        $results = array_merge($results2, $results);
+    }
+} else {
+    $results = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate, $room->codeObject->slotId);
+}
+
 ?>
 
 

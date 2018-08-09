@@ -326,9 +326,18 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         if (lock != null) {
             addAccessHistory(lock.id, userSlot, accessTime);
         }
+        
+        getManager().getAllGroups().stream()
+                    .filter(o -> o.isConnectedToLock(lock.id))
+                    .forEach(group -> {
+                        AccessEvent event = new AccessEvent();
+                        event.groupId = group.id;
+                        event.lockId = lock.id;
+                        event.date = accessTime;
+                        addEvent(event);
+                    });
     }
-
-
+        
 
     private Lock getLockByDeviceId(String deviceId) {
         int deviceIdInt = Integer.parseInt(deviceId);

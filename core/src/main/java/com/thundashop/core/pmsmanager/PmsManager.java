@@ -4925,6 +4925,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void checkIfGuestHasArrived() throws Exception {
+        if (getShopLockSystemManager.isActivated()) {
+            checkIfGuestHasArrivedApac();
+            PmsManagerProcessor processor = new PmsManagerProcessor(this);
+            processor.processStartEndings();
+            return;
+        }
+        
         if (!hasLockSystemActive()) {
             PmsManagerProcessor processor = new PmsManagerProcessor(this);
             processor.processStartEndings();
@@ -8786,4 +8793,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return newRes;
     }
+
+    private void checkIfGuestHasArrivedApac() {
+        getShopLockSystemManager.getAccessEvents()
+                .stream()
+                .forEach(event -> {
+                    for (PmsBooking booking : bookings.values()) {
+                        for (PmsBookingRooms room : booking.rooms) {
+                            if (!room.isStarted() || room.isEnded() || room.checkedin) {
+                                continue;
+                            }
+                            if (room.bookingItemId != null && room.codeObject != null) {
+                                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                                if (item != null && item.lockGroupId.equals(event.groupId) && event.date.after(room.date.start) && event.date.before(room.date.end)) {
+                                    markGuestArrivedInternal(booking, room);
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+    
 }

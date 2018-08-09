@@ -58,4 +58,6 @@ public interface LockServer {
     public void closeLock(String lockId);
 
     public void renameLock(String lockId, String name);
+    
+    public List<AccessEvent> getAccessEvents();
 }

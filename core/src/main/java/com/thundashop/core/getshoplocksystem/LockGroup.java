@@ -152,4 +152,13 @@ public class LockGroup extends DataCommon {
         
         return connectedToLocks.get(serverId).contains(lockId);
     }
+    
+    boolean isConnectedToLock(String lockId) {
+        for (List<String> lockIds : connectedToLocks.values()) {
+            if (lockIds != null && lockIds.contains(lockId))
+                return true;
+        }
+        
+        return false;
+    }
 }

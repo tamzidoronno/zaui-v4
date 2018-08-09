@@ -723,4 +723,17 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     public void renameLock(String serverId, String lockId, String name) {
         getLockServer(serverId).renameLock(lockId, name);
     }
+
+    public List<AccessEvent> getAccessEvents() {
+        List<AccessEvent> retList = new ArrayList();
+        lockServers.values()
+                .stream()
+                .forEach(server -> {
+                    retList.addAll(server.getAccessEvents());
+                });
+        
+        return retList;
+    }
+    
+    
 }

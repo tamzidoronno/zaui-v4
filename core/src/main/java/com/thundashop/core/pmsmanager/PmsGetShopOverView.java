@@ -346,9 +346,11 @@ public class PmsGetShopOverView extends GetShopSessionBeanNamed implements IPmsG
                 }
                 for(String cat : price.dailyPrices.keySet()) {
                     HashMap<String, Double> catPrice = price.dailyPrices.get(cat);
-                    Double defaultPrice = catPrice.get("default");
-                    if(defaultPrice == null || defaultPrice <= 0.0) {
-                        failed = true;
+                    if(catPrice != null) {
+                        Double defaultPrice = catPrice.get("default");
+                        if(defaultPrice == null || defaultPrice <= 0.0) {
+                            failed = true;
+                        }
                     }
                 }
                 return !failed;

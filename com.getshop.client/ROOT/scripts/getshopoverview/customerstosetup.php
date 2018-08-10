@@ -1,4 +1,4 @@
-<?php
+<?php //
 $factory = IocContainer::getFactorySingelton();
 
 $customers = $factory->getApi()->getPmsGetShopOverView()->getCustomerToSetup();
@@ -75,7 +75,7 @@ foreach($customers as $cust) {
     $stateclass = $cust->wubookSetUpState == 2 ? "correct" : "fail";
     echo "<td align='center' class='$stateclass'>".$cust->wubookSetUpState."</td>";
     
-    $stateclass = $cust->numberOfFieldsSetupInInvoice == 12 ? "correct" : "fail";
+    $stateclass = $cust->numberOfFieldsSetupInInvoice >= 12 ? "correct" : "fail";
     echo "<td align='center' class='$stateclass'>".$cust->numberOfFieldsSetupInInvoice."</td>";
     
     $stateclass = $cust->locksInstalled == 12 ? "correct" : "fail";

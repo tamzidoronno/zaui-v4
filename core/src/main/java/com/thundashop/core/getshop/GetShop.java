@@ -23,6 +23,8 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.GetshopStore;
+import com.thundashop.core.getshop.data.Lead;
+import com.thundashop.core.getshop.data.LeadHistory;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.SmsResponse;
@@ -70,6 +72,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     private HashMap<String, List<Partner>> partners;
     private HashMap<String, PartnerData> partnerData = new HashMap();
     private ConcurrentHashMap<String, SmsResponse> smsResponses = new ConcurrentHashMap();
+    private HashMap<String, Lead> leads = new HashMap();
 
     @Autowired
     public Database database;
@@ -85,6 +88,8 @@ public class GetShop extends ManagerBase implements IGetShop {
     
     @Autowired
     private StoreManager storeManager;
+    
+    
     
     @Override
     public List<GetshopStore> getStores(String code) {
@@ -114,6 +119,10 @@ public class GetShop extends ManagerBase implements IGetShop {
             if(obj instanceof PartnerData) {
                 PartnerData pdata = (PartnerData)obj;
                 partnerData.put(pdata.partnerId, pdata);
+            }
+            if(obj instanceof Lead) {
+                Lead lead = (Lead)obj;
+                leads.put(lead.id, lead);
             }
             if(obj instanceof SmsResponse) {
                 SmsResponse pdata = (SmsResponse)obj;
@@ -794,5 +803,48 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Override
     public void toggleRemoteEditing() {
         Runner.AllowedToSaveToRemoteDatabase = !Runner.AllowedToSaveToRemoteDatabase;
+    }
+
+    @Override
+    public Lead createLead(String name) {
+        Lead lead = new Lead();
+        lead.customerName = name;
+        saveLead(lead);
+        return lead;
+    }
+
+    @Override
+    public void saveLead(Lead lead) {
+        saveObject(lead);
+        leads.put(lead.id, lead);
+    }
+
+    @Override
+    public List<Lead> getLeads() {
+        return new ArrayList(leads.values());
+    }
+
+    @Override
+    public void addLeadHistory(String leadId, String comment) {
+        Lead lead = leads.get(leadId);
+        LeadHistory history = new LeadHistory();
+        history.comment = comment;
+        history.userId = getSession().currentUser.id;
+        history.leadState = lead.leadState;
+        lead.leadHistory.add(history);
+        saveLead(lead);
+    }
+
+    @Override
+    public void changeLeadState(String leadId, Integer state) {
+        Lead lead = leads.get(leadId);
+        lead.leadState = state;
+        addLeadHistory(lead.id, "Changed lead state");
+        saveLead(lead);
+    }
+
+    @Override
+    public Lead getLead(String leadId) {
+        return leads.get(leadId);
     }
 }

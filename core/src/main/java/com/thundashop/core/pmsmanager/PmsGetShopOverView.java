@@ -1,12 +1,12 @@
 package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.appmanager.data.SavedApplicationSettings;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class PmsGetShopOverView extends GetShopSessionBeanNamed implements IPmsGetShopOverView {
+public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverView {
 
     @Autowired
     public GetShop GetShop;

@@ -7,9 +7,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.List;
-import javax.xml.ws.soap.Addressing;
 
 /**
  *

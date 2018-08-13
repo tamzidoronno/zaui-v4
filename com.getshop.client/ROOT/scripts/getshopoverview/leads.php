@@ -48,7 +48,7 @@ foreach($leads as $lead) {
     echo "</td>";
     echo "<td style='width:440px;'>";
     echo "<span class='addcommentbutton' style='position:absolute;right:0px; color:blue; display:none;'>Add comment</span>";
-    $historyList = $lead->leadHistory;
+    $historyList = (array)$lead->leadHistory;
     krsort($historyList);
     $i = 0;
     foreach($historyList as $history) {
@@ -58,6 +58,9 @@ foreach($leads as $lead) {
         echo "(" . $leadstates[$history->leadState] . ")";
         echo "</div>";
         $i++;
+    }
+    if(sizeof($historyList) == 0) {
+        echo "<div class='historyshow'></div>";
     }
     echo "</td>";
     echo "</tr>";

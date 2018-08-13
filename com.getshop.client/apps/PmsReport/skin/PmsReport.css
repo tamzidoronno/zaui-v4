@@ -7,3 +7,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.PmsReport .reportview {
+    overflow: auto;
+    max-width: 1500px;
+    margin: auto;
+}

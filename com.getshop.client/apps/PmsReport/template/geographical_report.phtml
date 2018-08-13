@@ -323,65 +323,80 @@ ksort($countriesInList);
 <div class="pdfPageSizer">
         <table cellspacing='0' width='100%'>
             <tr>
-                <th align='left'>
+                <th align='left' style="width:200px;">
                     Type
                 </th>
+                <th>Total</th>
                 <?php foreach($countriesInList as $country => $count) {
                     echo "<th class='".strtolower($extendedRegionList[$country][5])."'>" . $codes[$country] . "<br>($country)" . "</th>";
                 }?>
-                <th>Total</th>
             </tr>
             <tr>
-                <td>Number of guests</td>
+                <td style="width:200px !important;">Number of guests</td>
                 <?php $total = 0; ?>
-                <?php foreach($countriesInList as $country => $count) {
+                <?php 
+                $cols = "";
+                foreach($countriesInList as $country => $count) {
                     $total += $count;
-                    echo "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
+                    $cols .= "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
                 }
                 echo "<td align='center'>$total</td>";
+                echo $cols;
                 ?>
             </tr>
             <tr>
                 <td>Number of guests per night</td>
                 <?php $total = 0; ?>
-                <?php foreach($countriesInList as $country => $count) {
+                <?php 
+                $cols = "";
+                foreach($countriesInList as $country => $count) {
                     $total += $saleStats->sleepoverstats->guests->{$country};
-                    echo "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $saleStats->sleepoverstats->guests->{$country} . "</td>";
+                    $cols .= "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $saleStats->sleepoverstats->guests->{$country} . "</td>";
                 }
                 echo "<td align='center'>$total</td>";
+                echo $cols;
                 ?>
             </tr>
             <tr>
                 <td>Number of company guests per night</td>
                 <?php $total = 0; ?>
-                <?php foreach($countriesInList as $country => $count) {
+                <?php 
+                $cols = "";
+                foreach($countriesInList as $country => $count) {
                     $count = isset($saleStats->sleepoverstats->guestsCompany->{$country}) ? $saleStats->sleepoverstats->guestsCompany->{$country} : "0";
                     $total += $count;
-                    echo "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
+                    $cols .= "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
                 }
                 echo "<td align='center'>$total</td>";
+                echo $cols;
                 ?>
             </tr>
             <tr>
                 <td>Number of regular guests per night</td>
                 <?php $total = 0; ?>
-                <?php foreach($countriesInList as $country => $count) {
+                <?php 
+                $cols = "";
+                foreach($countriesInList as $country => $count) {
                     $count = isset($saleStats->sleepoverstats->guestsRegular->{$country}) ? $saleStats->sleepoverstats->guestsRegular->{$country} : "0";
                     $total += $count;
-                    echo "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
+                    $cols .= "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
                 }
                 echo "<td align='center'>$total</td>";
+                echo $cols;
                 ?>
             </tr>
             <tr>
                 <td>Number of conference guests per night</td>
                 <?php $total = 0; ?>
-                <?php foreach($countriesInList as $country => $count) {
+                <?php 
+                $cols = "";
+                foreach($countriesInList as $country => $count) {
                     $count = isset($saleStats->sleepoverstats->guestsConference->{$country}) ? $saleStats->sleepoverstats->guestsConference->{$country} : "0";
                     $total += $count;
-                    echo "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
+                    $cols .= "<td align='center' class='".strtolower($extendedRegionList[$country][5])."'>" . $count . "</td>";
                 }
                 echo "<td align='center'>$total</td>";
+                echo $cols;
                 ?>
             </tr>
         </table>

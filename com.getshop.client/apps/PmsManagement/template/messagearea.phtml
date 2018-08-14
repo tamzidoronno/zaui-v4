@@ -33,7 +33,6 @@
             <div gstype="form" method="sendSms">
                 <select style="width:100%; margin-bottom: 10px;" gsname='guestid'>
                     <?php
-                    echo "<option value=''>Select a guest</option>";
                     $booking = $this->getSelectedBooking();
                     $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
                     foreach($booking->rooms as $room) {

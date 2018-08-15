@@ -6798,6 +6798,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void sendSmsToGuest(String guestId, String message) {
+        if(guestId== null || guestId.isEmpty()) {
+            return;
+        }
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 for (PmsGuests guest : room.guests) {

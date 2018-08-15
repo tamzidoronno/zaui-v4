@@ -6,6 +6,8 @@ import com.thundashop.core.common.GetShopNotSynchronized;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.GetshopStore;
+import com.thundashop.core.getshop.data.Lead;
+import com.thundashop.core.getshop.data.LeadHistory;
 import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.getshop.data.StartData;
@@ -35,7 +37,7 @@ public interface IGetShop {
     
     public void addToDibsAutoCollect(String orderId, String storeId);
     
-    /**
+    /**Current leads
      * 
      * @param ids
      * @throws ErrorException 
@@ -49,6 +51,24 @@ public interface IGetShop {
      */
     public PartnerData getPartnerData(String partnerId, String password) throws ErrorException;
 
+    @Administrator
+    public Lead createLead(String name);
+    
+    @Administrator
+    public void saveLead(Lead lead);
+    
+    @Administrator
+    public List<Lead> getLeads();
+    
+    @Administrator
+    public Lead getLead(String leadId);
+    
+    @Administrator
+    public void addLeadHistory(String leadId, String comment);
+    
+    @Administrator
+    public void changeLeadState(String leadId, Integer state);
+    
     /**
      * 
      * @param userId

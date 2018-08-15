@@ -43,9 +43,6 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     private VerifoneTerminalListener verifoneListener;
 
     @Autowired
-    public WebSocketServerImpl webSocketServer;
-
-    @Autowired
     public FrameworkConfig frameworkConfig;
     
     HashMap<String, VerifonePaymentApp> activePaymentApps = new HashMap();
@@ -163,7 +160,6 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     private void printFeedBack(String string) {
         VerifoneFeedback feedBack = new VerifoneFeedback();
         feedBack.msg = string;
-        webSocketServer.sendMessage(feedBack);
         terminalMessages.add(string);
         if(orderToPay != null && orderToPay.payment != null) {
             orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);

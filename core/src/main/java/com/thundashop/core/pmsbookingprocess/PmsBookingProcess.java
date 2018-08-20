@@ -711,9 +711,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             if(order != null && order.payment != null && order.payment.transactionLog != null) {
                 addToLog = true;
             }
-            if(storeManager.isProductMode() || testTerminalPrinter) {
+            if(storeManager.isProductMode()) {
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (" + url + ")");
-                webManager.htmlPost(url, text, false, "UTF-8");
+                webManager.htmlPostThreaded(url, text, false, "UTF-8");
             } else {
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (dev mode)");
                 System.out.println("Printing reciept to url: " + url);

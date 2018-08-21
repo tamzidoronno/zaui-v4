@@ -36,9 +36,6 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
     public GetShop GetShop;
 
     @Autowired
-    public PmsManager pmsManager;
-    
-    @Autowired
     public Database database;
     
     private List<Application> applist;

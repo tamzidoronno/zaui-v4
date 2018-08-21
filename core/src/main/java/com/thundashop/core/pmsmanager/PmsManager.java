@@ -5308,7 +5308,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Created user for booking");
             
             boolean canAdd = canAdd(bookingsToAdd);
-            if (configuration.payAfterBookingCompleted && !booking.createOrderAfterStay && !booking.hasOverBooking() && canAdd) {
+            if (configuration.payAfterBookingCompleted() && !booking.createOrderAfterStay && !booking.hasOverBooking() && canAdd) {
                 gsTiming("get priceobject from booking");
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
                 gsTiming("Got priceobject from booking");
@@ -5324,7 +5324,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Completed booking");
 
             if (result == 0) {
-                if (!configuration.payAfterBookingCompleted) {
+                if (!configuration.payAfterBookingCompleted()) {
                     if (bookingIsOK(booking)) {
                         if (!booking.confirmed || storeManager.isPikStore()) {
                             doNotification("booking_completed", booking, null);

@@ -691,19 +691,19 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         pmsManager.processor();
         String url = "http://" + settings.ip + ":8080/print.php";
         try {
-            if(order.isRecent()) {
-                PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
-                for(PmsBookingRooms room : booking.getActiveRooms()) {
-                    if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                        text += "--------------------\r\n";
-                        text += "###  ROOM CODE   ###\r\n";
-                        text += "--------------------\r\n";
-                        text += "Room: " + item.bookingItemName + "\r\n";
-                        text += "Code: " + room.code + "\r\n";
-                    }
+            
+            PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                    BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    text += "--------------------\r\n";
+                    text += "###  ROOM CODE   ###\r\n";
+                    text += "--------------------\r\n";
+                    text += "Room: " + item.bookingItemName + "\r\n";
+                    text += "Code: " + room.code + "\r\n";
                 }
             }
+
             text += "\r\n";
             text += "\r\n";
             text += "\r\n";

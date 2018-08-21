@@ -56,8 +56,8 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
     
     @Override
     public List<CustomerSetupObject> getCustomerToSetup() {
-        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { return null; }
-            List<Store> allStores = storePool.getAllStores();
+        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { logPrint("Auth failure"); return null; }
+        List<Store> allStores = storePool.getAllStores();
         
         List<CustomerSetupObject> objects = new ArrayList();
         Calendar cal = Calendar.getInstance();
@@ -66,8 +66,10 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
             if(cal.get(Calendar.YEAR) < 2018) {
                 continue;
             }
+            logPrint("store found: " + s.id);
             CustomerSetupObject obj = createCustomerObject(s);
             if(!obj.completed) {
+                logPrint("Added object");
                 objects.add(obj);
             }
         }

@@ -329,7 +329,7 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
         return new CustomerSetupObject();
     }
 
-    private boolean checkIfPricesAreOk(Store s) {
+    private boolean checkIfPricesAreOk(Store s) { 
         HashMap<String, String> searchCriteria = new HashMap();
         searchCriteria.put("className", "com.thundashop.core.pmsmanager.PmsPricing");
         List<DataCommon> apps = database.find("col_" + s.id, null, null, "PmsManager_default", searchCriteria);

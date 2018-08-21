@@ -156,7 +156,7 @@ public class PmsConfiguration extends DataCommon {
     public int warnWhenOrderNotPaidInDays = 3;
     public Integer chargeOrderAtDayInMonth = 0;
     private boolean prepayment = false;
-    public boolean payAfterBookingCompleted = false;
+    private boolean payAfterBookingCompleted = false;
     private boolean requirePayments = false;
     public boolean updatePriceWhenChangingDates = false;
     public Integer prepaymentDaysAhead = -1;
@@ -206,6 +206,13 @@ public class PmsConfiguration extends DataCommon {
             return true;
         }
         return requirePayments;
+    }
+    
+    public boolean payAfterBookingCompleted() {
+        if(isPikStore) {
+            return true;
+        }
+        return payAfterBookingCompleted;
     }
     
     public boolean getMarkBookingsWithNoOrderAsUnpaid() {

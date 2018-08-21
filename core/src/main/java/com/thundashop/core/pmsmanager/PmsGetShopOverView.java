@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +44,13 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
     
     private HashMap<String, CustomerSetupObject> customers = new HashMap();
     
+    @PostConstruct
+    public void init() {
+        isSingleton = true;
+        storeId = "all";
+        initialize();
+    }
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -56,7 +64,7 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
     
     @Override
     public List<CustomerSetupObject> getCustomerToSetup() {
-        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { logPrint("Auth failure"); return null; }
+        if(!hasAccess()) { logPrint("Auth failure"); return null; }
         List<Store> allStores = storePool.getAllStores();
         logPrint("All stores: " + allStores.size());
         List<CustomerSetupObject> objects = new ArrayList();
@@ -66,10 +74,8 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
             if(cal.get(Calendar.YEAR) < 2018) {
                 continue;
             }
-            logPrint("store found: " + s.id);
             CustomerSetupObject obj = createCustomerObject(s);
             if(!obj.completed) {
-                logPrint("Added object");
                 objects.add(obj);
             }
         }
@@ -143,7 +149,6 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
         if(applist != null) {
             return applist;
         }
-        List<DataCommon> appinstances = database.retreiveData(credentials);
         credentials.manangerName = "ApplicationPool";
         credentials.storeid = "all";
         List<DataCommon> apps = database.retreiveData(credentials);
@@ -314,14 +319,14 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
 
     @Override
     public void saveCustomerObject(CustomerSetupObject object) {
-        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { return; }
+        if(!hasAccess()) { return; }
         saveObject(object);
         customers.put(object.customerStoreId, object);
     }
 
     @Override
     public CustomerSetupObject getCustomerObject(String customerStoreId) {
-        if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { return null; }
+        if(!hasAccess()) { return null; }
         if(customers.containsKey(customerStoreId)) {
             CustomerSetupObject res = customers.get(customerStoreId);
             if(res != null) {
@@ -355,6 +360,13 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
             }
         }
         
+        return false;
+    }
+
+    private boolean hasAccess() {
+        if(getSession().storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
+            return true;
+        }
         return false;
     }
 

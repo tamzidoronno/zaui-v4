@@ -58,7 +58,7 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
     public List<CustomerSetupObject> getCustomerToSetup() {
         if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) { logPrint("Auth failure"); return null; }
         List<Store> allStores = storePool.getAllStores();
-        
+        logPrint("All stores: " + allStores.size());
         List<CustomerSetupObject> objects = new ArrayList();
         Calendar cal = Calendar.getInstance();
         for(Store s : allStores) {

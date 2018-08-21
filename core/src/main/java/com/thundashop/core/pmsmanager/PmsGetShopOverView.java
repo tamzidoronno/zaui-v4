@@ -30,7 +30,6 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@GetShopSession
 public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverView {
 
     @Autowired

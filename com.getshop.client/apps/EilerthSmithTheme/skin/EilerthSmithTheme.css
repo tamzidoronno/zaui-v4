@@ -12,3 +12,10 @@ h1 { font-weight: 100; }
 .Menu .menuentries .entry { display:block !important; }
 .Menu .menuentries .entry a { color:#fff !important; padding: 10px; border-bottom: solid 1px #fff; width:100%; display:block; }
 .Menu .menuentries .entry a:hover { color:green !important; } 
+
+
+@media only all and (max-width: 800px) {
+    .gscell_9.gsuicell { min-height: 310px; }
+    .gscell_49.gsuicell { background-size: inherit !important; }
+    .gscell_49.gsuicell img { margin-top: 20px; }
+}

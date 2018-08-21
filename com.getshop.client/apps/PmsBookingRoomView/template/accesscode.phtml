@@ -1,5 +1,6 @@
 <?
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$this->setData(true);
 $room = $this->getSelectedRoom();
 $bookingEngineBooking = $this->getBookingEngineBooking();
 $isActive = strtotime($bookingEngineBooking->startDate) <= time();
@@ -216,7 +217,27 @@ if ($isPaid && !$isClean) {
 }
 
 if (!$isPaid && !$isClean) {
-    echo "room not clean.";
+     ?>
+    <div class="kaipal infobox">
+        <div class="image talking"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Waiting for the room to be cleaned"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("The room is not clean and the guest has not paid");
+                ?>    
+
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Do you want me to do something about this?"); ?></div>
+                    <div class="shop_button" gsclick="markRoomCleaned"  synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as clean"); ?></div>
+                    <div class="shop_button" gsclick="markRoomCleanedwithoutlog"  synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as clean (without logging to reports)"); ?></div>
+                    <div class="shop_button" gsclick="forceAccessRegardlessOfPayment" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Force access regardless of payment"); ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?
 }
 ?>
 

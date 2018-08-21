@@ -689,7 +689,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         User user = userManager.getUserById(order.userId);
         String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
         pmsManager.processor();
-        String url = "http://" + settings.ip + "/print.php";
+        String url = "http://" + settings.ip + ":8080/print.php";
         try {
             if(order.isRecent()) {
                 PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
@@ -711,9 +711,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             if(order != null && order.payment != null && order.payment.transactionLog != null) {
                 addToLog = true;
             }
-            if(storeManager.isProductMode() || testTerminalPrinter) {
+            if(storeManager.isProductMode()) {
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (" + url + ")");
-                webManager.htmlPost(url, text, false, "UTF-8");
+                webManager.htmlPostThreaded(url, text, false, "UTF-8");
             } else {
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (dev mode)");
                 System.out.println("Printing reciept to url: " + url);
@@ -1064,7 +1064,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public StartPaymentProcessResult startPaymentProcess(StartPaymentProcess data) {
-        if(data.reference.length() < 4) {
+        if(data == null || data.reference == null || data.reference.length() < 4) {
             return null;
         }
         

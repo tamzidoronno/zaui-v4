@@ -66,6 +66,7 @@ import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.wubook.WubookManager;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8816,5 +8817,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 });
     }
+
+    @Override
+    public Object preProcessMessage(Object object, Method executeMethod) {
+
+        List<String> methodsThatShouldInvokeProcessor = new ArrayList();
+        methodsThatShouldInvokeProcessor.add("saveBooking");
+        methodsThatShouldInvokeProcessor.add("generateNewCodeForRoom");
+        methodsThatShouldInvokeProcessor.add("markRoomDirty");
+        methodsThatShouldInvokeProcessor.add("markRoomAsCleaned");
+        methodsThatShouldInvokeProcessor.add("markRoomAsCleanedWithoutLogging");
+        
+        if (executeMethod != null && methodsThatShouldInvokeProcessor.contains(executeMethod.getName().toString())) {
+            processor();
+        }
+        
+        return object;
+    }
+    
+    
     
 }

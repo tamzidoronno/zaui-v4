@@ -66,6 +66,11 @@ public class WebManager extends ManagerBase implements IWebManager {
         return htmlPostBasicAuth(url, data, jsonPost, encoding, "");
     }       
     
+    public void htmlPostThreaded(String url, String data, boolean jsonPost, String encoding) throws Exception {
+        WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap());
+        new Thread(thread).start();
+    }       
+    
     @Override
     public JsonObject htmlPostJson(String url, JsonObject jsonObject, String encoding) throws Exception {
         return new JsonParser().parse(htmlPost(url, jsonObject.toString(), true, encoding)).getAsJsonObject();

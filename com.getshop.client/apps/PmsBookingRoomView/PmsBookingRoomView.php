@@ -503,7 +503,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function setData($reload = false) {
-        if(isset($this->pmsBooking) && isset($this->selectedRoom)) {
+        if(isset($this->pmsBooking) && isset($this->selectedRoom) && !$reload) {
             return;
         }
         $cachedRoomId = $this->getSelectedRoomId();

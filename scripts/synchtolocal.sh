@@ -13,6 +13,7 @@ fi
 echo "What server do you want to release to?"
 echo "3 = Server 3 ( First server ever created )";
 echo "4 = Server 4 ( Created: 8 june 2017 )";
+echo "5 = Server 5 - Kronen ( Created: 19 aug 2018 )";
 read serverQuestion;
 
 SERVER="NONE";
@@ -20,6 +21,8 @@ if [ $serverQuestion = "3" ]; then
         SERVER="148.251.15.227";
 elif [ $serverQuestion = "4" ]; then
 	SERVER="138.201.203.177"
+elif [ $serverQuestion = "5" ]; then
+	SERVER="88.99.1.121"
 else 
 	echo "Invalid server setup";
 fi;

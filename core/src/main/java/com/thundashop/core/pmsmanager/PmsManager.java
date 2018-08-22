@@ -927,9 +927,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         PmsBooking booking = null;
         if(bookingId != null) {
-            booking = getBookingUnsecure(bookingId);
+            booking = getBooking(bookingId);
         } else {
-            booking = getBookingFromRoomSecure(roomId);
+            booking = getBookingFromRoom(roomId);
         }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
@@ -5699,7 +5699,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void changeDatesOnRoom(PmsBookingRooms room, Date start, Date end) {
-        PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
+        PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
         Date now = new Date();
         if (!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
                 && (start.before(now) && end.after(now))) {

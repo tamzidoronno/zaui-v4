@@ -89,7 +89,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean deletedByChannelManagerForModification = false;
     public boolean inWorkSpace = false;
     public boolean addedToWaitingList = false;
-    public boolean overbooking = false;
+    private boolean overbooking = false;
     public Date lastBookingChangedItem;
     
     @Transient
@@ -110,6 +110,13 @@ public class PmsBookingRooms implements Serializable {
     boolean paidFor = false;
     public boolean forceAccess = false;
     Double printablePrice = 0.0;
+    
+    public boolean isOverBooking() {
+        if(isAddedToBookingEngine()) {
+            overbooking = false;
+        }
+        return overbooking;
+    }
     
     void clear() {
         pmsBookingRoomId = UUID.randomUUID().toString();
@@ -925,6 +932,21 @@ public class PmsBookingRooms implements Serializable {
         double toreturn = getPriceForDay(priceType, cal);
         toreturn -= removeFromPrice;
         return toreturn;
+    }
+
+    public boolean isAddedToBookingEngine() {
+        if(bookingId != null && ! bookingId.isEmpty() && !isDeleted()) {
+            return true;
+        }
+        return false;
+    }
+
+    void unmarkOverBooking() {
+        overbooking = false;
+    }
+
+    void markAsOverbooking() {
+        overbooking = true;
     }
 
 }

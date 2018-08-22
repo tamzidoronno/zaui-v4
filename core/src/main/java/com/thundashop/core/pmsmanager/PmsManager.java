@@ -1730,7 +1730,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         for (PmsBookingRooms remove : toRemove) {
-            if (!remove.isDeleted() && !remove.overbooking) {
+            if (!remove.isDeleted() && !remove.isOverBooking()) {
                 bookingEngine.deleteBooking(remove.bookingId);
                 remove.delete();
                 logEntry(roomName + " removed from booking ", bookingId, null);
@@ -1743,7 +1743,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         bookingEngine.addBookings(toAdd);
                         remove.undelete();
                         booking.isDeleted = false;
-                        remove.overbooking = false;
+                        remove.unmarkOverBooking();
                         remove.credited = false;
                         remove.setBooking(tmpbook);
                         remove.deleted = false;
@@ -2750,7 +2750,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String res = addBookingToBookingEngine(booking, room);
         if (!res.isEmpty()) {
             room.addedToWaitingList = true;
-            room.overbooking = true;
+            room.markAsOverbooking();
         }
 
         addDefaultAddonsToRooms(toAdd);
@@ -3502,7 +3502,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.canBeAdded = false;
                     room.delete();
                     if (booking.isWubook()) {
-                        room.overbooking = true;
+                        room.markAsOverbooking();
                     }
 
                     BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);

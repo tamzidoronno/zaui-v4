@@ -149,9 +149,10 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
         if(applist != null) {
             return applist;
         }
-        credentials.manangerName = "ApplicationPool";
-        credentials.storeid = "all";
-        List<DataCommon> apps = database.retreiveData(credentials);
+        Credentials cr = new Credentials(UserManager.class);
+        cr.manangerName = "ApplicationPool";
+        cr.storeid = "all";
+        List<DataCommon> apps = database.retreiveData(cr);
         List<Application> applist = new ArrayList();
         for(DataCommon d : apps) {
             if(d instanceof Application) {
@@ -174,10 +175,10 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
     }
 
     private List<SavedApplicationSettings> getActivatedApplications(Store store) {
-        Credentials credentials = new Credentials(UserManager.class);
-        credentials.manangerName = "StoreApplicationPool";
-        credentials.storeid = store.id;
-        List<DataCommon> apps = database.retreiveData(credentials);
+        Credentials cr = new Credentials(UserManager.class);
+        cr.manangerName = "StoreApplicationPool";
+        cr.storeid = store.id;
+        List<DataCommon> apps = database.retreiveData(cr);
         List<SavedApplicationSettings> pmethods = new ArrayList();
         for(DataCommon data : apps) {
             if(data instanceof SavedApplicationSettings) {

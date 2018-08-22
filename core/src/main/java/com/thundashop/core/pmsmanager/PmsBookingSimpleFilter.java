@@ -203,7 +203,7 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "blocked";
         }
         
-        if(room.overbooking) {
+        if(room.isOverBooking()) {
             simple.progressState = "overbook";
         }
         if(room.deletedByChannelManagerForModification) {
@@ -277,7 +277,7 @@ public class PmsBookingSimpleFilter {
                 return true;
             }
         } else if (filter.filterType.equals("waiting") && !room.deletedByChannelManagerForModification) {
-            if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate) && (room.addedToWaitingList || room.overbooking)) {
+            if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate) && (room.addedToWaitingList || room.isOverBooking())) {
                 return true;
             }
         } else if (filter.filterType.equals("activecheckout")) {

@@ -128,7 +128,7 @@ public class PmsBooking extends DataCommon {
     
     public boolean hasOverBooking() {
         for(PmsBookingRooms room : rooms) {
-            if(room.overbooking) {
+            if(room.isOverBooking()) {
                 return true;
             }
         }
@@ -147,7 +147,7 @@ public class PmsBooking extends DataCommon {
     public List<PmsBookingRooms> getOverBookedRooms() {
         List<PmsBookingRooms> res = new ArrayList();
         for(PmsBookingRooms room : rooms) {
-            if(room.overbooking) {
+            if(room.isOverBooking()) {
                 res.add(room);
             }
         }
@@ -546,7 +546,7 @@ public class PmsBooking extends DataCommon {
 
     void unmarkOverBooking() {
         for(PmsBookingRooms room : getAllRoomsIncInactive()) {
-            room.overbooking = false;
+            room.unmarkOverBooking();
         }
         for(PmsBookingRooms room : getAllRoomsIncInactive()) {
             if(room.isDeleted() && !room.deletedByChannelManagerForModification) {

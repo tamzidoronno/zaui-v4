@@ -931,9 +931,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         PmsBooking booking = null;
         if(bookingId != null) {
-            booking = getBooking(bookingId);
+            booking = getBookingUnsecure(bookingId);
         } else {
-            booking = getBookingFromRoom(roomId);
+            booking = getBookingFromRoomSecure(roomId);
         }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
@@ -1734,7 +1734,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         for (PmsBookingRooms remove : toRemove) {
-            if (!remove.isDeleted() && !remove.overbooking) {
+            if (!remove.isDeleted() && !remove.isOverBooking()) {
                 bookingEngine.deleteBooking(remove.bookingId);
                 remove.delete();
                 logEntry(roomName + " removed from booking ", bookingId, null);
@@ -1747,7 +1747,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         bookingEngine.addBookings(toAdd);
                         remove.undelete();
                         booking.isDeleted = false;
-                        remove.overbooking = false;
+                        remove.unmarkOverBooking();
                         remove.credited = false;
                         remove.setBooking(tmpbook);
                         remove.deleted = false;
@@ -2754,7 +2754,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String res = addBookingToBookingEngine(booking, room);
         if (!res.isEmpty()) {
             room.addedToWaitingList = true;
-            room.overbooking = true;
+            room.markAsOverbooking();
         }
 
         addDefaultAddonsToRooms(toAdd);
@@ -3506,7 +3506,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.canBeAdded = false;
                     room.delete();
                     if (booking.isWubook()) {
-                        room.overbooking = true;
+                        room.markAsOverbooking();
                     }
 
                     BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
@@ -5703,7 +5703,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void changeDatesOnRoom(PmsBookingRooms room, Date start, Date end) {
-        PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
+        PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
         Date now = new Date();
         if (!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
                 && (start.before(now) && end.after(now))) {

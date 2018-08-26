@@ -90,6 +90,7 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Channel manager", "channelmanagerconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Lock setup", "lockconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Global setttings", "globalsettings", "");
+        $menu->entries[] = new ModulePageMenuItem("PGA", "pga", "");
         return $menu;
     }
 

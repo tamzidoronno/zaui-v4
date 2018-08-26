@@ -512,4 +512,10 @@ public interface IPmsManager {
     
     @Administrator
     public void transferFromOldCodeToNew(String pmsBookingRoomId);
+    
+    @Administrator
+    public void generatePgaAccess(String pmsBookingId, String pmsBookingRoomId);
+    
+    @Administrator
+    public void removePgaAccess(String pmsBookingId, String pmsBookingRoomId);
 }

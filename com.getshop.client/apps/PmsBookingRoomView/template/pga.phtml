@@ -1,0 +1,81 @@
+<?
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$room = $this->getSelectedRoom();
+$storeId = $this->getFactory()->getStore()->id;
+$getshopUser = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser();
+?>
+<br/>
+<br/>
+<div class="betawarning">
+    The functionality here is still under development and should not be yet be used in commercial.
+    <br/>We will be doing changes to the features here and it can change without any notices.
+</div>
+<br/>
+<br/>
+
+
+<?
+if (!$room->pgaAccessToken) {
+    ?>
+    <div class="isnotactive">
+        <div class="kaipal infobox">
+            // faces: happy,sad,talking,danger
+            <div class="image sad"></div>
+            <div class="textbox">
+                <div class="header"><? echo $this->__f("Guest has not received access to PGA"); ?></div>
+                <div class="text">
+                    <?
+                    echo $this->__f("Access to the PGA has not yet been granted for this guest.");
+                    ?>    
+
+                    <div class="buttonarea">
+                        <div class="buttonareaheader"><? echo $this->__f("Take actions?"); ?></div>
+                        <div synchron="true" gs_callback="app.PmsBookingRoomView.pgaTabUpdated" class="shop_button" gsclick='grantAccessToGuest'><? echo $this->__f("Grant access"); ?></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <?
+    return;
+}
+?>
+
+
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Access granted."); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("Your guest is in good hands now. I am helping him trough my PGA.");
+                ?>    
+                <br/>
+                <div>
+                    <br/><? echo $this->__f("I have generated this access token to your guest").": ".$room->pgaAccessToken ?> 
+                    <br/><? echo $this->__f("Link I have have sent to your guest").": <a target='_blank' href='https://pga.getshop.com/index.php?storeId=$storeId&pga_token=$room->pgaAccessToken&gsaddress=10.0.4.33'>Click here</a>"; ?> 
+                    
+                    <?
+                    if ($getshopUser) {
+                        ?>
+                        <br/><? echo $this->__f("Development link").": <a target='_blank' href='http://localhost:8081/index.php?storeId=$storeId&pga_token=$room->pgaAccessToken&gsaddress=localhost'>Click here</a>"; ?> 
+                        <?
+                    }
+                    ?>
+                </div>
+
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Take actions?"); ?></div>
+                    <div synchron="true" gs_callback="app.PmsBookingRoomView.pgaTabUpdated" class="shop_button" gsclick='removePgaAccess'><? echo $this->__f("Remove access"); ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<br/>
+<br/>

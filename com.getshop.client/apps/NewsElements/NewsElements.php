@@ -47,7 +47,7 @@ class NewsElements extends \MarketingApplication implements \Application {
     public function fileUplaoded($fileId) {
         $entry = $this->getApi()->getNewsManager()->getNewsForPage($_GET['listid']);
         $entry->image = $fileId;
-        $this->getApi()->getNewsManager()->addNews($entry);
+        $this->getApi()->getNewsManager()->addNews($entry, "");
     }
     
     /**

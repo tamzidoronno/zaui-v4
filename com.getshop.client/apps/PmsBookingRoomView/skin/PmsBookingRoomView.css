@@ -638,3 +638,9 @@
     width: 50px;
 }
 
+.PmsBookingRoomView .betawarning {
+    background-color: red;
+    color: #FFF;
+    padding: 20px;
+    text-align: center;
+}

@@ -1,0 +1,14 @@
+.PgaSettings .settingrow {
+    border-bottom: solid 1px #DDD;
+    padding: 10px;
+    font-size: 18px;
+    min-height: 37px;
+}
+
+.PgaSettings .settingrow input {
+    float: right;
+}
+
+.PgaSettings div.settingrow:nth-child(odd) {
+    background-color: #EEE;
+}

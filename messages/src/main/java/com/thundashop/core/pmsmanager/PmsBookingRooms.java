@@ -111,6 +111,8 @@ public class PmsBookingRooms implements Serializable {
     public boolean forceAccess = false;
     Double printablePrice = 0.0;
     
+    public String pgaAccessToken;
+    
     void clear() {
         pmsBookingRoomId = UUID.randomUUID().toString();
         date.start = new Date();

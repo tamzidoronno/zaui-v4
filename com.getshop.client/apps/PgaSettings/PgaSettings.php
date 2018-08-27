@@ -19,6 +19,8 @@ class PgaSettings extends \MarketingApplication implements \Application {
         $settings->costForLateCheckout = $_POST['data']['costForLateCheckout'];
         $settings->hoursExtraForLateCheckout = $_POST['data']['hoursExtraForLateCheckout'];
         $settings->extraCleaningCost = $_POST['data']['extraCleaningCost'];
+        $settings->staticWifiPassword = $_POST['data']['staticWifiPassword'];
+        $settings->staticWifiSSID = $_POST['data']['staticWifiSSID'];
         $this->getApi()->getPgaManager()->saveSettings($this->getSelectedMultilevelDomainName(), $settings);
     }
 }

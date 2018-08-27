@@ -29,5 +29,21 @@ $pgaSettings = $this->getApi()->getPgaManager()->getSettings($this->getSelectedM
         <input class="gsniceinput1" gsname="extraCleaningCost" value="<? echo $pgaSettings->extraCleaningCost; ?>"/>
     </div>
     
+    <h2><? echo $this->__f("Static Wifi (leave blank if you dont provide a static complementary wifi)"); ?></h2>
+    
+    <div class="settingrow">
+        <?php
+        echo $this->__f("If you provide complementary static wifi, please enter your wifi password here");
+        ?>
+        <input class="gsniceinput1" gsname="staticWifiSSID" value="<? echo $pgaSettings->staticWifiSSID; ?>"/>
+    </div>
+    
+    <div class="settingrow">
+        <?php
+        echo $this->__f("If you provide complementary static wifi, please enter your wifi password here");
+        ?>
+        <input class="gsniceinput1" gsname="staticWifiPassword" value="<? echo $pgaSettings->staticWifiPassword; ?>"/>
+    </div>
+    
     <div class="shop_button" gstype="submit"><?php echo $this->__f("Save");?></div>
 </div>

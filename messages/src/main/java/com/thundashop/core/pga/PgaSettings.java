@@ -15,4 +15,6 @@ public class PgaSettings extends DataCommon {
     public int hoursExtraForLateCheckout = 0;
     public double costForLateCheckout = 0;
     public double extraCleaningCost = 0;
+    public String staticWifiPassword = "";
+    public String staticWifiSSID = "";
 }

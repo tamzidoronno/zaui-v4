@@ -188,6 +188,18 @@ class Login extends \SystemApplication implements \Application {
         }
     }
 
+    public static function isGetShopUser() {
+        if (!Login::isAdministrator()) {
+            return false;
+        }
+        
+        if (!Login::getUserObject()) {
+            return false;
+        }
+        
+        return strpos(Login::getUserObject()->emailAddress, '@getshop.com') !== false;
+    }
+
 }
 
 ?>

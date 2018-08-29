@@ -144,6 +144,8 @@ public class StorePool {
     }
     
     public synchronized Store initialize(String webAddress, String sessionId) throws ErrorException {
+        String orgWebAddress = webAddress;
+        
         Store store = getStoreByWebaddress(webAddress);
         
         if (webAddress == null) {
@@ -177,6 +179,10 @@ public class StorePool {
         if (store == null && !webAddress.contains("www.")) {
             webAddress = "www."+webAddress;
             store = getStoreByWebaddress(webAddress);
+        }
+        
+        if (store == null) {
+            store = getStore(orgWebAddress);
         }
         
         if (store == null) {

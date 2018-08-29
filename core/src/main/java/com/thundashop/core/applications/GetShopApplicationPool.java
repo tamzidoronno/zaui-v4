@@ -35,7 +35,8 @@ public class GetShopApplicationPool extends ManagerBase implements IGetShopAppli
     public void loadData() {
         Stream<DataCommon> dataStream = database.getAll("ApplicationPool", "all");
         applications = dataStream.filter(o -> o instanceof Application)
-                .map(o -> (Application) o).collect(Collectors.toMap(o -> o.id, o -> o));    }
+                .map(o -> (Application) o).collect(Collectors.toMap(o -> o.id, o -> o));
+    }
 
     @Override
     public List<Application> getApplications() {

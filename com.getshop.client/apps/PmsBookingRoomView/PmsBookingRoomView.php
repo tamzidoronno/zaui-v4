@@ -508,6 +508,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         $cachedRoomId = $this->getSelectedRoomId();
          $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $cachedRoomId);
+         
         foreach ($this->pmsBooking->rooms as $room) {
             if ($room->pmsBookingRoomId == $cachedRoomId) {
                 $this->updateRoom($room, true);
@@ -1588,5 +1589,24 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $_SESSION['pmsroomviewlistgrouproom'] = false;
     }
 
+    public function grantAccessToGuest() {
+        $this->setData();
+        $pmsBookingRoomId = $this->getSelectedRoomId();
+        $pmsBookingId = $this->getPmsBooking()->id;
+        $this->getApi()->getPmsManager()->generatePgaAccess($this->getSelectedMultilevelDomainName(), $pmsBookingId, $pmsBookingRoomId);
+        $this->setData(true);
+        $this->includefile("pga");
+        die();
+    }
+    
+    public function removePgaAccess() {
+        $this->setData();
+        $pmsBookingRoomId = $this->getSelectedRoomId();
+        $pmsBookingId = $this->getPmsBooking()->id;
+        $this->getApi()->getPmsManager()->removePgaAccess($this->getSelectedMultilevelDomainName(), $pmsBookingId, $pmsBookingRoomId);
+        $this->setData(true);
+        $this->includefile("pga");
+        die();
+    }
 }
 ?>

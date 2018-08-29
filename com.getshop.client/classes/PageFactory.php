@@ -214,7 +214,12 @@ class PageFactory {
         $page = new \ModulePage("globalsettings");
         $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
         $page->createRow()->addColumn("9cea7eba-7807-4e4c-8d60-e7d58fbad13a", "25400e33-27b4-4763-a329-de8e6173b727");
-        $this->pages['globalsettings'] = $page;   
+        $this->pages['globalsettings'] = $page; 
+        
+        $page = new \ModulePage("pga");
+        $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
+        $page->createRow()->addColumn("972b6269-44fb-4dd6-b6f1-c3ecf2d27dd2", "ddfc9204-263e-4858-978a-6737011e82d7");
+        $this->pages['pga'] = $page;   
         
         // MODAL
         $page = new \ModulePage("booking_room_view");

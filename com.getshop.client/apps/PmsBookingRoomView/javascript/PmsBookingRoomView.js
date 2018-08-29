@@ -362,6 +362,10 @@ app.PmsBookingRoomView = {
         $('.PmsBookingRoomView .guestinformation[tab="accesscode"]').html(res);
     },
     
+    pgaTabUpdated: function(res) {
+        $('.PmsBookingRoomView .guestinformation[tab="pga"]').html(res);
+    },
+    
     unitPriceChanged: function(e) {
         var data = thundashop.framework.createGsArgs($('.pricerows'));
         

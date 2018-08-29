@@ -962,6 +962,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         checkUserAccess(user);
+        startImpersonationUnsecure(userId);
+    }
+
+    public void startImpersonationUnsecure(String userId) throws ErrorException {
         sessionFactory.addToSession(getSession().id, "impersonatedUser", userId);
         saveSessionFactory();
     }

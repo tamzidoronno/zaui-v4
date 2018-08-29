@@ -111,6 +111,8 @@ public class PmsBookingRooms implements Serializable {
     public boolean forceAccess = false;
     Double printablePrice = 0.0;
     
+    public String pgaAccessToken;
+
     public boolean isOverBooking() {
         if(isAddedToBookingEngine()) {
             overbooking = false;

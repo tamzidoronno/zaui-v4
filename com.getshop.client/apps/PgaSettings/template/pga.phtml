@@ -1,0 +1,49 @@
+<?php
+/* @var $this ns_972b6269_44fb_4dd6_b6f1_c3ecf2d27dd2\PgaSettings */
+$pgaSettings = $this->getApi()->getPgaManager()->getSettings($this->getSelectedMultilevelDomainName());
+?>
+
+<div gstype="form" method="savePgaSettings">
+    <h2><? echo $this->__f("Late checkout"); ?></h2>
+    
+    <div class="settingrow">
+        <?php
+        echo $this->__f("How many extra hours should a late checkout give? ( 0 = deactivated )");
+        ?>
+        <input class="gsniceinput1" gsname="hoursExtraForLateCheckout" value="<? echo $pgaSettings->hoursExtraForLateCheckout; ?>"/>
+    </div>
+    
+    <div class="settingrow">
+        <?php
+        echo $this->__f("Price for late checkout?");
+        ?>
+        <input class="gsniceinput1" gsname="costForLateCheckout" value="<? echo $pgaSettings->costForLateCheckout; ?>"/>
+    </div>
+    
+    <h2><? echo $this->__f("Extra cleaning"); ?></h2>
+    
+    <div class="settingrow">
+        <?php
+        echo $this->__f("Cost for extra cleaning? ( 0 = deactivated )");
+        ?>
+        <input class="gsniceinput1" gsname="extraCleaningCost" value="<? echo $pgaSettings->extraCleaningCost; ?>"/>
+    </div>
+    
+    <h2><? echo $this->__f("Static Wifi (leave blank if you dont provide a static complementary wifi)"); ?></h2>
+    
+    <div class="settingrow">
+        <?php
+        echo $this->__f("If you provide complementary static wifi, please enter your wifi password here");
+        ?>
+        <input class="gsniceinput1" gsname="staticWifiSSID" value="<? echo $pgaSettings->staticWifiSSID; ?>"/>
+    </div>
+    
+    <div class="settingrow">
+        <?php
+        echo $this->__f("If you provide complementary static wifi, please enter your wifi password here");
+        ?>
+        <input class="gsniceinput1" gsname="staticWifiPassword" value="<? echo $pgaSettings->staticWifiPassword; ?>"/>
+    </div>
+    
+    <div class="shop_button" gstype="submit"><?php echo $this->__f("Save");?></div>
+</div>

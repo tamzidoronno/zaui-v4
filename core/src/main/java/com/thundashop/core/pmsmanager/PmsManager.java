@@ -50,6 +50,7 @@ import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pga.PgaManager;
 import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -194,6 +195,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     WebManager webManager;
+    
+    @Autowired
+    private PgaManager pgaManager;
 
     @Autowired
     Database dataBase;
@@ -8835,6 +8839,79 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return object;
     }
     
+    public void createDefaultAddonConfig(String productId) {
+        List<PmsBookingAddonItem> addonConfigsForProduct = getConfigurationSecure().addonConfiguration.values()
+                .stream()
+                .filter(o -> o.productId.equals(productId))
+                .collect(Collectors.toList());
+        
+        if (addonConfigsForProduct.isEmpty()) {
+            PmsBookingAddonItem config = new PmsBookingAddonItem();
+            config.productId = productId;
+            config.isSingle = true;
+            getConfigurationSecure().addonConfiguration.put(getConfigurationSecure().addonConfiguration.size(), config);
+            saveObject(configuration);
+        }
+    }
     
+    public Date getNextCleaningDate(String bookingId, String pmsRoomId) {
+        PmsBookingRooms room = getBookingUnsecure(bookingId).getRoom(pmsRoomId);
+        
+        Date now = new Date();
+        
+        PmsBookingAddonItem firstCleaningAddonInFuture = room.addons.stream()
+                .filter(item -> item.productId.equals("gs_pms_extra_cleaning"))
+                .filter(item -> item.date.after(now))
+                .sorted((PmsBookingAddonItem item1, PmsBookingAddonItem item2) -> {
+                    return item1.date.compareTo(item2.date);
+                })
+                .findFirst()
+                .orElse(null);
+        
+        if (firstCleaningAddonInFuture != null) {
+            return firstCleaningAddonInFuture.date;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, 4);
+        return cal.getTime();
+    }
+    
+    @Override
+    public void generatePgaAccess(String pmsBookingId, String pmsBookingRoomId) {
+        PmsBooking booking = getBooking(pmsBookingId);
+        if (booking == null) {
+            throw new RuntimeException("Did not find the Pms Booking for the requested PGA access");
+        }
+        
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        if (room == null) {
+            throw new RuntimeException("Did not find the PMS Room for the requested PGA access");
+        }
+        
+        room.pgaAccessToken = pgaManager.createAccessToken(pmsBookingId, pmsBookingRoomId);
+        saveBooking(booking);
+    }
+
+    @Override
+    public void removePgaAccess(String pmsBookingId, String pmsBookingRoomId) {
+        long time = System.currentTimeMillis();
+        pgaManager.removeAccessToken(pmsBookingId, pmsBookingRoomId);
+        
+        PmsBooking booking = getBooking(pmsBookingId);
+        if (booking == null) {
+            throw new RuntimeException("Did not find the Pms Booking for the requested PGA access");
+        }
+        
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        if (room == null) {
+            throw new RuntimeException("Did not find the PMS Room for the requested PGA access");
+        }
+        
+        room.pgaAccessToken = "";
+        saveBooking(booking);
+    }
     
 }

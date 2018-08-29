@@ -119,28 +119,42 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
 .PmsBookingCalendar .day.disabled{background-color:#fff;}
 .PmsBookingSummary .addAddonOnRoom {font-size: 18px;font-weight: bold;}
 
+@media only all and (max-width:1100px){
+    .gscell_9 .shop_button, .gscell_91 .shop_button { font-size: 30px !important; }
+    .gsarea[area="header"] .Menu .entry div { padding-left: 10px; }
+    .gsinner { padding-left: 10px; padding-right: 10px; }
+    .gscell_41.gsdepth_1.gsuicell { padding: 0px !important; }
+    .gscell_42.gsdepth_1.gsuicell { padding: 0px !important; }
+    .gscell_43.gsdepth_1.gsuicell { padding: 0px !important; }
+}
+
 @media only all and (max-width:800px){
-    .sticky{position:absolute !important;top:0px !important;}
-    .gs_language_selection{right:50px;margin-top:10px;}
-    .gscell_1.gsucell{height:50px;position:absolute;width:100%;}
-    .gscell_1.gsuicell img{width:80px;float:left;margin-left:10px;}
+    .gs_language_selection{border:0;right:0px;top:-28px !important;}
+    .gsarea[area="header"] { border-bottom: solid 1px #efefef; }
+    .gscell_9 .shop_button, .gscell_91 .shop_button { font-size: 20px !important; width:95%; box-sizing: border-box; line-height: 8px !important; }
     
-    .gsarea[area="header"] .mobilenavigatemenu .fa{visibility:hidden;position:relative;right:-50px;top:-32px;z-index:30;font-size:27px;user-select:none;color:#fff;float:right;}
-    .gsarea[area="header"] .mobilenavigatemenu .fa:before{visibility:visible;}
-    .gsarea[area="header"] .Menu{display:inline-block;width:100%;margin:0;padding:0;}
-    .gsarea[area="header"] .Menu .entry  div{line-height:34px; margin:0;padding:2px;letter-spacing:0;font-size:16px;text-align:center !important;}
-    .gsarea[area="header"] .Menu .entry .entries{top:0;}
-    .gsarea[area="header"] .Menu .menuentries .entry{padding:0;}
+    .gsinner {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    .gscell_41.gsdepth_1.gsuicell { margin-bottom: 20px; }
+    .gscell_42.gsdepth_1.gsuicell { margin-bottom: 20px; }
+    .gscell_43.gsdepth_1.gsuicell { margin-bottom: 20px; }
+    .gscell_60 .ContentManager h1 { font-size: 30px !important; }
+    .gscell_41.gsdepth_1.gsuicell img { float:left; padding-right: 10px; }
+    .gscell_42.gsdepth_1.gsuicell img { float:left; padding-right: 10px;}
+    .gscell_43.gsdepth_1.gsuicell img { float:left; padding-right: 10px; }
+    .GoogleMaps { height: 200px !important; }
+    .Contact .shop_button { width: 100%; box-sizing: border-box;}
+    h1 { text-align:center;}
     .gsarea[area="header"] .Menu .menuentries.horizontal{background-color:#fff;}
-    .gsarea[area="header"] .Menu .menuentries.horizontal .entries .entry.active a div{border-bottom:1px solid #f1f1f1 !important;color:#030338;}
-    .gsarea[area="header"] .Menu .entries .entries{border:0;box-shadow:0 0 0;}
-    .gsarea[area="header"] .Menu .entries .entries div{width:100%;}
-    
-    .gsarea[area="body"] {margin:50px 0 0 0;padding:0 4% 0 4%;min-height:350px;}
-    
-    .PmsBookingProductList .productentry .name{position:relative;background-color:rgba(0,0,0,0);}
-    .PmsBookingProductList .imgcontainer{top:15px;}
-    
+    .gsarea[area="footer"] .ContentManager div { text-align: center !important;}
+    .gsarea[area="footer"] {padding-bottom: 10px; }
+    .gscell_84 .gsaddcontent { min-height: 150px; }
+    .gscell_73 .gsaddcontent { min-height: 150px; }
+    .gscell_68 .gsaddcontent { min-height: 150px; }
+    .Banner { text-align: center; }
     .PmsBooking .inputblock,
     .PmsBooking .pmsfront .check_available_button,
     .PmsBooking .pmsfront .dates.start_date,

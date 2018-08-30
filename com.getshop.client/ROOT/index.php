@@ -1,4 +1,21 @@
 <?php
+
+$filecontent = file_get_contents("../etc/config.txt");
+$localmode = strstr($filecontent, "localhost");
+
+if ($localmode) {
+    session_start();
+}
+
+if ($localmode && isset($_GET['changeGetShopModule']) && $_GET['changeGetShopModule']) {
+    $_SESSION['getshop_current_module_id'] = $_GET['changeGetShopModule'];
+}
+
+if (isset($_SESSION['getshop_current_module_id']) && $localmode && $_SESSION['getshop_current_module_id'] == "pms") {
+    include 'index2.php';
+    return;
+}
+
 ob_start();
 //phpinfo();
 //return;

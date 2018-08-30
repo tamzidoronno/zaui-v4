@@ -3,7 +3,7 @@ html{overflow-x:hidden;}
 body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
 .gsmobileheader { display:none; }
 .sticky{position:fixed !important;top:-65px !important;}
-.gs_language_selection{border:0;right:10px;top:-54px;}
+.gs_language_selection{border:0;right:10px;top:-20px;}
 .gs_language_selection .gs_lang_code_nb_NO{
     background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_norwegian.png);
     background-repeat: no-repeat;
@@ -30,7 +30,7 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
 .gsarea[area="header"] .Menu .entry .entries {top: 30px;background:rgba(255,255,255,1);}
 .gsarea[area="header"] .Menu .entry .entries div {padding: 0px;width: 200px;text-align: left;}
 .gsarea[area="header"] .Menu .entry div i {display: block;font-size: 30px;}
-.gsarea[area="header"] .Menu .entry div {font-size: 14px;line-height: 25px;margin: 15px 0 15px 0;padding: 0 20px 0 20px;text-align: center;color:#555;}
+.gsarea[area="header"] .Menu .entry div {font-size: 14px;line-height: 25px;margin: 15px 0 15px 0;padding: 0 10px 0 10px;text-align: center;color:#555;}
 
 .gsarea[area="body"]{margin-top:150px;}
 
@@ -154,6 +154,7 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
     .gscell_84 .gsaddcontent { min-height: 150px; }
     .gscell_73 .gsaddcontent { min-height: 150px; }
     .gscell_68 .gsaddcontent { min-height: 150px; }
+    .gscell_70 .gsaddcontent { min-height: 150px; }
     .Banner { text-align: center; }
     .PmsBooking .inputblock,
     .PmsBooking .pmsfront .check_available_button,

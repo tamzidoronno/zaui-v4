@@ -66,7 +66,6 @@ thundashop.common = {
         var url=location.href;
         var urlFilename = url.substring(url.lastIndexOf('/')+1, url.indexOf('?'));
         
-        debugger;
         if (link[0] == "/") {
             link = link.substring(1);
         }
@@ -504,7 +503,6 @@ thundashop.Ajax = {
             data['synchron'] = true;
             callback = thundashop.framework.reloadOverLayType1;
         }
-        
         var file = "data.php";
         var uploadcallback = false;
         if (xtra !== undefined) {
@@ -669,7 +667,7 @@ thundashop.Ajax = {
         $('.gs_loading_spinner').removeClass('active');
         
         if (event.core.closestappwithinstance && !event.core.instanceid && $('.gsoverlay1 .gsoverlayinner').is(':visible') ) {
-            thundashop.Ajax.reloadApp(event.core.closestappwithinstance);
+            thundashop.Ajax.reloadApp(event.core.closestappwithinstance, true);
             
         }
     },
@@ -796,6 +794,7 @@ getshop = {
             
             $('.gsoverlay2 .gsoverlayinner .content').html("");
             getshop.loadApps();
+            $('html, body').css({ overflow: 'auto'});
         }
     }
 }
@@ -900,6 +899,8 @@ getshop.Table = {
     },
     
     loadTableContentOverlay: function (e, btn) {
+        $('html, body').css({ overflow: 'hidden', height: '100%'});
+        
         var table = btn.closest('.GetShopModuleTable');
         var identifier = table.attr('identifier');
         var functioname = table.attr('method');

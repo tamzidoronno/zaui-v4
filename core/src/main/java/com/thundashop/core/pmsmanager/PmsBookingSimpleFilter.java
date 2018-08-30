@@ -23,10 +23,13 @@ public class PmsBookingSimpleFilter {
     LinkedList<PmsRoomSimple> filterRooms(PmsBookingFilter filter) {
         LinkedList<PmsRoomSimple> result = new LinkedList();
         List<PmsBooking> bookings = manager.getAllBookings(filter);
+        this.manager.gsTiming("GetAll bookings");
+        int i = 0;
         for(PmsBooking booking : bookings) {
             if(booking.containsOrderId(filter.searchWord)) {
                 for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                     result.add(convertRoom(room, booking));
+                    i++;
                 }
             } else {
                 List<PmsBookingRooms> rooms = booking.getActiveRooms();
@@ -36,10 +39,15 @@ public class PmsBookingSimpleFilter {
                 for(PmsBookingRooms room : rooms) {
                     if(inFilter(room, filter, booking)) {
                         result.add(convertRoom(room, booking));
+                        i++;
                     }
                 }
             }
+            if(i >= 200) {
+                break;
+            }
         }
+        this.manager.gsTiming("before sorting list");
         sortList(result, filter.sorting);
         if(filter.groupByBooking) {
             result = groupByBooking(result);

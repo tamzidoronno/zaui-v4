@@ -11,7 +11,7 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
     }
 
     public function render() {
-        if($_SERVER['PHP_SELF'] == "/json.php") {
+        if($_SERVER['PHP_SELF'] == "/json.php" || (isset($_POST['firstLoad']) && $_POST['firstLoad'] == "true")) {
             $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
             $app->setStartDate(date("d.m.Y", time()-86400));
             $app->setEndDate(date("d.m.Y", time()+(86400*14)));

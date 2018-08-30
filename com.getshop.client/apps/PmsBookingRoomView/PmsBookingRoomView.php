@@ -1568,6 +1568,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function toggleListGroupRooms() {
+        if(isset($_GET['page']) && $_GET['page'] == "groupbooking") {
+            return true;
+        }
+        
         if($_SESSION['pmsroomviewlistgrouproom']) {
             $_SESSION['pmsroomviewlistgrouproom'] = false;
         } else {

@@ -1,5 +1,4 @@
 <?php
-
 $filecontent = file_get_contents("../etc/config.txt");
 $localmode = strstr($filecontent, "localhost");
 

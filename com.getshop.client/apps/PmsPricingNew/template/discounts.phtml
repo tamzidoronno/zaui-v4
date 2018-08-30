@@ -54,7 +54,7 @@ if (sizeof($coupons) == 0) {
                         echo "</span>";
 
                         echo "</td>";
-                        echo "<td><span style=' width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='" . $this->getRepeatingSummary($coupon) . "'><i class='fa fa-edit loadcouponmoredates' data-couponid='" . $coupon->id . "'></i>" . $this->getRepeatingSummary($coupon) . "</span>";
+                        echo "<td style='position:relative;'><span style=' width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='" . $this->getRepeatingSummary($coupon) . "'><i class='fa fa-edit loadcouponmoredates' data-couponid='" . $coupon->id . "'></i>" . $this->getRepeatingSummary($coupon) . "</span>";
                         echo "<span class='addmoredatespanel'></span>";
                         echo "</td>";
                         echo "<td style='position:relative;'>";

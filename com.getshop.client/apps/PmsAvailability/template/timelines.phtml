@@ -13,7 +13,6 @@ if($sorting == "room") {
     $allInOne = true;
 }
 $cats = $this->getCategoryFilter();
-
 foreach ($types as $type) {
     if(sizeof($cats) > 0 && !in_array($type->id, $cats) && !$allInOne) {
         continue;
@@ -118,7 +117,9 @@ foreach ($types as $type) {
                         if($canShowModal) {
                             $dragging .= " draggable='true' ";
                         }
-                        echo "<div typeid='$type->id' col='$i' bookingitemid='$item->id' date='$colDate2' row='$j' time='$time' class='col_outer $noData $firstInRowOuter $lastInRowOuter'><div $canShowModal bookingid='$bookingId' roomid='$data->roomId' $dragging class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div></div>";
+                        echo "<div typeid='$type->id' col='$i' bookingitemid='$item->id' date='$colDate2' row='$j' time='$time' class='col_outer $noData $firstInRowOuter $lastInRowOuter'>";
+                        echo "<div $canShowModal bookingid='$bookingId' roomid='$data->roomId' $dragging class='$color timeline_col$i col col_width col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div>";
+                        echo "</div>";
                         $prevBookingIds = $data->bookingIds;
                         $i++;
                     }

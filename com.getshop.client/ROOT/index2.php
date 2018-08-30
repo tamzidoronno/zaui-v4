@@ -1,9 +1,13 @@
 <?
 include '../loader.php';
-session_start();
 $pageFactory = new \PageFactory();
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
+
+if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
+    $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
+}
+
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="<? echo \PageFactory::getGetShopModule(); ?>">
     <head>

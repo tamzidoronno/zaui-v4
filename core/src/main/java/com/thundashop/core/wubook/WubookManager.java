@@ -2160,8 +2160,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private boolean checkIfNeedToAddTaxes(Hashtable roomtable) {
         try {
             Hashtable anc = (Hashtable) roomtable.get("ancillary");
-            Double taxes = (Double) anc.get("taxes");
-            return taxes > 0.0;
+            boolean tax_inclusive = (boolean) anc.get("tax_inclusive");
+            return !tax_inclusive;
         }catch(Exception e) {
             //Ignore failure here.
         }

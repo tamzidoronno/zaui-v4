@@ -75,7 +75,7 @@ class Login extends \SystemApplication implements \Application {
             $_SESSION['loggedin'] = serialize($userLoggedIn);
             // Need to refresh the page in order to make sure that all data is loaded.
             // This login is after data has been initialized to factory.
-            if(isset($_POST['redirect'])) {
+            if(isset($_POST['redirect']) && $_POST['redirect']) {
                 header("location:" . $_POST['redirect']);
                 exit(0);
             }

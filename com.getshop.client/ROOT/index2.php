@@ -7,6 +7,11 @@ $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
     $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
 }
+$factory = IocContainer::getFactorySingelton();
+if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
+    header('location:/login.php?redirectto=/index2.php');
+    exit(0);
+}
 
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="<? echo \PageFactory::getGetShopModule(); ?>">

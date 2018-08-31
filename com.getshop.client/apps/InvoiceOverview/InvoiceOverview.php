@@ -102,6 +102,32 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
         return "<span getshop_sorting='".strtotime($row->dueDate)."'>" . date("d.m.Y", strtotime($row->dueDate)) . "</span>";
     }
     
+    
+    /**
+     * 
+     * @param \core_ordermanager_data_OrderResult $row
+     * @return 
+     */
+    public function formatStartDate($row) {
+        if(!$row->start) {
+            return "N/A";
+        }
+        return "<span getshop_sorting='".strtotime($row->start)."'>" . date("d.m.Y", strtotime($row->start)) . "</span>";
+    }
+    
+    
+    /**
+     * 
+     * @param \core_ordermanager_data_OrderResult $row
+     * @return 
+     */
+    public function formatEndDate($row) {
+        if(!$row->end) {
+            return "N/A";
+        }
+        return "<span getshop_sorting='".strtotime($row->end)."'>" . date("d.m.Y", strtotime($row->end)) . "</span>";
+    }
+    
     /**
      * 
      * @return \core_ordermanager_data_OrderFilter

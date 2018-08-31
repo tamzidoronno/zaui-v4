@@ -6,8 +6,10 @@ $attributes = array(
     array('id', 'gs_hidden', 'orderId'),
     array('incOrderId', 'Id', 'incOrderId'),
     array('orderDate', 'Date', null, 'formatOrderDate'),
-    array('paymentDate', 'Payment date', null, 'formatPaymentDate'),
+    array('paymentDate', 'p-date', null, 'formatPaymentDate'),
     array('dueDate', 'Due', null, 'formatDueDate'),
+    array('start', 'Start', null, 'formatStartDate'),
+    array('end', 'End', null, 'formatEndDate'),
     array('user', 'User', 'user'),
     array('status', 'Status', null, 'formatStatus'),
     array('amountExTaxes', 'Ex tax', 'amountExTaxes'),
@@ -17,7 +19,7 @@ $attributes = array(
 );
 
 $table = new \GetShopModuleTable($this, 'InvoiceOverview', 'loadOrder', null, $attributes);
-$table->setSorting(array("id","incOrderId","orderDate","paymentDate","dueDate","user","status","amountExTaxes","amountIncTaxes","amountPaid","restAmount"));
+$table->setSorting(array("id","incOrderId","orderDate","paymentDate","dueDate","start","end","user","status","amountExTaxes","amountIncTaxes","amountPaid","restAmount"));
 $table->setData($result);
 echo "<div class='invoicetable'>";
 $table->render();

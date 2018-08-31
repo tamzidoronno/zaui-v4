@@ -84,6 +84,14 @@ public class OrderFiltering {
                 if(inDate(order.shippingDate, filter.start, filter.end)) {
                     continue;
                 }
+            } else if(filter.type.equals("checkindate")) {
+                if(inDate(order.getStartDateByItems(), filter.start, filter.end)) {
+                    continue;
+                }
+            } else if(filter.type.equals("checkoutdate")) {
+                if(inDate(order.getEndDateByItems(), filter.start, filter.end)) {
+                    continue;
+                }
             }
             toRemove.add(order);
         }

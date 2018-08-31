@@ -11,6 +11,14 @@ $doubleauth = $settingsInstance->getConfigurationSetting("doubleauthentication")
 $username = "";
 $password = "";
 
+$redirect = "";
+if(isset($_GET['redirectto'])) {
+    $redirect = $_GET['redirectto'];
+}
+if(isset($_POST['redirect'])) {
+    $redirect = $_POST['redirect'];
+}
+
 if (isset($_GET['username'])) {
     $username = $_GET['username'];
 }
@@ -141,7 +149,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
             
             </h1>
             <form id='getshoploginform' method="POST" action="/login.php<? echo $doubleauth ? "?doubleauth=true" : ""; ?>" name="loginform" class="loginform">
-
+                <input type="hidden" name="redirect" value="<?php echo $redirect; ?>">
                 <?php
                 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
                     $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
@@ -160,7 +168,6 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                         }
                     } else {
                         echo "<br> Please wait while we are logging you on.</center>";
-                    
                         $module = $modules[0];
                         echo "<script>document.location = '/?changeGetShopModule=" . strtolower($module->id) . "&scopeid=NEW'</script>";
                     }

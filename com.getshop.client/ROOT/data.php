@@ -36,6 +36,22 @@ if (isset($_POST['core']['appid2']) && $_POST['core']['appid2']) {
     $appInstance = $page->getExtraApplication($_POST['core']['appid2']);
 }
 
+if(!$appInstance) {
+    $factory = IocContainer::getFactorySingelton();
+    $apps = $factory->getApi()->getStoreApplicationPool()->getAvailableApplications();
+    foreach($apps as $app) {
+        if($app->id == $_POST['core']['instanceid']) {
+            $appInstance = $factory->getApplicationPool()->createInstace($app);
+        }
+    }
+}
+
+if(isset($_POST['core']['convertDataToRawPost']) && $_POST['core']['convertDataToRawPost']) {
+    foreach($_POST['data'] as $key => $val) {
+        $_POST[$key] = $val;
+    }
+}
+
 if (isset($_POST['event']) && $_POST['event']) {
     $appInstance->{$_POST['event']}();
 }

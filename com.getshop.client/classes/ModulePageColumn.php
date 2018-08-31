@@ -46,7 +46,7 @@ class ModulePageColumn {
             }
         }
         
-        $api = PageFactory::getApi();
+        $api = IocContainer::getFactorySingelton()->getApi();
         $applicationSetting = $api->getStoreApplicationPool()->getApplication($this->applicationId);
         
         $javaInstance = null;
@@ -64,7 +64,7 @@ class ModulePageColumn {
             $this->appInstance = $appInstance;
             file_put_contents('/tmp/app_cached_'.$this->applicationId."_".$this->instanceId, serialize($appInstance));
         } else {
-            echo "not exists: $instance";
+            echo "not exists: $instance :" . $this->instanceId . " : " . $this->applicationId;
         }
     }
     

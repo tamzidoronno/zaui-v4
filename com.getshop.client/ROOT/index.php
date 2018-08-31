@@ -11,7 +11,7 @@ if ($localmode && isset($_GET['changeGetShopModule']) && $_GET['changeGetShopMod
 }
 
 if (isset($_SESSION['getshop_current_module_id']) && $localmode && $_SESSION['getshop_current_module_id'] == "pms") {
-    include 'index2.php';
+    include 'pms.php';
     return;
 }
 

@@ -6,7 +6,7 @@ app.PmsGetShopExpressSettings = {
     },
     loadproducts : function() {
         var btn = $(this);
-        app.PmsConfiguration.selectedview = $(this).closest('tr').attr('viewid');
+        app.PmsGetShopExpressSettings.selectedview = $(this).closest('tr').attr('viewid');
         var event = thundashop.Ajax.createEvent('','loadProducts', $(this), {});
         var view = $('.PmsGetShopExpressSettings .productview');
         thundashop.Ajax.postWithCallBack(event, function(res) {
@@ -18,9 +18,9 @@ app.PmsGetShopExpressSettings = {
     },
     addproducttoview : function() {
         var btn = $(this);
-        var row = $("tr[viewid='" + app.PmsConfiguration.selectedview + "']");
+        var row = $("tr[viewid='" + app.PmsGetShopExpressSettings.selectedview + "']");
         var event = thundashop.Ajax.createEvent('','addproducttoview', $(this), {
-            id : app.PmsConfiguration.selectedview,
+            id : app.PmsGetShopExpressSettings.selectedview,
             prodid : $(this).attr('prodid')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {

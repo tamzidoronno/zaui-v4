@@ -4,13 +4,13 @@ $pageFactory = new \PageFactory();
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
-if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
-    $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
-}
 $factory = IocContainer::getFactorySingelton();
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
-    header('location:/login.php?redirectto=/index2.php');
+    header('location:/login.php?redirectto=/pms.php');
     exit(0);
+}
+if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
+    $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
 }
 
 ?>
@@ -19,6 +19,7 @@ if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
         <title><? echo $page->getTitle(); ?></title>
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">
+        <link rel="stylesheet" href="/skin/default/pms.css">
         <link rel="stylesheet" href="/skin/default/gesthopmodules.css">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
 
@@ -32,6 +33,8 @@ if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
         <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
         <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
+        <script type="text/javascript" src="js/getshop.pms.js"></script>
+        <script src="js/ckeditor/ckeditor.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>
     

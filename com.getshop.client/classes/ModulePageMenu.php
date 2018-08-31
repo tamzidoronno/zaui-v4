@@ -52,7 +52,7 @@ class ModulePageMenu {
             <div class="menuentries horizontal">
                 <div class="entries">
                     <? foreach ($menuEntries as $entry) { ?>
-                        <div class="entry"><a href="/index2.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                        <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
                     <? } ?>
                 </div>
             </div>
@@ -68,7 +68,7 @@ class ModulePageMenu {
             <div class="menuentries vertical">
                 <div class="entries">
                     <? foreach ($menuEntries as $entry) { ?>
-                        <div class="entry"><a href="/index2.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                        <div class="entry"><a href="/pms.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
                                     <? } ?>
                 </div>
             </div>

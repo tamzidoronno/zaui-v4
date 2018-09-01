@@ -61,17 +61,15 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     
     
     public function render() {
-        if($_SERVER['PHP_SELF'] == "/json.php") {
+        echo "JA";
+        if($_SERVER['PHP_SELF'] == "/json.php" || isset($_SESSION['firstloadpage'])) {
             $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
             $app->setStartDate(date("d.m.Y", time()-86400));
             $app->setEndDate(date("d.m.Y", time()+(86400*14)));
         }
 
-
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 
-      
-                
         if(sizeof($items) == 0) {
             $this->includefile("noitemsyet");
         } else {
@@ -347,14 +345,13 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     }
     
     public function createNameOfBooker($data) {
-        
         $words = explode(" ", ucwords($data->name));
         $acronym = "";
 
         foreach ($words as $w) {
-            if($w && strlen($w) > 0) {
-                $acronym .= $w[0];
-            }
+//            if($w && strlen($w) > 0) {
+//                $acronym .= $w[0];
+//            }
         }
         if ($data->state !== "normal") {
             $markCleaning = "";

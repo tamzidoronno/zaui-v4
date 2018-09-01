@@ -124,7 +124,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         if (isset($this->page)) {
             return ($this->page->getId() == "groupbooking") && !$this->avoidGroupedBookingOptions;
         }
-        return ($this->getPage()->getId() == "groupbooking") && !$this->avoidGroupedBookingOptions;
+        return false;
     }
 
     
@@ -285,7 +285,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
         
     public function getSelectedFilter() {
-        if($_SERVER['PHP_SELF'] == "/json.php") {
+        if($_SERVER['PHP_SELF'] == "/json.php" || isset($_SESSION['firstloadpage'])) {
             unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
             ?>
             <script>

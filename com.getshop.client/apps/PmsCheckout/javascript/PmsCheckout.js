@@ -25,7 +25,7 @@ app.PmsCheckout = {
         $('.checkoutarea').html(res);
     },
     orderCreationCompleted : function(res) {
-        if($('.getshoptableoverlaybody').is(':visible') || $('.gs_modalinner').is(':visible')) {
+        if($('.getshoptableoverlaybody').is(':visible') || $('.gs_modalinner').is(':visible') || $('.gsoverlay2').is(':visible')) {
             app.PmsBookingRoomView.refresh();
         } else {
             $('.checkoutarea').html(res);

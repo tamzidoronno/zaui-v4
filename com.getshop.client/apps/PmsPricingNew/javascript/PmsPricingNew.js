@@ -57,14 +57,16 @@ app.PmsPricingNew = {
         }
     },        
     
-    loadMoreDates : function() {
-        var panel = $(this).closest('td').find('.addmoredatespanel');
+    loadMoreDates : function() { 
+       var panel = $(this).closest('td').find('.addmoredatespanel');
         var event = thundashop.Ajax.createEvent('','loadCouponRepeatingDataPanel',$(this), {
             "id" : $(this).attr('data-couponid')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             panel.html(res);
             panel.find('.addMoredatesPanel').fadeIn();
+            panel.show();
+            
         });
     },
     

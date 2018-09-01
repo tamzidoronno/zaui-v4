@@ -10,7 +10,7 @@ chdir("../../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
-    echo "Not logged on, please logon <a href='/totp.php'>here</a>";
+    echo "Not logged on, please logon <a href='/totp.php?redirectto=/scripts/getshopoverview/index.php'>here</a>";
     return;
 }
 include("tickets.php");

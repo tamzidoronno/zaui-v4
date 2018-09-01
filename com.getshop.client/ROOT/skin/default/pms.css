@@ -1,0 +1,191 @@
+.gss_settings_header i {
+    font-size: 50px;
+    margin-right: 20px;
+    margin-left: 10px;
+    color: #3a99d7;
+}
+
+.gss_settings_header {
+    background-color: #efefef;
+    margin-top: 0px;
+    color: #333;
+    padding: 20px;
+    vertical-align: top;
+    border: solid 1px #bbb;
+    border-bottom: 0px;
+}
+
+.gss_settings_header i {
+    font-size: 50px;
+    margin-right: 20px;
+    margin-left: 10px;
+    color: #3a99d7;
+}
+.gss_settings_content { border: solid 1px #bbb; margin-bottom: 20px; padding: 10px; }
+
+.gss_settings_header .gss_settings_header_title {
+    font-size: 16px;
+}
+
+.gss_settings_header .gss_settings_header_description .gss_settings_header_description_inner {
+    padding-top: 5px;
+}
+.gss_settings_header .gss_settings_header_description {
+    display: inline-block;
+    vertical-align: top;
+    max-width: 1030px;
+}
+
+
+.gss_setting .description {
+    padding: 10px;
+}
+.gss_setting .title {
+    font-size: 16px;
+}
+
+.gss_setting {
+    min-height: 30px;
+    position: relative;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    color: #333;
+    border-bottom: solid 1px #EEE;
+    padding-right: 350px;
+}
+
+.gss_settings_inner {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.gss_settings_inner.apparea {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 300;
+    /*color: #333*/
+    padding-top: 60px;
+}
+
+.gss_onoff i {
+    font-size: 30px;
+    padding-left: 10px; 
+    padding-right: 10px;
+    color: #3a99d7;
+    cursor:pointer;
+}
+.gss_onoff {
+    line-height: 30px;
+    vertical-align: top;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+
+.gss_dropdown {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    overflow: hidden;
+    height: 30px;
+    width: 286px;
+    background: #f2f2f2;
+    border: 1px solid;
+    border-color: white #f7f7f7 #f5f5f5;
+    border-radius: 3px;
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+    background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+    background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.06));
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+.gss_dropdown:before, .gss_dropdown:after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    top: 9px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 4px dashed;
+    border-color: #888 transparent;
+    pointer-events: none;
+}
+.gss_dropdown:before {
+    border-bottom-style: solid;
+    border-top: none;
+}
+.gss_dropdown:after {
+    margin-top: 7px;
+    border-top-style: solid;
+    border-bottom: none;
+}
+
+.gss_dropdown select {
+    position: relative;
+    width: 130%;
+    margin: 0;
+    padding: 6px 8px 6px 10px;
+    height: 28px;
+    line-height: 14px;
+    font-size: 12px;
+    color: #62717a;
+    text-shadow: 0 1px white;
+    /* Fallback for IE 8 */
+    background: #f2f2f2;
+    /* "transparent" doesn't work with Opera */
+    background: rgba(0, 0, 0, 0) !important;
+    border: 0;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+.gss_dropdown select:focus {
+    z-index: 3;
+    width: 100%;
+    color: #394349;
+    outline: 2px solid #49aff2;
+    outline: 2px solid -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+.gss_dropdown select > option {
+    margin: 3px;
+    padding: 6px 8px;
+    text-shadow: none;
+    background: #f2f2f2;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.gss_button i {
+    padding-right: 10px;
+}
+
+.gss_button {
+
+    background-image: linear-gradient(to bottom, #47a9e7 1px, #47a9e7 19px, #3a99d7 20px, #3a99d7 100% );
+    color: #FFF;
+
+    text-align: center;
+    display: inline-block;
+    padding: 10px;
+    color: #FFF;
+    text-decoration: none;
+    border-radius: 3px;
+    cursor: pointer;
+    border: solid 1px #1c6ea2;
+}
+
+.gss_button:hover {
+    background-image: linear-gradient(to bottom, #63819f 1px, #63819f 19px, #466585 20px, #466585 100% );
+}
+
+
+.gss_button_area {
+    margin-top: 20px;
+    padding-right: 10px;
+    text-align: right;
+    padding-bottom: 10px;
+}

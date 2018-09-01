@@ -11,6 +11,8 @@ public class OrderResult {
    public Date orderDate;
    public Date dueDate;
    public Date paymentDate;
+   public Date start;
+   public Date end;
    public double amountExTaxes = 0;
    public double amountIncTaxes = 0;
    public double amountPaid = 0;
@@ -33,6 +35,7 @@ public class OrderResult {
         amountIncTaxes = Math.round(amountIncTaxes*100)/100;
         
         restAmount = amountIncTaxes - amountPaid;
-        
+        start = ord.getStartDateByItems();
+        end = ord.getEndDateByItems();
     }
 }

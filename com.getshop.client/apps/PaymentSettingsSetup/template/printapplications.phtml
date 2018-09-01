@@ -10,38 +10,40 @@
         </div>
     </div>	
 </div>
+<div class="gss_settings_content">
+    <?php
+    /* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
 
-<?php
-/* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
+    $applications = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
+    $activated = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    $res = array();
+    foreach($activated as $active) {
+        $res[] = $active->id;
+    }
 
-$applications = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
-$activated = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-$res = array();
-foreach($activated as $active) {
-    $res[] = $active->id;
-}
-
-foreach($applications as $app) {
-    if($app->type == "PaymentApplication") {
-        $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
-        if(!method_exists($instance, "isPublicPaymentApp")) {
-            continue;
-        }
-        if(!$instance->isPublicPaymentApp()) {
-            continue;
-        }
-        if(method_exists($instance, "getName")) {
-            echo "<span class='paymentappactivation'>";
-            echo "<div class='header'>" . $instance->getName() . "</div>";
-            echo "<div class='description'>" . $instance->getDescription() . "</div>";
-            if(in_array($app->id, $res)) {
-                echo "<div class='footer deactivate' gstype='clicksubmit' gsvalue='".$app->id."' method='deactivateApp' gsname='id'>Deactivate</div>";
-            } else {
-                echo "<div class='footer' gstype='clicksubmit' gsvalue='".$app->id."' method='activateApp' gsname='id'>Activate</div>";
+    foreach($applications as $app) {
+        if($app->type == "PaymentApplication") {
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+            if(!method_exists($instance, "isPublicPaymentApp")) {
+                continue;
             }
-            echo "</span>";
+            if(!$instance->isPublicPaymentApp()) {
+                continue;
+            }
+            if(method_exists($instance, "getName")) {
+                echo "<span class='paymentappactivation'>";
+                echo "<div class='header'>" . $instance->getName() . "</div>";
+                echo "<div class='description'>" . $instance->getDescription() . "</div>";
+                if(in_array($app->id, $res)) {
+                    echo "<div class='footer deactivate' gstype='clicksubmit' gsvalue='".$app->id."' method='deactivateApp' gsname='id'>Deactivate</div>";
+                } else {
+                    echo "<div class='footer' gstype='clicksubmit' gsvalue='".$app->id."' method='activateApp' gsname='id'>Activate</div>";
+                }
+                echo "</span>";
+            }
         }
     }
-}
 
-?>
+    ?>
+    <div style='clear:both;'></div>
+</div>

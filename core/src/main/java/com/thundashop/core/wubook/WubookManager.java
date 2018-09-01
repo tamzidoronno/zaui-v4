@@ -29,6 +29,9 @@ import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.text.ParseException;
@@ -66,6 +69,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Autowired
     PmsManager pmsManager;
+    
+    @Autowired
+    ProductManager productManager;
     
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
@@ -346,6 +352,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     }catch(Exception e) {
                         logPrintException(e);
                     }
+                }
+                room.needToAddTaxes = checkIfNeedToAddTaxes(roomtable);
+                if(room.needToAddTaxes) {
+                    addTaxesToRoom(room);
                 }
             }
             roomNumber++;
@@ -2145,6 +2155,40 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public void setRoomRates(Integer channelId, List<WubookRoomRateMap> rates, Integer channelType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private boolean checkIfNeedToAddTaxes(Hashtable roomtable) {
+        try {
+            Hashtable anc = (Hashtable) roomtable.get("ancillary");
+            boolean tax_inclusive = (boolean) anc.get("tax_inclusive");
+            return !tax_inclusive;
+        }catch(Exception e) {
+            //Ignore failure here.
+        }
+        return false;
+    }
+
+    private void addTaxesToRoom(WubookBookedRoom room) {
+        WubookRoomData rdata = getWubookRoomData(room.roomId);
+        BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+        Product prod = productManager.getProduct(type.productId);
+        TaxGroup tax = prod.taxGroupObject;
+        Double factory = (100 + tax.taxRate) / 100;
+        for(Date key : room.priceMatrix.keySet()) {
+            Double current = room.priceMatrix.get(key);
+            current *= factory;
+            room.priceMatrix.put(key, current);
+        }
+    }
+
+    private WubookRoomData getWubookRoomData(int roomId) {
+        for(WubookRoomData rdata : wubookdata.values()) {
+            if(rdata.wubookroomid == roomId) {
+                return rdata;
+            }
+        }
+        
+        return null;
     }
 
 

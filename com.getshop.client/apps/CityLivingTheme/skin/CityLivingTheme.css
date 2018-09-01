@@ -5,7 +5,7 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
 .sticky{position:fixed !important;top:-65px !important;}
 .gs_language_selection{border:0;right:10px;top:-20px;}
 .gs_language_selection .gs_lang_code_nb_NO{
-    background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_norwegian.png);
+    background-image: url(/showApplicationImages.php?appNamespace=ns_08ca876d_b116_4178_bb87_3137415448d1&image=skin/images//flag_norwegian.png);
     background-repeat: no-repeat;
     background-position: center center;
     font-size: 0px;gsgss
@@ -13,7 +13,7 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
     background-size: 35px;
 }
 .gs_language_selection .gs_lang_code_en_en{
-    background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_english.png);
+    background-image: url(/showApplicationImages.php?appNamespace=ns_08ca876d_b116_4178_bb87_3137415448d1&image=skin/images//flag_english.png);
     background-repeat: no-repeat;
     background-position: center center;
     font-size: 0px;
@@ -137,6 +137,9 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
         padding-left: 5px;
         padding-right: 5px;
     }
+    
+    .Menu .fa { position:absolute; left: 0px; top: -140px; }
+    .gsarea[area="header"] .Menu .menuentries.horizontal { border: solid 2px; }
     
     .gscell_41.gsdepth_1.gsuicell { margin-bottom: 20px; }
     .gscell_42.gsdepth_1.gsuicell { margin-bottom: 20px; }

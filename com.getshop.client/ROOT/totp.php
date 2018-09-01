@@ -7,6 +7,13 @@ $instance = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
 $settings = $factory->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
 $settingsInstance = $factory->getApplicationPool()->createInstace($settings);
 
+$redirect = "";
+if(isset($_GET['redirectto'])) {
+    $redirect = $_GET['redirectto'];
+}
+if(isset($_POST['redirect'])) {
+    $redirect = $_POST['redirect'];
+}
 
 $username = "";
 $password = "";
@@ -118,6 +125,7 @@ if ($verificationcode && $username && $password) {
                 } else {
                     ?>
                     <form id='getshoploginform' method="POST" action="/totp.php" name="loginform" class="loginform">
+                        <input type="hidden" name="redirect" value="<?php echo $redirect; ?>">
                         <div class="form">
                             <div class="username">Username / Email<br><input id='gsloginusername' class="tstextfield" name="username" type="textfield" value='<? echo $username; ?>' style="height:40px;width:100%;"></input></div>
                             <bR>
@@ -154,6 +162,11 @@ if(isset($_POST['username'])) {
 }
 
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
+    if(isset($_POST['redirect'])) {
+        echo "<script>document.location = '".$_POST['redirect']."';</script>";
+        
+    }
+    
     $modules = $factory->getApi()->getPageManager()->getModules();
     if(sizeof($modules) > 1) {
         echo "<center><h1>Select a module</h1></center>";

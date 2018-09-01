@@ -45,10 +45,14 @@ class ModulePageMenu {
         ?>
 
         <div class="Menu">
+            
+            <?php
+            $this->printChangedMenues();
+            ?>
             <div class="menuentries horizontal">
                 <div class="entries">
                     <? foreach ($menuEntries as $entry) { ?>
-                        <div class="entry"><a href="/index2.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                        <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
                     <? } ?>
                 </div>
             </div>
@@ -64,7 +68,7 @@ class ModulePageMenu {
             <div class="menuentries vertical">
                 <div class="entries">
                     <? foreach ($menuEntries as $entry) { ?>
-                        <div class="entry"><a href="/index2.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                        <div class="entry"><a href="/pms.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
                                     <? } ?>
                 </div>
             </div>
@@ -92,6 +96,73 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Global setttings", "globalsettings", "");
         $menu->entries[] = new ModulePageMenuItem("PGA", "pga", "");
         return $menu;
+    }
+
+    public function printChangedMenues() {
+        $factory = IocContainer::getFactorySingelton();
+        $modules = $factory->getApi()->getPageManager()->getModules();
+        echo "<div class='gs_framework_modules'>";
+        foreach ($modules as $module) {
+            $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
+            $activeModule = $factory->getPage()->javapage->getshopModule == $module->id ? $module : $activeModule;
+            if (!$activeModule && $module->id == "cms") {
+                $activeModule = $module;
+            }
+            $icon = "<i class='fa gs".$module->fontAwesome."'></i>";
+            $scopeId = $_POST['scopeid'];
+            echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon"."<div>".$module->name."</div></div></a>";
+        }
+        echo "</div>";
+        echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa gsicon-menu modulechangericon'></i> <div>Modules</div></div>";
+
+        
+        
+        ?>
+        <script>
+            $('.modulechangericon').click(function() {
+                $('.gs_framework_modules').toggle();
+            });
+        </script>
+        <style>
+            .modulechangericoncontainer { float:left; }
+            .gs_framework_modules {
+                text-align: left;
+                position: absolute;
+                width: 623px;
+                left: 80px;
+                top: 76px;
+                z-index: 3;
+                font-size: 0px;
+                display: none;  
+                background-color: #23314e;
+                padding-bottom: 50px;
+                border-top: solid 1px rgba(255,255,255,0.2);
+            }
+            .gs_framework_module i { font-size: 40px; margin-top:5px;cursor:pointer; }
+            .gs_framework_module { display:inline-block;color:#fff; width: 80px;text-align: center; }
+            .gs_framework_modules .gs_framework_module i {
+                padding-bottom: 10px;
+            }
+
+            .gs_framework_modules .gs_framework_module {
+                display:  inline-block;
+                right: 30px;
+                top: 0px;
+                width: 120px;
+                height: 120px;
+                background-color: #FFF;
+                z-index: 1;
+                text-align: center;
+                box-sizing: border-box;
+                font-size: 11px;
+                color: rgba(255,255,255,0.8);
+                background-color: #23314e;
+                vertical-align: central;
+                box-sizing: border-box;
+                padding-top: 50px;
+            }
+        </style>
+        <?php
     }
 
 }

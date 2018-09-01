@@ -2350,4 +2350,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         markAsPaid(orderId, date, amount);
     }
 
+    @Override
+    public String sendInvoiceByEhf(String orderId, String vatNumber) {
+        AccountingDetails details = invoiceManager.getAccountingDetails();
+        Order order = getOrder(orderId);
+        User user = userManager.getUserById(order.userId);
+        EhfXmlGenerator generator = new EhfXmlGenerator(order, details, user);
+        return generator.generateXml();
+    }
+
 }

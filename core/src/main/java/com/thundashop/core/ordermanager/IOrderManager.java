@@ -320,4 +320,7 @@ public interface IOrderManager {
     @Administrator
     public void deleteOrder(String orderId);
     
+    @Administrator
+    public String sendInvoiceByEhf(String orderId, String vatNumber);
+    
 }

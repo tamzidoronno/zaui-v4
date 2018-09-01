@@ -12,14 +12,17 @@ import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -871,6 +874,22 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return total-amount;
     }
+    
+    public Map<TaxGroup, Double> getTaxes() {
+        Map<TaxGroup, Double> retMap = new HashMap();
+        cart.getItems().stream()
+                .forEach(item -> {
+                    Double current = retMap.get(item.getProduct().taxGroupObject);
+                    if (current == null) {
+                        current = 0D;
+                    }
+                    
+                    current += item.getTotalAmount() - item.getTotalEx();
+                    retMap.put(item.getProduct().taxGroupObject, current);
+                });
+        
+        return retMap;
+    }
 
     public Date getDueDate() {
         if(dueDays == null) {
@@ -906,6 +925,14 @@ public class Order extends DataCommon implements Comparable<Order> {
             return false;
         }
         return true;
+    }
+
+    public double getTotalAmountForTaxGroup(TaxGroup group) {
+        return cart.getItems().stream()
+                .filter(item -> item.getProduct().taxGroupObject.equals(group))
+                .mapToDouble(item -> item.getTotalAmount())
+                .sum();
+                
     }
 
 

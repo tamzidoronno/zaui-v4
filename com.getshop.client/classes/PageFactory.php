@@ -46,10 +46,11 @@ class PageFactory {
         
         // AVAILABILITY
         $page = new \ModulePage("0da68de9-da08-4b60-9652-3ac456da2627");
+        $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
         $row = $page->createRow();
         $row->addText("Availability");
         $row->addColumn("a5599ed1-60be-43f4-85a6-a09d5318638f", "cf33e9b4-9fb8-42f8-b831-f6ba0e2a67ac");
-        
+
         $row = $page->createRow();
         $row->addColumn("28886d7d-91d6-409a-a455-9351a426bed5", "84e615f5-5524-48a8-b913-b4a35a321383");
         $this->pages['0da68de9-da08-4b60-9652-3ac456da2627'] = $page;   
@@ -232,6 +233,7 @@ class PageFactory {
         $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
         $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
         $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
         $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
         $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
     }

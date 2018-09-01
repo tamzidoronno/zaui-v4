@@ -113,7 +113,12 @@ class PmsSearchBookingColumnFormatters {
         $vistorText .= "<i class='fa fa-plus-circle dontExpand quickfunction' title='Update addons' type='updateaddons'></i> ";
         $vistorText .= "<i class='fa fa-users dontExpand quickfunction' title='Change guest information' type='guestinfo'></i> ";
         if($room->numberOfRoomsInBooking > 1) {
-            $vistorText .= "<a href='/?page=groupbooking&bookingId=".$room->bookingId."' style='color:#bbb;'>";
+            if($_SERVER['REQUEST_URI'] == "/data.php") {
+                $base = "/pms.php";
+            } else {
+                $base = "/";
+            }
+            $vistorText .= "<a href='$base?page=groupbooking&bookingId=".$room->bookingId."' style='color:#bbb;'>";
             $vistorText .= "<i class='fa fa-arrows dontExpand' title='This room is part of a group of ".$room->numberOfRoomsInBooking." rooms'></i></a> ";
             
         }

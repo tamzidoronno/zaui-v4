@@ -285,7 +285,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
         
     public function getSelectedFilter() {
-        if($_SERVER['PHP_SELF'] == "/json.php" || (isset($_POST['firstLoad']) && $_POST['firstLoad'] == "true")) {
+        if($_SERVER['PHP_SELF'] == "/json.php" || isset($_SESSION['firstloadpage'])) {
             unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
             ?>
             <script>

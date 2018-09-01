@@ -10,11 +10,6 @@ if ($localmode && isset($_GET['changeGetShopModule']) && $_GET['changeGetShopMod
     $_SESSION['getshop_current_module_id'] = $_GET['changeGetShopModule'];
 }
 
-if (isset($_SESSION['getshop_current_module_id']) && $localmode && $_SESSION['getshop_current_module_id'] == "pms") {
-    include 'pms.php';
-    return;
-}
-
 ob_start();
 //phpinfo();
 //return;
@@ -308,6 +303,9 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
                 $icon = "<i class='fa gs".$module->fontAwesome."'></i>";
                 $scopeId = $_POST['scopeid'];
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
+                if($module->name == "PMS") {
+                    echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon PMS 2.0</div></a>";
+                }
             }
             
             $logoutText = $factory->__f("Logout");

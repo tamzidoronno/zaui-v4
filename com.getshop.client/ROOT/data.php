@@ -73,4 +73,6 @@ if (isset($_POST['core']['appid2']) && $_POST['core']['appid2']) {
     $ret['gs_alsoupdate'][] = $_POST['core']['fromappid'];
 }
 echo json_encode($ret);
+
+unset($_SESSION['firstloadpage']);
 ?>

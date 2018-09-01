@@ -13,6 +13,8 @@ if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['booki
     $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
 }
 
+$_SESSION['firstloadpage'] = true;
+
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="<? echo \PageFactory::getGetShopModule(); ?>">
     <head>

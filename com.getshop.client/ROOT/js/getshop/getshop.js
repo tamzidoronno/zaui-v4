@@ -496,7 +496,10 @@ thundashop.Ajax = {
         
         if($('.gsoverlay2 .gsoverlayinner').is(':visible') && (typeof(callback) === "undefined" || callback === undefined || callback === null)) {
             data['synchron'] = true;
-            callback = thundashop.framework.reloadOverLayType2;
+            if(typeof(isloadingoverlaytype2) === "undefined" || !isloadingoverlaytype2) {
+                isloadingoverlaytype2 = true;
+                callback = thundashop.framework.reloadOverLayType2;
+            }
         }
         
         if($('.gsoverlay1 .gsoverlayinner').is(':visible') && (typeof(callback) === "undefined" || callback === undefined || callback === null) && !data.firstLoad) {
@@ -765,6 +768,8 @@ getshop = {
     },
     
     showOverlay: function(overlaytype) {
+        $('.gsoverlay1').removeClass('active');
+        $('.gsoverlay2').removeClass('active');
         $('.gsoverlay' + overlaytype).addClass('active');
         $('.gsoverlay'+overlaytype+' .gsoverlayinner .content').html('<div style="padding: 30px; text-align: center;"><i style="font-size: 30px;" class="fa fa-spin fa-spinner"></i></div>');
     },
@@ -1124,6 +1129,7 @@ thundashop.framework = {
         
         thundashop.Ajax.post(latestOverLayLoadingEvent, function(res) {
             $('.gsoverlay2 .gsoverlayinner .content').html(res);
+            isloadingoverlaytype2 = false;
         });
     },
     

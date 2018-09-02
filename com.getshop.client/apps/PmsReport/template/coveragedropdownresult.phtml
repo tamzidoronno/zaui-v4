@@ -9,6 +9,8 @@
         <th align='left'>Remaining</th>
         <th align='left'>Room type</th>
         <th align='left'>Room</th>
+        <th align='left'>Start</th>
+        <th align='left'>End</th>
     </tr>
     <?php
     $data = json_decode($_SESSION['latestpmscoverageresult']);
@@ -53,8 +55,49 @@
                             echo "floating";
                         }
                         echo "</td>";
-                        
+                        echo "<td>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
+                        echo "<td>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
                         echo "</tr>";
+                    }
+                }
+            }
+            
+            $totalRemoved = 0;
+            foreach($entry->roomsRemovedFromStatistics as $roomId => $val) {
+                $totalRemoved += $val;
+            }
+            if($totalRemoved > 1 || $totalRemoved < -1) {
+                foreach($entry->roomsRemovedFromStatistics as $roomId => $val) {
+                    $removedBooking = $this->getApi()->getPmsManager()->getBookingFromRoomIgnoreDeleted($this->getSelectedMultilevelDomainName(), $roomId);
+                    if($removedBooking) {
+                        foreach($removedBooking->rooms as $room) {
+                            if($room->pmsBookingRoomId == $roomId) {
+                                echo "<tr>";
+                                echo "<td>" . $room->guests[0]->name . "</td>";
+                                echo "<td>" . round($val) . "</td>";
+                                echo "<td>0</td>";
+                                echo "<td>" . round($val*-1) . "</td>";
+                                echo "<td>";
+                                $total += $val;
+                                if($room->bookingItemTypeId) {
+                                    $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId)->name;
+                                    echo $type;
+                                }
+                                echo "</td>";
+                                echo "<td>";
+                                if($room->bookingItemId) {
+                                    $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+                                    echo $item->bookingItemName;
+                                } else {
+                                    echo "floating";
+                                }
+                                echo "</td>";
+                                echo "<td>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
+                                echo "<td>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
+                                echo "</tr>";
+                                $totalRemaining -= $val;
+                            }
+                        }
                     }
                 }
             }

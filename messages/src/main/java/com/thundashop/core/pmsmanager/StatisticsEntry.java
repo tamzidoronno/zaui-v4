@@ -25,6 +25,7 @@ public class StatisticsEntry {
     public HashMap<String, Double> roomsPrice = new HashMap();
     public HashMap<String, Double> roomsPriceForecasted = new HashMap();
     public HashMap<Integer, Double> addonsPriceEx = new HashMap();
+    public HashMap<String, Double> roomsRemovedFromStatistics = new HashMap();
     
     public HashMap<String, Integer> uniqueGuests = new HashMap();
     public HashMap<String, Integer> guests = new HashMap();
@@ -71,5 +72,15 @@ public class StatisticsEntry {
         roomsRentedOut += entry.roomsRentedOut;
         totalRooms += entry.totalRooms;
         finalize();
+    }
+
+    void addRoomsNotIncluded(PmsOrderStatisticsEntry entry, StatisticsEntry statEntry, String offset) {
+        roomsRemovedFromStatistics = new HashMap();
+        for(String roomId : entry.priceExRoom.keySet()) {
+            String tmpRoomId = roomId.replace("_"+offset, "");
+            if(!statEntry.roomsIncluded.contains(tmpRoomId)) {
+                roomsRemovedFromStatistics.put(tmpRoomId, entry.priceExRoom.get(roomId));
+            }
+        }
     }
 }

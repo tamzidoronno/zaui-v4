@@ -7844,6 +7844,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         statEntry.roomsPrice.put(roomId, price);
                     }
+                    
+                    statEntry.addRoomsNotIncluded(entry, statEntry, offset);
 
                     for (String productId : roomProductIds) {
                         Double productPrice = entry.priceEx.get(productId);

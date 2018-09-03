@@ -81,6 +81,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             <input type='hidden' gsname='roomid' value='<?php echo $_POST['data']['roomid']; ?>'>
         <?php
         switch($type) {
+            case "changeroom":
+            case "changecategory":
             case "delete":
             case "changeprice":
             case "changestay":

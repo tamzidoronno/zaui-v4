@@ -1,0 +1,36 @@
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+$room = null;
+foreach($booking->rooms as $r) {
+    if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+        $room = $r;
+    }
+}
+$start = $room->date->start;
+$end = $room->date->end;
+$bookingid = $room->bookingId;
+$availableItems = $this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(), $start, $end, $bookingid);
+foreach($availableItems as $tmpitem) {
+    $availableItems[$tmpitem->id] = $tmpitem;
+}
+?>
+Change room:<br>
+<select class="gsniceselect1" style="width:100%; min-width: 400px;" gsname='newroomid'>
+    <?php
+    foreach($items as $item) {
+        $isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $item->id);
+        $isCleanText = $isClean ? "(clean)" : "(dirty)";
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $item->bookingItemTypeId);
+        
+        $canAdd = false;
+        if(isset($availableItems[$item->id])) {
+            $canAdd = true;
+        }
+        $canAddText = $canAdd ? "(free)" : "(taken)";
+        echo "<option value='" . $item->id ."'>" . $item->bookingItemName . " : " . $type->name . " " . $isCleanText . " " . $canAddText . "</option>";
+    }
+    ?>
+</select>
+<span class="shop_button" style='width:100%;margin-top:5px;box-sizing: border-box;' gstype='submit'>Try change</span>

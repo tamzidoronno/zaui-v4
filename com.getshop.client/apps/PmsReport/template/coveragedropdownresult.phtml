@@ -23,9 +23,30 @@
                 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomIncluded);
                 foreach($booking->rooms as $room) {
                     if($room->pmsBookingRoomId == $roomIncluded) {
+                        $orderIds = array();
+                        foreach($entry->ordersUsed as $tmpid) {
+                            if(in_array($tmpid, $booking->orderIds)) {
+                                $orderIds[] = $tmpid;
+                            }
+                        }
+                        
                         $remaining = 0;
                         echo "<tr>";
                         echo "<td valign='top'>";
+                        $found = false;
+                        foreach($orderIds as $ordId) {
+                            $order = $this->getApi()->getOrderManager()->getOrder($ordId);
+                            foreach($order->cart->items as $itm) {
+                                if($itm->product->externalReferenceId == $roomIncluded) {
+                                    $found = true;
+                                }
+                            }
+                            $incId = $order->incrementOrderId;
+                            if($found) {
+                                echo "<i class='fa fa-file-pdf-o' style='cursor:pointer' title='Download order $incId' orderid='".$ordId."' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$ordId."&incrementalOrderId=".$incId."\");'></i> ";
+                            }
+                        }
+                        echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='$roomIncluded' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
                         echo $room->guests[0]->name . "<br>";
                         echo "</td>";
                         echo "<td valign='top'>";

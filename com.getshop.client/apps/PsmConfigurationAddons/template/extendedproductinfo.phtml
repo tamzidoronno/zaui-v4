@@ -12,6 +12,9 @@ $rangetype[1] = "On stay";
 $rangetype[2] = "On booking";
 ?>
 <div class='saveExtendedInformationForm'>
+    <div style='text-align: right'>
+        <i class='fa fa-close' style='cursor:pointer;' onclick='$(this).closest(".extendedinformation").hide();'></i>
+    </div>
     <input type='hidden' gsname='productId' value='<?php echo $_POST['data']['productId']; ?>'>
     <div class="extendedinforow">
         Description on web page <input type="txt" class="settings" gsname="descriptionWeb" value="<?php echo $addonItem->descriptionWeb; ?>">

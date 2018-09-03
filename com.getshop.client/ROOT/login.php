@@ -165,6 +165,12 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                         foreach ($modules as $module) {
                             echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=" . strtolower($module->id) . "&scopeid=NEW' style='text-decoration:none;'>";
                             echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span> " . $module->name . "</div>";
+                            echo "</a>";
+                            if($module->name == "PMS") {
+                                echo "<a class='gs_ignorenavigate' href='/pms.php' style='text-decoration:none;'>";
+                                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>PMS 2.0</div>";
+                                echo "</a>";
+                            }
                         }
                     } else {
                         echo "<br> Please wait while we are logging you on.</center>";

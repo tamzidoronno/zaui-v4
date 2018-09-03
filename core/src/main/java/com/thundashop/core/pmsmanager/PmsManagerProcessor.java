@@ -972,10 +972,10 @@ public class PmsManagerProcessor {
             if(booking.orderIds.size() > 1) {
                 continue;
             }
-            if(!booking.isOld(0)) {
+            if(!booking.isOld(90)) {
                 continue;
             }
-            if(booking.isOld(10)) {
+            if(booking.isOld(100)) {
                 continue;
             }
             if(booking.transferredToLock()) {

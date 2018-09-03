@@ -177,7 +177,6 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                         $module = $modules[0];
                         echo "<script>document.location = '/?changeGetShopModule=" . strtolower($module->id) . "&scopeid=NEW'</script>";
                     }
-
                 } else {
                     ?>
                     <div class="form">

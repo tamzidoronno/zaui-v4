@@ -2482,7 +2482,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(type != null) {
             CartItem item = createCartItem(type.productId, type.name, room, startDate, endDate, price, daysInPeriode, "");
             if(item != null) {
-                if(storeId.equals("b703b793-c7f4-4803-83bb-106cab891d6c")) {
+                if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
                     item.getProduct().name = item.getProduct().metaData;
                     item.getProduct().metaData = "";
                     item.getProduct().additionalMetaData = "";
@@ -2516,7 +2516,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 endDateToUse = room.date.end;
             }
             List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDateToUse);
-            if(storeId.equals("b703b793-c7f4-4803-83bb-106cab891d6c")) {
+            if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
                 result.addAll(createAddonsCartItemsToInvoiceForGetShop(items, room));
             } else {
                 for(int iteration = 0; iteration < 2; iteration++) {

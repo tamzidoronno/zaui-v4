@@ -44,22 +44,23 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
                 if(room.isEnded()) {
                     continue;
                 }
-                if(room.guests.size() > 0) {
-                    String storeId = getstoreId(room.guests.get(0).name);
+                if(room.guests.size() > 0 && room.guests.get(0) != null && room.guests.get(0).name != null) {
+                    String name = room.guests.get(0).name;
+                    String storeId = getstoreId(name);
                     if(storeId.isEmpty()) {
-                        storeId = getstoreId(room.guests.get(0).name.replace("www.", ""));
+                        storeId = getstoreId(name.replace("www.", ""));
                     }
                     if(storeId.isEmpty()) {
-                        storeId = getstoreId(room.guests.get(0).name.replace("http://", ""));
+                        storeId = getstoreId(name.replace("http://", ""));
                     }
                     if(storeId.isEmpty()) {
-                        storeId = getstoreId(room.guests.get(0).name.replace("http://www.", ""));
+                        storeId = getstoreId(name.replace("http://www.", ""));
                     }
                     if(storeId.isEmpty()) {
-                        storeId = getstoreId(room.guests.get(0).name.replace("https://", ""));
+                        storeId = getstoreId(name.replace("https://", ""));
                     }
                     if(storeId.isEmpty()) {
-                        storeId = getstoreId(room.guests.get(0).name.replace("https://www.", ""));
+                        storeId = getstoreId(name.replace("https://www.", ""));
                     }
                     
                     if(storeId.isEmpty()) {

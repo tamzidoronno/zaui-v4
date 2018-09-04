@@ -197,13 +197,21 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
 
                         <input class="loginbutton" type="submit" value="login" style="height:40px; margin-top: 20px;width:100%;"/>                
                     </div>
-
                     <?php
                 }
                 ?>
             </form>
         </div>
     </div>
+</div>
+<div style='text-align: center; '>
+    <?php
+    $gets = "";
+    foreach($_GET as $k => $val) {
+        $gets .= $k . "=" . $val . "&";
+    }
+    ?>
+    <a href='totp.php?<?php echo $gets; ?>' style='color:blue; text-decoration: none;'>Totp login</a>
 </div>
 <?php
 if (isset($_POST['username'])) {

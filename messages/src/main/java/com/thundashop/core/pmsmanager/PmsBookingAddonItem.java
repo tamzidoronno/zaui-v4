@@ -122,6 +122,9 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     }
 
     public String getName() {
+        if (overrideName != null && !overrideName.isEmpty()) {
+            name = overrideName;
+        }
         return name;
     }
     

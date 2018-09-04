@@ -184,6 +184,50 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
             echo "<span class='addeduser' userid='".$usr->id."'><i class='fa fa-close'></i> " . $usr->fullName . "</span>";
         }
     }
+    
+    public function downloadExcelFile() {
+        $result = $this->getFilteredResult();
+        $rows = array();
+        $header = array();
+        $header[] = "ID";
+        $header[] = "DATE";
+        $header[] = "P-DATE";
+        $header[] = "DUE";
+        $header[] = "START";
+        $header[] = "END";
+        $header[] = "USER";
+        $header[] = "STATUS";
+        $header[] = "EX TAX";
+        $header[] = "INC TAX";
+        $header[] = "PAID";
+        $header[] = "REST";
+        $rows[] = $header;
+        $states = $this->getStates();
+         
+        foreach($result as $statentry) {
+            /* @var $statentry \core_ordermanager_data_OrderResult */
+            $row = array();
+            $row[] = $statentry->incOrderId;
+            $row[] = date("d.m.Y", strtotime($statentry->orderDate));
+            $row[] = date("d.m.Y", strtotime($statentry->paymentDate));
+            $row[] = date("d.m.Y", strtotime($statentry->dueDate));
+            $row[] = date("d.m.Y", strtotime($statentry->start));
+            $row[] = date("d.m.Y", strtotime($statentry->end));
+            $row[] = $statentry->user;
+            if(isset($states[$statentry->status])) {
+                $state = $states[$statentry->status];
+            } else {
+                $state = $statentry->status;
+            }
+            $row[] = $state;
+            $row[] = $statentry->amountExTaxes;
+            $row[] = $statentry->amountIncTaxes;
+            $row[] = $statentry->amountPaid;
+            $row[] = $statentry->restAmount;
+            $rows[] = $row;
+        }
+        echo json_encode($rows);
+    }
 
 }
 ?>

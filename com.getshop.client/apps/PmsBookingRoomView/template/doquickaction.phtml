@@ -10,6 +10,12 @@ $currentRoom = null;
     }
 }
 switch($type) {
+    case "changeroom": 
+        $roomId = $currentRoom->pmsBookingRoomId;
+        $bookingId = $booking->id;
+        $itemId = $_POST['data']['newroomid'];
+        $this->getApi()->getPmsManager()->setBookingItem($this->getSelectedMultilevelDomainName(), $roomId, $bookingId, $itemId, false);
+        break;
     case "delete":
         $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $booking->id, $roomId);
         break;

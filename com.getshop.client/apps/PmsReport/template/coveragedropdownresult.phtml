@@ -9,6 +9,8 @@
         <th align='left'>Remaining</th>
         <th align='left'>Room type</th>
         <th align='left'>Room</th>
+        <th align='left'>Start</th>
+        <th align='left'>End</th>
     </tr>
     <?php
     $data = json_decode($_SESSION['latestpmscoverageresult']);
@@ -21,9 +23,30 @@
                 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomIncluded);
                 foreach($booking->rooms as $room) {
                     if($room->pmsBookingRoomId == $roomIncluded) {
+                        $orderIds = array();
+                        foreach($entry->ordersUsed as $tmpid) {
+                            if(in_array($tmpid, $booking->orderIds)) {
+                                $orderIds[] = $tmpid;
+                            }
+                        }
+                        
                         $remaining = 0;
                         echo "<tr>";
                         echo "<td valign='top'>";
+                        $found = false;
+                        foreach($orderIds as $ordId) {
+                            $order = $this->getApi()->getOrderManager()->getOrder($ordId);
+                            foreach($order->cart->items as $itm) {
+                                if($itm->product->externalReferenceId == $roomIncluded) {
+                                    $found = true;
+                                }
+                            }
+                            $incId = $order->incrementOrderId;
+                            if($found) {
+                                echo "<i class='fa fa-file-pdf-o' style='cursor:pointer' title='Download order $incId' orderid='".$ordId."' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$ordId."&incrementalOrderId=".$incId."\");'></i> ";
+                            }
+                        }
+                        echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='$roomIncluded' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
                         echo $room->guests[0]->name . "<br>";
                         echo "</td>";
                         echo "<td valign='top'>";
@@ -53,8 +76,64 @@
                             echo "floating";
                         }
                         echo "</td>";
-                        
+                        echo "<td>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
+                        echo "<td>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
                         echo "</tr>";
+                    }
+                }
+            }
+            
+            $totalRemoved = 0;
+            foreach($entry->roomsRemovedFromStatistics as $roomId => $val) {
+                $totalRemoved += $val;
+            }
+            if($totalRemoved > 1 || $totalRemoved < -1) {
+                foreach($entry->roomsRemovedFromStatistics as $roomId => $val) {
+                    $removedBooking = $this->getApi()->getPmsManager()->getBookingFromRoomIgnoreDeleted($this->getSelectedMultilevelDomainName(), $roomId);
+                    if($removedBooking) {
+                        foreach($removedBooking->rooms as $room) {
+                            if($room->pmsBookingRoomId == $roomId) {
+                                echo "<tr>";
+                                echo "<td>";
+                                foreach($removedBooking->orderIds as $ordId) {
+                                    $order = $this->getApi()->getOrderManager()->getOrder($ordId);
+                                    foreach($order->cart->items as $itm) {
+                                        if($itm->product->externalReferenceId == $roomIncluded) {
+                                            $found = true;
+                                        }
+                                    }
+                                    $incId = $order->incrementOrderId;
+                                    if($found) {
+                                        echo "<i class='fa fa-file-pdf-o' style='cursor:pointer' title='Download order $incId' orderid='".$ordId."' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$ordId."&incrementalOrderId=".$incId."\");'></i> ";
+                                    }
+                                }
+                                echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='$roomIncluded' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
+                                
+                                echo $room->guests[0]->name . "</td>";
+                                echo "<td>" . round($val) . "</td>";
+                                echo "<td>0</td>";
+                                echo "<td>" . round($val*-1) . "</td>";
+                                echo "<td>";
+                                $total += $val;
+                                if($room->bookingItemTypeId) {
+                                    $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId)->name;
+                                    echo $type;
+                                }
+                                echo "</td>";
+                                echo "<td>";
+                                if($room->bookingItemId) {
+                                    $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+                                    echo $item->bookingItemName;
+                                } else {
+                                    echo "floating";
+                                }
+                                echo "</td>";
+                                echo "<td>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
+                                echo "<td>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
+                                echo "</tr>";
+                                $totalRemaining -= $val;
+                            }
+                        }
                     }
                 }
             }

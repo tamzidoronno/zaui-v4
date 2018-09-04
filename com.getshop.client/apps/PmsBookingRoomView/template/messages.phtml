@@ -30,8 +30,9 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
                 echo "<h3>Select the guests you want to send a message to</h3>";
                 $idx = 0;
                 foreach($guests as $guest) {
+                    $checked = ($idx == 0) ? "checked" : "";
                     echo "<div>";
-                    echo "<input type='checkbox' gsname='sendtoguest_$idx'>";
+                    echo "<input type='checkbox' gsname='sendtoguest_$idx' $checked>";
                     echo "<input type='hidden' class='gsniceinput1' gsname='guestid_$idx' value='" . $guest->guestId ."' style='width:20px;'>";
                     echo "<input type='text' class='gsniceinput1' gsname='prefix_$idx' value='" . $guest->prefix ."' style='width:20px;'>";
                     echo "<input type='text' class='gsniceinput1' gsname='phone_$idx' value='" . $guest->phone ."'>";

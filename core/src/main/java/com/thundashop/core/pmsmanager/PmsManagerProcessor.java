@@ -957,6 +957,9 @@ public class PmsManagerProcessor {
         
         List<PmsBooking> allNotDeleted = getAllConfirmedNotDeleted(true);
         for(PmsBooking booking : allNotDeleted) {
+            if(booking.id.equals("66a3109d-4fb5-4ec7-89ab-e782b6efb5a7")) {
+                System.out.println("check");
+            }
             if(booking.payedFor) {
                 continue;
             }
@@ -978,6 +981,9 @@ public class PmsManagerProcessor {
             if(booking.transferredToLock()) {
                 continue;
             }
+            if(booking.getActiveRooms().isEmpty()) {
+                continue;
+            }
             
             if(configuration.ignorePaymentWindowDaysAheadOfStay > 0) {
                 Date startDate = booking.getStartDate();
@@ -988,7 +994,12 @@ public class PmsManagerProcessor {
                 }
             }
             
-            System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);
+            manager.removeAllUnclosedOrders(booking.id);
+            booking = manager.getBooking(booking.id);
+            if(!booking.orderIds.isEmpty()) {
+                return;
+            }
+            
             manager.logEntry("Autodeleted because it has expired.", booking.id, null);
             manager.deleteBooking(booking.id);
         }

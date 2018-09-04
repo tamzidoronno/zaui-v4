@@ -209,12 +209,7 @@ $(document).ready(function() {
         $(this).css('margin-right', "-"+marginLeft+"px");
         $(this).find('span').hide();
         $(this).attr('numberofblocks', numberOfBlocks);
-        
-        if (size > 100 || numberOfBlocks > 1) {
-            $(this).find('.fullname').fadeIn();
-        } else {
-            $(this).find('.acronyme').fadeIn();
-        }
+        $(this).find('.fullname').fadeIn();
     });
     if (typeof(alreadyAddedScrollAvailability) === "undefined") {
         alreadyAddedScrollAvailability = true;

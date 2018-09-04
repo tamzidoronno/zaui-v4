@@ -22,6 +22,7 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.DibsAutoCollectData;
+import com.thundashop.core.getshop.data.EhfComplientCompany;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Lead;
 import com.thundashop.core.getshop.data.LeadHistory;
@@ -55,6 +56,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,7 @@ import org.springframework.stereotype.Component;
 public class GetShop extends ManagerBase implements IGetShop {
 
     private List<DibsAutoCollectData> listToAdd = new ArrayList();
+    private List<EhfComplientCompany> ehfCompanies = new ArrayList();
     
     private HashMap<String, List<Partner>> partners;
     private HashMap<String, PartnerData> partnerData = new HashMap();
@@ -116,6 +119,11 @@ public class GetShop extends ManagerBase implements IGetShop {
                 List<Partner> partnerList = getPartnerList(toAdd.partnerId);
                 partnerList.add(toAdd);
             }
+            
+            if(obj instanceof EhfComplientCompany) {
+                ehfCompanies.add((EhfComplientCompany)obj);
+            }
+            
             if(obj instanceof PartnerData) {
                 PartnerData pdata = (PartnerData)obj;
                 partnerData.put(pdata.partnerId, pdata);
@@ -129,6 +137,8 @@ public class GetShop extends ManagerBase implements IGetShop {
                 smsResponses.put(pdata.id, pdata);
             }
         }
+        
+        createScheduler("ehf_datahotel_downloader", "33 3 * * *", FetchEhfProcessor.class);
     }
 
     private void addUserInformation(GetshopStore getshopstore, Store store) {
@@ -846,5 +856,48 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Override
     public Lead getLead(String leadId) {
         return leads.get(leadId);
+    }
+    
+    @Override
+    public void loadEhfCompanies() {
+        EhfCsvReader reader = new EhfCsvReader();
+        List<EhfComplientCompany> companiesFromDatahotelDifi = reader.getCompanies();
+        
+        if (companiesFromDatahotelDifi.isEmpty()) {
+            return;
+        }
+        
+        List<Integer> vatNumbers = companiesFromDatahotelDifi.stream()
+                .map(c -> c.vatNumber)
+                .collect(Collectors.toList());
+        
+        // Delete and remove companies that has been removed from the EHF Supported.
+        ehfCompanies.stream()
+                .filter(c -> !vatNumbers.contains(c.vatNumber))
+                .forEach(c -> deleteObject(c));
+        
+        ehfCompanies.removeIf(c -> !vatNumbers.contains(c.vatNumber));
+        
+        // Add new once.
+        companiesFromDatahotelDifi.stream().forEach(comp -> {
+            boolean alreadyExists = getEhfCompany(comp.vatNumber) != null;
+            
+            if (!alreadyExists) {
+                saveObject(comp);
+                ehfCompanies.add(comp);
+            }
+        });
+    }
+    
+    private EhfComplientCompany getEhfCompany(int vatNumber) {
+        return ehfCompanies.stream()
+                    .filter(c -> c.vatNumber == vatNumber)
+                    .findAny()
+                    .orElse(null);
+    }
+
+    @Override
+    public boolean canInvoiceOverEhf(int vatNumber) {
+        return getEhfCompany(vatNumber) != null;
     }
 }

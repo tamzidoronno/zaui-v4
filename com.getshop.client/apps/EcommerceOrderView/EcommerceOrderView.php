@@ -9,6 +9,12 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         
     }
     
+    
+    public static function sortByDate( $logEntrya, $logEntryb) {
+        die("TEST");
+        return  strtotime($logEntrya->date) -  strtotime($logEntryb->date);
+    }
+
     public function chargeBySavedCard() {
         $orderId = $_POST['data']['orderid'];
         $cardId = $_POST['data']['savedcard'];

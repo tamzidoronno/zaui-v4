@@ -2,9 +2,20 @@
 /* @var $this \ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
 $order = $this->getOrder();
 echo "<h1>Transaction log</h1>";
+
+$transactiolog = array();
+$arr = array();
 foreach($order->payment->transactionLog as $time => $log) {
-    echo "<div>" . date("d.m.Y H:i", $time/1000) . " : " . $log . "</div>";
+    $arr[(int)$time] = $log;
 }
+
+ksort($arr);
+
+foreach($arr as $time => $log) {
+    echo "<div>". date("d.m.Y H:i", $time/1000) . " : " . $log . "</div>";
+}
+
+
 foreach($order->orderTransactions as $transactionObject) {
     $name = "";
     if($transactionObject->userId) {

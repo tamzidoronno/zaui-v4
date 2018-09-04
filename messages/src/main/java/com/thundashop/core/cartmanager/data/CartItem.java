@@ -318,10 +318,18 @@ public class CartItem implements Serializable {
         cartItemId = UUID.randomUUID().toString();
     }
 
+    public double getTotalAmountRoundedWithTwoDecimals() {
+        return Math.round(getTotalAmount() * 100.0) / 100.0;
+    }
+    
     public double getTotalAmount() {
         return count * getProduct().price;
     }
 
+    public double getTotalExRoundedWithTwoDecimals() {
+        return Math.round(getTotalEx() * 100.0) / 100.0;
+    }
+    
     public double getTotalEx() {
         return count * getProduct().priceExTaxes;
     }

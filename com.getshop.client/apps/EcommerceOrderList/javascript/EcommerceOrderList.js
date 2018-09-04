@@ -6,6 +6,12 @@ app.EcommerceOrderList = {
         $(document).on('click','.EcommerceOrderList .deleteOrder', app.EcommerceOrderList.deleteOrder);
         $(document).on('click','.EcommerceOrderList .creditOrder', app.EcommerceOrderList.creditOrder);
     },
+    
+    showSendingEhfMessage: function() {
+        $('.sendehfbox').hide(); 
+        $('.sendingehf').show();
+    },
+    
     refreshOrderRow : function(orderId) {
         var event = thundashop.Ajax.createEvent('','reloadRow',$('.EcommerceOrderList'), {
             "id" : orderId
@@ -44,6 +50,16 @@ app.EcommerceOrderList = {
     doneSendingPaymentLink : function() {
         $('.currentsentdate').html('<i class="fa fa-check"></i> Just sent');
         $('.currentsentdate').closest('.datarow').find('.sendpaymentlinkwindow').slideUp();
+    },
+    doneSendingPaymentLinkEhf : function(res) {
+        if (!res) {
+            $('.currentsentdate').html('<i class="fa fa-check"></i> Just sent');
+            $('.currentsentdate').closest('.datarow').find('.sendpaymentlinkwindow').slideUp();    
+        } else {
+            $('.currentsentdate').closest('.datarow').find('.sendingehf').html(res);    
+        }
+        
+        
     },
     sendEmail : function() {
         var btn = $(this);

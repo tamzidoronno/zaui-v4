@@ -121,4 +121,11 @@ public interface IGetShop {
     
     @Administrator
     public void toggleRemoteEditing();
+    
+    @Administrator
+    @GetShopNotSynchronized
+    public void loadEhfCompanies();
+    
+    @Administrator
+    public boolean canInvoiceOverEhf(int vatNumber);
 }

@@ -606,6 +606,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return amount;
     }
+    
+    public double getTotalAmountRoundedTwoDecimals() {
+        double total = getTotalAmount();
+        return Math.round(total * 100.0) / 100.0;
+    }
 
     public double getTotalAmountUnfinalized() {
         double amount = 0.0;
@@ -866,6 +871,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         periodeDaySleptStart = null;
     }
 
+    public Double getTotalAmountVatRoundedTwoDecimals () {
+        double total = getTotalAmountVat();
+        return Math.round(total * 100.0) / 100.0;    
+    }
+    
     public Double getTotalAmountVat() {
         double total = getTotalAmount();
         double amount = 0.0;
@@ -875,7 +885,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         return total-amount;
     }
     
-    public Map<TaxGroup, Double> getTaxes() {
+    public Map<TaxGroup, Double> getTaxesRoundedWithTwoDecimals() {
         Map<TaxGroup, Double> retMap = new HashMap();
         cart.getItems().stream()
                 .forEach(item -> {
@@ -884,7 +894,9 @@ public class Order extends DataCommon implements Comparable<Order> {
                         current = 0D;
                     }
                     
-                    current += item.getTotalAmount() - item.getTotalEx();
+                    double taxes = item.getTotalAmountRoundedWithTwoDecimals()- item.getTotalExRoundedWithTwoDecimals();
+                    current += Math.round(taxes * 100.0) / 100.0;
+                    
                     retMap.put(item.getProduct().taxGroupObject, current);
                 });
         
@@ -927,10 +939,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         return true;
     }
 
-    public double getTotalAmountForTaxGroup(TaxGroup group) {
+    /**
+     * Returns prices without taxes added.
+     * @param group
+     * @return 
+     */
+    public double getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group) {
         return cart.getItems().stream()
                 .filter(item -> item.getProduct().taxGroupObject.equals(group))
-                .mapToDouble(item -> item.getTotalAmount())
+                .mapToDouble(item -> item.getTotalExRoundedWithTwoDecimals())
                 .sum();
                 
     }

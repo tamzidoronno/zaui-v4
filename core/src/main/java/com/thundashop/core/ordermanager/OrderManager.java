@@ -22,6 +22,7 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
+import com.thundashop.core.ordermanager.data.EhfSentLog;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
@@ -2350,4 +2351,70 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         markAsPaid(orderId, date, amount);
     }
 
+    @Override
+    public String getEhfXml(String orderId) {
+        AccountingDetails details = invoiceManager.getAccountingDetails();
+        Order order = getOrder(orderId);
+        User user = userManager.getUserById(order.userId);
+        EhfXmlGenerator generator = new EhfXmlGenerator(order, details, user);
+        String xml = "";
+        
+        try {
+            xml = generator.generateXml();
+        } catch (ErrorException ex) {
+            messageManager.sendErrorNotification("There was an error while validating the EHF, please investigate. <br/>OrderId: " + orderId, ex);
+            return "failed";
+        }
+        
+        return xml;
+    }
+
+    @Override
+    public void closeOrder(String orderId, String reason) {
+        if (getSession() != null && getSession().currentUser != null) {
+            reason += ", done by: " + getSession().currentUser.fullName;
+        }
+        Order order = getOrder(orderId);
+        order.closed = true;
+        order.payment.transactionLog.put(System.currentTimeMillis(), reason);
+        saveObject(order);
+    }
+
+    @Override
+    public List<String> isConfiguredForEhf() {
+        List<String> errors = new ArrayList();
+        
+        AccountingDetails details = invoiceManager.getAccountingDetails();
+        
+        if (details.vatNumber.isEmpty()) 
+            errors.add("Vat number not configured for invoice");
+        
+        if (details.companyName == null || details.companyName.isEmpty())
+            errors.add("Company name not set");
+            
+        if (details.address.isEmpty())
+            errors.add("Street address not connfigured for invoice");
+        
+        if (details.postCode.isEmpty())
+            errors.add("Postcode not configured for invoice");
+        
+        if (details.accountNumber.isEmpty())
+            errors.add("Account number not configured for invoice");
+        
+        if (details.contactEmail.isEmpty())
+            errors.add("Email not configured for for invoice");
+            
+        return errors;
+    }
+
+    @Override
+    public void registerSentEhf(String orderId) {
+        Order order = getOrder(orderId);
+        
+        EhfSentLog log = new EhfSentLog();
+        log.orderId = orderId;
+        log.userId = getSession().currentUser.id;
+        log.vatNumber = userManager.getUserById(order.userId).companyObject.vatNumber;
+        saveObject(log);
+    }
 }

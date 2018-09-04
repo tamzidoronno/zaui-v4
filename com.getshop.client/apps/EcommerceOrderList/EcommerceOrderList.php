@@ -272,6 +272,25 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId);
     }
     
+    public function sendByEhf() {
+        $email = $_POST['data']['bookerEmail'];
+        $bookingId = $_POST['data']['bookingid'];
+        $orderid = $_POST['data']['orderid'];
+        $xml = $this->getApi()->getOrderManager()->getEhfXml($orderid);
+        if ($xml == "failed") {
+            echo "1. Something wrong happend while creating EHF invoice, GetShop has been notified and will contact you once its sorted out. ";
+            return;
+        }
+        
+        $res = $this->sendDocument($xml);
+        if ($res[0] != "ok") {
+            echo "2. Something went wrong during sending EHF, please contact GetShop Support.";
+            return;
+        }
+        
+        $this->getApi()->getOrderManager()->registerSentEhf($orderid);
+        $this->getApi()->getOrderManager()->closeOrder($orderid, "Invoice sent by EHF to customer.");
+    }
     
     public function sendPaymentLink() {
         $orderid = $_POST['data']['orderid'];
@@ -315,6 +334,78 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
 
     public function setPaymentLinkCallBack($callback) {
         $this->paymentLinkCallback = $callback;
+    }
+
+    
+    function sendDocument($doc) {
+        if (!$this->getApi()->getStoreManager()->isProductMode()) {
+            return array("ok");
+        }
+        
+        $url = "https://www.ehfportal.no/fsc.php";
+        $user = 'getshop';
+        $pass = 'dj28ycz2x';
+
+        $ch = curl_init();
+
+        $params = array(
+                'a1' => $user,
+                'a2' => $pass,
+                'a3' => $doc
+        );
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 500);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlInfo = curl_getinfo($ch);
+        if($httpCode == 200) {
+                $status = 'ok';
+        } else {
+                $status = 'error';
+        }
+        curl_close($ch);
+        return array($status, $response, $curlInfo);
+    }
+    
+    /**
+     * 
+     * @param \core_ordermanager_data_Order $order
+     * @param \core_usermanager_data_User $user
+     * @return array
+     */
+
+    public function getEhfProblems($order, $user) {
+        $ret = array();
+  
+        if (!$user->fullName) {
+            $ret[] = "The name of the customer can not be blank";
+        }
+        
+        if (!$user->address || !$user->address->address) {
+            $ret[] = "Street address of the customer can not be blank";
+        }
+        
+        if (!$user->address || !$user->address->city) {
+            $ret[] = "City of the customer address can not be blank";
+        }
+        
+        if (!$user->address || !$user->address->postCode) {
+            $ret[] = "Postcode of the customer address can not be blank";
+        }
+        
+        
+        if (!$user->companyObject || !$user->companyObject->name) {
+            $ret[] = "Customer company name can not be blank";
+        }
+        
+        return $ret;
     }
 
 }

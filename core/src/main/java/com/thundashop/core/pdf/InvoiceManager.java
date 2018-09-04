@@ -81,7 +81,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         }
     }
 
-    private AccountingDetails getAccountingDetails() throws ErrorException {
+    public AccountingDetails getAccountingDetails() throws ErrorException {
         Application settings = storeApplicationPool.getApplicationIgnoreActive("70ace3f0-3981-11e3-aa6e-0800200c9a66");
         AccountingDetails details = new AccountingDetails();
         if(settings != null) {
@@ -96,6 +96,8 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             details.vatNumber = settings.getSetting("vatNumber");
             details.webAddress = settings.getSetting("webAddress");
             details.useLanguage = settings.getSetting("language");
+            details.postCode = settings.getSetting("postCode");
+            details.bankName = settings.getSetting("");
             String kidSize = settings.getSetting("kidSize");
             if(kidSize != null && !kidSize.isEmpty()) {
                 details.kidSize = new Integer(kidSize);

@@ -320,4 +320,15 @@ public interface IOrderManager {
     @Administrator
     public void deleteOrder(String orderId);
     
+    @Administrator
+    public String getEhfXml(String orderId);
+ 
+    @Administrator
+    public void closeOrder(String orderId, String reason);
+    
+    @Administrator
+    public List<String> isConfiguredForEhf(); 
+    
+    @Administrator
+    public void registerSentEhf(String orderId);
 }

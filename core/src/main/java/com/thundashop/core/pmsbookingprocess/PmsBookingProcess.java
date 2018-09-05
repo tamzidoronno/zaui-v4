@@ -680,6 +680,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void printReciept(BookingPrintRecieptData data) {
+        logPrint("Starting printing service for " + data.terminalId + " - " + data.orderId);
         pmsManager.processor();
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
         Order order = orderManager.getOrderSecure(data.orderId);
@@ -719,6 +720,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 System.out.println("Printing reciept to url: " + url);
                 System.out.println(text);
             }
+            orderManager.saveOrder(order);
         }catch(Exception e) {
             
         }

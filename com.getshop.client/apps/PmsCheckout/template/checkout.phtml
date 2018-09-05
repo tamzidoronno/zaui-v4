@@ -129,7 +129,7 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
                 }
                 foreach($orderIds as $orderId) {
                     $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-                    if(!$this->isGroupPayment() && !$order->closed) {
+                    if(!$this->isGroupPayment() && !$order->closed && !$order->manuallyClosed) {
                         echo "<option value='$orderId'>Add to order: " . $order->incrementOrderId . "</option>";
                     }
                 }

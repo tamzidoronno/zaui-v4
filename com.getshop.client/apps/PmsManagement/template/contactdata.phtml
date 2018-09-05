@@ -46,7 +46,13 @@ $config = $this->getConfigurationToUse();
                 echo $booking->wubookNoShow ? "Yes" : "no";
                 echo "</span><br>"; 
             }
-            if($booking->nonrefundable) {
+            
+            $isnonref = false;
+            foreach($booking->rooms as $r) {
+                if($r->nonrefundable) { $isnonref = true; }
+            }
+            
+            if($isnonref) {
                 echo "This booking is non refundable, <span style='color:blue; cursor:pointer;' gstype='forceClicksubmitToInfoBox' method='toggleNonRefundable' gsname='id' gsvalue='".$booking->id."'>mark as refundable</span><br>";
             } else {
                 echo "This booking is refundable, <span style='color:blue; cursor:pointer;' gstype='forceClicksubmitToInfoBox' method='toggleNonRefundable' gsname='id' gsvalue='".$booking->id."'>mark as non refundable</span><br>";

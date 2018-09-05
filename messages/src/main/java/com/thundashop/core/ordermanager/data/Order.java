@@ -63,6 +63,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public List<String> notifications = new ArrayList();
     public String invoiceNote = "";
     public boolean closed = false;
+    public boolean manuallyClosed = false;
     public List<String> creditOrderId = new ArrayList();
     public boolean isCreditNote = false;
     public Date startDate = null;

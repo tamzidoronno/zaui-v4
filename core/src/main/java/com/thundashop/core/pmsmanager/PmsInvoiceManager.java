@@ -1162,10 +1162,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public void clearOrdersOnBooking(PmsBooking booking) {
-        boolean setNonRef = false;
-        if(booking.nonrefundable) {
-            setNonRef = true;
-            booking.nonrefundable = false;
+        List<String> nonRefundableRooms = new ArrayList();
+        for(PmsBookingRooms r : booking.rooms) {
+            if(r.nonrefundable) {
+                nonRefundableRooms.add(r.pmsBookingRoomId);
+                r.nonrefundable = false;
+            }
         }
         List<Order> ordersToSave = new ArrayList();
         for(String orderId : booking.orderIds) {
@@ -1184,7 +1186,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(Order save : ordersToSave) {
             orderManager.saveOrder(save);
         }
-        booking.nonrefundable = setNonRef;
+        for(String rid : nonRefundableRooms) {
+            PmsBookingRooms tmpRoom = booking.getRoom(rid);
+            tmpRoom.nonrefundable = true;
+        }
+        pmsManager.saveBooking(booking);
     }
 
     private Payment getPreferredPaymentTypeFromBooking(PmsBooking booking) {

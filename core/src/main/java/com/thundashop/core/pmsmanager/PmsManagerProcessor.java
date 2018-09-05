@@ -1192,7 +1192,7 @@ public class PmsManagerProcessor {
         List<PmsBooking> result = new ArrayList();
         
         for(PmsBooking booking : latestBookings) {
-            if(booking.nonrefundable) {
+            if(booking.hasNoRefRooms()) {
                 result.add(booking);
             }
         }

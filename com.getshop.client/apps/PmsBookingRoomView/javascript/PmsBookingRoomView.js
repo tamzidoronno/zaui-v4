@@ -51,10 +51,22 @@ app.PmsBookingRoomView = {
         });
     },
     listPaymentButton : function() {
-        $('.menuentry[tab="orderstab"]').click();
+        var event = thundashop.Ajax.createEvent("", "removeGroupList", $(this), {});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            var refreshing = app.PmsBookingRoomView.refresh(true);
+            refreshing.done(function() {
+                $('.menuentry[tab="orderstab"]').click();
+            });
+        });
     },
     listLogEntries : function() {
-        $('.menuentry[tab="log"]').click();
+        var event = thundashop.Ajax.createEvent("", "removeGroupList", $(this), {});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            var refreshing = app.PmsBookingRoomView.refresh(true);
+            refreshing.done(function() {
+                $('.menuentry[tab="log"]').click();
+            });
+        });
     },
     openGroup : function() {
         thundashop.common.closeModal();
@@ -325,12 +337,15 @@ app.PmsBookingRoomView = {
         if(!avoidSpinner) {
 //            view.html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');
         }
+        var deferred = $.Deferred();
         thundashop.Ajax.postWithCallBack(event, function(res) {
             view.html(res);
             if($('.getshoptableoverlaybody').length > 0) {
                 $('.getshoptableoverlaybody').css('height','auto');
             }
+            deferred.resolve();
         });
+        return deferred;
     },
     toggleRemoveAddonCheckBox : function() {
         if($(this).hasClass('forGroup')) {

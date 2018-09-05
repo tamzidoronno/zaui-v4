@@ -115,7 +115,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     private HashMap<String, Double> generatePriceMatrix(PmsBookingRooms room) {
         LinkedHashMap<String, Double> currentMatrix = room.priceMatrix;
         
-        if((room.deleted && !currentBooking.nonrefundable) || room.deletedByChannelManagerForModification) {
+        if((room.deleted && !room.nonrefundable) || room.deletedByChannelManagerForModification) {
             currentMatrix = new LinkedHashMap();
         }
         
@@ -166,7 +166,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         //Include addons which is included in room price.
-        if((!room.deleted || currentBooking.nonrefundable) && !room.deletedByChannelManagerForModification) {
+        if((!room.deleted || room.nonrefundable) && !room.deletedByChannelManagerForModification) {
             Calendar cal = Calendar.getInstance();
             for(PmsBookingAddonItem item : room.addons) {
                 if(item.isIncludedInRoomPrice) {
@@ -450,7 +450,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             addonsToAdd.put(item.addonId, item);
         }
         
-        if((room.deleted && !currentBooking.nonrefundable) || room.deletedByChannelManagerForModification) { 
+        if((room.deleted && !room.nonrefundable) || room.deletedByChannelManagerForModification) { 
             for(PmsBookingAddonItem item : addonsToAdd.values()) {
                 item.price = 0.0;
             }

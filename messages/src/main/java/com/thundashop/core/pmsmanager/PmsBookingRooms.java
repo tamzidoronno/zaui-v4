@@ -48,7 +48,8 @@ public class PmsBookingRooms implements Serializable {
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public String currency = "NOK";
     public String cleaningComment = "";
-    
+
+    public boolean nonrefundable = false;    
     public boolean checkedin = false;
     public boolean checkedout = false;
     public boolean blocked = false;
@@ -729,7 +730,7 @@ public class PmsBookingRooms implements Serializable {
         return total;
     }
     
-    public void calculateTotalCost(Integer priceType, boolean isNoRefundable) {
+    public void calculateTotalCost(Integer priceType) {
         totalCost = 0.0;
         Integer days = getNumberOfNights();
         
@@ -750,7 +751,7 @@ public class PmsBookingRooms implements Serializable {
             }
         }
         
-        if(isDeleted() && !isNoRefundable) {
+        if(isDeleted() && !nonrefundable) {
             price = 0.0;
         } else {
             if(priceType.equals(PriceType.daily)) {

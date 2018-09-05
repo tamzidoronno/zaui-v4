@@ -10,6 +10,14 @@ $currentRoom = null;
     }
 }
 switch($type) {
+    case "togglenonref": 
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $roomId) {
+                $r->nonrefundable = !$r->nonrefundable;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        break;
     case "changeroom": 
         $roomId = $currentRoom->pmsBookingRoomId;
         $bookingId = $booking->id;

@@ -105,6 +105,7 @@ class PmsSearchBookingColumnFormatters {
         if($hasSamleFakturaApp) {
             $vistorText .= "<span style='float:left;padding-left:10px;' class='startcheckout dontExpand'>Start checkout</span>";
         }
+        $vistorText .= "<i class='fa fa-fighter-jet dontExpand quickfunction' title='Toggle as non refundable' type='togglenonref'></i> ";
         if($room->progressState != "deleted") {
             $vistorText .= "<i class='fa fa-trash-o dontExpand quickfunction' title='Delete room' type='delete'></i> ";
             $vistorText .= "<i class='fa fa-exchange dontExpand quickfunction' title='Change stay' type='changestay'></i> ";
@@ -208,6 +209,11 @@ class PmsSearchBookingColumnFormatters {
         if($room->totalUnsettledAmount > 0) {
             $priceData .= "<div class='unsettledamountwarning dontExpand' roomid='".$room->pmsRoomId."' title='Amount not created orders for yet'>".$room->totalUnsettledAmount."</div>";
         }
+        
+        if($room->nonrefundable) {
+            $priceData .= "<div style='color:#bbb;' title='This room is non refundable'>nonref</div>";
+        }
+        
         return $priceData;
 
     }

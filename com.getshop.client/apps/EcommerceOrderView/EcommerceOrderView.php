@@ -296,14 +296,16 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $order = $this->getOrder();
         $this->getApi()->getOrderManager()->changeOrderType($order->id, $_POST['data']['paymentappid']);
     }
-
+    
+    public function manuallycloseorder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->manuallyClosed = !$order->manuallyClosed;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function printOrderLines() {
         $order = $this->getOrder();
-        if ($order->closed) {
-            $this->includefile("closedorderlines");
-        } else {
-            $this->includefile("openorderlines");
-        }
+        $this->includefile("openorderlines");
     }
 
 }

@@ -153,6 +153,7 @@
 "1048","No product conencted to the ticket"
 "1049","This accountingsystem does not support direct transfer"
 "1050","Was not able to validate EHF. GetShop has been notified and will contact you once we have checked what the problem is"
+"1051","Order is manually closed, please open it before modifying"
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

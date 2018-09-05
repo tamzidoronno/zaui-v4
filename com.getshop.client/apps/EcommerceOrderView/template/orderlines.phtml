@@ -2,6 +2,10 @@
 /* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
 $order = $this->getOrder();
 $cart = $order->cart;
+$closed = $order->closed;
+if($order->manuallyClosed) {
+    $closed = $order->manuallyClosed;
+}
 ?>
 
 <div class="insideheader">
@@ -42,7 +46,7 @@ if (!count($cart->items)) {
     </div>
 </div>
 <?
-if (!$order->closed) {
+if (!$closed) {
     $products = $this->getApi()->getProductManager()->getAllProductsLight();
     echo "<span gstype='form' method='additemtoorder'>";
     echo "<input type='hidden' gsname='orderid' value='".$order->id."'>";

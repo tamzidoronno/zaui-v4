@@ -17,8 +17,12 @@ getshop.pms = {
    },
    closeOverLays : function(e) {
        if(e.keyCode === 27) {
-           $('.gsoverlay1').click();
-           $('.gsoverlay2').click();
+           if($('.gsoverlay1').is(":visible")) {
+               $('.gsoverlay1').click();
+           }
+           if($('.gsoverlay2').is(":visible")) {
+               $('.gsoverlay2').click();
+           }
        }
        console.log(e);
    },

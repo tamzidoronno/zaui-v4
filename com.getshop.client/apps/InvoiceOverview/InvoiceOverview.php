@@ -1,7 +1,10 @@
 <?php
 namespace ns_3746f382_0450_414c_aed5_51262ae85307;
 
-class InvoiceOverview extends \WebshopApplication implements \Application {
+class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUserCallback {
+
+    private $userToCreateOrderOn = null;
+
     public function getDescription() {
         
     }
@@ -9,10 +12,46 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
     public function getName() {
         return "InvoiceOverview";
     }
+    
+    public function changeUser($user) {
+    }
+    
+    public function createCompany() {
+    }
+    
+    public function saveUser($user) {
+        $_SESSION['invoiceoverviewcreateorderonuser'] = $user->id;
+    }
+    
+    public function loadQuickUser() {
+        $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+        
+        $xtraargs = array();
+        $xtraargs['savebtnname'] = "Create order";
+        $xtraargs['avoidprintuseraftersave'] = "true";
+        
+        $quser->printEditDirect = true;
+        $quser->hideWarning = true;
+        $quser->setExtraArgs($xtraargs);
+        $quser->renderApplication(true, $this);
+    }
+    
+    public function createNewUser() {
+        
+    }
+
 
     public function render() {
         $this->includefile("filterheader");
-        $this->includefile("filterresult");
+        if(isset($_SESSION['invoiceoverviewcreateorderonuser']) && $_SESSION['invoiceoverviewcreateorderonuser']) {
+            echo "Create order on user";
+            echo "<pre>";
+            print_r($_SESSION['invoiceoverviewcreateorderonuser']);
+            echo "</pre>";
+        } else {
+            $this->includefile("filterresult");
+        }
+        $_SESSION['invoiceoverviewcreateorderonuser']=null;
     }
 
     /**

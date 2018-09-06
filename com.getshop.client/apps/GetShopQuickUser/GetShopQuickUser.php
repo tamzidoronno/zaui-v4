@@ -80,7 +80,9 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
 //      
         $instance = $this->getCallBackApp();
         $instance->saveUser($user);
-        $this->includefile("edituser");
+        if(!isset($_POST['data']['avoidlistuser'])) {
+            $this->includefile("edituser");
+        }
 //        die();
         
     }

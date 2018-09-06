@@ -67,6 +67,9 @@ public class OrderFiltering {
 
     private void filterByDate(OrderFilter filter, List<Order> toRemove) {
         //Filter by date.
+        if(filter.type == null) {
+            return;
+        }
         for(Order order : ordersToFilter) {
             if(filter.type.equals("createddate")) {
                 if(inDate(order.rowCreatedDate, filter.start, filter.end)) {

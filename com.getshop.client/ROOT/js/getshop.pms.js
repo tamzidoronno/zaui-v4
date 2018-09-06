@@ -24,7 +24,6 @@ getshop.pms = {
                $('.gsoverlay2').click();
            }
        }
-       console.log(e);
    },
    toggleOnOff: function () {
         var fontAwesomeIcon = $(this).find('i');

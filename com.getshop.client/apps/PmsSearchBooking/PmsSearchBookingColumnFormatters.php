@@ -201,12 +201,12 @@ class PmsSearchBookingColumnFormatters {
     
     public function formatTotalPrice($room) {
         $priceData = "";
-        if($room->totalUnpaidCost > 0) {
+        if($room->totalUnpaidCost > 0.5) {
             $priceData = "<div><div class='unpaidprice dontExpand' title='Missing payment on room' roomid='".$room->pmsRoomId."'>".round($room->totalCost)."</div><div class='pricetagright'></div></div>";
         } else {
             $priceData = "<div title='Total cost for this room'>" . round($room->totalCost) . "</div>";
         }
-        if($room->totalUnsettledAmount > 0) {
+        if($room->totalUnsettledAmount > 0.5) {
             $priceData .= "<div class='unsettledamountwarning dontExpand' roomid='".$room->pmsRoomId."' title='Amount not created orders for yet'>".$room->totalUnsettledAmount."</div>";
         }
         

@@ -13,6 +13,14 @@ getshop.pms = {
    init : function() {
         $(document).on('click', '[gs_model].gss_onoff', getshop.pms.toggleOnOff);
         $(document).on('click', '[gss_method="saveSettings"]', getshop.pms.saveSettings);
+        $(document).on('keydown', getshop.pms.closeOverLays);
+   },
+   closeOverLays : function(e) {
+       if(e.keyCode === 27) {
+           $('.gsoverlay1').click();
+           $('.gsoverlay2').click();
+       }
+       console.log(e);
    },
    toggleOnOff: function () {
         var fontAwesomeIcon = $(this).find('i');

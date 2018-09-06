@@ -11,7 +11,11 @@ $addonsPrice = $this->getAddonsCost(false);
 $addonsPriceToDisplay = $this->getAddonsCost(true);
 $totalOnRoom = $stayPrice + $addonsPrice;
 
-if(!$stayPrice) {$stayPrice = "";} else {$stayPrice  = " - " . $stayPrice;}
+if(!$stayPrice) {$stayPrice = "";} else {
+    $stayPrice = round($stayPrice);
+    $stayPrice  = " - " . $stayPrice;
+}
+
 
 if(!$addonsPriceToDisplay) {$addonsPriceToDisplay = "";} else {$addonsPriceToDisplay  = " - " . $addonsPriceToDisplay;}
 

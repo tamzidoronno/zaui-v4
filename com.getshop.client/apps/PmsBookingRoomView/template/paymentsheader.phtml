@@ -18,18 +18,19 @@ foreach ($pmsBooking->rooms as $r) {
         $endDate = strtotime($r->date->end);
     }
 }
-$totalOnRoom = $pmsSelectedRoom->totalCost;
+$totalOnRoom = round($pmsSelectedRoom->totalCost);
 $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
-$unsettledRoom = $totalOnRoom - $totalOrdersRoom;
-
-$totalOnBooking = $pmsBooking->totalPrice;
+$unsettledRoom = round($totalOnRoom - $totalOrdersRoom);
+$totalOrdersRoom = round($totalOrdersRoom);
+$totalOnBooking = round($pmsBooking->totalPrice);
 $totalMissingOnGroup = 0.0;
 $totalNotPaidOnRoom = 0.0;
 foreach($pmsBooking->orderIds as $ordId) {
     $order = $this->getApi()->getOrderManager()->getOrder($ordId);
     $totalNotPaidOnRoom += $this->getApi()->getOrderManager()->getTotalAmount($order);
 }
-$totalMissingOnGroup = $pmsBooking->totalPrice - $totalNotPaidOnRoom;
+$totalMissingOnGroup = round($pmsBooking->totalPrice - $totalNotPaidOnRoom);
+$totalNotPaidOnRoom = round($totalNotPaidOnRoom);
 
 ?>
 <div style='height: 138px; display:inline-block; width:100%;'>

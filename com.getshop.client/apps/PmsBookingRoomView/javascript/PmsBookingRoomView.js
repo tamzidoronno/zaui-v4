@@ -70,7 +70,11 @@ app.PmsBookingRoomView = {
     },
     openGroup : function() {
         thundashop.common.closeModal();
-        window.location.href=location.pathname+'?page=groupbooking&bookingId=' + $(this).attr('bookingid');
+        var path = location.pathname;
+        if(path == "/bookings.html") {
+            path = "/";
+        }
+        window.location.href=path+'?page=groupbooking&bookingId=' + $(this).attr('bookingid');
     },
     expandmessage : function() {
         $(this).closest('.messagelogentry').find('.messagelogtext').css('max-height','100%');

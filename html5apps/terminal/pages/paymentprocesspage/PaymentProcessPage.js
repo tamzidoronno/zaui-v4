@@ -32,10 +32,12 @@ pga.page = {
     createData: function() {
         var orderid = $('.data').attr('orderid');
         var amount = $('.data').attr('amount');
+        var name = $('.data').attr('name');
         
         var data = {
             orderid : orderid,
-            amount: amount
+            amount: amount,
+            name: name
         }
         
         return data;

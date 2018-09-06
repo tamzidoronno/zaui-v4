@@ -14,6 +14,7 @@
 class PaymentProcessPage extends Page {
     public $state = "";
     public $messageToDisplay = "";
+    public $result = null;
     
     public function getId() {
         
@@ -23,6 +24,7 @@ class PaymentProcessPage extends Page {
         if (isset($_POST['orderid'])) {
             $_GET['orderid'] = $_POST['orderid'];
             $_GET['amount'] = $_POST['amount'];
+            $_GET['name'] = $_POST['name'];
         }
         
         if (isset($_POST['cancelPayment'])) {

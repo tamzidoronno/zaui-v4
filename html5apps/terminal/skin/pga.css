@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 /*@import url('skin/opensans/css?family=Open+Sans');*/
-@import url('https://fonts.googleapis.com/css?family=Lobster|Open+Sans|Pacifico');
+@import url('https://fonts.googleapis.com/css?family=Lobster|Open+Sans|Pacifico|Fredoka+One');
 
 body {
     background: #87e0fd;
@@ -74,7 +74,7 @@ body {
 }
 
 .heading {
-    font-family: lobster;
+    font-family: 'Fredoka One' , cursive;
     font-size: 70px;
     color: #FFF;
     

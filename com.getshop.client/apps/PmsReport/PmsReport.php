@@ -120,7 +120,53 @@ class PmsReport extends \MarketingApplication implements \Application {
         $_SESSION['savedfilter'] = json_encode($filter);
     }
 
+    public function downloadCoverageReport() {
+        $filter = $this->getCoverageFilter();
+         $data = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
+         $rows = array();
+         $header = array();
+         $header[] = "Date";
+         $header[] = "Available";
+         $header[] = "Rented out";
+         $header[] = "Arrivals";
+         $header[] = "Departures";
+         $header[] = "Guests";
+         $header[] = "Avg. Price";
+         $header[] = "Revpar";
+         $header[] = "Total";
+         $header[] = "Billed";
+         $header[] = "Remaining";
+         $header[] = "Coverage";
+         $rows[] = $header;
+         
+         foreach($data->entries as $d) {
+             $row = array();
+             if($d->date) {
+                 $row[] = date("d.m.Y", strtotime($d->date));
+             } else {
+                 $row[] = "";
+             }
+             $row[] = $d->spearRooms;
+             $row[] = $d->roomsRentedOut;
+             $row[] = $d->arrivals;
+             $row[] = $d->departures;
+             $row[] = $d->guestCount;
+             $row[] = $d->avgPrice;
+             $row[] = $d->revPar;
+             $row[] = $d->totalForcasted;
+             $row[] = $d->totalPrice;
+             $row[] = $d->totalRemaining;
+             $row[] = $d->coverage;
+             $rows[] = $row;
+         }
+         echo json_encode($rows);
+    }
+    
     public function printCoverageReport() {
+        $date = date("d-m-Y", time());
+        echo "<div style='text-align:right;'>";
+        echo "<span style='color:blue; cursor:pointer;' gs_downloadExcelReport='downloadCoverageReport' gs_fileName='coveragereport-$date'>Download this report to excel</span>";
+        echo "</div>";
         $filter = $this->getCoverageFilter();
         $data = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $attributes = array(

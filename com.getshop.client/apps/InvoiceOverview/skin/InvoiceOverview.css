@@ -31,3 +31,4 @@
     border: solid 1px;
     top: 67px;
 }
+.InvoiceOverview .invoicetable { min-height: 600px; }

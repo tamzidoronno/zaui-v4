@@ -946,9 +946,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                             add = false;
                         }
                     }
-                    if(storeId.equals("e625c003-9754-4d66-8bab-d1452f4d5562")) {
-                        add = false;
-                    }
                     
                     if(add) {
                         pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);

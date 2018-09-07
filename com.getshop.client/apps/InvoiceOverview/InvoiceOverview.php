@@ -17,6 +17,11 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
     }
     
     public function createCompany() {
+        $vatnumber = $_POST['data']['vatnumber'];
+        $name = $_POST['data']['companyname'];
+        
+        $user = $this->getApi()->getUserManager()->createCompany($vatnumber, $name);
+        return $user;
     }
     
     public function saveUser($user) {
@@ -38,7 +43,9 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
     }
     
     public function createNewUser() {
-        
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        return $this->getApi()->getUserManager()->createUser($user);
     }
 
 

@@ -988,10 +988,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if(filterMethod != null && !filterMethod.isEmpty()) {
                         if(order.payment == null) {
                             avoid = true;
-                        }
-                        String method = filterMethod.replace("-", "_");
-                        if(!order.payment.paymentType.contains(method)) {
-                            avoid = true;
+                        } else if(order.payment.paymentType != null) {
+                            String method = filterMethod.replace("-", "_");
+                            if(!order.payment.paymentType.contains(method)) {
+                                avoid = true;
+                            }
                         }
                     }
 

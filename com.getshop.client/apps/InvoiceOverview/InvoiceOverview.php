@@ -20,7 +20,8 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
     }
     
     public function saveUser($user) {
-        $_SESSION['invoiceoverviewcreateorderonuser'] = $user->id;
+        $order = $this->getApi()->getOrderManager()->createOrderForUser($user->id);
+        $_SESSION['invoiceoverviewdisplayorder'] = $order->id;
     }
     
     public function loadQuickUser() {
@@ -43,14 +44,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
 
     public function render() {
         $this->includefile("filterheader");
-        if(isset($_SESSION['invoiceoverviewcreateorderonuser']) && $_SESSION['invoiceoverviewcreateorderonuser']) {
-            echo "Create order on user";
-            echo "<pre>";
-            print_r($_SESSION['invoiceoverviewcreateorderonuser']);
-            echo "</pre>";
-        } else {
-            $this->includefile("filterresult");
-        }
+        $this->includefile("filterresult");
         $_SESSION['invoiceoverviewcreateorderonuser']=null;
     }
 
@@ -59,7 +53,31 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
      * @return \core_ordermanager_data_OrderResult[]
      */
     public function getFilteredResult() {
-        return $this->getApi()->getOrderManager()->getOrdersByFilter($this->getFilter());
+        $filter = $this->getFilter();
+        if(isset($_SESSION['invoiceoverviewdisplayorder']) && $_SESSION['invoiceoverviewdisplayorder']) {
+            $filter->orderId = $_SESSION['invoiceoverviewdisplayorder'];
+        }
+        return $this->getApi()->getOrderManager()->getOrdersByFilter($filter);
+    }
+    
+    public function reloadRow() {
+        /*
+         * array('amountExTaxes', 'Ex tax', 'amountExTaxes'),
+           array('amountIncTaxes', 'Inc tax', 'amountIncTaxes'),
+           array('amountPaid', 'Paid', 'amountPaid'),
+         */
+         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['id']);
+        $result = array();
+        $paid = 0.0;
+        foreach($order->transactions as $trans) {
+            $paid += $trans->amount;
+        }
+        
+        $result['amountPaid'] = $paid;
+        $result['amountExTaxes'] = round($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order));
+        $result['amountIncTaxes'] = round($this->getApi()->getOrderManager()->getTotalAmount($order));
+        $result['restAmount'] = $result['amountIncTaxes'] - $result['amountPaid'];
+        echo json_encode($result);
     }
     
     /**
@@ -72,7 +90,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
             return "N/A";
         }
         
-        return "<span getshop_sorting='".strtotime($row->orderDate)."'>" . date("d.m.Y", strtotime($row->orderDate)) . "</span>";
+        return "<span getshop_sorting='".strtotime($row->orderDate)."' hiddenorderid='".$row->orderId."'>" . date("d.m.Y", strtotime($row->orderDate)) . "</span>";
     }
     
     public function InvoiceOverview_loadOrder() {

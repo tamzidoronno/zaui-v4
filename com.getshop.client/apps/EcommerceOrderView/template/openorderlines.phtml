@@ -93,4 +93,8 @@ if(!$closed) {
     <div style='text-align: right; margin-top:10px;'>
         <span class='shop_button' gstype='submit' gs_callback="app.EcommerceOrderList.refreshOrderRow('<?php echo $order->id; ?>')">Save orderlines</span>
     </div>
+    <script>
+        $('.cartitem .gsniceinput1.startdate').datepicker({ dateFormat: "dd.mm.yy"});
+        $('.cartitem .gsniceinput1.enddate').datepicker({ dateFormat: "dd.mm.yy"});
+    </script>
 <?php } ?>

@@ -23,5 +23,6 @@ public class OrderFilter {
     public String type;
     public String searchWord;
     public List<String> customer = new ArrayList();
+    public String orderId;
 
 }

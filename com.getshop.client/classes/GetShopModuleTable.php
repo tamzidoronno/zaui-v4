@@ -206,6 +206,10 @@ class GetShopModuleTable {
         $this->data = $data;
     }
 
+    public function setExpandOnRow($i) {
+        $_SESSION['gs_moduletable_' . $this->getFunctionName()]['rownumber'] = $i;
+    }
+    
     private function shouldShowRow($rownumber) {
         if ($this->avoidAutoExpanding) {
             return false;

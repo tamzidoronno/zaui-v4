@@ -117,6 +117,10 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             var username = localStorage.getItem("username");
             var password = localStorage.getItem("password");
             
+            if (!username || !password) {
+                return;
+            }
+            
             $getShopApi = this.getApi();
             var me = this;
             

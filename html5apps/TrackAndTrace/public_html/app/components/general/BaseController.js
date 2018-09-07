@@ -9,6 +9,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.BaseController = function($scope, $rootScope, $state, datarepository, $api) {
     $scope.messages = datarepository.driverMessages;
+    $scope.sentMessages = [];
     $scope.showReply = false;
     $scope.currentMesage = null;
     $scope.apiOptions = false;
@@ -65,6 +66,10 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         datarepository.loadAllData($api, $scope, null, $state);
     });
     
+    $scope.groupBy = function(xs, key) {
+        
+    }
+    
     $scope.$on('messageCountChanged', function() {
         $scope.counter = $api.getApi().getUnsentMessageCount();
         $scope.$evalAsync();
@@ -109,6 +114,36 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     
     $scope.toggleOptions = function() {
         $scope.apiOptions = !$scope.apiOptions;
+        
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            var toLoop = messagePersister.getAllUnsentMessages();
+            var test = [];
+            
+            for (var i in toLoop) {
+                var msg = toLoop[i];
+                var meth = msg.interfaceName+"."+msg.method;
+                if (!test[meth]) {
+                    test[meth] = 1;
+                } else {
+                    test[meth] += 1;
+                }
+            }
+            
+            $scope.sentMessages = [];
+            
+            for (var i in test) {
+                var count = test[i];
+                var toAdd = {
+                    method: i,
+                    count: count
+                };
+                $scope.sentMessages.push(toAdd);
+            }
+            
+            console.log(test);
+        }
+        
+        $scope.$evalAsync();
     }
     
     $scope.resetApi = function() {

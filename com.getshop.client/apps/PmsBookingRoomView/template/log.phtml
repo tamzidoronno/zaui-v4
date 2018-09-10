@@ -6,10 +6,11 @@ $booking = $this->getBookingEngineBooking();
 $filter = new \core_pmsmanager_PmsLog();
 $filter->bookingId = $pmsBooking->id;
 $filter->roomId = $pmsSelectedRoom->pmsBookingRoomId;
+$filter->includeAll = true;
 
 $logentries = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedMultilevelDomainName(), $filter);
 
-$arrays = array_chunk($logentries, 100);
+$arrays = array_chunk($logentries, 2000);
 $this->setLogEntries($logentries);
 $this->includefile("logentries");
 ?>

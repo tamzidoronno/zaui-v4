@@ -189,3 +189,30 @@
     text-align: right;
     padding-bottom: 10px;
 }
+
+@media screen and (max-width: 1000px) {
+    .gsarea[area="header"] .Menu .entry i,
+    .gs_framework_module i { font-size: 30px !important; }
+    .gsarea[area="header"] .Menu .entry { padding-left: 5px; padding-right: 5px; width: 40px !important; }
+    .gs_page_col.colcount_0.rowcount_0 { display:none; }
+    .gs_page_col.colcount_1 { width:100%; }
+}
+@media screen and (max-width: 800px) {
+    .warnversion20 { display:none; }
+    .gsarea[area="header"] .Menu .entry i,
+    .gs_framework_module i { font-size: 20px !important; }
+    .Menu .menuentries.horizontal { display:inline-block !important; }
+    .Menu .mobilenavigatemenu { display:none !important; }
+    .Menu .menuentries .entries .entry { display:inline-block !important; text-align: center; width: 70px !important; }
+    .gsarea[area="header"] {
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 1;
+        top: 0px;
+        height: 100px;
+    }
+    .gs_page_area { margin-top: 20px; }
+    .module_toprow { padding: 0px !important; }
+    .gsoverlay2, .gsoverlay1 { top: 120px; }
+    .gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner { width: 97%; }
+}

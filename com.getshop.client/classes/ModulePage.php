@@ -229,23 +229,27 @@ class ModulePage {
     public function renderPage() {
         $topRow = true;
         echo "<div class='gs_page_area' gs_page_content_id='$this->pageId'>";
+        $rowcount = 0;
         foreach ($this->getRows() as $row) {
             $topRowClass = $topRow && !$this->leftMenu ? 'module_toprow' : "";
             echo "<div class='gs_page_row $topRowClass'>";
             $cols = $row->getColumns();
+            $colcount = 0;
             foreach ($cols as $column) {
                 $instance = $column->getAppInstance();
                 $colclass = "col" . count($cols);
-                echo "<div class='gs_page_col $colclass'>";
+                echo "<div class='gs_page_col $colclass colcount_$colcount rowcount_$rowcount'>";
                 if (!$instance && $column->text) {
                     echo $column->text;
                 } else {
                     $instance->renderApp();
                 }
                 echo "</div>";
+                $colcount++;
             }
             echo "</div>";
             $topRow = false;
+            $rowcount++;
         }
         echo "</div>";
     }

@@ -41,6 +41,8 @@ class PageFactory {
         // HOME
         $page = new \ModulePage("home");
         $row = $page->createRow();
+        $row->addText("Overview");
+        $row = $page->createRow();
         $row->addColumn("f8d72daf-97d8-4be2-84dc-7bec90ad8462", "2e43f480-636a-4842-9769-8a326ee09cce");
         $this->pages['home'] = $page;   
         

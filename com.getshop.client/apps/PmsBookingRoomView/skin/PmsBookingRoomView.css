@@ -644,3 +644,44 @@
     padding: 20px;
     text-align: center;
 }
+
+.PmsBookingRoomView .otheroptionstd {
+    padding-left:50px;   
+}
+.PmsBookingRoomView .sendmessagetext {
+    width: 600px; height: 100px; border:solid 1px #ddd; overflow:hidden;
+}
+
+@media screen and (max-width: 800px) {
+    .bookinginfocolheader { display:block; width: 100%; box-sizing: border-box; }
+    .PmsBookingRoomView .bookingoverview_content_row .menuarea { width: 100%; }
+    .PmsBookingRoomView .bookingoverview_content_row .workarea { width: calc(100% - 10px); }
+    .PmsBookingRoomView .itemview_inner { width: calc(100% - 10px) !important; border: 0px !important; border-bottom: solid 1px #ddd !important; }
+    .PmsBookingRoomView .bookingoverview_content_row { padding-left: 10px; }
+    .PmsBookingRoomView .roomandcats .shop_button { width: 100% !important; box-sizing: border-box; margin-bottom: 3px !important; }
+    .PmsBookingRoomView .roomindication { float: none; }
+    .PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry {
+        display: inline;
+        width: 30%;
+        float: left;
+        margin: 6px !important;
+        padding: 0px !important;
+    }
+    .PmsBookingRoomView .bookingoverview_content_row .menuarea .menuentry.active span { display:inline !important; }
+    .PmsBookingRoomView .bookinginformation .guest_row { border-bottom: solid 1px #ddd !important; padding-bottom: 10px; margin-bottom: 10px; }
+    .PmsBookingRoomView .bookinginformation .guest_col1 { width: 100%; }
+    .PmsBookingRoomView .guest_row.header { display:none; }
+    .PmsBookingRoomView .sendmessagetext { width: 100% !important; box-sizing: border-box; }
+    .PmsBookingRoomView .guestinformation td { width: 100% !important; display:block; }
+    .PmsBookingRoomView .otheroptionstd { padding-left: 0px; } 
+    .PmsBookingRoomView .otheroptionstd input { width: 200px !important; } 
+
+    .PmsBookingRoomView .pricerow .col2, .PmsBookingRoomView .pricerow .col2 input { width: 80px !important; }
+    .PmsBookingRoomView .itemview_inner .explenation { width: 100% !important; }
+    .PmsBookingRoomView .movetotype .itemselector { width: 100% !important; }
+    .PmsBookingRoomView .addonsArea .buttonarea .addaddonsbutton,
+    .PmsBookingRoomView .addonsArea .buttonarea .removeselectedaddons
+    { width: 100%; box-sizing: border-box; margin-bottom: 2px; float:none; }
+    .PmsBookingRoomView .accesscode .shop_button { width: 100%; box-sizing: border-box; margin-bottom: 2px; float:none !important; }
+.PmsBookingRoomView .addAddonsArea { left: 0px; width: 100%; box-sizing: border-box; }
+}

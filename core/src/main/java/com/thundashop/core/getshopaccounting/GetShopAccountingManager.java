@@ -6,6 +6,7 @@
 package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.accountingmanager.ProductStatiticsResult;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
@@ -292,7 +293,7 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
             } else {
                 getActivatedAccountingSystemInvoices().directTransfer(orderId);
                 return getActivatedAccountingSystemInvoices().getLogEntries();
-            }    
+            }
         }
         
         return new ArrayList();

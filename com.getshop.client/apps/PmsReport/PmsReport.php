@@ -76,6 +76,8 @@ class PmsReport extends \MarketingApplication implements \Application {
             $this->includefile("cleaning_report");
         } else if($selectedFilter->type == "geographical_report") {
             $this->includefile("geographical_report");
+        } else if($selectedFilter->type == "accounting_report") {
+            $this->includefile("accounting_report");
         } else if(strstr($selectedFilter->type, "coverage")) {
             $this->printCoverageReport();
         } else {
@@ -160,6 +162,23 @@ class PmsReport extends \MarketingApplication implements \Application {
              $rows[] = $row;
          }
          echo json_encode($rows);
+    }
+    
+    public function downloadAccountingReport() {
+        $filter = $this->getIncomeReportFilter();
+        $data = $this->getApi()->getPmsInvoiceManager()->getAccountingStatistics($this->getSelectedMultilevelDomainName(), $filter);
+        $matrix = $this->createMatrix($data);
+        $attrs = $this->createAccountingAttributes($matrix);
+        $rows = array();
+        $header = array();
+        foreach($attrs as $r) {
+            $header[] = $r[1];
+        }
+        $rows[] = $header;
+        foreach($matrix as $r) {
+            $rows[] = $r;
+        }
+        echo json_encode($rows);
     }
     
     public function printCoverageReport() {
@@ -371,14 +390,17 @@ class PmsReport extends \MarketingApplication implements \Application {
             $index++;
         }
         $attributes[] = array('total', 'Total', 'total',null);
-        
+        echo "<div class='reportoverview'>";
         $table = new \GetShopModuleTable($this, 'PmsManager', 'loadIncomeReportCell', null, $attributes);
         $table->setSorting($sortAttributes);
         $table->setData($rows);
         $table->render();
+        echo "</div>";
         
         echo "<style>";
-        echo ".PmsReport .GetShopModuleTable .col { width: " . (85/sizeof($attributes)). "% !important; }";
+        echo ".reportoverview {  overflow-x: scroll; max-width: 1500px; margin:auto; }";
+        echo ".PmsReport .GetShopModuleTable .col { width: 100px !important; }";
+        echo ".PmsReport .GetShopModuleTable { width: " . (111*sizeof($attributes)). "px !important; }";
         echo "</style>";
     }
 
@@ -413,7 +435,6 @@ class PmsReport extends \MarketingApplication implements \Application {
         }
         echo "<tr><td colspan='10'>Total : " . round($total) . "</td></tr>";;
         echo "</table>";
-
     }
     
     public function getCoverageFilter() {
@@ -437,19 +458,7 @@ class PmsReport extends \MarketingApplication implements \Application {
      * @return \core_pmsmanager_PmsOrderStatistics
      */
     public function setIncomeReportData() {
-        $selectedFilter = $this->getSelectedFilter();
-        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
-        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
-        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
-        $filter->includeVirtual = false;
-        $filter->savedPaymentMethod = "allmethods";
-        $filter = $this->addPaymentTypeToFilter($filter);
-        $filter->displayType = "dayslept";
-        $filter->priceType = "extaxes";
-
-        if(stristr($selectedFilter->type, "forecasted")) {
-            $filter->includeVirtual = true;
-        }
+        $filter = $this->getIncomeReportFilter();
         if(!$this->data) {
             $data = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedMultilevelDomainName(), $filter);
         } else {
@@ -571,6 +580,71 @@ class PmsReport extends \MarketingApplication implements \Application {
             $products[$productId] = round($val);
         }
         return $products;
+    }
+
+    public function getIncomeReportFilter() {
+        $selectedFilter = $this->getSelectedFilter();
+        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
+        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
+        $filter->includeVirtual = false;
+        $filter->savedPaymentMethod = "allmethods";
+        $filter = $this->addPaymentTypeToFilter($filter);
+        $filter->displayType = "dayslept";
+        $filter->priceType = "extaxes";
+
+        if(stristr($selectedFilter->type, "forecasted")) {
+            $filter->includeVirtual = true;
+        }
+        return $filter;
+    }
+
+    public function createMatrix($data) {
+        $allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());
+        $products = $data->productsIncluded;
+        $rows = array();
+        foreach($data->dayresult as $dayres) {
+            /* @var $dayres core_accountingmanager_AccountingSystemStatistics */
+            $row = new \stdClass();
+            $row->date = date("d.m.Y", strtotime($dayres->date));
+            foreach($products as $prodId) {
+                if(isset($dayres->productPrices->{$prodId})) {
+                    $prodres = $dayres->productPrices->{$prodId};
+                    $row->{$prodId} = round($prodres->totalValue); 
+                } else {
+                   $row->{$prodId} = 0.0; 
+                }
+            }
+            $row->total = round($dayres->total);
+            $rows[] = $row;
+        }
+        
+        $summaryRow = new \stdClass();
+        $summaryRow->date = "Total";
+        $total = 0;
+        foreach($data->productsIncluded as $prodInc) {
+            $summaryRow->{$prodInc} = round($data->allResult->{$prodInc});
+            $total += $data->allResult->{$prodInc};
+        }
+        $summaryRow->total = round($total);
+        $rows[] = $summaryRow;
+        return $rows;
+
+    }
+
+    public function createAccountingAttributes($matrix) {
+        $attributes = array(array('date', 'Date', 'date',null));
+        $allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());
+        $index = 0;
+        foreach($matrix[0] as $productId => $total) {
+            if($productId == "date") { continue; }
+            if($productId == "total") { continue; }
+            $attributes[] = array("product".$index, $allProducts[$productId]->name, $productId, null);
+            $index++;
+        }
+        $date = date("d-m-Y", time());
+        $attributes[] = array('total', 'Total', 'total',null);
+        return $attributes;
     }
 
 }

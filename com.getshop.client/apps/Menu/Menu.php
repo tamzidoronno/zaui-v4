@@ -67,9 +67,8 @@ class Menu extends \SystemApplication implements \Application {
         if ($_POST['data']['setting_isscrollmenu'] === "true") { 
             $this->setConfigurationSetting("isscrollmenu", true);
         } else {
-            $this->setConfigurationSetting("isscrollmenu", false);
+            $this->setConfigurationSetting("isscrollmenu", "");
         }
-        
     }
 
     public function renderSetup() {

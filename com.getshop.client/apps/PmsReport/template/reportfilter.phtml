@@ -21,6 +21,9 @@ $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : "";
                 <b>Coverage:</b> Coverage in the hotel,earned until now + future bookings.<br>
                 <b>Income report:</b> All money earned until now.<br>
                 <b>Forecasted income report:</b> All money potentially possible to earn if you collect all the money.<br>
+                <b>Stay / Geopgraphical report:</b> A report displaying where in the world the guests are from<br>
+                <b>Cleaning report:</b> Reports from the cleaning staff<br>
+                <b>Accounting report:</b> A report mirroring the accounting system<br>
             </div>
         </div>
     </div><br><br>
@@ -32,6 +35,7 @@ $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : "";
         <span type='forecasted_incomereport' class='pmsbutton tab <?php if($filter->type == "forecasted_incomereport") {echo "selected";}?>'><i class='fa fa-dashboard'></i> Forecasted income report</span>
         <span type='geographical_report' class='pmsbutton tab <?php if($filter->type == "geographical_report") {echo "selected";}?>'><i class='fa fa-language'></i> Stay / Geopgraphical report</span>
         <span type='cleaning_report' class='pmsbutton tab <?php if($filter->type == "cleaning_report") {echo "selected";}?>'><i class='fa fa-paint-brush'></i> Cleaning report</span>
+        <span type='accounting_report' class='pmsbutton tab <?php if($filter->type == "accounting_report") {echo "selected";}?>'><i class='fa fa-pencil-square'></i> Accounting report</span>
     </div>
     <div gstype="form" method="setReportFilter">
     <table>

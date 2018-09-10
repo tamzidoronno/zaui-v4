@@ -18,7 +18,6 @@ $_SESSION['firstloadpage'] = true;
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="<? echo \PageFactory::getGetShopModule(); ?>">
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><? echo $page->getTitle(); ?></title>
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">

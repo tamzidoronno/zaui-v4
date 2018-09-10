@@ -28,15 +28,3 @@
     background-color:#fff;
     border-color: #bbb;
 }
-
-@media screen and (max-width: 800px) {
-    .PmsNewBooking .addnewroom { width: 100%; }
-    .PmsNewBooking .gs_headerbox { margin-right: 10px; }
-    .PmsNewBooking .discountcode { width: 100px;  }
-    .PmsNewBooking .availablerooms { display:none; }
-    .PmsNewBooking .section { width: 100%; }
-    .PmsNewBooking .GetShopModuleTable { font-size:12px;}
-    .PmsNewBooking .GetShopModuleTable .attributeheader.datarow .col, 
-    .PmsNewBooking .GetShopModuleTable .datarow_inner .col { width: 16% !important; }
-    .PmsNewBooking .companytypeselection .shop_button { width: 100% !important; margin: 2px; box-sizing: border-box; }
-}

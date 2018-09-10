@@ -45,17 +45,17 @@ if($room->bookingItemId) {
             <div style='text-align:right;' gstype='form' method='setCleaningInterval'>
                 <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
                 <input type='text' class='gsniceinput1' style='width:30px;text-align: center;' value='<?php echo $cleaningInterval; ?>' gsname='interval'> 
-                <span class='shop_button' style='width:250px;' gstype='submit'>Set cleaning interval</span>
+                <span class='shop_button' style='width:200px;' gstype='submit'>Set cleaning interval</span>
             </div>
             <br>
             <div style='text-align:right;' gstype='form' method='setCleaningDate'>
                 <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
                 <input type='text' class='gsniceinput1' style='width:80px;text-align: center' value='<?php echo date("d.m.Y", strtotime($intervalCleaningDate)); ?>' gsname='date'> 
-                <span class='shop_button' style='width:250px;' gstype='submit'>Set start date for cleaning</span>
+                <span class='shop_button' style='width:170px; float:right;' gstype='submit'>Set start date for cleaning</span>
             </div>
             <br>
             <div>
-                <span class='shop_button' style='width:270px;' gstype='clicksubmit' method='markRoomCleanedWithoutLogging'>Mark room as clean without logging</span>
+                <span class='shop_button' style='width:270px; float:right; margin-bottom:2px;' gstype='clicksubmit' method='markRoomCleanedWithoutLogging'>Mark room as clean without logging</span>
                 <span class='shop_button' style='width:250px; float:right;' gstype='clicksubmit' method='markRoomCleanedWithLogging'>Mark room as clean with logging</span>
             </div>
             <br>

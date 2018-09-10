@@ -92,34 +92,3 @@
     margin-bottom: 50px;
     margin-top: 50px;
 }
-
-@media screen and (max-width: 800px) {
-    .PmsGroupBookingHeader .top_box { width: 80px; height: 80px; font-size:25px; margin-bottom: 20px;  }
-    .PmsGroupBookingHeader .edit_details_directprint { width: 100%; box-sizing: border-box;  }
-    .PmsGroupBookingHeader .edituserdetails { width: 100%; margin-left: 10px;float:none;}
-    .PmsGroupBookingHeader .masseditguests { width:100%; float:none; margin-top: 10px;}
-    .PmsGroupBookingHeader .masseditguests [gsname="name"],
-    .PmsGroupBookingHeader .masseditguests [gsname="email"]
-    { width:calc((100%/2) - 140px) }
-    .PmsGroupBookingHeader .masseditguests [gsname="phone"] { width:80px; }
-    .PmsGroupBookingHeader select.gsniceselect1 { width: 100% !important; }
-    .PmsGroupBookingHeader .edit_details_directprint .shop_button { width: 100% !important; }
-    .PmsGroupBookingHeader [areatype="stay"] { display:none; }
-    .PmsGroupBookingHeader [areatype="conference"] { display:none; }
-    .PmsGroupBookingHeader .headercol {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;  }
-    .PmsGroupBookingHeader .col_reg,
-    .PmsGroupBookingHeader .col_guest,
-    .PmsGroupBookingHeader .col_visitor,
-    .PmsGroupBookingHeader .col_price
-    { display:none !important; }
-    .PmsGroupBookingHeader .GetShopModuleTable { font-size: 11px; }
-    .PmsGroupBookingHeader .GetShopModuleTable .col_visitor { width: calc(100% - 350px) !important; }
-    .PmsGroupBookingHeader .GetShopModuleTable .headercol.col_visitor { width: calc(100% - 350px) !important; }
-    
-    .PmsGroupBookingHeader .GetShopModuleTable .attributeheader.datarow .col, 
-    .PmsGroupBookingHeader .GetShopModuleTable .datarow_inner .col {
-        width: 14% !important;
-    }
-
-    
-}

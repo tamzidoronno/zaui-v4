@@ -30,6 +30,7 @@ public class Page extends DataCommon implements Cloneable {
     public Page parent;
     public String type;
     public int userLevel = 0;
+    @Translation
     public String description = "";
     public LinkedList<Long> layoutBackups = new LinkedList();
     public PageLayout layout = new PageLayout();

@@ -15,6 +15,7 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.DatabaseRemote;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
@@ -251,6 +252,9 @@ public class ManagerSubBase {
     }
 
     public void saveObject(DataCommon data) throws ErrorException {
+        if(data != null && data instanceof VirtualOrder) {
+            return;
+        }
         if (modules.shouldStoreRemote(getCurrentGetShopModule())) {
             if (data.getClass().getAnnotation(GetShopRemoteObject.class) != null) {
                 data.getshopModule = getCurrentGetShopModule();

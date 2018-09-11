@@ -12,3 +12,6 @@
     max-width: 1500px;
     margin: auto;
 }
+.PmsReport .kaipal .text {background-color:#fff; }
+.PmsReport [method="setReportFilter"] { background-color:#fff; padding: 10px; border-left:solid 1px #bbb;border-right:solid 1px #bbb;border-bottom:solid 1px #bbb; }
+.PmsReport .reportview { padding: 10px; border:solid 1px #bbb; background-color:#fff; max-width: 1480px; }

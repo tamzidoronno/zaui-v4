@@ -65,7 +65,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     public function formatVistior($room) {
-        
         return $this->formatter->formatVistior($room, $this->hasSamleFaktura());
     }
     
@@ -449,8 +448,15 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
 
     public function hasSamleFaktura() {
+        if(isset($this->hasSamleFakturaCheck)) {
+            return $this->hasSamleFakturaCheck;
+        }
         $app = $this->getApi()->getStoreApplicationPool()->getApplication("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba");
-        if($app) { return true; }
+        if($app) { 
+            $this->hasSamleFakturaCheck = true;
+            return true; 
+        }
+        $this->hasSamleFakturaCheck = false;
         return false;
     }
 }

@@ -3727,7 +3727,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         gsTiming("After removebycustomercodesandaddons");
 
         res = sortDeletedLast(res);
-        
         return res;
     }
 

@@ -13,7 +13,16 @@ getshop.pms = {
    init : function() {
         $(document).on('click', '[gs_model].gss_onoff', getshop.pms.toggleOnOff);
         $(document).on('click', '[gss_method="saveSettings"]', getshop.pms.saveSettings);
+        $(document).on('click', '.gsoverlayinner .closemodal', getshop.pms.closeOverLaysMouse);
         $(document).on('keydown', getshop.pms.closeOverLays);
+   },
+   closeOverLaysMouse : function(e) {
+        if($('.gsoverlay1').is(":visible")) {
+            $('.gsoverlay1').click();
+        }
+        if($('.gsoverlay2').is(":visible")) {
+            $('.gsoverlay2').click();
+        }
    },
    closeOverLays : function(e) {
        if(e.keyCode === 27) {

@@ -2,7 +2,7 @@
 .PmsCleaningNew .roomIsReady { color: green; font-weight: bold; }
 .PmsCleaningNew .guestname { display:inline-block; width: 50px; overflow:hidden;  text-overflow: ellipsis; white-space: nowrap; height: 12px; line-height: 12px;
  }
-.PmsCleaningNew .stepbox { border: solid 1px #ddd; border-radius : 5px; padding: 20px; background-color:#efefef; padding-top: 0px; }
+.PmsCleaningNew .stepbox { border: solid 1px #ddd; border-radius : 5px; padding: 20px; background-color:#fff; padding-top: 0px; }
  
 .PmsCleaningNew th {
 	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
@@ -38,3 +38,4 @@
 .PmsCleaningNew .inUse { background-color: purple; }
 .PmsCleaningNew .clean { background-color: green; }
 .PmsCleaningNew .notcleancheckedout { background-color: orange;cursor:pointer;  }
+.PmsCleaningNew .kaipal .text { background-color:#fff; border-color: #bbb; }

@@ -110,7 +110,11 @@ class ModulePageMenu {
             }
             $icon = "<i class='fa gs".$module->fontAwesome."'></i>";
             $scopeId = $_POST['scopeid'];
-            echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon"."<div>".$module->name."</div></div></a>";
+            if($module->name == "PMS") {
+                echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br>PMS</div></a>";
+            } else {
+                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
+            }
         }
         echo "</div>";
         echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa gsicon-menu modulechangericon'></i> <div>Modules</div></div>";

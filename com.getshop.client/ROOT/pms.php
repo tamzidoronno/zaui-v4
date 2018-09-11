@@ -88,11 +88,6 @@ $_SESSION['firstloadpage'] = true;
             $menu->renderTop();
             ?>
         </div>
-        <div style='text-align:center;background-color:red; color:#fff;padding: 3px;' class="warnversion20">
-            PMS 2.0 is the same as PMS functionality whise.
-            We have rewritten the core of the system to improve speed, thus PMS 2.0. 
-            Doing such a large rewrite needs lots of testing and we will therefore run PMS and PMS2.0 in parallell for a while, meaning you can use both.
-        </div>
         
         <div class="gs_body" hasleftmenu="<? echo $page->getLeftMenu() ? 'yes' : 'no'; ?>">
             <?

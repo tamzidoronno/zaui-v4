@@ -6,11 +6,11 @@
 }
 .PmsBookingRoomView .notvalidselection { font-size: 20px; color: red; font-weight: bold; margin-top: 20px; line-height: 30px; }
 .PmsBookingRoomView .colheader {
-    border-bottom: solid 1px #efefef;
     text-align: center;
-    background-color:#efefef;
+    background-color:#241b1b;
     padding: 5px;
     margin-bottom: 5px;
+    color:#fff;
 }
 .PmsBookingRoomView .grouppaymentprocess {
     position: absolute;
@@ -620,7 +620,7 @@
     border-bottom: solid 1px #DDD;
     font-size: 0px;
 }
-
+.PmsBookingRoomView .bookinginfocolheader { background-color:#ddd; }
 
 .PmsBookingRoomView .guestinformation[tab="ticket"] {
     padding: 20px;

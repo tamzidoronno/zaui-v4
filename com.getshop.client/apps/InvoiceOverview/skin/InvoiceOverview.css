@@ -4,6 +4,9 @@
 .InvoiceOverview .usersfilterresult { text-align: left; padding-top: 5px;}
 .InvoiceOverview .searchwordwarning { text-align: left; color:red; font-weight: bold; padding-top: 10px; font-family: cursive;}
 .InvoiceOverview .fa-close { cursor:pointer; color:#bbb;}
+.InvoiceOverview .neworderview { position:absolute; left: 100px; background-color: #fff; width: 800px; top: 60px; border: solid 2px; display:none; text-align: left; }
+.InvoiceOverview .neworderview .show_change_user { position:absolute; right: 0px; }
+.InvoiceOverview .GetShopQuickUser .edit_details_of_user { left: -2px; top: -2px; }
 .InvoiceOverview .addeduser { border: solid 1px #bbb;     padding: 2px; cursor:pointer;
     margin: 2px;
     border-radius: 3px;
@@ -28,3 +31,4 @@
     border: solid 1px;
     top: 67px;
 }
+.InvoiceOverview .invoicetable { min-height: 600px; }

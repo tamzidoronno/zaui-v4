@@ -18,12 +18,18 @@ $attributes = array(
     array('restAmount', 'Rest', 'restAmount'),
 );
 
+
 $table = new \GetShopModuleTable($this, 'InvoiceOverview', 'loadOrder', null, $attributes);
 $table->setSorting(array("id","incOrderId","orderDate","paymentDate","dueDate","start","end","user","status","amountExTaxes","amountIncTaxes","amountPaid","restAmount"));
+if(isset($_SESSION['invoiceoverviewdisplayorder']) && $_SESSION['invoiceoverviewdisplayorder']) {
+    $table->setExpandOnRow(1);
+}
+
 $table->setData($result);
 echo "<div class='invoicetable'>";
 $table->render();
 echo "</div>";
+$_SESSION['invoiceoverviewdisplayorder'] = null;
 ?>
 <div style="text-align:right; padding-right: 10px; max-width:1500px; margin: auto; border-bottom: solid 4px #bbb; padding-bottom: 10px; margin-top: 10px;">
     <span class='shop_button' gs_downloadExcelReport="downloadExcelFile" gs_fileName="overview">Download result</span>

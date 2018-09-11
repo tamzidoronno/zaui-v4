@@ -26,6 +26,7 @@ public class OrderFiltering {
     }
     List<Order> filterOrders(OrderFilter filter) {
         List<Order> toRemove = new ArrayList();
+        filterByOrderId(filter);
         filterByDate(filter, toRemove);
         filterByStatus(filter);
         filterByPaymentMethod(filter);
@@ -67,6 +68,9 @@ public class OrderFiltering {
 
     private void filterByDate(OrderFilter filter, List<Order> toRemove) {
         //Filter by date.
+        if(filter.type == null) {
+            return;
+        }
         for(Order order : ordersToFilter) {
             if(filter.type.equals("createddate")) {
                 if(inDate(order.rowCreatedDate, filter.start, filter.end)) {
@@ -133,6 +137,18 @@ public class OrderFiltering {
             }
         }
         ordersToFilter.removeAll(remove);
+    }
+
+    private void filterByOrderId(OrderFilter filter) {
+        if(filter.orderId != null && !filter.orderId.isEmpty()) {
+            List<Order> remove = new ArrayList();
+            for(Order ord : ordersToFilter) {
+                if(!filter.orderId.equals(ord.id)) {
+                    remove.add(ord);
+                }
+            }
+            ordersToFilter.removeAll(remove);
+        }
     }
     
 }

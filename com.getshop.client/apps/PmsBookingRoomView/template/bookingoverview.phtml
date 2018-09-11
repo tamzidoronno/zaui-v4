@@ -11,7 +11,11 @@ $addonsPrice = $this->getAddonsCost(false);
 $addonsPriceToDisplay = $this->getAddonsCost(true);
 $totalOnRoom = $stayPrice + $addonsPrice;
 
-if(!$stayPrice) {$stayPrice = "";} else {$stayPrice  = " - " . $stayPrice;}
+if(!$stayPrice) {$stayPrice = "";} else {
+    $stayPrice = round($stayPrice);
+    $stayPrice  = " - " . $stayPrice;
+}
+
 
 if(!$addonsPriceToDisplay) {$addonsPriceToDisplay = "";} else {$addonsPriceToDisplay  = " - " . $addonsPriceToDisplay;}
 
@@ -167,10 +171,10 @@ if($this->listGroupRooms()) {
             </div>
 
             <div class="stayinformation PmsAvailability <? echo $this->isTabActive('stayinformation'); ?>" tab='stayinformation'>
-                <br>
                 <?php $this->printArea("stayinformation"); ?>
             </div>
         </div>
+        <div style='clear:both;'></div>
     </div>
     <?php
 }

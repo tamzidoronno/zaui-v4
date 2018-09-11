@@ -206,3 +206,14 @@
     color: #666;
     font-weight: bold;
 } 
+
+@media screen and (max-width: 1300px) {
+    .PmsSearchBooking .col_reg,
+    .PmsSearchBooking .col_guest,
+    .PmsSearchBooking .col_price
+    { display:none; }
+    .PmsSearchBooking .GetShopModuleTable .col_visitor {
+        width: calc(100% - 670px);
+    }
+    .PmsSearchBooking .GetShopModuleTable .col_room { width: 90px; overflow:hidden;}
+}

@@ -3,6 +3,8 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
+import com.thundashop.core.accountingmanager.AccountingSystemStatistics;
+import com.thundashop.core.accountingmanager.AccountingSystemStatisticsResult;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
@@ -14,9 +16,8 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.FilterOptions;
-import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshopaccounting.GBat10AccountingSystem;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -63,6 +65,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Autowired
     StoreManager storeManager;
+    
+    @Autowired
+    GBat10AccountingSystem gBat10AccountingSystem;
     
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -822,6 +827,81 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return calculator.doCalculation(price, coverage,typeId, start);
     }
 
+    public List<Order> getFilterOrders(PmsOrderStatsFilter filter) {
+        List<Order> orders = new ArrayList();
+        
+        if(filter.includeVirtual) {
+            pmsManager.createAllVirtualOrdersForPeriode(filter.start, filter.end);
+            orders = orderManager.getAllOrderIncludedVirtual();
+        } else {
+            orders = orderManager.getAllOrders();
+        }
+        
+        if(filter.channel != null && !filter.channel.trim().isEmpty()) {
+            orders = filterOrdersOnChannel(filter.channel, orders);
+        }
+       
+        List<Order> ordersToUse = new ArrayList();
+        for(Order order : orders) {
+            if(order == null || order.cart == null) {
+                continue;
+            }
+            if(order.cart.getItems().isEmpty()) {
+                continue;
+            }
+            if(order.testOrder) {
+                continue;
+            }
+            
+            if(filter.methods.isEmpty() || filter.includeVirtual) {
+                ordersToUse.add(order);
+            } else {
+                for(PmsPaymentMethods pmethod : filter.methods) {
+                    boolean avoid = false;
+                    String filterMethod = pmethod.paymentMethod;
+                    Integer filterStatus = pmethod.paymentStatus;
+                    if(filterMethod != null && !filterMethod.isEmpty()) {
+                        if(order.payment == null) {
+                            avoid = true;
+                        } else if(order.payment.paymentType != null) {
+                            String method = filterMethod.replace("-", "_");
+                            if(!order.payment.paymentType.contains(method)) {
+                                avoid = true;
+                            }
+                        }
+                    }
+
+                    if(filterStatus != null) {
+                        if(filterStatus == -10) {
+                            if(!order.transferredToAccountingSystem) {
+                                avoid = true;
+                            }
+                        }
+                        if(filterStatus == -9) {
+                            if(orderManager.getTotalAmount(order) > 0) {
+                                avoid = true;
+                            }
+                        }
+
+                        if(filterStatus > 0) {
+                            if(order.status != filterStatus) {
+                                avoid = true;
+                            }
+                        }
+                    }
+                    if(order.isVirtual && filter.includeVirtual) {
+                        avoid = false;
+                    }
+
+                    if(!avoid && !ordersToUse.contains(order)) {
+                        ordersToUse.add(order);
+                    }
+                }
+            }
+        }
+        return ordersToUse;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -952,78 +1032,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(filter == null) {
             return new PmsOrderStatistics(null, userManager.getAllUsersMap());
         }
-        
-        List<Order> orders = new ArrayList();
-        
-        if(filter.includeVirtual) {
-            pmsManager.createAllVirtualOrdersForPeriode(filter.start, filter.end);
-            orders = orderManager.getAllOrderIncludedVirtual();
-        } else {
-            orders = orderManager.getAllOrders();
-        }
-        
-        if(filter.channel != null && !filter.channel.trim().isEmpty()) {
-            orders = filterOrdersOnChannel(filter.channel, orders);
-        }
-       
-        List<Order> ordersToUse = new ArrayList();
-        for(Order order : orders) {
-            if(order == null || order.cart == null) {
-                continue;
-            }
-            if(order.cart.getItems().isEmpty()) {
-                continue;
-            }
-            if(order.testOrder) {
-                continue;
-            }
-            
-            if(filter.methods.isEmpty() || filter.includeVirtual) {
-                ordersToUse.add(order);
-            } else {
-                for(PmsPaymentMethods pmethod : filter.methods) {
-                    boolean avoid = false;
-                    String filterMethod = pmethod.paymentMethod;
-                    Integer filterStatus = pmethod.paymentStatus;
-                    if(filterMethod != null && !filterMethod.isEmpty()) {
-                        if(order.payment == null) {
-                            avoid = true;
-                        }
-                        String method = filterMethod.replace("-", "_");
-                        if(!order.payment.paymentType.contains(method)) {
-                            avoid = true;
-                        }
-                    }
-
-                    if(filterStatus != null) {
-                        if(filterStatus == -10) {
-                            if(!order.transferredToAccountingSystem) {
-                                avoid = true;
-                            }
-                        }
-                        if(filterStatus == -9) {
-                            if(orderManager.getTotalAmount(order) > 0) {
-                                avoid = true;
-                            }
-                        }
-
-                        if(filterStatus > 0) {
-                            if(order.status != filterStatus) {
-                                avoid = true;
-                            }
-                        }
-                    }
-                    if(order.isVirtual && filter.includeVirtual) {
-                        avoid = false;
-                    }
-
-                    if(!avoid && !ordersToUse.contains(order)) {
-                        ordersToUse.add(order);
-                    }
-                }
-            }
-        }
-        
+        List<Order> ordersToUse = getFilterOrders(filter);
         double totalAmountEx = 0;
         for(Order ord : ordersToUse) {
             totalAmountEx += orderManager.getTotalAmountExTaxes(ord);
@@ -1162,10 +1171,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public void clearOrdersOnBooking(PmsBooking booking) {
-        boolean setNonRef = false;
-        if(booking.nonrefundable) {
-            setNonRef = true;
-            booking.nonrefundable = false;
+        List<String> nonRefundableRooms = new ArrayList();
+        for(PmsBookingRooms r : booking.rooms) {
+            if(r.nonrefundable) {
+                nonRefundableRooms.add(r.pmsBookingRoomId);
+                r.nonrefundable = false;
+            }
         }
         List<Order> ordersToSave = new ArrayList();
         for(String orderId : booking.orderIds) {
@@ -1184,7 +1195,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(Order save : ordersToSave) {
             orderManager.saveOrder(save);
         }
-        booking.nonrefundable = setNonRef;
+        for(String rid : nonRefundableRooms) {
+            PmsBookingRooms tmpRoom = booking.getRoom(rid);
+            tmpRoom.nonrefundable = true;
+        }
+        pmsManager.saveBooking(booking);
     }
 
     private Payment getPreferredPaymentTypeFromBooking(PmsBooking booking) {
@@ -2482,7 +2497,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(type != null) {
             CartItem item = createCartItem(type.productId, type.name, room, startDate, endDate, price, daysInPeriode, "");
             if(item != null) {
-                if(storeId.equals("b703b793-c7f4-4803-83bb-106cab891d6c")) {
+                if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
                     item.getProduct().name = item.getProduct().metaData;
                     item.getProduct().metaData = "";
                     item.getProduct().additionalMetaData = "";
@@ -2516,7 +2531,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 endDateToUse = room.date.end;
             }
             List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDateToUse);
-            if(storeId.equals("b703b793-c7f4-4803-83bb-106cab891d6c")) {
+            if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
                 result.addAll(createAddonsCartItemsToInvoiceForGetShop(items, room));
             } else {
                 for(int iteration = 0; iteration < 2; iteration++) {
@@ -3169,4 +3184,42 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return toReturn;
     }
     
+    
+    @Override
+    public AccountingSystemStatisticsResult getAccountingStatistics(PmsOrderStatsFilter filter) {
+        List<Order> ordersToUse = getFilterOrders(filter);
+        Calendar cal = Calendar.getInstance();
+        AccountingSystemStatisticsResult toReturn = new AccountingSystemStatisticsResult();
+        TreeMap<String, AccountingSystemStatistics> res = new TreeMap();
+        for(Order ord : ordersToUse) {
+            Date postingDate = gBat10AccountingSystem.getAccountingPostingDate(ord);
+            String offset = "";
+            if(postingDate != null) {
+                if(postingDate.before(filter.start) || postingDate.after(filter.end)) {
+                    continue;
+                }
+                cal.setTime(postingDate);
+                Integer year = cal.get(Calendar.YEAR);
+                Integer day = cal.get(Calendar.DAY_OF_MONTH);
+                Integer month = cal.get(Calendar.MONTH)+1;
+                offset = year + "-";
+                if(month >= 10) { offset += month; } else { offset += "0" + month; }
+                offset += "-";
+                if(day >= 10) { offset += day; } else { offset += "0" + day; }
+            }
+            AccountingSystemStatistics toUpdate = new AccountingSystemStatistics();
+            if(res.containsKey(offset)) {
+                toUpdate = res.get(offset);
+            }
+            toUpdate.date = postingDate;
+            toUpdate.addOrder(ord);
+            res.put(offset, toUpdate);
+        }
+        
+        toReturn.dayresult = res;
+        toReturn.generateProductsList();
+        toReturn.generateListOfOrdersNotTransferred(ordersToUse);
+        
+        return toReturn;
+    }
 }

@@ -1,6 +1,5 @@
 .PmsSearchBox {
     text-align: right;
-    padding-right: 20px;
 }
 .PmsSearchBox .advancesearch { display:none; }
 .PmsSearchBox .advanceserachbuttonenabled { color: #82cdf3; }
@@ -60,4 +59,31 @@
 }
 .PmsSearchBox .otherselectionheading {    border-bottom: solid 1px #bbb;
     padding-bottom: 5px;
-    margin-bottom: 5px; }
+    margin-bottom: 5px; 
+}
+
+@media screen and (max-width: 800px) {
+    .GetShopModuleTableHeader,
+    .tablefilterinput { display:none; }
+    .PmsSearchBox { margin-bottom: 10px; border-bottom: solid 1px; padding-bottom: 10px; padding-top: 10px; }
+    .PmsSearchBox .dailydaterangepicker { top: 200px; font-size: 20px; width:100%;box-sizing: border-box; width: auto;}
+    .gs_headerbox { width: 100%; margin-left: 20px; margin-right: 20px; margin-bottom: 5px; }
+    .gs_headerbox .shop_button { width: 20%; font-size: 10px; float:left; }
+    .gs_headerbox .opensimplesearch { line-height:15px; }
+    .PmsSearchBox .roomtypeselection { min-width:100%; }
+    
+    .PmsSearchBooking .headercol {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;  }
+    .PmsSearchBooking .col_reg,
+    .PmsSearchBooking .col_guest,
+    .PmsSearchBooking .col_visitor,
+    .PmsSearchBooking .col_price
+    { display:none; }
+    .PmsSearchBooking .GetShopModuleTable { font-size: 11px; }
+    .PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 350px) !important; }
+    .PmsSearchBooking .GetShopModuleTable .headercol.col_visitor { width: calc(100% - 350px) !important; }
+    
+    .PmsSearchBooking .GetShopModuleTable .attributeheader.datarow .col, 
+    .PmsSearchBooking .GetShopModuleTable .datarow_inner .col {
+        width: 14% !important;
+    }
+}

@@ -444,7 +444,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function toggleNonRefundable() {
         $_POST['data']['bookingid'] = $_POST['data']['clicksubmit'];
         $booking = $this->getSelectedBooking();
-        $booking->nonrefundable = !$booking->nonrefundable;
+        $newState = true;
+        foreach($booking->rooms as $r) {
+            if($r->nonrefundable) { $newState = false; }
+        }
+        
+        foreach($booking->rooms as $r) {
+            $r->nonrefundable = $newState;
+        }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         $this->selectedBooking = null;
         $this->showBookingInformation();

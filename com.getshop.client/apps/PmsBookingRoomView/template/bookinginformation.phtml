@@ -30,15 +30,15 @@ $pmsSelectedRoom = $this->getSelectedRoom();
     <div  class="guest_row row_template" style='display: none'>
         <div class="guest_col guest_col1">
             <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1" value=""/>
-            <input temp_gsname="guestinfo_name" class="gsniceinput1" value=""/>
+            <input temp_gsname="guestinfo_name" class="gsniceinput1" value="" placeholder='<? echo $this->__f("Name"); ?>'/>
         </div>
 
         <div class="guest_col guest_col2">
-            <input temp_gsname="guestinfo_email" class="gsniceinput1" value=""/>
+            <input temp_gsname="guestinfo_email" class="gsniceinput1" value="" placeholder='<? echo $this->__f("Email"); ?>'/>
         </div>
 
         <div class="guest_col guest_col3">
-            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value="<?php echo $this->getDefaultPrefix(); ?> "/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value=""/>
+            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value="<?php echo $this->getDefaultPrefix(); ?> "/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value="" placeholder='<? echo $this->__f("Phone"); ?>'/>
         </div>
 
         <div class="guest_col guest_col4">

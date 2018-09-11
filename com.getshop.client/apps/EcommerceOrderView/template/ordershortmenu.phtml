@@ -4,17 +4,35 @@ $order = $this->getOrder();
 $paymentApps = $this->getAvailablePaymentMethods();
 $total = $this->getApi()->getOrderManager()->getRestToPay($order);
 $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+$closed = $order->closed;
+if($order->manuallyClosed) {
+    $closed = true;
+}
 
-
-if ($order->closed) {
+if ($closed) {
 ?>
 <div>
-    <? echo $this->__f("Order is closed, so you can not do any changes to it."); ?>
+    <? 
+    echo "<div>" . $this->__f("Order is closed, so you can not do any changes to it.") . "</div>";
+    if($order->manuallyClosed && !$order->closed) {
+    ?>
+    <span gstype='form' method='manuallycloseorder'>
+        <div class="gs_shop_small_icon" gstype="submit"><i class="fa fa-lock"></i> <? echo $this->__f("Open order"); ?></div>
+        <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+    </span>
+    <?php
+    }
+    ?>
 </div>    
 <?
 } else {
 ?>
 <div style='position:relative;'>
+    <span gstype='form' method='manuallycloseorder'>
+        <div class="gs_shop_small_icon" gstype="submit" title='Lock the order temporary to make sure it is not being changed'><i class="fa fa-lock"></i> <? echo $this->__f("Manually lock order"); ?></div>
+        <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+    </span>
+    
     <div class="gs_shop_small_icon show_payment_methods"><i class="fa fa-money"></i> <? echo $this->__f("Change payment method"); ?>
         <div class="paymentmethods">
             <?

@@ -1,7 +1,10 @@
 <?php
 namespace ns_3746f382_0450_414c_aed5_51262ae85307;
 
-class InvoiceOverview extends \WebshopApplication implements \Application {
+class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUserCallback {
+
+    private $userToCreateOrderOn = null;
+
     public function getDescription() {
         
     }
@@ -9,10 +12,47 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
     public function getName() {
         return "InvoiceOverview";
     }
+    
+    public function changeUser($user) {
+    }
+    
+    public function createCompany() {
+        $vatnumber = $_POST['data']['vatnumber'];
+        $name = $_POST['data']['companyname'];
+        
+        $user = $this->getApi()->getUserManager()->createCompany($vatnumber, $name);
+        return $user;
+    }
+    
+    public function saveUser($user) {
+        $order = $this->getApi()->getOrderManager()->createOrderForUser($user->id);
+        $_SESSION['invoiceoverviewdisplayorder'] = $order->id;
+    }
+    
+    public function loadQuickUser() {
+        $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+        
+        $xtraargs = array();
+        $xtraargs['savebtnname'] = "Create order";
+        $xtraargs['avoidprintuseraftersave'] = "true";
+        
+        $quser->printEditDirect = true;
+        $quser->hideWarning = true;
+        $quser->setExtraArgs($xtraargs);
+        $quser->renderApplication(true, $this);
+    }
+    
+    public function createNewUser() {
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        return $this->getApi()->getUserManager()->createUser($user);
+    }
+
 
     public function render() {
         $this->includefile("filterheader");
         $this->includefile("filterresult");
+        $_SESSION['invoiceoverviewcreateorderonuser']=null;
     }
 
     /**
@@ -20,7 +60,31 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
      * @return \core_ordermanager_data_OrderResult[]
      */
     public function getFilteredResult() {
-        return $this->getApi()->getOrderManager()->getOrdersByFilter($this->getFilter());
+        $filter = $this->getFilter();
+        if(isset($_SESSION['invoiceoverviewdisplayorder']) && $_SESSION['invoiceoverviewdisplayorder']) {
+            $filter->orderId = $_SESSION['invoiceoverviewdisplayorder'];
+        }
+        return $this->getApi()->getOrderManager()->getOrdersByFilter($filter);
+    }
+    
+    public function reloadRow() {
+        /*
+         * array('amountExTaxes', 'Ex tax', 'amountExTaxes'),
+           array('amountIncTaxes', 'Inc tax', 'amountIncTaxes'),
+           array('amountPaid', 'Paid', 'amountPaid'),
+         */
+         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['id']);
+        $result = array();
+        $paid = 0.0;
+        foreach($order->transactions as $trans) {
+            $paid += $trans->amount;
+        }
+        
+        $result['amountPaid'] = $paid;
+        $result['amountExTaxes'] = round($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order));
+        $result['amountIncTaxes'] = round($this->getApi()->getOrderManager()->getTotalAmount($order));
+        $result['restAmount'] = $result['amountIncTaxes'] - $result['amountPaid'];
+        echo json_encode($result);
     }
     
     /**
@@ -33,7 +97,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application {
             return "N/A";
         }
         
-        return "<span getshop_sorting='".strtotime($row->orderDate)."'>" . date("d.m.Y", strtotime($row->orderDate)) . "</span>";
+        return "<span getshop_sorting='".strtotime($row->orderDate)."' hiddenorderid='".$row->orderId."'>" . date("d.m.Y", strtotime($row->orderDate)) . "</span>";
     }
     
     public function InvoiceOverview_loadOrder() {

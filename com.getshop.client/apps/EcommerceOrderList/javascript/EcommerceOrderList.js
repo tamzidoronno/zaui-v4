@@ -13,7 +13,7 @@ app.EcommerceOrderList = {
     },
     
     refreshOrderRow : function(orderId) {
-        var event = thundashop.Ajax.createEvent('','reloadRow',$('.EcommerceOrderList'), {
+        var event = thundashop.Ajax.createEvent('','reloadRow',$('[hiddenorderid="'+orderId+'"]'), {
             "id" : orderId
         });
         

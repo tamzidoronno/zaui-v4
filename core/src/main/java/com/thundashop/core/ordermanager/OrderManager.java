@@ -524,7 +524,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         for (VirtualOrder virt : virtOrders) {
             virtualOrders.remove(virt.id);
-            deleteObject(virt);
         }
     }
     
@@ -1961,12 +1960,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void validateOrder(Order incomeOrder) {
         Order inMemory = null;
         
-        if (incomeOrder.paymentDate == null)
-            return;
-        
         if (incomeOrder.id != null && !incomeOrder.id.isEmpty()) {
             inMemory = getOrderSecure(incomeOrder.id);
         }
+        if(inMemory != null && inMemory.manuallyClosed && incomeOrder.manuallyClosed) {
+            throw new ErrorException(1051);
+        }
+        
+        if (incomeOrder.paymentDate == null)
+            return;
         
         if (inMemory != null && inMemory.isPaymentDate(incomeOrder.paymentDate)) {
             return;

@@ -302,9 +302,10 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
                 }
                 $icon = "<i class='fa gs".$module->fontAwesome."'></i>";
                 $scopeId = $_POST['scopeid'];
-                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
                 if($module->name == "PMS") {
-                    echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon PMS 2.0</div></a>";
+                    echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon PMS</div></a>";
+                } else {
+                    echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
                 }
             }
             

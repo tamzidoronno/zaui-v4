@@ -894,7 +894,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             newbooking.registrationData.resultAdded.put("user_address_city", booking.city);
             newbooking.registrationData.resultAdded.put("user_emailAddress", booking.email);
             newbooking.registrationData.resultAdded.put("user_address_postCode", booking.postCode);
-            newbooking.nonrefundable = booking.isNonRefundable;
+            if(booking.isNonRefundable) {
+                newbooking.setAllRoomsNonRefundable();
+            }
 
             Calendar calStart = Calendar.getInstance();
 
@@ -944,6 +946,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                             add = false;
                         }
                     }
+                    
                     if(add) {
                         pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
                     }

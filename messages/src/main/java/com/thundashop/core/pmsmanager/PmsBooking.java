@@ -504,7 +504,7 @@ public class PmsBooking extends DataCommon {
             if(room.deletedByChannelManagerForModification) {
                 continue;
             }
-            room.calculateTotalCost(priceType, nonrefundable);
+            room.calculateTotalCost(priceType);
             total += room.totalCost;
         }
         
@@ -622,6 +622,20 @@ public class PmsBooking extends DataCommon {
             return true;
         }
         return false;
+    }
+
+    boolean hasNoRefRooms() {
+        for(PmsBookingRooms r : rooms) {
+            if(r.nonrefundable) 
+                return true;
+        }
+        return false;
+    }
+
+    public void setAllRoomsNonRefundable() {
+        for(PmsBookingRooms r : rooms) {
+            r.nonrefundable = true;
+        }
     }
 
     public static class PriceType {

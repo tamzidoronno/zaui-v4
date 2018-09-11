@@ -71,7 +71,9 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
                 }
                 foreach($orderIds as $orderId) {
                     $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-                    echo "<option value='$orderId'>Add to order: " . $order->incrementOrderId . "</option>";
+                    if(!$order->closed) {
+                        echo "<option value='$orderId'>Add to order: " . $order->incrementOrderId . "</option>";
+                    }
                 }
                 ?>
             </select>

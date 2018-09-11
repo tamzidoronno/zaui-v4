@@ -169,7 +169,7 @@
     padding-right: 10px;
 }
 .PmsBookingRoomView .stayperiodecontainer input {
-    width: 200px;
+    width: 100px;
     box-sizing: border-box;
 }
 .PmsBookingRoomView .stayperiodecontainer input.time {
@@ -181,7 +181,6 @@
 .PmsBookingRoomView .pricesview {
     width: 280px;
     box-sizing: border-box;
-    border-right: solid 1px #bbb;
     padding:0px;
     margin-top: 20px;
 }
@@ -212,7 +211,7 @@
 }
 
 .PmsBookingRoomView .roomandcats {
-    height: 270px;
+    height: 370px;
     border-left: solid 1px #DDD;
     border-right: solid 1px #DDD;
     position: relative;

@@ -1,7 +1,13 @@
 <?
 /* @var $this \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser */
 $user = $this->user;
-
+if(!$user) {
+    echo "No user connected yet.";
+    echo "<script>";
+    echo "$('.GetShopQuickUser .change_user_form').show();";
+    echo "</script>";
+    return;
+}
 $extraArgs = $this->getExtraArgs();
 
 $disabled = "";
@@ -15,8 +21,13 @@ if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
 ?>
 <div gstype="form" method="saveUser">
     <?
-    if($this->avoidSaving) {
+    $xargs = $this->getExtraArgs();
+    
+    if($this->avoidSaving || (isset($xargs['avoidsave']) && $xargs['avoidsave'] == "true")) {
         echo "<input type='hidden' gsname='avoidsaving' value='true'>";
+    }
+    if((isset($xargs['avoidprintuseraftersave']) && $xargs['avoidprintuseraftersave'] == "true")) {
+        echo "<input type='hidden' gsname='avoidlistuser' value='true'>";
     }
     if($disabled) {
         echo "<div style='color:red; font-weight: bold; text-align:center; font-size: 16px;'>You can not change the values for this user.</div>";
@@ -139,9 +150,16 @@ if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
             </div>
             <?php
         }
+        
+        $name = $this->__f("Save");
+        $xtra = $this->getExtraArgs();
+        if(isset($xtra['savebtnname'])) {
+            $xtra = $xtra['savebtnname'];
+        }
+        
         ?>
         <div class="shop_button" gstype="submit">
-            <i class="fa fa-save"></i> <? echo $this->__f("Save"); ?>
+            <i class="fa fa-save"></i> <? echo $xtra; ?>
         </div>
     </div>
 

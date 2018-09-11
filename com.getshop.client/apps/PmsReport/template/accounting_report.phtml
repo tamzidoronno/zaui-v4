@@ -1,0 +1,33 @@
+
+<?php
+/* @var $this \ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
+$filter = $this->getIncomeReportFilter();
+$data = $this->getApi()->getPmsInvoiceManager()->getAccountingStatistics($this->getSelectedMultilevelDomainName(), $filter);
+$matrix = $this->createMatrix($data);
+$attributes = $this->createAccountingAttributes($matrix);
+$date = date("d-m-Y", time());
+echo "<div style='text-align:right;margin:auto; max-width: 1500px;'>";
+$title = join(",", $data->ordersNotTransferredToAccounting);
+echo "<span style='float:left;' title='$title'>There are current " . sizeof($data->ordersNotTransferredToAccounting) . " orders not transferred to accounting system yet.</span><br>";
+echo "<span style='float:left;'>Report consist of " . sizeof($data->ordersUsedInReport) . " orders in total.</span>";
+echo "<span style='color:blue; cursor:pointer;' gs_downloadExcelReport='downloadAccountingReport' gs_fileName='accountingreport-$date'>Download this report to excel</span>";
+echo "</div>";
+echo "<div class='reportoverview'>";
+$table = new \GetShopModuleTable($this, 'PmsManager', 'loadAccountingReportCell', null, $attributes);
+$table->setData($matrix);
+$table->render();
+echo "</div>";
+
+?>
+<br><br><bR>
+<style>
+    .reportoverview {  overflow-x: scroll; max-width: 1500px; margin:auto; }
+    .PmsReport .GetShopModuleTable { margin: 0px;}
+    .PmsReport .GetShopModuleTable .col { width: 100px; }
+</style>
+<script>
+    <?php
+    $width = sizeof($attributes) * 111;
+    echo "$('.PmsReport .GetShopModuleTable').css('width','$width"."px');";
+    ?>
+</script>

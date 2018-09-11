@@ -1,2 +1,4 @@
 .PmsRestrictions .createrestricitonarea { padding: 10px; border: solid 1px #bbb; display:none; background-color:#ddd; position:absolute; }
 .PmsRestrictions .repeatoption { display:none; }
+.PmsRestrictions .section { background-color:#fff; border:solid 1px #bbb; padding: 10px; }
+.PmsRestrictions .GetShopModuleTable { max-width: 100%; }

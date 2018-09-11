@@ -12,8 +12,8 @@
 .PmsNewBooking .availableroomsheading { border-bottom: solid 1px #DDD; padding-bottom: 10px; margin-bottom: 10px; }
 .PmsNewBooking .moreThenAvailableWarning { color: red; font-weight: bold; margin-top: 20px; display:none; }
 .PmsNewBooking .warninnotabletoadd { color:red; font-weight: bold; font-size: 24px; margin-top:20px; }
-.PmsNewBooking .section {  padding: 10px; border: solid 1px #efefef; width:68%; box-sizing: border-box; }
-
+.PmsNewBooking .section {  box-shadow: 0px 0px 10px rgba(0,0,0,0.3); padding: 10px; border: solid 1px #efefef; width:68%; box-sizing: border-box; background-color:#fff; }
+.PmsNewBooking .conferenceroom [method="addConferenceRoom"] { box-shadow: 0px 0px 10px rgba(0,0,0,0.3); padding: 10px; background-color: #fff; }
 .PmsNewBooking .nextstep { display:none; }
 .PmsNewBooking .selectedbutton { background-color:green; }
 .PmsNewBooking .searchbrregbutton { color: blue; cursor:pointer; }

@@ -224,6 +224,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
+                if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof ConferenceData) {
@@ -3726,7 +3727,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         gsTiming("After removebycustomercodesandaddons");
 
         res = sortDeletedLast(res);
-        
         return res;
     }
 
@@ -5952,7 +5952,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
 
         Product product = productManager.getProduct(addon.productId);
-        logEntry("Added addon: " + product.name, booking.id, room.bookingItemId, room.pmsBookingRoomId, "addaddon");
+        logEntry("Added addon: " + product.name + "(" + addon.getName() + ")", booking.id, room.bookingItemId, room.pmsBookingRoomId, "addaddon");
     }
 
     private void updateRoomPriceFromAddons(PmsBookingRooms room, PmsBooking booking) {

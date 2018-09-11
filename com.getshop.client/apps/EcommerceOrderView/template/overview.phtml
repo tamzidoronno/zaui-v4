@@ -16,7 +16,8 @@
         <div class="menuentry <? echo $this->isTabActive('accounting'); ?>" tab='accounting'><span><? echo $this->__f("Accounting"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('note'); ?>" tab='note'><span><? echo $this->__f("Note"); ?></span></div>
         <div class="menuentry <? echo $this->isTabActive('log'); ?>" tab='log'><span><? echo $this->__f("Log"); ?></span></div>
-    </div><div class="workarea">
+    </div>
+    <div class="workarea">
         <div class="orderinformation <? echo $this->isTabActive('overview'); ?>" tab='overview'>
             <?
             $this->includefile("orderoverview");

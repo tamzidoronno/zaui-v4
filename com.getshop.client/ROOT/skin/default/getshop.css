@@ -171,6 +171,16 @@ a {
     display: block;
 }
 
+.gsoverlayinner .closemodal {
+    cursor:pointer;
+    padding: 10px;
+    position: absolute;
+    right: -17px;
+    background-color: #fff;
+    border-radius: 56%;
+    top: -20px;
+}
+
 .gsoverlay2 .gsoverlayinner,
 .gsoverlay1 .gsoverlayinner {
     background-color: #FFF;
@@ -178,6 +188,8 @@ a {
     width: 70%;
     margin-top: 40px;
     position: relative;
+    padding: 5px;
+    background-color:#fff;
 }
 
 .gsoverlay2 .gs_loading_spinner,

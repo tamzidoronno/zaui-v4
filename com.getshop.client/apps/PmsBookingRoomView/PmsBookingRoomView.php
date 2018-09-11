@@ -34,7 +34,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     public function togglerefundable() {
         $booking = $this->getPmsBooking();
-        $booking->nonrefundable = !$booking->nonrefundable;
+        $room = $this->getSelectedRoom();
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                $r->nonrefundable = !$r->nonrefundable;
+            }
+        }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
 
@@ -87,6 +92,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             case "changeprice":
             case "changestay":
             case "updateaddons":
+            case "togglenonref":
             case "guestinfo":
                 echo "<div style='text-align:right; border-bottom: solid 1px #bbb; padding-bottom: 10px; margin-bottom: 10px;'><i class='fa fa-close' style='cursor:pointer;' onmousedown='$(\".quickmenuoption\").hide();'></i></div>";
                 $this->setRoomId($_POST['data']['roomid']);
@@ -1568,6 +1574,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         die();
     }
 
+    public function removeGroupList() {
+        $_SESSION['pmsroomviewlistgrouproom'] = false;
+    }
+    
     public function getDefaultPrefix() {
         if($this->defaultPrefix) {
             return $this->defaultPrefix;

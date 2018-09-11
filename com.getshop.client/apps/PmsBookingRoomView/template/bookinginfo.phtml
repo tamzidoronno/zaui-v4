@@ -7,7 +7,9 @@ $bookingEngineBooking = $this->getBookingEngineBooking();
 
 $extraArgs = array();
 $extraArgs['userid'] = $user->id;
-$extraArgs['id'] = $bookingEngineBooking->id;
+if($bookingEngineBooking) {
+    $extraArgs['id'] = $bookingEngineBooking->id;
+}
 $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 ?>
 <div class="row odd">
@@ -35,9 +37,9 @@ if ($pmsBooking->wubookreservationid) {
 ?>
 
 <div class="row odd">
-    <div class="col col1"><? echo $this->__f("Non refundable"); ?></div>
+    <div class="col col1"><? echo $this->__f("Room non refundable"); ?></div>
     <?php
-    if ($pmsBooking->nonrefundable) {
+    if ($pmsSelectedRoom->nonrefundable) {
         ?>
         <div class="col col2">Yes, <span style='color:blue;cursor:pointer;' gsclick='togglerefundable'>make it refundable</span></div>    
         <?php

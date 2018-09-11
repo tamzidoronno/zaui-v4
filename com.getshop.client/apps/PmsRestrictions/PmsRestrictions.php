@@ -77,8 +77,11 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
     }
     
     public function render() {
+        echo "<br>";
+        echo "<div class='section'>";
         $this->includefile("createrestriction");
         $this->printRestrictions();
+        echo "</div>";
         $this->includefile("wubookrestrictions");
     }
     

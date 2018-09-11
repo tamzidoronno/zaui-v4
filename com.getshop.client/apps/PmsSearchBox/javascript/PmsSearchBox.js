@@ -156,7 +156,6 @@ app.PmsSearchBox = {
             localStorage.setItem('advancesearchtoggled', "false");
             $('.PmsSearchBox .simplesearch').show();
             $('.PmsSearchBox .advancesearch').hide();
-            $('input[gsname="searchtext"]').focus();
         } else {
             localStorage.setItem('advancesearchtoggled', "true");
             $('.PmsSearchBox .simplesearch').hide();

@@ -9,7 +9,7 @@ $extraArgs['userid'] = $user->id;
 
 ?>
 <input type='hidden' id='pmsbookingid' value='<?php echo $booking->id; ?>'>
-<div style='width:50%; float:left; padding-right:10px;box-sizing: border-box;'>
+<div class='edituserdetails'>
     <div style='background-color:#fff;'>
         <div class="title"><? echo $this->__("Information about the booker"); ?></div>
         <?
@@ -21,7 +21,7 @@ $extraArgs['userid'] = $user->id;
         ?>
     </div>
 </div>
-<div style='width:50%; float:left;background-color:#fff;'>
+<div class='masseditguests'>
     <div class="title"><? echo $this->__("GUESTS"); ?></div>
     <?php
 

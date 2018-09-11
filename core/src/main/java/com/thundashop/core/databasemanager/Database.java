@@ -457,6 +457,9 @@ public class Database extends StoreComponent {
         if (sandbox) {
             return;
         }
+        if(data != null && data instanceof VirtualOrder) {
+            return;
+        }
 
         addDataCommonToDatabase(data, credentials);
     }

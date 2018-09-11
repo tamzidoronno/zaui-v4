@@ -216,8 +216,8 @@ public class StorePool {
             Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
             method = getCorrectMethod(method);
             
-            if (aClass != null && method != null && method.getAnnotation(GetShopNotSynchronized.class) != null) {
-                if (aClass.getAnnotation(GetShopSession.class) != null) {
+            if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
+                if (method.getAnnotation(GetShopNotSynchronized.class) != null && aClass.getAnnotation(GetShopSession.class) != null) {
                     throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
                 }
                 

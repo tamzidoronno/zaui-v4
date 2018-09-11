@@ -1,6 +1,6 @@
 <?
 include '../loader.php';
-$pageFactory = new \PageFactory("pms");
+$pageFactory = new \PageFactory("srs");
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
@@ -16,7 +16,7 @@ if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['booki
 $_SESSION['firstloadpage'] = true;
 
 ?>
-<html pageid="<? echo $page->getId(); ?>" module="pms">
+<html pageid="<? echo $page->getId(); ?>" module="srs">
     <head>
         <title><? echo $page->getTitle(); ?></title>
         <link rel="stylesheet" href="/icomoon/style.css">
@@ -35,7 +35,6 @@ $_SESSION['firstloadpage'] = true;
         <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
         <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
-        <script type="text/javascript" src="js/getshop.pms.js"></script>
         <script src="js/ckeditor/ckeditor.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>
@@ -84,14 +83,9 @@ $_SESSION['firstloadpage'] = true;
         
         <div area="header" class="gsarea">
             <?
-            $menu = $page->getMenu("pms");
+            $menu = $page->getMenu("srs");
             $menu->renderTop();
             ?>
-        </div>
-        <div style='text-align:center;background-color:red; color:#fff;padding: 3px;'>
-            PMS 2.0 is the same as PMS functionality whise.
-            We have rewritten the core of the system to improve speed, thus PMS 2.0. 
-            Doing such a large rewrite needs lots of testing and we will therefore run PMS and PMS2.0 in parallell for a while, meaning you can use both.
         </div>
         
         <div class="gs_body" hasleftmenu="<? echo $page->getLeftMenu() ? 'yes' : 'no'; ?>">

@@ -12,6 +12,7 @@ class GeneralSettingsOther extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        $this->getApi()->getBackupManager()->createBackup();
         $this->includefile("settings");
     }
     

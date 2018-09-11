@@ -91,8 +91,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Autowired
     WebManager webManager;
     
-    public boolean testTerminalPrinter = true;
-    public boolean testTerminalPaymentTerminal = true;
+    public boolean testTerminalPrinter = false;
+    public boolean testTerminalPaymentTerminal = false;
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {

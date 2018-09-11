@@ -18,7 +18,61 @@ class PageFactory {
     
     private $pages = array();
     
-    function __construct() {
+    function __construct($moduleId=false) {
+        if (!$moduleId) {
+            $moduleId = "pms";
+        }
+        PageFactory::$moduleId = $moduleId;
+        if ($moduleId == "pms") {
+            $this->createPmsPages();
+        }
+        if ($moduleId == "srs") {
+            $this->createSrsPages();
+        }
+    }
+
+    /**
+     * @return \ModulePage
+     */
+    public function getPage($pageId) {
+        if (!$pageId) {
+            $pageId = "home";
+        }
+        $page = $this->pages[$pageId];
+        $page->createApplicationInstances();
+        $page->setModuleId();
+        return $page;
+    }
+    
+    /**
+     * 
+     * @return GetShopApi
+     */
+    public static function getApi() {
+        if (PageFactory::$api == null) {
+            $config = new ConfigReader();
+            $port = $config->getConfig("port");
+            $host = $config->getConfig("backenddb");
+            PageFactory::$api = new GetShopApi($port, $host, session_id());    
+        }
+        
+        return PageFactory::$api;
+    }
+    
+    public static function getGetShopModule() {
+       
+        if (isset($_GET['gs_getshopmodule'])) {
+            return $_GET['gs_getshopmodule'];
+        }
+        
+        if (isset($_POST['gs_getshopmodule'])) {
+            return $_POST['gs_getshopmodule'];
+        }
+        
+        return null;
+    }
+
+    public function createPmsPages() {
         // Bookings
         $page = new \ModulePage("a90a9031-b67d-4d98-b034-f8c201a8f496");
             
@@ -247,47 +301,31 @@ class PageFactory {
         $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
         $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
         $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
+      
     }
-
-    /**
-     * @return \ModulePage
-     */
-    public function getPage($pageId) {
-        if (!$pageId) {
-            $pageId = "home";
-        }
-        $page = $this->pages[$pageId];
-        $page->createApplicationInstances();
-        $page->setModuleId();
-        return $page;
-    }
-    
-    /**
-     * 
-     * @return GetShopApi
-     */
-    public static function getApi() {
-        if (PageFactory::$api == null) {
-            $config = new ConfigReader();
-            $port = $config->getConfig("port");
-            $host = $config->getConfig("backenddb");
-            PageFactory::$api = new GetShopApi($port, $host, session_id());    
-        }
+//
+    public function createSrsPages() {
+        $page = new \ModulePage("home");
+        $row = $page->createRow();
+        $row->addColumn("f8d72daf-97d8-4be2-84dc-7bec90ad8462", "2e43f480-636a-4842-9769-8a326ee09cce");
+        $this->pages['home'] = $page;   
         
-        return PageFactory::$api;
-    }
-    
-    public static function getGetShopModule() {
-       
-        if (isset($_GET['gs_getshopmodule'])) {
-            return $_GET['gs_getshopmodule'];
-        }
+        $page = new \ModulePage("3a0bc113-d800-4658-a68e-a0086973eb80");
+        $row = $page->createRow();
+        $row->addText("Reservations");
         
-        if (isset($_POST['gs_getshopmodule'])) {
-            return $_POST['gs_getshopmodule'];
-        }
+        $row = $page->createRow();
+        $row->addColumn("916aff23-c765-4b8c-9d8f-8783f1b7bd16", "6e38af16-6028-4ec7-a94a-a1be31287705");
+        $this->pages['3a0bc113-d800-4658-a68e-a0086973eb80'] = $page;   
+        $page->addExtraApplications("e8fedc44-b227-400b-8f4d-52d52e58ecfe");
         
-        return null;
+        $page = new \ModulePage("9c87fd8c-e44a-467a-a65b-1734f974a553");
+        $row = $page->createRow();
+        $row->addText("Reservations");
+        
+        $row = $page->createRow();
+        $row->addColumn("480bdbdd-4da9-44ca-95c9-2fcb044eaf22", "f807d085-13f3-4421-a94a-5be4ae0148ca");
+        $this->pages['9c87fd8c-e44a-467a-a65b-1734f974a553'] = $page;   
     }
 
 }

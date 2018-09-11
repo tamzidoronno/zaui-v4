@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.pga;
 
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
@@ -31,4 +32,8 @@ public interface IPgaManager {
     public PgaResult buyLateCheckout();
     
     public PgaResult buyExtraCleaning(Date date);
+    
+    public Cart getUnpaidCartItems();
+    
+    public void sendPaymentLink(String email, String prefix, String phone);
 }

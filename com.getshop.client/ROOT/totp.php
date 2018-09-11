@@ -173,6 +173,12 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
         foreach($modules as $module) {
             echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW' style='text-decoration:none;'>";
             echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" .$module->fontAwesome . "'></span> " . $module->name . "</div>";
+            echo "</a>";
+            if($module->name == "PMS") {
+                echo "<a class='gs_ignorenavigate' href='/pms.php' style='text-decoration:none;'>";
+                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>PMS 2.0</div>";
+                echo "</a>";
+            }
         }
     } else {
         $module = $modules[0];

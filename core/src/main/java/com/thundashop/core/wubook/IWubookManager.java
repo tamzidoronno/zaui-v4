@@ -6,6 +6,7 @@
 package com.thundashop.core.wubook;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public interface IWubookManager {
     @Administrator
     public String markNoShow(String rcode) throws Exception;
     @Administrator
+    @ForceAsync
     public String updatePrices() throws Exception;
     @Administrator
     public String updateMinStay() throws Exception;

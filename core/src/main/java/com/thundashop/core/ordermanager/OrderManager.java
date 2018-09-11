@@ -524,7 +524,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         for (VirtualOrder virt : virtOrders) {
             virtualOrders.remove(virt.id);
-            deleteObject(virt);
         }
     }
     

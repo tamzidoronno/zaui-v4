@@ -252,9 +252,6 @@ public class ManagerSubBase {
     }
 
     public void saveObject(DataCommon data) throws ErrorException {
-        if(data != null && data instanceof VirtualOrder) {
-            return;
-        }
         if (modules.shouldStoreRemote(getCurrentGetShopModule())) {
             if (data.getClass().getAnnotation(GetShopRemoteObject.class) != null) {
                 data.getshopModule = getCurrentGetShopModule();

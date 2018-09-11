@@ -46,6 +46,18 @@ public class ExcelBase {
         }
     }
     
+    public void writeFile(String fileName) {
+        try {
+            FileOutputStream out = new FileOutputStream(new File(fileName));
+            workbook.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public String getBase64Encoded() {
         writeFile();
         

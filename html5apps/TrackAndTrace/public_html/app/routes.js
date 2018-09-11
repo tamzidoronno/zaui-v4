@@ -25,6 +25,17 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.settings', {
+        url: '/settings',
+        
+        views: {
+            main: {
+                templateUrl : 'components/settings/settings.html',
+                controller : controllers.SettingsController
+            }
+        }
+    });
+    
     $stateProvider.state('base.login', {
         url: '/login',
         

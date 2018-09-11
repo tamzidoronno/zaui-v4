@@ -10,20 +10,26 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pmsmanager.NewOrderFilter;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,10 +52,16 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
     private PmsManager pmsManager;
     
     @Autowired
+    private PmsInvoiceManager pmsInvoiceManager;
+    
+    @Autowired
     private UserManager userManager;
     
     @Autowired
     private BookingEngine bookingEngine;
+    
+    @Autowired
+    private CartManager cartManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -383,5 +395,40 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
         }
         
         return null;
+    }
+
+    @Override
+    public Cart getUnpaidCartItems() {
+        checkLoginInternal();
+        
+        if (!startImpersonation()) {
+            return null;
+        }
+        
+        LoginDetails loginDetails = getLoginDetails();
+        PmsBookingRooms room = getRoom(loginDetails.bookingId, loginDetails.pmsBookingRoomId);
+        
+        if (room == null) {
+            return null;
+        }
+        
+        PmsBooking booking = pmsManager.getBooking(loginDetails.bookingId);
+        pmsInvoiceManager.clearOrdersOnBooking(booking);
+        
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.pmsRoomId = loginDetails.pmsBookingRoomId;
+        filter.avoidOrderCreation = true;
+        
+        pmsInvoiceManager.createOrder(loginDetails.bookingId, filter);
+        
+        cancelImpersonation();
+        
+        return cartManager.getCart();
+    }
+
+    @Override
+    public void sendPaymentLink(String email, String prefix, String phone) {
+        System.out.println("To implement: " + email + " " + prefix + " " + phone);
+        return;
     }
 }

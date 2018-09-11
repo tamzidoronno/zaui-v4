@@ -4,7 +4,7 @@ $ret['instanceid'] = isset($_POST['core']['instanceid']) ? $_POST['core']['insta
 
 include '../loader.php';
 session_start();
-$pageFactory = new \PageFactory();
+$pageFactory = new \PageFactory($_POST['gs_getshopmodule']);
 $page = $pageFactory->getPage($_POST['core']['pageid']);
 $page->setModuleId();
 

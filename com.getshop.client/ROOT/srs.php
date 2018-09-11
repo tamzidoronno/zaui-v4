@@ -1,6 +1,6 @@
 <?
 include '../loader.php';
-$pageFactory = new \PageFactory("pms");
+$pageFactory = new \PageFactory("srs");
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
@@ -16,7 +16,7 @@ if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['booki
 $_SESSION['firstloadpage'] = true;
 
 ?>
-<html pageid="<? echo $page->getId(); ?>" module="pms">
+<html pageid="<? echo $page->getId(); ?>" module="srs">
     <head>
         <title><? echo $page->getTitle(); ?></title>
         <link rel="stylesheet" href="/icomoon/style.css">
@@ -35,7 +35,6 @@ $_SESSION['firstloadpage'] = true;
         <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
         <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
-        <script type="text/javascript" src="js/getshop.pms.js"></script>
         <script src="js/ckeditor/ckeditor.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>
@@ -84,7 +83,7 @@ $_SESSION['firstloadpage'] = true;
         
         <div area="header" class="gsarea">
             <?
-            $menu = $page->getMenu("pms");
+            $menu = $page->getMenu("srs");
             $menu->renderTop();
             ?>
         </div>

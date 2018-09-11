@@ -2,10 +2,11 @@
 /* @var $this PaymentProcessPage */
 ?>
 
-<div class="data" orderid='<?php echo $_GET['orderid']; ?>' amount='<?php echo $_GET['amount']; ?>'></div>
+<div class="data" orderid='<?php echo $_GET['orderid']; ?>' amount='<?php echo $_GET['amount']; ?>' name='<?php echo $_GET['name']; ?>'></div>
 <div class="heading">
     <?php
     echo $this->__f("Processing payment");
+    echo "<br/>".$_GET['name'];
     ?>
 </div>
 

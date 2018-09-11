@@ -35,6 +35,12 @@ angular.module('TrackAndTrace')
         window.scroll(0,0);
     });
     
+    var settingspage = $location.$$path.includes('settings');
+    
+    if (settingspage) {
+        return;
+    }
+    
     if ( localStorage.getItem("username") == null || localStorage.getItem("password") === "") {
         $location.path( "/login" );
     } else if ($location.$$path === "") {

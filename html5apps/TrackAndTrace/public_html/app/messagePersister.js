@@ -20,6 +20,19 @@ messagePersister = {
         }
     },
     
+    clearSentMessages: function() {
+        alert("Starting deletion of database, press ok and wait for next message.");
+        if (typeof(db) !== "undefined" && db) {
+            var me = this;
+        
+            db.transaction(function(tx) {
+                tx.executeSql(me.sentMessageTableSQL);
+                db.executeSql("DELETE FROM SentMessages");
+                alert("Deletion completed.");
+            });
+        }
+    },
+    
     addMessageToDatabase: function(data) {
         var me = this;
         db.transaction(function(tx) {

@@ -31,7 +31,7 @@ class AlreadyBookedPage extends Page {
                 echo "<script>";
                 $orderId = $this->result->orderId;
                 $amount = $this->result->amount;
-                echo "document.location = '/?page=paymentprocesspage&orderid=$orderId&amount=$amount'";
+                echo "document.location = '/?page=paymentprocesspage&orderid=$orderId&amount=$amount&name=".$this->result->name."'";
                 echo "</script>";
             }
         } else {

@@ -1,0 +1,21 @@
+<div class="gsview settings">
+    <div class="informationbox">
+        Settings
+    </div>
+
+    <div ng-if='!loggedId'>
+        <div>
+            Please enter password
+            <input type="password" class="textinput" placeholder="Password" id="themagicpassword"/>
+        </div>
+
+        <div class='button loginbutton' ng-click='showSettings()'>Login</div>    
+    </div>
+    
+    <div ng-if='loggedId'>
+        <div class="button" ng-click="clearDb()">Clear database</div>
+    </div>
+    
+    
+    <div class='button loginbutton' ng-click='goHome()'>Back</div>    
+</div>

@@ -273,6 +273,15 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         } else {
             echo $toPrint;
         }
+        echo $_SESSION['PmsSearchBooking_loadBooking'];
+        if(isset($_SESSION['PmsSearchBooking_loadBooking'])) {
+            echo "<script>";
+            echo "$('.datarow_inner').click();";
+            echo "</script>";
+            
+            unset($_SESSION['PmsSearchBooking_loadBooking']);
+        }
+
     }
     
     public function getAllProducts() {
@@ -311,6 +320,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         if(isset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]) && $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]) {
             $filter->includeDeleted = true;
+        }
+        
+        if(isset($_SESSION['PmsSearchBooking_loadBooking']) && $_SESSION['PmsSearchBooking_loadBooking']) {
+            $filter->bookingId = $_SESSION['PmsSearchBooking_loadBooking'];
         }
         
         return $filter;

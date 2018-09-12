@@ -207,7 +207,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
             $this->msg = ""; 
             $this->msg .= "<script>";
-            $this->msg .= "thundashop.common.goToPageLink('/?page=groupbooking&bookingId=".$res->id."');";
+            $this->msg .= "window.location.href='/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496&loadBooking=".$res->id."';";
             $this->msg .= "</script>";
         }
     }
@@ -331,7 +331,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             
             $this->msg = "";
             $this->msg .= "<script>";
-            $this->msg .= "thundashop.common.goToPageLink('/?page=groupbooking&bookingId=".$res->id."');";
+            $this->msg .= "window.location.href='/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496&loadBooking=".$res->id."';";
             $this->msg .= "</script>";
         } else {
             $this->msg = "";

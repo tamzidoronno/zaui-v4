@@ -1,0 +1,10 @@
+<?php
+/* @var $this \ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+?>
+<h1>Email template</h1>
+<div gstype='form' method='saveEmailTemplate'>
+    <textarea class='emailtemplate' gsname='email'><?php echo $config->emailTemplate; ?></textarea>
+    <div style='text-align: right; padding-top:10px;'>
+        <span class='shop_button' gstype='submit'>Save</span>
+</div>

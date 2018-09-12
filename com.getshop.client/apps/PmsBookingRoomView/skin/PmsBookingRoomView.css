@@ -4,6 +4,8 @@
     margin-top: 50px;
     margin-bottom: 50px;
 }
+.PmsBookingRoomView .activeroom { background-color:#ebfbcb !important; }
+
 .PmsBookingRoomView .notvalidselection { font-size: 20px; color: red; font-weight: bold; margin-top: 20px; line-height: 30px; }
 .PmsBookingRoomView .colheader {
     text-align: center;

@@ -245,6 +245,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
         $table->setSorting(array("reg","checkin","guest","checkout","visitor","bookedfor","room","price","totalprice"));
         $table->loadContentInOverlay = true;
+        if(isset($_SESSION['pmsroomviewlistgrouproom']) && $_SESSION['pmsroomviewlistgrouproom']) {
+            $table->appendClassToRow("roomId", $_SESSION['pmsroomviewlistgrouproom'], "activeroom");
+        }
         $table->render();
         $data = (array)$table->getDate();
         

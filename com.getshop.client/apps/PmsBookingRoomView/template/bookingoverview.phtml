@@ -100,7 +100,8 @@ if($diff < -1 || $diff > 1) {
 }
 if($this->listGroupRooms()) {
     echo "<div style='font-size: 20px; line-height:38px; background-color:#241b1b; padding: 10px; color:#fff;'>";
-    echo "LISTING ALL ROOMS IN GROUP FOR BOOKING <span class='shop_button' style='float:right;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>Close group list mode</span>";
+    echo "LISTING ALL ROOMS IN GROUP FOR BOOKING";
+    echo "<span class='shop_button' style='float:right;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>Close group list mode</span>";
     echo "</div>";
     
 }

@@ -230,6 +230,7 @@ class PmsSearchBookingColumnFormatters {
     private function createAddonText($room) {
         $products = $this->pmsSearchBooking->getAllProducts();
         $typesAdded = array();
+        $iconsAdded = array();
         $total = 0;
         foreach($room->addons as $addon) {
             if($addon->addonType == 1) {
@@ -239,6 +240,7 @@ class PmsSearchBookingColumnFormatters {
                 $typesAdded[$addon->productId]=0;
             }
             $typesAdded[$addon->productId] += $addon->count;
+            $iconsAdded[$addon->productId] = $addon->bookingicon;
             $total += ($addon->price * $addon->count);
         }
         $res = array();
@@ -249,8 +251,17 @@ class PmsSearchBookingColumnFormatters {
                 $title = $val . " x deleted product";
             }
             if(isset($products[$prodId]->name)) {
-                $name = "";
-                $res[] = "<span title='$title' style='cursor:pointer;'>($name)</span>";
+                $name = $products[$prodId]->name;
+                $words = explode(" ", $name);
+                $acronym = "";
+                foreach ($words as $w) {
+                  $acronym .= $w[0];
+                }
+                $acronym = "(".strtoupper($acronym) .")";
+                if(isset($iconsAdded[$addon->productId]) && $iconsAdded[$addon->productId]) {
+                    $acronym = "<i class='fa fa-" . $iconsAdded[$addon->productId] . "'></i>";
+                }
+                $res[] = "<span title='$title' style='cursor:pointer;'>$acronym</span>";
             } else {
                 $res[] = "<span title='$title' style='cursor:pointer;'>(deleted product)</span>";
             }

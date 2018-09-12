@@ -44,13 +44,12 @@ $this->includefile("overlayheader");
 if($numberOfRooms > 0) {
     echo "<div class='isgroupinformation'>";
     echo "<i class='fa fa-arrow-down'></i> ";
-    if($this->listGroupRooms()) {
-        $listGroupButton = "<a style='color:blue; cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>close group list</a>";
-    } else {
-        $listGroupButton = "<a style='color:blue; cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>list group</a>";
+    $listGroupButton= "";
+    if(!$this->listGroupRooms()) {
+        $listGroupButton = " - <a style='color:blue; cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>list group</a>";
     }
    
-    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='color:blue; cursor:pointer;' class='opengroup'>open group</a> - $listGroupButton";
+    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='color:blue; cursor:pointer;' class='opengroup'>open group</a>$listGroupButton";
     
     echo "<span class='roomindication'>";
     if(sizeof($pmsSelectedRoom->guests) > 0 && $pmsSelectedRoom->guests[0]->name) {
@@ -99,6 +98,13 @@ $warningPayments = "";
 if($diff < -1 || $diff > 1) {
     $warningPayments = "<span class='fa fa-warning' style='padding:0px;margin:0px; color:red;' title='You have unhandled payments'></span> ";
 }
+if($this->listGroupRooms()) {
+    echo "<div style='font-size: 20px; line-height:38px; background-color:#241b1b; padding: 10px; color:#fff;'>";
+    echo "LISTING ALL ROOMS IN GROUP FOR BOOKING <span class='shop_button' style='float:right;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>Close group list mode</span>";
+    echo "</div>";
+    
+}
+
 ?>
 <div class='grouppaymentprocess'></div>
 <?php

@@ -273,10 +273,15 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         } else {
             echo $toPrint;
         }
-        echo $_SESSION['PmsSearchBooking_loadBooking'];
+
         if(isset($_SESSION['PmsSearchBooking_loadBooking'])) {
+            $btmpid = $_SESSION['PmsSearchBooking_loadBooking'];
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $btmpid);
+            if(sizeof($booking->rooms) > 1) {
+                $_SESSION['forceroomlistview'] = true;
+            }
             echo "<script>";
-            echo "$('.datarow_inner').click();";
+            echo "$('.datarow[rownumber=\"1\"] .datarow_inner').click();";
             echo "</script>";
             
             unset($_SESSION['PmsSearchBooking_loadBooking']);

@@ -1607,6 +1607,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function removeGroupView() {
+        if(isset($_SESSION['forceroomlistview']) && $_SESSION['forceroomlistview']) {
+            $_SESSION['pmsroomviewlistgrouproom'] = $_POST['data']['roomId'];
+            unset($_SESSION['forceroomlistview']);
+        }
+        
         if($_SESSION['pmsroomviewlistgrouproom'] == $_POST['data']['roomId']) {
             return;
         }

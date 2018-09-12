@@ -406,6 +406,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
+        setBookingByAdmin(booking, false);
+    }
+    
+    public void setBookingByAdmin(PmsBooking booking, boolean keepRoomPrices) throws Exception {
         if (booking.couponCode != null && !booking.couponCode.isEmpty()) {
             if (booking.discountType != null && booking.discountType.equals("coupon")) {
                 Coupon cop = cartManager.getCoupon(booking.couponCode);
@@ -439,16 +443,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room.date.end != null && room.date.start != null && !getConfigurationSecure().hasNoEndDate) {
                 totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
             }
-
+            HashMap<String, Double> currentPriceMatrix = new HashMap(room.priceMatrix);
             pmsInvoiceManager.updateAddonsByDates(room);
             pmsInvoiceManager.updatePriceMatrix(booking, room, Integer.SIZE);
             addDiscountAddons(room, booking);
-
             room.count = totalDays;
             if (room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty() && !room.bookingItemTypeId.equals("waiting_list")) {
                 setPriceOnRoom(room, true, booking);
             }
             room.updateBreakfastCount();
+            if(keepRoomPrices) {
+                for(String day : room.priceMatrix.keySet()) {
+                    if(currentPriceMatrix.containsKey(day)) {
+                        room.priceMatrix.put(day, currentPriceMatrix.get(day));
+                    }
+                }
+            }
 
             for (PmsGuests guest : room.guests) {
                 if (guest.prefix != null) {
@@ -958,6 +968,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
+        /* Should be like this, needs to be removed later on, also comment in: PmsNewBooking.php:21.
+        if (booking.id == null || booking.id.isEmpty()) {
+            throw new ErrorException(1000015);
+        }
+
+        bookings.put(booking.id, booking);
+
+        try {
+            verifyPhoneOnBooking(booking, false);
+        } catch (Exception e) {
+            logPrintException(e);
+        }
+
+        saveObject(booking);
+        bookingUpdated(booking.id, "modified", null);
+        */
+        
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
@@ -5216,7 +5243,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     break;
                 }
             }
-
+            if(count == -1) {
+                if(item.dependsOnGuestCount) {
+                    count = room.numberOfGuests;
+                } else {
+                    count = 1;
+                }
+            }
+            
             List<PmsBookingAddonItem> addons = createAddonForTimePeriode(item.addonType, room, booking.priceType);
             for (PmsBookingAddonItem addon : addons) {
                 addon.count = count;
@@ -5999,6 +6033,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void addDefaultAddons(PmsBooking booking) {
         addDefaultAddonsToRooms(booking.getAllRooms());
+    }
+    
+    public void setDefaultAddons(String bookingId) {
+        addDefaultAddons(getBooking(bookingId));
     }
 
     @Override
@@ -8915,5 +8953,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.pgaAccessToken = "";
         saveBooking(booking);
     }
+    
     
 }

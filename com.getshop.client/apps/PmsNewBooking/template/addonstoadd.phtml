@@ -1,0 +1,24 @@
+<?php
+/* @var $this \ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
+$addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedMultilevelDomainName());
+$booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+$addonslist = array();
+foreach($addons as $addon) {
+    $addonslist[$addon->name] = $addon;
+}
+ksort($addonslist);
+?>
+<br>
+<h3>Step 3. Addons to add</h3>
+<div class='section'>
+<?php
+foreach($addonslist as $addon) {
+    $active = "";
+    if($this->isAddedAddon($booking, $addon)) {
+        $active = "active";
+    }
+    echo "<span class='addonoption $active' productid='".$addon->productId."'>" . $addon->name . "</span>";
+}
+
+?>
+</div>

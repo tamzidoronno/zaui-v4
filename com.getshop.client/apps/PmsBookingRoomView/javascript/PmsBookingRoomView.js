@@ -139,7 +139,7 @@ app.PmsBookingRoomView = {
         $('.PmsBookingRoomView .outerstay').hide();
         
         var data = {}
-        var event = thundashop.Ajax.createEvent(null, 'showItemView', this, data);
+        var event = thundashop.Ajax.createEvent(null, 'showItemView', $('.PmsBookingRoomView'), data);
         event['synchron'] = true;
         
         
@@ -154,7 +154,10 @@ app.PmsBookingRoomView = {
             "roomid" : $(this).attr('roomid')
         });
         thundashop.Ajax.postWithCallBack(event, function() {
-            app.PmsBookingRoomView.refresh(true);
+            var setSplit = app.PmsBookingRoomView.refresh(true);
+            setSplit.done(function() {
+                app.PmsBookingRoomView.showRoomsToSelect();
+            });
         });
     },
     deletecomment : function() {

@@ -1,6 +1,7 @@
 <?php
 /* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 ?>
 <h3>Step 1. Add a rooms</h3>
 <div class="section" style='width:100%;'>
@@ -28,7 +29,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 
             <i class="gsicon-calendar-text"></i>
         </div>
-        <input class="gsniceinput1 discountcode" gsname='discountcode' placeholder="Discount code" style="float:right;">
+        <input class="gsniceinput1 discountcode" gsname='discountcode' placeholder="Discount code" style="float:right;" value='<?php echo $curbooking->couponCode; ?>'>
         <br>
         <br>
         <div>

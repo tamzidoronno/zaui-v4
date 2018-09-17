@@ -1187,7 +1187,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         price = calculateLongTermDiscount(booking, price, room);
         price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
         price = getUserPrice(bookingEngineTypeId, price, count, booking);
-        
+
         return price;
     }
 
@@ -1506,6 +1506,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
     }
+    
+    @Override
+    public HashMap<String, Double> calculatePriceMatrix(PmsBooking booking, PmsBookingRooms room) {
+        updatePriceMatrix(booking, room, PmsBooking.PriceType.daily);
+        return room.priceMatrix;
+    } 
     
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
         pmsManager.checkAndReportPriceMatrix(booking, "when updating pricsudo n stablee matrix");

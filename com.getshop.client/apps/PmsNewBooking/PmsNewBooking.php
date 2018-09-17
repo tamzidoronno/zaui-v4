@@ -245,8 +245,8 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $app->setEndDate($_POST['data']['to']);
         
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $currentBooking->couponCode = $_POST['data']['discountcode'];
         
-
         foreach($currentBooking->rooms as $room) {
             $room->addedToWaitingList = false;
         }
@@ -271,11 +271,19 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
                 if($i >= $available) {
                     $room->addedToWaitingList = true;
                 }
+                $room->priceMatrix = $this->getApi()->getPmsInvoiceManager()->calculatePriceMatrix($this->getSelectedMultilevelDomainName(), $currentBooking, $room);
+                $avg = 0;
+                $days = 0;
+                foreach($room->priceMatrix as $d => $price) {
+                    $days++;
+                    $avg += $price;
+                }
+                $room->price = $avg / $days;
                 $currentBooking->rooms[] = $room;
             }
         }
         
-        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $currentBooking, true);
         $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $currentBooking->id);
     }
 

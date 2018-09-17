@@ -1637,5 +1637,38 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->includefile("pga");
         die();
     }
+
+    public function addAnotherRoom() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $bookingId = $_POST['data']['bookingid'];
+        $type = $_POST['data']['type'];
+        if(!$type) {
+            return;
+        }
+        $gs_multilevel_name = $this->getSelectedMultilevelDomainName();
+        $count = $_POST['data']['count'];
+        for($i = 0; $i < $count; $i++) {
+            $this->getApi()->getPmsManager()->addBookingItemType($gs_multilevel_name, $bookingId, $type, $start, $end, null);
+        }
+    }
+    
+    public function printAvailableRoomsFromCategory($start, $end) {
+        $start = $this->convertToJavaDate(strtotime($start));
+        $end = $this->convertToJavaDate(strtotime($end));
+        $categories = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        echo "<option value=''>Choose a category</option>";
+        foreach($categories as $cat) {
+            $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $cat->id, $start, $end);
+            echo "<option value='" . $cat->id . "'>" . $cat->name . " ($number available)</option>";
+        }
+    }
+
+    public function reloadAvailableRooms() {
+        $start = $_POST['data']['start'];
+        $end = $_POST['data']['end'];
+        $this->printAvailableRoomsFromCategory($start, $end);
+    }
+    
 }
 ?>

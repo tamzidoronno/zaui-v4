@@ -968,7 +968,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
-        /* Should be like this, needs to be removed later on, also comment in: PmsNewBooking.php:21.
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
@@ -980,54 +979,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         } catch (Exception e) {
             logPrintException(e);
         }
-
-        saveObject(booking);
-        bookingUpdated(booking.id, "modified", null);
-        */
-        
-        if (booking.id == null || booking.id.isEmpty()) {
-            throw new ErrorException(1000015);
-        }
-
-        checkAndReportPriceMatrix(booking, "saving invalid price matrix 1");
-
-        if (getConfigurationSecure().getUsePriceMatrixOnOrder()) {
-            try {
-                boolean sent = false;
-                for (PmsBookingRooms room : booking.getActiveRooms()) {
-                    if (room.priceMatrix == null || room.priceMatrix.keySet().isEmpty()) {
-                        pmsInvoiceManager.correctFaultyPriceMatrix(room, booking);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        checkAndReportPriceMatrix(booking, "saving invalid price matrix 2");
-        bookings.put(booking.id, booking);
-
-        try {
-            verifyPhoneOnBooking(booking, false);
-        } catch (Exception e) {
-            logPrintException(e);
-        }
-
-        if (booking.priceType == PmsBooking.PriceType.daily) {
-            for (PmsBookingRooms room : booking.getActiveRooms()) {
-                pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
-            }
-        }
-        checkAndReportPriceMatrix(booking, "saving invalid price matrix 3");
-        if (getConfiguration().createVirtualOrders) {
-            pmsInvoiceManager.createVirtualOrder(booking.id);
-        }
-        checkAndReportPriceMatrix(booking, "saving invalid price matrix 4");
-
-        PmsBooking oldBooking = (PmsBooking) database.getObject(credentials, booking.id);
-        if (oldBooking != null) {
-            diffPricesFromBooking(booking, oldBooking);
-        }
-        checkAndReportPriceMatrix(booking, "saving invalid price matrix 5");
 
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);

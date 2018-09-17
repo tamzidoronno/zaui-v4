@@ -17,8 +17,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     
     public function formatRoomPrice($row) {
         $guests = $row->price;
-//        return "<input type='txt' class='gsniceinput1 roomprice' roomid='".$row->roomid."' value='". $guests . "'>";
-        return $row->price;
+        return "<input type='txt' class='gsniceinput1 roomprice' roomid='".$row->roomid."' value='". $guests . "'>";
     }
     
     public function updateGuestCount() {

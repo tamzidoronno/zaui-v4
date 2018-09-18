@@ -297,6 +297,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     
     public function addToWaitingList() {
         $this->getApi()->getPmsManager()->addToWaitingList($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+        unset($_SESSION['tmpselectedroom']);
     }
     
     public function updateStayTime() {
@@ -306,6 +307,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $bookingId = $_POST['data']['bookingid'];
         $itemId = $_POST['data']['itemid'];
         $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId, $itemId, false, $start, $end);
+        unset($_SESSION['tmpselectedroom']);
     }
     
     public function closeroom() {
@@ -318,6 +320,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $comment .= $_POST['data']['comment'];
         
         $this->getApi()->getPmsManager()->closeItem($this->getSelectedMultilevelDomainName(), $itemid, $start, $end, $comment);
+        unset($_SESSION['tmpselectedroom']);
     }
     
     public function updateBookingDirect() {
@@ -336,6 +339,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         
         $this->getApi()->getBookingEngine()->changeSourceOnBooking($this->getSelectedMultilevelDomainName(), 
                 $_POST['data']['bookingid'], $_POST['data']['source']);
+        unset($_SESSION['tmpselectedroom']);
     }
     
     public function markRoomCleaned() {
@@ -384,9 +388,8 @@ class PmsAvailability extends \MarketingApplication implements \Application {
 
     public function deleteroom() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
-        
-
         $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $booking->id, $_POST['data']['roomid']);
+        unset($_SESSION['tmpselectedroom']);
     }
 
 }

@@ -72,5 +72,6 @@ switch($type) {
         $this->getApi()->getPmsManager()->setGuestOnRoom($this->getSelectedMultilevelDomainName(), $guests, $booking->id, $currentRoom->pmsBookingRoomId);
         break;
 }
+unset($_SESSION['tmpselectedroom']);
 
 ?>

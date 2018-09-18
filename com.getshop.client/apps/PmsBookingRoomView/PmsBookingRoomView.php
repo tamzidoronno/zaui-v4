@@ -332,21 +332,30 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             $room->bookingItemTypeId = $_POST['data']['typeId'];
         }
         if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
-            $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-            $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));  
-            $newPricesRoom = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), 
-                    $room->pmsBookingRoomId, 
-                    $room->bookingItemTypeId, 
-                    $room->date->start, 
-                    $room->date->end);
-            foreach($room->priceMatrix as $day => $val) {
-                foreach($newPricesRoom->priceMatrix as $day2 => $val2) {
-                    if($day2 == $day) {
-                        $newPricesRoom->priceMatrix->{$day} = $val;
+            $bookingsToAdd = $room->booking;
+            $bookingsToAdd->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+            $bookingsToAdd->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+            if($this->getApi()->getBookingEngine()->canAddBooking($this->getSelectedMultilevelDomainName(), $bookingsToAdd)) {
+                $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+                $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+                $newPricesRoom = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), 
+                        $room->pmsBookingRoomId, 
+                        $room->bookingItemTypeId, 
+                        $room->date->start, 
+                        $room->date->end);
+                foreach($room->priceMatrix as $day => $val) {
+                    foreach($newPricesRoom->priceMatrix as $day2 => $val2) {
+                        if($day2 == $day) {
+                            $newPricesRoom->priceMatrix->{$day} = $val;
+                        }
                     }
                 }
+                $room->priceMatrix = $newPricesRoom->priceMatrix;
+            } else {
+                $room->warningText = "We are not able to change to the specified dates.";
+                $_SESSION['tmpselectedroom'][$room->pmsBookingRoomId] = json_encode($room);
+                return;
             }
-            $room->priceMatrix = $newPricesRoom->priceMatrix;
         }
         $this->setTmpSelectedRoom($room);
 
@@ -588,9 +597,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
      * @param \core_pmsmanager_PmsBookingRooms $room
      */
     public function setTmpSelectedRoom($room) {
+        unset($_SESSION['tmpselectedroom']);
         if(!isset($_SESSION['tmpselectedroom'])) {
             $_SESSION['tmpselectedroom'] = array();
         }
+        $room->warningText = null;
         $room->tmpModified = true;
         $_SESSION['tmpselectedroom'][$room->pmsBookingRoomId] = json_encode($room);
         

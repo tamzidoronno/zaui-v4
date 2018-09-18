@@ -2196,11 +2196,20 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public void moveUserToEvent(String userId, String fromEventId, String toEventId) {
         User user = userManager.getUserById(userId);
         
-        removeUserFromEvent(fromEventId, userId, true);
-        addUserToEvent(toEventId, userId, true, "transfer");
         
         Event fromEvent = getEvent(fromEventId);
         Event event = getEvent(toEventId);
+        
+        if (fromEvent.encryptedPersonalIds != null) {
+            byte[] personalId = fromEvent.encryptedPersonalIds.get(userId);
+            event.encryptedPersonalIds.put(userId, personalId);
+            fromEvent.encryptedPersonalIds.remove(userId);
+            saveObject(fromEvent);
+            saveObject(event);
+        }
+        
+        removeUserFromEvent(fromEventId, userId, true);
+        addUserToEvent(toEventId, userId, true, "transfer");
         
         logEventEntry(event, "TRANSFERRED", "User transferred, " + user.fullName + ", from event: " + fromEvent.bookingItemType.name + " to this", user.id);
         logEventEntry(fromEvent, "TRANSFERRED", "User transferred, " + user.fullName + ", from this event to:" + event.bookingItemType.name, user.id);

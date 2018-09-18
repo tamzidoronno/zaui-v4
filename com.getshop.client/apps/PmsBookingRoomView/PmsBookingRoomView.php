@@ -1681,12 +1681,19 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             echo "<option value='" . $cat->id . "'>" . $cat->name . " ($number available)</option>";
         }
     }
-
+    
+    public function saveUserDescription() {
+        $booking = $this->getPmsBooking();
+        $user = $this->getUserForBooking();
+        $user->description = $_POST['data']['comment'];
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     public function reloadAvailableRooms() {
         $start = $_POST['data']['start'];
         $end = $_POST['data']['end'];
         $this->printAvailableRoomsFromCategory($start, $end);
     }
-    
+
 }
 ?>

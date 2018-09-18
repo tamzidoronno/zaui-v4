@@ -320,6 +320,7 @@ public class User extends DataCommon implements Comparable<User> {
     public String key;
     public String group;
     public String userAgent;
+    public String description = "";
     public boolean hasChrome;
     public boolean isTransferredToAccountSystem = false;
     public String accountingId = "";

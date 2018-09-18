@@ -16,6 +16,7 @@ public class PmsRoomSimple implements Serializable {
     public String bookingItemId = "";
     @ExcludePersonalInformation
     public String owner = "";
+    public String ownerDesc = "";
     @ExcludePersonalInformation
     public String ownersEmail = "";
     @ExcludePersonalInformation

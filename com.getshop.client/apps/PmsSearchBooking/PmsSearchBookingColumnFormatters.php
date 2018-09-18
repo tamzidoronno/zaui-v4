@@ -31,7 +31,11 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatBookedFor($room) { 
-        return "<div class='secondary_text booked_for'>" . $room->owner . "</div>";
+        $res = "<div class='secondary_text booked_for'>" . $room->owner . "</div>";
+        if($room->ownerDesc) {
+            $res .= "<div style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis; color:red;' title='".$room->ownerDesc."'>" . $room->ownerDesc . "</div>";
+        }
+        return $res;
     }
     
     public function formatAddons($room) {

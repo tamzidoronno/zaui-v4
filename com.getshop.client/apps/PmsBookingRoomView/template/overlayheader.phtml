@@ -1,5 +1,6 @@
 <?php
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$user = $this->getUserForBooking();
 ?>
 <table width="100%" cellspacing='0' cellpadding='0'>
     <tr>
@@ -7,6 +8,10 @@
             <div style='padding-left: 10px;'><?php $this->includefile("bookinginfo"); ?>
         </td>
         <td width="33.3%" class='bookinginfocolheader' valign="top" style=' border-left: solid 1px #efefef; border-right: solid 1px #efefef;'><div class='colheader'>Internal comments (not exposed to guests)</div>
+            <div style='padding-left: 10px; height: 20px;'><span title='A comment pinned to all bookings for this customer'><i class='fa fa-edit adduserdescription' style='cursor:pointer;'></i> Pinned comment:</span> 
+                <b><span class='userdescription'><?php echo $user->description; ?></span></b>
+                
+            </div>
             <div style='padding-left: 10px; padding-right:10px;padding-bottom:10px;'><?php $this->includefile("internalcomments"); ?></div>
         </td>
         <td width="33.3%" valign="top" class='bookinginfocolheader'>

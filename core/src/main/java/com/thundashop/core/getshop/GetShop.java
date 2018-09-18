@@ -50,6 +50,8 @@ import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -831,7 +833,28 @@ public class GetShop extends ManagerBase implements IGetShop {
 
     @Override
     public List<Lead> getLeads() {
-        return new ArrayList(leads.values());
+        List<Lead> result = new ArrayList(leads.values());
+        
+       List<Lead> toRemove = new ArrayList();
+       for(Lead l : result) {
+           if(l.leadState.equals(Lead.LeadState.LOST) || l.leadState.equals(Lead.LeadState.WON)) {
+               toRemove.add(l);
+           }
+       }
+       
+       result.removeAll(toRemove);
+       
+        Collections.sort(result, new Comparator<Lead>(){
+            public int compare(Lead o1, Lead o2){
+                if(o1.rowCreatedDate == null || o2.rowCreatedDate == null) {
+                    return -1;
+                }
+                return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+            }
+       });
+       
+        
+        return result;
     }
 
     @Override

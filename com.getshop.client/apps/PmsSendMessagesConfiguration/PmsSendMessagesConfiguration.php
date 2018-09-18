@@ -6,6 +6,12 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         
     }
 
+    public function saveEmailTemplate() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->emailTemplate = $_POST['data']['email'];
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
     public function getName() {
         return "PmsSendMessagesConfiguration";
     }
@@ -24,6 +30,7 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
 
     public function render() {
         $this->includefile("addmessage");
+        $this->includefile("emailtemplate");
         $this->includefile("roomspecificmessages");
     }
     

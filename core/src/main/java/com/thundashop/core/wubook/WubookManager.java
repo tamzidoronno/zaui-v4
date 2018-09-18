@@ -467,7 +467,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         String pattern = "dd/MM/yyyy";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         String dfrom = format.format(new Date());
-        
+        pmsInvoiceManager.startCacheCoverage();
         for (WubookRoomData rdata : wubookdata.values()) {
             if(!rdata.addedToWuBook) {
                 continue;
@@ -499,7 +499,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             int guests = 1;
             for(String roomId : roomIds) {
-                Vector list = new Vector();
+                Vector list = new Vector(); 
                 Calendar copy = Calendar.getInstance();
                 copy.setTime(calStart.getTime());
                 list = createRoomPriceList(rdata, pricesForType,copy,list,guests);

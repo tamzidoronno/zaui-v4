@@ -245,6 +245,9 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
         $table->setSorting(array("reg","checkin","guest","checkout","visitor","bookedfor","room","price","totalprice"));
         $table->loadContentInOverlay = true;
+        if(isset($_SESSION['pmsroomviewlistgrouproom']) && $_SESSION['pmsroomviewlistgrouproom']) {
+            $table->appendClassToRow("roomId", $_SESSION['pmsroomviewlistgrouproom'], "activeroom");
+        }
         $table->render();
         $data = (array)$table->getDate();
         
@@ -273,6 +276,20 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         } else {
             echo $toPrint;
         }
+
+        if(isset($_SESSION['PmsSearchBooking_loadBooking'])) {
+            $btmpid = $_SESSION['PmsSearchBooking_loadBooking'];
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $btmpid);
+            if(sizeof($booking->rooms) > 1) {
+                $_SESSION['forceroomlistview'] = true;
+            }
+            echo "<script>";
+            echo "$('.datarow[rownumber=\"1\"] .datarow_inner').click();";
+            echo "</script>";
+            
+            unset($_SESSION['PmsSearchBooking_loadBooking']);
+        }
+
     }
     
     public function getAllProducts() {
@@ -311,6 +328,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         if(isset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]) && $_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]) {
             $filter->includeDeleted = true;
+        }
+        
+        if(isset($_SESSION['PmsSearchBooking_loadBooking']) && $_SESSION['PmsSearchBooking_loadBooking']) {
+            $filter->bookingId = $_SESSION['PmsSearchBooking_loadBooking'];
         }
         
         return $filter;

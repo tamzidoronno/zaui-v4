@@ -44,13 +44,12 @@ $this->includefile("overlayheader");
 if($numberOfRooms > 0) {
     echo "<div class='isgroupinformation'>";
     echo "<i class='fa fa-arrow-down'></i> ";
-    if($this->listGroupRooms()) {
-        $listGroupButton = "<a style='color:blue; cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>close group list</a>";
-    } else {
-        $listGroupButton = "<a style='color:blue; cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>list group</a>";
+    $listGroupButton= "";
+    if(!$this->listGroupRooms()) {
+        $listGroupButton = " - <a style='color:blue; cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>list group</a>";
     }
    
-    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='color:blue; cursor:pointer;' class='opengroup'>open group</a> - $listGroupButton";
+    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='color:blue; cursor:pointer;' class='opengroup'>open group</a>$listGroupButton";
     
     echo "<span class='roomindication'>";
     if(sizeof($pmsSelectedRoom->guests) > 0 && $pmsSelectedRoom->guests[0]->name) {
@@ -99,6 +98,62 @@ $warningPayments = "";
 if($diff < -1 || $diff > 1) {
     $warningPayments = "<span class='fa fa-warning' style='padding:0px;margin:0px; color:red;' title='You have unhandled payments'></span> ";
 }
+$start = date("d.m.Y", time());
+$end = date("d.m.Y", time()+86400);
+
+if($this->listGroupRooms()) {
+    echo "<div style='font-size: 20px; line-height:38px; background-color:#241b1b; padding: 10px; color:#fff;'>";
+    echo "LISTING ALL ROOMS IN GROUP FOR BOOKING";
+    echo "<span class='shop_button' style='float:right;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>Close group list mode</span>";
+    echo "<span class='shop_button addanotherroomtogroup' style='float:right; margin-right: 5px; background-color:green;'  bookingId='".$this->getPmsBooking()->id."'>Add another room</span>";
+    ?>
+<div class='addanotherroompopup' gstype='form' method='addAnotherRoom'>
+     <i class='fa fa-close' style='cursor:pointer; float:right;' onclick='$(".addanotherroompopup").slideUp()'></i>
+    Start:
+    <input type='txt' gsname='start' class='gsniceinput1' style='width:100%; box-sizing: border-box;' value='<?php echo $start; ?>'>
+    End:
+    <input type='txt' gsname='end' class='gsniceinput1' style='width:100%; box-sizing: border-box;' value='<?php echo $end; ?>'>
+    Category:
+    <select class='gsniceselect1' style='width:100%; box-sizing: border-box;' gsname='type'>
+        <?php $this->printAvailableRoomsFromCategory($start, $end); ?>
+    </select>
+    <div>
+    Number of rooms:
+    </div>
+    <input class='gsniceinput1' gsname='count' style='width: 30px; text-align: center;' value='1'>
+    <input type='hidden' gsname='bookingid' value='<?php echo $this->getPmsBooking()->id; ?>'>
+    <span class='shop_button' gstype='submit' style='float:right;'>Add room(s)</span>
+    <script>
+        var startinput = $('.PmsBookingRoomView .addanotherroompopup input[gsname="start"]');
+        var endinput = $('.PmsBookingRoomView .addanotherroompopup input[gsname="end"]');
+        
+        startinput.datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+            onSelect: function(dateText) {
+                var curEnd = moment(endinput.val(), "DD.MM.YYYY");
+                var date = moment(dateText, "DD.MM.YYYY");
+
+                var diff = curEnd.valueOf() - date.valueOf();
+                if(diff <= 0) { date.add(1, 'days'); endinput.val(date.format('DD.MM.YYYY')); }
+                app.PmsBookingRoomView.updateAddNewRoomDropDown();
+            }
+        });
+        endinput.datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+            onSelect: function(dateText) {
+                var curStart = moment(startinput.val(), "DD.MM.YYYY");
+                var date = moment(dateText, "DD.MM.YYYY");
+
+                var diff = date.valueOf() - curStart.valueOf();
+                if(diff <= 0) { date.add(-1, 'days'); startinput.val(date.format('DD.MM.YYYY')); }
+                app.PmsBookingRoomView.updateAddNewRoomDropDown();
+            }
+        });
+    </script>
+</div>
+    <?php
+    echo "</div>";
+    
+}
+
 ?>
 <div class='grouppaymentprocess'></div>
 <?php
@@ -209,7 +264,25 @@ if($warningPayments) {
     if(typeof(warnaboutnopaymentsflashinterval) !== "undefined") {
         clearInterval(warnaboutnopaymentsflashinterval);
     }
+    
+    $('.addanotherroomtogroup').on('click', function() {
+        $('.addanotherroompopup').slideDown();
+    });
 </script>
 <?php
 }
 ?>
+<style>
+    .addanotherroompopup { 
+        position:absolute;
+        right: 10px; 
+        border: solid 1px; 
+        background-color: #fff; 
+        color:#000; 
+        display:inline-block; 
+        width: 200px; 
+        font-size: 12px;    
+        padding: 10px;
+        display:none;
+    }
+</style>

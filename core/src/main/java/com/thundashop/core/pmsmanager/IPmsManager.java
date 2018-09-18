@@ -28,6 +28,9 @@ import java.util.Map;
 public interface IPmsManager {
     
     @Administrator
+    public void setDefaultAddons(String bookingId);
+    
+    @Administrator
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
@@ -386,6 +389,9 @@ public interface IPmsManager {
     
     @Administrator
     public void markRoomDirty(String itemId) throws Exception;
+    
+    @Administrator
+    public void setBookingByAdmin(PmsBooking booking, boolean keepRoomPrices) throws Exception;
 
     public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
     
@@ -486,6 +492,13 @@ public interface IPmsManager {
 
     @Administrator
     public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
+    
+    /**
+     * Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+     * @param productId
+     * @param pmsRoomId
+     * @param count 
+     */
     @Administrator
     public void addProductToRoom(String productId, String pmsRoomId, Integer count);
     

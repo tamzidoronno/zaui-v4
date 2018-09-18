@@ -23,6 +23,9 @@ class GetShopModuleTable {
     private $sortByColumn = "";
     private $sortingAscending = true;
     private $sortingArray = array();
+    private $appendClass = "";
+    private $matchOnField = "";
+    private $checkForField = "";
 
     function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes, $extraData = null) {
         $this->attributes = $attributes;
@@ -120,13 +123,20 @@ class GetShopModuleTable {
                 $odd = $j % 2 ? "odd" : "even";
                 $active = $this->shouldShowRow($j);
                 $activeClass = $active ? "active" : "";
-
+                
                 $loadInOverlay = "";
                 if($this->loadContentInOverlay) {
                     $loadInOverlay = "loadContentInOverlay";
                 }
-                echo "<div class='datarow $odd $activeClass $loadInOverlay' rownumber='$j'>";
+                
+                $highlightrow = "";
+                if(isset($data[$this->checkForField]) && $data[$this->checkForField] == $this->matchOnField) {
+                    $highlightrow = $this->appendClass;
+                }
+                
+                echo "<div class='datarow $odd $activeClass $loadInOverlay $highlightrow' rownumber='$j'>";
                 echo "<div class='datarow_inner'>";
+                
                 $i = 1;
 
                 foreach ($this->attributes as $attribute) {
@@ -488,6 +498,12 @@ class GetShopModuleTable {
             });
         </script>
         <?php
+    }
+
+    public function appendClassToRow($field, $match, $class) {
+        $this->checkForField = $field;
+        $this->matchOnField = $match;
+        $this->appendClass = $class;
     }
 
 }

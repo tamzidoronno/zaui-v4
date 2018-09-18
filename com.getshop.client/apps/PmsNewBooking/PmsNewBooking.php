@@ -3,6 +3,8 @@ namespace ns_74220775_43f4_41de_9d6e_64a189d17e35;
 
 class PmsNewBooking extends \WebshopApplication implements \Application {
     public $canNotAddConferenceRoom = false;
+    private $products = array();
+    
     
     public function getDescription() {
         
@@ -13,6 +15,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         return "<input type='txt' class='gsniceinput1 guestcounter' roomid='".$row->roomid."' value='". $guests . "'>";
     }
     
+    public function formatRoomPrice($row) {
+        $guests = $row->price;
+        return "<input type='txt' class='gsniceinput1 roomprice' roomid='".$row->roomid."' value='". $guests . "'>";
+    }
+    
     public function updateGuestCount() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         foreach($booking->rooms as $r) {
@@ -21,14 +28,23 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
         }
         
-        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
-        
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
+        $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $booking->id);
+    }
+    
+    
+    public function updateRoomPrice() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         foreach($booking->rooms as $r) {
             if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
-                echo $r->totalCost;
+                foreach($r->priceMatrix as $day => $price) {
+                    $r->priceMatrix->{$day} = $_POST['data']['newprice'];
+                }
+                $r->price = $_POST['data']['newprice'];
             }
         }
+        
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
     }
     
     public function setDiscountCode() {
@@ -146,6 +162,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         echo "</div>";
         echo "<div style='clear:both;'></div>";
         $this->includefile("roomsadded");
+        echo "<div style='clear:both;'></div>";
         echo "</div>";
     }
     
@@ -189,7 +206,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
             $this->msg = ""; 
             $this->msg .= "<script>";
-            $this->msg .= "thundashop.common.goToPageLink('/?page=groupbooking&bookingId=".$res->id."');";
+            $this->msg .= "window.location.href='/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496&loadBooking=".$res->id."';";
             $this->msg .= "</script>";
         }
     }
@@ -228,8 +245,8 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $app->setEndDate($_POST['data']['to']);
         
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $currentBooking->couponCode = $_POST['data']['discountcode'];
         
-
         foreach($currentBooking->rooms as $room) {
             $room->addedToWaitingList = false;
         }
@@ -254,13 +271,39 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
                 if($i >= $available) {
                     $room->addedToWaitingList = true;
                 }
+                $room->priceMatrix = $this->getApi()->getPmsInvoiceManager()->calculatePriceMatrix($this->getSelectedMultilevelDomainName(), $currentBooking, $room);
+                $avg = 0;
+                $days = 0;
+                foreach($room->priceMatrix as $d => $price) {
+                    $days++;
+                    $avg += $price;
+                }
+                $room->price = $avg / $days;
                 $currentBooking->rooms[] = $room;
             }
         }
         
-        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $currentBooking, true);
+        $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $currentBooking->id);
     }
 
+    public function addAddonToBooking() {
+        $productId = $_POST['data']['productid'];
+        $curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        if($_POST['data']['remove'] == "true") {
+            foreach($curbooking->rooms as $room) {
+                $pmsRoomId = $room->pmsBookingRoomId;
+                $this->getApi()->getPmsManager()->removeProductFromRoom($this->getSelectedMultilevelDomainName(), $pmsRoomId,$productId);
+            }
+        } else {
+            foreach($curbooking->rooms as $room) {
+                $pmsRoomId = $room->pmsBookingRoomId;
+                $this->getApi()->getPmsManager()->addProductToRoom($this->getSelectedMultilevelDomainName(), $productId, $pmsRoomId, -1);
+            }
+        }
+        
+    }
+    
     public function removeAllSelectedRooms() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->rooms = array();
@@ -295,7 +338,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             
             $this->msg = "";
             $this->msg .= "<script>";
-            $this->msg .= "thundashop.common.goToPageLink('/?page=groupbooking&bookingId=".$res->id."');";
+            $this->msg .= "window.location.href='/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496&loadBooking=".$res->id."';";
             $this->msg .= "</script>";
         } else {
             $this->msg = "";
@@ -365,6 +408,62 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         echo "<br>";
         echo "<br>";
         echo "<br>";
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBooking $booking
+     * @param type $addon
+     * @return boolean
+     */
+    public function isAddedAddon($booking, $addon) {
+        foreach($booking->rooms as $room) {
+            foreach($room->addons as $addedaddon) {
+                if($addedaddon->productId == $addon->productId) {
+                    return true;
+                }
+            }
+        }
+        return false;        
+    }
+    
+    public function getFirstWords($sentence) {
+        if(!trim($sentence)) {
+            return "";
+        }
+        $words = explode(" ", $sentence);
+        $acronym = "";
+
+        foreach ($words as $w) {
+          $acronym .= mb_substr($w, 0, 1, "UTF-8");
+        }
+
+        return strtoupper($acronym);
+    }
+
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     * @return string
+     */
+    public function createAcronymAddonsRow($room) {
+        $acronym = "";
+        foreach($room->addons as $addon) {
+            $product = $this->getproduct($addon->productId);
+            $title = $addon->count . " x " . $product->name;
+            $acronym .= "<span title='$title'>(" . $addon->count . "x" . $this->getFirstWords($product->name) . ")</span> ";
+        }
+        return "<div style='padding-left: 10px;'>$acronym</div>";
+    }
+
+    public function getproduct($productId) {
+        if(isset($this->products[$productId])) {
+            return $this->products[$productId];
+        }
+        $prod = $this->getApi()->getProductManager()->getProduct($productId);
+        $this->products[$productId] = $prod;
+        return $prod;
     }
 
 }

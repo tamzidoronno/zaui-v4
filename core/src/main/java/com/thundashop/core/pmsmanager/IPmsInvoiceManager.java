@@ -120,6 +120,9 @@ public interface IPmsInvoiceManager {
     public void saveAdvancePriceYield(PmsAdvancePriceYield yieldPlan);
     
     @Administrator
+    public HashMap<String, Double> calculatePriceMatrix(PmsBooking booking, PmsBookingRooms room);
+    
+    @Administrator
     public List<PmsAdvancePriceYield> getAllAdvancePriceYields();
     
     @Administrator

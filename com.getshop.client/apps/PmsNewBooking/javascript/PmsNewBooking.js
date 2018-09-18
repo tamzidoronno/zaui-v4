@@ -30,7 +30,22 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .newcustomerbutton', app.PmsNewBooking.loadNewCustomerField);
         $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
         $(document).on('click','.PmsNewBooking .brregsearchresultrow', app.PmsNewBooking.selectBrregResult);
+        $(document).on('click','.PmsNewBooking .addonoption', app.PmsNewBooking.addAddonToBooking);
+        $(document).on('blur','.PmsNewBooking .roomprice', app.PmsNewBooking.changeRoomPrice);
     },
+    addAddonToBooking : function() {
+        var remove = false;
+        if($(this).hasClass('active')) {
+            remove = true;
+        }
+        var productid = $(this).attr('productid');
+        var event = thundashop.Ajax.createEvent('','addAddonToBooking', $(this), {
+            "productid" : productid,
+            "remove" : remove
+        });
+        thundashop.Ajax.post(event);
+    },
+    
     changeGuestCount : function() {
         var count = $(this).val();
         var roomId = $(this).attr('roomid');
@@ -39,9 +54,17 @@ app.PmsNewBooking = {
             "count" : count
         });
         var row = $(this).closest('.datarow');
-        thundashop.Ajax.postWithCallBack(event, function(res) {
-            row.find('[index="cost"]').html(res);
+        thundashop.Ajax.post(event);
+    },
+    
+    changeRoomPrice : function() {
+        var count = $(this).val();
+        var roomId = $(this).attr('roomid');
+        var event = thundashop.Ajax.createEvent('','updateRoomPrice', $(this), {
+            "roomid" : roomId,
+            "newprice" : count
         });
+        thundashop.Ajax.post(event);
     },
     setDiscountCode : function() {
         if(typeof(waitToInsertCode) !== "undefined") {

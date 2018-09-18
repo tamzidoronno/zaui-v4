@@ -15,12 +15,12 @@ import java.util.List;
  * @author boggi
  */
 public class Lead extends DataCommon {
-    static class LeadState {
-        static Integer NEW = 0;
-        static Integer HOT = 1;
-        static Integer LOST = 2;
-        static Integer WON = 3;
-        static Integer COLD = 4;
+    public static class LeadState {
+        public static Integer NEW = 0;
+        public static Integer HOT = 1;
+        public static Integer LOST = 2;
+        public static Integer WON = 3;
+        public static Integer COLD = 4;
     }
     
     public Integer leadState = 0;

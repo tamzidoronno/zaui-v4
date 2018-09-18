@@ -134,7 +134,7 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
             while(true) {
                 $dates[] = $toAdd;
                 $toAdd = strtotime('+1 day', $toAdd);
-                if($toAdd > $end) {
+                if($toAdd > $end || (date("d.m.Y", $toAdd) == date("d.m.Y", $end))) {
                     break;
                 }
             }

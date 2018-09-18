@@ -138,9 +138,9 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
         padding-right: 5px;
     }
     
-    .Menu .fa { position:absolute; left: 0px; top: -140px; }
+    .Menu .fa { position:absolute; left: 10px; top: -140px; }
     .gsarea[area="header"] .Menu .menuentries.horizontal { border: solid 2px; }
-    
+    .gsarea[area="header"] .Menu .entry .entries div { text-align: center; width:100%; }
     .gscell_41.gsdepth_1.gsuicell { margin-bottom: 20px; }
     .gscell_42.gsdepth_1.gsuicell { margin-bottom: 20px; }
     .gscell_43.gsdepth_1.gsuicell { margin-bottom: 20px; }

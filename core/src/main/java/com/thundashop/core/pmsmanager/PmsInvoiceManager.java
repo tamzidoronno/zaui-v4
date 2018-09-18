@@ -55,7 +55,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private List<String> roomIdsInCart = null;
     private HashMap<String, PmsAdvancePriceYield> advancePriceYields = new HashMap();
     private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
+    private HashMap<Long, Integer> savedCoverage = new HashMap();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
+    private Date cacheCoverage = null;
     
     @Autowired
     StoreApplicationPool storeApplicationPool;
@@ -822,7 +824,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Double increasePriceByAdvanceCoverage(String typeId, Date start, Double price) {
-        Integer coverage = bookingEngine.getCoverageForDate(start);
+        Integer coverage = null;
+        if(!savedCoverage.containsKey(start.getTime()/10000) && doCacheCoverage()) {
+            coverage = bookingEngine.getCoverageForDate(start);
+            savedCoverage.put(start.getTime()/10000, coverage);
+        } else {
+            coverage = savedCoverage.get(start);
+        }
         AdvancePriceYieldCalculator calculator = new AdvancePriceYieldCalculator(advancePriceYields);
         return calculator.doCalculation(price, coverage,typeId, start);
     }
@@ -900,6 +908,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         return ordersToUse;
+    }
+
+    private boolean doCacheCoverage() {
+        if(cacheCoverage == null || (cacheCoverage.getTime() / 10000) < (System.currentTimeMillis() / 10000)) {
+            savedCoverage.clear();
+            return false;
+        }
+        return true;
+    }
+
+    public void startCacheCoverage() {
+        cacheCoverage = new Date();
+        savedCoverage.clear();
     }
 
     class BookingOrderSummary {
@@ -1145,7 +1166,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Double price = totalPrice;
         
-        price = calculateDiscounts(booking, price, typeId, count, null, null, null);
+//        price = calculateDiscounts(booking, price, typeId, count, null, null, null);
         
         
         if(avgPrice && count != 0) {
@@ -1166,7 +1187,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         price = calculateLongTermDiscount(booking, price, room);
         price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
         price = getUserPrice(bookingEngineTypeId, price, count, booking);
-        
+
         return price;
     }
 
@@ -1485,6 +1506,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
     }
+    
+    @Override
+    public HashMap<String, Double> calculatePriceMatrix(PmsBooking booking, PmsBookingRooms room) {
+        updatePriceMatrix(booking, room, PmsBooking.PriceType.daily);
+        return room.priceMatrix;
+    } 
     
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
         pmsManager.checkAndReportPriceMatrix(booking, "when updating pricsudo n stablee matrix");

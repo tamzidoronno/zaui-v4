@@ -20,10 +20,12 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
             $name = $types[$room->bookingItemTypeId]->name;
         }
         $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='" . $room->pmsBookingRoomId . "' method='removeRoom'></i> " . $name;
+        $row->type .= $this->createAcronymAddonsRow($room);
         $row->start = date("d.m.Y H:i", strtotime($room->date->start));
         $row->end = date("d.m.Y H:i", strtotime($room->date->end));
         $row->numberOfGuests = $room->numberOfGuests;
         $row->cost = $room->totalCost;
+        $row->price = $room->price;
         $row->roomid = $room->pmsBookingRoomId;
         if ($room->canBeAdded && !$room->addedToWaitingList) {
             $row->available = "<i class='fa fa-check'></i>";
@@ -45,6 +47,7 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
         array('checkout', 'Check out', 'end', null),
         array('guests', 'Guest count', 'numberOfGuests', "formatNumberOfGuests"),
         array('available', 'Available', 'available', null),
+        array('price', 'Room price', 'price', "formatRoomPrice"),
         array('cost', 'Cost', 'cost', null)
     );
     if (!$found) {
@@ -54,16 +57,21 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
         $table->setData($rows);
         $table->render();
         ?>
-        <span class='shop_button' gstype='clicksubmit' method='removeAllSelectedRooms' style='float:left;background-color:red; margin-top: 5px;'>Remove all rooms</span>
+        <div style='text-align: right'>
+           <span class='shop_button' gstype='clicksubmit' method='removeAllSelectedRooms' style='background-color:red; margin-top: 5px;'>Remove all rooms</span>
+        </div>
         <div style="clear:both;"></div>
         <?php
     }
 ?>
 </div>
 <?php
-if($found) { ?>
+
+if($found) {
+    $this->includefile("addonstoadd");
+    ?>
     <br><br>
-    <h3>Step 3. Enter booking owner and continue</h3>
+    <h3>Step 4. Enter booking owner and continue</h3>
     <div class='section'>
         <div style='text-align:left;'>
         <div class='companytypeselection'>
@@ -111,3 +119,8 @@ if($found) { ?>
     <?php
 }
 ?>
+<br>
+<br>
+<br>
+<br>
+<br>

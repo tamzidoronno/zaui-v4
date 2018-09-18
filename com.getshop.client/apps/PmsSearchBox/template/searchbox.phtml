@@ -137,6 +137,7 @@ if($filter->groupByBooking) {
 </span>
 
 <span class='dailydaterangepicker'>
+    <i class='fa fa-close' onclick='$(".dailydaterangepicker").slideUp()' style='float:right; cursor:pointer;'></i>
     <div class='header' type='checkin'>Checking in</div>
     <div class='header' type='checkout'>Checking out</div>
     <div class='header' type='registered'>Registered</div>
@@ -199,7 +200,7 @@ if($filter->groupByBooking) {
     if(localStorage.getItem('advancesearchtoggled') === "true") {
         $('.PmsSearchBox .simplesearch').hide();
         $('.PmsSearchBox .advancesearch').show();
-//    }
+    }
     
     $(document).on('click', '.PmsSearchBox .gsicon-calendar-text', function() {
         $(this).closest('div').find('input').focus();

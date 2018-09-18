@@ -39,6 +39,15 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
         $(document).on('click', '.PmsBookingRoomView .expandmessage', this.expandmessage);
     },
+    updateAddNewRoomDropDown : function() {
+        var event = thundashop.Ajax.createEvent('','reloadAvailableRooms', $('.PmsBookingRoomView'), {
+            "start" : $('.PmsBookingRoomView .addanotherroompopup input[gsname="start"]').val(),
+            "end" : $('.PmsBookingRoomView .addanotherroompopup input[gsname="end"]').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsBookingRoomView .addanotherroompopup select[gsname="type"]').html(res);
+        });
+    },
     loadAddAddonsArea : function() {
         var event = thundashop.Ajax.createEvent('','printAddAddonsArea',$(this), {});
         thundashop.Ajax.postWithCallBack(event, function(res) {
@@ -139,7 +148,7 @@ app.PmsBookingRoomView = {
         $('.PmsBookingRoomView .outerstay').hide();
         
         var data = {}
-        var event = thundashop.Ajax.createEvent(null, 'showItemView', this, data);
+        var event = thundashop.Ajax.createEvent(null, 'showItemView', $('.PmsBookingRoomView'), data);
         event['synchron'] = true;
         
         
@@ -154,7 +163,10 @@ app.PmsBookingRoomView = {
             "roomid" : $(this).attr('roomid')
         });
         thundashop.Ajax.postWithCallBack(event, function() {
-            app.PmsBookingRoomView.refresh(true);
+            var setSplit = app.PmsBookingRoomView.refresh(true);
+            setSplit.done(function() {
+                app.PmsBookingRoomView.showRoomsToSelect();
+            });
         });
     },
     deletecomment : function() {

@@ -7,6 +7,11 @@ $channelConfig = $notificationSettings->channelConfiguration;
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 $types = $this->indexList($types);
 $prices = $this->getPrices();
+$discountTypes = array();
+$discountTypes["PERCENTAGE"] = "Percentage";
+$discountTypes["FIXED"] = "Fixed discount";
+$discountTypes["FIXEDPRICE"] = "Fixed daily price";
+$discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
 if (sizeof($coupons) == 0) {
     echo "<b>No coupon codes added yet.</b>";
 }
@@ -40,8 +45,44 @@ if (sizeof($coupons) == 0) {
                             $product = $this->getApi()->getProductManager()->getProduct($toInclude->productId);
                             $text .= $product->name . ", ";
                         }
-                        echo "<tr>";
-                        echo "<td><i class='fa fa-trash-o' gstype='clicksubmit' method='removeCoupon' gsvalue='" . $coupon->id . "' gsname='id' style='cursor:pointer;'</i> </td>";
+                        $invalid = "";
+                        if($coupon->timesLeft <= 0) {
+                            $invalid = "invalid";
+                        }
+                        echo "<tr class='$invalid'>";
+                        echo "<td style='width:60px;'><i class='fa fa-trash-o' gstype='clicksubmit' gsconfirm='Are you sure?' method='removeCoupon' gsvalue='" . $coupon->id . "' gsname='id' style='cursor:pointer;'></i>";
+                        echo " <i class='fa fa-edit toggleUpdateDiscountCode' style='cursor:pointer;'></i>";
+                        ?>
+                    
+                        <div gstype='form' method='updateDiscountCode' class="updateDiscountCodeForm" style="position:absolute; display:none; border: solid 1px; background-color:#fff; z-index: 2;">
+                            <input type="hidden" gsname="couponid" value="<?php echo $coupon->id; ?>">
+                            <label style='font-size: 12px; display:inline-block;'>
+                                Name of the code<br>
+                                <input type='text' gsname='code' class="gsniceinput1" value="<?php echo $coupon->code; ?>" disabled>
+                            </label>
+                            <label style='font-size: 12px; display:inline-block;'>
+                                * Times<br>
+                                <input type='text' gsname='times' style='width:40px;' class="gsniceinput1" value="<?php echo $coupon->timesLeft; ?>">
+                            </label>
+                            <label style='font-size: 12px; display:inline-block;'>
+                                * Amount<br>
+                                <input type='text' gsname='amount' style='width:60px;' class="gsniceinput1" value="<?php echo $coupon->amount; ?>">
+                            </label>
+                            <label style='font-size: 12px; display:inline-block;'>
+                                Type<br>
+                                <select gsname='type' class="gsniceselect1" style="height:36px;">
+                                    <?php 
+                                    foreach($discountTypes as $idx => $val) {
+                                        $selected = ($coupon->type == $idx) ? "SELECTED" : "";
+                                        echo "<option value='$idx' $selected>$val</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </label>
+                            <span class='pmsbutton' gstype='submit'>Update discount code</span>
+                        </div>
+                        <?php
+                        echo "</td>";
                         echo "<td align='left'>" . $coupon->code . "</td>";
                         echo "<td>" . $coupon->amount . "</td>";
                         echo "<td>" . $coupon->timesLeft . "</td>";
@@ -99,10 +140,12 @@ if (sizeof($coupons) == 0) {
                     <label style='font-size: 12px; display:inline-block;'>
                         Type<br>
                         <select gsname='type' class="gsniceselect1" style="height:36px;">
-                            <option value='PERCENTAGE'>Percentage</option>
-                            <option value='FIXED'>Fixed discount</option>
-                            <option value='FIXEDPRICE'>Fixed daily price</option>
-                            <option value='FIXEDDISCOUNTSTAY'>Fixed discount on stay</option>
+                        <?php 
+                            foreach($discountTypes as $idx => $val) {
+                                $selected = ($coupon->type == $idx) ? "SELECTED" : "";
+                                echo "<option value='$idx' $selected>$val</option>";
+                            }
+                        ?>
                         </select>
                     </label>
                     <span class='pmsbutton' gstype='submit'>Add discount coupon</span>

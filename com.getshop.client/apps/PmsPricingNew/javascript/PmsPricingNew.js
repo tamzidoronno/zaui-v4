@@ -13,6 +13,10 @@ app.PmsPricingNew = {
         $(document).on('change','.PmsPricingNew .repeat_type', app.PmsPricingNew.changeRepeatType);
         $(document).on('click','.PmsPricingNew .displayEditPriceCode', app.PmsPricingNew.toggleShow);
         $(document).on('click','.PmsPricingNew .editadvanceyieldplan', app.PmsPricingNew.startEditPricePlan);
+        $(document).on('click','.PmsPricingNew .toggleUpdateDiscountCode', app.PmsPricingNew.toggleUpdateDiscountCode);
+    },
+    toggleUpdateDiscountCode : function() {
+        $(this).closest('td').find('.updateDiscountCodeForm').toggle();
     },
     startEditPricePlan : function() {
         var event = thundashop.Ajax.createEvent('','loadAdvancedPricePlan', $(this), {

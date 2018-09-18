@@ -10,6 +10,15 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         return "PmsPricingNew";
     }
     
+    public function updateDiscountCode() {
+        $couponId = $_POST['data']['couponid'];
+        $coupon = $this->getApi()->getCartManager()->getCouponById($couponId);
+        $coupon->timesLeft = $_POST['data']['times'];
+        $coupon->amount = $_POST['data']['amount'];
+        $coupon->type = $_POST['data']['type'];
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+    
     public function loadAdvancedPricePlan() {
         $this->includefile("priceyieldpanel");
     }

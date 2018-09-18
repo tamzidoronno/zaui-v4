@@ -11,10 +11,27 @@ if($bookingEngineBooking) {
     $extraArgs['id'] = $bookingEngineBooking->id;
 }
 $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
+$codes = $this->getApi()->getCartManager()->getCoupons();
 ?>
 <div class="row odd">
     <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
     <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
+</div>
+<div class="row odd">
+    <div class="col col1"><? echo $this->__f("Discount code"); ?></div>
+    <div class="col col2">
+        <span class="codeselection">
+            <select class="changediscountcode">
+                <option value="">Not set</option>
+                <?php
+                foreach($codes as $code) {
+                    $selected = ($code->code == $pmsBooking->couponCode) ? "SELECTED" : "";
+                    echo "<option value='".$code->code."' $selected>" . $code->code . "</option>";
+                }
+                ?>
+            </select>
+        </span>
+    </div>    
 </div>
 
 <?php

@@ -1,6 +1,7 @@
 app.PmsBookingRoomView = {
     init: function() {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .close', this.closePreview);
+        $(document).on('change', '.PmsBookingRoomView .changediscountcode', this.changeCouponCode);
         $(document).on('click', '.PmsBookingRoomView .opengroup', this.openGroup);
         $(document).on('click', '.PmsBookingRoomView .addaddonsbutton', this.loadAddAddonsArea);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .closebutton', this.closePreview);
@@ -38,6 +39,13 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
         $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
         $(document).on('click', '.PmsBookingRoomView .expandmessage', this.expandmessage);
+    },
+    changeCouponCode : function() {
+        var newCode = $(this).val();
+        var event = thundashop.Ajax.createEvent('','changeDiscountCode',$(this), {
+            "code" : newCode
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {});
     },
     updateAddNewRoomDropDown : function() {
         var event = thundashop.Ajax.createEvent('','reloadAvailableRooms', $('.PmsBookingRoomView'), {

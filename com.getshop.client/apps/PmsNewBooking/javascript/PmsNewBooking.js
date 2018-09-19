@@ -19,7 +19,6 @@ app.PmsNewBooking = {
                 $('.moreThenAvailableWarning').fadeIn();
             }
         });
-        $(document).on('keyup','.PmsNewBooking [gsname="nameofholder"]',app.PmsNewBooking.checkForExisting);
         $(document).on('click','.PmsNewBooking .selectuser',app.PmsNewBooking.selectUser);
         $(document).on('click','.PmsNewBooking .selecteduser .fa-trash-o',app.PmsNewBooking.removeSelectedUser);
         $(document).on('keyup','.PmsNewBooking .roomtypecount',app.PmsNewBooking.countRoomsToAdd);
@@ -98,16 +97,6 @@ app.PmsNewBooking = {
         $('[gsname="name"]').val(name);
         $('.searchbrregarea').hide();
     },
-    searchResult : function(res) {
-        if(res) {
-            $('.brregsearchresult').html('');
-            for(var k in res) {
-                var company = res[k];
-                var row = $('<div class="brregsearchresultrow" vatnumber="'+company.vatNumber+'" name="'+company.name+'"><span>' + company.vatNumber + "</span> - <span>" + company.name + "</span></div>");
-                $('.brregsearchresult').append(row);
-            }
-        }
-    },
     showBrregSearch : function() {
         $('.searchbrregarea').slideDown();
     },    
@@ -121,6 +110,7 @@ app.PmsNewBooking = {
         $('.nextstep').hide();
         var type = $(this).attr('type');
         $('.'+type).show();
+        $(window).scrollTop(1000000);
     },
     
     selectAllRooms : function() {
@@ -157,20 +147,6 @@ app.PmsNewBooking = {
         $('.PmsNewBooking [gsname="nameofholder"]').hide();
         $('.PmsNewBooking .selecteduser').show();
         $('.PmsNewBooking .selecteduser').find('.name').html($(this).closest('tr').attr('name'));
-    },
-    
-    checkForExisting : function() {
-        var text = $(this).val();
-        if(text.length < 3) {
-            return;
-        }
-        
-        var event = thundashop.Ajax.createEvent('','checkForExisiting',$(this), {
-            "text" : text
-        });
-        thundashop.Ajax.postWithCallBack(event, function(res) {
-            $('.PmsNewBooking .alreadyexists').html(res);
-        });
     },
     reloadAvailability : function() {
         var event = thundashop.Ajax.createEvent('','reloadAvailability',$('.PmsNewBooking'), {

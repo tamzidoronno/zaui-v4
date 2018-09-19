@@ -86,8 +86,8 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     public function searchbrreg() {
         $company = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['data']['name']);
         echo json_encode($company);
-    }
-    
+    } 
+   
     public function getName() {
         return "PmsNewBooking";
     }
@@ -144,10 +144,6 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $hasConferenceClass = "hasconference";
         }
         
-        
-        
-        
-        
         echo "<div style='max-width:1500px; margin:auto;' class='dontExpand'>";
         echo "<div class='addnewroom $hasConferenceClass'>";
         $this->includefile("newbooking");
@@ -164,6 +160,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $this->includefile("roomsadded");
         echo "<div style='clear:both;'></div>";
         echo "</div>";
+    }
+    
+    public function registerprivateperson() {
+        $registerUser = new \RegistrateUsers();
+        $this->completeByUser($registerUser->registerprivateperson($this->getApi()));
     }
     
     public function showAvailableRooms() {
@@ -322,31 +323,27 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     }
     
     public function createNewCompanyCustomer() {
-        $vatnumber = $_POST['data']['vatnumber'];
-        $name = $_POST['data']['name'];
-        
-        $user = $this->getApi()->getUserManager()->createCompany($vatnumber, $name);
-        if($user) {
-            
-            $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-            $currentBooking->userId = $user->id;
-            $currentBooking->quickReservation = true;
-            $currentBooking->avoidCreateInvoice = true;
-            $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
-            $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedMultilevelDomainName());
-            unset($_SESSION['currentgroupbookedarea']);
-            
-            $this->msg = "";
-            $this->msg .= "<script>";
-            $this->msg .= "window.location.href='/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496&loadBooking=".$res->id."';";
-            $this->msg .= "</script>";
-        } else {
+        $registerUser = new \RegistrateUsers();
+        $user = $registerUser->createNewCompanyCustomer($this->getApi());
+        if(!$user) {
             $this->msg = "";
             $this->msg .= "<div style='border: solid 1px; background-color:red; padding: 10px; font-size: 16px; color:#fff;'>";
             $this->msg .= "<i class='fa fa-warning'></i> ";
             $this->msg .= "Unable to comply, the company you tried to create already exists.";
             $this->msg .= "</div>";
             $this->createdCustomerFailed = true;
+        } else {
+            unset($_SESSION['currentgroupbookedarea']);
+            $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+            $currentBooking->userId = $user->id;
+            $currentBooking->quickReservation = true;
+            $currentBooking->avoidCreateInvoice = true;
+            $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
+            $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedMultilevelDomainName());
+            $this->msg = "";
+            $this->msg .= "<script>";
+            $this->msg .= "window.location.href='/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496&loadBooking=".$res->id."';";
+            $this->msg .= "</script>";
         }
     }
     
@@ -371,43 +368,8 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     }
     
     public function checkForExisiting() {
-        $text = $_POST['data']['text'];
-        $users = $this->getApi()->getUserManager()->findUsers($text);
-        if(sizeof($users) == 0) {
-            return;
-        }
-        
-        echo "<div style='text-align:left; width: 800px; display:inline-block;font-size: 20px; margin-top: 20px; font-weight:bold;'>We already have " . sizeof($text) . " users matching this search, is it one of the below?</div>";
-        echo "<table style=width:800px;float:right;text-align:left; margin-bottom: 50px;'>";
-        echo "<tr>";
-        echo "<th>Name</th>";
-        echo "<th>Email</th>";
-        echo "<th>Prefix</th>";
-        echo "<th>Phone</th>";
-        echo "<th>Address</th>";
-        echo "<th>Postcal code</th>";
-        echo "<th>City</th>";
-        echo "<th></th>";
-        echo "</tr>";
-        
-        foreach($users as $user) {
-            echo "<tr userid='".$user->id."' name='".$user->fullName."'>";
-            echo "<td>" . $user->fullName . "</td>";
-            echo "<td>" . $user->emailAddress . "</td>";
-            echo "<td>" . $user->prefix . "</td>";
-            echo "<td>" . $user->cellPhone . "</td>";
-            echo "<td>"; if(isset($user->address)) { echo $user->address->address; } echo "</td>";
-            echo "<td>"; if(isset($user->address)) { echo $user->address->postCode; } echo "</td>";
-            echo "<td>"; if(isset($user->address)) { echo $user->address->city; } echo "</td>";
-            echo "<td style='color:blue; cursor:pointer;' class='selectuser'>Select</td>";
-            echo "</tr>";
-        }
-        echo "</table>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
+        $reg = new \RegistrateUsers();
+        $reg->checkForExisiting($this->getApi());
     }
 
     /**

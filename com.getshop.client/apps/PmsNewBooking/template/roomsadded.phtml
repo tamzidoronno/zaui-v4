@@ -74,47 +74,31 @@ if($found) {
     <h3>Step 4. Enter booking owner and continue</h3>
     <div class='section'>
         <div style='text-align:left;'>
-        <div class='companytypeselection'>
-            <div style='margin-bottom: 10px;'>
-               What type of customer would you like to connect to this booking?
+            <div class='companytypeselection'>
+                <div style='margin-bottom: 10px;'>
+                   What type of customer would you like to connect to this booking?
+                </div>
+                <span class='shop_button newcustomertypebutton' type='nextstepprivate'>Private person</span>
+                <span class='shop_button newcustomertypebutton' type='nextstepcompany'>Company / orginasation</span>
+                <span class='shop_button newcustomertypebutton' type='nextstepexisting'>Existing customer</span>
+                <span class='shop_button newcustomertypebutton' gstype='clicksubmit' method='completequickreservation'>Quick reservation</span>
             </div>
-            <span class='shop_button newcustomertypebutton' type='nextstepprivate'>Private person</span>
-            <span class='shop_button newcustomertypebutton' type='nextstepcompany'>Company / orginasation</span>
-            <span class='shop_button newcustomertypebutton' type='nextstepexisting'>Existing customer</span>
-            <span class='shop_button newcustomertypebutton' gstype='clicksubmit' method='completequickreservation'>Quick reservation</span>
-        </div>
 
-        <div class='nextstep nextstepexisting' gstype='form' method='searchExistingCustomer'>
-            <br>
-            Search for an existing customer:<br>
-            <input type='txt' class='gsniceinput1' gstype='submitenter' gs_callback='app.PmsNewBooking.existingSearchResult' gsname='searchword'>
-            <span class='shop_button searchexistingcustomer' gstype='submit' gs_callback='app.PmsNewBooking.existingSearchResult'>Search</span>
-            <div class='existingsearchcustomerresult'></div>
-        </div>
-            
-        <div class='nextstep nextstepcompany' gstype='form' method='createNewCompanyCustomer'>
-            <input type='hidden' gsname='type' value='company'>
-            <div>
-                <div style='margin-top:10px;'>Enter vat number and company name <span class='searchbrregbutton'>(search brreg)</span></div>
-                <span class='searchbrregarea' gstype='form' method='searchbrreg'>
-                    <input type='text' class='gsniceinput1' gsname='name'>
-                    <span class='shop_button' gstype='submit' gs_callback='app.PmsNewBooking.searchResult'>Search</span>
-                    <div class='brregsearchresult' style='max-height: 100px; overflow-y: auto;'></div>
-                </span>
-                <input type='txt' class='gsniceinput1' gsname='vatnumber' placeholder='Vat number'>
-                <input type='txt' class='gsniceinput1' gsname='name' placeholder='Name'>
-                <span class='shop_button' gstype='submit'>Register customer</span>
+            <div class='nextstep nextstepexisting' gstype='form' method='searchExistingCustomer'>
+                <br>
+                Search for an existing customer:<br>
+                <input type='txt' class='gsniceinput1' gstype='submitenter' gs_callback='app.PmsNewBooking.existingSearchResult' gsname='searchword'>
+                <span class='shop_button searchexistingcustomer' gstype='submit' gs_callback='app.PmsNewBooking.existingSearchResult'>Search</span>
+                <div class='existingsearchcustomerresult'></div>
             </div>
+
+            <?php
+            $newcustform = new \RegistrateUsers();
+            $newcustform->printRegisterCompanyForm();
+            $newcustform->printPrivateForm();
+            ?>
+
         </div>
-            
-        <div class='nextstep nextstepprivate' style='margin-top: 25px;' gstype='form' method='completequickreservation'>
-            <span class='selecteduser' style='display:none;'><i class='fa fa-trash-o' style='cursor:pointer;'></i> <span class='name'></span></span>
-            <input type='text' class='gsniceinput1' placeholder="Name of group holder" gsname='nameofholder'>
-            <span class='shop_button' gstype='submit'>Continue, reservation details is added in the next step <i class='fa fa-arrow-right'></i></span>
-            <div class='alreadyexists'></div>
-        </div>
-    </div>
-        
     </div>
     <?php
 }

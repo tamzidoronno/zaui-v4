@@ -472,7 +472,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking.sessionStartDate == null) {
             booking.sessionStartDate = getConfigurationSecure().getDefaultStart(new Date());
             if (!configuration.hasNoEndDate) {
-                booking.sessionEndDate = getConfigurationSecure().getDefaultEnd(new Date());
+                booking.sessionEndDate = getConfigurationSecure().getDefaultEnd(new Date(System.currentTimeMillis() + (86400*1000)));
             }
         }
 

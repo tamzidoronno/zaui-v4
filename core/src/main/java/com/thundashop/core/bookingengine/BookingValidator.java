@@ -79,7 +79,6 @@ public class BookingValidator {
                     line.bookingIds.stream()
                             .forEach(id -> {
                                 Booking b = savedBookings.get(id);
-                                System.out.println(b.id + " | " + b.bookingItemId + " | " + b.bookingItemTypeId + " | " + b.source + " | " + b.getHumanReadableDates());
                             });
                     throw new BookingEngineException("Overbooking detected for category at " + line.start + " - " + line.end);
                 }

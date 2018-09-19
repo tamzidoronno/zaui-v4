@@ -27,6 +27,9 @@ class PmsGlobalSettings extends \WebshopApplication implements \Application {
     public function correctAllOrders() {
         $this->getApi()->getPmsInvoiceManager()->recalculateAllBookings($this->getSelectedMultilevelDomainName(), $_POST['data']['prompt']);
     }
+    public function clearBookingSystem() {
+        $this->getApi()->getPmsManager()->deleteAllBookings($this->getSelectedMultilevelDomainName(), $_POST['data']['prompt']);
+    }
 
   
 }

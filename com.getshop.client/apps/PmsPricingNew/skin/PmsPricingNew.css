@@ -55,8 +55,11 @@
     box-shadow: 0px 0px 5px 1px #bbb; 
     z-index: 1;
 }
+.PmsPricingNew .addMoredatesPanel .addMoredatesPanel{
+    padding-top: 20px;
+}
 
-.PmsPricingNew .addMoredatesPanel .fa-close { right: 5px; top: 3px; position:absolute; font-size: 10px; color:#bbb; cursor:pointer; }
+.PmsPricingNew .addMoredatesPanel .fa-close { right: 25px; top: 3px; position:absolute; font-size: 10px; color:#bbb; cursor:pointer; }
 .PmsPricingNew .addMoredatesPanel .optionbox { padding-left: 5px; }
 .PmsPricingNew .addMoredatesPanel .optionbox select,
 .PmsPricingNew .addMoredatesPanel .optionbox input

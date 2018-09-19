@@ -6423,13 +6423,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private String getMessageToSend(String key, String type, PmsBooking booking, String language) {
         String message = "";
-
-        if (type.equals("email")) {
-            message = configuration.emails.get(key + "_" + language);
-        } else {
-            message = configuration.smses.get(key + "_" + language);
+        
+        if(key.equals("booking_completed") && booking.channel != null && booking.channel.contains("wubook")) {
+            if (type.equals("email")) {
+                message = configuration.emails.get("booking_completed_ota_" + language);
+            } else {
+                message = configuration.smses.get("booking_completed_ota_" + language);
+            }
         }
         
+        if(message == null || message.isEmpty()) {
+            if (type.equals("email")) {
+                message = configuration.emails.get(key + "_" + language);
+            } else {
+                message = configuration.smses.get(key + "_" + language);
+            }
+        }
+            
         if(message == null || message.isEmpty()) {
             if (type.equals("email")) {
                 for(String tmpKey : configuration.emails.keySet()) {

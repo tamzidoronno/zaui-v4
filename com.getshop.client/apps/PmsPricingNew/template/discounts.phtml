@@ -54,7 +54,8 @@ if (sizeof($coupons) == 0) {
                         echo " <i class='fa fa-edit toggleUpdateDiscountCode' style='cursor:pointer;'></i>";
                         ?>
                     
-                        <div gstype='form' method='updateDiscountCode' class="updateDiscountCodeForm" style="position:absolute; display:none; border: solid 1px; background-color:#fff; z-index: 2;">
+                        <div gstype='form' method='updateDiscountCode' class="updateDiscountCodeForm" style="position:absolute; padding: 10px; display:none; border: solid 1px; background-color:#fff; z-index: 2;">
+                            <i class="fa fa-close" style="float:right;cursor:pointer;" onclick="$('.updateDiscountCodeForm').hide()"></i>
                             <input type="hidden" gsname="couponid" value="<?php echo $coupon->id; ?>">
                             <label style='font-size: 12px; display:inline-block;'>
                                 Name of the code<br>
@@ -88,10 +89,12 @@ if (sizeof($coupons) == 0) {
                         echo "<td>" . $coupon->timesLeft . "</td>";
                         echo "<td>" . $coupon->type . "</td>";
                         echo "<td><i class='fa fa-edit'onclick='$(this).closest(\"td\").find(\".editcomment\").fadeIn()'></i>" . $coupon->description;
-                        echo "<span class='editcomment' method='savecommentoncoupon'  gstype='form'>";
+                        echo "<span class='editcomment' method='savecommentoncoupon'  gstype='form' style='padding:10px;'>";
+                        echo '<i class="fa fa-close" style="float:right;cursor:pointer;" onclick="$(\'.editcomment\').hide()"></i>';
+                        echo "<br>";
                         echo "<input type='hidden' gsname='couponid' value='" . $coupon->id . "'>";
-                        echo "<input type='txt' gsname='description' value='" . $coupon->description . "'></input><br>";
-                        echo "<span class='pmsbutton' gstype='submit'>Save description</span>";
+                        echo "<input type='txt' gsname='description' class='gsniceinput1' value='" . $coupon->description . "'></input><br>";
+                        echo "<span class='pmsbutton' gstype='submit' style='width:100%; box-sizing:border-box;margin-top:10px;'>Save description</span>";
                         echo "</span>";
 
                         echo "</td>";

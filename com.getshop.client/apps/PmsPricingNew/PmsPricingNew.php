@@ -112,6 +112,13 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     public function loadCouponAddonIncludePanel() {
         $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedName());
         $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['id']);
+        
+        ?>
+        <div style="text-align: right;">
+             <i class="fa fa-close"  onclick="$('.addaddonsinludepanel').hide()" style="cursor:pointer;"></i>
+         </div>
+        <?php
+        
         echo "<div gstype='form' method='saveAddonsToDiscount'>";
         echo "<input type='hidden' value='".$_POST['data']['id']."' gsname='couponid'>";
         echo "<div style='height: 350px; overflow:auto;'>";

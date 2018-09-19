@@ -8,9 +8,9 @@
     text-overflow: ellipsis;
 }
 .PmsReport .reportview {
-    overflow: auto;
     max-width: 1500px;
     margin: auto;
+    margin-bottom: 50px;
 }
 .PmsReport .kaipal .text {background-color:#fff; }
 .PmsReport [method="setReportFilter"] { background-color:#fff; padding: 10px; border-left:solid 1px #bbb;border-right:solid 1px #bbb;border-bottom:solid 1px #bbb; }

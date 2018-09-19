@@ -55,7 +55,11 @@ class PmsReport extends \MarketingApplication implements \Application {
         if(!$input->date) {
             return "Total";
         }
-        return "<span getshop_sorting='".strtotime($input->date)."'>" . date("d.m.Y", strtotime($input->date)) . "</span>";
+        $today = "";
+        if(date("dmy", strtotime($input->date)) == date("dmy", time())) {
+            $today = "<i class='fa fa-arrow-left' title='Todays date'></i>";
+        }
+        return "<span getshop_sorting='".strtotime($input->date)."'>" . date("d.m.Y", strtotime($input->date)) . " $today</span>";
     }
     public function formatRevPar($input) {
         return round($input->revPar);
@@ -400,7 +404,8 @@ class PmsReport extends \MarketingApplication implements \Application {
         echo "<style>";
         echo ".reportoverview {  overflow-x: scroll; max-width: 1500px; margin:auto; }";
         echo ".PmsReport .GetShopModuleTable .col { width: 100px !important; }";
-        echo ".PmsReport .GetShopModuleTable { width: " . (111*sizeof($attributes)). "px !important; }";
+        echo ".PmsReport .GetShopModuleTable { width: " . ((110*sizeof($attributes))+50). "px !important; }";
+        echo ".PmsReport .GetShopModuleTable { max-width: " . ((110*sizeof($attributes))+50). "px !important; }";
         echo "</style>";
     }
 

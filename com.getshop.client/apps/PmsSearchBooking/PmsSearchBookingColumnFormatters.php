@@ -165,9 +165,11 @@ class PmsSearchBookingColumnFormatters {
         }
         
         $channels = array();
+        $channels['wubook_0'] = "Wubook";
         $channels['wubook_1'] = "Exp.";
         $channels['wubook_2'] = "b.com";
         $channels['wubook_37'] = "GDS";
+        $channels['wubook_43'] = "ABNB";
         
         $channelText = $room->channel;
         if(isset($channels[$room->channel])) {

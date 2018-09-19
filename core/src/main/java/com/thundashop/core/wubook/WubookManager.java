@@ -763,6 +763,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     private int checkForBreakfast(Hashtable table, Hashtable bookingtable, int guests) {
         Hashtable addons = (Hashtable) table.get("ancillary");
+        if(addons == null) {
+            return 0;
+        }
         Vector addonsList = (Vector) addons.get("addons");
         if(addonsList != null) {
             Iterator roomIterator = addonsList.iterator();
@@ -2134,9 +2137,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = null;
         if(channelType == 2) {
             result = executeClient("bcom_rooms_rates", params);
-        }
-        if(channelType == 1) {
+        } else if(channelType == 1) {
             result = executeClient("exp_rooms_rates", params);
+        } else {
+            return new ArrayList();
         }
         Integer responseCode = (Integer) result.get(0);
         Hashtable mapping = (Hashtable) result.get(1);

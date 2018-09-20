@@ -20,6 +20,8 @@
     padding: 2px;
     background-color: #fff;
     min-width: 200px;
+    left: 0px;
+    text-align: left;
     top: 60px; 
     display:none;
     z-index:2;

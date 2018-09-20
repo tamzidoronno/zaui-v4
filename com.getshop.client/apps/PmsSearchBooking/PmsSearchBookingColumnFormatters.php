@@ -74,7 +74,7 @@ class PmsSearchBookingColumnFormatters {
         }
         
         $vistorText = "";
-        $vistorText = "<span class='quickmenuoption dontExpand'></span><div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='gsicon-user'></i></div>$checkedIn</div>";
+        $vistorText = "<div class='numberofguests'>$room->numberOfGuests <div class='guesticon'><i class='gsicon-user'></i></div>$checkedIn</div>";
         return $vistorText;
     }
     
@@ -130,6 +130,7 @@ class PmsSearchBookingColumnFormatters {
         $vistorText .= "<i class='fa fa-edit dontExpand quickfunction' title='Change room' type='changeroom'></i> ";
         
         $vistorText .= "</span></div>";
+        $vistorText .= "<span class='quickmenuoption dontExpand'></span> ";
         
         return $vistorText;
     }

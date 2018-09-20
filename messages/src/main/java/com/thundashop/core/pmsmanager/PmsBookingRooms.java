@@ -944,7 +944,7 @@ public class PmsBookingRooms implements Serializable {
         return false;
     }
 
-    void unmarkOverBooking() {
+    public void unmarkOverBooking() {
         overbooking = false;
     }
 

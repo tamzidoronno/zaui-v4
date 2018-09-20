@@ -1072,6 +1072,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room.isStarted() && !room.isEnded()) {
                 doNotification("room_changed", booking, room);
             }
+            
+            pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
         } catch (BookingEngineException ex) {
             return ex.getMessage();
         }
@@ -5725,6 +5727,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             setPriceOnRoom(room, true, booking);
         }
         pmsInvoiceManager.updateAddonsByDates(room);
+        pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
         bookingUpdated(getBookingFromRoom(room.pmsBookingRoomId).id, "date_changed", room.pmsBookingRoomId);
         verifyAddons(room);
         saveBooking(booking);

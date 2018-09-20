@@ -502,6 +502,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     public function subMenuChanged() {
         $_SESSION['currentSubMenu'] = $_POST['data']['selectedTab'];
+        
+        if ($_SESSION['currentSubMenu'] == "stayinformation") {
+            unset($_SESSION['tmpselectedroom']);
+        }
+        
         $this->renderTabContent();
         die();
     }
@@ -518,6 +523,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     private function setModalVariable() {
+        if (isset($_POST['firestLoad'])) {
+            $this->clearCache();
+            unset($_SESSION['tmpselectedroom']);
+        }
         if ($this->isModalView()) {    
             $_SESSION['PmsBookingRoomView_current_pmsroom_id'] = $this->getModalVariable("roomid");
             $this->setData();
@@ -539,7 +548,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             return;
         }
         $cachedRoomId = $this->getSelectedRoomId();
-         $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $cachedRoomId);
+        $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $cachedRoomId);
          
         foreach ($this->pmsBooking->rooms as $room) {
             if ($room->pmsBookingRoomId == $cachedRoomId) {

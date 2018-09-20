@@ -224,18 +224,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-                if(booking.wubookchannelreservationcode != null && booking.wubookchannelreservationcode.equals("1487264950")) {
-                    continue;
-                }
-                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1535629125")) {
-                    continue;
-                }
-                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1537260388")) {
-                    continue;
-                }
-                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1537264528")) {
-                    continue;
-                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
@@ -2824,15 +2812,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 logPrint("....");
                 logPrint("No items available?");
             } else {
-                BookingItem item = null;
-                for (BookingItem tmpitem : items) {
-                    item = tmpitem;
-                    PmsAdditionalItemInformation additionalroominfo = getAdditionalInfo(item.id);
-                    //Comment to commit.
-                    if (additionalroominfo.isClean()) {
-                        break;
-                    }
-                }
+                BookingItem item = getBestBookingItem(items);
                 room.bookingItemId = item.id;
                 room.bookingItemTypeId = item.bookingItemTypeId;
 
@@ -8941,6 +8921,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         room.pgaAccessToken = "";
         saveBooking(booking);
+    }
+
+    private BookingItem getBestBookingItem(List<BookingItem> items) {
+        BookingItem item = null;
+        for (BookingItem tmpitem : items) {
+            item = tmpitem;
+            PmsAdditionalItemInformation additionalroominfo = getAdditionalInfo(item.id);
+            //Comment to commit.
+            if(getConfigurationSecure().avoidRandomRoomAssigning) {
+                return item;
+            }
+            if (additionalroominfo.isClean()) {
+                return item;
+            }
+        }
+        return null;
     }
     
     

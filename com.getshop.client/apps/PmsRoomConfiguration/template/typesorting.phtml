@@ -9,6 +9,7 @@ foreach($types as $type) {
     if($type->order == 0) {
         $unsorted[] = $type;
     } else {
+        $type->name = $type->name;
         $sortList[$type->order] = $type;
     }
 }
@@ -37,3 +38,4 @@ foreach($unsorted as $type) {
     $( "#sortable" ).sortable();
     $( "#sortable" ).disableSelection();
 </script>
+<div style="clear:both;"></div>

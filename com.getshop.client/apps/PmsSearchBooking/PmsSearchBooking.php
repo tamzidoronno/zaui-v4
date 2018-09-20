@@ -115,7 +115,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $this->includefile("nobookingsyet");
             return;
         }
-        
+//        
         return $this->renderDataTable();
     }
     
@@ -192,6 +192,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
 //        
 //        
         $functionToUse = "getSimpleRooms";
+        $data = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
         
         if ($this->isGroupBookingView()) {
             
@@ -230,7 +231,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         
         ob_start();
-        
+
         echo "<div class='GetShopModuleTableHeader'>";
         if($this->hasSamleFaktura()) {
             echo "<span style='float:left;font-size:26px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
@@ -245,11 +246,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
         $table->setSorting(array("reg","checkin","guest","checkout","visitor","bookedfor","room","price","totalprice"));
         $table->loadContentInOverlay = true;
+        $table->setData($data);
         if(isset($_SESSION['pmsroomviewlistgrouproom']) && $_SESSION['pmsroomviewlistgrouproom']) {
             $table->appendClassToRow("roomId", $_SESSION['pmsroomviewlistgrouproom'], "activeroom");
         }
         $table->render();
-        $data = (array)$table->getDate();
         
         $rowCount = 0;
         $guests = 0;
@@ -271,11 +272,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         
         ob_end_clean();
-        if(sizeof($data) == 0) {
-            $this->includefile("noresultfound");
-        } else {
+//        if(sizeof($data) == 0) {
+//            $this->includefile("noresultfound");
+//        } else {
             echo $toPrint;
-        }
+//        }
 
         if(isset($_SESSION['PmsSearchBooking_loadBooking'])) {
             $btmpid = $_SESSION['PmsSearchBooking_loadBooking'];

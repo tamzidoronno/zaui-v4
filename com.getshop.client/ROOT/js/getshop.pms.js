@@ -16,6 +16,10 @@ getshop.pms = {
         $(document).on('click', '.gsoverlayinner .closemodal', getshop.pms.closeOverLaysMouse);
         $(document).on('keydown', getshop.pms.closeOverLays);
    },
+   hideInformationBox : function() {
+       $('.gsoverlay1').removeClass('active');
+   },
+   
    closeOverLaysMouse : function(e) {
         if($('.gsoverlay1').is(":visible")) {
             $('.gsoverlay1').click();
@@ -33,6 +37,54 @@ getshop.pms = {
                $('.gsoverlay2').click();
            }
        }
+   },
+   showInformationBox : function(event, title) {
+       getshop.showOverlay("1");
+       $('.gsoverlay1 .gsoverlayinner').html("");
+       thundashop.Ajax.postWithCallBack(event, function(res) {
+            if (typeof(title) === "undefined")
+                title = "";
+            var appid = null;
+            if(event !== undefined) {
+                if (event.core.appid !== undefined) {
+                    appid = event.core.appid;
+                }
+            }
+
+            var infoBox = $('<div></div>');
+            infoBox.attr('class', '');
+            infoBox.addClass('informationboxbackground');
+            infoBox.addClass('informationbox');
+            infoBox.attr('appid', appid);
+            infoBox.addClass('app');
+            if (open) {
+                $('#informationboxtitle').html(title);
+            }
+            infoBox.addClass('normalinformationbox');
+            infoBox.removeClass('largeinformationbox');
+            $('.informationbox-outer').css('overflow','hidden');
+            $('.informationbox-outer').fadeIn("200", function() {
+                $('.informationbox-outer').css('overflow-y','scroll');
+                $('body').css('overflow', 'hidden');
+            });
+
+            if(event !== undefined) {
+                if (event.core.appname === undefined) {
+                    event.core.appname = "";
+                }
+                if (event.core.apparea === undefined) {
+                    event.core.apparea = "";
+                }
+                infoBox.attr('app', event.core.appname);
+                infoBox.attr('apparea', event.core.apparea);
+                infoBox.attr('appsettingsid', event.core.instanceid);
+                infoBox.addClass(event.core.appname);
+            }
+
+            infoBox.html(res);
+           
+           $('.gsoverlay1 .gsoverlayinner').html(infoBox);
+       });
    },
    toggleOnOff: function () {
         var fontAwesomeIcon = $(this).find('i');

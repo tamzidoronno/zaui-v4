@@ -262,8 +262,11 @@ class PmsSearchBookingColumnFormatters {
                 $words = explode(" ", $name);
                 $acronym = "";
                 foreach ($words as $w) {
-                  $acronym .= $w[0];
+//                    $w = strip_tags($w);
+//                    echo "<div>" . $w[0] . " - " . $w . "</div>";
+                      $acronym .= substr($w,0,1);
                 }
+                $acronym = htmlentities($acronym);
                 $acronym = "(".strtoupper($acronym) .")";
                 if(isset($iconsAdded[$addon->productId]) && $iconsAdded[$addon->productId]) {
                     $acronym = "<i class='fa fa-" . $iconsAdded[$addon->productId] . "'></i>";
@@ -278,7 +281,7 @@ class PmsSearchBookingColumnFormatters {
         if(sizeof($res) > 0) {
             $text = join("," , $res);
         }
-
+//
         return $text;
     }
     

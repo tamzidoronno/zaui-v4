@@ -1136,6 +1136,11 @@ public class PmsManagerProcessor {
     }
 
     private void checkForDeadCodes() {
+        
+        if(manager.getStoreId().equals("7f2c47a4-7ec9-41e2-a070-1e9e8fcf4e38")) {
+            return;
+        }
+        
         if (isApacSolutionActivated() && manager.getStoreId().equals("a152b5bd-80b6-417b-b661-c7c522ccf305") && manager.getBookingMap().size() > 1000) {
             manager.checkForDeadCodesApac();
             return;

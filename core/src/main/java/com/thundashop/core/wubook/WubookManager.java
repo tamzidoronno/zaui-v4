@@ -875,6 +875,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(newbooking == null) {
                 newbooking = pmsManager.startBooking();
             }
+            
+            for(PmsBookingRooms room : newbooking.getAllRooms()) {
+                room.unmarkOverBooking();
+            }
 
             newbooking.channel = "wubook_" + booking.channelId;
             newbooking.wubookchannelreservationcode = booking.channel_reservation_code;
@@ -1014,8 +1018,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     pmsInvoiceManager.createOrder(newbooking.id, filter);
                 } else {
                     newbooking.rowCreatedDate = new Date();
-                    String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>" + pmsManager.dumpBooking(newbooking);
                     
+                    for(PmsBookingRooms room : newbooking.rooms) {
+                        if(room.isOverBooking()) {
+                            try {
+                                pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
+                            }catch(Exception e) {
+                                //Okay, it failed, that's okay.
+                            }
+                        }
+                    }
+                    
+                    String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>" + pmsManager.dumpBooking(newbooking, true);
                     text += "<br><br>";
                     text += "For more information about overbooking, see: https://getshop.com/double_booking_error.html"; 
                     String email = getStoreEmailAddress();
@@ -1038,6 +1052,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
             }catch(Exception e) {
+                e.printStackTrace();
                 messageManager.sendErrorNotification("Outer wubook catch, booking failed to be added: " +booking.reservationCode, e);
             }
             return "";

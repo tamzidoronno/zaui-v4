@@ -224,6 +224,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
+                if(booking.wubookchannelreservationcode != null && booking.wubookchannelreservationcode.equals("1487264950")) {
+                    continue;
+                }
+                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1535629125")) {
+                    continue;
+                }
+                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1537260388")) {
+                    continue;
+                }
+                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1537264528")) {
+                    continue;
+                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
@@ -3483,9 +3495,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for (PmsBookingRooms room : booking.rooms) {
                 if (getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
                     room.canBeAdded = false;
-                    room.delete();
-                    if (booking.isWubook()) {
-                        room.markAsOverbooking();
+                    if(!room.isDeleted()) {
+                        room.delete();
+                        if (booking.isWubook() && !room.deletedByChannelManagerForModification) {
+                            room.markAsOverbooking();
+                        }
                     }
 
                     BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
@@ -3520,7 +3534,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 if (!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
-                    messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
+                    messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking, false), null);
                 }
             }
             gsTiming("removed when full maybe");
@@ -3906,6 +3920,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "The room can not be added, its not available.";
         }
 
+        room.unmarkOverBooking();
+        room.addedToWaitingList = false;
         bookingEngine.addBookings(bookingToAddList);
         booking.addRoom(room);
         booking.attachBookingItems(bookingToAddList);
@@ -3979,16 +3995,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
-    public String dumpBooking(PmsBooking booking) {
+    public String dumpBooking(PmsBooking booking, boolean onlyoverbooking) {
         String res = "";
         res += booking.dump();
         for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            if(onlyoverbooking && !room.isOverBooking()) {
+                continue;
+            }
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             if (room.deletedByChannelManagerForModification) {
                 continue;
             }
             if (type != null) {
                 res += "   " + type.name + " - ";
+            }
+            if(room.isDeleted()) {
+                res += " DELETED - ";
+            } else if(room.isOverBooking()) {
+                res += " OVERBOOKING - ";
+            } else if(room.addedToWaitingList) {
+                res += " WAITING - ";
+            } else {
+                res += " ACTIVE -";
             }
             if (room.date != null) {
                 res += room.date.start + " frem til : " + room.date.end;

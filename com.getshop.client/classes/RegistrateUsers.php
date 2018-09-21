@@ -131,7 +131,13 @@ class RegistrateUsers {
         <?php
     }
 
+    /**
+     * @param GetShopApi $api
+     * @return type
+     */
     public function registerprivateperson($api) {
+        
+        
         $user = new \core_usermanager_data_User();
         $user->fullName = $_POST['data']['nameofholder'];
         $user->address = new core_usermanager_data_Address();
@@ -141,6 +147,13 @@ class RegistrateUsers {
         $user->emailAddress = $_POST['data']['email'];
         $user->cellPhone = $_POST['data']['phone'];
         $user->prefix = $_POST['data']['prefix'];
+        
+        if(strlen($user->fullName) == 36) {
+            $splitted = explode("-", $user->fullName);
+            if(sizeof($splitted) == 5) {
+                return $api->getUserManager()->getUserById($user->fullName)->id;
+            }
+        }
         
         $user = $api->getUserManager()->createUser($user);
         return $user->id;

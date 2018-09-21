@@ -1053,4 +1053,17 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
 
         return retList2;
     }
+
+    @Override
+    public Booking getActiveBookingOnBookingItem(String bookingItemId) {
+        if (bookingItemId == null || bookingItemId.isEmpty()) {
+            return null;
+        }
+        
+        return bookings.values().stream()
+                .filter(b -> b.bookingItemId != null && b.bookingItemId.equals(bookingItemId))
+                .filter(b -> b.isCurrentlyActive())
+                .findFirst()
+                .orElse(null);
+    }
 }

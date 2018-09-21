@@ -401,4 +401,8 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public List<BookingItem> getAvailbleItemsWithBookingConsideredAndShuffling(String typeId, Date start, Date end, String bookingId) {
         return deepClone(getBookingEngine().getAvailbleItemsWithBookingConsideredAndShuffling(typeId, start, end, bookingId));
     }
+
+    public Booking getActiveBookingOnBookingItem(String bookingItemId) {
+        return getBookingEngine().getActiveBookingOnBookingItem(bookingItemId);
+    }
 }

@@ -74,4 +74,5 @@ public interface IBookingEngineAbstract {
     public void saveOpeningHours(TimeRepeaterData time, String typeId);
     public List<TimeRepeaterData> getOpeningHours(String typeId);
     public void deleteOpeningHours(String repeaterId);
+    public Booking getActiveBookingOnBookingItem(String bookingItemId);
 }

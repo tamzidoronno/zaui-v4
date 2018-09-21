@@ -1494,4 +1494,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     public List<BookingItem> getAvailbleItemsWithBookingConsideredAndShuffling(String typeId, Date start, Date end, String bookingId) {
         return getAvailbleItemsWithBookingConsidered(typeId, start, end, bookingId);
     }
+
+    @Override
+    public Booking getActiveBookingOnBookingItem(String bookingItemId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

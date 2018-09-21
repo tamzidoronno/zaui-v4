@@ -1045,6 +1045,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.bookingItemId = null;
                 }
             }
+            if(room.deleted) {
+                room.date.start = start;
+                room.date.end = end;
+                room.bookingId = null;
+            }
 
             finalize(booking);
 
@@ -1074,6 +1079,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
+            List<PmsBookingRooms> list = new ArrayList();
+            list.add(room);
+            addDefaultAddonsToRooms(list);
         } catch (BookingEngineException ex) {
             return ex.getMessage();
         }
@@ -1736,6 +1744,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             setPriceOnRoom(remove, true, booking);
                         }
                         logEntry(roomName + " readded to booking ", bookingId, null);
+                    } else {
+                        logEntry(roomName + " tried readding booking but not possible ", bookingId, null);
                     }
                 } catch (BookingEngineException ex) {
                     addResult = ex.getMessage();
@@ -5708,7 +5718,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         bookingUpdated(getBookingFromRoom(room.pmsBookingRoomId).id, "date_changed", room.pmsBookingRoomId);
-        if (room.bookingId != null && !room.bookingId.isEmpty()) {
+        if (room.bookingId != null && !room.bookingId.isEmpty() && !room.isDeleted()) {
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
         }
         room.date.start = start;
@@ -5727,6 +5737,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             setPriceOnRoom(room, true, booking);
         }
         pmsInvoiceManager.updateAddonsByDates(room);
+        List<PmsBookingRooms> list = new ArrayList();
+        list.add(room);
+        addDefaultAddonsToRooms(list);
         pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
         bookingUpdated(getBookingFromRoom(room.pmsBookingRoomId).id, "date_changed", room.pmsBookingRoomId);
         verifyAddons(room);

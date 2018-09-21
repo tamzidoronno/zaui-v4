@@ -134,6 +134,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         $this->pmsBooking = null;
         $this->selectedRoom = null;
+        $this->clearCache();
     }
     
     public function removeFromOverBookingList() {
@@ -332,41 +333,48 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     public function updateAvialablity() {
         $room = $this->getTmpSelectedRoom($_POST['data']['roomId']);
-        if (isset($_POST['data']['itemId']) && isset($_POST['data']['itemId'])) {
-            $room->bookingItemId = $_POST['data']['itemId'];
-        }
-        if (isset($_POST['data']['typeId']) && isset($_POST['data']['typeId'])) {
-            $room->bookingItemTypeId = $_POST['data']['typeId'];
-        }
         if (isset($_POST['data']['start']) && isset($_POST['data']['end'])) {
+            $ignorecanadd = false;
             if($room->deleted || $room->addedToWaitingList || $room->overbooking) {
+                $ignorecanadd = true;
+            }
+            $bookingsToAdd = $room->booking;
+            $bookingsToAdd->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+            $bookingsToAdd->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+            if (isset($_POST['data']['itemId']) && isset($_POST['data']['itemId'])) {
+                $bookingsToAdd->bookingItemId = $_POST['data']['itemId'];
+            }
+            if (isset($_POST['data']['typeId']) && isset($_POST['data']['typeId'])) {
+                $bookingsToAdd->bookingItemTypeId = $_POST['data']['typeId'];
+            }
+            if($this->getApi()->getBookingEngine()->canAddBooking($this->getSelectedMultilevelDomainName(), $bookingsToAdd) || $ignorecanadd) {
+
+                if (isset($_POST['data']['itemId']) && isset($_POST['data']['itemId'])) {
+                    $room->bookingItemId = $_POST['data']['itemId'];
+                }
+                if (isset($_POST['data']['typeId']) && isset($_POST['data']['typeId'])) {
+                    $room->bookingItemTypeId = $_POST['data']['typeId'];
+                }
+
                 $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
                 $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
-            } else {
-                $bookingsToAdd = $room->booking;
-                $bookingsToAdd->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-                $bookingsToAdd->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));
-                if($this->getApi()->getBookingEngine()->canAddBooking($this->getSelectedMultilevelDomainName(), $bookingsToAdd)) {
-                    $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-                    $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
-                    $newPricesRoom = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), 
-                            $room->pmsBookingRoomId, 
-                            $room->bookingItemTypeId, 
-                            $room->date->start, 
-                            $room->date->end);
-                    foreach($room->priceMatrix as $day => $val) {
-                        foreach($newPricesRoom->priceMatrix as $day2 => $val2) {
-                            if($day2 == $day) {
-                                $newPricesRoom->priceMatrix->{$day} = $val;
-                            }
+                $newPricesRoom = $this->getApi()->getPmsManager()->getPrecastedRoom($this->getSelectedMultilevelDomainName(), 
+                        $room->pmsBookingRoomId, 
+                        $room->bookingItemTypeId, 
+                        $room->date->start, 
+                        $room->date->end);
+                foreach($room->priceMatrix as $day => $val) {
+                    foreach($newPricesRoom->priceMatrix as $day2 => $val2) {
+                        if($day2 == $day) {
+                            $newPricesRoom->priceMatrix->{$day} = $val;
                         }
                     }
-                    $room->priceMatrix = $newPricesRoom->priceMatrix;
-                } else {
-                    $room->warningText = "We are not able to change to the specified dates.";
-                    $_SESSION['tmpselectedroom'][$room->pmsBookingRoomId] = json_encode($room);
-                    return;
                 }
+                $room->priceMatrix = $newPricesRoom->priceMatrix;
+            } else {
+                $room->warningText = "We are not able to change to the specified dates.";
+                $_SESSION['tmpselectedroom'][$room->pmsBookingRoomId] = json_encode($room);
+                return;
             }
         }
         $this->setTmpSelectedRoom($room);
@@ -537,6 +545,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         unset($_SESSION['cachedroomspmsrooms']);
         unset($_SESSION['cachedbookings']);
         unset($_SESSION['cachedpmsbookings']);
+        unset($_SESSION['tmpselectedroom']);
     }
     
     public function setData($reload = false) {
@@ -1568,6 +1577,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
      * @return boolean
      */
     public function isValidSelection($room) {
+        if($room->deleted || $room->addedToWaitingList) {
+            return true;
+        }
         $start = $room->date->start;
         $end = $room->date->end;
         $available = (array)$this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedMultilevelDomainName(),

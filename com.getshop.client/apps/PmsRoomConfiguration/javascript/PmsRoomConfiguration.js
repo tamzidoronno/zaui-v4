@@ -12,11 +12,11 @@ app.PmsRoomConfiguration = {
      },
     opentypesorting : function() {
         var event = thundashop.Ajax.createEvent('','loadSortingTypes', $(this), {});
-        thundashop.common.showInformationBoxNew(event, "Sorting");
+        getshop.pms.showInformationBox(event, "Sorting");
     },
     openitemsorting : function() {
         var event = thundashop.Ajax.createEvent('','loadSortingItems', $(this), {});
-        thundashop.common.showInformationBoxNew(event, "Sorting");
+        getshop.pms.showInformationBox(event, "Sorting");
     },
     saveitemsorting: function() {
         var counter = 0;
@@ -29,7 +29,7 @@ app.PmsRoomConfiguration = {
             "sortlist" : result
         }
         thundashop.Ajax.simplePost($(this), 'setNewSorting', data);
-        thundashop.common.hideInformationBox();
+        getshop.pms.hideInformationBox();
     },
     
     savetypesorting: function() {
@@ -43,7 +43,7 @@ app.PmsRoomConfiguration = {
             "sortlist" : result
         }
         thundashop.Ajax.simplePost($(this), 'setNewTypeSorting', data);
-        thundashop.common.hideInformationBox();
+        getshop.pms.hideInformationBox();
     },
     
     

@@ -6,6 +6,7 @@
 }
 body { overflow-y: scroll; }
 .module_toprow { max-width: 1500px; margin: auto; }
+[gs_page_content_id="a90a9031-b67d-4d98-b034-f8c201a8f496"] .gs_page_col.col2 { max-width: 100%; width:100%; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .module_toprow { max-width: 100%; padding-left: 20px; padding-right: 20px; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .colcount_0.rowcount_0 { display:none; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .colcount_1.rowcount_0 { width: 100%; }

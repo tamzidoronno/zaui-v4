@@ -174,7 +174,6 @@ if($filter->groupByBooking) {
             if(diff < 0) {
                 date.add(1, 'days');
                 $('#enddate').val(date.format('DD.MM.YYYY')); 
-                app.PmsNewBooking.reloadAvailability();
             }
         }
     });
@@ -188,9 +187,7 @@ if($filter->groupByBooking) {
             var diff = date.valueOf() - curStart.valueOf();
             if(diff < 0) {
                 $('#startdate').val(date.format('DD.MM.YYYY')); 
-                app.PmsNewBooking.reloadAvailability();
             }
-            app.PmsNewBooking.reloadAvailability();
         }
     });
     $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function() {

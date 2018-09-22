@@ -43,7 +43,7 @@ if(stristr($booking->channel, "wubook_")) {
         <input type="textfield" class="gsniceinput1 endtime time endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
         <?php
         if(isset($room->warningText)) {
-            echo "<div><i>" . $room->warningText . "</i></div>";
+            echo "<div style='font-weight:bold; color:red;'><i>" . $room->warningText . "</i></div>";
         }
         ?>
         <span class='shop_button setnewdates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>

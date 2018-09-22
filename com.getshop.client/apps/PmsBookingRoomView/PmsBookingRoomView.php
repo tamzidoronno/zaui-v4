@@ -372,6 +372,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 }
                 $room->priceMatrix = $newPricesRoom->priceMatrix;
             } else {
+                $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+                $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
                 $room->warningText = "We are not able to change to the specified dates.";
                 $_SESSION['tmpselectedroom'][$room->pmsBookingRoomId] = json_encode($room);
                 return;

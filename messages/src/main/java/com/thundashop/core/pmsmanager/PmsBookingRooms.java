@@ -952,4 +952,13 @@ public class PmsBookingRooms implements Serializable {
         overbooking = true;
     }
 
+    boolean hasAddonOfProduct(String productId) {
+        for(PmsBookingAddonItem item : addons) {
+            if(item.productId.equals(productId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

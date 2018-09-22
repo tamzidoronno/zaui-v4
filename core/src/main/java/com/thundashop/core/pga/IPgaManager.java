@@ -36,4 +36,8 @@ public interface IPgaManager {
     public Cart getUnpaidCartItems();
     
     public void sendPaymentLink(String email, String prefix, String phone);
+    
+    public boolean loginByItem(String bookingItemId, int pincode);
+    
+    public void logout();
 }

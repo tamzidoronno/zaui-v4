@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
@@ -94,6 +95,7 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
                 .filter(s -> s.tokenId.equals(token))
                 .findFirst()
                 .orElse(null);
+        
         return details;
     }
     
@@ -117,6 +119,11 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
     }
     
     private LoginDetails getLoginDetails() {
+       
+        if ((String)getSession().get("pga_session") != null) {
+            return sessions.get((String)getSession().get("pga_session"));
+        }
+        
         return getLoginDetailsByTokenId((String)getSession().get("pga_token"));
     }
     
@@ -202,7 +209,7 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
                 retRoom.phonenumber = room.guests.get(0).phone;
             }
             
-            retRoom.code = room.isStarted() && !room.isEnded() ? room.code : "";
+            retRoom.code = !isLoggedInOnPga() && room.isStarted() && !room.isEnded() ? room.code : "";
             
             retRoom.bookingItemName = getBookingItemName(room);
             
@@ -353,21 +360,7 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
     }
 
     public String createAccessToken(String pmsBookingId, String pmsBookingRoomId) {
-        LoginDetails loginDetails = sessions.values()
-                .stream()
-                .filter(s -> s.bookingId.equals(pmsBookingId) && s.pmsBookingRoomId.equals(pmsBookingRoomId))
-                .findFirst()
-                .orElse(null);
-        
-        if (loginDetails != null) {
-            return loginDetails.tokenId;
-        }
-        
-        loginDetails = new LoginDetails();
-        loginDetails.bookingId = pmsBookingId;
-        loginDetails.pmsBookingRoomId = pmsBookingRoomId;
-        saveObject(loginDetails);
-        sessions.put(loginDetails.id, loginDetails);
+        LoginDetails loginDetails = createLoginDetails(pmsBookingId, pmsBookingRoomId);
         return loginDetails.tokenId;
     }
 
@@ -430,5 +423,60 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
     public void sendPaymentLink(String email, String prefix, String phone) {
         System.out.println("To implement: " + email + " " + prefix + " " + phone);
         return;
+    }
+
+    @Override
+    public void logout() {
+        // pga_session = login from pga.
+        // pga_token = login from link.
+        getSession().remove("pga_session");
+        getSession().remove("pga_token");
+    }
+
+    @Override
+    public boolean loginByItem(String bookingItemId, int pincode) {
+        Booking booking = bookingEngine.getActiveBookingOnBookingItem(bookingItemId);
+        
+        if (booking == null) {
+            return false;
+        }
+        
+        PmsBooking pmsbooking = pmsManager.getBookingFromBookingEngineId(booking.id);
+        if (pmsbooking == null)
+            return false;
+        
+        for (PmsBookingRooms room : pmsbooking.rooms) {
+            if (room.bookingItemId != null && room.bookingItemId.equals(bookingItemId) && room.code != null && room.code.equals(""+pincode)) {
+                LoginDetails details = createLoginDetails(pmsbooking.id, room.pmsBookingRoomId);
+                getSession().put("pga_session", details.id);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    private LoginDetails createLoginDetails(String pmsBookingId, String pmsBookingRoomId) {
+         LoginDetails loginDetails = sessions.values()
+                .stream()
+                .filter(s -> s.bookingId.equals(pmsBookingId) && s.pmsBookingRoomId.equals(pmsBookingRoomId))
+                .findFirst()
+                .orElse(null);
+        
+        if (loginDetails != null) {
+            return loginDetails;
+        }
+        
+        loginDetails = new LoginDetails();
+        loginDetails.bookingId = pmsBookingId;
+        loginDetails.pmsBookingRoomId = pmsBookingRoomId;
+        saveObject(loginDetails);
+        sessions.put(loginDetails.id, loginDetails);
+        
+        return loginDetails;
+    }
+
+    private boolean isLoggedInOnPga() {
+        return getSession().get("pga_session") != null;
     }
 }

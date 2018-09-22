@@ -256,4 +256,8 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         
         return endDate.before(toCompareDate);
     }
+    
+    public boolean isCurrentlyActive() {
+        return startDate.before(new Date()) && endDate.after(new Date());
+    }
 }

@@ -207,6 +207,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
     private String messageToSend;
     private boolean tmpFixed = false;
+    private String overrideNotificationTitle;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -224,6 +225,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
+                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1537260388")) {
+                    continue;
+                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
@@ -6405,12 +6409,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private String getMessageToSend(String key, String type, PmsBooking booking, String language) {
         String message = "";
-        
+        overrideNotificationTitle = "";
         if(key.equals("booking_completed") && booking.channel != null && booking.channel.contains("wubook")) {
+            boolean isChargedByOta = isChargedByOta(booking);
             if (type.equals("email")) {
                 message = configuration.emails.get("booking_completed_ota_" + language);
+                if(message != null && !message.isEmpty()) { overrideNotificationTitle = "booking_completed_ota"; }
             } else {
                 message = configuration.smses.get("booking_completed_ota_" + language);
+            }
+            if(isChargedByOta) {
+                if (type.equals("email")) {
+                    message = configuration.emails.get("booking_completed_payed_ota_" + language);
+                    if(message != null && !message.isEmpty()) { overrideNotificationTitle = "booking_completed_payed_ota"; }
+                } else {
+                    message = configuration.smses.get("booking_completed_payed_ota_" + language);
+                }
             }
         }
         
@@ -8720,16 +8734,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String getMessageTitle(String key, String lang) {
-        String title = configuration.emailTitles.get(key + "_" + lang);
+        String tocheckkey = key;
+        if(overrideNotificationTitle != null && !overrideNotificationTitle.isEmpty()) {
+            tocheckkey = overrideNotificationTitle;
+            overrideNotificationTitle = "";
+        }
+        String title = configuration.emailTitles.get(tocheckkey + "_" + lang);
+        
+        if(title != null && !title.isEmpty()) {
+            return title;
+        }
+        
         if(title == null || title.isEmpty()) {
             for(String titlekey : configuration.emailTitles.keySet()) {
-                title = configuration.emailTitles.get(titlekey);
-                if(title != null && !title.isEmpty()) {
-                    return title;
+                if(titlekey.contains(tocheckkey)) {
+                    title = configuration.emailTitles.get(titlekey);
+                    if(title != null && !title.isEmpty()) {
+                        return title;
+                    }
                 }
             }
-        } else {
-            return title;
         }
         return "";
     }
@@ -9000,6 +9024,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 item.date = room.date.end;
             }
         }
+    }
+
+    private boolean isChargedByOta(PmsBooking booking) {
+        if(booking.orderIds == null) {
+            return false;
+        }
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrder(orderId);
+            if(ord != null) {
+                if(ord.isBookingCom() || ord.isExpedia()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
         
 }

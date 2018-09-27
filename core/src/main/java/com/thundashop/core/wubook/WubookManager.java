@@ -941,9 +941,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             pmsManager.setBooking(newbooking);
             int i = 0;
             for(PmsBookingRooms room : newbooking.getActiveRooms()) {
-                if(booking.isBookingComVirtual) {
-                    room.forceAccess = true;
-                }
                 WubookBookedRoom r = booking.rooms.get(i);
                 if(r.breakfasts > 0) {
                     boolean add = true;
@@ -1040,16 +1037,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
             
-            if(booking.isPrePaid) {
-                for(String orderId : newbooking.orderIds) {
-                    Order order = orderManager.getOrder(orderId);
-                    if(order.isExpedia() || order.isBookingCom() && order.status != Order.Status.PAYMENT_COMPLETED) {
-                        order.status = Order.Status.PAYMENT_COMPLETED;
-                        orderManager.saveOrder(order);
-                    }
-                }
-            }
-
             logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
             }catch(Exception e) {
                 e.printStackTrace();

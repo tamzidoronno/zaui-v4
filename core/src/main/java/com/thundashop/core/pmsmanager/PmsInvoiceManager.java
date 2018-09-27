@@ -480,6 +480,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         boolean hasOrders = false;
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
+            if(order.isBookingCom() || order.isExpedia()) {
+                hasOrders = true;
+                continue;
+            }
             if(!hasRoomItems(pmsRoomId, order)) {
                 continue;
             }
@@ -921,6 +925,27 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public void startCacheCoverage() {
         cacheCoverage = new Date();
         savedCoverage.clear();
+    }
+
+    boolean hasUnchargedPrePaidOrders(PmsBookingRooms room, PmsBooking booking) {
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if(order != null) {
+                if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                    continue;
+                }
+                if(!order.isExpedia() && !order.isBookingCom()) {
+                    continue;
+                }
+                
+                for(CartItem item : order.cart.getItemsUnfinalized()) {
+                    if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     class BookingOrderSummary {
@@ -2097,15 +2122,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         order.payment = preferred;
         order.invoiceNote = booking.invoiceNote;
         
-        if(order.payment != null) {
-            String type = order.payment.paymentType.toLowerCase();
-            if(type.contains("expedia")) {
-                order.status = Order.Status.PAYMENT_COMPLETED;
-                order.captured = true;
-                order.payment.captured = true;
-            }
-        }
-
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(order.rowCreatedDate);
@@ -2194,15 +2210,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         order.payment = preferred;
         order.invoiceNote = booking.invoiceNote;
-        
-        if(order.payment != null) {
-            String type = order.payment.paymentType.toLowerCase();
-            if(type.contains("expedia")) {
-                order.status = Order.Status.PAYMENT_COMPLETED;
-                order.captured = true;
-                order.payment.captured = true;
-            }
-        }
         
         Double total = orderManager.getTotalAmount(order);
         if(total < 0) {

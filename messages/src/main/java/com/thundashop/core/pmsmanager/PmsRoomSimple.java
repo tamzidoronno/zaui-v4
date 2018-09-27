@@ -54,6 +54,7 @@ public class PmsRoomSimple implements Serializable {
     public double totalUnpaidCost = 0.0;
     public String userId;
     public boolean nonrefundable = false;
+    public boolean hasUnchargedPrePaidOrders = false;
     public HashMap<Long, PmsBookingComment> bookingComments = new HashMap(); 
     double totalUnsettledAmount;
     

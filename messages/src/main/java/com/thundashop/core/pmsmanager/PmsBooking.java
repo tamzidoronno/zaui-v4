@@ -638,6 +638,28 @@ public class PmsBooking extends DataCommon {
         }
     }
 
+    boolean hasRoomsNotAddedToBookingEngine() {
+        if(!isCompletedBooking()) {
+            return false;
+        }
+        
+        for(PmsBookingRooms room : rooms) {
+            if(room.deleted) {
+                continue;
+            }
+            if(room.addedToWaitingList) {
+                continue;
+            }
+            if(room.isOverBooking()) {
+                continue;
+            }
+            if(!room.bookingConnected()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

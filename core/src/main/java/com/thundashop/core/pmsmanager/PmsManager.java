@@ -208,6 +208,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String messageToSend;
     private boolean tmpFixed = false;
     private String overrideNotificationTitle;
+    private boolean warnedAboutNotAddedToBookingEngine = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -735,6 +736,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsBooking finalize(PmsBooking booking) {
         if (booking == null) {
             return null;
+        }
+        if(!warnedAboutNotAddedToBookingEngine && booking.hasRoomsNotAddedToBookingEngine()) {
+            warnedAboutNotAddedToBookingEngine = true;
+            messageManager.sendErrorNotification("Booking with pms booking id not found in booking engine: " + booking.id, null);
         }
         Calendar nowCal = Calendar.getInstance();
         if(booking.isTerminalBooking()) {

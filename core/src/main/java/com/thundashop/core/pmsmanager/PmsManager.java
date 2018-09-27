@@ -4401,9 +4401,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         logEntry(message + "<br> +" + prefix + " " + phone, booking.id, null, roomId, "sms");
         message = configuration.emailTemplate.replace("{content}", message);
         if (prefix.equals("47")) {
-            messageManager.sendSms("sveve", phone, message, prefix);
+            messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
         } else {
-            messageManager.sendSms("nexmo", phone, message, prefix);
+            messageManager.sendSms("nexmo", phone, message, prefix, configuration.smsName);
         }
     }
 

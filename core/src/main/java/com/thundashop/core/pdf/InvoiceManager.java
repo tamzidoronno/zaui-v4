@@ -225,6 +225,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     private String generateInvoiceByPHP(String orderId) {
         try {
             Order order = orderManager.getOrder(orderId);
+            generateKidOnOrder(order);
             String addr = "http://www.3.0.local.getshop.com/scripts/invoicetemplates/template1.php";
             if(storeManager.isProductMode()) {
                 addr = "https://www.getshop.com/scripts/invoicetemplates/template1.php";

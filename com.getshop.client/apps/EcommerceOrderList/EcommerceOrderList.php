@@ -132,7 +132,13 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             $text .= "<i class='fa fa-sticky-note' title='".$order->invoiceNote."'></i>";
         }
         
+        $text .= $this->getCashPointPrinters($order);
+        
         return $text;
+    }
+    
+    public function sendReceipt() {
+        $this->getApi()->getInvoiceManager()->sendReceiptToCashRegisterPoint($_POST['data']['deviceid'], $_POST['data']['orderid']);
     }
     
     public function creditOrder() {
@@ -406,6 +412,30 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         }
         
         return $ret;
+    }
+
+    public function getCashPointPrinters($order) {
+        
+        if(!$order->paymentDate) {
+            return "";
+        }
+        
+        $cashpoints = $this->getApi()->getGdsManager()->getDevices();
+        
+        if (!$cashpoints) {
+            return "";
+        }
+        
+        $text = "";
+        
+        foreach ($cashpoints as $cashpoint) {
+            if ($cashpoint->type == "cashap") {
+                $text .= "<i class='fa fa-print dontExpand' gsclick='sendReceipt' deviceid='$cashpoint->id' orderid='".$order->id."' title='Print receipt on $cashpoint->name'></i>";
+            }
+        }
+        
+        return $text; 
+        
     }
 
 }

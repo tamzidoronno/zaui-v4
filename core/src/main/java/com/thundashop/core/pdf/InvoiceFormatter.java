@@ -11,6 +11,7 @@ import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -69,6 +70,7 @@ public class InvoiceFormatter {
         this.base = this.base.replace("{vatNumber}", accountingDetails.vatNumber);
         this.base = this.base.replace("{address}", accountingDetails.address);
         this.base = this.base.replace("{city}", accountingDetails.city);
+        this.base = this.base.replace("{postCode}", accountingDetails.postCode);
         this.base = this.base.replace("{contactEmail}", accountingDetails.contactEmail);
         this.base = this.base.replace("{rowCreatedDate}", sdf.format(order.rowCreatedDate));
         this.base = this.base.replace("{dueDate}", sdf.format(order.getDueDate()));
@@ -139,34 +141,40 @@ public class InvoiceFormatter {
     }
 
     private String getItemText(CartItem item) {
-            String text = "";
-            if(item.getProduct() != null && item.getProduct().name.isEmpty()) {
-                text += item.getProduct().name;
-            }
+        if(item == null) {
+            return "";
+        }
+        
+        String lineText = "";
+        String startDate = "";
+        if(item.startDate != null) {
+            DateTime start = new DateTime(item.startDate);
+            startDate = start.toString("dd.MM.yy");
+        }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-            String dates = "";
-            if(item.startDate != null) {
-                dates += sdf.format(item.startDate);
-            }
-            if(item.endDate != null) {
-                if(!dates.isEmpty()) {
-                    dates += " - ";
-                }
-                dates += sdf.format(item.endDate);
-            }
-            if(item != null && item.getProduct() != null && item.getProduct().additionalMetaData != null) {
-                text += " " + item.getProduct().additionalMetaData;
-            }
-            if(item != null && item.getProduct() != null && item.getProduct().metaData != null) {
-                text += " " + item.getProduct().metaData;
-            }
-            
-            if(!dates.isEmpty()) {
-                text += " (" + dates + ")";
-            }
-
-            return text;
+        String endDate = "";
+        if(item.endDate != null) {
+            DateTime end = new DateTime(item.endDate);
+            endDate = end.toString("dd.MM.yy");
+        }
+        
+        lineText = "";
+        if(item.getProduct() != null && 
+                item.getProduct().additionalMetaData != null && 
+                !item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().additionalMetaData; 
+        }
+        
+        lineText += " " + item.getProduct().name;
+        
+        if(item.getProduct() != null && item.getProduct().metaData != null && !item.getProduct().metaData.isEmpty()) {
+            lineText += " " + item.getProduct().metaData;
+        }
+        if(!startDate.isEmpty() && !endDate.isEmpty() && !item.hideDates) {
+            lineText += " (" + startDate + " - " + endDate + ")";
+        }
+        
+        return lineText;
     }
 
     private String getTranslation(String key) {
@@ -184,6 +192,10 @@ public class InvoiceFormatter {
                 base = base.replace("<text>" + key + "</text>", key);
             }
         }
+    }
+
+    void setTotalLines() {
+        this.base = this.base.replace("{totalAmount}", ""+order.getTotalAmount());
     }
     
 }

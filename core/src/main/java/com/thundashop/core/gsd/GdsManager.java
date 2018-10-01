@@ -7,6 +7,7 @@ package com.thundashop.core.gsd;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
@@ -107,6 +108,8 @@ public class GdsManager extends ManagerBase implements IGdsManager {
     }
     
     private DeviceMessageQueue getQueue(String deviceId) {
+        deleteNullQueues();
+        
         DeviceMessageQueue queue = messages.values()
                 .stream()
                 .filter(o -> o.deviceId.equals(deviceId))
@@ -120,6 +123,18 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         }
         
         return queue;
+    }
+
+    private void deleteNullQueues() throws ErrorException {
+        List<DeviceMessageQueue> nullQueus = messages.values()
+                .stream()
+                .filter(o -> o.deviceId == null)
+                .collect(Collectors.toList());
+        
+        for (DeviceMessageQueue queue : nullQueus) {
+            messages.remove(queue.id);
+            deleteObject(queue);
+        }
     }
 
     private DeviceMessageQueue createNewMessageQueue(String deviceId) {

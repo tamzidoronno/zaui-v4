@@ -447,7 +447,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         
         foreach ($cashpoints as $cashpoint) {
             if ($cashpoint->type == "cashap") {
-                $text .= "<i class='fa fa-print dontExpand' gsclick='sendReceipt' cashpointid='$cashpoint->id' orderid='".$order->id."' title='Print receipt on $cashpoint->name'></i>";
+                $text .= "<i class='fa fa-print dontExpand' gsclick='sendReceipt' deviceid='$cashpoint->id' orderid='".$order->id."' title='Print receipt on $cashpoint->name'></i>";
             }
         }
         

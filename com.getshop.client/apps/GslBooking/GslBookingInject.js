@@ -719,6 +719,11 @@ function getshop_saveBookerInformation() {
         var val = $(this).val();
         fields[field] = val;
     });
+    if($('#organization input').is(':checked')) {
+        fields["choosetyperadio"] = "registration_company";
+    } else {
+        fields["choosetyperadio"] = "registration_private";
+    }
     var type = $("input[name='user']:checked").closest('label').attr('id');
     var data = {
         "profileType" : type,
@@ -1331,6 +1336,7 @@ function getshop_getWebSocketClient() {
 function getshop_searchRooms(e) {
     try {
         if(getshop_avoiddoubletap(e)) { return; }
+        $('.GslBooking .guestInfoBox').hide();
         var btn = $(this);
         if(btn.find('.fa-spin').length > 0) {
             return;
@@ -1635,6 +1641,7 @@ function getshop_cancelPayment() {
     }catch(e) { getshop_handleException(e); }
 }
 
+$(document).on('touchend click', getshop_hideGuestSelectionBox);
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
 $(document).on('touchend click', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
 $(document).on('touchend click', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
@@ -1657,7 +1664,6 @@ $(document).on('touchend click', '.GslBooking .addButton', getshop_addRemoveAddo
 $(document).on('touchend click', '.GslBooking .removeselectedroom', getshop_removeGroupedRooms);
 $(document).on('touchend click', '.GslBooking .gslfront_1 .trychangingdate', getshop_tryChangingDate);
 $(document).on('touchend click', '.GslBooking [gsname="ischild"]', getshop_changeChildSettings);
-$(document).on('touchend click', getshop_hideGuestSelectionBox);
 $(document).on('touchend click', '.GslBooking .displayeditroom', getshop_showEditRoomOptions);
 $(document).on('touchend click', '.GslBooking .cancelpaymentbutton', getshop_cancelPayment);
 

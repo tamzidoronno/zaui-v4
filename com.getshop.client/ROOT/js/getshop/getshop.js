@@ -505,8 +505,12 @@ thundashop.Ajax = {
         
         if($('.gsoverlay1 .gsoverlayinner').is(':visible') && (typeof(callback) === "undefined" || callback === undefined || callback === null) && !data.firstLoad) {
             data['synchron'] = true;
-            callback = thundashop.framework.reloadOverLayType1;
+            if(typeof(isloadingoverlaytype1) === "undefined" || !isloadingoverlaytype1) {
+                isloadingoverlaytype1=true;
+                callback = thundashop.framework.reloadOverLayType1;
+            }
         }
+        
         var file = "data.php";
         var uploadcallback = false;
         if (xtra !== undefined) {
@@ -669,11 +673,6 @@ thundashop.Ajax = {
         }
         
         $('.gs_loading_spinner').removeClass('active');
-        
-        if (event.core.closestappwithinstance && !event.core.instanceid && $('.gsoverlay1 .gsoverlayinner').is(':visible') ) {
-            thundashop.Ajax.reloadApp(event.core.closestappwithinstance, true);
-            
-        }
     },
     navigateWithJavascript: function(scope) {
         var variables = "";
@@ -853,7 +852,6 @@ getshop.Table = {
             getshop.Table.loadTableContentOverlay(e, $(this));
             return;
         }
-
 
         var table = $(this).closest('.GetShopModuleTable');
         var identifier = table.attr('identifier');
@@ -1139,6 +1137,7 @@ thundashop.framework = {
     reloadOverLayType1: function() {
         $('.gsoverlay1 .gsoverlayinner .app').each(function() {
             thundashop.Ajax.reloadApp($(this).attr('appsettingsid'), true);
+            isloadingoverlaytype1 = false;
         });
     }
 }

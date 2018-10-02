@@ -221,6 +221,10 @@ class PmsSearchBookingColumnFormatters {
             $priceData .= "<div style='color:#bbb;' title='This room is non refundable'>nonref</div>";
         }
         
+        if($room->hasUnchargedPrePaidOrders) {
+            $priceData .= "<div style='color:red;font-weight:bold;' title='NOT CHARGED: Remember to charge OTA for this stay, mark order as paid after.'>N/C</div>";
+        }
+        
         return $priceData;
 
     }

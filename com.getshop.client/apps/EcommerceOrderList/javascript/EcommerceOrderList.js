@@ -42,9 +42,12 @@ app.EcommerceOrderList = {
         var confirmed = confirm("Are you sure you want to credit this order?");
         if(confirmed) {
             var orderid = $(this).attr('orderid');
-            thundashop.Ajax.simplePost($(this), "creditOrder", {
+            var event = thundashop.Ajax.createEvent('','creditOrder', $(this), {
                 "id" : orderid
             });
+            thundashop.Ajax.postWithCallBack(event, function() {
+                thundashop.framework.reloadOverLayType1or2();
+            })
         }
     },
     doneSendingPaymentLink : function() {

@@ -208,6 +208,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String messageToSend;
     private boolean tmpFixed = false;
     private String overrideNotificationTitle;
+    private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -225,9 +226,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-                if(booking.wubookreservationid != null && booking.wubookreservationid.equals("1537260388")) {
-                    continue;
-                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
@@ -739,6 +737,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking == null) {
             return null;
         }
+        if(!warnedAboutNotAddedToBookingEngine.contains(booking.id) && booking.hasRoomsNotAddedToBookingEngine()) {
+            String toWarn = "Booking with pms booking id not found in booking engine: " + booking.id + "<br>";
+            warnedAboutNotAddedToBookingEngine.add(booking.id);
+            messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "out of sync booking", toWarn, "noreply@getshop.com", "noreply@getshop.com");
+        }
+        
+        
         Calendar nowCal = Calendar.getInstance();
         if(booking.isTerminalBooking()) {
             nowCal.add(Calendar.MINUTE, -15);
@@ -4401,9 +4406,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         logEntry(message + "<br> +" + prefix + " " + phone, booking.id, null, roomId, "sms");
         message = configuration.emailTemplate.replace("{content}", message);
         if (prefix.equals("47")) {
-            messageManager.sendSms("sveve", phone, message, prefix);
+            messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
         } else {
-            messageManager.sendSms("nexmo", phone, message, prefix);
+            messageManager.sendSms("nexmo", phone, message, prefix, configuration.smsName);
         }
     }
 

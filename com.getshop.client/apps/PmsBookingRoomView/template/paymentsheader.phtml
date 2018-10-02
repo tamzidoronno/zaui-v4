@@ -71,7 +71,7 @@ if (!$pmsBooking->createOrderAfterStay) {
 } else {
     echo "<div>An order of " . $pmsBooking->unsettled . " will be created at " . date("d.m.Y", $endDate) . "</div>";
     ?>
-    <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;width:100%;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
+    <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;width:100%; box-sizing:border-box;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
     <?php
 }
 ?>

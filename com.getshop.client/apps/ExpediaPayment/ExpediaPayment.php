@@ -42,13 +42,6 @@ class ExpediaPayment extends \PaymentApplication implements \Application  {
         
     }
 
-    /**
-     * 
-     * Should display you configuration page.
-     */
-    public function renderConfig() {
-    }
-
     public function getMode() {
         return null;
     }
@@ -57,9 +50,14 @@ class ExpediaPayment extends \PaymentApplication implements \Application  {
         
     }
 
-    public function saveSettings() {
+    public function renderConfig() {
+        $this->includeFile("config");
     }
-
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("automarkpaid", $_POST['automarkpaid']);
+    }
+    
 }
 
 ?>

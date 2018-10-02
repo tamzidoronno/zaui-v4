@@ -437,4 +437,11 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         return false;
     }
 
+    public Application getApplicationByNameSpace(String namespace) {
+        namespace = namespace.substring(0, namespace.indexOf("\\"));
+        namespace = namespace.replace("ns_", "");
+        namespace = namespace.replace("_", "-");
+        return getApplication(namespace);
+    }
+
 }

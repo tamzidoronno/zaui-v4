@@ -420,8 +420,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
      * @param \core_ordermanager_data_Order $order
      */
     public function getVerifoneTerminalPrinter($order) {
-        $text = "";
-        if (!$order->paymentDate && $order->payment->paymentId == "def1e922-972f-4557-a315-a751a9b9eff1") {
+        if($order->status != 7 && !$order->closed) {
             $text .= "<i class='fa fa-credit-card dontExpand' gsclick='sendToVerifone' verifonid='0' orderid='".$order->id."' title='Send to verifone terminal'></i>";
         }
         return $text;

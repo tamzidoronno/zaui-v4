@@ -1,0 +1,10 @@
+.GetShopDeviceList {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.GetShopDeviceList .createnewdevice {
+    margin-top: 50px;
+    background-color: #EFEFEF;
+    padding: 50px;
+}

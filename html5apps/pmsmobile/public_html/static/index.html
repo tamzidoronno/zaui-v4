@@ -29,7 +29,7 @@
             var hostToUse = localStorage.getItem("address");
             if(hostToUse) {
                 if(typeof(getshopclient) === "undefined") {
-                    getshopclient = new GetShopApiWebSocket("websocket.getshop.com", "443", hostToUse); //Local
+                    getshopclient = new GetShopApiWebSocket("websocket5.getshop.com", "443", hostToUse); //Local
 //                    getshopclient = new GetShopApiWebSocket("localhost", "31330", hostToUse); //Local
                 }
                 getshopclient.identifier = hostToUse;

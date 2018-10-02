@@ -1,0 +1,34 @@
+<?
+/* @var $this \ns_26958edf_e2a1_4e76_aca0_38e7edfe8c80\SalesPointAccessPoint */
+
+$devices = $this->getApi()->getGdsManager()->getDevices();
+
+$args = array();
+
+$attributes = array(
+    array('id', 'DEVICE ID', 'id'),
+    array('name', 'NAME', 'name'),
+    array('token', 'TOKEN', 'token'),
+    array('type', 'TYPE', 'type'),
+    array('lastPulledRequest', 'LASTPULL', 'lastPulledRequest'),
+);
+?>
+<br/>
+<br/>
+<br/>
+<?
+$table = new \GetShopModuleTable($this, 'GdsManager', "getDevices", $args, $attributes);
+$table->render();
+?>
+
+<div gstype="form" method="createNewDevice" class="createnewdevice">
+    <h2>Add a new device</h2>
+    Name <input class="gsniceinput1" gsname="name"/>
+    <br/> Token <input class="gsniceinput1" gsname="token"/>
+    <br/> Type 
+        <select gsname="type" class="gsniceselect1">
+            <option value="cashap">Cash Access Point</option>
+        </select>
+    <br/>
+    <br/><div class="shop_button" gstype="submit">Add</div>
+</div>

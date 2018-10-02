@@ -18,4 +18,7 @@ public interface IInvoiceManager {
     
     @Administrator
     public String getBase64EncodedInvoice(String orderId);
+    
+    @Administrator
+    public void sendReceiptToCashRegisterPoint(String deviceId, String orderId);
 }

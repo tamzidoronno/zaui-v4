@@ -12,6 +12,8 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.gsd.DevicePrintMessage;
+import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -63,6 +65,9 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     @Autowired
     private GetShop getShop;
 
+    @Autowired
+    private GdsManager gdsManager;
+    
     @Override
     public void createInvoice(String orderId) throws ErrorException {
         Order order = orderManager.getOrder(orderId);
@@ -113,7 +118,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     @Override
     public String getBase64EncodedInvoice(String orderId) {
         if(storeManager.isPikStore()) {
-            return generateInvoiceByPHP(orderId);
+            return generateInvoiceByPHP(orderId, "template1");
         }
         Order order = orderManager.getOrder(orderId);
         checkForNullNameOnProduct(order);
@@ -222,13 +227,13 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         }
     }
 
-    private String generateInvoiceByPHP(String orderId) {
+    private String generateInvoiceByPHP(String orderId, String template) {
         try {
             Order order = orderManager.getOrder(orderId);
             generateKidOnOrder(order);
-            String addr = "http://www.3.0.local.getshop.com/scripts/invoicetemplates/template1.php";
+            String addr = "http://www.3.0.local.getshop.com/scripts/invoicetemplates/"+template+".php";
             if(storeManager.isProductMode()) {
-                addr = "https://www.getshop.com/scripts/invoicetemplates/template1.php";
+                addr = "https://www.getshop.com/scripts/invoicetemplates/"+template+".php";
             }
             addr += "?status=" + order.status;
             AccountingDetails details = getAccountingDetails();
@@ -240,6 +245,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             formatter.replaceVariables();
             formatter.setOrderLines();
             formatter.setTaxesLines();
+            formatter.setTotalLines();
             formatter.setTranslation(details.useLanguage);
             base = formatter.getBase();
             
@@ -251,6 +257,15 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             logPrintException(ex);
         }
         return "";
+    }
+
+    @Override
+    public void sendReceiptToCashRegisterPoint(String deviceId, String orderId) {
+        String base64phpInvoice = generateInvoiceByPHP(orderId, "template2_no");
+        DevicePrintMessage printMsg = new DevicePrintMessage();
+        printMsg.deviceId = deviceId;
+        printMsg.payLoad = base64phpInvoice;
+        gdsManager.sendMessageToDevice(deviceId, printMsg);
     }
 
 }

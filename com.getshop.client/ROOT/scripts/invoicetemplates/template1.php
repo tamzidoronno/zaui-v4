@@ -132,7 +132,17 @@ function doTranslation($key) {
                     <div class='giromiddleareaheader'><?php echo doTranslation("Due date"); ?></div>
                     <?php echo "<div>" . $dueDate . "</div>"; ?>
                 </div>         
-                <div class='giropaidby giromiddleareas'><div class='giromiddleareaheader'><?php echo doTranslation("Paid by"); ?></div>
+                <div class='giropaidby giromiddleareas'><div class='giromiddleareaheader'><?php echo doTranslation("Paid by"); ?>
+                    
+                        <div class="paidbytext">
+                            <?php
+                            echo $fullName . "<br>";
+                            echo $addressaddress. "<br>";
+                            echo $addresspostCode . " " . $addresscity. "<br>";
+                            echo $addresscountryname. "<br>";
+                            ?>
+                        </div>
+                    </div>
                 </div>         
                 <div class='giropaidto giromiddleareas'>
                     <div class='giromiddleareaheader'><?php echo doTranslation("Paid to"); ?></div>
@@ -201,7 +211,8 @@ function doTranslation($key) {
     .giropaidto { position:absolute !important; right: 10px; bottom: 40px; width: 300px; height: 60px;}
     .giropaidby { position:absolute !important; left: 10px; bottom: 40px; width: 300px; height: 60px;}
     .giropaymentinfo { position:absolute !important; left: 10px; top: 40px; }
-    .giromiddleareaheader { font-weight: bold; position:absolute; top: -22px; left:0px;}
+    .giromiddleareaheader { font-weight: bold; position:absolute; top: -22px; left:0px; width:200px;}
+    .paidbytext { font-weight: normal; font-size:14px; margin-top: 10px; margin-left: 5px; }
     .giromiddleareas { border: solid 1px #bbb; display:inline-block; position:relative; padding: 10px;  }
     .giroinformation .amountToPayGiro { position: absolute; right: 520px; top: 20px;}
     .giroinformation .paidByAccount { position: absolute; right: 20px; top: 20px;}
@@ -219,7 +230,7 @@ function doTranslation($key) {
     .itemsarea { height: 450px; display:inline-block; }
     .page1 {  width: 1024px; padding: 20px;}
     .recipient,.companyinfo { display:inline-block;  height: 150px;box-sizing: border-box;float:left;}
-    .recipient { width:60%; }
+    .recipient { width:60%; margin-top:120px; }
     .companyinfo { width:40%; }
     .companyinfoheader { font-weight: bold; font-size: 20px; border-bottom: solid 1px; padding: 5px; text-align: right; margin-bottom: 5px;}
     .ordernumberinfo { float:right; }

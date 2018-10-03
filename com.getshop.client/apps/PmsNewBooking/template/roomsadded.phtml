@@ -20,7 +20,7 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
             $name = $types[$room->bookingItemTypeId]->name;
         }
         $row->type = "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='" . $room->pmsBookingRoomId . "' method='removeRoom'></i> " . $name;
-        $row->type .= $this->createAcronymAddonsRow($room);
+        $row->type .= "<span class='addonsarea'>" . $this->createAcronymAddonsRow($room) . "</span>";
         $row->start = date("d.m.Y H:i", strtotime($room->date->start));
         $row->end = date("d.m.Y H:i", strtotime($room->date->end));
         $row->numberOfGuests = $room->numberOfGuests;
@@ -56,8 +56,14 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
         $table = new \GetShopModuleTable($this, null, null, null, $attributes);
         $table->setData($rows);
         $table->render();
+        echo "<div style='text-align:right;font-size:16px;padding:10px;margin-right:10px;'>";
+        echo "Total cost: <span class='totalcostindicator'>" . $booking->totalPrice . "</span>";
+        echo "</div>";
         ?>
         <div style='text-align: right'>
+            <span style="padding:10px; float:left;">
+                <input type="checkbox" class='usedefaultpricescheckbox' <?php if($this->useDefaultPrices()) { echo "CHECKED"; } ?>>Use default prices
+            </span>
            <span class='shop_button' gstype='clicksubmit' method='removeAllSelectedRooms' style='background-color:red; margin-top: 5px;'>Remove all rooms</span>
         </div>
         <div style="clear:both;"></div>

@@ -30,7 +30,22 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .searchbrregbutton', app.PmsNewBooking.showBrregSearch);
         $(document).on('click','.PmsNewBooking .brregsearchresultrow', app.PmsNewBooking.selectBrregResult);
         $(document).on('click','.PmsNewBooking .addonoption', app.PmsNewBooking.addAddonToBooking);
-        $(document).on('blur','.PmsNewBooking .roomprice', app.PmsNewBooking.changeRoomPrice);
+        $(document).on('click','.PmsNewBooking .usedefaultpricescheckbox', app.PmsNewBooking.usedefaultpricescheckbox);
+        $(document).on('keyup','.PmsNewBooking .roomprice', app.PmsNewBooking.changeRoomPrice);
+    },
+    usedefaultpricescheckbox : function() {
+        var checkbox = $(this);
+        var event = thundashop.Ajax.createEvent('','toggleUseDefaultPrices', $(this), {
+            "checked" : checkbox.is(':checked')
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            if(checkbox.is(':checked')) {
+                checkbox.closest('.section').find('.roomprice').attr('disabled','disabled');
+            } else {
+                checkbox.closest('.section').find('.roomprice').attr('disabled',null);
+            }
+        });
     },
     addAddonToBooking : function() {
         var remove = false;
@@ -53,7 +68,13 @@ app.PmsNewBooking = {
             "count" : count
         });
         var row = $(this).closest('.datarow');
-        thundashop.Ajax.post(event);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            var obj = JSON.parse(res);
+            row.find('.roomprice').val(obj.price);
+            row.find('.col_cost').html(obj.price);
+            row.find('.addonsarea').html(obj.addons);
+            $('.totalcostindicator').html(obj.totalcost);
+        });
     },
     
     changeRoomPrice : function() {
@@ -63,7 +84,14 @@ app.PmsNewBooking = {
             "roomid" : roomId,
             "newprice" : count
         });
-        thundashop.Ajax.post(event);
+        var row = $(this).closest('.datarow');
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            var obj = JSON.parse(res);
+            row.find('.roomprice').val(obj.price);
+            row.find('.col_cost').html(obj.price);
+            row.find('.addonsarea').html(obj.addons);
+            $('.totalcostindicator').html(obj.totalcost);
+        });
     },
     setDiscountCode : function() {
         if(typeof(waitToInsertCode) !== "undefined") {

@@ -887,21 +887,35 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
     
     public Map<TaxGroup, Double> getTaxesRoundedWithTwoDecimals() {
+        Map<TaxGroup, Double> realMap = new HashMap();
         Map<TaxGroup, Double> retMap = new HashMap();
+        Map<String, TaxGroup> groups = new HashMap();
+        
         cart.getItems().stream()
                 .forEach(item -> {
-                    Double current = retMap.get(item.getProduct().taxGroupObject);
+                    groups.put(item.getProduct().taxGroupObject.id, item.getProduct().taxGroupObject);
+                });
+        
+        cart.getItems().stream()
+                .forEach(item -> {
+                    TaxGroup taxGroup = groups.get(item.getProduct().taxGroupObject.id);
+                    Double current = retMap.get(taxGroup);
+                    
                     if (current == null) {
                         current = 0D;
                     }
                     
-                    double taxes = item.getTotalAmountRoundedWithTwoDecimals()- item.getTotalExRoundedWithTwoDecimals();
-                    current += Math.round(taxes * 100.0) / 100.0;
-                    
-                    retMap.put(item.getProduct().taxGroupObject, current);
+                    current += item.getTotalAmount()- item.getTotalEx();
+                    retMap.put(taxGroup, current);
                 });
         
-        return retMap;
+        for (TaxGroup group : retMap.keySet()) {
+            double taxes = retMap.get(group);
+            double ret = Math.round(taxes * 100.0) / 100.0;
+            realMap.put(group, ret);
+        }
+                    
+        return realMap;
     }
 
     public Date getDueDate() {
@@ -946,10 +960,12 @@ public class Order extends DataCommon implements Comparable<Order> {
      * @return 
      */
     public double getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group) {
-        return cart.getItems().stream()
-                .filter(item -> item.getProduct().taxGroupObject.equals(group))
-                .mapToDouble(item -> item.getTotalExRoundedWithTwoDecimals())
+        double total = cart.getItems().stream()
+                .filter(item -> item.getProduct().taxGroupObject.id.equals(group.id))
+                .mapToDouble(item -> item.getTotalEx())
                 .sum();
+        
+        return Math.round(total * 100.0) / 100.0;
                 
     }
 

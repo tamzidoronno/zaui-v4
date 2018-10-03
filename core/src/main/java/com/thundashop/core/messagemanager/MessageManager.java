@@ -237,29 +237,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     }
     
     public void sendErrorNotification(String inText, Exception ex) {
-        String text = "";
-        text += "<br/><b>Message:</b> <br/>";
-        text += inText.replace("\n", "<br/>");
-        text += "<br><br>Store id: " + storeId;
-        text += "<br/>Date: " + new Date();
-        text += "<br/>Store email: " + getStoreEmailAddress();
-        text += "<br/>Store name: " + getStoreName();
-        text += "<br/>Store default address: " + getStoreDefaultAddress();
-        text += "<br/>Store default login: " + getStoreDefaultAddress() + "/login.php";
-        text += "<br/>";
-        
-        
-        if (ex != null) {
-            text += "<br/>";
-            text += "<br/> <b> Stacktrace: </b>";
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            ex.printStackTrace(pw);
-            text += "<br/>   " + sw.toString().replace("\n", "<br/>");
-            text += "<br/>";
-        }
-        
-        sendMail("post@getshop.com", "post@getshop.com", "Error Notification (" + getStoreDefaultAddress() +")", text, "post@getshop.com", "post@getshop.com");
+        sendErrorNotificationToEmail("post@getshop.com", inText, ex);
     }
 
     public void sendMailWithDefaults(String name, String email, String title, String message) {
@@ -477,6 +455,33 @@ public class MessageManager extends ManagerBase implements IMessageManager {
               .boxed()
               .collect(toMap(i -> i / pageSize,
                              i -> list.subList(i, min(i + pageSize, list.size()))));
+    }
+
+    public void sendErrorNotificationToEmail(String email, String inText, Exception ex) {
+        String text = "";
+        text += "<br/><b>Message:</b> <br/>";
+        text += inText.replace("\n", "<br/>");
+        text += "<br><br>Store id: " + storeId;
+        text += "<br/>Date: " + new Date();
+        text += "<br/>Store email: " + getStoreEmailAddress();
+        text += "<br/>Store name: " + getStoreName();
+        text += "<br/>Store default address: " + getStoreDefaultAddress();
+        text += "<br/>Store default login: " + getStoreDefaultAddress() + "/login.php";
+        text += "<br/>";
+        
+        
+        if (ex != null) {
+            text += "<br/>";
+            text += "<br/> <b> Stacktrace: </b>";
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            text += "<br/>   " + sw.toString().replace("\n", "<br/>");
+            text += "<br/>";
+        }
+        
+        sendMail(email, email, "Error Notification (" + getStoreDefaultAddress() +")", text, email, email);
+ 
     }
 
 }

@@ -740,7 +740,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!warnedAboutNotAddedToBookingEngine.contains(booking.id) && booking.hasRoomsNotAddedToBookingEngine()) {
             String toWarn = "Booking with pms booking id not found in booking engine: " + booking.id + "<br>";
             warnedAboutNotAddedToBookingEngine.add(booking.id);
-            messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "out of sync booking", toWarn, "noreply@getshop.com", "noreply@getshop.com");
+            messageManager.sendErrorNotificationToEmail("pal@getshop.com", toWarn, null);
         }
         
         

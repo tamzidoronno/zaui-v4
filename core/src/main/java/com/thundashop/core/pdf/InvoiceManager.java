@@ -219,7 +219,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         }
     }
 
-    private void checkForNullNameOnProduct(Order order) {
+    public void checkForNullNameOnProduct(Order order) {
         for(CartItem item : order.cart.getItems()) {
             if(item.getProduct() != null && item.getProduct().name == null) {
                 item.getProduct().name = productManager.getProduct(item.getProduct().id).name;

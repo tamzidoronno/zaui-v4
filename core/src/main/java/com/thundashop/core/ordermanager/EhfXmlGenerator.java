@@ -279,7 +279,7 @@ public class EhfXmlGenerator {
         for (CartItem item : order.cart.getItems()) {
             i++;
             double unitPrice =  isCreditNote ? makePositive(Math.round(item.getProduct().priceExTaxes * 100.0) / 100.0) : Math.round(item.getProduct().priceExTaxes * 100.0) / 100.0;
-            double total = unitPrice * item.getCount();
+            double total = item.getTotalExRoundedWithTwoDecimals(); 
             double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
             
             String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "AA" : "S";

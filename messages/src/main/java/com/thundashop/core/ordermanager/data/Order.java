@@ -609,8 +609,11 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
     
     public double getTotalAmountRoundedTwoDecimals() {
-        double total = getTotalAmount();
-        return Math.round(total * 100.0) / 100.0;
+        double amount = 0.0;
+        for(CartItem item : cart.getItems()) {
+            amount += (Math.round(item.getTotalAmount() * 100.0) / 100.0);
+        }
+        return amount;
     }
 
     public double getTotalAmountUnfinalized() {
@@ -873,8 +876,16 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public Double getTotalAmountVatRoundedTwoDecimals () {
-        double total = getTotalAmountVat();
-        return Math.round(total * 100.0) / 100.0;    
+        double total = getTotalAmountRoundedTwoDecimals();
+        double amount = 0.0;
+        for(CartItem item : cart.getItems()) {
+            amount += item.getTotalEx();
+        }
+        
+        int total100 = (int)(total*100);
+        int amount100 = (int)(amount*100);
+        double newValue = (double)(total100-amount100) / 100;
+        return newValue;
     }
     
     public Double getTotalAmountVat() {
@@ -905,7 +916,8 @@ public class Order extends DataCommon implements Comparable<Order> {
                         current = 0D;
                     }
                     
-                    current += item.getTotalAmount()- item.getTotalEx();
+                    double taxesToAdd = item.getTotalAmount()- item.getTotalEx();
+                    current += Math.round(taxesToAdd * 100.0) / 100.0;
                     retMap.put(taxGroup, current);
                 });
         
@@ -962,7 +974,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public double getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group) {
         double total = cart.getItems().stream()
                 .filter(item -> item.getProduct().taxGroupObject.id.equals(group.id))
-                .mapToDouble(item -> item.getTotalEx())
+                .mapToDouble(item -> Math.round(item.getTotalEx() * 100.0) / 100.0)
                 .sum();
         
         return Math.round(total * 100.0) / 100.0;

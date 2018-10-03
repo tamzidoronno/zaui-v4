@@ -650,6 +650,9 @@ public class PmsBooking extends DataCommon {
             if(room.addedToWaitingList) {
                 continue;
             }
+            if(room.isEnded()) {
+                continue;
+            }
             if(room.isOverBooking()) {
                 continue;
             }

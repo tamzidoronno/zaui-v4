@@ -60,7 +60,7 @@ public class EhfCsvReader {
                 firstLine = false;
                 continue;
             }
-            int vatnumber = Integer.parseInt(s[1].replaceAll("\"", ""));
+            Long vatnumber = Long.parseLong(s[1].replaceAll("\"", ""));
             boolean canUse = s[6].replaceAll("\"", "").equals("Ja");
             if (canUse) {
                 EhfComplientCompany ehfComp = new EhfComplientCompany();

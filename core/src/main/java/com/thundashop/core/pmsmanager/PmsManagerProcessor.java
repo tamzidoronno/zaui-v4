@@ -1068,6 +1068,7 @@ public class PmsManagerProcessor {
                 }
                 if(order.payment != null && order.payment.paymentType != null && 
                         (!order.payment.paymentType.toLowerCase().contains("dibs") &&
+                        !order.payment.paymentType.toLowerCase().contains("netaxept") &&
                         !order.payment.paymentType.toLowerCase().contains("epay"))) {
                     continue;
                 }

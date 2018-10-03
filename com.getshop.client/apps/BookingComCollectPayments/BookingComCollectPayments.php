@@ -9,9 +9,20 @@ class BookingComCollectPayments extends \PaymentApplication implements \Applicat
     public function getName() {
         return "Booking.com";
     }
+    
+    public function renderConfig() {
+        $this->includeFile("config");
+    }
 
     public function render() {
         
     }
+    
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("automarkpaid", $_POST['automarkpaid']);
+    }
+    
+    
 }
 ?>

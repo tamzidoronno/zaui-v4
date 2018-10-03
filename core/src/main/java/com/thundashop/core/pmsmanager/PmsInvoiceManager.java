@@ -2232,7 +2232,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             cal.add(Calendar.DAY_OF_YEAR, -1);
             order.rowCreatedDate = cal.getTime();
         }
-
+        
         orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
 
         if (virtual) {
@@ -2241,7 +2241,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             orderManager.saveOrder(order);
         }
         
+        
+        automarkOrderAsPaidIfNessesary(order);
+         
         return order;
+    }
+
+    private void automarkOrderAsPaidIfNessesary(Order order) {
+        try {
+            Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
+            if(paymentapp != null) {
+                String automarkpaid = paymentapp.getSetting("automarkpaid");
+                if(automarkpaid != null && automarkpaid.equals("true")) {
+                    orderManager.markAsPaid(order.id, new Date(), orderManager.getTotalAmount(order));
+                }
+            }
+        }catch(Exception e) {
+            messageManager.sendErrorNotification("Failed to automark order as paid", e);
+        }
     }
 
     private LinkedHashMap<String, Double> calculateProgressivePrice(String typeId, Date start, Date end, int offset, Integer priceType, PmsPricing prices) {

@@ -18,4 +18,18 @@ h1 { font-weight: 100; }
     .gscell_9.gsuicell { min-height: 310px; }
     .gscell_49.gsuicell { background-size: inherit !important; }
     .gscell_49.gsuicell img { margin-top: 20px; }
+    .gsarea[area="header"] .ContentManager {
+        position: absolute;
+        right: 20px;
+        top: -170px;
+    }
+    .gsarea[area="body"] { padding-left: 10px; padding-right: 10px; }
+    .gsarea[area="header"] .Menu {
+        left: 20px;
+        top: -10px;
+    }
+    .GoogleMaps { height: 300px !important; }
+    
+    .gsarea[area="header"] .ImageDisplayer[appsettingsid="831647b5-6a63-4c46-a3a3-1b4a7c36710a"] img { height: 75px !important; }
+    .gsarea[area="header"] .ImageDisplayer[appsettingsid="831647b5-6a63-4c46-a3a3-1b4a7c36710a"] .displayimagecontainer { text-align: center; }
 }

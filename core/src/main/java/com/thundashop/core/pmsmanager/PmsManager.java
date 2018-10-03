@@ -740,7 +740,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!warnedAboutNotAddedToBookingEngine.contains(booking.id) && booking.hasRoomsNotAddedToBookingEngine()) {
             String toWarn = "Booking with pms booking id not found in booking engine: " + booking.id + "<br>";
             warnedAboutNotAddedToBookingEngine.add(booking.id);
-            messageManager.sendErrorNotificationToEmail("pal@getshop.com", toWarn, null);
+            if(getConfigurationSecure().bookingProfile != null && getConfiguration().bookingProfile.equals("hotel")) {
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", toWarn, null);
+            }
         }
         
         

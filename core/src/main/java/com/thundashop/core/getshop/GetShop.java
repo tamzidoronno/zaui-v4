@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.mongodb.morphia.Morphia;
@@ -72,7 +73,7 @@ import org.springframework.stereotype.Component;
 public class GetShop extends ManagerBase implements IGetShop {
 
     private List<DibsAutoCollectData> listToAdd = new ArrayList();
-    private List<EhfComplientCompany> ehfCompanies = new ArrayList();
+    private CopyOnWriteArrayList<EhfComplientCompany> ehfCompanies = new CopyOnWriteArrayList();
     
     private HashMap<String, List<Partner>> partners;
     private HashMap<String, PartnerData> partnerData = new HashMap();
@@ -890,7 +891,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             return;
         }
         
-        List<Integer> vatNumbers = companiesFromDatahotelDifi.stream()
+        List<Long> vatNumbers = companiesFromDatahotelDifi.stream()
                 .map(c -> c.vatNumber)
                 .collect(Collectors.toList());
         
@@ -912,7 +913,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         });
     }
     
-    private EhfComplientCompany getEhfCompany(int vatNumber) {
+    private EhfComplientCompany getEhfCompany(Long vatNumber) {
         return ehfCompanies.stream()
                     .filter(c -> c.vatNumber == vatNumber)
                     .findAny()
@@ -920,7 +921,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public boolean canInvoiceOverEhf(int vatNumber) {
+    public boolean canInvoiceOverEhf(Long vatNumber) {
         return getEhfCompany(vatNumber) != null;
     }
 }

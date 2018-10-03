@@ -12,6 +12,6 @@ import com.thundashop.core.common.DataCommon;
  * @author ktonder
  */
 public class EhfComplientCompany extends DataCommon {
-    public int vatNumber;
+    public long vatNumber;
     public String name;
 }

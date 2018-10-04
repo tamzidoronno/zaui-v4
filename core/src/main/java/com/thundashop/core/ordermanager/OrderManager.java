@@ -2357,6 +2357,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public String getEhfXml(String orderId) {
         AccountingDetails details = invoiceManager.getAccountingDetails();
         Order order = getOrder(orderId);
+        invoiceManager.checkForNullNameOnProduct(order);
+        invoiceManager.generateKidOnOrder(order);
+        
         User user = userManager.getUserById(order.userId);
         EhfXmlGenerator generator = new EhfXmlGenerator(order, details, user);
         String xml = "";

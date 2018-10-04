@@ -72,6 +72,8 @@ public class EhfXmlGenerator {
     public String generateXmlInternal() {
         String useId = order.kid != null && !order.kid.isEmpty() ? order.kid : ""+order.incrementOrderId;
         
+        String vatNumberWithoutMVAextention = details.vatNumber.toLowerCase().replaceAll("mva", "");
+        
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         
         if (!isCreditNote) {
@@ -121,7 +123,7 @@ public class EhfXmlGenerator {
         xml
                 += "        <cac:AccountingSupplierParty>\n"
                 + "                <cac:Party>\n"
-                + "                        <cbc:EndpointID schemeID=\"NO:ORGNR\">" + details.vatNumber + "</cbc:EndpointID>\n"
+                + "                        <cbc:EndpointID schemeID=\"NO:ORGNR\">" + vatNumberWithoutMVAextention + "</cbc:EndpointID>\n"
                 + "                        <cac:PartyName>\n"
                 + "                                <cbc:Name>" + details.companyName + "</cbc:Name>\n"
                 + "                        </cac:PartyName>\n"
@@ -134,14 +136,14 @@ public class EhfXmlGenerator {
                 + "                                </cac:Country>\n"
                 + "                        </cac:PostalAddress>\n"
                 + "                        <cac:PartyTaxScheme>\n"
-                + "                                <cbc:CompanyID schemeID=\"NO:VAT\">" + details.vatNumber + "MVA</cbc:CompanyID>\n"
+                + "                                <cbc:CompanyID schemeID=\"NO:VAT\">" + details.vatNumber + "</cbc:CompanyID>\n"
                 + "                                <cac:TaxScheme>\n"
                 + "                                        <cbc:ID>VAT</cbc:ID>\n"
                 + "                                </cac:TaxScheme>\n"
                 + "                        </cac:PartyTaxScheme>\n"
                 + "                        <cac:PartyLegalEntity>\n"
                 + "                                <cbc:RegistrationName>" + details.companyName + "</cbc:RegistrationName>\n"
-                + "                                <cbc:CompanyID schemeID=\"NO:ORGNR\" schemeName=\"Foretaksregisteret\">" + details.vatNumber + "</cbc:CompanyID>\n"
+                + "                                <cbc:CompanyID schemeID=\"NO:ORGNR\" schemeName=\"Foretaksregisteret\">" + vatNumberWithoutMVAextention + "</cbc:CompanyID>\n"
                 + "                                <cac:RegistrationAddress>\n"
                 + "                                        <cbc:CityName>" + details.city + "</cbc:CityName>\n"
                 + "                                        <cac:Country>\n"
@@ -276,14 +278,16 @@ public class EhfXmlGenerator {
         int i = 0;
         for (CartItem item : order.cart.getItems()) {
             i++;
-            double total = makePositive(item.getTotalExRoundedWithTwoDecimals());
-            double unitPrice = makePositive(Math.round(item.getProduct().priceExTaxes * 100.0) / 100.0);
+            double unitPrice =  isCreditNote ? makePositive(Math.round(item.getProduct().priceExTaxes * 100.0) / 100.0) : Math.round(item.getProduct().priceExTaxes * 100.0) / 100.0;
+            double total = item.getTotalExRoundedWithTwoDecimals(); 
+            double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
+            
             String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "AA" : "S";
             String invoicelinetext = isCreditNote ? "CreditNoteLine" : "InvoiceLine";
             String invoieqtytext = isCreditNote ? "CreditedQuantity" : "InvoicedQuantity";
             xml += "        <cac:"+invoicelinetext+">\n"
                     + "                <cbc:ID>" + i + "</cbc:ID>\n"
-                    + "                <cbc:"+invoieqtytext+" unitCode=\"NAR\" unitCodeListID=\"UNECERec20\">" + makePositive(item.getCount()) + "</cbc:"+invoieqtytext+">\n"
+                    + "                <cbc:"+invoieqtytext+" unitCode=\"NAR\" unitCodeListID=\"UNECERec20\">" + count + "</cbc:"+invoieqtytext+">\n"
                     + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + total + "</cbc:LineExtensionAmount>\n"
                     + "                <cbc:AccountingCost>BookingCode001</cbc:AccountingCost>\n"
                     + "                <cac:InvoicePeriod>\n"

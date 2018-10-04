@@ -319,7 +319,7 @@ public class CartItem implements Serializable {
     }
 
     public double getTotalAmountRoundedWithTwoDecimals() {
-        return Math.round(getTotalAmount() * 100.0) / 100.0;
+        return Math.round(((double)count) * getProduct().price * 100.0) / 100.0;
     }
     
     public double getTotalAmount() {

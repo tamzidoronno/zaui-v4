@@ -38,7 +38,6 @@ public class EhfCsvReader {
             lines.add(country);
         }
 
-        System.out.println("Lines from difi: " + lines.size());
         return lines;
     }
 
@@ -69,8 +68,6 @@ public class EhfCsvReader {
                 retList.add(ehfComp);
             }
         }
-        
-        System.out.println("Added retlist: " + lines.size());
         
         return retList;
     }

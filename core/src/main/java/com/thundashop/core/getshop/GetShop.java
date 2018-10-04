@@ -886,7 +886,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     public void loadEhfCompanies() {
         EhfCsvReader reader = new EhfCsvReader();
         List<EhfComplientCompany> companiesFromDatahotelDifi = reader.getCompanies();
-        
+     
         if (companiesFromDatahotelDifi.isEmpty()) {
             return;
         }

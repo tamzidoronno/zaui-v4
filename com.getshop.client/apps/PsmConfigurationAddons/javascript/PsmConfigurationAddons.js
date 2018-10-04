@@ -7,6 +7,24 @@ app.PsmConfigurationAddons = {
         $(document).on('click', '.PsmConfigurationAddons .saveExtendedInformation', app.PsmConfigurationAddons.saveExtendedInformation);
         $(document).on('click', '.PsmConfigurationAddons .addNewDateRange', app.PsmConfigurationAddons.addNewDateRange);
         $(document).on('click', '.PsmConfigurationAddons .removeRestrictionRange', app.PsmConfigurationAddons.removeRestrictionRange);
+        $(document).on('click', '.PsmConfigurationAddons .changeproductname', app.PsmConfigurationAddons.doChangeName);
+    },
+    doChangeName : function() {
+        var td = $(this).closest('td');
+        var curname = td.find('.productnamecontainer').text();
+        var newname = prompt("New name", curname);
+        if(!newname) {
+            return;
+        }
+        var productid = $(this).attr('productid');
+        
+        var event = thundashop.Ajax.createEvent('','changeProductName',$(this), {
+            "productid" : productid,
+            "name" : newname
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            td.find('.productnamecontainer').html(newname);
+        });
     },
     removeRestrictionRange : function() {
         var row = $(this).closest('tr');

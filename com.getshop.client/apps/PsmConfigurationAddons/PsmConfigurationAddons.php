@@ -14,6 +14,12 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         return "TESWT"; 
     }
     
+    public function changeProductName() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+        $product->name = $_POST['data']['name'];
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
     public function readAddons() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
         $roomId = $_POST['data']['roomid'];

@@ -83,7 +83,8 @@ foreach($config->addonConfiguration as $item) {
         <td style="width:300px;text-align: left;position:relative;">
             <i class="fa fa-info-circle loadExtendedProductInformation" style="color:green; cursor:pointer;"></i>
             <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gstype="forceClicksubmitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
-            <?php echo $product->name;
+            <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
+            <?php echo "<span class='productnamecontainer'>" . $product->name . "</span>";
             $translationcount = 0;
             $translations = "";
             foreach($addonItem->translationStrings as $key => $val) {

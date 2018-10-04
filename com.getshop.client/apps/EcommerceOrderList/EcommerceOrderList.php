@@ -420,8 +420,19 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
      * @param \core_ordermanager_data_Order $order
      */
     public function getVerifoneTerminalPrinter($order) {
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
+        if (!$app)
+            return;
+        
         if($order->status != 7 && !$order->closed) {
-            $text .= "<i class='fa fa-credit-card dontExpand' gsclick='sendToVerifone' verifonid='0' orderid='".$order->id."' title='Send to verifone terminal'></i>";
+            $offset = 0;
+            for ($offset=0; $offset<5; $offset++) {
+                $ip = $app->settings->{"ipaddr$offset"}->value;
+                if ($ip) {
+                    $text .= "<i class='fa fa-credit-card dontExpand' gsclick='sendToVerifone' verifonid='$offset' orderid='".$order->id."' title='Send to verifone terminal $offset'></i>";
+                }
+            }
+            
         }
         return $text;
     }
@@ -436,6 +447,14 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             return "";
         }
         
+        if($order->status != 7) {
+            return "";
+        }
+        
+        if(!$order->payment || !$order->payment->paymentType) {
+            return "";
+        }
+        
         $cashpoints = $this->getApi()->getGdsManager()->getDevices();
         
         if (!$cashpoints) {
@@ -443,6 +462,14 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         }
         
         $text = "";
+        
+        $validPaymentMethods = array();
+        $validPaymentMethods[] = 'ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal';
+        $validPaymentMethods[] = 'ns_565ea7bd_c56b_41fe_b421_18f873c63a8f\PayOnDelivery';
+        
+        if (!in_array($order->payment->paymentType, $validPaymentMethods)) {
+            return ""; 
+        }
         
         foreach ($cashpoints as $cashpoint) {
             if ($cashpoint->type == "cashap") {

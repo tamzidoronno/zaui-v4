@@ -6,19 +6,26 @@ package com.thundashop.core.pdf;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.AnnotationExclusionStrategy;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.gsd.DevicePrintMessage;
 import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.gsd.ItemLine;
+import com.thundashop.core.gsd.VatLine;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.socket.GsonUTCDateAdapter;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.storemanager.StoreManager;
@@ -27,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -261,11 +269,62 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Override
     public void sendReceiptToCashRegisterPoint(String deviceId, String orderId) {
-        String base64phpInvoice = generateInvoiceByPHP(orderId, "template2_no");
+        Order order = orderManager.getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+        
+        InvoiceFormatter formatter = new InvoiceFormatter("");
+        
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .serializeSpecialFloatingPointValues()
+                .registerTypeAdapter(Date.class, new GsonUTCDateAdapter())
+                .disableInnerClassSerialization()
+                .create();
+        
         DevicePrintMessage printMsg = new DevicePrintMessage();
         printMsg.deviceId = deviceId;
-        printMsg.payLoad = base64phpInvoice;
+        printMsg.accountDetails = getAccountingDetails();
+        
+        Map<TaxGroup, Double> vats = order.getTaxesRoundedWithTwoDecimals();
+        
+        for (TaxGroup group : vats.keySet()) {
+            VatLine vatLine = new VatLine();
+            vatLine.percent = group.taxRate;
+            vatLine.total = vats.get(group);
+            printMsg.vatLines.add(vatLine);
+        }
+        
+        for (CartItem cartItem : order.cart.getItems()) {
+            ItemLine itemLine = new ItemLine();
+            itemLine.description = formatter.getItemText(cartItem);
+            itemLine.price = cartItem.getTotalExRoundedWithTwoDecimals();
+            printMsg.itemLines.add(itemLine);
+        }
+        
+        printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals();
+        printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals() - order.getTotalAmountVatRoundedTwoDecimals();
+        printMsg.paymentMethod = getPaymentTypeForTermalReceipt(order, applicationPool.getApplicationByNameSpace(order.payment.paymentType));
+        printMsg.paymentDate = order.paymentDate;
+
         gdsManager.sendMessageToDevice(deviceId, printMsg);
+    }
+    
+    private String getPaymentTypeForTermalReceipt(Order order, Application application) {
+        if (application.id.equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2")) {
+            return "kort";
+        }
+        
+        if (application.id.equals("565ea7bd-c56b-41fe-b421-18f873c63a8f")) {
+            return "kontant";
+        }
+        
+        if (application.id.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
+            return "faktura";
+        }
+        
+        return application.appName;
     }
 
 }

@@ -140,7 +140,7 @@ public class InvoiceFormatter {
         this.accountingDetails = accountingDetails;
     }
 
-    private String getItemText(CartItem item) {
+    public String getItemText(CartItem item) {
         if(item == null) {
             return "";
         }
@@ -197,5 +197,5 @@ public class InvoiceFormatter {
     void setTotalLines() {
         this.base = this.base.replace("{totalAmount}", ""+order.getTotalAmount());
     }
-    
+
 }

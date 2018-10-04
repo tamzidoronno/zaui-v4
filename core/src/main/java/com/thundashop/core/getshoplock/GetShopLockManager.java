@@ -1065,6 +1065,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         if(masterCodes.checkIfEmtpy()) {
             saveObject(masterCodes);
         }
+        
+        if(!masterCodes.codes.containsKey(1)) { masterCodes.codes.put(1, "1234"); }
+        if(!masterCodes.codes.containsKey(2)) { masterCodes.codes.put(2, "1234"); }
+        if(!masterCodes.codes.containsKey(3)) { masterCodes.codes.put(3, "1234"); }
+        if(!masterCodes.codes.containsKey(4)) { masterCodes.codes.put(4, "1234"); }
+        if(!masterCodes.codes.containsKey(5)) { masterCodes.codes.put(5, "1234"); }
+        
         return masterCodes;
     }
     

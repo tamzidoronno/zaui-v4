@@ -107,7 +107,7 @@
                                         echo "<i class='fa fa-file-pdf-o' style='cursor:pointer' title='Download order $incId' orderid='".$ordId."' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$ordId."&incrementalOrderId=".$incId."\");'></i> ";
                                     }
                                 }
-                                echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='$roomIncluded' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
+                                echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
                                 
                                 echo $room->guests[0]->name . "</td>";
                                 echo "<td>" . round($val) . "</td>";

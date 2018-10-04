@@ -190,6 +190,8 @@ thundashop.common.activateCKEditor = function(id, config) {
                 var data = event.editor.getData();
                 var toPush = {};
                 toPush['content'] = data;
+                toPush['fromid'] = $(target).attr('id');
+                
                 var altid = target.attr('altid');
 
                 var gsevent = thundashop.Ajax.createEvent('','saveContent',$(target),toPush);

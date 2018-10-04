@@ -26,7 +26,11 @@ class ModulePageMenu {
         return $this->entries;
     }
 
-    public function renderTop() {
+    /**
+     * 
+     * @param core_usermanager_data_User $user
+     */
+    public function renderTop($user) {
         $menuEntries = $this->getEntries();
         ?>
 
@@ -37,7 +41,14 @@ class ModulePageMenu {
             ?>
             <div class="menuentries horizontal">
                 <div class="entries">
-                    <? foreach ($menuEntries as $entry) { ?>
+                    <? foreach ($menuEntries as $entry) {
+                        $useraccess = (array)$user->pmsPageAccess;
+                        if(!empty($useraccess)) {
+                            if(!in_array($entry->getPageId(),$useraccess)) {
+                                continue;
+                            }
+                        }
+                        ?>
                         <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
                     <? } ?>
                 </div>

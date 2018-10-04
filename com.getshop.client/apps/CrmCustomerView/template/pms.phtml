@@ -1,0 +1,28 @@
+<div class='header'>PMS Restrictions</div>
+<?php
+/* @var $user core_usermanager_data_User */
+$user = $this->getUser();
+if($user->type < 100) {
+    echo "User need to be an administrator to have access to modules";
+    return;
+}
+?>
+<div gstype='form' method='updatePmsRights'>
+    <?php
+    $menu = new ModulePage(null);
+    $user = $this->getUser();
+    foreach($menu->getTopMenuPms()->getEntries() as $entry) {
+        echo "<div style='clear:both;'>";
+        $checked = "";
+        if(in_array($entry->getPageId(),$user->pmsPageAccess)) {
+            $checked = "CHECKED";
+        }
+        echo $entry->getName();
+        echo "<input class='checkbox' style='float:right;' type='checkbox' gsname='".$entry->getPageId()."' $checked>";
+        echo "</div>";
+    }
+    ?>
+    <div class='footer'>
+        <span class='shop_button' gstype='submit'>Update access rights</span>
+    </div>
+</div>

@@ -17,7 +17,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     
     public function formatRoomPrice($row) {
         $guests = $row->price;
-        return "<input type='txt' class='gsniceinput1 roomprice' roomid='".$row->roomid."' value='". $guests . "'>";
+        $disabled = "";
+        if($this->useDefaultPrices()) {
+            $disabled = "DISABLED";
+        }
+        return "<input type='txt' class='gsniceinput1 roomprice' roomid='".$row->roomid."' value='". $guests . "' $disabled>";
     }
     
     public function updateGuestCount() {
@@ -28,8 +32,12 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
         }
         
-        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
+        $keepPrices = !$this->useDefaultPrices();
+        
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, $keepPrices);
         $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $booking->id);
+        
+        $this->printRowPriceUpdate();
     }
     
     
@@ -45,6 +53,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         }
         
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
+        $this->printRowPriceUpdate();
     }
     
     public function setDiscountCode() {
@@ -181,6 +190,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     
     public function completequickreservation() {
         $this->completeByUser($this->createSetUser());
+        $this->clearUseDefaultPrices();
     }
     
     private function completeByUser($userId) {
@@ -426,6 +436,41 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $prod = $this->getApi()->getProductManager()->getProduct($productId);
         $this->products[$productId] = $prod;
         return $prod;
+    }
+
+    public function toggleUseDefaultPrices() {
+        $_SESSION['usedefaultpriceswhenaddingnewroomsinpms'] = $_POST['data']['checked'];
+    }
+    
+    public function useDefaultPrices() {
+        if(isset($_SESSION['usedefaultpriceswhenaddingnewroomsinpms'])) {
+            return $_SESSION['usedefaultpriceswhenaddingnewroomsinpms'] == "true";
+        }
+        return true;
+    }
+
+    public function printRowPriceUpdate() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $pmsRoom = null;
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $pmsRoom = $r;
+            }
+        }
+        
+        $result = array();
+        $result['guestcount'] = $r->numberOfGuests;
+        $result['price'] = $pmsRoom->price;
+        $result['addons'] = $this->createAcronymAddonsRow($pmsRoom);
+        $result['totalcost'] = $booking->totalPrice;
+        echo json_encode($result);
+    }
+
+    public function clearUseDefaultPrices() {
+        if(isset($_SESSION['usedefaultpriceswhenaddingnewroomsinpms'])) {
+            unset($_SESSION['usedefaultpriceswhenaddingnewroomsinpms']);
+        }
     }
 
 }

@@ -275,6 +275,18 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $this->getApi()->getUserManager()->saveUser($user);
     }
     
+    public function updatePmsRights() {
+        $menu = new \ModulePage(null);
+        $user = $this->getUser();
+        $user->pmsPageAccess = array();
+        foreach($menu->getTopMenuPms()->getEntries() as $entry) {
+            if($_POST['data'][$entry->getPageId()] == "true") {
+                $user->pmsPageAccess[] = $entry->getPageId();
+            }
+        }
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     public function saveAccountingDetails() {
         $user = $this->getUser();
         $user->accountingId = $_POST['data']['accountingId'];

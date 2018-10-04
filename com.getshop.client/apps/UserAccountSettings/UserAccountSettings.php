@@ -19,9 +19,21 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
             return "<i class='fa fa-check'></i>";
         }
     }
+    /**
+     * @param \core_usermanager_data_User $user
+     * @return string
+     */
     public function formatpms($user) { 
+        $access = (array)$user->pmsPageAccess;
+        $size = sizeof($access);
         if(in_array("pms", $user->hasAccessToModules)) {
+            if($size > 0) {
+                return $this->formatAccessToPages($access);
+            }
             return "<i class='fa fa-check'></i>";
+        }
+        if($size > 0) {
+            return $this->formatAccessToPages($access);
         }
     }
     public function formatsalespoint($user) {
@@ -89,5 +101,18 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
         $app->loadUser($_POST['data']['id']);
         $app->renderApplication(true, $this);
     }
+
+    public function formatAccessToPages($access) {
+        $menu = new \ModulePage(null);
+        $size = sizeof($access);
+        $title = "Has access to $size pages<br>";
+        foreach ($menu->getTopMenuPms()->getEntries() as $entry) {
+            if(in_array($entry->getPageId(),$access)) {
+                $title .= $entry->getName() . "<br>";
+            }
+        }
+        return "<span title='$title'>$size</span>";
+    }
+
 }
 ?>

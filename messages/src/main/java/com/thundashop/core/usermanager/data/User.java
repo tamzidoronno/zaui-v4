@@ -41,6 +41,7 @@ public class User extends DataCommon implements Comparable<User> {
     public Date lastBooked = null;
     public Date lastOrdered = null;
     public Double orderAmount = 0.0;
+    public List<String> pmsPageAccess = new ArrayList();
     
     public HashMap<String,UserOAuthorization> oAuths = new HashMap();
     

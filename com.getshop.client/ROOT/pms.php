@@ -15,6 +15,7 @@ if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['booki
 if(isset($_GET['page']) && $_GET['page'] == "a90a9031-b67d-4d98-b034-f8c201a8f496" && isset($_GET['loadBooking'])) {
     $_SESSION['PmsSearchBooking_loadBooking'] = $_GET['loadBooking'];
 }
+$user = $factory->getApi()->getUserManager()->getLoggedOnUser();
 
 $_SESSION['firstloadpage'] = true;
 
@@ -88,7 +89,7 @@ $_SESSION['firstloadpage'] = true;
         <div area="header" class="gsarea">
             <?
             $menu = $page->getMenu("pms");
-            $menu->renderTop();
+            $menu->renderTop($user);
             ?>
         </div>
         

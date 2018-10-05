@@ -459,6 +459,11 @@ class Factory extends FactoryBase {
         $homePageId = $this->getHomePageName();
 
         if (!isset($navigation->currentPageId)) {
+            if($_SERVER['REQUEST_URI'] && strlen($_SERVER['REQUEST_URI']) > 4 && $_SERVER['SCRIPT_NAME'] == "/index.php") {
+                header('location:/');
+                exit(0);
+            }
+            
             $navigation->currentPageId = $homePageId;
         }
 

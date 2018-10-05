@@ -1703,6 +1703,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
                 
                 User user = userManager.getUserById(order.userId);
+                if (user == null || user.address == null)
+                    return;
+                
                 if(user.address != null) {
                     user.address.emailAddress = user.emailAddress;
                     user.address.prefix = user.prefix;
@@ -1710,8 +1713,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     user.address.fullName = user.fullName;
                 }
                 
-                if (user == null || user.address == null)
-                    return;
                 
                 if (order.cart.address.isSame(user, user.address)) {
                     return;

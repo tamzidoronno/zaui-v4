@@ -1641,7 +1641,7 @@ function getshop_cancelPayment() {
     }catch(e) { getshop_handleException(e); }
 }
 
-$(document).on('touchend click', getshop_hideGuestSelectionBox);
+$(document).on('touchend click', '.GslBooking', getshop_hideGuestSelectionBox);
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
 $(document).on('touchend click', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
 $(document).on('touchend click', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);

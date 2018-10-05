@@ -17,6 +17,7 @@ class SalesStatisticsEntry implements Serializable {
     
     public void finalize() {
         avgOrderPrice = (int)(totalPrice / numberOfOrders);
+        
     }
 
     void addPayment(String paymentType, Double total) {

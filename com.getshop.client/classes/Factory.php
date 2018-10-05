@@ -468,7 +468,7 @@ class Factory extends FactoryBase {
         }
 
         $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
-
+        
         $javaPage = $this->pageManager->getPage($pageId);
 
         if ($javaPage == null) {

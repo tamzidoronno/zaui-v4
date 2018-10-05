@@ -449,6 +449,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->endDate = $this->convertToJavaDate(strtotime($selectedFilter->end));
         $filter->timeInterval = $selectedFilter->view;
         $filter->includeVirtual = false;
+        $filter->fromPms = true;
         $filter->removeAddonsIncludedInRoomPrice = true;
         
         if(stristr($selectedFilter->type, "forecasted")) {

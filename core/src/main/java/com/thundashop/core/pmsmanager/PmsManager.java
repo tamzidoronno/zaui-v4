@@ -7375,24 +7375,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         Date now = new Date();
-        //In the midle of the periode selection.
-        if (now.before(filter.endDate) && now.after(filter.startDate)) {
-            PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
-            orderFilterToUse.end = getEndOfToday();
-            setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
-            orderFilterToUse.start = getEndOfToday();
-            orderFilterToUse.end = filter.endDate;
-            orderFilterToUse.includeVirtual = true;
-            setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
-        } else if (now.after(filter.endDate)) {
-            //Before the selected periode.
+        
+        if(filter.fromPms) {
             PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
             setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
         } else {
-            //After the selected periode
-            PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
-            orderFilterToUse.includeVirtual = true;
-            setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+            //In the midle of the periode selection.
+            if (now.before(filter.endDate) && now.after(filter.startDate)) {
+                PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
+                orderFilterToUse.end = getEndOfToday();
+                setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+                orderFilterToUse.start = getEndOfToday();
+                orderFilterToUse.end = filter.endDate;
+                orderFilterToUse.includeVirtual = true;
+                setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+            } else if (now.after(filter.endDate)) {
+                //Before the selected periode.
+                PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
+                setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+            } else {
+                //After the selected periode
+                PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
+                orderFilterToUse.includeVirtual = true;
+                setResultFromIncomeReportByFilter(result, orderFilterToUse, roomProductIds);
+            }
         }
     }
 

@@ -9,6 +9,7 @@ import java.util.List;
 
 public class PmsBookingFilter extends DataCommon {
 
+
     boolean containsCode(String couponCode) {
         if(couponCode == null) {
             return false;
@@ -93,7 +94,8 @@ public class PmsBookingFilter extends DataCommon {
     public List<String> typeFilter = new ArrayList();
     public List<String> itemFilter = new ArrayList();
     public String filterName = "";
-    
+    boolean fromPms = false;
+
     public List<String> customers = new ArrayList();
     public List<String> addons = new ArrayList();
     public List<String> codes = new ArrayList();

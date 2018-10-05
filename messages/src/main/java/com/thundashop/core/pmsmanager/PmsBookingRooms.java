@@ -234,10 +234,14 @@ public class PmsBookingRooms implements Serializable {
             return false;
         }
         
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(time);
-        cal.set(Calendar.HOUR_OF_DAY, 17);
-        if(cal.getTime().after(date.start) && cal.getTime().before(date.end)) {
+        if(isStartingToday(time)) {
+            return true;
+        }
+        if(isEndingToday(time)) {
+            return false;
+        }
+        
+        if(time.after(date.start) && time.before(date.end)) {
             return true;
         }
         
@@ -701,9 +705,6 @@ public class PmsBookingRooms implements Serializable {
     boolean isStartingToday(Date now) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
-        if(cal.get(Calendar.HOUR_OF_DAY) < 6) {
-            return false;
-        }
         
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(date.start);

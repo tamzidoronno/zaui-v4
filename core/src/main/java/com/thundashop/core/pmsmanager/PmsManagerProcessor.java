@@ -790,7 +790,7 @@ public class PmsManagerProcessor {
                 externalChannel = false;
             }
             boolean forceSend = externalChannel;
-            if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
+            if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings && !manager.storeManager.isPikStore()) {
                 forceSend = true;
             }
             if(booking.hasForcedAccessedRooms()) {

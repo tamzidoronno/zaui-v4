@@ -185,6 +185,10 @@ class PmsReport extends \MarketingApplication implements \Application {
         echo json_encode($rows);
     }
     
+    public function formatAvgPrice($row) {
+        return "<span title='Average from billed'>" . $row->avgPrice . "</span> / <span title='Average from total'>" . $row->avgPriceForcasted . "</span>";
+    }
+    
     public function printCoverageReport() {
         $date = date("d-m-Y", time());
         echo "<div style='text-align:right;'>";
@@ -200,7 +204,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             array('arrivals', 'Arrivals', 'arrivals', null),
             array('departures', 'Departures', 'departures', null),
             array('guests', 'Guests', 'guestCount', null),
-            array('avprice', 'Avg. price', "avgPrice", null),
+            array('avprice', 'Avg. price', "avgPrice", "formatAvgPrice"),
             array('revpar', 'RevPar', 'revPar', "formatRevPar"),
             array('total', 'Total', 'totalForcasted', null),
             array('totalbilled', 'Billed', 'totalPrice', null),

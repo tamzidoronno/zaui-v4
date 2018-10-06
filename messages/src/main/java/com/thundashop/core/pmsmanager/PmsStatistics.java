@@ -48,7 +48,8 @@ public class PmsStatistics implements Serializable {
             total.coverage = total.coverage / entries.size();
         }
         if(total.roomsRentedOut > 0) {
-            total.avgPrice = total.totalPrice / total.roomsRentedOut;
+            total.avgPrice = (double)Math.round(total.totalPrice / total.roomsRentedOut);
+            total.avgPriceForcasted = (double)Math.round(total.totalForcasted / total.roomsRentedOut);
         }
         if(entries.size() > 0) {
             total.revPar = total.revPar / entries.size();

@@ -39,6 +39,7 @@ public class StatisticsEntry {
     public Integer totalRoomsOriginal;
     public Double totalForcasted = 0.0;
     public double totalRemaining = 0.0;
+    double avgPriceForcasted = 0.0;
     
     public void finalize() {
         
@@ -50,11 +51,13 @@ public class StatisticsEntry {
         
         if(roomsRentedOut > 0) {
             avgPrice = totalPrice / roomsRentedOut;
+            avgPriceForcasted = totalForcasted / roomsRentedOut;
         } else {
             avgPrice = 0.0;
         }
         totalPrice = (double)Math.round(totalPrice);
         avgPrice = (double)Math.round(avgPrice);
+        avgPriceForcasted = (double)Math.round(avgPriceForcasted);
         spearRooms = totalRooms - roomsRentedOut;
         revPar = totalPrice / (roomsRentedOut + spearRooms);
         double result = (double)roomsRentedOut / (double)totalRooms;

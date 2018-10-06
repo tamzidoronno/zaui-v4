@@ -804,7 +804,7 @@ public class PmsManagerProcessor {
                 }
             }
             
-            
+
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
                 if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {

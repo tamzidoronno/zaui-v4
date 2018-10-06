@@ -217,6 +217,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        if(isset($_POST['data']['getshop_resetlistmode']) && $_POST['data']['getshop_resetlistmode'] == "true") {
+            $this->removeGroupList();
+        }
         $this->setModalVariable();
         $this->includefile("bookingoverview");
     }

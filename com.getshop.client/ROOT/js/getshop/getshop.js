@@ -924,12 +924,16 @@ getshop.Table = {
 
         var data = gs_modules_data_array[identifier][rowNumber];
         data['gscolumn'] = target.attr('index');
+        if(base.hasClass('activeroom')) {
+            data['getshop_resetlistmode'] = "true";
+        }
 
         var event = thundashop.Ajax.createEvent(null, table.attr('method'), btn, data);
         event['synchron'] = true;
         latestOverLayLoadingEvent = event;
         getshop.showOverlay("2");
         thundashop.Ajax.post(event, function (res) {
+            latestOverLayLoadingEvent.data.getshop_resetlistmode = "false";
             $('.gsoverlay2 .gsoverlayinner .content').html(res);
             $('.gsoverlay2 .gsoverlayinner').prepend('<i class="fa fa-close closemodal"></i>');
         });

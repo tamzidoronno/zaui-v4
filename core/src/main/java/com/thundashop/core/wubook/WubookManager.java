@@ -846,11 +846,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(newbooking == null) {
                     sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
                 } else {
-                    pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
                     for(PmsBookingRooms room : newbooking.getActiveRooms()) {
                         room.deletedByChannelManagerForModification = true;
                         pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
+                        if(room.isStarted()) {
+                            newbooking.wubookModifiedResId.add(booking.reservationCode);
+                            pmsManager.logEntry("Failed to update from channel manager, stay already started.", newbooking.id, null);
+                            pmsManager.saveBooking(newbooking);
+                            messageManager.sendErrorNotification("Failed to update already started stay from channel manager.", null);
+                            return "";
+                        }
                     }
+                    pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
                     isUpdate = true;
                 }
             } else if(booking.delete) {

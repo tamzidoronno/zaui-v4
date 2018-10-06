@@ -706,7 +706,6 @@ public class PmsManagerProcessor {
             boolean needSaving = false;
             boolean payedfor = true; 
             boolean firstDate = true;
-            boolean forceAccess = false;
             if(config.getRequirePayments()) {
                 boolean needCapture = false;
                 for(String orderId : booking.orderIds) {
@@ -717,12 +716,6 @@ public class PmsManagerProcessor {
                     if(order.payment != null && order.payment.paymentType != null && 
                             order.payment.paymentType.toLowerCase().contains("invoice")) {
                         manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
-                        continue;
-                    }
-                    if(order.payment != null && order.payment.paymentType != null && 
-                            order.payment.paymentType.toLowerCase().contains("bookingcomcollectpayments")) {
-                        forceAccess = true;
-                        payedfor = false;
                         continue;
                     }
                     if(order.payment != null && order.payment.paymentType != null && 
@@ -738,7 +731,6 @@ public class PmsManagerProcessor {
                     if(total <= 0.0 && !order.hasFreezeItem()) {
                         continue;
                     }
-                    forceAccess = false;
                     if(order.status != Order.Status.PAYMENT_COMPLETED || order.hasFreezeItem()) {
                         for(CartItem item : order.cart.getItems()) {
                             if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
@@ -752,13 +744,6 @@ public class PmsManagerProcessor {
                             firstDate = false;
                             payedfor = false;
                         }
-                    }
-                }
-
-                for(PmsBookingRooms tmpRoom : booking.getActiveRooms()) {
-                    if(tmpRoom.forceAccess && forceAccess) {
-                        tmpRoom.forceAccess = forceAccess;
-                        needSaving = true;
                     }
                 }
 
@@ -785,15 +770,12 @@ public class PmsManagerProcessor {
                 }catch(Exception e) {}
 
             }
-            boolean externalChannel = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
-            if(externalChannel && booking.channel.equals("terminal")) {
-                externalChannel = false;
+            boolean isBookingExternalChannel = (booking.channel != null && !booking.channel.isEmpty());
+            if(isBookingExternalChannel && booking.channel.equals("terminal")) {
+                isBookingExternalChannel = false;
             }
-            boolean forceSend = externalChannel;
+            boolean forceSend = isBookingExternalChannel;
             if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings && !manager.storeManager.isPikStore()) {
-                forceSend = true;
-            }
-            if(booking.hasForcedAccessedRooms()) {
                 forceSend = true;
             }
             if(manager.getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay > 0) {
@@ -804,14 +786,14 @@ public class PmsManagerProcessor {
                 }
             }
             
-
-            if(booking.payedFor != payedfor || forceSend) {
+            if(booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
-                if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
-                    if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
-                        manager.doNotificationFromProcessor("booking_completed", booking, null);
-                        needSaving = true;
-                    }
+                needSaving = true;
+            }
+            if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
+                if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
+                    manager.doNotificationFromProcessor("booking_completed", booking, null);
+                    needSaving = true;
                 }
             }
             if(booking.payedFor && !booking.avoidAutoDelete) {

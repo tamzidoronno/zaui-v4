@@ -2,6 +2,8 @@
 namespace ns_a5599ed1_60be_43f4_85a6_a09d5318638f;
 
 class PmsAvailabilityDateSelector extends \MarketingApplication implements \Application {
+    var $errorMessage;
+    
     public function getDescription() {
         
     }
@@ -18,11 +20,21 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
         }
         
         $this->includefile("selector");
+        if($this->errorMessage) {
+            echo $this->errorMessage;
+        }
     }
     
     public function closeForPeriode() {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00"));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59"));
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $config->defaultStart));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " "  . $config->defaultEnd));
+        
+        if(strtotime($start) > strtotime($end)) {
+            $this->errorMessage = "If you want to close for one day, please specify start as check in and end as check out.";
+            return;
+        }
+        
         $data = new \core_pmsmanager_TimeRepeaterData();
         $data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
         $data->firstEvent->start = $start;

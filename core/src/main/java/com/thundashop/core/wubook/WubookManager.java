@@ -1370,6 +1370,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public void addRestriction(WubookAvailabilityRestrictions restriction) {
+        if(restriction.start.after(restriction.end)) {
+            return;
+        }
         saveObject(restriction);
         restrictions.put(restriction.id, restriction);
     }

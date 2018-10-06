@@ -7,7 +7,7 @@
                 <div gstype='form' method='addWubookRestriction'>
                     <h3>1. Time periode</h3>
                     <input type='txt' class='startdate gsniceinput1' gsname='start' value='<?php echo date("d.m.Y", time()); ?>'>
-                    <input type='txt' class='enddate gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", time()); ?>'>
+                    <input type='txt' class='enddate gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", time()+86400); ?>'>
                     <h3>2. Select rooms to close</h3>
                     <input type='checkbox' class='checkallclosingtypes'> Select all<br>
                     <?php
@@ -19,6 +19,11 @@
                     ?><bR><br>
                     <input type='button' value='Close selected types for the OTA(s)' gstype="submit" >
                 </div>
+                <?php
+                if($this->wubookWarning) {
+                    echo "<div style='margin:10px;color:red;'>" . $this->wubookWarning . "</div>";
+                }
+                ?>
                 <?php
                 if($allRestrictions) {
                     echo "<br><br>Closed ota for periode(s):<br>";
@@ -53,6 +58,11 @@
                     <input type='txt' class='enddate gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", time()); ?>'>
                     <span class="shop_button" gstype="submit">Close hotel for periode</span>
                 </div>
+                <?php
+                if($this->errorMessage) {
+                    echo "<div style='margin:10px;color:red;'>" . $this->errorMessage . "</div>";
+                }
+                ?>
                 
                 <?php
                 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());

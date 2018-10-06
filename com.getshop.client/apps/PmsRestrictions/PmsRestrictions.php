@@ -2,6 +2,8 @@
 namespace ns_7db21d0e_6636_4dd3_a767_48b06932416c;
 
 class PmsRestrictions extends \WebshopApplication implements \Application {
+    var $errorMessage = "";
+    var $wubookWarning = "";
     public function getDescription() {
         
     }
@@ -14,6 +16,12 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $config->defaultStart));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " "  . $config->defaultEnd));
+        
+        if(strtotime($start) > strtotime($end)) {
+            $this->errorMessage = "If you want to close for one day, please specify start as check in and end as check out.";
+            return;
+        }
+        
         $data = new \core_pmsmanager_TimeRepeaterData();
         $data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
         $data->firstEvent->start = $start;
@@ -93,6 +101,12 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         $startTime = $_POST['data']['start'];
         $endTime = $_POST['data']['end'];
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        
+        if(strtotime($startTime) >= strtotime($endTime)) {
+            $this->wubookWarning = "If you want to close for one day, please specify start as check in and end as check out.";
+            return;
+        }
+        
         if(!$endTime || !$startTime) {
             echo "Please select a start and end date";
         } else {

@@ -333,6 +333,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         
         if(isset($_SESSION['PmsSearchBooking_loadBooking']) && $_SESSION['PmsSearchBooking_loadBooking']) {
             $filter->bookingId = $_SESSION['PmsSearchBooking_loadBooking'];
+            $this->setCurrentFilter($filter);
         }
         
         return $filter;

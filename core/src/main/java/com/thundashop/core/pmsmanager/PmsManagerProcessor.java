@@ -170,7 +170,15 @@ public class PmsManagerProcessor {
         try {
             PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
             if(deleted) {
-                manager.logEntry("Removing code from lock code (" + room.code + ")", booking.id , room.bookingItemId);
+                String isExpired = room.isEnded() ? "yes" : "no";
+                String isStarted = room.isStarted() ? "yes" : "no";
+                String blocked = room.blocked ? "yes" : "no";
+                String deletedText = room.isDeleted() ? "yes" : "no";
+                String startEndText = "";
+                if(room.date != null && room.date.start != null && room.date.end != null) {
+                    startEndText = room.date.start + " - " + room.date.end;
+                }
+                manager.logEntry("Removing code from lock, code (" + room.code + "), expired: <b>" + isExpired + "</b> started: <b>" + isStarted + "</b> blocked: <b>" + blocked + "</b> deleted: <b>" + deletedText+"</b> startend: <b>"+startEndText + "</b>", booking.id, room.bookingItemId);
             } else {
                 manager.logEntry("Getting code from lock.", booking.id , room.bookingItemId);
             }
@@ -331,12 +339,11 @@ public class PmsManagerProcessor {
             
             //Also deleted rooms needs to be removed from arx.
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
-                if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || 
-                        (room.deleted && room.addedToArx) || 
-                        //Special function for rena treningssenter.
-                        (manager.storeManager.getStoreId().equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b") && 
-                        !manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
-                        (room.blocked && room.addedToArx)) {
+                if(!room.addedToArx) {
+                    continue;
+                }
+                boolean isRenaTreningNotPaid = (manager.storeManager.getStoreId().equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b") && !manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId));
+                if (room.isEnded() || !room.isStarted() || room.deleted || isRenaTreningNotPaid || room.blocked) {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;

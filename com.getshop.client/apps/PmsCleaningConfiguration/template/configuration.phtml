@@ -91,18 +91,6 @@ $days[7] = "Sunday";
         <span class='configentry'>
         <?
             $checked = "";
-            if($notificationSettings->whenCleaningEndStayForGuestCheckinOut) {
-                $checked = "CHECKED";
-            }
-        ?>
-        <input type='checkbox' gsname='whenCleaningEndStayForGuestCheckinOut' <? echo $checked; ?>>
-        </span>
-        Make sure the booking is ended when the room is marked as clean.
-    </div>
-    <div class='configrow'>
-        <span class='configentry'>
-        <?
-            $checked = "";
             if($notificationSettings->autoAddMissingItemsToRoom) {
                 $checked = "CHECKED";
             }

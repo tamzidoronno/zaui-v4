@@ -276,8 +276,14 @@ public class PmsConfiguration extends DataCommon {
     boolean automaticallyCloseRoomIfDirtySameDay = false;
     public boolean autoAddMissingItemsToRoom = false;
     public boolean autoNotifyCareTakerForMissingInventory = false;
-    public boolean whenCleaningEndStayForGuestCheckinOut = false;
+    private boolean whenCleaningEndStayForGuestCheckinOut = false;
 
+    public boolean getWhenCleaningEndStayForGuestCheckinOut() {
+        if(isPikStore) {
+            return true;
+        }
+        return whenCleaningEndStayForGuestCheckinOut;
+    }
     
     /* Mail settings */
     public String senderName = "";

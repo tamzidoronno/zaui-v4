@@ -6999,7 +6999,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void markRoomCleanInternal(String itemId, boolean logCleaning) {
-        if (getConfiguration().whenCleaningEndStayForGuestCheckinOut) {
+        if (getConfiguration().getWhenCleaningEndStayForGuestCheckinOut()) {
             endStay(itemId);
         }
 

@@ -29,6 +29,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         foreach($booking->rooms as $r) {
             if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
                 $r->numberOfGuests = $_POST['data']['count'];
+                $r->guests = $this->createGuestList($r);
             }
         }
         
@@ -279,6 +280,8 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
                 $room->date->start = $start;
                 $room->date->end = $end;
                 $room->bookingItemTypeId = $type->id;
+                $room->numberOfGuests = 1;
+                $room->guests = $this->createGuestList($room);
                 if($i >= $available) {
                     $room->addedToWaitingList = true;
                 }
@@ -471,6 +474,25 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         if(isset($_SESSION['usedefaultpriceswhenaddingnewroomsinpms'])) {
             unset($_SESSION['usedefaultpriceswhenaddingnewroomsinpms']);
         }
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
+    public function createGuestList($room) {
+        $current = array();
+        for($i = 0;$i < $room->numberOfGuests; $i++) {
+            if(isset($room->guests[$i])) {
+                $current[] = $room->guests[$i];
+            }
+        }
+        $diff = $room->numberOfGuests - sizeof($room->guests);
+        for($i = 0; $i < $diff;$i++) {
+            $guest = new \core_pmsmanager_PmsGuests();
+            $current[] = $guest;
+        }
+        return $current;
     }
 
 }

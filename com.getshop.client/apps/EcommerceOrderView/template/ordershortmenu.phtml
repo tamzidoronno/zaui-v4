@@ -5,10 +5,13 @@ $paymentApps = $this->getAvailablePaymentMethods();
 $total = $this->getApi()->getOrderManager()->getRestToPay($order);
 $user = $this->getApi()->getUserManager()->getUserById($order->userId);
 $closed = $order->closed;
+$isManuallyClosed = false;
+if(!$closed && $order->manuallyClosed) {
+    $isManuallyClosed = true;
+}
 if($order->manuallyClosed) {
     $closed = true;
 }
-
 if ($closed) {
 ?>
 <div>
@@ -48,7 +51,7 @@ if ($closed) {
 </div>
 <?
 }
-if($order->status != 7) {
+if($order->status != 7 && !$isManuallyClosed) {
     ?>
     <div class="gs_shop_small_icon" onclick='$(".EcommerceOrderView .markaspaidarea").toggle();' style='margin-top:2px;'><i class="fa fa-check-square markorderaspaid" ></i> <? echo $this->__f("Mark order as paid"); ?></div>
     <?php 

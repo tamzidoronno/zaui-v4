@@ -137,7 +137,8 @@ class PmsReport extends \MarketingApplication implements \Application {
          $header[] = "Arrivals";
          $header[] = "Departures";
          $header[] = "Guests";
-         $header[] = "Avg. Price";
+         $header[] = "Avg. Price total";
+         $header[] = "Avg. Price billed";
          $header[] = "Revpar";
          $header[] = "Total";
          $header[] = "Billed";
@@ -157,6 +158,7 @@ class PmsReport extends \MarketingApplication implements \Application {
              $row[] = $d->arrivals;
              $row[] = $d->departures;
              $row[] = $d->guestCount;
+             $row[] = $d->avgPriceForcasted;
              $row[] = $d->avgPrice;
              $row[] = $d->revPar;
              $row[] = $d->totalForcasted;

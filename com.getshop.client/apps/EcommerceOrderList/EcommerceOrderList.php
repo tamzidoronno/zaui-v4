@@ -243,15 +243,19 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             }
         }
         $sentDate = null;
+        $addr = "";
+        $sendLog = "";
         foreach($order->shipmentLog as $logEntry) {
             if($logEntry->date) {
                 if(!$sentDate || $sentDate < strtotime($logEntry->date)) {
                     $sentDate = strtotime($logEntry->date);
+                    $sendLog .= date("d.m.Y H:i", $sentDate) . " sent to " . $logEntry->address . "\n";
+                    $addr = $logEntry->address;
                 }
             }
         }
         if($sentDate) {
-            $sentDate = date("d.m.Y", $sentDate);
+            $sentDate = "<i class 'fa fa-share'></i> " . date("d.m.Y", $sentDate);
         } else {
             $sentDate = "Not sent yet";
         }
@@ -260,7 +264,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             $roomid = $this->externalReferenceIds[0];
         }
         
-        $text .= "<div class='sentdate'><span title='Where sent at $sentDate'>" . $sentDate."</span></div>";
+        $text .= "<div class='sentdate'><span title='$sendLog'>" . $sentDate."</span></div>";
         return $text;
     }
 

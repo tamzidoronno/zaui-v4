@@ -52,7 +52,7 @@ public class PmsStatistics implements Serializable {
             total.avgPriceForcasted = (double)Math.round(total.totalForcasted / total.roomsRentedOut);
         }
         if(entries.size() > 0) {
-            total.revPar = total.revPar / entries.size();
+            total.revPar = (double)Math.round(total.revPar / entries.size());
         }
         
         

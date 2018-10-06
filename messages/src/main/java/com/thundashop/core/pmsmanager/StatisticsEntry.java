@@ -59,7 +59,7 @@ public class StatisticsEntry {
         avgPrice = (double)Math.round(avgPrice);
         avgPriceForcasted = (double)Math.round(avgPriceForcasted);
         spearRooms = totalRooms - roomsRentedOut;
-        revPar = totalPrice / (roomsRentedOut + spearRooms);
+        revPar = (double)Math.round(totalPrice / (roomsRentedOut + spearRooms));
         double result = (double)roomsRentedOut / (double)totalRooms;
         result *= 100;
         coverage = (int)result;

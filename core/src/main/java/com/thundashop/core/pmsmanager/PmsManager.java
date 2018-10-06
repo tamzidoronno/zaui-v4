@@ -49,6 +49,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pga.PgaManager;
 import com.thundashop.core.pmseventmanager.PmsEventManager;
@@ -1338,6 +1339,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (order != null) {
                 order.sentToPhone = phone;
                 order.sentToPhonePrefix = prefix;
+                
+                OrderShipmentLogEntry e = new OrderShipmentLogEntry();
+                e.type = key;
+                e.date = new Date();
+                e.address = prefix + "-" + phone;
+                order.shipmentLog.add(e);
             }
 
             if (prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
@@ -1377,6 +1384,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (order != null) {
                     order.recieptEmail = recipientEmail;
                     order.sentToEmail = recipientEmail;
+                    
+                    OrderShipmentLogEntry e = new OrderShipmentLogEntry();
+                    e.type = key;
+                    e.date = new Date();
+                    e.address = recipientEmail;
+                    order.shipmentLog.add(e);
+
                     orderManager.saveOrder(order);
                 }
             }

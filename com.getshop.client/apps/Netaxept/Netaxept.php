@@ -135,6 +135,7 @@ class Netaxept extends \PaymentApplication implements \Application {
             $this->transactionId = $RegisterResult->TransactionId;
             $this->order->paymentTransactionId = $this->transactionId;
             $this->order->status = 2;
+            $this->order->payment->transactionLog->{time()*1000} = "Transferring to payment window";
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         } catch (SoapFault $fault) {
             print_r($fault);

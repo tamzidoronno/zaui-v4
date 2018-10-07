@@ -1232,6 +1232,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     //This is specifically for wubook, should have been moved into wubookmanager.
                     order.closed = false;
                     order.status = Order.Status.WAITING_FOR_PAYMENT;
+                    order.orderTransactions.clear();
                 } else {
                     continue;
                 }

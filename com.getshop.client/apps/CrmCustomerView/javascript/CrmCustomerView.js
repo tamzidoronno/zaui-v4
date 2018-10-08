@@ -3,6 +3,29 @@ app.CrmCustomerView = {
         $(document).on('click','.CrmCustomerView .crmmenuentry', app.CrmCustomerView.loadArea);
         $(document).on('click','.CrmCustomerView .paymentmethodbtn', app.CrmCustomerView.toggleButton);
         $(document).on('click','.CrmCustomerView .docreatenewcode', app.CrmCustomerView.doCreateNewDicountCode);
+        $(document).on('change','.CrmCustomerView [gsname="attachedDiscountCode"]', app.CrmCustomerView.changeDiscountSystem);
+    },
+    loadCorrectDiscountSystem : function() {
+        $("[gsname='attachedDiscountCode']").each(function() {
+            if($(this).is(':visible')) {
+                $(this).change();
+            }
+        });
+    },
+    changeDiscountSystem : function() {
+        if($(this).val() !== "") {
+            var event = thundashop.Ajax.createEvent('','loadDiscountCode',$(this), {
+                "code" : $(this).val()
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.discountcodesystemconfig').html(res);
+            });
+            $('.newdiscountsystem').show();
+            $('.olddiscountsystem').hide();
+        } else {
+            $('.olddiscountsystem').show();
+            $('.newdiscountsystem').hide();
+        }
     },
     doCreateNewDicountCode : function() {
         var code = prompt("Enter the new code");
@@ -15,6 +38,7 @@ app.CrmCustomerView = {
         thundashop.Ajax.postWithCallBack(event, function() {
             $("[gsname='attachedDiscountCode']").append("<option value='" + code + "'>" + code + "</option>");
              $("[gsname='attachedDiscountCode']").val(code);
+             app.CrmCustomerView.loadCorrectDiscountSystem();
         });
     },
     loadArea : function() {

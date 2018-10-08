@@ -10,6 +10,10 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         
     }
     
+    public function loadDiscountCode() {
+        $this->includefile("discountcodesetup");
+    }
+    
     public function formatRooms($booking) {
         return sizeof($booking->rooms);
     }

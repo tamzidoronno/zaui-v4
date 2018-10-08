@@ -78,26 +78,9 @@ foreach ($domains as $domain) {
                     </td>
                 </tr>
                 <tr>
-                    <td><b>Price plan</b><br>
-                        Specify a specific price plan for this user<br>
-                    <td class='rowinput'>
-                        <select class='gsniceselect1' gsname='pricePlan'>
-                            <?php
-                            echo "<option value=''>Default</option>";
-                            $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($domain);
-                            foreach ($priceCodes as $code) {
-                                if ($code == "default") {
-                                    continue;
-                                }
-                                $selected = "";
-                                if ($discounts->pricePlan == $code) {
-                                    $selected = "SELECTED";
-                                }
-                                echo "<option value='" . $code . "' $selected>" . $code . "</option>";
-                            }
-                            ?>                                    
-                        </select>
-                    </td>
+                    <td><b>Booking code</b><br>
+                        Specify a booking code for this account, can be handed out and used in the discount code field in the booking process.<br>
+                    <td class='rowinput'><input type='text' class='gsniceinput1' value='<?php echo $user->referenceKey; ?>' style='width:80px;'><br><br></td>
                 </tr>
                 <tr>
                     <td><b>Attached discount code (<a style='color:blue; cursor:pointer;' class='docreatenewcode'>create a new code</a>)</b><br>
@@ -118,20 +101,6 @@ foreach ($domains as $domain) {
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <td><b>Discount type</b><br>
-                        Percentage or fixed price discount?<br>
-                    <td class='rowinput'>
-                        <select class='gsniceselect1' gsname='discounttype'>
-                            <option value='percentage'>Percentage</option>
-                            <option value='fixedprice' <?php
-                            if ($discounts->discountType == 1) {
-                                echo "SELECTED";
-                            }
-                            ?>>Fixed price</option>
-                        </select>
-                    </td>
-                </tr>
 
                 <tr>
                     <?php
@@ -149,6 +118,21 @@ foreach ($domains as $domain) {
                         </div>
                     </td>
                 </tr>
+                <tr class="olddiscountsystem">
+                    <td><b>Discount type</b><br>
+                        Percentage or fixed price discount?<br>
+                    <td class='rowinput'>
+                        <select class='gsniceselect1' gsname='discounttype'>
+                            <option value='percentage'>Percentage</option>
+                            <option value='fixedprice' <?php
+                            if ($discounts->discountType == 1) {
+                                echo "SELECTED";
+                            }
+                            ?>>Fixed price</option>
+                        </select>
+                    </td>
+                </tr>
+
 
                 <?php
                 foreach ($rooms as $room) {
@@ -156,12 +140,18 @@ foreach ($domains as $domain) {
                     if (isset($discounts->discounts->{$room->id})) {
                         $amount = $discounts->discounts->{$room->id};
                     }
-                    echo "<tr>";
+                    echo "<tr class='olddiscountsystem'>";
                     echo "<td>" . $room->name . "</td>";
                     echo "<td class='rowinput'><input type='txt' class='gsniceinput1' style='width:50px;' value='$amount' gsname='discount_" . $room->id . "'></td>";
                     echo "</tr>";
                 }
                 ?>
+                
+                <tr class="newdiscountsystem">
+                    <td colspan='21'>
+                        <div class='discountcodesystemconfig'></div>
+                    </td>
+                </tr>
             </table>
         </div>
         <div class='footer'>
@@ -171,4 +161,7 @@ foreach ($domains as $domain) {
     <?php
 }
 ?>
+<script>
+    app.CrmCustomerView.loadCorrectDiscountSystem();
+</script>
     

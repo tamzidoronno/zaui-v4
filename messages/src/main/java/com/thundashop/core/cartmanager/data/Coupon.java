@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.cartmanager.data;
 
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.PmsRepeatingData;
 import java.util.ArrayList;
@@ -41,4 +42,11 @@ public class Coupon extends DataCommon {
         }
         return false;
     }
+
+    public void convertToNewSystem(List<BookingItemType> types) {
+        for(BookingItemType type : types) {
+            dailyPriceAmountByType.put(type.id+"_1", (double)amount);
+        }
+    }
+
 }

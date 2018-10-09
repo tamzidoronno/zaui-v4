@@ -18,6 +18,7 @@ $rowCreatedDate = "{rowCreatedDate}";
 $dueDate = "{dueDate}";
 $incrementOrderId = "{incrementOrderId}";
 $itemLines = "{itemLines}";
+$itemLinesLarge = "{itemLinesLarge}";
 $invoiceNote = "{invoiceNote}";
 $status = (int)$_GET['status'];
 $kid = "{kid}";
@@ -76,15 +77,6 @@ function doTranslation($key) {
             
             <?php
             echo $itemLines;
-            /*
-            foreach($cart->items as $item) {
-                if(!isset($taxes[$item->product->taxGroupObject->taxRate])) {
-                    $taxes[$item->product->taxGroupObject->taxRate] = 0;
-                }
-                $taxes[$item->product->taxGroupObject->taxRate] += $item->product->price - $item->product->priceExTaxes;
-                $netAmount += $item->product->priceExTaxes;
-            }
-             */
             ?>
         </div>
 
@@ -194,6 +186,7 @@ function doTranslation($key) {
             <div class='girofooterbottom'></div>
         </div>
     </div>
+    <?php echo $itemLinesLarge; ?>
 </body>
 
 <style>
@@ -206,7 +199,7 @@ function doTranslation($key) {
     .girofooterbottom { height: 20px; background-color: #fff685;}
     .accountnumber { display:inline-block; background-color:#fff; height: 24px; width: 20px; margin-right: 3px; }
     .footaccountnumberarea { background-color: #fff685; padding: 2px; padding-left: 30px;padding-top: 5px; }
-    .giromiddle { height: 400px; display:inline-block; position: relative; width: 100%; box-sizing: border-box;}
+    .giromiddle { height: 380px; display:inline-block; position: relative; width: 100%; box-sizing: border-box;}
     .giropaywheninfo { position:absolute !important; right: 10px; top: 40px; }
     .giropaidto { position:absolute !important; right: 10px; bottom: 40px; width: 300px; height: 60px;}
     .giropaidby { position:absolute !important; left: 10px; bottom: 40px; width: 300px; height: 60px;}
@@ -242,4 +235,5 @@ function doTranslation($key) {
     .orderitemprice { display:inline-block; width: 120px; }
     .orderitemcount { display:inline-block; width: 40px; }
     .orderitemtotal { display:inline-block; width: 120px; text-align: right; }
+    .page2 { padding: 20px; }
 </style>

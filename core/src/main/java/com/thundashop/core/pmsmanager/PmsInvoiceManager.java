@@ -2349,11 +2349,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
                 int days = 1;
+                Integer guestCount = 0;
                 if(room != null) {
                     days = getNumberOfDays(room.date.start, room.date.end);
+                    guestCount = room.numberOfGuests;
                 }
                 if(cartManager.couponIsValid(booking.rowCreatedDate, couponCode, start,end, productId, days)) {
-                    price = cartManager.calculatePriceForCouponWithoutSubstract(couponCode, price, days);
+                    price = cartManager.calculatePriceForCouponWithoutSubstract(couponCode, price, days, guestCount, typeId);
                 }
             }
         }

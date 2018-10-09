@@ -210,6 +210,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean tmpFixed = false;
     private String overrideNotificationTitle;
     private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
+    private boolean convertedDiscountSystem = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -661,6 +662,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
+        if(!convertedDiscountSystem) { cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; }
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -3709,6 +3711,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
+        if(!convertedDiscountSystem) { cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; }
         List<PmsRoomSimple> res = new ArrayList();
         gsTiming("filtering 1");
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
@@ -5634,7 +5637,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (cartManager.couponIsValid(booking.rowCreatedDate, booking.couponCode, item.date, item.date, item.productId, days)) {
                 Coupon coupon = cartManager.getCoupon(booking.couponCode);
                 if (coupon.containsAddonProductToInclude(item.productId)) {
-                    item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price, days);
+                    item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price, days, room.numberOfGuests, room.bookingItemTypeId);
                 }
             }
             if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {

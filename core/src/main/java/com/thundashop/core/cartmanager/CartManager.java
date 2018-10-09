@@ -1,6 +1,7 @@
 package com.thundashop.core.cartmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
@@ -499,7 +500,7 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
 
-    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price, int days) {
+    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price, int days, Integer guestCount, String bookingTypeId) {
         Coupon coupon = getCoupon(couponCode); 
         Double newPrice = price;
         if(coupon != null) {
@@ -508,7 +509,11 @@ public class CartManager extends ManagerBase implements ICartManager {
                     newPrice = price - coupon.amount;
                 }
                 if(coupon.type == CouponType.FIXEDPRICE) {
-                    newPrice = (double)coupon.amount;
+                    if(guestCount != null && bookingTypeId != null && coupon.dailyPriceAmountByType.containsKey(bookingTypeId+"_" +guestCount)) {
+                        newPrice = coupon.dailyPriceAmountByType.get(bookingTypeId+"_" +guestCount);
+                    } else {
+                        newPrice = price;
+                    }
                 }
                 if(coupon.type == CouponType.PERCENTAGE) {
                     double multiplier = (double)(100-coupon.amount)/(double)100;
@@ -577,6 +582,14 @@ public class CartManager extends ManagerBase implements ICartManager {
         Cart cart = getCart();
         for(CartItem item : cart.getItems()) {
             item.keepOnlyDateRange(start, end);
+        }
+    }
+    
+    public void checkIfNeedsToConvertToNewCouponSystem(List<BookingItemType> types) {
+        for(Coupon coupon : coupons.values()) {
+            if(coupon.type == CouponType.FIXEDPRICE && coupon.dailyPriceAmountByType.isEmpty()) {
+                coupon.convertToNewSystem(types);
+            }
         }
     }
 }

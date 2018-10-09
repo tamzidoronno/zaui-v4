@@ -428,6 +428,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         if (!$app)
             return;
         
+        $text = "";
         if($order->status != 7 && !$order->closed) {
             $offset = 0;
             for ($offset=0; $offset<5; $offset++) {
@@ -447,7 +448,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     
     public function getCashPointPrinters($order) {
         
-        if(!$order->paymentDate) {
+        if(!isset($order->paymentDate) || !$order->paymentDate) {
             return "";
         }
         

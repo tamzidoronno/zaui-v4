@@ -99,7 +99,13 @@ public class InvoiceFormatter {
             text += "</div>";
             lines += text;
         }
-        this.base = this.base.replace("{itemLines}", lines);
+        if(order.cart.getItems().size() > 20) {
+            this.base = this.base.replace("{itemLinesLarge}", "<div class='page2'>" + lines + "</div>");
+            this.base = this.base.replace("{itemLines}", "See attachment(s) for more information.");
+        } else {
+            this.base = this.base.replace("{itemLinesLarge}", "");
+            this.base = this.base.replace("{itemLines}", lines);
+        }
     }
     
     public void setTaxesLines() {

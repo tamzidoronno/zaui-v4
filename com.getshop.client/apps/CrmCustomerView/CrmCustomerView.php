@@ -11,7 +11,8 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
     }
     
     public function loadDiscountCode() {
-        $this->includefile("discountcodesetup");
+        $pmsPricingNew = new \ns_4c8e3fe7_3c81_4a74_b5f6_442f841a0cb1\PmsPricingNew();
+        $pmsPricingNew->loadEditDiscountCode();
     }
     
     public function formatRooms($booking) {
@@ -63,10 +64,11 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
         $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
         $user->showExTaxes = $_POST['data']['showExTaxes'] == "true";
+        $user->referenceKey = $_POST['data']['referencecode'];
         $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
         $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
         $discount->discountType = 0;
-        $discount->pricePlan = $_POST['data']['pricePlan'];
+        $discount->pricePlan = "default";
         $discount->attachedDiscountCode = $_POST['data']['attachedDiscountCode'];
         
         if($_POST['data']['discounttype'] == "fixedprice") {
@@ -75,7 +77,9 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         foreach($_POST['data'] as $index => $val) {
             if(stristr($index, "discount_")) {
                 $room = str_replace("discount_", "", $index);
-                $discount->discounts->{$room} = $val;
+                if($val && is_numeric($val)) {
+                    $discount->discounts->{$roomsaveDiscounts} = $val;
+                }
             }
         }
         $enabledMethods = array();
@@ -92,6 +96,8 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($domain, $discount);
         $this->getApi()->getUserManager()->saveUser($user);
+        
+        $this->updateDiscountCode();
     }
     
     /** @param \core_pmsmanager_PmsBooking $booking */
@@ -358,6 +364,11 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
     
     public function formatRowCreatedDate($user) {
         return \GetShopModuleTable::formatDate($user->rowCreatedDate);
+    }
+
+    public function updateDiscountCode() {
+        $pmsPricing = new \ns_4c8e3fe7_3c81_4a74_b5f6_442f841a0cb1\PmsPricingNew();
+        $pmsPricing->saveDiscountCode();
     }
 
 }

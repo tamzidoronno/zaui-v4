@@ -16,7 +16,14 @@ app.PmsPricingNew = {
         $(document).on('click','.PmsPricingNew .toggleUpdateDiscountCode', app.PmsPricingNew.toggleUpdateDiscountCode);
     },
     toggleUpdateDiscountCode : function() {
-        $(this).closest('td').find('.updateDiscountCodeForm').toggle();
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','loadEditDiscountCode', $(this), {
+            "code" : btn.attr('couponcode')
+        });
+        btn.closest('td').find('.updateDiscountCodeForm').toggle();
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            btn.closest('td').find('.updateDiscountCodeForm .innerupdatediscountcodeform').html(res);
+        });
     },
     startEditPricePlan : function() {
         var event = thundashop.Ajax.createEvent('','loadAdvancedPricePlan', $(this), {

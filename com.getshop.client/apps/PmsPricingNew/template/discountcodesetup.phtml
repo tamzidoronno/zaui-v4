@@ -23,10 +23,10 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
         </div>
         <div>
             <span class='colspacer'><input type='txt' disabled class='gsniceinput1' value='<?php echo $code->code; ?>'></span>
-            <span class='colspacer'><input type='txt' class='gsniceinput1' value='<?php echo $code->timesLeft; ?>'></span>
-            <span class='colspacer'><input type='txt' class='gsniceinput1' value='<?php echo $code->description; ?>'></span>
+            <span class='colspacer'><input type='txt' class='gsniceinput1' gsname='timesLeft' value='<?php echo $code->timesLeft; ?>'></span>
+            <span class='colspacer'><input type='txt' class='gsniceinput1' gsname='description' value='<?php echo $code->description; ?>'></span>
             <span class='colspacer'>
-                <select class='gsniceselect1 pricetypeselection'>
+                <select class='gsniceselect1 pricetypeselection' gsname='type'>
                     <?php
                     foreach($discountTypes as $idx => $name) {
                         $selected = $code->type == $idx ? "SELECTED" :"";
@@ -40,35 +40,38 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
     <span class="middlearea">
         <div class='restriction_addonstitile'>Prices</div>
         
-        <input type='txt' class='gsniceinput1 otherpriceselection' value='<?php echo $code->amount; ?>'>
+        <input type='txt' class='gsniceinput1 otherpriceselection' gsname='otherpriceamount' value='<?php echo $code->amount; ?>'>
         <div class='fixeddailyprice'>
             <?php
             $first = true;
+            
+            $maxcount = 0;
+            foreach($types as $type) {
+                if($type->size > $maxcount) {
+                    $maxcount = $type->size;
+                }
+            }
+            echo "<span class='pricespacertype'>All categories</span>";
+
+            echo "<div style='clear: both;'></div>";
+            echo "<div>";
+            for($i = 1; $i <= $maxcount; $i++) {
+                echo "<span class='pricespacer'><input type='txt' class='gsniceinput1 allguestsetter' guest='$i' value='' style='width:50px;padding: 2px;' placeholder='Guest $i'></span>";
+            }
+            echo "</div>";
 
             foreach($types as $type) {
                 $key = $type->id;
                 echo "<span class='pricespacertype'>" . $type->name . "</span>";
                 echo "<div style='clear: both;'></div>";
-                ?>
-                <span class='pricespacer'>
-                    <?php if($first) { echo "Standard<br>"; } 
-                        $amount = "";
-                        if(isset($code->dailyPriceAmountByType->{$key."_1"})) {
-                            $amount = $code->dailyPriceAmountByType->{$key."_1"};
-                        }
-                    ?>
-                    <input type='txt' class='gsniceinput1' value='<?php echo $amount; ?>' style='width:50px;'>
-                </span>
-                <?php
-                for($i=2;$i <= $type->size;$i++) {
+                for($i=1;$i <= $type->size;$i++) {
                     $amount = "";
                     if(isset($code->dailyPriceAmountByType->{$key."_".$i})) {
                         $amount = $code->dailyPriceAmountByType->{$key."_".$i};
                     }
                     
                     echo "<span class='pricespacer'>";
-                    if($first) { echo "$i guests<br>"; }
-                    echo "<input type='txt' class='gsniceinput1' value='' style='width:50px;'>";
+                    echo "<input type='txt' class='gsniceinput1 categoryguestsetter' guest='$i' gsname='".$type->id."_$i' value='$amount' style='width:50px;padding: 2px;'>";
                     echo "</span>";
                 }
                 echo "<div style='clear: both;'></div>";
@@ -253,6 +256,7 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
         }
         ?>
     </span>
+    <div style='clear:both;'></div>
 </div>
 
 <style>
@@ -262,7 +266,7 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
     .discountcodeoptionsdate { width: 30%; display:inline-block; float: left; box-sizing: border-box;}
     .discountcodeoptions { width: 20%; display:inline-block; float: left; box-sizing: border-box;}
     .discountsystemeditpanel .pricespacer{ display: inline-block; float:left; margin-right: 5px; text-align: center;}
-    .discountsystemeditpanel .pricespacertype{ display: inline-block; float:left; width:300px; text-align: left; font-size:16px; line-height: 30px;height: 30px; }
+    .discountsystemeditpanel .pricespacertype{ display: inline-block; float:left; width:300px; text-align: left; font-size:14px; line-height: 30px;height: 30px; }
     .discountsystemeditpanel .pricespacertypefirst{ margin-top: 16px;}
     .discountsystemeditpanel .addMoredatesPanel, 
     .discountsystemeditpanel .addaddonsinludepanel { 
@@ -346,6 +350,13 @@ onSelect: function(dateText) {
     }
     $('#end_date').val((moment(date).get('date')+1) + "." + month + "." + moment(date).get('year'));
   }
+});
+
+$('.allguestsetter').on('keyup', function() {
+    var guest = $(this).attr('guest');
+    var value = $(this).val();
+    console.log(guest);
+    $('.categoryguestsetter[guest="' + guest + '"]').val(value);
 });
 
 function getshopdiscount_changePriceType() {

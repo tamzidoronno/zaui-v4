@@ -11,12 +11,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     }
     
     public function updateDiscountCode() {
-        $couponId = $_POST['data']['couponid'];
-        $coupon = $this->getApi()->getCartManager()->getCouponById($couponId);
-        $coupon->timesLeft = $_POST['data']['times'];
-        $coupon->amount = $_POST['data']['amount'];
-        $coupon->type = $_POST['data']['type'];
-        $this->getApi()->getCartManager()->addCoupon($coupon);
+        $this->saveDiscountCode();
     }
     
     public function loadAdvancedPricePlan() {
@@ -429,6 +424,48 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
             $this->convertToJavaDate(strtotime($this->getEnd())));
     }
 
+    public function saveDiscountCode() {
+        $this->saveAddonsToDiscount();
+        $this->addRepeatingDates();
+        $this->saveDiscountInformation();
+        $this->saveCouponPrices();
+    }
+
+    public function saveDiscountInformation() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
+        $coupon->timesLeft = $_POST['data']['timesLeft'];
+        $coupon->type = $_POST['data']['type'];
+        $coupon->description = $_POST['data']['description'];
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+
+    public function loadEditDiscountCode() {
+        $this->includefile("discountcodesetup");
+    }
     
+    public function saveCouponPrices() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
+        if($coupon->type == "FIXEDPRICE") {
+            $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+            $maxcount = 0;
+            foreach($types as $type) {
+                if($type->size > $maxcount) {
+                    $maxcount = $type->size;
+                }
+            }
+            $coupon->dailyPriceAmountByType=array();
+            foreach($types as $type) {
+                for($i = 1; $i <= $maxcount; $i++) {
+                    if(isset($_POST['data'][$type->id."_".$i]) && $_POST['data'][$type->id."_".$i]) {
+                        $coupon->dailyPriceAmountByType[$type->id."_".$i] = $_POST['data'][$type->id."_".$i];
+                    }
+                }
+            }
+        } else {
+            $coupon->amount = $_POST['data']['otherpriceamount'];
+        }
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+
 }
 ?>

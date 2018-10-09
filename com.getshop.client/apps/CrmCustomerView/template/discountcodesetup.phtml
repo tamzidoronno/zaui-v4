@@ -46,34 +46,46 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
             $first = true;
 
             foreach($types as $type) {
+                $key = $type->id;
                 echo "<span class='pricespacertype'>" . $type->name . "</span>";
                 echo "<div style='clear: both;'></div>";
                 ?>
                 <span class='pricespacer'>
-                    <?php if($first) { echo "Standard<br>"; } ?>
-                    <input type='txt' class='gsniceinput1' value='0' style='width:50px;'>
+                    <?php if($first) { echo "Standard<br>"; } 
+                        $amount = "";
+                        if(isset($code->dailyPriceAmountByType->{$key."_1"})) {
+                            $amount = $code->dailyPriceAmountByType->{$key."_1"};
+                        }
+                    ?>
+                    <input type='txt' class='gsniceinput1' value='<?php echo $amount; ?>' style='width:50px;'>
                 </span>
                 <?php
                 for($i=2;$i <= $type->size;$i++) {
+                    $amount = "";
+                    if(isset($code->dailyPriceAmountByType->{$key."_".$i})) {
+                        $amount = $code->dailyPriceAmountByType->{$key."_".$i};
+                    }
+                    
                     echo "<span class='pricespacer'>";
                     if($first) { echo "$i guests<br>"; }
-                    echo "<input type='txt' class='gsniceinput1' value='0' style='width:50px;'>";
+                    echo "<input type='txt' class='gsniceinput1' value='' style='width:50px;'>";
                     echo "</span>";
                 }
                 echo "<div style='clear: both;'></div>";
                 $first=false;
             }
             ?>
+            If empty, prices from price plan <b><?php echo $code->priceCode; ?></b> is being used.
         </div>
     </span>
     <span class='middlearea'>
         <div class='restriction_addonstitile'>Restrictions</div>
         <?php
-        /* @var $this ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
-        $endDate = time()+(86400*30);
-        $repeatingData = $coupon->whenAvailable;
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-        $starting = time();
+            /* @var $this ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+            $endDate = time()+(86400*30);
+            $repeatingData = $coupon->whenAvailable;
+            $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+            $starting = time();
         ?><div class='itemrow' style='position:relative;'>
             <span class='bookedaction'></span> 
             <span class='addMoredatesPanel' gstype='form' method='addRepeatingDates'>

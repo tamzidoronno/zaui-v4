@@ -7,6 +7,7 @@ package com.thundashop.core.cartmanager.data;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.PmsRepeatingData;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public class Coupon extends DataCommon {
     public String code;
     public CouponType type;
     public int amount;
+    public HashMap<String, Double> dailyPriceAmountByType = new HashMap();
     public int timesLeft;
     public String channel = "";
     public String description = "";

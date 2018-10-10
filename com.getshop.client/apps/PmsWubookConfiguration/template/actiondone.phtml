@@ -25,6 +25,9 @@ if($action == "testConnection") {
 } else if($action == "updateMinStay") {
     $this->getApi()->getWubookManager()->updateMinStay($this->getSelectedMultilevelDomainName());
     echo "done";
+} else if($action == "activateCallback") {
+    $this->getApi()->getWubookManager()->activateWubookCallback($this->getSelectedMultilevelDomainName());
+    echo "done";
 } else if($action == "checkForNoShows") {
     $this->getApi()->getWubookManager()->checkForNoShowsAndMark($this->getSelectedMultilevelDomainName());
 } else if($action == "markCCInvalid") {

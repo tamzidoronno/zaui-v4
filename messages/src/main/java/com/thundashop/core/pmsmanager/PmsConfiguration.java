@@ -296,6 +296,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubookpassword = "";
     public String wubookproviderkey = "";
     public String wubooklcode = "";
+    public boolean wubookcallbackactivated = false;
     public int numberOfRoomsToRemoveFromBookingCom = 1;
     public boolean usePricesFromChannelManager = false;
     public boolean useGetShopPricesOnExpedia = false;

@@ -38,6 +38,10 @@ public interface IWubookManager {
     @Administrator
     public WubookBooking fetchBooking(String rcode) throws Exception;
     @Administrator
+    public WubookBooking fetchBookingFromCallback(String rcode) throws Exception;
+    @Administrator
+    public void activateWubookCallback() throws Exception;
+    @Administrator
     public void addBooking(String rcode) throws Exception;
     @Administrator
     public boolean updateAvailabilityFromButton() throws Exception;
@@ -94,5 +98,9 @@ public interface IWubookManager {
     
     @Administrator
     public void setRoomRates(Integer channelId, List<WubookRoomRateMap> rates, Integer channelType);
+    
+    @Administrator
+    public String getCallbackUrl();
+    
     
 }

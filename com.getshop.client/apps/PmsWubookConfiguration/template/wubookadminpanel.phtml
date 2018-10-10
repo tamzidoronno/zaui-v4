@@ -1,10 +1,15 @@
 <?php /* @var $this \ns_2b4a865c_6aed_416e_bf52_ab6e2428bd1f\PmsWubookConfiguration */
 
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$callbackactive = $config->wubookcallbackactivated ? "<span style='color:green;'>callback is active</span>" : "<span style='color:red;'>callback is not active</span>";
+$callbackurl = $this->getApi()->getWubookManager()->getCallbackUrl($this->getSelectedMultilevelDomainName());
 ?>
 <br>
     <div class='section'>
-        <h2>Actions available</h2>
+        <h2>Actions available, <?php echo $callbackactive; ?></h2>
+        <div>
+            <?php echo "Callback url will be: " .$callbackurl; ?>
+        </div>
         <span class='gsmodulebutton' gstype="clicksubmit" gsvalue='testConnection' gsname='type' method='doAction'>Test connection</span>
         <span class='gsmodulebutton' gstype="clicksubmit" gsvalue='fetchAllBookings' gsname='type' method='doAction'>Fetch all bookings</span>
         <span class='gsmodulebutton' gstype="clicksubmit" gsvalue='fetchBookingCodes' gsname='type' method='doAction'>Fetch booking codes</span>
@@ -18,6 +23,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
         <span class='gsmodulebutton' gstype="clicksubmit" gsvalue='deleteAllRooms' gsname='type' method='doAction'>DANGER: delete all rooms</span>
         <span class='gsmodulebutton' gstype="clicksubmit" gsvalue='doubleCheckDeletions' gsname='type' method='doAction'>Double check if all cancelations has been cancelled.</span>
         <span class='gsmodulebutton' gstype="clicksubmit" gsvalue='runSparseUpdate' gsname='type' method='doAction'>Run sparse update.</span>
+        <span class='gsmodulebutton' gstype="clicksubmit" gsvalue='activateCallback' gsname='type' method='doAction'>Start wubook callback activation</span>
     </div>
 <br>
 <br>

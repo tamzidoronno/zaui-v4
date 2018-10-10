@@ -97,6 +97,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private int tokenCount;
     private Date availabiltyyHasBeenChangedEnd;
     private Date availabiltyyHasBeenChangedStart;
+    private Date latestCheckForNewBookings = null;
     private boolean forceUpdate = false;
     
     @Override
@@ -370,10 +371,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public List<WubookBooking> fetchNewBookings() throws Exception {
-        if(pmsManager.getConfigurationSecure().wubooklcode == null ||
-                pmsManager.getConfigurationSecure().wubooklcode.isEmpty()) {
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
+        if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
             return new ArrayList();
         }
+        
+        if(config.wubookcallbackactivated && doNotCheckBookings()) {
+            return new ArrayList();
+        }
+        
         connectToApi();
         Vector params = new Vector();
         params.addElement(token);
@@ -422,6 +428,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         return toReturn;
+    }
+
+    private boolean doNotCheckBookings() {
+        if(latestCheckForNewBookings == null) {
+            latestCheckForNewBookings = new Date();
+            return false;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR_OF_DAY, -1);
+        Date toCheck = cal.getTime();
+        if(toCheck.after(latestCheckForNewBookings)) {
+            latestCheckForNewBookings = new Date();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -2224,6 +2245,51 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!storeApplicationPool.isActivated(pmethod)) {
             storeApplicationPool.activateApplication(pmethod);
         }
+    }
+
+    @Override
+    public WubookBooking fetchBookingFromCallback(String rcode) throws Exception {
+        List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+        Integer toCheck = new Integer(rcode);
+
+        for(PmsBooking pmsbook : allbookings) {
+            List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
+            for(Integer resCode : allCodesOnOldBooking) {
+                if(resCode == toCheck) {
+                    return null;
+                }
+            }
+        }
+        WubookBooking booking = fetchBooking(rcode);
+        if(booking != null) {
+            PmsConfiguration config = pmsManager.getConfigurationSecure();
+            if(!config.wubookcallbackactivated) {
+                config.wubookcallbackactivated = true;
+                pmsManager.saveConfiguration(config);
+            }
+        }
+        pmsManager.processor();
+        return booking;
+    }
+
+    @Override
+    public void activateWubookCallback() throws Exception {
+        String address = getCallbackUrl();
+        Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        params.addElement(address);
+        Vector res = executeClient("push_activation", params);
+        Integer responseCode = (Integer) res.get(0);
+    }
+
+    @Override
+    public String getCallbackUrl() {
+        String address = storeManager.getMyStore().getDefaultWebAddress() + "/scripts/wubookcallback.php";
+        if(!address.startsWith("http")) {
+            address = "https://" + address;
+        } 
+        return address;
     }
 
 

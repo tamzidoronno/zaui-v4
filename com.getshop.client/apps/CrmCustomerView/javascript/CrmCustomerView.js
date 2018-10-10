@@ -5,6 +5,9 @@ app.CrmCustomerView = {
         $(document).on('click','.CrmCustomerView .docreatenewcode', app.CrmCustomerView.doCreateNewDicountCode);
         $(document).on('change','.CrmCustomerView [gsname="attachedDiscountCode"]', app.CrmCustomerView.changeDiscountSystem);
     },
+    saveSuccess : function() {
+        thundashop.common.Alert('Saved');
+    },
     loadCorrectDiscountSystem : function() {
         $("[gsname='attachedDiscountCode']").each(function() {
             if($(this).is(':visible')) {

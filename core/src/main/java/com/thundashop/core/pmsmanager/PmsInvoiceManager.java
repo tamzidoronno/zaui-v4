@@ -480,7 +480,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         boolean hasOrders = false;
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
-            if(order.isBookingCom() || order.isExpedia()) {
+            if(order.isPrepaidByOTA()) {
                 hasOrders = true;
                 continue;
             }
@@ -934,7 +934,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
                     continue;
                 }
-                if(!order.isExpedia() && !order.isBookingCom()) {
+                if(!order.isPrepaidByOTA()) {
                     continue;
                 }
                 
@@ -1228,7 +1228,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order.closed) {
-                if((order.isExpedia() || order.isBookingCom()) && order.isRecent()) {
+                if(order.isPrepaidByOTA() && order.isRecent()) {
                     //This is specifically for wubook, should have been moved into wubookmanager.
                     order.closed = false;
                     order.status = Order.Status.WAITING_FOR_PAYMENT;

@@ -11,7 +11,7 @@ class AirBNBCollect extends \PaymentApplication implements \Application {
     }
 
     public function getName() {
-        return "ExpediaCollect";
+        return "AirBNBCollect";
     }
 
     public function addPaymentMethods() {
@@ -47,6 +47,7 @@ class AirBNBCollect extends \PaymentApplication implements \Application {
      * Should display you configuration page.
      */
     public function renderConfig() {
+        $this->includeFile("config");
     }
 
     public function getMode() {
@@ -58,6 +59,7 @@ class AirBNBCollect extends \PaymentApplication implements \Application {
     }
 
     public function saveSettings() {
+        $this->setConfigurationSetting("automarkpaid", $_POST['automarkpaid']);
     }
 
 }

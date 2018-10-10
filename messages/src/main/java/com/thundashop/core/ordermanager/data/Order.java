@@ -981,6 +981,26 @@ public class Order extends DataCommon implements Comparable<Order> {
                 
     }
 
+    public boolean isPrepaidByOTA() {
+        if(isBookingCom()) {
+            return true;
+        }
+        if(isExpedia()) {
+            return true;
+        }
+        if(isABNB()) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isABNB() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("airbnbcollect")) {
+            return true;
+        }
+        return false;
+    }
+
 
     public static class Status  {
         public static int CREATED = 1;

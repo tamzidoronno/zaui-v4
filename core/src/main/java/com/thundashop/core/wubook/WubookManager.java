@@ -4,6 +4,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -87,6 +88,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     StoreManager storeManager;
+    
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
     
     @Autowired
     OrderManager orderManager;
@@ -940,10 +944,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 newbooking.addRoom(room);
             }
             if(booking.isExpediaCollect) {
+                checkIfPaymentMethodIsActive("92bd796f-758e-4e03-bece-7d2dbfa40d7a");
                 newbooking.paymentType = "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
             }
             if(booking.isBookingComVirtual) {
+                checkIfPaymentMethodIsActive("d79569c6-ff6a-4ab5-8820-add42ae71170");
                 newbooking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
+            }
+            if(newbooking.channel.equals("wubook_43")) {
+                checkIfPaymentMethodIsActive("639164bc-37f2-11e6-ac61-9e71128cae77");
+                newbooking.paymentType = "639164bc-37f2-11e6-ac61-9e71128cae77";
             }
             pmsManager.setBooking(newbooking);
             int i = 0;
@@ -2208,6 +2218,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         return null;
+    }
+
+    private void checkIfPaymentMethodIsActive(String pmethod) {
+        if(!storeApplicationPool.isActivated(pmethod)) {
+            storeApplicationPool.activateApplication(pmethod);
+        }
     }
 
 

@@ -9065,7 +9065,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(String orderId : booking.orderIds) {
             Order ord = orderManager.getOrder(orderId);
             if(ord != null) {
-                if(ord.isBookingCom() || ord.isExpedia()) {
+                if(ord.isPrepaidByOTA()) {
                     return true;
                 }
             }

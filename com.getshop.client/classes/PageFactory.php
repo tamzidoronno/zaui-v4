@@ -189,7 +189,7 @@ class PageFactory {
         $page = new \ModulePage("4f66aad0-08a0-466c-9b4c-71337c1e00b7");
         
         $page->addExtraApplications('acb219a1-4a76-4ead-b0dd-6f3ba3776421');
-        $page->addExtraApplications('7e828cd0-8b44-4125-ae4f-f61983b01e0a');
+//        $page->addExtraApplications('7e828cd0-8b44-4125-ae4f-f61983b01e0a');
         
         $row = $page->createRow();
         $row->addText("CRM");

@@ -268,6 +268,9 @@ public class PmsManagerProcessor {
         }
         
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        if(manager.storeManager.getStoreId().equals("7f2c47a4-7ec9-41e2-a070-1e9e8fcf4e38")) {
+            bookings = getBookingsNeedsToBeChecked(bookings);
+        }
         for (PmsBooking booking : bookings) {
             if(!booking.confirmed) {
                 continue;
@@ -1328,11 +1331,7 @@ public class PmsManagerProcessor {
     }
 
     private boolean isApacSolutionActivated() {
-        List<LockGroup> groups = manager.getShopLockSystemManager.getAllGroups();
-        if (groups.size() > 0) {
-            return true;
-        }
-        return false;
+        return manager.getShopLockSystemManager.isActivated();
     }
 
     private void processGreetingMessage() {
@@ -1362,6 +1361,25 @@ public class PmsManagerProcessor {
                 manager.saveBooking(booking);
             }
         }
+    }
+
+    private List<PmsBooking> getBookingsNeedsToBeChecked(List<PmsBooking> bookings) {
+        List<PmsBooking> toCheck = new ArrayList();
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        for(PmsBooking booking : bookings) {
+            boolean found = false;
+            for(PmsBookingRooms r : booking.getAllRoomsIncInactive()) {
+                if(found) { continue; }
+                if(r.addedToArx) {
+                    toCheck.add(booking);
+                    found = true;
+                } else if(r.startingInHours(30, cal)) {
+                    toCheck.add(booking);
+                    found = true;
+                }
+            }
+        }
+        return toCheck;
     }
 
 

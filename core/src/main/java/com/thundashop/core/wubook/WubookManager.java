@@ -33,6 +33,8 @@ import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.text.ParseException;
@@ -91,6 +93,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    UserManager userManager;
     
     @Autowired
     OrderManager orderManager;
@@ -2248,28 +2253,42 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     @Override
-    public WubookBooking fetchBookingFromCallback(String rcode) throws Exception {
-        List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
-        Integer toCheck = new Integer(rcode);
+    public void fetchBookingFromCallback(String rcode) throws Exception {
+        try {
+            User user = userManager.getInternalApiUser();
+            userManager.startImpersonationUnsecure("gs_system_scheduler_user");
+            getSession().currentUser = user;
+            
+            logPrint("Fetching wubook booking from callback using rcode: " + rcode);
+            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+            Integer toCheck = new Integer(rcode);
 
-        for(PmsBooking pmsbook : allbookings) {
-            List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
-            for(Integer resCode : allCodesOnOldBooking) {
-                if(resCode == toCheck) {
-                    return null;
+            for(PmsBooking pmsbook : allbookings) {
+                List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
+                for(Integer resCode : allCodesOnOldBooking) {
+                    if(resCode == toCheck) {
+                        logPrint("Booking with rcode: " + toCheck + " already exist");
+                        return;
+                    }
                 }
             }
-        }
-        WubookBooking booking = fetchBooking(rcode);
-        if(booking != null) {
-            PmsConfiguration config = pmsManager.getConfigurationSecure();
-            if(!config.wubookcallbackactivated) {
-                config.wubookcallbackactivated = true;
-                pmsManager.saveConfiguration(config);
+            WubookBooking booking = fetchBooking(rcode);
+            if(booking != null) {
+                logPrint("Booking with rcode: " + toCheck + " found in wubook");
+                addBookingToPms(booking);
+                PmsConfiguration config = pmsManager.getConfigurationSecure();
+                if(!config.wubookcallbackactivated) {
+                    config.wubookcallbackactivated = true;
+                    pmsManager.saveConfiguration(config);
+                }
+            } else {
+                logPrint("Booking with rcode: " + toCheck + " could not be found in wubook");
             }
+            pmsManager.processor();
+        }catch(Exception e) {
+            logPrintException(e);
         }
-        pmsManager.processor();
-        return booking;
+        userManager.cancelImpersonating();
     }
 
     @Override

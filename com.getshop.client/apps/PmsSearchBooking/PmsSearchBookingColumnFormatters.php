@@ -109,11 +109,13 @@ class PmsSearchBookingColumnFormatters {
         if($hasSamleFakturaApp) {
             $vistorText .= "<span style='float:left;padding-left:10px;' class='startcheckout dontExpand'>Start checkout</span>";
         }
-        $vistorText .= "<i class='fa fa-fighter-jet dontExpand quickfunction' title='Toggle as non refundable' type='togglenonref'></i> ";
         if($room->progressState != "deleted") {
             $vistorText .= "<i class='fa fa-trash-o dontExpand quickfunction' title='Delete room' type='delete'></i> ";
             $vistorText .= "<i class='fa fa-exchange dontExpand quickfunction' title='Change stay' type='changestay'></i> ";
+        } else {
+            $vistorText .= "<i class='fa fa-undo dontExpand quickfunction' title='Undo deletion' type='delete'></i> ";
         }
+        $vistorText .= "<i class='fa fa-fighter-jet dontExpand quickfunction' title='Toggle as non refundable' type='togglenonref'></i> ";
         $vistorText .= "<i class='fa fa-dollar dontExpand quickfunction' title='Change dayprice' type='changeprice'></i> ";
         $vistorText .= "<i class='fa fa-plus-circle dontExpand quickfunction' title='Update addons' type='updateaddons'></i> ";
         $vistorText .= "<i class='fa fa-users dontExpand quickfunction' title='Change guest information' type='guestinfo'></i> ";

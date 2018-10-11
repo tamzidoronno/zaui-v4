@@ -415,7 +415,18 @@ class CartManager extends \SystemApplication implements \Application {
         $_SESSION['shippingproduct'] = $_POST['data']['shippingProduct'];
         $this->init();
     }
-        
+       
+    public function getAllACtivatedPaymentApplications() {
+        $apps = $this->getFactory()->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        $result = array();
+        foreach ($apps as $app) {
+            $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+            $result[] = $appInstance;
+        }
+            
+        return $result;
+    }
+    
     /**
      * 
      * @return \PaymentApplication[]
@@ -611,8 +622,7 @@ class CartManager extends \SystemApplication implements \Application {
         } else {
             $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
             $payment = null;
-
-            foreach ($cartManager->getPaymentApplications() as $paymenti) {
+            foreach ($cartManager->getAllACtivatedPaymentApplications() as $paymenti) {
                 $paymentId = str_replace("-","_", $paymenti->applicationSettings->id);
                 if (stristr($order->payment->paymentType, $paymentId)) {
                     $payment = $paymenti;
@@ -623,7 +633,11 @@ class CartManager extends \SystemApplication implements \Application {
                 $payment->order = $order;
                 if ($payment->order) {
                     $payment->initPaymentMethod();
-                    $payment->simplePayment();
+                    if(method_exists($payment, "simplePayment")) {
+                        $payment->simplePayment();
+                    } else {
+                        echo "<script>window.location.href='?page=payment_success'</script>";
+                    }
                 } else {
                     echo "En feil oppstod, ordren kunne ikke bli funnet. (" . $_GET['orderId'] . ")";
                 }

@@ -1714,6 +1714,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
     }
     
+    public function loadCategoryAvailability() {
+        $this->includefile("roomsavailable");
+    }
+    
     public function printAvailableRoomsFromCategory($start, $end) {
         $start = $this->convertToJavaDate(strtotime($start));
         $end = $this->convertToJavaDate(strtotime($end));

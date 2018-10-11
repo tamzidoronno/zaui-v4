@@ -16,6 +16,7 @@ echo "4 = Server 4 ( Created: 8 june 2017 )";
 echo "5 = Server 5 ( Created: 19 aug 2018 )";
 read serverQuestion;
 
+IFS=';'
 
 SERVER="NONE";
 if [ $serverQuestion = "3" ]; then
@@ -31,20 +32,24 @@ fi;
 echo "What store?";
 cat $serverQuestion | while read line
 do
-  array=(${line//;/ })
-  echo ${array[0]}"="${array[2]} ${array[3]} ${array[4]} ${array[5]} ${array[6]} ${array[7]};
+  array=(${line})
+  echo ${array[0]}"="${array[2]};
 done
 read storeQuestion;
 
 STOREID="NONE";
+MASTERSTOREID="NONE";
 
 while read line
 do
-  array=(${line//;/ })
+  array=(${line})
   val=${array[0]};
   if [ "$storeQuestion" == "$val" ]
   then
       STOREID="${array[1]}";
+      if [ ${#array[@]}  == 4 ] ; then
+          MASTERSTOREID="${array[3]}";
+      fi
   fi
 done <<< "$(cat $serverQuestion)"
 
@@ -65,7 +70,7 @@ mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( func
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
 ssh -oPort=4223 -T naxa@$SERVER << EOF > /dev/null
-/home/naxa/backup2.sh $STOREID
+/home/naxa/backup2.sh $STOREID $MASTERSTOREID
 EOF
 
 if [ -f dump.tar.gz ]; then

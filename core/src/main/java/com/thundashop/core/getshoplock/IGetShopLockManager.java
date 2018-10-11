@@ -1,6 +1,7 @@
 package com.thundashop.core.getshoplock;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.getshop.data.GetShopDevice;
@@ -78,6 +79,7 @@ public interface IGetShopLockManager {
     public void saveMastercodes(GetShopLockMasterCodes codes);
     
     @Administrator
+    @ForceAsync
     public List<String> getCodesInUse();
     
     @Administrator

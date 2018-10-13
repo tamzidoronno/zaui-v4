@@ -79,7 +79,6 @@ public interface IGetShopLockManager {
     public void saveMastercodes(GetShopLockMasterCodes codes);
     
     @Administrator
-    @ForceAsync
     public List<String> getCodesInUse();
     
     @Administrator

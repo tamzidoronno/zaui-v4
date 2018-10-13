@@ -1365,7 +1365,11 @@ public class PmsManagerProcessor {
 
     private List<PmsBooking> getBookingsNeedsToBeChecked(List<PmsBooking> bookings) {
         List<PmsBooking> toCheck = new ArrayList();
-        java.util.Calendar cal = java.util.Calendar.getInstance();
+        
+        java.util.Calendar end = java.util.Calendar.getInstance();
+        java.util.Calendar start = java.util.Calendar.getInstance();
+        start.add(Calendar.HOUR_OF_DAY, -30);
+        end.add(Calendar.HOUR_OF_DAY, 30);
         for(PmsBooking booking : bookings) {
             boolean found = false;
             for(PmsBookingRooms r : booking.getAllRoomsIncInactive()) {
@@ -1373,7 +1377,7 @@ public class PmsManagerProcessor {
                 if(r.addedToArx) {
                     toCheck.add(booking);
                     found = true;
-                } else if(r.startingInHours(30, cal)) {
+                } else if(r.startingBetween(start.getTime(), end.getTime())) {
                     toCheck.add(booking);
                     found = true;
                 }

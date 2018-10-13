@@ -559,21 +559,11 @@ public class PmsBookingRooms implements Serializable {
         return date.end.before(cal.getTime());
     }
 
-    boolean startingInHours(int maxAhead, Calendar calToUse) {
-        Calendar cal = null;
-        if(calToUse != null) {
-            //This is done like this to improve performance, getinstance is draining resources.
-            calToUse.setTimeInMillis(System.currentTimeMillis());
-            cal = calToUse;
-        } else {
-            cal = Calendar.getInstance();
-        }
-        cal.add(Calendar.HOUR_OF_DAY, maxAhead);
-        Date toCompareWith = cal.getTime();
-        boolean aheadOfTimeout = date.start.after(toCompareWith);
-        boolean aheadOfNow = date.start.after(new Date());
+    boolean startingBetween(Date start, Date end) {
+        boolean isAfterStart = date.start.after(start);
+        boolean isBeforeEnd = date.start.before(end);
         
-        boolean res = aheadOfNow && !aheadOfTimeout;
+        boolean res = isAfterStart && isBeforeEnd;
         return res;
     }
 

@@ -3310,7 +3310,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     }
 
-    private boolean avoidSameDayDropIn(Date start, String itemType) {
+    private boolean avoidSameDayDropIn(Date start, String itemType, boolean adminoverride) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.HOUR, -7);
@@ -3322,7 +3322,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         Session sess = getSession();
         if (sess != null && sess.currentUser != null) {
-            if (sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser()) {
+            if (sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser() && adminoverride) {
                 return false;
             }
         }
@@ -7619,7 +7619,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (hasRoomsInWorkspace(start, end)) {
             return true;
         }
-        if (avoidSameDayDropIn(start, itemType)) {
+        if (avoidSameDayDropIn(start, itemType, adminOverride)) {
             return true;
         }
         if(closedForPeriode(start, end)) {

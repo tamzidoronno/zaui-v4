@@ -321,7 +321,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             markAsPaidInternal(order, date,amount);
             saveOrder(order);
         }
-        markOrderForAutoSending(orderId);
     }
     
     public void markAsPaidInternal(Order order, Date date, Double amount) {

@@ -1068,6 +1068,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(user.emailAddressToInvoice != null && !user.emailAddressToInvoice.isEmpty()) {
             usersEmail = user.emailAddressToInvoice;
         }
+
+        if(order.recieptEmail != null && !order.recieptEmail.isEmpty()) {
+            usersEmail = order.recieptEmail;
+        }
         sendRecieptOrInvoice(order.id, usersEmail, bookingId);
         pmsManager.logEntry("Reciept / invoice sent to : " + usersEmail + " orderid: " + order.incrementOrderId, bookingId, null);
         

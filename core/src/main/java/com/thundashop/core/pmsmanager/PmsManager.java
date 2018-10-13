@@ -6521,6 +6521,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = "Code {code} room {roomName}.";
         }
 
+        if(message == null || message.isEmpty() && key.startsWith("sendreciept") && type.equals("email")) {
+            message = "reciept for your stay";
+        }
+        if(message == null || message.isEmpty() && key.startsWith("sendinvoice") && type.equals("email")) {
+            message = "invoice for your stay";
+        }
+        
         if (message == null || message.isEmpty()) {
             return "";
         }
@@ -8792,6 +8799,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        if(title == null || title.isEmpty() && key.startsWith("sendreciept")) {
+            return "reciept for your stay";
+        }
+        if(title == null || title.isEmpty() && key.startsWith("sendinvoice")) {
+            return "invoice for your stay";
+        }
+
         return "";
     }
 

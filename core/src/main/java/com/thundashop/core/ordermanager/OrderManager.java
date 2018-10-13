@@ -26,6 +26,7 @@ import com.thundashop.core.ordermanager.data.EhfSentLog;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
+import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -73,6 +74,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private Set<String> ordersChanged = new TreeSet();
     
     private Set<String> ordersCreated = new TreeSet();
+    
+    public OrdersToAutoSend ordersToAutoSend = new OrdersToAutoSend();
     
     @Autowired
     public MailFactory mailFactory;
@@ -318,6 +321,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             markAsPaidInternal(order, date,amount);
             saveOrder(order);
         }
+        markOrderForAutoSending(orderId);
     }
     
     public void markAsPaidInternal(Order order, Date date, Double amount) {
@@ -645,6 +649,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void saveOrder(Order order) throws ErrorException {
         validateOrder(order);
         saveOrderInternal(order);
+    }
+    
+    public void markOrderForAutoSending(String orderId) {
+        ordersToAutoSend.orderIds.add(orderId);
+        saveObject(ordersToAutoSend);
+    }
+    
+    public List<String> getOrdersToAutoSend() {
+        List<String> toSend = new ArrayList(ordersToAutoSend.orderIds);
+        ordersToAutoSend.orderIds.clear();
+        saveObject(ordersToAutoSend);
+        return toSend;
     }
     
     @Override
@@ -1427,7 +1443,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         epayManager.payWithCard(order, card);
                     }
                     if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                        messageManager.sendInvoiceForOrder(order.id);
+                        markOrderForAutoSending(order.id);
                         break;
                     }
                     if(order.status == Order.Status.PAYMENT_FAILED) {

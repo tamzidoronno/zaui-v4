@@ -662,7 +662,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
-        if(!convertedDiscountSystem) { cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; }
+        if(!convertedDiscountSystem) { 
+            cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; 
+        }
+        
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -3711,7 +3714,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
-        if(!convertedDiscountSystem) { cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; }
+        if(!convertedDiscountSystem) { 
+            cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; 
+        }
         List<PmsRoomSimple> res = new ArrayList();
         gsTiming("filtering 1");
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);

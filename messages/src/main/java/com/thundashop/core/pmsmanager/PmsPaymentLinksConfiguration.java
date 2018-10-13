@@ -15,4 +15,8 @@ import java.util.LinkedList;
 public class PmsPaymentLinksConfiguration extends DataCommon {
     public String webAdress;
     public LinkedList<PmsProductMessageConfig> productPaymentLinks = new LinkedList();
+    
+    //Temporary object to make sure usercodes are converted once in a time, can be removed anytime.
+    boolean haveConvertedUserDiscountCodes = false;
+    
 }

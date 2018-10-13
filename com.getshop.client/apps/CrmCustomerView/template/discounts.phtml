@@ -5,6 +5,11 @@ $domains = $this->getDomains();
 $user = $this->getUser();
 $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 
+$storeId = $this->getFactory()->getStore()->id;
+if($storeId == "a152b5bd-80b6-417b-b661-c7c522ccf305" || $storeId == "3b647c76-9b41-4c2a-80db-d96212af0789" || $storeId == "e625c003-9754-4d66-8bab-d1452f4d5562") {
+    $domains = array();
+    $domains[] = "demo";
+}
 
 
 foreach ($domains as $domain) {

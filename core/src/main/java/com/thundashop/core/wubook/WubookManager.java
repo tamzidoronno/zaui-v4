@@ -382,7 +382,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         if(config.wubookcallbackactivated && doNotCheckBookings()) {
-            return new ArrayList();
+//            return new ArrayList();
         }
         
         connectToApi();
@@ -2254,41 +2254,41 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public void fetchBookingFromCallback(String rcode) throws Exception {
-        try {
-            User user = userManager.getInternalApiUser();
-            userManager.startImpersonationUnsecure("gs_system_scheduler_user");
-            getSession().currentUser = user;
-            
-            logPrint("Fetching wubook booking from callback using rcode: " + rcode);
-            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
-            Integer toCheck = new Integer(rcode);
-
-            for(PmsBooking pmsbook : allbookings) {
-                List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
-                for(Integer resCode : allCodesOnOldBooking) {
-                    if(resCode == toCheck) {
-                        logPrint("Booking with rcode: " + toCheck + " already exist");
-                        return;
-                    }
-                }
-            }
-            WubookBooking booking = fetchBooking(rcode);
-            if(booking != null) {
-                logPrint("Booking with rcode: " + toCheck + " found in wubook");
-                addBookingToPms(booking);
-                PmsConfiguration config = pmsManager.getConfigurationSecure();
-                if(!config.wubookcallbackactivated) {
-                    config.wubookcallbackactivated = true;
-                    pmsManager.saveConfiguration(config);
-                }
-            } else {
-                logPrint("Booking with rcode: " + toCheck + " could not be found in wubook");
-            }
-            pmsManager.processor();
-        }catch(Exception e) {
-            logPrintException(e);
-        }
-        userManager.cancelImpersonating();
+//        try {
+//            User user = userManager.getInternalApiUser();
+//            userManager.startImpersonationUnsecure("gs_system_scheduler_user");
+//            getSession().currentUser = user;
+//            
+//            logPrint("Fetching wubook booking from callback using rcode: " + rcode);
+//            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+//            Integer toCheck = new Integer(rcode);
+//
+//            for(PmsBooking pmsbook : allbookings) {
+//                List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
+//                for(Integer resCode : allCodesOnOldBooking) {
+//                    if(resCode == toCheck) {
+//                        logPrint("Booking with rcode: " + toCheck + " already exist");
+//                        return;
+//                    }
+//                }
+//            }
+//            WubookBooking booking = fetchBooking(rcode);
+//            if(booking != null) {
+//                logPrint("Booking with rcode: " + toCheck + " found in wubook");
+//                addBookingToPms(booking);
+//                PmsConfiguration config = pmsManager.getConfigurationSecure();
+//                if(!config.wubookcallbackactivated) {
+//                    config.wubookcallbackactivated = true;
+//                    pmsManager.saveConfiguration(config);
+//                }
+//            } else {
+//                logPrint("Booking with rcode: " + toCheck + " could not be found in wubook");
+//            }
+//            pmsManager.processor();
+//        }catch(Exception e) {
+//            logPrintException(e);
+//        }
+//        userManager.cancelImpersonating();
     }
 
     @Override

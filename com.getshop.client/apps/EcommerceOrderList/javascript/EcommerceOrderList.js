@@ -47,7 +47,7 @@ app.EcommerceOrderList = {
             });
             thundashop.Ajax.postWithCallBack(event, function() {
                 thundashop.framework.reloadOverLayType1or2();
-            })
+            });
         }
     },
     doneSendingPaymentLink : function() {

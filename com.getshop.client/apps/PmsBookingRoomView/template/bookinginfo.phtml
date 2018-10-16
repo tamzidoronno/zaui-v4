@@ -25,7 +25,7 @@ $codes = $this->getApi()->getCartManager()->getCoupons();
                 <option value="">Not set</option>
                 <?php
                 foreach($codes as $code) {
-                    $selected = ($code->code == $pmsBooking->couponCode) ? "SELECTED" : "";
+                    $selected = (strtolower($code->code) == strtolower($pmsBooking->couponCode)) ? "SELECTED" : "";
                     echo "<option value='".$code->code."' $selected>" . $code->code . "</option>";
                 }
                 ?>

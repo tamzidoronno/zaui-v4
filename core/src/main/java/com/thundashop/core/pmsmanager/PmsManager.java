@@ -8063,7 +8063,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cal2.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
         cal2.set(Calendar.SECOND, cal.get(Calendar.SECOND));
         cal2.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND));
-//        cal2.add(Calendar.DAY_OF_YEAR, );
         newStartDate = cal2.getTime();
 
         System.out.println("Transformed date: " + newStartDate);

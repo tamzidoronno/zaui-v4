@@ -312,7 +312,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
         
         //Update price matrix
-        $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId, $selectedRoom->priceMatrix);
+        if(isset($selectedRoom->priceMatrixChanged) && $selectedRoom->priceMatrixChanged) {
+            $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId, $selectedRoom->priceMatrix);
+        }
         
         $this->removeTmpRoom($selectedRoom->pmsBookingRoomId);
     }
@@ -980,6 +982,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $tmp = $this->getSelectedRoom();
         $room = $this->getTmpSelectedRoom($tmp->pmsBookingRoomId);
         $room->priceMatrix = $_POST['data'];
+        $room->priceMatrixChanged = true;
         $this->setTmpSelectedRoom($room);
     }
     

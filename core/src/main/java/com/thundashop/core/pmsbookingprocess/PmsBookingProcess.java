@@ -280,6 +280,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     if((guestLeft - lowest.guests) < (roomsLeft-1)) {
                         continue;
                     }
+                    if((guestLeft - lowest.guests) < 0) {
+                        continue;
+                    }
                     int count = maxRooms.get(lowest.room.id);
                     count--;
                     maxRooms.put(lowest.room.id, count);
@@ -317,9 +320,19 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             logPrint("Not all guests where assigned a room");
             logPrint("################ WARNING ################");
         }
+        if(guestLeft < 0) {
+            logPrint("################ WARNING ################");
+            logPrint("Too many guests where assigned a room");
+            logPrint("################ WARNING ################");
+        }
         if(roomsLeft > 0) {
             logPrint("################ WARNING ################");
             logPrint("Not all rooms where assigned");
+            logPrint("################ WARNING ################");
+        }
+        if(roomsLeft < 0) {
+            logPrint("################ WARNING ################");
+            logPrint("Too many rooms where assigned");
             logPrint("################ WARNING ################");
         }
         

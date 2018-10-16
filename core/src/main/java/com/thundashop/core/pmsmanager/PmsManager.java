@@ -8080,6 +8080,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Date end = new Date(newEnd);
 
         bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
+        String logText = "Changed start date and item <b>" + newStartDate + "</b> New room : " + bookingEngine.getBookingItem(bookingItemId).bookingItemName;
+        logEntry(logText, pmsBooking.id, room.bookingItemId, room.pmsBookingRoomId, "changestay");
     }
 
     public void addOrderToBooking(PmsBooking booking, String orderId) {

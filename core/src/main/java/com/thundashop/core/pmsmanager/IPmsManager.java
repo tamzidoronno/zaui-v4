@@ -147,6 +147,9 @@ public interface IPmsManager {
     public void checkOutRoom(String pmsBookingRoomId);
     
     @Administrator
+    public void undoCheckOut(String pmsBookingRoomId);
+    
+    @Administrator
     public void checkInRoom(String pmsBookingRoomId);
     
     

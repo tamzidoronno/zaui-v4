@@ -50,9 +50,10 @@ if(stristr($booking->channel, "wubook_")) {
         <?php
         if($this->startingToday($room) && !$room->checkedin) {
             echo "<span class='shop_button checkinguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:green;'>Check in guest</span>";
-        }
-        if($room->checkedin && !$room->checkedout) {
+        } else if($room->checkedin && !$room->checkedout) {
             echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:blue;'>Check out guest</span>";
+        } else {
+            echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:orange;'>Undo checkout</span>";
         }
         ?>
     </div>

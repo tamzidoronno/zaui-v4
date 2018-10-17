@@ -1585,8 +1585,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             if($room->pmsBookingRoomId != $roomid) {
                 continue;
             }
-            if($room->checkedin) {
+            if($room->checkedin && !$room->checkedout) {
                 $this->getApi()->getPmsManager()->checkOutRoom($this->getSelectedMultilevelDomainName(), $roomid);
+            } else if($room->checkedout) {
+                $this->getApi()->getPmsManager()->undoCheckOut($this->getSelectedMultilevelDomainName(), $roomid);
             } else {
                 $this->getApi()->getPmsManager()->checkInRoom($this->getSelectedMultilevelDomainName(), $roomid);
             }

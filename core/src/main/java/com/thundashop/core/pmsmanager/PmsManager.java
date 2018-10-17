@@ -5720,7 +5720,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.cleaningDate = null;
         if (room.addedToArx) {
             if (room.isStarted() && !room.isEnded()) {
-                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded() && !getShopLockSystemManager.isActivated()) {
                     room.forceUpdateLocks = true;
                 }
             }
@@ -6768,11 +6768,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (room.date.end.after(new Date())) {
                     changeDates(room.pmsBookingRoomId, booking.id, room.date.start, new Date());
                 }
+                logEntry("Room checked out", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkout");
             }
         }
         saveBooking(booking);
     }
 
+    @Override
+    public void undoCheckOut(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                room.checkedout = false;
+            }
+            logEntry("Undo checkout", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkout");
+        }
+        saveBooking(booking);
+    }
+    
+    
     private void changeCheckoutTimeForGuestOnRoom(String itemId) {
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkout";
@@ -8532,7 +8546,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void checkInRoom(String pmsBookingRoomId) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        room = changeDates(room.pmsBookingRoomId, booking.id, new Date(), room.date.end);
+        if(!room.isStarted()) {
+            room = changeDates(room.pmsBookingRoomId, booking.id, new Date(), room.date.end);
+        }
         if (room != null) {
             logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");
             room.checkedin = true;
@@ -9093,5 +9109,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return false;
     }
+
         
 }

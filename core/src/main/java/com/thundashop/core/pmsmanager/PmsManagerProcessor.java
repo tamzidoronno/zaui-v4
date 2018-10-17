@@ -804,8 +804,10 @@ public class PmsManagerProcessor {
             }
             if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
                 if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
-                    manager.doNotificationFromProcessor("booking_completed", booking, null);
-                    needSaving = true;
+                    if(!booking.isSynxis()) {
+                        manager.doNotificationFromProcessor("booking_completed", booking, null);
+                        needSaving = true;
+                    }
                 }
             }
             if(booking.payedFor && !booking.avoidAutoDelete) {

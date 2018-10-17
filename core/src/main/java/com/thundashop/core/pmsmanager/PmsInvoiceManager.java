@@ -480,6 +480,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         boolean hasOrders = false;
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
+            if(order == null) {
+                continue;
+            }
             if(order.isPrepaidByOTA()) {
                 hasOrders = true;
                 continue;

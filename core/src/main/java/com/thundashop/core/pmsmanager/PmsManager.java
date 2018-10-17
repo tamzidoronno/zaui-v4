@@ -5706,7 +5706,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
                 && (start.before(now) && end.after(now))) {
             //This is extending a stay, we need to remove cleaning and mark it as cleaned.
-            if (!getConfiguration().isGetShopHotelLock()) {
+            if (!getConfiguration().isGetShopHotelLock() && !getShopLockSystemManager.isActivated()) {
                 room.forceUpdateLocks = true;
             }
         }
@@ -8494,7 +8494,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void resetDoorLockCode(PmsBookingRooms room) {
         if (room.addedToArx) {
             if (room.isStarted() && !room.isEnded()) {
-                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                if ((!getConfigurationSecure().isGetShopHotelLock() && !getShopLockSystemManager.isActivated()) && !room.isEnded()) {
                     room.forceUpdateLocks = true;
                 }
             }

@@ -182,7 +182,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                             if(captureOrder(response, order, msg)) {
                                 order.status = Order.Status.PAYMENT_COMPLETED;
                                 orderManager.saveOrder(order);
-                                messageManager.sendInvoiceForOrder(order.id);
+                                orderManager.markOrderForAutoSending(order.id);
                             } else {
                                 messageManager.sendErrorNotification("Failed to capture order for vipps:" + order.incrementOrderId, null);
                                 order.status = Order.Status.PAYMENT_FAILED;

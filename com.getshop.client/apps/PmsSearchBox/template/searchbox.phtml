@@ -63,7 +63,11 @@ if($filter->groupByBooking) {
         </select>
     </div>
 
-    <?php if(sizeof($channels) > 0) { ?>
+    <?php 
+    if(sizeof($channels) > 0) { 
+        $pmssearchbox = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
+        $chnls = $pmssearchbox->getChannels();
+        ?>
         <div class="gs_headerbox">
             <div>
                 <?
@@ -78,7 +82,7 @@ if($filter->groupByBooking) {
                     if($filter->channel == $idx) {
                         $selected = "SELECTED";
                     }
-                    echo "<option value='$idx' $selected>$channel</option>";
+                    echo "<option value='$idx' $selected>".$chnls[$channel]."</option>";
                 }
                 ?>
             </select>
@@ -156,8 +160,9 @@ if($filter->groupByBooking) {
     <div title="<? echo $this->__f("Users checkout today"); ?>" type='checkout' day="0" class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "checkout" ? 'active' : ''; ?>"><i class="gsicon-exit"></i></div>
     <input class="gsniceinput1" gstype='submitenter' gsname='searchtext' placeholder="<? echo $this->__f("Search"); ?>" value='<? echo $searchWord; ?>'/>
     <div class="top-row-icon <? echo $searchWord ? 'active' : ''; ?>" gstype='submit' title='Show filtering'><i class="gsicon-search"></i></div>
-    <div class="top-row-icon advancesearchtoggle"><i class="gsicon-search2"></i></div>
+    <div class="top-row-icon advancesearchtoggle"><i class="gsicon-search2" title='Advance search'></i></div>
     <div class="top-row-icon clearfilter" title='Clear filter'><i class="fa fa-trash-o"></i></div>
+    <div class="top-row-icon" onclick="window.open('/scripts/securitylist.php?engine=<?php echo $this->getSelectedMultilevelDomainName(); ?>', 'securitylisttab')" title='Printable list'><i class="fa fa-file-pdf-o"></i></div>
 </span>
 
 

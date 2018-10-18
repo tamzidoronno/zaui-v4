@@ -50,7 +50,7 @@ if($user->primaryCompanyUser) {
     </div>
     <div class="row">
         <div class="col col1">
-            <? echo $this->__f("Postbox"); ?>
+            <? echo $this->__f("Post code"); ?>
         </div>
         <div class="col col2">
             <input class="gsniceinput1" gsname="invoice_postcode" value="<? echo @$user->companyObject->invoiceAddress->postCode; ?>"/>

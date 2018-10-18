@@ -480,6 +480,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         boolean hasOrders = false;
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
+            if(order == null) {
+                continue;
+            }
             if(order.isPrepaidByOTA()) {
                 hasOrders = true;
                 continue;
@@ -1067,6 +1070,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String usersEmail = user.emailAddress;
         if(user.emailAddressToInvoice != null && !user.emailAddressToInvoice.isEmpty()) {
             usersEmail = user.emailAddressToInvoice;
+        }
+
+        if(order.recieptEmail != null && !order.recieptEmail.isEmpty()) {
+            usersEmail = order.recieptEmail;
         }
         sendRecieptOrInvoice(order.id, usersEmail, bookingId);
         pmsManager.logEntry("Reciept / invoice sent to : " + usersEmail + " orderid: " + order.incrementOrderId, bookingId, null);

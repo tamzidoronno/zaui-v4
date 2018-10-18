@@ -486,7 +486,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                     captureOrder(order, toCapture);
                 }
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                    messageManager.sendInvoiceForOrder(order.id);
+                    orderManager.markOrderForAutoSending(order.id);
                 }
 
                 orderManager.saveOrder(order);
@@ -537,7 +537,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 }
                 
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                    messageManager.sendInvoiceForOrder(order.id);
+                    orderManager.markOrderForAutoSending(order.id);
                 }
 
                 orderManager.saveOrder(order);

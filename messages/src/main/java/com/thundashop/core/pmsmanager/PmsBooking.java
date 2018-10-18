@@ -663,6 +663,13 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    boolean isSynxis() {
+        if(channel != null && channel.equals("wubook_37")) {
+            return true;
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

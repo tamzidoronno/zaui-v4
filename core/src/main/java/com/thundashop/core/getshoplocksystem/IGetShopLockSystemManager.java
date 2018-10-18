@@ -8,6 +8,7 @@ package com.thundashop.core.getshoplocksystem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import java.util.Date;
 import java.util.List;
@@ -152,6 +153,7 @@ public interface IGetShopLockSystemManager {
     public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId);
     
     @Administrator
+    @ForceAsync
     public List<UserSlot> getCodesInUse(String serverId, String lockId);
     
     @Administrator

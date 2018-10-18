@@ -110,7 +110,7 @@ public class EpayManager extends ManagerBase implements IEpayManager {
                         order.captured = true;
                         orderManager.markAsPaid(order.id, new Date(), amount);
                     }
-                    messageManager.sendInvoiceForOrder(order.id);
+                    orderManager.markOrderForAutoSending(order.id);
                     orderManager.saveObject(order);
                 }catch(Exception e) {
                     messageManager.sendErrorNotification("Failed to parse json for epay callback: " + msg.id + " : " + msg.getVariables, e);

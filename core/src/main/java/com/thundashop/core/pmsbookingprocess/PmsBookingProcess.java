@@ -103,7 +103,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return null;
         }
         PmsBooking booking = pmsManager.startBooking();
-        booking.couponCode = arg.discountCode;
+        if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
+            User discountUser = userManager.getUserByReference(arg.discountCode);
+            if(discountUser != null) {
+                booking.userId = discountUser.id;
+                booking.couponCode = pmsInvoiceManager.getDiscountsForUser(discountUser.id).attachedDiscountCode;
+            } else {
+                booking.couponCode = arg.discountCode;
+            }
+        }
         try {
             pmsManager.setBooking(booking);
         }catch(Exception e) {
@@ -171,7 +179,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         }
                     }
                     room.roomsSelectedByGuests.put(i, count);
-                    Double price = getPriceForRoom(room, arg.start, arg.end, i, arg.discountCode);
+                    Double price = getPriceForRoom(room, arg.start, arg.end, i, booking.couponCode);
                     room.pricesByGuests.put(i, price);
                 }
             } catch (Exception ex) {
@@ -272,6 +280,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     if((guestLeft - lowest.guests) < (roomsLeft-1)) {
                         continue;
                     }
+                    if((guestLeft - lowest.guests) < 0) {
+                        continue;
+                    }
                     int count = maxRooms.get(lowest.room.id);
                     count--;
                     maxRooms.put(lowest.room.id, count);
@@ -309,9 +320,19 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             logPrint("Not all guests where assigned a room");
             logPrint("################ WARNING ################");
         }
+        if(guestLeft < 0) {
+            logPrint("################ WARNING ################");
+            logPrint("Too many guests where assigned a room");
+            logPrint("################ WARNING ################");
+        }
         if(roomsLeft > 0) {
             logPrint("################ WARNING ################");
             logPrint("Not all rooms where assigned");
+            logPrint("################ WARNING ################");
+        }
+        if(roomsLeft < 0) {
+            logPrint("################ WARNING ################");
+            logPrint("Too many rooms where assigned");
             logPrint("################ WARNING ################");
         }
         

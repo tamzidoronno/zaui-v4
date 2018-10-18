@@ -167,13 +167,7 @@ class PmsSearchBookingColumnFormatters {
             $text = $room->progressState;
         }
         
-        $channels = array();
-        $channels['wubook_0'] = "Wubook";
-        $channels['wubook_1'] = "Exp.";
-        $channels['wubook_2'] = "b.com";
-        $channels['wubook_37'] = "GDS";
-        $channels['wubook_43'] = "ABNB";
-        
+        $channels = $this->getChannels();
         $channelText = $room->channel;
         if(isset($channels[$room->channel])) {
             $channelText = $channels[$room->channel];
@@ -307,5 +301,16 @@ class PmsSearchBookingColumnFormatters {
         }
         return $count;
     }
-    
+
+    public function getChannels() {
+        $channels = array();
+        $channels['web'] = "Website";
+        $channels['wubook_0'] = "Wubook";
+        $channels['wubook_1'] = "Exp.";
+        $channels['wubook_2'] = "b.com";
+        $channels['wubook_37'] = "GDS";
+        $channels['wubook_43'] = "ABNB";
+        return $channels;
+    }
+
 }

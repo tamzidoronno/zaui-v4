@@ -53,6 +53,8 @@ public class PmsManagerProcessor {
         checkTimer("processLockSystem");
         try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("sendPaymentLinkOnUnpaidBookings");
+        try { sendRecieptsOnCompletedPayments(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("sendRecieptsOnCompletedPayments");
     }
     
     public void hourlyProcessor() {
@@ -802,8 +804,10 @@ public class PmsManagerProcessor {
             }
             if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
                 if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
-                    manager.doNotificationFromProcessor("booking_completed", booking, null);
-                    needSaving = true;
+                    if(!booking.isSynxis()) {
+                        manager.doNotificationFromProcessor("booking_completed", booking, null);
+                        needSaving = true;
+                    }
                 }
             }
             if(booking.payedFor && !booking.avoidAutoDelete) {
@@ -1365,7 +1369,11 @@ public class PmsManagerProcessor {
 
     private List<PmsBooking> getBookingsNeedsToBeChecked(List<PmsBooking> bookings) {
         List<PmsBooking> toCheck = new ArrayList();
-        java.util.Calendar cal = java.util.Calendar.getInstance();
+        
+        java.util.Calendar end = java.util.Calendar.getInstance();
+        java.util.Calendar start = java.util.Calendar.getInstance();
+        start.add(Calendar.HOUR_OF_DAY, -30);
+        end.add(Calendar.HOUR_OF_DAY, 30);
         for(PmsBooking booking : bookings) {
             boolean found = false;
             for(PmsBookingRooms r : booking.getAllRoomsIncInactive()) {
@@ -1373,13 +1381,28 @@ public class PmsManagerProcessor {
                 if(r.addedToArx) {
                     toCheck.add(booking);
                     found = true;
-                } else if(r.startingInHours(30, cal)) {
+                } else if(r.startingBetween(start.getTime(), end.getTime())) {
                     toCheck.add(booking);
                     found = true;
                 }
             }
         }
         return toCheck;
+    }
+
+    private void sendRecieptsOnCompletedPayments() {
+        if(!manager.isActive() || manager.hasNoBookings()) {
+            return;
+        }
+//        
+//        List<String> ordersToAutosend = manager.orderManager.getOrdersToAutoSend();
+//        for(String orderId : ordersToAutosend) {
+//            PmsBooking booking = manager.getBookingWithOrderId(orderId);
+//            if(booking != null) {
+//                Order order = manager.orderManager.getOrder(orderId);
+//                manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
+//            }
+//        }
     }
 
 

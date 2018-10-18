@@ -1145,6 +1145,10 @@ thundashop.framework = {
             thundashop.Ajax.reloadApp($(this).attr('appsettingsid'), true);
             isloadingoverlaytype1 = false;
         });
+    },
+    reloadOverLayType1or2 : function() {
+        if($('.gsoverlay1').is(':visible')) { thundashop.framework.reloadOverLayType1(); }
+        if($('.gsoverlay2').is(':visible')) { thundashop.framework.reloadOverLayType2(); }
     }
 }
 

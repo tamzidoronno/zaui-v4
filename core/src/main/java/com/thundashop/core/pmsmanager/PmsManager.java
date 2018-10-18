@@ -662,7 +662,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
-        if(!convertedDiscountSystem) { cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; }
+        if(!convertedDiscountSystem) { 
+            cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; 
+        }
+        
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
@@ -3310,7 +3313,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     }
 
-    private boolean avoidSameDayDropIn(Date start, String itemType) {
+    private boolean avoidSameDayDropIn(Date start, String itemType, boolean adminoverride) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.HOUR, -7);
@@ -3322,7 +3325,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         Session sess = getSession();
         if (sess != null && sess.currentUser != null) {
-            if (sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser()) {
+            if (sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser() && adminoverride) {
                 return false;
             }
         }
@@ -3711,7 +3714,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
-        if(!convertedDiscountSystem) { cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; }
+        if(!convertedDiscountSystem) { 
+            cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; 
+        }
         List<PmsRoomSimple> res = new ArrayList();
         gsTiming("filtering 1");
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
@@ -5701,7 +5706,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
                 && (start.before(now) && end.after(now))) {
             //This is extending a stay, we need to remove cleaning and mark it as cleaned.
-            if (!getConfiguration().isGetShopHotelLock()) {
+            if (!getConfiguration().isGetShopHotelLock() && !getShopLockSystemManager.isActivated()) {
                 room.forceUpdateLocks = true;
             }
         }
@@ -5715,7 +5720,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.cleaningDate = null;
         if (room.addedToArx) {
             if (room.isStarted() && !room.isEnded()) {
-                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded() && !getShopLockSystemManager.isActivated()) {
                     room.forceUpdateLocks = true;
                 }
             }
@@ -6516,6 +6521,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = "Code {code} room {roomName}.";
         }
 
+        if(message == null || message.isEmpty() && key.startsWith("sendreciept") && type.equals("email")) {
+//            message = "reciept for your stay";
+        }
+        if(message == null || message.isEmpty() && key.startsWith("sendinvoice") && type.equals("email")) {
+//            message = "invoice for your stay";
+        }
+        
         if (message == null || message.isEmpty()) {
             return "";
         }
@@ -6756,11 +6768,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (room.date.end.after(new Date())) {
                     changeDates(room.pmsBookingRoomId, booking.id, room.date.start, new Date());
                 }
+                logEntry("Room checked out", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkout");
             }
         }
         saveBooking(booking);
     }
 
+    @Override
+    public void undoCheckOut(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                room.checkedout = false;
+            }
+            logEntry("Undo checkout", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkout");
+        }
+        saveBooking(booking);
+    }
+    
+    
     private void changeCheckoutTimeForGuestOnRoom(String itemId) {
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkout";
@@ -7619,7 +7645,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (hasRoomsInWorkspace(start, end)) {
             return true;
         }
-        if (avoidSameDayDropIn(start, itemType)) {
+        if (avoidSameDayDropIn(start, itemType, adminOverride)) {
             return true;
         }
         if(closedForPeriode(start, end)) {
@@ -8051,7 +8077,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cal2.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
         cal2.set(Calendar.SECOND, cal.get(Calendar.SECOND));
         cal2.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND));
-//        cal2.add(Calendar.DAY_OF_YEAR, );
         newStartDate = cal2.getTime();
 
         System.out.println("Transformed date: " + newStartDate);
@@ -8068,6 +8093,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Date end = new Date(newEnd);
 
         bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
+        String logText = "Changed start date and item <b>" + newStartDate + "</b> New room : " + bookingEngine.getBookingItem(bookingItemId).bookingItemName;
+        logEntry(logText, pmsBooking.id, room.bookingItemId, room.pmsBookingRoomId, "changestay");
     }
 
     public void addOrderToBooking(PmsBooking booking, String orderId) {
@@ -8467,7 +8494,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void resetDoorLockCode(PmsBookingRooms room) {
         if (room.addedToArx) {
             if (room.isStarted() && !room.isEnded()) {
-                if (!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                if ((!getConfigurationSecure().isGetShopHotelLock() && !getShopLockSystemManager.isActivated()) && !room.isEnded()) {
                     room.forceUpdateLocks = true;
                 }
             }
@@ -8519,7 +8546,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void checkInRoom(String pmsBookingRoomId) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        room = changeDates(room.pmsBookingRoomId, booking.id, new Date(), room.date.end);
+        if(!room.isStarted()) {
+            room = changeDates(room.pmsBookingRoomId, booking.id, new Date(), room.date.end);
+        }
         if (room != null) {
             logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");
             room.checkedin = true;
@@ -8787,6 +8816,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        if(title == null || title.isEmpty() && key.startsWith("sendreciept")) {
+            return "reciept for your stay";
+        }
+        if(title == null || title.isEmpty() && key.startsWith("sendinvoice")) {
+            return "invoice for your stay";
+        }
+
         return "";
     }
 
@@ -9072,5 +9109,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return false;
     }
+
         
 }

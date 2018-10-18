@@ -52,7 +52,7 @@ if(stristr($booking->channel, "wubook_")) {
             echo "<span class='shop_button checkinguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:green;'>Check in guest</span>";
         } else if($room->checkedin && !$room->checkedout) {
             echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:blue;'>Check out guest</span>";
-        } else {
+        } else if(!$room->checkedin && $room->checkedout) {
             echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:orange;'>Undo checkout</span>";
         }
         ?>

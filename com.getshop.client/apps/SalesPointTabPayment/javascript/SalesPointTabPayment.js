@@ -32,6 +32,7 @@ app.SalesPointTabPayment = {
         var data = app.SalesPointTabPayment.getChargingData();
         data.payementId = $(this).attr('paymentid');
         var event = thundashop.Ajax.createEvent(null, "startPayment", this, data);
+        event.firstLoad = true;
         thundashop.Ajax.post(event);
     },
     

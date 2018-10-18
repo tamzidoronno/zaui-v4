@@ -238,8 +238,22 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
             $this->getApi()->getPmsManager()->addCartItemToRoom($bookingEngineName, $item, $_POST['data']['roomid'], "SalesPoint");
         }
         
-        $this->getApi()->getPosManager()->removeItemsFromTab($this->getCurrentTab()->id, $cartItems);
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($bookingEngineName,  $_POST['data']['roomid']);
+        $guestName = "";
+        $roomName = "";
+        foreach ($booking->rooms as $room) {
+            if ($room->bookingItemId) {
+                $bookingItem = $this->getApi()->getBookingEngine()->getBookingItem($bookingEngineName, $room->bookingItemId);
+                $roomName = $bookingItem->bookingItemName;
+            }
+            
+            $guestName = @$room->guests[0]->name;
+        }
         
+        $gdsDeviceId = $this->getCurrentGdsDevice();
+        
+        $this->getApi()->getPosManager()->printRoomReceipt($gdsDeviceId->id, $roomName, $guestName, $cartItems);
+        $this->getApi()->getPosManager()->removeItemsFromTab($this->getCurrentTab()->id, $cartItems);
         $this->cancelCurrentOrder();
     }
 

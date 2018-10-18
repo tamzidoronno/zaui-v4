@@ -15,6 +15,8 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.gsd.RoomReceipt;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
@@ -49,6 +51,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     
     @Autowired
     private InvoiceManager invoiceManager;
+    
+    @Autowired
+    private GdsManager gdsManager;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -270,5 +275,15 @@ public class PosManager extends ManagerBase implements IPosManager {
         order.cart.addCartItems(tab.cartItems);
         
         invoiceManager.sendOrderToGdsDevice(cashPointDeviceId, order);
+    }
+
+    @Override
+    public void printRoomReceipt(String gdsDeviceId, String roomName, String guestName, List<CartItem> items) {
+        RoomReceipt receipt = new RoomReceipt();
+        receipt.roomName = roomName;
+        receipt.guestName = guestName;
+        receipt.cartItems = items;
+        receipt.date = new Date();
+        gdsManager.sendMessageToDevice(gdsDeviceId, receipt);
     }
 }

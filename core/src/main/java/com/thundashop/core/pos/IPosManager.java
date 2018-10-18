@@ -69,4 +69,7 @@ public interface IPosManager {
     
     @Editor
     public void printOverview(String tabId, String cashPointDeviceId);
+    
+    @Editor
+    public void printRoomReceipt(String gdsDeviceId, String roomName, String guestName, List<CartItem> items);
 }

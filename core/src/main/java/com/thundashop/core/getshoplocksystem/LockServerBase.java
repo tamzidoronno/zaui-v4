@@ -317,4 +317,8 @@ public abstract class LockServerBase extends DataCommon {
         accessEvents.clear();
         return events;
     }
+    
+    public String getGivenName() {
+        return givenName;
+    }
 }

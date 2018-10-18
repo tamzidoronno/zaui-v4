@@ -65,7 +65,7 @@ public interface IPosManager {
     public void createZReport();
     
     @Editor
-    public double getTotalForCurrentZReport();
+    public Double getTotalForCurrentZReport();
     
     @Editor
     public void printOverview(String tabId, String cashPointDeviceId);

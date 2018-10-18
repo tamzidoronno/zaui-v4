@@ -632,7 +632,7 @@ class Page {
             echo "<div class='gsucell_outer' cellid='$cell->cellId'>";
         }
         
-        $lastInRow = (count(@$parent->cells) - 1) == $count ?  "gs_last_in_row" : "";
+        $lastInRow = (@count(@$parent->cells) - 1) == $count ?  "gs_last_in_row" : "";
         $firstInRowClass = $count == 0 ?  "gs_first_in_row" : "";
         $height = $cell->height;
         

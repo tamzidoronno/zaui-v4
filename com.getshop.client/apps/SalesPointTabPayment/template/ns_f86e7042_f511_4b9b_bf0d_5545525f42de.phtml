@@ -1,0 +1,81 @@
+<?php
+/* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+
+$cartItems = $this->getCartItemsForRoom();
+$bookingEngineName = $this->getBookingEngineNameByPayOnRoomPaymentMethod();
+if (!$bookingEngineName) {
+    echo $this->__f("The booking engine name has not yet been configures, please specify what bookingengine is used under payment method settings.");
+    return;
+}
+
+$items = $this->getApi()->getBookingEngine()->getBookingItems($bookingEngineName);
+
+echo "<div class='summarybox'>";
+    echo "<h2>".$this->__f("Summary")."</h2>";
+    foreach ($cartItems as $cartItem) {
+        ?>
+        <div class='cartitem itemlines' cartitemid='<? echo $cartItem->cartItemId; ?>'>
+
+            <div class='col productname'>&nbsp;&nbsp;&nbsp;<?php echo $cartItem->product->name; ?></div>
+            <div class='col count'><? echo $cartItem->count; ?> x</div>
+            <div class='col price'><? echo $cartItem->product->price; ?></div>
+        </div>
+        <?
+    }
+
+echo "</div>";
+?>
+<div class="filterbox">
+    <div style="float: left; font-size: 16px;">
+    <?
+    echo $this->__f("Please select room you want to move this order to.");
+    ?>    
+    </div>
+    
+    <? echo $this->__f("Filter").": "; ?><input class="gsniceinput1 filterpayonroomlist"/> <i class="gs_shop_small_icon fa fa-search"></i>
+</div>
+<?
+$state = new \core_pmsmanager_PmsBookingFilter();
+$state->filterType = "active";
+$state->startDate = $this->convertToJavaDate(strtotime( '-1 days' ));
+$state->endDate = $this->convertToJavaDate(strtotime( '+1 days' ));
+$rooms = $this->getApi()->getPmsManager()->getSimpleRooms($bookingEngineName, $state);
+$newRooms = array();
+
+foreach ($rooms as $room) {
+    if (!$room->bookingItemId)
+        continue;
+    
+    $room->bookingItemName = $this->getItemName($items, $room->bookingItemId);
+    $newRooms[] = $room;
+}
+
+usort($newRooms, array("ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment", "usortRoomsByRoomName"));
+
+
+echo "<div class='roomrow'>";
+    echo "<div class='col bookingitemname'>".$this->__f("Room name")."</div>";
+    echo "<div class='col guestname'>".$this->__f("Guest name")."</div>";
+    echo "<div class='col checkin'>".$this->__f("Check in")."</div>";
+    echo "<div class='col checkout'>".$this->__f("Check out")."</div>";
+    echo "<div class='col addtoroombutton'></div>";
+echo "</div>";
+
+foreach ($newRooms as $room) {
+    if (!$room->bookingItemId)
+        continue;
+
+    echo "<div class='roomrow'>";
+        echo "<div class='col bookingitemname'>".$room->bookingItemName."</div>";
+        echo "<div class='col guestname'>".$room->guest[0]->name."</div>";
+        echo "<div class='col checkin'>".date('d.m.Y H.i.s', ($room->start/1000))."</div>";
+        echo "<div class='col checkout'>".date('d.m.Y H.i.s', ($room->end/1000))."</div>";
+        echo "<div class='col addtoroombutton'><div class='gs_shop_small_icon' gsclick='addCurrentItemsToRoom' roomid='$room->pmsRoomId'>".$this->__f("Add to room")."</div></div>";
+    echo "</div>";
+}
+?>
+
+<div class="buttonarea" style="padding: 20px;">
+    <div class='shop_button' gsclick='cancelCurrentOrder'><? echo $this->__f("Cancel"); ?></div>
+</div>
+

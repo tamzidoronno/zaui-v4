@@ -1,0 +1,40 @@
+<?
+/* @var $this \ns_4404dc7d_e68a_4fd5_bd98_39813974a606\EcommerceProductView */
+?>
+<div>
+    <?
+    echo $this->__f("Search for list");
+    ?>
+    &nbsp;&nbsp;<input class="gsniceinput1" />
+</div>
+<?
+$product = $this->getProduct();
+$lists = $this->getApi()->getProductManager()->getProductLists();
+
+usort($lists, array('ns_4404dc7d_e68a_4fd5_bd98_39813974a606\EcommerceProductView','sortByName'));
+
+?>
+<div gstype='form' method='saveListToProduct'>
+    <?
+    foreach ($lists as $list) {
+        $checked = in_array($product->id, $list->productIds) ? "checked='true'" : "";
+        echo "<div></i><input $checked type='checkbox' gsname='product_list_$list->id'>".$list->listName." <span class='showeditlist' listid='$list->id'>( edit ) </span></div>";
+        
+        echo "<div gstype='form' method='saveList' class='editlist' listid='$list->id'>";
+        echo "<input type='hidden' gsname='listid' value='$list->id'/>";
+        echo $this->__f("Name").": <input gsname='name' value='$list->listName'/>";
+        echo "<br/><br/><div class='shop_button closeedit'>".$this->__f("Close")."</div> <div gstype='submit' class='shop_button'>".$this->__f("Save")."</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <div style='background-color: red;' class='shop_button' gsclick='deleteList' listid='$list->id'>".$this->__f("Delete")."</div> ";
+        echo "</div>";
+    }
+    ?>
+    <br/>
+    &nbsp;
+    <div class="shop_button" gstype="submit"><? echo $this->__f("Save"); ?></div>
+</div>
+
+<div class="createnewlist" gstype="form" method="addNewList">
+    <h2><? echo $this->__f("Add new list"); ?></h2>
+    <input class="gsniceinput1" gstype="submitenter" gsname="listname" placeholder="<? echo $this->__f('Name of list'); ?>"/>
+    <div class="gs_shop_small_icon" gstype="submit"><? echo $this->__f("Create"); ?></div>
+</div>
+

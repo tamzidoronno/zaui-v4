@@ -32,9 +32,6 @@ $appInstance = $page->getAppInstance($_POST['core']['instanceid']);
 if (isset($_POST['core']['appid2']) && $_POST['core']['appid2']) {
     $appInstance = $page->getExtraApplication($_POST['core']['appid2']);
 }
-if (isset($_POST['core']['appid2']) && $_POST['core']['appid2']) {
-    $appInstance = $page->getExtraApplication($_POST['core']['appid2']);
-}
 
 if(!$appInstance) {
     $factory = IocContainer::getFactorySingelton();

@@ -43,6 +43,7 @@ public class CartItem implements Serializable {
     public Date periodeStart = null;
     public String groupedById = "";
     public String addedBy = "";
+    public Date addedDate = null;
     public boolean removedAfterDeleted;
     public List<PmsBookingAddonItem> itemsAdded;
     public HashMap<String, Double> priceMatrix;
@@ -132,7 +133,7 @@ public class CartItem implements Serializable {
 
     public Product getProduct() {
         product.doFinalize();
-        return product;
+        return product;    
     }
 
     public Product getProductUnfinalized() {

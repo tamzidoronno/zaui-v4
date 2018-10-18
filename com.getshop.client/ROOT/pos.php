@@ -1,28 +1,26 @@
 <?
 include '../loader.php';
-$pageFactory = new \PageFactory("srs");
+$pageFactory = new \PageFactory("salespoint");
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
 $factory = IocContainer::getFactorySingelton();
-if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
-    header('location:/login.php?redirectto=/pms.php');
+if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+    header('location:/login.php?redirectto=/salespoint.php');
     exit(0);
 }
-if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
-    $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
-}
 
+// Add apps if not already added
 $_SESSION['firstloadpage'] = true;
 
 ?>
-<html pageid="<? echo $page->getId(); ?>" module="srs">
+<html pageid="<? echo $page->getId(); ?>" module="salespoint">
     <head>
         <title><? echo $page->getTitle(); ?></title>
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">
-        <link rel="stylesheet" href="/skin/default/pms.css">
         <link rel="stylesheet" href="/skin/default/gesthopmodules.css">
+        <link rel="stylesheet" href="/skin/default/pos.css">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
 
         <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">
@@ -83,8 +81,8 @@ $_SESSION['firstloadpage'] = true;
         
         <div area="header" class="gsarea">
             <?
-            $menu = $page->getMenu("srs");
-            $menu->renderTop();
+            $menu = $page->getMenu("salespoint");
+            $menu->renderTop(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject());
             ?>
         </div>
         

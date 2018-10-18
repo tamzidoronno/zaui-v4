@@ -1,0 +1,43 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$tabs = $this->getApi()->getPosManager()->getAllTabs();
+if (!$tabs || !count($tabs)) {
+    ?>
+    <div class="information">
+        <?
+        echo $this->__f("You have no tabs available, please create one first.");
+        ?>
+    </div>
+    <?
+    return;
+}
+?>
+<div class="tablistcontent">
+    
+
+    <div class="tablist">
+        <div class="col tabname"><? echo $this->__f("Tab Reference"); ?></div>
+        <div class="col createddate"><? echo $this->__f("Date created"); ?></div>
+        <div class="col createby"><? echo $this->__f("Created by"); ?></div>
+        <div class="col cartitemsize"><? echo $this->__f("Rows count"); ?></div>
+        <div class="col buttons"><? echo $this->__f("Select"); ?></div> 
+    </div>
+
+    <?
+    foreach ($tabs as $tab) {
+        $craetedUser = $this->getApi()->getUserManager()->getUserById($tab->createdByUserId);
+        $nameOfCreator = $craetedUser ? $craetedUser->fullName : "N/A";
+        ?>
+        <div class="tablist">
+            <div class="col tabname"><? echo $tab->name ? $tab->name : "N/A"; ?></div>
+            <div class="col createddate"><? echo $tab->rowCreatedDate; ?></div>
+            <div class="col createby"><? echo $nameOfCreator; ?></div>
+            <div class="col cartitemsize"> <? echo count($tab->cartItems); ?></div>
+            <div class="col buttons"> 
+                <i class="gs_shop_small_icon" gsclick="activateTab" tabid="<? echo $tab->id; ?>"><? echo $this->__f("Activate"); ?></i>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

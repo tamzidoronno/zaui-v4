@@ -26,6 +26,10 @@ class GetShopDeviceList extends \MarketingApplication implements \Application {
         $this->getApi()->getGdsManager()->saveDevice($device);
     }
     
+    public function formatMessageCount() {
+        echo "ok";
+    }
+    
     public function deleteDevice() {
         $this->getApi()->getGdsManager()->deleteDevice($_POST['data']['deviceid']);
     }

@@ -71,11 +71,13 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
                 .orElse(null);
         
         if (lockAlreadAdded != null) {
+            lockAlreadAdded.maxnumberOfCodes = 2000;
+            saveMe();
             return;
         }
         
         lockAlreadAdded = new LockBoxLock();
-        lockAlreadAdded.maxnumberOfCodes = 1000;
+        lockAlreadAdded.maxnumberOfCodes = 2000;
         lockAlreadAdded.name = "Lock " + deviceId;
         lockAlreadAdded.connectedToServerId  = id;
         lockAlreadAdded.id = UUID.randomUUID().toString();

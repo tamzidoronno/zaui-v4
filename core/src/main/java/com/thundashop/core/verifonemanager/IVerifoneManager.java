@@ -6,7 +6,9 @@
 package com.thundashop.core.verifonemanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import java.util.List;
 
 /**
  * Handle payments trough verifone.
@@ -18,4 +20,10 @@ public interface IVerifoneManager {
     
     @Administrator
     public void cancelPaymentProcess(String terminalId);
+    
+    @Editor
+    public List<String> getTerminalMessages();
+    
+    @Editor
+    public void clearMessages();
 }

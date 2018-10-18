@@ -1,0 +1,36 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$tab = $this->getCurrentTab();    
+$tabId = $tab ? $tab->id : "";
+$tabActive = !$tab ? "tabnotactive" : "";
+$showpaymentmodal = $tab ? "gs_show_modal='paymentmodal'" : "";
+?>
+
+<div class='menu'>
+    <div class='entry taboperation <? echo $tabActive; ?> printoverview' tab='printpreview'>
+        <i class='fa fa-print'></i>
+        Print overview
+    </div>
+    <div class='entry taboperation startpaymentbutton <? echo $tabActive; ?>'  <? echo $showpaymentmodal; ?> tab='listtab' tabid='<? echo $tabId; ?>'>
+        <i class='fa fa-credit-card'></i>
+        Payment
+    </div>
+    <div class='entry taboperation deletetab <? echo $tabActive; ?>' tab='listtab'>
+        <i class='fa fa-trash'></i>
+        Delete tab
+    </div>
+    
+    <br/>
+    <br/>
+    <br/>
+    
+    <div class='entry all' tab='newtab'>
+        <i class='fa fa-dollar'></i>
+        New tab
+    </div>
+    
+    <div class='entry all' tab='listtab'>
+        <i class='fa fa-tablet'></i>
+        List tabs
+    </div>
+</div>

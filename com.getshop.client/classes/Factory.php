@@ -754,7 +754,7 @@ class Factory extends FactoryBase {
     }
 
     public function getTranslationForKey($app, $key) {
-        if (!count($this->translationMatrix)) {
+        if (!@count($this->translationMatrix)) {
             $this->read_csv_translation();
         }
 

@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class ProductView extends UpdateScriptBase implements UpdateScript {
+public class SalesPointTabPayment extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
-        return getDate("19/04-2018");
+        return getDate("14/10-2018");
     }
     
     @Override
     public String getId() {
-        return "ea0be5ca-c324-49e0-b154-406124e85f46";
+        return "301960ff-5691-4983-a8fc-fd909ef9bee0";
     }
 
     @SuppressWarnings("empty-statement")
@@ -49,7 +49,7 @@ public class ProductView extends UpdateScriptBase implements UpdateScript {
     }
     
     public static void main(String[] args) {
-        new ProductView().runSingle();
+        new SalesPointTabPayment().runSingle();
     }
     
     @Override
@@ -66,16 +66,16 @@ public class ProductView extends UpdateScriptBase implements UpdateScript {
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        Application ProductView = createSettings("ProductView",
-        "f52bea98-9616-4b43-bd28-32e62fa95c91",
+        Application SalesPointTabPayment = createSettings("SalesPointTabPayment",
+        "11234b3f-452e-42ce-ab52-88426fc48f8d",
         allowed2,
         " ",
         Application.Type.Marketing, true);
-        ProductView.isPublic = true;
-        ProductView.isFrontend = true;
-        ProductView.moduleId = "ecommerce";
-        ProductView.defaultActivate = true;
-        ProductView.storeId = "all";
-        database.save(ProductView, credentials);
+        SalesPointTabPayment.isPublic = true;
+        SalesPointTabPayment.isFrontend = true;
+        SalesPointTabPayment.moduleId = "salespoint";
+        SalesPointTabPayment.defaultActivate = true;
+        SalesPointTabPayment.storeId = "all";
+        database.save(SalesPointTabPayment, credentials);
     }
 }

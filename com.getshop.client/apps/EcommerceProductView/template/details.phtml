@@ -1,0 +1,21 @@
+<?
+/* @var $this \ns_4404dc7d_e68a_4fd5_bd98_39813974a606\EcommerceProductView */
+$product = $this->getProduct();
+?>
+
+<div gstype='form' method='saveDetails'>
+    <? echo $this->__f("Product name").": "; ?> 
+    <br/><input type="text" class="gsniceinput1" gsname="name" value="<? echo $product->name; ?>">
+    <br/>
+    <br/>
+    <? echo $this->__f("Product short description").": "; ?> 
+    <br/><textarea type="text" gsname='shortdesc' class="gsniceinput1"><? echo $product->shortDescription; ?></textarea>
+    <br/>
+    <br/>
+    <? echo $this->__f("Product long description").": "; ?> 
+    <br/><textarea type="text" gsname='description' class="gsniceinput1"><? echo $product->description; ?></textarea>
+    <br/>
+    <br/>
+    <div class='shop_button' gstype='submit'><? echo $this->__f("Save"); ?></div>
+</div>
+

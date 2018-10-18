@@ -1,0 +1,3 @@
+.ProductList .col_name {
+    width: calc(100% - 440px);
+}

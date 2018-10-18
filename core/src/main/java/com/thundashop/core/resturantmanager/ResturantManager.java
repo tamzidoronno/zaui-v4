@@ -34,6 +34,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.trackermanager.TrackLog;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.verifonemanager.VerifoneManager;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,6 +90,9 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     
     @Autowired
     public StorePrintManager storePrintManager;
+    
+    @Autowired
+    private VerifoneManager verifoneManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -713,4 +717,10 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         orderManager.printOrderToPrinter(dummyOrder, printerId);
     }
 
+    
+    public List<String> getTerminalMessages() {
+        ArrayList retList = new ArrayList<String>(verifoneManager.getTerminalMessages());
+        verifoneManager.getTerminalMessages().clear();
+        return retList;
+    }
 }

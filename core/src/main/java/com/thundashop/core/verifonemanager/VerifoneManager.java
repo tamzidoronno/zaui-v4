@@ -64,8 +64,8 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         this.orderToPay = order;
 
         if(!storeManager.isProductMode() && !overrideDevMode) {
-            order.status = Order.Status.PAYMENT_COMPLETED;
-            saveOrderSomeHow(orderToPay);
+//            order.status = Order.Status.PAYMENT_COMPLETED;
+//            saveOrderSomeHow(orderToPay);
             orderToPay = null;
             return;
         }
@@ -207,13 +207,24 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     @Override
     public void cancelPaymentProcess(String terminalId) {
+        if(!storeManager.isProductMode()) {
+            printFeedBack("payment failed");
+            return;
+        }
+        
         VerifonePaymentApp app = activePaymentApps.get(terminalId);
         app.closeCom();
         orderToPay = null;
     }
 
+    @Override
     public List<String> getTerminalMessages() {
         return terminalMessages;
+    }
+
+    @Override
+    public void clearMessages() {
+        terminalMessages.clear();
     }
 
 }

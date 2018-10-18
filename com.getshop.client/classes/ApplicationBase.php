@@ -375,11 +375,13 @@ class ApplicationBase extends FactoryBase {
             return false;
         }
         $accesslist = @$this->getUser()->applicationAccessList;
+        
+        
         $type = -1;
         if(isset($this->applicationSettings) && isset($accesslist->{$this->applicationSettings->id})) {
             $type = $accesslist->{$this->applicationSettings->id};
         }
-        if(sizeof($accesslist) == 0 || $type == 0 || $type == 2) {
+        if(@sizeof($accesslist) == 0 || $type == 0 || $type == 2) {
             return true;
         }
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {

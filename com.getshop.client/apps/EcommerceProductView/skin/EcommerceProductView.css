@@ -1,0 +1,109 @@
+.EcommerceProductView .product_header {
+    font-size: 30px;
+    padding: 20px;
+    border-bottom: solid 3px #EFEFEF;
+}
+
+
+.EcommerceProductView .menuarea,
+.EcommerceProductView .workarea {
+    width: 500px;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 13px;
+}
+
+.EcommerceProductView .workarea .producttab {
+    display: none;
+    width: 100%;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.EcommerceProductView .workarea {
+    width: calc(100% - 205px);
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+.EcommerceProductView .workarea .active {
+    display: inline-block;
+}
+
+.EcommerceProductView .menuarea {
+    width: 200px;
+    box-sizing: border-box;
+    padding: 30px;
+    padding-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.EcommerceProductView .menuarea .menuentry i{
+    font-size: 30px;
+    display: none;
+}
+.EcommerceProductView .menuarea .menuentry {
+    text-align: left;
+    padding: 5px;
+    cursor: pointer;
+    color: #82cdf3;
+    text-decoration: dotted;
+    text-decoration: none;
+    width: inherit;
+    display: inline-block;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: 0px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.EcommerceProductView .menuarea .menuentry span {
+    border-bottom: 2px dotted #82cdf3;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding: 3px;
+    margin-left: 20px;
+}
+
+.EcommerceProductView .menuarea .menuentry.active span {
+    
+}
+
+.EcommerceProductView .menuarea .menuentry.active span {
+    border-bottom: 2px dotted transparent;
+    display: inline-block;
+    background-color: #2a324e;
+    color: #FFF;
+    border-radius: 20px;
+    border: solid 0px;
+    margin-left: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.EcommerceProductView .createnewlist {
+    border-top: solid 3px #EFEFEF;
+    margin-top: 30px;
+}
+
+.EcommerceProductView textarea,
+.EcommerceProductView input[type='text'] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.EcommerceProductView textarea {
+    height: 100px;
+}
+
+.EcommerceProductView .editlist {
+    position: absolute;
+    background-color: #FFF;
+    padding: 20px;
+    border: solid 1px;
+    display: none;
+}

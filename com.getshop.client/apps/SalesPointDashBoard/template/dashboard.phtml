@@ -1,0 +1,52 @@
+<?php
+/* @var $this ns_bf312f0d_d204_45e9_9519_a139064ee2a7\SalesPointDashBoard */
+
+$boxes = array();
+$boxes["Open Tabs"] = "Number of open tabs";
+$boxes["TOTAL SALES"] = "Total sales in your local currency since last ZReport";
+$boxes["NUMBER OF ORDERS"] = "Orders that has been created since last ZReport";
+
+$colors["Open_Tabs"] = "green";
+$colors["TOTAL_SALES"] = "orange";
+$colors["NUMBER_OF_ORDERS"] = "pink";
+$colors["CLEANING"] = "lightblue";
+$colors["GUEST_COMMENTS"] = "pink";
+$colors["ECONOMY"] = "lightgreen";
+$colors["Coverage"] = "yellow";
+$colors["Janitor"] = "green";
+
+$count["Open_Tabs"] = count($this->getApi()->getPosManager()->getAllTabs());
+$count["TOTAL_SALES"] = $this->getApi()->getPosManager()->getTotalForCurrentZReport();
+$count["NUMBER_OF_ORDERS"] = count($this->getApi()->getPosManager()->getZReport("")->orderIds);
+?>
+
+<div class='dashboard_main'>
+    <?php
+    foreach($boxes as $title => $desc) {
+        $field = str_replace(" ", "_", $title);
+    ?>
+    <div class="statistics_outer <?php echo $field; ?>">
+        <div class="statistics <?php echo $field; ?>">
+            <div class='header'>
+                <?php echo $title; ?>
+                <i class='fa fa-info-circle' title='<?php echo $desc; ?>'></i> 
+            </div>
+            <div class='inner'>
+                <? $color = $colors[$field]; ?>
+                <div class="statiticbox counter <? echo $color; ?> counter1">
+                    <div class="filecount boldFont">
+                        <? 
+                        echo $count[$field];
+                        ?>
+                    </div>
+                    
+                    <div class="box_explainer">
+                    <?php echo $this->__f("Today"); ?>
+                    </div>
+                </div>
+                
+            </div>    
+        </div>
+    </div>
+<?php } ?>
+</div>

@@ -5,10 +5,12 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductLight;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -117,6 +119,8 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public Product getProduct(String id) throws ErrorException;
+    
+    public List<ProductLight> getProductLight(List<String> ids) throws ErrorException;
     
     @Administrator
     public Product getDeletedProduct(String id) throws ErrorException;
@@ -241,4 +245,7 @@ public interface IProductManager {
     
     @Editor
     public FilteredData getAllProductsForRestaurant(FilterOptions filterOptions);
+    
+    @Editor
+    public FilteredData findProducts(FilterOptions filterOptions);
 }

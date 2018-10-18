@@ -1394,14 +1394,15 @@ public class PmsManagerProcessor {
         if(!manager.isActive() || manager.hasNoBookings()) {
             return;
         }
-        List<String> ordersToAutosend = manager.orderManager.getOrdersToAutoSend();
-        for(String orderId : ordersToAutosend) {
-            PmsBooking booking = manager.getBookingWithOrderId(orderId);
-            if(booking != null) {
-                Order order = manager.orderManager.getOrder(orderId);
-                manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
-            }
-        }
+//        
+//        List<String> ordersToAutosend = manager.orderManager.getOrdersToAutoSend();
+//        for(String orderId : ordersToAutosend) {
+//            PmsBooking booking = manager.getBookingWithOrderId(orderId);
+//            if(booking != null) {
+//                Order order = manager.orderManager.getOrder(orderId);
+//                manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
+//            }
+//        }
     }
 
 

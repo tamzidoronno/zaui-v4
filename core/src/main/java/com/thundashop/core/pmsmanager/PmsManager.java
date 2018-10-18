@@ -6522,10 +6522,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         if(message == null || message.isEmpty() && key.startsWith("sendreciept") && type.equals("email")) {
-            message = "reciept for your stay";
+//            message = "reciept for your stay";
         }
         if(message == null || message.isEmpty() && key.startsWith("sendinvoice") && type.equals("email")) {
-            message = "invoice for your stay";
+//            message = "invoice for your stay";
         }
         
         if (message == null || message.isEmpty()) {

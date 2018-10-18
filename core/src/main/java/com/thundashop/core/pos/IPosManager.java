@@ -35,13 +35,13 @@ public interface IPosManager {
     public PosTab getTab(String tabId);
     
     @Editor
-    public double getTotal(String tabId);
+    public Double getTotal(String tabId);
     
     @Editor
     public void removeFromTab(String cartItemId, String tabId);
     
     @Editor
-    public double getTotalForItems(List<CartItem> cartItems);
+    public Double getTotalForItems(List<CartItem> cartItems);
     
     @Editor
     public Order createOrder(List<CartItem> cartItems, String paymentId);

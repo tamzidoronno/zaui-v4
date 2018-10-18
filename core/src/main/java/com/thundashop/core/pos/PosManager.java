@@ -108,7 +108,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public double getTotal(String tabId) {
+    public Double getTotal(String tabId) {
         PosTab tab = getTab(tabId);
         Cart cart = new Cart();
         cart.addCartItems(tab.cartItems);
@@ -123,7 +123,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public double getTotalForItems(List<CartItem> cartItems) {
+    public Double getTotalForItems(List<CartItem> cartItems) {
         Cart cart = new Cart();
         cart.addCartItems(cartItems);
         return cartManager.getCartTotal(cart);

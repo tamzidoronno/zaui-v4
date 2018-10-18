@@ -250,7 +250,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public double getTotalForCurrentZReport() {
+    public Double getTotalForCurrentZReport() {
         ZReport report = getZReport("");
         
         return report.orderIds.stream()

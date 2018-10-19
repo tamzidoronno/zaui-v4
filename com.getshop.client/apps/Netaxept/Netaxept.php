@@ -172,7 +172,7 @@ class Netaxept extends \PaymentApplication implements \Application {
                 $this->getApi()->getMessageManager()->sendMail($fromMail, $name, $emailtitle, $emailbody, $fromMail, $fromName);
             }
             $this->order->status = 8;
-           $this->getApi()->getOrderManager()->saveOrder($this->order);
+            $this->getApi()->getOrderManager()->saveOrder($this->order);
         } else {
             $this->order->captured = true;
             $this->getApi()->getOrderManager()->saveOrder($this->order);
@@ -215,13 +215,12 @@ class Netaxept extends \PaymentApplication implements \Application {
                     $found = true;
                 }
             } else {
-                $text = "Sorry, but the payment did not validate, " . $authing->ResponseCode;
-                $this->logTransaction($text, $this->order->id);
+                echo "Sorry, but your payment did not validate.";
             }
         } else {
             $this->saveOrderStatus(5);
             if ($canceledpage) {
-                echo $code;
+                header('Location: ' . $canceledpage);
                 $found = true;
             }
         }
@@ -229,7 +228,7 @@ class Netaxept extends \PaymentApplication implements \Application {
             echo "Thank you page and canceled page not found yet";
         }
     }
-
+    
     public function getTerminal() {
         $terminal = "https://epayment.nets.eu/terminal/default.aspx";
         if ($this->getConfigurationSetting("debugmode") == "true" || !$this->getFactory()->productionMode) {

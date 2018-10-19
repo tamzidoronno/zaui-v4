@@ -386,6 +386,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void logTransactionEntry(String orderId, String entry) throws ErrorException {
         Order order = getOrder(orderId);
+        if(order == null) {
+            try {
+                Integer incOrderId = new Integer(orderId);
+                order = getOrderByincrementOrderId(incOrderId);
+            }catch(Exception e) {
+                //No need to try to continue from here.
+                return;
+            }
+        }
         order.payment.transactionLog.put(new Date().getTime(), entry);
         saveOrder(order);
     }

@@ -1290,7 +1290,7 @@ public class PmsManagerProcessor {
         start = System.currentTimeMillis();
     }
     
-    private void checkTimerInner(String text) {
+    private void checkTimerInner(String text) { 
         long diff = System.currentTimeMillis() - start;
 //        manager.logPrint("\t Processor inner:" + diff + " : " + text);
         start = System.currentTimeMillis();

@@ -182,6 +182,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $room = $this->getSelectedRoom();
         $tmpRoom = $this->getTmpSelectedRoom($room->pmsBookingRoomId);
         $room = $this->doUpdatePriceMatrixWithPeriodePrice($tmpRoom);
+        $room->priceMatrixChanged = true;
         $this->setTmpSelectedRoom($room);
     }
 

@@ -36,6 +36,9 @@ foreach($list as $room) {
     foreach((array)$room->guest as $g) {
         $guests[] = $g->name;
     }
+    if(!$room->transferredToArx) {
+        continue;
+    }
     echo "<tr bgcolor='#fff'>";
     echo "<td>" . $room->code . "</td>";
     echo "<td>" . $room->room . "</td>";

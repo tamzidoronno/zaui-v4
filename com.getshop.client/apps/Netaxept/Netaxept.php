@@ -172,7 +172,7 @@ class Netaxept extends \PaymentApplication implements \Application {
                 $this->getApi()->getMessageManager()->sendMail($fromMail, $name, $emailtitle, $emailbody, $fromMail, $fromName);
             }
             $this->order->status = 8;
-            $this->getApi()->getOrderManager()->saveOrder($this->order);
+           $this->getApi()->getOrderManager()->saveOrder($this->order);
         } else {
             $this->order->captured = true;
             $this->getApi()->getOrderManager()->saveOrder($this->order);
@@ -215,12 +215,13 @@ class Netaxept extends \PaymentApplication implements \Application {
                     $found = true;
                 }
             } else {
-                echo "Sorry, but your payment did not validate.";
+                $text = "Sorry, but the payment did not validate, " . $authing->ResponseCode;
+                $this->logTransaction($text, $this->order->id);
             }
         } else {
             $this->saveOrderStatus(5);
             if ($canceledpage) {
-                header('Location: ' . $canceledpage);
+                echo $code;
                 $found = true;
             }
         }

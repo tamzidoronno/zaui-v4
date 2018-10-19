@@ -1,0 +1,65 @@
+<?php
+/* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+$tab = $this->getCurrentTab();
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+
+if (!$tab || !count($tab->cartItems)) {
+    echo "<script>$('.gsoverlay1').click();</script>";
+//    echo "<div class='no_items'>";
+//    echo $this->__f("The tab is empty, please create one and/or add items to the tab.");
+//    echo "</div>";
+    return;
+}
+?>
+<div class='topinformation'>
+    <?php
+    echo $this->__f("You can do multiple payments for a tab. Please select the items you want to charge the customer for.");
+    ?>
+</div>
+<?
+$cartItems = $tab->cartItems;
+
+foreach ($cartItems as $cartItem) {
+    ?>
+    <div class='cartitem itemlines' cartitemid='<? echo $cartItem->cartItemId; ?>'>
+        <div class='col checkbox'><input type='checkbox' checked='true'/></div>
+        <div class='col productname'><?php echo $cartItem->product->name; ?></div>
+        <div class='col count'><input class='gsniceinput1' value='<? echo $cartItem->count; ?>'/> x</div>
+        <div class='col price'><input class='gsniceinput1' value='<? echo $cartItem->product->price; ?>'/></div>
+    </div>
+    <?
+}
+?>
+<div class='cartitem totalrow'>
+    <div class='col checkbox'></div>
+    <div class='col productname'><?php echo $this->__f("Total"); ?></div>
+    <div class='col count'></div>
+    <div class='col price'><? echo $this->getApi()->getPosManager()->getTotal($tab->id) ?></div>
+</div>
+
+<div class='paymentmethods'>
+    <?
+    foreach ($paymentMethods as $method) {
+        // PayOnDelivery
+        if ($method->id == "565ea7bd-c56b-41fe-b421-18f873c63a8f") {
+            ?>
+            <div class='shop_button startpayment' paymentid='565ea7bd-c56b-41fe-b421-18f873c63a8f'><i class='fa fa-money'></i> <? echo $this->__f("Cash"); ?></div>
+            <?
+        }
+        
+        // Verifone
+        if ($method->id == "6dfcf735-238f-44e1-9086-b2d9bb4fdff2") {
+            ?>
+            <div class='shop_button startpayment' paymentid='6dfcf735-238f-44e1-9086-b2d9bb4fdff2'><i class='fa fa-credit-card'></i> <? echo $this->__f("Bank / Verifone terminal"); ?></div>
+            <?
+        }
+        
+        // Pay On Room
+        if ($method->id == "f86e7042-f511-4b9b-bf0d-5545525f42de") {
+            ?>
+            <div class='shop_button startpayment' paymentid='f86e7042-f511-4b9b-bf0d-5545525f42de'><i class='fa fa-bed'></i> <? echo $this->__f("Pay on room"); ?></div>
+            <?
+        }
+    }
+    ?>
+</div>

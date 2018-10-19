@@ -21,6 +21,9 @@ public interface IStoreApplicationInstancePool {
 
     @Administrator
     public ApplicationInstance createNewInstance(String applicationId);
+    
+    @Administrator
+    public ApplicationInstance createNewInstanceWithId(String applicationId, String instanceId);
 
     public ApplicationInstance getApplicationInstance(String applicationInstanceId);
 

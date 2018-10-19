@@ -1,0 +1,97 @@
+<?
+/* @var $this ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$report = $this->getCurrentZReport();
+
+if ($this->isCurrentZReportASavedReport()) {
+    echo "<div class='informationbox'>";
+        echo $this->__f("You are looking at an old/saved Z-Report");
+        echo "<br/><br/><div gsclick='cancelCurrentZReport' class='shop_button'>".$this->__f("Cancel")."</div>";
+    echo "</div>";
+}
+
+if (!$report->orderIds || !count($report->orderIds)) {
+    echo "<div class='nofound'>";
+    echo $this->__f("No transactions found");
+    echo "</div>";
+    return;
+}
+
+$orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99999);
+$totalForPaymentMethods = array();
+$ordersGrouped = array();
+
+foreach ($orders as $order) {
+    if (!isset($ordersGrouped[$order->payment->paymentType])) {
+        $ordersGrouped[$order->payment->paymentType] = array();
+    }
+    
+    $ordersGrouped[$order->payment->paymentType][] = $order;
+}
+
+foreach ($ordersGrouped as $type => $orders) {
+    $paymentTypeArr = explode("\\", $type);
+    $paymentType = $paymentTypeArr[1];
+    echo "<div class='paymentrow'>";
+        echo "<h2>".$this->__f($paymentType)."</h2>";
+    ?>
+        <div class="orderline">
+            <div class='col orderid'><? echo $this->__f("id"); ?></div>
+            <div class='col date'><? echo $this->__f("Payment Date"); ?></div>
+            <div class='col name'><? echo $this->__f("Employee / customer"); ?></div>
+            <div class='col type'><? echo $this->__f("Payment type"); ?></div>
+            <div class='col totalfororder'><? echo $this->__f("Price"); ?></div>
+        </div>
+    <?
+        
+        $total = 0;
+        foreach ($orders as $order) {
+            $user = $this->getUserById($order->userId);
+            $userFullName = $user ? $user->fullName : "N/A";
+            $totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            $total += $totalForOrder;
+
+
+            echo "<div class='orderline'>";
+                echo "<div class='col orderid'>".$order->incrementOrderId."</div>";
+                echo "<div class='col date'>".$this->formatDate($order->paymentDate)."</div>";
+                echo "<div class='col name'>".$userFullName."</div>";
+                echo "<div class='col type'>".$this->__f($paymentType)."</div>";
+                echo "<div class='col totalfororder'>".$totalForOrder."</div>";
+            echo "</div>";
+        }
+
+        $totalForPaymentMethods[$type] = $total;
+        echo "<h2> Total: ".$total."</h2>";
+    echo "</div>";
+}
+?>
+
+<div class="paymentrow summary">
+    <h2><? echo $this->__f("Total summary"); ?></h2>
+        <?
+        $grandTotal = 0;
+        foreach ($totalForPaymentMethods as $type => $total) {
+            $paymentTypeArr = explode("\\", $type);
+            $paymentType = $paymentTypeArr[1];
+            echo '<div class="orderline">';
+                echo "<div class='col name'>$paymentType</div>";
+                echo "<div class='col'>$total</div>";
+            echo "</div>";
+            $grandTotal += $total;
+        }
+        ?>
+    
+    <h2><? echo $this->__f("Grand total").": ".$grandTotal; ?></h2>
+</div>
+
+<?
+if (!$this->isCurrentZReportASavedReport()) {
+?>
+    <div style="padding: 50px;">
+        <div class="shop_button" gsclick="createZReport"><? echo $this->__f("Create ZReport"); ?></div>
+    </div>
+<?
+}
+?>
+
+  

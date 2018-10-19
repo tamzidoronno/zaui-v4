@@ -21,26 +21,30 @@ class ModulePage {
     private $pageId = "";
     private $extraApps = array();
     private $extraAppInstances = array();
+    private $extraAppNoneInstances = array();
     private $leftMenu = null;
+    private $module = "pms";
 
-    function __construct($pageId) {
+    function __construct($pageId, $module = "pms") {
         $this->pageId = $pageId;
-    }
+        $this->module = $module; 
+   }
 
     public function getTitle() {
         return "PMS";
     }
 
     public function getMenu($module=false) {
-        if (!$module) {
-            $module = "pms";
-        }
-        if ($module == "pms") {
+        if ($this->module == "pms") {
             return $this->getTopMenuPms();
         }
         
-        if ($module == "srs") {
+        if ($this->module == "srs") {
             return $this->getTopMenuSrs();
+        }
+        
+        if ($this->module == "salespoint") {
+            return $this->getTopMenuSalesPoint();
         }
         
     }
@@ -66,17 +70,19 @@ class ModulePage {
     public function createApplicationInstances() {
         foreach ($this->rows as $row) {
             foreach ($row->getColumns() as $column) {
-                $column->createAppInstance();
+                $column->createAppInstance($this->module);
             }
         }
 
         foreach ($this->extraApps as $extraAppId) {
             $column = new ModulePageColumn($extraAppId, "", $this);
-            $column->createAppInstance();
+            $column->createAppInstance($this->module);
 
             $instance = $column->getAppInstance();
             if ($instance) {
                 $this->extraAppInstances[] = $instance;
+            } else {
+                $this->extraAppNoneInstances[] = $extraAppId;
             }
         }
     }
@@ -101,6 +107,10 @@ class ModulePage {
     public function loadAppsCss() {
         foreach ($this->getAllApplicationInstances() as $instance) {
             $this->doApp($instance->getApplicationSettings()->id);
+        }
+        
+        foreach ($this->extraAppNoneInstances as $id) {
+            $this->doApp($id);
         }
 
         $this->doApp("a11ac190-4f9a-11e3-8f96-0800200c9a66");
@@ -162,6 +172,11 @@ class ModulePage {
             $namespace = "ns_" . str_replace("-", "_", $appInstance->getApplicationSettings()->id);
             $this->loadByNamespace($namespace);
         }
+        
+        foreach ($this->extraAppNoneInstances as $id) {
+            $namespace = "ns_" . str_replace("-", "_", $id);
+            $this->loadByNamespace($namespace);
+        }
     }
 
     private function loadByNamespace($namespace) {
@@ -210,8 +225,8 @@ class ModulePage {
         return null;
     }
 
-    public function addExtraApplications($appId) {
-        $this->extraApps[] = $appId;
+    public function addExtraApplications($instanceId) {
+        $this->extraApps[] = $instanceId;
     }
 
     public function getExtraApplication($appId) {
@@ -285,6 +300,16 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Cleaning", "e03b19de-d1bf-4d1c-ac40-8c100ef53366", "gsicon-gs-cleaning");
         $menu->entries[] = new ModulePageMenuItem("CRM", "4f66aad0-08a0-466c-9b4c-71337c1e00b7", "gsicon-users");
         $menu->entries[] = new ModulePageMenuItem("Settings", "messages", "gsicon-gs-gears");
+        return $menu;
+    }
+
+    public function getTopMenuSalesPoint() {
+        $menu = new \ModulePageMenu();
+        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("New Sale", "new", "gsicon-gs-new");
+        $menu->entries[] = new ModulePageMenuItem("Products", "products", "gsicon-basket");
+        $menu->entries[] = new ModulePageMenuItem("Reports", "reports", "gsicon-gs-reports");
+        $menu->entries[] = new ModulePageMenuItem("Settings", "settings", "gsicon-gs-gears");
         return $menu;
     }
 

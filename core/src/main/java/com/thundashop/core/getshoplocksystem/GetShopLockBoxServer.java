@@ -71,11 +71,13 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
                 .orElse(null);
         
         if (lockAlreadAdded != null) {
+            lockAlreadAdded.maxnumberOfCodes = 2000;
+            saveMe();
             return;
         }
         
         lockAlreadAdded = new LockBoxLock();
-        lockAlreadAdded.maxnumberOfCodes = 1000;
+        lockAlreadAdded.maxnumberOfCodes = 2000;
         lockAlreadAdded.name = "Lock " + deviceId;
         lockAlreadAdded.connectedToServerId  = id;
         lockAlreadAdded.id = UUID.randomUUID().toString();
@@ -149,5 +151,16 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
 
     private String httpLoginRequest(String address, String username, String password) throws Exception {
         return GetshopLockCom.httpLoginRequest(address, username, password);
+    }
+
+    @Override
+    public void addAccessHistoryEntranceDoor(String lockId, int code, Date date) {
+        Lock lock = getLock(lockId);
+        
+        lock.getUserSlots().stream()
+                .filter(slot -> slot.code != null && slot.code.pinCode == code)
+                .forEach(slot -> {
+                    addAccessHistory(lockId, slot.slotId, date);
+                });
     }
 }

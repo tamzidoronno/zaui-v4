@@ -299,7 +299,7 @@ class GetShopModuleTable {
 
 
         $end = $this->pagedInfo->currentPageNumber + $leftAndRightCount + 1;
-
+        
         if ($end > $this->pagedInfo->totalPages) {
             $end = $this->pagedInfo->totalPages;
         }

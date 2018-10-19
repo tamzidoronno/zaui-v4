@@ -1,0 +1,63 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$tab = $this->getCurrentTab();    
+if (!$tab) {
+    ?>
+    <div class='header'>
+        <div class='notabopen'>
+            <?
+            echo $this->__f("No tab open");
+            ?>
+        </div>
+        <div class='notabopen_desc'>
+            <?
+            echo $this->__f("Create a new one or select one that already exists from the menu to the left");
+            ?>
+        </div>
+    </div>
+    <?
+    return;
+}
+?>
+
+<div class='header'> 
+        <h2><? echo $this->__f("Tab").": ".$tab->name; ?></h2>
+</div>
+
+<div class='tabcreateinfo'>
+    <?
+    $createdByUser = $this->getApi()->getUserManager()->getUserById($tab->createdByUserId);
+    echo $this->__f("Created by").": ".$createdByUser->fullName;
+    echo "<br/>".$this->__f("Created date").": ".$tab->rowCreatedDate;
+    ?>    
+</div>
+
+<div class='header2'> 
+        <h2><? echo $this->__f("Added to tab"); ?></h2>
+</div>
+<?
+$cartItems = $tab->cartItems;
+foreach ($cartItems as $item) {
+    echo "<div class='cartitemline' cartitemid='$item->cartItemId'>";
+        echo "<div class='col count'>".$item->count."</div>";
+        echo "<div class='col productname'>".$item->product->name."</div>";
+        echo "<div class='col price'>".$item->product->price."</div>";
+        
+        echo "<div class='details'>";
+        echo '<i class="gs_shop_small_icon fa fa-trash removefromtab"></i> ';
+        echo $this->__f("Count").": <input class='changecount' value='".$item->count."'/> ";
+        echo $this->__f("Price").": <input class='changeprice' value='".$item->product->price."'/>";
+        
+        echo "</div>";
+    echo "</div>";
+    
+}
+?>
+
+
+
+<div class="total tabtotal">
+    <?php
+    echo $this->__f("Total").": <span>".$this->getApi()->getPosManager()->getTotal($tab->id)."</span>";
+    ?>
+</div>

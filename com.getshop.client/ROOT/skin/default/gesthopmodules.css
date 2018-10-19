@@ -96,7 +96,6 @@ body {
 }
 
 .gsarea[area="header"] {
-    border-bottom: solid 1px #DDD;
     background-color: #23314e;
     padding-bottom: 10px;
     padding-top: 0px;

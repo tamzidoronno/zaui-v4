@@ -274,6 +274,10 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             return;
         }
         
+        sendOrderToGdsDevice(deviceId, order);
+    }
+
+    public void sendOrderToGdsDevice(String deviceId, Order order) throws ErrorException {
         InvoiceFormatter formatter = new InvoiceFormatter("");
         
         Gson gson = new GsonBuilder()
@@ -299,13 +303,17 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         for (CartItem cartItem : order.cart.getItems()) {
             ItemLine itemLine = new ItemLine();
             itemLine.description = formatter.getItemText(cartItem);
-            itemLine.price = cartItem.getTotalExRoundedWithTwoDecimals();
+            itemLine.price = cartItem.getTotalAmountRoundedWithTwoDecimals();
             printMsg.itemLines.add(itemLine);
         }
         
         printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals();
         printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals() - order.getTotalAmountVatRoundedTwoDecimals();
-        printMsg.paymentMethod = getPaymentTypeForTermalReceipt(order, applicationPool.getApplicationByNameSpace(order.payment.paymentType));
+        
+        if (order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.isEmpty()) {
+            printMsg.paymentMethod = getPaymentTypeForTermalReceipt(order, applicationPool.getApplicationByNameSpace(order.payment.paymentType));
+        }
+        
         printMsg.paymentDate = order.paymentDate;
 
         gdsManager.sendMessageToDevice(deviceId, printMsg);

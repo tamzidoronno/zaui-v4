@@ -1,0 +1,31 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$lists = $this->getApi()->getProductManager()->getProductLists();
+$productIds = array();
+foreach ($lists as $list) {
+    $productIds = array_merge($list->productIds, $productIds);
+}
+
+$products = $this->getApi()->getProductManager()->getProductLight($productIds);
+
+foreach ($lists as $list) {
+    ?>
+    <div class='productlist'>
+        <?
+        
+        echo "<h2>".$list->listName."</h2>";
+        foreach ($list->productIds as $productId) {
+            $product = $this->getProduct($products, $productId);
+            ?>
+            <div class='product addProductToCurrentTab' productid="<? echo $product->id; ?>">
+                <div class='inner'>
+                    <div class='productname'><? echo $product->name; ?></div>
+                </div>
+            </div>
+            <?
+        }
+        ?>
+    </div>
+    <?
+}
+?>

@@ -340,6 +340,8 @@ thundashop.Ajax = {
         event.data = data;
         event.core = {};
         event.core.pageid = modalName;
+        event.gs_getshopmodule = $('html').attr('module');
+        
         event.synchron = true;
 //        
         thundashop.Ajax.post(event, function(res) {

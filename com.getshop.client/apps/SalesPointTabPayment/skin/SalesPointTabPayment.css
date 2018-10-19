@@ -1,0 +1,108 @@
+.SalesPointTabPayment .no_items {
+    font-size: 20px;
+    text-align: center;
+    padding: 50px;
+}
+
+.SalesPointTabPayment .cartitem {
+    border-bottom: solid 1px #DDD;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.SalesPointTabPayment .cartitem .col {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.SalesPointTabPayment .cartitem .col.checkbox input { width:  25px; height: 25px; }
+.SalesPointTabPayment .cartitem .col.checkbox { width:  50px; text-align: center; }
+.SalesPointTabPayment .cartitem .col.productname { width: calc(100% - 300px); }
+
+.SalesPointTabPayment .cartitem .col.count input { width: 30px; }
+.SalesPointTabPayment .cartitem .col.count { width: 65px; }
+
+.SalesPointTabPayment .cartitem .col.price input,
+.SalesPointTabPayment .cartitem .col.price { width: 100px; }
+
+.SalesPointTabPayment .totalrow { font-size: 20px; font-weight: bold; }
+
+.SalesPointTabPayment .topinformation {
+    background-color: #fffb89;
+    text-align: center;
+    font-size: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.SalesPointTabPayment .paymentmethods {
+    text-align: center;
+    padding: 30px;
+}
+
+.SalesPointTabPayment .paymentmethods .shop_button {
+    margin-right: 20px;
+}
+
+.SalesPointTabPayment .completepayment {
+    text-align: center;
+    font-size: 16px;
+}
+
+.SalesPointTabPayment .completepayment .buttonarea {
+    padding: 30px;
+}
+
+.SalesPointTabPayment .completepayment .buttonarea .shop_button {
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.SalesPointTabPayment .completepayment .total {
+    font-size: 30px;
+    padding: 30px;
+}
+
+.SalesPointTabPayment .completepayment.cash #receivedpayment {
+    text-align: center;
+}
+
+
+.SalesPointTabPayment .completepayment.cash .refund {
+    font-size: 20px;
+}
+    
+.SalesPointTabPayment .completepayment .information {
+    background-color: #fffb89;
+    max-width: 500px;
+    padding: 30px;
+    margin: 0 auto;
+}
+
+.SalesPointTabPayment .roomrow:nth-child(even) {
+    background-color: #EFEFEF;
+}
+
+.SalesPointTabPayment .roomrow {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    padding-left: 50px;
+}
+.SalesPointTabPayment .roomrow .col {
+    display: inline-block;
+    width: 100px;
+    vertical-align: top;
+}
+
+.SalesPointTabPayment .roomrow .col.guestname {
+    width: calc(100% - 400px);
+}
+
+.SalesPointTabPayment .summarybox {
+    background-color: #e7ffa1;
+    padding: 30px;
+}
+
+.SalesPointTabPayment .filterbox {
+    text-align: right;
+    padding: 20px;
+}

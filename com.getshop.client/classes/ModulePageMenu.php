@@ -109,6 +109,8 @@ class ModulePageMenu {
             $scopeId = $_POST['scopeid'];
             if($module->name == "PMS") {
                 echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br>PMS</div></a>";
+            } elseif ($module->name == "Salespoint") {
+                echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>SalesPoint</div></a>";
             } else {
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
             }

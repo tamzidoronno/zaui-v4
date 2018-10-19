@@ -171,13 +171,18 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
     if(sizeof($modules) > 1) {
         echo "<center><h1>Select a module</h1></center>";
         foreach($modules as $module) {
-            echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW' style='text-decoration:none;'>";
-            echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" .$module->fontAwesome . "'></span> " . $module->name . "</div>";
-            echo "</a>";
             if($module->name == "PMS") {
                 echo "<a class='gs_ignorenavigate' href='/pms.php' style='text-decoration:none;'>";
-                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>PMS 2.0</div>";
+                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>PMS</div>";
                 echo "</a>";
+            } elseif($module->name == "Salespoint") {
+                echo "<a class='gs_ignorenavigate' href='/pos.php' style='text-decoration:none;'>";
+                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>Salespoint</div>";
+                echo "</a>";
+            } else {
+                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW' style='text-decoration:none;'>";
+                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" .$module->fontAwesome . "'></span> " . $module->name . "</div>";
+                echo "</a>";    
             }
         }
     } else {

@@ -12,6 +12,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductDynamicPrice;
+import com.thundashop.core.productmanager.data.ProductLight;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -410,5 +411,22 @@ public class ProductManager extends AProductManager implements IProductManager {
     public FilteredData getAllProductsForRestaurant(FilterOptions filterOptions) {
         List<Product> products = search(filterOptions.searchWord, 10000000, 1).products;
         return pageIt(products, filterOptions);
+    }
+    
+    @Override
+    public FilteredData findProducts(FilterOptions filterOptions) {
+        List<Product> products = search(filterOptions.searchWord, 10000000, 1).products;
+        return pageIt(products, filterOptions);
+    }
+
+    @Override
+    public List<ProductLight> getProductLight(List<String> ids) throws ErrorException {
+        List<ProductLight> arrayList = new ArrayList();
+        
+        ids.stream()
+            .forEach(id -> arrayList.add(new ProductLight(getProduct(id))));
+        
+        
+        return arrayList;
     }
 }

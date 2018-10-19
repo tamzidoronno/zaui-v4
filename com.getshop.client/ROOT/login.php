@@ -167,6 +167,10 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                                 echo "<a class='gs_ignorenavigate' href='/pms.php' style='text-decoration:none;'>";
                                 echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>PMS</div>";
                                 echo "</a>";
+                            } elseif($module->name == "Salespoint") {
+                                echo "<a class='gs_ignorenavigate' href='/pos.php' style='text-decoration:none;'>";
+                                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>Salespoint</div>";
+                                echo "</a>";
                             } else {
                                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=" . strtolower($module->id) . "&scopeid=NEW' style='text-decoration:none;'>";
                                 echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span> " . $module->name . "</div>";

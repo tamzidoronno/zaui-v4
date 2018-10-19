@@ -147,6 +147,8 @@ public interface IGetShopLockSystemManager {
     
     public void addTransactionHistory(String tokenId, String lockId, Date timeStamp, int userSlot);
     
+    public void addTransactionEntranceDoor(String serverId, String lockId, int code);
+    
     @Administrator
     public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId);
     

@@ -99,4 +99,7 @@ interface IResturantManager {
     
     @Editor
     public void prePrint(String paymentMethodId, List<ResturantCartItem> cartItemIds, String printerId);
+    
+    @Editor
+    public List<String> getTerminalMessages();
 }

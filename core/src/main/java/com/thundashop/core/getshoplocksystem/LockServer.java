@@ -60,4 +60,8 @@ public interface LockServer {
     public void renameLock(String lockId, String name);
     
     public List<AccessEvent> getAccessEvents();
+
+    public void addAccessHistoryEntranceDoor(String lockId, int code, Date date);
+
+    public String getGivenName();
 }

@@ -33,7 +33,7 @@ class ModulePageColumn {
     }
 
     
-    public function createAppInstance() {
+    public function createAppInstance($moduleName="pms") {
         if (!$this->applicationId)
             return;
             
@@ -52,7 +52,11 @@ class ModulePageColumn {
         $javaInstance = null;
         
         if ($this->instanceId) {
-            $javaInstance = $api->getStoreApplicationInstancePool()->getApplicationInstanceWithModule($this->instanceId, "pms");
+            $javaInstance = $api->getStoreApplicationInstancePool()->getApplicationInstanceWithModule($this->instanceId, $moduleName);
+        }
+        
+        if (!$applicationSetting) {
+            return;
         }
         
         $instance = "ns_" . str_replace("-", "_", $this->applicationId) . "\\" . $applicationSetting->appName;

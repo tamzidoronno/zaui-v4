@@ -647,7 +647,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (lock == null)
             return "N/A";
         
-        return lock.name;
+        return server.getGivenName()+ " " + lock.name;
     }
 
     @Override
@@ -734,6 +734,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         return retList;
     }
-    
-    
+
+    @Override
+    public void addTransactionEntranceDoor(String serverId, String lockId, int code) {
+        LockServer lockServer = getLockServer(serverId);
+        
+        if (lockServer != null) {
+            lockServer.addAccessHistoryEntranceDoor(lockId, code, new Date());
+        }
+    }
 }

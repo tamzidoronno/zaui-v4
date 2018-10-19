@@ -285,9 +285,22 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         }
 
         if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50) {
-            return checkSecurity(instance);
+            instance =  checkSecurity(instance);
+            return instance;
         }
         
         return checkSecurity(instance.secureClone());
+    }
+
+    @Override
+    public ApplicationInstance createNewInstanceWithId(String applicationId, String instanceId) {
+        ApplicationInstance applicationInstance = new ApplicationInstance();
+        applicationInstance.appSettingsId = applicationId;
+        applicationInstance.id = instanceId;
+        
+        saveObject(applicationInstance);
+
+        getCurrentApplicationInstances().put(applicationInstance.id, applicationInstance);
+        return applicationInstance;
     }
 }

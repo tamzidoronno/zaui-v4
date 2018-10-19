@@ -369,5 +369,10 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
     }
 
+    @Override
+    public void addAccessHistoryEntranceDoor(String lockId, int code, Date date) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }

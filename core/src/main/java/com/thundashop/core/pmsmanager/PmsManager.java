@@ -5264,13 +5264,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Created booking from json object");
         }
         
-        String lang = getStoreSettingsApplicationKey("language");
-        if(lang == null || lang.isEmpty()) {
-            lang = "en_en";
-        }
-        booking.language = lang;
-        if(getSession().language != null && !getSession().language.isEmpty()) {
-            booking.language = getSession().language;
+        if(booking.language == null || booking.language.trim().isEmpty()) {
+            String lang = getStoreSettingsApplicationKey("language");
+            if(lang == null || lang.isEmpty()) {
+                lang = "en_en";
+            }
+            booking.language = lang;
+            if(getSession().language != null && !getSession().language.isEmpty()) {
+                booking.language = getSession().language;
+            }
         }
         
         if (getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {

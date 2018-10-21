@@ -31,4 +31,5 @@ public class WubookBooking implements Serializable {
     boolean isPrePaid = false;
     
     boolean isAddedToPms = false;
+    public String language = "";
 }

@@ -28,7 +28,7 @@ public class PmsBooking extends DataCommon {
     
     public List<String> bookingEngineAddons = new ArrayList();
     public RegistrationRules registrationData = new RegistrationRules();
-    public String language = "nb_NO";
+    public String language = "";
     public String userId = "";
     public String bookedByUserId = "";
     public Integer state = 0;

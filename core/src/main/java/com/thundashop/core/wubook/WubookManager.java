@@ -259,6 +259,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         String arrival = (String) table.get("date_arrival");
         String departure = (String) table.get("date_departure");
         booking.channelId = table.get("id_channel") + "";
+        if(table.containsKey("customer_language_iso")) {
+            booking.language = table.get("customer_language_iso") + "";
+        }
         booking.reservationCode = table.get("reservation_code") + "";
         booking.channel_reservation_code = (String) table.get("channel_reservation_code");
         booking.status = new Integer(table.get("status") + "");
@@ -917,6 +920,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 room.unmarkOverBooking();
             }
 
+            if(booking.language != null && !booking.language.isEmpty()) {
+                newbooking.language = booking.language;
+            }
             newbooking.channel = "wubook_" + booking.channelId;
             newbooking.wubookchannelreservationcode = booking.channel_reservation_code;
             if(!isUpdate) {

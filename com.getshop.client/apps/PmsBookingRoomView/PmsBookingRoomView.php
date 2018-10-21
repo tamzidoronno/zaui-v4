@@ -953,11 +953,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->setData();
         $booking = $this->getPmsBooking();
         $room = $this->getSelectedRoom();
-        foreach($booking->rooms as $room) {
-            if($room->pmsBookingRoomId == $room->pmsBookingRoomId) {
-                $room->blocked = true;
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                $r->blocked = true;
             }
         }
+        $itemId = $room->pmsBookingRoomId;
+        $bookingId = $booking->id;
+        $logText = "Blocking room";
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), $logText, $bookingId, $itemId);
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         $this->setData();
         $this->includefile("accesscode");

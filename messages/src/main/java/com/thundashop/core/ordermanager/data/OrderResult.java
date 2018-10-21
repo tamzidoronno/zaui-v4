@@ -17,6 +17,8 @@ public class OrderResult {
    public double amountIncTaxes = 0;
    public double amountPaid = 0;
    public double restAmount = 0;
+   public boolean closed = false;
+   public String invoiceNote = "";
 
     public void setOrder(Order ord) {
         amountPaid = ord.getTransactionAmount();
@@ -30,6 +32,8 @@ public class OrderResult {
         amountExTaxes = ord.getTotalAmount() - ord.getTotalAmountVat();
         amountIncTaxes = ord.getTotalAmount();
         dueDate = ord.getDueDate();
+        closed = ord.closed;
+        invoiceNote = ord.invoiceNote;
         
         amountExTaxes = Math.round(amountExTaxes*100)/100;
         amountIncTaxes = Math.round(amountIncTaxes*100)/100;

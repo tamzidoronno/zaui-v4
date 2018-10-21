@@ -2257,6 +2257,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void automarkOrderAsPaidIfNessesary(Order order) {
+        if(order == null || order.payment == null || order.payment.paymentType == null) {
+            return;
+        }
         try {
             Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
             if(paymentapp != null) {

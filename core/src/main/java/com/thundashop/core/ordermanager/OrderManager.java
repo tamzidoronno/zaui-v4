@@ -2375,6 +2375,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(!password.equals("fdsvb4354345345")) {
             return;
         }
+        messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Order marked as paid", null);
         markAsPaid(orderId, date, amount);
     }
 

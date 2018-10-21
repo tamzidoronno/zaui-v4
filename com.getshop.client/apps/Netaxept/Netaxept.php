@@ -382,6 +382,10 @@ class Netaxept extends \PaymentApplication implements \Application {
 
     public function saveOrderStatus($status) {
         if (isset($this->order)) {
+            if($status == 7) {
+                $this->getApi()->getOrderManager()->markAsPaidWithPassword($this->order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($this->order), "fdsvb4354345345");
+            }
+            
             $this->order->status = $status;
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         }

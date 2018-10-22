@@ -36,10 +36,17 @@ class AccountingDownload extends \MarketingApplication implements \Application {
     public function formatOrderCount($file) {
         return count($file->orders);
     }
+    
+    public function downloadFReport() {
+        $this->includefile("freport");
+    }
 
     public function formatDownload($row) {
         $buttons = '<div class="gs_shop_small_icon downloadFile dontExpand" fileid="'.$row->id.'" ><i  class="fa fa-download dontExpand"></i></div>';
         $buttons .= '<div class="gs_shop_small_icon dontExpand" gs_downloadExcelReport="downloadExcelFile" fileid="'.$row->id.'" fileName="file.xls" ><i  class="fa fa-download dontExpand"></i> Excel</div>';
+        if ($row->accountingTransactionLines) {
+            $buttons .= '<div fileid="'.$row->id.'" class="gs_shop_small_icon downloadFileFReport dontExpand" gstype="downloadpdf" method="downloadFReport" filename="report.pdf" ><i  class="fa fa-download dontExpand"></i> F-Report</div>';
+        }
         return $buttons;
     }
     

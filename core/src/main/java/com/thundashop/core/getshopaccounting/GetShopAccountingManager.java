@@ -45,8 +45,14 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         
         List<Order> orders = orderManager.getOrdersToTransferToAccount(endDate);
         
-        List<String> others = getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, "invoice", orders);
-        List<String> invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other", orders);            
+        List<String> others = new ArrayList();
+        List<String> invoices = new ArrayList();
+        if (getActivatedAccountingSystemOther().getSystemType().equals(SystemType.GENERELL_NORWEGIAN)) {
+            others = getActivatedAccountingSystemOther().createNextOrderFile(endDate, null, orders);            
+        } else {
+            others = getActivatedAccountingSystemInvoices().createNextOrderFile(endDate, "invoice", orders);
+            invoices = getActivatedAccountingSystemOther().createNextOrderFile(endDate, "other", orders);            
+        }
         
         if (getActivatedAccountingSystemInvoices().equals(getActivatedAccountingSystemOther())) {
             if(invoices != null) {

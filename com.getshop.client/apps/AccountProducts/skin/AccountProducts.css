@@ -13,3 +13,29 @@
     margin: 0 auto;
     padding: 50px;
 }
+
+.AccountProducts .distinctAccounts {
+    background-color: #EEE;
+    padding: 50px;
+    margin-top: 50px;
+}
+
+.AccountProducts .distinctAccounts .row_description {
+    padding: 5px;
+}
+
+.AccountProducts .distinctAccounts .row_description:nth-child(even) {
+    background-color: #DDD;    
+}
+.AccountProducts .distinctAccounts .col {
+    display: inline-block;
+    vertical-align: top;   
+    line-height: 37px;
+}
+
+.AccountProducts .distinctAccounts .col.accountindesc {
+    width: 300px;
+}
+.AccountProducts .distinctAccounts .col.accountingid {
+    width: 300px;
+}

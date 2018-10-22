@@ -221,9 +221,8 @@ public abstract class AccountingSystemBase extends ManagerBase {
         
         if (file != null && file.orders != null) {
             file.orders.stream().forEach(orderId -> {
-                Order order = orderManager.getOrder(orderId);
-                order.resetTransferToAccounting();
-                orderManager.saveOrder(order);
+                
+                orderManager.resetTransferToAccount(orderId);
             });    
         }
         
@@ -257,6 +256,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
         }
     }
     
+    public String getAccountingNumberForProduct(String productId) {
+        return productManager.getProduct(productId).accountingAccount;
+    }
     
     public String getUniqueCustomerIdForOrder(Order order) {
         String paymentId = order.getPaymentApplicationId();
@@ -279,9 +281,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
    
     private void markOrdersAsTransferred(SavedOrderFile file) {
         file.orders.stream().forEach(orderId -> { 
-            Order order = orderManager.getOrderSecure(orderId);
-            order.transferredToAccountingSystem = true;
-            orderManager.saveOrder(order);
+            orderManager.markOrderAsTransferredToAccounting(orderId);
         });
     }
 
@@ -314,6 +314,10 @@ public abstract class AccountingSystemBase extends ManagerBase {
             postingDate = order.getStartDateByItems();
         }
         return postingDate;
+    }
+    
+    public int getAccountNumberForPaymentMethod(Order order) {
+        return Integer.valueOf(getUniqueCustomerIdForOrder(order));
     }
     
     private void finalizeFile(SavedOrderFile saved) {

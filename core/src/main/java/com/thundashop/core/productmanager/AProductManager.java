@@ -7,6 +7,8 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
@@ -40,7 +42,10 @@ public abstract class AProductManager extends ManagerBase {
     public Map<String, Product> products = new HashMap();
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
-
+    
+    private HashMap<Integer, AccountingDetail> accountingAccountDetails = new HashMap();
+    
+    
     @Autowired
     public PageManager pageManager;
 
@@ -146,6 +151,10 @@ public abstract class AProductManager extends ManagerBase {
             if (object instanceof TaxGroup) {
                 TaxGroup group = (TaxGroup) object;
                 taxGroups.put(group.groupNumber, group);
+            }
+            if (object instanceof AccountingDetail) {
+                AccountingDetail detail = (AccountingDetail) object;
+                accountingAccountDetails.put(detail.accountNumber, detail);
             }
         }
     }
@@ -344,5 +353,19 @@ public abstract class AProductManager extends ManagerBase {
             saveObject(productConfiguration);
             saveObject(product);
         }
+    }
+    
+    public AccountingDetail getAccountingDetail(int accountNumber) {
+        return accountingAccountDetails.get(accountNumber);
+    }
+    
+    public void saveAccountingDetail(AccountingDetail detail) {
+        AccountingDetail alreadyExists = getAccountingDetail(detail.accountNumber);
+        if (alreadyExists != null) {
+            detail.id = alreadyExists.id;
+        }
+        
+        saveObject(detail);
+        accountingAccountDetails.put(detail.accountNumber, detail);
     }
 }

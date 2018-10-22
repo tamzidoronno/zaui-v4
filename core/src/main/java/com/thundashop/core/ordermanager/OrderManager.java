@@ -2438,4 +2438,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         log.vatNumber = userManager.getUserById(order.userId).companyObject.vatNumber;
         saveObject(log);
     }
+
+    public void markOrderAsTransferredToAccounting(String orderId) {
+        Order order = getOrderSecure(orderId);
+        order.transferredToAccountingSystem = true;
+        saveOrderInternal(order);
+    }
+
+    public void resetTransferToAccount(String orderId) {
+        Order order = getOrder(orderId);
+        order.resetTransferToAccounting();
+        saveOrderInternal(order);
+    }
 }

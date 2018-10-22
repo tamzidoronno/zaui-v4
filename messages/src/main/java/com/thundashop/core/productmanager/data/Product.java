@@ -7,8 +7,10 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.Translation;
+import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.pagemanager.data.Page;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -239,5 +241,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
         if(Double.isNaN(priceExTaxes)) {
             priceExTaxes = 0.0;
         }
+    }
+
+    public BigDecimal getPriceExTaxesWithTwoDecimals() {
+        return TwoDecimalRounder.roundTwoDecimals(priceExTaxes);
     }
 }

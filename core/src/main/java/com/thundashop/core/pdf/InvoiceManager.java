@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -291,24 +292,24 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         printMsg.deviceId = deviceId;
         printMsg.accountDetails = getAccountingDetails();
         
-        Map<TaxGroup, Double> vats = order.getTaxesRoundedWithTwoDecimals();
+        Map<TaxGroup, BigDecimal> vats = order.getTaxesRoundedWithTwoDecimals();
         
         for (TaxGroup group : vats.keySet()) {
             VatLine vatLine = new VatLine();
             vatLine.percent = group.taxRate;
-            vatLine.total = vats.get(group);
+            vatLine.total = vats.get(group).doubleValue();
             printMsg.vatLines.add(vatLine);
         }
         
         for (CartItem cartItem : order.cart.getItems()) {
             ItemLine itemLine = new ItemLine();
             itemLine.description = formatter.getItemText(cartItem);
-            itemLine.price = cartItem.getTotalAmountRoundedWithTwoDecimals();
+            itemLine.price = cartItem.getTotalAmountRoundedWithTwoDecimals().doubleValue();
             printMsg.itemLines.add(itemLine);
         }
         
-        printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals();
-        printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals() - order.getTotalAmountVatRoundedTwoDecimals();
+        printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals().doubleValue();
+        printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals().doubleValue() - order.getTotalAmountVatRoundedTwoDecimals().doubleValue();
         
         if (order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.isEmpty()) {
             printMsg.paymentMethod = getPaymentTypeForTermalReceipt(order, applicationPool.getApplicationByNameSpace(order.payment.paymentType));

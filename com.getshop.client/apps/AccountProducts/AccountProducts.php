@@ -41,5 +41,18 @@ class AccountProducts extends \MarketingApplication implements \Application {
             }
         }
     }
+    
+    public function saveAccountingDescription() {
+        foreach ($_POST['data'] as $key => $value) {
+            $exp = explode("_", $key);
+            if ($exp[0] == "description") {
+                $accountDetail = new \core_productmanager_data_AccountingDetail();
+                $accountDetail->accountNumber = $exp[1];
+                $accountDetail->description = $value;
+                $accountDetail->taxgroup = $_POST['data']['taxcode_'.$exp[1]];
+                $this->getApi()->getProductManager()->saveAccountingDetail($accountDetail);
+            }
+        }
+    }
 }
 ?>

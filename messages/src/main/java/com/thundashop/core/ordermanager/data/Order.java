@@ -965,6 +965,13 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return true;
     }
+    
+    public double getPaidRest() {
+        double transactionAmount = getTransactionAmount();
+        double total = getTotalAmount();
+        double diff = total - transactionAmount;
+        return diff;
+    }
 
     /**
      * Returns prices without taxes added.

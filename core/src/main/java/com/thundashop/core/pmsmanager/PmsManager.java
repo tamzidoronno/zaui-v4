@@ -6521,11 +6521,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = "Code {code} room {roomName}.";
         }
 
-        if(message == null || message.isEmpty() && key.startsWith("sendreciept") && type.equals("email")) {
-//            message = "reciept for your stay";
+        if((message == null || message.isEmpty()) && key.startsWith("sendreciept") && type.equals("email")) {
+            message = "reciept for your stay";
         }
-        if(message == null || message.isEmpty() && key.startsWith("sendinvoice") && type.equals("email")) {
-//            message = "invoice for your stay";
+        if((message == null || message.isEmpty()) && key.startsWith("sendinvoice") && type.equals("email")) {
+            message = "invoice for your stay";
         }
         
         if (message == null || message.isEmpty()) {
@@ -8193,9 +8193,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String roomId = additional.markedDirtyDatesLog.get(timezone);
             if (roomId != null) {
                 PmsBooking booking = getBookingFromRoom(roomId);
-                PmsBookingRooms room = booking.getRoom(roomId);
-                if (!room.guests.isEmpty()) {
-                    res.name = room.guests.get(0).name;
+                if(booking != null) {
+                    PmsBookingRooms room = booking.getRoom(roomId);
+                    if (!room.guests.isEmpty()) {
+                        res.name = room.guests.get(0).name;
+                    }
                 }
             }
             res.cleaned = false;

@@ -501,7 +501,7 @@ public class PmsBooking extends DataCommon {
         }
         double total = 0.0;
         for(PmsBookingRooms room : rooms) {
-            if(room.deletedByChannelManagerForModification) {
+            if(room.deletedByChannelManagerForModification && !storeId.equals("9099f6db-3095-4495-8616-a04551cabd89")) {
                 continue;
             }
             room.calculateTotalCost(priceType);

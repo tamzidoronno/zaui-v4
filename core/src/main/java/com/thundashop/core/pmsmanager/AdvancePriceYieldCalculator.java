@@ -39,6 +39,9 @@ public class AdvancePriceYieldCalculator {
     }
 
     private Double calculcatePrice(Integer coverage, Double price, Date day, PmsAdvancePriceYield yieldplan) {
+        if(coverage == null || yieldplan == null) {
+            return price;
+        }
         long diff = day.getTime() - System.currentTimeMillis();
         long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
         Integer dayOffset = mapDay(days);

@@ -228,7 +228,7 @@ class Netaxept extends \PaymentApplication implements \Application {
             echo "Thank you page and canceled page not found yet";
         }
     }
-
+    
     public function getTerminal() {
         $terminal = "https://epayment.nets.eu/terminal/default.aspx";
         if ($this->getConfigurationSetting("debugmode") == "true" || !$this->getFactory()->productionMode) {

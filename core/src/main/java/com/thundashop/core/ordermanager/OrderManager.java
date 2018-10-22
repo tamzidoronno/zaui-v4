@@ -314,7 +314,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 markAsPaidInternal(order, date,amount);
                 saveOrder(order);
             } else {
-                messageManager.sendErrorNotification("Not fully paid order detected." + order.incrementOrderId, null);
+                messageManager.sendErrorNotification("Not fully paid order detected: " + order.incrementOrderId + " Amount: " + order.getPaidRest(), null);
             }
 
         } else {

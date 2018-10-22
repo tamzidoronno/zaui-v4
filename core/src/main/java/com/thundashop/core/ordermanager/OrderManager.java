@@ -51,6 +51,7 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -267,6 +268,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order.isVirtual) {
             return;
         }
+        
         order.clearPeriodisation();
         
         User user = getSession().currentUser;
@@ -2449,5 +2451,58 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         order.resetTransferToAccounting();
         saveOrderInternal(order);
+    }
+    
+    @Override
+    public void postProcessMessage(Method executeMethod, Object[] argObjects) {
+        blockManuallyPaymentMarkingForPaymentMethodsThatShouldNotDoThat(executeMethod, argObjects);
+        overridePaymentDate(executeMethod, argObjects);
+    }
+
+    private void blockManuallyPaymentMarkingForPaymentMethodsThatShouldNotDoThat(Method executeMethod, Object[] argObjects) throws ErrorException {
+        if (executeMethod != null && executeMethod.getName().equals("markAsPaid")) {
+            String orderId = (String)argObjects[0];
+            Order order = getOrder(orderId);
+            if (order.payment == null) {
+                throw new ErrorException(1052);
+            }
+            
+            // Verifone
+            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2")) {
+                throw new ErrorException(1052);
+            }
+            
+            // NetAxept
+            if (order.getPaymentApplicationId().equals("def1e922-972f-4557-a315-a751a9b9eff1")) {
+                throw new ErrorException(1052);
+            }
+        }
+    }
+
+    /**
+     * We override the date if someone tries to set a different payment date for cash payments.
+     * 
+     * @param order
+     * @return 
+     */
+    private boolean shouldOverridePaymentDate(Order order) {
+        User user = getSession().currentUser;
+        
+        if (order.getPaymentApplicationId().equals("565ea7bd-c56b-41fe-b421-18f873c63a8f")) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private void overridePaymentDate(Method executeMethod, Object[] argObjects) {
+        if (executeMethod != null && executeMethod.getName().equals("markAsPaid")) {
+            String orderId = (String)argObjects[0];
+            Order order = getOrder(orderId);
+            if (shouldOverridePaymentDate(order)) {
+                argObjects[1] = new Date();
+            }
+        }
+        
     }
 }

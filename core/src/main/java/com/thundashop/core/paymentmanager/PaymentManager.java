@@ -255,5 +255,17 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
             }
         }
     }
+
+    public boolean isAllowedToMarkAsPaid(String paymentId) {
+        if (paymentId == null) {
+            return false;
+        }
+        
+        if (paymentId.equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2")) {
+            return false;
+        }
+        
+        return true;
+    }
     
 }

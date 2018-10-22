@@ -904,7 +904,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             }
                         }
                     }
-                    if(order.isVirtual && filter.includeVirtual) {
+                    if(order.isVirtual && filter.includeVirtual || (order.isPrepaidByOTA() && filter.fromPmsModule)) {
                         avoid = false;
                     }
 

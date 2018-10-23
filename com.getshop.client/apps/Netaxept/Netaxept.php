@@ -460,7 +460,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $_GET['responseCode'] = "OK";
         $_GET['transactionId'] = $transactionId;
         if($this->order->status != 7) {
-            $this->paymentCallback();
+            $this->collectOrder();
         }
     }
 

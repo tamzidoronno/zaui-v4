@@ -223,6 +223,7 @@ public class StoreHandler {
         try {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
             scopedStoreId = manager.getStoreId();
+            manager.postProcessMessage(executeMethod, argObjects);
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             

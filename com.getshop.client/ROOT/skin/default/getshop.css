@@ -334,3 +334,9 @@ a {
     font-weight: bold;
     text-align: center;
 }
+
+#messagebox .inline {
+    display: inline-block;
+    vertical-align: top;    
+}
+

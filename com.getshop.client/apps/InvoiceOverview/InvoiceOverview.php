@@ -168,7 +168,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         if(!$row->paymentDate) {
             return "N/A";
         }
-        return "<span getshop_sorting='".strtotime($row->paymentDate)."'>" . date("d.m.Y", strtotime($row->paymentDate)) . "</span>";
+        return "<span getshop_sorting='".strtotime($row->paymentDate)."'>" . date("d.m.Y", strtotime($row->paymentDate)) ."<br/>".date("h:i:s", strtotime($row->paymentDate)) . "</span>";
     }
     
     /**

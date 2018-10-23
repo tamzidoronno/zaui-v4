@@ -9,6 +9,7 @@ import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
 public class SavedOrderFile extends DataCommon {
+    public List<AccountingTransaction> accountingTransactionLines = new ArrayList();
     public List<String> result;
     public String type = "accounting";
     public boolean transferred = false;

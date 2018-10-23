@@ -527,4 +527,12 @@ public class ManagerSubBase {
     public Store getStore() {
         return storePool.getStore(storeId);
     }
+
+    /**
+     * @param executeMethod
+     * @param argObjects 
+     */
+    public void postProcessMessage(Method executeMethod, Object[] argObjects) {}
+
+    
 }

@@ -33,3 +33,5 @@
     top: 67px;
 }
 .InvoiceOverview .invoicetable { min-height: 600px; }
+
+.InvoiceOverview .EcommerceOrderView .workarea { width: calc(100% - 205px); margin-top: 30px; }

@@ -6,9 +6,11 @@ package com.thundashop.core.cartmanager.data;
 
 import com.google.gson.Gson;
 import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -319,16 +321,18 @@ public class CartItem implements Serializable {
         cartItemId = UUID.randomUUID().toString();
     }
 
-    public double getTotalAmountRoundedWithTwoDecimals() {
-        return Math.round(((double)count) * getProduct().price * 100.0) / 100.0;
+    public BigDecimal getTotalAmountRoundedWithTwoDecimals() {
+        double total = (double)count * getProduct().price;
+        return TwoDecimalRounder.roundTwoDecimals(total);
     }
     
     public double getTotalAmount() {
         return count * getProduct().price;
     }
 
-    public double getTotalExRoundedWithTwoDecimals() {
-        return Math.round(getTotalEx() * 100.0) / 100.0;
+    public BigDecimal getTotalExRoundedWithTwoDecimals() {
+        BigDecimal priceExTaxes = TwoDecimalRounder.roundTwoDecimals(getProduct().priceExTaxes);
+        return priceExTaxes.multiply(new BigDecimal(count));
     }
     
     public double getTotalEx() {

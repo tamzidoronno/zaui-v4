@@ -66,12 +66,13 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
     private void createLock(int deviceId) {
         LockBoxLock lockAlreadAdded = locks.values()
                 .stream()
-                .filter(l -> l.deviceId == deviceId)
+                .filter(l -> l.name.equals("Lock " + deviceId))
                 .findAny()
                 .orElse(null);
         
         if (lockAlreadAdded != null) {
             lockAlreadAdded.maxnumberOfCodes = 2000;
+            lockAlreadAdded.initializeUserSlots();
             saveMe();
             return;
         }

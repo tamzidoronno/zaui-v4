@@ -4,6 +4,7 @@ package com.thundashop.core.common;
 import com.google.gson.Gson;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,6 +94,10 @@ public class TranslationHandler implements Serializable {
 //                continue;
             }
             if(field.getType().isPrimitive() || field.getType().isEnum()) {
+                continue;
+            }
+            
+            if(field.getType().isAssignableFrom(BigDecimal.class)) {
                 continue;
             }
             

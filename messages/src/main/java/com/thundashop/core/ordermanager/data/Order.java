@@ -10,10 +10,13 @@ import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.User;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -608,10 +612,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         return amount;
     }
     
-    public double getTotalAmountRoundedTwoDecimals() {
-        double amount = 0.0;
+    public BigDecimal getTotalAmountRoundedTwoDecimals() {
+        BigDecimal amount = new BigDecimal(0D);
+        
         for(CartItem item : cart.getItems()) {
-            amount += (Math.round(item.getTotalAmount() * 100.0) / 100.0);
+            amount = amount.add(item.getTotalAmountRoundedWithTwoDecimals());
         }
         return amount;
     }
@@ -875,17 +880,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         periodeDaySleptStart = null;
     }
 
-    public Double getTotalAmountVatRoundedTwoDecimals () {
-        double total = getTotalAmountRoundedTwoDecimals();
-        double amount = 0.0;
+    public BigDecimal getTotalAmountVatRoundedTwoDecimals () {
+        BigDecimal total = getTotalAmountRoundedTwoDecimals();
+        BigDecimal amount = new BigDecimal(0.0);
         for(CartItem item : cart.getItems()) {
-            amount += item.getTotalEx();
+            amount = amount.add(item.getTotalExRoundedWithTwoDecimals());
         }
         
-        int total100 = (int)(total*100);
-        int amount100 = (int)(amount*100);
-        double newValue = (double)(total100-amount100) / 100;
-        return newValue;
+        return total.subtract(amount);
     }
     
     public Double getTotalAmountVat() {
@@ -897,9 +899,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         return total-amount;
     }
     
-    public Map<TaxGroup, Double> getTaxesRoundedWithTwoDecimals() {
-        Map<TaxGroup, Double> realMap = new HashMap();
-        Map<TaxGroup, Double> retMap = new HashMap();
+    public Map<TaxGroup, BigDecimal> getTaxesRoundedWithTwoDecimals() {
+        Map<TaxGroup, BigDecimal> retMap = new HashMap();
         Map<String, TaxGroup> groups = new HashMap();
         
         cart.getItems().stream()
@@ -910,24 +911,19 @@ public class Order extends DataCommon implements Comparable<Order> {
         cart.getItems().stream()
                 .forEach(item -> {
                     TaxGroup taxGroup = groups.get(item.getProduct().taxGroupObject.id);
-                    Double current = retMap.get(taxGroup);
+                    BigDecimal current = retMap.get(taxGroup);
                     
                     if (current == null) {
-                        current = 0D;
+                        current = new BigDecimal(BigInteger.ZERO);
                     }
                     
-                    double taxesToAdd = item.getTotalAmount()- item.getTotalEx();
-                    current += Math.round(taxesToAdd * 100.0) / 100.0;
+                    BigDecimal taxesToAdd = item.getTotalAmountRoundedWithTwoDecimals().subtract(item.getTotalExRoundedWithTwoDecimals());
+                    current = current.add(taxesToAdd);
                     retMap.put(taxGroup, current);
                 });
         
-        for (TaxGroup group : retMap.keySet()) {
-            double taxes = retMap.get(group);
-            double ret = Math.round(taxes * 100.0) / 100.0;
-            realMap.put(group, ret);
-        }
-                    
-        return realMap;
+       
+        return retMap;
     }
 
     public Date getDueDate() {
@@ -978,14 +974,18 @@ public class Order extends DataCommon implements Comparable<Order> {
      * @param group
      * @return 
      */
-    public double getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group) {
-        double total = cart.getItems().stream()
-                .filter(item -> item.getProduct().taxGroupObject.id.equals(group.id))
-                .mapToDouble(item -> Math.round(item.getTotalEx() * 100.0) / 100.0)
-                .sum();
+    public BigDecimal getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group) {
+        BigDecimal ret = new BigDecimal(0);
         
-        return Math.round(total * 100.0) / 100.0;
-                
+        List<CartItem> cartItems = cart.getItems().stream()
+                .filter(item -> item.getProduct().taxGroupObject.id.equals(group.id))
+                .collect(Collectors.toList());
+        
+        for (CartItem item : cartItems) {
+            ret = ret.add(item.getTotalExRoundedWithTwoDecimals());
+        }
+        
+        return ret;
     }
 
     public boolean isPrepaidByOTA() {

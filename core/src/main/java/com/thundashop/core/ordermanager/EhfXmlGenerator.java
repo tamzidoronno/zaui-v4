@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.UUID;
@@ -249,8 +250,7 @@ public class EhfXmlGenerator {
 
         xml += "        </cac:TaxTotal>\n";
 
-        double totalWithoutVat = order.getTotalAmountRoundedTwoDecimals() - order.getTotalAmountVatRoundedTwoDecimals();
-        double roundedTotalWithoutVat = Math.round(totalWithoutVat * 100.0) / 100.0;
+        BigDecimal roundedTotalWithoutVat = order.getTotalAmountRoundedTwoDecimals().subtract(order.getTotalAmountVatRoundedTwoDecimals());
         xml += "        <cac:LegalMonetaryTotal>\n"
                 + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:LineExtensionAmount>\n"
                 + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:TaxExclusiveAmount>\n"
@@ -278,8 +278,8 @@ public class EhfXmlGenerator {
         int i = 0;
         for (CartItem item : order.cart.getItems()) {
             i++;
-            double unitPrice =  isCreditNote ? makePositive(Math.round(item.getProduct().priceExTaxes * 100.0) / 100.0) : Math.round(item.getProduct().priceExTaxes * 100.0) / 100.0;
-            double total = item.getTotalExRoundedWithTwoDecimals(); 
+            BigDecimal unitPrice =  isCreditNote ? makePositive(item.getProduct().getPriceExTaxesWithTwoDecimals()) : item.getProduct().getPriceExTaxesWithTwoDecimals();
+            BigDecimal total = item.getTotalExRoundedWithTwoDecimals(); 
             double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
             
             String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "AA" : "S";
@@ -367,7 +367,7 @@ public class EhfXmlGenerator {
     }
 
     private String generateSubTaxes() {
-        Map<TaxGroup, Double> taxes = order.getTaxesRoundedWithTwoDecimals();
+        Map<TaxGroup, BigDecimal> taxes = order.getTaxesRoundedWithTwoDecimals();
         String xml = "";
         for (TaxGroup group : taxes.keySet()) {
             String taxCode = group.taxRate < 25.0 ? "AA" : "S";
@@ -442,10 +442,14 @@ public class EhfXmlGenerator {
         return false;
     }
 
+    private BigDecimal makePositive(BigDecimal number) {
+        return number.plus();
+    }
+    
     private double makePositive(double number) {
-        if (number < 0) {
+        if (number < 0)
             return number * -1;
-        }
+        
         return number;
     }
 }

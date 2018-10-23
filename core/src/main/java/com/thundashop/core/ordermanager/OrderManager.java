@@ -1746,6 +1746,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (order.cart.address.fullName == null || order.cart.address.fullName.isEmpty()) {
                     order.cart.address.fullName = user.fullName;
                 }
+                if (order.cart.address.co == null || order.cart.address.co.isEmpty() && user.address != null) {
+                    order.cart.address.co = user.address.co;
+                }
                 
                 saveObject(order);
             } catch (CloneNotSupportedException ex) {

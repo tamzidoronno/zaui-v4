@@ -127,6 +127,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $room->numberOfGuests = 1;
             $room->bookingItemId = $item->id;
             $room->bookingItemTypeId = $item->bookingItemTypeId;
+            $room->priceMatrix = $this->getApi()->getPmsInvoiceManager()->calculatePriceMatrix($this->getSelectedMultilevelDomainName(), $currentBooking, $room);
             $currentBooking->rooms[] = $room;
             $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
         }

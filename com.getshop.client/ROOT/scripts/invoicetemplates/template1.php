@@ -28,6 +28,7 @@ $addresspostCode = "{addresspostCode}";
 $addresscountryname = "{addresscountryname}";
 $addresscity = "{addresscity}";
 $total = "{total}";
+$co = "{co}";
 $netAmount = "{netAmount}";
 
 function doTranslation($key) {
@@ -43,6 +44,7 @@ function doTranslation($key) {
         <div class='recipient'>
             <?php
             echo $fullName . "<br>";
+            echo $co;
             echo $addressaddress. "<br>";
             echo $addresspostCode . " " . $addresscity. "<br>";
             echo $addresscountryname. "<br>";

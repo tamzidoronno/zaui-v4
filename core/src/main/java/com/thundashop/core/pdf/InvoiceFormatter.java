@@ -45,6 +45,12 @@ public class InvoiceFormatter {
             if(order.cart.address.postCode != null && !order.cart.address.postCode.isEmpty()) {
                 this.base = this.base.replace("{addresspostCode}", order.cart.address.postCode);
             }
+            if(order.cart.address.co != null && !order.cart.address.co.isEmpty()) {
+                this.base = this.base.replace("{co}", "C/O " + order.cart.address.co + "<br>");
+            } else {
+                this.base = this.base.replace("{co}", "");
+            }
+            
             if(order.cart.address.city != null && !order.cart.address.city.isEmpty()) {
                 this.base = this.base.replace("{addresscity}", order.cart.address.city);
             }

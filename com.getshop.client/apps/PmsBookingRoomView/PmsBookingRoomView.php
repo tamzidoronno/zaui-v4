@@ -1622,7 +1622,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 $start, 
                 $end, 
                 $room->bookingId);
-        
+                
         foreach($available as $av) {
             /* @var $av \core_bookingengine_data_BookingItem */
             if($av->bookingItemTypeId == $room->bookingItemTypeId) {

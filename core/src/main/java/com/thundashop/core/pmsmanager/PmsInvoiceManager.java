@@ -2408,11 +2408,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         
         LinkedHashMap<String, Double> result = new LinkedHashMap();
+        if(typeId.equals("gsconference")) {
+            priceRange = new HashMap();
+        }
         if (priceRange == null) {
             return result;
         }
 
         Double defaultPrice = priceRange.get("default");
+        
         if (defaultPrice == null) {
             defaultPrice = 0.0;
         }

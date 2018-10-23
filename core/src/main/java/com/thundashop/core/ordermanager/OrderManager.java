@@ -330,6 +330,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         order.paymentDate = date;
         order.status = Order.Status.PAYMENT_COMPLETED;
+        order.captured = true;
         
         String name = "";
         if(getSession() != null && getSession().currentUser != null) {
@@ -2380,7 +2381,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(!password.equals("fdsvb4354345345")) {
             return;
         }
-        messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Order marked as paid", null);
+        Order order = getOrder(orderId);
+        messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Order marked as paid: " + order.incrementOrderId, null);
         markAsPaid(orderId, date, amount);
     }
 

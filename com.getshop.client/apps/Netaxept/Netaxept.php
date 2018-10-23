@@ -175,7 +175,6 @@ class Netaxept extends \PaymentApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         } else {
             $this->order->captured = true;
-            $this->getApi()->getOrderManager()->saveOrder($this->order);
         }
         
         return $this->order->captured;
@@ -200,10 +199,14 @@ class Netaxept extends \PaymentApplication implements \Application {
         if ($code == "OK") {
             $authing = $this->processPaymentExtended($this->getAmount(), $_GET['transactionId'], $orderId, "AUTH");
             if (!$authing) {
-                $this->saveOrderStatus(3);
-                if ($paymentfailed) {
-                    header('Location: ' . $paymentfailed);
-                    $found = true;
+                if($this->collectOrder()) {
+                    $this->saveOrderStatus(7);
+                } else {
+                    $this->saveOrderStatus(3);
+                    if ($paymentfailed) {
+                        header('Location: ' . $paymentfailed);
+                        $found = true;
+                    }
                 }
             }
             if (isset($authing) && $authing->ResponseCode == "OK") {
@@ -460,7 +463,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $_GET['responseCode'] = "OK";
         $_GET['transactionId'] = $transactionId;
         if($this->order->status != 7) {
-            $this->collectOrder();
+            $this->paymentCallback();
         }
     }
 

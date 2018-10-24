@@ -48,7 +48,7 @@ if(stristr($booking->channel, "wubook_")) {
         ?>
         <span class='shop_button setnewdates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>
         <?php
-        if($this->isStarted($room) && !$room->checkedin) {
+        if($this->isStartingToday($room) && !$room->checkedin) {
             echo "<span class='shop_button checkinguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:green;'>Check in guest</span>";
         } else if($room->checkedin && !$room->checkedout) {
             echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:blue;'>Check out guest</span>";

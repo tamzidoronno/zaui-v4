@@ -1752,7 +1752,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->printAvailableRoomsFromCategory($start, $end);
     }
 
-    public function isStarted($room) {
+    public function isStartingToday($room) {
+        if(date("dmy", time()) == date("dmy", strtotime($room->date->start))) {
+            return true;
+        }
         if(strtotime($room->date->start) < time()) {
             return true;
         }

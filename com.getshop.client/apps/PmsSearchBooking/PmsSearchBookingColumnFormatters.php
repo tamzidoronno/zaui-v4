@@ -310,6 +310,7 @@ class PmsSearchBookingColumnFormatters {
         $channels['wubook_2'] = "b.com";
         $channels['wubook_37'] = "GDS";
         $channels['wubook_43'] = "ABNB";
+        $channels['terminal'] = "Terminal";
         return $channels;
     }
 

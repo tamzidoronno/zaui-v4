@@ -1177,6 +1177,10 @@ function getshop_changeNumberOfRooms() {
         var count = $(this).val();
         var start = moment.utc($('.date_picker_start_gsl').val(), "DD.MM.YYYY").local();
         var end = moment.utc($('.date_picker_end_gsl').val(), "DD.MM.YYYY").local();
+        
+        start = start.replace(/[^a-zA-Z0-9,: ]/g, "");
+        end = end.replace(/[^a-zA-Z0-9,: ]/g, "");
+        
         var client = getshop_getWebSocketClient();
         var data = {
             "id": $(this).closest('.productentry').attr('roomid'),
@@ -1370,6 +1374,8 @@ function getshop_searchRooms(e) {
         var end = moment.utc($('#date_picker_end').val(), "DD.MM.YYYY").local();
         var endDate = end.format('MMM DD, YYYY ') + time;
 
+        startDate = startDate.replace(/[^a-zA-Z0-9,: ]/g, "")
+        endDate = endDate.replace(/[^a-zA-Z0-9,: ]/g, "")
         var data = {
             "start": startDate,
             "end": endDate,
@@ -1614,11 +1620,16 @@ function getshop_tryChangingDate(e) {
         var end = moment(room.find('[gsname="newroomenddate"]').val(), 'DD.MM.YYYY');
 
         var time = new Date().toLocaleTimeString('en-us');
+        var starttime = start.format('MMM DD, YYYY ') + time;
+        var endtime = end.format('MMM DD, YYYY ') + time;
+    
+        starttime = starttime.replace(/[^a-zA-Z0-9,: ]/g, "")
+        endtime = endtime.replace(/[^a-zA-Z0-9,: ]/g, "")
 
         var roomid = room.attr("roomid");
         var data = {
-            "start" : start.format('MMM DD, YYYY ') + time,
-            "end" : end.format('MMM DD, YYYY ') + time,
+            "start" : starttime,
+            "end" : endtime,
             "roomId" : roomid
         }
 

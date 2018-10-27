@@ -2382,7 +2382,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         Order order = getOrder(orderId);
-        messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Order marked as paid: " + order.incrementOrderId, null);
         markAsPaid(orderId, date, amount);
     }
 

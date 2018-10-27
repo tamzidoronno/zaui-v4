@@ -55,7 +55,7 @@ function getshop_setBookingTranslation() {
             getshop_bookingconfiguration = config;
             var text = getshop_translationMatrixLoaded['agebelow'];
             text = text.replace("{age}", config.childAge);
-            $("[gstranslationfield='agebelow']").html(text);
+            $("[gstranslationfield='agebelow']").html(text);              
 
             var text = getshop_translationMatrixLoaded['ischildtext'];
             text = text.replace("{age}", config.childAge);
@@ -1177,9 +1177,6 @@ function getshop_changeNumberOfRooms() {
         var count = $(this).val();
         var start = moment.utc($('.date_picker_start_gsl').val(), "DD.MM.YYYY").local();
         var end = moment.utc($('.date_picker_end_gsl').val(), "DD.MM.YYYY").local();
-        
-        start = start.replace(/[^a-zA-Z0-9,: ]/g, "");
-        end = end.replace(/[^a-zA-Z0-9,: ]/g, "");
         
         var client = getshop_getWebSocketClient();
         var data = {

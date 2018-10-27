@@ -6439,6 +6439,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String getMessageToSend(String key, String type, PmsBooking booking, String language) {
+        
+        language = makeSureLanguageIsCorrect(language);
+        
         String message = "";
         overrideNotificationTitle = "";
         if(key.equals("booking_completed") && booking.channel != null && booking.channel.contains("wubook")) {
@@ -9112,6 +9115,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private String makeSureLanguageIsCorrect(String language) {
+        if(language != null) {
+            language = language.toLowerCase();
+            if(language.equals("en")) { return "en_en"; }
+            if(language.equals("no")) { return "nb_no"; }
+        }
+        return "en_en";
     }
 
         

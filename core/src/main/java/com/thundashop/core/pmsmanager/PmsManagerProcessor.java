@@ -1039,6 +1039,9 @@ public class PmsManagerProcessor {
             if(book.getActiveRooms().isEmpty()) {
                 continue;
             }
+            if(book.isSynxis()) {
+                continue;
+            }
             
             if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty()) && manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
                 continue;

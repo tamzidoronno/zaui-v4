@@ -214,9 +214,12 @@ class PmsReport extends \MarketingApplication implements \Application {
             array('Coverage', 'Coverage', 'coverage', null)
         );
         
+        $rowsToHighLight = $this->getWeekendRows($data->entries);
+        
         $table = new \GetShopModuleTable($this, 'PmsManager', 'loadCoverageResult', null, $attributes);
         $table->setSorting(array("date","total","totalbilled", "totalremaining","arrivals", "departures","avilable","rentedout","guests","avprice","revpar","total","budget","Coverage"));
         $table->setData($data->entries);
+        $table->appendClassToRowNumbers($rowsToHighLight, "weekenddate");
         $table->render();
         $_SESSION['latestpmscoverageresult'] = json_encode($data);
     }
@@ -661,6 +664,18 @@ class PmsReport extends \MarketingApplication implements \Application {
         $date = date("d-m-Y", time());
         $attributes[] = array('total', 'Total', 'total',null);
         return $attributes;
+    }
+
+    public function getWeekendRows($rows) {
+        $rowcounter = 1;
+        $result = array();
+        foreach($rows as $row) {
+            if((date('N', strtotime($row->date)) >= 6)) {
+                $result[] = $rowcounter;
+            }
+            $rowcounter++;
+        }
+        return $result;
     }
 
 }

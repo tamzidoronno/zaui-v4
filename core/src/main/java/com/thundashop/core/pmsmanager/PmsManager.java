@@ -6480,8 +6480,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             } else {
                 for(String tmpKey : configuration.smses.keySet()) {
-                    if(tmpKey.startsWith(key) && configuration.emails.get(tmpKey) != null && !configuration.emails.get(tmpKey).isEmpty()) {
-                        message = configuration.emails.get(tmpKey);
+                    if(tmpKey.startsWith(key) && configuration.smses.get(tmpKey) != null && !configuration.smses.get(tmpKey).isEmpty()) {
+                        message = configuration.smses.get(tmpKey);
                         break;
                     }
                 }
@@ -9119,11 +9119,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private String makeSureLanguageIsCorrect(String language) {
         if(language != null) {
-            language = language.toLowerCase();
-            if(language.equals("en")) { return "en_en"; }
-            if(language.equals("no")) { return "nb_no"; }
+            if(language.equalsIgnoreCase("en")) { return "en_en"; }
+            if(language.equalsIgnoreCase("no")) { return "nb_NO"; }
+            if(language.equalsIgnoreCase("nb_no")) { return "nb_NO"; }
         }
-        return "en_en";
+        return language;
     }
 
         

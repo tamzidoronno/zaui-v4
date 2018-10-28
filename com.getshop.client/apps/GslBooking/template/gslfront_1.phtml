@@ -77,9 +77,6 @@
                 <div style="padding:10px;">
                     <h4 style="border-bottom: 1px solid #fff;text-align:center;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                     <div class='yourstaysummary'></div>
-                    <div class="overview_confirmation">
-                        <div class="gsl_button continue" onclick="getshop_showOverviewPage()" style=''><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
-                    </div>
                 </div>
             </div>
             <div class="addons_overview_left">
@@ -139,7 +136,7 @@
                             <div class="guestentry" id='guestentryrow' style='display:none;'>
                                 <div class='entryfield'><input type="txt" gsname="name" placeholder="Name"/></div>
                                 <div class='entryfield'><input type="txt" gsname="email"placeholder="E-mail"/></div>
-                                <div class='entryfield phonefield'><input type="txt" class="guest_phone" value="47" gsname="prefix"><input type="text" style="width:75%;" gsname="phone" placeholder="Phone"/></div>
+                                <div class='entryfield phonefield'><input type="txt" class="guest_phone field_prefix" value="47" gsname="prefix"><input type="text" class='field_postfix' gsname="phone" placeholder="Phone"/></div>
                                 <div style="clear:both;"></div>
                                 <div class="ischildrow excludeChildSelection">
                                     <input type="checkbox" class="ischild" gsname="ischild"><span gstype='bookingtranslation' gstranslationfield='ischildtext'></span><br>
@@ -156,6 +153,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="overview_confirmation">
+                <div class="gsl_button continue" onclick="getshop_showOverviewPage()" style=''><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
             </div>
         </div>
         <div class="overview">
@@ -179,14 +179,14 @@
                 <div class="overview_contact">
                     <h3><span gstype='bookingtranslation' gstranslationfield='contactInformation'></span></h3>
                     <div class="overview_contact_tab">
-                        <label for="private" id="private" class='selectedusertype'>
-                            <input type="radio" name="user" checked="checked"> <span gstype='bookingtranslation' gstranslationfield='private'></span>
+                        <label for="private" class='selectedusertype' fortype='private'>
+                            <input type="radio" id="private" name="user" checked="checked"> <span gstype='bookingtranslation' gstranslationfield='private'></span>
                         </label>
-                        <label for="organization" id="organization" class='selectedusertype'>
-                            <input type="radio" name="user"> <span gstype='bookingtranslation' gstranslationfield='organization'></span>
+                        <label for="organization" class='selectedusertype' fortype='organization'>
+                            <input type="radio" id="organization" name="user"> <span gstype='bookingtranslation' gstranslationfield='organization'></span>
                         </label>
-                        <label for="gotAccount" id="gotAccount" class='selectedusertype'>
-                            <input type="radio" name="user"> <span gstype='bookingtranslation' gstranslationfield='alreadyGotanAccount'></span>
+                        <label for="gotAccount" class='selectedusertype' fortype='gotAccount'>
+                            <input type="radio" id="gotAccount" name="user"> <span gstype='bookingtranslation' gstranslationfield='alreadyGotanAccount'></span>
                         </label>
                     </div>
                     <br>
@@ -194,57 +194,57 @@
                         <div class="guestentry guesttypeselection" type='private'>
                             <div><input type='checkbox' id='sameasguestselection' style='width:16px; padding:initial;'> <span gstype='bookingtranslation' gstranslationfield='sameasguest'></span></div>
                             <div style='clear:both;'></div>
-                            <div style="width: 33.33%;float: left;">
+                            <div style="width: 33.33%;float: left;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='name'></span></div>
                                 <input type="txt" gsname="user_fullName">
                             </div>
-                            <div style="width: 33.33%;float: left;">
+                            <div style="width: 33.33%;float: left;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='e-mail'></span></div>
                                 <input type="txt" gsname="user_emailAddress">
                             </div>
-                            <div style="width: 33.33%;float: left;">
+                            <div style="width: 33.33%;float: left;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
-                                <div class='phonefield'><input type="txt" class="guest_phone" value="47" gsname="user_prefix" style='float:left;'></div>
-                                <input type="text" style="width:75%;float:left;"gsname="user_cellPhone">
+                                <div class='phonefield'><input type="txt" class="guest_phone field_prefix" value="47" gsname="user_prefix"></div>
+                                <input type="text" gsname="user_cellPhone" class='field_postfix'>
                             </div>
-                            <div style="width: 50%;float:left; padding-top: 10px;">
+                            <div style="width: 50%;float:left; padding-top: 10px;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='streetAdress'></span></div>
                                 <input type="txt" gsname='user_address_address'>
                             </div>
-                            <div style="width: 50%;float:left; padding-top: 10px;">
+                            <div style="width: 50%;float:left; padding-top: 10px;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='zipCode'></span></div>
-                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='user_address_postCode'>
-                                <input id="guest_zipname" type="text" style="width:75%;float:left;" gsname='user_address_city'>
+                                <input id="guest_zipcode" type="txt" class="guest_phone field_prefix" value="" gsname='user_address_postCode'>
+                                <input id="guest_zipname" type="text" class='field_postfix' gsname='user_address_city'>
                             </div>
                         </div>
                     </div>
                     <div class="company_fields guesttypeselection" style='display:none;' type='organization'>
                         <div class="guestentry">
-                            <div style="width: 25%;float: left;">
+                            <div style="width: 25%;float: left;" class='organisationinputbox'>
                                 <span gstype='bookingtranslation' gstranslationfield='companyName'></span><br>
                                 <input type="txt" gsname="company_name">
                             </div>
-                            <div style="width: 25%;float: left;">
+                            <div style="width: 25%;float: left;" class='organisationinputbox'>
                                 <span gstype='bookingtranslation' gstranslationfield='vatNumber'></span><br>
                                 <input type="txt" gsname="company_vatNumber">
                             </div>
-                            <div style="width: 25%;float: left;">
+                            <div style="width: 25%;float: left;" class='organisationinputbox'>
                                 <span gstype='bookingtranslation' gstranslationfield='e-mail'></span><br>
                                 <input type="txt" gsname="company_email">
                             </div>
-                            <div style="width: 25%;float: left;">
+                            <div style="width: 25%;float: left;" class='organisationinputbox'>
                                 <span gstype='bookingtranslation' gstranslationfield='phone'></span><br>
-                                <input type="txt" class="guest_phone" value="+47" gsname="company_prefix" style='float:left;'>
-                                <input type="text" style="width:75%;border-right: 1px solid #ddd;float:left;"gsname="company_phone">
+                                <input type="txt" class="guest_phone field_prefix" value="+47" gsname="company_prefix" style='float:left;'>
+                                <input type="text" class='field_postfix' gsname="company_phone">
                             </div>
-                            <div style="width: 50%;float:left; padding-top: 10px;">
+                            <div style="width: 50%;float:left; padding-top: 10px;" class='organisationinputbox'>
                                 <span gstype='bookingtranslation' gstranslationfield='streetAdress'></span><br>
                                 <input type="txt" gsname='company_address_address'>
                             </div>
-                            <div style="width: 50%;float:left; padding-top: 10px;">
+                            <div style="width: 50%;float:left; padding-top: 10px;" class='organisationinputbox'>
                                 <span gstype='bookingtranslation' gstranslationfield='zipCode'></span><br>
-                                <input id="guest_zipcode" type="txt"  class="guest_phone" value="" style="width:25%;border-right: 1px solid #ddd;float:left;" gsname='company_address_postCode'>
-                                <input id="guest_zipname" type="text" style="width:75%;border-right: 1px solid #ddd;float:left;" gsname='company_address_city'>
+                                <input id="guest_zipcode" type="txt" class="guest_phone field_prefix" value=""  gsname='company_address_postCode'>
+                                <input id="guest_zipname" type="text" class='field_postfix' gsname='company_address_city'>
                             </div>
                         </div>
                     </div>
@@ -307,6 +307,7 @@
             <div class="product_availablerooms"><span gstype='bookingtranslation' gstranslationfield='availableRooms'></span><span class='availableroomcontainer'></span></div>
         </div>
         <div class="productentry_body">
+            <div class='noroomsavailable'><span gstype='bookingtranslation' gstranslationfield='roomisunavailable' class='roomisunavailable'></span></div>
             <table class="guestselection">
                 <tr style="font-weight: bold;">
                     <td><span gstype='bookingtranslation' gstranslationfield='numberofguests'></span></td><td><span gstype='bookingtranslation' gstranslationfield='price'></span></td><td style="text-align: right;"><span gstype='bookingtranslation' gstranslationfield='numberofrooms'></span></td>

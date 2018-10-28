@@ -156,7 +156,6 @@ Error      : #de5353; red
 
 .GslBooking .gslfront_1 .gsl_button.continue{
     width: 100%;
-    right: 10px;
     margin-top: 10px;
     height: 33px;
     bottom: 10px;
@@ -439,7 +438,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .guestentry input{padding:8px;width:100%;border:0;box-shadow: 0px 0px 0px 1px #ddd;}
 .GslBooking .gslfront_1 .guestentry input.ischild {box-shadow: none; float:left; width: 14px; padding: 0px; margin: 0px; margin-top:2px; }
 .GslBooking .gslfront_1 .guestentry .ischildrow { padding-top: 4px; padding-bottom: 14px; color:#563333;font-size: 12px; display:inline-block; }
-.GslBooking .gslfront_1 .guest_phone{width:25% !important;background-color:#f9f9f9;color: #329ad6;padding: 8px 0px 8px 16px!important;}
+.GslBooking .gslfront_1 .guest_phone{width:25% !important;color: #329ad6;padding: 8px 0px 8px 16px!important;}
 .GslBooking .gslfront_1 .guest_addon{position: absolute;right:40px; top:0px; height: 31px; display:inline-block; color:#94ccdf; font-size: 14px;padding-top:4px;}
 .GslBooking .gslfront_1 .guestaddonicon {
     background-color: #fff;
@@ -461,18 +460,27 @@ Error      : #de5353; red
     border-radius: 2px;
     padding: 9px !important;
     color: #f9f9f9 !important;}
+.GslBooking .field_prefix { float:left; width: 22%; }
+.GslBooking .field_postfix { float:right; width: 73% !important; }
+
 .GslBooking .gslfront_1 .active_addon{color: #fff !important;background-color:#305e83}
 .GslBooking .pricebox {width:40%;}
 .GslBooking .gslfront_1 .gsl_button.goToPayment{width:68%;padding:8px 0;}
+.GslBooking .overview_room_info .gsl_button.return { padding: 10px; }
+.GslBooking .roomisunavailable { font-size: 26px; }
 
 @media only all and (min-width:800px){
     .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#c8c8c8;}
     .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#c8c8c8 !important;}
     .GslBooking .gslfront_1 .guestentry input:-moz-placeholder{color:#c8c8c8;}
     .GslBooking .gslfront_1 .guestentry input:-ms-input-placeholder{color:#c8c8c8;}
-    .GslBooking .gslfront_1 .overview_confirmation { float :left; box-sizing: border-box; width:100%; }
+    .GslBooking .gslfront_1 .overview_confirmation { box-sizing: border-box; width:100%; }
 }
-@media only all and (max-width:800px){
+@media only all and (max-width:800px){  
+    .GslBooking .organisationinputbox,
+    .GslBooking .privateinputbox
+    { margin-top: 5px; }
+    .GslBooking .yourstaysummary { padding-bottom: 10px; }    
     .GslBooking .gslfront_1 .mobilecheckinheading, .GslBooking .gslfront_1 .mobilecheckoutheading { color:#bbb; width: 50%; float: left; border-bottom:1px solid #ddd;padding:0 4px;}
     .GslBooking .gslfront_1 .overview_room_info{padding-left: 0px; }
     .GslBookingFront .picker_header { display:none; }
@@ -527,7 +535,7 @@ Error      : #de5353; red
     
     .GslBooking .gslfront_1 .guestbox .guestentry {display:none;} 
     .GslBooking .gslfront_1 .guestbox .guestRows .guestentry {display:block;} 
-    .GslBooking .gslfront_1 .roomentry .guestentry {padding-top:40px;}
+    .GslBooking .gslfront_1 .roomentry .guestentry {padding-top:10px;}
     .GslBooking .gslfront_1 .roomheading {font-size:16px;}
     .GslBooking .gslfront_1 .guestentry div{width:100% !important;left:0;font-size:14px;}
     .GslBooking .gslfront_1 .guestentry div span{font-size: 10px;}
@@ -542,8 +550,9 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .guestentry .invalidinput input{box-shadow: 0px 0px 0px 1px red !important;}
     
     .GslBooking .gslfront_1 .guest_phone{padding:10px 0 10px 12px !important;}
+    .GslBooking .gslfront_1 .guestentry .phonefield {margin-top: 4px; }
     .GslBooking .gslfront_1 .guestentry .phonefield:before {padding:10px 3px;}
-    .GslBooking .gslfront_1 .removeguest{right:-1px; top:39px; padding: 12px 12px 13px 12px !important;}
+    .GslBooking .gslfront_1 .removeguest{right:-1px; top:46px; padding: 10px 10px 12px 12px !important;}
     .GslBooking .gslfront_1 .roomentryframe{margin-bottom:20px;}
     .GslBooking .gslfront_1 .overview_confirmation{width: 100%;bottom:10px;z-index:1;}
     .GslBooking .gslfront_1 .overview_confirmation .gsl_button.continue { right:25%; width:50%;;}

@@ -1,5 +1,6 @@
 {
     "bookStay" : "Book ditt opphold i dag",
+    "roomisunavailable" : "Vi har ikke flere rom igjen av denne typen",
     "bookingonbehalf" : "Du booker under",
     "failedlogon" : "Beklager, feil brukernavn eller passord",
     "rooms" : "Rom",

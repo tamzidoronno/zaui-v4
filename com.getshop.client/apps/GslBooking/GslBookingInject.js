@@ -93,7 +93,6 @@ function getshop_getBookingTranslations() {
 }
 
 function getshop_setSameAsGuest(e) {
-    if(getshop_avoiddoubletap(e)) { return; }
     try {
         var container = $('.roomrowadded');
         var checkbox = $(this);
@@ -541,7 +540,7 @@ function getshop_changeBookingType(e) {
         if(getshop_avoiddoubletap(e)) { return; }
         $('.errormessage').hide();
         $('.invalidinput').removeClass('invalidinput');
-        var type = $(this).attr('id');
+        var type = $(this).attr('fortype');
         $('.agreetotermsbox').hide();
         $('.overview_confirmation').hide();
         $('.guesttypeselection').hide();
@@ -720,9 +719,9 @@ function getshop_saveBookerInformation() {
         fields[field] = val;
     });
     if($('#organization input').is(':checked')) {
-        fields["choosetyperadio"] = "registration_company";
+        fields["choosetyperadio"] = "registration_company";
     } else {
-        fields["choosetyperadio"] = "registration_private";
+        fields["choosetyperadio"] = "registration_private";
     }
     var type = $("input[name='user']:checked").closest('label').attr('id');
     var data = {
@@ -1464,9 +1463,12 @@ function getshop_searchRooms(e) {
                     utilities += '<i class="fa fa-' + utility + '" title="' + room.utilities[utility] + '"></i>';
                 }
 
-                $('#productentry').append(roomBox);
-                roomBox.show();
-
+                    $('#productentry').append(roomBox);
+                    roomBox.find('.noroomsavailable').hide();
+                    if(room.availableRooms === 0) {
+                        roomBox.find('.noroomsavailable').show();
+                    }
+                    roomBox.show();
                 for (var i = 0; i <= room.images.length - 1; i++) {
                     var active = "";
                     if (i == 0) {
@@ -1652,7 +1654,7 @@ function getshop_cancelPayment() {
 $(document).on('touchend click', '.GslBooking', getshop_hideGuestSelectionBox);
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
 $(document).on('touchend click', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
-$(document).on('touchend click', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
+$(document).on('click', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
 $(document).on('touchend click','.GslBooking .gssigninbutton', getshop_logon);
 $(document).on('touchend click','.GslBooking .gssignoutbutton', getshop_logout);
 $(document).on('touchend click','.GslBooking .selectedusertype', getshop_changeBookingType);

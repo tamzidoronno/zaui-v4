@@ -1,7 +1,7 @@
 <?php
 namespace ns_57db782b_5fe7_478f_956a_ab9eb3575855;
 
-class SalesPointNewSale extends \MarketingApplication implements \Application {
+class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     public function getDescription() {
         
@@ -12,6 +12,10 @@ class SalesPointNewSale extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        if ($this->preRender()) {
+            return;
+        }
+        
         $this->includefile("taboperationoverlay");
         
         echo "<div class='leftmenu'>";
@@ -131,5 +135,9 @@ class SalesPointNewSale extends \MarketingApplication implements \Application {
         $this->getApi()->getPosManager()->printOverview($tab->id, $gdsDevice->id);
     }
     
+    
+    public function movelist() {
+        $this->getApi()->getPosManager()->moveList($this->getSelectedCashPointId(), $_POST['data']['listid'], $_POST['data']['type'] === "up");
+    }
 }
 ?>

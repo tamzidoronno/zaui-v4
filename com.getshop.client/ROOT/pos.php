@@ -88,7 +88,7 @@ $_SESSION['firstloadpage'] = true;
         
         <div class="gs_body" hasleftmenu="<? echo $page->getLeftMenu() ? 'yes' : 'no'; ?>">
             <?
-            if ($page->getLeftMenu()) { $page->getLeftMenu()->renderLeft(); }
+            if ($page->getLeftMenu()) { $page->getLeftMenu()->renderLeft("pos"); }
             ?>
 
             <div class="gs_body_inner">

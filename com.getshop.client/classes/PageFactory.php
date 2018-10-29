@@ -44,6 +44,8 @@ class PageFactory {
         if (!$pageId) {
             $pageId = "home";
         }
+        
+        
 //        echo "<pre>";
 //        print_r($this->pages);
         $page = $this->pages[$pageId];
@@ -376,8 +378,22 @@ class PageFactory {
         $this->pages['reports'] = $page;
         
         $page = new \ModulePage("settings", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
         $row = $page->createRow();
         $row->addColumn("26958edf-e2a1-4e76-aca0-38e7edfe8c80", "e4a9014e-10d1-4ebf-9c00-6b901d64e6f0");
         $this->pages['settings'] = $page;
+        
+        $page = new \ModulePage("devices", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("26958edf-e2a1-4e76-aca0-38e7edfe8c80", "e4a9014e-10d1-4ebf-9c00-6b901d64e6f0");
+        $this->pages['devices'] = $page;
+        
+        $page = new \ModulePage("cashpoints", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("5532e18a-3e3d-4804-8ded-30bbb33e5bd5", "1e379f14-c842-405e-a45b-9a0ebef4e6b1");
+        $this->pages['cashpoints'] = $page;
+        
     }
 }

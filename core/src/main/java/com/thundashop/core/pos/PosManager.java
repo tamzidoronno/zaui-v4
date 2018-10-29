@@ -22,6 +22,8 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.ProductList;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,6 +41,7 @@ import org.springframework.stereotype.Component;
 public class PosManager extends ManagerBase implements IPosManager {
     public HashMap<String, PosTab> tabs = new HashMap();
     public HashMap<String, ZReport> zReports = new HashMap();
+    public HashMap<String, CashPoint> cashPoints = new HashMap();
     
     @Autowired
     private CartManager cartManager;
@@ -55,6 +58,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Autowired
     private GdsManager gdsManager;
 
+    @Autowired
+    private ProductManager productManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         data.data.stream()
@@ -64,6 +70,9 @@ public class PosManager extends ManagerBase implements IPosManager {
                     }
                     if (dataCommon instanceof ZReport) {
                         zReports.put(dataCommon.id, (ZReport)dataCommon);
+                    }
+                    if (dataCommon instanceof CashPoint) {
+                        cashPoints.put(dataCommon.id, (CashPoint)dataCommon);
                     }
                 });
     }
@@ -285,5 +294,88 @@ public class PosManager extends ManagerBase implements IPosManager {
         receipt.cartItems = items;
         receipt.date = new Date();
         gdsManager.sendMessageToDevice(gdsDeviceId, receipt);
+    }
+
+    @Override
+    public void createCashPoint(String name) {
+        CashPoint cashPoint = new CashPoint();
+        cashPoint.cashPointName = name;
+        saveObject(cashPoint);
+        cashPoints.put(cashPoint.id, cashPoint);
+    }
+
+    @Override
+    public List<CashPoint> getCashPoints() {
+        return new ArrayList(cashPoints.values());
+    }
+    
+    @Override
+    public List<ProductList> getProductList(String cashPointId) {
+        CashPoint cashPoint = getCashPoint(cashPointId);
+        if (cashPoint == null) {
+            return productManager.getProductLists();
+        }
+     
+        return cashPoint.productListIds.stream()
+                .map(id -> productManager.getProductList(id))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CashPoint getCashPoint(String cashPointId) {
+        return cashPoints.get(cashPointId);
+    }
+
+    @Override
+    public void saveCashPoint(CashPoint cashPoint) {
+        saveObject(cashPoint);
+        cashPoints.put(cashPoint.id, cashPoint);
+    }
+
+    @Override
+    public void moveList(String cashPointId, String listId, boolean down) {
+        int number = 0;
+        CashPoint cashPoint = getCashPoint(cashPointId);
+        
+        for (String id : cashPoint.productListIds) {
+            if (id.equals(listId)) {
+                break;
+            }
+            
+            number++;
+        }
+        
+        if (down) {
+            number++;
+            if (number > (cashPoint.productListIds.size() - 1)) {
+                number = cashPoint.productListIds.size() - 1;
+            }
+        } else {
+            number--;
+            if (number < 0) {
+                number = 0;
+            }
+        }
+        
+        int i = 0;
+        List<String> newList = new ArrayList();
+        for (String id : cashPoint.productListIds) {
+            if (i == number) {
+                newList.add(listId);
+            }
+            
+            i++;
+            
+            if (!id.equals(listId) && !newList.contains(id)) {
+                newList.add(id);
+            }
+            
+            if (cashPoint.productListIds.size() < i && id.equals(listId) && down && !newList.contains(cashPoint.productListIds.get(i))) {
+                newList.add(cashPoint.productListIds.get(i));
+            }
+        }
+        
+        cashPoint.productListIds = newList;
+        saveObject(cashPoint);
     }
 }

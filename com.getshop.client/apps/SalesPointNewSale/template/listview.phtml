@@ -1,11 +1,12 @@
 <?
 /* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
-$lists = $this->getApi()->getProductManager()->getProductLists();
+$lists = $this->getApi()->getPosManager()->getProductList($this->getSelectedCashPointId());
 $productIds = array();
 foreach ($lists as $list) {
     $productIds = array_merge($list->productIds, $productIds);
 }
 
+$cashPointId = $this->getSelectedCashPointId();
 $products = $this->getApi()->getProductManager()->getProductLight($productIds);
 
 foreach ($lists as $list) {
@@ -13,7 +14,18 @@ foreach ($lists as $list) {
     <div class='productlist'>
         <?
         
-        echo "<h2>".$list->listName."</h2>";
+        echo "<h2>";
+            echo $list->listName;
+            
+            if ($cashPointId) {
+                ?>
+                <div class='movebuttons'>
+                    <div class='gs_shop_small_icon' gsclick='movelist' listid='<? echo $list->id; ?>' type='down' ><i class='fa fa-arrow-up'></i></div>
+                    <div class='gs_shop_small_icon' gsclick='movelist' listid='<? echo $list->id; ?>' type='up' ><i class='fa fa-arrow-down'></i></div>
+                </div>
+                <?
+            }
+        echo "</h2>";
         foreach ($list->productIds as $productId) {
             $product = $this->getProduct($products, $productId);
             ?>

@@ -235,3 +235,21 @@
     color: red;
     padding: 40px;
 }
+
+.SalesPointNewSale h2 {
+    position: relative;
+    padding: 10px;
+}
+.SalesPointNewSale .movebuttons {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: none;
+}
+
+.SalesPointNewSale h2:hover {
+    background-color: #DDD;
+}
+.SalesPointNewSale h2:hover .movebuttons {
+    display: block;
+}

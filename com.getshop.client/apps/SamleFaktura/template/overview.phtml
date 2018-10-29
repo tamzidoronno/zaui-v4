@@ -53,10 +53,14 @@ foreach ($groupedOrders as $userId => $orders) {
                 <div class='col col4'>
                     <?
                     foreach ($order->cart->items as $item) {
-                        echo "<div style='display: inline-block; width: 49%;'>".$item->count . " x " . $item->product->name."</div>";
+                        $metadata = $item->product && $item->product->metaData ? "( " .$item->product->metaData." )" : "";
+                        echo "<div style='display: inline-block; width: 49%;'>".$item->count . " x " . $item->product->name." $metadata</div>";
+                        
+                        
                         if ($item->startDate && $item->endDate) {
                             echo "<div style='display: inline-block; width: 49%;'>".date("d/m-Y", strtotime($item->startDate))." -".date("d/m-Y", strtotime($item->endDate))."</div>";
                         }
+                        
                     }
                     ?>
                 

@@ -12,6 +12,9 @@ if($_GET['type'] == "roomrevenue") {
     $filter = new core_pmsmanager_PmsBookingFilter();
     $filter->startDate = $appBase->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
     $filter->endDate = $appBase->convertToJavaDate(strtotime($_GET['end'] . " 23:59"));
+    if(isset($_GET['includevirtual']) && $_GET['includevirtual'] == "1") {
+        $filter->includeVirtual = true;
+    }
     
     //Coverage + virtual orders
     $stats = $factory->getApi()->getPmsManager()->getStatistics($_GET['domain'], $filter);

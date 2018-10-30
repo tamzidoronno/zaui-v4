@@ -430,7 +430,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             PmsUserDiscount userDiscount = pmsInvoiceManager.getUserDiscountByCouponCode(booking.couponCode);
             if(userDiscount != null) {
-                booking.userId = userDiscount.userId;
+                if(userManager.doesUserExsist(userDiscount.userId)) {
+                    booking.userId = userDiscount.userId;
+                }
             }
         }
 
@@ -5311,7 +5313,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             createUserForBooking(booking);
             addDefaultAddons(booking);
             checkIfBookedBySubAccount(booking);
-            if (userManager.getUserById(booking.userId).suspended) {
+            if (userManager.getUserById(booking.userId) == null || userManager.getUserById(booking.userId).suspended) {
                 logPrint("User is suspended." + booking.id);
                 return null;
             }

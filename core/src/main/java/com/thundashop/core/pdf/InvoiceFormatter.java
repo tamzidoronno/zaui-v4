@@ -122,7 +122,7 @@ public class InvoiceFormatter {
                 taxes.put(item.getProduct().taxGroupObject.taxRate, current);
             }
             current = taxes.get(item.getProduct().taxGroupObject.taxRate);
-            current += item.getProduct().price - item.getProduct().priceExTaxes;
+            current += (item.getProduct().price - item.getProduct().priceExTaxes) * item.getCount();
             taxes.put(item.getProduct().taxGroupObject.taxRate, current);
         }
         

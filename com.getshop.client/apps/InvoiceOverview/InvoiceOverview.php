@@ -214,7 +214,12 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
             return "N/A";
         }
         
-        return "<span getshop_sorting='".strtotime($row->dueDate)."'>" . date("d.m.Y", strtotime($row->dueDate)) . "</span>";
+        $itsdue = "";
+        if(time() > strtotime($row->dueDate)) {
+            $itsdue = "itsdue";
+        }
+        
+        return "<span class='$itsdue' getshop_sorting='".strtotime($row->dueDate)."'>" . date("d.m.Y", strtotime($row->dueDate)) . "</span>";
     }
     
     

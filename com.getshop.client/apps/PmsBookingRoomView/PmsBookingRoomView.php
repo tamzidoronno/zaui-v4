@@ -1762,5 +1762,29 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return false;
     }
 
+    public function getPrinters() {
+        $devices = $this->getApi()->getGdsManager()->getDevices();
+        $ret = array();
+        
+        foreach ($devices as $device) {
+            if ($device->type == "cashap") {
+                $ret[] = $device;
+            }
+        }
+        
+        return $ret;
+    }
+    
+    public function printCode() {
+        $room = $this->getSelectedRoom();
+        $this->getApi()->getPmsManager()->printCode($this->getSelectedMultilevelDomainName(), $_POST['data']['cashpointid'], $room->pmsBookingRoomId);
+    }
+
+    public function printGroupCodes() {
+        $booking = $this->getPmsBooking();
+        foreach ($booking->rooms as $room) {
+            $this->getApi()->getPmsManager()->printCode($this->getSelectedMultilevelDomainName(), $_POST['data']['cashpointid'], $room->pmsBookingRoomId);
+        }
+    }
 }
 ?>

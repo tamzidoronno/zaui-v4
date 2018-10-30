@@ -45,6 +45,8 @@ import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
 import com.thundashop.core.getshoplocksystem.MasterUserSlot;
+import com.thundashop.core.gsd.DevicePrintRoomCode;
+import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -200,6 +202,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     private PgaManager pgaManager;
 
+    @Autowired
+    private GdsManager gdsManager;
+    
     @Autowired
     Database dataBase;
     private Date virtualOrdersCreated;
@@ -9126,5 +9131,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return language;
     }
 
+    @Override
+    public void printCode(String gdsDeviceId, String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         
+        if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+            return;
+        }
+        
+        if (room.code == null || room.code.isEmpty()) {
+            return;
+        }
+        
+        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+        DevicePrintRoomCode message = new DevicePrintRoomCode();
+        message.roomName = item.bookingItemName;
+        message.code = room.code;
+        
+        gdsManager.sendMessageToDevice(gdsDeviceId, message);
+    }
 }

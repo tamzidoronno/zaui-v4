@@ -18,6 +18,8 @@ $daysToArrival = ceil($diff / (60 * 60 * 24));
 
 $hasAcessControl = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName());
 
+$printers = $this->getPrinters();
+
 if ($isEnded) {
     ?>
     <div class="successinfo">
@@ -80,6 +82,15 @@ if ($room->code && $room->addedToArx) {
                     <div class="shop_button" gsclick="blockAccessToRoom" gs_confirm='<? echo $blockSureMessage; ?>' synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Block access"); ?></div>
                     <div class="shop_button" onclick='$(".resendcodeform").slideDown();'><? echo $this->__f("Resend code"); ?></div>
                     <div class="shop_button" gsclick="renewCodeForRoom" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated" style='float:right;'><? echo $this->__f("Regenerate code"); ?></div>
+                    <?
+                    if (count($printers)) {
+                        foreach ($printers as $printer) {
+                            ?>
+                                <div class='shop_button' gsclick='printCode' cashpointid='<? echo $printer->id; ?>'><? echo $this->__f("Print code")." - ".$printer->name; ?></div>
+                            <?
+                        }
+                    }
+                    ?>
                     
                     <div style='margin-top:20px; display:none;' class='resendcodeform' gstype='form' method='resendCodeForRoom'>
                         <input type='text' class='gsniceinput1' style='width:30px;' value='<?php echo $prefix; ?>' gsname='prefix'>

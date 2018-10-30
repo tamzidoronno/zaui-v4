@@ -425,7 +425,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             PmsUserDiscount userDiscount = pmsInvoiceManager.getUserDiscountByCouponCode(booking.couponCode);
             if(userDiscount != null) {
-                booking.userId = userDiscount.userId;
+                if(userManager.doesUserExsist(userDiscount.userId)) {
+                    booking.userId = userDiscount.userId;
+                }
             }
         }
 

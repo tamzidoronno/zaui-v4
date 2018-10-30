@@ -256,4 +256,12 @@ public interface IProductManager {
     @Editor
     public void saveAccountingDetail(AccountingDetail detail);
     
+    @Editor
+    public void addAdditionalTaxGroup(String productId, String taxGroupId);
+    
+    @Editor
+    public void removeTaxGroup(String productId, String taxGroupId);
+    
+    @Editor
+    public Product changeTaxCode(Product product, String taxGroupId);
 }

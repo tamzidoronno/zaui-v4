@@ -27,7 +27,7 @@ class GetShopDeviceList extends \MarketingApplication implements \Application {
     }
     
     public function formatMessageCount() {
-        echo "ok";
+        return "";
     }
     
     public function deleteDevice() {

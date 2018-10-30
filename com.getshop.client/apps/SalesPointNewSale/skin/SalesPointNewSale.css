@@ -253,3 +253,6 @@
 .SalesPointNewSale h2:hover .movebuttons {
     display: block;
 }
+.SalesPointNewSale .multitaxsupport {
+    display: none;
+}

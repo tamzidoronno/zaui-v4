@@ -11,6 +11,7 @@ import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.pagemanager.data.Page;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -92,6 +93,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public List<String> subProductIds = new ArrayList();
     
     public TaxGroup taxGroupObject;
+    
+    public List<TaxGroup> additionalTaxGroupObjects = new ArrayList();
     
     @Transient
     public Page page;
@@ -245,5 +248,20 @@ public class Product extends DataCommon implements Comparable<Product>  {
 
     public BigDecimal getPriceExTaxesWithTwoDecimals() {
         return TwoDecimalRounder.roundTwoDecimals(priceExTaxes);
+    }
+
+    public void changeToAdditionalTaxCode(String taxGroupId) {
+        TaxGroup group = additionalTaxGroupObjects.stream()
+                .filter(t -> t.id.equals(taxGroupId))
+                .findFirst()
+                .orElse(null);
+        
+        if (group != null) {
+            double multiple = group.getTaxRate()+1;
+            BigDecimal newPrice = getPriceExTaxesWithTwoDecimals();
+            price = newPrice.multiply(new BigDecimal(multiple)).doubleValue();
+            this.taxGroupObject = group;
+            doFinalize();
+        }
     }
 }

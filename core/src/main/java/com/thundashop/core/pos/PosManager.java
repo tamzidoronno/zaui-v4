@@ -162,7 +162,10 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Override
     public void completeTransaction(String tabId, String orderId, String cashPointDeviceId) {
         Order order = orderManager.getOrder(orderId);
-        orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order));
+        
+        if (!order.isFullyPaid()) {
+            orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order));
+        }
         
         PosTab tab = getTab(tabId);
         

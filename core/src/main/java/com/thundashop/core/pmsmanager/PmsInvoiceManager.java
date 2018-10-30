@@ -904,7 +904,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             }
                         }
                     }
-                    if(order.isVirtual && filter.includeVirtual) {
+                    if(order.isVirtual && filter.includeVirtual || (order.isPrepaidByOTA() && filter.fromPmsModule)) {
                         avoid = false;
                     }
 
@@ -2257,6 +2257,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void automarkOrderAsPaidIfNessesary(Order order) {
+        if(order == null || order.payment == null || order.payment.paymentType == null) {
+            return;
+        }
         try {
             Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
             if(paymentapp != null) {
@@ -2405,11 +2408,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         
         LinkedHashMap<String, Double> result = new LinkedHashMap();
+        if(typeId.equals("gsconference")) {
+            priceRange = new HashMap();
+        }
         if (priceRange == null) {
             return result;
         }
 
         Double defaultPrice = priceRange.get("default");
+        
         if (defaultPrice == null) {
             defaultPrice = 0.0;
         }

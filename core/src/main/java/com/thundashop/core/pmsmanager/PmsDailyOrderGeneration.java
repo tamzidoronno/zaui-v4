@@ -335,6 +335,13 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+        if(type.id.equals("gsconference") && (type.productId == null || type.productId.isEmpty())) {
+            Product newProduct = productManager.createProduct();
+            newProduct.name = "Conference";
+            productManager.saveProduct(newProduct);
+            type.productId = newProduct.id;
+            bookingEngine.updateBookingItemType(type);
+        }
         boolean useTypeName = false;
         if((productId == null || productId.isEmpty()) && type != null) {
             productId = type.productId;

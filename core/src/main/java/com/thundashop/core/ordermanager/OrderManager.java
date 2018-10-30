@@ -316,7 +316,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 markAsPaidInternal(order, date,amount);
                 saveOrder(order);
             } else {
-                messageManager.sendErrorNotification("Not fully paid order detected." + order.incrementOrderId, null);
+                messageManager.sendErrorNotification("Not fully paid order detected: " + order.incrementOrderId + " Amount: " + order.getPaidRest(), null);
             }
 
         } else {
@@ -330,6 +330,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         order.paymentDate = date;
         order.status = Order.Status.PAYMENT_COMPLETED;
+        order.captured = true;
         
         String name = "";
         if(getSession() != null && getSession().currentUser != null) {
@@ -1748,6 +1749,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (order.cart.address.fullName == null || order.cart.address.fullName.isEmpty()) {
                     order.cart.address.fullName = user.fullName;
                 }
+                if (order.cart.address.co == null || order.cart.address.co.isEmpty() && user.address != null) {
+                    order.cart.address.co = user.address.co;
+                }
                 
                 saveObject(order);
             } catch (CloneNotSupportedException ex) {
@@ -2377,6 +2381,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(!password.equals("fdsvb4354345345")) {
             return;
         }
+        Order order = getOrder(orderId);
         markAsPaid(orderId, date, amount);
     }
 

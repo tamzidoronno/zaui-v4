@@ -1,6 +1,7 @@
 .InvoiceOverview .GetShopModuleTable .col { width: 100px; }
 .InvoiceOverview .GetShopModuleTable .col_2 { width: 80px; }
-.InvoiceOverview .GetShopModuleTable .col_8 { width: calc(100% - 1200px) !important; }
+.InvoiceOverview .GetShopModuleTable .col_8 { width: calc(100% - 1320px) !important; }
+.InvoiceOverview .GetShopModuleTable .col_state .fa { margin-right: 5px; }
 .InvoiceOverview .usersfilterresult { text-align: left; padding-top: 5px;}
 .InvoiceOverview .searchwordwarning { text-align: left; color:red; font-weight: bold; padding-top: 10px; font-family: cursive;}
 .InvoiceOverview .fa-close { cursor:pointer; color:#bbb;}

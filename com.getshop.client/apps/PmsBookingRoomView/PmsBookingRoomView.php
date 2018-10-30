@@ -953,11 +953,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->setData();
         $booking = $this->getPmsBooking();
         $room = $this->getSelectedRoom();
-        foreach($booking->rooms as $room) {
-            if($room->pmsBookingRoomId == $room->pmsBookingRoomId) {
-                $room->blocked = true;
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                $r->blocked = true;
             }
         }
+        $itemId = $room->pmsBookingRoomId;
+        $bookingId = $booking->id;
+        $logText = "Blocking room";
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), $logText, $bookingId, $itemId);
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         $this->setData();
         $this->includefile("accesscode");
@@ -1618,7 +1622,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 $start, 
                 $end, 
                 $room->bookingId);
-        
+                
         foreach($available as $av) {
             /* @var $av \core_bookingengine_data_BookingItem */
             if($av->bookingItemTypeId == $room->bookingItemTypeId) {
@@ -1746,6 +1750,16 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $start = $_POST['data']['start'];
         $end = $_POST['data']['end'];
         $this->printAvailableRoomsFromCategory($start, $end);
+    }
+
+    public function isStartingToday($room) {
+        if(date("dmy", time()) == date("dmy", strtotime($room->date->start))) {
+            return true;
+        }
+        if(strtotime($room->date->start) < time()) {
+            return true;
+        }
+        return false;
     }
 
 }

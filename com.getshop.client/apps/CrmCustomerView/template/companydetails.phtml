@@ -12,7 +12,7 @@ if(sizeof((array)$user->company) == 0) {
         <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
         Vat number:<br>
         <input type="text" class='gsniceinput1' gsname='vatnumber'>
-        <span class='shop_button' gstype='submit'>Connect to customer</span>
+        <span class='shop_button' gstype='submit' gs_callback='$(".selectedmenuentry").click();'>Connect to customer</span>
     </div>
     <?php
     return;

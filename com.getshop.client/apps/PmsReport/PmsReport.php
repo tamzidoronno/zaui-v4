@@ -214,9 +214,12 @@ class PmsReport extends \MarketingApplication implements \Application {
             array('Coverage', 'Coverage', 'coverage', null)
         );
         
+        $rowsToHighLight = $this->getWeekendRows($data->entries);
+        
         $table = new \GetShopModuleTable($this, 'PmsManager', 'loadCoverageResult', null, $attributes);
         $table->setSorting(array("date","total","totalbilled", "totalremaining","arrivals", "departures","avilable","rentedout","guests","avprice","revpar","total","budget","Coverage"));
         $table->setData($data->entries);
+        $table->appendClassToRowNumbers($rowsToHighLight, "weekenddate");
         $table->render();
         $_SESSION['latestpmscoverageresult'] = json_encode($data);
     }
@@ -239,7 +242,10 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
             
             $id = $method->id;
-            if($id == "70ace3f0-3981-11e3-aa6e-0800200c9a66" || $id == "cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba") {
+            if($id == "cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba") {
+                continue;
+            }
+            if($id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
                 //Invoices and samlefaktura needs to include everything
                 $method = new \core_pmsmanager_PmsPaymentMethods();
                 $method->paymentMethod = $id;
@@ -601,6 +607,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
         $filter->includeVirtual = false;
         $filter->savedPaymentMethod = "allmethods";
+        $filter->fromPmsModule = true;
         $filter = $this->addPaymentTypeToFilter($filter);
         $filter->displayType = "dayslept";
         $filter->priceType = "extaxes";
@@ -657,6 +664,18 @@ class PmsReport extends \MarketingApplication implements \Application {
         $date = date("d-m-Y", time());
         $attributes[] = array('total', 'Total', 'total',null);
         return $attributes;
+    }
+
+    public function getWeekendRows($rows) {
+        $rowcounter = 1;
+        $result = array();
+        foreach($rows as $row) {
+            if((date('N', strtotime($row->date)) >= 6)) {
+                $result[] = $rowcounter;
+            }
+            $rowcounter++;
+        }
+        return $result;
     }
 
 }

@@ -15,3 +15,6 @@
 .PmsReport .kaipal .text {background-color:#fff; }
 .PmsReport [method="setReportFilter"] { background-color:#fff; padding: 10px; border-left:solid 1px #bbb;border-right:solid 1px #bbb;border-bottom:solid 1px #bbb; }
 .PmsReport .reportview { padding: 10px; border:solid 1px #bbb; background-color:#fff; max-width: 1480px; }
+.PmsReport .weekenddate { background-color:#32c122 !important; color:#fff !important; }
+.PmsReport .weekenddate.active { color:#000 !important; }
+.PmsReport .weekenddate .datarow_extended_content { background-color:#fff !important;}

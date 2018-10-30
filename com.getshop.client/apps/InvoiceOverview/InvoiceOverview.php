@@ -67,6 +67,23 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         return $this->getApi()->getOrderManager()->getOrdersByFilter($filter);
     }
     
+    public function formatState($order) {
+        $roomid = "";
+        
+        $text = "";
+        if ($order->closed) {
+            $text = '<i class="fa fa-lock" title="Order has been locked"></i>';
+        } else {
+            $text = '<i class="fa fa-unlock"></i>';
+        }
+        $text .= "<i class='fa fa-download dontExpand' title='Download order' style='cursor:pointeR;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->orderId."&incrementalOrderId=".$order->incOrderId."\");'></i>";
+        if(@$order->invoiceNote) {
+            $text .= "<i class='fa fa-sticky-note' title='".$order->invoiceNote."'></i>";
+        }
+        
+        return $text;
+    }
+    
     public function reloadRow() {
         /*
          * array('amountExTaxes', 'Ex tax', 'amountExTaxes'),

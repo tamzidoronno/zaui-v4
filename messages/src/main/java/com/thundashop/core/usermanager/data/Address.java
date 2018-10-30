@@ -23,6 +23,7 @@ public class Address extends DataCommon {
     public String prefix = "";
     public String emailAddress = "";
     public String fullName = "";
+    public String co = "";
     public String postCode = "";
     public String address = "";
     public String address2;
@@ -44,6 +45,7 @@ public class Address extends DataCommon {
                 && checkField(address.postCode, this.postCode)
                 && checkField(address.address, this.address)
                 && checkField(address.address2, this.address2)
+                && checkField(address.co, this.co)
                 && checkField(address.prefix, this.prefix)
                 && checkField(address.city, this.city)
                 && checkField(address.type, this.type)

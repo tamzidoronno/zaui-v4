@@ -5264,13 +5264,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Created booking from json object");
         }
         
-        String lang = getStoreSettingsApplicationKey("language");
-        if(lang == null || lang.isEmpty()) {
-            lang = "en_en";
-        }
-        booking.language = lang;
-        if(getSession().language != null && !getSession().language.isEmpty()) {
-            booking.language = getSession().language;
+        if(booking.language == null || booking.language.trim().isEmpty()) {
+            String lang = getStoreSettingsApplicationKey("language");
+            if(lang == null || lang.isEmpty()) {
+                lang = "en_en";
+            }
+            booking.language = lang;
+            if(getSession().language != null && !getSession().language.isEmpty()) {
+                booking.language = getSession().language;
+            }
         }
         
         if (getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
@@ -6437,6 +6439,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String getMessageToSend(String key, String type, PmsBooking booking, String language) {
+        
+        language = makeSureLanguageIsCorrect(language);
+        
         String message = "";
         overrideNotificationTitle = "";
         if(key.equals("booking_completed") && booking.channel != null && booking.channel.contains("wubook")) {
@@ -6475,8 +6480,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             } else {
                 for(String tmpKey : configuration.smses.keySet()) {
-                    if(tmpKey.startsWith(key) && configuration.emails.get(tmpKey) != null && !configuration.emails.get(tmpKey).isEmpty()) {
-                        message = configuration.emails.get(tmpKey);
+                    if(tmpKey.startsWith(key) && configuration.smses.get(tmpKey) != null && !configuration.smses.get(tmpKey).isEmpty()) {
+                        message = configuration.smses.get(tmpKey);
                         break;
                     }
                 }
@@ -9110,6 +9115,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private String makeSureLanguageIsCorrect(String language) {
+        if(language != null) {
+            if(language.equalsIgnoreCase("en")) { return "en_en"; }
+            if(language.equalsIgnoreCase("no")) { return "nb_NO"; }
+            if(language.equalsIgnoreCase("nb_no")) { return "nb_NO"; }
+        }
+        return language;
     }
 
         

@@ -1,5 +1,6 @@
 <body>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </head>
 
@@ -7,14 +8,14 @@
 <div id='bookingprocess'></div>
 
 <script>
-//    gsisdevmode = true;
+    gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("https://www.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://renahotell.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                     {
-                        "endpoint": "https://ibedcity.getshop.com/",
-                        "jsendpoint": "https://ibedcity.getshop.com/",
+                        "endpoint": "http://renahotell.3.0.local.getshop.com/",
+                        "jsendpoint": "http://renahotell.3.0.local.getshop.com/",
                         "domain" : "default"
                     }
             );

@@ -71,6 +71,7 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
         $user->address->countrycode = $_POST['data']['countryCode'];
+        $user->address->co = $_POST['data']['address.co'];
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];

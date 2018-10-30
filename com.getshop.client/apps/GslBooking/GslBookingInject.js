@@ -55,7 +55,7 @@ function getshop_setBookingTranslation() {
             getshop_bookingconfiguration = config;
             var text = getshop_translationMatrixLoaded['agebelow'];
             text = text.replace("{age}", config.childAge);
-            $("[gstranslationfield='agebelow']").html(text);
+            $("[gstranslationfield='agebelow']").html(text);              
 
             var text = getshop_translationMatrixLoaded['ischildtext'];
             text = text.replace("{age}", config.childAge);
@@ -93,7 +93,6 @@ function getshop_getBookingTranslations() {
 }
 
 function getshop_setSameAsGuest(e) {
-    if(getshop_avoiddoubletap(e)) { return; }
     try {
         var container = $('.roomrowadded');
         var checkbox = $(this);
@@ -541,7 +540,7 @@ function getshop_changeBookingType(e) {
         if(getshop_avoiddoubletap(e)) { return; }
         $('.errormessage').hide();
         $('.invalidinput').removeClass('invalidinput');
-        var type = $(this).attr('id');
+        var type = $(this).attr('fortype');
         $('.agreetotermsbox').hide();
         $('.overview_confirmation').hide();
         $('.guesttypeselection').hide();
@@ -720,9 +719,9 @@ function getshop_saveBookerInformation() {
         fields[field] = val;
     });
     if($('#organization input').is(':checked')) {
-        fields["choosetyperadio"] = "registration_company";
+        fields["choosetyperadio"] = "registration_company";
     } else {
-        fields["choosetyperadio"] = "registration_private";
+        fields["choosetyperadio"] = "registration_private";
     }
     var type = $("input[name='user']:checked").closest('label').attr('id');
     var data = {
@@ -1177,6 +1176,7 @@ function getshop_changeNumberOfRooms() {
         var count = $(this).val();
         var start = moment.utc($('.date_picker_start_gsl').val(), "DD.MM.YYYY").local();
         var end = moment.utc($('.date_picker_end_gsl').val(), "DD.MM.YYYY").local();
+        
         var client = getshop_getWebSocketClient();
         var data = {
             "id": $(this).closest('.productentry').attr('roomid'),
@@ -1370,6 +1370,8 @@ function getshop_searchRooms(e) {
         var end = moment.utc($('#date_picker_end').val(), "DD.MM.YYYY").local();
         var endDate = end.format('MMM DD, YYYY ') + time;
 
+        startDate = startDate.replace(/[^a-zA-Z0-9,: ]/g, "")
+        endDate = endDate.replace(/[^a-zA-Z0-9,: ]/g, "")
         var data = {
             "start": startDate,
             "end": endDate,
@@ -1461,9 +1463,12 @@ function getshop_searchRooms(e) {
                     utilities += '<i class="fa fa-' + utility + '" title="' + room.utilities[utility] + '"></i>';
                 }
 
-                $('#productentry').append(roomBox);
-                roomBox.show();
-
+                    $('#productentry').append(roomBox);
+                    roomBox.find('.noroomsavailable').hide();
+                    if(room.availableRooms === 0) {
+                        roomBox.find('.noroomsavailable').show();
+                    }
+                    roomBox.show();
                 for (var i = 0; i <= room.images.length - 1; i++) {
                     var active = "";
                     if (i == 0) {
@@ -1614,11 +1619,16 @@ function getshop_tryChangingDate(e) {
         var end = moment(room.find('[gsname="newroomenddate"]').val(), 'DD.MM.YYYY');
 
         var time = new Date().toLocaleTimeString('en-us');
+        var starttime = start.format('MMM DD, YYYY ') + time;
+        var endtime = end.format('MMM DD, YYYY ') + time;
+    
+        starttime = starttime.replace(/[^a-zA-Z0-9,: ]/g, "")
+        endtime = endtime.replace(/[^a-zA-Z0-9,: ]/g, "")
 
         var roomid = room.attr("roomid");
         var data = {
-            "start" : start.format('MMM DD, YYYY ') + time,
-            "end" : end.format('MMM DD, YYYY ') + time,
+            "start" : starttime,
+            "end" : endtime,
             "roomId" : roomid
         }
 
@@ -1644,7 +1654,7 @@ function getshop_cancelPayment() {
 $(document).on('touchend click', '.GslBooking', getshop_hideGuestSelectionBox);
 $(document).on('change', '.GslBooking .numberof_rooms', getshop_changeNumberOfRooms);
 $(document).on('touchend click', '.GslBooking .guestInfoBox .fa', getshop_changeGuestSelection);
-$(document).on('touchend click', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
+$(document).on('click', '.GslBooking #sameasguestselection', getshop_setSameAsGuest);
 $(document).on('touchend click','.GslBooking .gssigninbutton', getshop_logon);
 $(document).on('touchend click','.GslBooking .gssignoutbutton', getshop_logout);
 $(document).on('touchend click','.GslBooking .selectedusertype', getshop_changeBookingType);

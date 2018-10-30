@@ -26,6 +26,8 @@ class GetShopModuleTable {
     private $appendClass = "";
     private $matchOnField = "";
     private $checkForField = "";
+    private $appendClassToRows;
+    private $appendClassToRowsClass;
 
     function __construct(\ApplicationBase $application, $managerName, $functionName, $args, $attributes, $extraData = null) {
         $this->attributes = $attributes;
@@ -134,7 +136,15 @@ class GetShopModuleTable {
                     $highlightrow = $this->appendClass;
                 }
                 
-                echo "<div class='datarow $odd $activeClass $loadInOverlay $highlightrow' rownumber='$j'>";
+                if(!$this->appendClassToRows) {
+                    $this->appendClassToRows = array();
+                }
+                $rowsHighlighting = "";
+                if(in_array($j, $this->appendClassToRows)) {
+                    $rowsHighlighting = $this->appendClassToRowsClass;
+                }
+                
+                echo "<div class='datarow $odd $activeClass $loadInOverlay $highlightrow $rowsHighlighting' rownumber='$j'>";
                 echo "<div class='datarow_inner'>";
                 
                 $i = 1;
@@ -504,6 +514,11 @@ class GetShopModuleTable {
         $this->checkForField = $field;
         $this->matchOnField = $match;
         $this->appendClass = $class;
+    }
+
+    public function appendClassToRowNumbers($rows, $className) {
+        $this->appendClassToRows = $rows;
+        $this->appendClassToRowsClass = $className;
     }
 
 }

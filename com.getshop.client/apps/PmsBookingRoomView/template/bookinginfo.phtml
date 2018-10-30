@@ -15,7 +15,9 @@ $codes = $this->getApi()->getCartManager()->getCoupons();
 ?>
 <div class="row odd">
     <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
-    <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>    
+    <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
+    <span style='float:right; color:#bbb;'><?php echo $pmsBooking->language . " / " . $pmsBooking->countryCode; ?></span>
+    </div>
 </div>
 <div class="row odd">
     <div class="col col1"><? echo $this->__f("Discount code"); ?></div>

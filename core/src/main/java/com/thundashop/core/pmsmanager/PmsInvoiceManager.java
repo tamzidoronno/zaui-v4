@@ -1794,7 +1794,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(res.isEmpty()) {
             order.closed = true;
             order.markAsSent(OrderShipmentLogEntry.Type.email, email);
-            orderManager.saveOrder(order);
+            orderManager.saveOrderInternal(order);
         }
         return res;
     }

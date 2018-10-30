@@ -1,7 +1,11 @@
 <?php
 /* @var $this \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList */
-$roomId = $_POST['data']['roomid'];
-$booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
+$order = $this->getSelectedOrder();
+$roomId = "";
+if(isset($_POST['data']['roomid'])) {
+    $roomId = $_POST['data']['roomid'];
+}
+$booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $order->id);
 $room = null;
 foreach ($booking->rooms as $r) {
     if ($r->pmsBookingRoomId == $roomId) {
@@ -13,9 +17,8 @@ if($room != null) {
     $guests = $room->guests;
 }
 $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
-$order = $this->getSelectedOrder();
 
-$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
 $invoiceEmail = $user->emailAddress;
 if ($user->emailAddressToInvoice) {
     $invoiceEmail = $user->emailAddressToInvoice;
@@ -23,6 +26,14 @@ if ($user->emailAddressToInvoice) {
 $phonePrefix = $user->prefix;
 $phoneNumber = $user->cellPhone;
 $bookerName = $user->fullName;
+$sendEmailCallback = "app.EcommerceOrderList.doneSendingPaymentLink";
+$sendEmailCallbackEhf = "app.EcommerceOrderList.doneSendingPaymentLinkEhf";
+if(isset($_GET['sendcallback'])) {
+    $sendEmailCallback = $_GET['sendcallback'];
+}
+if(isset($_GET['sendcallbackehf'])) {
+    $sendEmailCallbackEhf = $_GET['sendcallbackehf'];
+}
 ?>
 <span class='sendpaymentlinkbox dosendbox dontExpand' gstype='form' method='sendEmail'>
     <div style='padding-bottom: 10px;'>
@@ -30,7 +41,7 @@ $bookerName = $user->fullName;
         <input type='txt' gsname="bookerEmail" value="<?php echo $invoiceEmail; ?>" placeholder="Email">
         <input type='hidden' gsname="bookingid" value="<?php echo $booking->id; ?>">
         <input type='hidden' gsname="orderid" value="<?php echo $order->id; ?>">
-        <input type="button" gstype='submit' value='Send' gs_callback='app.EcommerceOrderList.doneSendingPaymentLink'>
+        <input type="button" gstype='submit' value='Send' gs_callback='<?php echo $sendEmailCallback; ?>'>
     </div>
 </span>
 
@@ -41,7 +52,9 @@ $isCompany = $user->companyObject != null && $user->companyObject->vatNumber;
 $isInvoice = $order->payment && $order->payment->paymentId == "70ace3f0-3981-11e3-aa6e-0800200c9a66";
 
 if ($app && $isCompany && $isInvoice) {
-    $canUseEhf = $this->getApi()->getGetShop()->canInvoiceOverEhf($user->companyObject->vatNumber);
+    $vatnumber = $user->companyObject->vatNumber;
+    $vatnumber = str_replace(' ', '', $vatnumber);
+    $canUseEhf = $this->getApi()->getGetShop()->canInvoiceOverEhf($vatnumber);
     $ehfValitation = $this->getEhfProblems($order, $user);
     $ehfConfigErrors = $this->getApi()->getOrderManager()->isConfiguredForEhf();
     
@@ -72,7 +85,7 @@ if ($app && $isCompany && $isInvoice) {
                     <input type='txt' gsname="vatNumber" value="<?php echo $user->companyObject->vatNumber; ?>" placeholder="Email">
                     <input type='hidden' gsname="bookingid" value="<?php echo $booking->id; ?>">
                     <input type='hidden' gsname="orderid" value="<?php echo $order->id; ?>">
-                    <input type="button" gstype='submit' onclick="app.EcommerceOrderList.showSendingEhfMessage()" value='Send EHF' gs_callback='app.EcommerceOrderList.doneSendingPaymentLinkEhf'>
+                    <input type="button" gstype='submit' onclick="app.EcommerceOrderList.showSendingEhfMessage()" value='Send EHF' gs_callback='<?php echo $sendEmailCallbackEhf; ?>'>
                     <br/><?
                     echo $this->__f("* Ehf costs Kr 2.50,- pr invoice and you will be billed monthly.");
                     ?>

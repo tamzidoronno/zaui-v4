@@ -1008,6 +1008,10 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
     }
 
+    public boolean isEmpty() {
+        return cart.getItems().isEmpty();
+    }
+
 
     public static class Status  {
         public static int CREATED = 1;

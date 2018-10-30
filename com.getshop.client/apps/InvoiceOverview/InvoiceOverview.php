@@ -54,6 +54,19 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         $this->includefile("filterresult");
         $_SESSION['invoiceoverviewcreateorderonuser']=null;
     }
+    
+    /**
+     * 
+     * @param \core_ordermanager_data_OrderResult $row
+     * @return type
+     */
+    public function formatUser($row) {
+        $user = "<div>" . $row->user . "</div>";
+        foreach($row->shipmentLog as $logentry) {
+            $user .= "<div style='color:#aaa;'>" . date("d.m.Y", strtotime($logentry->date)) . " : " . $logentry->address . "<span style='float:right'>". $logentry->type . "</span></div>";
+        }
+        return $user;
+    }
 
     /**
      * 
@@ -67,6 +80,23 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         return $this->getApi()->getOrderManager()->getOrdersByFilter($filter);
     }
     
+    public function sendEmail() {
+        $ecomm = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        $ecomm->sendEmail();
+    }
+    
+    public function sendByEhf() {
+        $ecomm = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        $ecomm->sendByEhf();
+    }
+    
+    public function loadSendEmail() {
+        $_GET['sendcallback'] = "app.InvoiceOverview.doneSendingInvoice";
+        $_GET['sendcallbackehf'] = "app.InvoiceOverview.doneSendingEHF";
+        $ecomm = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        $ecomm->loadSendEmail();
+    }
+    
     public function formatState($order) {
         $roomid = "";
         
@@ -77,6 +107,9 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
             $text = '<i class="fa fa-unlock"></i>';
         }
         $text .= "<i class='fa fa-download dontExpand' title='Download order' style='cursor:pointeR;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->orderId."&incrementalOrderId=".$order->incOrderId."\");'></i>";
+        if(stristr($order->paymentType, "invoice")) {
+            $text .= "<i class='fa fa-forward dontExpand sendemail' orderid='".$order->orderId."' title='Send invoice' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span> ";
+        }
         if(@$order->invoiceNote) {
             $text .= "<i class='fa fa-sticky-note' title='".$order->invoiceNote."'></i>";
         }
@@ -180,6 +213,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         if(!$row->dueDate) {
             return "N/A";
         }
+        
         return "<span getshop_sorting='".strtotime($row->dueDate)."'>" . date("d.m.Y", strtotime($row->dueDate)) . "</span>";
     }
     
@@ -190,23 +224,18 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
      * @return 
      */
     public function formatStartDate($row) {
+        $text = "";
         if(!$row->start) {
-            return "N/A";
+            $text .= "N/A";
+        } else {
+            $text .= "<div getshop_sorting='".strtotime($row->start)."'>" . date("d.m.Y", strtotime($row->start)) . "</div>";
         }
-        return "<span getshop_sorting='".strtotime($row->start)."'>" . date("d.m.Y", strtotime($row->start)) . "</span>";
-    }
-    
-    
-    /**
-     * 
-     * @param \core_ordermanager_data_OrderResult $row
-     * @return 
-     */
-    public function formatEndDate($row) {
         if(!$row->end) {
-            return "N/A";
+            $text .= "N/A";
+        } else {
+            $text .= "<div getshop_sorting='".strtotime($row->end)."'>" . date("d.m.Y", strtotime($row->end)) . "</div>";
         }
-        return "<span getshop_sorting='".strtotime($row->end)."'>" . date("d.m.Y", strtotime($row->end)) . "</span>";
+        return $text;
     }
     
     /**

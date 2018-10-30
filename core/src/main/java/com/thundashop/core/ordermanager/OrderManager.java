@@ -26,6 +26,7 @@ import com.thundashop.core.ordermanager.data.EhfSentLog;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
+import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -2333,6 +2334,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<OrderResult> orderFilterResult = new ArrayList();
         for(Order ord : ordersToReturn) {
+            if(ord.isEmpty()) {
+                continue;
+            }
             OrderResult res = new OrderResult();
             res.setOrder(ord);
             User usr = userManager.getUserByIdUnfinalized(ord.userId);
@@ -2453,6 +2457,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         log.userId = getSession().currentUser.id;
         log.vatNumber = userManager.getUserById(order.userId).companyObject.vatNumber;
         saveObject(log);
+        
+        OrderShipmentLogEntry logentry = new OrderShipmentLogEntry();
+        logentry.address = log.vatNumber;
+        logentry.type = OrderShipmentLogEntry.Type.ehf;
+        logentry.date = new Date();
+        order.shipmentLog.add(logentry);
+        saveOrder(order);
     }
 
     public void markOrderAsTransferredToAccounting(String orderId) {

@@ -8,6 +8,7 @@ public class OrderShipmentLogEntry {
         public static String email = "email";
         public static String phone = "phone";
         public static String accounting = "accounting";
+        public static String ehf = "ehf";
     }
     
     public Date date;

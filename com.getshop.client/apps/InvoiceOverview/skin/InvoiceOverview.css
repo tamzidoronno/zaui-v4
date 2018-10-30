@@ -1,6 +1,6 @@
 .InvoiceOverview .GetShopModuleTable .col { width: 100px; }
 .InvoiceOverview .GetShopModuleTable .col_2 { width: 80px; }
-.InvoiceOverview .GetShopModuleTable .col_8 { width: calc(100% - 1320px) !important; }
+.InvoiceOverview .GetShopModuleTable .col_user { width: calc(100% - 1100px) !important; }
 .InvoiceOverview .GetShopModuleTable .col_state .fa { margin-right: 5px; }
 .InvoiceOverview .usersfilterresult { text-align: left; padding-top: 5px;}
 .InvoiceOverview .searchwordwarning { text-align: left; color:red; font-weight: bold; padding-top: 10px; font-family: cursive;}
@@ -8,6 +8,7 @@
 .InvoiceOverview .neworderview { position:absolute; left: 100px; background-color: #fff; width: 800px; top: 60px; border: solid 2px; display:none; text-align: left; }
 .InvoiceOverview .neworderview .show_change_user { position:absolute; right: 0px; }
 .InvoiceOverview .GetShopQuickUser .edit_details_of_user { left: -2px; top: -2px; }
+.InvoiceOverview .sendpaymentlinkwindow { position:absolute; background-color: #fff; border: solid 1px; width: 300px; padding: 10px; display:none; right: 0px; }
 .InvoiceOverview .addeduser { border: solid 1px #bbb;     padding: 2px; cursor:pointer;
     margin: 2px;
     border-radius: 3px;

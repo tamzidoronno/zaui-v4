@@ -284,7 +284,6 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     }
     
     public function sendByEhf() {
-        $email = $_POST['data']['bookerEmail'];
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
         $xml = $this->getApi()->getOrderManager()->getEhfXml($orderid);

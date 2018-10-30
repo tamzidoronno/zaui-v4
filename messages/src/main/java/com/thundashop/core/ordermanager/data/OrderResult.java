@@ -1,6 +1,8 @@
 package com.thundashop.core.ordermanager.data;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class OrderResult {
    public String orderId;
@@ -19,10 +21,12 @@ public class OrderResult {
    public double restAmount = 0;
    public boolean closed = false;
    public String invoiceNote = "";
+   public List<OrderShipmentLogEntry> shipmentLog = new ArrayList();
+   public String paymentType = "";
 
     public void setOrder(Order ord) {
         amountPaid = ord.getTransactionAmount();
-        
+        paymentType = ord.payment.paymentType;
         incOrderId = ord.incrementOrderId;
         userId = ord.userId;
         status = ord.status;
@@ -34,6 +38,7 @@ public class OrderResult {
         dueDate = ord.getDueDate();
         closed = ord.closed;
         invoiceNote = ord.invoiceNote;
+        shipmentLog = ord.shipmentLog;
         
         amountExTaxes = Math.round(amountExTaxes*100)/100;
         amountIncTaxes = Math.round(amountIncTaxes*100)/100;

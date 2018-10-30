@@ -70,6 +70,13 @@ public class EhfXmlGenerator {
         return xml;
     }
 
+    public String xmlComplientString(String text) {
+        text = text.replaceAll("&", "&amp;");
+        text = text.replaceAll("<", "&lt;");
+        text = text.replaceAll(">", "&gt;");
+        return text;
+    }
+    
     public String generateXmlInternal() {
         String useId = order.kid != null && !order.kid.isEmpty() ? order.kid : ""+order.incrementOrderId;
         
@@ -126,7 +133,7 @@ public class EhfXmlGenerator {
                 + "                <cac:Party>\n"
                 + "                        <cbc:EndpointID schemeID=\"NO:ORGNR\">" + vatNumberWithoutMVAextention + "</cbc:EndpointID>\n"
                 + "                        <cac:PartyName>\n"
-                + "                                <cbc:Name>" + details.companyName + "</cbc:Name>\n"
+                + "                                <cbc:Name>" + xmlComplientString(details.companyName) + "</cbc:Name>\n"
                 + "                        </cac:PartyName>\n"
                 + "                        <cac:PostalAddress>\n"
                 + "                                <cbc:StreetName>" + details.address + "</cbc:StreetName>\n"
@@ -143,7 +150,7 @@ public class EhfXmlGenerator {
                 + "                                </cac:TaxScheme>\n"
                 + "                        </cac:PartyTaxScheme>\n"
                 + "                        <cac:PartyLegalEntity>\n"
-                + "                                <cbc:RegistrationName>" + details.companyName + "</cbc:RegistrationName>\n"
+                + "                                <cbc:RegistrationName>" + xmlComplientString(details.companyName) + "</cbc:RegistrationName>\n"
                 + "                                <cbc:CompanyID schemeID=\"NO:ORGNR\" schemeName=\"Foretaksregisteret\">" + vatNumberWithoutMVAextention + "</cbc:CompanyID>\n"
                 + "                                <cac:RegistrationAddress>\n"
                 + "                                        <cbc:CityName>" + details.city + "</cbc:CityName>\n"
@@ -153,7 +160,7 @@ public class EhfXmlGenerator {
                 + "                                </cac:RegistrationAddress>\n"
                 + "                        </cac:PartyLegalEntity>\n"
                 + "                        <cac:Contact>\n"
-                + "                                <cbc:ID>"+details.companyName+"</cbc:ID>\n"
+                + "                                <cbc:ID>"+xmlComplientString(details.companyName)+"</cbc:ID>\n"
                 + "                                <cbc:ElectronicMail>"+details.contactEmail+"</cbc:ElectronicMail>\n"
                 + "                        </cac:Contact>\n"
                 + "                </cac:Party>\n"
@@ -166,7 +173,7 @@ public class EhfXmlGenerator {
                 + "                                <cbc:ID schemeID=\"ZZZ\">"+customer.customerId+"</cbc:ID>\n"
                 + "                        </cac:PartyIdentification>\n"
                 + "                        <cac:PartyName>\n"
-                + "                                <cbc:Name>" + customer.fullName + "</cbc:Name>\n"
+                + "                                <cbc:Name>" + xmlComplientString(customer.fullName) + "</cbc:Name>\n"
                 + "                        </cac:PartyName>\n"
                 + "                        <cac:PostalAddress>\n"
                 + "                                <cbc:StreetName>" + customer.address.address + "</cbc:StreetName>\n";
@@ -189,7 +196,7 @@ public class EhfXmlGenerator {
                 + "                                </cac:TaxScheme>\n"
                 + "                        </cac:PartyTaxScheme>\n"
                 + "                        <cac:PartyLegalEntity>\n"
-                + "                                <cbc:RegistrationName>" + customer.companyObject.name + "</cbc:RegistrationName>\n"
+                + "                                <cbc:RegistrationName>" + xmlComplientString(customer.companyObject.name) + "</cbc:RegistrationName>\n"
                 + "                                <cbc:CompanyID schemeID=\"NO:ORGNR\">" + customer.companyObject.vatNumber + "</cbc:CompanyID>\n"
                 + "                                <cac:RegistrationAddress>\n"
                 + "                                        <cbc:CityName>" + customer.address.city + "</cbc:CityName>\n"
@@ -199,15 +206,15 @@ public class EhfXmlGenerator {
                 + "                                </cac:RegistrationAddress>\n"
                 + "                        </cac:PartyLegalEntity>\n"
                 + "                        <cac:Contact>\n"
-                + "                                <cbc:ID>"+customer.fullName+"</cbc:ID>\n"
-                + "                                <cbc:Name>"+customer.fullName+"</cbc:Name>\n"
+                + "                                <cbc:ID>"+xmlComplientString(customer.fullName)+"</cbc:ID>\n"
+                + "                                <cbc:Name>"+xmlComplientString(customer.fullName)+"</cbc:Name>\n"
                 + "                        </cac:Contact>\n"
                 + "                </cac:Party>\n"
                 + "        </cac:AccountingCustomerParty>\n";
 
         xml += "        <cac:PayeeParty>\n"
                 + "                <cac:PartyName>\n"
-                + "                        <cbc:Name>" + customer.companyObject.name + "</cbc:Name>\n"
+                + "                        <cbc:Name>" + xmlComplientString(customer.companyObject.name) + "</cbc:Name>\n"
                 + "                </cac:PartyName>\n"
                 + "                <cac:PartyLegalEntity>\n"
                 + "                        <cbc:CompanyID schemeID=\"NO:ORGNR\">" + customer.companyObject.vatNumber + "</cbc:CompanyID>\n"

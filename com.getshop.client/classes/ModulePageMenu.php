@@ -57,7 +57,7 @@ class ModulePageMenu {
         <?
     }
 
-    public function renderLeft() {
+    public function renderLeft($moduleName="pms") {
         $menuEntries = $this->getEntries();
         ?>
 
@@ -65,7 +65,7 @@ class ModulePageMenu {
             <div class="menuentries vertical">
                 <div class="entries">
                     <? foreach ($menuEntries as $entry) { ?>
-                        <div class="entry"><a href="/pms.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                        <div class="entry"><a href="/<?echo $moduleName;?>.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
                                     <? } ?>
                 </div>
             </div>
@@ -169,4 +169,10 @@ class ModulePageMenu {
         <?php
     }
 
+    public static function getSalesPointSettingsLeftMenu() {
+        $menu = new \ModulePageMenu();
+        $menu->entries[] = new ModulePageMenuItem("GetShop Devices", "devices", "");
+        $menu->entries[] = new ModulePageMenuItem("Cashpoints", "cashpoints", "");
+        return $menu;
+    }
 }

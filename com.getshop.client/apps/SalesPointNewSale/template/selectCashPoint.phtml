@@ -1,0 +1,26 @@
+<?
+/* @var $this \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointCommon */
+$points = $this->getApi()->getPosManager()->getCashPoints();
+?>
+
+<script>
+    var storeCashPointIdInLocalStorage = function(a,b,c) {
+        localStorage.setItem('cash_point_id', $(a).attr('cashpointid'));
+    }
+</script>
+
+<div class='presetup'>
+    <h2>Connect this device to a cash point</h2>
+    <?
+    foreach ($points as $point) {
+        echo "<div style='border: solid 1px #DDD; cursor: pointer; margin: 10px; padding: 10px;' class='select_cash_point' onclick=\"storeCashPointIdInLocalStorage(this);\" gsclick='selectCashPoint' cashpointid='$point->id'>".$point->cashPointName."</div>";
+    }
+    ?>
+</div>
+
+<script>
+    var selectedId = localStorage.getItem('cash_point_id');
+    if (selectedId != null && selectedId) {
+        $('.select_cash_point[cashpointid="'+selectedId+'"]').click();
+    }
+</script>

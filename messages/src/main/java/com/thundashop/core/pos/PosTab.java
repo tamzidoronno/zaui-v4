@@ -17,6 +17,7 @@ import java.util.List;
 public class PosTab extends DataCommon {
     public String name = "";
     public String createdByUserId = "";
+    public String cashPointId = "";
     public List<CartItem> cartItems = new ArrayList();
 
     void removeCartItem(CartItem cartItem) {

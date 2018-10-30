@@ -11,6 +11,7 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.productmanager.data.ProductList;
 import java.util.List;
 
 /**
@@ -72,4 +73,22 @@ public interface IPosManager {
     
     @Editor
     public void printRoomReceipt(String gdsDeviceId, String roomName, String guestName, List<CartItem> items);
+    
+    @Editor
+    public void createCashPoint(String name);
+    
+    @Editor
+    public List<CashPoint> getCashPoints();
+    
+    @Editor
+    public CashPoint getCashPoint(String cashPointId);
+    
+    @Editor
+    public List<ProductList> getProductList(String cashPointId);
+    
+    @Editor
+    public void saveCashPoint(CashPoint cashPoint);
+    
+    @Editor
+    public void moveList(String cashPointId, String listId, boolean down);
 }

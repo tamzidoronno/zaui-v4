@@ -1,0 +1,22 @@
+<?
+/* @var $this \ns_5532e18a_3e3d_4804_8ded_30bbb33e5bd5\SalesPointCashPoints */
+$args = array();
+
+$attributes = array(
+    array('id', 'gs_hidden', 'id'),
+    array('cashPointName', 'NAME', 'cashPointName')
+
+);
+
+$table = new \GetShopModuleTable($this, 'PosManager', 'getCashPoints', $args, $attributes);
+$table->loadContentInOverlay = true;
+$table->render();
+?>
+
+<hr/>
+<div gstype="form" method="createNewCashPoint">
+    <h2><? echo $this->__f("Create new CashPoint"); ?></h2>
+    <? echo $this->__f("Name").": ";?><input gsname='name' class="gsniceinput1"/>
+    <br/>
+    <br/> <div gstype='submit' class="shop_button"><? echo $this->__f("Create"); ?></div>
+</div>

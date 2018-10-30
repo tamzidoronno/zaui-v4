@@ -1,0 +1,18 @@
+<?
+/* @var $this \ns_5532e18a_3e3d_4804_8ded_30bbb33e5bd5\SalesPointCashPoints */
+
+?>
+<div class='config_sales_point' cashpointid='<? echo $_POST['data']['id']; ?>'>
+<?
+    $cashPoint = $this->getApi()->getPosManager()->getCashPoint($_POST['data']['id']);
+    echo "<h2>".$cashPoint->cashPointName."</h2>";
+    $productLists = $this->getApi()->getProductManager()->getProductLists();
+    foreach ($productLists as $list) {
+        $selected = in_array($list->id, $cashPoint->productListIds) ? "checked='true'" : "";
+        echo "<br/><input $selected type='checkbox' class='selectedposlist' value='$list->id'/> ".$list->listName;
+    }
+    ?>
+    <br/>
+    <br/>
+    <div class='shop_button saveproductconfig'><? echo $this->__f("Save"); ?></div>
+</div>

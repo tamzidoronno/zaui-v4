@@ -4,6 +4,7 @@ $tab = $this->getCurrentTab();
 $tabId = $tab ? $tab->id : "";
 $tabActive = !$tab ? "tabnotactive" : "";
 $showpaymentmodal = $tab ? "gs_show_modal='paymentmodal'" : "";
+$cashpoints = $this->getApi()->getPosManager()->getCashPoints();
 ?>
 
 <div class='menu'>
@@ -33,4 +34,15 @@ $showpaymentmodal = $tab ? "gs_show_modal='paymentmodal'" : "";
         <i class='fa fa-tablet'></i>
         List tabs
     </div>
+    
+    <?
+    if ($this->getSelectedCashPointId() && count($cashpoints) > 1) {
+    ?>
+        <div class='entry all' onclick="localStorage.removeItem('cash_point_id');" gsclick='disconnectedCashPoint'>
+            <i class='fa fa-chain-broken'></i>
+            Disconnect Cashpoint
+        </div>
+    <?
+    }
+    ?>
 </div>

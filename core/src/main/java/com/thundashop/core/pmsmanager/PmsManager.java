@@ -5306,7 +5306,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             createUserForBooking(booking);
             addDefaultAddons(booking);
             checkIfBookedBySubAccount(booking);
-            if (userManager.getUserById(booking.userId).suspended) {
+            if (userManager.getUserById(booking.userId) == null || userManager.getUserById(booking.userId).suspended) {
                 logPrint("User is suspended." + booking.id);
                 return null;
             }

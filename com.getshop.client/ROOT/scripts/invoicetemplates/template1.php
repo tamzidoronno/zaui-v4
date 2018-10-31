@@ -225,7 +225,7 @@ function doTranslation($key) {
     .itemsarea { height: 450px; display:inline-block; }
     .page1 {  width: 1024px; padding: 20px;}
     .recipient,.companyinfo { display:inline-block;  height: 150px;box-sizing: border-box;float:left;}
-    .recipient { width:60%; margin-top:120px; }
+    .recipient { width:60%; margin-top:180px; padding-left:50px; }
     .companyinfo { width:40%; }
     .companyinfoheader { font-weight: bold; font-size: 20px; border-bottom: solid 1px; padding: 5px; text-align: right; margin-bottom: 5px;}
     .ordernumberinfo { float:right; }

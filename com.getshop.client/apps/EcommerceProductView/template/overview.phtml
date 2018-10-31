@@ -28,4 +28,9 @@
         $this->includefile("prices");
         ?>
     </div>
+    <div class="producttab <? echo $this->isTabActive('taxes'); ?>" tab='taxes'>
+        <?
+        $this->includefile("taxes");
+        ?>
+    </div>
 </div>

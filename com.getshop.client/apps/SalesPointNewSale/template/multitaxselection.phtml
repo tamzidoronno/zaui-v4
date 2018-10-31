@@ -1,0 +1,24 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+
+echo "<h2>".$this->__f("Please select tax")."</h2>";
+echo "<div>";
+
+?>
+
+<div class="product addProductToCurrentTabWithTaxes" productid="<? echo $product->id; ?>" taxgroupid='<? echo $product->taxGroupObject->id; ?>'>
+    <div class="inner">
+        <div class="productname"><? echo $product->taxGroupObject->taxRate." %"; ?></div>
+    </div>
+</div>
+
+<?
+foreach ($product->additionalTaxGroupObjects as $taxGroup) {
+?>
+<div class="product addProductToCurrentTabWithTaxes" productid="<? echo $product->id; ?>" taxgroupid='<? echo $taxGroup->id; ?>'>
+    <div class="inner">
+        <div class="productname"><? echo $taxGroup->taxRate." %"; ?></div>
+    </div>
+</div>
+<? } ?>

@@ -534,4 +534,7 @@ public interface IPmsManager {
     
     @Administrator
     public void removePgaAccess(String pmsBookingId, String pmsBookingRoomId);
+    
+    @Administrator
+    public void printCode(String gdsDeviceId, String pmsBookingRoomId);
 }

@@ -12,7 +12,7 @@ class SalesPointCommon extends \MarketingApplication {
     protected function preRender() {
         $cashPoints = $this->getApi()->getPosManager()->getCashPoints();
         
-        if (count($cashPoints) == 1) {
+        if ($cashPoints && count($cashPoints) == 1) {
             $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_id'] = $cashPoints[0]->id;
         }
         

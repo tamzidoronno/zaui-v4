@@ -441,4 +441,48 @@ public class ProductManager extends AProductManager implements IProductManager {
     public void saveAccountingDetail(AccountingDetail detail) {
         super.saveAccountingDetail(detail); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void addAdditionalTaxGroup(String productId, String taxGroupId) {
+        Product product = getProduct(productId);
+        if (product != null) {
+            if (product.taxGroupObject != null && product.taxGroupObject.id.equals(taxGroupId)) {
+                return;
+            }
+            
+            for (TaxGroup existingGroup : product.additionalTaxGroupObjects) {
+                if (existingGroup.id.equals(taxGroupId)) {
+                    return;
+                }
+            }
+            
+            TaxGroup taxGroup = taxGroups.values()
+                    .stream()
+                    .filter(tax -> tax.id.equals(taxGroupId))
+                    .findFirst()
+                    .orElse(null);
+            
+            if (taxGroup != null) {
+                product.additionalTaxGroupObjects.add(taxGroup);
+                saveProduct(product);
+            }
+        }
+    }
+
+    @Override
+    public void removeTaxGroup(String productId, String taxGroupId) {
+        Product product = getProduct(productId);
+        
+        if (product != null) {
+            product.additionalTaxGroupObjects.removeIf(o -> o.id.equals(taxGroupId));
+            saveObject(product);
+        }
+    }
+
+    @Override
+    public Product changeTaxCode(Product product, String taxGroupId) {
+        product.changeToAdditionalTaxCode(taxGroupId);
+        return product;
+    }
+    
 }

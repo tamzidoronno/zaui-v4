@@ -101,6 +101,14 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         if ($tab == "prices") {
             $this->includefile ("prices");
         }
+        
+        if ($tab == "taxes") {
+            $this->includefile ("taxes");
+        }
+    }
+    
+    public function addExtraTax() {
+        $this->getApi()->getProductManager()->addAdditionalTaxGroup($_POST['data']['productid'], $_POST['data']['taxgroup']);
     }
     
     public function addNewList() {
@@ -149,6 +157,10 @@ class EcommerceProductView extends \MarketingApplication implements \Application
 
     public function deleteList() {
         $this->getApi()->getProductManager()->deleteProductList($_POST['data']['listid']);
+    }
+    
+    public function removeTax() {
+        $this->getApi()->getProductManager()->removeTaxGroup($_POST['data']['productid'], $_POST['data']['taxgroupid']);
     }
 }
 ?>

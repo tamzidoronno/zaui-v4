@@ -10,6 +10,7 @@ $stayPrice = $this->getStayPrice();
 $addonsPrice = $this->getAddonsCost(false);
 $addonsPriceToDisplay = $this->getAddonsCost(true);
 $totalOnRoom = $stayPrice + $addonsPrice;
+$printers = $this->getPrinters();
 
 if(!$stayPrice) {$stayPrice = "";} else {
     $stayPrice = round($stayPrice);
@@ -108,7 +109,18 @@ if($this->listGroupRooms()) {
     echo "<span class='shop_button addanotherroomtogroup' start='$start' end='$end' style='float:right; margin-right: 5px; background-color:green;'  bookingId='".$this->getPmsBooking()->id."'>Add another room</span>";
     ?>
     <div class='addanotherroompopup' gstype='form' method='addAnotherRoom'></div>
+    <div>
     <?php
+    if ($printers && count($printers)) {
+        
+        foreach ($printers as $printer) {
+            echo "<div gsclick='printGroupCodes' cashpointid='$printer->id' class='shop_button'>Print codes</div>";
+        }
+    }
+    ?>
+    </div>    
+    <?
+    
     echo "</div>";
     
 }

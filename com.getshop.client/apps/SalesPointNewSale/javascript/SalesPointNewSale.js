@@ -3,6 +3,7 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .entry.all', app.SalesPointNewSale.leftMenuClicked);
         $(document).on('click', '.SalesPointNewSale .cancelcreatenew', app.SalesPointNewSale.cancelCreateNewTab);
         $(document).on('click', '.SalesPointNewSale .addProductToCurrentTab', app.SalesPointNewSale.addProductToCurrentTab);
+        $(document).on('click', '.SalesPointNewSale .addProductToCurrentTabWithTaxes', app.SalesPointNewSale.addProductToCurrentTabWithTaxes);
         $(document).on('mouseover', '.SalesPointNewSale .cartitemline', app.SalesPointNewSale.showDetails);
         $(document).on('change', '.SalesPointNewSale .cartitemline .changecount', app.SalesPointNewSale.countChange);
         $(document).on('change', '.SalesPointNewSale .cartitemline .changeprice', app.SalesPointNewSale.priceChange);
@@ -109,12 +110,53 @@ app.SalesPointNewSale = {
         event['synchron'] = true;
         
         var me = this;
+        
         thundashop.Ajax.post(event, function(res) {
-            $('.SalesPointNewSale .rightmenu').html(res);
-            if ($('.tabnotactive').length) {
-                app.SalesPointNewSale.activateTab(me);
+            if (res === "multitaxessupport") {
+                app.SalesPointNewSale.showMultiTaxesSelection(me, data);
+            } else {
+                app.SalesPointNewSale.updateResponseFromAddOfCartItem(me, res);
             }
         });
+    },
+    
+    addProductToCurrentTabWithTaxes: function() {
+        var data = {
+            productid : $(this).attr('productid'),
+            taxgroupid: $(this).attr('taxgroupid')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "addProductToCurrentTabWithTaxCode", this, data);
+        event['synchron'] = true;
+        
+        var me = this;
+        
+        thundashop.Ajax.post(event, function(res) {
+            app.SalesPointNewSale.updateResponseFromAddOfCartItem(me, res);
+            $('.productlistinner').show();
+            $('.multitaxsupport').html("");
+            $('.multitaxsupport').hide();
+        });
+    },
+    
+    showMultiTaxesSelection: function(target, data) {
+        $('.productlistinner').hide();
+        $('.multitaxsupport').html("");
+        $('.multitaxsupport').show();
+        
+        var event = thundashop.Ajax.createEvent(null, "showMultiTaxes", target, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.multitaxsupport').html(res);
+        });
+    },
+    
+    updateResponseFromAddOfCartItem: function(me, res) {
+        $('.SalesPointNewSale .rightmenu').html(res);
+        if ($('.tabnotactive').length) {
+            app.SalesPointNewSale.activateTab(me);
+        }
     },
     
     activateTab: function(from) {

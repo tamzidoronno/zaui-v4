@@ -11,6 +11,8 @@
         getshop_viewmode = options.viewmode;
         getshop_terminalid = options.terminalid;
         getshop_nextPage = options.nextPage;
+        getshop_successcallback = options.success;
+        getshop_failurecallback = options.failure;
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
         sessionStorage.setItem('getshop_domain',options.domain);
         

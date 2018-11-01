@@ -617,17 +617,25 @@ function getshop_gotopayment(e) {
                 var completing = getshop_completeBooking(paylater);
                 btn.html('<i class="fa fa-spin fa-spinner"></i>');
                 completing.done(function(res) {
-                    if(res.continuetopayment == 1) {
-                        window.location.href = getshop_endpoint + "/?page=cart&payorder=" + res.orderid;
+                    if(typeof(getshop_successcallback) !== "undefined") {
+                        getshop_successcallback(res);
                     } else {
-                        $('.gslbookingBody').hide();
-                        $('.successcompleted').show();
+                        if(res.continuetopayment == 1) {
+                            window.location.href = getshop_endpoint + "/?page=cart&payorder=" + res.orderid;
+                        } else {
+                            $('.gslbookingBody').hide();
+                            $('.successcompleted').show();
+                        }
                     }
                 });
-                completing.fail(function() {
-                    $('.gslbookingBody').hide();
-                    $('.errorcompleted').show();
-                })
+                completing.fail(function(res) {
+                    if(typeof(getshop_failurecallback) !== "undefined") {
+                        getshop_failurecallback(res);
+                    } else {
+                        $('.gslbookingBody').hide();
+                        $('.errorcompleted').show();
+                    }
+                });
             }
         });
     }catch(e) { getshop_handleException(e); }

@@ -838,7 +838,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         
        List<Lead> toRemove = new ArrayList();
        for(Lead l : result) {
-           if(l.leadState.equals(Lead.LeadState.LOST) || l.leadState.equals(Lead.LeadState.WON)) {
+           if(l.leadState.equals(Lead.LeadState.LOST) || l.leadState.equals(Lead.LeadState.DELIVERED)) {
                toRemove.add(l);
            }
        }
@@ -859,11 +859,12 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public void addLeadHistory(String leadId, String comment) {
+    public void addLeadHistory(String leadId, String comment, Date date, String userid) {
         Lead lead = leads.get(leadId);
         LeadHistory history = new LeadHistory();
         history.comment = comment;
-        history.userId = getSession().currentUser.id;
+        history.historyDate = date;
+        history.userId = userid;
         history.leadState = lead.leadState;
         lead.leadHistory.add(history);
         saveLead(lead);
@@ -873,7 +874,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     public void changeLeadState(String leadId, Integer state) {
         Lead lead = leads.get(leadId);
         lead.leadState = state;
-        addLeadHistory(lead.id, "Changed lead state");
+        addLeadHistory(lead.id, "Changed lead state", new Date(), getSession().currentUser.id);
         saveLead(lead);
     }
 

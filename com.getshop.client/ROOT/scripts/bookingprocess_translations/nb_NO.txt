@@ -63,7 +63,7 @@
     "agreeTerms" : "Jeg godtar bruksvilkårene",
     "readTerms" : "Les bruksvilkårene",
     "downloadTerms" : "Last ned bruksvilkårene",       
-    "noRoomsMessage" : "Beklager vi har ikke flere ledige rom i forhold til ditt valg.",
+    "noRoomsMessage" : "Beklager vi har ikke flere ledige rom i henhold til ditt valg.",
     "startingAt" : "Starter fra NOK ",
     "numberofguests" : "Gjester",
     "numberofrooms" : "Antall rom",

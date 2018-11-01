@@ -4,6 +4,18 @@ $factory = IocContainer::getFactorySingelton();
 if(isset($_POST['createlead']) && $_POST['name']) {
     $factory->getApi()->getGetShop()->createLead($_POST['name']);
 }
+if(isset($_POST['registerfollowup'])) {
+    if(isset($_SESSION['lastfollowup']) && $_SESSION['lastfollowup'] == $_POST['registerfollowup']) {
+        echo "double submit, avoid this.";
+    } else {
+        $_SESSION['lastfollowup'] = $_POST['registerfollowup'];
+        $time = date("c", strtotime($_POST['date']));
+        $comment = $_POST['comment'];
+        $leadid = $_POST['leadid'];
+        $userid = $_POST['userid'];
+        $factory->getApi()->getGetShop()->addLeadHistory($leadid, $comment, $time, $userid);
+    }
+}
 $leads = $factory->getApi()->getGetShop()->getLeads();
 $leadstates = array();
 $leadstates[0] = "NEW";
@@ -11,13 +23,69 @@ $leadstates[4] = "COLD";
 $leadstates[1] = "HOT";
 $leadstates[2] = "LOST";
 $leadstates[3] = "WON";
+$leadstates[5] = "DELIVER";
+
+$users = $factory->getApi()->getUserManager()->getAllUsers();
+$admins = array();
+$loggedonuser = $factory->getApi()->getUserManager()->getLoggedOnUser();
+foreach($users as $usr) {
+    if($usr->type == 100) {
+        $admins[$usr->id] = $usr;
+    }
+}
 ?>
+<div style='border:solid 1px #ddd; width: 400px;padding: 10px; background-color:#efefef;position:absolute;display:none;' class='addcommentpanel'>
+    <form action='' method='POST'>
+        <input type='date' name='date'>
+        <input type='hidden' name='leadid'>
+        <input type='hidden' value='<?php echo rand(0,1000000); ?> ' name='registerfollowup'>
+        <select style='padding: 3px;' name='userid'>
+            <?php
+            foreach($admins as $admin) {
+                $selected = "";
+                if($admin->id == $loggedonuser->id) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='" . $admin->id . "' $selected>" . $admin->fullName . " (" . $admin->emailAddress . ")</option>";
+            }
+            ?>
+        </select>
+        <div>
+            Comment:<br>
+            <textarea name='comment' style='width:400px; height: 100px;'></textarea>
+        </div>
+        <div style='text-align:right; margin-top: 5px;'>
+            <input type='submit' value='Register followup'>
+        </div>
+    </form>
+</div>
+
+<h1>My followups today</h1>
+<table bgcolor='dddddd' cellspacing='1' cellpadding='1' width='100%'>
+<?php
+foreach($leads as $lead) {
+    foreach($lead->leadHistory as $lhist) {
+        if(stristr($lhist->comment, "changed lead state")) {
+            continue;
+        }
+        if(date("dmy") == date("dmy", strtotime($lhist->historyDate))) {
+            echo "<tr bgcolor='ffffff'>";
+            echo "<td>" . $lead->customerName . "</td>";
+            echo "<td>" . $lead->phone . "</td>";
+            echo "<td>" . $lead->email . "</td>";
+            echo "<td>" . $lhist->comment . "</td>";
+            echo "</tr>";
+        }
+    }    
+}
+?>
+</table>
 <h1>Current leads</h1>
 <form action='' method='POST'>
     <input type="text" placeholder="Name of lead" name='name'><input type="submit" value='Create lead' name='createlead'>
 </form>
 
-<table width='100%'>
+<table width='100%' class='customerlist'>
     <tr>
         <th align='left'>Registration date</th>
         <th align='left'>Customer</th>
@@ -27,7 +95,9 @@ $leadstates[3] = "WON";
         <th align='left'>Email</th>
         <th align='left'>Price offer</th>
         <th align='left'>State</th>
-        <th align='right'>History</th>
+        <th align='left'>Followup date</th>
+        <th align='left'>History</th>
+        <th align='left'>Add followup</th>
     </tr>
         
 <?php
@@ -40,28 +110,54 @@ foreach($leads as $lead) {
     echo "<td><input name='phone' type='txt' value='".$lead->phone."' style='width:100px;'></td>";
     echo "<td><input name='email' type='txt' value='".$lead->email."' style='width:160px;'></td>";
     echo "<td><input name='offerPrice' type='txt' value='".$lead->offerPrice."' style='width:60px;'></td>";
-    echo "<td style='width:440px;'>";
+    echo "<td >";
     foreach($leadstates as $k => $name) {
         $state = ($k == $lead->leadState) ? "current" : "";
         echo "<span class='leadstatebox $state' stateid='$k'>" . $name . "</span>";
     }
+    $followup = null;
+    $today = false;
+    foreach($lead->leadHistory as $hist) {
+        if(date("dmy") == date("dmy", strtotime($hist->historyDate)) && !stristr($hist->comment, "changed lead state")) {
+            $today = true;
+            $usrid = $hist->userId;
+            $title = $hist->comment;
+        }
+        if(time() < strtotime($hist->historyDate)) {
+            $followup = $hist->historyDate;
+            $usrid = $hist->userId;
+            $title = $hist->comment;
+        }
+    }
     echo "</td>";
-    echo "<td style='width:440px;'>";
-    echo "<span class='addcommentbutton' style='position:absolute;right:0px; color:blue; display:none;'>Add comment</span>";
-    $historyList = (array)$lead->leadHistory;
-    krsort($historyList);
-    $i = 0;
-    foreach($historyList as $history) {
-        $classToAdd = $i == 0 ? "historyshow" : "historyhidden";
-        echo "<div class='$classToAdd'>";
-        echo date("d.m.Y H:i", strtotime($history->historyDate)) . " : " . $history->comment;
-        echo "(" . $leadstates[$history->leadState] . ")";
-        echo "</div>";
-        $i++;
+    echo "<td>";
+    if($followup) {
+        echo "<div title='$title'>";
+         echo date("d.m.Y", strtotime($followup));
+         echo " by " . $admins[$usrid]->fullName;
+         echo "</div>";
+    } else {
+        if($today) {
+            echo "<span style='color:green;font-weight:bold;'>TODAY</span>";
+            echo " by " . $admins[$usrid]->fullName;
+        } else {
+            echo "<span style='color:red;font-weight:bold;'>NOT BEING FOLLOWED UP!</span>";
+        }
     }
-    if(sizeof($historyList) == 0) {
-        echo "<div class='historyshow'></div>";
+    echo "</td>";
+    echo "<td>";
+    echo "<input type='button' value='View history' class='viewhostory' style='cursor:pointer;'>";
+    echo "<div style='position:absolute;right:0px; border: solid 1px; padding: 10px; background-color:#efefef;display:none;' class='historypanel'>";
+    foreach($lead->leadHistory as $hist) {
+        echo date("d.m.Y", strtotime($hist->historyDate)) . "<br>";
+        echo "<div>" . $hist->comment . "</div>";
+        echo "<div style='color:#bbb'>- " . $admins[$hist->userId]->fullName . "</div>";
+        echo "<hr>";
     }
+    echo "</div>";
+    echo "</td>";
+    echo "<td>";
+    echo "<input type='button' value='Add followup' class='addfollowupbtn' style='cursor:pointer;'>";
     echo "</td>";
     echo "</tr>";
 }
@@ -74,9 +170,25 @@ echo "</table>";
     .historyhidden { display: none; }
     .historyshow { cursor:pointer; }
     .row:hover .addcommentbutton { display:block !important; cursor:pointer; }
+    .customerlist tr:hover { font-weight: bold; }
 </style>
 
 <script>
+    
+    $('.viewhostory').on('click', function() {
+        var row = $(this).closest('.row');
+        row.find('.historypanel').toggle();
+        
+    });
+    
+    $('.addfollowupbtn').on('click', function() {
+        var panel = $('.addcommentpanel');
+        panel.css('left',$(this).offset().left-450);
+        panel.css('top',$(this).offset().top);
+        panel.find("input[name='leadid']").val(row.attr('leadid'));
+        panel.show();
+    });
+    
     $('.row input').keyup(function() {
         var data = {};
         var row = $(this).closest('.row');

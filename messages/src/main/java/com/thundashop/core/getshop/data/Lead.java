@@ -21,6 +21,7 @@ public class Lead extends DataCommon {
         public static Integer LOST = 2;
         public static Integer WON = 3;
         public static Integer COLD = 4;
+        public static Integer DELIVERED = 5;
     }
     
     public Integer leadState = 0;

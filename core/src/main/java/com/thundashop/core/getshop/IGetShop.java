@@ -53,7 +53,7 @@ public interface IGetShop {
 
     @Administrator
     public Lead createLead(String name);
-    
+
     @Administrator
     public void saveLead(Lead lead);
     
@@ -64,7 +64,8 @@ public interface IGetShop {
     public Lead getLead(String leadId);
     
     @Administrator
-    public void addLeadHistory(String leadId, String comment);
+    public void addLeadHistory(String leadId, String comment, Date date, String userId);
+    
     
     @Administrator
     public void changeLeadState(String leadId, Integer state);

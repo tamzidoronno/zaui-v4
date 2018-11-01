@@ -13,6 +13,7 @@ import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
+import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -102,6 +103,8 @@ public interface IOrderManager {
     public boolean payWithCard(String orderId, String cardId) throws Exception;
     
     public Order getOrder(String orderId) throws ErrorException;
+    
+    public OrderLight getOrderLight(String orderId) throws ErrorException;
     
     public Order getOrderWithIdAndPassword(String orderId, String password) throws ErrorException;
     

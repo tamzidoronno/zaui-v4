@@ -15,6 +15,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,14 +43,17 @@ public class NorwegianAccounting extends AccountingSystemBase {
     private ProductManager productManager;
     
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> inOrders) {
+    public List<SavedOrderFile> createFiles(List<Order> inOrders, Date start, Date end) {
         
         List<SavedOrderFile> retFiles = new ArrayList();
         SavedOrderFile file = new SavedOrderFile();
         file.subtype = "all";
         inOrders.stream().forEach(order -> addTransactionLineToFile(order, file));
         retFiles.add(file);
-       
+        
+        moveOrdersOutsideOfScope(file, start, end);
+        addAllOrdersOutsideOfScope(file, start, end);
+        
         List<String> toPrint = new ArrayList();
         
         file.accountingTransactionLines.stream()
@@ -85,6 +90,11 @@ public class NorwegianAccounting extends AccountingSystemBase {
     }
 
     private void addTransactionLineToFile(Order order, SavedOrderFile file) {
+        int accountNumber = getAccountNumberForPaymentMethod(order);
+        
+        if (accountNumber == -1) {
+            return;
+        }
         
         addPaymentTransaction(order, file);
         addExpenseTransaction(order, file);
@@ -102,15 +112,17 @@ public class NorwegianAccounting extends AccountingSystemBase {
             paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
             Application paymentapp = storeApplicationPool.getApplication(order.getPaymentApplicationId());
             paymentTransaction.description = paymentapp.appName;
+            paymentTransaction.orderIds.add(order.id);
         } else {
-            AccountingTransaction paymentTransaction = getTransactionFile(file, order.createdDate, 1510);
+            AccountingTransaction paymentTransaction = getTransactionFile(file, order.createdDate, 1499);
             paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
-            paymentTransaction.description = "Kundefordringer";
+            paymentTransaction.description = "Kundefordringer GetShop";
+            paymentTransaction.orderIds.add(order.id);
         }
     }
 
-    private AccountingTransaction getTransactionFile(SavedOrderFile file, Date postingDate, int accountNumber) {
-        AccountingTransaction transactionFile = file.accountingTransactionLines.stream()
+    private AccountingTransaction getTransactionFileTemp(List<AccountingTransaction> accountingTransactionLines, Date postingDate, int accountNumber) {
+        AccountingTransaction transactionFile = accountingTransactionLines.stream()
                 .filter(i -> i.isFor(accountNumber, postingDate))
                 .findAny()
                 .orElse(null);
@@ -121,6 +133,15 @@ public class NorwegianAccounting extends AccountingSystemBase {
             transactionFile.accountNumber = accountNumber;
             transactionFile.start = getDayBreakDateStart(postingDate);
             transactionFile.end = getDayBreakDateEnd(postingDate);
+        }
+        
+        return transactionFile;
+    }
+    
+    private AccountingTransaction getTransactionFile(SavedOrderFile file, Date postingDate, int accountNumber) {
+        AccountingTransaction transactionFile = getTransactionFileTemp(file.accountingTransactionLines, postingDate, accountNumber);
+        
+        if (!file.accountingTransactionLines.contains(transactionFile)) {
             file.accountingTransactionLines.add(transactionFile);
         }
         
@@ -175,6 +196,10 @@ public class NorwegianAccounting extends AccountingSystemBase {
             int accountNumber = Integer.valueOf(getAccountingNumberForProduct(cartItem.getProduct().id));
             AccountingTransaction paymentTransaction = getTransactionFile(file, postDate, accountNumber);
             paymentTransaction.credit = paymentTransaction.credit.add(total);
+            
+            if (!paymentTransaction.orderIds.contains(order.id)) {
+                paymentTransaction.orderIds.add(order.id);
+            }
         }
     }
 
@@ -236,5 +261,67 @@ public class NorwegianAccounting extends AccountingSystemBase {
         }
         return result + "\r\n";
     }
+
+    private void moveOrdersOutsideOfScope(SavedOrderFile file, Date start, Date end) {
+        List<AccountingTransaction> filesToMove = file.accountingTransactionLines.stream()
+                .filter(o -> o.start.after(end))
+                .collect(Collectors.toList());
+        
+        file.accountingTransactionLines.removeAll(filesToMove);
+        file.accountingTransactionOutOfScope.addAll(filesToMove);
+        
+        BigDecimal sum = new BigDecimal(BigInteger.ZERO);
+        
+        for (AccountingTransaction o : filesToMove) {
+            sum = sum.add(o.credit);
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(end);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        Date endTime = cal.getTime();
+        
+        AccountingTransaction accountTransactionLine = getTransactionFile(file, endTime, 2900);
+        accountTransactionLine.credit = sum;
+    }
+
+    private void addAllOrdersOutsideOfScope(SavedOrderFile file, Date start, Date end) {
+        List<Order> orders = files.values().stream()
+                .flatMap(o -> o.accountingTransactionOutOfScope.stream())
+                .flatMap(o -> o.orderIds.stream())
+                .map(orderId -> orderManager.getOrder(orderId))
+                .distinct()
+                .collect(Collectors.toList());
+        
+        
+        for (Order order : orders) {
+            Date postingDate = getAccountingPostingDate(order);
+            AccountingTransaction transaction = getTransactionFileTemp(new ArrayList(), postingDate, 2900);
+            
+            if (transaction.start.before(end) && transaction.start.after(start)) {
+                addPaymentFromDepth(order, file);
+                addExpenseTransaction(order, file);
+                
+                files.values().stream().forEach(iFile -> { 
+                    boolean foundOne = iFile.moveOrderToProcessedInADifferentFile(order.id);
+                    if (foundOne) {
+                        saveObject(iFile);
+                    }
+                });
+                System.out.println("Move order here: " + order.incrementOrderId);
+            }
+        }
+    }
+
+    private void addPaymentFromDepth(Order order, SavedOrderFile file) {
+        Date postingDate = getAccountingPostingDate(order);
+        AccountingTransaction paymentTransaction = getTransactionFile(file, postingDate, 2900);
+        paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
+        paymentTransaction.description = productManager.getAccountingDetail(2900).description;
+    }   
     
+    @Override
+    boolean isUsingProductTaxCodes() {
+        return false;
+    }
 }

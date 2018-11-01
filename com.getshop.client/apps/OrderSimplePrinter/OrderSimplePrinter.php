@@ -2,7 +2,7 @@
 namespace ns_f22e70e7_7c31_4c83_a8c1_20ae882853a7;
 
 class OrderSimplePrinter extends \MarketingApplication implements \Application {
-    private $orderId;
+    public $orderId;
     
     private $compactView = false;
     public $lastOrderInTable = false;

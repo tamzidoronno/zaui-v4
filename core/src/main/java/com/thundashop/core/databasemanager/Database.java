@@ -85,6 +85,7 @@ public class Database extends StoreComponent {
         }
         mongo = new Mongo("localhost", mongoPort);
         morphia = new Morphia();
+        morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(DataCommon.class);
     }
 

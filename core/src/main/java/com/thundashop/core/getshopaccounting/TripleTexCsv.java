@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -51,7 +52,7 @@ public class TripleTexCsv extends AccountingSystemBase {
     }
 
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> orders) {
+    public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
         Map<String, List<Order>> allOrders = groupOrders(orders);
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
         
@@ -257,5 +258,9 @@ public class TripleTexCsv extends AccountingSystemBase {
         }
         return result;
     }
-
+    
+    @Override
+    boolean isUsingProductTaxCodes() {
+        return true;
+    }
 }

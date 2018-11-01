@@ -98,6 +98,41 @@ class AccountingDownload extends \MarketingApplication implements \Application {
             $first = false;
         }
         
+        if (isset($file->accountingTransactionOutOfScope)) {
+            $this->printAccountingTransactions($file->accountingTransactionOutOfScope, "Orders outside of this scope (will be accounted for later)");
+        }
+        
+        if (isset($file->accountingTransactionProcessedInADifferentFile)) {
+            $this->printAccountingTransactions($file->accountingTransactionProcessedInADifferentFile, "Accounted for in a later file.");
+        }
+    }
+    
+    private function printAccountingTransactions($transactions, $text) {
+        $first = true;
+        if (count($transactions)) {
+            echo "<h2>$text</h2>";
+            $orderList = array();
+            foreach ($transactions as $outOfScope) {
+                foreach ($outOfScope->orderIds as $orderId) {
+                    $orderList[] = $orderId;
+                }
+            }
+            
+            $orderList = array_unique($orderList);
+            
+            foreach ($orderList as $orderId) {
+                $orderPrinter = new \ns_f22e70e7_7c31_4c83_a8c1_20ae882853a7\OrderSimplePrinter();
+                $orderPrinter->setOrderId($orderId);
+                $orderPrinter->setCompactView();
+
+                if ($first) {
+                    $orderPrinter->setPrintHeader();
+                }
+
+                $orderPrinter->renderApplication(true);
+                $first = false;
+            }
+        }
     }
     
     public function formatNumber($data, $colVal) {
@@ -158,12 +193,13 @@ class AccountingDownload extends \MarketingApplication implements \Application {
     }
 
     public function setEndDate() {
+        
         if (!$_POST['data']['endDate']) {
             $this->clearSession();
             return;
         }
         
-        $_SESSION['AccountingDownload_endDate'] = $_POST['data']['endDate'];
+        $_SESSION['AccountingDownload_endDate'] = date('Y-m-d 23:59:59', strtotime($_POST['data']['endDate']));
         unset($_SESSION['AccountingDownload_filesCreated']);
     }
     

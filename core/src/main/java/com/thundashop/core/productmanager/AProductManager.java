@@ -356,6 +356,13 @@ public abstract class AProductManager extends ManagerBase {
     }
     
     public AccountingDetail getAccountingDetail(int accountNumber) {
+        if (accountNumber == 2900) {
+            AccountingDetail forskudd = new AccountingDetail();
+            forskudd.accountNumber = 2900;
+            forskudd.description = "Forskudd fra kunder";
+            forskudd.taxgroup = 0;
+            return forskudd;
+        }
         return accountingAccountDetails.get(accountNumber);
     }
     

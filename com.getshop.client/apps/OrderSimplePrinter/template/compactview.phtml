@@ -1,9 +1,8 @@
 <?
 /* @var $this ns_f22e70e7_7c31_4c83_a8c1_20ae882853a7\OrderSimplePrinter */
-$order = $this->getOrder();
-$totalAmount = $this->getApi()->getOrderManager()->getTotalAmount($order);
+$order = $this->getApi()->getOrderManager()->getOrderLight($this->orderId);
+$totalAmount = $this->getApi()->getOrderManager()->getTotalForOrderById($this->orderId);
 
-$paymentInstance = $this->getPaymentApplication();
 if ($this->printHeader) {
     ?>
     <div class='compactorderheader'>
@@ -21,5 +20,5 @@ if ($this->printHeader) {
     <div class='cost'><? echo $totalAmount ; ?></div>
     <div class='createdby'><? echo date('d/m-Y h:i', strtotime($order->createdDate)); ?></div>
     <div class='paymentdate'><? echo isset($order->paymentDate) && $order->paymentDate ? date('d/m-Y h:i', strtotime($order->paymentDate)) : $this->__f("N/A"); ?></div>
-    <div class='paymenttype'><? echo isset($order->payment) && $order->payment->paymentType ? $this->formatPaymentType($order->payment->paymentType) : $this->__f("N/A"); ?></div>
+    <div class='paymenttype'><? echo $order->paymentType ? $this->formatPaymentType($order->paymentType) : $this->__f("N/A"); ?></div>
 </div>

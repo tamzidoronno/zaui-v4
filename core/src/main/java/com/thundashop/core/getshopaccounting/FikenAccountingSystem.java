@@ -13,6 +13,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import org.springframework.stereotype.Component;
 public class FikenAccountingSystem extends AccountingSystemBase {
 
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> orders) {
+    public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
         Map<String, List<Order>> groupedOrders = groupOrders(orders);
 
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
@@ -146,6 +147,11 @@ public class FikenAccountingSystem extends AccountingSystemBase {
         }
 
         orderManager.saveObject(order);
+    }
+
+    @Override
+    boolean isUsingProductTaxCodes() {
+        return true;
     }
 
 }

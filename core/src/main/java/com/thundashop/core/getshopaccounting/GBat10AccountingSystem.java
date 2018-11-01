@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 public class GBat10AccountingSystem extends AccountingSystemBase {
    
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> inOrders) {
+    public List<SavedOrderFile> createFiles(List<Order> inOrders, Date start, Date end) {
         Map<String, List<Order>> allOrders = groupOrders(inOrders);
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
         
@@ -262,4 +262,8 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
         throw new ErrorException(1049);
     }
 
+    @Override
+    boolean isUsingProductTaxCodes() {
+        return true;
+    }
 }

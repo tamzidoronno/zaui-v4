@@ -211,6 +211,23 @@ class PageFactory {
         $row->addColumn("dcc56763-43cf-470f-87c3-ee305a5a517b", "afa2d7e7-594a-4db4-8242-6253e0a78f1c");
         $this->pages['4f66aad0-08a0-466c-9b4c-71337c1e00b7'] = $page;   
         
+        $page = new \ModulePage("checklist", "pms");
+        $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
+        $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
+        $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
+        $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+        $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
+        
+        $row = $page->createRow();
+        $row->addText("Checklist");
+        
+        $row = $page->createRow();
+        $row->addColumn("24206ea4-45f2-4a08-ac57-ed2c6c8b22f5", "21a90037-1fca-40fb-9ad5-6db53ec65846");
+        $this->pages['checklist'] = $page;   
+        
         // Settings
         $page = new \ModulePage("messages", "pms");
         $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());

@@ -72,7 +72,7 @@ public class PmsBooking extends DataCommon {
     public Date orderCreatedAfterStay;
     boolean isConference = false;
     double bookingAmountDiff;
-    double totalUnsettledAmount = 0.0;
+    public double totalUnsettledAmount = 0.0;
     Double unsettled;
     public boolean nonrefundable = false;
     

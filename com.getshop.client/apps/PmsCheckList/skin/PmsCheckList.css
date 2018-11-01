@@ -1,0 +1,26 @@
+.PmsCheckList .errorrow {
+    border-bottom: solid 1px #DDD;
+    padding: 2px;
+}
+
+.PmsCheckList .errorrow .col {
+    display: inline-block;
+    margin-right: 40px;
+}
+
+.PmsCheckList .type {
+    width: 200px;
+}
+
+.PmsCheckList .total {
+    width: 100px;
+}
+
+.PmsCheckList {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.PmsCheckList .col.orderId {
+    width: 100px;
+}

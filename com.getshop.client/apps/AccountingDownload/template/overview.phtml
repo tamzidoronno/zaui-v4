@@ -3,67 +3,76 @@
 $time = $this->convertToJavaDate(strtotime($_SESSION['AccountingDownload_endDate']));
 $orders = $this->getApi()->getGetShopAccountingManager()->getOrdersToIncludeForNextTransfer($time);
 $groupedOrders = array();
+
+if ($this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther() !== "GENERELL_NORWEGIAN") {
 ?>
 
-<h2>2. Verify content</h2>
-<div class="informationbox">
-    The following transactions will be added to the to the next batch to be transferred.
-    <br/> <br/> <i class="fa fa-exclamation-circle"></i> You find the button to craete this batch at the bottom.
-</div>
-<?
-foreach ($orders as $orderId) {
-    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-    $order->totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
-    $order->totalForOrderExTaxes = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
-    
-    $time=strtotime($order->shouldHaveBeenTransferredToAccountingOnDate);
-    $index=date("F",$time)." ".date("Y",$time);
-    if (!isset($groupedOrders[$index])) {
-        $groupedOrders[$index] = array();
-    }
-    $groupedOrders[$index][] = $order;
-}
-?>
-<div class="preview">
-<?
-foreach ($groupedOrders as $month => $orders) {
-    $monthTotal = 0;
-    $monthTotalExTaxes = 0;
-    ?>
-    <h2><? echo $month; ?></h2>
-    <div class="row">
-        <div class="col col1"><b><? echo $this->__f("Order id"); ?></b></div>
-        <div class="col col2"><b><? echo $this->__f("Will be in file for periode"); ?></b></div>
-        <div class="col col3"><b><? echo $this->__f("Should have been in file for periode"); ?></b></div>
-        <div class="col col4"><b><? echo $this->__f("Order total"); ?></b></div>
-        <div class="col col5"><b><? echo $this->__f("Payment Method"); ?></b></div>
-        <div class="col col6"><b><? echo $this->__f("Option"); ?></b></div>
+    <h2>2. Verify content</h2>
+    <div class="informationbox">
+        The following transactions will be added to the to the next batch to be transferred.
+        <br/> <br/> <i class="fa fa-exclamation-circle"></i> You find the button to craete this batch at the bottom.
     </div>
     <?
-    foreach ($orders as $order) {
-        $monthTotal += $order->totalForOrder;
-        $monthTotalExTaxes += $order->totalForOrderExTaxes;
-    ?>
-        <div class="row">
-            <div class="col col1">
-                <div class="gs_shop_small_icon" gs_show_modal="orderview" orderid="<? echo $order->id; ?>"><i class="fa fa-edit"></i></div>
-                <? echo $order->incrementOrderId; ?>
-            </div>
-            <div class="col col2"><? echo $order->transferToAccountingDate; ?></div>
-            <div class="col col3"><? echo $order->shouldHaveBeenTransferredToAccountingOnDate; ?></div>
-            <div class="col col4"><? echo round($order->totalForOrder, 2); ?></div>
-            <div class="col col5"><? echo explode("\\", $order->payment->paymentType)[1]; ?></div>
-            <div class="col col6">
-                <div class="gs_shop_small_icon" gsclick="markAsTransferred" orderid="<? echo $order->id; ?>"><i class="fa fa-trash"></i> <? echo $this->__f("Ignore"); ?></div>
-            </div>
-        </div>
-    <?
+    foreach ($orders as $orderId) {
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $order->totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        $order->totalForOrderExTaxes = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+
+        $time=strtotime($order->shouldHaveBeenTransferredToAccountingOnDate);
+        $index=date("F",$time)." ".date("Y",$time);
+        if (!isset($groupedOrders[$index])) {
+            $groupedOrders[$index] = array();
+        }
+        $groupedOrders[$index][] = $order;
     }
-    
-    echo "<br/><b>Total inc taxes:</b> $monthTotal <br/> <b>Total ex taxes :</b> $monthTotalExTaxes ex taxes";
+    ?>
+    <div class="preview">
+    <?
+    foreach ($groupedOrders as $month => $orders) {
+        $monthTotal = 0;
+        $monthTotalExTaxes = 0;
+        ?>
+        <h2><? echo $month; ?></h2>
+        <div class="row">
+            <div class="col col1"><b><? echo $this->__f("Order id"); ?></b></div>
+            <div class="col col2"><b><? echo $this->__f("Will be in file for periode"); ?></b></div>
+            <div class="col col3"><b><? echo $this->__f("Should have been in file for periode"); ?></b></div>
+            <div class="col col4"><b><? echo $this->__f("Order total"); ?></b></div>
+            <div class="col col5"><b><? echo $this->__f("Payment Method"); ?></b></div>
+            <div class="col col6"><b><? echo $this->__f("Option"); ?></b></div>
+        </div>
+        <?
+        foreach ($orders as $order) {
+            $monthTotal += $order->totalForOrder;
+            $monthTotalExTaxes += $order->totalForOrderExTaxes;
+        ?>
+            <div class="row">
+                <div class="col col1">
+                    <div class="gs_shop_small_icon" gs_show_modal="orderview" orderid="<? echo $order->id; ?>"><i class="fa fa-edit"></i></div>
+                    <? echo $order->incrementOrderId; ?>
+                </div>
+                <div class="col col2"><? echo $order->transferToAccountingDate; ?></div>
+                <div class="col col3"><? echo $order->shouldHaveBeenTransferredToAccountingOnDate; ?></div>
+                <div class="col col4"><? echo round($order->totalForOrder, 2); ?></div>
+                <div class="col col5"><? echo explode("\\", $order->payment->paymentType)[1]; ?></div>
+                <div class="col col6">
+                    <div class="gs_shop_small_icon" gsclick="markAsTransferred" orderid="<? echo $order->id; ?>"><i class="fa fa-trash"></i> <? echo $this->__f("Ignore"); ?></div>
+                </div>
+            </div>
+        <?
+        }
+
+        echo "<br/><b>Total inc taxes:</b> $monthTotal <br/> <b>Total ex taxes :</b> $monthTotalExTaxes ex taxes";
+    }
+    ?>
+    </div>
+<?
+} else {
+    $count = $orders ? count($orders) : 0;
+    echo "<h2>Number of orders $count</h2>";
 }
 ?>
-</div>
+    
 <br/>
 <div class='shop_button' gsclick="cancelOverview"><? echo $this->__f("Cancel"); ?></div>
 <div class='shop_button' gsclick="createFiles"><? echo $this->__f("Create files"); ?></div>

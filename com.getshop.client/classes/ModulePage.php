@@ -299,6 +299,7 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Prices", "394bb905-8448-45c1-8910-e9a60f8aebc5", "gsicon-gs-prices");
         $menu->entries[] = new ModulePageMenuItem("Cleaning", "e03b19de-d1bf-4d1c-ac40-8c100ef53366", "gsicon-gs-cleaning");
         $menu->entries[] = new ModulePageMenuItem("CRM", "4f66aad0-08a0-466c-9b4c-71337c1e00b7", "gsicon-users");
+        $menu->entries[] = new ModulePageMenuItem("Checklist", "checklist", "gsicon-list");
         $menu->entries[] = new ModulePageMenuItem("Settings", "messages", "gsicon-gs-gears");
         return $menu;
     }

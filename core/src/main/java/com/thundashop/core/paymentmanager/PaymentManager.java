@@ -126,7 +126,7 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
     }
 
     private boolean handleNormalOrder(PaymentConfiguration config, Order order, Date lockDate) {
-        if (config.transferToAccountingBasedOnPaymentDate && order.paymentDate != null) {
+        if (config.transferToAccountingBasedOnPaymentDate && order.paymentDate != null && order.status == Order.Status.PAYMENT_COMPLETED) {
             order.shouldHaveBeenTransferredToAccountingOnDate = order.paymentDate;
             order.transferToAccountingDate = order.paymentDate;
             

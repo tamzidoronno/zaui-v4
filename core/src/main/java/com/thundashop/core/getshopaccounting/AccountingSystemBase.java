@@ -81,7 +81,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
         }
     }
     
-    public abstract List<SavedOrderFile> createFiles(List<Order> orders);
+    public abstract List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end);
     
     public abstract SystemType getSystemType();
     
@@ -110,7 +110,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             if(prod == null) {
                 addToLog("Product does not exists anymore on order, regarding order: " + order.incrementOrderId);
                 return true;
-            } else if(prod.sku == null || prod.sku.trim().isEmpty()) {
+            } else if(isUsingProductTaxCodes() && (prod.sku == null || prod.sku.trim().isEmpty())) {
                 if(prod.deleted != null && (prod.name == null || prod.name.trim().isEmpty())) {
                     prod.name = item.getProduct().name;
                     productManager.saveProduct(prod);
@@ -126,6 +126,8 @@ public abstract class AccountingSystemBase extends ManagerBase {
     public String getProductNumber(Product product) {
         return "";
     }
+    
+    abstract boolean isUsingProductTaxCodes();
     
     private boolean checkTaxCodes(List<Order> orders) {
         boolean hasFail = false;
@@ -159,13 +161,16 @@ public abstract class AccountingSystemBase extends ManagerBase {
         }
         
         orders = distinctOrders(orders);
-        List<SavedOrderFile> newFiles = createFiles(orders);
+        
+        Date prevDate = getPreviouseEndDate();
+        
+        List<SavedOrderFile> newFiles = createFiles(orders, prevDate, endDate);
         
         if (newFiles == null) {
             return new ArrayList();
         }
         
-        Date prevDate = getPreviouseEndDate();
+        
         newFiles.stream().forEach(file -> {
             file.endDate = endDate;
             file.startDate = prevDate;

@@ -43,7 +43,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     private String token;
 
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> orders) {
+    public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
         Map<String, List<Order>> groupedOrders = groupOrders(orders);
 
         ArrayList<SavedOrderFile> retFiles = new ArrayList();
@@ -366,5 +366,8 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         
     }
 
-
+    @Override
+    boolean isUsingProductTaxCodes() {
+        return true;
+    }
 }

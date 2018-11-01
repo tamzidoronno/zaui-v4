@@ -6,10 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.mongodb.morphia.annotations.Transient;
 
 public class SavedOrderFile extends DataCommon {
     public List<AccountingTransaction> accountingTransactionLines = new ArrayList();
+    public List<AccountingTransaction> accountingTransactionOutOfScope = new ArrayList();
+    public List<AccountingTransaction> accountingTransactionProcessedInADifferentFile = new ArrayList();
     public List<String> result;
     public String type = "accounting";
     public boolean transferred = false;
@@ -48,4 +51,19 @@ public class SavedOrderFile extends DataCommon {
     
     @Transient
     public Integer numberOfOrdersNow = 0;
+
+    public boolean moveOrderToProcessedInADifferentFile(String id) {
+        List<AccountingTransaction> toMove = accountingTransactionOutOfScope.stream()
+                .filter(s -> s.orderIds.contains(id))
+                .collect(Collectors.toList());
+        
+        if (toMove.isEmpty()) {
+            return false;
+        }
+        
+        accountingTransactionOutOfScope.removeAll(toMove);
+        accountingTransactionProcessedInADifferentFile.addAll(toMove);
+        
+        return true;
+    }
 }

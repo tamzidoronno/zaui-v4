@@ -25,6 +25,7 @@ import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
+import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
@@ -2529,5 +2530,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
+    }
+
+    @Override
+    public OrderLight getOrderLight(String orderId) throws ErrorException {
+        Order order = getOrder(orderId);
+        if (order != null) {
+            return new OrderLight(order);
+        }
+        
+        return null;
     }
 }

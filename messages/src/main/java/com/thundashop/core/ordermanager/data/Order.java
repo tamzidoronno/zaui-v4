@@ -1012,7 +1012,24 @@ public class Order extends DataCommon implements Comparable<Order> {
         return cart.getItems().isEmpty();
     }
 
-
+    public boolean isPaymentLinkType() {
+        if(payment != null && payment.paymentType != null) {
+            if (payment.paymentType.equals("ns_def1e922_972f_4557_a315_a751a9b9eff1\\Netaxept")) {
+                return true;
+            }
+            if (payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
+                return true;
+            }
+            if (payment.paymentType.equals("ns_3d02e22a_b0ae_4173_ab92_892a94b457ae\\StripePayments")) {
+                return true;
+            }
+            if (payment.paymentType.equals("ns_8f5d04ca_11d1_4b9d_9642_85aebf774fee\\Epay")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

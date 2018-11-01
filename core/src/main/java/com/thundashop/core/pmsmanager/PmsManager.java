@@ -6207,27 +6207,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsBooking> filterByUnsettledAmounts(List<PmsBooking> finalized) {
         List<PmsBooking> result = new ArrayList();
         for (PmsBooking test : finalized) {
-            if (test.testReservation) {
-                continue;
-            }
-            if (!test.payedFor) {
-                continue;
-            }
-            test.calculateTotalCost();
-            double total = test.getTotalPrice();
-            double orderTotal = 0.0;
-            for (String orderId : test.orderIds) {
-                Order order = orderManager.getOrderSecure(orderId);
-                orderTotal += orderManager.getTotalAmount(order);
-            }
-            double diff = total - orderTotal;
-            if (diff < -3 || diff > 3) {
-                test.totalUnsettledAmount = diff;
+            if (isUnsettledAmount(test)) {
                 result.add(test);
             }
         }
 
         return result;
+    }
+    
+    public boolean isUnsettledAmount(PmsBooking test) {
+        if (test.testReservation) {
+            return false;
+        }
+        if (!test.payedFor) {
+            return false;
+        }
+        test.calculateTotalCost();
+        double total = test.getTotalPrice();
+        double orderTotal = 0.0;
+        for (String orderId : test.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            orderTotal += orderManager.getTotalAmount(order);
+        }
+        double diff = total - orderTotal;
+        if (diff < -3 || diff > 3) {
+            test.totalUnsettledAmount = diff;
+            return true;
+        }
+        
+        return false;
     }
 
     public List<String> getListOfAllRoomsThatHasPriceMatrix() {

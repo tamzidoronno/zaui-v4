@@ -6,7 +6,9 @@
 package com.thundashop.core.accountingmanager;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * We are using from (not including) start to end (and included) 
@@ -14,12 +16,13 @@ import java.util.Date;
  * @author ktonder
  */
 public class AccountingTransaction {
+    public List<String> orderIds = new ArrayList();
     public String description = "";
     public Date start;
     public Date end;
     public int accountNumber;
     public BigDecimal credit = new BigDecimal(0);
-    public BigDecimal debit = new BigDecimal(0);;
+    public BigDecimal debit = new BigDecimal(0);
     
     public boolean isFor(int accountNumber, Date date) {
         long startLong = start.getTime();

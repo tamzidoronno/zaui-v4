@@ -9,6 +9,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
     private String oAuthSource = "vismaeaccounting";
     
     @Override
-    public List<SavedOrderFile> createFiles(List<Order> orders) {
+    public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
         try {
             Map<String, List<Order>> groupedOrders = groupOrders(orders);
             List<Order> otherOrders = groupedOrders.get("other");
@@ -248,5 +249,10 @@ public class VismaEAccountingSystem extends AccountingSystemBase {
 
     private void uploadInvoiceOrder(Order order, String customerId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    boolean isUsingProductTaxCodes() {
+        return true;
     }
 }

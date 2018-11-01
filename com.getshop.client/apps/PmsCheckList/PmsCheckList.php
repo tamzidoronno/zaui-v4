@@ -65,8 +65,8 @@ class PmsCheckList extends \MarketingApplication implements \Application {
         }
         
         foreach ($grouped as $type => $errors) {
-            echo "<div>";
-                echo "<h2>".$type."</h2>";
+            echo "<div class='typebox'>";
+                $this->printHeader($type);
                 foreach ($errors as $error) {
                     $this->currentError = $error;
                     echo "<div class='errorrow'>";
@@ -90,5 +90,24 @@ class PmsCheckList extends \MarketingApplication implements \Application {
    public function dateChanged() {
        $_SESSION['ns_24206ea4_45f2_4a08_ac57_ed2c6c8b22f5'] = $_POST['data']['date'];
    }
+   
+   public function markBookingAsIgnoreUnsettledAmount() {
+       $this->getApi()->getPmsManager()->markIgnoreUnsettledAmount($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+   }
+
+    public function printHeader($type) {
+        if ($type == "UnsettledAmountProcessor") {
+            echo "<div class='description'><h2>Unsettled Amount</h2><br/>Bookings with unsettled amounts are normally because you have forgotten to charge your guest for everything, please check them.</div>";   
+        } elseif($type === "UnpaidPaymentLinksProcessor") {
+            echo "<div class='description'><h2>".$this->__f("Payment links")."</h2>Normally paymentlinks are used to aquire prepaid bookings, if a booking has ended and the paymentlink still exists it could be a potential problem, please check them.</div>";
+        } elseif($type === "ExpediaVirtualCreditCardCheckProcessor") {
+            echo "<div class='description'><h2>".$this->__f("Expedia")."</h2>Its important to keep track of the unpaid expedia.com bookings, this is normally Virtual Credit Cards that has to be manually processed by someone.</div>";
+        } elseif($type === "BookingComVirtualCreditCardCheckProcessor") {
+            echo "<div class='description'><h2>".$this->__f("Booking.com")."</h2>Its important to keep track of the unpaid booking.com bookings, this is normally Virtual Credit Cards that has to be manually processed by someone.</div>";
+        } else {
+            echo "<h2>".$type."</h2>";
+        }
+    }
+
 }
 ?>

@@ -7752,6 +7752,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .forEach(booking -> {
                     if (order.cart.getItems().isEmpty()) {
                         booking.orderIds.remove(orderId);
+                        saveObject(booking);
                     }
                 });
     }
@@ -9160,5 +9161,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         message.code = room.code;
         
         gdsManager.sendMessageToDevice(gdsDeviceId, message);
+    }
+
+    @Override
+    public void markIgnoreUnsettledAmount(String bookingId) {
+        PmsBooking booking = getBooking(bookingId);
+        if (booking != null) {
+            booking.ignoreUnsettledAmount = true;
+            saveObject(booking);
+        }
     }
 }

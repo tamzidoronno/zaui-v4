@@ -20,10 +20,10 @@ $room = $booking->rooms[0];
     } else {
         echo "-";
     }
-        
     ?>
 </div>
 <div class='col button'>
     <div class='gs_shop_small_icon' gs_show_modal='booking_room_view' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Open booking"); ?></div>
+    <div class='gs_shop_small_icon' gsclick='markBookingAsIgnoreUnsettledAmount' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Mark as ignored"); ?></div>
 </div>
 

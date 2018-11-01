@@ -98,6 +98,12 @@ public class PmsBooking extends DataCommon {
     @Transient
     boolean isAddedToEventList;
     
+    /**
+     * If this is set to true it will not show up
+     * in the checklist of tasks to do.
+     */
+    public boolean ignoreUnsettledAmount = false;
+    
     public Double getTotalPrice() {
         return totalPrice;
     }

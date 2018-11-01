@@ -537,4 +537,7 @@ public interface IPmsManager {
     
     @Administrator
     public void printCode(String gdsDeviceId, String pmsBookingRoomId);
+    
+    @Administrator
+    public void markIgnoreUnsettledAmount(String bookingId);
 }

@@ -26,6 +26,10 @@ public class UnsettledAmountProcessor extends CheckProcessorBase implements Chec
             return null;
         }
         
+        if (booking.ignoreUnsettledAmount) {
+            return null;
+        }
+        
         if (getPmsManager().isUnsettledAmount(booking)) {
             CheckListError error = new CheckListError();
             error.filterType = getClass().getSimpleName();

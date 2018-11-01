@@ -1,6 +1,7 @@
 .PmsCheckList .errorrow {
     border-bottom: solid 1px #DDD;
     padding: 2px;
+    padding-left: 20px;
 }
 
 .PmsCheckList .errorrow .col {
@@ -23,4 +24,26 @@
 
 .PmsCheckList .col.orderId {
     width: 100px;
+}
+
+.PmsCheckList .description {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #a6ffa7;
+    text-align: center;
+}
+
+.PmsCheckList h2 {
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+.PmsCheckList .typebox {
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    border-top: solid 1px #DDD;
+    margin-bottom: 50px;
+    
+    
 }

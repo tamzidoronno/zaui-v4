@@ -187,36 +187,6 @@ $langauges['nb_no'] = "Norsk";
     if($kidsize && ((int)$kidsize) > 0) {
         $currentidSet = $this->getApi()->getStoreOcrManager()->getAccountingId();
         $currentidSet =$currentidSet ?  "Nets ocr id is : ". $currentidSet : "Account id not set yet";
-        ?>
-        <div class='gss_button_area'>
-            <span style='float:left'><?php echo $currentidSet; ?></span>
-            <div class="gss_button runocrscan"><?php echo $this->__("Run ocr scan"); ?></div>
-            <div class="gss_button dosetaccountingid"><i class='fa fa-question'></i><?php echo $this->__("Norwegian: set nets avtaleid"); ?></div>
-        </div>
-        <?php
     }
     ?>
 </div>
-
-<script>
-    $(document).on('click', '.PaymentSettingsSetup .dosetaccountingid' , dosetaccountingid);
-    $(document).on('click', '.PaymentSettingsSetup .runocrscan' , runocrscan);
-    function runocrscan() {
-        var event = thundashop.Ajax.createEvent('','runOcrScan', $(this), {});
-        thundashop.Ajax.postWithCallBack(event, function() {});
-    }
-    function dosetaccountingid() {
-        var password = prompt("Password");
-        var id = prompt("Avtaleid");
-        if(!id || !password) {
-            return;
-        }
-        var event = thundashop.Ajax.createEvent('','setAccountingId', $(this), {
-            "id" : id,
-            "password" : password
-        });
-        thundashop.Ajax.postWithCallBack(event, function() {
-            location.reload();
-        });
-    }
-</script>

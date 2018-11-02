@@ -6,6 +6,8 @@
 package com.thundashop.core.ocr;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,9 +15,11 @@ import com.thundashop.core.common.DataCommon;
  */
 public class OcrFile extends DataCommon {
     String name = "";
+    List<OcrFileLines> ocrLines = new ArrayList();
     
-    public void addOcrFileContent(String content) {
+    public void addOcrFileContent(String content, String name) {
         String[] lines = content.split("\n");
+        this.name = name;
         String avtaleId = "";
         for(String line : lines) {
             OcrFileLines ocrline = new OcrFileLines(line);
@@ -26,17 +30,7 @@ public class OcrFile extends DataCommon {
                 continue;
             }
             ocrline.avtaleId = avtaleId;
-            String transaksjonstype = ocrline.getTransaksjonsType();
-            String recordtype = ocrline.getRecordType();
-            if(transaksjonstype.equals("13") && recordtype.equals("30")) {
-                System.out.println("============== Kid found ===================");
-                System.out.println("Avtaleid: " + ocrline.avtaleId);
-                System.out.println("Kid: " + ocrline.getKid().trim());
-                System.out.println("Amount: " + ocrline.getAmount().trim());
-                System.out.println("Amount (double): " + ocrline.getAmountInDouble());
-                System.out.println("Fortegn: " + ocrline.getFortegn().trim());
-                System.out.println("----------");
-            }
+            ocrLines.add(ocrline);
         }
     }
 }

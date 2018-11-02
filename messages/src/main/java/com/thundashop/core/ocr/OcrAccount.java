@@ -6,6 +6,8 @@
 package com.thundashop.core.ocr;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,4 +15,5 @@ import com.thundashop.core.common.DataCommon;
  */
 public class OcrAccount extends DataCommon {
     public String accountId;
+    public List<OcrFileLines> lines = new ArrayList();
 }

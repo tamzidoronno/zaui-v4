@@ -11,9 +11,17 @@ package com.thundashop.core.ocr;
  */
 public class OcrFileLines {
 
-    private final String rawLine;
+    private String rawLine = "";
     String avtaleId = "";
-
+    private boolean beenTransferred = false;
+    private Double amount = 0.0;
+    private Long matchOnOrderId = (long)-1;
+    private String matchDate = "";
+    private String kid = "";
+    
+    public OcrFileLines() {
+    }
+    
     OcrFileLines(String line) {
         rawLine = line;
     }
@@ -62,5 +70,22 @@ public class OcrFileLines {
     Double getAmountInDouble() {
         Integer amount = new Integer(getAmount());
         return (double)amount / 100;
+    }
+
+    boolean isTransferred() {
+        return beenTransferred;
+    }
+    void setBeenTransferred() {
+        amount = getAmountInDouble();
+        matchDate = getOppgjorsDato();
+        kid = getKid();
+        beenTransferred = true;
+    }
+    void setMatchOnOrderId(Long orderId) {
+        matchOnOrderId = orderId;
+    }
+
+    private String getOppgjorsDato() {
+        return rawLine.substring(15,21);
     }
 }

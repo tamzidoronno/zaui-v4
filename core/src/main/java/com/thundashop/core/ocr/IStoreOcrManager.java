@@ -7,6 +7,7 @@ package com.thundashop.core.ocr;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import java.util.List;
 
 /**
  *
@@ -20,4 +21,6 @@ public interface IStoreOcrManager {
     public void checkForPayments();
     @Administrator
     public String getAccountingId();
+    @Administrator
+    public List<OcrFileLines> getAllTransactions();
 }

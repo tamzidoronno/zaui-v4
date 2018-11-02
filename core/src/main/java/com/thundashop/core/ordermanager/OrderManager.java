@@ -305,26 +305,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void markAsPaid(String orderId, Date date, Double amount) {
-        Order order = orders.get(orderId);
-        
-        if(amount != null && amount != 0.0) {
-            String userId = "";
-            if(getSession() != null && getSession().currentUser != null) {
-                userId = getSession().currentUser.id;
-            }
-            order.registerTransaction(date, amount, userId);
-            feedGrafanaPaymentAmount(amount);
-            if(order.isFullyPaid()) {
-                markAsPaidInternal(order, date,amount);
-                saveOrder(order);
-            } else {
-                messageManager.sendErrorNotification("Not fully paid order detected: " + order.incrementOrderId + " Amount: " + order.getPaidRest(), null);
-            }
-
-        } else {
-            markAsPaidInternal(order, date,amount);
-            saveOrder(order);
-        }
+        markAsPaidWithTransactionType(orderId, date, amount, 1);
     }
     
     public void markAsPaidInternal(Order order, Date date, Double amount) {
@@ -1996,9 +1977,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (incomeOrder.id != null && !incomeOrder.id.isEmpty()) {
             inMemory = getOrderSecure(incomeOrder.id);
         }
-        if(inMemory != null && inMemory.manuallyClosed && incomeOrder.manuallyClosed) {
-            throw new ErrorException(1051);
-        }
         
         if (incomeOrder.paymentDate == null)
             return;
@@ -2540,5 +2518,39 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return null;
+    }
+
+    public Order getOrderByKid(String kid) {
+        for(Order ord : orders.values()) {
+            if(ord.kid == null || ord.kid.trim().isEmpty()) {
+                continue;
+            }
+            if(kid.contains(ord.kid)) {
+                return ord;
+            }
+        }
+        return null;
+    }
+
+    public void markAsPaidWithTransactionType(String orderId, Date date, Double amount, int transactiontype) {
+        Order order = orders.get(orderId);
+        if(amount != null && amount != 0.0) {
+            String userId = "";
+            if(getSession() != null && getSession().currentUser != null) {
+                userId = getSession().currentUser.id;
+            }
+            order.registerTransaction(date, amount, userId, transactiontype);
+            feedGrafanaPaymentAmount(amount);
+            if(order.isFullyPaid()) {
+                markAsPaidInternal(order, date,amount);
+                saveOrder(order);
+            } else {
+                messageManager.sendErrorNotification("Not fully paid order detected: " + order.incrementOrderId + " Amount: " + order.getPaidRest(), null);
+            }
+
+        } else {
+            markAsPaidInternal(order, date,amount);
+            saveOrder(order);
+        }
     }
 }

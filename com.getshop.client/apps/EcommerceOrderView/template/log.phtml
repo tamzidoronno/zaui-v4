@@ -16,16 +16,21 @@ foreach($arr as $time => $log) {
 }
 
 
+$transactiontype = array();
+$transactiontype[1] = "Uknown";
+$transactiontype[2] = "OCR";
+
 foreach($order->orderTransactions as $transactionObject) {
     $name = "";
     if($transactionObject->userId) {
         $user = $this->getApi()->getUserManager()->getUserById($transactionObject->userId);
         $name = $user->fullName;
     }
-    echo "<div>" . date("d.m.Y", strtotime($transactionObject->date)) . " : " . $transactionObject->amount;
+    echo "<div>" . date("d.m.Y H:i ", strtotime($transactionObject->date)) . ": Registered payment of <b>" . $transactionObject->amount . "</b>";
     if($name) {
-        echo "(" .$name. ")";
+        echo " by <b>" .$name . "</b>";
     }
+echo " type <b>" . $transactiontype[$transactionObject->transactionType] . "</b>";
     echo "</div>";
 }
 

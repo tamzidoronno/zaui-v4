@@ -936,11 +936,12 @@ public class Order extends DataCommon implements Comparable<Order> {
         return cal.getTime();
     }
 
-    public void registerTransaction(Date date, Double amount, String userId) {
+    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType) {
         OrderTransaction transaction = new OrderTransaction();
         transaction.date = date;
         transaction.amount = amount;
         transaction.userId = userId;
+        transaction.transactionType = transactionType;
         orderTransactions.add(transaction);
     }
 
@@ -1042,6 +1043,12 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static int NEEDCOLLECTING = 9;
         public static int SEND_TO_INVOICE = 10;
     }
+    
+    public static class OrderTransactionType {
+        public static Integer UNKNOWN = 1;
+        public static Integer OCR = 2;
+    }
+    
     
     public Date createdDate = new Date();
     

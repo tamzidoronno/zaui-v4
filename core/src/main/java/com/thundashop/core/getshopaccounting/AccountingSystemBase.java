@@ -325,6 +325,16 @@ public abstract class AccountingSystemBase extends ManagerBase {
         return Integer.valueOf(getUniqueCustomerIdForOrder(order));
     }
     
+    public String getAccountDescriptionForPaymentMethod(Order order) {
+        String paymentId = order.getPaymentApplicationId();
+        if (paymentId == null) {
+            return "";
+        }
+        
+        StorePaymentConfig config = paymentManager.getStorePaymentConfiguration(paymentId);
+        return config.accountingDescription;
+    }
+    
     private void finalizeFile(SavedOrderFile saved) {
         saved.sumAmountExOrderLines = 0.0;
         saved.sumAmountIncOrderLines = 0.0;

@@ -22,8 +22,7 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
             array('appName', 'Name', 'appName'),
-            array('accoutUserId', 'Account id', 'accountUserId'),
-            
+            array('accoutUserId', 'Account id', 'accountUserId')            
         );
         
         $data = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
@@ -43,6 +42,7 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $config = new \core_paymentmanager_StorePaymentConfig();
         $config->paymentAppId = $_POST['data']['id'];
         $config->userCustomerNumber = $_POST['data']['customernumber'];
+        $config->accountingDescription = $_POST['data']['accountingDescription'];
         $this->getApi()->getPaymentManager()->saveStorePaymentConfiguration($config);
     }
     

@@ -14,4 +14,5 @@ import com.thundashop.core.common.DataCommon;
 public class StorePaymentConfig extends DataCommon {
     public String paymentAppId = "";
     public String userCustomerNumber = "";
+    public String accountingDescription = "";
 }

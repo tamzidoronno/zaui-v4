@@ -106,19 +106,17 @@ public class NorwegianAccounting extends AccountingSystemBase {
 
     private void addPaymentTransaction(Order order, SavedOrderFile file) {
         int accountNumber = getAccountNumberForPaymentMethod(order);
+        String accountDescription = getAccountDescriptionForPaymentMethod(order);
         
-        if (order.paymentDate != null) {
-            AccountingTransaction paymentTransaction = getTransactionFile(file, order.paymentDate, accountNumber);
-            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
-            Application paymentapp = storeApplicationPool.getApplication(order.getPaymentApplicationId());
-            paymentTransaction.description = paymentapp.appName;
-            paymentTransaction.orderIds.add(order.id);
-        } else {
-            AccountingTransaction paymentTransaction = getTransactionFile(file, order.createdDate, 1499);
-            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
-            paymentTransaction.description = "Kundefordringer GetShop";
-            paymentTransaction.orderIds.add(order.id);
-        }
+        Application paymentapp = storeApplicationPool.getApplication(order.getPaymentApplicationId());
+        accountDescription = accountDescription.isEmpty() ? paymentapp.appName : accountDescription;
+        
+        Date useDate = order.paymentDate != null ? order.paymentDate : order.createdDate;
+        AccountingTransaction paymentTransaction = getTransactionFile(file, useDate, accountNumber);
+        paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
+        
+        paymentTransaction.description = accountDescription;
+        paymentTransaction.orderIds.add(order.id);
     }
 
     private AccountingTransaction getTransactionFileTemp(List<AccountingTransaction> accountingTransactionLines, Date postingDate, int accountNumber) {

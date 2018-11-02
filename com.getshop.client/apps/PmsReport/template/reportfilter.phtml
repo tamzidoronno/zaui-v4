@@ -6,6 +6,13 @@ $views['daily'] = "Daily";
 $views['monthly'] = "Monthly";
 $views['yearly'] = "Yearly";
 $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : ""; 
+
+$pmsManager = new ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement();
+$channels = $pmsManager->getChannelMatrix();
+
+$pmssearchbox = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
+$chnls = $pmssearchbox->getChannels();
+
 ?>
 <div style='max-width:1500px;margin:auto;'>
     
@@ -56,6 +63,18 @@ $checked = ($filter->includeNonBookableRooms) ? "CHECKED" : "";
                 foreach($views as $view => $name) {
                     $selected = ($filter->view == $view) ? "SELECTED" : "";
                     echo "<option value='$view' $selected>$name</option>";
+                }
+                echo "</select>";
+                ?>
+            </td>
+            <td>
+                Channel<br>
+                <?php
+                echo "<select gsname='channel' class='gsniceselect1' style='height:37px'>";
+                echo "<option value=''>All channels</option>";
+                foreach($channels as $chanid => $chan) {
+                    $selected = ($filter->channel == $chan) ? "SELECTED" : "";
+                    echo "<option value='$chan' $selected>".$chnls[$chanid]."</option>";
                 }
                 echo "</select>";
                 ?>

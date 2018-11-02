@@ -121,6 +121,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->start = $_POST['data']['start'];
         $filter->end = $_POST['data']['end'];
         $filter->includeNonBookableRooms = $_POST['data']['includenonbookable'] == "true";
+        $filter->channel = $_POST['data']['channel'];
         $filter->view = $_POST['data']['view'];
         
         $_SESSION['savedfilter'] = json_encode($filter);
@@ -468,6 +469,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             $filter->includeVirtual = true;
         }
         $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
+        $filter->channel = $selectedFilter->channel;
         return $filter;
     }
 

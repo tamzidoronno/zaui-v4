@@ -183,6 +183,7 @@ echo "</table>";
     
     $('.addfollowupbtn').on('click', function() {
         var panel = $('.addcommentpanel');
+        var row = $(this).closest('.row');
         panel.css('left',$(this).offset().left-450);
         panel.css('top',$(this).offset().top);
         panel.find("input[name='leadid']").val(row.attr('leadid'));

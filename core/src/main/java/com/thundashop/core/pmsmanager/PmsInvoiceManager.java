@@ -1019,7 +1019,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return isRoomPaidForWithBooking(pmsRoomId, booking);
     }
     
-    private boolean hasRoomItems(String pmsRoomId, Order order) {
+    public boolean hasRoomItems(String pmsRoomId, Order order) {
         if(order == null || order.cart == null) {
             return false;
         }

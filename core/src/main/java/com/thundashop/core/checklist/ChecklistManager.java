@@ -11,6 +11,7 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pmsmanager.IPmsManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,9 @@ public class ChecklistManager extends GetShopSessionBeanNamed implements ICheckl
     
     @Autowired
     private OrderManager ordreManager;
+    
+    @Autowired
+    private PmsInvoiceManager pmsInvoiceManager;
     
     @Override
     public List<CheckListError> getErrors(Date from, Date to) {
@@ -76,6 +80,7 @@ public class ChecklistManager extends GetShopSessionBeanNamed implements ICheckl
         retList.add(new BookingComVirtualCreditCardCheckProcessor(ordreManager, pmsManager));
         retList.add(new UnpaidPaymentLinksProcessor(ordreManager, pmsManager));
         retList.add(new UnsettledAmountProcessor(ordreManager, pmsManager));
+        retList.add(new DiffByPaidAmountToTotal(ordreManager, pmsManager, pmsInvoiceManager));
         return retList;
     }
     

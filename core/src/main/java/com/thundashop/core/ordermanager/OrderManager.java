@@ -314,7 +314,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             order.registerTransaction(date, amount, userId);
             feedGrafanaPaymentAmount(amount);
-            if(order.isFullyPaid()) {
+            if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
                 saveOrder(order);
             } else {
@@ -2494,7 +2494,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             
             // Verifone
-            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2")) {
+            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && order.getTotalAmount() > 0) {
                 throw new ErrorException(1052);
             }
             

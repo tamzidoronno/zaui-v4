@@ -104,6 +104,8 @@ class PmsCheckList extends \MarketingApplication implements \Application {
             echo "<div class='description'><h2>".$this->__f("Expedia")."</h2>Its important to keep track of the unpaid expedia.com bookings, this is normally Virtual Credit Cards that has to be manually processed by someone.</div>";
         } elseif($type === "BookingComVirtualCreditCardCheckProcessor") {
             echo "<div class='description'><h2>".$this->__f("Booking.com")."</h2>Its important to keep track of the unpaid booking.com bookings, this is normally Virtual Credit Cards that has to be manually processed by someone.</div>";
+        } elseif($type === "DiffByPaidAmountToTotal") {
+            echo "<div class='description'><h2>".$this->__f("Different in paid and charged amount")."</h2>This check is checking if you have rooms that are having a difference in what is marked as paid and what charged.</div>";
         } else {
             echo "<h2>".$type."</h2>";
         }

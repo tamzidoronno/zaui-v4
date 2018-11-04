@@ -859,12 +859,13 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public void addLeadHistory(String leadId, String comment, Date date, String userid) {
+    public void addLeadHistory(String leadId, String comment, Date start, Date end, String userId) {
         Lead lead = leads.get(leadId);
         LeadHistory history = new LeadHistory();
         history.comment = comment;
-        history.historyDate = date;
-        history.userId = userid;
+        history.historyDate = start;
+        history.endDate = end;
+        history.userId = userId;
         history.leadState = lead.leadState;
         lead.leadHistory.add(history);
         saveLead(lead);
@@ -874,7 +875,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     public void changeLeadState(String leadId, Integer state) {
         Lead lead = leads.get(leadId);
         lead.leadState = state;
-        addLeadHistory(lead.id, "Changed lead state", new Date(), getSession().currentUser.id);
+        addLeadHistory(lead.id, "Changed lead state", new Date(), new Date(), getSession().currentUser.id);
         saveLead(lead);
     }
 
@@ -924,5 +925,18 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Override
     public boolean canInvoiceOverEhf(Long vatNumber) {
         return getEhfCompany(vatNumber) != null;
+    }
+
+    @Override
+    public void markLeadHistoryCompleted(String leadHistoryId) {
+        for(Lead lead : leads.values()) {
+            for(LeadHistory hist : lead.leadHistory) {
+                if(hist.leadHistoryId.equals(leadHistoryId)) {
+                    hist.completed = true;
+                    saveObject(lead);
+                    return;
+                }
+            }
+        }
     }
 }

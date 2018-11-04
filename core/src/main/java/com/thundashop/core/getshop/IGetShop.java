@@ -55,6 +55,9 @@ public interface IGetShop {
     public Lead createLead(String name);
 
     @Administrator
+    public void markLeadHistoryCompleted(String leadHistoryId);
+
+    @Administrator
     public void saveLead(Lead lead);
     
     @Administrator
@@ -64,7 +67,7 @@ public interface IGetShop {
     public Lead getLead(String leadId);
     
     @Administrator
-    public void addLeadHistory(String leadId, String comment, Date date, String userId);
+    public void addLeadHistory(String leadId, String comment, Date start, Date end, String userId);
     
     
     @Administrator

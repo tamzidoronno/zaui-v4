@@ -5,6 +5,8 @@
  */
 package com.thundashop.core.ocr;
 
+import java.util.UUID;
+
 /**
  *
  * @author boggi
@@ -18,6 +20,11 @@ public class OcrFileLines {
     private Long matchOnOrderId = (long)-1;
     private String matchDate = "";
     private String kid = "";
+    private String orcLineId = UUID.randomUUID().toString();
+    
+    public String getOcrLineId() {
+        return orcLineId;
+    }
     
     public OcrFileLines() {
     }

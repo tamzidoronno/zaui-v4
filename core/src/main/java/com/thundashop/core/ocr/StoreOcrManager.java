@@ -59,7 +59,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
             System.out.println("Need to mark payment for kid: " + line.getKid() + " amount: " + line.getAmountInDouble());
             Order toMatch = orderManager.getOrderByKid(line.getKid());
             if(toMatch != null) {
-                orderManager.markAsPaidWithTransactionType(toMatch.id, new Date(), line.getAmountInDouble(), Order.OrderTransactionType.OCR);
+                orderManager.markAsPaidWithTransactionType(toMatch.id, new Date(), line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
                 line.setMatchOnOrderId(toMatch.incrementOrderId);
             }
         }

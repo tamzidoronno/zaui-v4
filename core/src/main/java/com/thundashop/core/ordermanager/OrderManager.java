@@ -305,7 +305,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void markAsPaid(String orderId, Date date, Double amount) {
-        markAsPaidWithTransactionType(orderId, date, amount, 1);
+        markAsPaidWithTransactionType(orderId, date, amount, 1, "unkown");
     }
     
     public void markAsPaidInternal(Order order, Date date, Double amount) {
@@ -2532,14 +2532,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return null;
     }
 
-    public void markAsPaidWithTransactionType(String orderId, Date date, Double amount, int transactiontype) {
+    public void markAsPaidWithTransactionType(String orderId, Date date, Double amount, int transactiontype, String refId) {
         Order order = orders.get(orderId);
         if(amount != null && amount != 0.0) {
             String userId = "";
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype);
+            order.registerTransaction(date, amount, userId, transactiontype, refId);
             feedGrafanaPaymentAmount(amount);
             if(order.isFullyPaid()) {
                 markAsPaidInternal(order, date,amount);

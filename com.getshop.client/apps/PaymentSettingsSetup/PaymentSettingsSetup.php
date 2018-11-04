@@ -28,5 +28,10 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
         $this->includefile("printapplications");
         $this->includefile("activatedpaymentmethods");
     }
+    
+    public function runOcrScan() {
+        $this->getApi()->getStoreOcrManager()->checkForPayments();
+    }
+    
 }
 ?>

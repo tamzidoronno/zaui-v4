@@ -2,7 +2,6 @@ app.InvoicePayment = {
     init: function() {
         $(document).on('change', '.InvoicePayment .invoicenote' , app.InvoicePayment.noteChanged);
     },
-    
     noteChanged: function() {
         var data = {};
         

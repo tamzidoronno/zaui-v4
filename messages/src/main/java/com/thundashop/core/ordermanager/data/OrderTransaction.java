@@ -9,4 +9,6 @@ class OrderTransaction implements Serializable {
     public Double amount;
     public String userId;
     public String transactionId = UUID.randomUUID().toString();
+    public Integer transactionType = 1;
+    public String refId = "";
 }

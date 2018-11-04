@@ -30,7 +30,7 @@ $users = $factory->getApi()->getUserManager()->getAllUsers();
 $admins = array();
 $loggedonuser = $factory->getApi()->getUserManager()->getLoggedOnUser();
 foreach($users as $usr) {
-    if($usr->type == 100) {
+    if($usr->type == 100 && $usr->emailAddress && $usr->emailAddress != "post@getshop.com") {
         $admins[$usr->id] = $usr;
     }
 }
@@ -62,55 +62,65 @@ foreach($users as $usr) {
         </div>
     </form>
 </div>
+<div>
+    <input type='checkbox' class='showallpanels'> Show all tables
+</div>
 <?php
 $toComplete = array();
-?>
-<h1>My followups today</h1>
-<table  cellspacing='1' cellpadding='1' width="100%" bgcolor='#ddd'>
-    <?php
-    echo "<tr bgcolor='#fff'>";
-    for($i = 0; $i <= 45; $i++) {
-        echo "<td valign='top' style='padding:5px;width:250px;'>";
-        $day = (time() + (86400*$i));
-        echo "<b>" . date("d.m.Y (D)", $day) . "</b>";
-        $rows = array();
-        foreach($leads as $lead) {
-            foreach($lead->leadHistory as $lhist) {
-                if(stristr($lhist->comment, "changed lead state")) {
-                    continue;
-                }
-                if($lhist->userId == $loggedonuser->id) {
-                    if(!$lhist->completed && strtotime($lhist->historyDate) < time() || date("dmy") == date("dmy", strtotime($lhist->historyDate))) {
-                        $lhist->customerName = $lead->customerName;
-                        $toComplete[$lhist->leadHistoryId] = $lhist;
-                    }
-                }
-                if($lhist->userId == $loggedonuser->id) {
-                    if(date("dmy",$day) == date("dmy", strtotime($lhist->historyDate))) {
-                        if(!isset($rows[strtotime($lhist->historyDate)] )) {
-                            $rows[strtotime($lhist->historyDate)] = "";
-                        }
-                        $rows[strtotime($lhist->historyDate)] .= "<tr bgcolor='ffffff'>";
-                        $rows[strtotime($lhist->historyDate)] .= "<td class='overflow' title='".$lhist->comment."' style='cursor:pointer;' class='markcompleted' historyid='".$lhist->leadHistoryId."'> " . date("H:i", strtotime($lhist->historyDate)) . " - " .  date("H:i", strtotime($lhist->endDate)) . " : "  . $lead->customerName .  "</td>";
-                        $rows[strtotime($lhist->historyDate)] .= "</tr>";
-                        $rows[strtotime($lhist->historyDate)] .= "<tr bgcolor='ffffff'>";
-                        $rows[strtotime($lhist->historyDate)] .= "<td class='overflow' style='padding-left:75px; max-width: 145px; color:#555555;' title='$lhist->comment'> " . $lhist->comment .  "</td>";
-                        $rows[strtotime($lhist->historyDate)] .= "</tr>";
-                    }
-                }
-            }
-        }
-        ksort($rows);
-        echo "<table cellspacing='1' cellpadding='1' width='100%'>";
-        foreach($rows as $r) {
-            echo $r;
-        }
-        echo "</table>";
-        echo "</td>";
-    }
-    echo "</tr>";
+foreach($admins as $admin) {
+    $mypanel = $admin->id == $loggedonuser->id ? "mypanel" : "";
     ?>
-</table>
+    <div class='followuppanel <?php echo $mypanel; ?>'>
+        <h1>Followups <?php echo $admin->fullName; ?></h1>
+        <table  cellspacing='1' cellpadding='1' width="100%" bgcolor='#ddd'>
+            <?php
+            echo "<tr bgcolor='#fff'>";
+            for($i = 0; $i <= 45; $i++) {
+                echo "<td valign='top' style='padding:5px;width:250px;'>";
+                $day = (time() + (86400*$i));
+                echo "<b>" . date("d.m.Y (D)", $day) . "</b>";
+                $rows = array();
+                foreach($leads as $lead) {
+                    foreach($lead->leadHistory as $lhist) {
+                        if(stristr($lhist->comment, "changed lead state")) {
+                            continue;
+                        }
+                        if($lhist->userId == $loggedonuser->id) {
+                            if(!$lhist->completed && strtotime($lhist->historyDate) < time() || date("dmy") == date("dmy", strtotime($lhist->historyDate))) {
+                                $lhist->customerName = $lead->customerName;
+                                $toComplete[$lhist->leadHistoryId] = $lhist;
+                            }
+                        }
+                        if($lhist->userId == $admin->id) {
+                            if(date("dmy",$day) == date("dmy", strtotime($lhist->historyDate))) {
+                                if(!isset($rows[strtotime($lhist->historyDate)] )) {
+                                    $rows[strtotime($lhist->historyDate)] = "";
+                                }
+                                $rows[strtotime($lhist->historyDate)] .= "<tr bgcolor='ffffff'>";
+                                $rows[strtotime($lhist->historyDate)] .= "<td class='overflow' title='".$lhist->comment."' style='cursor:pointer;' class='markcompleted' historyid='".$lhist->leadHistoryId."'> " . date("H:i", strtotime($lhist->historyDate)) . " - " .  date("H:i", strtotime($lhist->endDate)) . " : "  . $lead->customerName .  "</td>";
+                                $rows[strtotime($lhist->historyDate)] .= "</tr>";
+                                $rows[strtotime($lhist->historyDate)] .= "<tr bgcolor='ffffff'>";
+                                $rows[strtotime($lhist->historyDate)] .= "<td class='overflow' style='padding-left:75px; max-width: 145px; color:#555555;' title='$lhist->comment'> " . $lhist->comment .  "</td>";
+                                $rows[strtotime($lhist->historyDate)] .= "</tr>";
+                            }
+                        }
+                    }
+                }
+                ksort($rows);
+                echo "<table cellspacing='1' cellpadding='1' width='100%'>";
+                foreach($rows as $r) {
+                    echo $r;
+                }
+                echo "</table>";
+                echo "</td>";
+            }
+            echo "</tr>";
+            ?>
+        </table>
+    </div>
+<?php
+}
+?>
 <h1>Need completion</h1>
 <?php
 $toComplete = (array)$toComplete;
@@ -212,6 +222,8 @@ echo "</table>";
 
 ?>
 <style>
+    .followuppanel { display:none; }
+    .mypanel { display: block; }
     .state_5 { display:none; }
     .overflow {
         white-space: nowrap; 
@@ -231,7 +243,13 @@ echo "</table>";
 </style>
 
 <script>
-    
+    $('.showallpanels').on('click', function() {
+        if($(this).is(':checked')) {
+            $('.followuppanel').show();
+        } else {
+            $('.followuppanel').hide();
+        }
+    });
     $('.viewhostory').on('click', function() {
         var row = $(this).closest('.row');
         row.find('.historypanel').toggle();

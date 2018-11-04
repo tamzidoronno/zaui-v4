@@ -838,7 +838,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         
        List<Lead> toRemove = new ArrayList();
        for(Lead l : result) {
-           if(l.leadState.equals(Lead.LeadState.LOST) || l.leadState.equals(Lead.LeadState.DELIVERED)) {
+           if(l.leadState.equals(Lead.LeadState.LOST)) {
                toRemove.add(l);
            }
        }

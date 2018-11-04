@@ -6,7 +6,7 @@ if(isset($_POST['createlead']) && $_POST['name']) {
 }
 if(isset($_POST['registerfollowup'])) {
     if(isset($_SESSION['lastfollowup']) && $_SESSION['lastfollowup'] == $_POST['registerfollowup']) {
-        echo "double submit, avoid this.";
+        // "double submit, avoid this.";
     } else {
         $_SESSION['lastfollowup'] = $_POST['registerfollowup'];
         $start = date("c", strtotime($_POST['date'] . " " . $_POST['start']));
@@ -69,12 +69,12 @@ $toComplete = array();
 <table  cellspacing='1' cellpadding='1' width="100%" bgcolor='#ddd'>
     <?php
     echo "<tr bgcolor='#fff'>";
-    for($i = 0; $i <= 7; $i++) {
-        echo "<td valign='top' width='14.28%' style='padding:5px;'>";
+    for($i = 0; $i <= 45; $i++) {
+        echo "<td valign='top' style='padding:5px;width:250px;'>";
         $day = (time() + (86400*$i));
         echo "<b>" . date("d.m.Y (D)", $day) . "</b>";
+        $rows = array();
         foreach($leads as $lead) {
-            echo "<table cellspacing='1' cellpadding='1' width='100%'>";
             foreach($lead->leadHistory as $lhist) {
                 if(stristr($lhist->comment, "changed lead state")) {
                     continue;
@@ -87,14 +87,25 @@ $toComplete = array();
                 }
                 if($lhist->userId == $loggedonuser->id) {
                     if(date("dmy",$day) == date("dmy", strtotime($lhist->historyDate))) {
-                        echo "<tr bgcolor='ffffff'>";
-                        echo "<td class='overflow' title='".$lhist->comment."' style='cursor:pointer;' class='markcompleted' historyid='".$lhist->leadHistoryId."'> " . date("H:i", strtotime($lhist->historyDate)) . " - " .  date("H:i", strtotime($lhist->endDate)) . " : "  . $lead->customerName .  "</td>";
-                        echo "</tr>";
+                        if(!isset($rows[strtotime($lhist->historyDate)] )) {
+                            $rows[strtotime($lhist->historyDate)] = "";
+                        }
+                        $rows[strtotime($lhist->historyDate)] .= "<tr bgcolor='ffffff'>";
+                        $rows[strtotime($lhist->historyDate)] .= "<td class='overflow' title='".$lhist->comment."' style='cursor:pointer;' class='markcompleted' historyid='".$lhist->leadHistoryId."'> " . date("H:i", strtotime($lhist->historyDate)) . " - " .  date("H:i", strtotime($lhist->endDate)) . " : "  . $lead->customerName .  "</td>";
+                        $rows[strtotime($lhist->historyDate)] .= "</tr>";
+                        $rows[strtotime($lhist->historyDate)] .= "<tr bgcolor='ffffff'>";
+                        $rows[strtotime($lhist->historyDate)] .= "<td class='overflow' style='padding-left:75px; max-width: 145px; color:#555555;' title='$lhist->comment'> " . $lhist->comment .  "</td>";
+                        $rows[strtotime($lhist->historyDate)] .= "</tr>";
                     }
                 }
             }
-            echo "</table>";
         }
+        ksort($rows);
+        echo "<table cellspacing='1' cellpadding='1' width='100%'>";
+        foreach($rows as $r) {
+            echo $r;
+        }
+        echo "</table>";
         echo "</td>";
     }
     echo "</tr>";
@@ -111,11 +122,14 @@ foreach($toComplete as $leadHistoryId => $complete) {
     echo "</tr>";
 }
 echo "</table>";
+if(sizeof($toComplete) == 0) {
+    echo "Nothing to do.";
+}
 ?>
 
 <h1>Current leads</h1>
 <form action='' method='POST'>
-    <input type="text" placeholder="Name of lead" name='name'><input type="submit" value='Create lead' name='createlead'>
+    <input type="text" placeholder="Name of lead" class='newleadname' name='name'><input type="submit" value='Create lead' name='createlead'>
 </form>
 
 <table width='100%' class='customerlist'>
@@ -135,9 +149,9 @@ echo "</table>";
         
 <?php
 foreach($leads as $lead) {
-    echo "<tr leadid='".$lead->id."' class='row'>";
+    echo "<tr leadid='".$lead->id."' class='row state_".$lead->leadState."'>";
     echo "<td align='left'>".date("d.m.Y H:i", strtotime($lead->rowCreatedDate)) . "</td>";
-    echo "<td style='width:200px;'><input name='customerName' type='txt' value='".$lead->customerName."' style='width:200px;'></td>";
+    echo "<td style='width:200px;'><input name='customerName' class='customerNameInput' type='txt' value='".$lead->customerName."' style='width:200px;'></td>";
     echo "<td><input name='rooms' type='txt' value='".$lead->rooms."' style='width:60px;'></td>";
     echo "<td><input name='beds' type='txt' value='".$lead->beds."' style='width:60px;'></td>";
     echo "<td><input name='phone' type='txt' value='".$lead->phone."' style='width:100px;'></td>";
@@ -198,11 +212,14 @@ echo "</table>";
 
 ?>
 <style>
+    .state_5 { display:none; }
     .overflow {
         white-space: nowrap; 
         overflow: hidden;
         display:inline-block;
         width:100%;
+        max-width:220px;
+        font-size:12px;
         text-overflow: ellipsis;
     }
     .leadstatebox { border: solid 1px #bbb; text-align: center; width: 80px; margin-right: 5px; display: inline-block; cursor:pointer; }
@@ -219,6 +236,23 @@ echo "</table>";
         var row = $(this).closest('.row');
         row.find('.historypanel').toggle();
         
+    });
+    $('.newleadname').on('keyup', function() {
+        var val = $(this).val();
+        $('.customerNameInput').each(function() {
+            var customerName = $(this).val();
+            var row = $(this).closest('tr');
+            if(customerName.toLowerCase().indexOf(val) >= 0) {
+                console.log(val);
+                if(row.hasClass('state_5') && (!val || val === "")) {
+                    row.hide();
+                } else {
+                    row.show();
+                }
+            } else {
+                row.hide();
+            }
+        });
     });
     $('.markcompleted').on('click', function() {
         var historyid = $(this).attr('leadHistoryId');

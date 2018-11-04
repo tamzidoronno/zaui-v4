@@ -248,6 +248,7 @@ echo "</table>";
             $('.followuppanel').show();
         } else {
             $('.followuppanel').hide();
+            $('.mypanel').show();
         }
     });
     $('.viewhostory').on('click', function() {

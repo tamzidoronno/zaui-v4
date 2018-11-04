@@ -9,6 +9,12 @@
 chdir("../../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
+
+if(isset($_GET['markCompleted'])) {
+    $factory->getApi()->getGetShop()->markLeadHistoryCompleted($_GET['markCompleted']);
+    return;
+}
+
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
     echo "Not logged on, please logon <a href='/totp.php?redirectto=/scripts/getshopoverview/index.php'>here</a>";
     return;

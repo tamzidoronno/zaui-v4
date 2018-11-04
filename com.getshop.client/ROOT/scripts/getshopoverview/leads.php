@@ -9,11 +9,12 @@ if(isset($_POST['registerfollowup'])) {
         echo "double submit, avoid this.";
     } else {
         $_SESSION['lastfollowup'] = $_POST['registerfollowup'];
-        $time = date("c", strtotime($_POST['date']));
+        $start = date("c", strtotime($_POST['date'] . " " . $_POST['start']));
+        $end = date("c", strtotime($_POST['date'] . " " . $_POST['end']));
         $comment = $_POST['comment'];
         $leadid = $_POST['leadid'];
         $userid = $_POST['userid'];
-        $factory->getApi()->getGetShop()->addLeadHistory($leadid, $comment, $time, $userid);
+        $factory->getApi()->getGetShop()->addLeadHistory($leadid, $comment, $start, $end, $userid);
     }
 }
 $leads = $factory->getApi()->getGetShop()->getLeads();
@@ -37,6 +38,8 @@ foreach($users as $usr) {
 <div style='border:solid 1px #ddd; width: 400px;padding: 10px; background-color:#efefef;position:absolute;display:none;' class='addcommentpanel'>
     <form action='' method='POST'>
         <input type='date' name='date'>
+        <input type='txt' name='start' value='10:00' style='width:60px'>
+        <input type='txt' name='end' value='12:00' style='width:60px'>
         <input type='hidden' name='leadid'>
         <input type='hidden' value='<?php echo rand(0,1000000); ?> ' name='registerfollowup'>
         <select style='padding: 3px;' name='userid'>
@@ -59,27 +62,57 @@ foreach($users as $usr) {
         </div>
     </form>
 </div>
-
-<h1>My followups today</h1>
-<table bgcolor='dddddd' cellspacing='1' cellpadding='1' width='100%'>
 <?php
-foreach($leads as $lead) {
-    foreach($lead->leadHistory as $lhist) {
-        if(stristr($lhist->comment, "changed lead state")) {
-            continue;
-        }
-        if(date("dmy") == date("dmy", strtotime($lhist->historyDate))) {
-            echo "<tr bgcolor='ffffff'>";
-            echo "<td>" . $lead->customerName . "</td>";
-            echo "<td>" . $lead->phone . "</td>";
-            echo "<td>" . $lead->email . "</td>";
-            echo "<td>" . $lhist->comment . "</td>";
-            echo "</tr>";
-        }
-    }    
-}
+$toComplete = array();
 ?>
+<h1>My followups today</h1>
+<table  cellspacing='1' cellpadding='1' width="100%" bgcolor='#ddd'>
+    <?php
+    echo "<tr bgcolor='#fff'>";
+    for($i = 0; $i <= 7; $i++) {
+        echo "<td valign='top' width='14.28%' style='padding:5px;'>";
+        $day = (time() + (86400*$i));
+        echo "<b>" . date("d.m.Y (D)", $day) . "</b>";
+        foreach($leads as $lead) {
+            echo "<table cellspacing='1' cellpadding='1' width='100%'>";
+            foreach($lead->leadHistory as $lhist) {
+                if(stristr($lhist->comment, "changed lead state")) {
+                    continue;
+                }
+                if($lhist->userId == $loggedonuser->id) {
+                    if(!$lhist->completed && strtotime($lhist->historyDate) < time() || date("dmy") == date("dmy", strtotime($lhist->historyDate))) {
+                        $lhist->customerName = $lead->customerName;
+                        $toComplete[$lhist->leadHistoryId] = $lhist;
+                    }
+                }
+                if($lhist->userId == $loggedonuser->id) {
+                    if(date("dmy",$day) == date("dmy", strtotime($lhist->historyDate))) {
+                        echo "<tr bgcolor='ffffff'>";
+                        echo "<td class='overflow' title='".$lhist->comment."' style='cursor:pointer;' class='markcompleted' historyid='".$lhist->leadHistoryId."'> " . date("H:i", strtotime($lhist->historyDate)) . " - " .  date("H:i", strtotime($lhist->endDate)) . " : "  . $lead->customerName .  "</td>";
+                        echo "</tr>";
+                    }
+                }
+            }
+            echo "</table>";
+        }
+        echo "</td>";
+    }
+    echo "</tr>";
+    ?>
 </table>
+<h1>Need completion</h1>
+<?php
+$toComplete = (array)$toComplete;
+echo "<table>";
+foreach($toComplete as $leadHistoryId => $complete) {
+    echo "<tr>";
+    echo "<td><input type='button' class='markcompleted' style='cursor:pointer;' leadHistoryId='$leadHistoryId' value='Completed'></td>";
+    echo "<td>" . date("d.m.y H:i", strtotime($complete->historyDate)) . "</td><td>" . $complete->customerName . "</td><td>" . $complete->comment . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>
+
 <h1>Current leads</h1>
 <form action='' method='POST'>
     <input type="text" placeholder="Name of lead" name='name'><input type="submit" value='Create lead' name='createlead'>
@@ -165,6 +198,13 @@ echo "</table>";
 
 ?>
 <style>
+    .overflow {
+        white-space: nowrap; 
+        overflow: hidden;
+        display:inline-block;
+        width:100%;
+        text-overflow: ellipsis;
+    }
     .leadstatebox { border: solid 1px #bbb; text-align: center; width: 80px; margin-right: 5px; display: inline-block; cursor:pointer; }
     .leadstatebox.current { background-color:green; color:#fff; }
     .historyhidden { display: none; }
@@ -179,6 +219,11 @@ echo "</table>";
         var row = $(this).closest('.row');
         row.find('.historypanel').toggle();
         
+    });
+    $('.markcompleted').on('click', function() {
+        var historyid = $(this).attr('leadHistoryId');
+        $(this).closest('tr').hide();
+        $.get("index.php?markCompleted=" + historyid);
     });
     
     $('.addfollowupbtn').on('click', function() {

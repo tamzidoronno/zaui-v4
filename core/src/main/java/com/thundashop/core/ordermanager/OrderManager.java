@@ -1552,7 +1552,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         sortOrderList(allOrders);
         finalize(allOrders);
-        return pageIt(allOrders, filterOptions);
+        FilteredData result = pageIt(allOrders, filterOptions);
+        return result;
     }
 
     private Predicate<? super Order> filterOrdersByDate(FilterOptions filterOptions) {

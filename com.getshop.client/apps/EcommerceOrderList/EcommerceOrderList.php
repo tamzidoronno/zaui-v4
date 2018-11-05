@@ -191,7 +191,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             
             $filterOptions->extra->orderids = implode(",", $this->orderIds);
         }
-        
+  
         $args = array($filterOptions);
         
         $attributes = array(
@@ -485,5 +485,9 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         
     }
 
+    public function handleGetShopModulePaging() {
+        $table = new \GetShopModuleTable($this, 'OrderManager', 'getOrdersFiltered', $args, $attributes);
+        $table->setCurrentPageNumber($_POST['data']['newpagenumber']);
+    }
 }
 ?>

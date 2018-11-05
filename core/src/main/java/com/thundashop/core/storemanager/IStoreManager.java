@@ -32,6 +32,8 @@ public interface IStoreManager {
     
     public void acceptGDPR();
     
+    public boolean isPikStore();
+    
     /**
      * Initializing this api. This will identify the webshop and will act as the root for everything in this api.
      * @param initSessionId The session id to identify to this user.

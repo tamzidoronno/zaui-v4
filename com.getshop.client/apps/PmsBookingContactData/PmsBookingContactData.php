@@ -171,6 +171,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         unset($_SESSION['pmfilter'][$this->getSelectedName()]);
         $this->savePostedForm();
         $this->validatePostedForm();
+        $isPikStore = $this->getApi()->getStoreManager()->isPikStore();
         $loaded = false;
         if(!sizeof($this->validation) > 0) {
             $bookingToSend = $this->getCurrentBooking();
@@ -199,7 +200,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 }
                  
                 echo "<script>";
-                if($config->payAfterBookingCompleted) {
+                if($config->payAfterBookingCompleted || $isPikStore) {
                     if(!isset($curBooking->orderIds[0]) || $ignorePaymentWindow) {
                         if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
                             $nextPage = $this->getConfigurationSetting("nextPageId");

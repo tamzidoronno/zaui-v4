@@ -1552,7 +1552,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         sortOrderList(allOrders);
         finalize(allOrders);
-        return pageIt(allOrders, filterOptions);
+        FilteredData result = pageIt(allOrders, filterOptions);
+        return result;
     }
 
     private Predicate<? super Order> filterOrdersByDate(FilterOptions filterOptions) {
@@ -2472,7 +2473,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             
             // Verifone
-            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2")) {
+            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && order.getTotalAmount() > 0) {
                 throw new ErrorException(1052);
             }
             
@@ -2541,7 +2542,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             order.registerTransaction(date, amount, userId, transactiontype, refId);
             feedGrafanaPaymentAmount(amount);
-            if(order.isFullyPaid()) {
+            if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
                 saveOrder(order);
             } else {

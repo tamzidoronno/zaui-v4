@@ -410,6 +410,13 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
+    
+    public boolean isSamleFaktura() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("samlefaktura")) {
+            return true;
+        }
+        return false;
+    }
 
     public boolean isExpedia() {
         if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("expedia")) {

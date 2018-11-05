@@ -320,7 +320,7 @@ class GetShopModuleTable {
             }
         }
 
-        for ($i = $start; $i < $end; $i++) {
+        for ($i = $start; $i <= $end; $i++) {
             echo $this->getNumber($i);
         }
 
@@ -365,6 +365,10 @@ class GetShopModuleTable {
         }
 
         return 1;
+    }
+    
+    public function setCurrentPageNumber($number) {
+        $_SESSION['gs_moduletable_' . $this->getFunctionName() . "_pagenumber"] = $number;
     }
 
     public function getCurrentPageSize() {

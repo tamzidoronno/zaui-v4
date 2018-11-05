@@ -7,6 +7,7 @@
 .PmsCheckList .errorrow .col {
     display: inline-block;
     margin-right: 40px;
+    vertical-align: top;
 }
 
 .PmsCheckList .type {

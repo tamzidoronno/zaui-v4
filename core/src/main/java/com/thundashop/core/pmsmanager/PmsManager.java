@@ -6462,17 +6462,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(key.equals("booking_completed") && booking.channel != null && booking.channel.contains("wubook")) {
             boolean isChargedByOta = isChargedByOta(booking);
             if (type.equals("email")) {
-                message = configuration.emails.get("booking_completed_ota_" + language);
+                message = getNotificationMessage("booking_completed_ota", language, type);
                 if(message != null && !message.isEmpty()) { overrideNotificationTitle = "booking_completed_ota"; }
             } else {
-                message = configuration.smses.get("booking_completed_ota_" + language);
+                message = getNotificationMessage("booking_completed_ota", language, type);
             }
             if(isChargedByOta) {
                 if (type.equals("email")) {
-                    message = configuration.emails.get("booking_completed_payed_ota_" + language);
+                    message = getNotificationMessage("booking_completed_payed_ota",language, type);
                     if(message != null && !message.isEmpty()) { overrideNotificationTitle = "booking_completed_payed_ota"; }
                 } else {
-                    message = configuration.smses.get("booking_completed_payed_ota_" + language);
+                    message = getNotificationMessage("booking_completed_payed_ota",language, type);
                 }
             }
         }
@@ -9170,5 +9170,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.ignoreUnsettledAmount = true;
             saveObject(booking);
         }
+    }
+
+    private String getNotificationMessage(String key, String language, String type) {
+        PmsConfiguration config = getConfigurationSecure();
+        String msg = null;
+        if(type.equals("email")) {
+            msg = config.emails.get(key + "_" + language);
+            if(msg == null || msg.isEmpty()) {
+                for(String k : config.emails.keySet()) {
+                    String tmpMessage = config.emails.get(k);
+                    if(k.toLowerCase().contains(key) && tmpMessage != null && !tmpMessage.isEmpty()) {
+                        msg = tmpMessage;
+                        break;
+                    }
+                }
+            }
+        }
+        if(type.equals("sms")) {
+            msg = config.smses.get(key + "_" + language);
+            if(msg == null || msg.isEmpty()) {
+                for(String k : config.smses.keySet()) {
+                    String tmpMessage = config.smses.get(k);
+                    if(k.toLowerCase().contains(key) && tmpMessage != null && !tmpMessage.isEmpty()) {
+                        msg = tmpMessage;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return msg;
     }
 }

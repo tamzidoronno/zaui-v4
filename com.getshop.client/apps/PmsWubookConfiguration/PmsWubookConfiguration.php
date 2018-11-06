@@ -32,6 +32,7 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
         $config->wubooklcode = $_POST['data']['lcode'];
         $config->ignoreNoShow = $_POST['data']['ignoreNoShow'] == "true";
         $config->increaseByPercentage = $_POST['data']['increaseByPercentage'];
+        $config->numberOfRoomsToRemoveFromBookingCom = $_POST['data']['numberOfRoomsToRemoveFromBookingCom'];
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
 

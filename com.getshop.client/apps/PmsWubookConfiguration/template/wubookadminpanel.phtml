@@ -82,6 +82,13 @@ $callbackurl = $this->getApi()->getWubookManager()->getCallbackUrl($this->getSel
                             </td>
                         </tr>
                         <tr>
+                            <td>Number of rooms to decrease from OTA'S<br>
+                                <b>(to avoid overbooking)</b> 
+                            </td>
+                            <td><input type="text" class='gsniceinput1' placeholder='0' gsname="numberOfRoomsToRemoveFromBookingCom" value="<?php echo $config->numberOfRoomsToRemoveFromBookingCom; ?>">
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Avoid sending noshow to booking.com
                             </td>
                             <?php $checked = $config->ignoreNoShow == true ? "CHECKED" : ""; ?>

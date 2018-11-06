@@ -91,6 +91,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
      * This will result in less special produced code for specific customers.
      * @return 
      */
+    @Override
     public boolean isPikStore() {
         Calendar pikTime = Calendar.getInstance();
         pikTime.set(Calendar.YEAR, 2018);

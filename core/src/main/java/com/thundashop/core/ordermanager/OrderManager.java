@@ -1175,7 +1175,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         incrementingOrderId = 100000;
         orders.clear();
     }
+    
+    
+    public List<Order> getAllOrderNotTransferredToAccounting() {
+        return orders.values().stream()
+                .filter(order -> !order.transferredToAccountingSystem)
+                .filter(order -> !order.isEmpty())
+                .collect(Collectors.toList());
+    }
 
+    /**
+     * Depricated 
+     * 
+     * @return 
+     */
     @Override
     public List<Order> getOrdersNotTransferredToAccountingSystem() {
         List<Order> allOrders = getOrders(new ArrayList(), null, null);

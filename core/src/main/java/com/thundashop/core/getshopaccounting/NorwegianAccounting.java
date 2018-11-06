@@ -48,11 +48,19 @@ public class NorwegianAccounting extends AccountingSystemBase {
         List<SavedOrderFile> retFiles = new ArrayList();
         SavedOrderFile file = new SavedOrderFile();
         file.subtype = "all";
-        inOrders.stream().forEach(order -> addTransactionLineToFile(order, file));
+        List<Order> ordersInScope = getOrdersInScope(inOrders, start, end);
+        ordersInScope.stream().forEach(order -> addTransactionLineToFile(order, file, start, end));
+        
         retFiles.add(file);
         
+        // This will move the order out to a list that is to be accounted for later.
         moveOrdersOutsideOfScope(file, start, end);
+        
+        // This will move orders that has been accounted for in previouse files.
         addAllOrdersOutsideOfScope(file, start, end);
+        
+        // Add orders that has been created later but needs to be accounted in this file.
+        addAllUnaccountedOrdersInFuture(file, start, end, inOrders, ordersInScope);
         
         List<String> toPrint = new ArrayList();
         
@@ -89,14 +97,14 @@ public class NorwegianAccounting extends AccountingSystemBase {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private void addTransactionLineToFile(Order order, SavedOrderFile file) {
+    private void addTransactionLineToFile(Order order, SavedOrderFile file, Date start, Date end) {
         int accountNumber = getAccountNumberForPaymentMethod(order);
         
         if (accountNumber == -1) {
             return;
         }
         
-        addPaymentTransaction(order, file);
+        addPaymentTransaction(order, file, start, end);
         addExpenseTransaction(order, file);
         
         file.orders.add(order.id);
@@ -104,7 +112,7 @@ public class NorwegianAccounting extends AccountingSystemBase {
         
     }
 
-    private void addPaymentTransaction(Order order, SavedOrderFile file) {
+    private void addPaymentTransaction(Order order, SavedOrderFile file, Date start, Date end) {
         int accountNumber = getAccountNumberForPaymentMethod(order);
         String accountDescription = getAccountDescriptionForPaymentMethod(order);
         
@@ -112,11 +120,21 @@ public class NorwegianAccounting extends AccountingSystemBase {
         accountDescription = accountDescription.isEmpty() ? paymentapp.appName : accountDescription;
         
         Date useDate = order.paymentDate != null ? order.paymentDate : order.createdDate;
-        AccountingTransaction paymentTransaction = getTransactionFile(file, useDate, accountNumber);
-        paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
-        
-        paymentTransaction.description = accountDescription;
-        paymentTransaction.orderIds.add(order.id);
+        if (useDate.after(end)) {
+            
+            // Bruk 1530 periodiseringskontoen når betalingen er opprettet eller innhentet utenfor angitt tidsperiode.
+            AccountingTransaction paymentTransaction = getTransactionFile(file, end, 1530);
+            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
+
+            paymentTransaction.description = "Opptjent, ikke fakturert driftsinntekter.";
+            paymentTransaction.orderIds.add(order.id);
+        } else {
+            AccountingTransaction paymentTransaction = getTransactionFile(file, useDate, accountNumber);
+            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
+
+            paymentTransaction.description = accountDescription;
+            paymentTransaction.orderIds.add(order.id);
+        }
     }
 
     private AccountingTransaction getTransactionFileTemp(List<AccountingTransaction> accountingTransactionLines, Date postingDate, int accountNumber) {
@@ -322,4 +340,56 @@ public class NorwegianAccounting extends AccountingSystemBase {
     boolean isUsingProductTaxCodes() {
         return false;
     }
+
+    private List<Order> getOrdersInScope(List<Order> inOrders, Date start, Date end) {
+        List<Order> orders = new ArrayList();
+        for (Order order : inOrders) {
+            String id = getUniqueCustomerIdForOrder(order);
+            if (id == null || Integer.parseInt(id) < 0)
+                continue;
+            
+            if (order.status == Order.Status.PAYMENT_COMPLETED && order.paymentDate != null) {
+                if (order.paymentDateWithin(start, end)) {
+                    orders.add(order);
+                }
+            } else {
+                if (order.isInvoice() && order.createdBetween(start, end)) {
+                    orders.add(order);
+                }
+                
+                Date accountingDate = getAccountingPostingDate(order);
+                if (order.isPaymentLinkType() && accountingDate.after(start) && accountingDate.before(end)) {
+                    orders.add(order);
+                }
+            }
+        }
+        
+        return orders;
+    }
+
+    private void addAllUnaccountedOrdersInFuture(SavedOrderFile file, Date start, Date end, List<Order> inOrders, List<Order> ordersInScope) {
+        List<Order> allOrdersToCheck = new ArrayList(inOrders);
+        allOrdersToCheck.removeAll(ordersInScope);
+        
+        
+        List<Order> futureOrders = new ArrayList();
+        for (Order order : allOrdersToCheck) {            
+            String id = getUniqueCustomerIdForOrder(order);
+
+            Date accountingDate = getAccountingPostingDate(order);
+
+            if (id != null && Integer.parseInt(id) > 0) {
+                if (order.createdDate.after(end) && accountingDate.after(start) && accountingDate.before(end)) {
+                    futureOrders.add(order);
+                }
+            } else {
+                if (order.isPaymentLinkType() && accountingDate.after(start) && accountingDate.before(end)) {
+                    futureOrders.add(order);
+                }
+            }
+        }
+     
+        futureOrders.stream().forEach(order -> addTransactionLineToFile(order, file, start, end));
+    }
+
 }

@@ -1,6 +1,7 @@
 <?php
 /* @var $this \ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
 $filter = $this->getSelectedFilter();
+$types = $this->getTypes();
 $views = array();
 $views['daily'] = "Daily";
 $views['monthly'] = "Monthly";
@@ -12,7 +13,6 @@ $channels = $pmsManager->getChannelMatrix();
 
 $pmssearchbox = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
 $chnls = $pmssearchbox->getChannels();
-
 ?>
 <div style='max-width:1500px;margin:auto;'>
     
@@ -84,6 +84,16 @@ $chnls = $pmssearchbox->getChannels();
         </tr>
     </table>
     <input type='checkbox' gsname='includenonbookable' <?php echo $checked; ?>> Include non bookable rooms as well when calculating the coverage.
+        <div>
+        <?php
+        foreach($types as $type) {
+            $checked = "";
+            $filterArray = (array)$filter->typeFilter;
+            if(in_array($type->id, $filterArray)) { $checked = "CHECKED"; }
+            echo "<span style='display:inline-block'><input type='checkbox' gsname='typeselected_".$type->id."' $checked>" . $type->name . "</span> ";
+        }
+        ?>
+        </div>
     </div>
 </div>
 

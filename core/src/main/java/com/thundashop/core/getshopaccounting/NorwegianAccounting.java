@@ -12,6 +12,7 @@ import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import java.math.BigDecimal;
@@ -62,24 +63,26 @@ public class NorwegianAccounting extends AccountingSystemBase {
         // Add orders that has been created later but needs to be accounted in this file.
         addAllUnaccountedOrdersInFuture(file, start, end, inOrders, ordersInScope);
         
-        List<String> toPrint = new ArrayList();
-        
-        file.accountingTransactionLines.stream()
-            .forEach(transactionLine -> {
-                AccountingDetail accountingDetail = productManager.getAccountingDetail(transactionLine.accountNumber);
-                if (accountingDetail == null && transactionLine.accountNumber >= 2000) {
-                    throw new RuntimeException("Accounting details not created for product accounting account: " + transactionLine.accountNumber);
-                }
-                
-                int mvaCode = transactionLine.accountNumber >= 2000 ? transactionLine.accountNumber : 1;
-
-                String gbat10line = createGBat10Line(transactionLine.start, transactionLine.accountNumber, mvaCode, transactionLine.getSum());
-                toPrint.add(gbat10line); 
-            });
-        
-        file.result = toPrint;
+        file.result = createGbat10Lines(file);
         
         return retFiles;
+    }
+
+    private List<String> createGbat10Lines(SavedOrderFile file) {
+        List<String> toPrint = new ArrayList();
+        file.accountingTransactionLines.stream()
+                .forEach(transactionLine -> {
+                    AccountingDetail accountingDetail = productManager.getAccountingDetail(transactionLine.accountNumber);
+                    if (accountingDetail == null && transactionLine.accountNumber >= 2000) {
+                        throw new RuntimeException("Accounting details not created for product accounting account: " + transactionLine.accountNumber);
+                    }
+                    
+                    int mvaCode = transactionLine.accountNumber >= 2000 ? transactionLine.accountNumber : 1;
+                    
+                    String gbat10line = createGBat10Line(transactionLine.start, transactionLine.accountNumber, mvaCode, transactionLine.getSum());
+                    toPrint.add(gbat10line);
+                });
+        return toPrint;
     }
 
     @Override
@@ -391,5 +394,52 @@ public class NorwegianAccounting extends AccountingSystemBase {
      
         futureOrders.stream().forEach(order -> addTransactionLineToFile(order, file, start, end));
     }
+    
+    @Override
+    public String createBankTransferFile() {
+        List<OrderTransaction> transactions = orderManager.getBankOrderTransactions();
+        if (transactions.isEmpty()) {
+            return null;
+        }
+        
+        SavedOrderFile saveOrderFile = new SavedOrderFile();
+        saveOrderFile.type = "banktransfer";
+        saveOrderFile.subtype = "banktransfer";
+        
+        transactions.stream().forEach(transaction -> {
+            boolean success = addAccountinTransferLineForBanking(transaction, saveOrderFile);
+            if (success) {
+                orderManager.markTransactionAsTransferredToAccounting(transaction);
+            }
+        });
+        
+        if (!saveOrderFile.accountingTransactionLines.isEmpty()) {
+            saveObject(saveOrderFile);
+            saveOrderFile.result = createGbat10Lines(saveOrderFile);
+            files.put(saveOrderFile.id, saveOrderFile);    
+        }
+        
+        return saveOrderFile.id;
+    }
 
+    private boolean addAccountinTransferLineForBanking(OrderTransaction transaction, SavedOrderFile saveOrderFile) {
+        String invoiceAccountingId = getAccountingNumberForPaymentApplicationId("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        if (invoiceAccountingId == null || invoiceAccountingId.isEmpty()) {
+            return false;
+        }
+        
+        AccountingTransaction transactionToAdd = new AccountingTransaction();
+        transactionToAdd.accountNumber = 1920;
+        transactionToAdd.start = transaction.date;
+        transactionToAdd.debit = new BigDecimal(transaction.amount);
+        saveOrderFile.accountingTransactionLines.add(transactionToAdd);
+        
+        AccountingTransaction transactionToAdd2 = new AccountingTransaction();
+        transactionToAdd2.accountNumber = Integer.parseInt(invoiceAccountingId);
+        transactionToAdd2.start = transaction.date;
+        transactionToAdd2.credit = new BigDecimal(transaction.amount);
+        saveOrderFile.accountingTransactionLines.add(transactionToAdd2);
+        
+        return true;
+    }
 }

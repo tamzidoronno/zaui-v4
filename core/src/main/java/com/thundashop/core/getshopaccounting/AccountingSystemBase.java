@@ -208,6 +208,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
         
         return files.values()
                 .stream()
+                .filter(u -> u.endDate != null)
                 .map(u -> u.endDate)
                 .max(Date::compareTo)
                 .get();
@@ -267,6 +268,10 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     public String getUniqueCustomerIdForOrder(Order order) {
         String paymentId = order.getPaymentApplicationId();
+        return getAccountingNumberForPaymentApplicationId(paymentId);
+    }
+
+    protected String getAccountingNumberForPaymentApplicationId(String paymentId) {
         if (paymentId == null) {
             return null;
         }
@@ -555,5 +560,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
         orders.stream().forEach(order -> distinctOrders.put(order.id, order));
         
         return new ArrayList(distinctOrders.values());
+    }
+    
+    public String createBankTransferFile() {
+        return null;
     }
 }

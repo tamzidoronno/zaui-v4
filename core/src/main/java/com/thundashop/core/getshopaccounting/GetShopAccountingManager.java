@@ -6,6 +6,7 @@
 package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.accountingmanager.AccountingTransaction;
 import com.thundashop.core.accountingmanager.ProductStatiticsResult;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -14,6 +15,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -38,7 +40,7 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     
     @Autowired
     private final List<AccountingSystemBase> accountingSystems = new ArrayList();
-
+    
     @Override
     public List<String> createNextOrderFile(Date endDate) {
         List<String> ret = new ArrayList();
@@ -128,7 +130,7 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         data.data.stream().forEach(datacommon -> {
             if (datacommon instanceof Configuration) {
                 this.config = (Configuration)datacommon;
-            }    
+            }     
         });
     }
     
@@ -305,4 +307,11 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         
         return new ArrayList();
     }
+
+    @Override
+    public String createBankTransferFile() {
+        AccountingSystemBase res = getActivatedAccountingSystemInvoices();
+        return res.createBankTransferFile();
+    }
+
 }

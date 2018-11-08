@@ -11,6 +11,7 @@ class OcrReader extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        $this->includefile("paymentdownload");
         $this->includefile("ocrreaderpanel");
     }
 
@@ -18,6 +19,11 @@ class OcrReader extends \WebshopApplication implements \Application {
         $id = $_POST['data']['id'];
         $password = $_POST['data']['password'];
         $this->getApi()->getStoreOcrManager()->setAccountId($id, $password);
+    }
+    
+    public function createTransactionFile() {
+        $result = $this->getApi()->getGetShopAccountingManager()->createBankTransferFile();
+        echo $result;
     }
 }
 ?>

@@ -61,6 +61,7 @@ public class OcrManager extends ManagerBase implements IOcrManager {
                 ocrfile.addOcrFileContent(content, f.getName());
                 files.put(f.getName(), ocrfile);
                 saveObject(ocrfile);
+                f.delete();
             } catch (IOException ex) {
                 logPrintException(ex);
             }

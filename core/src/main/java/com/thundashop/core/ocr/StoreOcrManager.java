@@ -6,6 +6,7 @@
 package com.thundashop.core.ocr;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.bookingengine.CheckConsistencyCron;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -39,6 +40,8 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                 account = (OcrAccount) com;
             }
         }
+        
+        createScheduler("storeocrprocessor", "20 17,3,5 * * *", OcrProcessor.class);
     }
     
     @Override
@@ -59,7 +62,8 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
             System.out.println("Need to mark payment for kid: " + line.getKid() + " amount: " + line.getAmountInDouble());
             Order toMatch = orderManager.getOrderByKid(line.getKid());
             if(toMatch != null) {
-                orderManager.markAsPaidWithTransactionType(toMatch.id, new Date(), line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
+                Date paymentDate = line.getPaymentDate();
+                orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
                 line.setMatchOnOrderId(toMatch.incrementOrderId);
             }
         }

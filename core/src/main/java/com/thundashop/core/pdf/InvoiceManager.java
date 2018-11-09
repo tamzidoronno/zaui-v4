@@ -224,6 +224,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
                     User user = userManager.getUserById(order.userId);
                     order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
                 }
+                orderManager.saveOrder(order);
             }
         }
     }

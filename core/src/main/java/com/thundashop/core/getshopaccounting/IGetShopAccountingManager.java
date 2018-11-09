@@ -69,5 +69,7 @@ public interface IGetShopAccountingManager {
     
     @Administrator
     public List<String> transferDirect(String orderId);
-    
+
+    @Administrator
+    public String createBankTransferFile();
 }

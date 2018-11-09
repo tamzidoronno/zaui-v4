@@ -2,6 +2,7 @@ package com.thundashop.core.ordermanager;
 
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.accountingmanager.AccountingTransaction;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -28,6 +29,7 @@ import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -1175,7 +1177,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         incrementingOrderId = 100000;
         orders.clear();
     }
+    
+    
+    public List<Order> getAllOrderNotTransferredToAccounting() {
+        return orders.values().stream()
+                .filter(order -> !order.transferredToAccountingSystem)
+                .filter(order -> !order.isEmpty())
+                .collect(Collectors.toList());
+    }
 
+    /**
+     * Depricated 
+     * 
+     * @return 
+     */
     @Override
     public List<Order> getOrdersNotTransferredToAccountingSystem() {
         List<Order> allOrders = getOrders(new ArrayList(), null, null);
@@ -2554,4 +2569,45 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             saveOrder(order);
         }
     }
+
+    @Override
+    public List<OrderTransaction> getBankOrderTransactions() {
+        List<Order> invoices = orders.values().stream()
+                .filter(order -> order.isInvoice())
+                .collect(Collectors.toList());
+        
+        List<OrderTransaction> transactions = new ArrayList();
+        for (Order invoiceOrder : invoices) {
+            for (OrderTransaction orderTransaction : invoiceOrder.orderTransactions) {
+                if (orderTransaction.transferredToAccounting) {
+                    continue;
+                }
+                
+                orderTransaction.orderId = invoiceOrder.id;
+                transactions.add(orderTransaction);
+            }
+        }
+        
+        Collections.sort(transactions, (OrderTransaction a, OrderTransaction b) -> {
+            return a.date.compareTo(b.date);
+        });
+
+        return transactions;
+    }
+
+    public void markTransactionAsTransferredToAccounting(OrderTransaction transaction) {
+        Order order = getOrder(transaction.orderId);
+        if (order != null) {
+            order.orderTransactions.stream()
+                    .forEach(t -> {
+                        if (t.refId.equals(transaction.refId)) {
+                            t.transferredToAccounting = true;
+                        }
+                    });
+            
+            saveObject(order);
+        }
+    }
+    
+    
 }

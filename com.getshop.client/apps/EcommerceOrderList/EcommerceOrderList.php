@@ -467,11 +467,11 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         
         $text = "";
         
-        $validPaymentMethods = array();
-        $validPaymentMethods[] = 'ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal';
-        $validPaymentMethods[] = 'ns_565ea7bd_c56b_41fe_b421_18f873c63a8f\PayOnDelivery';
+        $inValidPaymentMethods = array();
+        $inValidPaymentMethods[] = 'ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment';
+        $inValidPaymentMethods[] = 'ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura';
         
-        if (!in_array($order->payment->paymentType, $validPaymentMethods)) {
+        if (in_array($order->payment->paymentType, $inValidPaymentMethods)) {
             return ""; 
         }
         

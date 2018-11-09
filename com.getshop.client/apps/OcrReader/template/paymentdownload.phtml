@@ -1,0 +1,80 @@
+<?php
+/* @var $this ns_36de3b7e_e29e_4327_b3f5_7206febf4909\OcrReader */
+$linesToTransfer = $this->getApi()->getOrderManager()->getBankOrderTransactions();
+if (!$linesToTransfer || !count($linesToTransfer)) {
+    return;
+}
+?>
+
+<div style='max-width: 1600px; margin: auto;margin-top: 50px;margin-bottom: 20px; border-bottom: solid 1px #DDD;'>
+    <div class="isnotactive">
+        <div class="kaipal infobox">
+            // faces: happy,sad,talking,danger
+            
+            <?php
+            if(!$avtaleid) {
+                ?>
+                <div class="image happy"></div>
+                <div class="textbox">
+                    <div class="header"><? echo $this->__f("Download accounting file"); ?></div>
+                    <div class="text">
+                        <div>
+                            I have the following transactions that you have not yet transferred to your accountingsystem, please download the file to transfer it.
+                        </div>
+                        <br/>
+                        <?
+                        foreach ($linesToTransfer as $line) {
+                            echo "<div class='accountingrow'>";
+                                $order = $this->getApi()->getOrderManager()->getOrder($line->orderId);
+                                echo "<div class='col date'>";
+                                    echo date('d.m.Y', strtotime($line->date));
+                                echo "</div>";
+
+                                echo "<div class='col orderid'>";
+                                    echo $order->incrementOrderId;
+                                echo "</div>";
+
+                                echo "<div class='col type'>";
+                                    echo $line->refId ? "OCR" : "Manual";
+                                echo "</div>";
+
+                                echo "<div class='col amount'>";
+                                    echo $line->amount;
+                                echo "</div>";
+                            echo "</div>";
+                        }
+
+                        ?>   
+                        
+                        <div class="buttonarea">
+                            <div class="buttonareaheader"><? echo $this->__f("actions"); ?></div>
+                            <div class="shop_button createtranasctionfile"><? echo $this->__f("Download file"); ?></div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+            } else {
+                ?>
+                <div class="image happy"></div>
+                <div class="textbox">
+                    <div class="header"><? echo $this->__f("OCR scanning (for norwegian customers)"); ?></div>
+                    <div class="text">
+                        <?
+                        echo $this->__f("OCR reading is a system for automatically marking invoices as paid when paid by bank.") . "<br>";
+                        echo $this->__f("Below you find a complete list for payments recieved.") . "<br>";
+                        echo $this->__f("I am connected to id : $avtaleid") . "<br>";
+                        ?>
+                    </div>
+                </div>
+                <?php
+            }
+
+            ?>
+        </div>
+
+     
+</div>
+
+<br/>
+<br/>
+<br/>

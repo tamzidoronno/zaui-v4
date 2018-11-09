@@ -15,6 +15,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
@@ -334,4 +335,7 @@ public interface IOrderManager {
     
     @Administrator
     public void registerSentEhf(String orderId);
+    
+    @Administrator
+    public List<OrderTransaction> getBankOrderTransactions();
 }

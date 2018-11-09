@@ -34,6 +34,9 @@ class AccountingDownload extends \MarketingApplication implements \Application {
     }
     
     public function formatOrderCount($file) {
+        if (!count($file->orders)) {
+            return "-";
+        }
         return count($file->orders);
     }
     
@@ -43,9 +46,11 @@ class AccountingDownload extends \MarketingApplication implements \Application {
 
     public function formatDownload($row) {
         $buttons = '<div class="gs_shop_small_icon downloadFile dontExpand" fileid="'.$row->id.'" ><i  class="fa fa-download dontExpand"></i></div>';
-        $buttons .= '<div class="gs_shop_small_icon dontExpand" gs_downloadExcelReport="downloadExcelFile" fileid="'.$row->id.'" fileName="file.xls" ><i  class="fa fa-download dontExpand"></i> Excel</div>';
-        if ($row->accountingTransactionLines) {
-            $buttons .= '<div fileid="'.$row->id.'" class="gs_shop_small_icon downloadFileFReport dontExpand" gstype="downloadpdf" method="downloadFReport" filename="report.pdf" ><i  class="fa fa-download dontExpand"></i> F-Report</div>';
+        if ($row->type !== "banktransfer") {
+            $buttons .= '<div class="gs_shop_small_icon dontExpand" gs_downloadExcelReport="downloadExcelFile" fileid="'.$row->id.'" fileName="file.xls" ><i  class="fa fa-download dontExpand"></i> Excel</div>';
+            if ($row->accountingTransactionLines) {
+                $buttons .= '<div fileid="'.$row->id.'" class="gs_shop_small_icon downloadFileFReport dontExpand" gstype="downloadpdf" method="downloadFReport" filename="report.pdf" ><i  class="fa fa-download dontExpand"></i> F-Report</div>';
+            }
         }
         return $buttons;
     }
@@ -136,14 +141,23 @@ class AccountingDownload extends \MarketingApplication implements \Application {
     }
     
     public function formatNumber($data, $colVal) {
+        if (!$colVal) {
+            return "-";
+        }
         return number_format($colVal, 0, ",", ' ');
     }
     
     public function formatStartDate($row) {
+        if (!$row->startDate) {
+            return "-";
+        }
         return \GetShopModuleTable::formatDate($row->startDate);
     }
     
     public function formatEndDate($row) {
+        if (!$row->endDate) {
+            return "-";
+        }
         return \GetShopModuleTable::formatDate($row->endDate);
     }
     

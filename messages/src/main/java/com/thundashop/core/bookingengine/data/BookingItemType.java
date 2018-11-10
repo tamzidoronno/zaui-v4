@@ -28,6 +28,9 @@ public class BookingItemType extends DataCommon {
         public static Integer CONFERENCE = 1;
         public static Integer RESTAURANT = 2;
         public static Integer CAMPING = 3;
+        public static Integer CABIN = 4;
+        public static Integer HOSTELBED = 5;
+        public static Integer APARTMENT = 6;
     }
     
     @Translation

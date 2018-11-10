@@ -78,9 +78,24 @@ function getshop_setBookingTranslation() {
             var toReplace = translations["paymentexplanation"];
             toReplace = toReplace.replace("{time}", config.defaultCheckinTime);
             $("[gstranslationfield='paymentexplanation']").html(toReplace);
+            
+            var types = $('.GslBooking .roomselectiontemplate');
+            for(var activeType in config.activeTypes) {
+                var systemType = config.activeTypes[activeType];
+                var typeTemplate = types.clone();
+                typeTemplate.removeClass('roomselectiontemplate');
+                typeTemplate.attr('systemcategory',systemType);
+                var text = getshop_translationMatrixLoaded['selectionsystemcategory_'+systemType];
+                if(!text) {
+                    text = "selectiontextforsystemcategory_" + systemType;
+                }
+                typeTemplate.find('.roomtextname').html(text);
+//                $('.roomselectionoptions').append(typeTemplate);
+            }
+            
             loading.resolve(config);
         });
-        getshop_confirmGuestInfoBox(); 
+        getshop_confirmGuestInfoBox();
     });
     return loading;
 }
@@ -296,6 +311,14 @@ function getshop_loadTextualSummary(res) {
         }
         if(typeof(translation['children']) !== "undefined") {
             text = text.replace("{children}", translation['children'].toLowerCase());
+        }
+        for(var i = 0; i < 20; i++) {
+            if(typeof(translation['selection_'+i]) !== "undefined") {
+                text = text.replace("{selection_"+i+"}", translation['selection_'+i].toLowerCase());
+            }
+            if(typeof(translation['selections_'+i]) !== "undefined") {
+                text = text.replace("{selections_"+i+"}", translation['selections_'+i].toLowerCase());
+            }
         }
         if(typeof(translation['rooms']) !== "undefined") {
             text = text.replace("{rooms}", translation['rooms'].toLowerCase());
@@ -919,6 +942,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     var row = "";
     var translationMatrix = getshop_getBookingTranslations();
     var roomsSelected = 0;
+    var systemCounter = {};
     for(var k in res.rooms) {
         var room = res.rooms[k];
         for(var guest in room.roomsSelectedByGuests) {
@@ -928,24 +952,43 @@ function getshop_updateOrderSummary(res, isSearch) {
                 row += "<tr roomid='"+room.id+"' guests='"+guest+"' index='"+k+"' class='priceofferrow'><td style='text-align:left;' class='removeselectedroom'><i class='fa fa-trash-o' style='cursor:pointer;'></i> "+ room.name +"</td>";
                 row += "<td>" + (guest*count);
                 row += " (" + count + " ";
+                var text = translationMatrix['selection_'+room.systemCategory];
                 if(count > 1) {
-                    row += translationMatrix['rooms'].toLowerCase();
-                } else {
-                    row += translationMatrix['room'].toLowerCase();
+                    text = translationMatrix['selections_'+room.systemCategory];
                 }
+                if(!text) {
+                    text = 'selections_'+room.systemCategory;
+                }
+                row += text;
                 row += ")</td>";
                 
                 row += "<td>" + parseInt(price*count) + ",-</td>";
                 row += "</tr>";
                 total += parseInt(price*count);
                 totalRooms += parseInt(count);
+                if(!systemCounter[room.systemCategory]) {
+                    systemCounter[room.systemCategory] = 0;
+                }
+                systemCounter[room.systemCategory] += parseInt(count);
                 totalGuests += (guest*count);
                 roomsSelected++;
             }
         }
     }
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + "</table>");
-    $('.GslBooking .ordersummary .totalprice').html("<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests + " <strong>"+ chosenRoomText['rooms']+":</strong> "+ totalRooms);
+    
+    var txt = "<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests;
+    
+    for(var systemType in systemCounter) {
+        var totalCount = systemCounter[systemType];
+        if(totalCount > 1) {
+            txt += " <strong>"+ chosenRoomText['selections_'+systemType]+":</strong> "+ totalCount;
+        } else {
+            txt += " <strong>"+ chosenRoomText['selection_'+systemType]+":</strong> "+ totalCount;
+        }
+    }
+    
+    $('.GslBooking .ordersummary .totalprice').html(txt);
     $('.GslBooking .ordersummary .continue').hide();
     if(isSearch) {
         if(!$('.GslBooking .ordersummary').is(":visible")) {
@@ -1194,15 +1237,15 @@ function getshop_changeNumberOfRooms() {
             "end" : end
         };
         var change = client.PmsBookingProcess.changeNumberOnType(getshop_domainname, data);
+        var target = $(this);
         change.done(function(res) {
             gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = count;            
-            var target = $(this);
             var totalCost = 0;
             var selectedRooms = 0;
             var totalSelectedRooms = 0;
             var allContainers = target.closest('#productentry');
             var mainContainer = target.closest('.productentry_main');
-            var availableRooms = parseInt(mainContainer.find('.product_availablerooms').attr('value'));
+            var availableRooms = parseInt(mainContainer.find('.product_availablerooms').attr('numberavailable'));
 
             allContainers.find('.numberof_rooms').each(function () {
                 var loopdropdown = $(this);
@@ -1413,6 +1456,8 @@ function getshop_searchRooms(e) {
                 getshop_updateOrderSummary(res, true);
             }
 
+            var translation = getshop_getBookingTranslations();
+
             for (var k in res.rooms) {
                 var room = res.rooms[k];
                 var firstFile = "";
@@ -1429,16 +1474,23 @@ function getshop_searchRooms(e) {
                 roomBox.attr('roomid', room.id);
 
                 roomBox.find('.roomname').html(room.name);
-                roomBox.find('.product_availablerooms').val(room.availableRooms);
+                roomBox.find('.product_availablerooms').attr('numberavailable',room.availableRooms);
                 roomBox.find('.availableroomcontainer').html(room.availableRooms);
                 roomBox.find('.lowpricedisplayer').html(room.pricesByGuests[1]);
                 roomBox.find('.roomdescription').html(room.description);
                 roomBox.find('.featured-image').css('background-image','url('+featuredImageUrl+')');              
                 roomBox.attr('index', k);
+                
+                var text = translation['availablerooms_'+room.systemCategory];
+                if(!text) { text ='availablerooms_'+room.systemCategory; };
+                roomBox.find('[gstranslationfield="availableRooms"]').html(text);
+                
+                var text = translation['numberofrooms_'+room.systemCategory];
+                if(!text) { text ='numberofrooms_'+room.systemCategory; };
+                roomBox.find('[gstranslationfield="numberofrooms"]').html(text);
 
                 var translation = getshop_getBookingTranslations();
                 var currency = getshop_bookingconfiguration.currencyText;
-                console.log(getshop_bookingconfiguration);
                 if(!currency) {
                     currency = "NOK";
                 }

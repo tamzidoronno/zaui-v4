@@ -20,6 +20,8 @@ Error      : #de5353; red
 .GslBooking .yourstaysummary { padding-left: 10px; }
 .GslBooking .invalidinput { border-color: red; border: solid 1px red !important; }
 .GslBooking .guestentry { position:relative; }
+.GslBooking .availableroomcontainer { margin-left: 10px; }
+.GslBooking .roomselectiontemplate { display:none; }
 .GslBooking .paymentmethodselection #paymentmethodselection { padding: 5px; width: 100%; box-sizing: border-box; }
 #warningstartyesterday { border-top: solid 1px; text-align: center; padding: 10px; color:red; font-weight: bold; display:none; }
 .GslBooking .terminalpaymentprocess {  

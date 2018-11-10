@@ -81,6 +81,10 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     @Override
     public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType) {
         List<BookingItemType> result = new ArrayList(types.values());
+        if(systemType == null) {
+            return result;
+        }
+
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
             public int compare(BookingItemType c1, BookingItemType c2) {
                 if(c1.name == null || c2.name == null) {

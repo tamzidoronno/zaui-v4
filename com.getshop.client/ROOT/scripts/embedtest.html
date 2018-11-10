@@ -11,20 +11,20 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://renahotell.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://henningsvar.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://renahotell.3.0.local.getshop.com/",
-                    "jsendpoint": "http://renahotell.3.0.local.getshop.com/",
-                    "domain" : "default",
-                    "success" : function(res) {
-                        console.log("booking completed");
-                        console.log(res);
-                    },
-                    "failure" : function(res) {
-                        console.log("booking failed");
-                        console.log(res);
-                    }
+                    "endpoint": "http://henningsvar.3.0.local.getshop.com/",
+                    "jsendpoint": "http://henningsvar.3.0.local.getshop.com/",
+                    "domain" : "default"
+//                    "success" : function(res) {
+//                        console.log("booking completed");
+//                        console.log(res);
+//                    },
+//                    "failure" : function(res) {
+//                        console.log("booking failed");
+//                        console.log(res);
+//                    }
                 }
             );
         });

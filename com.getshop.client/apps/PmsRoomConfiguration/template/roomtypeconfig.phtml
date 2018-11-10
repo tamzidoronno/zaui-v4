@@ -1,6 +1,6 @@
 <?php 
 /* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 ?>
 <h2>Room types <span class='opentypesorting' style='cursor:pointer;'>(open sorting)</span></h2>
 <span gstype='form' method='createType'>
@@ -8,7 +8,6 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     <span class='shop_button' gstype='submit'>Create a new room type</span>
 </span>
 <?php
-    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
     $taxes = $this->getApi()->getProductManager()->getTaxes();
     $unsorted = array();
     $sortList = array();

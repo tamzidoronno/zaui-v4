@@ -28,6 +28,18 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         return "PmsRoomConfiguration";
     }
 
+    public function getTypeSystemCategories() {
+        $systemCategories = array();
+        $systemCategories[0] = "ROOM";
+        $systemCategories[1] = "CONFERENCE";
+        $systemCategories[2] = "RESTAURANT";
+        $systemCategories[3] = "CAMPING";
+        $systemCategories[4] = "CABIN";
+        $systemCategories[5] = "HOSTEL BED";
+        $systemCategories[6] = "APARTMENT";
+        return $systemCategories;
+    }
+    
     public function render() {
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
@@ -56,7 +68,12 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         } else {
             $res = "<i class='fa fa-eye' style='color:gray; float:right;' title='This room is not visible for booking'></i>";
         }
+        
+        $typeConfig = $this->getTypeSystemCategories();
+        $res .= "<span style='float:right; margin-right: 5px; color:#bbb;'>" . $typeConfig[$type->systemCategory] . "</span>";
+        
         $res .= " <b>" . $row->name . "</b><br>" . $row->description . "<bR>";
+        
         $res .= "<b>Accessorier:</b> ";
         foreach($accessories as $acc) {
             if(in_array($acc->id, $additional->accessories)) {

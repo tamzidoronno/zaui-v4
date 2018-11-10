@@ -126,7 +126,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         StartBookingResult result = new StartBookingResult();
-        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         result.numberOfDays = pmsInvoiceManager.getNumberOfDays(arg.start, arg.end);
         
         Collections.sort(types, new Comparator<BookingItemType>() {
@@ -515,7 +515,23 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         } else {
             result.textualSummary.add(numberOfChildren + " x {children}");
         }
-        result.textualSummary.add(booking.getActiveRooms().size() + " x {rooms}");
+        HashMap<Integer, Integer> typeCounter = new HashMap();
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            Integer typecount = typeCounter.get(type.systemCategory);
+            if(typecount == null) { typecount = 0; }
+            typecount++;
+            typeCounter.put(type.systemCategory,typecount);
+        }
+        for(Integer type : typeCounter.keySet()) {
+            Integer count = typeCounter.get(type);
+            if(count > 1) {
+                result.textualSummary.add(typeCounter.get(type) + " x {selections_"+type+"}");
+            } else {
+                result.textualSummary.add(typeCounter.get(type) + " x {selection_"+type+"}");
+            }
+        }
+        
         
         List<PmsBookingAddonItem> addons = pmsManager.getAddonsAvailable();
         for(PmsBookingAddonItem item : addons) {
@@ -1011,6 +1027,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         retval.currencyText = currencycode;
         retval.startYesterday = isMidleOfNight();
         retval.defaultCheckinTime = config.getDefaultStartRaw();
+        
+        List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypesWithSystemType(null);
+        HashMap<Integer, String> typesActive = new HashMap();
+        for(BookingItemType type : bookingItemTypes) {
+            typesActive.put(type.systemCategory, "");
+        }
+        retval.activeTypes = new ArrayList(typesActive.keySet());
+        
         return retval;
     }
 

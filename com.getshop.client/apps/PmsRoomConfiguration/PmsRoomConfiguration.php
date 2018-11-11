@@ -41,7 +41,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     }
     
     public function render() {
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
         if(sizeof($types) == 0) {
             echo "<br><br>";

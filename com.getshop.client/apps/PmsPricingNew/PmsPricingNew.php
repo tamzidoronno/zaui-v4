@@ -267,6 +267,23 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
             $this->addCouponError = "Not a valid percentage";
         }
         
+        if($coupon->type == "FIXEDPRICE") {
+            $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+            $maxcount = 0;
+            foreach($types as $type) {
+                if($type->size > $maxcount) {
+                    $maxcount = $type->size;
+                }
+            }
+            $coupon->dailyPriceAmountByType=array();
+            foreach($types as $type) {
+                for($i = 1; $i <= $maxcount; $i++) {
+                    $coupon->dailyPriceAmountByType[$type->id."_".$i] = $coupon->amount;
+                }
+            }
+        }
+        
+        
         if(!$this->addCouponError) {
             $this->getApi()->getCartManager()->addCoupon($coupon);
         }

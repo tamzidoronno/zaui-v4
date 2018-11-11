@@ -1712,8 +1712,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function addAnotherRoom() {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $config->defaultStart));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $config->defaultEnd));
         $bookingId = $_POST['data']['bookingid'];
         $type = $_POST['data']['type'];
         if(!$type) {

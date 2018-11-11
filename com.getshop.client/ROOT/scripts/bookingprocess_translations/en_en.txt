@@ -28,6 +28,7 @@
     "signinbutton" : "Sign in",
     "inLuckAvailable" : "Your selection!",
     "continue" : "Continue",
+    "abortselection" : "Remove preselection",
     "addons" : "Addons",
     "addAddonsOr" : "Add addons for all guests, or add individual addons under room information.",
     "currency" : "NOK",

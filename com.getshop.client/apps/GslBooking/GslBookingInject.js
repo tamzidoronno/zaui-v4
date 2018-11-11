@@ -467,13 +467,13 @@ function getshop_createSticky(sticky) {
             if(win.scrollTop() > pos && win.scrollTop() <= stopPos) {
                 sticky.css({
                     position: 'fixed',
-                    top: (0+positionPaddingTop)
+                    bottom: "0px"
                 });
                 paddingBox.css('padding-top', sticky.height()+'px');
             } else {
                 sticky.css({
                     position: 'relative',
-                    top: '0'
+                    bottom: '0px'
                 });
                 $('.productoverview').css('padding-top', '0px');
             }
@@ -983,7 +983,7 @@ function getshop_updateOrderSummary(res, isSearch) {
         var totalCount = systemCounter[systemType];
         if(totalCount > 1) {
             txt += " <strong>"+ chosenRoomText['selections_'+systemType]+":</strong> "+ totalCount;
-        } else {
+        } else {
             txt += " <strong>"+ chosenRoomText['selection_'+systemType]+":</strong> "+ totalCount;
         }
     }
@@ -992,8 +992,10 @@ function getshop_updateOrderSummary(res, isSearch) {
     $('.GslBooking .ordersummary .continue').hide();
     if(isSearch) {
         if(!$('.GslBooking .ordersummary').is(":visible")) {
-            $('.GslBooking .ordersummary').slideDown('slow', function() {
-                $(function(){getshop_createSticky($("#order-sticky"));});
+            $('.GslBooking .ordersummary').show();
+            $(function(){
+                getshop_createSticky($("#order-sticky"));
+                $('.GslBooking .continuetoguestinfooptions').fadeIn();
             });
         }
     } else if(total > 0) {
@@ -1008,7 +1010,7 @@ function getshop_updateOrderSummary(res, isSearch) {
         $('.noRoomSelected').hide();
         $('.GslBooking .ordersummary .continue').show();
         if(!isSearch) {
-            $('.gsl_button.continue.active').effect( "shake" );
+            $('.continuetoguestinformationbtn').effect( "shake" );
             getshop_createSticky($("#order-sticky"));
         }
     }
@@ -1701,6 +1703,31 @@ function getshop_tryChangingDate(e) {
     }catch(e) { getshop_handleException(e); }
 }
 
+function getshop_removeAllSelected(e) {
+    try {
+        if(getshop_avoiddoubletap(e)) { return; }
+        $('.removeselectedroom').each(function() {
+            $(this).find('i').addClass('fa-spin');
+            var tr = $(this).closest('tr');
+            var index = tr.attr('index');
+            var roomId = tr.attr('roomid');
+            var guest = tr.attr('guests');
+
+           var client = getshop_getWebSocketClient();
+           var remove = client.PmsBookingProcess.removeGroupedRooms(getshop_domainname, {
+                "roomId": roomId,
+                "guestCount" : guest
+            });
+            remove.done(function(res) {
+                gslbookingcurresult.rooms[index].roomsSelectedByGuests[guest] = 0;    
+                getshop_updateOrderSummary(gslbookingcurresult, false);
+                $('.productentrybox[index="'+index+'"]').find('.numberof_rooms[guests="'+guest+'"]').val(0);
+                $(window).scrollTop(0);
+            });
+        });
+    }catch(e) { getshop_handleException(e); }
+}
+
 function getshop_cancelPayment() {
     try {
         getshop_manuallycancelledbutton = true;
@@ -1729,13 +1756,14 @@ $(document).on('touchend click', '.GslBooking .addguest', getshop_addGuest);
 $(document).on('touchend click', '.GslBooking .addroom', getshop_addRoom);
 $(document).on('touchend click', '.GslBooking .roomheading .guestaddonicon', getshop_addRemoveAddon);
 $(document).on('touchend click', '.GslBooking .guestentry .removeguest', getshop_removeGuest);
-$(document).on('touchend click', '.GslBooking .ordersummary .continue', getshop_continueToSummary);
+$(document).on('touchend click', '.GslBooking .continuetoguestinformationbtn', getshop_continueToSummary);
 $(document).on('touchend click', '.GslBooking .addButton', getshop_addRemoveAddon);
 $(document).on('touchend click', '.GslBooking .removeselectedroom', getshop_removeGroupedRooms);
 $(document).on('touchend click', '.GslBooking .gslfront_1 .trychangingdate', getshop_tryChangingDate);
 $(document).on('touchend click', '.GslBooking [gsname="ischild"]', getshop_changeChildSettings);
 $(document).on('touchend click', '.GslBooking .displayeditroom', getshop_showEditRoomOptions);
 $(document).on('touchend click', '.GslBooking .cancelpaymentbutton', getshop_cancelPayment);
+$(document).on('touchend click', '.GslBooking .removeallselectedroomsbtn', getshop_removeAllSelected);
 
 function getshop_doEvent(functiontorun) {
     $.proxy(functiontorun, this);

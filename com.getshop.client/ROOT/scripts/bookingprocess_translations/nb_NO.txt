@@ -66,6 +66,7 @@
     "startingAt" : "Starter fra NOK ",
     "numberofguests" : "Gjester",
     "numberofrooms" : "Antall rom",
+    "abortselection" : "Fjern forhåndsvalg",
     "price" : "Pris",
     "availableRooms" : "Tilgjengelige rom: ",
     "chosenRoom" : "Valg",

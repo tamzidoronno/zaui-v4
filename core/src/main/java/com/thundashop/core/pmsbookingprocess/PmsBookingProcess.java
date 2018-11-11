@@ -1033,8 +1033,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for(BookingItemType type : bookingItemTypes) {
             typesActive.put(type.systemCategory, "");
         }
-        retval.activeTypes = new ArrayList(typesActive.keySet());
-        
         return retval;
     }
 

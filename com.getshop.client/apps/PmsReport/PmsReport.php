@@ -124,6 +124,13 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->channel = $_POST['data']['channel'];
         $filter->view = $_POST['data']['view'];
         
+        $filter->typeFilter = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "typeselected_") && $val == "true") {
+                $filter->typeFilter[] = str_replace("typeselected_", "", $key);
+            }
+        }
+        
         $_SESSION['savedfilter'] = json_encode($filter);
     }
 
@@ -464,6 +471,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->includeVirtual = false;
         $filter->fromPms = true;
         $filter->removeAddonsIncludedInRoomPrice = true;
+        $filter->typeFilter = $selectedFilter->typeFilter;
         
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;

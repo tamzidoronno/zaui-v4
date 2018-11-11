@@ -306,6 +306,12 @@ public class PmsBooking extends DataCommon {
             if(endDate == null || room.date.end.after(endDate)) {
                 endDate = room.date.end;
             }
+            for(PmsBookingAddonItem item : room.addons) {
+                if(endDate == null || item.date.after(endDate)) {
+                    endDate = item.date;
+                }
+            }
+            
         }
         return endDate;
     }
@@ -316,7 +322,13 @@ public class PmsBooking extends DataCommon {
             if(startDate == null || room.date.start.before(startDate)) {
                 startDate = room.date.start;
             }
+            for(PmsBookingAddonItem item : room.addons) {
+                if(startDate == null || item.date.before(startDate)) {
+                    startDate = item.date;
+                }
+            }
         }
+        
         return startDate;
     }
 

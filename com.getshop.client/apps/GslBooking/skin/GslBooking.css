@@ -20,6 +20,12 @@ Error      : #de5353; red
 .GslBooking .yourstaysummary { padding-left: 10px; }
 .GslBooking .invalidinput { border-color: red; border: solid 1px red !important; }
 .GslBooking .guestentry { position:relative; }
+.GslBooking .availableroomcontainer { margin-left: 10px; }
+.GslBooking .roomselectiontemplate { display:none; }
+.GslBooking .continuetoguestinfooptions { position:absolute; width: 50%; right:10px; bottom: 10px; text-align: right; display:none;}
+.GslBooking .continuetoguestinformationbtn,
+.GslBooking .removeallselectedroomsbtn { padding: 10px; }
+.GslBooking .removeallselectedroomsbtn { background-color:red !important; }
 .GslBooking .paymentmethodselection #paymentmethodselection { padding: 5px; width: 100%; box-sizing: border-box; }
 #warningstartyesterday { border-top: solid 1px; text-align: center; padding: 10px; color:red; font-weight: bold; display:none; }
 .GslBooking .terminalpaymentprocess {  
@@ -379,7 +385,9 @@ Error      : #de5353; red
     background-color:rgba(255,255,255,0.96);
     min-height: 60px !important;
     padding: 0 4px;
-    box-shadow: 0px 1px 0px 0px #ddd;}
+    border-top: solid 1px #bbb;
+    border-bottom: solid 1px #bbb;
+}
 .GslBooking .gslfront_1 .ordersummary .selectedguests { padding: 10px; }
 .GslBooking .gslfront_1 .ordersummary td{padding:2px;}
 .GslBooking .gslfront_1 .ordersummary .bottomspacer { clear:both;height: 10px; }
@@ -468,7 +476,11 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .gsl_button.goToPayment{width:68%;padding:8px 0;}
 .GslBooking .overview_room_info .gsl_button.return { padding: 10px; }
 .GslBooking .roomisunavailable { font-size: 26px; }
-
+.GslBooking .gslfront_1 .isSticked {
+    position: fixed;
+    z-index: 2000;
+    bottom: 0px;
+}
 @media only all and (min-width:800px){
     .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#c8c8c8;}
     .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#c8c8c8 !important;}
@@ -477,6 +489,9 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .overview_confirmation { box-sizing: border-box; width:100%; }
 }
 @media only all and (max-width:800px){  
+    
+    .GslBooking .continuetoguestinfooptions { position:relative; width: 100%; right:10px; top: 10px; text-align: right; display:none;}
+    
     .GslBooking .organisationinputbox,
     .GslBooking .privateinputbox
     { margin-top: 5px; }
@@ -595,7 +610,7 @@ Error      : #de5353; red
         -moz-box-shadow: 0px 0px 0px 1px #ddd;
         box-shadow: 0px 0px 0px 1px #ddd;
     }
-    
+    .GslBooking .removeallselectedroomsbtn { float:left; margin-left: 10px; }
 }
 
 /*End of gslfront 1*/

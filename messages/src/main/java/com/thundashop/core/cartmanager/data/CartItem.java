@@ -33,8 +33,8 @@ import org.mongodb.morphia.annotations.Transient;
  */
 public class CartItem implements Serializable {
     private String cartItemId = UUID.randomUUID().toString();
-    private Map<String, String> variations = new HashMap();
-    
+    private Map<String, String> variations = new HashMap(); 
+   
     private Product product;
     
     private int count = 0;

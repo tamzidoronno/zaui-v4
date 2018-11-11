@@ -11,7 +11,7 @@ $languages[] = $this->getFactory()->getCurrentLanguage();
 $readable = $this->getFactory()->getLanguageReadable();
 $product = $this->getApi()->getProductManager()->getProduct($type->productId);
 $taxes = $this->getApi()->getProductManager()->getTaxes();
-
+$systemCategories = $this->getTypeSystemCategories();
 ?>
 <div gstype='form' method='saveTypeSettings'>
     <input type='hidden' gsname='id' value='<?php echo $id; ?>'>
@@ -97,10 +97,12 @@ $taxes = $this->getApi()->getProductManager()->getTaxes();
     <div style="margin-top: 50px; padding-top: 50px; border-top: solid 1px #dcdcdc;">
         <b>Type: </b>
         <select gsname='systemCategory' class="gsniceselect1">
-            <? $selected = $type->systemCategory == 0 ? "selected='true'" : "";?>
-            <option value="0" <? echo $selected; ?>>Room</option>
-            <? $selected = $type->systemCategory == 3 ? "selected='true'" : "";?>
-            <option value="3" <? echo $selected; ?>>Camping.</option>
+            <?php
+            foreach($systemCategories as $idx => $systemCat) {
+                $selected = $type->systemCategory == $idx ? "selected='true'" : "";
+                echo "<option value='" . $idx . "' $selected>" . $systemCat . "</option>";
+            }
+            ?>
         </select>
     </div>
     <div style='text-align:right;padding-top: 20px;'>

@@ -54,8 +54,10 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
             }
             
             SavedOrderFile file = generateFile(orders, subType);
-            file.subtype = subType;
-            retFiles.add(file);
+            if(file != null) {
+                file.subtype = subType;
+                retFiles.add(file);
+            }
         }
 
         return retFiles;

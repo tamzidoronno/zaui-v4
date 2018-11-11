@@ -2,16 +2,14 @@
     <div style='display:none' class='terminalpaymentprocess'>
         <span class='content'><i class='fa fa-spin fa-spinner'></i>
             <div><span gstype='bookingtranslation' gstranslationfield='paymentexplanation'></span></div>
-        <div class='verifonefeedbackdata' style='font-size:12px;font-style: italic;padding-top: 10px; padding-bottom: 10px; display:none;'></div>
-        <br><br>
+            <div class='verifonefeedbackdata' style='font-size:12px;font-style: italic;padding-top: 10px; padding-bottom: 10px; display:none;'></div>
+            <br><br>
             <div style='text-align:center;margin-top: 10px;margin-bottom:10px;'>
                 <span class='cancelpaymentbutton dopaymentbutton' style='border: solid 1px; padding: 10px; border-radius:5px;' gstype='bookingtranslation' gstranslationfield='cancelpayment'></span>
             </div>
         </span>
-        
-        </span>
     </div>
-    
+
     <div class='gslbookingHeader'>
 
         <div class='fa_box mobilecheckinheading date'>
@@ -22,13 +20,13 @@
             <span class='picker_header' gstype='bookingtranslation' gstranslationfield='checkout'></span>
             <input id="date_picker_end" class='date_picker_end_gsl' type='txt'>
         </div>
-        
+
         <div class="fa_box guests">
             <span class='picker_header' gstype='bookingtranslation' gstranslationfield='numberofguests'></span>
             <input id="guests" value="" style="border-right:1px solid #ddd;" readonly>
             <div class="guestInfoBox">
                 <div class='guestInfoBox_left'>
-                    <div><span gstype='bookingtranslation' gstranslationfield='rooms'></span></div>
+                    <div style='display:none;'><span gstype='bookingtranslation' gstranslationfield='rooms'></span></div>
                     <div>
                         <span class="excludeChildSelection" gstype='bookingtranslation' gstranslationfield='adults'></span>
                         <span class="switchAdultToGuest" gstype='bookingtranslation' gstranslationfield='numberofguests'></span>
@@ -36,7 +34,7 @@
                     <div class="excludeChildSelection" style='top:-6px;'><span gstype='bookingtranslation' gstranslationfield='children'></span><br><span style="font-size:12px;position:absolute;left:0;"><span gstype='bookingtranslation' gstranslationfield='agebelow'></span></span></div>
                 </div>
                 <div class='guestInfoBox_right'>
-                    <div class="count_line">
+                    <div class="count_line" style='display:none;'>
                         <i id="subtract_room" class="fa fa-minus disabled"></i><input type="txt" class="count" id="count_room" value="1" readonly><i id="add_room" class="fa fa-plus"></i>
                     </div>
                     <div class="count_line">
@@ -63,8 +61,14 @@
             </div>
             <div class='noRoomSelected'><i class="fa fa-info"></i> No room has been selected, please select one below</div>
             <div id="order-sticky" class='roomSelected'>
-                <div class="bestValue"><span gstype='bookingtranslation' gstranslationfield='bestValue'></span> <span class='totalprice'></span>
-                </div><div class='gsl_button continue active'><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
+                <div class='continuetoguestinfooptions'>
+                    <span class='removeallselectedroomsbtn gsl_button' gstype='bookingtranslation' gstranslationfield='abortselection'></span>
+                    <span class='continuetoguestinformationbtn gsl_button' gstype='bookingtranslation' gstranslationfield='continue'></span>
+                </div>
+                <div class="bestValue">
+                    <span class='totalprice'></span>
+                </div>
+                <div style='clear:both;'></div>
             </div>
         </div>
         <div class="productoverview">
@@ -174,7 +178,7 @@
                 </div>
                 <div class="prefilled_contact">
                     <h3><span gstype='bookingtranslation' gstranslationfield='bookingonbehalf'></span> <span class='bookingonbehalfname'></span></h3>
-                    
+
                 </div>
                 <div class="overview_contact">
                     <h3><span gstype='bookingtranslation' gstranslationfield='contactInformation'></span></h3>
@@ -322,23 +326,25 @@
     <div style="clear:both;"></div>
 </div>
 
+
+
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <script>
 
 //Reset page on load.
-    $(function() {
-        sessionStorage.setItem('gslcurrentpage','');
+    $(function () {
+        sessionStorage.setItem('gslcurrentpage', '');
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
-        $.getScript( "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function( data, textStatus, jqxhr ) {
-            $.getScript( "{getshop_endpoint}/scripts/booking/bookingscripts.php", function( data, textStatus, jqxhr ) {        
-                 $.getScript( "{getshop_endpoint}/js/daterangepicker/moment.js", function( data, textStatus, jqxhr ) {
+        $.getScript("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function (data, textStatus, jqxhr) {
+            $.getScript("{getshop_endpoint}/scripts/booking/bookingscripts.php", function (data, textStatus, jqxhr) {
+                $.getScript("{getshop_endpoint}/js/daterangepicker/moment.js", function (data, textStatus, jqxhr) {
                     var loading = getshop_setBookingTranslation();
-                    loading.done(function() {
+                    loading.done(function () {
                         getshop_setDatePicker();
                     });
-               });
+                });
             });
-       });
+        });
     });
 </script>

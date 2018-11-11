@@ -5,6 +5,9 @@
  */
 package com.thundashop.core.pmsbookingprocess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author boggi

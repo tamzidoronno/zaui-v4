@@ -189,6 +189,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
     
     public void generateKidLuhn(String byNumber, Integer length) {
+        if(kid != null && !kid.trim().isEmpty()) {
+            return;
+        }
         String result = checkSum(byNumber, true) + "";
         result = byNumber + result;
         int res = result.length();

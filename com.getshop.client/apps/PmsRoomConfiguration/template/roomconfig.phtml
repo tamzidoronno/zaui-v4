@@ -1,6 +1,6 @@
 <?php 
 /* @var $this ns_a22747ef_10b1_4f63_bef8_41c02193edd8\PmsRoomConfiguration */
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 ?>
 <br>
@@ -32,7 +32,7 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 
 <?php
 $rooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
-$types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName()));
+$types = $this->indexList($types);
 
 if (!is_array($rooms)) {
     $rooms = array();

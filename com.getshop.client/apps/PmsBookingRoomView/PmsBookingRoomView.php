@@ -401,6 +401,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->avoidOrderCreation = true;
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
+        $filter->startInvoiceAt = $this->convertToJavaDate(strtotime($booking->startDate));
 
         $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $this->getPmsBooking()->id, $filter);    
 
@@ -1407,6 +1408,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->avoidOrderCreation = true;
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($booking->endDate));
+        $filter->startInvoiceAt = $this->convertToJavaDate(strtotime($booking->startDate));
         $filter->pmsRoomIds = array();
         $filter->pmsRoomId  = $this->getSelectedRoom()->pmsBookingRoomId;
         unset($_SESSION['groupordercreationtype']);

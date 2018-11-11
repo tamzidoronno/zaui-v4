@@ -322,8 +322,9 @@ public class CartItem implements Serializable {
     }
 
     public BigDecimal getTotalAmountRoundedWithTwoDecimals() {
-        double total = (double)count * getProduct().price;
-        return TwoDecimalRounder.roundTwoDecimals(total);
+        BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(getProduct().price);
+        rounded = rounded.multiply(new BigDecimal(count));
+        return rounded;
     }
     
     public double getTotalAmount() {
@@ -546,5 +547,13 @@ public class CartItem implements Serializable {
         
         this.count = counter;
         this.product.price = price / counter;
+    }
+
+    public boolean isPriceMatrixItem() {
+        return priceMatrix != null && !priceMatrix.isEmpty();
+    }
+
+    public boolean isPmsAddons() {
+        return itemsAdded != null && !itemsAdded.isEmpty();
     }
 }

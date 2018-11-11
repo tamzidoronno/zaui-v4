@@ -23,4 +23,12 @@ public class TwoDecimalRounder {
         return new BigDecimal(twoDec);
     }
     
+    public static BigDecimal roundTwoDecimalsHalfDown(double value) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.HALF_DOWN);
+        String twoDec = df.format(value);
+        
+        return new BigDecimal(twoDec);
+    }
+    
 }

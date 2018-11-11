@@ -22,7 +22,7 @@ Error      : #de5353; red
 .GslBooking .guestentry { position:relative; }
 .GslBooking .availableroomcontainer { margin-left: 10px; }
 .GslBooking .roomselectiontemplate { display:none; }
-.GslBooking .continuetoguestinfooptions { position:absolute; width: 50%; right:10px; top: 10px; text-align: right; display:none;}
+.GslBooking .continuetoguestinfooptions { position:absolute; width: 50%; right:10px; bottom: 10px; text-align: right; display:none;}
 .GslBooking .continuetoguestinformationbtn,
 .GslBooking .removeallselectedroomsbtn { padding: 10px; }
 .GslBooking .removeallselectedroomsbtn { background-color:red !important; }
@@ -476,7 +476,11 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .gsl_button.goToPayment{width:68%;padding:8px 0;}
 .GslBooking .overview_room_info .gsl_button.return { padding: 10px; }
 .GslBooking .roomisunavailable { font-size: 26px; }
-
+.GslBooking .gslfront_1 .isSticked {
+    position: fixed;
+    z-index: 2000;
+    bottom: 0px;
+}
 @media only all and (min-width:800px){
     .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#c8c8c8;}
     .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#c8c8c8 !important;}

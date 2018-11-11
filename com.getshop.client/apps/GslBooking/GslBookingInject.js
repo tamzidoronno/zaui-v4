@@ -464,20 +464,10 @@ function getshop_createSticky(sticky) {
         }
         getshop_hasstickyscroll = true;
         win.on("scroll", function () {
-            console.log("sticky scrollTop: " + win.scrollTop());
             if(win.scrollTop() > pos) {
-                sticky.css({
-                    position: 'fixed',
-                    bottom: "0px"
-                });
-                paddingBox.css('padding-top', sticky.height()+'px');
+                sticky.addClass("isSticked");
             } else {
-                console.log('NEI');
-                sticky.css({
-                    position: 'relative',
-                    bottom: '0px'
-                });
-                $('.productoverview').css('padding-top', '0px');
+                sticky.removeClass("isSticked");
             }
         });
         $(function() {

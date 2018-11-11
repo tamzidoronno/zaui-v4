@@ -464,13 +464,15 @@ function getshop_createSticky(sticky) {
         }
         getshop_hasstickyscroll = true;
         win.on("scroll", function () {
-            if(win.scrollTop() > pos && win.scrollTop() <= stopPos) {
+            console.log("sticky scrollTop: " + win.scrollTop());
+            if(win.scrollTop() > pos) {
                 sticky.css({
                     position: 'fixed',
                     bottom: "0px"
                 });
                 paddingBox.css('padding-top', sticky.height()+'px');
             } else {
+                console.log('NEI');
                 sticky.css({
                     position: 'relative',
                     bottom: '0px'

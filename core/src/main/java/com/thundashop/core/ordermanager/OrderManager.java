@@ -2608,6 +2608,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             saveObject(order);
         }
     }
-    
+
+    @Override
+    public void markOrderAsBillabe(String orderId) {
+        Order order = getOrder(orderId);
+        if (order != null) {
+            order.billable = true;
+            saveObject(order);
+        }
+    }
     
 }

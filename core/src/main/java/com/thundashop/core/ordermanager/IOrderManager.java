@@ -338,4 +338,7 @@ public interface IOrderManager {
     
     @Administrator
     public List<OrderTransaction> getBankOrderTransactions();
+    
+    @Administrator
+    public void markOrderAsBillabe(String orderId);
 }

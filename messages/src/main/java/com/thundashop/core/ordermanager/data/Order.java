@@ -129,6 +129,13 @@ public class Order extends DataCommon implements Comparable<Order> {
     
     public boolean isUnderConstruction = false;
     
+    /**
+     * This is marked as true if the order 
+     * should be billed to an external OTA, example 
+     * booking.com, expedia.com etc.
+     */
+    public boolean billable = false;
+    
     public Order jsonClone() {
         Gson gson = new Gson();
         String gsonOrder = gson.toJson(this);

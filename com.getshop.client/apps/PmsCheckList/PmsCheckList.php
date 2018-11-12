@@ -111,5 +111,8 @@ class PmsCheckList extends \MarketingApplication implements \Application {
         }
     }
 
+    public function markOrderAsBillable() {
+        $this->getApi()->getOrderManager()->markOrderAsBillabe($_POST['data']['orderid']);
+    }
 }
 ?>

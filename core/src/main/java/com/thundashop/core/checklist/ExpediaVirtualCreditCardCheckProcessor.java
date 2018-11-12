@@ -32,6 +32,10 @@ public class ExpediaVirtualCreditCardCheckProcessor extends CheckProcessorBase i
         
         List<Order> orders = getOrders(booking);
         
+        orders = orders.stream()
+             .filter(order -> !order.billable)
+             .collect(Collectors.toList());
+           
         for (Order order : orders) {
             if (order.isExpedia() && order.status != Order.Status.PAYMENT_COMPLETED) {
                 CheckListError error = new CheckListError();

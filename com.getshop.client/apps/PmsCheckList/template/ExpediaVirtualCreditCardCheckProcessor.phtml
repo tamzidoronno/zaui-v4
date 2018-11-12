@@ -21,4 +21,5 @@ $room = $booking->rooms[0];
 </div>
 <div class='col button'>
     <div class='gs_shop_small_icon' gs_show_modal='booking_room_view' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Open booking"); ?></div>
+    <div class='gs_shop_small_icon markorderasbillable' orderid='<? echo $order->id; ?>' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Bill expedia.com"); ?></div>
 </div>

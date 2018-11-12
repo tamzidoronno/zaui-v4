@@ -129,7 +129,7 @@ body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
 }
 
 @media only all and (max-width:800px){
-    .GslBooking .gslfront_1 .isSticked { padding-bottom: 50px; }
+     .GslBooking .gslfront_1 .isSticked { padding-bottom: 50px !important; }
     .gs_language_selection{border:0;right:0px;top:-28px !important;}
     .gsarea[area="header"] { border-bottom: solid 1px #efefef; }
     .gscell_9 .shop_button, .gscell_91 .shop_button { font-size: 20px !important; width:95%; box-sizing: border-box; line-height: 8px !important; }

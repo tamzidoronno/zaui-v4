@@ -84,7 +84,7 @@ if(stristr($booking->channel, "wubook_")) {
         <br/>
         <div class="shop_button showroomstoselect"><? echo $this->__f("Change room or category"); ?></div>
         <?php if(!$savedRoom->deleted && !$savedRoom->addedToWaitingList) { ?>
-           <span class='shop_button' gsclick='deleteRoom' style='bottom:-27px;background-color:red;'>Cancel this room</span>
+           <span class='shop_button' gsclick='deleteRoom' gs_confirm="Are you sure you want to cancel this room?" style='bottom:-27px;background-color:red;'>Cancel this room</span>
         <?php } ?>
     </div>
 

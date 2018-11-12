@@ -37,6 +37,7 @@ public abstract class CheckProcessorBase {
     public List<Order> getOrders(PmsBooking booking) {
         List<Order> orders = booking.orderIds.stream()
                 .map(orderId -> getOrderManager().getOrder(orderId))
+                .filter(order -> !order.isNullOrder())
                 .collect(Collectors.toList());
         return orders;
     }

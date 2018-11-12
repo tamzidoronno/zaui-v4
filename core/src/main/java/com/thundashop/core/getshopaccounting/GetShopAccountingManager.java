@@ -45,7 +45,7 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     public List<String> createNextOrderFile(Date endDate) {
         List<String> ret = new ArrayList();
         
-        List<Order> orders = new ArrayList(); 
+        List<Order> orders = orderManager.getOrdersToTransferToAccount(endDate);
         
         List<String> others = new ArrayList();
         List<String> invoices = new ArrayList();

@@ -171,18 +171,19 @@ public class PmsManagerProcessor {
         PmsConfiguration config = manager.getConfigurationSecure();
         try {
             PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
+            String isExpired = room.isEnded() ? "yes" : "no";
+            String isStarted = room.isStarted() ? "yes" : "no";
+            String blocked = room.blocked ? "yes" : "no";
+            String deletedText = room.isDeleted() ? "yes" : "no";
+            String startEndText = "";
+            if(room.date != null && room.date.start != null && room.date.end != null) {
+                startEndText = room.date.start + " - " + room.date.end;
+            }
+            String prefixtext = " code (" + room.code + "), expired: <b>" + isExpired + "</b> started: <b>" + isStarted + "</b> blocked: <b>" + blocked + "</b> deleted: <b>" + deletedText+"</b> startend: <b>"+startEndText + "</b>";
             if(deleted) {
-                String isExpired = room.isEnded() ? "yes" : "no";
-                String isStarted = room.isStarted() ? "yes" : "no";
-                String blocked = room.blocked ? "yes" : "no";
-                String deletedText = room.isDeleted() ? "yes" : "no";
-                String startEndText = "";
-                if(room.date != null && room.date.start != null && room.date.end != null) {
-                    startEndText = room.date.start + " - " + room.date.end;
-                }
-                manager.logEntry("Removing code from lock, code (" + room.code + "), expired: <b>" + isExpired + "</b> started: <b>" + isStarted + "</b> blocked: <b>" + blocked + "</b> deleted: <b>" + deletedText+"</b> startend: <b>"+startEndText + "</b>", booking.id, room.bookingItemId);
+                manager.logEntry("Removing code from lock: " + prefixtext, booking.id, room.bookingItemId);
             } else {
-                manager.logEntry("Getting code from lock.", booking.id , room.bookingItemId);
+                manager.logEntry("Getting code from lock: " + prefixtext, booking.id , room.bookingItemId);
             }
         }catch(Exception e) {
             e.printStackTrace();

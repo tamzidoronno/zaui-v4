@@ -1,6 +1,6 @@
 <?php
 /* @var $this \ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
-$addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedMultilevelDomainName());
+$addons = (array)$this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedMultilevelDomainName());
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 $addonslist = array();
 foreach($addons as $addon) {

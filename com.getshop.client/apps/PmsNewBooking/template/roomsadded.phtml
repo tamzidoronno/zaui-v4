@@ -1,7 +1,7 @@
 <?php
 /* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-$types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName()));
+$types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null));
 ?>
 <br>
 <h3>Step 2. Verify rooms to be added</h3>

@@ -252,7 +252,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
     }
     
     public function addRoom() {
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
         $app->setStartDate($_POST['data']['from']);
         $app->setEndDate($_POST['data']['to']);

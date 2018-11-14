@@ -162,8 +162,16 @@ class PmsAvailability extends \MarketingApplication implements \Application {
 
     public function loadTypes() {
         if (!$this->types) {
-            $this->types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+            $this->types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         }
+        $allTypes = array();
+        foreach($this->types as $type) {
+            if($type->systemCategory == 1) {
+                continue;
+            }
+            $allTypes[] = $type;
+        }
+        $this->types = $allTypes;
     }
 
     public function anyMatches($arr1, $arr2) {

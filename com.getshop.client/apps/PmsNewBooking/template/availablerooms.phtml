@@ -13,7 +13,7 @@ $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelecte
 
 ob_start();
 echo "<div class='availableroomsheading'></div>";
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 echo "<table width='100%'>";
 $total = 0;
 foreach($types as $type) {

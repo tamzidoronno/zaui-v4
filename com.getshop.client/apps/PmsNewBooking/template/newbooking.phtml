@@ -1,6 +1,15 @@
 <?php
 /* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
+$allTypes = array();
+foreach($types as $type) {
+if($type->systemCategory == 1) {
+    continue;
+}
+$allTypes[] = $type;
+}
+$types = $allTypes;
+
 $curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 ?>
 <h3>Step 1. Add a rooms</h3>

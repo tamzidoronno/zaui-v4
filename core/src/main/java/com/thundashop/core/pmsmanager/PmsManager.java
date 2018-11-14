@@ -372,8 +372,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         List<PmsBookingRooms> result = new ArrayList();
-        List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
-
+        List<BookingItemType> allGroups = bookingEngine.getBookingItemTypesWithSystemType(null);
+        allGroups = removeConferenceType(allGroups);
+        
+        
         Collections.sort(allGroups, new Comparator<BookingItemType>() {
             public int compare(BookingItemType o1, BookingItemType o2) {
                 return o1.order.compareTo(o2.order);
@@ -9201,5 +9203,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return msg;
+    }
+
+    private List<BookingItemType> removeConferenceType(List<BookingItemType> allGroups) {
+       List<BookingItemType> res = new ArrayList();
+       for(BookingItemType type : allGroups) {
+           if(type.systemCategory == BookingItemType.BookingSystemCategory.CONFERENCE) {
+               continue;
+           }
+           res.add(type);
+       }
+       return res;
     }
 }

@@ -5,6 +5,12 @@ $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
 $factory = IocContainer::getFactorySingelton();
+
+$timezone = $factory->getStore()->timeZone;
+if($timezone) {
+    date_default_timezone_set($timezone);
+}
+
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
     header('location:/login.php?redirectto=/pms.php');
     exit(0);

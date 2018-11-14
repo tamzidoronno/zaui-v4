@@ -8,6 +8,12 @@ $pageFactory = new \PageFactory($_POST['gs_getshopmodule']);
 $page = $pageFactory->getPage($_POST['core']['pageid']);
 $page->setModuleId();
 
+$timezone =  $pageFactory->getApi()->getStoreManager()->getMyStore()->timeZone;
+if($timezone) {
+    date_default_timezone_set($timezone);
+}
+
+
 // UPDATE MODAL VARIABLES
 if (isset($_POST['data']['gs_show_modal'])) {
     $_SESSION['gs_currently_showing_modal'] = $_POST['data']['gs_show_modal'];

@@ -290,6 +290,9 @@ public class EhfXmlGenerator {
             double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
             
             String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "AA" : "S";
+            if (item.getProduct().taxGroupObject.taxRate == 0.0) {
+                taxCode = "Z";
+            }
             String invoicelinetext = isCreditNote ? "CreditNoteLine" : "InvoiceLine";
             String invoieqtytext = isCreditNote ? "CreditedQuantity" : "InvoicedQuantity";
             xml += "        <cac:"+invoicelinetext+">\n"
@@ -378,6 +381,9 @@ public class EhfXmlGenerator {
         String xml = "";
         for (TaxGroup group : taxes.keySet()) {
             String taxCode = group.taxRate < 25.0 ? "AA" : "S";
+            if (group.taxRate == 0.0) {
+                taxCode = "Z";
+            }
             xml += "                <cac:TaxSubtotal>\n"
                     + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountForTaxGroupRoundedWithTwoDecimals(group)) + "</cbc:TaxableAmount>\n"
                     + "                        <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(taxes.get(group)) + "</cbc:TaxAmount>\n"

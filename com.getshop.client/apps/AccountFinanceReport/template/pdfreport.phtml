@@ -1,0 +1,210 @@
+<?
+/* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+?>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<style>
+    .row {
+        border-bottom: solid 1px #DDD;
+        font-size: 16px;
+        padding: 5px;
+    }
+    
+    .row .col {
+        display: inline-block;
+        vertical-align: top;
+        width: 200px;
+    }
+    
+    .row .col.col_start {
+        width: 80px;
+    }
+    
+    .row .col.col_description {
+        width: calc(100% - 480px);
+    }
+    
+    
+    .monthoverview {
+        margin-bottom: 50px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    
+    .monthheader {
+        background-color: #EFEFEF;
+        font-size: 18px;
+        text-align: center;
+        padding: 5px;
+        line-height: 30px;
+    }
+    
+    .summary {
+        background-color: #EEE;
+        padding: 20px;
+        font-size: 20px;
+        margin-top: 50px;
+    }
+    
+    .heading2,
+    .heading {
+        padding: 20px;
+        font-size: 20px;
+    }
+    
+    .heading2 {
+        page-break-before:always;
+    }
+    
+    .attachment {
+        margin-bottom: 50px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    
+</style>    
+
+<?php
+setlocale(LC_TIME, 'nb_NO');
+
+$factory = $this->getFactory();
+$start = $this->getStart();
+$end = $this->getEnd();
+$dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
+
+$eiendeler = array();
+
+$this->fetchConfigs();
+
+$GLOBALS['overAllDebit'] = 0;
+$GLOBALS['overAllCredit'] = 0;
+
+
+$gjeld = array();
+$grouped = array();
+foreach ($dayIncomes as $dayIncome) {
+    foreach ($dayIncome->dayEntries as $entry) {
+        if ((int)$entry->accountingNumber < 2000 || (int) $entry->accountingNumber > 10000) {
+            $eiendeler[$entry->accountingNumber][] = $entry;
+            continue;
+        }
+
+        if ((int)$entry->accountingNumber > 2000 && (int)$entry->accountingNumber < 3000) {
+            $gjeld[$entry->accountingNumber][] = $entry;
+            continue;
+        }
+
+        if (!isset($grouped[$entry->accountingNumber])) {
+            $grouped[$entry->accountingNumber] = array();
+        }
+
+        $grouped[$entry->accountingNumber][] = $entry;
+    }
+}
+
+function sortFunction($a, $b) {
+    return ((int)$a) > ((int)$b);
+}
+
+function sortFunctionDate($a, $b) {
+    return ((int)strtotime($a)) > ((int)strtotime($b));
+}
+
+$start = date('d.m.Y', strtotime($start));
+$end = date('d.m.Y', strtotime($end));
+?>
+
+<div class="heading">
+    <h2>Regnskapsbilag</h2>
+    Opprettet dato: <? echo date('d/m-Y H:i:s', strtotime('now')); ?>
+    <br/> Eiendelsperiode: <? echo $start. " - ".$end; ?>
+</div>
+
+<?
+
+function printLines($monthLines, $sumtext, $api, $me) {
+    $total=0;
+    
+    uksort($monthLines, "sortFunction");
+
+    echo "<div class='row total'>";
+       echo "<div class='col col_start'>Konto</div>";
+       echo "<div class='col col_description'></div>";
+       echo "<div class='col col_debit'>Debit</div>";
+       echo "<div class='col col_credit'>Credit</div>";
+    echo "</div>";
+   
+    $totalCredit = 0;
+    $totalDebit = 0;
+        
+    foreach ($monthLines as $accountNumber => $lines) {
+        $sum = 0;
+      
+        foreach ($lines as $line) {
+            $sum += $line->amount;
+        }
+
+        if (!$sum)
+            continue;
+
+        $desc = $me->getAccountDescription($accountNumber);
+        
+        if ((int)$accountNumber >= 2000 && (int)$accountNumber <= 4000) {
+            $credit = $sum;
+            $debit = 0;
+        } else {
+            $credit = 0;
+            $debit = $sum;
+        }
+        
+        echo "<div class='row'>";
+            echo "<div class='col col_start'>$accountNumber</div>";
+            echo "<div class='col col_description'>$desc</div>";
+            echo "<div class='col col_debit'>$debit</div>";
+            echo "<div class='col col_credit'>".($credit*-1)."</div>";
+        echo "</div>";
+
+        $totalDebit += $debit;
+        $totalCredit += $credit;
+    }
+
+    echo "<div class='row total'>";
+       echo "<div class='col col_start'></div>";
+       echo "<div class='col col_description'><b>$sumtext</b></div>";
+       echo "<div class='col col_debit'><b>$totalDebit</b></div>";
+       echo "<div class='col col_credit'><b>".($totalCredit*-1)."</b></div>";
+   echo "</div>";
+   
+   $GLOBALS['overAllDebit'] += $totalDebit;
+   $GLOBALS['overAllCredit'] += $totalCredit;
+}
+
+echo "<div class='monthoverview'>";
+    echo "<div class='monthHeader'> Eiendeler $start - $end</div>";
+    printLines($eiendeler, "Sum eiendeler", $factory->getApi(), $this);
+echo "</div>";
+
+
+echo "<div class='monthoverview'>";
+    echo "<div class='monthHeader'> Egenkapital og gjeld - $start - $end</div>";
+    printLines($gjeld, "Sum egenkapital og gjeld", $factory->getApi(), $this);
+echo "</div>";
+
+
+echo "<div class='monthoverview'>";
+    echo "<div class='monthHeader'> Salgs og driftsinntekter - $start - $end</div>";
+    printLines($grouped, "Sum Salgs og driftsinntekter", $factory->getApi(), $this);
+echo "</div>";
+
+$overAllDebit = round($GLOBALS['overAllDebit'], 2);
+$overAllCredit = round($GLOBALS['overAllCredit'], 2);
+
+
+echo "<div class='monthoverview'>";
+    echo "<div class='row total'>";
+       echo "<div class='col col_start'></div>";
+       echo "<div class='col col_description'>Sum</div>";
+       echo "<div class='col col_debit'>".$overAllDebit."</div>";
+       echo "<div class='col col_credit'>".($overAllCredit*-1)."</div>";
+   echo "</div>";
+echo "</div>";

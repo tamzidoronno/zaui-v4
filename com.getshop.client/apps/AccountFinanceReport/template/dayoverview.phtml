@@ -1,0 +1,101 @@
+<?
+/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_start'], $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_end']);
+
+$allAccountNumbers = array();
+
+if (count($dayIncomes) != 1) {
+    echo "Multiple days not allowed in this view";
+    return;
+}
+
+$orders = array();
+foreach ($dayIncomes as $dayIncome) {
+    foreach ($dayIncome->dayEntries as $entry) {
+        if (!isset($orders[$entry->orderId])) {
+            $orders[$entry->orderId] = array();
+        }
+        $orders[$entry->orderId][] = $entry;
+        $allAccountNumbers[] = $entry->accountingNumber;
+    }
+}
+
+$accounts = array_unique($allAccountNumbers);
+
+sort($accounts);
+
+?>
+<div class="infoheader">
+    <?
+    echo "<div class='head'>".$this->__f("Financial Day Income")."</div>";
+    echo $this->__f("Periode").": ".date('d.m.Y H:i', strtotime($dayIncome->start))." - ".date('d.m.Y H:i', strtotime($dayIncome->end));
+    ?>
+    <div>
+        <? echo $this->__f("You can click on each order to inspect how this order is accounted for. Or click back to go to go back"); ?>
+    </div>
+    
+</div>
+<?
+echo "<div class='buttonarea'>";
+    echo "<div gsclick='cancelBrowsing' class='shop_button'>Back</div>";
+echo "</div>";
+
+echo "<div class='outer'>";
+    echo "<div class='row header'>";
+        echo "<div class='col orderid header'>OrderId</div>";
+        foreach ($accounts as $account) {
+            echo "<div class='col $account header'>".$account;
+                echo "<div class='accountdesc'>".$this->getAccountDescription($account)."</div>";
+            echo "</div>";
+        }
+        echo "<div class='col controlsum'>Zero Check</div>";
+    echo "</div>";
+
+    ksort($orders);
+    $sum = array();
+    foreach ($orders as $orderId => $incomes) {
+        echo "<div class='row' gsclick='showOrder' orderid='$orderId'>";
+            $incrementalId = $this->getApi()->getOrderManager()->getIncrementalOrderIdByOrderId($orderId);
+            echo "<div class='col orderid'>".$incrementalId."</div>";
+            $grouped = $this->groupOnAccounting($incomes);
+
+            $controlSum = 0;
+            foreach ($accounts as $account) {
+                if (isset($grouped[$account]) && $grouped[$account]) {
+                    $sum[$account] = @$sum[$account] + $grouped[$account];
+                }
+
+                if (isset($grouped[$account]) && $grouped[$account]) {
+                    $controlSum += $grouped[$account];
+                }
+
+                $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : "&nbsp;";
+                echo "<div class='col $account'>$val</div>";
+            }
+            echo "<div class='col controlsum'>".round($controlSum)."</div>";
+
+        echo "</div>";
+    }
+
+    echo "<div class='row summaryrow'>";
+
+        echo "<div class='col orderid'>Total</div>";
+        $grouped = $this->groupOnAccounting($incomes);
+
+        $controlSum = 0;
+        foreach ($accounts as $account) {
+            if (isset($sum[$account]) && $sum[$account]) {
+                $controlSum += $sum[$account];
+            }
+            $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
+            echo "<div class='col $account'>$val</div>";
+        }
+        echo "<div class='col controlsum'>".floor($controlSum)."</div>";
+
+    echo "</div>";
+
+    echo "<div class='buttonarea'>";
+        echo "<div gsclick='cancelBrowsing' class='shop_button'>Back</div>";
+    echo "</div>";
+echo "</div>";
+?>

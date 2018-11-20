@@ -155,6 +155,7 @@
 "1050","Was not able to validate EHF. GetShop has been notified and will contact you once we have checked what the problem is"
 "1051","Order is manually closed, please open it before modifying"
 "1052","This payment method is not allowed to mark as paid manually"
+"1053","You can not do this as it will change financial in a periode that has been closed."
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

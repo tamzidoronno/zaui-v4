@@ -540,4 +540,7 @@ public interface IPmsManager {
     
     @Administrator
     public void markIgnoreUnsettledAmount(String bookingId);
+    
+    @Administrator
+    public void markOtaPaymentsAutomaticallyPaidOnCheckin(Date start, Date end);
 }

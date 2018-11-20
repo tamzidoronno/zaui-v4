@@ -130,6 +130,14 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean isUnderConstruction = false;
     
     /**
+     * If this is set to a date it will use this date for everything 
+     * to accounting. 
+     * 
+     * Example when you need to credit an order but the periode is closed.
+     */
+    public Date overrideAccountingDate = null;
+    
+    /**
      * This is marked as true if the order 
      * should be billed to an external OTA, example 
      * booking.com, expedia.com etc.
@@ -146,6 +154,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.triedTransferredToAccountingSystem = false;
         orderNew.transferredToAccountingSystem = false;
         orderNew.createdDate = new Date();
+        orderNew.logLines.clear();
+        orderNew.transactions.clear();
 
         if (orderNew.cart != null) {
             orderNew.cart.rowCreatedDate = new Date();
@@ -1047,6 +1057,140 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
         return false;
+    }
+
+    /**
+     * this function will return true if there are any items in the pricematrix
+     * that will validate the closed periode of the accounting.
+     * 
+     * @param oldOrder
+     * @param closedDate
+     * @return 
+     */
+    public boolean needToStopDueToIllegalChangeOfPriceMatrix(Order oldOrder, Date closedDate) {
+        if (cart == null) {
+            return false;
+        }
+        
+        List<CartItem> itemsToCheck = cart.getItems().stream()
+                .filter(item -> item.isPriceMatrixItem())
+                .collect(Collectors.toList());
+        
+        for (CartItem item : itemsToCheck) {
+            for (String dateString : item.priceMatrix.keySet()) {
+                Date date = convertPriceMatrixDate(dateString);
+
+                if (date.equals(closedDate) || date.after(closedDate)) {
+                    continue;
+                }
+
+                if (oldOrder == null) {
+                    return true;
+                }
+
+                Double oldValue = oldOrder.cart.getCartItem(item.getCartItemId()).priceMatrix.get(dateString);
+                if (oldValue == null) {
+                    return true;
+                }
+
+                BigDecimal oldPriceForDate = TwoDecimalRounder.roundTwoDecimals(oldValue);
+                BigDecimal currentPrice = TwoDecimalRounder.roundTwoDecimals(item.priceMatrix.get(dateString));
+
+                if (oldPriceForDate.compareTo(currentPrice) != 0) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    private Date convertPriceMatrixDate(String dateString) throws RuntimeException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try {
+            return sdf.parse(dateString+" 09:00:00");
+        } catch (ParseException ex) {
+            throw new RuntimeException("Failed to parse matrix date, should not happen");
+        }
+    }
+
+    public boolean needToStopDueToIllegalChangeInAddons(Order oldOrder, Date closedDate) {
+        if (cart == null) {
+            return false;
+        }
+        
+        List<CartItem> itemsToCheck = cart.getItems().stream()
+                .filter(item -> item.isPmsAddons())
+                .collect(Collectors.toList());
+        
+        for (CartItem item : itemsToCheck) {
+            for (PmsBookingAddonItem addon : item.itemsAdded) {
+                Date date = addon.date;
+
+                if (date.equals(closedDate) || date.after(closedDate)) {
+                    continue;
+                }
+
+                if (oldOrder == null) {
+                    return true;
+                }
+
+                PmsBookingAddonItem oldAddon = oldOrder.cart.getCartItem(item.getCartItemId())
+                        .itemsAdded
+                        .stream()
+                        .filter(i -> i.addonId.equals(addon.addonId))
+                        .findAny()
+                        .orElse(null);
+                
+                if (oldAddon == null) {
+                    return true;
+                }
+
+                BigDecimal oldPriceForDate = TwoDecimalRounder.roundTwoDecimals(oldAddon.count * oldAddon.price);
+                BigDecimal currentPrice = TwoDecimalRounder.roundTwoDecimals((addon.count * addon.price));
+
+                if (oldPriceForDate.compareTo(currentPrice) != 0) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    public boolean needToStopDueToIllegalChangePaymentDate(Order oldOrder, Date closedDate) {
+        if (paymentDate == null || paymentDate.equals(closedDate) || paymentDate.after(closedDate))
+            return false;
+        
+        if (oldOrder == null || oldOrder.paymentDate == null)
+            return true;
+        
+        if (!oldOrder.paymentDate.equals(paymentDate)) {
+            return true;
+        } 
+        
+        return false;
+    }
+
+    public void moveAllTransactionToTodayIfItsBeforeDate(Date close) {
+        if (cart == null)
+            return;
+        
+        // PMS Addons
+        if (needToStopDueToIllegalChangeInAddons(null, close)) {
+            overrideAccountingDate = new Date();
+            return;
+        }
+        
+        if (needToStopDueToIllegalChangeOfPriceMatrix(null, close)) {
+            overrideAccountingDate = new Date();
+            return;
+        }
+        
+        if (needToStopDueToIllegalChangePaymentDate(null, close)) {
+            overrideAccountingDate = new Date();
+            return;
+        }
     }
     
     public static class Status  {

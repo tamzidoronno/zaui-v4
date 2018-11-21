@@ -195,7 +195,7 @@ public interface IOrderManager {
     public Order getOrderByincrementOrderIdAndPassword(Integer id, String password) throws ErrorException;
     
     @Editor
-    public long getIncrementalOrderIdByOrderId(String orderId);
+    public Long getIncrementalOrderIdByOrderId(String orderId);
     
     /**
      * If everything is ok, the price is the same as the order and the currency, then update the status.

@@ -2644,7 +2644,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public long getIncrementalOrderIdByOrderId(String orderId) {
+    public Long getIncrementalOrderIdByOrderId(String orderId) {
         Order order = getOrder(orderId);
         if (order != null) {
             return order.incrementOrderId;

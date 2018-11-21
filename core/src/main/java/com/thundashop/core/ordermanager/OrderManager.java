@@ -2650,7 +2650,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return order.incrementOrderId;
         }
         
-        return 0;
+        return 0L;
     }
 
     @Override

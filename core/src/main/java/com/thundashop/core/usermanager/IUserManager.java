@@ -500,4 +500,9 @@ public interface IUserManager {
     public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode);
     
     public User updatePasswordByResetCode(String resetCode, String newPassword);
+    
+    public User logonUsingToken(String token);
+    
+    @Customer
+    public String createTokenAccess();
 }

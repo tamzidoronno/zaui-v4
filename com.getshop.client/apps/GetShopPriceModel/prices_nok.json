@@ -14,7 +14,7 @@
     "repeaterPrice" : 500,
     "serverPrice" : 1500,
     "integrationToAccountingPrice" : 24000,
-    "minMonthlyCost" : 500,
+    "minMonthlyCost" : 1000,
     "restaurantCost" : 29000,
     "restaurantEntryPoints" : 2000,
     "currency" : "NOK"

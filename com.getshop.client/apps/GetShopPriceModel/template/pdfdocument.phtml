@@ -516,6 +516,24 @@ $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calc
     </div>
     <?
     }
+    
+    if (isset($priceMatrix['minMonthly'])) {
+    ?>
+        <div class="row">
+            <div class="type">
+                Minimum cost
+            </div>
+            <div class="count">
+            </div>
+            <div class="price">
+                <? echo $priceMatrix['minMonthly']." ".$prices->currency." / Month"; ?>
+            </div>
+            <div class="description">
+                Adjustment due to minimum monthly cost.
+            </div>
+        </div>
+    <?
+    }
     ?>
     
     <div class="row" style='font-weight: bold; color: green; font-size: 20px;'>

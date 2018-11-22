@@ -66,12 +66,14 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $locksLicenceCost = ($priceObject->lockLicense * $locks);
 
         $totalMonthly = 0.0;
+        $minTotalDiff = 0;
         $totalMonthly += $roomLicenceCost;
         $totalMonthly += $locksLicenceCost;
         if ($integrationtoaccounting) {
             $totalMonthly += $priceObject->accountinglicense;
         }
-        if ($totalMonthly < 65 && $totalMonthly > 0) {
+        if ($totalMonthly < $priceObject->minMonthlyCost && $totalMonthly > 0) {
+            $minTotalDiff = $priceObject->minMonthlyCost - $totalMonthly;
             $totalMonthly = $priceObject->minMonthlyCost;
         }
         
@@ -159,6 +161,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $priceMatrix['servers'] = $servers;
         $priceMatrix['repeaters'] = $repeaters;
         $priceMatrix['totalMonthly'] = $totalMonthly;
+        $priceMatrix['minMonthly'] = $minTotalDiff;
         
         $priceMatrix['serversCost'] = $servers * $priceObject->serverPrice;
         $priceMatrix['repeatersCost'] = $repeaters * $priceObject->repeaterPrice;

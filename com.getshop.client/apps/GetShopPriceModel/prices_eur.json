@@ -14,7 +14,7 @@
     "repeaterPrice" : 52.01,
     "serverPrice" : 156.15,
     "integrationToAccountingPrice" : 2496.89,
-    "minMonthlyCost" : 52.64,
+    "minMonthlyCost" : 100,
     "restaurantCost" : 3020.12,
     "restaurantEntryPoints" : 208.14,
     "currency" : "EUR"

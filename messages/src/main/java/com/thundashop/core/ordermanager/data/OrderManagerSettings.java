@@ -20,5 +20,5 @@ public class OrderManagerSettings extends DataCommon {
      * 
      * Note, its all orders until this date, not including.
      */
-    public Date closedTilPeriode = new Date(0);
+    public Date closedTilPeriode = null;
 }

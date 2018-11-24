@@ -22,6 +22,7 @@ public class DayEntry implements Serializable, Cloneable {
     public boolean isIncome = false;
     public String cartItemId;
     public String orderId;
+    public long incrementalOrderId;
     public BigDecimal amount;
     public Date date;
     public String accountingNumber;

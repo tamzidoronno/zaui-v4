@@ -63,6 +63,10 @@
     width: 150px;
 }
 
+.AccountFinanceReport .col.rowdate {
+    width: 150px;
+}
+
 .AccountFinanceReport .infoheader {
     padding: 30px;
     padding-left: 50px;
@@ -91,4 +95,8 @@
 
 .AccountFinanceReport .showresultbutton.deactivated {
     background-color: #DDD;
+}
+
+.AccountFinanceReport .inbalance {
+    color: green;
 }

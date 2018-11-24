@@ -14,6 +14,12 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
 
     public function render() {
         $this->fetchConfigs();
+        
+        if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'])) {
+            $this->includefile("accountsummary");
+            return;
+        }
+        
         if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid'])) {
             $this->includefile("orderview");
             return;
@@ -28,6 +34,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
 
     public function createGroupByAccount($dayIncome) {
         
+    }
+    
+    public function showSummaryForAccount() {
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'] = $_POST['data']['account'];
     }
     
     public function showDetailedReport() {
@@ -124,6 +134,27 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     
     public function downloadReport() {
         $this->includefile("pdfreport");
+    }
+
+    public function getOrderBalance($orderId, $records) {
+        $total = 0;
+        
+        foreach ($records as $record) {
+            if ($record->incrementalOrderId == $orderId) {
+                $total += $record->amount;
+            }
+        }
+        
+        return round($total, 4);
+    }
+
+    public function getPaymentName($paymentType) {
+        $name = explode("\\", $paymentType);
+        return $name[1];
+    }
+
+    public function cancelAccountOverview() {
+        unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary']);
     }
 }
 ?>

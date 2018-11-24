@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -18,6 +19,13 @@ public class DayIncome {
     public Date start;
     public Date end;
     public List<DayEntry> dayEntries = new ArrayList();
+    
+    /**
+     * Used for return error messages to 
+     * gui.
+     */
+    @Transient
+    public String errorMsg;
 
     public boolean within(Date date) {
         long startLong = start.getTime();

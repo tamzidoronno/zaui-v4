@@ -10,10 +10,23 @@ $monthHasPassed = strtotime($end) < time();
 $selectedYear = date('Y', strtotime($start));
 $selectedMonth = date('m', strtotime($start));
 
+$errors  = array();
 foreach ($dayIncomes as $dayIncome) {
-    foreach ($dayIncome->dayEntries as $entry) {
-        $allAccountNumbers[] = $entry->accountingNumber;
+    if ($dayIncome->errorMsg) {
+        $errors[] = $dayIncome->errorMsg;
+    } else {
+        foreach ($dayIncome->dayEntries as $entry) {
+            $allAccountNumbers[] = $entry->accountingNumber;
+        }
     }
+}
+
+if (count($errors)) {
+    echo "<h1>".$this->__f("There is a few errors you have to sort out first.")."</h1>";
+    foreach ($errors as $error) {
+        echo "<div style='color: red; margin-left: 50px;'>- ".$error."</div>";
+    }
+    return;
 }
 
 $accounts = array_unique($allAccountNumbers);
@@ -119,7 +132,7 @@ echo "<div class='outer'>";
                 $controlSum += $sum[$account];
             }
             $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
-            echo "<div class='col $account'>$val</div>";
+            echo "<div gsclick='showSummaryForAccount' account='$account' class='col $account'>$val</div>";
         }
         echo "<div class='col controlsum'>".floor($controlSum)."</div>";
 

@@ -10,12 +10,12 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.ProductManager;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +40,7 @@ public class OrderDailyBreaker {
     private Date end;
     private Date start;
     private List<DayEntry> orderDayEntries;
+    private List<String> errors = new ArrayList();
     
     public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, boolean includingTaxes, PaymentManager paymentManager, ProductManager productManager) {
         this.dayIncomes = new ArrayList();
@@ -86,19 +87,22 @@ public class OrderDailyBreaker {
     public void breakOrders() {
         System.out.println("Total orders: " + ordersToBreak.size());
         this.ordersToBreak.stream().forEach(order -> {
-            if (order.isNullOrder() || order.isVirtual)
-                return;
-            
-            if (ignoreOrderDueToDisabledAccountingPaymentMethod(order)) {
-                return;
+            try {
+                if (order.isNullOrder() || order.isVirtual)
+                    return;
+
+                if (ignoreOrderDueToDisabledAccountingPaymentMethod(order)) {
+                    return;
+                }
+
+                if (!order.payment.isPaymentTypeValid()) {
+                    throw new RuntimeException("Missing payment method on order? " + order.incrementOrderId);
+                }
+
+                proccessOrder(order);
+            } catch (Exception ex) {
+                errors.add(ex.getMessage());
             }
-            
-            if (!order.payment.isPaymentTypeValid()) {
-                System.out.println("Missing payment method on order? " + order.incrementOrderId);
-                return;
-            }
-            
-            proccessOrder(order);
         });
     }
 
@@ -152,6 +156,7 @@ public class OrderDailyBreaker {
             }
         });
         
+        createPaymentRecords(orderDayEntries, order);
         correctRoundingProblemsDueToExTaxes(orderDayEntries);
         
         boolean orderValidated = validateDayEntries(orderDayEntries, order);
@@ -159,15 +164,17 @@ public class OrderDailyBreaker {
         // TODO - handle execption
         if (!orderValidated) {
             String message = "The pricematrix, items added or normal cartitems does not match up with total income for the order, order: " + order.incrementOrderId;
-            System.out.println(message);
-//            throw new RuntimeException(message);
+            throw new RuntimeException(message);
         }
         
         return orderDayEntries;
     }
 
     private DayEntry createIncomeEntry(Order order) {
-        if (order.status != Order.Status.PAYMENT_COMPLETED || order.paymentDate == null) {
+        boolean shouldDoublePost = shouldRegisterPaymentTransactions(order);
+        boolean isPaid = order.status == Order.Status.PAYMENT_COMPLETED && order.paymentDate != null;
+        
+        if (!shouldDoublePost && !isPaid) {
             return null;
         }
         
@@ -179,7 +186,8 @@ public class OrderDailyBreaker {
         }
         dayEntry.isIncome = true;
         dayEntry.orderId = order.id;
-        dayEntry.date = order.paymentDate;
+        dayEntry.incrementalOrderId = order.incrementOrderId;
+        dayEntry.date = shouldDoublePost ? order.rowCreatedDate : order.paymentDate;
         dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.payment.getPaymentTypeId());
         return dayEntry;
     }
@@ -193,6 +201,7 @@ public class OrderDailyBreaker {
                 DayEntry entry = new DayEntry();
                 entry.cartItemId = item.getCartItemId();
                 entry.orderId = order.id;
+                entry.incrementalOrderId = order.incrementOrderId;
                 if (includingTaxes) {
                     entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.priceMatrix.get(dateString));
                 } else {
@@ -229,6 +238,7 @@ public class OrderDailyBreaker {
             entry.cartItemId = item.getCartItemId();
             entry.orderId = order.id;
             entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(total);
+            entry.incrementalOrderId = order.incrementOrderId;
             entry.date = i.date;
             if (order.overrideAccountingDate != null)
                 entry.date = order.overrideAccountingDate;
@@ -244,6 +254,7 @@ public class OrderDailyBreaker {
         DayEntry entry = new DayEntry();
         entry.cartItemId = item.getCartItemId();
         entry.orderId = order.id;
+        entry.incrementalOrderId = order.incrementOrderId;
         if (includingTaxes) {
             entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalAmount());
         } else {
@@ -406,6 +417,20 @@ public class OrderDailyBreaker {
 
         return null;
     }
+    
+    private String getAccountingNumberForPaymentApplicationId_paid(String paymentId) {
+        if (paymentId == null) {
+            return null;
+        }
+        
+        StorePaymentConfig config = paymentManager.getStorePaymentConfiguration(paymentId);
+        
+        if (config != null) {
+            return config.userCustomerNumberPaid;
+        }
+
+        return null;
+    }
 
     private String getAccountingNumberForProduct(CartItem item) throws DailyIncomeException {
         String result = getAccountingNumberForProduct(item.getProduct().id);
@@ -561,8 +586,61 @@ public class OrderDailyBreaker {
 
     private void checkStorePayment(StorePaymentConfig storePaymentConfig, Order order) {
         if (storePaymentConfig == null) {
-            throw new NullPointerException("Missing paymentconfig for " + order.payment.paymentType);
+            throw new NullPointerException("Missing paymentconfig for " + order.payment.readablePaymentType() + ", orderid: " + order.incrementOrderId);
         }
+    }
+
+    private boolean shouldRegisterPaymentTransactions(Order order) {
+        
+        StorePaymentConfig config = paymentManager.getStorePaymentConfiguration(order.getPaymentApplicationId());
+        
+        if (config != null) {
+            return config.userCustomerNumberPaid != null && !config.userCustomerNumberPaid.isEmpty();
+        }
+        
+        return false;
+    }
+
+    private void createPaymentRecords(List<DayEntry> orderDayEntries, Order order)  {
+        if (!shouldRegisterPaymentTransactions(order)) {
+            return;
+        }
+        
+        if (order.orderTransactions == null)
+            return;
+        
+        for (OrderTransaction orderTransaction : order.orderTransactions) {
+            DayEntry dayEntry = new DayEntry();
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount);
+            dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
+            dayEntry.orderId = order.id;
+            dayEntry.incrementalOrderId = order.incrementOrderId;
+            dayEntry.date = orderTransaction.date;
+            orderDayEntries.add(dayEntry);
+            
+            try {
+                dayEntry = dayEntry.clone();
+                dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId_paid(order.getPaymentApplicationId());
+                dayEntry.amount = dayEntry.amount.multiply(new BigDecimal(-1));
+                orderDayEntries.add(dayEntry);
+            } catch (CloneNotSupportedException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public boolean hasErrors() {
+        return !errors.isEmpty();
+    }
+
+    public List<DayIncome> getErrors() {
+        return errors.stream()
+                .map(error -> {
+                    DayIncome inc = new DayIncome();
+                    inc.errorMsg = error;
+                    return inc;
+                })
+                .collect(Collectors.toList());
     }
 
 }

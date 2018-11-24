@@ -2,6 +2,7 @@ package com.thundashop.core.ordermanager;
 
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.accountingmanager.AccountingTransaction;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
@@ -16,9 +17,11 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.epay.EpayManager;
+import com.thundashop.core.eventbooking.EventLog;
 import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
+import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
@@ -2481,6 +2484,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void markOrderAsTransferredToAccounting(String orderId) {
         Order order = getOrderSecure(orderId);
+        
+        if (order.transferredToAccountingSystem) {
+            return;
+        }
+        
         order.transferredToAccountingSystem = true;
         saveOrderInternal(order);
     }
@@ -2638,11 +2646,41 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getDayIncomes(Date start, Date end) {
+        DayIncomeReport report = getReport(start, end);
+        
+        if (report != null) {
+            return report.incomes;
+        }
+                
         OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, true, paymentManager, productManager);
         breaker.breakOrders();
+        
+        if (breaker.hasErrors()) {
+            return breaker.getErrors();
+        }
+        
         return breaker.getDayIncomes();
     }
 
+    private DayIncomeReport getReport(Date startDate, Date endDate) {
+        long start = startDate.getTime();
+        long end = endDate.getTime();
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", DayIncomeReport.class.getCanonicalName());
+        return database.query("OrderManager", storeId, query).stream()
+                .map(o -> (DayIncomeReport)o)
+                .filter(r -> {
+                    long iStart = r.start.getTime();
+                    long iEnd = r.end.getTime();
+                    
+                    return iStart <= start && iEnd > end;
+                })
+                .findAny()
+                .orElse(null);
+        
+    }
+    
     @Override
     public Long getIncrementalOrderIdByOrderId(String orderId) {
         Order order = getOrder(orderId);
@@ -2655,17 +2693,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayEntry> getDayEntriesForOrder(String orderId) {
-        
         Order order = getOrder(orderId);
         Date start = order.rowCreatedDate;
         Date end = order.rowCreatedDate;
+        
         List<Order> orders = new ArrayList();
         orders.add(order);
         OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, true, paymentManager, productManager);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
-                
     }
 
     @Override
@@ -2683,22 +2720,35 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             closePeriodeToDate = cal.getTime();
         }
         
+        if (!lastDayOfPrevMonthClosed(closeDate)) {
+            throw new RuntimeException("Could not close periode due to last periode has not been closed");
+        }
+        
         Date now = new Date();
         if (now.before(closePeriodeToDate)) {
             throw new RuntimeException("We can not close down for the future");
         }
         
-        OrderManagerSettings settings = getOrderManagerSettings();
-        settings.closedTilPeriode = closePeriodeToDate;
-        saveObject(settings);
-        
         List<DayIncome> days = getDayIncomes(getOrderManagerSettings().closedTilPeriode, closeDate);
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        
+        DayIncomeReport incomeReport = new DayIncomeReport();
+        incomeReport.start = settings.closedTilPeriode;
+        incomeReport.end = closePeriodeToDate;
+        incomeReport.createdBy = getSession().currentUser.id;
 
+        incomeReport.incomes = days;
+        saveObject(incomeReport);
+        
         for (DayIncome day : days) {
             for (DayEntry entry : day.dayEntries) {
                 markOrderAsTransferredToAccounting(entry.orderId);
             }
         }
+        
+        settings.closedTilPeriode = closePeriodeToDate;
+        saveObject(settings);
     }   
     
     private OrderManagerSettings getOrderManagerSettings() {
@@ -2706,6 +2756,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             this.orderManagerSettings = new OrderManagerSettings();
             saveObject(this.orderManagerSettings);
         }
+        
+        if (this.orderManagerSettings.closedTilPeriode == null || this.orderManagerSettings.closedTilPeriode.equals(new Date(0))) {
+            this.orderManagerSettings.closedTilPeriode = getStore().rowCreatedDate;
+        }
+        
         
         return this.orderManagerSettings;
     }
@@ -2781,5 +2836,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public boolean isLocked(Date date) {
         return getOrderManagerSettings().closedTilPeriode.after(date);
+    }
+
+    private boolean lastDayOfPrevMonthClosed(Date closeDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(closeDate);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayInPrevMonth = cal.getTime();
+        
+        return getOrderManagerSettings().closedTilPeriode.after(lastDayInPrevMonth);
     }
 }

@@ -2,6 +2,30 @@ app.AccountFinanceReport = {
     init: function() {
         $(document).on('click', '.AccountFinanceReport .showresultbutton.deactivated', app.AccountFinanceReport.displayWarning);
         $(document).on('click', '.AccountFinanceReport .showresultbutton.closeperiode', app.AccountFinanceReport.closePeriode);
+        $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
+    },
+    
+    changePeriodeOptions: function() {
+        var selectedYear = $('.AccountFinanceReport .timeperiode[gsname="year"]').val();
+        
+        $('.AccountFinanceReport .timeperiode[gsname="month"] option').show();
+        $('.AccountFinanceReport .timeperiode[gsname="month"] option').removeClass('hiddenelement');
+        
+        if (selectedYear == storeCreatedYear) {
+            $('.AccountFinanceReport .timeperiode[gsname="month"] option').each(function() {
+                var val = $(this).val();
+                if (val < storeCreatedMonth) {
+                    $(this).hide();
+                    $(this).addClass('hiddenelement');
+                }
+            });
+            
+            var elementHidden = $('.AccountFinanceReport .timeperiode[gsname="month"]').find(':selected').hasClass('hiddenelement');
+            if (elementHidden) {
+                var visibleItems = $('.AccountFinanceReport .timeperiode[gsname="month"] option:not(.hiddenelement)');
+                $(visibleItems[0]).attr('selected', 'selected');
+            }
+        }
     },
     
     closePeriode: function() {

@@ -31,6 +31,12 @@ if (count($errors)) {
 
 $accounts = array_unique($allAccountNumbers);
 sort($accounts);
+$store = $this->getApi()->getStoreManager()->getMyStore();
+$storeYear = date('Y', strtotime($store->rowCreatedDate));
+echo "<script>";
+    echo "storeCreatedYear = ".$storeYear.";";
+    echo "storeCreatedMonth = ".date('m', strtotime($store->rowCreatedDate)).";";
+echo "</script>";
 ?>
 <div class="infoheader">
     <?
@@ -44,7 +50,7 @@ sort($accounts);
     <br/><b>Please select: </b>
     <br/>
     <div gstype='form' method='showMonth'>
-        <select gsname='month' class='gsniceselect1'>
+        <select  gsname='month' class='gsniceselect1 timeperiode'>
             <option value="1" <? echo $selectedMonth == 1 ? 'selected="true"' :""; ?>>Jan</option>
             <option value="2" <? echo $selectedMonth == 2 ? 'selected="true"' :""; ?>>Feb</option>
             <option value="3" <? echo $selectedMonth == 3 ? 'selected="true"' :""; ?>>Mar</option>
@@ -59,11 +65,11 @@ sort($accounts);
             <option value="12" <? echo $selectedMonth == 12 ? 'selected="true"' :""; ?>>Dec</option>
         </select>
         -
-        <select gsname='year' class='gsniceselect1'>
+        <select gsname='year' class='gsniceselect1 timeperiode'>
             <?
-            $currentYear = date('Y') + 1;
-            for ($i=0; $i<5; $i++) {
-                $year = $currentYear - $i;
+            $nextYear = date('Y') + 1;
+            for ($i=$storeYear; $i<=$nextYear; $i++) {
+                $year = $i;
                 $selected = $year == $selectedYear ? 'selected="true"' :""; 
                 echo "<option $selected year='$year'>$year</option>";
             }
@@ -142,3 +148,8 @@ echo "<div class='outer'>";
 echo "</div>";
 
 ?>
+<script>
+    $(document).ready(function() {
+        app.AccountFinanceReport.changePeriodeOptions();
+    })
+</script>

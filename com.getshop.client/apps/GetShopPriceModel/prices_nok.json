@@ -17,5 +17,6 @@
     "minMonthlyCost" : 1000,
     "restaurantCost" : 29000,
     "restaurantEntryPoints" : 2000,
+    "salespoints" : 19000,
     "currency" : "NOK"
 }

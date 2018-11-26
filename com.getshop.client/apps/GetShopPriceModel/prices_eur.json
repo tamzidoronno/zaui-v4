@@ -17,5 +17,6 @@
     "minMonthlyCost" : 100,
     "restaurantCost" : 3020.12,
     "restaurantEntryPoints" : 208.14,
+    "salespoints" : 1900,
     "currency" : "EUR"
 }

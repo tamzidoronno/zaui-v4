@@ -3,6 +3,7 @@
 
 $rooms = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms'] : 0;
 $locks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks'] : 0;
+$salespoints = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['salespoints']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['salespoints'] : 0;
 $restaurantEntryPoints = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['restaurantEntryPoints']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['restaurantEntryPoints'] : 0;
 $entrancelocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks'] : 0;
 $selfcheckinindoor = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor'] : 0;
@@ -68,6 +69,11 @@ $getshoptraining = $getshoptraining ? 'checked="true"' : "";
 <div class='row'>
     <div class='col1'>Number of PGA's</div>
     <div class='col2'><input type='text' class='gsniceinput1 inputvalue pgas' value='<? echo $pgas; ?>'></div>
+</div>
+
+<div class='row'>
+    <div class='col1'>SalesPoints</div>
+    <div class='col2'><input type='text' class='gsniceinput1 inputvalue salespoints' value='<? echo $salespoints; ?>'></div>
 </div>
 
 <div class='row'>

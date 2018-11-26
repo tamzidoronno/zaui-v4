@@ -17,5 +17,6 @@
     "minMonthlyCost" : 120,
     "restaurantCost" : 3729.10,
     "restaurantEntryPoints" : 257,
+    "salespoints" : 2200,
     "currency" : "USD"
 }

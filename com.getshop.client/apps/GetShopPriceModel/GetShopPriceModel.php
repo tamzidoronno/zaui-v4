@@ -56,6 +56,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $selfcheckinindoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinindoor'];
         $selfcheckinoutdoor = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor'];
         $pgas = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas'];
+        $salespoints = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['salespoints'];
         $customwebsite = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite'] === "true";
         $integrationtoaccounting = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting'] === "true";
         $getshopdosetup = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup'] === "true";
@@ -89,6 +90,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $terminalIndoorCosts = ($priceObject->terminalIndoorPrice * $selfcheckinindoor);
         $terminalOutdoorCosts = ($priceObject->terminalOutdoorPrice * $selfcheckinoutdoor);
         $pgatotalcosts = ($pgas * $priceObject->pgaPrice);
+        $salespointstotalcosts = ($salespoints * $priceObject->salespoints);
         $installationPrice = ($locks * $priceObject->installLockPrice);
 
         $totalSetupCost = 0;
@@ -96,6 +98,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $totalSetupCost += $terminalIndoorCosts;
         $totalSetupCost += $terminalOutdoorCosts;
         $totalSetupCost += $pgatotalcosts;
+        $totalSetupCost += $salespointstotalcosts;
         $totalSetupCost += $entranceDoorPriceTotal;
         if ($getshopinstalllocks) {
             $totalSetupCost += $installationPrice;
@@ -153,6 +156,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $priceMatrix['terminalIndoorCosts'] = $terminalIndoorCosts;
         $priceMatrix['terminalOutdoorCosts'] = $terminalOutdoorCosts;
         $priceMatrix['pgatotalcosts'] = $pgatotalcosts;
+        $priceMatrix['salespointstotalcosts'] = $salespointstotalcosts;
         $priceMatrix['installationPrice'] = $installationPrice;
         $priceMatrix['roomLicenceCost'] = $roomLicenceCost;
         $priceMatrix['locksLicenceCost'] = $locksLicenceCost;

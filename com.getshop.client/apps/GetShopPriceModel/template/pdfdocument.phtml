@@ -16,6 +16,7 @@ $integrationtoaccounting = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b
 $getshopdosetup = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup'] === "true";
 $getshopinstalllocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks'] === "true";
 $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining'] === "true";
+$salespoints = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['salespoints'];
 
 ?>
 
@@ -215,6 +216,27 @@ $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calc
         </div>
         <div class="description">
             The PGA's are used at the hotel-rooms where guests can do a few operations themself, like request late checkout, personal wifi, etc.
+        </div>
+    </div>
+    <?
+    }
+    ?>
+    
+    <?
+    if ($salespoints) {
+    ?>
+    <div class="row">
+        <div class="type">
+            SalesPoint
+        </div>
+        <div class="count">
+            <? echo $salespoints." x ".$prices->salespoints; ?>
+        </div>
+        <div class="price">
+            <? echo $priceMatrix['salespointstotalcosts']." ".$prices->currency; ?>
+        </div>
+        <div class="description">
+            A cloud based webinterface integrated with thermal printer and a cashdrawer.
         </div>
     </div>
     <?

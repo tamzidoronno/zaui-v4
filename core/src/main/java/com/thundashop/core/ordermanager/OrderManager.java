@@ -2721,7 +2721,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if (!lastDayOfPrevMonthClosed(closeDate)) {
-            throw new RuntimeException("Could not close periode due to last periode has not been closed");
+            throw new ErrorException(1054);
         }
         
         Date now = new Date();

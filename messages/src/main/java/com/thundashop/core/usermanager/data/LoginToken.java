@@ -6,6 +6,7 @@
 package com.thundashop.core.usermanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Internal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,7 +17,10 @@ import java.util.UUID;
 public class LoginToken extends DataCommon {
     public String accessToken = "";
     public String ipAddress = "";
+    
+    @Internal
     public String token = UUID.randomUUID().toString();
+    
     public Date lastUsed = null;
     public String userId = "";
 }

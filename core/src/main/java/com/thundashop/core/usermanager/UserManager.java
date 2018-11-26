@@ -348,20 +348,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public void logout() throws ErrorException {
-        List<LoginToken> tokensToRemove = tokens.values()
-                .stream()
-                .filter(t -> t.userId.equals(getSession().currentUser.id))
-                .collect(Collectors.toList());
-        
-        tokensToRemove.stream()
-                .forEach(t -> {
-                    tokens.remove(t.id);
-                    deleteObject(t);
-                });
-                
         sessionFactory.removeFromSession(getSession().id);
         saveSessionFactory();
-        
     }
 
     @Override
@@ -2400,5 +2388,27 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         tokens.put(token.id, token);
         
         return token.token;
+    }
+
+    @Override
+    public List<LoginToken> getTokenList() {
+        return tokens.values()
+                .stream()
+                .filter(o -> o != null && o.userId.equals(getSession().currentUser.id))
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public void clearTokenList() {
+        List<LoginToken> tokensToRemove = tokens.values()
+                .stream()
+                .filter(t -> t != null && t.userId.equals(getSession().currentUser.id))
+                .collect(Collectors.toList());
+        
+        tokensToRemove.stream()
+                .forEach(t -> {
+                    tokens.remove(t.id);
+                    deleteObject(t);
+                });
     }
 }

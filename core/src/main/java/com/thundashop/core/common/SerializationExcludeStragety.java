@@ -23,6 +23,10 @@ public class SerializationExcludeStragety implements ExclusionStrategy {
     
     @Override
     public boolean shouldSkipField(FieldAttributes fa) {
+        if (fa.getAnnotation(Internal.class) != null) {
+            return true;
+        }
+        
         if (fa.getAnnotation(Administrator.class) != null) {
             if (user == null || user.type < 100) {
                 return true;

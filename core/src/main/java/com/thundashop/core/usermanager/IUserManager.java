@@ -13,6 +13,7 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
+import com.thundashop.core.usermanager.data.LoginToken;
 import com.thundashop.core.usermanager.data.SimpleUser;
 
 import com.thundashop.core.usermanager.data.User;
@@ -505,4 +506,10 @@ public interface IUserManager {
     
     @Customer
     public String createTokenAccess();
+    
+    @Customer
+    public List<LoginToken> getTokenList();
+    
+    @Customer
+    public void clearTokenList();
 }

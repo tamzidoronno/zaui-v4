@@ -30,23 +30,23 @@ public class AnnotationExclusionStrategy implements ExclusionStrategy {
             return true;
         }
         
-        if (f != null && f.getAnnotation(Administrator.class) != null) {
-            if (user == null || user.type < 100) {
-                return true;
-            }
-        }
-        
-        if (f != null && f.getAnnotation(Editor.class) != null) {
-            if (user == null || user.type < 50) {
-                return true;
-            }
-        }
-        
-        if (f != null && f.getAnnotation(Customer.class) != null) {
-            if (user == null || user.type < 10) {
-                return true;
-            }
-        }
+//        if (f != null && f.getAnnotation(Administrator.class) != null) {
+//            if (user == null || user.type < 100) {
+//                return true;
+//            }
+//        }
+//        
+//        if (f != null && f.getAnnotation(Editor.class) != null) {
+//            if (user == null || user.type < 50) {
+//                return true;
+//            }
+//        }
+//        
+//        if (f != null && f.getAnnotation(Customer.class) != null) {
+//            if (user == null || user.type < 10) {
+//                return true;
+//            }
+//        }
         
         if(user != null && !user.annotionsAdded.isEmpty()) {
             for(String annotation : user.annotionsAdded) {

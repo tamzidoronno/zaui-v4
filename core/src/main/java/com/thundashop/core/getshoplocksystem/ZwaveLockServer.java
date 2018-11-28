@@ -121,7 +121,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                             lock.maxnumberOfCodes = userCode.get("maxUsers").getAsJsonObject().get("value").getAsInt();
                         }
                         lock.zwaveDeviceId = Integer.parseInt(deviceId);
-                        lock.codeSize = getManager().getCodeSize();
                         lock.name = name;
                         lock.connectedToServerId  = id;
                         lock.initializeUserSlots();

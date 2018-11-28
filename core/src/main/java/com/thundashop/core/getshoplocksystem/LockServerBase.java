@@ -213,7 +213,7 @@ public abstract class LockServerBase extends DataCommon {
     
     public void markCodeForResending(String lockId, int slotId) {
         Lock lock = getLock(lockId);
-        lock.markCodeForResending(slotId);
+        lock.markCodeForResending(slotId, getManager().getCodeSize());
         saveMe();
     }
 
@@ -231,10 +231,10 @@ public abstract class LockServerBase extends DataCommon {
             Lock lock = getLock(slot.connectedToLockId);
 
             if (lock != null && groupCode.code != null) {
-                boolean changed = lock.setCodeObject(slot.slotId, groupCode.code);
+                boolean changed = lock.setCodeObject(slot.slotId, groupCode.code, getManager().getCodeSize());
                 
                 if (changed) {
-                    lock.markCodeForResending(slot.slotId);
+                    lock.markCodeForResending(slot.slotId, getManager().getCodeSize());
                 }
             }
         });

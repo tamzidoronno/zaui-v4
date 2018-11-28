@@ -39,13 +39,12 @@ public class LockGroup extends DataCommon {
             
             if (masterSlot == null) {
                 masterSlot = new MasterUserSlot();
-                masterSlot.codeSize = codeSize;
             }
             
             masterSlot.slotId = i;
             
             if (!masterSlot.hasCode()) {
-                masterSlot.generateNewCode();
+                masterSlot.generateNewCode(codeSize);
             }
             
             connectedToLocks.clear();
@@ -75,19 +74,19 @@ public class LockGroup extends DataCommon {
         }
     }
 
-    public void changeCode(int slotId, int pinCode, String cardId) {
+    public void changeCode(int slotId, int pinCode, String cardId, int codeSize) {
         MasterUserSlot slot = groupLockCodes.get(slotId);
-        slot.changeCode(pinCode, cardId);
+        slot.changeCode(pinCode, cardId, codeSize);
     }
 
-    void renewCodeForSlot(int slotId) {
+    void renewCodeForSlot(int slotId, int codeSize) {
         MasterUserSlot slot = groupLockCodes.get(slotId);
-        slot.generateNewCode();
+        slot.generateNewCode(codeSize);
     }
 
-    void changeDatesForSlot(int slotId, Date validFrom, Date validTo) {
+    void changeDatesForSlot(int slotId, Date validFrom, Date validTo, int codeSize) {
         MasterUserSlot slot = groupLockCodes.get(slotId);
-        slot.setDates(validFrom, validTo);
+        slot.setDates(validFrom, validTo, codeSize);
     }
 
     public HashMap<Integer, MasterUserSlot> getGroupLockCodes() {

@@ -46,8 +46,6 @@ public class Lock {
     public int maxnumberOfCodes = 20;
     public String name;
     
-    public int codeSize = 6;
-
     public List<Integer> routing = new ArrayList();
     
     public List<UserSlot> getUserSlots() {
@@ -70,7 +68,6 @@ public class Lock {
                 slot.connectedToServerId = connectedToServerId;
                 slot.connectedToLockId = id;
                 slot.slotId = i;
-                slot.codeSize = codeSize;
                 userSlots.put(slot.slotId, slot);
             } else {
                 userSlots.get(i).connectedToServerId = connectedToServerId;
@@ -107,9 +104,9 @@ public class Lock {
         });
     }
 
-    void generateNewCodes() {
+    void generateNewCodes(int codeSize) {
         getUserSlots().stream()
-                .forEach(s -> s.generateNewCode());
+                .forEach(s -> s.generateNewCode(codeSize));
     }
 
     public List<UserSlot> getToRemove() {
@@ -138,9 +135,9 @@ public class Lock {
         return null;
     }
 
-    void generateNewCode(int slotId) {
+    void generateNewCode(int slotId, int codeSize) {
         if (userSlots.get(slotId) != null) {
-            userSlots.get(slotId).generateNewCode();
+            userSlots.get(slotId).generateNewCode(codeSize);
         }
     }
 
@@ -156,9 +153,9 @@ public class Lock {
         }
     }
     
-    void markCodeForResending(int slotId) {
+    void markCodeForResending(int slotId, int codeSize) {
         if (userSlots.get(slotId) != null) {
-            userSlots.get(slotId).markCodeForResending();
+            userSlots.get(slotId).markCodeForResending(codeSize);
         }
     }
 
@@ -195,7 +192,7 @@ public class Lock {
      * if it has not changed because its the same it will return false.
      * If it changes the code it return true
      */
-    public boolean setCodeObject(int slotId, LockCode code) {
+    public boolean setCodeObject(int slotId, LockCode code, int codeSize) {
         Gson gson = new Gson();
         code = gson.fromJson(gson.toJson(code), LockCode.class);
         
@@ -204,7 +201,7 @@ public class Lock {
                 return false;
             }
             
-            userSlots.get(slotId).setCodeObject(code);
+            userSlots.get(slotId).setCodeObject(code, codeSize);
         }
         
         return true;

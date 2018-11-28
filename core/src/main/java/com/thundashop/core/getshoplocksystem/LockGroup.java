@@ -123,7 +123,7 @@ public class LockGroup extends DataCommon {
                 if (lock != null) {
                     UserSlot slot = lock.getUserSlot(subSlot.slotId);
                     
-                    if (slot.needToBeRemoved || slot.toBeAdded || slot.toBeRemoved ) {
+                    if (slot.needToBeRemoved || slot.toBeAdded || slot.toBeRemoved || slot.duplicate) {
                         masterUserSlot.slotsNotOk.add(slot);
                         masterUserSlot.allCodesAdded = false;
                         masterUserSlot.connectedToLockId = lock.id;

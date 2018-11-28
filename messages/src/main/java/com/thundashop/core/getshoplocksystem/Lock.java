@@ -8,6 +8,7 @@ package com.thundashop.core.getshoplocksystem;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +84,8 @@ public class Lock {
         toRemove.clear();
         inUse.clear();
         
+        markSlotsAsDuplicates();
+        
         userSlots.values().stream()
             .forEach(s -> { 
                 s.finalize();
@@ -102,6 +105,43 @@ public class Lock {
                 s.connectedToLockId = id;
                 s.connectedToServerId = connectedToServerId;
         });
+        
+        
+    }
+
+    /**
+     * Its important to remove duplicates to be updated
+     * as they will retry to set code until 
+     * 
+     */
+    private void markSlotsAsDuplicates() {
+        userSlots.values().stream()
+                .forEach(slot -> {
+                    slot.duplicate = false;
+                });
+        
+        Map<Integer, List<UserSlot>> res = userSlots.values()
+                .stream()
+                .filter(slot -> slot != null && slot.code != null)
+                .collect(Collectors.groupingBy(UserSlot::getPincode));
+        
+        
+        for (Integer code : res.keySet()) {
+            List<UserSlot> slots = res.get(code);
+            int numberOfCodes = slots.size();
+            if (numberOfCodes > 1) {
+                Collections.sort(slots, (UserSlot a, UserSlot b) -> {
+                    Integer a1 = new Integer(a.slotId);
+                    Integer b1 = new Integer(b.slotId);
+                    return a1.compareTo(b1);
+                });
+                
+                for ( UserSlot slot : slots.subList( 1, slots.size() ) ) {
+                    slot.duplicate = true;
+                }
+            }
+        }
+        
     }
 
     void generateNewCodes(int codeSize) {

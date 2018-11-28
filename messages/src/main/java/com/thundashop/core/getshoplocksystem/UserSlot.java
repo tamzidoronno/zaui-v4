@@ -17,6 +17,7 @@ public class UserSlot implements Serializable {
     public boolean toBeRemoved = false;
     public boolean toBeAdded = false;
     public boolean needToBeRemoved = false;
+    public boolean duplicate = false;
     public Date takenInUseDate = null;
     public boolean isCurrentlyUpdating = false;
 //    public int codeSize = 6;
@@ -53,6 +54,10 @@ public class UserSlot implements Serializable {
     }
 
     public void finalize() {
+        if (duplicate) {
+            toBeAdded = false;
+        }
+        
         if (code == null) {
             toBeRemoved = false;
             toBeAdded = false;
@@ -63,7 +68,7 @@ public class UserSlot implements Serializable {
             toBeRemoved = false;
         }
         
-        if (code.addedDate == null) {
+        if (code.addedDate == null && !duplicate) {
             toBeAdded = true;
         }
         
@@ -118,6 +123,13 @@ public class UserSlot implements Serializable {
 
     boolean belongsToGroup(String lockGroupId) {
         return belongsToGroupId != null && belongsToGroupId.equals(lockGroupId);
+    }
+    
+    int getPincode() {
+        if (code != null)
+            return code.pinCode;
+        
+        return -1;
     }
 
     void claimGroupId(String groupId) {

@@ -59,7 +59,7 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
     }
     
     public function createNewLockGroup() {
-        $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup($_POST['data']['name'], $_POST['data']['numberofslots']);
+        $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup($_POST['data']['name'], $_POST['data']['numberofslots'], $_POST['data']['codesize']);
     }
     
     public function GetShopLockSystemManager_getAllGroups() {

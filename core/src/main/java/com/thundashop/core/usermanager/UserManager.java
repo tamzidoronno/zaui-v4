@@ -23,6 +23,7 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.LoginHistory;
+import com.thundashop.core.usermanager.data.LoginToken;
 import com.thundashop.core.usermanager.data.SimpleUser;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
@@ -74,6 +75,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     private Map<String, UserRole> roles = new HashMap();
     
+    private Map<String, LoginToken> tokens = new HashMap();
+    
     private GetShopModules modules = new GetShopModules();
     
     @Autowired
@@ -122,6 +125,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
             if (dataCommon instanceof User) {
                 userStoreCollection.addUserDirect((User) dataCommon);
+            }
+            if (dataCommon instanceof LoginToken) {
+                tokens.put(dataCommon.id, (LoginToken) dataCommon);
             }
             if (dataCommon instanceof UserRole) {
                 UserRole role = (UserRole)dataCommon;
@@ -1850,7 +1856,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             String message = "Hi <br/> <br/> There has been created a new user that needs to be approved as company owner <br/><br/> From: " + getStoreDefaultAddress();
             messageManager.sendMessageToStoreOwner("A user requested to be a company owner", message);
         }
-        
     }
 
     @Override
@@ -2346,5 +2351,64 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         return null;
+    }
+
+    @Override
+    public User logonUsingToken(String token) {
+        if (token == null || token.isEmpty())
+            return null;
+        
+        LoginToken tokenObject = tokens.values().stream()
+                .filter(t -> t.token.equals(token))
+                .findAny()
+                .orElse(null);
+        
+        if (tokenObject != null && tokenObject.userId != null && !tokenObject.userId.isEmpty()) {
+            tokenObject.lastUsed = new Date();
+            saveObject(tokenObject);
+            User user = getUserStoreCollection(storeId).getUser(tokenObject.userId);
+            addUserToSession(user);
+            return user;
+        }   
+        
+        return null;
+    }
+
+    @Override
+    public String createTokenAccess() {
+        if (getSession() == null || getSession().currentUser == null) {
+            return "";
+        }
+        
+        LoginToken token = new LoginToken();
+        token.userId = getSession().currentUser.id;
+        token.ipAddress = "";
+        token.lastUsed = new Date();
+        saveObject(token);
+        tokens.put(token.id, token);
+        
+        return token.token;
+    }
+
+    @Override
+    public List<LoginToken> getTokenList() {
+        return tokens.values()
+                .stream()
+                .filter(o -> o != null && o.userId.equals(getSession().currentUser.id))
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public void clearTokenList() {
+        List<LoginToken> tokensToRemove = tokens.values()
+                .stream()
+                .filter(t -> t != null && t.userId.equals(getSession().currentUser.id))
+                .collect(Collectors.toList());
+        
+        tokensToRemove.stream()
+                .forEach(t -> {
+                    tokens.remove(t.id);
+                    deleteObject(t);
+                });
     }
 }

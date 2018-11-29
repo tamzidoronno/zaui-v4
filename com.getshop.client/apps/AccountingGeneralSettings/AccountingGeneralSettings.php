@@ -42,7 +42,10 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $config = new \core_paymentmanager_StorePaymentConfig();
         $config->paymentAppId = $_POST['data']['id'];
         $config->userCustomerNumber = $_POST['data']['customernumber'];
+        $config->userCustomerNumberPaid = $_POST['data']['customernumberpaid'];
         $config->accountingDescription = $_POST['data']['accountingDescription'];
+        $config->offsetAccountingId_accrude = $_POST['data']['offsetAccountingId_accrude'];
+        $config->offsetAccountingId_prepayment = $_POST['data']['offsetAccountingId_prepayment'];
         $this->getApi()->getPaymentManager()->saveStorePaymentConfiguration($config);
     }
     

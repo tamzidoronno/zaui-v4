@@ -121,7 +121,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                             lock.maxnumberOfCodes = userCode.get("maxUsers").getAsJsonObject().get("value").getAsInt();
                         }
                         lock.zwaveDeviceId = Integer.parseInt(deviceId);
-                        lock.codeSize = getManager().getCodeSize();
                         lock.name = name;
                         lock.connectedToServerId  = id;
                         lock.initializeUserSlots();
@@ -285,17 +284,23 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
             if (lockToWorkWith.getToUpdate().size() == 1) {
                 slotToUpdate = lockToWorkWith.getToUpdate().get(0);
             } else {
-                int min = 0;
-                int max = lockToWorkWith.getToUpdate().size() - 1;
-                Random rn = new Random();
-                int slot = rn.nextInt(max - min + 1) + min;
-                slotToUpdate = lockToWorkWith.getToUpdate().get(slot);
+                slotToUpdate = getRandomSlot(lockToWorkWith);
             }
             
             return new ZwaveAddCodeThread(this, slotToUpdate, lockToWorkWith, storeId);
         }
         
         return null;
+    }
+
+    private UserSlot getRandomSlot(LocstarLock lockToWorkWith) {
+        UserSlot slotToUpdate;
+        int min = 0;
+        int max = lockToWorkWith.getToUpdate().size() - 1;
+        Random rn = new Random();
+        int slot = rn.nextInt(max - min + 1) + min;
+        slotToUpdate = lockToWorkWith.getToUpdate().get(slot);
+        return slotToUpdate;
     }
 
     @Override

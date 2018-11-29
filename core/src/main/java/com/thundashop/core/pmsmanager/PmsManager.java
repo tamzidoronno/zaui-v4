@@ -7138,9 +7138,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void warnFailedBooking(PmsBooking booking) {
-        Gson gson = new Gson();
-        String rawBooking = gson.toJson(booking);
-        messageManager.sendErrorNotification("Someone booked error message shown to enduser, booking raw:" + rawBooking, null);
+//        Gson gson = new Gson();
+//        String rawBooking = gson.toJson(booking);
+//        messageManager.sendErrorNotification("Someone booked error message shown to enduser, booking raw:" + rawBooking, null);
     }
 
     @Override
@@ -9214,5 +9214,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
            res.add(type);
        }
        return res;
+    }
+    
+    @Override
+    public void markOtaPaymentsAutomaticallyPaidOnCheckin(Date start, Date end) {
+        bookings.values().stream()
+                .filter(o -> o.startDate.before(new Date()))
+                .filter(o -> o.isActiveInPeriode(start, end))
+                .forEach(booking -> {
+                    for (String orderId : booking.orderIds) {
+                        Order order = orderManager.getOrder(orderId);
+                        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+                            continue;
+                        }
+                        
+                        if (order.isBookingCom() || order.isExpedia()) {
+                            Date checkoutDate = booking.endDate;
+                            orderManager.markAsPaid(orderId, checkoutDate, order.getTotalAmount());
+                        }
+                    }
+                });
     }
 }

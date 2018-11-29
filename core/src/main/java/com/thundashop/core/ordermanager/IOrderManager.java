@@ -9,6 +9,8 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
+import com.thundashop.core.getshopaccounting.DayEntry;
+import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
@@ -192,6 +194,9 @@ public interface IOrderManager {
      */
     public Order getOrderByincrementOrderIdAndPassword(Integer id, String password) throws ErrorException;
     
+    @Editor
+    public Long getIncrementalOrderIdByOrderId(String orderId);
+    
     /**
      * If everything is ok, the price is the same as the order and the currency, then update the status.
      * @param password A predefined password needed to update the status.
@@ -341,4 +346,16 @@ public interface IOrderManager {
     
     @Administrator
     public void markOrderAsBillabe(String orderId);
+    
+    @Administrator
+    public List<DayIncome> getDayIncomes(Date start, Date end);
+    
+    @Administrator
+    public List<DayEntry> getDayEntriesForOrder(String orderId);
+    
+    @Administrator
+    public void closeTransactionPeriode(Date closeDate);
+    
+    @Administrator
+    public boolean isLocked(Date date);
 }

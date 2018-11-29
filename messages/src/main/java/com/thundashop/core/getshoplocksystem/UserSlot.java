@@ -17,9 +17,10 @@ public class UserSlot implements Serializable {
     public boolean toBeRemoved = false;
     public boolean toBeAdded = false;
     public boolean needToBeRemoved = false;
+    public boolean duplicate = false;
     public Date takenInUseDate = null;
     public boolean isCurrentlyUpdating = false;
-    public int codeSize = 6;
+//    public int codeSize = 6;
     
     public String comment;
     
@@ -41,7 +42,7 @@ public class UserSlot implements Serializable {
     @Transient
     public String isAddedToLock = "unkown";
 
-    public void generateNewCode() {
+    public void generateNewCode(int codeSize) {
         previouseCode = code;
         
         code = new LockCode();
@@ -53,6 +54,10 @@ public class UserSlot implements Serializable {
     }
 
     public void finalize() {
+        if (duplicate) {
+            toBeAdded = false;
+        }
+        
         if (code == null) {
             toBeRemoved = false;
             toBeAdded = false;
@@ -63,7 +68,7 @@ public class UserSlot implements Serializable {
             toBeRemoved = false;
         }
         
-        if (code.addedDate == null) {
+        if (code.addedDate == null && !duplicate) {
             toBeAdded = true;
         }
         
@@ -100,10 +105,10 @@ public class UserSlot implements Serializable {
         finalize();
     }
 
-    void markCodeForResending() {
+    void markCodeForResending(int codeSize) {
         
         if (code == null) {
-            generateNewCode();
+            generateNewCode(codeSize);
         }
         
         code.addedDate = null;
@@ -118,6 +123,13 @@ public class UserSlot implements Serializable {
 
     boolean belongsToGroup(String lockGroupId) {
         return belongsToGroupId != null && belongsToGroupId.equals(lockGroupId);
+    }
+    
+    int getPincode() {
+        if (code != null)
+            return code.pinCode;
+        
+        return -1;
     }
 
     void claimGroupId(String groupId) {
@@ -143,28 +155,28 @@ public class UserSlot implements Serializable {
         return false;
     }
     
-    void setCodeObject(LockCode code) {
+    void setCodeObject(LockCode code, int codeSize) {
         this.code = code;
-        markCodeForResending();
+        markCodeForResending(codeSize);
     }
     
     boolean hasCode() {
         return code != null;
     }
 
-    void changeCode(int pinCode, String cardId) {
+    void changeCode(int pinCode, String cardId, int codeSize) {
         if (code == null) {
-            generateNewCode();
+            generateNewCode(codeSize);
         }
         
         code.changeCode(pinCode, cardId);
-        markCodeForResending();
+        markCodeForResending(codeSize);
         takenInUseDate = null;
     }
     
-    void setDates(Date validFrom, Date validTo) {
+    void setDates(Date validFrom, Date validTo, int codeSize) {
         if (code == null) {
-            generateNewCode();
+            generateNewCode(codeSize);
         }
         
         code.validFrom = validFrom;

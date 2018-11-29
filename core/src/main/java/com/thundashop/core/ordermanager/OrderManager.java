@@ -2,6 +2,7 @@ package com.thundashop.core.ordermanager;
 
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.accountingmanager.AccountingTransaction;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
@@ -16,7 +17,12 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.epay.EpayManager;
+import com.thundashop.core.eventbooking.EventLog;
 import com.thundashop.core.getshop.GetShopPullService;
+import com.thundashop.core.getshopaccounting.DayEntry;
+import com.thundashop.core.getshopaccounting.DayIncome;
+import com.thundashop.core.getshopaccounting.DayIncomeReport;
+import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -25,6 +31,7 @@ import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
@@ -56,6 +63,7 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -81,6 +89,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private Set<String> ordersCreated = new TreeSet();
     
     public OrdersToAutoSend ordersToAutoSend = new OrdersToAutoSend();
+    
+    private OrderManagerSettings orderManagerSettings = null;
     
     @Autowired
     public MailFactory mailFactory;
@@ -187,6 +197,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         credited.orderTransactions.clear();
         credited.closed = false;
         credited.transferredToAccountingSystem = false;
+        credited.moveAllTransactionToTodayIfItsBeforeDate(getOrderManagerSettings().closedTilPeriode);
         order.creditOrderId.add(credited.id);
         order.doFinalize();
         
@@ -200,6 +211,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         saveOrder(credited);
         saveOrder(order);
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            markAsPaid(order.id, new Date(), order.getTotalAmount());
+            markAsPaid(credited.id, new Date(), credited.getTotalAmount());
+        }
+        
         return credited;
     }
     
@@ -224,6 +241,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
+            }
+            
+            if (dataFromDatabase instanceof OrderManagerSettings) {
+                orderManagerSettings = (OrderManagerSettings)dataFromDatabase;
             }
 
             if (dataFromDatabase instanceof Order) {
@@ -2463,6 +2484,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void markOrderAsTransferredToAccounting(String orderId) {
         Order order = getOrderSecure(orderId);
+        
+        if (order.transferredToAccountingSystem) {
+            return;
+        }
+        
         order.transferredToAccountingSystem = true;
         saveOrderInternal(order);
     }
@@ -2490,12 +2516,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             // Verifone
             if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && order.getTotalAmount() > 0) {
                 throw new ErrorException(1052);
-            }
-            
-            // NetAxept
-            if (order.getPaymentApplicationId().equals("def1e922-972f-4557-a315-a751a9b9eff1")) {
-                throw new ErrorException(1052);
-            }
+            }            
         }
     }
 
@@ -2617,5 +2638,212 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             saveObject(order);
         }
     }
+
+    @Override
+    public List<DayIncome> getDayIncomes(Date start, Date end) {
+        DayIncomeReport report = getReport(start, end);
+        
+        if (report != null) {
+            return report.incomes;
+        }
+                
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, true, paymentManager, productManager);
+        breaker.breakOrders();
+        
+        if (breaker.hasErrors()) {
+            return breaker.getErrors();
+        }
+        
+        return breaker.getDayIncomes();
+    }
+
+    private DayIncomeReport getReport(Date startDate, Date endDate) {
+        long start = startDate.getTime();
+        long end = endDate.getTime();
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", DayIncomeReport.class.getCanonicalName());
+        return database.query("OrderManager", storeId, query).stream()
+                .map(o -> (DayIncomeReport)o)
+                .filter(r -> {
+                    long iStart = r.start.getTime();
+                    long iEnd = r.end.getTime();
+                    
+                    return iStart <= start && iEnd > end;
+                })
+                .findAny()
+                .orElse(null);
+        
+    }
     
+    @Override
+    public Long getIncrementalOrderIdByOrderId(String orderId) {
+        Order order = getOrder(orderId);
+        if (order != null) {
+            return order.incrementOrderId;
+        }
+        
+        return 0L;
+    }
+
+    @Override
+    public List<DayEntry> getDayEntriesForOrder(String orderId) {
+        Order order = getOrder(orderId);
+        Date start = order.rowCreatedDate;
+        Date end = order.rowCreatedDate;
+        
+        List<Order> orders = new ArrayList();
+        orders.add(order);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, true, paymentManager, productManager);
+        breaker.breakOrders();
+        
+        return breaker.getDayEntries();
+    }
+
+    @Override
+    public void closeTransactionPeriode(Date closeDate) {
+        Date closePeriodeToDate = closeDate;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(closeDate);
+        
+        // If hour, minute, second is not exaclty the beginning of the day, change time to be in the beginning of the very next day.
+        if (cal.get(Calendar.HOUR_OF_DAY) != 0 || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0) {
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            closePeriodeToDate = cal.getTime();
+        }
+        
+        if (!lastDayOfPrevMonthClosed(closeDate)) {
+            throw new ErrorException(1054);
+        }
+        
+        Date now = new Date();
+        if (now.before(closePeriodeToDate)) {
+            throw new RuntimeException("We can not close down for the future");
+        }
+        
+        List<DayIncome> days = getDayIncomes(getOrderManagerSettings().closedTilPeriode, closeDate);
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        
+        DayIncomeReport incomeReport = new DayIncomeReport();
+        incomeReport.start = settings.closedTilPeriode;
+        incomeReport.end = closePeriodeToDate;
+        incomeReport.createdBy = getSession().currentUser.id;
+
+        incomeReport.incomes = days;
+        saveObject(incomeReport);
+        
+        for (DayIncome day : days) {
+            for (DayEntry entry : day.dayEntries) {
+                markOrderAsTransferredToAccounting(entry.orderId);
+            }
+        }
+        
+        settings.closedTilPeriode = closePeriodeToDate;
+        saveObject(settings);
+    }   
+    
+    private OrderManagerSettings getOrderManagerSettings() {
+        if (this.orderManagerSettings == null) {
+            this.orderManagerSettings = new OrderManagerSettings();
+            saveObject(this.orderManagerSettings);
+        }
+        
+        if (this.orderManagerSettings.closedTilPeriode == null || this.orderManagerSettings.closedTilPeriode.equals(new Date(0))) {
+            this.orderManagerSettings.closedTilPeriode = getStore().rowCreatedDate;
+        }
+        
+        
+        return this.orderManagerSettings;
+    }
+
+    @Override
+    public void saveObject(DataCommon data) throws ErrorException {
+        checkAndResetOrderByClosedPeriodeDate(data);
+        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void checkAndResetOrderByClosedPeriodeDate(DataCommon data) {
+        boolean isOrderObject = (data instanceof Order);
+        if (!isOrderObject) { 
+            return;
+        }
+        
+        Date closedDate = getOrderManagerSettings().closedTilPeriode;
+        
+        Order order = (Order)data;
+        Order oldOrder = null;
+        
+        stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
+        
+        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate)) {
+            return;
+        }
+        
+        if (order.id != null && !order.id.isEmpty()) {
+            oldOrder = (Order)database.getObject(getCredentials(), order.id);
+        }
+        
+        if (order.needToStopDueToIllegalChangeOfPriceMatrix(oldOrder, closedDate)) {
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1053);
+        }
+        
+        if (order.needToStopDueToIllegalChangeInAddons(oldOrder, closedDate)) {
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1053);
+        }
+        
+        if (order.needToStopDueToIllegalChangePaymentDate(oldOrder, closedDate)) {
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1053);
+        }
+        
+        // If a order has created date that is not the same as the one in the database, what happend? 
+        if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate)) {
+            throw new ErrorException(1053);
+        }
+    }
+
+    private void stopIfOverrideDateConflictingClosedDate(Order order, Date closedDate, Order oldOrder) throws ErrorException {
+        if (order.overrideAccountingDate != null && order.overrideAccountingDate.before(closedDate)) {
+            if (oldOrder == null) {
+                resetOrder(oldOrder, order);
+                throw new ErrorException(1053);
+            }
+            
+            double oldTotal = oldOrder.getTotalAmount();
+            double newTotal = order.getTotalAmount();
+            if (oldTotal != newTotal) {
+                throw new ErrorException(1053);
+            }
+        }
+    }
+
+    private void resetOrder(Order oldOrder, Order order) {
+        if (oldOrder != null)
+            order = oldOrder;
+    }
+
+    @Override
+    public boolean isLocked(Date date) {
+        return getOrderManagerSettings().closedTilPeriode.after(date);
+    }
+
+    private boolean lastDayOfPrevMonthClosed(Date closeDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(closeDate);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayInPrevMonth = cal.getTime();
+        
+        return getOrderManagerSettings().closedTilPeriode.after(lastDayInPrevMonth);
+    }
 }

@@ -116,10 +116,12 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $instance = new $text();
         
         $text = "";
-        if ($order->closed) {
+        if ($order->closed && !@count($order->creditOrderId) && !$order->isCreditNote) {
             $text = '<i class="fa fa-lock" title="Order has been locked"></i>';
             $text .= '<i class="fa fa-history dontExpand creditOrder" style="cursor:pointeR;" orderid="'.$order->id.'" title="Credit order"></i>';
-        } else {
+        }
+        
+        if (!$order->closed && !@count($order->creditOrderId)) {
             $text = '<i class="fa fa-unlock"></i>';
             $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' style='cursor:pointeR;' orderid='".$order->id."' title='Delete order'></i>";
         }

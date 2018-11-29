@@ -168,7 +168,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (server != null) {
             Lock lock = server.getLock(lockId);
             if (lock != null) {
-                lock.generateNewCodes();
+                lock.generateNewCodes(getCodeSize());
                 server.save();
             }
         }
@@ -407,7 +407,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void renewCodeForSlot(String groupId, int slotId) {
         LockGroup group = getGroup(groupId);
-        group.renewCodeForSlot(slotId);
+        group.renewCodeForSlot(slotId, getCodeSize());
         
         lockServers.values().stream().forEach(server -> {
             server.syncGroupSlot(group, slotId);
@@ -420,7 +420,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void changeCode(String groupId, int slotId, int pinCode, String cardId) {
         LockGroup group = getGroup(groupId);
-        group.changeCode(slotId, pinCode, cardId);
+        group.changeCode(slotId, pinCode, cardId, getCodeSize());
         saveObject(group);
         
         lockServers.values().stream().forEach(server -> {
@@ -433,7 +433,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         LockGroup group = getGroup(groupId);
         
         if (group != null) {
-            group.changeDatesForSlot(slotId, validFrom, validTo);
+            group.changeDatesForSlot(slotId, validFrom, validTo, getCodeSize());
             
             lockServers.values().stream().forEach(server -> {
                 server.syncGroupSlot(group, slotId);

@@ -1,0 +1,72 @@
+<?
+/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+
+$entries = $this->getApi()->getOrderManager()->getDayEntriesForOrder($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid']);
+$order = $this->getApi()->getOrderManager()->getOrder($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid']);
+?>
+
+<div class="infoheader">
+    <?
+    echo "<div class='head'>".$this->__f("Order").": ".$order->incrementOrderId."</div>";
+    ?>
+</div>
+
+<div class='buttonarea'>
+    <div gsclick='cancelOrderView' class='shop_button'>Back</div>
+</div>
+
+<?
+$groupByDay = array();
+$allAccounts = array();
+foreach ($entries as $entry) {
+    $date = date('d.m.Y', strtotime($entry->date));
+    if (!isset($groupByDay[$date])) {
+        $groupByDay[$date] = array();
+    }
+    
+    $groupByDay[$date][] = $entry;
+    if ($entry->amount) {
+        $allAccounts[] = $entry->accountingNumber;
+    }
+}
+
+ksort($groupByDay);
+$accounts = array_unique($allAccounts);
+sort($allAccounts);
+
+echo "<div class='outer'>";
+
+    echo "<div class='row header'>";
+        echo "<div class='col orderid header'>Date</div>";
+        foreach ($accounts as $account) {
+            echo "<div class='col $account header'>".$account;
+                echo "<div class='accountdesc'>".$this->getAccountDescription($account)."</div>";;
+            echo "</div>";
+        }
+        echo "<div class='col controlsum'>Zero Check</div>";
+    echo "</div>";
+    
+    foreach ($groupByDay as $day => $entries) {
+        $grouped = array();
+        foreach ($entries as $entry) {
+            $grouped[$entry->accountingNumber] = @$grouped[$entry->accountingNumber] + $entry->amount;
+        }
+        
+        echo "<div class='row' >";
+            $controlSum = 0;
+            
+            echo "<div class='col orderid'>".date('d.m.Y H:i:s', strtotime($day))."</div>";
+            foreach ($accounts as $account) {
+                $val = @$grouped[$account] ? $grouped[$account] : "&nbsp;";
+                if (isset($grouped[$account]) && $grouped[$account]) {
+                    $controlSum += $grouped[$account];
+                }
+                echo "<div class='col $account'>$val</div>";                
+            }
+            
+            echo "<div class='col controlsum'>".round($controlSum)."</div>";
+        echo "</div>";  
+    }
+echo "</div>";
+    
+?>

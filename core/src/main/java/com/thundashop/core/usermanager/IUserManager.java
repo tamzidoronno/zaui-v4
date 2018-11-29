@@ -13,6 +13,7 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
+import com.thundashop.core.usermanager.data.LoginToken;
 import com.thundashop.core.usermanager.data.SimpleUser;
 
 import com.thundashop.core.usermanager.data.User;
@@ -500,4 +501,15 @@ public interface IUserManager {
     public User logonUsingTotpAgainstCrm(String username, String password, int oneTimeCode);
     
     public User updatePasswordByResetCode(String resetCode, String newPassword);
+    
+    public User logonUsingToken(String token);
+    
+    @Customer
+    public String createTokenAccess();
+    
+    @Customer
+    public List<LoginToken> getTokenList();
+    
+    @Customer
+    public void clearTokenList();
 }

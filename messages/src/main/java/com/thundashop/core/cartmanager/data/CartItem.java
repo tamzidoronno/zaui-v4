@@ -556,4 +556,15 @@ public class CartItem implements Serializable {
     public boolean isPmsAddons() {
         return itemsAdded != null && !itemsAdded.isEmpty();
     }
+
+    public double getPriceMatrixWithoutTax(String dateString) {
+        Double price = priceMatrix.get(dateString);
+        if (price == null) {
+            throw new NullPointerException("Tried to recalculate a price that is null from price matrix.");
+        }
+        
+        double taxDivideFactor = product.taxGroupObject.getTaxRate() + 1; 
+        double priceExTaxes = price / taxDivideFactor;
+        return priceExTaxes;
+    }
 }

@@ -1,0 +1,102 @@
+.AccountFinanceReport .col {
+    display: inline-block;
+    width: 100px;
+    border-left: solid 1px rgba(0,0,0,0.1);
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+}
+
+.AccountFinanceReport .row {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    display: table-row;
+}
+
+.AccountFinanceReport div.row:nth-child(odd) {
+    background-color: #EEE;
+}
+
+.AccountFinanceReport .dateheader {
+    background-color: #EFEFEF;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
+}
+
+.AccountFinanceReport div.row:hover {
+    background-color: #DDD;
+    cursor: pointer;
+}
+
+.AccountFinanceReport .row .controlsum,
+.AccountFinanceReport .row.header,
+.AccountFinanceReport .row.summaryrow {
+    font-weight: bold;
+}
+
+.AccountFinanceReport .buttonarea {
+    padding: 20px;
+}
+
+.AccountFinanceReport .outer {
+    white-space:nowrap;
+    overflow-x: auto;
+}
+
+.AccountFinanceReport .outer .accountdesc {
+    font-size: 10px;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.AccountFinanceReport .header.col {
+    vertical-align: top;
+    white-space: initial;
+}
+
+.AccountFinanceReport .col {
+    padding: 5px;
+}
+
+.AccountFinanceReport .col.orderid {
+    width: 150px;
+}
+
+.AccountFinanceReport .col.rowdate {
+    width: 150px;
+}
+
+.AccountFinanceReport .infoheader {
+    padding: 30px;
+    padding-left: 50px;
+    background-color: #9cff91;
+    font-size: 14px;
+}
+
+.AccountFinanceReport .infoheader .head {
+    font-size: 25px;
+    font-weight: bold
+}
+
+.AccountFinanceReport {
+    margin-bottom: 50px;
+}
+
+.AccountFinanceReport .showresultbutton {
+    vertical-align: top;
+    margin-top: 1px;
+    line-height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: 10px;
+    height: 50px;
+}
+
+.AccountFinanceReport .showresultbutton.deactivated {
+    background-color: #DDD;
+}
+
+.AccountFinanceReport .inbalance {
+    color: green;
+}

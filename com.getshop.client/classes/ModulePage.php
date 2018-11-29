@@ -42,6 +42,9 @@ class ModulePage {
         if ($this->module == "srs") {
             return $this->getTopMenuSrs();
         }
+        if ($this->module == "getshopsupport") {
+            return $this->getTopMenuGetShopSupport();
+        }
         
         if ($this->module == "salespoint") {
             return $this->getTopMenuSalesPoint();
@@ -286,6 +289,14 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Menu", "94c0e942-a7f5-4bbb-89f0-598c0e080ec1", "gsicon-list");
         $menu->entries[] = new ModulePageMenuItem("Bar", "9c87fd8c-e44a-467a-a65b-1734f974a553", "gsicon-glass-cocktail");
         $menu->entries[] = new ModulePageMenuItem("Settings", "3234b76a-f960-4d51-96ac-959a36ca31f8", "gsicon-gs-gears");
+        return $menu;
+    }
+
+    public function getTopMenuGetShopSupport() {
+        $menu = new \ModulePageMenu();
+        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Your cases", "3a0bc113-d800-4658-a68e-a0086973eb80", "gsicon-list");
+        $menu->entries[] = new ModulePageMenuItem("Billing", "94c0e942-a7f5-4bbb-89f0-598c0e080ec1", "fa-money");
         return $menu;
     }
 

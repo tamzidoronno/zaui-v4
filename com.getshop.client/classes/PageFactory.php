@@ -34,6 +34,9 @@ class PageFactory {
         if ($moduleId == "salespoint") {
             $this->createSalesPointPages();
         }
+        if ($moduleId == "getshopsupport") {
+            $this->createGetShopSupportPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -357,6 +360,13 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("480bdbdd-4da9-44ca-95c9-2fcb044eaf22", "f807d085-13f3-4421-a94a-5be4ae0148ca");
         $this->pages['9c87fd8c-e44a-467a-a65b-1734f974a553'] = $page;   
+    }
+    public function createGetShopSupportPages() {
+        $page = new \ModulePage("home", "getshopsupport");
+        $row = $page->createRow();
+        $row->addColumn("f8d72daf-97d8-4be2-84dc-7bec90ad8462", "2e43f480-636a-4842-9769-8a326ee09cce");
+        $this->pages['home'] = $page;   
+
     }
 
     public function createSalesPointPages() {

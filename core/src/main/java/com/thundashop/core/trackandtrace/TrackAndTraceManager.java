@@ -13,9 +13,11 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -53,6 +55,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public HashMap<String, DriverMessage> driverMessages = new HashMap();
     
     public HashMap<String, ReplyMessage> replyMessages = new HashMap();
+    
+    public HashMap<String, List<Serializable>> userMessages = new HashMap();
 
     public ExportCounter exportCounter = null;
     
@@ -64,6 +68,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     @Autowired
     public WebSocketServerImpl webSocketServer;
+    
+    @Autowired
+    public GdsManager gdsManager;
     
     private List<AcculogixExport> sortedExports = new ArrayList();
     
@@ -734,6 +741,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     private void notifyRoute(Route route) {
         finalize(route);
         
+        route.userIds.stream().forEach(userId -> {
+            addMessage(userId, route);
+        });
+        
         webSocketServer.sendMessage(route);
     }
     
@@ -923,6 +934,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         driverMessages.put(driverMsg.id, driverMsg);
         
         webSocketServer.sendMessage(driverMsg);
+        
+        addMessage(driverId, driverMsg);
         return driverMsg;
     }
 
@@ -1145,6 +1158,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         driverRemoved.userId = userId;
         
         webSocketServer.sendMessage(driverRemoved);
+        addMessage(userId, driverRemoved);
     }
 
     @Override
@@ -1504,5 +1518,38 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         return false;
+    }
+
+    @Override
+    public List<Serializable> getMyQueueMessages() {
+        String userId = getSession().currentUser.id;
+        List<Serializable> retQueue = new ArrayList();
+        
+        retQueue.addAll(getQueue(userId));
+        getQueue(userId).clear();
+        
+        return retQueue;
+    }
+
+    private void addMessage(String driverId, Serializable object) {
+        List<Serializable> queue = getQueue(driverId);
+        queue.removeIf(o -> {
+            return o.getClass() == object.getClass();
+        });
+        
+        if (object != null) {
+            queue.add(object);
+        }
+    }
+
+    private List<Serializable> getQueue(String userId) {
+        List<Serializable> queue = userMessages.get(userId);
+        
+        if (queue == null) {
+            queue = new ArrayList();
+            userMessages.put(userId, queue);
+        }
+        
+        return queue;
     }
 }

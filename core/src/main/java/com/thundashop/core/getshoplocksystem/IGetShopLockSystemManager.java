@@ -58,7 +58,7 @@ public interface IGetShopLockSystemManager {
     public void saveLocstarLock(String serverId, LocstarLock lock);
     
     @Administrator
-    public LockGroup createNewLockGroup(String name, int maxUsersInGroup);   
+    public LockGroup createNewLockGroup(String name, int maxUsersInGroup, Integer codeSize);   
     
     @Administrator
     public String restCall(String serverId, String path);

@@ -29,7 +29,9 @@ public class LockGroup extends DataCommon {
     public int numberOfSlotsInGroup = 5;
     public String name;
     public boolean isVirtual = false;
-
+    
+    public Integer codeSize;
+    
     public void rebuildCodeMatrix(List<LockServer> servers, int codeSize) {
         
         int j = 0;

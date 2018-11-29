@@ -16,7 +16,7 @@ public class GenerateJavascriptKai {
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {
         GenerateJavascriptApi.pathToBuildClasses = "/home/ktonder/netbeans/3.0.0/GetShop Core/build/classes/";
         GenerateJavascriptApi.pathToJavaSource = "/source/getshop/3.0.0/core/src/main/java/";
-        GenerateJavascriptApi.storeFileIn = "/source/getshop/3.0.0/html5apps/Resturant/public_html/app/getshopapi.js";
+        GenerateJavascriptApi.storeFileIn = "/source/getshop/3.0.0/html5apps/TrackAndTrace/public_html/app/getshopapi.js";
         GenerateJavascriptApi.main(args);
     }
 }

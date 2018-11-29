@@ -9,6 +9,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -197,4 +198,7 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public void setSortingOfRoutes(String sortingName);
+    
+    @Customer
+    public List<Serializable> getMyQueueMessages();
 }

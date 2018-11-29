@@ -35,8 +35,6 @@ public class PmsManagerProcessor {
         start = System.currentTimeMillis();
         clearCachedObject();
         checkTimer("Cleared cache");
-        try { runAutoPayWithCard(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("Autopay cards");
         clearCachedObject();
         checkTimer("Clear cache 2");
         try { autoMarkBookingsAsPaid(); }catch(Exception e) {manager.logPrintException(e); }

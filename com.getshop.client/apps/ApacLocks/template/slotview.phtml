@@ -20,13 +20,17 @@ if ($slot->belongsToGroupId) {
         if (!$slot->toBeAdded && $slot->toBeRemoved) {
             $state = "<i class='fa fa-trash' title='Waiting to be removed from lock'></i>";
         }
-        if (!$slot->toBeAdded && !$slot->toBeRemoved) {
+        if ($slot->duplicate) {
+            $state = "<i class='fa fa-copy' title='This code is a duplicate'></i>";
+        }
+        if (!$slot->toBeAdded && !$slot->toBeRemoved && !$slot->duplicate) {
             $state = "<i class='fa fa-check' title='All good'></i>";
         }
         
         if (!$slot->code) {
             $state = "<i class='fa fa-close' title='Not in use'></i>";
         }
+        
         if ($inUseClass) {
             $state = "<i class='fa fa-warning' title='In use'></i>";
         } else {

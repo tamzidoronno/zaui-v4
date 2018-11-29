@@ -57,7 +57,7 @@ public class GenerateJavascriptApi {
     private String getHeader() throws URISyntaxException, IOException {
         String total = "";
         
-        List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptApiHeader2"));
+        List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptHeaderHttpRequest.js"));
 //        List<String> lines = Files.readAllLines(Paths.get(GenerateJavascriptApi.pathToJavaSource+"com/thundashop/core/start/GetShopJavascriptApiHeader"));
 
         for (String line : lines) {
@@ -114,7 +114,7 @@ public class GenerateJavascriptApi {
                     argstring = argstring.substring(0, argstring.length() - 1);
                 }
                 
-                argstring = argstring.equals("") ? "gs_silent" : argstring + ", gs_silent";
+                argstring = argstring.equals("") ? "gs_silent, gs_dont_persist" : argstring + ", gs_silent, gs_dont_persist";
                 argstring = argstring.replace(",,", ",");
                 javascriptFile += "    '" + method.getName() + "' : function(" + argstring + ") {\n";
                 javascriptFile += "        var data = {\n";
@@ -129,7 +129,7 @@ public class GenerateJavascriptApi {
                 }
                 javascriptFile += "            interfaceName: '" + clazz.getCanonicalName().replace("com.thundashop.", "") + "',\n";
                 javascriptFile += "        };\n";
-                javascriptFile += "        return this.communication.send(data, gs_silent);\n";
+                javascriptFile += "        return this.communication.send(data, gs_silent, gs_dont_persist);\n";
                 javascriptFile += "    },\n";
                 javascriptFile += "\n";
             }

@@ -85,7 +85,6 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Rooms", "roomsconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Notifications", "notifications", "");
         $menu->entries[] = new ModulePageMenuItem("Budget", "budget", "");
-        $menu->entries[] = new ModulePageMenuItem("RateManager/TripTease", "triptease", "");
         $menu->entries[] = new ModulePageMenuItem("GetShop Express", "getshopexpressconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Restricitions", "restrictionsconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Channel manager", "channelmanagerconfig", "");

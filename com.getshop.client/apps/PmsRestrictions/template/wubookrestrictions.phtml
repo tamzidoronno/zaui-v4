@@ -29,7 +29,11 @@
                     echo "<br><br>Closed ota for periode(s):<br>";
                     echo "<table>";
                     foreach($allRestrictions as $res) {
-                        echo "<tr>";
+                        $old = "";
+                        if(strtotime($res->end) < time()) {
+                            $old = "oldrestriction";
+                        }
+                        echo "<tr class='$old'>";
                         echo "<td valign='top'><i class='fa fa-trash-o' gstype='clicksubmit' method='removeRestriction' gsname='id' gsvalue='".$res->id."' style='cursor:pointer;'></i></td>";
                         echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($res->start)) . "</td>";
                         echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($res->end)) . "</td>";
@@ -47,6 +51,7 @@
                     echo "</table>";
                 }
                 ?>
+                <span onclick="$('.oldrestriction').show()" style="cursor:pointer; padding: 5px;">Include outdated restricitons</span>
             </div>
         </td>
         <td valign="top" width="50%">
@@ -67,13 +72,19 @@
                 <?php
                 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
                 foreach($config->closedOfPeriode as $row) {
-                    echo "<div style='padding-left:5px;'>";
+                    $old = "";
+                    if(strtotime($row->firstEvent->end) < time()) {
+                        $old = "oldrestriction";
+                    }                    
+                    
+                    echo "<div style='padding-left:5px;' class='$old'>";
                     echo "<i class='fa fa-trash-o' gstype='clicksubmit' style='cursor:pointer;' method='removeClosedOfUntil' gsname='id' gsvalue='".$row->repeaterId."'></i> ";
                     echo date("d.m.Y H:i", strtotime($row->firstEvent->start)) . " - ";
                     echo date("d.m.Y H:i", strtotime($row->firstEvent->end));
                     echo "</div>";
                 }
                 ?>
+                <span onclick="$('.oldrestriction').show()" style="cursor:pointer; padding: 5px;">Include outdated restricitons</span>
             </div>
         </td>
     </tr>

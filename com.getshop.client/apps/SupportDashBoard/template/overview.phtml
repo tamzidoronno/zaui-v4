@@ -99,7 +99,7 @@ if(sizeof($cases) == 0) {
         <?php
         foreach($cases as $case) {
             /* @var $case core_support_SupportCase */
-            echo "<tr>";
+            echo "<tr caseid='".$case->id."' class='loadcase'>";
             echo "<td>".date("d.m.Y H:i", strtotime($case->rowCreatedDate)) ."</td>";
             echo "<td>".$case->title."</td>";
             echo "<td>".$this->translateTypeToText($case->type)."</td>";

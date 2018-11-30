@@ -25,13 +25,34 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         return "SupportDashBoard";
     }
 
+    public function addReply() {
+        $caseid = $_POST['data']['caseid'];
+        $history = new \core_support_SupportCaseHistory();
+        $history->content = $_POST['data']['content'];
+        $history->minutesUsed = $_POST['data']['timeused'];
+        $this->getApi()->getSupportManager()->addToSupportCase($caseid, $history);
+    }
+    
     public function lazyLoadOverviewData() {
         $res = array();
         
+        $stats = $this->getApi()->getSupportManager()->getSupportStatistics();
         switch($_POST['data']['view']) {
             case "Bugs":
-                $res['today'] = 0;
-                $res['tomorrow'] = 0;
+                $res['today'] = $stats->bugs;
+                $res['tomorrow'] = $stats->bugsTotal;
+                break;
+            case "Features":
+                $res['today'] = $stats->features;
+                $res['tomorrow'] = $stats->featuresTotal;
+                break;
+            case "Time_spent":
+                $res['today'] = $stats->timeSpent;
+                $res['tomorrow'] = $stats->timeSpentTotal;
+                break;
+            case "Questions":
+                $res['today'] = $stats->questions;
+                $res['tomorrow'] = $stats->questionsTotal;
                 break;
             default:
                 $res['today'] = 0;
@@ -47,6 +68,10 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
        $this->includefile("overview"); 
     }
 
+    public function loadDialog() {
+        $this->includefile("suppportcasedialog");
+    }
+    
     public function convertRequestType($requesttype) {
         $requesttype = strtolower($requesttype);
         switch($requesttype) {

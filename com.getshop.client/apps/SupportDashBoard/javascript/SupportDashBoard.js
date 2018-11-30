@@ -1,5 +1,22 @@
 app.SupportDashBoard = {
     init : function() {
+        $(document).on('click','.SupportDashBoard .loadcase', function() {
+            var caseid = $(this).attr('caseid');
+            var event = thundashop.Ajax.createEvent('','loadDialog', $(this), {
+                "caseid" : caseid
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                console.log(res);
+                $('.SupportDashBoard').prepend($(res));
+            });
+        });
+        $(document).on('click','.SupportDashBoard .dialogoverlay', function(e) {
+            if(!$(e.target).hasClass('dialogoverlay')) {
+                return;
+            }
+            $('.dialogoverlay').hide();
+        });
+        
         $(document).on('click','.SupportDashBoard .requestbutton', function() {
             $('#requestform').fadeIn();
             $('#requesttitle').focus();

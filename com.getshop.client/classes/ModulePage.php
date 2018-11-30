@@ -295,8 +295,8 @@ class ModulePage {
     public function getTopMenuGetShopSupport() {
         $menu = new \ModulePageMenu();
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
-        $menu->entries[] = new ModulePageMenuItem("Your cases", "3a0bc113-d800-4658-a68e-a0086973eb80", "gsicon-list");
-        $menu->entries[] = new ModulePageMenuItem("Billing", "94c0e942-a7f5-4bbb-89f0-598c0e080ec1", "fa-money");
+        $menu->entries[] = new ModulePageMenuItem("Dev center", "getshopdevcenter", "gsicon-list");
+        $menu->entries[] = new ModulePageMenuItem("Billing", "getshopbillinghistory", "fa-money");
         return $menu;
     }
 

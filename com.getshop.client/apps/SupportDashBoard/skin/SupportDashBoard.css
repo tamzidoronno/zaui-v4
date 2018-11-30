@@ -1,0 +1,133 @@
+.SupportDashBoard {
+    max-width:1500px;
+    margin:auto;
+}
+.SupportDashBoard .statiticbox {
+    width: 145px;
+    height: 145px;
+    text-align: center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin: 8px;
+}
+
+
+.SupportDashBoard .statiticbox .subinfo {
+    font-size: 20px;
+}
+
+.SupportDashBoard .statiticbox .filecount { 
+    padding-top: 43px;
+    font-size: 35px;
+}
+
+.SupportDashBoard .statiticbox.counter.lightgreen {
+    color: #3fbdbd;
+    background-color: #3fbdbd;
+}
+
+.SupportDashBoard .statiticbox.counter.yellow {
+    color: #e6e158;
+    background-color: #e6e158;
+}
+
+.SupportDashBoard .statiticbox.counter.grey {
+    color: #b6ced9;
+    background-color: #b6ced9;
+}
+
+.SupportDashBoard .statiticbox.counter.pink {
+    color: #d29be8;
+    background-color: #d29be8;
+}
+
+.SupportDashBoard .statiticbox.counter.lightblue {
+    color: #82cdf3;
+    background-color: #82cdf3;
+}
+
+.SupportDashBoard .statiticbox.counter.green {
+    color: #a1ca36;
+    background-color: #a1ca36;
+}
+
+.SupportDashBoard .statiticbox.counter.orange {
+    color: #f1a130;
+    background-color: #f1a130;
+}
+
+.SupportDashBoard .statiticbox.counter .box_explainer {
+    color: #000;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 12px;
+} 
+
+.SupportDashBoard .statiticbox.counter {
+    color: #33455b;
+    background-image: url('{IMAGEFOLDER}/background.png');
+    background-size: contain;
+    background-position: center;
+} 
+
+
+.SupportDashBoard .statistics .dayheader {
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 20px;
+}
+
+.SupportDashBoard .dashboard_main { 
+    text-align: center;
+}
+
+.SupportDashBoard .statistics .header {
+    border-bottom: solid 1px #bbb;
+    padding: 20px;
+    position: relative;
+    
+    color:#000;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.SupportDashBoard .requestbutton:hover { cursor:pointer; background-color:#3fbdbd; }
+
+.SupportDashBoard .statistics .header i {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: #b6ced9;
+    font-size: 25px;
+}
+
+.SupportDashBoard .heading { text-align: center; margin-bottom: 30px; margin-top: 10px; }
+
+
+.SupportDashBoard .statistics_outer {
+    font-size: 15px;
+    width:22%;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 40px;
+}
+
+.SupportDashBoard .statistics {
+    background-color: #FFF;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+}
+
+.SupportDashBoard .statistics .inner { 
+    padding: 20px;
+}
+        
+
+@media screen and (max-width: 800px) {
+    .SupportDashBoard .statistics_outer { width: 100%; }
+}

@@ -49,8 +49,6 @@ class PageFactory {
         }
         
         
-//        echo "<pre>";
-//        print_r($this->pages);
         $page = $this->pages[$pageId];
         $page->createApplicationInstances();
         $page->setModuleId();
@@ -364,9 +362,18 @@ class PageFactory {
     public function createGetShopSupportPages() {
         $page = new \ModulePage("home", "getshopsupport");
         $row = $page->createRow();
-        $row->addColumn("f8d72daf-97d8-4be2-84dc-7bec90ad8462", "2e43f480-636a-4842-9769-8a326ee09cce");
-        $this->pages['home'] = $page;   
-
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("getshopdevcenter", "getshopsupport");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopdevcenter'] = $page;   
+        
+        $page = new \ModulePage("getshopbillinghistory", "getshopsupport");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopbillinghistory'] = $page;   
     }
 
     public function createSalesPointPages() {

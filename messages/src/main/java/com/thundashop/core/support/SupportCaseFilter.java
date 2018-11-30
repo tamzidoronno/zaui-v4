@@ -7,11 +7,8 @@ package com.thundashop.core.support;
 
 /**
  *
- * @author ktonder
+ * @author boggi
  */
-public class SupportCaseType {
-    public static Integer SUPPORT = 0;
-    public static Integer BUG = 1;
-    public static Integer FEATURE = 2;
-    public static Integer MEETINGREQUEST = 3;
+public class SupportCaseFilter {
+    
 }

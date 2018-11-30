@@ -1,0 +1,61 @@
+<div style="border: solid 1px #bbb; border-radius: 3px; background-color:#efefef; padding: 10px;position:absolute;z-index: 10; width: 80%; display:none;" id='requestform'>
+        <i class='fa fa-close' style='cursor:pointer; float:right;' onclick='$("#requestform").hide();'></i>
+    <div class='contentdescription' titletype='Time_spent'>What is the meeting about?</div>
+    <div class='contentdescription' titletype='Features'>What kind of feature are you asking for?</div>
+    <div class='contentdescription' titletype='Questions'>Title for question</div>
+    <div class='contentdescription' titletype='Bugs'>Title of bug</div>
+    <input type="text" class="gsniceinput1" id='requesttitle' style="width:100%;box-sizing: border-box;" placeholder="Title">
+    <input type='hidden' name='requesttype' id='requesttype'>
+    <br><br>
+    <div class='contentdescription' titletype='Time_spent'>What is the meeting about?</div>
+    <div class='contentdescription' titletype='Features'>Please describe your feature</div>
+    <div class='contentdescription' titletype='Questions'>Please state your question</div>
+    <div class='contentdescription' titletype='Bugs'>Please describe the bug</div>
+    <div style="height: 20px;"></div>
+    <textarea name="content" id="editor"></textarea>
+    <div style='clear:both;'></div>
+    <div style='text-align: right; margin-top: 5px;'>
+        <span class='shop_button submitrequestform'>
+            <div class='contentdescription' titletype='Time_spent'>Submit meeting request</div>
+            <div class='contentdescription' titletype='Features'>Submit feature request</div>
+            <div class='contentdescription' titletype='Questions'>Submit question</div>
+            <div class='contentdescription' titletype='Bugs'>Submit bug</div>
+        </span>
+    </div>
+</div>
+<style>
+.ck-editor__editable {
+    min-height: 400px;
+}
+</style>
+<script>
+    var myEditor;
+    $(function() {
+        ClassicEditor.create( document.querySelector( '#editor' ), {
+             ckfinder: {
+                uploadUrl: '/getshopsupportfileuploader.php'
+            }
+        })
+        .then( editor => {
+            myEditor = editor;
+                console.log( editor );
+        })
+        .catch( error => {
+                console.error( error );
+        });
+    });
+    $('#requesttitle').focus();
+    $('.submitrequestform').on('click', function() {
+        var data = {};
+        data.content = myEditor.getData();
+        data.title = $('#requesttitle').val();
+        data.type = $('#requesttype').val();
+        myEditor.setData('');
+        $('#requesttitle').val('');
+        
+        var event = thundashop.Ajax.createEvent('','saveRequest',$('.SupportDashBoard'), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+//            window.location.reload();
+        });
+    });
+</script>

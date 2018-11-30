@@ -26,7 +26,7 @@ $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
 $_SESSION['firstloadpage'] = true;
 
 ?>
-<html pageid="<? echo $page->getId(); ?>" module="pms">
+<html pageid="<? echo $page->getId(); ?>" module="getshopsupport">
     <head>
         <title>GetShop Support</title>
         <link rel="stylesheet" href="/icomoon/style.css">
@@ -36,7 +36,8 @@ $_SESSION['firstloadpage'] = true;
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
 
         <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">
-        
+        <script src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
+
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         
         <? $page->loadAppsCss(); ?>
@@ -46,7 +47,6 @@ $_SESSION['firstloadpage'] = true;
         <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
         <script type="text/javascript" src="js/getshop.pms.js"></script>
-        <script src="js/ckeditor/ckeditor.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>
     

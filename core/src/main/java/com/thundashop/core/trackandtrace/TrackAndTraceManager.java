@@ -1533,11 +1533,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     private void addMessage(String driverId, Serializable object) {
         List<Serializable> queue = getQueue(driverId);
-        queue.removeIf(o -> {
-            return o.getClass() == object.getClass();
-        });
         
-        if (object != null) {
+        if (object != null && !queue.contains(object)) {
             queue.add(object);
         }
     }

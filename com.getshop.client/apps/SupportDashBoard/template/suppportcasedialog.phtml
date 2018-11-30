@@ -1,0 +1,63 @@
+<?php
+/* @var $this ns_84268253_6c1e_4859_86e3_66c7fb157ea1\SupportDashBoard */
+$caseId = $_POST['data']['caseid'];
+$case = $this->getApi()->getSupportManager()->getSupportCase($caseId);
+?>
+<div class='dialogoverlay'>
+    <div class='dialogdocument'>
+        <?php
+        echo "<div class='dialogtitle'>";
+        echo $case->title;
+        echo "</div>";
+        foreach($case->history as $history) {
+            echo $history->content;
+            echo "<div class='messagefooter'>";
+            echo "<input type='hidden' id='replycaseid' value='".$case->id. "'>";
+            echo $history->fullName . " - " . date("d.m.Y H:i", strtotime($history->date));
+            echo "</div>";
+        }
+        ?>
+        <div class='replyarea' style='display:none;'>
+            <textarea name="content" id="replyeditor"></textarea>
+            <div style='text-align: right' class='saveresponsebutton shop_button'>Save reponse</div>
+        </div>
+        
+        <div>
+            <span class='shop_button createreply'>Reply</span>
+        </div>
+    </div>
+</div>
+<script>
+var replyEditor;
+$('.SupportDashBoard .createreply').on('click', function() {
+    $('.replyarea').show();
+    ClassicEditor.create( document.querySelector( '#replyeditor' ), {
+             ckfinder: {
+                uploadUrl: '/getshopsupportfileuploader.php'
+            }
+        })
+    .then( editor => {
+        replyEditor = editor;
+    })
+    .catch( error => {
+            console.error( error );
+    });
+    $(this).hide();
+});
+
+$('.saveresponsebutton').on('click', function() {
+    var data = {};
+    data.content = replyEditor.getData();
+    data.caseid = $('#replycaseid').val();
+    data.timeused = 1;
+    var event = thundashop.Ajax.createEvent('','addReply', $('.SupportDashBoard'), data);
+    thundashop.Ajax.postWithCallBack(event, function() {
+        $('.dialogoverlay').hide();
+    });
+});
+</script>
+
+<style>
+    .dialogtitle { border-bottom: solid 1px; margin-bottom: 10px; }
+    .messagefooter { border-top: solid 1px; color:#bbb; font-size : 12px; padding-top: 10px; text-align: right;}
+</style>

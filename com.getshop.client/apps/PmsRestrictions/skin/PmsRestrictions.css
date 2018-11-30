@@ -2,3 +2,4 @@
 .PmsRestrictions .repeatoption { display:none; }
 .PmsRestrictions .section { background-color:#fff; border:solid 1px #bbb; padding: 10px; }
 .PmsRestrictions .GetShopModuleTable { max-width: 100%; }
+.PmsRestrictions .oldrestriction { display:none; color:#bbb; }

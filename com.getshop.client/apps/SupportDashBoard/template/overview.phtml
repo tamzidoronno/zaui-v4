@@ -1,0 +1,115 @@
+<?php
+/* @var $this ns_84268253_6c1e_4859_86e3_66c7fb157ea1\SupportDashBoard */
+$boxes = array();
+$boxes["Bugs"] = "Number of bugs reported";
+$boxes["Questions"] = "Number of questions asked";
+$boxes["Features"] = "Number of features requested";
+$boxes["Time spent"] = "Support time spent";
+
+$colors["Bugs"] = "green";
+$colors["Questions"] = "orange";
+$colors["Features"] = "pink";
+$colors["Time_spent"] = "yellow";
+$filter = new core_support_SupportCaseFilter();
+$cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
+
+?>
+<div class="heading">Statistics</div>
+<div class='dashboard_main'>
+    <?php
+    foreach($boxes as $title => $desc) {
+        $field = str_replace(" ", "_", $title);
+    ?>
+    <div class="statistics_outer <?php echo $field; ?>">
+        <div class="statistics <?php echo $field; ?>">
+            <div class='header'>
+                <?php echo $title; ?>
+                <div>
+                    <span class="shop_button requestbutton" requesttype='<?php echo $field; ?>' style="width:100%;box-sizing: border-box; margin-top:5px;">
+                        <?php
+                        if($title == "Bugs") { echo "Report a bug"; }
+                        if($title == "Questions") { echo "Ask a question"; }
+                        if($title == "Features") { echo "I have a feature request"; }
+                        if($title == "Time spent") { echo "Request a meeting"; }
+                        ?>
+                    </span>
+                </div>
+            </div>
+            <div class='inner'>
+                <? $color = $colors[$field]; ?>
+                <div class="statiticbox counter <? echo $color; ?> counter1">
+                    <div class="filecount boldFont">
+                        <i class='fa fa-spin fa-spinner'></i>
+                    </div>
+                    
+                    <div class="box_explainer">
+                    <?php
+                        if($field == "Time_spent") {
+                            echo $this->__f("This periode");
+                        } else {
+                            echo $this->__f("By you");
+                        }
+                    ?>
+                    </div>
+                </div>
+                
+                <div class="statiticbox counter grey counter2">
+                    <div class="filecount boldFont"><i class='fa fa-spin fa-spinner'></i></div>
+                    
+                    <div class="box_explainer">
+                        <?php
+                            if($field == "Time_spent") {
+                                echo $this->__f("In total");
+                            } else {
+                                echo $this->__f("By everyone");
+                            }
+                        ?>
+                    </div>
+                </div>    
+            </div>    
+        </div>
+    </div>
+    <script>
+        app.SupportDashBoard.loadview('<?php echo $field; ?>');
+        viewloaded = {};
+    </script>
+<?php } ?>
+</div>
+
+<div style="clear:both"></div>
+<div class="heading">Cases by you</div>
+
+<div style="text-align: center; max-width:1100px; margin: auto;">
+<?php
+if(sizeof($cases) == 0) {
+    echo "You have no cases registered on you.";
+} else {
+?>
+    <table width="100%" bgcolor="#efefef" cellspacing="1" cellpadding="1">
+        <tr bgcolor="#fff">
+            <th align="left">Date</th>
+            <th align="left">Title</th>
+            <th align="left">Type</th>
+            <th align="left">By</th>
+            <th align="left">State</th>
+            <th align="left">Module</th>
+            <th align="center">Time (minutes)</th>
+        </tr>
+        
+        <?php
+        foreach($cases as $case) {
+            /* @var $case core_support_SupportCase */
+            echo "<tr caseid='".$case->id."' class='loadcase'>";
+            echo "<td>".date("d.m.Y H:i", strtotime($case->rowCreatedDate)) ."</td>";
+            echo "<td>".$case->title."</td>";
+            echo "<td>".$this->translateTypeToText($case->type)."</td>";
+            echo "<td>".$case->byUserName."</td>";
+            echo "<td>".$this->translateStateToText($case->state)."</td>";
+            echo "<td>". $case->module . " " .$this->translateModule($case->module)."</td>";
+            echo "<td align='center'>".$case->minutesSpent."</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+<? } ?>
+</div>

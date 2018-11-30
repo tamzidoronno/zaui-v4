@@ -315,51 +315,59 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
+        boolean failed = false;
+        
         if(guestLeft > 0) {
             logPrint("################ WARNING ################");
             logPrint("Not all guests where assigned a room");
             logPrint("################ WARNING ################");
+            failed = true;
         }
         if(guestLeft < 0) {
             logPrint("################ WARNING ################");
             logPrint("Too many guests where assigned a room");
             logPrint("################ WARNING ################");
+            failed = true;
         }
         if(roomsLeft > 0) {
             logPrint("################ WARNING ################");
             logPrint("Not all rooms where assigned");
             logPrint("################ WARNING ################");
+            failed = true;
         }
         if(roomsLeft < 0) {
             logPrint("################ WARNING ################");
             logPrint("Too many rooms where assigned");
             logPrint("################ WARNING ################");
+            failed = true;
         }
         
         logPrint("---------------: " + guestLeft + "-----------");
         int childToSet = arg.children;
-        for(PmsBookingProcessorCalculator check : listOfRooms) {
-                logPrint(check.guests + " : "+ check.room.availableRooms + " : " + check.price + " : " + check.room.name);
-                Integer current = check.room.roomsSelectedByGuests.get(check.guests);
-                if(current == null) {
-                    current = 0;
-                }
-                current++;
-                check.room.roomsSelectedByGuests.put(check.guests, current);
-                
-                PmsBookingRooms toAddToCurrentBooking = new PmsBookingRooms();
-                toAddToCurrentBooking.bookingItemTypeId = check.room.id;
-                toAddToCurrentBooking.numberOfGuests = check.guests;
-                toAddToCurrentBooking.date = new PmsBookingDateRange();
-                toAddToCurrentBooking.date.start = normalizeDate(arg.start, true);
-                toAddToCurrentBooking.date.end = normalizeDate(arg.end, false);
-                if(childToSet > 0) {
-                    childToSet -= toAddToCurrentBooking.setGuestAsChildren(childToSet);
-                }
-                pmsManager.setPriceOnRoom(toAddToCurrentBooking, true, booking);
-                result.roomsSelected++;
-                booking.addRoom(toAddToCurrentBooking);
-                check.room.totalPriceForRoom = toAddToCurrentBooking.price;
+        if(!failed) {
+            for(PmsBookingProcessorCalculator check : listOfRooms) {
+                    logPrint(check.guests + " : "+ check.room.availableRooms + " : " + check.price + " : " + check.room.name);
+                    Integer current = check.room.roomsSelectedByGuests.get(check.guests);
+                    if(current == null) {
+                        current = 0;
+                    }
+                    current++;
+                    check.room.roomsSelectedByGuests.put(check.guests, current);
+
+                    PmsBookingRooms toAddToCurrentBooking = new PmsBookingRooms();
+                    toAddToCurrentBooking.bookingItemTypeId = check.room.id;
+                    toAddToCurrentBooking.numberOfGuests = check.guests;
+                    toAddToCurrentBooking.date = new PmsBookingDateRange();
+                    toAddToCurrentBooking.date.start = normalizeDate(arg.start, true);
+                    toAddToCurrentBooking.date.end = normalizeDate(arg.end, false);
+                    if(childToSet > 0) {
+                        childToSet -= toAddToCurrentBooking.setGuestAsChildren(childToSet);
+                    }
+                    pmsManager.setPriceOnRoom(toAddToCurrentBooking, true, booking);
+                    result.roomsSelected++;
+                    booking.addRoom(toAddToCurrentBooking);
+                    check.room.totalPriceForRoom = toAddToCurrentBooking.price;
+            }
         }
         try {
             booking.calculateTotalCost();

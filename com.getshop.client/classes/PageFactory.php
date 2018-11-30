@@ -34,6 +34,9 @@ class PageFactory {
         if ($moduleId == "salespoint") {
             $this->createSalesPointPages();
         }
+        if ($moduleId == "getshopsupport") {
+            $this->createGetShopSupportPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -46,8 +49,6 @@ class PageFactory {
         }
         
         
-//        echo "<pre>";
-//        print_r($this->pages);
         $page = $this->pages[$pageId];
         $page->createApplicationInstances();
         $page->setModuleId();
@@ -357,6 +358,22 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("480bdbdd-4da9-44ca-95c9-2fcb044eaf22", "f807d085-13f3-4421-a94a-5be4ae0148ca");
         $this->pages['9c87fd8c-e44a-467a-a65b-1734f974a553'] = $page;   
+    }
+    public function createGetShopSupportPages() {
+        $page = new \ModulePage("home", "getshopsupport");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("getshopdevcenter", "getshopsupport");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopdevcenter'] = $page;   
+        
+        $page = new \ModulePage("getshopbillinghistory", "getshopsupport");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopbillinghistory'] = $page;   
     }
 
     public function createSalesPointPages() {

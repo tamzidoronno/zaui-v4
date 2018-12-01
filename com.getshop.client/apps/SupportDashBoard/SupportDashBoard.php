@@ -6,6 +6,11 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         
     }
 
+    public function isGetShop() {
+        $storeId = $this->getFactory()->getStore()->id;
+        return $storeId == "13442b34-31e5-424c-bb23-a396b7aeb8ca";
+    }
+    
     public function saveRequest() {
         $content = $_POST['data']['content'];
         $requesttype = $_POST['data']['type'];
@@ -29,8 +34,23 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         $caseid = $_POST['data']['caseid'];
         $history = new \core_support_SupportCaseHistory();
         $history->content = $_POST['data']['content'];
-        $history->minutesUsed = $_POST['data']['timeused'];
-        $this->getApi()->getSupportManager()->addToSupportCase($caseid, $history);
+        $minutes = (int)$_POST['data']['timeused'];
+        if($minutes <= 0) { $minutes = 1; }
+        $history->minutesUsed = $minutes;
+        $rawcontent = trim(strip_tags($history->content));
+        if($rawcontent && $rawcontent != "&nbsp;") {
+            $this->getApi()->getSupportManager()->addToSupportCase($caseid, $history);
+        }
+        
+        if(isset($_POST['data']['title'])) {
+            $this->getApi()->getSupportManager()->changeSupportCaseType($caseid, $_POST['data']['type']);
+            $this->getApi()->getSupportManager()->changeStateForCase($caseid, $_POST['data']['state']);
+            $this->getApi()->getSupportManager()->changeTitleOnCase($caseid, $_POST['data']['title']);
+            if($_POST['data']['assignedto']) {
+                $this->getApi()->getSupportManager()->assignCareTakerForCase($caseid, $_POST['data']['assignedto']);
+            }
+        }
+        
     }
     
     public function lazyLoadOverviewData() {
@@ -64,8 +84,12 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
     }
     
     public function render() {
-       $this->includefile("requestform"); 
-       $this->includefile("overview"); 
+       if($this->page->getId() == "getshopdevcenter") {
+            $this->includefile("devcenter"); 
+       } else {
+            $this->includefile("requestform"); 
+            $this->includefile("overview"); 
+       }
     }
 
     public function loadDialog() {
@@ -87,27 +111,79 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         return 0;
     }
 
-    public function translateTypeToText($type) {
+    public function getTypes() {
         $types = array();
         $types[0] = "SUPPORT";
         $types[1] = "BUG";
         $types[2] = "FEATURE";
         $types[3] = "MEETINGREQUEST";
+        return $types;
+    }
+    
+    public function dofilter() {
+        $_SESSION['supportfiltertype'] = $_POST['data']['type'];
+    }
+    
+    public function getFilter() {
+        if(!$this->isGetShop()) {
+            return new \core_support_SupportCaseFilter();
+        }
+        $type = $this->getfilterType();
+        $filter = new \core_support_SupportCaseFilter();
+        if($type == "assignedtomeneedfollowup") {
+            $filter->state = 0;
+            $filter->userId = $this->getApi()->getUserManager()->getLoggedOnUser()->id;
+        } else if($type == "assignedtome") {
+            $filter->state = -1;
+            $filter->userId = $this->getApi()->getUserManager()->getLoggedOnUser()->id;
+        } else if($type == "unassigned") {
+            $filter->state = 0;
+        } else if($type == "assigned") {
+            $filter->state = 9;
+        } else if($type == "all") {
+            $filter->state = -1;
+        } else {
+            $filter->state = -1;
+        }
+        return $filter;
+    }
+    
+    public function translateTypeToText($type) {
+        $types = $this->getTypes();
         return $types[$type];
+    }
+    
+    
+    public function getStates() {
+        $state = array();
+        $state[0] = "SENT";
+        $state[1] = "APRROVED";
+        $state[2] = "BACKLOGGED";
+        $state[3] = "REJECTED";
+        $state[4] = "WAITING_RESPONSE";
+        $state[5] = "SOLVED";
+        $state[6] = "DELEGATED";
+        $state[7] = "CREATED";
+        $state[8] = "REPLIED";
+        $state[9] = "ASSIGNED";
+        $state[10] = "INPROGRESS";
+        $state[11] = "SOLVED BY DEVELOPER";
+        return $state;
+    }
+    
+    public function startDevelopement() {
+        $caseid = $_POST['data']['caseid'];
+        $this->getApi()->getSupportManager()->changeStateForCase($caseid, 10);
+    }
+    
+    public function solvedCase() {
+        $caseid = $_POST['data']['caseid'];
+        $this->getApi()->getSupportManager()->changeStateForCase($caseid, 11);
     }
 
     public function translateStateToText($stateId) {
-        $state = array();
-        $types[0] = "SENT";
-        $types[1] = "APRROVED";
-        $types[2] = "MOVEDTOBACKLOG";
-        $types[3] = "REJECTED";
-        $types[4] = "WAITING_RESPONSE";
-        $types[5] = "SOLVED";
-        $types[6] = "DELEGATED";
-        $types[7] = "CREATED";
-        
-        return $types[$stateId];
+        $state = $this->getStates();
+        return $state[$stateId];
     }
 
     public function translateModule($moduleId) {
@@ -120,6 +196,53 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         $modules[2] = "APAC";
         
         return $modules[$moduleId];
+    }
+    
+    /**
+     * 
+     * @return \core_usermanager_data_User[]
+     */
+    public function getAdmins() {
+        if(!$this->isGetShop()) {
+            return array();
+        }
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        $admins = array();
+        foreach($users as $usr) {
+            if($usr->type == 100 && $usr->emailAddress && $usr->emailAddress != "post@getshop.com") {
+                $admins[$usr->id] = $usr;
+            }
+        }
+        return $admins;
+    }
+
+    public function getfilterType() {
+        $type = "assignedtomeneedfollowup";
+        if(isset($_SESSION['supportfiltertype'])) {
+            $type = $_SESSION['supportfiltertype'];
+        }
+        return $type;
+    }
+
+    public function getBackLog() {
+        $filter = new \core_support_SupportCaseFilter();
+        $filter->state = 2;
+        $cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
+        return $cases;
+    }
+
+    public function getInProgress() {
+        $filter = new \core_support_SupportCaseFilter();
+        $filter->state = 10;
+        $cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
+        return $cases;
+    }
+
+    public function getSolvedCases() {
+        $filter = new \core_support_SupportCaseFilter();
+        $filter->state = 11;
+        $cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
+        return $cases;
     }
 
 }

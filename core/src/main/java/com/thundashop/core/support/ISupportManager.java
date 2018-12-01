@@ -24,4 +24,5 @@ public interface ISupportManager {
     public void changeModuleForCase(String caseId, Integer moduleId);
     public SupportCase getSupportCase(String supportCaseId);
     public SupportStatistics getSupportStatistics();
+    public void changeTitleOnCase(String caseId, String title);
 }

@@ -38,6 +38,8 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private StoreManager StoreManager;
     
     private SupportStatistics storeSupportStats = new SupportStatistics();
+    private String getshopStoreId = "13442b34-31e5-424c-bb23-a396b7aeb8ca";
+    private SupportStatistics globalStats;
     
     @Override
     public void helloWorld() {
@@ -61,18 +63,42 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     }
     
     private SupportStatistics getGlobalSupportStatitics() {
+        if(this.globalStats != null) {
+            return globalStats;
+        }
+        
         BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("className", "com.thundashop.core.support.SupportStatistics"));
+        query.put("$and", obj);
+        
+        SupportStatistics stats = new SupportStatistics();
         List<DataCommon> res = supportDatabase.query(query);
         for(DataCommon r : res) {
             if(r instanceof SupportStatistics) {
-                return (SupportStatistics) r;
+                stats = (SupportStatistics) r;
             }
         }
-        return new SupportStatistics();
+        this.globalStats = stats;
+        return stats;
     }
 
-    private List<SupportCase> getCases() {
+    private List<SupportCase> getCases(SupportCaseFilter filter) {
         BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        if(filter.state >= 0) {
+            obj.add(new BasicDBObject("state", filter.state));
+        }
+        if(!filter.caseId.isEmpty()) {
+            obj.add(new BasicDBObject("_id", filter.caseId));
+        }
+        if(!filter.userId.isEmpty()) {
+            obj.add(new BasicDBObject("handledByUser", filter.userId));
+        }
+        if(!obj.isEmpty()) {
+            query.put("$and", obj);
+        }
+        
         List<DataCommon> res = supportDatabase.query(query);
         List<SupportCase> cases = new ArrayList();
         for(DataCommon r : res) {
@@ -94,7 +120,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     
     @Override
     public List<SupportCase> getSupportCases(SupportCaseFilter filter) {
-        List<SupportCase> allCases = getCases();
+        List<SupportCase> allCases = getCases(filter);
         List<SupportCase> result = new ArrayList();
         for(SupportCase tmpCase : allCases) {
             if(!hasAccess(tmpCase.byStoreId)) {
@@ -108,6 +134,12 @@ public class SupportManager extends ManagerBase implements ISupportManager {
 
     @Override
     public void addToSupportCase(String supportCaseId, SupportCaseHistory history) {
+        if(history.minutesUsed <= 0) {
+            history.minutesUsed = 1;
+        }
+        if(!isGetShop()) {
+            history.minutesUsed = 0;
+        }
         history.storeId = StoreManager.getStoreId();
         history.userId = getSession().currentUser.id;
         history.date = new Date();
@@ -117,6 +149,10 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         if(scase.byUserName.isEmpty()) {
             scase.byUserName = getSession().currentUser.fullName;
         }
+        if(!isGetShop()) {
+            scase.state = SupportCaseState.SENT;
+        }
+        updateTimeCounter(history.minutesUsed);
         saveSupportCase(scase);
     }
 
@@ -142,13 +178,17 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     }
 
     private boolean hasAccess(String storeIdToCheck) {
-        if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
+        if(storeId.equals(getshopStoreId)) {
             return true;
         }
         boolean isEqual = storeIdToCheck.equals(storeId);
         return isEqual;
     }
 
+    private boolean isGetShop() {
+        return storeId.equals(getshopStoreId);
+    }
+    
     @Override
     public void changeModuleForCase(String caseId, Integer module) {
         SupportCase toChange = getSupportCase(caseId);
@@ -158,7 +198,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
 
     @Override
     public SupportCase getSupportCase(String supportCaseId) {
-        List<SupportCase> allCases = getCases();
+        SupportCaseFilter filter = new SupportCaseFilter();
+        filter.caseId = supportCaseId;
+        List<SupportCase> allCases = getCases(filter);
         for(SupportCase tmpCase : allCases) {
             if(!hasAccess(tmpCase.byStoreId)) {
                 continue;
@@ -179,7 +221,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private void finalize(SupportCase tmpCase) {
         tmpCase.minutesSpent = 0;
         for(SupportCaseHistory hist : tmpCase.history) {
-            hist.minutesUsed += hist.minutesUsed;
+            tmpCase.minutesSpent += hist.minutesUsed;
         }
     }
 
@@ -201,5 +243,25 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         supportDatabase.save(globalStats);
         saveObject(storeSupportStats);
     }
+
+    private void updateTimeCounter(Integer minutesUsed) {
+        SupportStatistics globalStats = getGlobalSupportStatitics();
+        globalStats.timeSpentTotal += minutesUsed;
+        storeSupportStats.timeSpent += minutesUsed;
+        supportDatabase.save(globalStats);
+        saveObject(storeSupportStats);
+    }
+
+    @Override
+    public void changeTitleOnCase(String caseId, String title) {
+        if(!isGetShop()) {
+            return;
+        }
+        SupportCase casetochange = getSupportCase(caseId);
+        casetochange.title = title;
+        saveSupportCase(casetochange);
+    }
+
+    
     
 }

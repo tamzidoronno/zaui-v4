@@ -10,26 +10,62 @@ $case = $this->getApi()->getSupportManager()->getSupportCase($caseId);
         echo $case->title;
         echo "</div>";
         foreach($case->history as $history) {
+            echo "<div class='dialoghistory'>";
+            echo "<div class='dialogcontent'>";
             echo $history->content;
+            echo "</div>";
             echo "<div class='messagefooter'>";
             echo "<input type='hidden' id='replycaseid' value='".$case->id. "'>";
             echo $history->fullName . " - " . date("d.m.Y H:i", strtotime($history->date));
+            echo "</div>";
             echo "</div>";
         }
         ?>
         <div class='replyarea' style='display:none;'>
             <textarea name="content" id="replyeditor"></textarea>
-            <div style='text-align: right' class='saveresponsebutton shop_button'>Save reponse</div>
+            <?php
+            if($this->isGetShop()) {
+                echo "<div style='padding-top: 3px; padding-bottom: 3px;'>";
+                echo "<input type='text' id='casetitle' value='". $case->title ."' class='gsniceinput1' style='width:100%; box-sizing:border-box;margin-bottom: 3px; margin-top: 3px;'>";
+                $states = $this->getStates();
+                $admins = $this->getAdmins();
+                echo "<select class='gsniceselect1' id='assigntask' taskid='".$case->id."' style='width:30%;'>";
+                echo "<option value=''>Select a user</option>";
+                foreach($admins as $admin) {
+                    $selected = $case->handledByUser == $admin->id ? "SELECTED" : "";
+                    echo "<option value='" .$admin->id."' $selected>".$admin->fullName . "</option>";
+                }
+                echo "</select> ";
+                
+                echo "<select class='gsniceselect1' style='box-sizing:border-box; width:33%;' id='getshopsupportstate'>";
+                echo "<option value=''>Select a state</option>";
+                foreach($states as $id => $state) {
+                    $selected = $id == 8 ? "SELECTED" : "";
+                    echo "<option value='$id' $selected>$state</option>";
+                }
+                echo "</select>";
+                $types = $this->getTypes();
+                echo "<select class='gsniceselect1' style='box-sizing:border-box; width:33%; float:right;' id='getshopsupporttype'>";
+                foreach($types as $id => $type) {
+                    $selected = $case->type == $id ? "SELECTED" : "";
+                    echo "<option value='$id' $selected>$type</option>";
+                }
+                echo "</select>";
+                echo "</div>";
+            }
+            ?>
+            <div style='width:100%; box-sizing: border-box;text-align: center;' class='saveresponsebutton shop_button'>Send reponse</div>
         </div>
         
         <div>
-            <span class='shop_button createreply'>Reply</span>
+            <span class='shop_button createreply' style='width:100%; box-sizing: border-box;text-align: center;'>Reply</span>
         </div>
     </div>
 </div>
 <script>
 var replyEditor;
 $('.SupportDashBoard .createreply').on('click', function() {
+    app.SupportDashBoard.replyStartTime = new Date();
     $('.replyarea').show();
     ClassicEditor.create( document.querySelector( '#replyeditor' ), {
              ckfinder: {
@@ -49,15 +85,55 @@ $('.saveresponsebutton').on('click', function() {
     var data = {};
     data.content = replyEditor.getData();
     data.caseid = $('#replycaseid').val();
-    data.timeused = 1;
+    var now = new Date();
+    var diffMs = (now - app.SupportDashBoard.replyStartTime); // milliseconds between now & Christmas
+    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+    
+    if($('#getshopsupporttype').is(':visible')) {
+        data.type = $('#getshopsupporttype').val();
+    }
+    if($('#getshopsupportstate').is(':visible')) {
+        data.state = $('#getshopsupportstate').val();
+    }
+    if($('#casetitle').is(':visible')) {
+        data.title = $('#casetitle').val();
+    }
+    if($('#assigntask').is(':visible')) {
+        data.assignedto = $('#assigntask').val();
+    }
+    
+    data.minutes = diffMins;
+    
     var event = thundashop.Ajax.createEvent('','addReply', $('.SupportDashBoard'), data);
     thundashop.Ajax.postWithCallBack(event, function() {
-        $('.dialogoverlay').hide();
+        window.location.reload();
     });
 });
 </script>
 
 <style>
-    .dialogtitle { border-bottom: solid 1px; margin-bottom: 10px; }
-    .messagefooter { border-top: solid 1px; color:#bbb; font-size : 12px; padding-top: 10px; text-align: right;}
+    .dialogtitle { border-bottom: solid 1px #bbb;
+        padding: 10px;
+        background-color: #c5c4ec;
+        text-align: center;
+        font-size: 20px;
+    }
+    .dialogcontent {
+        padding: 10px;
+        margin-bottom: 10px;
+        margin-top: 5px;
+    }
+    .dialoghistory { 
+        border: solid 1px #bbb;
+        margin-top: 5px; 
+        margin-bottom: 5px; 
+    }
+    .messagefooter {    
+        border-top: solid 1px;
+        color: #bbb;
+        font-size: 12px;
+        padding: 10px;
+        text-align: right;
+        background-color: #efefef;
+    }
 </style>

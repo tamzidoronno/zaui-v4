@@ -1,0 +1,19 @@
+<?php
+/* @var $this ns_84268253_6c1e_4859_86e3_66c7fb157ea1\SupportDashBoard */
+$filterButtons = array();
+$filterButtons['assignedtome'] = "All tasked assigned to me";
+$filterButtons['assignedtomeneedfollowup'] = "Tasked assigned to me needing followup";
+$filterButtons['unassigned'] = "Unassigned tasks";
+$filterButtons['assigned'] = "Assigned tasks";
+$filterButtons['all'] = "All tasks";
+$selectedtype = $this->getfilterType();
+?>
+<div style='margin-bottom:30px;'>
+    <?php
+    foreach($filterButtons as $id => $text) {
+        $selected = $selectedtype == $id ? "selectedbtn" : "";
+        echo "<span class='shop_button $selected' gsclick='dofilter' type='$id'>$text</span> ";
+        
+    }
+    ?>
+</div>

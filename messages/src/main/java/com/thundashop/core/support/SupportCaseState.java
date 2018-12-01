@@ -18,4 +18,7 @@ public class SupportCaseState {
     public static Integer SOLVED = 5;
     public static Integer DELEGATED = 6;
     public static Integer CREATED = 7;
+    public static Integer REPLIED = 8;
+    public static Integer ASSIGNED = 9;
+    public static Integer INPROGRESS = 10;
 }

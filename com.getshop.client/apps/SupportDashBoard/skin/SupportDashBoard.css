@@ -37,6 +37,19 @@
     padding-top: 43px;
     font-size: 35px;
 }
+.SupportDashBoard .backlogentry {
+    border: solid 1px #bbb;
+    padding: 5px;
+    line-height: 36px;
+    margin-bottom: 3px;
+    background-color: #fff;
+}
+.SupportDashBoard .selectedbtn { background-color:green; }
+.SupportDashBoard .loadcase th,
+.SupportDashBoard .loadcase td { padding: 3px; }
+.SupportDashBoard .loadcase { cursor: pointer; }
+.SupportDashBoard .loadcase.odd { background-color:#fff; }
+.SupportDashBoard .loadcase.even { background-color:#efefef; }
 
 .SupportDashBoard .statiticbox.counter.lightgreen {
     color: #3fbdbd;

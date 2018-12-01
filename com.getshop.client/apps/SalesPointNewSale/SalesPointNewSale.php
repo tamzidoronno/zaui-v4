@@ -22,15 +22,18 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             $this->includefile("leftmenu");
         echo "</div>";
         
-        echo "<div class='productlistouter'>";
-            echo "<div class='productlistinner'>";
-                $this->includefile("listview");
+        echo "<div style='display: inline-block; width: calc(100% - 100px)'>";
+            $this->includefile("topmenu");
+            echo "<div class='productlistouter'>";
+                echo "<div class='productlistinner'>";
+                    $this->renderActivatedView();
+                echo "</div>";
+                echo "<div class='multitaxsupport'></div>";
             echo "</div>";
-            echo "<div class='multitaxsupport'></div>";
-        echo "</div>";
-        
-        echo "<div class='rightmenu'>";
-            $this->includefile("tab");
+
+            echo "<div class='rightmenu'>";
+                $this->includefile("tab");
+            echo "</div>";
         echo "</div>";
         
     }
@@ -110,7 +113,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         }
         
         $cartItem = new \core_cartmanager_data_CartItem();
-        $cartItem->count = 1;
+        $cartItem->count = $_POST['data']['count'];
         $cartItem->product = $product;
         $this->getApi()->getPosManager()->addToTab($tab->id, $cartItem);
         $this->includefile("tab");
@@ -175,6 +178,29 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     public function showMultiTaxes() {
         $this->includefile("multitaxselection");
+    }
+    
+    public function activateView() {
+        if (isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == $_POST['data']['view']) {
+            unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']);
+        } else {
+            $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] = $_POST['data']['view'];
+        }
+    }
+
+    public function renderActivatedView() {
+        if (isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) == "cashwithdrawal") {
+            $this->includefile("cashwithdrawal");
+        } else {
+            $this->includefile("listview");
+        }
+    }
+
+    public function addCashWithdrawal() {
+        $tab = $this->getCurrentTab();
+        $this->getApi()->getPosManager()->addCashWithDrawalToTab($tab->id, $_POST['data']['amount']);
+        $_POST['data']['view'] = "cashwithdrawal";
+        $this->activateView();
     }
 }
 ?>

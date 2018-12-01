@@ -144,7 +144,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public Order createOrder(List<CartItem> cartItems, String paymentId) {
+    public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId) {
+        PosTab tab = getTab(tabId);
+        
         cartManager.clear();
         cartManager.getCart().addCartItems(cartItems);
         
@@ -153,6 +155,10 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         Application paymentApplication = storeApplicationPool.getApplication(paymentId);
         order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+        
+        if (tab != null) {
+            order.cashWithdrawal = tab.cashWithDrawal;
+        }
         
         orderManager.saveOrder(order);
         
@@ -164,7 +170,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         Order order = orderManager.getOrder(orderId);
         
         if (!order.isFullyPaid()) {
-            orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order));
+            orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order) + order.cashWithdrawal);
         }
         
         PosTab tab = getTab(tabId);
@@ -173,6 +179,8 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .forEach(cartItem -> {
                     tab.removeCartItem(cartItem);
                 });
+        
+        tab.cashWithDrawal = tab.cashWithDrawal - order.cashWithdrawal;
         
         saveObject(tab);
         
@@ -380,5 +388,14 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         cashPoint.productListIds = newList;
         saveObject(cashPoint);
+    }
+
+    @Override
+    public void addCashWithDrawalToTab(String tabId, double amount) {
+        PosTab res = getTab(tabId);
+        if (res != null) {
+            res.cashWithDrawal = amount;
+            saveObject(res);
+        }
     }
 }

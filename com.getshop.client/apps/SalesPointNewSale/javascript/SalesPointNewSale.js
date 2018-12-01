@@ -10,6 +10,25 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .cartitemline .removefromtab', app.SalesPointNewSale.removeItemFromTab);
         $(document).on('click', '.SalesPointNewSale .deletetab', app.SalesPointNewSale.deleteTab);
         $(document).on('click', '.SalesPointNewSale .printoverview', app.SalesPointNewSale.printOverview);
+        $(document).on('click', '.SalesPointNewSale .countadd', app.SalesPointNewSale.countAddClicked);
+        
+        this.bindScrollEvent();
+    },
+    
+    bindScrollEvent: function() {
+        $(window).scroll(function() {
+            var top = 76-window.scrollY;
+            if (top < 0) {
+                top = 0;
+            }
+            
+            $('.SalesPointNewSale .topmenu').css('top', top + 'px');
+        });
+    },
+    
+    countAddClicked: function() {
+        $('.SalesPointNewSale .countadd').removeClass('active');
+        $(this).addClass('active');
     },
     
     printOverview: function() {
@@ -102,8 +121,13 @@ app.SalesPointNewSale = {
     },
     
     addProductToCurrentTab: function() {
+        var count = $('.SalesPointNewSale .countadd.active span').text();
+        if (!count) {
+            count = 1;
+        }
         var data = {
-            productid : $(this).attr('productid')
+            productid : $(this).attr('productid'),
+            count : count
         }
         
         var event = thundashop.Ajax.createEvent(null, "addProductToCurrentTab", this, data);
@@ -153,6 +177,7 @@ app.SalesPointNewSale = {
     },
     
     updateResponseFromAddOfCartItem: function(me, res) {
+        $('.SalesPointNewSale .countadd.defaultone').click();
         $('.SalesPointNewSale .rightmenu').html(res);
         if ($('.tabnotactive').length) {
             app.SalesPointNewSale.activateTab(me);

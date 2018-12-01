@@ -101,6 +101,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         $roomid = "";
         
         $text = "";
+        
         if ($order->closed) {
             $text = '<i class="fa fa-lock" title="Order has been locked"></i>';
         } else {
@@ -113,6 +114,10 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         if(@$order->invoiceNote) {
             $text .= "<i class='fa fa-sticky-note' title='".$order->invoiceNote."'></i>";
         }
+        
+        $list = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        $text .= $list->getCashPointPrinters($order);
+        
         
         return $text;
     }
@@ -343,6 +348,10 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         }
         echo json_encode($rows);
     }
-
+    
+    public function sendReceipt() {
+        $list = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        $list->sendReceipt();
+    }
 }
 ?>

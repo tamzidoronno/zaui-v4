@@ -41,6 +41,9 @@ if (!count($cart->items)) {
        
        echo $this->__f("Total ex taxes").": ".$totalEx;
        echo "<br/>".$this->__f("Total inc taxes").": ".$totalInc;
+       if ($order->cashWithdrawal) {
+            echo "<br/>".$this->__f("Cash withdrawal").": ".$order->cashWithdrawal;
+       }
        ?>
         <span class="price"></span>
     </div>

@@ -19,7 +19,9 @@ public class PosTab extends DataCommon {
     public String createdByUserId = "";
     public String cashPointId = "";
     public List<CartItem> cartItems = new ArrayList();
+    public double cashWithDrawal;
 
+    
     void removeCartItem(CartItem cartItem) {
         for (CartItem item : cartItems) {
             if (item.getCartItemId().equals(cartItem.getCartItemId())) {

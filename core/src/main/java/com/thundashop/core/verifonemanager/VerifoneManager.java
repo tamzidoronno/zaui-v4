@@ -102,6 +102,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             }
         }        
         
+        Double cashWithdrawal = order.cashWithdrawal * 100;
+        
+        amount = amount + cashWithdrawal.intValue();
         app.openCom(ip, verifoneListener);
         app.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
     }

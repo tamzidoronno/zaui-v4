@@ -457,7 +457,10 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             return "";
         }
         
-        if(!$order->payment || !$order->payment->paymentType) {
+        $missingPaymentTypeA = !$order->payment || !$order->payment->paymentType;
+        $missingPaymentTypeB = isset($order->paymentType) && !$order->paymentType;
+        
+        if($missingPaymentTypeA && $missingPaymentTypeB) {
             return "";
         }
         
@@ -473,13 +476,15 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $inValidPaymentMethods[] = 'ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment';
         $inValidPaymentMethods[] = 'ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura';
         
-        if (in_array($order->payment->paymentType, $inValidPaymentMethods)) {
+        $paymentType = $missingPaymentTypeB ? $order->payment->paymentType : $order->paymentType;
+        if (in_array($paymentType, $inValidPaymentMethods)) {
             return ""; 
         }
         
         foreach ($cashpoints as $cashpoint) {
             if ($cashpoint->type == "cashap") {
-                $text .= "<i class='fa fa-print dontExpand' gsclick='sendReceipt' deviceid='$cashpoint->id' orderid='".$order->id."' title='Print receipt on $cashpoint->name'></i>";
+                $orderId = isset($order->id) ? $order->id : $order->orderId;
+                $text .= "<i class='fa fa-print dontExpand' gsclick='sendReceipt' deviceid='$cashpoint->id' orderid='".$orderId."' title='Print receipt on $cashpoint->name'></i>";
             }
         }
         

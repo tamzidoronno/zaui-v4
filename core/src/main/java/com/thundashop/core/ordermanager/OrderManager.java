@@ -39,6 +39,7 @@ import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
 import com.thundashop.core.ordermanager.data.Payment;
+import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
@@ -2845,5 +2846,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Date lastDayInPrevMonth = cal.getTime();
         
         return getOrderManagerSettings().closedTilPeriode.after(lastDayInPrevMonth);
+    }
+
+    @Override
+    public PaymentTerminalInformation getTerminalInformation(String orderId) {
+        Order order = getOrder(orderId);
+        if (order != null) {
+            return order.getTerminalInformation();
+        }
+        
+        return null;
     }
 }

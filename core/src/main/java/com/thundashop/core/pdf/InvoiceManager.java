@@ -22,6 +22,7 @@ import com.thundashop.core.gsd.VatLine;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -309,8 +310,15 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             printMsg.itemLines.add(itemLine);
         }
         
-        printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals().doubleValue();
-        printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals().doubleValue() - order.getTotalAmountVatRoundedTwoDecimals().doubleValue();
+        if (order.cashWithdrawal > 0) {
+            ItemLine itemLine = new ItemLine();
+            itemLine.description = "Kontantuttak";
+            itemLine.price = order.cashWithdrawal;
+            printMsg.itemLines.add(itemLine);
+        }
+        
+        printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals().doubleValue() + order.cashWithdrawal;
+        printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals().doubleValue() - order.getTotalAmountVatRoundedTwoDecimals().doubleValue() + order.cashWithdrawal;
         
         if (order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.isEmpty()) {
             printMsg.paymentMethod = getPaymentTypeForTermalReceipt(order, applicationPool.getApplicationByNameSpace(order.payment.paymentType));
@@ -322,8 +330,16 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     }
     
     private String getPaymentTypeForTermalReceipt(Order order, Application application) {
-        if (application.id.equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2")) {
-            return "kort";
+        PaymentTerminalInformation info = order.getTerminalInformation();
+        
+        if (info != null) {
+            String ret = "\n"+info.paymentType.trim() + " - " + info.issuerName.trim() + "\n";
+            if (info.transactionNumber != null) {
+                ret += "Ref: " + info.transactionNumber.trim() ;
+            }
+            
+            ret += "\nKortnr: " + info.cardInfo.trim();
+            return ret;
         }
         
         if (application.id.equals("565ea7bd-c56b-41fe-b421-18f873c63a8f")) {

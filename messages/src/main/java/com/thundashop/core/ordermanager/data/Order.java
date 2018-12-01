@@ -43,6 +43,12 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date transferredToCreditor = null;
     
     /**
+     * Used if this order also has money that should be 
+     * deducted from the cash on delivery type.
+     */
+    public Double cashWithdrawal = new Double(0);
+    
+    /**
      * This variable is wrong and should be removed. The one above is the corrent one.
      */
     private Boolean transferedToAccountingSystem = false;
@@ -983,7 +989,7 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public boolean isFullyPaid() {
         double transactionAmount = getTransactionAmount();
-        double total = getTotalAmount();
+        double total = getTotalAmount() + cashWithdrawal;
         double diff = total - transactionAmount;
         if(diff > 1 || diff < -1) {
             return false;
@@ -1192,6 +1198,13 @@ public class Order extends DataCommon implements Comparable<Order> {
             return;
         }
     }
+
+    boolean isVerifonePayment() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("verifone")) {
+            return true;
+        }
+        return false;
+    }
     
     public static class Status  {
         public static int CREATED = 1;
@@ -1375,5 +1388,13 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void markAsTransferredToAccounting() {
         transferredToAccountingSystem = true;
         triedTransferredToAccountingSystem  = true;
+    }
+    
+    public PaymentTerminalInformation getTerminalInformation() {
+        if (isVerifonePayment()) {
+            return new VerifoneLogParser(this);
+        }
+        
+        return null;
     }
 } 

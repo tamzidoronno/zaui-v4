@@ -10,9 +10,11 @@ $colors["Bugs"] = "green";
 $colors["Questions"] = "orange";
 $colors["Features"] = "pink";
 $colors["Time_spent"] = "yellow";
-$filter = new core_support_SupportCaseFilter();
+$filter = $this->getFilter();
 $cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
-
+if($this->isGetShop()) {
+    $admins = $this->getAdmins();
+}
 ?>
 <div class="heading">Statistics</div>
 <div class='dashboard_main'>
@@ -79,8 +81,21 @@ $cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
 <div style="clear:both"></div>
 <div class="heading">Cases by you</div>
 
-<div style="text-align: center; max-width:1100px; margin: auto;">
 <?php
+if($this->isGetShop()) {
+    $maxwidth = "1600px";
+} else {
+    $maxwidth = "1100px";
+}
+?>
+
+<div style="text-align: center; max-width:<?php echo $maxwidth; ?>; margin: auto;">
+<?php
+
+if($this->isGetShop()) {
+    $this->includefile("supportfilter");
+}
+
 if(sizeof($cases) == 0) {
     echo "You have no cases registered on you.";
 } else {
@@ -94,12 +109,21 @@ if(sizeof($cases) == 0) {
             <th align="left">State</th>
             <th align="left">Module</th>
             <th align="center">Time (minutes)</th>
+            <?php
+            if($this->isGetShop()) {
+                echo "<th>Assigned</th>";
+                echo "<th>Email</th>";
+                echo "<th>Webaddr</th>";
+            }
+            ?>
         </tr>
         
         <?php
+        $oddeven = "";
         foreach($cases as $case) {
+            $oddeven = ($oddeven == "odd") ? "even" : "odd";
             /* @var $case core_support_SupportCase */
-            echo "<tr caseid='".$case->id."' class='loadcase'>";
+            echo "<tr caseid='".$case->id."' class='loadcase $oddeven'>";
             echo "<td>".date("d.m.Y H:i", strtotime($case->rowCreatedDate)) ."</td>";
             echo "<td>".$case->title."</td>";
             echo "<td>".$this->translateTypeToText($case->type)."</td>";
@@ -107,6 +131,18 @@ if(sizeof($cases) == 0) {
             echo "<td>".$this->translateStateToText($case->state)."</td>";
             echo "<td>". $case->module . " " .$this->translateModule($case->module)."</td>";
             echo "<td align='center'>".$case->minutesSpent."</td>";
+            if($this->isGetShop()) {
+                echo "<td>";
+                foreach($admins as $admin) {
+                    /* @var $admin core_usermanager_data_User */
+                    if($admin->id == $case->handledByUser) {
+                        echo $admin->fullName;
+                    }
+                }
+                echo "</td>";
+                echo "<td>" . $case->emailAdress . "</td>";
+                echo "<td>" . $case->webAddress . "</td>";
+            }
             echo "</tr>";
         }
         ?>

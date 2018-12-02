@@ -2,13 +2,18 @@ package com.thundashop.core.support;
 
 
 import com.getshop.scope.GetShopSession;
+import com.ibm.icu.util.Calendar;
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.SupportDatabase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshoplock.GetShopLogFetcherStarter;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.StorePool;
+import com.thundashop.core.storemanager.data.Store;
 import static com.thundashop.core.support.SupportCaseType.BUG;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,24 +40,43 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private SupportDatabase supportDatabase;
     
     @Autowired
-    private StoreManager StoreManager;
+    private StoreManager storeManager;
+    
+    @Autowired
+    private StorePool storePool;
+    
+    @Autowired
+    private MessageManager messageManager;
     
     private SupportStatistics storeSupportStats = new SupportStatistics();
+    private String getshopStoreId = "13442b34-31e5-424c-bb23-a396b7aeb8ca";
+    private SupportStatistics globalStats;
+    
+    private SupportStore mySupportStores = new SupportStore();
+    private List<SupportStore> allSupportStores = new ArrayList();
+    private Date lastUpdatedAllStores;
     
     @Override
     public void helloWorld() {
         saveSupportCaseTest();
     }
     
-        @Override
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon dataCommon : data.data) {
             if(dataCommon instanceof SupportStatistics) {
                 storeSupportStats = (SupportStatistics) dataCommon;
             }
+            if(dataCommon instanceof SupportStore) {
+                mySupportStores = (SupportStore)dataCommon;
+            }
         }
     }
     
+    @Override
+    public void initialize() throws SecurityException {
+        super.initialize(); //To change body of generated methods, choose Tools | Templates.
+    }
 
     private void saveSupportCaseTest() throws ErrorException {
         SupportCase supportCase = new SupportCase();
@@ -61,18 +85,75 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     }
     
     private SupportStatistics getGlobalSupportStatitics() {
+        if(this.globalStats != null) {
+            return globalStats;
+        }
+        
         BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("className", "com.thundashop.core.support.SupportStatistics"));
+        query.put("$and", obj);
+        
+        SupportStatistics stats = new SupportStatistics();
         List<DataCommon> res = supportDatabase.query(query);
         for(DataCommon r : res) {
             if(r instanceof SupportStatistics) {
-                return (SupportStatistics) r;
+                stats = (SupportStatistics) r;
             }
         }
-        return new SupportStatistics();
+        this.globalStats = stats;
+        return stats;
+    }
+    
+    private List<SupportStore> getSupportStores() {
+        if(!this.allSupportStores.isEmpty() && !isAllSupportStoresExpired()) {
+            return allSupportStores;
+        }
+        
+        lastUpdatedAllStores = new Date();
+        BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("className", "com.thundashop.core.support.SupportStore"));
+        query.put("$and", obj);
+        
+        SupportStatistics stats = new SupportStatistics();
+        List<DataCommon> res = supportDatabase.query(query);
+        for(DataCommon r : res) {
+            if(r instanceof SupportStore) {
+                SupportStore tmp = (SupportStore) r;
+                allSupportStores.add(tmp);
+            }
+        }
+        return allSupportStores;
+    }
+    
+    private SupportStore getSupportStore(String storeId) {
+        List<SupportStore> allStores = getSupportStores();
+        for(SupportStore s : allStores) {
+            if(s.supportStoreId.equals(storeId)) {
+                return s;
+            }
+        }
+        return null;
     }
 
-    private List<SupportCase> getCases() {
+    private List<SupportCase> getCases(SupportCaseFilter filter) {
+        notifySupportCenter();
         BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        if(filter.state >= 0) {
+            obj.add(new BasicDBObject("state", filter.state));
+        }
+        if(!filter.caseId.isEmpty()) {
+            obj.add(new BasicDBObject("_id", filter.caseId));
+        }
+        if(!filter.userId.isEmpty()) {
+            obj.add(new BasicDBObject("handledByUser", filter.userId));
+        }
+        if(!obj.isEmpty()) {
+            query.put("$and", obj);
+        }
+        
         List<DataCommon> res = supportDatabase.query(query);
         List<SupportCase> cases = new ArrayList();
         for(DataCommon r : res) {
@@ -83,18 +164,39 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         return cases;
     }
 
+    
+    private List<FeatureList> getFeatureLists() {
+        List<FeatureList> retval = new ArrayList();
+        BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("className", "com.thundashop.core.support.FeatureList"));
+        
+        List<DataCommon> res = supportDatabase.query(query);
+        List<SupportCase> cases = new ArrayList();
+        for(DataCommon r : res) {
+            if(r instanceof FeatureList) {
+                retval.add((FeatureList) r);
+            }
+        }
+        return retval;
+    }
+
+    
+    
     @Override
     public SupportCase createSupportCase(SupportCase supportCase) {
         supportCase.state = SupportCaseState.CREATED;
         supportCase.byStoreId = storeId;
         updateStatisticsCounter(supportCase);
+        String msg = "Support case has been added to support center";
+        messageManager.sendMail("support@getshop.com", "support@getshop.com", "Added to support center: " + supportCase.title, msg, "noreply@getshop.com", "noreply@getshop.com");
         return saveSupportCase(supportCase);
     }
 
     
     @Override
     public List<SupportCase> getSupportCases(SupportCaseFilter filter) {
-        List<SupportCase> allCases = getCases();
+        List<SupportCase> allCases = getCases(filter);
         List<SupportCase> result = new ArrayList();
         for(SupportCase tmpCase : allCases) {
             if(!hasAccess(tmpCase.byStoreId)) {
@@ -108,7 +210,13 @@ public class SupportManager extends ManagerBase implements ISupportManager {
 
     @Override
     public void addToSupportCase(String supportCaseId, SupportCaseHistory history) {
-        history.storeId = StoreManager.getStoreId();
+        if(history.minutesUsed <= 0) {
+            history.minutesUsed = 1;
+        }
+        if(!isGetShop()) {
+            history.minutesUsed = 0;
+        }
+        history.storeId = storeManager.getStoreId();
         history.userId = getSession().currentUser.id;
         history.date = new Date();
         history.fullName = getSession().currentUser.fullName;
@@ -117,7 +225,20 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         if(scase.byUserName.isEmpty()) {
             scase.byUserName = getSession().currentUser.fullName;
         }
+        if(!isGetShop()) {
+            scase.state = SupportCaseState.SENT;
+        }
+        updateTimeCounter(history.minutesUsed);
         saveSupportCase(scase);
+        
+        SupportStore supportstore = getSupportStore(scase.byStoreId);
+        if(isGetShop()) {
+            if(supportstore != null && supportstore.mainEmailAdress != null && !supportstore.mainEmailAdress.isEmpty()) {
+                String msg = "Your case has been replied to, log on to your support center to read it.";
+                messageManager.sendMail(supportstore.mainEmailAdress, supportstore.mainEmailAdress, scase.title,msg,"noreply@getshop.com","noreply@getshop.com");
+            }
+        }
+        
     }
 
     @Override
@@ -142,13 +263,17 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     }
 
     private boolean hasAccess(String storeIdToCheck) {
-        if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
+        if(storeId.equals(getshopStoreId)) {
             return true;
         }
         boolean isEqual = storeIdToCheck.equals(storeId);
         return isEqual;
     }
 
+    private boolean isGetShop() {
+        return storeId.equals(getshopStoreId);
+    }
+    
     @Override
     public void changeModuleForCase(String caseId, Integer module) {
         SupportCase toChange = getSupportCase(caseId);
@@ -158,7 +283,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
 
     @Override
     public SupportCase getSupportCase(String supportCaseId) {
-        List<SupportCase> allCases = getCases();
+        SupportCaseFilter filter = new SupportCaseFilter();
+        filter.caseId = supportCaseId;
+        List<SupportCase> allCases = getCases(filter);
         for(SupportCase tmpCase : allCases) {
             if(!hasAccess(tmpCase.byStoreId)) {
                 continue;
@@ -179,7 +306,15 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private void finalize(SupportCase tmpCase) {
         tmpCase.minutesSpent = 0;
         for(SupportCaseHistory hist : tmpCase.history) {
-            hist.minutesUsed += hist.minutesUsed;
+            tmpCase.minutesSpent += hist.minutesUsed;
+            SupportStore storeconfig = getSupportStore(tmpCase.byStoreId);
+            if(storeconfig != null) {
+                tmpCase.emailAdress = storeconfig.mainEmailAdress;
+                tmpCase.webAddress = storeconfig.defaultWebAddress;
+            } else {
+                tmpCase.emailAdress = "unmapped store";
+                tmpCase.webAddress = "unmapped store";
+            }
         }
     }
 
@@ -201,5 +336,66 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         supportDatabase.save(globalStats);
         saveObject(storeSupportStats);
     }
+
+    private void updateTimeCounter(Integer minutesUsed) {
+        SupportStatistics globalStats = getGlobalSupportStatitics();
+        globalStats.timeSpentTotal += minutesUsed;
+        storeSupportStats.timeSpent += minutesUsed;
+        supportDatabase.save(globalStats);
+        saveObject(storeSupportStats);
+    }
+
+    @Override
+    public void changeTitleOnCase(String caseId, String title) {
+        if(!isGetShop()) {
+            return;
+        }
+        SupportCase casetochange = getSupportCase(caseId);
+        casetochange.title = title;
+        saveSupportCase(casetochange);
+    }
+
+    private boolean isAllSupportStoresExpired() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, 1);
+        if(lastUpdatedAllStores == null) {
+            return true;
+        }
+        Date toCheck = cal.getTime();
+        return toCheck.after(lastUpdatedAllStores);
+    }
+
+    private void notifySupportCenter() {
+        Store store = storeManager.getMyStore();
+//        if(!mySupportStores.notifiedSupport) {
+            mySupportStores.mainEmailAdress = store.configuration.emailAdress;
+            mySupportStores.supportStoreId = store.id;
+            mySupportStores.defaultWebAddress = store.getDefaultWebAddress();
+            mySupportStores.notifiedSupport = true;
+            supportDatabase.save(mySupportStores);
+            saveObject(mySupportStores);
+            lastUpdatedAllStores = null;
+//        }
+    }
+
+    @Override
+    public void saveFeatureThree(String moduleId, FeatureList list) {
+        supportDatabase.save(list);
+    }
+
+    @Override
+    public FeatureList getFeatureThree(String moduleId) {
+        List<FeatureList> featurelists = getFeatureLists();
+        for(FeatureList l : featurelists) {
+            if(l.id.equals(moduleId)) {
+                return l;
+            }
+        }
+        FeatureList newlist = new FeatureList();
+        newlist.id = moduleId;
+        return newlist;
+    }
+
+    
     
 }

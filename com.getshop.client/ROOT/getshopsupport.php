@@ -28,15 +28,17 @@ $_SESSION['firstloadpage'] = true;
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="getshopsupport">
     <head>
-        <title>GetShop Support</title>
+        <title>Support - GetShop</title>
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">
         <link rel="stylesheet" href="/skin/default/getshopsupport.css">
         <link rel="stylesheet" href="/skin/default/gesthopmodules.css">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 
         <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">
         <script src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
+
 
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         
@@ -46,7 +48,8 @@ $_SESSION['firstloadpage'] = true;
         <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
         <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
-        <script type="text/javascript" src="js/getshop.pms.js"></script>
+        <script type="text/javascript" src="js/getshop.support.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>
     

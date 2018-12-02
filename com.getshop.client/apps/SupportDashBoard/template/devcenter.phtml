@@ -1,0 +1,71 @@
+<?php
+/* @var $this ns_84268253_6c1e_4859_86e3_66c7fb157ea1\SupportDashBoard */
+?>
+<div style='margin:auto;width:90%;'>
+    <table width='100%' cellspacing='0' cellpadding='0'>
+        <tr style='background-color:#c5c4ec;'>
+            <th width='40%' style='padding: 10px;'>Backlog</th>
+            <th width='40%' style='padding: 10px;'>In progress</th>
+        </tr>
+        <tr>
+            <td width='40%' valign='top' bgcolor='#efefef' style='border-right: solid 1px #bbb;padding: 10px;'>
+                <?php
+                $backlog = $this->getBackLog();
+                foreach($backlog as $log) {
+                    echo "<div class='backlogentry'>";
+                    echo date("d.m.Y", strtotime($log->rowCreatedDate)). " : ";
+                    echo $this->translateTypeToText($log->type) . " - ";
+                    echo $log->title;
+                    if($this->isGetShop()) {
+                        echo "<span style='float:right;'>";
+                        echo "<span class='shop_button loadcase' caseid='".$log->id."'>Read</span> ";
+                        echo "<span class='shop_button' gsclick='startDevelopement' caseid='".$log->id."'>Start</span>";
+                        echo "</span>";
+                    }
+                    echo  "</div>";
+                }
+                ?>
+            </td>
+            <td width='40%' valign='top' bgcolor='#efefef' style='padding:10px;'>
+                <?php
+                $backlog = $this->getInProgress();
+                foreach($backlog as $log) {
+                    echo "<div class='backlogentry'>";
+                    echo date("d.m.Y", strtotime($log->rowCreatedDate)). " : ";
+                    echo $this->translateTypeToText($log->type) . " - ";
+                    echo $log->title;
+                    if($this->isGetShop()) {
+                        echo "<span style='float:right;'>";
+                        echo "<span class='shop_button loadcase' caseid='".$log->id."'>Read</span> ";
+                        echo "<span class='shop_button' gsclick='solvedCase' caseid='".$log->id."'>Solved</span> ";
+                        echo "</span>";
+                    }
+                    echo  "</div>";
+                }
+                ?>
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan='2'>
+                <br><br>
+                <h1>All solved cases</h1>
+                <?php
+                $backlog = $this->getSolvedCases();
+                foreach($backlog as $log) {
+                    echo "<div class='backlogentry'>";
+                    echo date("d.m.Y", strtotime($log->rowCreatedDate)). " : ";
+                    echo $this->translateTypeToText($log->type) . " - ";
+                    echo $log->title;
+                    if($this->isGetShop()) {
+                        echo "<span style='float:right;'>";
+                        echo "<span class='shop_button loadcase' caseid='".$log->id."'>Read</span> ";
+                        echo "</span>";
+                    }
+                    echo  "</div>";
+                }
+                ?>
+            </td>
+        </tr>            
+    </table>
+</div>

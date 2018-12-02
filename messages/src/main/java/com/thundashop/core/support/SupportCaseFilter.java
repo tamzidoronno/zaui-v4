@@ -10,5 +10,7 @@ package com.thundashop.core.support;
  * @author boggi
  */
 public class SupportCaseFilter {
-    
+    public Integer state = -1;
+    public String caseId = "";
+    public String userId = "";
 }

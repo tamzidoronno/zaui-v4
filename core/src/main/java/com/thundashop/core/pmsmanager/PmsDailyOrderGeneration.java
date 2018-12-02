@@ -335,7 +335,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-        if(type.id.equals("gsconference") && (type.productId == null || type.productId.isEmpty())) {
+        if(type != null && type.id.equals("gsconference") && (type.productId == null || type.productId.isEmpty())) {
             Product newProduct = productManager.createProduct();
             newProduct.name = "Conference";
             productManager.saveProduct(newProduct);

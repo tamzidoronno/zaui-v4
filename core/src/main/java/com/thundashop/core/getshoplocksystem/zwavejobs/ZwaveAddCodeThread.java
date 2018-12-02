@@ -21,7 +21,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
     private UserSlot slot;
     
     public ZwaveAddCodeThread(ZwaveLockServer server, UserSlot slot, LocstarLock lock, String storeId) {
-        super(server, lock, 30, storeId);
+        super(server, lock, 5, storeId);
         this.slot = slot;
         this.slot.isAddedToLock = "unkown";
     }

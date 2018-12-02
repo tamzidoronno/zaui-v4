@@ -25,4 +25,6 @@ public interface ISupportManager {
     public SupportCase getSupportCase(String supportCaseId);
     public SupportStatistics getSupportStatistics();
     public void changeTitleOnCase(String caseId, String title);
+    public void saveFeatureThree(String moduleId, FeatureList list);
+    public FeatureList getFeatureThree(String moduleId);
 }

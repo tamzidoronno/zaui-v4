@@ -296,6 +296,7 @@ class ModulePage {
         $menu = new \ModulePageMenu();
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Dev center", "getshopdevcenter", "gsicon-list");
+        $menu->entries[] = new ModulePageMenuItem("Manuals", "getshopusermanual", "fa-support");
         return $menu;
     }
 

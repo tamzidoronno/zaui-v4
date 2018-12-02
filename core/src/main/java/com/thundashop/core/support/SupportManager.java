@@ -10,6 +10,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.SupportDatabase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshoplock.GetShopLogFetcherStarter;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
@@ -43,6 +44,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     
     @Autowired
     private StorePool storePool;
+    
+    @Autowired
+    private MessageManager messageManager;
     
     private SupportStatistics storeSupportStats = new SupportStatistics();
     private String getshopStoreId = "13442b34-31e5-424c-bb23-a396b7aeb8ca";
@@ -160,11 +164,32 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         return cases;
     }
 
+    
+    private List<FeatureList> getFeatureLists() {
+        List<FeatureList> retval = new ArrayList();
+        BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("className", "com.thundashop.core.support.FeatureList"));
+        
+        List<DataCommon> res = supportDatabase.query(query);
+        List<SupportCase> cases = new ArrayList();
+        for(DataCommon r : res) {
+            if(r instanceof FeatureList) {
+                retval.add((FeatureList) r);
+            }
+        }
+        return retval;
+    }
+
+    
+    
     @Override
     public SupportCase createSupportCase(SupportCase supportCase) {
         supportCase.state = SupportCaseState.CREATED;
         supportCase.byStoreId = storeId;
         updateStatisticsCounter(supportCase);
+        String msg = "Support case has been added to support center";
+        messageManager.sendMail("support@getshop.com", "support@getshop.com", "Added to support center: " + supportCase.title, msg, "noreply@getshop.com", "noreply@getshop.com");
         return saveSupportCase(supportCase);
     }
 
@@ -205,6 +230,15 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         }
         updateTimeCounter(history.minutesUsed);
         saveSupportCase(scase);
+        
+        SupportStore supportstore = getSupportStore(scase.byStoreId);
+        if(isGetShop()) {
+            if(supportstore != null && supportstore.mainEmailAdress != null && !supportstore.mainEmailAdress.isEmpty()) {
+                String msg = "Your case has been replied to, log on to your support center to read it.";
+                messageManager.sendMail(supportstore.mainEmailAdress, supportstore.mainEmailAdress, scase.title,msg,"noreply@getshop.com","noreply@getshop.com");
+            }
+        }
+        
     }
 
     @Override
@@ -333,7 +367,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
 
     private void notifySupportCenter() {
         Store store = storeManager.getMyStore();
-        if(!mySupportStores.notifiedSupport) {
+//        if(!mySupportStores.notifiedSupport) {
             mySupportStores.mainEmailAdress = store.configuration.emailAdress;
             mySupportStores.supportStoreId = store.id;
             mySupportStores.defaultWebAddress = store.getDefaultWebAddress();
@@ -341,7 +375,25 @@ public class SupportManager extends ManagerBase implements ISupportManager {
             supportDatabase.save(mySupportStores);
             saveObject(mySupportStores);
             lastUpdatedAllStores = null;
+//        }
+    }
+
+    @Override
+    public void saveFeatureThree(String moduleId, FeatureList list) {
+        supportDatabase.save(list);
+    }
+
+    @Override
+    public FeatureList getFeatureThree(String moduleId) {
+        List<FeatureList> featurelists = getFeatureLists();
+        for(FeatureList l : featurelists) {
+            if(l.id.equals(moduleId)) {
+                return l;
+            }
         }
+        FeatureList newlist = new FeatureList();
+        newlist.id = moduleId;
+        return newlist;
     }
 
     

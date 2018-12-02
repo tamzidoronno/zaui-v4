@@ -1,0 +1,70 @@
+<?php
+/* @var $this ns_84268253_6c1e_4859_86e3_66c7fb157ea1\SupportDashBoard */
+if(!$this->isGetShop()) {
+    echo "Not yet here.";
+    return;
+}
+$modules = array();
+$modules[] = "pms";
+$modules[] = "srs";
+$modules[] = "apac";
+$modules[] = "accounting";
+?>
+<input type='button' value='Save feature list' id='savelist'>
+<br>
+<div id='using_json_2'></div>
+
+<?php
+$jsonres = array();
+foreach($modules as $module) {
+    $data = $this->getApi()->getSupportManager()->getFeatureThree($module);
+    $root = new stdClass();
+    $root->id = $module;
+    $root->parent = "#";
+    $root->text = $module;
+    $root->type = "default";
+    $jsonres[] = $root;
+    $childrens = $this->createFlatList($data->entries, $module);
+    $jsonres = array_merge($jsonres, $childrens);
+}
+?>
+
+
+<script>
+/*    
+    [
+            { "id" : "pms", "parent" : "#", "text" : "PMS", type :"default" },
+            { "id" : "srs", "parent" : "#", "text" : "SRS", type :"default" },
+            { "id" : "apac", "parent" : "#", "text" : "APAC", type :"default" },
+            { "id" : "accounting", "parent" : "#", "text" : "Accounting", type :"default" },
+         ]
+ */
+    
+    $('#using_json_2').jstree({ 'core' : {
+    "check_callback" : true,
+    'data' : <?php echo json_encode($jsonres); ?>
+    },
+     "types" : {
+      "default" : {
+        "icon" : "fa fa-folder"
+      },
+      "file" : {
+        "icon" : "fa fa-file-o"
+      }
+    },
+    "plugins" : [ "contextmenu", "dnd","types" ]
+    });
+    
+    $('#savelist').on('click', function() {
+        
+        var data = $('#using_json_2').jstree(true).get_json('#', { flat: false });
+        var postdata = {
+            "three" : data
+        }
+        var event = thundashop.Ajax.createEvent('','savefeaturelist', $(this), postdata);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            
+        });
+    });
+    
+</script>

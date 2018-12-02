@@ -2,6 +2,9 @@
 namespace ns_84268253_6c1e_4859_86e3_66c7fb157ea1;
 
 class SupportDashBoard extends \WebshopApplication implements \Application {
+
+    private $currentFeatureList;
+
     public function getDescription() {
         
     }
@@ -86,6 +89,8 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
     public function render() {
        if($this->page->getId() == "getshopdevcenter") {
             $this->includefile("devcenter"); 
+       } else if("getshopusermanual") {
+            $this->includefile("usermanuals"); 
        } else {
             $this->includefile("requestform"); 
             $this->includefile("overview"); 
@@ -243,6 +248,73 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         $filter->state = 11;
         $cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
         return $cases;
+    }
+
+    public function savefeaturelist() {
+        foreach($_POST['data']['three'] as $module) {
+            $moduleid = $module['id'];
+            if(isset($module['children'])) {
+                $this->currentFeatureList = $this->getApi()->getSupportManager()->getFeatureThree($moduleid);
+                $children = $this->createModuleFeatureList($module['children'], $moduleid);
+                $featurelist = new \core_support_FeatureList();
+                $featurelist->entries = $children;
+                $featurelist->module = $moduleid;
+                $featurelist->id = $moduleid;
+                $this->getApi()->getSupportManager()->saveFeatureThree($featurelist->id, $featurelist);
+            }
+        }
+        
+    }
+
+    public function createModuleFeatureList($children, $parentId) {
+        $childs = array();
+        foreach($children as $child) {
+            $childobject = $this->getExistingChild($child['id']);
+            if(!$childobject) {
+                $childobject = new \core_support_FeatureListEntry();
+            }
+            $childobject->text = new \stdClass();
+            $childobject->text->{'en'} = $child['text'];
+            $childobject->parentId = $parentId;
+            if(strlen($child['id']) < 8) {
+                $childobject->id = uniqid();
+            } else {
+                $childobject->id = $child['id'];
+            }
+            if(isset($child['children'])) {
+                $childobject->children = $this->createModuleFeatureList($child['children'], $childobject->id);
+            }
+            $childs[] = $childobject;
+        }
+        return $childs;
+    }
+
+    public function createFlatList($children, $parent) {
+        $retval = array();
+        foreach($children as $child) {
+            $res = new \stdClass();
+            $res->id = $child->id;
+            $res->text = $child->text->{'en'};
+            $res->parent = $parent;
+            $retval[] = $res;
+        }
+        return $retval;
+    }
+
+    public function getExistingChild($childId) {
+        return $this->searchChildren($this->currentFeatureList->entries, $childId);
+    }
+
+    public function searchChildren($children, $childId) {
+        foreach($children as $child) {
+            if($child->id == $childId) {
+                return $child;
+            }
+            if(isset($child->children)) {
+                return $this->searchChildren($child->children, $childId);
+            }
+        }
+        return null;
     }
 
 }

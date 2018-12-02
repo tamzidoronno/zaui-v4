@@ -374,6 +374,11 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['getshopbillinghistory'] = $page;   
+        
+        $page = new \ModulePage("getshopusermanual", "getshopsupport");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopusermanual'] = $page;   
     }
 
     public function createSalesPointPages() {

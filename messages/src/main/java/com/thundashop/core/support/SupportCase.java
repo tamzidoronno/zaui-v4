@@ -29,6 +29,10 @@ public class SupportCase extends DataCommon {
     
     @Transient
     Integer minutesSpent;
+    @Transient
+    String emailAdress;
+    @Transient
+    String webAddress;
 
     void finalizeCase() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

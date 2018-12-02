@@ -296,7 +296,6 @@ class ModulePage {
         $menu = new \ModulePageMenu();
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Dev center", "getshopdevcenter", "gsicon-list");
-        $menu->entries[] = new ModulePageMenuItem("Billing", "getshopbillinghistory", "fa-money");
         return $menu;
     }
 
@@ -312,6 +311,7 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("CRM", "4f66aad0-08a0-466c-9b4c-71337c1e00b7", "gsicon-users");
         $menu->entries[] = new ModulePageMenuItem("Checklist", "checklist", "gsicon-list");
         $menu->entries[] = new ModulePageMenuItem("Settings", "messages", "gsicon-gs-gears");
+        $menu->entries[] = new ModulePageMenuItem("Support", "getshopsupport", "fa-support");
         return $menu;
     }
 

@@ -2,13 +2,17 @@ package com.thundashop.core.support;
 
 
 import com.getshop.scope.GetShopSession;
+import com.ibm.icu.util.Calendar;
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.SupportDatabase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshoplock.GetShopLogFetcherStarter;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.StorePool;
+import com.thundashop.core.storemanager.data.Store;
 import static com.thundashop.core.support.SupportCaseType.BUG;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,26 +39,40 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private SupportDatabase supportDatabase;
     
     @Autowired
-    private StoreManager StoreManager;
+    private StoreManager storeManager;
+    
+    @Autowired
+    private StorePool storePool;
     
     private SupportStatistics storeSupportStats = new SupportStatistics();
     private String getshopStoreId = "13442b34-31e5-424c-bb23-a396b7aeb8ca";
     private SupportStatistics globalStats;
+    
+    private SupportStore mySupportStores = new SupportStore();
+    private List<SupportStore> allSupportStores = new ArrayList();
+    private Date lastUpdatedAllStores;
     
     @Override
     public void helloWorld() {
         saveSupportCaseTest();
     }
     
-        @Override
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon dataCommon : data.data) {
             if(dataCommon instanceof SupportStatistics) {
                 storeSupportStats = (SupportStatistics) dataCommon;
             }
+            if(dataCommon instanceof SupportStore) {
+                mySupportStores = (SupportStore)dataCommon;
+            }
         }
     }
     
+    @Override
+    public void initialize() throws SecurityException {
+        super.initialize(); //To change body of generated methods, choose Tools | Templates.
+    }
 
     private void saveSupportCaseTest() throws ErrorException {
         SupportCase supportCase = new SupportCase();
@@ -82,8 +100,41 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         this.globalStats = stats;
         return stats;
     }
+    
+    private List<SupportStore> getSupportStores() {
+        if(!this.allSupportStores.isEmpty() && !isAllSupportStoresExpired()) {
+            return allSupportStores;
+        }
+        
+        lastUpdatedAllStores = new Date();
+        BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("className", "com.thundashop.core.support.SupportStore"));
+        query.put("$and", obj);
+        
+        SupportStatistics stats = new SupportStatistics();
+        List<DataCommon> res = supportDatabase.query(query);
+        for(DataCommon r : res) {
+            if(r instanceof SupportStore) {
+                SupportStore tmp = (SupportStore) r;
+                allSupportStores.add(tmp);
+            }
+        }
+        return allSupportStores;
+    }
+    
+    private SupportStore getSupportStore(String storeId) {
+        List<SupportStore> allStores = getSupportStores();
+        for(SupportStore s : allStores) {
+            if(s.supportStoreId.equals(storeId)) {
+                return s;
+            }
+        }
+        return null;
+    }
 
     private List<SupportCase> getCases(SupportCaseFilter filter) {
+        notifySupportCenter();
         BasicDBObject query = new BasicDBObject();
         List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
         if(filter.state >= 0) {
@@ -140,7 +191,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         if(!isGetShop()) {
             history.minutesUsed = 0;
         }
-        history.storeId = StoreManager.getStoreId();
+        history.storeId = storeManager.getStoreId();
         history.userId = getSession().currentUser.id;
         history.date = new Date();
         history.fullName = getSession().currentUser.fullName;
@@ -222,6 +273,14 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         tmpCase.minutesSpent = 0;
         for(SupportCaseHistory hist : tmpCase.history) {
             tmpCase.minutesSpent += hist.minutesUsed;
+            SupportStore storeconfig = getSupportStore(tmpCase.byStoreId);
+            if(storeconfig != null) {
+                tmpCase.emailAdress = storeconfig.mainEmailAdress;
+                tmpCase.webAddress = storeconfig.defaultWebAddress;
+            } else {
+                tmpCase.emailAdress = "unmapped store";
+                tmpCase.webAddress = "unmapped store";
+            }
         }
     }
 
@@ -260,6 +319,29 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         SupportCase casetochange = getSupportCase(caseId);
         casetochange.title = title;
         saveSupportCase(casetochange);
+    }
+
+    private boolean isAllSupportStoresExpired() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, 1);
+        if(lastUpdatedAllStores == null) {
+            return true;
+        }
+        Date toCheck = cal.getTime();
+        return toCheck.after(lastUpdatedAllStores);
+    }
+
+    private void notifySupportCenter() {
+        Store store = storeManager.getMyStore();
+        if(!mySupportStores.notifiedSupport) {
+            mySupportStores.mainEmailAdress = store.configuration.emailAdress;
+            mySupportStores.supportStoreId = store.id;
+            mySupportStores.defaultWebAddress = store.getDefaultWebAddress();
+            mySupportStores.notifiedSupport = true;
+            supportDatabase.save(mySupportStores);
+            saveObject(mySupportStores);
+            lastUpdatedAllStores = null;
+        }
     }
 
     

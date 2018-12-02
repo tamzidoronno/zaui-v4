@@ -81,7 +81,15 @@ if($this->isGetShop()) {
 <div style="clear:both"></div>
 <div class="heading">Cases by you</div>
 
-<div style="text-align: center; max-width:1100px; margin: auto;">
+<?php
+if($this->isGetShop()) {
+    $maxwidth = "1600px";
+} else {
+    $maxwidth = "1100px";
+}
+?>
+
+<div style="text-align: center; max-width:<?php echo $maxwidth; ?>; margin: auto;">
 <?php
 
 if($this->isGetShop()) {
@@ -104,6 +112,8 @@ if(sizeof($cases) == 0) {
             <?php
             if($this->isGetShop()) {
                 echo "<th>Assigned</th>";
+                echo "<th>Email</th>";
+                echo "<th>Webaddr</th>";
             }
             ?>
         </tr>
@@ -130,6 +140,8 @@ if(sizeof($cases) == 0) {
                     }
                 }
                 echo "</td>";
+                echo "<td>" . $case->emailAdress . "</td>";
+                echo "<td>" . $case->webAddress . "</td>";
             }
             echo "</tr>";
         }

@@ -40,7 +40,7 @@ app.SupportDashBoard = {
             "caseid" : caseid
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            $('.SupportDashBoard').prepend($(res));
+            $('.SupportDashBoard').prepend(res);
         });
     },
     loadview : function(field) {

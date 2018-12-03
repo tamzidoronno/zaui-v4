@@ -89,7 +89,7 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
     public function render() {
        if($this->page->getId() == "getshopdevcenter") {
             $this->includefile("devcenter"); 
-       } else if("getshopusermanual") {
+       } else if($this->page->getId() ==  "getshopusermanual") {
             $this->includefile("usermanuals"); 
        } else {
             $this->includefile("requestform"); 
@@ -282,7 +282,7 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
                 $childobject->id = $child['id'];
             }
             if(isset($child['children'])) {
-                $childobject->children = $this->createModuleFeatureList($child['children'], $childobject->id);
+                $childobject->entries = $this->createModuleFeatureList($child['children'], $childobject->id);
             }
             $childs[] = $childobject;
         }
@@ -297,6 +297,10 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
             $res->text = $child->text->{'en'};
             $res->parent = $parent;
             $retval[] = $res;
+            if(isset($child->entries) && sizeof($child->entries) > 0) {
+                $tmparray = $this->createFlatList($child->entries, $res->id);
+                $retval = array_merge($retval, $tmparray);
+            }
         }
         return $retval;
     }

@@ -65,6 +65,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 server.setManger(this);
                 lockServers.put(iData.id, server);
             }
+            if (iData instanceof RcoLockSystem) {
+                RcoLockSystem server = (RcoLockSystem)iData;                
+                server.setManger(this);
+                lockServers.put(iData.id, server);
+            }
             if (iData instanceof AccessGroupUserAccess) {
                 AccessGroupUserAccess access = (AccessGroupUserAccess)iData;                
                 users.put(access.id, access);
@@ -99,6 +104,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (type.equals("getshoplockbox")) {
             createGetShopLockBoxServer(hostname, userName, password, givenName, token);
         }
+        
+        if (type.equals("rcosystem")) {
+            createRcoServer(hostname, userName, password, givenName, token);
+        }
     }   
 
     private void createZwaveServer(String hostname, String userName, String password, String givenName, String token) throws ErrorException {
@@ -111,6 +120,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     
     private void createGetShopLockBoxServer(String hostname, String userName, String password, String givenName, String token) throws ErrorException {
         GetShopLockBoxServer server = new GetShopLockBoxServer();
+        server.setDetails(hostname, userName, password, givenName, token);
+        server.setManger(this);
+        saveObject(server);
+        lockServers.put(server.id, server);
+    }
+    
+    private void createRcoServer(String hostname, String userName, String password, String givenName, String token) throws ErrorException {
+        RcoLockSystem server = new RcoLockSystem();
         server.setDetails(hostname, userName, password, givenName, token);
         server.setManger(this);
         saveObject(server);
@@ -659,29 +676,29 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         return server.getGivenName()+ " " + lock.name;
     }
 
+    /**
+     * TODO: Refactor this, there should not be save specific lock types.
+     */ 
     @Override
     public void saveLocstarLock(String serverId, LocstarLock lock) {
         LockServer server = lockServers.get(serverId);
        
-        if (server != null) {
-            server.saveLocstarLock(lock);
+        if (server != null && server instanceof ZwaveLockServer) {
+            ((ZwaveLockServer)server).saveLocstarLock(lock);
             server.save();
         }
     }
 
     @Override
     public void updateZwaveRoute(String serverId, String lockId) {
-        Lock lock = getLock(serverId, lockId);
-        String ids = "";
-        if(lock.routing.size() > 0) { ids += lock.routing.get(0) + ","; } else { ids += "0,"; }
-        if(lock.routing.size() > 1) { ids += lock.routing.get(1) + ","; } else { ids += "0,"; }
-        if(lock.routing.size() > 2) { ids += lock.routing.get(2) + ","; } else { ids += "0,"; }
-        if(lock.routing.size() > 3) { ids += lock.routing.get(3); } else { ids += "0"; }
+        LockServer server = lockServers.get(serverId);
+       
+        if (server != null && server instanceof ZwaveLockServer) {
+            ((ZwaveLockServer)server).updateRouting(lockId);
+            server.save();
+        }
         
-        LocstarLock lstrlock = (LocstarLock) lock;
         
-        String path = "JS/Run/zway.SetPriorityRoute("+lstrlock.zwaveDeviceId+","+ids+",3)";
-        restCall(serverId, path);
     }
 
     @Override

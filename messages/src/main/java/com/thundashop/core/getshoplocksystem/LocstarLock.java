@@ -5,7 +5,9 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -23,6 +25,8 @@ public class LocstarLock extends Lock {
     public int currentlyAttempt;
     public boolean dead = false;
     public Date markedDateAtDate;
+    
+    public List<Integer> routing = new ArrayList();
     
     public Integer getJobSize() {
         return getToRemove().size() + getToUpdate().size();

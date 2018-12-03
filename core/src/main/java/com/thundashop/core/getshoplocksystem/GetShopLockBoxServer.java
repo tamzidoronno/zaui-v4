@@ -160,4 +160,9 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
                     addAccessHistory(lockId, slot.slotId, date);
                 });
     }
+
+    @Override
+    public boolean hasAccessLogFeature() {
+        return true;
+    }
 }

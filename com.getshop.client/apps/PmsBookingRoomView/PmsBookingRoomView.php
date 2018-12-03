@@ -1789,5 +1789,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             $this->getApi()->getPmsManager()->printCode($this->getSelectedMultilevelDomainName(), $_POST['data']['cashpointid'], $room->pmsBookingRoomId);
         }
     }
+
+    public function shouldShowAccessLog() {
+        return $this->getApi()->getGetShopLockSystemManager()->canShowAccessLog();
+    }
+
 }
 ?>

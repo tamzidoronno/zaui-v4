@@ -62,4 +62,6 @@ public interface LockServer {
     public void addAccessHistoryEntranceDoor(String lockId, int code, Date date);
 
     public String getGivenName();
+    
+    public boolean hasAccessLogFeature();
 }

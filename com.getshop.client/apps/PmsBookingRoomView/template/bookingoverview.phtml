@@ -139,7 +139,15 @@ if($this->listGroupRooms()) {
             <div class="menuentry <? echo $this->isTabActive('stayinformation'); ?>" clearTabContent="true" tab='stayinformation'><i class="fa fa-calendar"></i> <span><? echo $this->__f("Stay") . $stayPrice; ?></span></div>
             <div class="menuentry <? echo $this->isTabActive('addons'); ?>" tab='addons'><i class="fa fa-plus-circle"></i> <span><? echo $this->__f("Addons") . " " . $addonsPriceToDisplay; ?></span></div>
             <div class="menuentry <? echo $this->isTabActive('accesscode'); ?>" tab='accesscode'><i class="fa fa-key"></i> <span><? echo $this->__f("Access code"); ?></span></div>
+            
+            <?
+            if ($this->shouldShowAccessLog()) {
+            ?>
             <div class="menuentry <? echo $this->isTabActive('accesslog'); ?>" tab='accesslog'><i class="fa fa-key"></i> <span><? echo $this->__f("Access log"); ?></span></div>
+            <?
+            }
+            ?>
+            
             <div class="menuentry <? echo $this->isTabActive('messages'); ?>" tab='messages'><i class="fa fa-envelope"></i> <span><? echo $this->__f("Messages"); ?></span></div>
             <div class="menuentry <? echo $this->isTabActive('cleaning'); ?>" tab='cleaning'><i class="fa gsicon-gs-cleaning"></i> <span><? echo $this->__f("Cleaning"); ?></span></div>
             <div style='display:none;' class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>

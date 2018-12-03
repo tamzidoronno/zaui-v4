@@ -39,6 +39,10 @@ foreach ($servers as $server) {
                 echo "$date,0000,2400,$lock->name,PINONLY,$pincode,,Slot $slot->slotId,GetShop - $lock->name,2\n";
     //            die();    
             }
+            $factory->getApi()->getGetShopLockSystemManager()->markCodeAsUpdatedOnLock($server->id, $lock->id, $slot->slotId);
         }
     }
 }
+
+
+$factory->getApi()->getUserManager()->logout();

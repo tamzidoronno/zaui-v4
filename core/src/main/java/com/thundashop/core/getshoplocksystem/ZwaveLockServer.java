@@ -392,5 +392,10 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         httpLoginRequestZwaveServer(address);
     }
 
+    @Override
+    public boolean hasAccessLogFeature() {
+        return true;
+    }
+
 
 }

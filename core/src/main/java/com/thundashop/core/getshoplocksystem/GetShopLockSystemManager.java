@@ -769,4 +769,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             lockServer.addAccessHistoryEntranceDoor(lockId, code, new Date());
         }
     }
+
+    @Override
+    public boolean canShowAccessLog() {
+        return lockServers.values()
+                .stream()
+                .filter(o -> o.hasAccessLogFeature())
+                .count() > 0;
+    }
 }

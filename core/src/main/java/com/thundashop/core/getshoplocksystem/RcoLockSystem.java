@@ -55,19 +55,8 @@ public class RcoLockSystem extends LockServerBase implements LockServer {
 
     @Override
     public void finalizeServer() {
-        setAllCodesAdded();
     }
     
-    private void setAllCodesAdded() {
-        locks.values().stream().forEach(l -> {
-            l.getUserSlots().stream().forEach(slot -> {
-                if (slot.code != null) {
-                    slot.codeAddedSuccesfully();
-                }
-            });
-        });
-    }
-
     @Override
     public void addTransactionHistory(String tokenId, String lockId, Date accessTime, int userSlot) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -105,6 +94,11 @@ public class RcoLockSystem extends LockServerBase implements LockServer {
             lock.initializeUserSlots();
             locks.put(lock.id, lock);
         }
+    }
+
+    @Override
+    public boolean hasAccessLogFeature() {
+        return false;
     }
     
 }

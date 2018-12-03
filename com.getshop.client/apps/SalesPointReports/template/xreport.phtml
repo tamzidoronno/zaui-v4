@@ -21,16 +21,37 @@ $totalForPaymentMethods = array();
 $ordersGrouped = array();
 
 foreach ($orders as $order) {
-    if (!isset($ordersGrouped[$order->payment->paymentType])) {
-        $ordersGrouped[$order->payment->paymentType] = array();
+    $terminalData = $this->getApi()->getOrderManager()->getTerminalInformation($order->id);
+    $paymentTypeArr = explode("\\", $order->payment->paymentType);
+    $paymentType = $paymentTypeArr[1];
+    
+    if ($terminalData) {
+        $paymentType .= " - ".ucfirst(strtolower(trim($terminalData->issuerName)))."";
     }
     
-    $ordersGrouped[$order->payment->paymentType][] = $order;
+    if ($order->cashWithdrawal) {
+        $cashWithdrawal = new stdClass();
+        $cashWithdrawal->id = $order->id;
+        $cashWithdrawal->incrementOrderId = $order->incrementOrderId;
+        $cashWithdrawal->paymentDate = $order->paymentDate;
+        $cashWithdrawal->userId = $order->userId;
+        $cashWithdrawal->cashWithdrawalCorrection = $order->cashWithdrawal * -1;
+        
+        if (!isset($ordersGrouped['PayOnDelivery'])) {
+            $ordersGrouped['PayOnDelivery'] = array();
+        }
+        
+        $ordersGrouped['PayOnDelivery'][] = $cashWithdrawal;
+    }
+
+    if (!isset($ordersGrouped[$paymentType])) {
+        $ordersGrouped[$paymentType] = array();
+    }
+    
+    $ordersGrouped[$paymentType][] = $order;
 }
 
-foreach ($ordersGrouped as $type => $orders) {
-    $paymentTypeArr = explode("\\", $type);
-    $paymentType = $paymentTypeArr[1];
+foreach ($ordersGrouped as $paymentType => $orders) {
     echo "<div class='paymentrow'>";
         echo "<h2>".$this->__f($paymentType)."</h2>";
     ?>
@@ -47,7 +68,13 @@ foreach ($ordersGrouped as $type => $orders) {
         foreach ($orders as $order) {
             $user = $this->getUserById($order->userId);
             $userFullName = $user ? $user->fullName : "N/A";
+            
             $totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            
+            if (isset($order->cashWithdrawalCorrection)) {
+                $totalForOrder = $order->cashWithdrawalCorrection;
+            }
+            
             $total += $totalForOrder;
 
 
@@ -60,7 +87,7 @@ foreach ($ordersGrouped as $type => $orders) {
             echo "</div>";
         }
 
-        $totalForPaymentMethods[$type] = $total;
+        $totalForPaymentMethods[$paymentType] = $total;
         echo "<h2> Total: ".$total."</h2>";
     echo "</div>";
 }
@@ -70,9 +97,7 @@ foreach ($ordersGrouped as $type => $orders) {
     <h2><? echo $this->__f("Total summary"); ?></h2>
         <?
         $grandTotal = 0;
-        foreach ($totalForPaymentMethods as $type => $total) {
-            $paymentTypeArr = explode("\\", $type);
-            $paymentType = $paymentTypeArr[1];
+        foreach ($totalForPaymentMethods as $paymentType => $total) {
             echo '<div class="orderline">';
                 echo "<div class='col name'>$paymentType</div>";
                 echo "<div class='col'>$total</div>";

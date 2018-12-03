@@ -1,0 +1,37 @@
+<?
+/* @var $this \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$cashwithdrawalective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "cashwithdrawal" ? "active" : "";
+?>
+
+<div class='topmenu'>
+    <div class='entry active countadd defaultone'>
+        <span>1</span>
+        x
+    </div>
+    <div class='entry countadd'>
+        <span>2</span>
+        x
+    </div>
+    <div class='entry countadd'>
+        <span>3</span>
+        x
+    </div>
+    <div class='entry countadd'>
+        <span>4</span>
+        x
+    </div>
+    <div class='entry countadd'>
+        <span>5</span>
+        x
+    </div>
+    <div class='entry countadd'>
+        <span>10</span>
+        x
+    </div>
+    
+    <div class='entry cashwithdrawal <? echo $cashwithdrawalective; ?>' gsclick='activateView' view='cashwithdrawal'>
+        <i class='fa fa-money'></i>
+        Cash Withdrawal
+    </div>
+    
+</div>

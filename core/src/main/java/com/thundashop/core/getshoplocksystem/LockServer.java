@@ -51,8 +51,6 @@ public interface LockServer {
 
     public void addTransactionHistory(String tokenId, String lockId, Date accessTime, int userSlot);
 
-    public void saveLocstarLock(LocstarLock lock);
-
     public void openLock(String lockId);
 
     public void closeLock(String lockId);
@@ -64,4 +62,6 @@ public interface LockServer {
     public void addAccessHistoryEntranceDoor(String lockId, int code, Date date);
 
     public String getGivenName();
+    
+    public boolean hasAccessLogFeature();
 }

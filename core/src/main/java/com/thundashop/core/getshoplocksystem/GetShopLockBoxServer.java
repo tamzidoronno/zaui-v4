@@ -117,11 +117,7 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
             addAccessHistory(lockId, userSlot, accessTime);
         }
     }
-    @Override
-    public void saveLocstarLock(LocstarLock lock) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public void openLock(String lockId) {
         Lock lock = getLock(lockId);
@@ -163,5 +159,10 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
                 .forEach(slot -> {
                     addAccessHistory(lockId, slot.slotId, date);
                 });
+    }
+
+    @Override
+    public boolean hasAccessLogFeature() {
+        return true;
     }
 }

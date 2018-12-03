@@ -47,8 +47,6 @@ public class Lock {
     public int maxnumberOfCodes = 20;
     public String name;
     
-    public List<Integer> routing = new ArrayList();
-    
     public List<UserSlot> getUserSlots() {
         finalize();
         return new ArrayList(userSlots.values());

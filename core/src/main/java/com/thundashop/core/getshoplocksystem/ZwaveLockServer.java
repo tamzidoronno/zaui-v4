@@ -353,7 +353,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                 .orElse(null);
     }
 
-    @Override
     public void saveLocstarLock(LocstarLock lock) {
         locks.put(lock.id, lock);
     }
@@ -377,6 +376,25 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     @Override
     public void addAccessHistoryEntranceDoor(String lockId, int code, Date date) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void updateRouting(String lockId) {
+        LocstarLock lock = locks.get(lockId);
+        
+        String ids = "";
+        if(lock.routing.size() > 0) { ids += lock.routing.get(0) + ","; } else { ids += "0,"; }
+        if(lock.routing.size() > 1) { ids += lock.routing.get(1) + ","; } else { ids += "0,"; }
+        if(lock.routing.size() > 2) { ids += lock.routing.get(2) + ","; } else { ids += "0,"; }
+        if(lock.routing.size() > 3) { ids += lock.routing.get(3); } else { ids += "0"; }
+        
+        LocstarLock lstrlock = (LocstarLock) lock;
+        String address = "JS/Run/zway.SetPriorityRoute("+lstrlock.zwaveDeviceId+","+ids+",3)";
+        httpLoginRequestZwaveServer(address);
+    }
+
+    @Override
+    public boolean hasAccessLogFeature() {
+        return true;
     }
 
 

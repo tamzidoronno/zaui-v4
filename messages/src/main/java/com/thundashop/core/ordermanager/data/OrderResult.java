@@ -43,7 +43,7 @@ public class OrderResult {
         amountExTaxes = Math.round(amountExTaxes*100)/100;
         amountIncTaxes = Math.round(amountIncTaxes*100)/100;
         
-        restAmount = amountIncTaxes - amountPaid;
+        restAmount = amountIncTaxes - amountPaid + ord.cashWithdrawal;
         start = ord.getStartDateByItems();
         end = ord.getEndDateByItems();
     }

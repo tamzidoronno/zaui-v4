@@ -19,6 +19,7 @@ import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.Payment;
+import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
@@ -358,4 +359,7 @@ public interface IOrderManager {
     
     @Administrator
     public boolean isLocked(Date date);
+    
+    @Administrator
+    public PaymentTerminalInformation getTerminalInformation(String orderId);
 }

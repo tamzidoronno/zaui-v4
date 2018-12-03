@@ -139,6 +139,10 @@ public class OrderDailyBreaker {
             orderDayEntries.add(incomeEntry);
         }
         
+        if (order.cashWithdrawal != 0) {
+            createCashWithdrawalEntries(order, orderDayEntries);
+        }
+        
         order.cart.getItems().stream().forEach(item -> {
             if (item.isPriceMatrixItem()) {
                 List<DayEntry> entries = createEntriesOfPriceMatrix(order, item);
@@ -641,6 +645,32 @@ public class OrderDailyBreaker {
                     return inc;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private DayEntry createCashWithdrawalEntries(Order order, List<DayEntry> orderDayEntries) {
+        try {
+            if (order.isFullyPaid()) {
+                DayEntry dayEntry = new DayEntry();
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal);
+                dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId("565ea7bd-c56b-41fe-b421-18f873c63a8f");
+                dayEntry.orderId = order.id;
+                dayEntry.incrementalOrderId = order.incrementOrderId;
+                dayEntry.date = order.paymentDate;
+                orderDayEntries.add(dayEntry);
+
+                dayEntry = dayEntry.clone();
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal).multiply(new BigDecimal(-1));
+                dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
+                dayEntry.orderId = order.id;
+                dayEntry.incrementalOrderId = order.incrementOrderId;
+                dayEntry.date = order.paymentDate;
+                orderDayEntries.add(dayEntry);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        
+        return null;
     }
 
 }

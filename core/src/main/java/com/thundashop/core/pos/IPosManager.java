@@ -45,7 +45,7 @@ public interface IPosManager {
     public Double getTotalForItems(List<CartItem> cartItems);
     
     @Editor
-    public Order createOrder(List<CartItem> cartItems, String paymentId);
+    public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId);
     
     @Editor
     public void completeTransaction(String tabId, String orderId, String cashPointDeviceId);
@@ -91,4 +91,7 @@ public interface IPosManager {
     
     @Editor
     public void moveList(String cashPointId, String listId, boolean down);
+    
+    @Editor
+    public void addCashWithDrawalToTab(String tabId, double amount);
 }

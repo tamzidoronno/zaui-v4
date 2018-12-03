@@ -84,12 +84,13 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
     }
     
     public function startPayment() {
+        $tab = $this->getCurrentTab();
         $cartItems = $this->getPostedCartItems();
         
         if ($_POST['data']['payementId'] == "f86e7042-f511-4b9b-bf0d-5545525f42de") {
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom'] = json_encode($cartItems);
         } else {
-            $order = $this->getApi()->getPosManager()->createOrder($cartItems, $_POST['data']['payementId']);
+            $order = $this->getApi()->getPosManager()->createOrder($cartItems, $_POST['data']['payementId'], $tab->id);
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'] = $order->id;
         }
     }

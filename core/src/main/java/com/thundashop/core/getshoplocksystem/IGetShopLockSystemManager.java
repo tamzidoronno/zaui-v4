@@ -164,4 +164,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void renameLock(String serverId, String lockId, String name);
+    
+    @Administrator
+    public boolean canShowAccessLog();
 }

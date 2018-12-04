@@ -18,5 +18,6 @@
     "restaurantCost" : 29000,
     "restaurantEntryPoints" : 2000,
     "salespoints" : 19000,
+    "pmsLockPriceExtra" : 1000,
     "currency" : "NOK"
 }

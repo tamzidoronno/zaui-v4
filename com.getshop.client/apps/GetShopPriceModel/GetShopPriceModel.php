@@ -62,6 +62,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $getshopdosetup = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup'] === "true";
         $getshopinstalllocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks'] === "true";
         $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining'] === "true";
+        $directbylocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks'] === "true";
 
         $roomLicenceCost = ($priceObject->roomLicense * $rooms);
         $locksLicenceCost = ($priceObject->lockLicense * $locks);
@@ -85,6 +86,9 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
             $restaurantkiosksprice += ($restaurantEntryPoints * $priceObject->restaurantEntryPoints);
         }
 
+        if ($directbylocks) {
+            $directbylocks = ($priceObject->pmsLockPriceExtra * $rooms);
+        }
         $lockPriceStartup = ($priceObject->lockPrice * $locks);
         $entranceDoorPriceTotal = ($entrancelocks * $priceObject->mainEntrancePrice);
         $terminalIndoorCosts = ($priceObject->terminalIndoorPrice * $selfcheckinindoor);
@@ -100,6 +104,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $totalSetupCost += $pgatotalcosts;
         $totalSetupCost += $salespointstotalcosts;
         $totalSetupCost += $entranceDoorPriceTotal;
+        $totalSetupCost += $directbylocks;
         if ($getshopinstalllocks) {
             $totalSetupCost += $installationPrice;
         }
@@ -121,6 +126,19 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         if ($locks > 0) {
             $repeaters = $locks / 6;
             $servers = $locks / 30;
+            $repeaters = round($repeaters);
+            if ($servers < 1) {
+                $servers = 1;
+            }
+            $servers = ceil($servers);
+
+            $totalSetupCost += ($repeaters * $priceObject->repeaterPrice);
+            $totalSetupCost += ($servers * $priceObject->serverPrice);
+        }
+        
+        if ($directbylocks && $rooms) {
+            $repeaters = $rooms / 6;
+            $servers = $rooms / 20;
             $repeaters = round($repeaters);
             if ($servers < 1) {
                 $servers = 1;
@@ -152,6 +170,7 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         $priceMatrix = array();
         $priceMatrix['totalSetupCost'] = $totalSetupCost;
         $priceMatrix['lockPriceStartup'] = $lockPriceStartup;
+        $priceMatrix['directbylocks'] = $directbylocks;
         $priceMatrix['entranceDoorPriceTotal'] = $entranceDoorPriceTotal;
         $priceMatrix['terminalIndoorCosts'] = $terminalIndoorCosts;
         $priceMatrix['terminalOutdoorCosts'] = $terminalOutdoorCosts;
@@ -214,7 +233,17 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         }
         
         $content = file_get_contents('../app/' . $appname ."/prices_".$currency.".json");
-        return json_decode($content);
+        
+        $directbylocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks'] === "true";
+
+        $priceObject = json_decode($content);
+        
+        // We double the price if they buy the locks driectly :D
+        if ($directbylocks) {
+            $priceObject->serverPrice = $priceObject->serverPrice * 2;
+        }
+        
+        return $priceObject;
     }
 
 }

@@ -19,6 +19,7 @@ app.GetShopPriceModel = {
             'getshopdosetup' : $('.getshopdosetup').is(':checked'),
             'getshopinstalllocks' : $('.getshopinstalllocks').is(':checked'),
             'getshoptraining' : $('.getshoptraining').is(':checked'),
+            'directbylocks' : $('.directbylocks').is(':checked'),
             'currency' : $('.currency').val()
         }
         

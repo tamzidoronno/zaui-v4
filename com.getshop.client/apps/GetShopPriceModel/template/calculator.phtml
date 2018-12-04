@@ -10,6 +10,7 @@ $selfcheckinindoor = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_ca
 $selfcheckinoutdoor = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['selfcheckinoutdoor'] : 0;
 $pgas = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['pgas'] : 0;
 $customwebsite = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['customwebsite'] === "true";
+$directbylocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks'] === "true";
 $integrationtoaccounting = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['integrationtoaccounting'] === "true";
 $getshopdosetup = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup'] === "true";
 $getshopinstalllocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks'] === "true";
@@ -17,6 +18,7 @@ $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calc
 $currency = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency']) ? $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency'] : "1";
 
 $customwebsite = $customwebsite ? 'checked="true"' : "";
+$directbylocks = $directbylocks ? 'checked="true"' : "";
 $integrationtoaccounting = $integrationtoaccounting ? 'checked="true"' : "";
 $getshopdosetup = $getshopdosetup ? 'checked="true"' : "";
 $getshopinstalllocks = $getshopinstalllocks ? 'checked="true"' : "";
@@ -99,6 +101,11 @@ $getshoptraining = $getshoptraining ? 'checked="true"' : "";
 <div class='row'>
     <div class='col1'>Include GetShop's training program</div>
     <div class='col2'><input type='checkbox' class='selection inputvalue getshoptraining' <? echo $customwebsite; ?>></div>
+</div>
+
+<div class='row'>
+    <div class='col1'>Buyer buys locks directly from Locstar</div>
+    <div class='col2'><input type='checkbox' class='selection inputvalue directbylocks' <? echo $directbylocks; ?>></div>
 </div>
 <br>
 <br>

@@ -2666,7 +2666,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     long iStart = r.start.getTime();
                     long iEnd = r.end.getTime();
                     
-                    return iStart <= start && iEnd > end;
+                    return iStart <= start && iEnd > end && r.deleted == null;
                 })
                 .findAny()
                 .orElse(null);
@@ -2698,6 +2698,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
+    public void resetLastMonthClose(String password, Date start, Date end) {
+        if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
+            DayIncomeReport report = getReport(start, end);
+            
+            if (report != null) {
+                deleteObject(report);
+                
+                OrderManagerSettings settings = getOrderManagerSettings();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(settings.closedTilPeriode);
+                cal.add(Calendar.MONTH, -1);
+                settings.closedTilPeriode = cal.getTime();
+                
+                saveObject(settings);
+            }
+        }
+    }
+    
+    @Override
     public void closeTransactionPeriode(Date closeDate) {
         Date closePeriodeToDate = closeDate;
         Calendar cal = Calendar.getInstance();
@@ -2721,17 +2740,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new RuntimeException("We can not close down for the future");
         }
         
-        List<DayIncome> days = getDayIncomes(getOrderManagerSettings().closedTilPeriode, closeDate);
-        
         OrderManagerSettings settings = getOrderManagerSettings();
         
-        DayIncomeReport incomeReport = new DayIncomeReport();
-        incomeReport.start = settings.closedTilPeriode;
-        incomeReport.end = closePeriodeToDate;
-        incomeReport.createdBy = getSession().currentUser.id;
-
-        incomeReport.incomes = days;
-        saveObject(incomeReport);
+        List<DayIncome> days = getDayIncomes(settings.closedTilPeriode, closeDate);
+        
+        createAndSaveIncomeReport(settings.closedTilPeriode, closePeriodeToDate, days);
         
         for (DayIncome day : days) {
             for (DayEntry entry : day.dayEntries) {
@@ -2864,5 +2877,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return null;
+    }
+
+    private void createAndSaveIncomeReport(Date start, Date end, List<DayIncome> days) {
+        
+        DayIncomeReport incomeReport = new DayIncomeReport();
+        incomeReport.start = start;
+        incomeReport.end = end;
+        incomeReport.createdBy = getSession().currentUser.id;
+
+        incomeReport.incomes = days;
+        saveObject(incomeReport);
     }
 }

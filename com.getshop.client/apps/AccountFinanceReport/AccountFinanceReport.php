@@ -168,5 +168,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         return $this->getApi()->getProductManager()->getAccountingDetail($accountNumber)->taxgroup;
     }
 
+    public function resetLastMonth() {
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        $this->getApi()->getOrderManager()->resetLastMonthClose($_POST['data']['password'], $start, $end);
+    }
 }
 ?>

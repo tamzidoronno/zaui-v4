@@ -24,6 +24,7 @@ public class SupportCase extends DataCommon {
     String title = "";
     public Date closedDate;
     String handledByUser = "";
+    String usersEmail = "";
     public String featureRequestId = "";
     public List<SupportCaseHistory> history = new ArrayList();
     

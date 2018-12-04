@@ -200,6 +200,13 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         List<SupportCase> result = new ArrayList();
         for(SupportCase tmpCase : allCases) {
             if(!hasAccess(tmpCase.byStoreId)) {
+                if(isBacklogProgressOrSolved(filter.state) && isBacklogProgressOrSolved(tmpCase.state)) {
+                    SupportCase tmpCaseFixed = new SupportCase();
+                    tmpCaseFixed.rowCreatedDate = tmpCase.rowCreatedDate;
+                    tmpCaseFixed.title = tmpCase.title;
+                    tmpCaseFixed.type = tmpCase.type;
+                    result.add(tmpCaseFixed);
+                }
                 continue;
             }
             finalize(tmpCase);
@@ -222,8 +229,13 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         history.fullName = getSession().currentUser.fullName;
         SupportCase scase = getSupportCase(supportCaseId);
         scase.history.add(history);
-        if(scase.byUserName.isEmpty()) {
-            scase.byUserName = getSession().currentUser.fullName;
+        if(getSession() != null && getSession().currentUser != null) {
+            if(scase.byUserName.isEmpty()) {
+                scase.byUserName = getSession().currentUser.fullName;
+            }
+            if(scase.usersEmail.isEmpty()) {
+                scase.usersEmail = getSession().currentUser.emailAddress;
+            }
         }
         if(!isGetShop()) {
             scase.state = SupportCaseState.SENT;
@@ -235,7 +247,11 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         if(isGetShop()) {
             if(supportstore != null && supportstore.mainEmailAdress != null && !supportstore.mainEmailAdress.isEmpty()) {
                 String msg = "Your case has been replied to, log on to your support center to read it.";
-                messageManager.sendMail(supportstore.mainEmailAdress, supportstore.mainEmailAdress, scase.title,msg,"noreply@getshop.com","noreply@getshop.com");
+                if(scase.usersEmail != null && scase.usersEmail.contains("@")) {
+                    messageManager.sendMail(scase.usersEmail, scase.usersEmail, scase.title,msg,"noreply@getshop.com","noreply@getshop.com");
+                } else {
+                    messageManager.sendMail(supportstore.mainEmailAdress, supportstore.mainEmailAdress, scase.title,msg,"noreply@getshop.com","noreply@getshop.com");
+                }
             }
         }
         
@@ -394,6 +410,13 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         FeatureList newlist = new FeatureList();
         newlist.id = moduleId;
         return newlist;
+    }
+
+    private boolean isBacklogProgressOrSolved(Integer state) {
+        if(state.equals(SupportCaseState.MOVEDTOBACKLOG) || state.equals(SupportCaseState.SOLVEDBYDEV) || state.equals(SupportCaseState.INPROGRESS)) {
+            return true;
+        }
+        return false;
     }
 
     

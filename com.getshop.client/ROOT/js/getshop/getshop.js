@@ -259,6 +259,7 @@ thundashop.Ajax = {
         $(document).on('click','*[gsclick]', thundashop.Ajax.postgeneral);
         $(document).on('change','*[gschange]', thundashop.Ajax.postgeneral);
         $(document).on('click','*[gs_downloadExcelReport]', thundashop.Ajax.createExcelFile);
+        $(document).on('click','*[gs_downloadPlainText]', thundashop.Ajax.createPlainTextFile);
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
         $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
         $(document).on('click','*[gstype="downloadpdf"]', thundashop.Ajax.downloadPdf);
@@ -372,6 +373,35 @@ thundashop.Ajax = {
         thundashop.Ajax.postWithCallBack(evt, function(res) {
             var base64 = thundashop.base64.encode(res);
             var url = '/scripts/createExcelFile.php';
+            var form = $('<form method="POST" action="' + url + '">');
+            form.append($('<input type="hidden" name="data" value="' + base64 + '">'));
+            form.append($('<input type="hidden" name="filename" value="' + filename + '">'));
+            
+            $('body').append(form);
+            
+            form.submit();
+            form.remove();
+        });
+    },
+    
+    createPlainTextFile: function() {
+        var method = $(this).attr('gs_downloadPlainText');
+        var filename = $(this).attr('gs_fileName');
+        var data = {};
+   
+        $.each(this.attributes, function(i, attrib) {
+            var name = attrib.name;
+            var value = attrib.value;
+            data[name] = value;
+        });
+        
+        data['synchron'] = true;
+        
+        var evt = thundashop.Ajax.createEvent(null, method, this, data);
+        
+        thundashop.Ajax.postWithCallBack(evt, function(res) {
+            var base64 = thundashop.base64.encode(res);
+            var url = '/scripts/createPlainTextFile.php';
             var form = $('<form method="POST" action="' + url + '">');
             form.append($('<input type="hidden" name="data" value="' + base64 + '">'));
             form.append($('<input type="hidden" name="filename" value="' + filename + '">'));

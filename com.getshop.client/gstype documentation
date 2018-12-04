@@ -128,6 +128,21 @@ Excel download
 
     <div gs_downloadExcelReport='downloadReport' gs_fileName='$filename'>Download</div>
 
+Excel plain text file
+    gs_downloadPlainText = Name of function that generates the excel file data
+    gs_fileName = Name of the file that will be downloaded
+
+    downloadReport() should return a jsonencoded multidimension array like:
+        
+    public function downloadReport() { 
+        $data = "TEST\n";
+        $data .= "TEST";
+        
+        echo json_encode($data);
+    }
+
+    <div gs_downloadPlainText='downloadReport' gs_fileName='$filename'>Download</div>
+
 Framework translation: __f("");
 
 

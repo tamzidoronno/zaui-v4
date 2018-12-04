@@ -2786,7 +2786,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
         
-        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate)) {
+        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {
             return;
         }
         
@@ -2794,23 +2794,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
         }
         
-        if (order.needToStopDueToIllegalChangeOfPriceMatrix(oldOrder, closedDate)) {
+        if (order.needToStopDueToIllegalChangeOfPriceMatrix(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
         
-        if (order.needToStopDueToIllegalChangeInAddons(oldOrder, closedDate)) {
+        if (order.needToStopDueToIllegalChangeInAddons(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
         
-        if (order.needToStopDueToIllegalChangePaymentDate(oldOrder, closedDate)) {
+        if (order.needToStopDueToIllegalChangePaymentDate(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
         
         // If a order has created date that is not the same as the one in the database, what happend? 
-        if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate)) {
+        if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate) && !order.forcedOpen) {
             throw new ErrorException(1053);
         }
     }

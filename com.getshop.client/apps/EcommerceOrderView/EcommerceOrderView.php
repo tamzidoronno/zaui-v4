@@ -78,9 +78,10 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
             
             $item->count = $count;
             $item->product->price = $finalamount;
+            $item->priceMatrix = $priceMatrix;
+            $item->itemsAdded = $itemsAdded;
             
             $this->getApi()->getOrderManager()->saveOrder($order);
-            
             
             echo json_encode($result);
             break;

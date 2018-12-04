@@ -244,10 +244,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
             }
             
-            if (dataFromDatabase instanceof OrderManagerSettings) {
-                orderManagerSettings = (OrderManagerSettings)dataFromDatabase;
-            }
-
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
                 if (order.cleanMe()) {
@@ -2748,6 +2744,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }   
     
     private OrderManagerSettings getOrderManagerSettings() {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.ordermanager.data.OrderManagerSettings");
+        
+        if (this.orderManagerSettings == null) {
+            this.orderManagerSettings = database.query("OrderManager", storeId, query).stream()
+                    .map(o -> (OrderManagerSettings)o)
+                    .findFirst()
+                    .orElse(null);
+        }
+        
         if (this.orderManagerSettings == null) {
             this.orderManagerSettings = new OrderManagerSettings();
             saveObject(this.orderManagerSettings);
@@ -2831,7 +2837,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public boolean isLocked(Date date) {
-        return getOrderManagerSettings().closedTilPeriode.after(date);
+        Date closed = getOrderManagerSettings().closedTilPeriode;
+        boolean isClosed = closed.after(date);
+        return isClosed;
     }
 
     private boolean lastDayOfPrevMonthClosed(Date closeDate) {

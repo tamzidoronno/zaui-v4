@@ -1445,7 +1445,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
 
-            if (room.guests == null || room.guests.isEmpty() || !bookingEngine.getConfig().rules.includeGuestData) {
+            if (room.guests == null || room.guests.isEmpty() || (!bookingEngine.getConfig().rules.includeGuestData && !storeManager.isPikStore())) {
                 if (type.equals("email")) {
                     String email = userManager.getUserById(booking.userId).emailAddress;
                     if (emailToSendTo != null) {

@@ -14,6 +14,10 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         return $storeId == "13442b34-31e5-424c-bb23-a396b7aeb8ca";
     }
     
+    public function isGetShopById($id) {
+        return $id == "13442b34-31e5-424c-bb23-a396b7aeb8ca";
+    }
+    
     public function saveRequest() {
         $content = $_POST['data']['content'];
         $requesttype = $_POST['data']['type'];

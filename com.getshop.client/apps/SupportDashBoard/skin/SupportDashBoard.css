@@ -3,6 +3,11 @@
     margin:auto;
     font-size: 14px;
 }
+.SupportDashBoard .isgetshop {
+    background-color: #45746b;
+    color:#fff;
+}
+
 .SupportDashBoard .statiticbox {
     width: 145px;
     height: 145px;

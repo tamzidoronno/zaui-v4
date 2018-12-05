@@ -10,7 +10,11 @@ $case = $this->getApi()->getSupportManager()->getSupportCase($caseId);
         echo $case->title;
         echo "</div>";
         foreach($case->history as $history) {
-            echo "<div class='dialoghistory'>";
+            $isGetShop = "";
+            if($this->isGetShopById($history->storeId)) {
+                $isGetShop = "isgetshop";
+            }
+            echo "<div class='dialoghistory $isGetShop'>";
             echo "<div class='dialogcontent'>";
             echo $history->content;
             echo "</div>";

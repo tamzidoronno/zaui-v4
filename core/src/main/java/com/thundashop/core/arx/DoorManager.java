@@ -15,6 +15,8 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +63,13 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
                                     doorsToRet.add(door);
                                 });
                     });
+            
+            Collections.sort(doorsToRet, new Comparator<Door>(){
+                public int compare(Door o1, Door o2){
+                    return o1.name.compareTo(o2.name);
+                }
+           });
+            
             return doorsToRet;
         }
         

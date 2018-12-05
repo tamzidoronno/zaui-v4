@@ -43,7 +43,7 @@
                      <i class="fa fa-sign-out" ng-show="printCheckedOut(guest)"></i>
                      <span ng-show="cleaningList.type=='checkin'">{{getCheckinTime(guest.start, guest, false) }}</span>
                     <span ng-show="cleaningList.type=='checkout'">{{getCheckinTime(guest.end, guest, true) }}</span>
-                     {{guest.guest[0].name}} 
+                     {{guest.guest[0].name}}, ({{guest.numberOfGuests}} guests).
                     <i class="fa fa-arrow-right" style='float:right;'></i>
                     
                     <span style='float:right; padding-right: 20px;' ng-show='guest.hasBeenCleaned'>Ready</span>

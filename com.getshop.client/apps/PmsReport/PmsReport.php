@@ -462,8 +462,45 @@ class PmsReport extends \MarketingApplication implements \Application {
         echo "</table>";
     }
     
+    public function searchCustomerToIncludeInFilter() {
+        $input = $_POST['data']['input'];
+        $users = $this->getApi()->getUserManager()->findUsers($input);
+        if(sizeof($users) == 0) {
+            echo "No customers / companies found.";
+        } else {
+            foreach($users as $usr) {
+                echo "<div class='customerselectionrow'>";
+                echo "<span class='shop_button includecustomerinfilter' style='float:right;' userid='".$usr->id."'>Select</span>";
+                echo $usr->fullName. "<br>";
+                echo "</div>";
+            }
+        }
+    }
+    
+    public function includeCustomerToFilter() {
+        $userid = $_POST['data']['userid'];
+        $filter = $this->getSelectedFilter();
+        if(!isset($filter->customers)) {
+            $filter->customers = array();
+        }
+        $filter->customers->{$userid} = "";
+        $_SESSION['savedfilter'] = json_encode($filter);
+        $this->printAddedCustomers();
+     }
+
+     public function removeCustomer() {
+        $userid = $_POST['data']['userid'];
+        $filter = $this->getSelectedFilter();
+        unset($filter->customers->{$userid});
+        $_SESSION['savedfilter'] = json_encode($filter);
+     }
+     
     public function getCoverageFilter() {
         $selectedFilter = $this->getSelectedFilter();
+        $typeFilter = array();
+        if(isset($selectedFilter->typeFilter)) {
+            $typeFilter = $selectedFilter->typeFilter;
+        }
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(strtotime($selectedFilter->start));
         $filter->endDate = $this->convertToJavaDate(strtotime($selectedFilter->end));
@@ -471,13 +508,17 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->includeVirtual = false;
         $filter->fromPms = true;
         $filter->removeAddonsIncludedInRoomPrice = true;
-        $filter->typeFilter = $selectedFilter->typeFilter;
+        $filter->typeFilter = $typeFilter;
         
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
         }
         $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
         $filter->channel = $selectedFilter->channel;
+        $filter->customers = array();
+        foreach($selectedFilter->customers as $id => $val) {
+            $filter->customers[] = $id;
+        }
         return $filter;
     }
 
@@ -621,6 +662,10 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter = $this->addPaymentTypeToFilter($filter);
         $filter->displayType = "dayslept";
         $filter->priceType = "extaxes";
+        $filter->customers = array(); 
+        foreach($selectedFilter->customers as $id => $val) {
+            $filter->customers[] = $id;
+        }
 
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
@@ -686,6 +731,14 @@ class PmsReport extends \MarketingApplication implements \Application {
             $rowcounter++;
         }
         return $result;
+    }
+
+    public function printAddedCustomers() {
+        $selectedfilter = $this->getSelectedFilter();
+        foreach($selectedfilter->customers as $userId => $val) {
+            $usr = $this->getApi()->getUserManager()->getUserById($userId);
+            echo "<div class='selectedcustomerrow'><span class='fa fa-trash-o removecustomerfromfilter' userid='".$usr->id."'></i> " . $usr->fullName . "</div>";
+        }
     }
 
 }

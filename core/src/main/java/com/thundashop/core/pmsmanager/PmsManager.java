@@ -7478,6 +7478,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.priceType = "extaxes";
         filter.includeVirtual = pmsFilter.includeVirtual;
         filter.channel = pmsFilter.channel;
+        filter.customers.addAll(pmsFilter.customers);
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.start);
@@ -8779,6 +8780,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> finalized = finalizeList(result);
         finalized = filterTypes(finalized, filter.typeFilter);
         finalized = filterByUser(finalized, filter.userId);
+        finalized = filterByCustomers(finalized, filter.customers);
         finalized = filterByChannel(finalized, filter.channel);
         finalized = filterByBComRateManager(finalized, filter);
         finalized = filterByUnpaid(finalized, filter);
@@ -9235,5 +9237,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                 });
+    }
+
+    private List<PmsBooking> filterByCustomers(List<PmsBooking> finalized, List<String> customers) {
+        if(customers == null || customers.isEmpty()) {
+            return finalized;
+        }
+        List<PmsBooking> newList = new ArrayList();
+        for(PmsBooking tmp : finalized) {
+            if(customers.contains(tmp.userId)) {
+                newList.add(tmp);
+            }
+        }
+        return newList;
     }
 }

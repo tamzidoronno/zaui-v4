@@ -195,6 +195,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     public SupportCase createSupportCase(SupportCase supportCase) {
         supportCase.state = SupportCaseState.CREATED;
         supportCase.byStoreId = storeId;
+        if(isGetShop()) {
+            supportCase.state = SupportCaseState.MOVEDTOBACKLOG;
+        }
         updateStatisticsCounter(supportCase);
         String msg = "Support case has been added to support center";
         messageManager.sendMail("support@getshop.com", "support@getshop.com", "Added to support center: " + supportCase.title, msg, "noreply@getshop.com", "noreply@getshop.com");

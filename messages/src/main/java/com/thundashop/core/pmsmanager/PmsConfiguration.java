@@ -75,6 +75,10 @@ public class PmsConfiguration extends DataCommon {
         return cal.getTime();
     }
 
+    void setHasAccessControl(boolean hasLockSystemActive) {
+        this.hasDoorLockSystem = hasLockSystemActive;
+    }
+
 
 
     public static class PmsBookingTimeInterval {
@@ -263,6 +267,7 @@ public class PmsConfiguration extends DataCommon {
     private Integer codeSize = 4;
     private boolean keepDoorOpenWhenCodeIsPressed = false;
     private String closeAllDoorsAfterTime = "22:00";
+    public boolean hasDoorLockSystem = false;
 
     
     //Cleaning options

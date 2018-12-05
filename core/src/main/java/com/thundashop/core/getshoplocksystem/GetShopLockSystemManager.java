@@ -737,6 +737,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 });
     }
 
+    public void pulseOpenLock(String lockId) {
+        lockServers.values()
+                .stream()
+                .forEach(server -> {
+                    server.pulseOpenLock(lockId);
+                });
+    }    
+    
     public void closeLock(String lockId) {
         lockServers.values()
             .stream()
@@ -777,4 +785,5 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 .filter(o -> o.hasAccessLogFeature())
                 .count() > 0;
     }
+
 }

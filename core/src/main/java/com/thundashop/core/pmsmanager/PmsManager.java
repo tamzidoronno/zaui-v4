@@ -1213,11 +1213,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsConfiguration getConfiguration() {
         Gson gson = new Gson();
-        String copy = gson.toJson(configuration);
+        String copy = gson.toJson(getConfigurationSecure());
 
         User loggedOn = getSession().currentUser;
         if (loggedOn != null && loggedOn.isAdministrator()) {
-            return configuration;
+            return getConfigurationSecure();
         }
 
         PmsConfiguration toReturn = gson.fromJson(copy, PmsConfiguration.class);
@@ -3714,7 +3714,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public boolean hasLockSystemActive() {
-        if (getConfiguration().hasLockSystem()) {
+        if (configuration.hasLockSystem()) {
             return true;
         }
 
@@ -3848,6 +3848,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String timeZone = storeManager.getMyStore().timeZone;
         configuration.setTimeZone(timeZone);
         configuration.setIsPikStore(storeManager.isPikStore());
+        configuration.setHasAccessControl(hasLockSystemActive());
         return configuration;
     }
 

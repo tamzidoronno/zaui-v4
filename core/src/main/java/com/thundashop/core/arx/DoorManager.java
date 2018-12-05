@@ -91,10 +91,13 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     @Override
     public void doorAction(String externalId, String state) throws Exception {
         if (apacManager.isActivated()) {
-            if (state.equals("forceOpenOn"))
+            if (state.equals("forceOpenOn")) {
                 apacManager.openLock(externalId);
-            else
-                apacManager.closeLock(externalId);
+            } else if(state.equals("pulseOpen")) {
+                apacManager.pulseOpenLock(externalId);
+            } else {
+                 apacManager.closeLock(externalId);
+            }
         } else {
             getDoorManager().doorAction(externalId, state);
         }

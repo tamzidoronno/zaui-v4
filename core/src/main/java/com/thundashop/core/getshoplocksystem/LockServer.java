@@ -53,6 +53,8 @@ public interface LockServer {
 
     public void openLock(String lockId);
 
+    public void pulseOpenLock(String lockId);
+
     public void closeLock(String lockId);
 
     public void renameLock(String lockId, String name);

@@ -138,7 +138,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     }
 
     private List<SupportCase> getCases(SupportCaseFilter filter) {
-        filter.storeId = getStoreId();
+        if(!isGetShop()) {
+            filter.storeId = getStoreId();
+        }
         notifySupportCenter();
         BasicDBObject query = new BasicDBObject();
         List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
@@ -151,7 +153,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         if(!filter.userId.isEmpty()) {
             obj.add(new BasicDBObject("handledByUser", filter.userId));
         }
-        if(!isBacklogProgressOrSolved(filter.state) && !isGetShop()) {
+        if(!isBacklogProgressOrSolved(filter.state)) {
             if(!filter.storeId.isEmpty()) {
                 obj.add(new BasicDBObject("byStoreId", filter.storeId));
             }

@@ -244,10 +244,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
             }
             
-            if (dataFromDatabase instanceof OrderManagerSettings) {
-                orderManagerSettings = (OrderManagerSettings)dataFromDatabase;
-            }
-
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
                 if (order.cleanMe()) {
@@ -2670,7 +2666,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     long iStart = r.start.getTime();
                     long iEnd = r.end.getTime();
                     
-                    return iStart <= start && iEnd > end;
+                    return iStart <= start && iEnd > end && r.deleted == null;
                 })
                 .findAny()
                 .orElse(null);
@@ -2702,6 +2698,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
+    public void resetLastMonthClose(String password, Date start, Date end) {
+        if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
+            DayIncomeReport report = getReport(start, end);
+            
+            if (report != null) {
+                deleteObject(report);
+                
+                OrderManagerSettings settings = getOrderManagerSettings();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(settings.closedTilPeriode);
+                cal.add(Calendar.MONTH, -1);
+                settings.closedTilPeriode = cal.getTime();
+                
+                saveObject(settings);
+            }
+        }
+    }
+    
+    @Override
     public void closeTransactionPeriode(Date closeDate) {
         Date closePeriodeToDate = closeDate;
         Calendar cal = Calendar.getInstance();
@@ -2725,17 +2740,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new RuntimeException("We can not close down for the future");
         }
         
-        List<DayIncome> days = getDayIncomes(getOrderManagerSettings().closedTilPeriode, closeDate);
-        
         OrderManagerSettings settings = getOrderManagerSettings();
         
-        DayIncomeReport incomeReport = new DayIncomeReport();
-        incomeReport.start = settings.closedTilPeriode;
-        incomeReport.end = closePeriodeToDate;
-        incomeReport.createdBy = getSession().currentUser.id;
-
-        incomeReport.incomes = days;
-        saveObject(incomeReport);
+        List<DayIncome> days = getDayIncomes(settings.closedTilPeriode, closeDate);
+        
+        createAndSaveIncomeReport(settings.closedTilPeriode, closePeriodeToDate, days);
         
         for (DayIncome day : days) {
             for (DayEntry entry : day.dayEntries) {
@@ -2748,6 +2757,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }   
     
     private OrderManagerSettings getOrderManagerSettings() {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.ordermanager.data.OrderManagerSettings");
+        
+        if (this.orderManagerSettings == null) {
+            this.orderManagerSettings = database.query("OrderManager", storeId, query).stream()
+                    .map(o -> (OrderManagerSettings)o)
+                    .findFirst()
+                    .orElse(null);
+        }
+        
         if (this.orderManagerSettings == null) {
             this.orderManagerSettings = new OrderManagerSettings();
             saveObject(this.orderManagerSettings);
@@ -2780,7 +2799,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
         
-        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate)) {
+        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {
             return;
         }
         
@@ -2788,23 +2807,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
         }
         
-        if (order.needToStopDueToIllegalChangeOfPriceMatrix(oldOrder, closedDate)) {
+        if (order.needToStopDueToIllegalChangeOfPriceMatrix(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
         
-        if (order.needToStopDueToIllegalChangeInAddons(oldOrder, closedDate)) {
+        if (order.needToStopDueToIllegalChangeInAddons(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
         
-        if (order.needToStopDueToIllegalChangePaymentDate(oldOrder, closedDate)) {
+        if (order.needToStopDueToIllegalChangePaymentDate(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
         
         // If a order has created date that is not the same as the one in the database, what happend? 
-        if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate)) {
+        if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate) && !order.forcedOpen) {
             throw new ErrorException(1053);
         }
     }
@@ -2831,7 +2850,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public boolean isLocked(Date date) {
-        return getOrderManagerSettings().closedTilPeriode.after(date);
+        Date closed = getOrderManagerSettings().closedTilPeriode;
+        boolean isClosed = closed.after(date);
+        return isClosed;
     }
 
     private boolean lastDayOfPrevMonthClosed(Date closeDate) {
@@ -2856,5 +2877,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return null;
+    }
+
+    private void createAndSaveIncomeReport(Date start, Date end, List<DayIncome> days) {
+        
+        DayIncomeReport incomeReport = new DayIncomeReport();
+        incomeReport.start = start;
+        incomeReport.end = end;
+        incomeReport.createdBy = getSession().currentUser.id;
+
+        incomeReport.incomes = days;
+        saveObject(incomeReport);
     }
 }

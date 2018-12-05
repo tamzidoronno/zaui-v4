@@ -362,4 +362,7 @@ public interface IOrderManager {
     
     @Administrator
     public PaymentTerminalInformation getTerminalInformation(String orderId);
+    
+    @Administrator
+    public void resetLastMonthClose(String password, Date start, Date end);
 }

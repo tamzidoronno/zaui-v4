@@ -16,6 +16,7 @@ $integrationtoaccounting = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b
 $getshopdosetup = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopdosetup'] === "true";
 $getshopinstalllocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshopinstalllocks'] === "true";
 $getshoptraining = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['getshoptraining'] === "true";
+$directbylocks = isset($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks']) && $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['directbylocks'] === "true";
 $salespoints = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['salespoints'];
 
 ?>
@@ -116,6 +117,27 @@ $salespoints = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['sa
     
     <div class='new-page'></div><br/>
     <h2>Startup Costs</h2>
+    
+    <?
+    if ($directbylocks) {
+    ?>
+    <div class="row">
+        <div class="type">
+            GetShop PMS & APAC
+        </div>
+        <div class="count">
+            <? echo "1. x ".$priceMatrix['directbylocks'];?>
+        </div>
+        <div class="price">
+            <? echo $priceMatrix['directbylocks']." ".$prices->currency; ?>
+        </div>
+        <div class="description">
+            GetShop PMS & GetShop APAC, all the tools you need to automate your hotel with check-in/check-out. The PMS is connected to your locks.
+        </div>
+    </div>
+    <?
+    }
+    ?>
     
     <?
     if ($locks) {
@@ -539,7 +561,7 @@ $salespoints = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['sa
     <?
     }
     
-    if (isset($priceMatrix['minMonthly'])) {
+    if (isset($priceMatrix['minMonthly']) && $priceMatrix['minMonthly']) {
     ?>
         <div class="row">
             <div class="type">

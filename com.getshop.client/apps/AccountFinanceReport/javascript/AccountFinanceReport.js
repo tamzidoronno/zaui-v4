@@ -2,7 +2,16 @@ app.AccountFinanceReport = {
     init: function() {
         $(document).on('click', '.AccountFinanceReport .showresultbutton.deactivated', app.AccountFinanceReport.displayWarning);
         $(document).on('click', '.AccountFinanceReport .showresultbutton.closeperiode', app.AccountFinanceReport.closePeriode);
+        $(document).on('click', '.AccountFinanceReport .showresultbutton.recalc', app.AccountFinanceReport.resetLastMonth);
         $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
+    },
+    
+    resetLastMonth: function(password) {
+        var data = {
+            password: password
+        }
+        
+        thundashop.Ajax.simplePost($('.AccountFinanceReport'), "resetLastMonth", data);
     },
     
     changePeriodeOptions: function() {

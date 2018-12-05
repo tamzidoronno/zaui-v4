@@ -18,5 +18,6 @@
     "restaurantCost" : 3729.10,
     "restaurantEntryPoints" : 257,
     "salespoints" : 2200,
+    "pmsLockPriceExtra" : 120,
     "currency" : "USD"
 }

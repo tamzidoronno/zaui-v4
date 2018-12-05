@@ -36,6 +36,13 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
     }
     
+    public function downloadAccountingFile() {
+        $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
+        if ($system == "GENERELL_NORWEGIAN") {
+            $this->includefile("gbat10");
+        }
+    }
+    
     public function showSummaryForAccount() {
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'] = $_POST['data']['account'];
     }
@@ -155,6 +162,16 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
 
     public function cancelAccountOverview() {
         unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary']);
+    }
+
+    public function getTaxCodeForAccount($accountNumber) {
+        return $this->getApi()->getProductManager()->getAccountingDetail($accountNumber)->taxgroup;
+    }
+
+    public function resetLastMonth() {
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        $this->getApi()->getOrderManager()->resetLastMonthClose($_POST['data']['password'], $start, $end);
     }
 }
 ?>

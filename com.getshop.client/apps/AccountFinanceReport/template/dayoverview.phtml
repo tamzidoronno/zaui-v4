@@ -6,6 +6,7 @@ $allAccountNumbers = array();
 
 if (count($dayIncomes) != 1) {
     echo "Multiple days not allowed in this view";
+    $this->cancelBrowsing();
     return;
 }
 

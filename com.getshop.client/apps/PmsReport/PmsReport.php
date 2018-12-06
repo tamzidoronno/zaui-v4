@@ -516,8 +516,10 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
         $filter->channel = $selectedFilter->channel;
         $filter->customers = array();
-        foreach($selectedFilter->customers as $id => $val) {
-            $filter->customers[] = $id;
+        if(isset($selectedFilter->customers)) {
+            foreach($selectedFilter->customers as $id => $val) {
+                $filter->customers[] = $id;
+            }
         }
         return $filter;
     }
@@ -663,8 +665,10 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->displayType = "dayslept";
         $filter->priceType = "extaxes";
         $filter->customers = array(); 
-        foreach($selectedFilter->customers as $id => $val) {
-            $filter->customers[] = $id;
+        if(isset($selectedFilter->customers)) {
+            foreach($selectedFilter->customers as $id => $val) {
+                $filter->customers[] = $id;
+            }
         }
 
         if(stristr($selectedFilter->type, "forecasted")) {
@@ -735,9 +739,11 @@ class PmsReport extends \MarketingApplication implements \Application {
 
     public function printAddedCustomers() {
         $selectedfilter = $this->getSelectedFilter();
-        foreach($selectedfilter->customers as $userId => $val) {
-            $usr = $this->getApi()->getUserManager()->getUserById($userId);
-            echo "<div class='selectedcustomerrow'><span class='fa fa-trash-o removecustomerfromfilter' userid='".$usr->id."'></i> " . $usr->fullName . "</div>";
+        if(isset($selectedfilter->customers)) {
+            foreach($selectedfilter->customers as $userId => $val) {
+                $usr = $this->getApi()->getUserManager()->getUserById($userId);
+                echo "<div class='selectedcustomerrow'><span class='fa fa-trash-o removecustomerfromfilter' userid='".$usr->id."'></i> " . $usr->fullName . "</div>";
+            }
         }
     }
 

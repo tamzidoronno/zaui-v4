@@ -13,6 +13,7 @@
         <th align='left'>End</th>
     </tr>
     <?php
+    $filter = $this->getSelectedFilter();
     $data = json_decode($_SESSION['latestpmscoverageresult']);
     $total = 0;
     $totalForcasted = 0;
@@ -87,11 +88,24 @@
             foreach($entry->roomsRemovedFromStatistics as $roomId => $val) {
                 $totalRemoved += $val;
             }
+            $selectedFilter = $this->getSelectedFilter();
+            $typeFilter = (array)$selectedFilter->typeFilter;
+            
             if($totalRemoved > 1 || $totalRemoved < -1) {
                 foreach($entry->roomsRemovedFromStatistics as $roomId => $val) {
                     $removedBooking = $this->getApi()->getPmsManager()->getBookingFromRoomIgnoreDeleted($this->getSelectedMultilevelDomainName(), $roomId);
                     if($removedBooking) {
                         foreach($removedBooking->rooms as $room) {
+                            if($room->bookingItemTypeId) {
+                                $typeObject = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+                                $type = $typeObject->name;
+                                if(isset($type) && sizeof($typeFilter) > 0) {
+                                    if(!in_array($typeObject->id, $typeFilter)) {
+                                        continue;
+                                    }
+                                }
+                            }
+                            
                             if($room->pmsBookingRoomId == $roomId) {
                                 echo "<tr>";
                                 echo "<td>";
@@ -115,10 +129,7 @@
                                 echo "<td>" . round($val*-1) . "</td>";
                                 echo "<td>";
                                 $total += $val;
-                                if($room->bookingItemTypeId) {
-                                    $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId)->name;
-                                    echo $type;
-                                }
+                                echo $type;
                                 echo "</td>";
                                 echo "<td>";
                                 if($room->bookingItemId) {

@@ -21,4 +21,5 @@ public class SupportCaseState {
     public static Integer REPLIED = 8;
     public static Integer ASSIGNED = 9;
     public static Integer INPROGRESS = 10;
+    public static Integer SOLVEDBYDEV = 11;
 }

@@ -1,0 +1,31 @@
+
+<?php
+echo "<div style=' width: 1500px; margin: auto;text-align:left; color:blue; cursor:pointer;'>";
+echo "<span gs_downloadExcelReport='downloadReportRawNew' gs_fileName='incomereport'>Download this report to excel</span> - ";
+echo "<span gs_downloadExcelReport='downloadIncomeReportExTaxesNew' gs_fileName='incomereportraw'>Download to excel ex taxes with </span> - ";
+echo "<span gs_downloadExcelReport='downloadIncomeReportIncTaxesNew' gs_fileName='incomereport'>Download to excel inc taxes</span>";
+echo "</div>";
+        
+/* @var $this ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
+$data = $this->getIncomeReportData();
+echo "<div class='newincomereportview'>";
+echo "<div class='innernewincomereport'>";
+$first = true;
+$colums = 0;
+foreach($data as $row) {
+    $columns = sizeof($row);
+    echo "<div>";
+    foreach($row as $res) {
+        $firstClass = $first ? "first" : "";
+        echo "<span class='column $firstClass'>" . $res . "</span>";
+    }
+    $first = false;
+    echo "</div>";
+}
+echo "</table>";
+echo "</div>";
+echo "</div>";
+?>
+<script>
+    $('.innernewincomereport').css('width','<?php echo ($columns*100); ?>px');
+</script>

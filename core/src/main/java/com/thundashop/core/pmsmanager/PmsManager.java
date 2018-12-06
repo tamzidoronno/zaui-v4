@@ -206,6 +206,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private GdsManager gdsManager;
     
     @Autowired
+    private PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
+    
+    @Autowired
     Database dataBase;
     private Date virtualOrdersCreated;
     private Date startedDate;
@@ -1673,7 +1676,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         }
         if (getConfigurationSecure().getUsePriceMatrixOnOrder() && (storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018)) {
-            setTotalFromIncomeReport(result, filter);
+            if(useNewIncomeCoverageReport(startYear)) {
+                pmsCoverageAndIncomeReportManager.setTotalFromNewCoverageIncomeReport(result,filter);
+            } else {
+                setTotalFromIncomeReport(result, filter);
+            }
+            
         }
         gsTiming("After after setting income report");
         result.setView(filter);
@@ -9250,5 +9258,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return newList;
+    }
+
+    private boolean useNewIncomeCoverageReport(int startYear) {
+        if(startYear >= 2019) {
+            return true;
+        }
+        if(storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
+            return true;
+        }
+        return false;
     }
 }

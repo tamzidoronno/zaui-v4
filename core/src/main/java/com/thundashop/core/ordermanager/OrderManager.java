@@ -2638,20 +2638,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getDayIncomes(Date start, Date end) {
-        DayIncomeReport report = getReport(start, end);
-        
-        if (report != null) {
-            return report.incomes;
-        }
-                
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, true, paymentManager, productManager);
-        breaker.breakOrders();
-        
-        if (breaker.hasErrors()) {
-            return breaker.getErrors();
-        }
-        
-        return breaker.getDayIncomes();
+        return getDayIncomeTaxesConsidered(start,end,true);
     }
 
     private DayIncomeReport getReport(Date startDate, Date endDate) {
@@ -2888,5 +2875,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         incomeReport.incomes = days;
         saveObject(incomeReport);
+    }
+
+    public Order getOrderDirect(String orderId) {
+        return orders.get(orderId);
+    }
+
+    public List<DayIncome> getDayIncomeTaxesConsidered(Date start, Date end, boolean includeTaxes) {
+        DayIncomeReport report = getReport(start, end);
+        
+        if (report != null) {
+            return report.incomes;
+        }
+                
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, includeTaxes, paymentManager, productManager);
+        breaker.breakOrders();
+        
+        if (breaker.hasErrors()) {
+            return breaker.getErrors();
+        }
+        
+        return breaker.getDayIncomes();
     }
 }

@@ -206,6 +206,7 @@ public class OrderDailyBreaker {
                 entry.cartItemId = item.getCartItemId();
                 entry.orderId = order.id;
                 entry.incrementalOrderId = order.incrementOrderId;
+                entry.isActualIncome = true;
                 if (includingTaxes) {
                     entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.priceMatrix.get(dateString));
                 } else {
@@ -244,6 +245,7 @@ public class OrderDailyBreaker {
             entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(total);
             entry.incrementalOrderId = order.incrementOrderId;
             entry.date = i.date;
+            entry.isActualIncome = true;
             if (order.overrideAccountingDate != null)
                 entry.date = order.overrideAccountingDate;
             entry.accountingNumber = getAccountingNumberForProduct(item);
@@ -259,6 +261,7 @@ public class OrderDailyBreaker {
         entry.cartItemId = item.getCartItemId();
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
+        entry.isActualIncome = true;
         if (includingTaxes) {
             entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalAmount());
         } else {

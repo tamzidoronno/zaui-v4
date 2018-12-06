@@ -57,6 +57,11 @@ public class DayEntry implements Serializable, Cloneable {
      * This is the different between the total amount, prepaid and accruedAmount
      */
     public BigDecimal sameDayPayment;
+    
+    /**
+     * Will be true if this is an actual income post.
+     */
+    public boolean isActualIncome = false;
 
     @Override
     protected DayEntry clone() throws CloneNotSupportedException {

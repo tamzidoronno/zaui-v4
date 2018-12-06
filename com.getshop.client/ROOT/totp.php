@@ -3,6 +3,9 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 $instance = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
 
+$cookieFound = isset($_COOKIE['gstoken']) ? "found" : "not found";
+echo "<center><b>$cookieFound</b></center>";
+
 if (isset($_COOKIE['gstoken'])) {
     $user = $factory->getApi()->getUserManager()->logonUsingToken($_COOKIE['gstoken']);
     if ($user) {

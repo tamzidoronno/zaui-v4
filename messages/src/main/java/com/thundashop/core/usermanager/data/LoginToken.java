@@ -19,7 +19,7 @@ public class LoginToken extends DataCommon {
     public String ipAddress = "";
     
     @Internal
-    public String token = UUID.randomUUID().toString();
+    public String token;
     
     public Date lastUsed = null;
     public String userId = "";

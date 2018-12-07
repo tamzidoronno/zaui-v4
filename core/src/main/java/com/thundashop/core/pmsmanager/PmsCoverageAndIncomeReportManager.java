@@ -33,7 +33,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     @Override
     public LinkedList<IncomeReportDayEntry> getStatistics(CoverageAndIncomeReportFilter filter) {
         LinkedList<IncomeReportDayEntry> res = new LinkedList();
-        List<DayIncome> toinclude = orderManager.getDayIncomeTaxesConsidered(filter.start, filter.end, filter.incTaxes);
+        List<DayIncome> toinclude = orderManager.getDayIncomes(filter.start, filter.end);
         
         List<Product> products = productManager.getAllProducts();
         

@@ -24,6 +24,7 @@ public class DayEntry implements Serializable, Cloneable {
     public String orderId;
     public long incrementalOrderId;
     public BigDecimal amount;
+    public BigDecimal amountExTax;
     public Date date;
     public String accountingNumber;
     
@@ -46,22 +47,26 @@ public class DayEntry implements Serializable, Cloneable {
      * it has the total prePaidAmount for the order
      */
     public BigDecimal prePaidAmount;
+    public BigDecimal prePaidAmountExTaxes;
     
     /**
      * If this entry is a income entry 
      * it has the total accrued for the order
      */
     public BigDecimal accruedAmount;
+    public BigDecimal accruedAmountExTaxes;
     
     /**
      * This is the different between the total amount, prepaid and accruedAmount
      */
     public BigDecimal sameDayPayment;
+    public BigDecimal sameDayPaymentExTaxes;
     
     /**
      * Will be true if this is an actual income post.
      */
     public boolean isActualIncome = false;
+    
 
     @Override
     protected DayEntry clone() throws CloneNotSupportedException {

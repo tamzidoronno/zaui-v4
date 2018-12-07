@@ -19,4 +19,5 @@ public class PmsOrderStatsFilter extends DataCommon {
     
     public String savedPaymentMethod = "";
     public String channel;
+    public List<String> customers = new ArrayList();
 }

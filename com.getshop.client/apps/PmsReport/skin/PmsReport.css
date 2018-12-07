@@ -7,14 +7,26 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.PmsReport .selectedcustomerrow .fa { cursor:pointer; }
+.PmsReport .selectedcustomerrow { padding: 5px; font-size:15px;}
 .PmsReport .reportview {
     max-width: 1500px;
     margin: auto;
     margin-bottom: 50px;
 }
 .PmsReport .kaipal .text {background-color:#fff; }
-.PmsReport [method="setReportFilter"] { background-color:#fff; padding: 10px; border-left:solid 1px #bbb;border-right:solid 1px #bbb;border-bottom:solid 1px #bbb; }
+.PmsReport [method="setReportFilter"] { background-color:#fff; padding: 10px; border-left:solid 1px #bbb;border-right:solid 1px #bbb;border-bottom:solid 1px #bbb; position:relative; }
 .PmsReport .reportview { padding: 10px; border:solid 1px #bbb; background-color:#fff; max-width: 1480px; }
 .PmsReport .weekenddate { background-color:#32c122 !important; color:#fff !important; }
 .PmsReport .weekenddate.active { color:#000 !important; }
 .PmsReport .weekenddate .datarow_extended_content { background-color:#fff !important;}
+.PmsReport .customerfilter { border: solid 1px #bbb; background-color:#c7c5c5; position: absolute; display: inline-block; padding: 2px; width: 500px; right: 0px; top: 115px; display:none; }
+.PmsReport .customerfilter .customersearch { width: 100%; box-sizing: border-box; }
+.PmsReport .customerselectionrow { border-bottom: solid 1px; line-height: 37px; background-color:#fff; padding-left: 10px; }
+.PmsReport .newincomereportview { overflow: auto; }
+.PmsReport .newincomereportview .column { width: 100px; text-align: center; display:inline-block; 
+white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.PmsReport .newincomereportview .column.first { width: 100px; text-align: center;display:inline-block; }

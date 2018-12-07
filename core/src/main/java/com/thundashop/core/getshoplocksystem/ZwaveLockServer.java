@@ -361,7 +361,17 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     public void openLock(String lockId) {
         Lock lock = getLock(lockId);
         if (lock != null) {
-            System.out.println("To implement open lock");
+            String address = "ZWave.zway/Run/devices["+lock.id+"].instances[0].commandClasses[98].Set(1,0,0,1,1)";
+            httpLoginRequestZwaveServer(address);
+        }
+    }
+
+    @Override
+    public void pulseOpenLock(String lockId) {
+        Lock lock = getLock(lockId);
+        if (lock != null) {
+            String address = "ZWave.zway/Run/devices["+lock.id+"].instances[0].commandClasses[98].Set(0)";
+            httpLoginRequestZwaveServer(address);
         }
     }
 
@@ -369,7 +379,8 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     public void closeLock(String lockId) {
         Lock lock = getLock(lockId);
         if (lock != null) {
-            System.out.println("To implement close lock");
+            String address = "ZWave.zway/Run/devices["+lock.id+"].instances[0].commandClasses[98].Set(1,255,255,1,1)";
+            httpLoginRequestZwaveServer(address);
         }
     }
 

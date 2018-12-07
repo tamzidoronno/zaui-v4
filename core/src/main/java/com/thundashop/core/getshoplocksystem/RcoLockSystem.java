@@ -100,5 +100,9 @@ public class RcoLockSystem extends LockServerBase implements LockServer {
     public boolean hasAccessLogFeature() {
         return false;
     }
+
+    @Override
+    public void pulseOpenLock(String lockId) {
+    }
     
 }

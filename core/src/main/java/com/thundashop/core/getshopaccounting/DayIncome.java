@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshopaccounting;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,5 +34,15 @@ public class DayIncome {
         long dateLong = date.getTime();
         
         return startLong <= dateLong && dateLong < endLong;
+    }
+
+    public BigDecimal getTotal() {
+        BigDecimal total = new BigDecimal(0);
+        for(DayEntry entry : dayEntries) {
+            if(entry.isActualIncome) {
+                total = total.add(entry.amount);
+            }
+        }
+        return total;
     }
 }

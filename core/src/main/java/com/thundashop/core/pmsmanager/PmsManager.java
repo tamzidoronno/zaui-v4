@@ -206,6 +206,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private GdsManager gdsManager;
     
     @Autowired
+    private PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
+    
+    @Autowired
     Database dataBase;
     private Date virtualOrdersCreated;
     private Date startedDate;
@@ -1213,11 +1216,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsConfiguration getConfiguration() {
         Gson gson = new Gson();
-        String copy = gson.toJson(configuration);
+        String copy = gson.toJson(getConfigurationSecure());
 
         User loggedOn = getSession().currentUser;
         if (loggedOn != null && loggedOn.isAdministrator()) {
-            return configuration;
+            return getConfigurationSecure();
         }
 
         PmsConfiguration toReturn = gson.fromJson(copy, PmsConfiguration.class);
@@ -1673,7 +1676,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         }
         if (getConfigurationSecure().getUsePriceMatrixOnOrder() && (storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018)) {
-            setTotalFromIncomeReport(result, filter);
+            if(useNewIncomeCoverageReport(startYear)) {
+                pmsCoverageAndIncomeReportManager.setTotalFromNewCoverageIncomeReport(result,filter);
+            } else {
+                setTotalFromIncomeReport(result, filter);
+            }
+            
         }
         gsTiming("After after setting income report");
         result.setView(filter);
@@ -3714,7 +3722,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public boolean hasLockSystemActive() {
-        if (getConfiguration().hasLockSystem()) {
+        if (configuration.hasLockSystem()) {
             return true;
         }
 
@@ -3848,6 +3856,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String timeZone = storeManager.getMyStore().timeZone;
         configuration.setTimeZone(timeZone);
         configuration.setIsPikStore(storeManager.isPikStore());
+        configuration.setHasAccessControl(hasLockSystemActive());
         return configuration;
     }
 
@@ -7477,6 +7486,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.priceType = "extaxes";
         filter.includeVirtual = pmsFilter.includeVirtual;
         filter.channel = pmsFilter.channel;
+        filter.customers.addAll(pmsFilter.customers);
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.start);
@@ -8778,6 +8788,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> finalized = finalizeList(result);
         finalized = filterTypes(finalized, filter.typeFilter);
         finalized = filterByUser(finalized, filter.userId);
+        finalized = filterByCustomers(finalized, filter.customers);
         finalized = filterByChannel(finalized, filter.channel);
         finalized = filterByBComRateManager(finalized, filter);
         finalized = filterByUnpaid(finalized, filter);
@@ -9234,5 +9245,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                 });
+    }
+
+    private List<PmsBooking> filterByCustomers(List<PmsBooking> finalized, List<String> customers) {
+        if(customers == null || customers.isEmpty()) {
+            return finalized;
+        }
+        List<PmsBooking> newList = new ArrayList();
+        for(PmsBooking tmp : finalized) {
+            if(customers.contains(tmp.userId)) {
+                newList.add(tmp);
+            }
+        }
+        return newList;
+    }
+
+    private boolean useNewIncomeCoverageReport(int startYear) {
+        if(startYear >= 2019) {
+            return true;
+        }
+        if(storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
+            return true;
+        }
+        return false;
     }
 }

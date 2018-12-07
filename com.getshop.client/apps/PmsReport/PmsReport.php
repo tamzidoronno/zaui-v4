@@ -85,7 +85,11 @@ class PmsReport extends \MarketingApplication implements \Application {
         } else if(strstr($selectedFilter->type, "coverage")) {
             $this->printCoverageReport();
         } else {
-            $this->printIncomeReport();
+            if($this->useNewIncomeReport()) {
+                $this->includefile("incomereport");
+            } else {
+                $this->printIncomeReport();
+            }
         }
         echo "</div>";
     }
@@ -355,7 +359,19 @@ class PmsReport extends \MarketingApplication implements \Application {
         echo json_encode($rows);
     }
     
-
+    public function downloadReportRawNew() {
+        echo json_encode($this->getIncomeReportData());
+    }
+    
+    public function downloadIncomeReportExTaxesNew() {
+        echo json_encode($this->getIncomeReportData());
+    }
+    
+    public function downloadIncomeReportIncTaxesNew() {
+        echo json_encode($this->getIncomeReportData());
+    }
+    
+    
     public function printIncomeReport() {
         $this->setIncomeReportData();
         $data = $this->data;
@@ -404,7 +420,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         }
                
         $rows = $this->getIncomeReportRows();
-        
+
         //Creating attributes.
         $attributes = array(array('date', 'Date', 'date',null));
         $index = 0;
@@ -462,8 +478,47 @@ class PmsReport extends \MarketingApplication implements \Application {
         echo "</table>";
     }
     
+    public function searchCustomerToIncludeInFilter() {
+        $input = $_POST['data']['input'];
+        $users = $this->getApi()->getUserManager()->findUsers($input);
+        if(sizeof($users) == 0) {
+            echo "No customers / companies found.";
+        } else {
+            foreach($users as $usr) {
+                echo "<div class='customerselectionrow'>";
+                echo "<span class='shop_button includecustomerinfilter' style='float:right;' userid='".$usr->id."'>Select</span>";
+                echo $usr->fullName. "<br>";
+                echo "</div>";
+            }
+        }
+    }
+    
+    public function includeCustomerToFilter() {
+        $userid = $_POST['data']['userid'];
+        $filter = $this->getSelectedFilter();
+        if(!isset($filter->customers)) {
+            $filter->customers = array();
+        } else {
+            $filter->customers = (array)$filter->customers;
+        }
+        $filter->customers[$userid] = "";
+        $_SESSION['savedfilter'] = json_encode($filter);
+        $this->printAddedCustomers();
+     }
+
+     public function removeCustomer() {
+        $userid = $_POST['data']['userid'];
+        $filter = $this->getSelectedFilter();
+        unset($filter->customers->{$userid});
+        $_SESSION['savedfilter'] = json_encode($filter);
+     }
+     
     public function getCoverageFilter() {
         $selectedFilter = $this->getSelectedFilter();
+        $typeFilter = array();
+        if(isset($selectedFilter->typeFilter)) {
+            $typeFilter = $selectedFilter->typeFilter;
+        }
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(strtotime($selectedFilter->start));
         $filter->endDate = $this->convertToJavaDate(strtotime($selectedFilter->end));
@@ -471,13 +526,19 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->includeVirtual = false;
         $filter->fromPms = true;
         $filter->removeAddonsIncludedInRoomPrice = true;
-        $filter->typeFilter = $selectedFilter->typeFilter;
+        $filter->typeFilter = $typeFilter;
         
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
         }
         $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
         $filter->channel = $selectedFilter->channel;
+        $filter->customers = array();
+        if(isset($selectedFilter->customers)) {
+            foreach($selectedFilter->customers as $id => $val) {
+                $filter->customers[] = $id;
+            }
+        }
         return $filter;
     }
 
@@ -621,6 +682,12 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter = $this->addPaymentTypeToFilter($filter);
         $filter->displayType = "dayslept";
         $filter->priceType = "extaxes";
+        $filter->customers = array(); 
+        if(isset($selectedFilter->customers)) {
+            foreach($selectedFilter->customers as $id => $val) {
+                $filter->customers[] = $id;
+            }
+        }
 
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
@@ -686,6 +753,99 @@ class PmsReport extends \MarketingApplication implements \Application {
             $rowcounter++;
         }
         return $result;
+    }
+
+    public function printAddedCustomers() {
+        $selectedfilter = $this->getSelectedFilter();
+        if(isset($selectedfilter->customers)) {
+            foreach($selectedfilter->customers as $userId => $val) {
+                $usr = $this->getApi()->getUserManager()->getUserById($userId);
+                echo "<div class='selectedcustomerrow'><span class='fa fa-trash-o removecustomerfromfilter' userid='".$usr->id."'></i> " . $usr->fullName . "</div>";
+            }
+        }
+    }
+
+    public function useNewIncomeReport() {
+        $startYear = (int)date("Y", strtotime($this->getSelectedFilter()->start));
+        if($startYear >= 2019) {
+            return true;
+        }
+        
+        $storeid = $this->getFactory()->getStore()->id;
+        if($storeid == "fd2fecef-1ca1-4231-86a6-0ec445fbac83") {
+            return true;
+        }
+        
+        return true;
+    }
+
+    public function getIncomeReportData() {
+        $selectedFilter = $this->getSelectedFilter();
+        $filter = new \core_pmsmanager_CoverageAndIncomeReportFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
+        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
+        $filter->incTaxes = false;
+        if(isset($_POST['event']) && $_POST['event'] == "downloadIncomeReportIncTaxesNew") {
+            $filter->incTaxes = true;
+        }
+        
+        foreach($selectedFilter->typeFilter as $typeId) {
+            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $typeId);
+            $filter->products[] = $type->productId;
+        }
+        if(isset($selectedFilter->customers)) {
+            foreach($selectedFilter->customers as $usrid => $val) {
+                $filter->userIds[] = $usrid;
+            }
+        }
+        
+        $result = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($filter);
+        $matrix = array();
+        $productsInUse = array();
+        
+        //First find all products in use for this report segment.0
+        foreach($result as $day) {
+            foreach($day->products as $productId => $total) {
+                if($total != 0) {
+                    $productsInUse[$productId] = 0;
+                }
+            }
+        }
+        
+        //Create a header
+        $header = array();
+        $header[] = "Date";
+        foreach($productsInUse as $prodId => $val) {
+            $header[] = $this->getApi()->getProductManager()->getProduct($prodId)->name;
+        }
+        $header[] = "Total";
+        $matrix[] = $header;
+        
+        
+        //create a body
+        $everything = 0;
+        foreach($result as $day) {
+            $row = array();
+            $row[] = date("d.m.Y", strtotime($day->day));
+            foreach($productsInUse as $prodId => $val) {
+                $row[$prodId] = $day->products->{$prodId};
+                $productsInUse[$prodId] += $row[$prodId];
+            }
+            $row[] = (int)$day->total;
+            $everything += (int)$day->total;
+            $matrix[] = $row;
+        }
+            
+        //Create a footer
+        $footer = array();
+        $footer[] = "";
+        foreach($productsInUse as $productId => $total) {
+            $footer[$productId] = $total;
+        }
+        $footer["total"] = $everything;
+        $matrix[] = $footer;
+        
+        return $matrix;
     }
 
 }

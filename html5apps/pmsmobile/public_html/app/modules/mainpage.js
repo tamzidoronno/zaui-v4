@@ -34,7 +34,7 @@ getshop.mainpageController = function($scope, $state) {
         var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
         config.done(function(res) {
             $scope.views = res.mobileViews;
-            if(res.arxHostname) {
+            if(res.arxHostname || res.hasDoorLockSystem) {
                 $scope.hasDoorControl = true;
             }
             if(res.otherinstructions) {

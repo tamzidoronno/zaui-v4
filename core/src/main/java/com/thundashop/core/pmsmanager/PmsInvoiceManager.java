@@ -867,6 +867,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(order.testOrder) {
                 continue;
             }
+            if(filter.customers != null && !filter.customers.isEmpty()) {
+                if(!filter.customers.contains(order.userId)) {
+                    continue;
+                }
+            }
             
             if(filter.methods.isEmpty() || filter.includeVirtual) {
                 ordersToUse.add(order);

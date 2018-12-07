@@ -165,4 +165,8 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
     public boolean hasAccessLogFeature() {
         return true;
     }
+
+    @Override
+    public void pulseOpenLock(String lockId) {
+    }
 }

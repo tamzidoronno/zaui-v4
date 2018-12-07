@@ -60,7 +60,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter) {
         BigDecimal result = new BigDecimal(0);
         for(DayEntry entry : income.dayEntries) {
-            if(!entry.isActualIncome) {
+            if(!entry.isActualIncome || entry.isOffsetRecord) {
                 continue;
             }
             Order order = orderManager.getOrderDirect(entry.orderId);

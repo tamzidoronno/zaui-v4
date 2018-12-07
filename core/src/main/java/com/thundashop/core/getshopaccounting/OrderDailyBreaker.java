@@ -35,19 +35,17 @@ public class OrderDailyBreaker {
     private final List<DayIncome> dayIncomes;
     private final List<Order> ordersToBreak;
     private final int whatHourOfDayStartADay = 0;
-    private final boolean includingTaxes;
     private final ProductManager productManager;
     private Date end;
     private Date start;
     private List<DayEntry> orderDayEntries;
     private List<String> errors = new ArrayList();
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, boolean includingTaxes, PaymentManager paymentManager, ProductManager productManager) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
         this.start = start;
         this.end = end;        
-        this.includingTaxes = includingTaxes;
         this.paymentManager = paymentManager;
         this.productManager = productManager;
         correctStartAndEndTime();
@@ -183,11 +181,8 @@ public class OrderDailyBreaker {
         }
         
         DayEntry dayEntry = new DayEntry();
-        if (includingTaxes) {
-            dayEntry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount());
-        } else {
-            dayEntry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount() - order.getTotalAmountVat());
-        }
+        dayEntry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount());
+        dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount() - order.getTotalAmountVat());
         dayEntry.isIncome = true;
         dayEntry.orderId = order.id;
         dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -207,11 +202,8 @@ public class OrderDailyBreaker {
                 entry.orderId = order.id;
                 entry.incrementalOrderId = order.incrementOrderId;
                 entry.isActualIncome = true;
-                if (includingTaxes) {
-                    entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.priceMatrix.get(dateString));
-                } else {
-                    entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getPriceMatrixWithoutTax(dateString));
-                }
+                entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.priceMatrix.get(dateString));
+                entry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getPriceMatrixWithoutTax(dateString));
                 
                 entry.date = sdf.parse(dateString+" 09:00:00");
                 
@@ -233,16 +225,13 @@ public class OrderDailyBreaker {
         
         for (PmsBookingAddonItem i : item.itemsAdded) {
             double total = ((double)i.count * i.price); 
-            
-            if (!includingTaxes) {
-                double factor = item.getProduct().taxGroupObject.getTaxRate() + 1;
-                total = total / factor;
-            }
+            double taxFactor = item.getProduct().taxGroupObject.getTaxRate() + 1;
             
             DayEntry entry = new DayEntry();
             entry.cartItemId = item.getCartItemId();
             entry.orderId = order.id;
             entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(total);
+            entry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown((total / taxFactor));
             entry.incrementalOrderId = order.incrementOrderId;
             entry.date = i.date;
             entry.isActualIncome = true;
@@ -262,11 +251,8 @@ public class OrderDailyBreaker {
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
         entry.isActualIncome = true;
-        if (includingTaxes) {
-            entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalAmount());
-        } else {
-            entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalEx());
-        }
+        entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalAmount());
+        entry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalEx());
         entry.date = order.rowCreatedDate;
         
         if (order.overrideAccountingDate != null)
@@ -278,20 +264,24 @@ public class OrderDailyBreaker {
 
     private boolean validateDayEntries(List<DayEntry> orderDayEntries, Order order) {
         BigDecimal sum = new BigDecimal(0D);
+        BigDecimal sumEx = new BigDecimal(0D);
         
-        if (includingTaxes) {
-            sum = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount());
-        } else {
-            sum = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount() - order.getTotalAmountVat());
-        }
+        sum = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount());
+        sumEx = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount() - order.getTotalAmountVat());
+        
         for (DayEntry dayEntry : orderDayEntries) {
             if (!dayEntry.isIncome) {
                 sum = sum.subtract(dayEntry.amount);
+                sumEx = sum.subtract(dayEntry.amountExTax);
             }
         };
         
         // We are not able to match this 100% due to rounding problems.
         if ( sum.doubleValue() > 0.5 && sum.doubleValue() < -0.5) {
+            return false;
+        }
+        
+        if ( sumEx.doubleValue() > 0.5 && sumEx.doubleValue() < -0.5) {
             return false;
         }
         
@@ -351,7 +341,7 @@ public class OrderDailyBreaker {
             .collect(Collectors.toList());
         
         long time = System.currentTimeMillis();
-        OrderDailyBreaker dayBreaker = new OrderDailyBreaker(orders, start, end, false, null, null);
+        OrderDailyBreaker dayBreaker = new OrderDailyBreaker(orders, start, end, null, null);
         dayBreaker.breakOrders();
         
         List<DayIncome> dayIncomes = dayBreaker.getDayIncomes();
@@ -374,9 +364,9 @@ public class OrderDailyBreaker {
         BigDecimal sum = new BigDecimal(0D);
         for (DayEntry dayEntry : orderDayEntries) {
             if (dayEntry.isIncome) {
-                sum = sum.add(dayEntry.amount);
+                sum = sum.add(dayEntry.amountExTax);
             } else {
-                sum = sum.subtract(dayEntry.amount);
+                sum = sum.subtract(dayEntry.amountExTax);
             }
         };
         
@@ -388,7 +378,7 @@ public class OrderDailyBreaker {
         }
         
         if ( sum.doubleValue() < 0.5 && sum.doubleValue() > -0.5 && sum.doubleValue() != 0) {
-            incomeDay.amount = incomeDay.amount.subtract(sum);
+            incomeDay.amountExTax = incomeDay.amountExTax.subtract(sum);
         }
     }
 
@@ -457,13 +447,18 @@ public class OrderDailyBreaker {
         DayEntry income = getDayIncome(orderDayEntries);
         
         if (income != null) {
-            income.accruedAmount = calculateAccruedAmount(orderDayEntries);
-            income.prePaidAmount = calculatePrepaidAmount(orderDayEntries);
+            income.accruedAmount = calculateAccruedAmount(orderDayEntries, true);
+            income.prePaidAmount = calculatePrepaidAmount(orderDayEntries, true);
+            
+            income.accruedAmountExTaxes = calculateAccruedAmount(orderDayEntries, false);
+            income.prePaidAmountExTaxes = calculatePrepaidAmount(orderDayEntries, false);
+            
             income.sameDayPayment = income.amount.subtract(income.accruedAmount).subtract(income.prePaidAmount);
+            income.sameDayPaymentExTaxes = income.amount.subtract(income.accruedAmountExTaxes).subtract(income.prePaidAmountExTaxes);
         }
     }
 
-    private BigDecimal calculateAccruedAmount(List<DayEntry> orderDayEntries) {
+    private BigDecimal calculateAccruedAmount(List<DayEntry> orderDayEntries, boolean incTaxes) {
         BigDecimal retVal = new BigDecimal(0D);
         
         List<DayEntry> entries = orderDayEntries.stream()
@@ -472,13 +467,17 @@ public class OrderDailyBreaker {
                 .collect(Collectors.toList());
         
         for (DayEntry dayEntry : entries) {
-            retVal = retVal.add(dayEntry.amount);
+            if (incTaxes) {
+                retVal = retVal.add(dayEntry.amount);
+            } else {
+                retVal = retVal.add(dayEntry.amount);
+            }
         }
         
         return retVal;
     }
 
-    private BigDecimal calculatePrepaidAmount(List<DayEntry> orderDayEntries) {
+    private BigDecimal calculatePrepaidAmount(List<DayEntry> orderDayEntries, boolean incTaxes) {
         BigDecimal retVal = new BigDecimal(0D);
         
         List<DayEntry> entries = orderDayEntries.stream()
@@ -487,7 +486,11 @@ public class OrderDailyBreaker {
                 .collect(Collectors.toList());
         
         for (DayEntry dayEntry : entries) {
-            retVal = retVal.add(dayEntry.amount);
+            if (incTaxes) {
+                retVal = retVal.add(dayEntry.amount);
+            } else {
+                retVal = retVal.add(dayEntry.amountExTax);
+            }
         }
         
         return retVal;
@@ -536,6 +539,7 @@ public class OrderDailyBreaker {
                 .filter(o -> !o.isIncome)
                 .forEach(o -> {
                     o.amount = o.amount.multiply(new BigDecimal(-1));
+                    o.amountExTax = o.amountExTax.multiply(new BigDecimal(-1));
                 });
     }
 
@@ -557,6 +561,7 @@ public class OrderDailyBreaker {
                 checkStorePayment(storePaymentConfig, order);
                 entryPrePayment.accountingNumber = storePaymentConfig.offsetAccountingId_prepayment;
                 entryPrePayment.amount = entryPrePayment.amount.multiply(new BigDecimal(-1D));                
+                entryPrePayment.amountExTax = entryPrePayment.amountExTax.multiply(new BigDecimal(-1D));                
                 toAdd.add(entryPrePayment);
             }
             
@@ -564,6 +569,7 @@ public class OrderDailyBreaker {
                 checkStorePayment(storePaymentConfig, order);
                 entryAccrude.accountingNumber = storePaymentConfig.offsetAccountingId_accrude;
                 entryAccrude.amount = entryAccrude.amount.multiply(new BigDecimal(-1D));                
+                entryAccrude.amountExTax = entryAccrude.amountExTax.multiply(new BigDecimal(-1D));                
                 toAdd.add(entryAccrude);
             }
             
@@ -573,10 +579,16 @@ public class OrderDailyBreaker {
                 entryAccrude.accountingNumber = storePaymentConfig.offsetAccountingId_accrude;
                 
                 entryAccrude.amount = entryAccrude.accruedAmount;
+                entryAccrude.amountExTax = entryAccrude.accruedAmountExTaxes;
+                
                 entryPrePayment.amount = entryPrePayment.prePaidAmount;
+                entryPrePayment.amountExTax = entryPrePayment.prePaidAmountExTaxes;
                 
                 entryAccrude.amount = entryAccrude.amount.multiply(new BigDecimal(-1D));                
                 entryPrePayment.amount = entryPrePayment.amount.multiply(new BigDecimal(-1D));                
+                
+                entryAccrude.amountExTax = entryAccrude.amountExTax.multiply(new BigDecimal(-1D));                
+                entryPrePayment.amountExTax = entryPrePayment.amountExTax.multiply(new BigDecimal(-1D));                
                 
                 toAdd.add(entryAccrude);
                 toAdd.add(entryPrePayment);
@@ -619,6 +631,7 @@ public class OrderDailyBreaker {
         for (OrderTransaction orderTransaction : order.orderTransactions) {
             DayEntry dayEntry = new DayEntry();
             dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount);
+            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount);
             dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -629,6 +642,7 @@ public class OrderDailyBreaker {
                 dayEntry = dayEntry.clone();
                 dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId_paid(order.getPaymentApplicationId());
                 dayEntry.amount = dayEntry.amount.multiply(new BigDecimal(-1));
+                dayEntry.amountExTax = dayEntry.amountExTax.multiply(new BigDecimal(-1));
                 orderDayEntries.add(dayEntry);
             } catch (CloneNotSupportedException ex) {
                 ex.printStackTrace();
@@ -655,6 +669,7 @@ public class OrderDailyBreaker {
             if (order.isFullyPaid()) {
                 DayEntry dayEntry = new DayEntry();
                 dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal);
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal);
                 dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId("565ea7bd-c56b-41fe-b421-18f873c63a8f");
                 dayEntry.orderId = order.id;
                 dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -663,6 +678,7 @@ public class OrderDailyBreaker {
 
                 dayEntry = dayEntry.clone();
                 dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal).multiply(new BigDecimal(-1));
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal).multiply(new BigDecimal(-1));
                 dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
                 dayEntry.orderId = order.id;
                 dayEntry.incrementalOrderId = order.incrementOrderId;

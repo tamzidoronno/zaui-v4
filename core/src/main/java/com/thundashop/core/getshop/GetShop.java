@@ -746,7 +746,8 @@ public class GetShop extends ManagerBase implements IGetShop {
         }
         
         try {
-            String newStoreId = copyStore("47522cce-8fda-4538-9b61-84eb72faf03f", newAddress, startData);
+            // 7d89917f-c2de-4108-a9d6-33ba78f62c16 = http://bookingtemplate.getshop.com
+            String newStoreId = copyStore("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData);
             storePool.loadStore(newStoreId, newAddress);
             
             GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);

@@ -2374,8 +2374,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return null;
     }
 
+
     @Override
     public String createTokenAccess() {
+        SecureRandom random = new SecureRandom();
+        
         if (getSession() == null || getSession().currentUser == null) {
             return "";
         }
@@ -2384,6 +2387,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         token.userId = getSession().currentUser.id;
         token.ipAddress = "";
         token.lastUsed = new Date();
+        token.token = new BigInteger(130, random).toString(32);
         saveObject(token);
         tokens.put(token.id, token);
         

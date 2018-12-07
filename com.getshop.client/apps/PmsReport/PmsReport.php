@@ -831,8 +831,8 @@ class PmsReport extends \MarketingApplication implements \Application {
                 $row[$prodId] = $day->products->{$prodId};
                 $productsInUse[$prodId] += $row[$prodId];
             }
-            $row[] = (int)$day->total;
-            $everything += (int)$day->total;
+            $row[] = $day->total;
+            $everything += $day->total;
             $matrix[] = $row;
         }
             

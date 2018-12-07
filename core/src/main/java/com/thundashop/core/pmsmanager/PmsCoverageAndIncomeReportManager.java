@@ -74,7 +74,11 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                 continue;
             }
             if(item.getProduct().id.equals(productId)) {
-                result = result.add(entry.amount);
+                if(filter.incTaxes) {
+                    result = result.add(entry.amount);
+                } else {
+                    result = result.add(entry.amountExTax);
+                }
             }
         }
         return result.multiply(new BigDecimal(-1));

@@ -1,6 +1,6 @@
 <?php
 /* @var $this ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
-$itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedName(),null);
 $priceObject = $this->getPrices();
 $prices = $priceObject->dailyPrices;
 ?>

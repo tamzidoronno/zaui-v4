@@ -293,7 +293,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
                     $days++;
                     $avg += $price;
                 }
-                $room->price = $avg / $days;
+                if($avg != 0) {
+                    $room->price = $avg / $days;
+                } else {
+                    $room->price = 0;
+                }
                 $currentBooking->rooms[] = $room;
             }
         }

@@ -836,7 +836,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             $matrix[] = $row;
         }
             
-        //Create a footer
+        //Create a footer 
         $footer = array();
         $footer[] = "";
         foreach($productsInUse as $productId => $total) {

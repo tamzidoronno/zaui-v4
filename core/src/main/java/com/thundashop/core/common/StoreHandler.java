@@ -287,7 +287,7 @@ public class StoreHandler {
     private void setSessionObject(String sessionId, IUserManager userManager, String getShopModuleName) {
 
         Session session = getSession(sessionId);
-                
+
         if (!sessions.containsKey(sessionId)) {
             session = new Session();
             session.storeId = storeId;

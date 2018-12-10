@@ -37,6 +37,11 @@ public class InvoiceFormatter {
         
         
         this.base = this.base.replace("{fullName}", user.fullName);
+        if(accountingDetails.logo != null) {
+            this.base = this.base.replace("{logo}", "<img src='"+accountingDetails.logo+"'></img>");
+        } else {
+            this.base = this.base.replace("{logo}", "");
+        }
         
         if(order.cart.address != null) {
             if(order.cart.address.address != null && !order.cart.address.address.isEmpty()) {

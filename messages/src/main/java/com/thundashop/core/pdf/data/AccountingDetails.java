@@ -26,6 +26,7 @@ public class AccountingDetails {
     public String swift = "";
     public String useLanguage = "";
     public String bankName = "";
+    public String logo = "";
 
     public boolean isTypeOne() {
         if (type == null || type.isEmpty() || type.equals("type1"))

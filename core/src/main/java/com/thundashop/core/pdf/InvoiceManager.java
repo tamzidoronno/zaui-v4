@@ -112,6 +112,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             details.webAddress = settings.getSetting("webAddress");
             details.useLanguage = settings.getSetting("language");
             details.postCode = settings.getSetting("postCode");
+            details.logo = settings.getSetting("logo");
             details.bankName = settings.getSetting("");
             String kidSize = settings.getSetting("kidSize");
             if(kidSize != null && !kidSize.isEmpty()) {

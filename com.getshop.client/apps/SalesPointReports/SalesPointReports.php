@@ -13,6 +13,7 @@ class SalesPointReports extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        $this->addOrderToReport();
         $this->includefile("leftmenu");
         
         $tab = isset($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab']) ? $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] : "";
@@ -107,5 +108,12 @@ class SalesPointReports extends \MarketingApplication implements \Application {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "xreport";
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report'] = $_POST['data']['zreportid'];
     }
+
+    public function addOrderToReport() {
+        if (isset($_POST['data']['addorder']) && isset($_POST['data']['password']) && isset($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report']) && $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report']) {
+            $this->getApi()->getPosManager()->addOrderIdToZReport($_POST['data']['addorder'], $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report'], $_POST['data']['password']);
+        }
+    }
+
 }
 ?>

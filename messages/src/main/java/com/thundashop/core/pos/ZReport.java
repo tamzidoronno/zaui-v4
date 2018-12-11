@@ -7,8 +7,8 @@ package com.thundashop.core.pos;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -17,6 +17,8 @@ import org.mongodb.morphia.annotations.Transient;
 public class ZReport extends DataCommon implements Comparable<ZReport> {
     public List<String> orderIds = new ArrayList();
     public String createdByUserId = "";
+    public Date start;
+    public Date end;
     public double totalAmount;
     
     @Override

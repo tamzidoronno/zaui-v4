@@ -14,12 +14,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
-import com.thundashop.core.start.Runner;
-import java.io.File;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +32,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class SupportDatabase extends StoreComponent {
+public class OAuthDatabase extends StoreComponent {
 
     public static int mongoPort = 27017;
 
@@ -49,13 +45,13 @@ public class SupportDatabase extends StoreComponent {
     public Logger logger;
     
 
-    public SupportDatabase() throws UnknownHostException {
+    public OAuthDatabase() throws UnknownHostException {
         morphia = new Morphia();
         morphia.map(DataCommon.class);
     }
 
     private void connect() throws UnknownHostException {
-        String connectionString = "mongodb://getshop:aisdfjoiw3j4q2oaijsdfoiajsfdoi23joiASD__ASDF@192.168.100.1/SupportManager";
+        String connectionString = "mongodb://oauth:02349890uqadsfajsl3n421k24j3nblksadnf@192.168.100.1/oauth";
         mongo = new MongoClient(new MongoClientURI(connectionString));
     }
     
@@ -71,7 +67,7 @@ public class SupportDatabase extends StoreComponent {
         DBObject dbObject = morphia.toDBObject(data);
         try {
             connect();
-            mongo.getDB("SupportManager").getCollection(collectionPrefix + "all").save(dbObject);
+            mongo.getDB("oauth").getCollection(collectionPrefix + "all").save(dbObject);
             mongo.close();
         } catch (com.mongodb.CommandFailureException ex) {
             ex.printStackTrace();

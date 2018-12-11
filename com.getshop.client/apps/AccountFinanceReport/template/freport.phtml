@@ -86,17 +86,14 @@ echo "</script>";
         <?
         } else {
         ?>
-        <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
-        <?
-        $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
-        switch ($system){
-            case "GENERELL_NORWEGIAN":
-                ?>
-                <div class="shop_button showresultbutton" gs_downloadPlainText='downloadAccountingFile' gs_fileName='data.csv'> <? echo $this->__f("Download GBAT10"); ?></div>
-                <?
-                break;
-        }
-        
+            <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
+            <?
+            $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
+            $appTemplateFile = '../app/'.$appname.'/template/' . $system . "_BUTTON.phtml";
+            
+            if (file_exists($appTemplateFile)) {
+                $this->includefile($system."_BUTTON");
+            }
         }
         ?>
     </div>

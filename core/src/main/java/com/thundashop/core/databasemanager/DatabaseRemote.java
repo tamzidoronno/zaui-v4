@@ -89,7 +89,7 @@ public class DatabaseRemote extends StoreComponent {
     }
 
     private void connect() throws UnknownHostException {
-        String connectionString = "mongodb://getshopreadonly:readonlypassword@clients.getshop.com/admin";
+        String connectionString = "mongodb://getshopreadonly:readonlypassword@192.168.100.1/admin";
         
         if (GetShopLogHandler.isDeveloper) {
             String[] linesFromFile = readLines("../commonpassword.txt");

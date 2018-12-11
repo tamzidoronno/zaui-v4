@@ -28,6 +28,13 @@ app.SalesPointReports = {
         thundashop.Ajax.post(event, function(res) {
             $('.SalesPointReports .reportarea').html(res);
         });
+    },
+    
+    addOrderToZRepport: function(incrementalorderid, password) {
+        thundashop.Ajax.simplePost($('.SalesPointReports'), "", {
+            addorder : incrementalorderid,
+            password : password
+        });
     }
 };
 

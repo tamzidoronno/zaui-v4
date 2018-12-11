@@ -94,4 +94,7 @@ public interface IPosManager {
     
     @Editor
     public void addCashWithDrawalToTab(String tabId, double amount);
+    
+    @Editor
+    public void addOrderIdToZReport(int incrementalOrderId, String zReportId, String password);
 }

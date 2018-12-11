@@ -203,6 +203,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         Date prevZReportDate = getPreviouseZReportDate();
         
         ZReport report = new ZReport();
+        report.start = prevZReportDate;
+        report.end = new Date();
+        
         List<String> orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                 .stream()
                 .filter(order -> order.paymentDate !=  null && order.paymentDate.after(prevZReportDate))
@@ -217,11 +220,14 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         return report;
     }
-
+    
     @Override
     public FilteredData getZReportsUnfinalized(FilterOptions filterOptions) {
         List<ZReport> reports = zReports.values()
                 .stream()
+                .sorted((ZReport o1, ZReport o2) -> {
+                    return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+                })
                 .collect(Collectors.toList());
         
         return pageIt(reports, filterOptions);
@@ -252,6 +258,28 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.totalAmount = getTotalAmountForZReport(report);
         saveObject(report);
         zReports.put(report.id, report);
+    }
+    
+    /**
+     * How to use this feature.
+     * 
+     * 1. navigate to z report you want to add order to
+     * 2. do a javascript request: app.SalesPointReports.addOrderToZRepport('102107','Askdfjalksrdj23AMmasdkfasii23');
+     * 
+     * @param incrementalOrderId
+     * @param zReportId
+     * @param password 
+     */
+    @Override
+    public void addOrderIdToZReport(int incrementalOrderId, String zReportId, String password) {
+        if (password == null || !password.equals("Askdfjalksrdj23AMmasdkfasii23")) {
+            return;
+        }
+        
+        Order order = orderManager.getOrderByincrementOrderId(incrementalOrderId);
+        ZReport zreport = getZReport(zReportId);
+        zreport.orderIds.add(order.id);
+        saveObject(order);
     }
 
     private double getTotalAmountForZReport(ZReport report) {

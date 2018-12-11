@@ -1,0 +1,83 @@
+<?php
+/* @var $this ns_84268253_6c1e_4859_86e3_66c7fb157ea1\SupportDashBoard */
+$entry = $this->getApi()->getSupportManager()->getFeatureListEntry($_POST['data']['id']);
+$text = $entry->descriptions->{$this->getLanguage()};
+if(!$text) {
+    $text = new core_support_FeatureListEntryText();
+}
+echo "<h1>Title</h1>";
+echo "<input type='txt' class='gsniceinput1' value='".$entry->text->{$this->getLanguage()}."' id='entrytitle'>";
+echo "<input type='hidden' class='gsniceinput1' value='".$entry->id."' id='entryid'>";
+
+echo "<h1>Image</h1>";
+echo "<div class='imagearea'>".$text->image."</div>";
+
+echo "<h1>Web description</h1>";
+echo "<div class='webdescription'>".$text->webDescription."</div>";
+
+echo "<h1>User manual</h1>";
+echo "<div class='usermanual'>".$text->manualDescription."</div>";
+?>
+<div style='text-align: right;margin-top:20px;'>
+    <span class='shop_button' id='savefeatureentry'>Save entry information</span>
+</div>
+<style>
+.ck-editor__editable {
+    min-height:150px;
+}
+</style>
+<script>
+    $('#savefeatureentry').on('click', function() {
+        var data = {};
+        data.image = image.getData();
+        data.webdesc = webdesc.getData();
+        data.usermanual = usermanual.getData();
+        data.title = $('#entrytitle').val();
+        data.entryid = $('#entryid').val();
+        var event = thundashop.Ajax.createEvent('','saveEntryData',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            console.log(res);
+        });
+    });
+    
+    var myEditor;
+    $(function() {
+        ClassicEditor.create( document.querySelector( '.imagearea' ), {
+             ckfinder: {
+                uploadUrl: '/getshopsupportfileuploader.php'
+            }
+        })
+        .then( editor => {
+            image = editor;
+        })
+        .catch( error => {
+                console.error( error );
+        });
+    });
+    $(function() {
+        ClassicEditor.create( document.querySelector( '.webdescription' ), {
+             ckfinder: {
+                uploadUrl: '/getshopsupportfileuploader.php'
+            }
+        })
+        .then( editor => {
+            webdesc = editor;
+        })
+        .catch( error => {
+                console.error( error );
+        });
+    });
+    $(function() {
+        ClassicEditor.create( document.querySelector( '.usermanual' ), {
+             ckfinder: {
+                uploadUrl: '/getshopsupportfileuploader.php'
+            }
+        })
+        .then( editor => {
+            usermanual = editor;
+        })
+        .catch( error => {
+                console.error( error );
+        });
+    });
+</script>

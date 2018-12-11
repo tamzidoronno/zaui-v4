@@ -4,15 +4,37 @@ if(!$this->isGetShop()) {
     echo "Not yet here.";
     return;
 }
+
+$languages = array();
+$languages['en'] = "English";
+$languages['no'] = "Norwegian";
+
 $modules = array();
 $modules[] = "pms";
 $modules[] = "srs";
 $modules[] = "apac";
 $modules[] = "accounting";
+
+echo "<div style='margin-bottom:10px;'>";
+foreach($languages as $lang => $langtext) {
+    $selectedlanguage = ($this->getLanguage() == $lang) ? "selectedlanguage" : "";
+    echo "<span class='languageselection $selectedlanguage' language='$lang'>$langtext</span>";
+}
+echo "</div>";
+
 ?>
 <input type='button' value='Save feature list' id='savelist'>
 <br>
-<div id='using_json_2'></div>
+<table width='100%'>
+    <tr>
+        <td valign='top' width='30%'>
+            <div id='using_json_2'></div>
+        </td>
+        <td valign='top'>
+            <div class='nodethreeresult'></div>
+        </td>
+    </tr>
+</table>
 
 <?php
 $jsonres = array();
@@ -67,4 +89,16 @@ foreach($modules as $module) {
         });
     });
     
+    $('#using_json_2').on('activate_node.jstree', function (e, data) {
+        if (data == undefined || data.node == undefined || data.node.id == undefined) {
+            return;
+        }
+        
+        var event = thundashop.Ajax.createEvent('','loadEntryData',$(this), {
+            "id" : data.node.id
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.nodethreeresult').html(res);
+        });
+    });
 </script>

@@ -27,4 +27,6 @@ public interface ISupportManager {
     public void changeTitleOnCase(String caseId, String title);
     public void saveFeatureThree(String moduleId, FeatureList list);
     public FeatureList getFeatureThree(String moduleId);
+    public FeatureListEntry getFeatureListEntry(String entryId);
+    public void updateFeatureListEntry(String entryId, FeatureListEntryText text, String title, String language);
 }

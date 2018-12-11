@@ -429,6 +429,46 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         return false;
     }
 
+    @Override
+    public FeatureListEntry getFeatureListEntry(String entryId) {
+        for(FeatureList list : getFeatureLists()) {
+            FeatureListEntry found = findFeatureListEntry(list.entries, entryId);
+            if(found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    private FeatureListEntry findFeatureListEntry(List<FeatureListEntry> entries, String entryId) {
+        for(FeatureListEntry entry : entries) {
+            if(entry.id.equals(entryId)) {
+                return entry;
+            }
+            if(entry.entries != null && !entry.entries.isEmpty()) {
+                FeatureListEntry found = findFeatureListEntry(entry.entries, entryId);
+                if(found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void updateFeatureListEntry(String entryId, FeatureListEntryText text, String title, String language) {
+        for(FeatureList list : getFeatureLists()) {
+            FeatureListEntry featureListEntry = findFeatureListEntry(list.entries, entryId);
+            if(featureListEntry != null) {
+                featureListEntry.descriptions.put(language, text);
+                featureListEntry.text.put(language,title);
+                supportDatabase.save(list);
+                return;
+            }
+        }
+    }
+
+
     
     
 }

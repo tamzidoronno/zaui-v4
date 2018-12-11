@@ -14,4 +14,5 @@ public class FeatureListEntry {
     String type = "";
     public List<FeatureListEntry> entries = new ArrayList();
     public String id = "";
+    public HashMap<String, FeatureListEntryText> descriptions = new HashMap();
 }

@@ -7,6 +7,15 @@ app.SupportDashBoard = {
         $(document).on('click','.SupportDashBoard .requestbutton', app.SupportDashBoard.requestbutton);
         $(document).on('click','.SupportDashBoard #assigntaskbutton', app.SupportDashBoard.doassigntask);
         $(document).on('change','.SupportDashBoard #assigntask', app.SupportDashBoard.assingningChanged);
+        $(document).on('click','.SupportDashBoard .languageselection', app.SupportDashBoard.selectLanguage);
+    },
+    selectLanguage : function() {
+        var event = thundashop.Ajax.createEvent('','changeLanguage',$(this), {
+            language : $(this).attr('language')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            window.location.reload();
+        });
     },
     assingningChanged : function() {
         $('#getshopsupportstate').val(9);

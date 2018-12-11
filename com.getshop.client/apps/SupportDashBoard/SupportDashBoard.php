@@ -9,6 +9,10 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         
     }
 
+    public function loadEntryData() {
+        $this->includefile("featureentry");
+    }
+    
     public function isGetShop() {
         $storeId = $this->getFactory()->getStore()->id;
         return $storeId == "13442b34-31e5-424c-bb23-a396b7aeb8ca";
@@ -278,7 +282,7 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
                 $childobject = new \core_support_FeatureListEntry();
             }
             $childobject->text = new \stdClass();
-            $childobject->text->{'en'} = $child['text'];
+            $childobject->text->{$this->getLanguage()} = $child['text'];
             $childobject->parentId = $parentId;
             if(strlen($child['id']) < 8) {
                 $childobject->id = uniqid();
@@ -298,7 +302,14 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         foreach($children as $child) {
             $res = new \stdClass();
             $res->id = $child->id;
-            $res->text = $child->text->{'en'};
+            if(isset($child->text->{$this->getLanguage()})) {
+                $res->text = $child->text->{$this->getLanguage()};
+            } else {
+                $res->text = $child->text->{"en"};
+            }
+            if(isset($child->descriptions->{$this->getLanguage()}) && $child->descriptions->{$this->getLanguage()}->webDescription) {
+                $res->icon = "fa fa-check";
+            }
             $res->parent = $parent;
             $retval[] = $res;
             if(isset($child->entries) && sizeof($child->entries) > 0) {
@@ -309,6 +320,11 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
         return $retval;
     }
 
+    public function changeLanguage() {
+        $lang = $_POST['data']['language'];
+        $_SESSION['selectedmanuallanguage'] = $lang;
+    }
+    
     public function getExistingChild($childId) {
         return $this->searchChildren($this->currentFeatureList->entries, $childId);
     }
@@ -323,6 +339,22 @@ class SupportDashBoard extends \WebshopApplication implements \Application {
             }
         }
         return null;
+    }
+
+    public function getLanguage() {
+        if(isset($_SESSION['selectedmanuallanguage'])) {
+            return $_SESSION['selectedmanuallanguage'];
+        }
+        return "en";
+    }
+    
+    public function saveEntryData() {
+        $entry = $this->getApi()->getSupportManager()->getFeatureListEntry($_POST['data']['entryid']);
+        $entryText->image = $_POST['data']['image'];
+        $entryText->webDescription = $_POST['data']['webdesc'];
+        $entryText->manualDescription = $_POST['data']['usermanual'];
+        $title = $_POST['data']['title'];
+        $this->getApi()->getSupportManager()->updateFeatureListEntry($_POST['data']['entryid'], $entryText, $title, $this->getLanguage());
     }
 
 }

@@ -7,6 +7,14 @@
     background-color: #45746b;
     color:#fff;
 }
+.SupportDashBoard .languageselection.selectedlanguage {
+    font-weight: bold;
+}
+
+.SupportDashBoard .languageselection {
+    margin: 3px;
+    cursor:pointer;
+}
 
 .SupportDashBoard .statiticbox {
     width: 145px;

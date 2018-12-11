@@ -30,3 +30,4 @@ white-space: nowrap;
     text-overflow: ellipsis;
 }
 .PmsReport .newincomereportview .column.first { width: 100px; text-align: center;display:inline-block; }
+.PmsReport .top30list { display:none; }

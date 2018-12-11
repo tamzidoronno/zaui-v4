@@ -10,4 +10,7 @@ public class CoverageAndIncomeReportFilter {
     public List<String> products = new ArrayList();
     public List<String> userIds = new ArrayList();
     public boolean incTaxes = false;
+    public String channel = "";
+    public List<String> orderIds = new ArrayList();
+    public List<String> ignoreOrderIds = new ArrayList();
 }

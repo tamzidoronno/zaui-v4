@@ -9269,4 +9269,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return false;
     }
+
+    List<PmsBooking> getAllBookingsUnfinalized() {
+        return new ArrayList(bookings.values());
+    }
 }

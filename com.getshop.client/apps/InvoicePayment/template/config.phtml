@@ -175,7 +175,47 @@ $langauges['nb_no'] = "Norsk";
             <?php  echo $this->__f("Selected language"); ?>
         </div>
     </div>
+    <div class="textfield"  id="language">
+        <span class="title"><?php echo $this->__f("Logo"); ?></span>
+        <div src="" height="200" alt="Image preview..." id="imageprivew" style='text-align: right;'>
+            <?php
+            $logo = $this->getConfigurationSetting("logo");
+            if($logo) {
+                echo "<img src='" . $logo . "' style='max-height: 200px; max-width: 200px;'></img>";
+            }
+            ?>
+        </div>
+        <input type='hidden' gs_model='invoicepaymentmodel' gs_model_attr='logo' id='logoinput'>
+        <a onclick='$("#logoinput").val("");$("#imageprivew").html("");' style='color:blue; cursor:pointer;'>(clear logo)</a>
+        <div class="description">
+            <input type="file" onchange="previewFile()" id="uploadimagebutton" value='Upload a logo' style='position:relative; border:0px;'><br>
+        </div>
+    </div>
     
+    
+    <script>
+       function previewFile(){
+            if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+                alert('The File APIs are not fully supported in this browser.');
+                return;
+            }   
+           
+           var preview = $('#imageprivew'); //selects the query named img
+           var file    = document.getElementById('uploadimagebutton').files[0]; //sames as here
+           var reader  = new FileReader();
+           reader.onloadend = function () {
+               $('#logoinput').val(reader.result);
+               preview.html("<img src='"+reader.result + "' style='max-width:200px; max-height: 200px;'>");
+           }
+
+           if (file) {
+               reader.readAsDataURL(file); //reads the data as a URL
+           } else {
+               preview.src = "";
+           }
+      }
+       previewFile();
+    </script>
     
     <div class='gss_button_area'>
         <div class="gss_button" gss_method="saveSettings" gss_model="invoicepaymentmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>

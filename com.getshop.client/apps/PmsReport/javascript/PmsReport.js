@@ -12,6 +12,10 @@ app.PmsReport = {
         $(document).on('keyup', '.PmsReport .customersearch', app.PmsReport.searchCustomer);
         $(document).on('click', '.PmsReport .removecustomerfromfilter', app.PmsReport.removeCustomer);
         $(document).on('click', '.PmsReport .filterbycustomerbutton', app.PmsReport.toggleFilterByCustomer);
+        $(document).on('click', '.PmsReport .displayto30list', app.PmsReport.toggleTop30List);
+    },
+    toggleTop30List : function() {
+        $('.top30list').toggle();
     },
     toggleFilterByCustomer : function() {
         $('.customerfilter').toggle();

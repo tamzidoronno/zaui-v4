@@ -2638,11 +2638,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getDayIncomes(Date start, Date end) {
-        DayIncomeReport report = getReport(start, end);
-        
-        if (report != null) {
-            return report.incomes;
-        }
+//        DayIncomeReport report = getReport(start, end);
+//        
+//        if (report != null) {
+//            return report.incomes;
+//        }
                 
         OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager);
         breaker.breakOrders();

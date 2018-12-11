@@ -785,6 +785,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
         $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
         $filter->incTaxes = false;
+        $filter->channel = $selectedFilter->channel;
         if(isset($_POST['event']) && $_POST['event'] == "downloadIncomeReportIncTaxesNew") {
             $filter->incTaxes = true;
         }
@@ -799,7 +800,10 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
         }
         
-        $result = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($filter);
+        $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($filter);
+        $result = $data->entries;
+        $this->printUsersTotal((array)$data->usersTotal);
+        
         $matrix = array();
         $productsInUse = array();
         
@@ -831,12 +835,12 @@ class PmsReport extends \MarketingApplication implements \Application {
                 $row[$prodId] = $day->products->{$prodId};
                 $productsInUse[$prodId] += $row[$prodId];
             }
-            $row[] = (int)$day->total;
-            $everything += (int)$day->total;
+            $row[] = $day->total;
+            $everything += $day->total;
             $matrix[] = $row;
         }
             
-        //Create a footer
+        //Create a footer 
         $footer = array();
         $footer[] = "";
         foreach($productsInUse as $productId => $total) {
@@ -846,6 +850,23 @@ class PmsReport extends \MarketingApplication implements \Application {
         $matrix[] = $footer;
         
         return $matrix;
+    }
+
+    public function printUsersTotal($usersTotal) {
+        arsort($usersTotal);
+        $counter = 0;
+        echo "<table class='top30list'>";
+        foreach($usersTotal as $userId => $total) {
+            echo "<tr>";
+            echo "<td>" . $this->getApi()->getUserManager()->getUserById($userId)->fullName . "</td>";
+            echo "<td>" . $total . "</td>";
+            echo "</tr>";
+            $counter++;
+            if($counter > 30) {
+                break;
+            }
+        }
+        echo "</table>";
     }
 
 }

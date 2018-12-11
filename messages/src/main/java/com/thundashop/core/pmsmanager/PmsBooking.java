@@ -685,6 +685,20 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    boolean isChannel(String channelToCheck) {
+        if(channelToCheck == null) {
+            return true;
+        }
+        if(channelToCheck.equals("web") && (channel == null || channel.isEmpty())) {
+           return true;
+        }
+        if(this.channel == null) {
+            return false;
+        }
+        
+        return this.channel.equals(channelToCheck);
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

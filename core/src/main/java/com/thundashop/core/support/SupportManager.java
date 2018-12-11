@@ -199,8 +199,6 @@ public class SupportManager extends ManagerBase implements ISupportManager {
             supportCase.state = SupportCaseState.MOVEDTOBACKLOG;
         }
         updateStatisticsCounter(supportCase);
-        String msg = "Support case has been added to support center";
-        messageManager.sendMail("support@getshop.com", "support@getshop.com", "Added to support center: " + supportCase.title, msg, "noreply@getshop.com", "noreply@getshop.com");
         return saveSupportCase(supportCase);
     }
 
@@ -255,7 +253,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         saveSupportCase(scase);
         
         SupportStore supportstore = getSupportStore(scase.byStoreId);
-        if(isGetShop()) {
+        if(!isGetShop()) {
             if(supportstore != null && supportstore.mainEmailAdress != null && !supportstore.mainEmailAdress.isEmpty()) {
                 String msg = "Your case has been replied to, log on to your support center to read it.";
                 if(scase.usersEmail != null && scase.usersEmail.contains("@")) {
@@ -264,8 +262,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
                     messageManager.sendMail(supportstore.mainEmailAdress, supportstore.mainEmailAdress, scase.title,msg,"noreply@getshop.com","noreply@getshop.com");
                 }
             }
+        } else {
+            messageManager.sendMail("support@getshop.com", "support@getshop.com", "Support center: " + scase.title + " updated by user",history.content,"noreply@getshop.com","noreply@getshop.com");
         }
-        
     }
 
     @Override

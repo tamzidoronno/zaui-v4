@@ -5,14 +5,16 @@
  */
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.common.GetShopApi;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
  *
  * @author boggi
  */
-@GetShopApi
-public interface IPmsCoverageAndIncomeReportManager {
-    public IncomeReportResultData getStatistics(CoverageAndIncomeReportFilter filter);
+public class IncomeReportResult implements Serializable {
+    LinkedList<IncomeReportDayEntry> res = new LinkedList();
+    HashMap<String, BigDecimal> usersMoney = new HashMap(); 
 }

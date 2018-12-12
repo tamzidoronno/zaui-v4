@@ -834,6 +834,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.createdDate = new Date();
         order.cart = cart.clone();
         order.reference = cart.reference;
+        order.overrideAccountingDate = cart.overrideDate;
         
         //What about orders that is not supposed to be sent, why an address then?
 //        if (order.cart == null || order.cart.address == null) {
@@ -2901,6 +2902,27 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public Order getOrderDirect(String orderId) {
         return orders.get(orderId);
+    }
+
+    public boolean isCartWithinClosedPeriode(Cart cart) {
+        Order order = new Order();
+        order.cart = cart;
+        
+        Date closedDate = getOrderManagerSettings().closedTilPeriode;
+        
+        if (order.needToStopDueToIllegalChangeOfPriceMatrix(null, closedDate) && !order.forcedOpen) {
+            return true;
+        }
+        
+        if (order.needToStopDueToIllegalChangeInAddons(null, closedDate) && !order.forcedOpen) {
+            return true;
+        }
+        
+        if (order.needToStopDueToIllegalChangePaymentDate(null, closedDate) && !order.forcedOpen) {
+            return true;
+        }
+        
+        return false;
     }
 
 }

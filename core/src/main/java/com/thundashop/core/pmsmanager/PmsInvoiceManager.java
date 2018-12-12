@@ -3196,11 +3196,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     @Override
-    public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType) {
+    public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType, Date overrideDate) {
         
         List<String> toreturn = new ArrayList();
         
         Cart cart = cartManager.getCart();
+        cart.overrideDate = overrideDate;
         
         HashMap<String, List<CartItem>> groupedItems = new HashMap();
         

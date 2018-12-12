@@ -48,13 +48,12 @@ public class OAuthManager extends ManagerBase implements IOAuthManager {
      * @return 
      */
     @Override
-    public OAuthSession startNewOAuthSession(String address, String clientId, String storeWebHostName, String scope, String endDestionation, String clientSecretId) {
+    public OAuthSession startNewOAuthSession(String authAddress, String clientId, String scope, String clientSecretId, String tokenAddress) {
         OAuthSession session = new OAuthSession();
-        session.address = address;
+        session.address = authAddress;
+        session.tokenAddress = tokenAddress;
         session.clientId = clientId;
-        session.storeWebHostName = storeWebHostName;
         session.scope = scope;
-        session.endDestionation = endDestionation;
         session.clientSecretId = clientSecretId;
         
         if (getSession() != null && getSession().currentUser != null) {

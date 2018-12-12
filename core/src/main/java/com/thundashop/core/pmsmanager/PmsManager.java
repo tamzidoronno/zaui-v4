@@ -9230,7 +9230,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void markOtaPaymentsAutomaticallyPaidOnCheckin(Date start, Date end) {
         bookings.values().stream()
-                .filter(o -> o.startDate.before(new Date()))
+                .filter(o -> o.startDate != null && o.startDate.before(new Date()))
                 .filter(o -> o.isActiveInPeriode(start, end))
                 .forEach(booking -> {
                     for (String orderId : booking.orderIds) {

@@ -181,4 +181,6 @@ public interface ICartManager {
     
     @Editor
     public Double getCartTotal(Cart cart);
+    
+    public boolean isCartConflictingWithClosedPeriode();
 }

@@ -27,8 +27,8 @@ public class OAuthSession extends DataCommon {
     
     public String loginLink = "";
     
+    public String tokenAddress;
     public String address;
-    public String storeWebHostName;
     public String scope;
     
     public String clientId = "";
@@ -60,13 +60,6 @@ public class OAuthSession extends DataCommon {
      */
     public String accessToken;
     
-    /**
-     * The application will be redirected to this
-     * end point after auth code has been received and 
-     * token has been exchanged.
-     */
-    public String endDestionation;
-    
     public boolean hasExpired() {
         // Its not even stored to the database, so it cant be expired.
         if (rowCreatedDate == null)
@@ -92,7 +85,7 @@ public class OAuthSession extends DataCommon {
      */
     public void createLoginLink() {
         try {
-            loginLink = "https://" + address + "?response_type=code&client_id="+clientId+"&redirect_uri="+URLEncoder.encode("https://oauth.getshop.com/auth.php", "UTF-8")+"&scope="+scope+"&state="+state;
+            loginLink = address + "?response_type=code&client_id="+clientId+"&redirect_uri="+URLEncoder.encode("https://oauth2.getshop.com/auth.php", "UTF-8")+"&scope="+scope+"&state="+state;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(OAuthSession.class.getName()).log(Level.SEVERE, null, ex);
         }

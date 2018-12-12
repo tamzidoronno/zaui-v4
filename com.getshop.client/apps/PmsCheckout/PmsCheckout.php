@@ -169,7 +169,8 @@ class PmsCheckout extends \WebshopApplication implements \Application {
             if (isset($_POST['data']['paymenttypeselection'])) {
                 $type = $_POST['data']['paymenttypeselection'];
             }
-            $orderIds = $this->getApi()->getPmsInvoiceManager()->convertCartToOrders($this->getSelectedMultilevelDomainName(), $id, null, $payment, $type);
+            $overrideDate = isset($_POST['data']['overridedate']) ? $this->convertToJavaDate(strtotime($_POST['data']['overridedate'])) : null;
+            $orderIds = $this->getApi()->getPmsInvoiceManager()->convertCartToOrders($this->getSelectedMultilevelDomainName(), $id, null, $payment, $type, $overrideDate);
             
             if ($type == "merged") {
                 //Do something here.

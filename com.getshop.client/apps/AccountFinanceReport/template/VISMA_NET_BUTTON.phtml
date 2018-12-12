@@ -12,8 +12,15 @@ if ($oauthSessionId) {
 echo $_GET['code'];
 
 if ($needLogin) {
-    $actual_link = "https://oauth2.getshop.com/auth.php";
-    $result = $this->getApi()->getOAuthManager()->startNewOAuthSession("signin.visma.net/oauthwebapp/authorization.xhtml", "getshop_as_test_ae37op", urlencode($actual_link), "financialstasks", $actual_link."/freport.html", "e3b9d2a8-20cb-42eb-85d0-94eb79e9f6f6");
+    
+    $result = $this->getApi()->getOAuthManager()->startNewOAuthSession(
+            "https://integration.visma.net/API/resources/oauth/authorize", 
+            "getshop_as_test_ae37op", 
+            "financialstasks", 
+            "e3b9d2a8-20cb-42eb-85d0-94eb79e9f6f6", 
+            "https://integration.visma.net/API/security/api/v2/token");
+    
+    $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_VISMA_NET_OAUTHSESSION'] = $result->id;
 ?>
 <a class='gs_ignorenavigate' target='_blank' href='<? echo $result->loginLink; ?>'><div class="shop_button showresultbutton gs_ignorenavigate"> <? echo $this->__f("Login to Visma"); ?></div></a>
 <?

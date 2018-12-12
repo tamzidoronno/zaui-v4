@@ -226,6 +226,23 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
         </div>
         <?php
     }
+    
+    if ($this->getApi()->getCartManager()->isCartConflictingWithClosedPeriode()) {
+        ?>
+        <br/>
+        <b style="color: red;"> The periode is closed, do accounting on the following day instead: </b>
+        <br/> <input class="gsniceinput1 overridedate" gsname="overridedate" value="<? echo date('m/d/Y'); ?> "/>
+        <br/>
+        <br/>
+        
+        <script>
+            $('.PmsCheckout .overridedate').datepicker();
+        </script>
+        <?
+        echo "";
+    }
+    
     ?>
     <span class="shop_button continue_checkout" gstype='submit' gs_callback='app.PmsCheckout.orderCreationCompleted'>Create payment</span>
 </div>
+

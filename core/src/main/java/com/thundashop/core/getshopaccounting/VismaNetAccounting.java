@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.ordermanager.data.Order;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -46,4 +47,10 @@ public class VismaNetAccounting extends AccountingSystemBase {
         
     }
     
+    @Override
+    public HashMap<String, String> getConfigOptions() {
+        HashMap<String, String> ret = new HashMap();
+        ret.put("vismacompanyid", "Visma Company ID");
+        return ret;
+    }
 }

@@ -15,6 +15,5 @@ import com.thundashop.core.common.GetShopApi;
 @GetShopApi
 public interface IOAuthManager {
     public OAuthSession startNewOAuthSession(String authAddress, String clientId, String scope, String clientSecretId, String tokenAddress);
-    public OAuthSession exchangeToken(String authCode, String state);
     public OAuthSession getCurrentOAuthSession(String oauthSessionId);
 }

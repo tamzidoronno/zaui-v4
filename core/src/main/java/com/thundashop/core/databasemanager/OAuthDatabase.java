@@ -5,6 +5,8 @@
  */
 package com.thundashop.core.databasemanager;
 
+import com.google.common.util.concurrent.ExecutionError;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -63,7 +65,7 @@ public class OAuthDatabase extends StoreComponent {
     }
 
     private void addDataCommonToDatabase(DataCommon data) {
-        data.gs_manager = "SupportManager";
+        data.gs_manager = "oauth";
         DBObject dbObject = morphia.toDBObject(data);
         try {
             connect();
@@ -76,6 +78,17 @@ public class OAuthDatabase extends StoreComponent {
         }
     }
 
+    public void hardDelete(DataCommon data) throws ErrorException {
+        try {
+            data.gs_manager = "oauth";
+            connect();
+            mongo.getDB("oauth").getCollection(collectionPrefix + "all").remove(new BasicDBObject().append("_id", data.id));
+            mongo.close();
+        } catch (UnknownHostException ex) {
+            java.util.logging.Logger.getLogger(OAuthDatabase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void delete(DataCommon data) throws ErrorException {
         data.deleted = new Date();
         save(data);
@@ -120,15 +133,19 @@ public class OAuthDatabase extends StoreComponent {
         try  {
             connect();
             
-            DB db = mongo.getDB("SupportManager");
+            DB db = mongo.getDB("oauth");
             DBCollection col = db.getCollection("col_all");
             DBCursor res = col.find(query);
             List<DataCommon> retObjecs = new ArrayList();
 
             while (res.hasNext()) {
                 DBObject nx = res.next();
-                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
-                retObjecs.add(data);
+                try {
+                    DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                    retObjecs.add(data);
+                } catch (Exception ex) {
+                    System.out.println("failed ot map: " + nx.get("_id"));
+                }
             }
 
             mongo.close();

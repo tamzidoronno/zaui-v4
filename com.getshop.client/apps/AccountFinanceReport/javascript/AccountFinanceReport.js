@@ -3,7 +3,25 @@ app.AccountFinanceReport = {
         $(document).on('click', '.AccountFinanceReport .showresultbutton.deactivated', app.AccountFinanceReport.displayWarning);
         $(document).on('click', '.AccountFinanceReport .showresultbutton.closeperiode', app.AccountFinanceReport.closePeriode);
         $(document).on('click', '.AccountFinanceReport .showresultbutton.recalc', app.AccountFinanceReport.resetLastMonth);
+        $(document).on('click', '.AccountFinanceReport .showresultbutton.vismaloginlink', app.AccountFinanceReport.doVismaLogin);
         $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
+    },
+    
+    doVismaLogin: function() {
+        var event = thundashop.Ajax.createEvent(null, "createVismaNETLoginLink", $('.AccountFinanceReport'), {});
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            var win = window.open(res, '_blank');
+            var timer = setInterval(function() { 
+                if(win.closed) {
+                    clearInterval(timer);
+                    $('html').html('reloading, please wait');
+                    document.location = document.location;
+                }
+            }, 1000);
+
+        });
     },
     
     resetLastMonth: function(password) {

@@ -3,6 +3,7 @@ namespace ns_e6570c0a_8240_4971_be34_2e67f0253fd3;
 
 class AccountFinanceReport extends \MarketingApplication implements \Application {
     private $paymentConfigs = array();
+    public $extramessage = "";
     
     public function getDescription() {
         
@@ -36,6 +37,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
     }
     
+    public function logoutVisma() {
+        unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_VISMA_NET_OAUTHSESSION']);
+    }
+    
     public function downloadAccountingFile() {
         $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
         if ($system == "GENERELL_NORWEGIAN") {
@@ -61,7 +66,8 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
                 $grouped[$entry->accountingNumber] = 0;
             }
 
-            $grouped[$entry->accountingNumber] = $grouped[$entry->accountingNumber] + $entry->amount;
+            $newVal = $grouped[$entry->accountingNumber] + $entry->amount;
+            $grouped[$entry->accountingNumber] = round($newVal, 2);
             
             ksort($grouped);
         }
@@ -173,5 +179,33 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $end = $this->getEnd();
         $this->getApi()->getOrderManager()->resetLastMonthClose($_POST['data']['password'], $start, $end);
     }
+    
+    public function transferData() {
+        $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
+        
+        if ($system == "VISMA_NET") {
+            $this->doVismaTransfer();
+        }
+    }
+    
+    public function createVismaNETLoginLink() {
+        $builder = new VismaNetPostBuilder($this->getApi(), $this);
+        $result = $builder->startNewSession();
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_VISMA_NET_OAUTHSESSION'] = $result->id;
+        echo $result->loginLink;
+        die();
+    }
+
+    public function doVismaTransfer() {
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        
+        $builder = new VismaNetPostBuilder($this->getApi(), $this);
+        $vismaDays = $builder->getResult($start, $end);
+        $this->extramessage = $builder->sendData($vismaDays);
+        
+        
+    }
+
 }
 ?>

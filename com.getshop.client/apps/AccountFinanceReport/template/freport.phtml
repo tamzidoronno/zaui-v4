@@ -99,7 +99,18 @@ echo "</script>";
     </div>
     
 </div>
+
 <?
+if ($this->extramessage) {
+?>
+    <div>
+        <?
+        echo $this->extramessage;
+        ?>
+    </div>
+<?
+}
+
 echo "<div class='outer'>";
 
     echo "<div class='row header'>";

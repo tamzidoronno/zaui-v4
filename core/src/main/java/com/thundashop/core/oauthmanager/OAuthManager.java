@@ -67,41 +67,13 @@ public class OAuthManager extends ManagerBase implements IOAuthManager {
         return session;
     }
 
-    /**
-     * Use the response that you get back from the login to start exchanging for the access token.
-     * 
-     * @param oauthSessionId
-     * @param authCode
-     * @param state
-     * @return 
-     */
-    @Override
-    public OAuthSession exchangeToken(String authCode, String state) {
-        
-//        OAuthSession session = oauthSessions.values()
-//                .stream()
-//                .filter(s -> s.state.equals(state))
-//                .findAny()
-//                .orElse(null);
-//        
-//        if (session != null) {
-//            try {
-//                String result = webManager.htmlPost(url, data, true, "UTF-8");
-//                System.out.println(result);
-//            } catch (Exception ex) {
-//                Logger.getLogger(OAuthManager.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            
-//            return session;
-//        }
-//        
-        return null;
-    }
-
     @Override
     public OAuthSession getCurrentOAuthSession(String oauthSessionId) {
+        cleanUpExpiredSession();
+        
         BasicDBObject query = new BasicDBObject();
-        query.put("id", oauthSessionId);
+        query.put("_id", oauthSessionId);
+        
         return (OAuthSession) oauthDatabase.query(query)
                 .stream()
                 .findAny()
@@ -111,5 +83,22 @@ public class OAuthManager extends ManagerBase implements IOAuthManager {
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
         oauthDatabase.save(data);
+    }
+
+    private void cleanUpExpiredSession() {
+        BasicDBObject query = new BasicDBObject();
+        List<OAuthSession> expiredSessions = oauthDatabase.query(query)
+                .stream()
+                .filter(o -> (o instanceof OAuthSession))
+                .map(o -> (OAuthSession)o)
+                .filter(o -> o.hasExpired())
+                .collect(Collectors.toList());
+        
+        expiredSessions.stream()
+                .forEach(session -> {
+                    System.out.println("Deleted: " + session.id);
+                    oauthDatabase.hardDelete(session);
+                });
+        
     }
 }

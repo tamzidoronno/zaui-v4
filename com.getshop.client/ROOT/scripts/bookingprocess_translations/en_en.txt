@@ -43,7 +43,7 @@
     "addGuest" : "Add guest",
     "yourStay" : "Your stay",
     "return" : "Return",
-    "successfulbooking" : "Congratulation, your room has been reserved now.",
+    "successfulbooking" : "Congratulation, your room has been reserved.",
     "errorcompleted" : "An uknown error occured, please contact us.",
     "goToPayment" : "Go to payment",
     "contactInformation" : "Contact information",

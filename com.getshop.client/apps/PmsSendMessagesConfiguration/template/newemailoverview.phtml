@@ -1,0 +1,22 @@
+<div style='clear:both'></div>
+<?php
+/* @var $this ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
+echo "<hr>";
+$msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
+
+
+foreach($msgs as $msg) {
+    echo "<div style='border: solid 1px; margin-bottom: 10px; background-color:#fff;'>";
+    echo "<div class='title' style='background-color:#efefef; padding: 10px; border-bottom: solid 1px;'>" . $msg->title  . "</div>";
+    echo "<div class='content' style='padding: 10px;'>";
+    echo $msg->content;
+    echo "</div>";
+    echo "<div class='footer' style='border-top: solid 1px; padding: 10px;'>";
+    echo $msg->key;
+    echo "<span style='float:right;'>" . $msg->type . "</span>";   
+    echo "</div>";
+    echo "</div>";
+    echo "<br>";
+}
+
+?>

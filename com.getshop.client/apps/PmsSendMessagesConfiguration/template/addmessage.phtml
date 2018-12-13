@@ -98,9 +98,9 @@ $notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge ca
 </div>
 <br>
 <div gstype="form" method="addMessage">
-    Select a message type (read more about it here): 
+    Select a message type: 
     <div>
-        <select class='gsniceselect1 changeLanguage' style='width:29%;' gsname="language">
+        <select class='gsniceselect1 changeLanguage' style='width:29%; display:none;' gsname="language">
             <?php
                 foreach($languages as $key) {
                     $selected = ($key == $langauge) ? "SELECTED" : "";
@@ -108,7 +108,7 @@ $notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge ca
                 }
             ?>
         </select>
-        <select class='gsniceselect1' style='width:69%; float:right;' gsname="type">
+        <select class='gsniceselect1' style='width:100%; float:right;' gsname="type">
             <?php
             foreach($notifications as $key => $value) {
                 echo "<option value='$key'>$value</option>";

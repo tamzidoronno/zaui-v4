@@ -12,6 +12,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class Cart extends DataCommon {
     public Address address;
     public Coupon coupon;
     public Double couponCost;
+    public Date overrideDate;
     
     private CartItem getCartItem(String productId, Map<String, String> variations) {
         for (CartItem cartItem : items) {

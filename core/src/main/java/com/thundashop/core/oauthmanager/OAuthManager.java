@@ -1,24 +1,27 @@
 package com.thundashop.core.oauthmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.ManagerSubBase;
-import com.thundashop.core.getshopaccounting.VismaEaccountingTokenResponse;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.databasemanager.OAuthDatabase;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
-import com.thundashop.core.usermanager.data.UserOAuthorization;
 import com.thundashop.core.webmanager.WebManager;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
-public class OAuthManager extends ManagerSubBase implements IOAuthManager {
+public class OAuthManager extends ManagerBase implements IOAuthManager {
     
     @Autowired
     FrameworkConfig frameworkConfig;
@@ -28,150 +31,74 @@ public class OAuthManager extends ManagerSubBase implements IOAuthManager {
     
     @Autowired
     WebManager webManager;
-    
-    HashMap<String, OAuthState> states = new HashMap();
-    
-    public TokenEndpoints endpoints = new TokenEndpoints();
-    
-    public String getEndPoint(String source) {
-        if(frameworkConfig.productionMode) {
-            return endpoints.endPoint.get(source);
-        } else {
-            return endpoints.endPointTest.get(source);
-        }
-    }
 
-    public String getAuthrizeEndPoint(String source) {
-        String endpoint = getEndPoint(source);
-        return endpoint+endpoints.authorizeEndPoint.get(source);
-    }
+    @Autowired
+    private OAuthDatabase oauthDatabase;
     
-    
-    public String getToken(String source) {
-        User user = userManager.getLoggedOnUser();
-        UserOAuthorization authObject = user.oAuths.get(source);
-        if(authObject == null) {
-            return null;
-        }
-        if(!authObject.authorized) {
-            return doAuthorization(source);
-        } else {
-            if(authObject.expire.before(new Date())) {
-                return refreshToken(source);
-            }
-        }
-        return authObject.token;
-    }
-
-    private String refreshToken(String source) {
-        User user = userManager.getLoggedOnUser();
-        UserOAuthorization authObject = user.oAuths.get(source);
-        String tokenendPoint = getEndPoint(source) + endpoints.tokenEndPoint.get(source);
-        String clientId = getClientId(source);
-        String clientSecret = getClientSecret(source);
-        String code = authObject.code;
-        String redirect = getRedirect(source);
+  
+    /**
+     * Example of address.
+     * 
+     * Creates an OAuth session. Use the ID of this object for further communication.
+     * 
+     * @param address - example: integration.visma.net/API-index/doc/oauth/authorization
+     * @param clientId - example: getshop
+     * @param storeWebHostName - normally the webpage you are already at
+     * @param scope - the different scopes the applications provides.
+     * @return 
+     */
+    @Override
+    public OAuthSession startNewOAuthSession(String authAddress, String clientId, String scope, String clientSecretId, String tokenAddress) {
+        OAuthSession session = new OAuthSession();
+        session.address = authAddress;
+        session.tokenAddress = tokenAddress;
+        session.clientId = clientId;
+        session.scope = scope;
+        session.clientSecretId = clientSecretId;
         
-        HashMap<String, String> headerData = new HashMap();
-        String toPost = "grant_type=refresh_token&refresh_token="+authObject.refreshToken+"&redirect_uri="+redirect;
-        String auth = clientId + ":" + clientSecret;
-        try {
-            String result = webManager.htmlPostBasicAuth(tokenendPoint, toPost, false, "UTF-8", auth, "Basic", true, "POST", headerData);
-            Gson gson = new Gson();
-            VismaEaccountingTokenResponse res = gson.fromJson(result, VismaEaccountingTokenResponse.class);
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.SECOND, res.expires_in);
-            authObject.expire = cal.getTime();
-            authObject.token = res.access_token;
-            authObject.refreshToken = res.refresh_token;            
-        }catch(Exception e) {
-            logPrint(webManager.getLatestErrorMessage());
-            e.printStackTrace();
+        if (getSession() != null && getSession().currentUser != null) {
+            session.userId = getSession().currentUser.id;
         }
-        authObject.authorized = true;
-        userManager.saveUser(user);
-        return authObject.token;
-    }
-
-    private String doAuthorization(String source) {
-        User user = userManager.getLoggedOnUser();
-        UserOAuthorization authObject = user.oAuths.get(source);
-        String tokenendPoint = getEndPoint(source) + endpoints.tokenEndPoint.get(source);
-        String clientId = getClientId(source);
-        String clientSecret = getClientSecret(source);
-        String code = authObject.code;
-        String redirect = getRedirect(source);
         
-        HashMap<String, String> headerData = new HashMap();
-        String toPost = "code="+code+"&grant_type=authorization_code&redirect_uri="+redirect;
-        String auth = clientId + ":" + clientSecret;
-        try {
-            String result = webManager.htmlPostBasicAuth(tokenendPoint, toPost, false, "UTF-8", auth, "Basic", true, "POST", headerData);
-            Gson gson = new Gson();
-            VismaEaccountingTokenResponse res = gson.fromJson(result, VismaEaccountingTokenResponse.class);
-
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.SECOND, res.expires_in);
-            authObject.expire = cal.getTime();
-            authObject.token = res.access_token;
-            authObject.refreshToken = res.refresh_token;
-        }catch(Exception e) {
-            e.printStackTrace();
-            System.out.println(webManager.getLatestErrorMessage());
-        }
-        authObject.authorized = true;
-        userManager.saveUser(user);
+        session.createLoginLink();
         
-        return authObject.token;
-    }
-    
-    public String getClientId(String source) {
-        if(frameworkConfig.productionMode) {
-            return endpoints.clientId.get(source);
-        } else {
-            return endpoints.clientIdTest.get(source);
-        }
-    }
-
-    private String getClientSecret(String source) {
-        if(frameworkConfig.productionMode) {
-            return endpoints.clientSecret.get(source);
-        } else {
-            return endpoints.clientSecretTest.get(source);
-        }
-    }
-
-    private String getRedirect(String source) {
-        if(frameworkConfig.productionMode) {
-            return endpoints.clientRedirect.get(source);
-        } else {
-            return endpoints.clientRedirectTest.get(source);
-        }
-    }
-
-    public String createState(String source, String redirectTo) {
-        String uuid = UUID.randomUUID().toString();
-        OAuthState state = new OAuthState();
-        state.source = source;
-        state.redirectTo = redirectTo;
-        states.put(uuid, state);
-        return uuid;
+        saveObject(session);
+        
+        return session;
     }
 
     @Override
-    public void handleCallback(String code, String state) {
-        OAuthState res = states.get(state);
-        User user = userManager.getLoggedOnUser();
-        UserOAuthorization authObject = new UserOAuthorization();
-        authObject.code = code;
-        user.oAuths.put(res.source, authObject);
-        userManager.saveUser(user);
+    public OAuthSession getCurrentOAuthSession(String oauthSessionId) {
+        cleanUpExpiredSession();
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", oauthSessionId);
+        
+        return (OAuthSession) oauthDatabase.query(query)
+                .stream()
+                .findAny()
+                .orElse(null);
     }
 
     @Override
-    public String getStateRedirect(String state) {
-        OAuthState res = states.get(state);
-        return res.redirectTo;
+    public void saveObject(DataCommon data) throws ErrorException {
+        oauthDatabase.save(data);
     }
 
+    private void cleanUpExpiredSession() {
+        BasicDBObject query = new BasicDBObject();
+        List<OAuthSession> expiredSessions = oauthDatabase.query(query)
+                .stream()
+                .filter(o -> (o instanceof OAuthSession))
+                .map(o -> (OAuthSession)o)
+                .filter(o -> o.hasExpired())
+                .collect(Collectors.toList());
+        
+        expiredSessions.stream()
+                .forEach(session -> {
+                    System.out.println("Deleted: " + session.id);
+                    oauthDatabase.hardDelete(session);
+                });
+        
+    }
 }

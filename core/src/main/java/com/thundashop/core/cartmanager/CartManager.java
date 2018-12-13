@@ -592,4 +592,10 @@ public class CartManager extends ManagerBase implements ICartManager {
             }
         }
     }
+
+    @Override
+    public boolean isCartConflictingWithClosedPeriode() {
+        Cart cart = getCart();
+        return orderManager.isCartWithinClosedPeriode(cart);
+    }
 }

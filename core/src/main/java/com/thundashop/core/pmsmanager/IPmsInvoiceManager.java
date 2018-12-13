@@ -114,7 +114,7 @@ public interface IPmsInvoiceManager {
     public List<CartItem> getAllUnpaidItemsForRoom(String pmsRoomId);
     
     @Administrator
-    public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType);
+    public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType, Date overrideDate);
     
     @Administrator
     public void saveAdvancePriceYield(PmsAdvancePriceYield yieldPlan);

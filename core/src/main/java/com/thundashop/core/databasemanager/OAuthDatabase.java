@@ -5,6 +5,8 @@
  */
 package com.thundashop.core.databasemanager;
 
+import com.google.common.util.concurrent.ExecutionError;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -14,12 +16,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
-import com.thundashop.core.start.Runner;
-import java.io.File;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +34,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class SupportDatabase extends StoreComponent {
+public class OAuthDatabase extends StoreComponent {
 
     public static int mongoPort = 27017;
 
@@ -49,13 +47,13 @@ public class SupportDatabase extends StoreComponent {
     public Logger logger;
     
 
-    public SupportDatabase() throws UnknownHostException {
+    public OAuthDatabase() throws UnknownHostException {
         morphia = new Morphia();
         morphia.map(DataCommon.class);
     }
 
     private void connect() throws UnknownHostException {
-        String connectionString = "mongodb://getshop:aisdfjoiw3j4q2oaijsdfoiajsfdoi23joiASD__ASDF@192.168.100.1/SupportManager";
+        String connectionString = "mongodb://oauth:02349890uqadsfajsl3n421k24j3nblksadnf@192.168.100.1/oauth";
         mongo = new MongoClient(new MongoClientURI(connectionString));
     }
     
@@ -67,11 +65,11 @@ public class SupportDatabase extends StoreComponent {
     }
 
     private void addDataCommonToDatabase(DataCommon data) {
-        data.gs_manager = "SupportManager";
+        data.gs_manager = "oauth";
         DBObject dbObject = morphia.toDBObject(data);
         try {
             connect();
-            mongo.getDB("SupportManager").getCollection(collectionPrefix + "all").save(dbObject);
+            mongo.getDB("oauth").getCollection(collectionPrefix + "all").save(dbObject);
             mongo.close();
         } catch (com.mongodb.CommandFailureException ex) {
             ex.printStackTrace();
@@ -80,6 +78,17 @@ public class SupportDatabase extends StoreComponent {
         }
     }
 
+    public void hardDelete(DataCommon data) throws ErrorException {
+        try {
+            data.gs_manager = "oauth";
+            connect();
+            mongo.getDB("oauth").getCollection(collectionPrefix + "all").remove(new BasicDBObject().append("_id", data.id));
+            mongo.close();
+        } catch (UnknownHostException ex) {
+            java.util.logging.Logger.getLogger(OAuthDatabase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void delete(DataCommon data) throws ErrorException {
         data.deleted = new Date();
         save(data);
@@ -124,15 +133,19 @@ public class SupportDatabase extends StoreComponent {
         try  {
             connect();
             
-            DB db = mongo.getDB("SupportManager");
+            DB db = mongo.getDB("oauth");
             DBCollection col = db.getCollection("col_all");
             DBCursor res = col.find(query);
             List<DataCommon> retObjecs = new ArrayList();
 
             while (res.hasNext()) {
                 DBObject nx = res.next();
-                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
-                retObjecs.add(data);
+                try {
+                    DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                    retObjecs.add(data);
+                } catch (Exception ex) {
+                    System.out.println("failed ot map: " + nx.get("_id"));
+                }
             }
 
             mongo.close();

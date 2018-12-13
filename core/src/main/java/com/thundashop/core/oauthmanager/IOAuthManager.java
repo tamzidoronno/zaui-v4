@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.oauthmanager;
 
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
 
 /**
@@ -13,6 +14,6 @@ import com.thundashop.core.common.GetShopApi;
  */
 @GetShopApi
 public interface IOAuthManager {
-    public String getStateRedirect(String state);
-    public void handleCallback(String code, String state);
+    public OAuthSession startNewOAuthSession(String authAddress, String clientId, String scope, String clientSecretId, String tokenAddress);
+    public OAuthSession getCurrentOAuthSession(String oauthSessionId);
 }

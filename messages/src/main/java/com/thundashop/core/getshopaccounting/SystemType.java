@@ -17,6 +17,7 @@ public enum SystemType {
      FIKEN_API,
      POWEROFFICEGO_API,
      VISMAEACCOUNTING_API,
-     GENERELL_NORWEGIAN
+     GENERELL_NORWEGIAN,
+     VISMA_NET
  }
 

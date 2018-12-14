@@ -108,9 +108,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 Stripe.apiKey = "sk_test_BQokikJOvBiI2HlWgH4olfQ2";
             }
 
-            
-            Application ecommerceSettings = storeApplicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
-            String currency = ecommerceSettings.getSetting("currency");
+            String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
             if(currency == null || currency.isEmpty()) {
                 currency = "NOK";
             }

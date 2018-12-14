@@ -113,6 +113,8 @@ public class PmsBookingRooms implements Serializable {
     Double printablePrice = 0.0;
     
     public String pgaAccessToken;
+    public boolean loggedGetCode = false;
+    public boolean loggedDeletedCode = false;
 
     public boolean isOverBooking() {
         if(isAddedToBookingEngine()) {

@@ -15,6 +15,7 @@
         getshop_failurecallback = options.failure;
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
         sessionStorage.setItem('getshop_domain',options.domain);
+        sessionStorage.setItem('getshop_booking_form_options', JSON.stringify(options));
         
         
         if(!options.language) {

@@ -1,0 +1,23 @@
+<?
+/* @var $this \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons */
+$products = $this->getApi()->getProductManager()->getAllProducts();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$addonItem = $this->getAddonItem($config, $_POST['data']['productId']);
+        
+echo "<h2>" . $this->__f("Please select addons that should be in this group") . "</h2>";
+foreach ($products as $product) {
+    $productAddonItem = $this->getAddonItem($config, $product->id);
+    if (!$productAddonItem || $productAddonItem->groupAddonType)
+        continue;
+    
+//    echo "<pre>";print_r($productAddonItem);echo "</pre>";
+    $checked = $addonItem != null && in_array($product->id, $addonItem->groupAddonSettings->groupProductIds) ? "checked='true'" : "";
+    echo "<div>";
+    echo "<input $checked class='group_addon_item' type='checkbox' value='$product->id'> " . $productAddonItem->name;
+    echo "</div>";
+}
+echo "<br/>";
+echo "<div class='shop_button saveproductsingroupaddon' mainproductid='" . $_POST['data']['productId'] . "'>" . $this->__f("Save") . "</div>";
+?>
+
+

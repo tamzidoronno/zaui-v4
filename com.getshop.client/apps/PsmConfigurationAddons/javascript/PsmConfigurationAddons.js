@@ -8,7 +8,42 @@ app.PsmConfigurationAddons = {
         $(document).on('click', '.PsmConfigurationAddons .addNewDateRange', app.PsmConfigurationAddons.addNewDateRange);
         $(document).on('click', '.PsmConfigurationAddons .removeRestrictionRange', app.PsmConfigurationAddons.removeRestrictionRange);
         $(document).on('click', '.PsmConfigurationAddons .changeproductname', app.PsmConfigurationAddons.doChangeName);
+        $(document).on('click', '.PsmConfigurationAddons .editgroupaddon', app.PsmConfigurationAddons.editGroupAddon);
+        $(document).on('click', '.PsmConfigurationAddons .saveproductsingroupaddon', app.PsmConfigurationAddons.saveProductsInGroupAddon);
     },
+    
+    saveProductsInGroupAddon: function() {
+        var row = $(this).closest('tr');
+        
+        var productIds = [];
+        
+        $('.PsmConfigurationAddons .group_addon_item:checked').each(function() {
+            productIds.push($(this).val());
+        });
+        
+        var data = {
+            productId : $(this).attr('mainproductid'),
+            productIds : productIds
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "saveGroupAddonProducts", this, data);
+        thundashop.Ajax.post(event, function(res) {
+            row.find('.extendedinformation').fadeOut();
+        });
+    },
+    
+    editGroupAddon: function() {
+        var row = $(this).closest('tr');
+        
+        var event = thundashop.Ajax.createEvent('',"loadGroupProductInfo", row, {
+            "productId" : row.attr('productid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            row.find('.extendedinformation').html(res);
+            row.find('.extendedinformation').show();
+        });
+    },
+    
     doChangeName : function() {
         var td = $(this).closest('td');
         var curname = td.find('.productnamecontainer').text();

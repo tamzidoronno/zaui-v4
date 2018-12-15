@@ -7,6 +7,7 @@ import java.util.Date;
 public class AddonItem {
     public Double price;
     public String name;
+    public String descriptionWeb;
     public Integer count;
     public String productId;
     public Date date;
@@ -22,5 +23,6 @@ public class AddonItem {
         productId = item.productId;
         date = item.date;
         maxAddonCount = item.count;
+        descriptionWeb = item.descriptionWeb;
     }
 }

@@ -32,6 +32,9 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $this->includefile("addmessage");
         $this->includefile("emailtemplate");
         $this->includefile("roomspecificmessages");
+        if($this->getApi()->getStoreManager()->getMyStore()->id == "0a501e98-08d7-411d-8fb9-909d81dfb7e9") {
+            $this->includefile("newemailoverview");
+        }
     }
     
     public function changeLanguage() {

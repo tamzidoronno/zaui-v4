@@ -194,7 +194,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             selectMostSuitableRooms(result, arg);
         }
         result.totalAmount = pmsManager.getCurrentBooking().getTotalPrice();
-        result.supportPayLaterButton = checkIfSupportPayLater();
+        result.supportPayLaterButton = checkIfSupportPayLater(arg);
         result.supportedPaymentMethods = checkForSupportedPaymentMethods(booking);
         result.prefilledContactUser = "";
         if(booking.userId != null && !booking.userId.isEmpty()) {
@@ -204,12 +204,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         return result;
     }
 
-    private boolean checkIfSupportPayLater() {
+    private boolean checkIfSupportPayLater(StartBooking arg) {
         PmsBooking booking = pmsManager.getCurrentBooking();
         if(booking == null) {
             return false;
         }
         Date startDate = booking.getStartDate();
+        if(startDate == null) {
+            startDate = arg.start;
+        }
         if(startDate == null) {
             return false;
         }

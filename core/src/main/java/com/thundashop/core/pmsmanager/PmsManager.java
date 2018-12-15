@@ -209,6 +209,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
     
     @Autowired
+    private PmsNotificationManager pmsNotificationManager;
+    
+    
+    @Autowired
     Database dataBase;
     private Date virtualOrdersCreated;
     private Date startedDate;
@@ -1253,6 +1257,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
+        
+        if(pmsNotificationManager.isActive()) {
+            pmsNotificationManager.doNotification(key, booking, room);
+            return;
+        }
+        
         repicientList.clear();
         String addNotificationSent = key;
         try {
@@ -1303,6 +1313,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public String getMessage(String bookingId, String key) {
+        if(pmsNotificationManager.isActive()) {
+            pmsNotificationManager.setOrderIdToSend(null);
+            return pmsNotificationManager.getMessageFormattedMessage(bookingId, key, "sms");
+        }
         orderIdToSend = null;
 
         PmsBooking booking = getBooking(bookingId);
@@ -2907,7 +2921,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     }
 
-    private void logEntry(String logText, String bookingId, String itemId, String roomId, String logType) {
+    public void logEntry(String logText, String bookingId, String itemId, String roomId, String logType) {
 
         PmsLog log = new PmsLog();
         log.bookingId = bookingId;
@@ -3981,6 +3995,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 bookingId = booking.id;
             }
         }
+        pmsNotificationManager.setOrderIdToSend(orderId);
+        pmsNotificationManager.setEmailToSendTo(email);
+        pmsNotificationManager.setPrefixToSendTo(prefix);
+        pmsNotificationManager.setPhoneToSendTo(phone);
+        if(pmsNotificationManager.isActive()) {
+            pmsNotificationManager.doNotification("booking_sendpaymentlink", bookingId);
+            return;
+        }
+        
+        
         orderIdToSend = orderId;
         emailToSendTo = email;
         prefixToSend = prefix;
@@ -3990,6 +4014,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message) {
+        pmsNotificationManager.setOrderIdToSend(orderId);
+
+        pmsNotificationManager.setOrderIdToSend(orderId);
+        pmsNotificationManager.setEmailToSendTo(email);
+        pmsNotificationManager.setPrefixToSendTo(prefix);
+        pmsNotificationManager.setPhoneToSendTo(phone);
+        pmsNotificationManager.setMessageToSend(message);
+
+        if(pmsNotificationManager.isActive()) {
+            pmsNotificationManager.doNotification("booking_sendpaymentlink", bookingId);
+            return;
+        }
+        
+        
         orderIdToSend = orderId;
         emailToSendTo = email;
         prefixToSend = prefix;
@@ -4002,12 +4040,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void failedChargeCard(String orderId, String bookingId) {
         orderIdToSend = orderId;
+        pmsNotificationManager.setOrderIdToSend(orderId);
         doNotification("booking_unabletochargecard", bookingId);
     }
 
     @Override
     public void sendMissingPayment(String orderId, String bookingId) {
         orderIdToSend = orderId;
+        pmsNotificationManager.setOrderIdToSend(orderId);
         doNotification("booking_paymentmissing", bookingId);
     }
 
@@ -4465,6 +4505,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void setOrderIdToSend(String id) {
+        pmsNotificationManager.setOrderIdToSend(id);
         this.orderIdToSend = id;
     }
 
@@ -4473,6 +4514,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoom(roomId);
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if (room.pmsBookingRoomId.equals(roomId)) {
+                pmsNotificationManager.setPhoneToSendTo(phoneNumber);
+                pmsNotificationManager.setPrefixToSendTo(prefix);
                 phoneToSend = phoneNumber;
                 prefixToSend = prefix;
                 doNotification("room_added_to_arx", booking, room);
@@ -4729,6 +4772,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     void setEmailToSendTo(String email) {
         emailToSendTo = email;
+        pmsNotificationManager.setEmailToSendTo(email);
     }
 
     private void feedGrafanaNotificationDone(String key) {
@@ -5530,7 +5574,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void sendConfirmation(String email, String bookingId, String type) {
         emailToSendTo = email;
-
+        pmsNotificationManager.setEmailToSendTo(emailToSendTo);
         if (type == "confirmation") {
             doNotification("booking_confirmed", bookingId);
         } else {

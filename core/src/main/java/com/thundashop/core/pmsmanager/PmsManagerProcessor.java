@@ -178,10 +178,19 @@ public class PmsManagerProcessor {
                 startEndText = room.date.start + " - " + room.date.end;
             }
             String prefixtext = " code (" + room.code + "), expired: <b>" + isExpired + "</b> started: <b>" + isStarted + "</b> blocked: <b>" + blocked + "</b> deleted: <b>" + deletedText+"</b> startend: <b>"+startEndText + "</b>";
+            
             if(deleted) {
-                manager.logEntry("Removing code from lock: " + prefixtext, booking.id, room.bookingItemId);
+                if(!room.loggedDeletedCode) {
+                    manager.logEntry("Removing code from lock: " + prefixtext, booking.id, room.bookingItemId);
+                    room.loggedDeletedCode = true;
+                    room.loggedGetCode = false;
+                }
             } else {
-                manager.logEntry("Getting code from lock: " + prefixtext, booking.id , room.bookingItemId);
+                if(!room.loggedGetCode) {
+                    manager.logEntry("Getting code from lock: " + prefixtext, booking.id , room.bookingItemId);
+                    room.loggedGetCode = true;
+                    room.loggedDeletedCode = false;
+                }
             }
         }catch(Exception e) {
             e.printStackTrace();

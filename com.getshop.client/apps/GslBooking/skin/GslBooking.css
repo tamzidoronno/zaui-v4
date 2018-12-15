@@ -537,7 +537,7 @@ Error      : #de5353; red
 }
 
 .GslBooking .gslfront_1 .getshop_room_config .guestinformation .phonenumber {
-    width: calc(100% - 55px);
+    width: calc(100% - 56px);
 }
 
 .GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .addon_select_box .price {

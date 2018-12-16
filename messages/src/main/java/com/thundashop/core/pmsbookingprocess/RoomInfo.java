@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomInfo {
     public String roomId = "";
@@ -16,4 +17,11 @@ public class RoomInfo {
     public HashMap<String, AddonItem> addonsAvailable = new HashMap();
     public Double totalCost = 0.0;
     public String bookingItemTypeId = "";
+        
+    /**
+     * Key = Group Addon product Id.
+     * Value = List of different options.
+     */
+    public List<GroupAddonItem> availableGuestOptionAddons = new ArrayList();
+
 }

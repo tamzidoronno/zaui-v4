@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -456,6 +457,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 info.prefix = guest.prefix;
                 info.phone = guest.phone;
                 info.isChild = guest.isChild;
+                info.selectedOptions = guest.orderedOption;
                 returnroom.guestInfo.add(info);
             }
             List<PmsBookingAddonItem> addons = pmsManager.getAddonsWithDiscount(room.pmsBookingRoomId);
@@ -476,6 +478,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 toAddAddon.icon = item.bookingicon;
                 checkIsAddedToRoom(toAddAddon, room, item);
                 if(!item.displayInBookingProcess.isEmpty() && !item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
+                    continue;
+                }
+                if (shouldIgnoreDueToGroupAddonFunctionallity(item, addons)) {
                     continue;
                 }
                 if(isAvailableForRoom(item, room)) {
@@ -643,6 +648,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 newGuest.prefix = ginfo.prefix;
                 newGuest.name = ginfo.name;
                 newGuest.isChild = ginfo.isChild;
+                newGuest.orderedOption = ginfo.selectedOptions;
                 updatedGuestInfo.add(newGuest);
             }
             room.guests = updatedGuestInfo;
@@ -678,6 +684,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addItemSupported(result);
         addTextualSummary(result);
         addLoggedOnInformation(result);
+        addGroupAddons(result);
         validateFields(result);
         return result;
     }
@@ -980,7 +987,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private boolean isAvailableForRoom(PmsBookingAddonItem item,PmsBookingRooms room) {
-        
         if(!item.onlyForBookingItems.isEmpty()) {
             List<BookingItem> items = bookingEngine.getAvailbleItems(room.bookingItemTypeId, room.date.start, room.date.end);
             for(BookingItem tmpItem : items) {
@@ -1310,5 +1316,56 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         return generateSummary();
+    }
+
+    private boolean shouldIgnoreDueToGroupAddonFunctionallity(PmsBookingAddonItem item, List<PmsBookingAddonItem> addons) {
+        if (item.groupAddonType != null && !item.groupAddonType.isEmpty()) {
+            return true;
+        }
+        
+        List<String> productIdsPartOfAGroupAddon = addons.stream()
+                .filter(o -> o.groupAddonType != null && !o.groupAddonType.isEmpty() && o.groupAddonType.equals("option"))
+                .flatMap(o -> o.groupAddonSettings.groupProductIds.stream())
+                .collect(Collectors.toList());
+        
+        return productIdsPartOfAGroupAddon.contains(item.productId);
+    }
+
+    private void addGroupAddons(GuestAddonsSummary result) {
+        
+        for (RoomInfo room : result.rooms) {
+            List<PmsBookingAddonItem> addons = pmsManager.getAddonsWithDiscount(room.roomId);
+            
+            List<PmsBookingAddonItem> groupAddonsForEachGuest = addons.stream()
+                    .filter(item -> item.groupAddonType != null && item.groupAddonType.equals("option"))
+                    .filter(item -> item.displayInBookingProcess.contains(room.bookingItemTypeId))
+                    .filter(item -> item.dependsOnGuestCount)
+                    .collect(Collectors.toList());
+            
+            for (PmsBookingAddonItem groupAddon : groupAddonsForEachGuest) {
+                List<AddonItem> addonsAvailable = addons
+                        .stream()
+                        .filter(item -> groupAddon.groupAddonSettings.groupProductIds.contains(item.productId))
+                        .filter(item -> item.displayInBookingProcess.contains(room.bookingItemTypeId))
+                        .map(item -> {
+                            AddonItem addonItem = new AddonItem();
+                            addonItem.setAddon(item);
+                            addonItem.name = productManager.getProduct(item.productId).name;
+                            return addonItem;
+                        })
+                        .collect(Collectors.toList());
+                
+                AddonItem addonItem = new AddonItem();
+                addonItem.setAddon(groupAddon);
+                addonItem.name = productManager.getProduct(groupAddon.productId).name;
+                
+                GroupAddonItem groupAddonItem = new GroupAddonItem();
+                groupAddonItem.mainItem = addonItem;
+                groupAddonItem.items = addonsAvailable;
+                
+                room.availableGuestOptionAddons.add(groupAddonItem);
+            }
+            
+        }
     }
 }

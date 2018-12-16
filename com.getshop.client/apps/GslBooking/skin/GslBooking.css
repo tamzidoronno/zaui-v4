@@ -46,7 +46,6 @@ Error      : #de5353; red
     padding: 10px;
 }
 
-
 .GslBooking .gslfront_1 {
     background-color: #fff;
     padding: 0px;
@@ -59,6 +58,11 @@ Error      : #de5353; red
     width:100%;
     text-align:left;
 }
+
+.GslBooking .gslfront_1[page="roomconfig"] {
+    box-shadow: inherit;
+}
+
 .GslBooking .gslfront_1 *,.GslBooking .gslfront_1 *::before,.GslBooking .gslfront_1 *::after{box-sizing: border-box;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;}
 .GslBooking .gslfront_1, .GslBooking .gslfront_1 input, .GslBooking .gslfront_1 select{font-family: 'Montserrat', sans-serif;}
 .GslBooking .gslfront_1 .nights .fa { font-size: 25px; cursor:pointer; }
@@ -448,6 +452,190 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .guestentry .ischildrow { padding-top: 4px; padding-bottom: 14px; color:#563333;font-size: 12px; display:inline-block; }
 .GslBooking .gslfront_1 .guest_phone{width:25% !important;color: #329ad6;padding: 8px 0px 8px 16px!important;}
 .GslBooking .gslfront_1 .guest_addon{position: absolute;right:40px; top:0px; height: 31px; display:inline-block; color:#94ccdf; font-size: 14px;padding-top:4px;}
+
+
+.GslBooking .gslfront_1 .getshop_room_config { display: none; }
+.GslBooking .gslfront_1 .getshop_room_config .guestinfowarning { color: red; font-weight: bold; text-align: center; padding: 20px; margin-top: 20px; border: solid 1px red; display: none;}
+.GslBooking .gslfront_1 .getshop_room_config .contains_error { border: solid 1px red; }
+.GslBooking .gslfront_1 .getshop_room_config .roomconfigtemplate { display: none; }
+.GslBooking .gslfront_1 .getshop_room_config .guestinformationtemplate { display: none; }
+.GslBooking .gslfront_1 .getshop_room_config .getshop_room_config_innner .gsl_header {
+    border-bottom: solid 1px #DDD;
+    text-align: center;
+    font-size: 25px;
+    padding: 10px;    
+}
+.GslBooking .gslfront_1 .getshop_room_config .getshop_room_config_innner .gsl_header .roomname {
+    font-size: 20px;
+    padding-top: 5px;
+    font-weight: bold;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guestinformation .ischildbox {
+    font-size: 15px;
+    padding: 5px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guestinformation {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    font-size: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #EFEFEF;
+    border-top: solid 1px #DDD;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box .selection_title {
+    font-weight: bold;
+}
+.GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box .selecticon {
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 5px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box .selecticon i {
+    color: green;
+    font-size: 20px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box.active .selecticon {
+    display: block;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box {
+    margin-bottom: 10px;
+    padding-left: 30px;
+    position: relative;
+    cursor: pointer;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .selectgroupheadertitle {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.GslBooking .gslfront_1 .getshop_room_config .group_chose_option_guest {
+    font-size: 15px;
+    padding: 9px;
+}
+.GslBooking .gslfront_1 .getshop_room_config .guestinformation:nth-child(odd) {
+    background-color: #DDD;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guestinformation .col {
+    display: inline-block;
+    width: 33%;
+    font-size: 16px;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guestinformation .prefix {
+    width: 50px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guestinformation .phonenumber {
+    width: calc(100% - 56px);
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .addon_select_box .price {
+    font-size: 25px;
+    text-align: center;
+    padding: 5px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .addon_select_box .addon_select_box_name {
+    padding: 20px;
+    padding-bottom: 0px;
+    box-sizing: border-box;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .backandforwardbuttons {
+    font-size: 0px;
+    margin-top: 50px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .backandforwardbuttons .prev_button,
+.GslBooking .gslfront_1 .getshop_room_config .backandforwardbuttons .next_button {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    background-color: #3fc297;
+    line-height: 50px;
+    font-size: 20px;
+    color: #FFF;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .backandforwardbuttons .next_button {
+    border-left: solid 1px #FFF;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .guestinfoinner {
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .addon_select_box {
+    display: inline-block;
+    width: calc(100% / 3);
+    height: auto;
+    border-right: solid 1px #DDD;
+    vertical-align: top;
+    box-sizing: border-box;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config  .countselect {
+    font-size: 0px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config  .countselect .countcol {
+    font-size: 20px;
+    display: inline-block;
+    width: calc(100%/3);
+    text-align: center;
+    line-height: 40px;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config  .countselect .countcol.plus,
+.GslBooking .gslfront_1 .getshop_room_config  .countselect .countcol.minus {
+    background-color: #3fc297;
+    line-height: 46px;
+    height: 46px;
+    cursor: pointer;
+    color: #FFF;
+    font-size: 30px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select {
+    border: solid 1px #DDD;
+    margin-top: 50px;
+    display: none;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .select_addons_row { border-top: solid 1px #DDD; }
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .select_addons_row div.addon_select_box:last-child { border-right: 0px; }
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .select_addons_row div.addon_select_box.last_child { border-right: 1px #DDD !important; }
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .addons_select_infobox {
+    padding: 20px;
+}
+
+.GslBooking .gslfront_1 .getshop_room_config .room_addons_to_select .addons_select_header,
+.GslBooking .gslfront_1 .getshop_room_config .guestinfoheader {
+    font-weight: bold;
+    background-color: #329ad6;
+    color: #FFF;
+    text-align: center;
+    padding: 20px;
+}
+
 .GslBooking .gslfront_1 .guestaddonicon {
     background-color: #fff;
     border-radius: 50%;

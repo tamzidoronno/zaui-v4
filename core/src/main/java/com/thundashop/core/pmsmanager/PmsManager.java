@@ -4210,6 +4210,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.setTranslationStrings(addonConfig.getTranslations());
         toReturn.onlyForBookingItems = addonConfig.onlyForBookingItems;
         toReturn.alwaysAddAddon = addonConfig.alwaysAddAddon;
+        toReturn.groupAddonType = addonConfig.groupAddonType;
+        toReturn.groupAddonSettings = addonConfig.groupAddonSettings;
 
         if (addonConfig.price != null && addonConfig.price > 0) {
             toReturn.price = addonConfig.price;
@@ -5367,6 +5369,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             createUserForBooking(booking);
             addDefaultAddons(booking);
+            addGuestAddons(booking);
+            
             checkIfBookedBySubAccount(booking);
             if (userManager.getUserById(booking.userId) == null || userManager.getUserById(booking.userId).suspended) {
                 logPrint("User is suspended." + booking.id);
@@ -9320,5 +9324,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public String getDefaultCountryCode() {
         return storeManager.getcountryCode();
+    }
+    
+    private void addGuestAddons(PmsBooking booking) {
+        for (PmsBookingRooms room : booking.rooms) {
+            for (PmsGuests guest : room.guests) {
+                if (guest.orderedOption == null) {
+                    continue;
+                }
+                
+                for (String productId : guest.orderedOption.values()) {
+                    List<PmsBookingAddonItem> addonsToAdd = createAddonsThatCanBeAddedToRoom(productId, room.pmsBookingRoomId);
+                    room.addons.addAll(addonsToAdd);
+                }
+            }
+        }
+        
+        saveBooking(booking);
     }
 }

@@ -53,6 +53,8 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isAvailableForCleaner = false;
     public boolean dependsOnGuestCount = false;
     public boolean isIncludedInRoomPrice = false;
+    public String groupAddonType = "";
+    public GroupAddonSettings groupAddonSettings = new GroupAddonSettings();
     public String channelManagerAddonText = "";
     public String bookingicon = "";
     public List<String> includedInBookingItemTypes = new ArrayList();

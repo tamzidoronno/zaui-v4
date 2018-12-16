@@ -31,8 +31,20 @@ $rangetype[2] = "On booking";
     <div class="extendedinforow">
         <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">
     </div>
-    <br>
-
+    <br/>
+    <hr/>
+    <div class="extendedinforow">
+        Group addon type ( blank = no group addon )
+        <select gsname='groupaddon' class='settings'> 
+            <? $selected = $addonItem->groupAddonType == "" ? "selected='true'" : ""; ?>
+            <option <? echo $selected; ?> value=''></option>
+            <? $selected = $addonItem->groupAddonType == "option" ? "selected='true'" : ""; ?>
+            <option <? echo $selected; ?> value='option'>Option</option>
+        </select>
+        
+    </div>
+    <hr/>
+    
     <?php
     echo "Only available for the following rooms:<br>";
     foreach($allItems as $item) {

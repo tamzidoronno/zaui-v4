@@ -4,20 +4,19 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </head>
 
-<div style='margin: 200px;'>
-    <div id='bookingprocess'></div>
-</div>
+<div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
 
 <script>
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://tobiasbrygga.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://eilertsmith.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://tobiasbrygga.3.0.local.getshop.com/",
-                    "jsendpoint": "http://tobiasbrygga.3.0.local.getshop.com/",
-                    "domain" : "default"
+                    "endpoint": "http://eilertsmith.3.0.local.getshop.com/",
+                    "jsendpoint": "http://eilertsmith.3.0.local.getshop.com/",
+                    "domain" : "default",
+                    'roomStepTroughConfig' : true
 //                    "success" : function(res) {
 //                        console.log("booking completed");
 //                        console.log(res);
@@ -28,7 +27,17 @@
 //                    }
                 }
             );
+            
+            
         });
+        
+//        setTimeout(function() {
+//            $('#search_rooms').click();
+//        }, 1500);
+//        
+//        setTimeout(function() {
+//            $('.continuetoguestinformationbtn').click();
+//        }, 2500);
     });
 </script>
 

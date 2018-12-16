@@ -195,6 +195,7 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             $addon->bookingicon = $_POST['data']['bookingicon'];
             $addon->count = $_POST['data']['count'];
             $addon->channelManagerAddonText = $_POST['data']['channelManagerAddonText'];
+            $addon->groupAddonType = $_POST['data']['groupaddon'];
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
@@ -212,6 +213,43 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         }
         return false;
     }
+    
+    /**
+     * 
+     * @param type $config
+     * @param type $productId
+     * @return \core_pmsmanager_PmsBookingAddonItem
+     */
+    public function getAddonItem($config, $productId) {
+        foreach($config->addonConfiguration as $addon) {
+            if($addon->productId == $productId) {
+                return $addon;
+            }
+        }
+        
+        return null;
+    }
 
+    public function loadGroupProductInfo() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $addonItem = $this->getAddonItem($config, $_POST['data']['productId']);
+        
+        if ($addonItem->groupAddonType == "option") {
+            $this->includefile('groupaddon_config_option');
+        }
+    }
+    
+    public function saveGroupAddonProducts() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        
+        foreach($config->addonConfiguration as $addon) {
+            if($addon->productId != $_POST['data']['productId']) {
+                continue;
+            }
+            $addon->groupAddonSettings->groupProductIds = $_POST['data']['productIds'];
+        }
+        
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
 }
 ?>

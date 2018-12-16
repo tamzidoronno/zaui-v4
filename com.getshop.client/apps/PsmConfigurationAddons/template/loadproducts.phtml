@@ -84,6 +84,14 @@ foreach($config->addonConfiguration as $item) {
             <i class="fa fa-info-circle loadExtendedProductInformation" style="color:green; cursor:pointer;"></i>
             <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gstype="forceClicksubmitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
             <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
+            <?
+            if ($addonItem->groupAddonType) {
+                ?>
+                <i class='fa fa-chain editgroupaddon' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
+                <?
+            }
+            ?>
+                
             <?php echo "<span class='productnamecontainer'>" . $product->name . "</span>";
             $translationcount = 0;
             $translations = "";

@@ -76,6 +76,66 @@
             <div id="productoverview_footer" style="position: relative;">
             </div>
         </div>
+        <div class="getshop_room_config">
+            <div class='getshop_room_config_innner'>
+                <div class='gsl_header'>
+                    <span class='text'></span> <span class='currentroomnumber'></span> / <span class='tootalrooms'></span>
+                    <div class='roomname'></div>
+                </div>
+                
+                <div class='guestinfoheader'>
+                    <span gstype='bookingtranslation' gstranslationfield='guestInfo'></span>
+                </div>
+
+                <div class='guestinformation guestinformationtemplate guestentry'>
+                    <div class='name col'>
+                        <span gstype='bookingtranslation' gstranslationfield='name'></span> ( <span gstype='bookingtranslation' gstranslationfield='guest'></span>: <span class='guestnumber'></span> )
+                        <br/>
+                        <input type="txt" gsname='name'>
+                    </div>
+                    <div class='email col'>
+                        <span gstype='bookingtranslation' gstranslationfield='e-mail'></span> ( <span gstype='bookingtranslation' gstranslationfield='guest'></span>: <span class='guestnumber'></span> )
+                        <br/>
+                        <input type="txt" gsname='email'>
+                    </div>
+                    <div class='phone col'>
+                        <span gstype='bookingtranslation' gstranslationfield='phone'></span> ( <span gstype='bookingtranslation' gstranslationfield='guest'></span>: <span class='guestnumber'></span> )
+                        <br/>
+                        <input type="txt" class='prefix' gsname='prefix'>
+                        <input type="txt" class='phonenumber' gsname='phone'>
+                    </div>
+                    <div class='ischildbox'>
+                        <input type="checkbox" class="ischild" gsname="ischild"><span gstype='bookingtranslation' gstranslationfield='ischildtext'></span><br>
+                    </div>
+                    
+                </div>
+                
+                <div class='guestinfoinner'></div>
+                
+                <div class='room_addons_to_select'>
+                    <div class='addons_select_header'><span gstype='bookingtranslation' gstranslationfield='extraaddons'></span></div>
+                    <div class='addons_select_infobox'><span gstype='bookingtranslation' gstranslationfield='addonsinformation'></span></div>
+                    <div class='addonselectarea'></div>
+                </div>
+                
+                <div class="guestinfowarning">
+                    <span gstype="bookingtranslation" gstranslationfield="invalidguestinformation"></span>
+                </div>
+
+                <div class='backandforwardbuttons'>
+                    <div class='prev_button'>
+                        <i class='fa fa-arrow-left'></i> <span gstype='bookingtranslation' gstranslationfield='back'></span>
+                    </div>
+
+                    <div class='next_button' onclick='getshop_showNextRoomToConfig()'>
+                        <span gstype='bookingtranslation' gstranslationfield='continue'></span> <i class='fa fa-arrow-right'></i>
+                    </div>    
+                </div>
+                
+            </div>
+            
+           
+        </div>
         <div class="addons_overview">
             <div class="addons_overview_right">
                 <div style="padding:10px;">

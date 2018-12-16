@@ -85,7 +85,7 @@ foreach($config->addonConfiguration as $item) {
     <tr class='settingsForProduct' productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
         <td style="width:300px;text-align: left;position:relative;">
             <i class="fa fa-info-circle loadExtendedProductInformation" style="color:green; cursor:pointer;"></i>
-            <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gstype="forceClicksubmitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
+            <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gss_method="submitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
             <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
             <?
             if ($addonItem->groupAddonType) {

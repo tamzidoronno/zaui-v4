@@ -68,8 +68,10 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             if($tmpaddon->productId == $productId) {
                 foreach($languages as $language) {
                     $tmpaddon->translationStrings->{$language."_descriptionWeb"} = json_encode($_POST['data'][$language."_descriptionWeb"]);
+                    $tmpaddon->translationStrings->{$language."_name"} = json_encode($_POST['data'][$language."_name"]);
                 }
                 $tmpaddon->descriptionWeb = $_POST['data'][$selected."_descriptionWeb"];
+                $tmpaddon->name = $_POST['data'][$selected."_name"];
             }
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notifications);

@@ -13,13 +13,36 @@ getshop.pms = {
    init : function() {
         $(document).on('click', '[gs_model].gss_onoff', getshop.pms.toggleOnOff);
         $(document).on('click', '[gss_method="saveSettings"]', getshop.pms.saveSettings);
+        $(document).on('click', '[gss_method="submitToInfoBox"]', getshop.pms.postToInformationBox);
         $(document).on('click', '.gsoverlayinner .closemodal', getshop.pms.closeOverLaysMouse);
         $(document).on('keydown', getshop.pms.closeOverLays);
    },
    hideInformationBox : function() {
        $('.gsoverlay1').removeClass('active');
    },
-   
+   postToInformationBox : function(event) {
+        if(event.type == "keyup") {
+            if(event.keyCode !== 13) {
+                return;
+            }
+        }
+        $('#loaderbox').show();
+
+        var form = $(this).closest('[gstype="form"]');
+        var data = thundashop.framework.createGsArgs(form);
+        
+        if($(this).attr('gsvalue')) {
+            data["clicksubmit"] = $(this).attr('gsvalue');
+        }
+        
+        var method = form.attr('method');
+        if(typeof(method) === "undefined" || $(this).attr('method')) {
+            method = $(this).attr('method');
+        }
+        var event = thundashop.Ajax.createEvent('',method,$(this),data);
+        var title = $('#informationboxtitle').text();
+        getshop.pms.showInformationBox(event, title, true);
+    },
    closeOverLaysMouse : function(e) {
         if($('.gsoverlay1').is(":visible")) {
             $('.gsoverlay1').click();

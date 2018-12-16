@@ -72,6 +72,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     @Translation
     public String descriptionWeb = "";
     
+    @Translation
     private String name = "";
     boolean addedToRoom = false;
 

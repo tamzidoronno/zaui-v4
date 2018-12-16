@@ -14,24 +14,31 @@
     echo "<table cellspacing='0' cellpadding='0' method='savetranslationforproduct' gstype='form'>";
     echo "<tr>";
     echo "<th>Language</th>";
-    echo "<th>Translation</th>";
+    echo "<th>Name</th>";
+    echo "<th>Description</th>";
     echo "</tr>";
     
     foreach($notifications->addonConfiguration as $tmpaddon) {
         if($tmpaddon->productId == $productId) {
             foreach($languages as $language) {
-                $text = "";
+                $desc = "";
                 if(isset($tmpaddon->translationStrings->{$language."_descriptionWeb"})) {
-                    $text = json_decode($tmpaddon->translationStrings->{$language."_descriptionWeb"});
+                    $desc = json_decode($tmpaddon->translationStrings->{$language."_descriptionWeb"});
+                }
+                $name = $tmpaddon->name;
+                if(isset($tmpaddon->translationStrings->{$language."_name"})) {
+                    $name = json_decode($tmpaddon->translationStrings->{$language."_name"});
                 }
                 echo "<tr>";
-                echo "<td style='text-align:left; padding-left: 20px; padding-right: 20px;'>" . $states[$language] .  "</td><td><input type='text' class='gsniceinput1' style='width:500px;' value='$text' gsname='".$language."_descriptionWeb'></td>";
+                echo "<td style='text-align:left; padding-left: 20px; padding-right: 20px;'>" . $states[$language] .  "</td>";
+                echo "<td><input type='text' class='gsniceinput1' style='width:200px;' value='$name' gsname='".$language."_name'></td>";
+                echo "<td><input type='text' class='gsniceinput1' style='width:500px;' value='$desc' gsname='".$language."_descriptionWeb'></td>";
                 echo "</tr>";
             }
         }
     }
     echo "<tr><td>";
     echo "<input type='hidden' gsname='productid' value='$productId'>";
-    echo "</td><td style='text-align:right;'><input type='button' value='Save translation' style='padding:8px;' gstype='submit'></td></tr>";
+    echo "</td><td style='text-align:right;'><input type='button' value='Save translation' style='padding:8px;' gstype='submit' gs_callback='window.location.reload'></td></tr>";
     echo "</table>";
 ?>

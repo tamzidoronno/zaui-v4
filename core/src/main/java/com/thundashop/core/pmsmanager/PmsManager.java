@@ -9317,4 +9317,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     List<PmsBooking> getAllBookingsUnfinalized() {
         return new ArrayList(bookings.values());
     }
+
+    public String getDefaultCountryCode() {
+        return storeManager.getcountryCode();
+    }
 }

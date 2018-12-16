@@ -63,6 +63,8 @@ public class PmsRoomSimple implements Serializable {
     boolean extrabed = false;
     boolean childbed = false;
     String cleaningComment = "";
+    String language = "";
+    String countryCode = "";
     public Date requestedEndDate;
     public Integer priceType;
 }

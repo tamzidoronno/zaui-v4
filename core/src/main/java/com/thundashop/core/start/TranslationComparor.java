@@ -59,8 +59,8 @@ public class TranslationComparor {
         List<String> languages = new ArrayList();
         languages.add("nb_NO");
         languages.add("en_en");
-        languages.add("fi_FI");
-        languages.add("nl_NL");
+        languages.add("fi");
+        languages.add("nl");
         languages.add("de");
         languages.add("se");
 

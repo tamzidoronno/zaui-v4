@@ -156,6 +156,15 @@ public class PmsBookingSimpleFilter {
         simple.totalUnpaidCost = pmsInvoiceManager.getTotalUnpaidOnRoom(room, booking,true);
         simple.requestedEndDate = room.requestedEndDate;
         simple.userId = booking.userId;
+        simple.language = room.language;
+        if(simple.language == null || simple.language.isEmpty()) {
+            simple.language = booking.language;
+        }
+        simple.countryCode = booking.countryCode;
+        if(simple.countryCode == null || simple.countryCode.isEmpty()) {
+            simple.countryCode = manager.getDefaultCountryCode();
+        }
+       
         
         if(manager.hasLockSystemActive()) {
             simple.code = room.code;

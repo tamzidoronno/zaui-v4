@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 namespace ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73;
 
@@ -84,13 +79,17 @@ class PmsSearchBookingColumnFormatters {
         if(isset($guest[0]->name)) {
             $name = $guest[0]->name;
         }
-        $vistorText .= "<div class='guestinfo2' getshop_sorting='".$name."'>";
+        
+        
+        
+        $vistorText .= "<img src='/skin/flags/blank.gif' class='flag flag-".$room->countryCode."' style='float:left;'/><div class='guestinfo2' getshop_sorting='".$name."'>";
             foreach($room->guest as $guest) {
                 $vistorText .= "<div class='guestname'>".$guest->name."</div>";
                 if($guest->email) { $vistorText .= "<div class='guestemail'>" . $guest->email."</div>"; }
                 if($guest->phone) { $vistorText .= "<div class='guestphone'>+" . $guest->prefix . $guest->phone . "</div>"; }
                 $vistorText .= "<br>";
             }
+            $vistorText .= "<span style='color:#bbb;padding-left:10px'>Speaking ".  strtolower($this->printLanguage($room->language))."</span>";
 
             $vistorText .= "<div></div><span class='secondary_text'>";
             $vistorText .= "</span>";
@@ -314,6 +313,25 @@ class PmsSearchBookingColumnFormatters {
         $channels['wubook_28'] = "STRP";
         $channels['terminal'] = "Terminal";
         return $channels;
+    }
+
+    public function printLanguage($langcode) {
+        if($langcode == "nb_NO") {
+            $langcode = "no";
+        }
+        if($langcode == "en_EN") {
+            $langcode = "en";
+        }
+        if($langcode == "en_en") {
+            $langcode = "en";
+        }
+        $sendmsgconfig = new \ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration();
+        if(!$langcode) {
+            $langcode="no";
+        }
+        $langcode = strtolower($langcode);
+        $codes = $sendmsgconfig->getLanguageCodes();
+        return $codes[$langcode];
     }
 
 }

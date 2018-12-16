@@ -1,19 +1,36 @@
-<div style='clear:both'></div>
+<div class="loadeditevent"></div>
+<span class="shop_button" loadeditmeesage="-1">Create a new automated message</span>
+<br>
+<br>
 <?php
 /* @var $this ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
-echo "<hr>";
 $msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
-
+$notifications = $this->getNotifications("", true, true);
 
 foreach($msgs as $msg) {
-    echo "<div style='border: solid 1px; margin-bottom: 10px; background-color:#fff;'>";
-    echo "<div class='title' style='background-color:#efefef; padding: 10px; border-bottom: solid 1px;'>" . $msg->title  . "</div>";
-    echo "<div class='content' style='padding: 10px;'>";
-    echo $msg->content;
+    echo "<div class='messageboxnew'>";
+    if($msg->type == "email") {
+        echo "<div class='title'>" . $msg->title  . "</div>";
+    }
+    echo "<div class='content'>";
+    echo nl2br($msg->content);
     echo "</div>";
-    echo "<div class='footer' style='border-top: solid 1px; padding: 10px;'>";
-    echo $msg->key;
-    echo "<span style='float:right;'>" . $msg->type . "</span>";   
+    echo "<div class='footer'>";
+    echo $notifications[$msg->key."_"] . " (" . $msg->type . ")";
+    echo "<div class='optionspreview ".$msg->type."'>";
+    if(sizeof($msg->prefixes) != 0 || sizeof($msg->languages) != 0) {
+        $this->printLanguagesSelected($msg);
+
+        if($msg->type == "sms") {
+            $this->printPrefixesSelected($msg);
+        }
+    } else {
+        echo "Default message.<br>";
+        echo "This message is being used if no match on other criterias.<br>";
+    }
+    echo "</div>";
+    echo "<i class='fa fa-edit' loadeditmeesage='".$msg->id."'></i>";
+    echo "<i class='fa fa-trash-o' msgid='".$msg->id."'></i>";
     echo "</div>";
     echo "</div>";
     echo "<br>";

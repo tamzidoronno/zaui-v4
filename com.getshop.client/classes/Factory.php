@@ -1139,10 +1139,23 @@ class Factory extends FactoryBase {
         $states['se'] = "Swedish";
         $states['dk'] = "Danish";
         $states['en_en'] = "English";
-        $states['nl_NL'] = "Dutch";
+        $states['nl'] = "Dutch";
         $states['de'] = "Germany";
-        $states['fi_FI'] = "Finish";
+        $states['fi'] = "Finish";
         return $states;
+    }
+
+    public function getMainCountry() {
+        if (!isset($this->countryCode)) {
+            $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+            $instance = $this->applicationPool->createInstace($app);
+            $this->countryCode = $instance->getConfigurationSetting("countrycode");
+        }
+
+        if (!$this->countryCode) {
+            $this->countryCode = "NO";
+        }
+        return $this->countryCode;
     }
 
 }

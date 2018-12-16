@@ -2139,7 +2139,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             
             //Lofoten bed and breakfast icreases the rooms by 15%.
-            if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9") || config.increaseByPercentage > 0) {
+            if(storeId.equals("7bb18e4a-7a5c-4a0a-9a59-7e7705f0f004") || config.increaseByPercentage > 0) {
                 double factor = 1.15;
                 if(config.increaseByPercentage > 0) {
                     factor = 1.0 + ((double)config.increaseByPercentage/100);

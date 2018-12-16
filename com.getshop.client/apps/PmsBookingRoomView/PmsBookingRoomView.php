@@ -20,6 +20,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function changeCountryCodeOnBooking() {
+        $booking = $this->getPmsBooking();
+        $booking->countryCode = $_POST['data']['gsvalue'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function changeDiscountCode() {
         $code = $_POST['data']['code'];
         $booking = $this->getPmsBooking();
@@ -796,6 +802,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                         $addon->count = sizeof($guests);
                     }
                 }
+                $r->language = $_POST['data']['language'];
+                $r->countryCode = $_POST['data']['countrycode'];
             }
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $pmsBooking);
@@ -1792,6 +1800,25 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
     public function shouldShowAccessLog() {
         return $this->getApi()->getGetShopLockSystemManager()->canShowAccessLog();
+    }
+
+    public function getLanguage($room, $pmsBooking) {
+        $lang = $room->language;
+        if(!$lang) { $lang = $pmsBooking->language; }
+        if($lang == "nb_NO") { $lang = "no"; }
+        if($lang == "en_en") { $lang = "en"; }
+        return $lang;
+    }
+
+    public function getCountryCode($pmsSelectedRoom, $pmsBooking) {
+        if(!$pmsBooking->countryCode) {
+            $pmsBooking->countryCode = $this->getFactory()->getMainCountry();
+        }
+
+        if($pmsSelectedRoom->countryCode) {
+            return $pmsSelectedRoom->countryCode;
+        }
+        return $pmsBooking->countryCode;
     }
 
 }

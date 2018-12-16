@@ -42,6 +42,8 @@ public class PosManager extends ManagerBase implements IPosManager {
     public HashMap<String, PosTab> tabs = new HashMap();
     public HashMap<String, ZReport> zReports = new HashMap();
     public HashMap<String, CashPoint> cashPoints = new HashMap();
+    public HashMap<String, PosView> views = new HashMap();
+    public HashMap<String, PosTable> tables = new HashMap();
     
     @Autowired
     private CartManager cartManager;
@@ -74,6 +76,12 @@ public class PosManager extends ManagerBase implements IPosManager {
                     if (dataCommon instanceof CashPoint) {
                         cashPoints.put(dataCommon.id, (CashPoint)dataCommon);
                     }
+                    if (dataCommon instanceof PosView) {
+                        views.put(dataCommon.id, (PosView)dataCommon);
+                    }
+                    if (dataCommon instanceof PosTable) {
+                        tables.put(dataCommon.id, (PosTable)dataCommon);
+                    }
                 });
     }
     
@@ -93,6 +101,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     public void deleteTab(String tabId) {
         PosTab tab = tabs.remove(tabId);
         if (tab != null) {
+            removeTabFromTables(tab);
             deleteObject(tab);
         }
     }
@@ -349,13 +358,13 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
     
     @Override
-    public List<ProductList> getProductList(String cashPointId) {
-        CashPoint cashPoint = getCashPoint(cashPointId);
-        if (cashPoint == null) {
+    public List<ProductList> getProductList(String viewId) {
+        PosView view = getView(viewId);
+        if (view == null) {
             return productManager.getProductLists();
         }
      
-        return cashPoint.productListIds.stream()
+        return view.productListsIds.stream()
                 .map(id -> productManager.getProductList(id))
                 .collect(Collectors.toList());
     }
@@ -372,11 +381,15 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public void moveList(String cashPointId, String listId, boolean down) {
+    public void moveList(String viewId, String listId, boolean down) {
         int number = 0;
-        CashPoint cashPoint = getCashPoint(cashPointId);
+        PosView view = getView(viewId);
         
-        for (String id : cashPoint.productListIds) {
+        if (view == null) {
+            return;
+        }
+        
+        for (String id : view.productListsIds) {
             if (id.equals(listId)) {
                 break;
             }
@@ -386,8 +399,8 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         if (down) {
             number++;
-            if (number > (cashPoint.productListIds.size() - 1)) {
-                number = cashPoint.productListIds.size() - 1;
+            if (number > (view.productListsIds.size() - 1)) {
+                number = view.productListsIds.size() - 1;
             }
         } else {
             number--;
@@ -398,7 +411,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         int i = 0;
         List<String> newList = new ArrayList();
-        for (String id : cashPoint.productListIds) {
+        for (String id : view.productListsIds) {
             if (i == number) {
                 newList.add(listId);
             }
@@ -409,13 +422,13 @@ public class PosManager extends ManagerBase implements IPosManager {
                 newList.add(id);
             }
             
-            if (cashPoint.productListIds.size() < i && id.equals(listId) && down && !newList.contains(cashPoint.productListIds.get(i))) {
-                newList.add(cashPoint.productListIds.get(i));
+            if (view.productListsIds.size() < i && id.equals(listId) && down && !newList.contains(view.productListsIds.get(i))) {
+                newList.add(view.productListsIds.get(i));
             }
         }
         
-        cashPoint.productListIds = newList;
-        saveObject(cashPoint);
+        view.productListsIds = newList;
+        saveObject(view);
     }
 
     @Override
@@ -425,5 +438,115 @@ public class PosManager extends ManagerBase implements IPosManager {
             res.cashWithDrawal = amount;
             saveObject(res);
         }
+    }
+
+    @Override
+    public void createNewView(String viewName, String viewType) {
+        PosView view = new PosView();
+        view.name = viewName;
+        view.type = viewType;
+        saveObject(view);
+        views.put(view.id, view);
+    }
+
+    @Override
+    public void createNewTable(String tableName, int tableNumber) {
+        PosTable table = new PosTable();
+        table.name = tableName;
+        table.tableNumber = tableNumber;
+        saveObject(table);
+        tables.put(table.id, table);
+    }
+
+    @Override
+    public void deleteTable(String tableId) {
+        PosTable table = tables.remove(tableId);
+        if (table != null) {
+            deleteObject(table);
+        }
+    }
+
+    @Override
+    public void deleteView(String viewId) {
+        PosView viewToDelete = views.remove(viewId);
+        if (viewToDelete != null) {
+            deleteObject(viewToDelete);
+        }
+    }
+
+    @Override
+    public List<PosTable> getTables() {
+        ArrayList<PosTable> retList = new ArrayList(tables.values());
+        
+        retList.sort((PosTable o1, PosTable o2) -> {
+            Integer a = new Integer(o1.tableNumber);
+            Integer b = new Integer(o2.tableNumber);
+            return a.compareTo(b);
+        });
+        
+        return retList;
+    }
+
+    @Override
+    public List<PosView> getViews() {
+        return new ArrayList(views.values());
+    }
+
+    @Override
+    public PosView getView(String viewId) {
+        return views.get(viewId);
+    }
+
+    @Override
+    public PosTable getTable(String viewId) {
+        return tables.get(viewId);
+    }
+
+    @Override
+    public void saveView(PosView view) {
+        saveObject(view);
+        views.put(view.id, view);
+    }
+
+    @Override
+    public void saveTable(PosTable table) {
+        saveObject(table);
+        tables.put(table.id, table);
+    }
+
+    @Override
+    public boolean hasTables() {
+        return !tables.isEmpty();
+    }
+
+    @Override
+    public String getCurrentTabIdForTableId(String tableId) {
+        PosTable table = getTable(tableId);
+        if (table == null) {
+            return null;
+        }
+        
+        if (table.currentTabId != null && !table.currentTabId.isEmpty()) {
+            PosTab tab = getTab(table.currentTabId);
+            if (tab == null) {
+                table.currentTabId = "";
+            }
+        }
+        
+        if (table.currentTabId == null || table.currentTabId.isEmpty()) {
+            table.currentTabId = createNewTab("Table: " + table.tableNumber);
+            saveObject(table);
+        }
+        
+        return table.currentTabId;
+    }
+
+    private void removeTabFromTables(PosTab tab) {
+        tables.values().stream()
+                .filter(t -> t.currentTabId != null && t.currentTabId.equals(tab.id))
+                .forEach(t -> {
+                    t.currentTabId = "";
+                    saveObject(t);
+                });
     }
 }

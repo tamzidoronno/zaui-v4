@@ -1,0 +1,45 @@
+
+<?
+/* @var $this ns_7a273876_7390_45b3_95c3_79d3c0cec4d3\SalesPointViews */
+$tables = $this->getApi()->getPosManager()->getTables();
+?>
+<div class="isnotactive" style="margin-top: 50px;">
+    <div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Tables"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("By adding tables to your salespoint you can start utilization it more as a restaurant system.");
+                echo "<br/><br/>".$this->__f("Create tables and start selling your stuff.");
+                ?>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div gstype="form" method="createTable" class="createnewtable">
+    <h2>Create a new table</h2>
+    <input class="gsniceinput1" style='line-height: 31px;' gsname="tablenumber" placeholder="Number"/>
+    <br/>
+    <br/><div class="shop_button" gstype='submit'>Create new table</div>
+</div>
+
+<?
+if (count($tables)) {
+?>
+    <h2>Your tables </h2>
+    <?
+    foreach ($tables as $table) {
+        ?>
+        <div>
+            <i class='gs_shop_small_icon fa fa-trash' gsclick='deleteTable' tableid='<? echo $table->id; ?>' gs_confirm='Are you absolutly sure?'></i>
+            <i class='gs_shop_small_icon fa fa-edit' gsclick='editTable' tableid='<? echo $table->id; ?>'></i>
+            &nbsp;&nbsp;&nbsp;<? echo "Table: $table->tableNumber"; ?>
+        </div>
+        <?
+    }
+}
+?>
+

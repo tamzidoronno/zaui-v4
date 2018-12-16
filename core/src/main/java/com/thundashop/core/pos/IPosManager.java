@@ -84,17 +84,53 @@ public interface IPosManager {
     public CashPoint getCashPoint(String cashPointId);
     
     @Editor
-    public List<ProductList> getProductList(String cashPointId);
+    public List<ProductList> getProductList(String viewId);
     
     @Editor
     public void saveCashPoint(CashPoint cashPoint);
     
     @Editor
-    public void moveList(String cashPointId, String listId, boolean down);
+    public void moveList(String viewId, String listId, boolean down);
     
     @Editor
     public void addCashWithDrawalToTab(String tabId, double amount);
     
     @Editor
     public void addOrderIdToZReport(int incrementalOrderId, String zReportId, String password);
+    
+    @Editor
+    public void createNewView(String viewName, String viewType);
+    
+    @Editor
+    public void createNewTable(String tableName, int tableNumber);
+    
+    @Editor
+    public void deleteTable(String tableId);
+    
+    @Editor
+    public void deleteView(String viewId);
+    
+    @Editor
+    public List<PosTable> getTables();
+    
+    @Editor
+    public List<PosView> getViews();
+    
+    @Editor
+    public PosView getView(String viewId);
+    
+    @Editor
+    public PosTable getTable(String viewId);
+    
+    @Editor
+    public void saveView(PosView view);
+    
+    @Editor
+    public void saveTable(PosTable table);
+    
+    @Editor
+    public boolean hasTables();
+    
+    @Editor
+    public String getCurrentTabIdForTableId(String tableId);
 }

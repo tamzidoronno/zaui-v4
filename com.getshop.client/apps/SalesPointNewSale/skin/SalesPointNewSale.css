@@ -29,6 +29,10 @@
     vertical-align: top;
 }
 
+.SalesPointNewSale .rightmenu {
+    margin-top: 50px;
+}
+
 .SalesPointNewSale .leftmenu {
     width: 100px;
     background-color: #23314e;
@@ -98,7 +102,7 @@
     bottom: 0px;
     top: 0px;
     background-color: rgba(0,0,0,0.5);
-    z-index: 1;
+    z-index: 2;
     display: none;
 }
 
@@ -298,4 +302,74 @@
 
 .SalesPointNewSale .productlistinner {
     font-size: 14px;
+}
+
+.SalesPointNewSale .menuviewlist {
+    background-color: #0d152f;
+    width: 200px;
+    right: 0px;
+    position: absolute;
+    display: none;
+}
+
+.SalesPointNewSale .menuviewlist .listname {
+    line-height: 40px;
+    font-size: 14px;
+    border-bottom: solid 1px #FFF;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.SalesPointNewSale .table {
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+    font-size: 11px;
+    min-height: 46px;
+    border: solid 1px #DDD;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-right: 4px;
+    background-color: #0d152f;
+    color: #333;
+}
+
+.SalesPointNewSale .title {
+    margin-bottom: 10px;
+}
+
+.SalesPointNewSale .explenation {
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+.SalesPointNewSale .explenation .text {
+    line-height: 20px;
+    vertical-align: top;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.SalesPointNewSale .explenation .color {
+    vertical-align: top;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border: solid 1px #AAA;
+}
+
+.SalesPointNewSale .table.green,
+.SalesPointNewSale .explenation .color.green {
+    background-color: #1ccf52;
+}
+
+.SalesPointNewSale .table.yellow,
+.SalesPointNewSale .explenation .color.yellow {
+    background-color: #b5ff87;
+}
+
+.SalesPointNewSale .cash_disabled {
+    color: grey !important;
 }

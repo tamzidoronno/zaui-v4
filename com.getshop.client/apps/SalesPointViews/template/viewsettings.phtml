@@ -1,0 +1,47 @@
+<?
+/* @var $this ns_7a273876_7390_45b3_95c3_79d3c0cec4d3\SalesPointViews */
+$views = $this->getApi()->getPosManager()->getViews();
+?>
+<div class="isnotactive" style="margin-top: 50px;">
+    <div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Views"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("You can create as many views as you wish in order to simplify your workday.");
+                echo "<br/><br/>".$this->__f("Views are used to have different setups. For instance you can have a two different views for summer and winter, one has lots of options of winter products and the other one has options for summer products.");
+                ?>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div gstype="form" method="createNewView" class="createnewview">
+    <h2>Create a new view</h2>
+    <input class="gsniceinput1" style='line-height: 31px;' gsname="name" placeholder="View name"/> - 
+    <select class="gsniceselect1" gsname="type">
+        <option value="listview">List</option> 
+   </select>
+    <br/>
+    <br/><div class="shop_button" gstype='submit'>Create view</div>
+</div>
+
+<?
+if (count($views)) {
+?>
+    <h2>Your views </h2>
+    <?
+    foreach ($views as $view) {
+        ?>
+        <div>
+            <i class='gs_shop_small_icon fa fa-trash' gsclick='deleteView' viewid='<? echo $view->id; ?>' gs_confirm='Are you absolutly sure?'></i>
+            <i class='gs_shop_small_icon fa fa-edit' gsclick='editView' viewid='<? echo $view->id; ?>'></i>
+            &nbsp;&nbsp;&nbsp;<? echo "$view->name ($view->type)"; ?>
+        </div>
+        <?
+    }
+}
+?>
+

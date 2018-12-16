@@ -21,8 +21,8 @@ class SalesPointCommon extends \MarketingApplication {
             return true;
         }
         
-        return false;
-    }
+        return false; 
+   }
     
     public function getSelectedCashPointId() {
         
@@ -39,5 +39,21 @@ class SalesPointCommon extends \MarketingApplication {
     
     public function disconnectedCashPoint() {
         unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_id']);
+    }
+    
+    public function getSelectedViewId() {
+        if(isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_view_id'])) {
+            return $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_view_id'];
+        }
+        
+        return "";
+    }
+    
+    public function selectView() {
+        $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_view_id'] = $_POST['data']['viewId'];
+    }
+    
+    public function disconnectedView() {
+        unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_view_id']);
     }
 }

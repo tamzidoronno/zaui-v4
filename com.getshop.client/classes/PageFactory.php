@@ -434,5 +434,17 @@ class PageFactory {
         $row->addColumn("5532e18a-3e3d-4804-8ded-30bbb33e5bd5", "1e379f14-c842-405e-a45b-9a0ebef4e6b1");
         $this->pages['cashpoints'] = $page;
         
+        $page = new \ModulePage("views", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("7a273876-7390-45b3-95c3-79d3c0cec4d3", "1c1ab07d-2efa-443c-93b6-b691d191094c");
+        $this->pages['views'] = $page;
+        
+        $page = new \ModulePage("tables", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("300e2528-8518-411b-b343-28ad83eced77", "259188e6-3cba-4829-baa5-4e3eec71caf0");
+        $this->pages['tables'] = $page;
+        
     }
 }

@@ -178,7 +178,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     public void completeTransaction(String tabId, String orderId, String cashPointDeviceId) {
         Order order = orderManager.getOrder(orderId);
         
-        if (!order.isFullyPaid()) {
+        if (!order.isFullyPaid() && !order.isSamleFaktura()) {
             orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order) + order.cashWithdrawal);
         }
         
@@ -288,7 +288,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         Order order = orderManager.getOrderByincrementOrderId(incrementalOrderId);
         ZReport zreport = getZReport(zReportId);
         zreport.orderIds.add(order.id);
-        saveObject(order);
+        saveObject(zreport);
     }
 
     private double getTotalAmountForZReport(ZReport report) {

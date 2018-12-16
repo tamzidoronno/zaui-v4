@@ -101,6 +101,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
 
     private void convertOldNotificationSystem() {
+        if(!messages.isEmpty()) {
+            return;
+        }
+        
         PmsConfiguration config = pmsManager.getConfigurationSecure();
         for(String emailKey : config.emails.keySet()) {
             String email = config.emails.get(emailKey);
@@ -110,7 +114,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 msg.content = email;
                 msg.type = "email";
                 msg.key = emailKey;
-                msg.id = UUID.randomUUID().toString();
                 msg.isDefault = true;
                 convertLanguageSetup(msg);
                 messages.put(msg.id, msg);
@@ -124,7 +127,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 msg.content = email;
                 msg.type = "admin";
                 msg.key = adminKey;
-                msg.id = UUID.randomUUID().toString();
                 msg.isDefault = true;
                 convertLanguageSetup(msg);
                 messages.put(msg.id, msg);
@@ -138,7 +140,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 msg.type = "sms";
                 msg.key = smsKey;
                 msg.isDefault = true;
-                msg.id = UUID.randomUUID().toString();
                 convertLanguageSetup(msg);
                 messages.put(msg.id, msg);
             }
@@ -161,13 +162,11 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 msg.key = key;
             }
         }
+        saveObject(msg);
     }
 
     boolean isActive() {
-        if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9")) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
@@ -188,7 +187,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private void notifyByEmail(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "email");
         List<String> emailRecipients = new ArrayList();
-        PmsNotificationMessage message = getMessage(key, booking, room, "email");
+        PmsNotificationMessage message = getMessage(key, booking, room, "email", null);
         if(message != null) {
             String title = formatMessage(message.title, booking, room, key, "email");
             String content = formatMessage(message.content, booking, room, key, "email");
@@ -225,52 +224,45 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         key = checkIfNeedOverride(key, booking, room, "email");
         List<PmsGuests> smsRecipients = new ArrayList();
         
-        PmsNotificationMessage message = getMessage(key, booking, room, "sms");
-        if(message != null) {
-            String content = formatMessage(message.content, booking, room, key, "sms");
-            if(key.startsWith("room_")) {
-                smsRecipients.addAll(sendSms(key, booking, room, "room",content));
-            } else {
-                smsRecipients.addAll(sendSms(key, booking, room, "booker",content));
-            }
-
-            String roomId = null;
-            if(room != null) {
-                roomId = room.pmsBookingRoomId;
-            }
-            
-            if(!smsRecipients.isEmpty()) {
-                String logText = content + "<div>Sent to: ";
-                for(PmsGuests guest : smsRecipients) {
-                    logText += guest.prefix + " : " + guest.phone + ", ";
-                }
-                logText += "</div>";
-                pmsManager.logEntry(logText, booking.id, null, roomId, key + "_sms");
-                
-                if(orderIdToSend != null && !orderIdToSend.isEmpty()) {
-                    for(PmsGuests guest : smsRecipients) {
-                        logToOrder(key, guest.prefix + " " + guest.phone, orderIdToSend);
-                    }
-                }
-            }
+        if(key.startsWith("room_")) {
+            smsRecipients.addAll(sendSms(key, booking, room, "room"));
+        } else {
+            smsRecipients.addAll(sendSms(key, booking, room, "booker"));
         }
     }
 
-    private PmsNotificationMessage getMessage(String key, PmsBooking booking, PmsBookingRooms room, String messageForm) {
+    private PmsNotificationMessage getMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix) {
         if(messageToSend != null && !messageToSend.isEmpty()) {
             PmsNotificationMessage notificationmsg = new PmsNotificationMessage();
             notificationmsg.content = messageToSend;
             return notificationmsg;
         }
         
+        if(prefix== null) {
+            prefix = "";
+        }
+        prefix = prefix.replace("+", "");
+        
+        String language = convertLanguage(booking.language);
+        
+        
+        List<String> languagesSupported = getLanguagesForMessage(key, type);
+        List<String> prefixesSupported = getPrefixesForMessage(key, type);
+        
         for(PmsNotificationMessage msg : messages.values()) {
-            if(!msg.isDefault) {
+            if(!msg.type.equals(type)) {
                 continue;
             }
-            if(!msg.type.equals(messageForm)) {
+            if(languagesSupported.contains(language) && !msg.containsLanguage(language)) {
+                continue;
+            }
+            if(prefixesSupported.contains(prefix) && !msg.prefixes.contains(prefix)) {
                 continue;
             }
             if(!msg.languages.isEmpty() && !msg.containsLanguage(booking.language)) {
+                continue;
+            }
+            if(!msg.prefixes.isEmpty() && !msg.prefixes.contains(prefix)) {
                 continue;
             }
             if(msg.key.equalsIgnoreCase(key)) {
@@ -278,6 +270,23 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 if(msg.title == null) { msg.title = ""; }
                 return msg;
             }
+        }
+        for(PmsNotificationMessage msg : messages.values()) {
+            if(!msg.type.equals(type)) {
+                continue;
+            }
+            if(!msg.key.equalsIgnoreCase(key)) {
+                continue;
+            }
+            if(msg.languages.isEmpty()) {
+                continue;
+            }
+            if(msg.prefixes.isEmpty()) {
+                continue;
+            }
+            if(msg.content == null) { msg.content = ""; }
+            if(msg.title == null) { msg.title = ""; }
+            return msg;
         }
         return null;
     }
@@ -345,12 +354,12 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private String checkIfNeedOverride(String key, PmsBooking booking, PmsBookingRooms room, String messageForm) {
         if(key.equals("booking_completed") && booking.channel != null && booking.channel.contains("wubook")) {
             boolean isChargedByOta = isChargedByOta(booking);
-            PmsNotificationMessage message = getMessage("booking_completed_ota", booking, room, messageForm);
+            PmsNotificationMessage message = getMessage("booking_completed_ota", booking, room, messageForm, null);
             if(message != null) {
                 key = "booking_completed_ota"; 
             }
             if(isChargedByOta) {
-                message = getMessage("booking_completed_payed_ota", booking, room, messageForm);
+                message = getMessage("booking_completed_payed_ota", booking, room, messageForm, null);
                 if(message != null) { 
                     key = "booking_completed_payed_ota"; 
                 }
@@ -375,10 +384,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         return false;
     }
 
-    String getMessageFormattedMessage(String bookingId, String key, String messageForm) {
+    String getMessageFormattedMessage(String bookingId, String key, String type) {
         doConvertToNewSystem();
         PmsBooking booking = pmsManager.getBooking(bookingId);
-        PmsNotificationMessage message = getMessage(key, booking, null, messageForm);
+        PmsNotificationMessage message = getMessage(key, booking, null, type, null);
         if(message==null) {
             return "";
         }
@@ -453,21 +462,23 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         return contract;
     }    
     
-    private List<PmsGuests> sendSms(String key, PmsBooking booking, PmsBookingRooms room, String type, String content) {
-        
-        
-        if(messageToSend != null && !messageToSend.isEmpty()) {
-            content = messageToSend;
-        }
-        
+    private List<PmsGuests> sendSms(String key, PmsBooking booking, PmsBookingRooms room, String type) {
         PmsConfiguration configuration = pmsManager.getConfigurationSecure();
         
         List<PmsGuests> recipients = getSmsRecipients(booking, room, type);
         for(PmsGuests guest : recipients) {
-            if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
-                messageManager.sendSms("sveve", guest.phone, content, guest.prefix, configuration.smsName);
-            } else {
-                messageManager.sendSms("nexmo", guest.phone, content, guest.prefix, configuration.smsName);
+            PmsNotificationMessage message = getMessage(key, booking, room, "sms", guest.prefix);
+            if(message != null) {
+                String content = formatMessage(message.content, booking, room, key, "sms");
+                if(messageToSend != null && !messageToSend.isEmpty()) {
+                    content = messageToSend;
+                }
+                if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
+                    messageManager.sendSms("sveve", guest.phone, content, guest.prefix, configuration.smsName);
+                } else {
+                    messageManager.sendSms("nexmo", guest.phone, content, guest.prefix, configuration.smsName);
+                }
+                logSentMessage(content, room, key, "(" + guest.prefix+")" + guest.phone, booking);
             }
         }
         
@@ -564,7 +575,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
 
     private void notifyAdmin(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "admin");
-        PmsNotificationMessage message = getMessage(key, booking, room, "admin");
+        PmsNotificationMessage message = getMessage(key, booking, room, "admin", null);
         if(message != null) {
             String content = formatMessage(message.content, booking, room,key,"admin");
             String email = storeManager.getMyStore().configuration.emailAdress;
@@ -580,10 +591,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
 
     private void doConvertToNewSystem() {
-        messages.clear();
-        if(messages.isEmpty()) {
-            convertOldNotificationSystem();
-        }
+        convertOldNotificationSystem();
     }
 
     private void logToOrder(String key, String msg, String orderIdToSend) {
@@ -594,6 +602,78 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         e.address = msg;
         order.shipmentLog.add(e);
         orderManager.saveOrder(order);
+    }
+
+    @Override
+    public void deleteMessage(String messageId) {
+        PmsNotificationMessage msg = getMessage(messageId);
+        if(msg != null) {
+            deleteObject(msg);
+            messages.remove(messageId);
+        }
+    }
+
+    @Override
+    public List<String> getLanguagesForMessage(String key, String type) {
+        List<String> languages = new ArrayList();
+        for(PmsNotificationMessage msg : messages.values()) {
+            if(!msg.key.equals(key)) {
+                continue;
+            }
+            if(!msg.type.equals(type)) {
+                continue;
+            }
+            languages.addAll(msg.languages);
+        }
+        return languages;
+    }
+
+    @Override
+    public List<String> getPrefixesForMessage(String key, String type) {
+        List<String> prefixes = new ArrayList();
+        for(PmsNotificationMessage msg : messages.values()) {
+            if(!msg.key.equals(key)) {
+                continue;
+            }
+            if(!msg.type.equals(type)) {
+                continue;
+            }
+            prefixes.addAll(msg.prefixes);
+        }
+        return prefixes;        
+    }
+
+    private void logSentMessage(String content, PmsBookingRooms room, String key, String recipient, PmsBooking booking) {
+
+        String roomId = null;
+        if(room != null) {
+            roomId = room.pmsBookingRoomId;
+        }
+
+        String logText = content + "<div>Sent to: ";
+        logText += recipient;
+        logText += "</div>";
+        pmsManager.logEntry(logText, booking.id, null, roomId, key + "_sms");
+
+        if(orderIdToSend != null && !orderIdToSend.isEmpty()) {
+            logToOrder(key, recipient, orderIdToSend);
+        }
+    }
+
+    private String convertLanguage(String language) {
+        if(language == null) {
+            return "no";
+        }
+        if(language.toLowerCase().equals("nb_no")) {
+            return "no";
+        }
+        if(language.toLowerCase().equals("nn_no")) {
+            return "no";
+        }
+        if(language.toLowerCase().equals("en_en")) {
+            return "en";
+        }
+        return "no";
     }
 
     

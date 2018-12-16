@@ -11,7 +11,6 @@ app.PsmConfigurationAddons = {
         $(document).on('click', '.PsmConfigurationAddons .editgroupaddon', app.PsmConfigurationAddons.editGroupAddon);
         $(document).on('click', '.PsmConfigurationAddons .saveproductsingroupaddon', app.PsmConfigurationAddons.saveProductsInGroupAddon);
     },
-    
     saveProductsInGroupAddon: function() {
         var row = $(this).closest('tr');
         

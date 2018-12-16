@@ -104,6 +104,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return null;
         }
         PmsBooking booking = pmsManager.startBooking();
+        if(arg.language != null && !arg.language.isEmpty()) {
+            setSessionLanguage(arg.language);
+        }
+        if(booking.language == null || booking.language.isEmpty()) {
+            booking.language = getSession().language;
+        }
         if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
             User discountUser = userManager.getUserByReference(arg.discountCode);
             if(discountUser != null) {
@@ -467,7 +473,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             for(PmsBookingAddonItem item : addons) {
                 AddonItem toAddAddon = new AddonItem();
                 toAddAddon.setAddon(item);
-                toAddAddon.name = item.descriptionWeb;
                 String translation = item.getTranslationsByKey("descriptionWeb", curLang);
                 if(translation != null && !translation.isEmpty()) {
                     toAddAddon.name = translation;
@@ -1348,17 +1353,30 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         .filter(item -> groupAddon.groupAddonSettings.groupProductIds.contains(item.productId))
                         .filter(item -> item.displayInBookingProcess.contains(room.bookingItemTypeId))
                         .map(item -> {
+                            String curLang = getSession().language;
                             AddonItem addonItem = new AddonItem();
                             addonItem.setAddon(item);
                             addonItem.name = productManager.getProduct(item.productId).name;
+                            String translatedName = item.getTranslationsByKey("name", curLang);
+                            if(translatedName != null && !translatedName.isEmpty()) {
+                                addonItem.name = translatedName;
+                            }
+                            String translatedDesc = item.getTranslationsByKey("descriptionWeb", curLang);
+                            if(translatedDesc != null && !translatedDesc.isEmpty()) {
+                                addonItem.descriptionWeb = translatedDesc;
+                            }
                             return addonItem;
                         })
                         .collect(Collectors.toList());
                 
                 AddonItem addonItem = new AddonItem();
                 addonItem.setAddon(groupAddon);
+                String curLang = getSession().language;
                 addonItem.name = productManager.getProduct(groupAddon.productId).name;
-                
+                String translatedName = groupAddon.getTranslationsByKey("name", curLang);
+                if(translatedName != null && !translatedName.isEmpty()) {
+                    addonItem.name = translatedName;
+                }
                 GroupAddonItem groupAddonItem = new GroupAddonItem();
                 groupAddonItem.mainItem = addonItem;
                 groupAddonItem.items = addonsAvailable;
@@ -1367,5 +1385,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             
         }
+    }
+
+    private void setSessionLanguage(String language) {
+        if(language.equals("en")) {
+            language = "en_en";
+        }
+        if(language.equals("no")) {
+            language = "nb_NO";
+        }
+        storeManager.setSessionLanguage(language);
     }
 }

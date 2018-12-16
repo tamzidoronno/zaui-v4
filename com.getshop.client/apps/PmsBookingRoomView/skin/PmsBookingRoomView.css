@@ -432,10 +432,11 @@
     padding: 20px;
 }
 
-.PmsBookingRoomView .bookinginformation .guest_col1 { width: calc(100% - 560px); }
+.PmsBookingRoomView .bookinginformation .guest_col1 { width: calc(100% - 550px); }
 .PmsBookingRoomView .bookinginformation .guest_col2 { width: 300px; }
 .PmsBookingRoomView .bookinginformation .guest_col3 { width: 200px; }
 .PmsBookingRoomView .bookinginformation .guest_col4 { width: 35px; }
+.PmsBookingRoomView .bookinginformation .guest_col5 { width: 225px; }
 
 .PmsBookingRoomView .insideheader {
     padding: 0px;
@@ -518,12 +519,11 @@
     font-size: 15px;
     color: green;
 }
-
+.PmsBookingRoomView .guestinfo { width:100%; }
 .PmsBookingRoomView .guestinfo, 
 .PmsBookingRoomView .guestinfobox {
     padding: 20px;
     display: inline-block;
-    
     box-sizing: border-box;
     vertical-align: top;
 }

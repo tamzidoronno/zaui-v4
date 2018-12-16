@@ -19,4 +19,7 @@ public interface IPmsNotificationManager {
     public List<PmsNotificationMessage> getAllMessages();
     public void saveMessage(PmsNotificationMessage msg);
     public PmsNotificationMessage getMessage(String messageId);
+    public void deleteMessage(String messageId);
+    public List<String> getLanguagesForMessage(String key, String type);
+    public List<String> getPrefixesForMessage(String key, String type);
 }

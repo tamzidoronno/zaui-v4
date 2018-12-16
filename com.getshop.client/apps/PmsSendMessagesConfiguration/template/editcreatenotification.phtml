@@ -1,0 +1,229 @@
+<?php
+/* @var $this ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
+$notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+
+/* @var $factory Factory */
+$hasArx = $notificationSettings->arxHostname;
+if($this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName())) {
+    $hasArx = true;
+}
+$msgid = $_POST['data']['id'];
+$msg = new core_pmsmanager_PmsNotificationMessage();
+$msg->type = "email";
+if($msgid != "-1") {
+    $msg = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), $msgid);
+}
+
+$notifications = $this->getNotifications("", $hasArx, false);
+
+$deliverytypes = array();
+$deliverytypes['email'] = "E-mail";
+$deliverytypes['sms'] = "Sms";
+$deliverytypes['admin'] = "Admin";
+?>
+<div class="overlay">
+    <i class="fa fa-close"></i>
+    <div>
+        <div class='headingtext'>Delivery type</div>
+        <?php 
+        foreach($deliverytypes as $devtypes => $val) {
+            $checked = $msg->type == $devtypes ? "checked='checked'" : "";
+            ?>
+            <label class="container"><?php echo $val; ?>
+              <input type="radio" value='<?php echo $devtypes; ?>' <?php echo $checked; ?> name="deliverytype">
+              <span class="checkmark"></span>
+            </label>
+            <?php
+        }
+        ?>
+    </div>
+    <br>
+    <div>
+        <div class='headingtext'>Type of message</div>
+        <select class='gsniceselect1' style='width:100%;' name='typeofmessage'>
+            <?php
+            foreach($notifications as $key => $notification) {
+                $key = substr($key, 0,-1);
+                $selected = $key == $msg->key ? "SELECTED" : "";
+                echo "<option value='$key' $selected>$notification</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <br>
+    <div class='messagetitle'>
+        <div class='headingtext'>Title</div>
+        <input class='gsniceinput1' name='msgtitle' style='width:100%; box-sizing: border-box;' value='<?php echo $msg->title; ?>'>
+        <br>
+        <br>
+    </div>
+    
+    <div data-include-for-type='old'>
+        <div>Variables available:</div>
+        {rooms}, 
+        {referenceNumber},
+        {email}, 
+        {city},
+        {phone},
+        {address}, 
+        {orderid}, 
+        {postCode},
+        {contact_prefix},
+        {personalMessage},
+        {roomlist},
+        {bookingid},
+        {bookinginformation},
+        {extrafield},
+        {userid},
+        {roomDescription},
+        {simpleRoomList}, {nightprice}, {totalcost}
+        
+        <span class='roomspecificvariables'>
+            <div>For guests:</div>
+            {code},
+            {checkin_date}, 
+            {checkout_date},
+            {checkin_time},
+            {checkout_time},
+            {name},
+            {roomType}, 
+            {roomName}
+        </span>
+        .<br>
+    </div>
+    
+    <div class='headingtext'>Content</div>
+    <textarea class='availablemessages' name='msgcontent'><?php echo $msg->content; ?></textarea>
+    <div style='text-align: right; padding-top: 5px;'>
+        <span class='shop_button updatemessage' msgid='<?php echo $msg->id; ?>'>Update message</span>
+    </div>
+    
+    <div class='languageselectionoptions'>
+        <div class='headingtext'>Filter for language</div>
+        <?php
+        $languages = $this->getLanguageCodes();
+        $langs = (array)$msg->languages;
+        $alllangselected = sizeof($langs) == 0 ? "checked" : "";
+        echo "<table width='100%'>";
+        echo "<tr><td><input type='checkbox' value='' class='alllangaugeselectionbox' $alllangselected>All languages</td></tr>";
+        echo "</tr>";
+        echo "<tr>";
+        $counter = 0;
+        foreach($languages as $code => $val) {
+            $checkedlang = in_array($code, $langs) ? "checked" : "";            
+            echo "<td><input type='checkbox' value='$code' class='languageselectionbox' $checkedlang>" . $val . "</td>";
+            $counter++;
+            if($counter % 9 == 0) {
+                echo "<tr></tR>";
+            }
+        }
+        echo "</tr>";
+        echo "</table>";
+        ?>
+    </div>
+    <div class='phoneprefixoptions'>
+        <br>
+        <div class='headingtext'>Filter for phone prefix</div>
+        <?php
+        $languages = $this->getPhonePrefixes();
+        $prefixes = (array)$msg->prefixes;
+        $allprefixselected = sizeof($prefixes) == 0 ? "checked" : "";
+        echo "<table width='100%'>";
+        echo "<tr><td><input type='checkbox' value='' class='allprefixesbox' $allprefixselected>All prefixes</td></tr>";
+        echo "<tr>";
+        $counter = 0;
+        foreach($languages as $code => $val) {
+            $checkedprefix = in_array($code, $prefixes) ? "checked" : "";
+            echo "<td><input type='checkbox' class='prefixselectionbox' value='$code' $checkedprefix>" . $val . "</td>";
+            $counter++;
+            if($counter % 9 == 0) {
+                echo "<tr></tR>";
+            }
+        }
+        echo "</tr>";
+        echo "</table>";
+        ?>
+    </div>
+</div>
+<style>
+    .PmsSendMessagesConfiguration .availablemessages { width: 100%; min-height: 360px;     padding: 10px;
+    border: solid 1px #dcdcdc;
+    transition: box-shadow 0.3s, border 0.3s;
+    box-sizing: inherit;}
+    .PmsSendMessagesConfiguration .overlay { background-color:#fff; box-sizing: border-box; margin: 200px; position:relative; padding: 5px; margin-top: 100px; border-radius: 5px; border-solid 1px #bbb; }
+    .PmsSendMessagesConfiguration .overlay .fa-close { position:absolute; right: -5px; top: -5px; padding: 5px; background-color:#fff; border-radius: 5px; cursor:pointer;}
+    
+    /* Customize the label (the container) */
+    .headingtext { font-size: 17px; margin-bottom: 10px; }
+.container {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 17px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-right: 20px;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+    
+</style>
+
+<script>
+    app.PmsSendMessagesConfiguration.updateBySelection();
+    app.PmsSendMessagesConfiguration.updateRoomSpecificCodes();
+</script>

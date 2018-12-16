@@ -115,6 +115,8 @@ public class PmsBookingRooms implements Serializable {
     public String pgaAccessToken;
     public boolean loggedGetCode = false;
     public boolean loggedDeletedCode = false;
+    public String language = "";
+    public String countryCode = "";
 
     public boolean isOverBooking() {
         if(isAddedToBookingEngine()) {

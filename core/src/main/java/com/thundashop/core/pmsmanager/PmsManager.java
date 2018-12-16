@@ -4218,10 +4218,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             toReturn.priceExTaxes = addonConfig.priceExTaxes;
         }
 
-        if (room != null && room.bookingItemTypeId != null && addonConfig.includedInBookingItemTypes != null && addonConfig.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
-            toReturn.isIncludedInRoomPrice = true;
-        }
-
         return toReturn;
     }
 
@@ -9322,6 +9318,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return new ArrayList(bookings.values());
     }
 
+    public String getDefaultCountryCode() {
+        return storeManager.getcountryCode();
+    }
+    
     private void addGuestAddons(PmsBooking booking) {
         for (PmsBookingRooms room : booking.rooms) {
             for (PmsGuests guest : room.guests) {

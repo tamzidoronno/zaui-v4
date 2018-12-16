@@ -2,9 +2,38 @@
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
+$sendmsgconfig = new ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration();
+$langs = $sendmsgconfig->getLanguageCodes();
 ?>
 <div class="bookinginformation">
 <div class="guestinfo">
+    <div class='insideheader' style='border:solid 0px;'>
+        <? echo $this->__f("Language"); ?>
+        <select class="gsniceselect1" style='float:right;height:35px;' id='roomlanguage'>
+            <?php
+            foreach($langs as $lang => $name) {
+                $selected = $this->getLanguage($pmsSelectedRoom, $pmsBooking) == $lang ? "SELECTED" : "";
+                echo "<option value='$lang' $selected>" . $name . "</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <div class='insideheader' style='border:solid 0px;'>
+        <? echo $this->__f("Country"); ?>
+
+        <select gsname="countryCode" class="gsniceselect1" style='float:right;height:35px;' id='countrycodeselection'>
+            <?php
+            $genothersettings = new ns_afbe1ef5_6c62_45c7_a5a0_fd16d380d7cb\GeneralSettingsOther();
+            $countries = $genothersettings->getCountryCodes();
+            $curCountryCode = $this->getCountryCode($pmsSelectedRoom, $pmsBooking);
+            foreach($countries as $code => $country) {
+                $selected = $this->getCountryCode($pmsSelectedRoom, $pmsBooking) == $code ? "SELECTED" : "";
+                echo "<option value='$code' $selected>$country</option>";
+            }
+            ?>
+        </select>
+    </div>
+    
     <div class='insideheader'>
         <? echo $this->__f("Guests"); ?>
         <div class="gs_shop_small_icon add_more_guests" title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
@@ -22,9 +51,7 @@ $pmsSelectedRoom = $this->getSelectedRoom();
             <b><? echo $this->__f("Phone"); ?></b>
         </div>
 
-        <div class="guest_col guest_col4"> 
-
-        </div>
+        <div class="guest_col guest_col4"></div>
     </div>
 
     <div  class="guest_row row_template" style='display: none'>

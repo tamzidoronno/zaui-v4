@@ -1856,7 +1856,8 @@ function getshop_searchRooms(e) {
             "adults": adults,
             "children": children,
             "discountCode": discountCode,
-            "bookingId": ""
+            "bookingId": "",
+            "language" : sessionStorage.getItem("getshop_language")
         };
         var client = getshop_getWebSocketClient();
         var starting = client.PmsBookingProcess.startBooking(getshop_domainname, data);

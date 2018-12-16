@@ -197,6 +197,22 @@ $slaves = $this->getApi()->getStoreManager()->getSlaves();
         <div style="height:20px;"></div>
         <div class='spacer'></div>
         <div class='row'>
+            <div class='col col1'>Country</div>
+            <div class='col col2'>
+                <select gsname="countrycode" class="gsniceselect1">
+                    <?php
+                    $countrycodes = $this->getCountryCodes();
+                    foreach ($countrycodes as $code => $country) {
+                        $selected = $this->getFactory()->getMainCountry() == $code ? "selected='true'" : "";
+                        ?>
+                        <option <? echo $selected; ?> value="<? echo $code; ?>"><? echo $country; ?></option>
+<?php } ?>
+                </select>
+            </div>
+            <div class='spacer'></div>
+        </div>
+        <div class='spacer'></div>
+        <div class='row'>
             <div class='col col1'>Main language</div>
             <div class='col col2'>
                 <select gsname="mainlanguage" class="gsniceselect1">

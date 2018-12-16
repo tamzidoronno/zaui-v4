@@ -186,6 +186,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
     
     private function renderDataTable() {   
+        ?>
+        <link href="/skin/flags/flags.min.css" rel=stylesheet type="text/css">
+        <?php
+        
         $filter = $this->getSelectedFilter();
         $domainName = $this->getSelectedMultilevelDomainName();
         $args = array($domainName, $filter);

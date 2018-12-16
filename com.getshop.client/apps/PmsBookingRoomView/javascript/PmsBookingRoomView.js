@@ -206,6 +206,8 @@ app.PmsBookingRoomView = {
     },
     saveGuestInformation : function() {
         var args = thundashop.framework.createGsArgs($('.guestinforows'));
+        args.language = $('#roomlanguage').val();
+        args.countrycode = $('#countrycodeselection').val();
         thundashop.Ajax.simplePost($(this), 'saveGuestInformation', args);
     },
     menuOrdersClicked: function() {

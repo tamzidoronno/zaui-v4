@@ -6,6 +6,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionScope;
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
@@ -629,5 +630,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         store.acceptedSlaveIds.removeIf(o -> o.equals(slaveStoreId));
         store.acceptedSlaveIds.add(slaveStoreId);
         storePool.saveStore(store);
+    }
+
+    public String getcountryCode() {
+        Application settings = getStoreSettingsApplication();
+        String countrycode = settings.getSetting("countrycode");
+        if(countrycode == null || countrycode.isEmpty()) {
+            countrycode = "NO";
+        }
+        return countrycode;
     }
 }

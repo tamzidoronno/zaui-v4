@@ -118,6 +118,7 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
                     $addon->price = $res['price'];
                     $addon->dependsOnGuestCount = $res['perguest'] == "true";
                     $addon->noRefundable = $res['nonrefundable'] == "true";
+                    $addon->isIncludedInRoomPrice = $res['isIncludedInRoomPrice'] == "true";
 
                     $isIncluded = array();
                     foreach ($res as $id => $isSelected) {

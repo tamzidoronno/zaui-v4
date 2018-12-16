@@ -104,6 +104,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return null;
         }
         PmsBooking booking = pmsManager.startBooking();
+        booking.language = arg.language;
+        if(booking.language == null || booking.language.isEmpty()) {
+            booking.language = getSession().language;
+        }
         if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
             User discountUser = userManager.getUserByReference(arg.discountCode);
             if(discountUser != null) {

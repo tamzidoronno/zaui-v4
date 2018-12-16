@@ -50,7 +50,20 @@ class PmsTermsAndConditionConfig extends \WebshopApplication implements \Applica
             }
         ?>
         </div>
+        <div style='text-align:right; margin-top: 10px;'>
+            <span class='shop_button savetermsandconditions'>Save terms and conditions</span>
+        </div>
+<br>
+<br>
+<br>
         <?php
+    }
+    
+    public function saveTermsAndConditions() {
+        $langauge = $this->getLanguage();
+        $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $notificationSettings->contracts->{$langauge} = $_POST['data']['content'];
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notificationSettings);
     }
 }
 ?>

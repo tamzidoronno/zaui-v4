@@ -166,6 +166,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
 
     boolean isActive() {
+        if(storeId.equals("8888708d-ede5-4bcd-b5ab-7cfe7ee3d489")) { return false; }
+        if(storeId.equals("26c65d63-e353-4997-83df-488cc2fa3550")) { return false; }
+        if(storeId.equals("fc8f7789-fcdb-4dad-b2ba-7d1d8dcca4d2")) { return false; }
+        if(storeId.equals("bd3909ea-e5e9-4138-9d50-e8eab4a96045")) { return false; }
         return true;
     }
 

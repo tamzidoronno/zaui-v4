@@ -189,14 +189,14 @@ thundashop.common.activateCKEditor = function(id, config) {
         if (config.simpleMode !== undefined)
             simpleMode = config.simpleMode;
     }
-
+    var 
     var target = $('#' + id);
     target.attr('contenteditable', true);
     if (notdestroyonblur === undefined) {
         notdestroyonblur = false;
     }
     var toBeRemoved = 'magiclines';
-    if (notinline) {
+    if (notinline || config.removesave) {
         toBeRemoved += ",save"
     }
 
@@ -262,7 +262,8 @@ thundashop.common.activateCKEditor = function(id, config) {
     
     var instance = null;
     if (notinline) {
-        config.extraPlugins = 'autogrow';
+        config.height = 500;
+        
         config.width = '100%';
         instance = CKEDITOR.replace(id, config);
     } else {

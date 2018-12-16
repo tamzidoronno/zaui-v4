@@ -10,6 +10,10 @@ $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this
     }
     ?>
 </div>
+<div style='text-align:right; margin-top: 10px;'>
+    <span class='shop_button saveinstructions' fromid='otherinstructionsfiled'>Save other instructions</span>
+</div>
+
 
 <h1>Fire instructions</h1>
 <div id="fireinstructions" gsname='fireinstructions' style="border: solid 1px; min-height: 400px;">
@@ -19,6 +23,10 @@ $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this
     }
     ?>
 </div>
+<div style='text-align:right; margin-top: 10px;'>
+    <span class='shop_button saveinstructions' fromid='fireinstructions'>Save fire instructions</span>
+</div>
+
 
 <h1>Cleaning instructions</h1>
 <div id="cleaninginstruction" gsname='cleaninginstruction' style="border: solid 1px; min-height: 400px;">
@@ -27,4 +35,7 @@ $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this
         echo $notificationSettings->cleaninginstruction;
     }
     ?>
+</div>
+<div style='text-align:right; margin-top: 10px;'>
+    <span class='shop_button saveinstructions' fromid='cleaninginstruction'>Save cleaning instructions</span>
 </div>

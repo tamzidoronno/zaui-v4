@@ -119,6 +119,8 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
     }
     
     public function cancelCurrentOrder() {
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid']);
+        
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'])) {
             $order = $this->getCurrentOrder();
             $this->getApi()->getOrderManager()->deleteOrder($order->id);
@@ -265,6 +267,41 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
         $bookingEngineName = @$paymentMethod->settings->bookingengine->value;
         
         return $bookingEngineName;
+    }
+    
+    public function changeUser() {
+        $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'] = $_POST['data']['userid'];
+    }
+    
+    public function createNewUser() {
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        $user = $this->getApi()->getUserManager()->createUser($user);
+        $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'] = $user->id;
+        return $user;
+    }
+    
+    public function createCompany() {
+        $company = new \core_usermanager_data_Company();
+        
+        $company->name = $_POST['data']['companyname'];
+        $company->vatNumber = $_POST['data']['vatnumber'];
+        
+        $company->address = new \core_usermanager_data_Address();
+        
+        $user = $this->getApi()->getUserManager()->createUserAndCompany($company);
+        
+        $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'] = $user->id;
+        
+        return $user;
+    }
+    
+    public function saveTabForInvoicing() {
+        $order = $this->getCurrentOrder();
+        $order->userId = $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->completeCurrentOrder();
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid']);
     }
 }
 ?>

@@ -1,13 +1,17 @@
 <?
 /* @var $this \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser */
 $name = $this->user ? $this->user->fullName : "N/A";
+$userSelected = $this->user ? "userSelected" : "userNotSelected";
 ?>
 
 <?php
 if(!$this->printEditDirect) {
     ?>
-    <span class="show_edit_user edit_user_btn"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></span>
-    <span class="booked_for"><? echo $name; ?></span>
+    <div class='user_view <? echo $userSelected; ?>'>        
+        <span class="show_edit_user edit_user_btn"><i class="fa fa-edit"></i> <? echo $this->__f("Edit"); ?></span>
+        <span class="booked_for"><? echo $name; ?></span>
+    </div>
+
     <span class="show_change_user edit_user_btn"><i class="fa fa-user"></i> <? echo $this->__f("Change"); ?></span>
     
     <div class="edit_details_of_user">

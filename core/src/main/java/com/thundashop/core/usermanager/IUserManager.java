@@ -512,4 +512,7 @@ public interface IUserManager {
     
     @Customer
     public void clearTokenList();
+    
+    @Editor
+    public User createUserAndCompany(Company company);
 }

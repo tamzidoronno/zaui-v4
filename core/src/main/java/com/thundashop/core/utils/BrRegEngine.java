@@ -121,6 +121,7 @@ public class BrRegEngine implements CompanySearchEngine {
     @Override
     public List<Company> search(String search) {
         String normalSearchResult = read(search, false);
+        System.out.println(normalSearchResult);
         List<Company> companies = getCompanies(normalSearchResult);
 
         if (companies.isEmpty()) {
@@ -143,6 +144,11 @@ public class BrRegEngine implements CompanySearchEngine {
             Company retCompany = new Company();
             retCompany.vatNumber = company.orgnr;
             retCompany.name = company.navn;
+            retCompany.address = new Address();
+            retCompany.address.address = company.forretningsadr;
+            retCompany.address.postCode = company.forradrpostnr;
+            retCompany.address.city = company.forradrpoststed;
+            
             returnvalue.add(retCompany);
         }
 

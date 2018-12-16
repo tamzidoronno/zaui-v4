@@ -395,6 +395,7 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("57db782b-5fe7-478f-956a-ab9eb3575855", "");
         $page->addExtraApplications("11234b3f-452e-42ce-ab52-88426fc48f8d");
+        $page->addExtraApplications("b5e9370e-121f-414d-bda2-74df44010c3b");
         $this->pages['new'] = $page;
         
         $page = new \ModulePage("products", "salespoint");
@@ -407,6 +408,8 @@ class PageFactory {
         $this->pages['products'] = $page;
         
         $page = new \ModulePage("paymentmodal", "salespoint");
+        $page->addExtraApplications("b5e9370e-121f-414d-bda2-74df44010c3b");
+        
         $row = $page->createRow();
         $row->addColumn("11234b3f-452e-42ce-ab52-88426fc48f8d", "693a528e-2364-40df-a7a0-dcc765aa46dd");
         $this->pages['paymentmodal'] = $page;
@@ -415,6 +418,11 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("c20ea6e2-bc0b-4fe1-b92a-0c73b67aead7", "c565d07f-51bb-46ee-b006-6bf42940fcaf");
         $this->pages['reports'] = $page;
+        
+        $page = new \ModulePage("invoicing", "salespoint");
+        $row = $page->createRow();
+        $row->addColumn("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba", "9d534e1b-d856-4a81-97d8-970d4d79a226");
+        $this->pages['invoicing'] = $page;
         
         $page = new \ModulePage("settings", "salespoint");
         $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());

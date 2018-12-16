@@ -1,0 +1,27 @@
+<?
+/* @var $this ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+$user = null;
+if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'])) {
+    $user = $this->getApi()->getUserManager()->getUserById($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid']);
+}
+?>
+
+<div style='padding-left: 20px;'>
+    <h2>1. <? echo $this->__f("Select customer"); ?> </h2>
+    <div style='padding-left: 20px;'>
+        <?
+        $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+        $quser->setUser($user);
+        $quser->setExtraArgs($extraArgs);
+        $quser->renderApplication(true, $this);
+       
+        ?>
+    </div>
+    
+    <h2>2. <? echo $this->__f("What do you want to do?"); ?> </h2>
+    <div style='padding-left: 20px;'>
+        <div class='shop_button' gsclick='cancelCurrentOrder'><i class='fa fa-undo'></i> <? echo $this->__f("Cancel"); ?></div>
+        <div class='shop_button' gsclick='saveTabForInvoicing'><i class='fa fa-save'></i> <? echo $this->__f("Save selection for invoicing"); ?></div>
+    </div>
+</div>
+

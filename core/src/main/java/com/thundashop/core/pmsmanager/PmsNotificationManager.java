@@ -195,6 +195,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(message != null) {
             String title = formatMessage(message.title, booking, room, key, "email");
             String content = formatMessage(message.content, booking, room, key, "email");
+            content = wrapContentOnMessage(content);
             if(key.startsWith("room_")) {
                 emailRecipients.addAll(sendEmail(key, booking, room, "room", title, content));
             } else {
@@ -320,20 +321,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         message = formater.formatBookingData(message, booking, bookingEngine);
 
         message = message.replace("{extrafield}", pmsManager.getConfigurationSecure().extraField);
-
-        
-
-        if (type.equals("email")) {
-            if (message != null) {
-                if (message.contains("http") && !message.contains("<a")) {
-                    message = formater.formatHtml(message);
-                }
-
-                message = pmsManager.getConfigurationSecure().emailTemplate.replace("{content}", message);
-                message = message.trim();
-                message = message.replace("\n", "<br>\n");
-            }
-        }
 
         if (key.startsWith("booking_sendpaymentlink")
                 || key.startsWith("booking_unabletochargecard")
@@ -678,6 +665,22 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             return "en";
         }
         return "no";
+    }
+
+    private String wrapContentOnMessage(String message) {
+        if(message != null) {
+            PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+            if (message != null) {
+                if (message.contains("http") && !message.contains("<a")) {
+                    message = formater.formatHtml(message);
+                }
+
+                message = pmsManager.getConfigurationSecure().emailTemplate.replace("{content}", message);
+                message = message.trim();
+                message = message.replace("\n", "<br>\n");
+            }
+        }
+        return message;
     }
 
     

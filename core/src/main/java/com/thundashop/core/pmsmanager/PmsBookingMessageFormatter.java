@@ -290,6 +290,7 @@ class PmsBookingMessageFormatter {
         message = message.replace("{bookinginformation}", bookinginfo);
         message = message.replace("{totalcost}", total + "");
         message = message.replace("{nightprice}", nightPrice + "");
+        message = message.replace("{roomlist2}", getRoomList2(booking, bookingEngine));
         message = formatSpecifics(message, booking);
         return message;
     }
@@ -367,6 +368,28 @@ class PmsBookingMessageFormatter {
             
         }
         return message;
+    }
+
+    private String getRoomList2(PmsBooking booking, BookingEngine bookingEngine) {
+        String list = "";
+        
+        SimpleDateFormat slf = new SimpleDateFormat("dd.MM.YY");
+        
+        for (PmsBookingRooms room : booking.rooms) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            
+            list += "<div class='roominfo' style='margin-top: 10px; margin-bottom: 10px;'>"; 
+            list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "</div>";
+            for (PmsGuests guest : room.guests) {
+                list += "   <div class='guestinfo' style='padding-left: 10px;'>" + guest.name + ", +" + guest.prefix + " " + guest.phone + ", " + guest.email + "</div>";
+            }
+            for (PmsBookingAddonItem addon : room.addons) {
+                list += "   <div class='addon' style='padding-left: 10px;'>" + addon.count + " x " + addon.getName() + "</div>";
+            }
+            list += "</div>";
+        }
+        
+        return list;
     }
 
 }

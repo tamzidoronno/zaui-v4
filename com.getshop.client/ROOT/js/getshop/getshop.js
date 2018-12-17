@@ -424,6 +424,22 @@ thundashop.Ajax = {
             method = $(this).attr('gschange');
             data.gsvalue = $(this).val();
         }
+        
+        var gsPreCheckExtraData = null;
+        
+        if ($(this).attr("gs_precheck")) {
+            var preCheckFunc = $(this).attr("gs_precheck");
+            var funtionBody = "return "+preCheckFunc + "(event);";
+            var toExecute = new Function("event", funtionBody);
+            var gsPreCheckExtraData = toExecute(this);
+            if (gsPreCheckExtraData === false) {
+                return;
+            }
+        }
+        
+        if (gsPreCheckExtraData) {
+            data.gsextradatafromprecheck = gsPreCheckExtraData;
+        }
 
         if ($(this).attr("gs_confirm")) {
             var conf = confirm($(this).attr("gs_confirm"));

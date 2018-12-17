@@ -157,6 +157,9 @@
 "1052","This payment method is not allowed to mark as paid manually"
 "1053","You can not do this as it will change financial in a periode that has been closed."
 "1054","You can not close this periode without closing the previouse one."
+"1055","Vat number can not be blank."
+"1056","Company already exists."
+"1057","There already exists a user with maincompany and has connection to the newly created company."
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

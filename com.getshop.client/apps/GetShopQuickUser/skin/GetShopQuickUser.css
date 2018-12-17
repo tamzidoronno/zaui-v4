@@ -72,6 +72,14 @@ html {
     vertical-align: top;
 }
 
+.GetShopQuickUser .user_view {
+    display: inline-block;
+}
+
+.GetShopQuickUser .userNotSelected {
+    display: none;
+}
+
 .GetShopQuickUser .usersearchrow .user_col1 { width: 150px; }
 .GetShopQuickUser .usersearchrow .user_col2 { width: 250px; }
 .GetShopQuickUser .usersearchrow .user_col3 { width: 100px; }

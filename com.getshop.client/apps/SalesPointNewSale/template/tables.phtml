@@ -1,0 +1,23 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$tables = $this->getApi()->getPosManager()->getTables();
+
+?>
+<h2> <? echo $this->__f("Please select table"); ?> </h2>
+<div class='explenation'>
+    <div class='title'><b><? echo $this->__f("Colors").":"; ?></b></div>
+    <div><span class='color green'></span><span class='text'> <? echo $this->__f("Free / Ready to be used"); ?></span></div>
+    <div><span class='color yellow'></span><span class='text'> <? echo $this->__f("In use"); ?></span></div>
+</div>
+<?
+foreach ($tables as $table) {
+    $inUseClass = $table->currentTabId ? "yellow" : "green";
+    ?>
+    <div class='table <? echo $inUseClass; ?>' tableid='<? echo $table->id; ?>' gsclick='selectTable'>
+        <?
+        echo $table->tableNumber;
+        ?>
+    </div>
+    <?
+}
+?>

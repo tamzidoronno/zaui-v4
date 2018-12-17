@@ -179,6 +179,8 @@ class ModulePageMenu {
         $menu = new \ModulePageMenu();
         $menu->entries[] = new ModulePageMenuItem("GetShop Devices", "devices", "");
         $menu->entries[] = new ModulePageMenuItem("Cashpoints", "cashpoints", "");
+        $menu->entries[] = new ModulePageMenuItem("Views", "views", "");
+        $menu->entries[] = new ModulePageMenuItem("Tables", "tables", "");
         return $menu;
     }
 }

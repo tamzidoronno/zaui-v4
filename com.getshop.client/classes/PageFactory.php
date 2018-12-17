@@ -395,6 +395,7 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("57db782b-5fe7-478f-956a-ab9eb3575855", "");
         $page->addExtraApplications("11234b3f-452e-42ce-ab52-88426fc48f8d");
+        $page->addExtraApplications("b5e9370e-121f-414d-bda2-74df44010c3b");
         $this->pages['new'] = $page;
         
         $page = new \ModulePage("products", "salespoint");
@@ -407,6 +408,8 @@ class PageFactory {
         $this->pages['products'] = $page;
         
         $page = new \ModulePage("paymentmodal", "salespoint");
+        $page->addExtraApplications("b5e9370e-121f-414d-bda2-74df44010c3b");
+        
         $row = $page->createRow();
         $row->addColumn("11234b3f-452e-42ce-ab52-88426fc48f8d", "693a528e-2364-40df-a7a0-dcc765aa46dd");
         $this->pages['paymentmodal'] = $page;
@@ -415,6 +418,11 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("c20ea6e2-bc0b-4fe1-b92a-0c73b67aead7", "c565d07f-51bb-46ee-b006-6bf42940fcaf");
         $this->pages['reports'] = $page;
+        
+        $page = new \ModulePage("invoicing", "salespoint");
+        $row = $page->createRow();
+        $row->addColumn("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba", "9d534e1b-d856-4a81-97d8-970d4d79a226");
+        $this->pages['invoicing'] = $page;
         
         $page = new \ModulePage("settings", "salespoint");
         $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
@@ -433,6 +441,18 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("5532e18a-3e3d-4804-8ded-30bbb33e5bd5", "1e379f14-c842-405e-a45b-9a0ebef4e6b1");
         $this->pages['cashpoints'] = $page;
+        
+        $page = new \ModulePage("views", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("7a273876-7390-45b3-95c3-79d3c0cec4d3", "1c1ab07d-2efa-443c-93b6-b691d191094c");
+        $this->pages['views'] = $page;
+        
+        $page = new \ModulePage("tables", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("300e2528-8518-411b-b343-28ad83eced77", "259188e6-3cba-4829-baa5-4e3eec71caf0");
+        $this->pages['tables'] = $page;
         
     }
 }

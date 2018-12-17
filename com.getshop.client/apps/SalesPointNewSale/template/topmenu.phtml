@@ -1,6 +1,10 @@
 <?
 /* @var $this \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
 $cashwithdrawalective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "cashwithdrawal" ? "active" : "";
+$tablesective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables" ? "active" : "";
+$views = $this->getApi()->getPosManager()->getViews();
+$hasTables = $this->getApi()->getPosManager()->hasTables();
+$tabActive = !$this->getCurrentTab() ? "cash_disabled" : "";
 ?>
 
 <div class='topmenu'>
@@ -29,9 +33,44 @@ $cashwithdrawalective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855
         x
     </div>
     
-    <div class='entry cashwithdrawal <? echo $cashwithdrawalective; ?>' gsclick='activateView' view='cashwithdrawal'>
+    <div gs_precheck='app.SalesPointNewSale.getExtraData' class='entry cashwithdrawal <? echo $cashwithdrawalective." ".$tabActive; ?>' gsclick='activateView' view='cashwithdrawal'>
         <i class='fa fa-money'></i>
         Cash Withdrawal
     </div>
+    
+    
+    <?
+    if (count($views)) {
+        ?>
+        <div class='entry changeviewmenu'>
+            <i class='fa fa-table'></i>
+            Change<br/> view
+            <div class='menuviewlist'>
+            <? //
+            
+            $checked = $this->getSelectedViewId() == "" ? "<span style='font-size: 13px; display: inline-block; width: 15px; ' class='fa fa-check'></span> " : "<span style='font-size: 13px; display: inline-block; width: 19px;'></span>";
+            echo "<div viewid='' class='listname'>$checked".$this->__f("none")."</div>";
+            
+            foreach ($views as $view) {
+                $checked = $this->getSelectedViewId() == $view->id ? "<span style='font-size: 13px; display: inline-block; width: 15px; ' class='fa fa-check'></span> " : "<span style='font-size: 13px; display: inline-block; width: 19px;'></span>";
+                echo "<div viewid='$view->id' class='listname'>$checked".$view->name."</div>";
+            }        
+            ?>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+    
+    <?
+    if ($hasTables) {
+    ?>
+    <div class='entry <? echo $tablesective; ?>' gsclick='activateView' view='tables'>
+        <i class='fa fa-cutlery'></i>
+        Tables
+    </div>  
+    <?
+    }
+    ?>
     
 </div>

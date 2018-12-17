@@ -173,7 +173,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     
     public function movelist() {
-        $this->getApi()->getPosManager()->moveList($this->getSelectedCashPointId(), $_POST['data']['listid'], $_POST['data']['type'] === "up");
+        $this->getApi()->getPosManager()->moveList($this->getSelectedViewId(), $_POST['data']['listid'], $_POST['data']['type'] === "up");
     }
     
     public function showMultiTaxes() {
@@ -189,8 +189,15 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     }
 
     public function renderActivatedView() {
-        if (isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) == "cashwithdrawal") {
+        if (!isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'])) {
+            $this->includefile("listview");
+            return;
+        }
+        
+        if ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "cashwithdrawal") {
             $this->includefile("cashwithdrawal");
+        } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables") {
+            $this->includefile("tables");
         } else {
             $this->includefile("listview");
         }
@@ -201,6 +208,14 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $this->getApi()->getPosManager()->addCashWithDrawalToTab($tab->id, $_POST['data']['amount']);
         $_POST['data']['view'] = "cashwithdrawal";
         $this->activateView();
+    }
+    
+    public function selectTable() {
+        $tabId = $this->getApi()->getPosManager()->getCurrentTabIdForTableId($_POST['data']['tableid']);
+        $_POST['data']['tabid'] = $tabId;
+        $_POST['data']['view'] = "tables";
+        $this->activateView();
+        $this->activateTab();
     }
 }
 ?>

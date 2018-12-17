@@ -321,7 +321,8 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("New Sale", "new", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Products", "products", "gsicon-basket");
-        $menu->entries[] = new ModulePageMenuItem("Reports", "reports", "gsicon-gs-reports");
+        $menu->entries[] = new ModulePageMenuItem("Reports", "reports", "fa fa-line-chart");
+        $menu->entries[] = new ModulePageMenuItem("Invoicing", "invoicing", "gsicon-gs-reports");
         $menu->entries[] = new ModulePageMenuItem("Settings", "settings", "gsicon-gs-gears");
         return $menu;
     }

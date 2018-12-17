@@ -5365,7 +5365,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             createUserForBooking(booking);
             addDefaultAddons(booking);
-            addGuestAddons(booking);
+            replaceSelectedGuestAddons(booking);
             
             checkIfBookedBySubAccount(booking);
             if (userManager.getUserById(booking.userId) == null || userManager.getUserById(booking.userId).suspended) {
@@ -9322,14 +9322,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return storeManager.getcountryCode();
     }
     
-    private void addGuestAddons(PmsBooking booking) {
+    private void replaceSelectedGuestAddons(PmsBooking booking) {
         for (PmsBookingRooms room : booking.rooms) {
             for (PmsGuests guest : room.guests) {
                 if (guest.orderedOption == null) {
                     continue;
                 }
                 
-                for (String productId : guest.orderedOption.values()) {
+                for (String mainProductId : guest.orderedOption.keySet()) {
+                    String productId = guest.orderedOption.get(mainProductId);
+                    room.addons.removeIf(o -> o.productId.equals(mainProductId));
                     List<PmsBookingAddonItem> addonsToAdd = createAddonsThatCanBeAddedToRoom(productId, room.pmsBookingRoomId);
                     room.addons.addAll(addonsToAdd);
                 }

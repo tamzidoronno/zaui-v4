@@ -36,6 +36,13 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean triedToFetch = false;
     public boolean suspended = false;
     public boolean visibleOnlyInMainCompany = false;
+    
+    /**
+     * This is set true if the user of this is 100% 
+     * reflected with the company object.
+     * 
+     * Used for invoicing.
+     */
     public boolean primaryCompanyUser = false;
     public boolean showExTaxes = false;
     public Date lastBooked = null;
@@ -326,6 +333,12 @@ public class User extends DataCommon implements Comparable<User> {
     public String referenceKey = "";
     public String pinCode = null;
     public boolean isCompanyOwner = false;
+    
+    /**
+     * If the company has multiple users connected
+     * this is set to true if this user is the 
+     * main person for the company, could be for instance the owner etc.
+     */
     public boolean isCompanyMainContact = false;
     public boolean wantToBecomeCompanyOwner = false;
     public String preferredPaymentType = "";

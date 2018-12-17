@@ -63,6 +63,7 @@ app.GetShopQuickUser = {
     userChanged: function(result) {
         app.GetShopQuickUser.updateFieldsAfterUserChangedOrCreated(result);
         app.GetShopQuickUser.closeChangeUser();
+        $('.GetShopQuickUser .userNotSelected').removeClass('userNotSelected');
         return false;
     },
     
@@ -76,6 +77,7 @@ app.GetShopQuickUser = {
         app.GetShopQuickUser.updateFieldsAfterUserChangedOrCreated(result);
         app.GetShopQuickUser.closeChangeUser();
         $('.GetShopQuickUser .edit_details_of_user').slideDown();
+        $('.GetShopQuickUser .userNotSelected').removeClass('userNotSelected');
     },
     
     updateFieldsAfterUserChangedOrCreated: function(result) {

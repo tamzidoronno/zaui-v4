@@ -60,6 +60,13 @@ foreach ($cartItems as $cartItem) {
             <div class='shop_button startpayment' paymentid='f86e7042-f511-4b9b-bf0d-5545525f42de'><i class='fa fa-bed'></i> <? echo $this->__f("Pay on room"); ?></div>
             <?
         }
+        
+        // Invoice
+        if ($method->id == "cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba") {
+            ?>
+            <div class='shop_button startpayment' paymentid='cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba'><i class='fa fa-paperclip'></i> <? echo $this->__f("Invoice"); ?></div>
+            <?
+        }
     }
     ?>
 </div>

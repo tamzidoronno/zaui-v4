@@ -27,6 +27,8 @@ $users = $this->getApi()->getUserManager()->findUsers($searchvalue);
 foreach ($users as $user) {
     ?>
     <div class="row usersearchrow">
+        
+        <div class="user_col user_col0"><? echo $user->isCompanyMainContact || $user->primaryCompanyUser ? "<i class='fa fa-industry'></i>" : "<i class='fa fa-user'></i>"; ?></div>
         <div class="user_col user_col1"><? echo $user->fullName; ?></div>
         <div class="user_col user_col2"><? echo $user->emailAddress; ?></div>
         <div class="user_col user_col3"><? echo $user->cellPhone; ?></div>

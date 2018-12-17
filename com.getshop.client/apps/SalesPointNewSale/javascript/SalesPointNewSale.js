@@ -11,8 +11,34 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .deletetab', app.SalesPointNewSale.deleteTab);
         $(document).on('click', '.SalesPointNewSale .printoverview', app.SalesPointNewSale.printOverview);
         $(document).on('click', '.SalesPointNewSale .countadd', app.SalesPointNewSale.countAddClicked);
+        $(document).on('click', '.SalesPointNewSale .changeviewmenu', app.SalesPointNewSale.showListOfViews);
         
         this.bindScrollEvent();
+    },
+    
+    checkIfDisabled: function(e) {
+        if ($(e).hasClass('cash_disabled')) {
+            return false;
+        }
+        
+        return null;
+    },
+    
+    showListOfViews: function(e) {
+        if ($(e.target).hasClass('listname')) {
+            var data = {
+                viewId: $(e.target).attr('viewid')
+            };
+            
+            thundashop.Ajax.simplePost(this, "selectView", data);
+        } else {
+            var innerMenu = $(this).find('.menuviewlist');
+            if (innerMenu.is(':visible')) {
+                innerMenu.slideUp();
+            } else {
+                innerMenu.slideDown();
+            }
+        }
     },
     
     bindScrollEvent: function() {
@@ -51,6 +77,16 @@ app.SalesPointNewSale = {
         thundashop.Ajax.simplePost(this, "deleteCurrentTab", {});
     },
     
+    tabChanged: function() {
+        var tabActive = $('.SalesPointNewSale .rightmenu .header');
+        console.log(tabActive);
+        if (tabActive.length) {
+            $('.SalesPointNewSale .cash_disabled').removeClass('cash_disabled');
+        } else {
+            $('.SalesPointNewSale .cashwithdrawal').addClass('cash_disabled');
+        }
+    },
+    
     removeItemFromTab: function() {
         var data = {
             cartitemid : $(this).closest('.cartitemline').attr('cartitemid')
@@ -78,6 +114,7 @@ app.SalesPointNewSale = {
             var result = res.split(';');
             $(me).closest('.cartitemline').find('.count').html(result[0]);
             $('.SalesPointNewSale .tabtotal span').html(result[1]);
+            app.SalesPointNewSale.tabChanged();
         });
     },
     
@@ -94,6 +131,7 @@ app.SalesPointNewSale = {
             var result = res.split(';');
             $(me).closest('.cartitemline').find('.price').html(result[0]);
             $('.SalesPointNewSale .tabtotal span').html(result[1]);
+            app.SalesPointNewSale.tabChanged();
         });
     },
     
@@ -182,6 +220,8 @@ app.SalesPointNewSale = {
         if ($('.tabnotactive').length) {
             app.SalesPointNewSale.activateTab(me);
         }
+        
+        app.SalesPointNewSale.tabChanged();
     },
     
     activateTab: function(from) {

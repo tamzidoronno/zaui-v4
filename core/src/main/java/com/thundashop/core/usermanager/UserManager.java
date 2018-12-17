@@ -30,7 +30,7 @@ import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.usermanager.data.UserRole;
-import com.thundashop.core.utils.BrRegEngine;
+import com.thundashop.core.utils.UtilManager;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import java.lang.reflect.Field;
@@ -86,7 +86,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private OrderManager orderManager;
     
     @Autowired
-    private BrRegEngine brRegEngine;
+    private UtilManager utilManager;
 
     @Autowired
     public MessageManager messageManager;
@@ -517,7 +517,24 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         validatePhoneNumber(user);
         
+        updateCompanyDetailsIfThisIaPrimaryCompanyUser(user);
+        
         collection.addUser(user);
+    }
+
+    private void updateCompanyDetailsIfThisIaPrimaryCompanyUser(User user) throws ErrorException {
+        if (user.primaryCompanyUser && user.mainCompanyId != null && !user.mainCompanyId.isEmpty()) {
+            Company userCompany = getCompany(user.mainCompanyId);
+            if (userCompany != null) {
+                userCompany.name = user.fullName;
+                
+                if (user.address != null) {
+                    userCompany.address = user.address;
+                }
+                
+                saveObject(userCompany);
+            }
+        }
     }
 
     private void validatePhoneNumber(User user) {
@@ -2414,5 +2431,53 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                     tokens.remove(t.id);
                     deleteObject(t);
                 });
+    }
+
+    @Override
+    public User createUserAndCompany(Company company) {
+        if (company.vatNumber == null || company.vatNumber.isEmpty()) {
+            throw new ErrorException(1055);
+        }
+        
+        List<Company> existingCompany = getCompaniesByVatNumber(company.vatNumber);
+        
+        if (!existingCompany.isEmpty()) {
+            throw new ErrorException(1056);
+        }
+        
+        long existsingUsersWithMainComapnyAndHasCompany = getAllUsers().stream()
+                .filter(u -> u.isCompanyMainContact)
+                .flatMap(u -> u.company.stream())
+                .map(companyId -> getCompany(companyId))
+                .filter(o -> o.vatNumber != null && o.vatNumber.equals(company.vatNumber))
+                .count();
+        
+        if (existsingUsersWithMainComapnyAndHasCompany > 0) {
+            throw new ErrorException(1057);
+        }
+        
+        Company externalCompanyData = utilManager.getCompanyFree(company.vatNumber);
+        
+        if (externalCompanyData != null && externalCompanyData.address != null) {
+            company.address = externalCompanyData.address;
+        }
+        
+        saveCompany(company);
+        
+        User user = new User();
+        user.fullName = company.name;
+        user.company.add(company.id);
+        
+        if (company.address != null) {
+            user.address = new Address();
+            user.address = company.address;
+        }
+        
+        user.company.add(company.id);
+        user.primaryCompanyUser = true;
+        user.mainCompanyId = company.id;
+        
+        saveUser(user);
+        return user;
     }
 }

@@ -10,7 +10,7 @@
 
 .SamleFaktura .groupedbyuser .userinfo {
     padding: 10px;
-    background-color: #EEE;
+    background-color: #DDD;
     text-align: center;
 }
 
@@ -27,7 +27,7 @@
 .SamleFaktura .row .col5 { width: 100px; text-align: right;}
 
 .SamleFaktura .selectUser {
-    border: solid 1px #EEE;
+    border: solid 1px #DDD;
     padding: 20px;
     margin-bottom: 30px;
 }
@@ -38,4 +38,9 @@
     border-color: #DDD;
     padding: 20px;
     height: 100px;
+}
+
+.SamleFaktura {
+    max-width: 1000px;
+    margin: 50px auto;
 }

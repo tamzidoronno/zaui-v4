@@ -1,0 +1,20 @@
+<?
+/* @var $this ns_7a273876_7390_45b3_95c3_79d3c0cec4d3\SalesPointViews */
+$selectedView = $this->getSelectedView();
+$productlists = $this->getApi()->getProductManager()->getProductLists();
+
+echo "<h2>".$this->__f("Activate product lists for this view")."</h2>";
+foreach ($productlists as $list) {
+    $checked = in_array($list->id, $selectedView->productListsIds) ? "checked='true'" : "";
+    echo "<div><input $checked class='checkboxproductlist' type='checkbox' value='$list->id'/> ".$list->listName."</div>";
+}
+
+?>
+
+<div class='shop_button' gsclick='cancelEditView'>
+    <? echo $this->__f("Back"); ?>
+</div>
+
+<div class='shop_button saveProductLists'>
+    <? echo $this->__f("Save"); ?>
+</div>

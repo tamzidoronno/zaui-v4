@@ -227,6 +227,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         PmsConfiguration config = pmsManager.getConfigurationSecure();
         Integer ignoreDays = config.ignorePaymentWindowDaysAheadOfStay;
+        
+        if (ignoreDays == 0) {
+            return true;
+        }
+        
         if(ignoreDays <= 0) {
             return false;
         }
@@ -236,7 +241,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         int days = (int) ((diff / 1000) / 86400);
         
-        if(days > ignoreDays) {
+        if(days >= ignoreDays) {
             return true;
         }
         

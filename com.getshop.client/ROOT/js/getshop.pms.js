@@ -189,7 +189,6 @@ thundashop.common.activateCKEditor = function(id, config) {
         if (config.simpleMode !== undefined)
             simpleMode = config.simpleMode;
     }
-    var 
     var target = $('#' + id);
     target.attr('contenteditable', true);
     if (notdestroyonblur === undefined) {

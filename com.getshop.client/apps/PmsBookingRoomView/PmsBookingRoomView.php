@@ -806,6 +806,9 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 $r->countryCode = $_POST['data']['countrycode'];
             }
         }
+        $pmsBooking->countryCode = $_POST['data']['countrycode'];
+        $pmsBooking->language = $_POST['data']['language'];
+        
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $pmsBooking);
         $this->forceUpdate();
     }

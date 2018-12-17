@@ -248,7 +248,11 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
         prefix = prefix.replace("+", "");
         
-        String language = convertLanguage(booking.language);
+        String code = booking.language;
+        if(room != null && room.language != null && !room.language.isEmpty()) {
+            code = room.language;
+        }
+        String language = convertLanguage(code);
         
         
         List<String> languagesSupported = getLanguagesForMessage(key, type);
@@ -258,13 +262,16 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             if(!msg.type.equals(type)) {
                 continue;
             }
+            if(msg.languages.isEmpty() && msg.prefixes.isEmpty()) {
+                continue;
+            }
             if(languagesSupported.contains(language) && !msg.containsLanguage(language)) {
                 continue;
             }
-            if(prefixesSupported.contains(prefix) && !msg.prefixes.contains(prefix)) {
+            if(prefixesSupported.contains(prefix) && !msg.prefixes.contains(prefix) && type.equals("sms")) {
                 continue;
             }
-            if(!msg.languages.isEmpty() && !msg.containsLanguage(booking.language)) {
+            if(!msg.languages.isEmpty() && !msg.containsLanguage(language)) {
                 continue;
             }
             if(!msg.prefixes.isEmpty() && !msg.prefixes.contains(prefix)) {
@@ -276,6 +283,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 return msg;
             }
         }
+        
         for(PmsNotificationMessage msg : messages.values()) {
             if(!msg.type.equals(type)) {
                 continue;
@@ -283,10 +291,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             if(!msg.key.equalsIgnoreCase(key)) {
                 continue;
             }
-            if(msg.languages.isEmpty()) {
+            if(!msg.languages.isEmpty()) {
                 continue;
             }
-            if(msg.prefixes.isEmpty()) {
+            if(!msg.prefixes.isEmpty()) {
                 continue;
             }
             if(msg.content == null) { msg.content = ""; }
@@ -413,10 +421,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, String title, String content) {
         List<String> recipients = getEmailRecipients(booking, room, type);
         
-        if(messageToSend != null && !messageToSend.isEmpty()) {
-            content = messageToSend;
-        }
-        
         HashMap<String, String> attachments = new HashMap();
         if (key.startsWith("booking_completed")) {
             attachments.put("termsandcondition.html", createContractAttachment(booking.id));
@@ -461,9 +465,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             PmsNotificationMessage message = getMessage(key, booking, room, "sms", guest.prefix);
             if(message != null) {
                 String content = formatMessage(message.content, booking, room, key, "sms");
-                if(messageToSend != null && !messageToSend.isEmpty()) {
-                    content = messageToSend;
-                }
                 if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
                     messageManager.sendSms("sveve", guest.phone, content, guest.prefix, configuration.smsName);
                 } else {
@@ -664,7 +665,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(language.toLowerCase().equals("en_en")) {
             return "en";
         }
-        return "no";
+        return language;
     }
 
     private String wrapContentOnMessage(String message) {

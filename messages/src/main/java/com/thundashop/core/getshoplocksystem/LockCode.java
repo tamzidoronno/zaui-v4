@@ -55,6 +55,10 @@ public class LockCode implements Serializable, Cloneable {
         }
         return null;
     }
+
+    public int getCodeLength() {
+        return String.valueOf(pinCode).length();
+    }
     
     
 }

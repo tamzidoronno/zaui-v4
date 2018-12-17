@@ -15,6 +15,8 @@ import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.activation.DataHandler;
@@ -229,6 +231,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         return "col_"+storeId+"_log";
     }
 
+    private boolean isToDeveloper(String to) {
+        List<String> developersAddresses = new ArrayList();
+        developersAddresses.add("kai@getshop.com");
+        developersAddresses.add("pal@getshop.com");
+        return to != null && developersAddresses.add(to);
+    }
+
     private class Authenticator extends javax.mail.Authenticator {
 
         private PasswordAuthentication authentication;
@@ -290,7 +299,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     message.setContent(content, "text/html; charset=UTF-8");
                 }
 
-                if (frameworkConfig.productionMode) {
+                if (frameworkConfig.productionMode || isToDeveloper(to)) {
                     Transport.send(message);
                 } else {
                     GetShopLogHandler.logPrintStatic("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content.replace("<br>", "\n"), storeId);

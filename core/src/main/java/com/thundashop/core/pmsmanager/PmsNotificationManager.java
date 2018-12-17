@@ -421,10 +421,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, String title, String content) {
         List<String> recipients = getEmailRecipients(booking, room, type);
         
-        if(messageToSend != null && !messageToSend.isEmpty()) {
-            content = messageToSend;
-        }
-        
         HashMap<String, String> attachments = new HashMap();
         if (key.startsWith("booking_completed")) {
             attachments.put("termsandcondition.html", createContractAttachment(booking.id));
@@ -469,9 +465,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             PmsNotificationMessage message = getMessage(key, booking, room, "sms", guest.prefix);
             if(message != null) {
                 String content = formatMessage(message.content, booking, room, key, "sms");
-                if(messageToSend != null && !messageToSend.isEmpty()) {
-                    content = messageToSend;
-                }
                 if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
                     messageManager.sendSms("sveve", guest.phone, content, guest.prefix, configuration.smsName);
                 } else {

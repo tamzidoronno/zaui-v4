@@ -15,9 +15,6 @@ public class GetShopLockSystemSettings extends DataCommon {
     private int codeSize = 6;
     
     public int getCodeSize() {
-        if (storeId.equals("7f2c47a4-7ec9-41e2-a070-1e9e8fcf4e38")) {
-            return 4;
-        }
         if (storeId.equals("31e0a6ff-656e-4ef5-8973-945ffae8edd0")) {
             return 4;
         }

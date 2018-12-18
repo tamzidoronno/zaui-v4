@@ -726,6 +726,25 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void setCodeSize(int codeSize) {
         settings.setCodeSize(codeSize);
+        
+        groups.values().stream().forEach(group -> {
+            group.getGroupLockCodes().values()
+            .forEach(lockGroup -> {
+                int groupCodeSize = codeSize;
+
+                if (group.codeSize != null) {
+                    groupCodeSize = group.codeSize;
+                }
+
+                int check = groupCodeSize;
+
+                if (lockGroup.code != null && (lockGroup.code.getCodeLength() != codeSize || lockGroup.code.getCodeLength() != check)) {
+                    System.out.println("A invalid code");
+                    renewCodeForSlot(group.id, lockGroup.slotId);
+                }
+            });
+        });
+        
         saveObject(settings);
     }
 

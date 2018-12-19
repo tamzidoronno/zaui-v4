@@ -57,6 +57,18 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         }
         $config->mobileViewRestrictions->{$userId} = $toAdd;
         $this->getApi()->getPmsManager()->saveConfiguration($domain, $config);
+        
+        $user = $this->getUser();
+        $newAnnoutationsAdded = array();
+        foreach($user->annotionsAdded as $key => $val) {
+            if($val == "ExcludePersonalInformation" && $_POST['data']['area_userdata'] != "true") {
+                continue;
+            }
+            $newAnnoutationsAdded[$key] = $val;
+        }
+        $user->annotionsAdded = $newAnnoutationsAdded;
+        $this->getApi()->getUserManager()->saveUser($user);
+        
     }
     
     public function saveDiscountPreferences() {

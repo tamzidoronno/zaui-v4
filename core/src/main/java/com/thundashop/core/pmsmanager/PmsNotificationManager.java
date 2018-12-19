@@ -237,7 +237,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
 
     private PmsNotificationMessage getMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix) {
-        if(messageToSend != null && !messageToSend.isEmpty()) {
+        if(messageToSend != null && !messageToSend.isEmpty() && (type.equals("sms") || type.equals("email"))) {
             PmsNotificationMessage notificationmsg = new PmsNotificationMessage();
             notificationmsg.content = messageToSend;
             return notificationmsg;

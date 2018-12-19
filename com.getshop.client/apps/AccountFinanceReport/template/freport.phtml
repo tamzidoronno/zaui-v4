@@ -4,6 +4,7 @@ $start = $this->getStart();
 $end = $this->getEnd();
 $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
 $isLocked = $this->getApi()->getOrderManager()->isLocked($end);
+$isShowingExTaxes = $this->isShowingIncTaxes();
 
 $monthHasPassed = strtotime($end) < time();
 
@@ -16,6 +17,9 @@ foreach ($dayIncomes as $dayIncome) {
         $errors[] = $dayIncome->errorMsg;
     } else {
         foreach ($dayIncome->dayEntries as $entry) {
+            if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+                continue;
+            }
             $allAccountNumbers[] = $entry->accountingNumber;
         }
     }
@@ -74,6 +78,12 @@ echo "</script>";
                 echo "<option $selected year='$year'>$year</option>";
             }
             ?>
+        </select>
+        -
+        <select gsname='tax' class='gsniceselect1 timeperiode'> 
+            
+            <option class="gsniceselect1" <? echo $this->isShowingIncTaxes() ? "selected='true'" : ""; ?> value="yes"><? echo $this->__f("Inc taxes"); ?></option>
+            <option class="gsniceselect1" <? echo !$this->isShowingIncTaxes() ? "selected='true'" : ""; ?> value="no"><? echo $this->__f("Ex taxes"); ?></option>
         </select>
 
         <div gstype='submit' class='shop_button showresultbutton'><? echo $this->__f("Show"); ?></div>

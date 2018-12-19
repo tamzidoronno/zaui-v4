@@ -50,6 +50,8 @@ class AccountProducts extends \MarketingApplication implements \Application {
                 $accountDetail->accountNumber = $exp[1];
                 $accountDetail->description = $value;
                 $accountDetail->taxgroup = $_POST['data']['taxcode_'.$exp[1]];
+                $accountDetail->subaccountid = $_POST['data']['subaccountid_'.$exp[1]];
+                $accountDetail->subaccountvalue = $_POST['data']['subaccountvalue_'.$exp[1]];
                 $this->getApi()->getProductManager()->saveAccountingDetail($accountDetail);
             }
         }

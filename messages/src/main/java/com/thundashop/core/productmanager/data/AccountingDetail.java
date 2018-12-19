@@ -15,5 +15,7 @@ public class AccountingDetail  extends DataCommon {
     public int accountNumber = 0;
     public int taxgroup = -1;
     public String description = "";
+    public String subaccountid = "";
+    public String subaccountvalue = "";
 
 }

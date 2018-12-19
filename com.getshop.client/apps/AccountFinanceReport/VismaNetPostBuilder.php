@@ -25,10 +25,26 @@ class VismaNetPostBuilder {
         $this->parent = $parent;
     }
 
+    private function getTaxAccounts() {
+        $taxes = $this->api->getProductManager()->getTaxes();
+        $ret = array();
+        
+        foreach ($taxes as $tax) {
+            if ($tax->accountingTaxAccount) {
+                $ret[] = $tax->accountingTaxAccount;
+            }
+        }
+        
+        return $ret;
+    }
     
     public function getResult($start, $end) {
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'] = "no";
+        
         $dayIncomes = $this->api->getOrderManager()->getDayIncomes($start, $end);
         $rows = array();
+        
+        $taxAccounts = $this->getTaxAccounts();
         
         $allDays = array();
         
@@ -43,6 +59,8 @@ class VismaNetPostBuilder {
             
             $grouped = $this->parent->groupOnAccounting($dayIncome->dayEntries);
             foreach ($grouped as $accountNumber => $amount) {
+                $details = $this->parent->getApi()->getProductManager()->getAccountingDetail($accountNumber);
+                
                 $i++;
                 $line = new VismaJournalTransactionLine();
                 $line->lineNumber = new VismaValueObject($i);
@@ -59,7 +77,16 @@ class VismaNetPostBuilder {
                     $line->debitAmountInCurrency = new VismaValueObject(0);
                 }
                 
-                $line->vatCodeId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
+                if ($details->subaccountid) {
+                    $line->setSubAccountIdAndValue($details->subaccountid, $details->subaccountvalue);
+                }
+                
+                if (in_array($accountNumber, $taxAccounts)) {
+                    $line->vatId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
+                } else {
+                    $line->vatCodeId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
+                }
+                
                 $data->journalTransactionLines[] = $line;
             }
             
@@ -99,13 +126,24 @@ class VismaNetPostBuilder {
         
         foreach ($vismaDays as $day) {
             $jsonData = json_encode($day);
+            
             $ch = curl_init();
             curl_setopt($ch, constant("CURLOPT_" . 'URL'), "https://integration.visma.net/API/controller/api/v1/journaltransaction");
             curl_setopt($ch, constant("CURLOPT_" . 'POST'), true);
             curl_setopt($ch, constant("CURLOPT_" . 'POSTFIELDS'), $jsonData);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('authorization: Bearer '.$result->accessToken, "ipp-application-type: Visma.net Financials", "ipp-company-id: ".$vismaCompanyId, 'Content-Type: application/json'));
+            
+            ob_start();
             curl_exec($ch);
+            $output = ob_get_contents();
+            ob_end_clean();
+
             $info = curl_getinfo($ch);
+            
+            if ($info['http_code'] === 400) {
+                $extramessage .= $day->description->value." | <span style='color: red'> Failed | ".$output." </span><br/>";
+                break;
+            }
             
             if ($info['http_code'] === 201) {
                 $extramessage .= $day->description->value." | Sucessfully<br/>";
@@ -167,6 +205,7 @@ class VismaJournalTransactionLine {
     public $debitAmountInCurrency;
     public $creditAmountInCurrency;
     public $vatCodeId;
+    public $vatId;
     public $branch;
     
     function __construct() {
@@ -174,6 +213,12 @@ class VismaJournalTransactionLine {
         $this->subaccount = new \stdClass();
         $this->subaccount->segmentId = "1";
         $this->subaccount->segmentValue = "0";
+    }
+    
+    function setSubAccountIdAndValue($id, $value) {
+        $this->subaccount = new \stdClass();
+        $this->subaccount->segmentId = $id;
+        $this->subaccount->segmentValue = "$value";
     }
 
 }

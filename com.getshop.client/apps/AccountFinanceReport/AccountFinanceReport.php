@@ -61,12 +61,17 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $grouped = array();
         
         foreach ($incomes as $entry) {
+            if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+                continue;
+            }
             
             if (!isset($grouped[$entry->accountingNumber])) {
                 $grouped[$entry->accountingNumber] = 0;
             }
-
-            $newVal = $grouped[$entry->accountingNumber] + $entry->amount;
+            
+            
+            $amount = $entry->isActualIncome && !$entry->isOffsetRecord && !$this->isShowingIncTaxes() ? $entry->amountExTax : $entry->amount;
+            $newVal = $grouped[$entry->accountingNumber] + $amount;
             $grouped[$entry->accountingNumber] = round($newVal, 2);
             
             ksort($grouped);
@@ -125,6 +130,7 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $strTime = $_POST['data']['year']."-".$_POST['data']['month']."-1";
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_all_start'] = date("1.m.Y 00:00:00", strtotime($strTime));
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_all_end'] = date("t.m.Y 23:59:59", strtotime($strTime));
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'] = $_POST['data']['tax'];
     }
 
     public function getEnd() {
@@ -203,8 +209,12 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $builder = new VismaNetPostBuilder($this->getApi(), $this);
         $vismaDays = $builder->getResult($start, $end);
         $this->extramessage = $builder->sendData($vismaDays);
-        
-        
+    }
+
+    public function isShowingIncTaxes() {
+        return !isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX']) 
+        || $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'] == "yes"
+        || !$_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'];
     }
 
 }

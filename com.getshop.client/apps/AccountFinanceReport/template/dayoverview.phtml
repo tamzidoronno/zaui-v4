@@ -13,6 +13,9 @@ if (count($dayIncomes) != 1) {
 $orders = array();
 foreach ($dayIncomes as $dayIncome) {
     foreach ($dayIncome->dayEntries as $entry) {
+        if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+            continue;
+        }
         if (!isset($orders[$entry->orderId])) {
             $orders[$entry->orderId] = array();
         }

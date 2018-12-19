@@ -25,6 +25,7 @@ class EcommerceTaxes extends \WebshopApplication implements \Application {
             $grp = new \core_productmanager_data_TaxGroup();
             $grp->groupNumber = $i;
             $grp->taxRate = $_POST['data']['group'.$i];
+            $grp->accountingTaxAccount = $_POST['data']['accounttaxcode'.$i];
             $result[] = $grp;
         }
         

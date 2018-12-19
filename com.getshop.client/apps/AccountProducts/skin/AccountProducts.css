@@ -31,11 +31,23 @@
     display: inline-block;
     vertical-align: top;   
     line-height: 37px;
+    box-sizing: border-box;
+}
+
+.AccountProducts .distinctAccounts .col input {
+    width: 100px;
 }
 
 .AccountProducts .distinctAccounts .col.accountindesc {
-    width: 300px;
+    width: 150px;
 }
 .AccountProducts .distinctAccounts .col.accountingid {
-    width: 300px;
+    width: 150px;
+}
+.AccountProducts .distinctAccounts .col.taxcode {
+    width: 150px;
+}
+
+.AccountProducts .distinctAccounts .col.subaccountid {
+    width: 150px;
 }

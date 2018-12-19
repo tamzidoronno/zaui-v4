@@ -69,6 +69,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -2925,4 +2926,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return false;
     }
 
+    public void updateOrdersWithNewAccountingTaxCode(TaxGroup grp) {
+        List<CartItem> cartItems = orders.values().stream()
+                .flatMap(o -> o.getCartItems().stream())
+                .filter(item -> item.getProduct().taxgroup == grp.groupNumber)
+                .collect(Collectors.toList());
+        
+        cartItems.stream().forEach(item -> {
+            item.getProduct().taxGroupObject.accountingTaxAccount = grp.accountingTaxAccount;
+        });
+        
+        cartItems.stream()
+                .map(item -> getOrder(item.orderId))
+                .distinct()
+                .forEach(order -> {
+                    saveOrder(order);
+                });
+    }
+
+    
 }

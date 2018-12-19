@@ -1404,4 +1404,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return null;
     }
-} 
+    
+    public List<CartItem> getCartItems() {
+        if (cart == null)
+            return new ArrayList();
+        
+        List<CartItem> retItems = cart.getItems();
+        retItems.stream().forEach(item -> item.orderId = id);
+        return retItems;
+    }
+
+}

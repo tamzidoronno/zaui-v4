@@ -5,6 +5,7 @@ import com.thundashop.core.common.DataCommon;
 public class TaxGroup extends DataCommon {
     public int groupNumber = 0;
     public Double taxRate = 0.0;
+    public String accountingTaxAccount;
 
     public Double getTaxRate() {
         return taxRate/100;

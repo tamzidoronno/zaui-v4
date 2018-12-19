@@ -1,2 +1,10 @@
-.EcommerceTaxes .gsniceinput1 { float:right; width: 20px; }
+
 .EcommerceTaxes .gss_setting { width: 100%; }
+.EcommerceTaxes .col { display: inline-block; }
+.EcommerceTaxes .col1 { width: calc(100% - 210px)}
+
+.EcommerceTaxes .col2 input,
+.EcommerceTaxes .col2 { width: 100px; box-sizing: border-box; text-align: center; vertical-align: top; }
+
+.EcommerceTaxes .col3 input,
+.EcommerceTaxes .col3 { width: 100px; box-sizing: border-box; text-align: center; vertical-align: top; }

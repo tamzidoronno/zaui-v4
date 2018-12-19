@@ -15,6 +15,8 @@ import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.math.BigDecimal;
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -116,6 +118,8 @@ public class OrderDailyBreaker {
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        createVatLines(order, orderDayEntries);
         
         addToDayIncome(orderDayEntries);
     }
@@ -690,6 +694,32 @@ public class OrderDailyBreaker {
         }
         
         return null;
+    }
+
+    private void createVatLines(Order order, List<DayEntry> orderDayEntries) {
+        List<DayEntry> entriesToCreateVATtransactionOf = orderDayEntries.stream()
+                .filter(transaction -> transaction.isActualIncome && !transaction.isOffsetRecord)
+                .collect(Collectors.toList());
+                
+        for (DayEntry entry : entriesToCreateVATtransactionOf) {
+            Product product = order.cart.getCartItem(entry.cartItemId).getProduct();
+            TaxGroup taxGroup = product.taxGroupObject;
+            if (taxGroup.accountingTaxAccount == null || taxGroup.accountingTaxAccount.isEmpty()) {
+                continue;
+            }
+            
+            BigDecimal taxValue = entry.amount.subtract(entry.amountExTax);
+            
+            DayEntry dayEntry = new DayEntry();
+            dayEntry.amount = taxValue;
+            dayEntry.amountExTax = taxValue;
+            dayEntry.accountingNumber = taxGroup.accountingTaxAccount;
+            dayEntry.date  = entry.date;
+            dayEntry.orderId  = entry.orderId;
+            dayEntry.cartItemId  = entry.cartItemId;
+            dayEntry.isTaxTransaction = true;
+            orderDayEntries.add(dayEntry);
+        }
     }
 
 }

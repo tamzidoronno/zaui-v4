@@ -26,5 +26,13 @@ class PaymentMethod1 extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("name", $_POST['name']);
     }
     
+    public function paymentCallback() {
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderid']);
+        if(!$this->order) {
+            echo "Order where not found, are you sure you are using a correct order id?";
+        } else {
+            $this->getApi()->getOrderManager()->markAsPaidWithPassword($this->order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($this->order), "fdsvb4354345345");
+        }
+    }    
 }
 ?>

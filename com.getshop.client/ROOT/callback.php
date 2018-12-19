@@ -19,6 +19,10 @@ if(isset($_GET['useapp']) && $_GET['useapp'] == "netaxept") {
     $netaxept->handleCallBack($transId);
     return;
 }
+if(isset($_GET['usepaymentmethod1'])) {
+    $pmethod1 = new ns_7587fdcb_ff65_4362_867a_1684cbae6aef\PaymentMethod1();
+    $pmethod1->paymentCallback();
+}
 
 $data = http_build_query($_GET);
 if(!$data) {
@@ -39,6 +43,7 @@ foreach ($cartManager->getPaymentApplications() as $paymentApp) {
         break;
     }
 }
+
 
 if(isset($_GET['callback_method'])) {
     call_user_method($_GET['callback_method'], $application);

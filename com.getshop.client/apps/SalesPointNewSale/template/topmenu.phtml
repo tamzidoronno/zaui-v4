@@ -33,7 +33,7 @@ $tabActive = !$this->getCurrentTab() ? "cash_disabled" : "";
         x
     </div>
     
-    <div gs_precheck='app.SalesPointNewSale.getExtraData' class='entry cashwithdrawal <? echo $cashwithdrawalective." ".$tabActive; ?>' gsclick='activateView' view='cashwithdrawal'>
+    <div gs_precheck='app.SalesPointNewSale.checkIfDisabled' class='entry cashwithdrawal <? echo $cashwithdrawalective." ".$tabActive; ?>' gsclick='activateView' view='cashwithdrawal'>
         <i class='fa fa-money'></i>
         Cash Withdrawal
     </div>

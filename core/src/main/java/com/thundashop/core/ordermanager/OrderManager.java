@@ -2524,6 +2524,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 throw new ErrorException(1052);
             }
             
+            // Samlefaktura
+            if (order.getPaymentApplicationId().equals("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba") && order.getTotalAmount() > 0) {
+                throw new ErrorException(1052);
+            }
+            
             // Verifone
             if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && order.getTotalAmount() > 0) {
                 throw new ErrorException(1052);

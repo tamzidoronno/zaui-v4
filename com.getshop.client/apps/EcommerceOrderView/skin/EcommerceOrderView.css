@@ -190,3 +190,6 @@
 .EcommerceOrderView .paymentmethods div.paymentoption:last-child {
     border-bottom: 0px;
 }
+.EcommerceOrderView .multiinvoiceoverview {
+    min-height: 400px;
+}

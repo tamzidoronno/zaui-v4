@@ -49,6 +49,11 @@ if (!count($cart->items)) {
     </div>
 </div>
 <?
+if ($order->isCreditNote) {
+    $incid = $this->getApi()->getOrderManager()->getIncrementalOrderIdByOrderId($order->parentOrder);
+    echo "<span style='font-weight: bold; padding: 20px; color: red;'>Credit note! ref id: $incid</span>";
+}
+
 if (!$closed) {
     $products = $this->getApi()->getProductManager()->getAllProductsLight();
     echo "<span gstype='form' method='additemtoorder'>";

@@ -543,4 +543,7 @@ public interface IPmsManager {
     
     @Administrator
     public void markOtaPaymentsAutomaticallyPaidOnCheckin(Date start, Date end);
+    
+    @Administrator
+    public void cleanupOrdersThatDoesNoLongerExists();
 }

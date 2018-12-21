@@ -235,7 +235,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         List<String> developersAddresses = new ArrayList();
         developersAddresses.add("kai@getshop.com");
         developersAddresses.add("pal@getshop.com");
-        return to != null && developersAddresses.add(to);
+        return false;
     }
 
     private class Authenticator extends javax.mail.Authenticator {

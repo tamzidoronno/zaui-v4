@@ -1414,4 +1414,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         return retItems;
     }
 
+    public String getParentOrder() {
+        return parentOrder;
+    }
 }

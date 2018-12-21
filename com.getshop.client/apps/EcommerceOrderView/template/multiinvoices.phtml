@@ -1,0 +1,25 @@
+<?
+/* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+$multiInvoice = is_array($order->createdBasedOnOrderIds) && count($order->createdBasedOnOrderIds);
+?>
+<div class='multiinvoiceoverview'>
+    <?
+    if (!$multiInvoice) {
+        echo "<h2>".$this->__f("This is not a group invoice")."</h2>";
+        return;
+    } else {
+    ?>
+    <h2><? echo $this->__f("This invoice is created based on the following invoices"); ?></h2>
+    <?
+        foreach ($order->createdBasedOnOrderIds as $orderId) {
+            $ginvoice = $this->getApi()->getOrderManager()->getOrder($orderId);
+            echo "<div><span>Id: ".$ginvoice->incrementOrderId."</span> / created: <span>$ginvoice->rowCreatedDate</span></div>";
+            echo "<div>";
+            echo "OK";
+            echo "</div>";
+        }
+    }
+    ?>
+</div>
+

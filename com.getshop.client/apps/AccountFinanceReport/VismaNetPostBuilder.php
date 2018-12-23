@@ -48,51 +48,54 @@ class VismaNetPostBuilder {
         
         $allDays = array();
         
+        $allDayEntries = array();
+        
         foreach ($dayIncomes as $dayIncome) {
-            $i = 0;
-            
-            $data = new VismaJournalTransaction();
-            $data->description =   new VismaValueObject("Overføring fra GetShop, dato:" .date('d.m.Y', strtotime($dayIncome->start)));
-            $data->financialPeriod = new VismaValueObject(date('Ym', strtotime($dayIncome->start)));
-            $data->transactionDate = new VismaValueObject(date('Y-m-d\T00:00:00', strtotime($dayIncome->start)));
-            $data->postPeriod = new VismaValueObject(date('Y-m-d\T00:00:00', strtotime($dayIncome->start)));
-            
-            $grouped = $this->parent->groupOnAccounting($dayIncome->dayEntries);
-            foreach ($grouped as $accountNumber => $amount) {
-                $details = $this->parent->getApi()->getProductManager()->getAccountingDetail($accountNumber);
-                
-                $i++;
-                $line = new VismaJournalTransactionLine();
-                $line->lineNumber = new VismaValueObject($i);
-                $line->accountNumber = new VismaValueObject($accountNumber);
-                $line->referenceNumber = new VismaValueObject("");
-                $line->transactionDescription = new VismaValueObject("");
-                
-                if ($amount > 0) {
-                    $line->debitAmountInCurrency = new VismaValueObject($amount);
-                    $line->creditAmountInCurrency = new VismaValueObject(0);
-                } else {
-                    $amount *= -1;
-                    $line->creditAmountInCurrency = new VismaValueObject($amount);
-                    $line->debitAmountInCurrency = new VismaValueObject(0);
-                }
-                
-                if ($details->subaccountid) {
-                    $line->setSubAccountIdAndValue($details->subaccountid, $details->subaccountvalue);
-                }
-                
-                if (in_array($accountNumber, $taxAccounts)) {
-                    $line->vatId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
-                } else {
-                    $line->vatCodeId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
-                }
-                
-                $data->journalTransactionLines[] = $line;
-            }
-            
-            $allDays[] = $data;
+            $allDayEntries = array_merge($allDayEntries, $dayIncome->dayEntries);
         }
         
+        $i = 0;
+
+        $data = new VismaJournalTransaction();
+        $data->description =   new VismaValueObject("Overføring fra GetShop, dato:" .date('d.m.Y', strtotime($start)). " - ".date('d.m.Y', strtotime($end)));
+        $data->financialPeriod = new VismaValueObject(date('Ym', strtotime($end)));
+        $data->transactionDate = new VismaValueObject(date('Y-m-d\T00:00:00', strtotime($end)));
+        $data->postPeriod = new VismaValueObject(date('Y-m-d\T00:00:00', strtotime($end)));
+
+        $grouped = $this->parent->groupOnAccounting($allDayEntries);
+        foreach ($grouped as $accountNumber => $amount) {
+            $details = $this->parent->getApi()->getProductManager()->getAccountingDetail($accountNumber);
+
+            $i++;
+            $line = new VismaJournalTransactionLine();
+            $line->lineNumber = new VismaValueObject($i);
+            $line->accountNumber = new VismaValueObject($accountNumber);
+            $line->referenceNumber = new VismaValueObject("");
+            $line->transactionDescription = new VismaValueObject("");
+
+            if ($amount > 0) {
+                $line->debitAmountInCurrency = new VismaValueObject($amount);
+                $line->creditAmountInCurrency = new VismaValueObject(0);
+            } else {
+                $amount *= -1;
+                $line->creditAmountInCurrency = new VismaValueObject($amount);
+                $line->debitAmountInCurrency = new VismaValueObject(0);
+            }
+
+            if ($details->subaccountid) {
+                $line->setSubAccountIdAndValue($details->subaccountid, $details->subaccountvalue);
+            }
+
+            if (in_array($accountNumber, $taxAccounts)) {
+                $line->vatId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
+            } else {
+                $line->vatCodeId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
+            }
+
+            $data->journalTransactionLines[] = $line;
+        }
+
+        $allDays[] = $data;
         
         return $allDays;
     }
@@ -188,7 +191,7 @@ class VismaJournalTransaction {
         $this->currencyId = new VismaValueObject("NOK");
         $this->autoReversing = new VismaValueObject(false);
         $this->createVatTransaction = new VismaValueObject(true);
-        $this->skipVatAmountValidation = new VismaValueObject(false);
+        $this->skipVatAmountValidation = new VismaValueObject(true);
         $this->branch = new VismaValueObject("2");
         $this->description = new VismaValueObject("Overføring fra GetShop Booking");
         $this->ledger = new VismaValueObject("1");

@@ -321,8 +321,8 @@ public class CartItem implements Serializable {
         cartItemId = UUID.randomUUID().toString();
     }
 
-    public BigDecimal getTotalAmountRoundedWithTwoDecimals() {
-        BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(getProduct().price);
+    public BigDecimal getTotalAmountRoundedWithTwoDecimals(int precision) {
+        BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(getProduct().price, precision);
         rounded = rounded.multiply(new BigDecimal(count));
         return rounded;
     }
@@ -331,8 +331,8 @@ public class CartItem implements Serializable {
         return count * getProduct().price;
     }
 
-    public BigDecimal getTotalExRoundedWithTwoDecimals() {
-        BigDecimal priceExTaxes = TwoDecimalRounder.roundTwoDecimals(getProduct().priceExTaxes);
+    public BigDecimal getTotalExRoundedWithTwoDecimals(int precision) {
+        BigDecimal priceExTaxes = TwoDecimalRounder.roundTwoDecimals(getProduct().priceExTaxes, precision);
         return priceExTaxes.multiply(new BigDecimal(count));
     }
     

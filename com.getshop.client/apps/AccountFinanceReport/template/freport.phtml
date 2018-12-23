@@ -144,13 +144,16 @@ echo "<div class='outer'>";
                 }
 
                 if (isset($grouped[$account]) && $grouped[$account]) {
-                    $controlSum += $grouped[$account];
+                    $controlSum += ($grouped[$account]);
                 }
 
                 $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : "&nbsp;";
-                echo "<div class='col $account'>$val</div>";
+                echo "<div class='col $account'>".round($val,2)."</div>";
             }
-            echo "<div class='col controlsum'>".round($controlSum)."</div>";
+            if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
+                $controlSum = 0;
+            }
+            echo "<div class='col controlsum'>".$controlSum."</div>";
 
         echo "</div>";
     }
@@ -159,15 +162,10 @@ echo "<div class='outer'>";
 
         echo "<div class='col orderid'>Total</div>";
 
-        $controlSum = 0;
         foreach ($accounts as $account) {
-            if (isset($sum[$account]) && $sum[$account]) {
-                $controlSum += $sum[$account];
-            }
             $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
-            echo "<div gsclick='showSummaryForAccount' account='$account' class='col $account'>$val</div>";
+            echo "<div gsclick='showSummaryForAccount' account='$account' class='col $account'>".round($val,2)."</div>";
         }
-        echo "<div class='col controlsum'>".floor($controlSum)."</div>";
 
     echo "</div>";
 

@@ -645,11 +645,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         return amount;
     }
     
-    public BigDecimal getTotalAmountRoundedTwoDecimals() {
+    public BigDecimal getTotalAmountRoundedTwoDecimals(int precision) {
         BigDecimal amount = new BigDecimal(0D);
         
         for(CartItem item : cart.getItems()) {
-            amount = amount.add(item.getTotalAmountRoundedWithTwoDecimals());
+            amount = amount.add(item.getTotalAmountRoundedWithTwoDecimals(precision));
         }
         return amount;
     }
@@ -913,11 +913,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         periodeDaySleptStart = null;
     }
 
-    public BigDecimal getTotalAmountVatRoundedTwoDecimals () {
-        BigDecimal total = getTotalAmountRoundedTwoDecimals();
+    public BigDecimal getTotalAmountVatRoundedTwoDecimals (int precision) {
+        BigDecimal total = getTotalAmountRoundedTwoDecimals(precision);
         BigDecimal amount = new BigDecimal(0.0);
         for(CartItem item : cart.getItems()) {
-            amount = amount.add(item.getTotalExRoundedWithTwoDecimals());
+            amount = amount.add(item.getTotalExRoundedWithTwoDecimals(precision));
         }
         
         return total.subtract(amount);
@@ -932,7 +932,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         return total-amount;
     }
     
-    public Map<TaxGroup, BigDecimal> getTaxesRoundedWithTwoDecimals() {
+    public Map<TaxGroup, BigDecimal> getTaxesRoundedWithTwoDecimals(int precision) {
         Map<TaxGroup, BigDecimal> retMap = new HashMap();
         Map<String, TaxGroup> groups = new HashMap();
         
@@ -950,7 +950,7 @@ public class Order extends DataCommon implements Comparable<Order> {
                         current = new BigDecimal(BigInteger.ZERO);
                     }
                     
-                    BigDecimal taxesToAdd = item.getTotalAmountRoundedWithTwoDecimals().subtract(item.getTotalExRoundedWithTwoDecimals());
+                    BigDecimal taxesToAdd = item.getTotalAmountRoundedWithTwoDecimals(precision).subtract(item.getTotalExRoundedWithTwoDecimals(precision));
                     current = current.add(taxesToAdd);
                     retMap.put(taxGroup, current);
                 });
@@ -1009,7 +1009,7 @@ public class Order extends DataCommon implements Comparable<Order> {
      * @param group
      * @return 
      */
-    public BigDecimal getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group) {
+    public BigDecimal getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group, int precision) {
         BigDecimal ret = new BigDecimal(0);
         
         List<CartItem> cartItems = cart.getItems().stream()
@@ -1017,7 +1017,7 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .collect(Collectors.toList());
         
         for (CartItem item : cartItems) {
-            ret = ret.add(item.getTotalExRoundedWithTwoDecimals());
+            ret = ret.add(item.getTotalExRoundedWithTwoDecimals(precision));
         }
         
         return ret;
@@ -1099,8 +1099,8 @@ public class Order extends DataCommon implements Comparable<Order> {
                     return true;
                 }
 
-                BigDecimal oldPriceForDate = TwoDecimalRounder.roundTwoDecimals(oldValue);
-                BigDecimal currentPrice = TwoDecimalRounder.roundTwoDecimals(item.priceMatrix.get(dateString));
+                BigDecimal oldPriceForDate = TwoDecimalRounder.roundTwoDecimals(oldValue, 2);
+                BigDecimal currentPrice = TwoDecimalRounder.roundTwoDecimals(item.priceMatrix.get(dateString), 2);
 
                 if (oldPriceForDate.compareTo(currentPrice) != 0) {
                     return true;
@@ -1152,8 +1152,8 @@ public class Order extends DataCommon implements Comparable<Order> {
                     return true;
                 }
 
-                BigDecimal oldPriceForDate = TwoDecimalRounder.roundTwoDecimals(oldAddon.count * oldAddon.price);
-                BigDecimal currentPrice = TwoDecimalRounder.roundTwoDecimals((addon.count * addon.price));
+                BigDecimal oldPriceForDate = TwoDecimalRounder.roundTwoDecimals(oldAddon.count * oldAddon.price, 2);
+                BigDecimal currentPrice = TwoDecimalRounder.roundTwoDecimals((addon.count * addon.price), 2);
 
                 if (oldPriceForDate.compareTo(currentPrice) != 0) {
                     return true;

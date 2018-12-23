@@ -65,10 +65,12 @@ echo "<div class='outer'>";
                 if (isset($grouped[$account]) && $grouped[$account]) {
                     $controlSum += $grouped[$account];
                 }
-                echo "<div class='col $account'>$val</div>";                
+                echo "<div class='col $account'>".round($val,2)."</div>";                
             }
-            
-            echo "<div class='col controlsum'>".round($controlSum)."</div>";
+            if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
+                $controlSum = 0;
+            }
+            echo "<div class='col controlsum'>".$controlSum."</div>";
         echo "</div>";  
     }
 echo "</div>";

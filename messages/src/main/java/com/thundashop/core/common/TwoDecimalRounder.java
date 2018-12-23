@@ -15,16 +15,28 @@ import java.text.DecimalFormat;
  */
 public class TwoDecimalRounder {
     
-    public static BigDecimal roundTwoDecimals(double value) {
-        DecimalFormat df = new DecimalFormat("#.##");
+    public static BigDecimal roundTwoDecimals(double value, int precision) {
+        String format = getFormat(precision);
+        
+        DecimalFormat df = new DecimalFormat(format);
         df.setRoundingMode(RoundingMode.CEILING);
         String twoDec = df.format(value);
         
         return new BigDecimal(twoDec);
     }
+
+    private static String getFormat(int precision) {
+        String format = "#.";
+        for (int i=0; i<precision; i++) {
+            format += "#";
+        }
+        return format;
+    }
     
-    public static BigDecimal roundTwoDecimalsHalfDown(double value) {
-        DecimalFormat df = new DecimalFormat("#.##");
+    public static BigDecimal roundTwoDecimalsHalfDown(double value, int precision) {
+        String format = getFormat(precision);
+        
+        DecimalFormat df = new DecimalFormat(format);
         df.setRoundingMode(RoundingMode.HALF_DOWN);
         String twoDec = df.format(value);
         

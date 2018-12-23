@@ -246,8 +246,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
         }
     }
 
-    public BigDecimal getPriceExTaxesWithTwoDecimals() {
-        return TwoDecimalRounder.roundTwoDecimals(priceExTaxes);
+    public BigDecimal getPriceExTaxesWithTwoDecimals(int precision) {
+        return TwoDecimalRounder.roundTwoDecimals(priceExTaxes, precision);
     }
 
     public void changeToAdditionalTaxCode(String taxGroupId) {
@@ -258,7 +258,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
         
         if (group != null) {
             double multiple = group.getTaxRate()+1;
-            BigDecimal newPrice = getPriceExTaxesWithTwoDecimals();
+            BigDecimal newPrice = getPriceExTaxesWithTwoDecimals(2);
             price = newPrice.multiply(new BigDecimal(multiple)).doubleValue();
             this.taxGroupObject = group;
             doFinalize();

@@ -295,7 +295,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         printMsg.deviceId = deviceId;
         printMsg.accountDetails = getAccountingDetails();
         
-        Map<TaxGroup, BigDecimal> vats = order.getTaxesRoundedWithTwoDecimals();
+        Map<TaxGroup, BigDecimal> vats = order.getTaxesRoundedWithTwoDecimals(2);
         
         for (TaxGroup group : vats.keySet()) {
             VatLine vatLine = new VatLine();
@@ -307,7 +307,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         for (CartItem cartItem : order.cart.getItems()) {
             ItemLine itemLine = new ItemLine();
             itemLine.description = formatter.getItemText(cartItem);
-            itemLine.price = cartItem.getTotalAmountRoundedWithTwoDecimals().doubleValue();
+            itemLine.price = cartItem.getTotalAmountRoundedWithTwoDecimals(2).doubleValue();
             printMsg.itemLines.add(itemLine);
         }
         
@@ -318,8 +318,8 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             printMsg.itemLines.add(itemLine);
         }
         
-        printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals().doubleValue() + order.cashWithdrawal;
-        printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals().doubleValue() - order.getTotalAmountVatRoundedTwoDecimals().doubleValue() + order.cashWithdrawal;
+        printMsg.totalIncVat = order.getTotalAmountRoundedTwoDecimals(2).doubleValue() + order.cashWithdrawal;
+        printMsg.totalExVat = order.getTotalAmountRoundedTwoDecimals(2).doubleValue() - order.getTotalAmountVatRoundedTwoDecimals(2).doubleValue() + order.cashWithdrawal;
         
         if (order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.isEmpty()) {
             printMsg.paymentMethod = getPaymentTypeForTermalReceipt(order, applicationPool.getApplicationByNameSpace(order.payment.paymentType));

@@ -72,7 +72,7 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
             
             $amount = $entry->isActualIncome && !$entry->isOffsetRecord && !$this->isShowingIncTaxes() ? $entry->amountExTax : $entry->amount;
             $newVal = $grouped[$entry->accountingNumber] + $amount;
-            $grouped[$entry->accountingNumber] = round($newVal, 2);
+            $grouped[$entry->accountingNumber] = $newVal;
             
             ksort($grouped);
         }

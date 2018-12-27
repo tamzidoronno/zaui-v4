@@ -128,13 +128,7 @@ public class Lock {
             List<UserSlot> slots = res.get(code);
             int numberOfCodes = slots.size();
             if (numberOfCodes > 1) {
-                Collections.sort(slots, (UserSlot a, UserSlot b) -> {
-                    Integer a1 = new Integer(a.slotId);
-                    Integer b1 = new Integer(b.slotId);
-                    return a1.compareTo(b1);
-                });
-                
-                for ( UserSlot slot : slots.subList( 1, slots.size() ) ) {
+                for ( UserSlot slot : slots ) {
                     slot.duplicate = true;
                 }
             }

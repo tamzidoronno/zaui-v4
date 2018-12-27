@@ -18,6 +18,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsMessage;
+import com.thundashop.core.pmsmanager.PingServerThread;
 import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +49,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     
     @Autowired
     private WebManager webManager;
+    private int lastsavedcounter = 0;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -464,6 +466,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void triggerCheckOfCodes(String serverId) {
         LockServer server = getLockServer(serverId);
+        
         if (server instanceof ZwaveLockServer) {
             ((ZwaveLockServer)server).startUpdatingOfLocks();
         }
@@ -803,6 +806,22 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 .stream()
                 .filter(o -> o.hasAccessLogFeature())
                 .count() > 0;
+    }
+
+    @Override
+    public void pingServers() {
+        lastsavedcounter++;
+        if(lastsavedcounter >= 20) {
+            for(LockServer server : lockServers.values()) {
+                server.save();
+            }
+            lastsavedcounter = 0;
+            
+        }
+        for(LockServer server : lockServers.values()) {
+            PingThread thrad = new PingThread(server);
+            thrad.start();
+        }
     }
 
 }

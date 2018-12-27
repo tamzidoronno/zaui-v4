@@ -11,6 +11,7 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        $this->includefile("serverwarning");
         $this->includefile("searchbox");
     }
     

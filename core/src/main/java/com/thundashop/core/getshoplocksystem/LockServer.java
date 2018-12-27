@@ -13,6 +13,7 @@ import java.util.List;
  * @author ktonder
  */
 public interface LockServer {
+
     public List<Lock> getLocks();
     
     public void fetchLocksFromServer();
@@ -22,6 +23,9 @@ public interface LockServer {
     public void setDetails(String hostname, String userName, String password, String givenName, String token);
 
     public Lock getLock(String lockId);
+    public String getHostname();
+    public void setLastPing(Date date);
+    public Date getLastPing();
 
     public void save();
     

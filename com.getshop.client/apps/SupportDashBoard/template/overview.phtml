@@ -141,7 +141,7 @@ if(sizeof($cases) == 0) {
                 }
                 echo "</td>";
                 echo "<td>" . $case->emailAdress . "<br>" . $case->usersEmail . "</td>";
-                echo "<td>" . $case->webAddress . "</td>";
+                echo "<td><a href='https://$case->webAddress/totp.php' target='123123'>" . $case->webAddress . "</a></td>";
             }
             echo "</tr>";
         }

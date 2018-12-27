@@ -127,13 +127,13 @@ public class NorwegianAccounting extends AccountingSystemBase {
             
             // Bruk 1530 periodiseringskontoen når betalingen er opprettet eller innhentet utenfor angitt tidsperiode.
             AccountingTransaction paymentTransaction = getTransactionFile(file, end, 1530);
-            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
+            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals(2));
 
             paymentTransaction.description = "Opptjent, ikke fakturert driftsinntekter.";
             paymentTransaction.orderIds.add(order.id);
         } else {
             AccountingTransaction paymentTransaction = getTransactionFile(file, useDate, accountNumber);
-            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
+            paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals(2));
 
             paymentTransaction.description = accountDescription;
             paymentTransaction.orderIds.add(order.id);
@@ -211,7 +211,7 @@ public class NorwegianAccounting extends AccountingSystemBase {
     private void addExpenseTransaction(Order order, SavedOrderFile file) {
         Date postDate = getAccountingPostingDate(order);
         for (CartItem cartItem : order.cart.getItems()) {
-            BigDecimal total = cartItem.getTotalAmountRoundedWithTwoDecimals();
+            BigDecimal total = cartItem.getTotalAmountRoundedWithTwoDecimals(2);
             int accountNumber = Integer.valueOf(getAccountingNumberForProduct(cartItem.getProduct().id));
             AccountingTransaction paymentTransaction = getTransactionFile(file, postDate, accountNumber);
             paymentTransaction.credit = paymentTransaction.credit.add(total);
@@ -335,7 +335,7 @@ public class NorwegianAccounting extends AccountingSystemBase {
     private void addPaymentFromDepth(Order order, SavedOrderFile file) {
         Date postingDate = getAccountingPostingDate(order);
         AccountingTransaction paymentTransaction = getTransactionFile(file, postingDate, 2900);
-        paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals());
+        paymentTransaction.debit = paymentTransaction.debit.add(order.getTotalAmountRoundedTwoDecimals(2));
         paymentTransaction.description = productManager.getAccountingDetail(2900).description;
     }   
     

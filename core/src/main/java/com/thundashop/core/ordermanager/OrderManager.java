@@ -69,6 +69,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -2110,13 +2111,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.closed = true;
             saveObject(order);
         });
-                
-       
+        
         cartManager.clear();
         
         orderIds.stream()
                 .map(orderId -> getOrder(orderId))
                 .forEach(order -> { cartManager.getCart().addCartItems(order.cart.getItems()); });
+        
+        if (cartManager.isCartConflictingWithClosedPeriode()) {
+            cartManager.getCart().overrideDate = new Date();
+        }
         
         Order newOrder = createOrder(user.address);
         newOrder.userId = userId;
@@ -2517,6 +2521,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             String orderId = (String)argObjects[0];
             Order order = getOrder(orderId);
             if (order.payment == null) {
+                throw new ErrorException(1052);
+            }
+            
+            // Samlefaktura
+            if (order.getPaymentApplicationId().equals("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba") && order.getTotalAmount() > 0) {
                 throw new ErrorException(1052);
             }
             
@@ -2925,4 +2934,110 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return false;
     }
 
+    public void updateOrdersWithNewAccountingTaxCode(TaxGroup grp) {
+        List<CartItem> cartItems = orders.values().stream()
+                .flatMap(o -> o.getCartItems().stream())
+                .filter(item -> item.getProduct().taxgroup == grp.groupNumber)
+                .collect(Collectors.toList());
+        
+        cartItems.stream().forEach(item -> {
+            item.getProduct().taxGroupObject.accountingTaxAccount = grp.accountingTaxAccount;
+        });
+        
+        cartItems.stream()
+                .map(item -> getOrder(item.orderId))
+                .distinct()
+                .forEach(order -> {
+                    saveOrder(order);
+                });
+    }
+
+    @Override
+    public void checkGroupInvoicing(String password) {
+        if (!password.equals("a9dsfasd23olnasdfnj2k4nj3jkasndf")) {
+            return;
+        }
+        
+        List<Order> ret = orders.values().stream()
+                .filter(o -> o.isSamleFaktura())
+                .collect(Collectors.toList());
+        
+        List<Order> creditNotes = ret.stream()
+                .filter(o -> o.isCreditNote)
+                .filter(o -> o.cart != null && o.cart.reference != null && o.cart.reference.equals("ordermanager_merged_order"))
+                .collect(Collectors.toList());
+        
+        Map<String, List<Order>> groupedOrders = creditNotes.stream().collect(Collectors.groupingBy(Order::getParentOrder));
+        
+        for (String orderId : groupedOrders.keySet()) {
+            if (groupedOrders.get(orderId).size() > 1) {
+
+                boolean orderExists = isThereOrderCreatedBasedOnOrder(orderId);
+                if (orderExists) {
+                    System.out.println("There are orders for the id: " + orderId + " but have multiple creditted orders? : orderid: " + getOrder(orderId).incrementOrderId);
+                    groupedOrders.get(orderId).stream()
+                        .forEach(i -> {
+                            System.out.println("  - Creditnoteid: " + i.incrementOrderId);
+                        });
+                }
+                
+                System.out.println("Found a bit of a problem: " + groupedOrders.get(orderId).size());
+                boolean first = false;
+                List<Order> retOrders = groupedOrders.get(orderId);
+                
+                for (Order toD : retOrders) {
+                    if (first && orderExists) {
+                        first = false;
+                        continue;
+                    }   
+                    
+                    first = false;
+                    orders.remove(toD.id);
+                    deleteObject(toD);    
+                    ordersChanged.add(toD.id);
+                }
+                
+                Order origOrder = orders.get(orderId);
+                origOrder.status = Order.Status.CREATED;
+                origOrder.creditOrderId = new ArrayList();
+                ordersChanged.add(origOrder.id);
+                super.saveObject(origOrder); 
+            }
+        }
+        
+        List<Order> ordersWithNoRealInvoice = ret.stream()
+                .filter(o -> o.status == Order.Status.PAYMENT_COMPLETED)
+                .filter(o -> !isThereOrderCreatedBasedOnOrder(o.id))
+                .collect(Collectors.toList());
+            
+        // Cleanup samlefaktura orders that does not have a real invoice.
+        for (Order orderWithNoRealInvoice : ordersWithNoRealInvoice) {
+            List<Order> creditNotesForOrder = getCreditNotesForOrder(orderWithNoRealInvoice.id);
+            
+            for (Order toD : creditNotesForOrder) {
+                orders.remove(toD.id);
+                deleteObject(toD);    
+                ordersChanged.add(toD.id);
+            }
+            
+            orderWithNoRealInvoice.status = Order.Status.CREATED;
+            orderWithNoRealInvoice.creditOrderId = new ArrayList();
+            ordersChanged.add(orderWithNoRealInvoice.id);
+            super.saveObject(orderWithNoRealInvoice);
+        }
+    }
+    
+    public boolean isThereOrderCreatedBasedOnOrder(String orderId) {
+        return orders.values().stream()
+                .filter(order -> order.createdBasedOnOrderIds != null && order.createdBasedOnOrderIds.contains(orderId))
+                .count() > 0;
+    }
+
+    private List<Order> getCreditNotesForOrder(String id) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.parentOrder != null && o.parentOrder.equals(id))
+                .collect(Collectors.toList());
+    }
+    
 }

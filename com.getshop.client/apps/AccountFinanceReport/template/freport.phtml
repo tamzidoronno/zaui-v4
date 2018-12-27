@@ -4,6 +4,7 @@ $start = $this->getStart();
 $end = $this->getEnd();
 $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
 $isLocked = $this->getApi()->getOrderManager()->isLocked($end);
+$isShowingExTaxes = $this->isShowingIncTaxes();
 
 $monthHasPassed = strtotime($end) < time();
 
@@ -16,6 +17,9 @@ foreach ($dayIncomes as $dayIncome) {
         $errors[] = $dayIncome->errorMsg;
     } else {
         foreach ($dayIncome->dayEntries as $entry) {
+            if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+                continue;
+            }
             $allAccountNumbers[] = $entry->accountingNumber;
         }
     }
@@ -74,6 +78,12 @@ echo "</script>";
                 echo "<option $selected year='$year'>$year</option>";
             }
             ?>
+        </select>
+        -
+        <select gsname='tax' class='gsniceselect1 timeperiode'> 
+            
+            <option class="gsniceselect1" <? echo $this->isShowingIncTaxes() ? "selected='true'" : ""; ?> value="yes"><? echo $this->__f("Inc taxes"); ?></option>
+            <option class="gsniceselect1" <? echo !$this->isShowingIncTaxes() ? "selected='true'" : ""; ?> value="no"><? echo $this->__f("Ex taxes"); ?></option>
         </select>
 
         <div gstype='submit' class='shop_button showresultbutton'><? echo $this->__f("Show"); ?></div>
@@ -134,13 +144,16 @@ echo "<div class='outer'>";
                 }
 
                 if (isset($grouped[$account]) && $grouped[$account]) {
-                    $controlSum += $grouped[$account];
+                    $controlSum += ($grouped[$account]);
                 }
 
                 $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : "&nbsp;";
-                echo "<div class='col $account'>$val</div>";
+                echo "<div class='col $account'>".round($val,2)."</div>";
             }
-            echo "<div class='col controlsum'>".round($controlSum)."</div>";
+            if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
+                $controlSum = 0;
+            }
+            echo "<div class='col controlsum'>".$controlSum."</div>";
 
         echo "</div>";
     }
@@ -149,15 +162,10 @@ echo "<div class='outer'>";
 
         echo "<div class='col orderid'>Total</div>";
 
-        $controlSum = 0;
         foreach ($accounts as $account) {
-            if (isset($sum[$account]) && $sum[$account]) {
-                $controlSum += $sum[$account];
-            }
             $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
-            echo "<div gsclick='showSummaryForAccount' account='$account' class='col $account'>$val</div>";
+            echo "<div gsclick='showSummaryForAccount' account='$account' class='col $account'>".round($val,2)."</div>";
         }
-        echo "<div class='col controlsum'>".floor($controlSum)."</div>";
 
     echo "</div>";
 

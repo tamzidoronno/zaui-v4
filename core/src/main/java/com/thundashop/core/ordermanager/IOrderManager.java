@@ -365,4 +365,15 @@ public interface IOrderManager {
     
     @Administrator
     public void resetLastMonthClose(String password, Date start, Date end);
+    
+    /**
+     * This function is not in use anywhere so it can be deleted at any time.
+     * 
+     * just a function that fixes a problem that we had by resetting orders 
+     * that has not been fully completed.
+     * 
+     * @param password 
+     */
+    @Administrator
+    public void checkGroupInvoicing(String password);
 }

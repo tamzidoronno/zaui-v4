@@ -66,6 +66,7 @@ public class DayEntry implements Serializable, Cloneable {
      * Will be true if this is an actual income post.
      */
     public boolean isActualIncome = false;
+    public boolean isTaxTransaction = false;
     
 
     @Override

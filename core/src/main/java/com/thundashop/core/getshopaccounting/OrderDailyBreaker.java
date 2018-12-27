@@ -15,6 +15,8 @@ import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.math.BigDecimal;
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -40,6 +42,7 @@ public class OrderDailyBreaker {
     private Date start;
     private List<DayEntry> orderDayEntries;
     private List<String> errors = new ArrayList();
+    private int precision = 10;
     
     public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager) {
         this.dayIncomes = new ArrayList();
@@ -117,6 +120,8 @@ public class OrderDailyBreaker {
             Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        createVatLines(order, orderDayEntries);
+        
         addToDayIncome(orderDayEntries);
     }
     
@@ -181,8 +186,8 @@ public class OrderDailyBreaker {
         }
         
         DayEntry dayEntry = new DayEntry();
-        dayEntry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount());
-        dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount() - order.getTotalAmountVat());
+        dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision);
+        dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
         dayEntry.isIncome = true;
         dayEntry.orderId = order.id;
         dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -202,8 +207,8 @@ public class OrderDailyBreaker {
                 entry.orderId = order.id;
                 entry.incrementalOrderId = order.incrementOrderId;
                 entry.isActualIncome = true;
-                entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.priceMatrix.get(dateString));
-                entry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getPriceMatrixWithoutTax(dateString));
+                entry.amount = TwoDecimalRounder.roundTwoDecimals(item.priceMatrix.get(dateString), precision);
+                entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getPriceMatrixWithoutTax(dateString), precision);
                 
                 entry.date = sdf.parse(dateString+" 09:00:00");
                 
@@ -230,8 +235,8 @@ public class OrderDailyBreaker {
             DayEntry entry = new DayEntry();
             entry.cartItemId = item.getCartItemId();
             entry.orderId = order.id;
-            entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(total);
-            entry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown((total / taxFactor));
+            entry.amount = TwoDecimalRounder.roundTwoDecimals(total, precision);
+            entry.amountExTax = TwoDecimalRounder.roundTwoDecimals((total / taxFactor), precision);
             entry.incrementalOrderId = order.incrementOrderId;
             entry.date = i.date;
             entry.isActualIncome = true;
@@ -251,8 +256,8 @@ public class OrderDailyBreaker {
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
         entry.isActualIncome = true;
-        entry.amount = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalAmount());
-        entry.amountExTax = TwoDecimalRounder.roundTwoDecimalsHalfDown(item.getTotalEx());
+        entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmount(), precision);
+        entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalEx(), precision);
         entry.date = order.rowCreatedDate;
         
         if (order.overrideAccountingDate != null)
@@ -266,8 +271,8 @@ public class OrderDailyBreaker {
         BigDecimal sum = new BigDecimal(0D);
         BigDecimal sumEx = new BigDecimal(0D);
         
-        sum = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount());
-        sumEx = TwoDecimalRounder.roundTwoDecimalsHalfDown(order.getTotalAmount() - order.getTotalAmountVat());
+        sum = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision);
+        sumEx = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat(), precision);
         
         for (DayEntry dayEntry : orderDayEntries) {
             if (!dayEntry.isIncome) {
@@ -561,7 +566,7 @@ public class OrderDailyBreaker {
                 checkStorePayment(storePaymentConfig, order);
                 entryPrePayment.accountingNumber = storePaymentConfig.offsetAccountingId_prepayment;
                 entryPrePayment.amount = entryPrePayment.amount.multiply(new BigDecimal(-1D));                
-                entryPrePayment.amountExTax = entryPrePayment.amountExTax.multiply(new BigDecimal(-1D));                
+                entryPrePayment.amountExTax = entryPrePayment.amount; //entryPrePayment.amountExTax.multiply(new BigDecimal(-1D));                
                 toAdd.add(entryPrePayment);
             }
             
@@ -569,7 +574,7 @@ public class OrderDailyBreaker {
                 checkStorePayment(storePaymentConfig, order);
                 entryAccrude.accountingNumber = storePaymentConfig.offsetAccountingId_accrude;
                 entryAccrude.amount = entryAccrude.amount.multiply(new BigDecimal(-1D));                
-                entryAccrude.amountExTax = entryAccrude.amountExTax.multiply(new BigDecimal(-1D));                
+                entryAccrude.amountExTax = entryAccrude.amount; //entryAccrude.amountExTax.multiply(new BigDecimal(-1D));                
                 toAdd.add(entryAccrude);
             }
             
@@ -579,10 +584,10 @@ public class OrderDailyBreaker {
                 entryAccrude.accountingNumber = storePaymentConfig.offsetAccountingId_accrude;
                 
                 entryAccrude.amount = entryAccrude.accruedAmount;
-                entryAccrude.amountExTax = entryAccrude.accruedAmountExTaxes;
+                entryAccrude.amountExTax = entryAccrude.amount; //entryAccrude.accruedAmountExTaxes;
                 
                 entryPrePayment.amount = entryPrePayment.prePaidAmount;
-                entryPrePayment.amountExTax = entryPrePayment.prePaidAmountExTaxes;
+                entryPrePayment.amountExTax = entryPrePayment.amount; //entryPrePayment.prePaidAmountExTaxes;
                 
                 entryAccrude.amount = entryAccrude.amount.multiply(new BigDecimal(-1D));                
                 entryPrePayment.amount = entryPrePayment.amount.multiply(new BigDecimal(-1D));                
@@ -630,8 +635,8 @@ public class OrderDailyBreaker {
         
         for (OrderTransaction orderTransaction : order.orderTransactions) {
             DayEntry dayEntry = new DayEntry();
-            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount);
-            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount);
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision);
+            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision);
             dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -668,8 +673,8 @@ public class OrderDailyBreaker {
         try {
             if (order.isFullyPaid()) {
                 DayEntry dayEntry = new DayEntry();
-                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal);
-                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal);
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal, precision);
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal, precision);
                 dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId("565ea7bd-c56b-41fe-b421-18f873c63a8f");
                 dayEntry.orderId = order.id;
                 dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -677,8 +682,8 @@ public class OrderDailyBreaker {
                 orderDayEntries.add(dayEntry);
 
                 dayEntry = dayEntry.clone();
-                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal).multiply(new BigDecimal(-1));
-                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal).multiply(new BigDecimal(-1));
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal, precision).multiply(new BigDecimal(-1));
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.cashWithdrawal, precision).multiply(new BigDecimal(-1));
                 dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
                 dayEntry.orderId = order.id;
                 dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -690,6 +695,32 @@ public class OrderDailyBreaker {
         }
         
         return null;
+    }
+
+    private void createVatLines(Order order, List<DayEntry> orderDayEntries) {
+        List<DayEntry> entriesToCreateVATtransactionOf = orderDayEntries.stream()
+                .filter(transaction -> transaction.isActualIncome && !transaction.isOffsetRecord)
+                .collect(Collectors.toList());
+                
+        for (DayEntry entry : entriesToCreateVATtransactionOf) {
+            Product product = order.cart.getCartItem(entry.cartItemId).getProduct();
+            TaxGroup taxGroup = product.taxGroupObject;
+            if (taxGroup.accountingTaxAccount == null || taxGroup.accountingTaxAccount.isEmpty()) {
+                continue;
+            }
+            
+            BigDecimal taxValue = entry.amount.subtract(entry.amountExTax);
+            
+            DayEntry dayEntry = new DayEntry();
+            dayEntry.amount = taxValue;
+            dayEntry.amountExTax = taxValue;
+            dayEntry.accountingNumber = taxGroup.accountingTaxAccount;
+            dayEntry.date  = entry.date;
+            dayEntry.orderId  = entry.orderId;
+            dayEntry.cartItemId  = entry.cartItemId;
+            dayEntry.isTaxTransaction = true;
+            orderDayEntries.add(dayEntry);
+        }
     }
 
 }

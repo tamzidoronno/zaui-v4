@@ -251,21 +251,21 @@ public class EhfXmlGenerator {
                 "       </cac:PaymentMeans>\n";
 
         xml += "        <cac:TaxTotal>\n"
-                + "                <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountVatRoundedTwoDecimals()) + "</cbc:TaxAmount>\n";
+                + "                <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountVatRoundedTwoDecimals(2)) + "</cbc:TaxAmount>\n";
 
         xml += generateSubTaxes();
 
         xml += "        </cac:TaxTotal>\n";
 
-        BigDecimal roundedTotalWithoutVat = order.getTotalAmountRoundedTwoDecimals().subtract(order.getTotalAmountVatRoundedTwoDecimals());
+        BigDecimal roundedTotalWithoutVat = order.getTotalAmountRoundedTwoDecimals(2).subtract(order.getTotalAmountVatRoundedTwoDecimals(2));
         xml += "        <cac:LegalMonetaryTotal>\n"
                 + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:LineExtensionAmount>\n"
                 + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:TaxExclusiveAmount>\n"
-                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals()) + "</cbc:TaxInclusiveAmount>\n"
+                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals(2)) + "</cbc:TaxInclusiveAmount>\n"
                 + "                <cbc:ChargeTotalAmount currencyID=\"NOK\">0</cbc:ChargeTotalAmount>\n"
                 + "                <cbc:PrepaidAmount currencyID=\"NOK\">0</cbc:PrepaidAmount>\n"
                 + "                <cbc:PayableRoundingAmount currencyID=\"NOK\">0</cbc:PayableRoundingAmount>\n"
-                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals()) + "</cbc:PayableAmount>\n"
+                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals(2)) + "</cbc:PayableAmount>\n"
                 + "        </cac:LegalMonetaryTotal>\n";
 
         xml += createInvoiceLines();
@@ -285,8 +285,8 @@ public class EhfXmlGenerator {
         int i = 0;
         for (CartItem item : order.cart.getItems()) {
             i++;
-            BigDecimal unitPrice =  isCreditNote ? makePositive(item.getProduct().getPriceExTaxesWithTwoDecimals()) : item.getProduct().getPriceExTaxesWithTwoDecimals();
-            BigDecimal total = item.getTotalExRoundedWithTwoDecimals(); 
+            BigDecimal unitPrice =  isCreditNote ? makePositive(item.getProduct().getPriceExTaxesWithTwoDecimals(2)) : item.getProduct().getPriceExTaxesWithTwoDecimals(2);
+            BigDecimal total = item.getTotalExRoundedWithTwoDecimals(2); 
             double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
             
             String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "AA" : "S";
@@ -377,7 +377,7 @@ public class EhfXmlGenerator {
     }
 
     private String generateSubTaxes() {
-        Map<TaxGroup, BigDecimal> taxes = order.getTaxesRoundedWithTwoDecimals();
+        Map<TaxGroup, BigDecimal> taxes = order.getTaxesRoundedWithTwoDecimals(2);
         String xml = "";
         for (TaxGroup group : taxes.keySet()) {
             String taxCode = group.taxRate < 25.0 ? "AA" : "S";
@@ -385,7 +385,7 @@ public class EhfXmlGenerator {
                 taxCode = "Z";
             }
             xml += "                <cac:TaxSubtotal>\n"
-                    + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountForTaxGroupRoundedWithTwoDecimals(group)) + "</cbc:TaxableAmount>\n"
+                    + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountForTaxGroupRoundedWithTwoDecimals(group, 2)) + "</cbc:TaxableAmount>\n"
                     + "                        <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(taxes.get(group)) + "</cbc:TaxAmount>\n"
                     + "                        <cac:TaxCategory>\n"
                     + "                                <cbc:ID schemeID=\"UNCL5305\">" + taxCode + "</cbc:ID>\n"

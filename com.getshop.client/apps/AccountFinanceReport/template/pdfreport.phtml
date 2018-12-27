@@ -84,6 +84,9 @@ $gjeld = array();
 $grouped = array();
 foreach ($dayIncomes as $dayIncome) {
     foreach ($dayIncome->dayEntries as $entry) {
+        if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+            continue;
+        }
         if ((int)$entry->accountingNumber < 2000 || (int) $entry->accountingNumber > 10000) {
             $eiendeler[$entry->accountingNumber][] = $entry;
             continue;
@@ -141,7 +144,7 @@ function printLines($monthLines, $sumtext, $api, $me) {
         $sum = 0;
       
         foreach ($lines as $line) {
-            $sum += $line->amount;
+            $sum += $me->isShowingIncTaxes() || $line->isIncome ? $line->amount : $line->amountExTax;
         }
 
         if (!$sum)
@@ -160,8 +163,8 @@ function printLines($monthLines, $sumtext, $api, $me) {
         echo "<div class='row'>";
             echo "<div class='col col_start'>$accountNumber</div>";
             echo "<div class='col col_description'>$desc</div>";
-            echo "<div class='col col_debit'>$debit</div>";
-            echo "<div class='col col_credit'>".($credit*-1)."</div>";
+            echo "<div class='col col_debit'>".round($debit,2)."</div>";
+            echo "<div class='col col_credit'>".round(($credit*-1),2)."</div>";
         echo "</div>";
 
         $totalDebit += $debit;
@@ -171,8 +174,8 @@ function printLines($monthLines, $sumtext, $api, $me) {
     echo "<div class='row total'>";
        echo "<div class='col col_start'></div>";
        echo "<div class='col col_description'><b>$sumtext</b></div>";
-       echo "<div class='col col_debit'><b>$totalDebit</b></div>";
-       echo "<div class='col col_credit'><b>".($totalCredit*-1)."</b></div>";
+       echo "<div class='col col_debit'><b>".round($totalDebit,2)."</b></div>";
+       echo "<div class='col col_credit'><b>".round(($totalCredit*-1),2)."</b></div>";
    echo "</div>";
    
    $GLOBALS['overAllDebit'] += $totalDebit;
@@ -196,15 +199,15 @@ echo "<div class='monthoverview'>";
     printLines($grouped, "Sum Salgs og driftsinntekter", $factory->getApi(), $this);
 echo "</div>";
 
-$overAllDebit = round($GLOBALS['overAllDebit'], 2);
-$overAllCredit = round($GLOBALS['overAllCredit'], 2);
+$overAllDebit = $GLOBALS['overAllDebit'];
+$overAllCredit = $GLOBALS['overAllCredit'];
 
 
 echo "<div class='monthoverview'>";
     echo "<div class='row total'>";
        echo "<div class='col col_start'></div>";
        echo "<div class='col col_description'>Sum</div>";
-       echo "<div class='col col_debit'>".$overAllDebit."</div>";
-       echo "<div class='col col_credit'>".($overAllCredit*-1)."</div>";
+       echo "<div class='col col_debit'>".round($overAllDebit,2)."</div>";
+       echo "<div class='col col_credit'>".round(($overAllCredit*-1),2)."</div>";
    echo "</div>";
 echo "</div>";

@@ -9,6 +9,13 @@ foreach ($products as $product) {
 
 $distinctAccountingNames = array_unique($distinctAccountingNames);
 
+$taxes = $this->getApi()->getProductManager()->getTaxes();
+foreach ($taxes as $tax) {
+    if ($tax->accountingTaxAccount) {
+        $distinctAccountingNames[] = $tax->accountingTaxAccount;
+    }
+}
+
 ?>
 <div class="product_row">
     <div class="name"><? echo $this->__f("Product name"); ?></div>
@@ -50,6 +57,8 @@ if (count($distinctAccountingNames)) {
         echo "<div class='col accountingid'>".$this->__f("Account name")."</div>";
         echo "<div class='col accountindesc'>".$this->__f("Description")."</div>";
         echo "<div class='col taxcode'>".$this->__f("Tax Code")."</div>";
+        echo "<div class='col subaccountid'>".$this->__f("Sub Account Id")."</div>";
+        echo "<div class='col subaccountsegment'>".$this->__f("Sub Account Segment")."</div>";
     echo "</div>";
 
     foreach ($distinctAccountingNames as $accountName) {
@@ -59,11 +68,15 @@ if (count($distinctAccountingNames)) {
         $detail = $this->getApi()->getProductManager()->getAccountingDetail($accountName);
         $accountDescription = $detail ? $detail->description : "";
         $accountTaxGroup = $detail ? $detail->taxgroup : "";
+        $subaccountid = $detail ? $detail->subaccountid : "";
+        $subaccountvalue = $detail ? $detail->subaccountvalue : "";
         
         echo "<div class='row_description'>";
             echo "<div class='col accountingid'>$accountName</div>";
             echo "<div class='col accountindesc'><input gsname='description_$accountName' class='gsniceinput1' value='$accountDescription'></div>";
             echo "<div class='col taxcode'><input gsname='taxcode_$accountName' class='gsniceinput1' value='$accountTaxGroup'></div>";
+            echo "<div class='col subaccountid'><input gsname='subaccountid_$accountName' class='gsniceinput1' value='$subaccountid'></div>";
+            echo "<div class='col subaccountvalue'><input gsname='subaccountvalue_$accountName' class='gsniceinput1' value='$subaccountvalue'></div>";
         echo "</div>";
     }
     ?>

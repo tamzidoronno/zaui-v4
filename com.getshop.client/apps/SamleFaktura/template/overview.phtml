@@ -2,7 +2,16 @@
 /* @var $this ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura */
 $orders = $this->getApi()->getOrderManager()->getAllUnpaid("ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura");
 $groupedOrders = $this->groupOrdersByUserId($orders);
-if (!count($orders)) {
+
+$total = 0;
+foreach ($groupedOrders as $userId => $orders) {
+    foreach ($orders as $order) {
+        $total += $this->getApi()->getOrderManager()->getTotalAmount($order);
+    }
+}
+
+if (!$total) {
+    echo "<h2>".$this->__f("You dont have any group invoices")."</h2>";
     return;
 }
 

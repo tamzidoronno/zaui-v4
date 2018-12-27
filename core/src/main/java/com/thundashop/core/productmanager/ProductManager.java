@@ -6,6 +6,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pdf.data.AccountingDetails;
@@ -45,9 +46,11 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Autowired
     private PageManager pageManager;
     
-    
     @Autowired
     private Database database;
+    
+    @Autowired
+    private OrderManager orderManager;
 
     @Override
     public Product saveProduct(Product product) throws ErrorException {
@@ -212,6 +215,8 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public void setTaxes(List<TaxGroup> groups) throws ErrorException {
         //Remove the old ones first.
+        List<TaxGroup> oldGroups = new ArrayList(taxGroups.values());
+        
         for (TaxGroup grp : taxGroups.values()) {
             deleteObject(grp);
         }
@@ -220,6 +225,9 @@ public class ProductManager extends AProductManager implements IProductManager {
         for (TaxGroup grp : groups) {
             taxGroups.put(grp.groupNumber, grp);
             grp.storeId = storeId;
+            if (accountingCodeChangedFromNull(grp, oldGroups)) {
+                orderManager.updateOrdersWithNewAccountingTaxCode(grp);
+            }
             saveObject(grp);
         }
     }
@@ -484,5 +492,22 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.changeToAdditionalTaxCode(taxGroupId);
         return product;
     }
+
+    private boolean accountingCodeChangedFromNull(TaxGroup grp, List<TaxGroup> oldGroups) {
+        if (grp.accountingTaxAccount == null || grp.accountingTaxAccount.isEmpty()) {
+            return false;
+        }
+        
+        TaxGroup oldGroup = oldGroups.stream()
+                .filter(g -> g.groupNumber == grp.groupNumber)
+                .findFirst()
+                .orElse(null);
+        
+        boolean oldGroupHasNoAccountingTaxAccounnt = oldGroup.accountingTaxAccount == null || oldGroup.accountingTaxAccount.isEmpty();
+        boolean newTaxGroupHasAccounting = grp.accountingTaxAccount != null && !grp.accountingTaxAccount.isEmpty();
+        
+        return oldGroupHasNoAccountingTaxAccounnt && newTaxGroupHasAccounting;
+    }
+
     
 }

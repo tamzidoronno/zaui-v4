@@ -7799,6 +7799,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void orderChanged(String orderId) {
         Order order = orderManager.getOrderSecure(orderId);
 
+        if (order == null) {
+            bookings.values()
+                    .stream()
+                    .filter(b -> b.orderIds.contains(orderId))
+                    .forEach(b -> b.orderIds.remove(orderId));
+            
+            return;
+        }
+        
         if (!order.cart.getItems().isEmpty()) {
             return;
         }
@@ -9340,5 +9349,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         saveBooking(booking);
+    }
+    
+    @Override
+    public void cleanupOrdersThatDoesNoLongerExists() {
+        bookings.values().stream()
+                .forEach(b -> {
+                    for (String orderId : b.orderIds) {
+                        Order order = orderManager.getOrderSecure(orderId);
+                        if (order == null) {
+                            b.orderIds.remove(orderId);
+                            saveObject(b);
+                        }
+                    }
+                });
     }
 }

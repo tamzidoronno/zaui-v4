@@ -19,6 +19,9 @@ $order = $this->getApi()->getOrderManager()->getOrder($_SESSION['ns_e6570c0a_824
 $groupByDay = array();
 $allAccounts = array();
 foreach ($entries as $entry) {
+    if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+        continue;
+    }
     $date = date('d.m.Y', strtotime($entry->date));
     if (!isset($groupByDay[$date])) {
         $groupByDay[$date] = array();
@@ -49,7 +52,8 @@ echo "<div class='outer'>";
     foreach ($groupByDay as $day => $entries) {
         $grouped = array();
         foreach ($entries as $entry) {
-            $grouped[$entry->accountingNumber] = @$grouped[$entry->accountingNumber] + $entry->amount;
+            $amount = $entry->isActualIncome && !$entry->isOffsetRecord && !$this->isShowingIncTaxes() ? $entry->amountExTax : $entry->amount;
+            $grouped[$entry->accountingNumber] = @$grouped[$entry->accountingNumber] + $amount;
         }
         
         echo "<div class='row' >";
@@ -61,10 +65,12 @@ echo "<div class='outer'>";
                 if (isset($grouped[$account]) && $grouped[$account]) {
                     $controlSum += $grouped[$account];
                 }
-                echo "<div class='col $account'>$val</div>";                
+                echo "<div class='col $account'>".round($val,2)."</div>";                
             }
-            
-            echo "<div class='col controlsum'>".round($controlSum)."</div>";
+            if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
+                $controlSum = 0;
+            }
+            echo "<div class='col controlsum'>".$controlSum."</div>";
         echo "</div>";  
     }
 echo "</div>";

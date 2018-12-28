@@ -39,6 +39,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         useNewEngine.add("23db81fc-2705-43ee-b141-6ab019806b7e"); // hardanger gjestehus
         useNewEngine.add("fcaa6625-17da-447e-b73f-5c07b9b7d382"); // Banken Hotell Haugesund
         useNewEngine.add("87cdfab5-db67-4716-bef8-fcd1f55b770b"); // Renahotell
+        useNewEngine.add("b6949f70-5e41-4c5e-abcf-d595450f8048"); // Trysilhotell
     }
     
     @Autowired

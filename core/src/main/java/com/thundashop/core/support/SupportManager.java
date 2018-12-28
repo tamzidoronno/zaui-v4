@@ -287,6 +287,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     @Override
     public void assignCareTakerForCase(String caseId, String userId) {
         SupportCase toChange = getSupportCase(caseId);
+        if(toChange.handledByUser != null && toChange.handledByUser.equals(userId)) {
+            return;
+        }
         toChange.state = SupportCaseState.ASSIGNED;
         toChange.handledByUser = userId;
         saveSupportCase(toChange);
@@ -528,7 +531,10 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         loadServerStatusList();
         
         for(ServerStatusEntry entry : serverStatusList.entries.values()) {
-            entry.webaddr = getSupportStore(entry.storeId).defaultWebAddress;
+            SupportStore store = getSupportStore(entry.storeId);
+            if(store != null) {
+                entry.webaddr = getSupportStore(entry.storeId).defaultWebAddress;
+            }
         }
         
         return serverStatusList;

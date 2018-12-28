@@ -37,6 +37,9 @@ class PageFactory {
         if ($moduleId == "getshopsupport") {
             $this->createGetShopSupportPages();
         }
+        if ($moduleId == "intranet") {
+            $this->createIntranetPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -455,4 +458,32 @@ class PageFactory {
         $this->pages['tables'] = $page;
         
     }
+
+    public function createIntranetPages() {
+        $page = new \ModulePage("home", "intranet");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("getshopdevcenter", "intranet");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopdevcenter'] = $page;   
+        
+        $page = new \ModulePage("serverstatus", "intranet");
+        $row = $page->createRow();
+        $row->addColumn("89a38877-4b75-456c-9dc8-a55ff0e7dfef", "7773ec7f-671d-45cc-b8e5-1367084ea01f");
+        $this->pages['serverstatus'] = $page;   
+        
+        $page = new \ModulePage("getshopbillinghistory", "intranet");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopbillinghistory'] = $page;   
+        
+        $page = new \ModulePage("getshopusermanual", "intranet");
+        $row = $page->createRow();
+        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['getshopusermanual'] = $page;
+    }
+
 }

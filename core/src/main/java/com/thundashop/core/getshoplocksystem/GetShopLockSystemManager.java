@@ -15,6 +15,7 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsMessage;
@@ -50,6 +51,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Autowired
     private WebManager webManager;
     private int lastsavedcounter = 0;
+    
+    @Autowired
+    GetShop getShop;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -816,9 +820,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 server.save();
             }
             lastsavedcounter = 0;
-            
         }
         for(LockServer server : lockServers.values()) {
+            getShop.updateServerStatus(server, storeId);
             PingThread thrad = new PingThread(server);
             thrad.start();
         }

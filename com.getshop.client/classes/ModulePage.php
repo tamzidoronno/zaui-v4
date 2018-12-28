@@ -45,6 +45,9 @@ class ModulePage {
         if ($this->module == "getshopsupport") {
             return $this->getTopMenuGetShopSupport();
         }
+        if ($this->module == "intranet") {
+            return $this->getTopMenuIntranet();
+        }
         
         if ($this->module == "salespoint") {
             return $this->getTopMenuSalesPoint();
@@ -324,6 +327,15 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Reports", "reports", "fa fa-line-chart");
         $menu->entries[] = new ModulePageMenuItem("Invoicing", "invoicing", "gsicon-gs-reports");
         $menu->entries[] = new ModulePageMenuItem("Settings", "settings", "gsicon-gs-gears");
+        return $menu;
+    }
+
+    public function getTopMenuIntranet() {
+        $menu = new \ModulePageMenu();
+        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Dev center", "getshopdevcenter", "gsicon-list");
+        $menu->entries[] = new ModulePageMenuItem("Servers", "serverstatus", "fa-server");
+        $menu->entries[] = new ModulePageMenuItem("Manuals", "getshopusermanual", "fa-support");
         return $menu;
     }
 

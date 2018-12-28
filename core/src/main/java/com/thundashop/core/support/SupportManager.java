@@ -19,6 +19,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,8 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private List<SupportStore> allSupportStores = new ArrayList();
     private List<SupportCase> allSupportCases = new ArrayList();
     private Date lastUpdatedAllStores;
+    private ServerStatusList serverStatusList = null;
+    
     
     @Override
     public void helloWorld() {
@@ -478,7 +481,58 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         }
     }
 
+    public void updateServerStatusList(HashMap<String, ServerStatusEntry> serverStatusEntries) {
+        if(serverStatusList == null) {
+            loadServerStatusList();
+        }
+        for(String id : serverStatusEntries.keySet()) {
+            serverStatusList.entries.put(id, serverStatusEntries.get(id));
+        }
+        if(serverStatusList.needSaving()) {
+            serverStatusList.lastSaved = new Date();
+            supportDatabase.save(serverStatusList);
+        }
+    }
 
-    
+    private void loadServerStatusList() {
+ 
+        BasicDBObject query = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("className", "com.thundashop.core.support.ServerStatusList"));
+        query.put("$and", obj);
+        
+        List<DataCommon> res = supportDatabase.query(query);
+        ServerStatusList list = null;
+        for(DataCommon r : res) {
+            if(r instanceof ServerStatusList) {
+                list = (ServerStatusList) r;
+            }
+        }
+        if(list == null) {
+            serverStatusList = new ServerStatusList();
+            supportDatabase.save(serverStatusList);
+        }
+        if(serverStatusList == null) {
+            serverStatusList = list;
+        }
+        for(String id : list.entries.keySet()) {
+            serverStatusList.entries.put(id, list.entries.get(id));
+        }
+    }
+
+    @Override
+    public ServerStatusList getServerStatusList() {
+        if(!isGetShop()) {
+            return null;
+        }
+        loadServerStatusList();
+        
+        for(ServerStatusEntry entry : serverStatusList.entries.values()) {
+            entry.webaddr = getSupportStore(entry.storeId).defaultWebAddress;
+        }
+        
+        return serverStatusList;
+    }
+
     
 }

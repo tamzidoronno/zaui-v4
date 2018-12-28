@@ -462,13 +462,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             returnroom.bookingItemTypeId = room.bookingItemTypeId;
             
             for(PmsGuests guest : room.guests) {
-                GuestInfo info = new GuestInfo();
-                info.name = guest.name;
-                info.email = guest.email;
-                info.prefix = guest.prefix;
-                info.phone = guest.phone;
-                info.isChild = guest.isChild;
-                info.selectedOptions = guest.orderedOption;
+                GuestInfo info = createGuestInfo(guest);
                 returnroom.guestInfo.add(info);
             }
             List<PmsBookingAddonItem> addons = pmsManager.getAddonsWithDiscount(room.pmsBookingRoomId);
@@ -863,6 +857,22 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             Order order = orderManager.getOrderSecure(booking.orderIds.get(0));
             Application app = storeApplicationPool.getApplication(input.paymentMethod);
             order.payment.paymentType = app.getNameSpace();
+        }
+        
+        if(res.orderid != null && !res.orderid.isEmpty()) {
+            Order order = orderManager.getOrderSecure(res.orderid);
+            res.amount = orderManager.getTotalAmount(order);
+        }
+
+        
+        for(PmsBookingRooms room : booking.rooms) {
+            BookingResultRoom roomToReturn = new BookingResultRoom();
+            roomToReturn.roomType = bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            for(PmsGuests guest : room.guests) {
+                GuestInfo info = createGuestInfo(guest);
+                roomToReturn.guests.add(info);
+            }
+            res.roomList.add(roomToReturn);
         }
         
         return res;
@@ -1400,5 +1410,16 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             language = "nb_NO";
         }
         storeManager.setSessionLanguage(language);
+    }
+
+    private GuestInfo createGuestInfo(PmsGuests guest) {
+        GuestInfo info = new GuestInfo();
+        info.name = guest.name;
+        info.email = guest.email;
+        info.prefix = guest.prefix;
+        info.phone = guest.phone;
+        info.isChild = guest.isChild;
+        info.selectedOptions = guest.orderedOption;
+        return info;
     }
 }

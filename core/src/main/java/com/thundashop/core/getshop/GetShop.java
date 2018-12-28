@@ -31,6 +31,7 @@ import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.WebPageData;
+import com.thundashop.core.getshoplocksystem.LockServer;
 import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -39,6 +40,8 @@ import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.support.ServerStatusEntry;
+import com.thundashop.core.support.SupportManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
@@ -95,7 +98,11 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Autowired
     private StoreManager storeManager;
     
+    @Autowired
+    private SupportManager supportManager;
     
+    public HashMap<String, ServerStatusEntry> serverStatusEntries = new HashMap();
+
     
     @Override
     public List<GetshopStore> getStores(String code) {
@@ -939,5 +946,30 @@ public class GetShop extends ManagerBase implements IGetShop {
                 }
             }
         }
+    }
+
+    public void updateServerStatus(LockServer server, String storeId) {
+        ServerStatusEntry entry = new ServerStatusEntry();
+        entry.id = server.getId();
+        entry.givenName = server.getGivenName();
+        entry.hostname = server.getHostname();
+        entry.storeId = storeId;
+        entry.lastPing = server.getLastPing();
+        entry.status = isOnline(server);
+        serverStatusEntries.put(entry.id, entry);
+        supportManager.updateServerStatusList(serverStatusEntries);
+    }
+
+    private Integer isOnline(LockServer server) {
+        Date lastPing = server.getLastPing();
+        if(lastPing == null) {
+            return 0;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -5);
+        if(cal.getTime().after(lastPing)) {
+            return 0;
+        }
+        return 1;
     }
 }

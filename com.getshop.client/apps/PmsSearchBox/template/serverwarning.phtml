@@ -13,7 +13,7 @@ foreach($servers as $server) {
     }
     if($down) {
         echo "<div style='font-size:14px; color:red; font-weight:bold; text-align:left'>";
-        echo "WARNING: Server with servername: " . $server->givenName . " is not responding please double check that the internet connection is working properly, if so try restarting the server, last contact: ". date("d.m.Y H:i", strtotime($server->lastPing));
+        echo "WARNING: Server with servername: " . $server->givenName . " is not responding please double check the internet connection is working properly, if so try restarting the server, last contact: ". date("d.m.Y H:i", strtotime($server->lastPing));
         echo "</div>";
     }
 }

@@ -1,0 +1,8 @@
+<?php
+/* @var $this ns_89a38877_4b75_456c_9dc8_a55ff0e7dfef\ServerList */
+$list = $this->getApi()->getSupportManager()->getServerStatusList();
+echo "<h1>Offline servers</h1>";
+$this->printServerList($list, 0);
+echo "<h1>Online servers</h1>";
+$this->printServerList($list, 1);
+?>

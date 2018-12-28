@@ -217,6 +217,20 @@ body { background-color:#efefef; }
     padding: 0px !important; 
 }
 
+.gs_page_area[gs_page_content_id="products"] .module_toprow .colcount_0.rowcount_0 {
+    font-size: 20px;
+    line-height: 40px;
+}
+
+.gs_page_area[gs_page_content_id="products"] .module_toprow .gs_page_col {
+    vertical-align: top;
+}
+
+.gs_page_area[gs_page_content_id="products"] .module_toprow {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #DDD;
+}
 @media screen and (max-width: 1400px) {
     .gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner {
         width: 95%;

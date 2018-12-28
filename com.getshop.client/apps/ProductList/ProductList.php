@@ -12,6 +12,7 @@ class ProductList extends \MarketingApplication implements \Application {
 
     public function render() {
         $this->printTable();
+        $this->includefile("createproduct");
     }
     
     public function formatTaxGroup($row) {
@@ -48,6 +49,17 @@ class ProductList extends \MarketingApplication implements \Application {
         }
         
         return "";
+    }
+    
+    public function createNewProduct() {
+        $product = $this->getApi()->getProductManager()->createProduct();
+        $product->name = $_POST['data']['name'];
+        $this->getApi()->getProductManager()->saveProduct($product);
+        $_SESSION['ns_c282cfba_2873_46fd_876b_c44269eb0dfb_searchword'] = $product->name;
+        
+        $app = new \ns_4404dc7d_e68a_4fd5_bd98_39813974a606\EcommerceProductView();
+        $app->setProductId($product->id);
+        $app->renderApplication(true, $this);
     }
 
 }

@@ -12,6 +12,10 @@ $cashpoints = $this->getApi()->getPosManager()->getCashPoints();
         <i class='fa fa-print'></i>
         Print overview
     </div>
+    <div class='entry taboperation <? echo $tabActive; ?> printkitchen'>
+        <i class='fa fa-print'></i>
+        Print to kitchen
+    </div>
     <div class='entry taboperation startpaymentbutton <? echo $tabActive; ?>'  <? echo $showpaymentmodal; ?> tab='listtab' tabid='<? echo $tabId; ?>'>
         <i class='fa fa-credit-card'></i>
         Payment

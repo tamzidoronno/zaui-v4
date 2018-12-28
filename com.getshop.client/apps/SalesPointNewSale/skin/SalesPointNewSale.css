@@ -418,3 +418,7 @@
 .SalesPointNewSale .row_for_extras {
     padding-left: 10px
 }
+
+.SalesPointNewSale .taxrates {
+    text-align: center;
+}

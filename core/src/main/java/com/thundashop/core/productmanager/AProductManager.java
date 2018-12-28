@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -72,6 +73,7 @@ public abstract class AProductManager extends ManagerBase {
         setOriginalPriceIfNull(product);
         setGroupPrice(product);
         addSubProductsToTransientVariable(product);
+        updateAdditionalTaxGroups(product);
         
         for (ProductImage image : product.images.values()) {
             if (!product.imagesAdded.contains(image.fileId)) {
@@ -374,5 +376,20 @@ public abstract class AProductManager extends ManagerBase {
         
         saveObject(detail);
         accountingAccountDetails.put(detail.accountNumber, detail);
+    }
+
+    private void updateAdditionalTaxGroups(Product product) {
+        if (product.additionalTaxGroupObjects.isEmpty())
+            return;
+        
+        List<TaxGroup> groups = product.additionalTaxGroupObjects.stream()
+                .filter(group -> group != null)
+                .filter(group -> taxGroups.get(group.groupNumber) != null)
+                .map(group -> taxGroups.get(group.groupNumber))
+                .collect(Collectors.toList());
+        
+        if (product.additionalTaxGroupObjects.size() == groups.size()) {
+            product.additionalTaxGroupObjects = groups;
+        }
     }
 }

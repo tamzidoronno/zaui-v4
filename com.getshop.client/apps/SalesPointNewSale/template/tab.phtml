@@ -2,6 +2,10 @@
 /* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
 $tab = $this->getCurrentTab(); 
 
+$canChangeTaxes = false;
+
+$taxesToSelectBetween = (array)$this->getDistinctAdditionalTaxCodes($tab);
+
 if (!$tab) {
     ?>
     <div class='header'>
@@ -33,15 +37,42 @@ if (!$tab) {
     ?>    
 </div>
 
+<?
+if (count($taxesToSelectBetween) || $tab->tabTaxGroupId) {
+    ?>
+    <div class='header2'> 
+        <h2><? echo $this->__f("Change to different tax rate"); ?></h2>
+    </div>
+
+    <div class='taxrates'>
+        <?
+        if ( $tab->tabTaxGroupId) {
+            ?>
+            <div class="gs_shop_small_icon" gsclick='cancelCurrentTaxSelection'><? echo $this->__f("Undo"); ?></div>
+            <?
+        } else {
+            foreach ($taxesToSelectBetween as $taxGroup) {
+                $desc = $taxGroup->description ? " ( ".$taxGroup->description." )" : "";
+                ?>
+                <div class="gs_shop_small_icon" gsclick='changeTabTax' taxgroupnumber='<?  echo $taxGroup->id; ?>'><? echo $taxGroup->taxRate."%".$desc; ?></div>
+                <?
+            }
+        }
+        ?>
+    </div>
+<?
+}
+?>
 <div class='header2'> 
-        <h2><? echo $this->__f("Added to tab"); ?></h2>
+    <h2><? echo $this->__f("Added to tab"); ?></h2>
 </div>
 <?
 $cartItems = $tab->cartItems;
 foreach ($cartItems as $item) {
+    $foodIcon = $item->product->isFood ? "<i title='Food' class='fa fa-cutlery'></i> " : "";
     echo "<div class='cartitemline' cartitemid='$item->cartItemId'>";
         echo "<div class='col count'>".$item->count."</div>";
-        echo "<div class='col productname'>".$item->product->name."</div>";
+        echo "<div class='col productname'>$foodIcon".$item->product->name."</div>";
         echo "<div class='col price'>".$item->product->price."</div>";
         
         echo "<div class='details'>";
@@ -63,7 +94,7 @@ foreach ($cartItems as $item) {
                         }
                     }
                 echo "</div>";
-            }   
+            }
         }
         
         echo '<i class="gs_shop_small_icon fa fa-trash removefromtab"></i> ';

@@ -16,6 +16,7 @@ import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -24,6 +25,7 @@ import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,6 +65,12 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Autowired
     private ProductManager productManager;
     
+    /**
+     * Never access this variable directly! Always 
+     * go trough the getSettings function!
+     */
+    private PosManagerSettings settings;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         data.data.stream()
@@ -82,15 +90,34 @@ public class PosManager extends ManagerBase implements IPosManager {
                     if (dataCommon instanceof PosTable) {
                         tables.put(dataCommon.id, (PosTable)dataCommon);
                     }
+                    if (dataCommon instanceof PosManagerSettings) {
+                        settings = (PosManagerSettings)dataCommon;
+                    }
                 });
     }
     
+    private PosManagerSettings getSettings() {
+        if (settings == null) {
+            settings = new PosManagerSettings();
+            saveObject(settings);
+        }
+        
+        return settings;
+    }
+    
+    private int getNextTabId() {
+        PosManagerSettings settings = getSettings();
+        settings.incrementalTabId++;
+        saveObject(settings);
+        return settings.incrementalTabId;
+    }
     
     @Override
     public String createNewTab(String referenceName) {
         PosTab posTab = new PosTab();
         posTab.createdByUserId = getSession().currentUser.id;
         posTab.name = referenceName;
+        posTab.incrementalTabId = getNextTabId();
         
         saveObject(posTab);
         tabs.put(posTab.id, posTab);
@@ -120,6 +147,11 @@ public class PosManager extends ManagerBase implements IPosManager {
             if (cartItem.getCartItemId() != null) {
                 tab.cartItems.removeIf(c -> c.getCartItemId().equals(cartItem.getCartItemId()));
             }
+            
+            if (tab.tabTaxGroupId != null) {
+                cartItem.getProduct().changeToAdditionalTaxCode(""+tab.tabTaxGroupId);
+            }
+            
             tab.cartItems.add(cartItem);
         }
         saveObject(tab);
@@ -553,5 +585,64 @@ public class PosManager extends ManagerBase implements IPosManager {
                     t.currentTabId = "";
                     saveObject(t);
                 });
+    }
+    
+    @Override
+    public void printKitchen(String tabId, String gdsDeviceId) {
+        PosTab tab = getTab(tabId);
+        
+        if (tab == null)
+            return;
+        
+        List<CartItem> itemsToPrint = tab.cartItems.stream()
+                .filter(item -> item.getProduct() != null && item.getProduct().isFood)
+                .collect(Collectors.toList());
+        
+        if (itemsToPrint.isEmpty()) {
+            return;
+        }
+        
+        tab.printedToKitchenTimes++;
+        saveObject(tab);
+        
+        KitchenPrintMessage printMsg = new KitchenPrintMessage();
+        printMsg.printedBy = getSession().currentUser.fullName;
+        printMsg.tabName = tab.name;
+        printMsg.cartItems = itemsToPrint;
+        printMsg.header = String.format("%05d", tab.incrementalTabId)+" / "+tab.printedToKitchenTimes;
+        
+        TaxGroup group = productManager.getTaxGroupById(tab.tabTaxGroupId);
+        if (group != null) {
+            printMsg.header += "\n ( " + group.description + " )";
+        }
+       
+        gdsManager.sendMessageToDevice(gdsDeviceId, printMsg);
+    }
+
+    @Override
+    public void changeTaxRate(String tabId, String taxGroupNumber) {
+        PosTab tab = getTab(tabId);
+        
+        if (tab == null)
+            return;
+        
+        if (taxGroupNumber == null || taxGroupNumber.isEmpty()) {
+            tab.cartItems.stream()
+                .forEach(cartItem -> {
+                    cartItem.getProduct().resetAdditionalTaxGroup();
+                });
+            tab.tabTaxGroupId = null;
+            saveObject(tab);
+            return;
+        }
+        
+        tab.cartItems.stream()
+                .forEach(cartItem -> {
+                    cartItem.getProduct().changeToAdditionalTaxCode(""+taxGroupNumber);
+                });
+        
+        tab.tabTaxGroupId = taxGroupNumber;
+        
+        saveObject(tab);
     }
 }

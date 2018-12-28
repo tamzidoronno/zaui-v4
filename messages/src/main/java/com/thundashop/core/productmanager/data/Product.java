@@ -41,8 +41,10 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String shortDescription;
     public String mainImage = "";
     public double price;
+    public Double priceBeforeTaxChange;
+    public TaxGroup taxGroupBeforeTaxChange;
     
-    public Double originalPrice;
+    public Double lastExtraPrice = 0D;
 
     public double discountedPrice;
     
@@ -233,22 +235,24 @@ public class Product extends DataCommon implements Comparable<Product>  {
         Gson gson = new Gson();
         return gson.fromJson(gson.toJson(this), this.getClass());
     }
+    
+    /**
+     * We adding the difference between last calculated extra price and now. 
+     * This is to avoid that the price is changed back if the price is manually changed in the future
+     */
+    private void addExtrasPrice() {
+        double extraPrice = getExtrasPrice();
+        double toAdd = extraPrice - lastExtraPrice;
+        lastExtraPrice = extraPrice;
+        price += toAdd;
+    }
 
     public void doFinalize() {
         if(Double.isNaN(discountedPrice)) {
             discountedPrice = 0.0;
         }
-//        
-//        if (originalPrice == null) {
-//            originalPrice = price;
-//        } else {
-//            price = originalPrice;
-//        }
         
-//        double extraPrice = getExtrasPrice();
-//        if (extraPrice != 0) {
-//            price += extraPrice;
-//        }
+        addExtrasPrice();
         
         double divident = 0.0;
         if(taxGroupObject != null && taxGroupObject.taxRate != null) {
@@ -274,13 +278,32 @@ public class Product extends DataCommon implements Comparable<Product>  {
                 .findFirst()
                 .orElse(null);
         
+        if (priceBeforeTaxChange != null) {
+            // Its not possible to change to a different taxgroup without doing a reset by using the resetAdditionalTaxGroup function
+            return;
+        }
+        
         if (group != null) {
+            taxGroupBeforeTaxChange = taxGroupObject;
+            priceBeforeTaxChange = price;
             double multiple = group.getTaxRate()+1;
             BigDecimal newPrice = getPriceExTaxesWithTwoDecimals(2);
             price = newPrice.multiply(new BigDecimal(multiple)).doubleValue();
             this.taxGroupObject = group;
             doFinalize();
         }
+    }
+    
+    public void resetAdditionalTaxGroup() {
+        if (priceBeforeTaxChange == null) {
+            return;
+        }
+        
+        price = priceBeforeTaxChange;
+        priceBeforeTaxChange = null;
+        taxGroupObject = taxGroupBeforeTaxChange;
+        taxGroupBeforeTaxChange = null;
+        doFinalize();
     }
     
     private double getExtrasPrice() {
@@ -294,6 +317,10 @@ public class Product extends DataCommon implements Comparable<Product>  {
                     .filter(e -> e.id.equals(optionId))
                     .findAny()
                     .orElse(null);
+            if (selectedExtras.get(optionId) == null) {
+                continue;
+            }
+            
             for (String extraId : selectedExtras.get(optionId)) {
                 ProductExtraConfigOption val = opt.extras.stream()
                         .filter(e -> e.optionsubid.equals(extraId))

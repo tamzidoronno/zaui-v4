@@ -240,6 +240,14 @@ public class ProductManager extends AProductManager implements IProductManager {
     public TaxGroup getTaxGroup(int i) {
         return taxGroups.get(i);
     }
+    
+    public TaxGroup getTaxGroupById(String id) {
+        return taxGroups.values()
+                .stream()
+                .filter(g -> g.id.equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 
     @Override
     public Product getProductByPage(String id) throws ErrorException {

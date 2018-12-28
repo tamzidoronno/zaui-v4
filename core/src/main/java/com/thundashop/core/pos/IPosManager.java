@@ -133,4 +133,10 @@ public interface IPosManager {
     
     @Editor
     public String getCurrentTabIdForTableId(String tableId);
+    
+    @Editor
+    public void printKitchen(String tabId, String gdsDeviceId);
+    
+    @Editor
+    public void changeTaxRate(String tabId, String taxGroupNumber);
 }

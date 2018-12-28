@@ -95,11 +95,6 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     public function addProductToCurrentTab() {
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
         
-        if ($product->additionalTaxGroupObjects && count($product->additionalTaxGroupObjects) && !isset($_POST['data']['taxgroupid'])) {
-            echo "multitaxessupport";
-            die();
-        }
-        
         if (is_array($product->extras) && count($product->extras) && !isset($_POST['data']['extras'])) {
             echo "productconfig";
             die();
@@ -232,6 +227,42 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $_POST['data']['view'] = "tables";
         $this->activateView();
         $this->activateTab();
+    }
+    
+    public function printCurrentToKitchen() {
+        $tabPayment = new \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment();
+        $tab = $this->getCurrentTab();
+        $gdsDevice = $tabPayment->getCurrentGdsDevice();
+        $this->getApi()->getPosManager()->printKitchen($tab->id, $gdsDevice->id);
+    }
+    
+    public function getDistinctAdditionalTaxCodes($tab) {
+        $cartItems = $tab->cartItems;
+        $taxesToSelectBetween = new \stdClass();
+
+        foreach ($cartItems as $item) {
+            foreach ($item->product->additionalTaxGroupObjects as $taxGroup) {
+                $taxesToSelectBetween->{$taxGroup->groupNumber} = $taxGroup;
+            }
+        }
+        
+        return $taxesToSelectBetween;
+    }
+    
+    public function changeTabTax() {
+        $tab = $this->getCurrentTab();
+        if (!$tab)
+            return;
+        
+        $this->getApi()->getPosManager()->changeTaxRate($tab->id, $_POST['data']['taxgroupnumber']);
+    }
+    
+    public function cancelCurrentTaxSelection() {
+        $tab = $this->getCurrentTab();
+        if (!$tab)
+            return;
+        
+        $this->getApi()->getPosManager()->changeTaxRate($tab->id, "");
     }
 }
 ?>

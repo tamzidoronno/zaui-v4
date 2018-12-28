@@ -1,6 +1,7 @@
 <?
 /* @var $this \ns_4404dc7d_e68a_4fd5_bd98_39813974a606\EcommerceProductView */
 $product = $this->getProduct();
+$isFood = $product->isFood ? "checked='true'" : "";
 ?>
 
 <div gstype='form' method='saveDetails'>
@@ -14,6 +15,9 @@ $product = $this->getProduct();
     <br/>
     <? echo $this->__f("Product long description").": "; ?> 
     <br/><textarea type="text" gsname='description' class="gsniceinput1"><? echo $product->description; ?></textarea>
+    <br/>
+    <br/>
+    <br/><input <? echo $isFood; ?> gsname="isfood" type="checkbox"><? echo $this->__f("Is food?"); ?>
     <br/>
     <br/>
     <div class='shop_button' gstype='submit'><? echo $this->__f("Save"); ?></div>

@@ -120,6 +120,7 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         $product->name = $_POST['data']['name'];
         $product->shortDescription = $_POST['data']['shortdesc'];
         $product->description = $_POST['data']['description'];
+        $product->isFood = $_POST['data']['isfood'];
         $this->getApi()->getProductManager()->saveProduct($product);
     }
 
@@ -219,5 +220,6 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         
         $this->getApi()->getProductManager()->saveProduct($product);
     }
+    
 }
 ?>

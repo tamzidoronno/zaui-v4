@@ -20,6 +20,9 @@ public class PosTab extends DataCommon {
     public String cashPointId = "";
     public List<CartItem> cartItems = new ArrayList();
     public double cashWithDrawal;
+    public int incrementalTabId = 0;
+    public int printedToKitchenTimes = 0;
+    public String tabTaxGroupId;
 
     
     void removeCartItem(CartItem cartItem) {

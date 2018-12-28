@@ -528,7 +528,10 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         loadServerStatusList();
         
         for(ServerStatusEntry entry : serverStatusList.entries.values()) {
-            entry.webaddr = getSupportStore(entry.storeId).defaultWebAddress;
+            SupportStore store = getSupportStore(entry.storeId);
+            if(store != null) {
+                entry.webaddr = getSupportStore(entry.storeId).defaultWebAddress;
+            }
         }
         
         return serverStatusList;

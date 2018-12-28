@@ -12,6 +12,14 @@ $colors["Features"] = "pink";
 $colors["Time_spent"] = "yellow";
 $filter = $this->getFilter();
 $cases = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
+
+$type = $this->getfilterType();
+if($type == "assignedtomeneedfollowup") {
+    $filter->state = 9;
+    $cases2 = (array)$this->getApi()->getSupportManager()->getSupportCases($filter);
+    $cases = array_merge($cases, $cases2);
+}
+
 if($this->isGetShop()) {
     $admins = $this->getAdmins();
 }

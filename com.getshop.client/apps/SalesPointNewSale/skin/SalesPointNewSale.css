@@ -16,6 +16,7 @@
     box-sizing: border-box;
     padding: 5px;
     cursor: pointer;
+    position: relative;
 }
 
 .SalesPointNewSale .product:hover {
@@ -372,4 +373,48 @@
 
 .SalesPointNewSale .cash_disabled {
     color: grey !important;
+}
+
+.SalesPointNewSale .checkboxinner {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    border-radius: 100px;
+    
+}
+
+.SalesPointNewSale .checkboxinner .fa-check-circle {
+    display: none;
+}
+.SalesPointNewSale .checkboxinner .fa-circle {
+    display: block;
+    color: #2a324e;
+}
+
+.SalesPointNewSale .checkboxinner.checked .fa-circle {
+    display: none;
+}
+
+.SalesPointNewSale .checkboxinner.checked .fa-check-circle {
+    display: block;
+}
+
+.SalesPointNewSale .checkboxinner i {
+    font-size: 23px;
+}
+
+.SalesPointNewSale .productionbuttonarea {
+    padding: 4px;
+    margin-top: 40px;
+}
+
+.SalesPointNewSale .productionbuttonarea .shop_button {
+    padding: 4px;
+    width: 200px;
+    line-height: 50px;
+    height: 50px;
+}
+
+.SalesPointNewSale .row_for_extras {
+    padding-left: 10px
 }

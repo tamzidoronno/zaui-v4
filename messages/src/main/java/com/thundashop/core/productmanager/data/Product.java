@@ -41,6 +41,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String shortDescription;
     public String mainImage = "";
     public double price;
+    
+    public Double originalPrice;
 
     public double discountedPrice;
     
@@ -145,6 +147,10 @@ public class Product extends DataCommon implements Comparable<Product>  {
     @Transient
     public JsTreeList variations = null;
     
+    public List<ProductExtraConfig> extras = new ArrayList();
+    
+    public HashMap<String, List<String>> selectedExtras  = new HashMap();
+    
     public void setMainImage(String fileId) {
         mainImage = fileId;
     }
@@ -232,6 +238,18 @@ public class Product extends DataCommon implements Comparable<Product>  {
         if(Double.isNaN(discountedPrice)) {
             discountedPrice = 0.0;
         }
+//        
+//        if (originalPrice == null) {
+//            originalPrice = price;
+//        } else {
+//            price = originalPrice;
+//        }
+        
+//        double extraPrice = getExtrasPrice();
+//        if (extraPrice != 0) {
+//            price += extraPrice;
+//        }
+        
         double divident = 0.0;
         if(taxGroupObject != null && taxGroupObject.taxRate != null) {
             divident = (1 + (taxGroupObject.taxRate/100));
@@ -263,5 +281,29 @@ public class Product extends DataCommon implements Comparable<Product>  {
             this.taxGroupObject = group;
             doFinalize();
         }
+    }
+    
+    private double getExtrasPrice() {
+        if (selectedExtras == null || selectedExtras.isEmpty()) {
+            return 0D;
+        }
+        
+        double toAdd = 0D;
+        for (String optionId : selectedExtras.keySet()) {
+            ProductExtraConfig opt = extras.stream()
+                    .filter(e -> e.id.equals(optionId))
+                    .findAny()
+                    .orElse(null);
+            for (String extraId : selectedExtras.get(optionId)) {
+                ProductExtraConfigOption val = opt.extras.stream()
+                        .filter(e -> e.optionsubid.equals(extraId))
+                        .findAny()
+                        .orElse(null);
+                
+                toAdd += val.extraPriceDouble;
+            }
+        }
+        
+        return toAdd;
     }
 }

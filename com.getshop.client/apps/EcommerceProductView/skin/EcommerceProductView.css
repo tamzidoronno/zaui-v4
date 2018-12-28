@@ -114,3 +114,26 @@
     margin-top: 50px;
     margin-right: 50px;
 }
+
+.EcommerceProductView .optionbox {
+    border: solid 1px #DDD;
+    padding: 20px;
+    margin-bottom: 50px;
+    padding-top: 0px;
+}
+
+.EcommerceProductView .optionrow {
+    margin-bottom: 10px;
+}
+
+.EcommerceProductView .optionrow.optiontemplate {
+    display: none;
+}
+
+.EcommerceProductView .optionrow .col {
+    display: inline-block;
+}
+
+.EcommerceProductView .optionrows {
+    margin-bottom: 0px;
+}

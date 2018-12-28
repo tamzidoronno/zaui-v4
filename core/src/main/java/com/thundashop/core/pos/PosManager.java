@@ -127,6 +127,11 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public PosTab getTab(String tabId) {
+        tabs.get(tabId).cartItems.stream()
+                .forEach(i -> {
+                    i.doFinalize();
+                });
+        
         return tabs.get(tabId);
     }
 

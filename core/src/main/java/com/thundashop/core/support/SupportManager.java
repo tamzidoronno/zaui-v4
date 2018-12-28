@@ -287,6 +287,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     @Override
     public void assignCareTakerForCase(String caseId, String userId) {
         SupportCase toChange = getSupportCase(caseId);
+        if(toChange.handledByUser != null && toChange.handledByUser.equals(userId)) {
+            return;
+        }
         toChange.state = SupportCaseState.ASSIGNED;
         toChange.handledByUser = userId;
         saveSupportCase(toChange);

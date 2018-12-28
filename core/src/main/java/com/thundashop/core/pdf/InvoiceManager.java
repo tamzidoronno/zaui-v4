@@ -306,7 +306,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         
         for (CartItem cartItem : order.cart.getItems()) {
             ItemLine itemLine = new ItemLine();
-            itemLine.description = formatter.getItemText(cartItem);
+            itemLine.description = cartItem.getCount() +" x "+formatter.getItemText(cartItem);
             itemLine.price = cartItem.getTotalAmountRoundedWithTwoDecimals(2).doubleValue();
             printMsg.itemLines.add(itemLine);
         }

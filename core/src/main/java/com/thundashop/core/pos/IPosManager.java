@@ -48,7 +48,7 @@ public interface IPosManager {
     public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId);
     
     @Editor
-    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId);
+    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId);
     
     @Editor
     public int getTabCount();

@@ -1,5 +1,6 @@
 <?
 /* @var $this \ns_5532e18a_3e3d_4804_8ded_30bbb33e5bd5\SalesPointCashPoints */
+$devices = $this->getApi()->getGdsManager()->getDevices();
 
 ?>
 <div class='config_sales_point' cashpointid='<? echo $_POST['data']['id']; ?>'>
@@ -11,7 +12,38 @@
         $selected = in_array($list->id, $cashPoint->productListIds) ? "checked='true'" : "";
         echo "<br/><input $selected type='checkbox' class='selectedposlist' value='$list->id'/> ".$list->listName;
     }
+    
+    if (is_array($devices) && count($devices)) {
     ?>
+    <div>
+        <br/>
+        Receipt printer:
+        <br/> <select gsname='receiptprinter' class="gsniceselect1">
+            <?
+            echo "<option value=''>Not selected</option>";
+            foreach ($devices as $device) {
+                $selected = $device->id == $cashPoint->receiptPrinterGdsDeviceId ? "selected='true'" : "";
+                echo "<option $selected value='$device->id'>".$device->name."</option>";
+            }
+            ?>    
+        </select>
+        <br/>
+        <br/>Kitchen printer:
+        <br/> 
+        <select gsname='kitchenprinter' class="gsniceselect1">
+            <?
+            echo "<option value=''>Not selected</option>";
+            foreach ($devices as $device) {
+                $selected = $device->id == $cashPoint->kitchenPrinterGdsDeviceId ? "selected='true'" : "";
+                echo "<option $selected value='$device->id'>".$device->name."</option>";
+            }
+            ?>    
+        </select>
+    </div>
+    <?
+    }
+    ?>
+    
     <br/>
     <br/>
     <div class='shop_button saveproductconfig'><? echo $this->__f("Save"); ?></div>

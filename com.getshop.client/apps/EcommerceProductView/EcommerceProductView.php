@@ -162,5 +162,62 @@ class EcommerceProductView extends \MarketingApplication implements \Application
     public function removeTax() {
         $this->getApi()->getProductManager()->removeTaxGroup($_POST['data']['productid'], $_POST['data']['taxgroupid']);
     }
+    
+    public function addTopLevel() {
+        $product = $this->getProduct();
+        if (!$product->extras) {
+            $product->extras = array();
+        }
+        
+        if (!$product->variations->nodes) {
+            $product->variations->nodes = array();
+        }
+        
+        $node = new \core_productmanager_data_ProductExtraConfig();
+        $node->name = $_POST['data']['name'];
+        $node->type = $_POST['data']['type'];
+        
+        $product->extras[] = $node;
+        
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
+    public function deleteExtraOption() {
+        $product = $this->getProduct();
+        $newOptionList = array();
+        
+        foreach ($product->extras as $extra) {
+            if ($extra->id != $_POST['data']['optionid']) {
+                $newOptionList[] = $extra;
+            }
+        }
+        
+        $product->extras = $newOptionList;
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
+    public function saveOption() {
+        $product = $this->getProduct();
+        
+        $i = 0;
+        
+        foreach ($_POST['data']['extras'] as $extra) {
+            $_POST['data']['extras'][$i]['extraPriceDouble'] = str_replace(",", ".", $_POST['data']['extras'][$i]['extraPriceDouble']);
+        
+            if (!is_numeric($_POST['data']['extras'][$i]['extraPriceDouble'])) {
+                $_POST['data']['extras'][$i]['extraPriceDouble'] = 0;
+            }
+        
+            $i++;
+        }
+        
+        foreach ($product->extras as $extra) {
+            if ($extra->id == $_POST['data']['id']) {
+                $extra->extras = $_POST['data']['extras'];
+            }
+        }
+        
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
 }
 ?>

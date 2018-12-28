@@ -7,7 +7,7 @@ echo "<div>";
 
 ?>
 
-<div class="product addProductToCurrentTabWithTaxes" productid="<? echo $product->id; ?>" taxgroupid='<? echo $product->taxGroupObject->id; ?>'>
+<div class="product addProductToCurrentTab" productid="<? echo $product->id; ?>" taxgroupid='<? echo $product->taxGroupObject->id; ?>'>
     <div class="inner">
         <div class="productname"><? echo $product->taxGroupObject->taxRate." %"; ?></div>
     </div>
@@ -16,7 +16,7 @@ echo "<div>";
 <?
 foreach ($product->additionalTaxGroupObjects as $taxGroup) {
 ?>
-<div class="product addProductToCurrentTabWithTaxes" productid="<? echo $product->id; ?>" taxgroupid='<? echo $taxGroup->id; ?>'>
+<div class="product addProductToCurrentTab" productid="<? echo $product->id; ?>" taxgroupid='<? echo $taxGroup->id; ?>'>
     <div class="inner">
         <div class="productname"><? echo $taxGroup->taxRate." %"; ?></div>
     </div>

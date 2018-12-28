@@ -2,11 +2,22 @@
 namespace ns_57db782b_5fe7_478f_956a_ab9eb3575855;
 
 class SalesPointNewSale extends SalesPointCommon implements \Application {
+
     
     public function getDescription() {
         
     }
 
+    public function getExtraOption($options, $optioid) {
+        foreach ($options as $option) {
+            if ($option->id == $optioid || $option->optionsubid == $optioid) {
+                return $option;
+            }
+        }
+        
+        return null;
+    }
+    
     public function getName() {
         return "SalesPointNewSale";
     }
@@ -81,32 +92,25 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_tabid'] = $_POST['data']['tabid'];
     }
     
-    public function addProductToCurrentTabWithTaxCode() {
-        $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
-        $tab = $this->getCurrentTab();
-        if (!$tab) {
-            $this->createNewTab();
-            $tab = $this->getCurrentTab();
-        }
-        
-        $product = $this->getApi()->getProductManager()->changeTaxCode($product, $_POST['data']['taxgroupid']);
-        $cartItem = new \core_cartmanager_data_CartItem();
-        $cartItem->count = 1;
-        $cartItem->product = $product;
-        $this->getApi()->getPosManager()->addToTab($tab->id, $cartItem);
-        $this->includefile("tab");
-        die();
-    }
-    
     public function addProductToCurrentTab() {
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
         
-        if ($product->additionalTaxGroupObjects && count($product->additionalTaxGroupObjects)) {
+        if ($product->additionalTaxGroupObjects && count($product->additionalTaxGroupObjects) && !isset($_POST['data']['taxgroupid'])) {
             echo "multitaxessupport";
             die();
         }
         
+        if (is_array($product->extras) && count($product->extras) && !isset($_POST['data']['extras'])) {
+            echo "productconfig";
+            die();
+        }
+        
+        if (isset($_POST['data']['taxgroupid'])) {
+            $product = $this->getApi()->getProductManager()->changeTaxCode($product, $_POST['data']['taxgroupid']);
+        }
+        
         $tab = $this->getCurrentTab();
+        
         if (!$tab) {
             $this->createNewTab();
             $tab = $this->getCurrentTab();
@@ -115,6 +119,14 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $cartItem = new \core_cartmanager_data_CartItem();
         $cartItem->count = $_POST['data']['count'];
         $cartItem->product = $product;
+        
+        if (isset($_POST['data']['extras'])) {
+            $cartItem->product->selectedExtras = array();
+            foreach ($_POST['data']['extras'] as $arr) {
+                $cartItem->product->selectedExtras[$arr['id']] = $arr['selectedVals'];
+            }
+        }
+        
         $this->getApi()->getPosManager()->addToTab($tab->id, $cartItem);
         $this->includefile("tab");
         die();
@@ -178,6 +190,10 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     public function showMultiTaxes() {
         $this->includefile("multitaxselection");
+    }
+    
+    public function showProductConfig() {
+        $this->includefile("productconfig");
     }
     
     public function activateView() {

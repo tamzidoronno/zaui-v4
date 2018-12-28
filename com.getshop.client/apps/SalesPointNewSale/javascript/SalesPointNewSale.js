@@ -3,7 +3,6 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .entry.all', app.SalesPointNewSale.leftMenuClicked);
         $(document).on('click', '.SalesPointNewSale .cancelcreatenew', app.SalesPointNewSale.cancelCreateNewTab);
         $(document).on('click', '.SalesPointNewSale .addProductToCurrentTab', app.SalesPointNewSale.addProductToCurrentTab);
-        $(document).on('click', '.SalesPointNewSale .addProductToCurrentTabWithTaxes', app.SalesPointNewSale.addProductToCurrentTabWithTaxes);
         $(document).on('mouseover', '.SalesPointNewSale .cartitemline', app.SalesPointNewSale.showDetails);
         $(document).on('change', '.SalesPointNewSale .cartitemline .changecount', app.SalesPointNewSale.countChange);
         $(document).on('change', '.SalesPointNewSale .cartitemline .changeprice', app.SalesPointNewSale.priceChange);
@@ -12,8 +11,23 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .printoverview', app.SalesPointNewSale.printOverview);
         $(document).on('click', '.SalesPointNewSale .countadd', app.SalesPointNewSale.countAddClicked);
         $(document).on('click', '.SalesPointNewSale .changeviewmenu', app.SalesPointNewSale.showListOfViews);
+        $(document).on('click', '.SalesPointNewSale .product.checkbox', app.SalesPointNewSale.toggleCheckBox);
         
         this.bindScrollEvent();
+    },
+    
+    toggleCheckBox: function() {
+        var type = $(this).closest('.extraoptiongroup').attr('type');
+        
+        if (type === "group") {
+            $(this).closest('.extraoptiongroup').find('.checked').removeClass('checked');
+        }
+        
+        if ($(this).closest('.product').find('.checkboxinner').hasClass('checked')) {
+            $(this).closest('.product').find('.checkboxinner').removeClass('checked');
+        } else {
+            $(this).closest('.product').find('.checkboxinner').addClass('checked');
+        }
     },
     
     checkIfDisabled: function(e) {
@@ -168,6 +182,27 @@ app.SalesPointNewSale = {
             count : count
         }
         
+        if ($(this).attr('taxgroupid')) {
+            data.taxgroupid = $(this).attr('taxgroupid');
+        }
+        
+        if ($('.extraoptiongroup').is(':visible')) {
+            data.extras = [];
+            
+            $('.extraoptiongroup').each(function() {
+                var extra = {
+                    id : $(this).attr('extraid'),
+                    selectedVals : []
+                };
+                
+                $(this).find('.checked').each(function() {
+                    extra.selectedVals.push($(this).attr('optionid'));
+                });
+                
+                data.extras.push(extra);
+            });
+        }
+        
         var event = thundashop.Ajax.createEvent(null, "addProductToCurrentTab", this, data);
         event['synchron'] = true;
         
@@ -175,41 +210,27 @@ app.SalesPointNewSale = {
         
         thundashop.Ajax.post(event, function(res) {
             if (res === "multitaxessupport") {
-                app.SalesPointNewSale.showMultiTaxesSelection(me, data);
+                app.SalesPointNewSale.showMultiTaxesSelection(me, data, "showMultiTaxes");
+            } else if( res === "productconfig") {
+                app.SalesPointNewSale.showMultiTaxesSelection(me, data, "showProductConfig");
             } else {
                 app.SalesPointNewSale.updateResponseFromAddOfCartItem(me, res);
             }
         });
     },
     
-    addProductToCurrentTabWithTaxes: function() {
-        var data = {
-            productid : $(this).attr('productid'),
-            taxgroupid: $(this).attr('taxgroupid')
-        }
-        
-        var event = thundashop.Ajax.createEvent(null, "addProductToCurrentTabWithTaxCode", this, data);
-        event['synchron'] = true;
-        
-        var me = this;
-        
-        thundashop.Ajax.post(event, function(res) {
-            app.SalesPointNewSale.updateResponseFromAddOfCartItem(me, res);
-            $('.productlistinner').show();
-            $('.multitaxsupport').html("");
-            $('.multitaxsupport').hide();
-        });
-    },
-    
-    showMultiTaxesSelection: function(target, data) {
+    showMultiTaxesSelection: function(target, data, func) {
         $('.productlistinner').hide();
         $('.multitaxsupport').html("");
         $('.multitaxsupport').show();
         
-        var event = thundashop.Ajax.createEvent(null, "showMultiTaxes", target, data);
+        target = $('.SalesPointNewSale');
+        
+        var event = thundashop.Ajax.createEvent(null, func, target, data);
         event['synchron'] = true;
         
         thundashop.Ajax.post(event, function(res) {
+
             $('.multitaxsupport').html(res);
         });
     },
@@ -222,6 +243,10 @@ app.SalesPointNewSale = {
         }
         
         app.SalesPointNewSale.tabChanged();
+        
+        $('.productlistinner').show();
+        $('.multitaxsupport').html("");
+        $('.multitaxsupport').hide();
     },
     
     activateTab: function(from) {

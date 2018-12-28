@@ -10,6 +10,7 @@
     <div class="menuentry <? echo $this->isTabActive('categories'); ?>" tab='categories'><i class="fa fa-info"></i> <span><? echo $this->__f("Categories"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('lists'); ?>" tab='lists'><i class="fa fa-info"></i> <span><? echo $this->__f("Lists"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('pictures'); ?>" tab='pictures'><i class="fa fa-info"></i> <span><? echo $this->__f("Pictures"); ?></span></div>
+    <div class="menuentry <? echo $this->isTabActive('variations'); ?>" tab='variations'><i class="fa fa-info"></i> <span><? echo $this->__f("variations"); ?></span></div>
 </div>
 
 <div class="workarea">
@@ -31,6 +32,11 @@
     <div class="producttab <? echo $this->isTabActive('taxes'); ?>" tab='taxes'>
         <?
         $this->includefile("taxes");
+        ?>
+    </div>
+    <div class="producttab <? echo $this->isTabActive('variations'); ?>" tab='variations'>
+        <?
+        $this->includefile("variations");
         ?>
     </div>
 </div>

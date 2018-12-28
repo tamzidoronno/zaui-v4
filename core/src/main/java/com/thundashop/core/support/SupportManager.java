@@ -15,6 +15,8 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import static com.thundashop.core.support.SupportCaseType.BUG;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +48,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private StorePool storePool;
     
     @Autowired
+    private UserManager userManager;
+    
+    @Autowired
     private MessageManager messageManager;
     
     private SupportStatistics storeSupportStats = new SupportStatistics();
@@ -54,6 +59,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     
     private SupportStore mySupportStores = new SupportStore();
     private List<SupportStore> allSupportStores = new ArrayList();
+    private List<SupportCase> allSupportCases = new ArrayList();
     private Date lastUpdatedAllStores;
     
     @Override
@@ -149,15 +155,15 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         }
         if(!filter.caseId.isEmpty()) {
             obj.add(new BasicDBObject("_id", filter.caseId));
-        }
+            }
         if(!filter.userId.isEmpty()) {
             obj.add(new BasicDBObject("handledByUser", filter.userId));
-        }
-        if(!isBacklogProgressOrSolved(filter.state)) {
+            }
+            if(!isBacklogProgressOrSolved(filter.state)) {
             if(!filter.storeId.isEmpty()) {
                 obj.add(new BasicDBObject("byStoreId", filter.storeId));
+                }
             }
-        }
         if(!obj.isEmpty()) {
             query.put("$and", obj);
         }
@@ -205,6 +211,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     
     @Override
     public List<SupportCase> getSupportCases(SupportCaseFilter filter) {
+        long start = System.currentTimeMillis();
         List<SupportCase> allCases = getCases(filter);
         List<SupportCase> result = new ArrayList();
         for(SupportCase tmpCase : allCases) {
@@ -277,8 +284,11 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     @Override
     public void assignCareTakerForCase(String caseId, String userId) {
         SupportCase toChange = getSupportCase(caseId);
+        toChange.state = SupportCaseState.SENT;
         toChange.handledByUser = userId;
         saveSupportCase(toChange);
+        User caretaker = userManager.getUserById(userId);
+        messageManager.sendMail(caretaker.emailAddress, caretaker.emailAddress, "Supportcase has been assigned to you", toChange.title + " has been assigned to you", "post@getshop.com", "post@getshop.com");
     }
 
     @Override
@@ -383,7 +393,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
 
     private boolean isAllSupportStoresExpired() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, 1);
+        cal.add(Calendar.HOUR, -5);
         if(lastUpdatedAllStores == null) {
             return true;
         }
@@ -393,7 +403,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
 
     private void notifySupportCenter() {
         Store store = storeManager.getMyStore();
-//        if(!mySupportStores.notifiedSupport) {
+        if(!mySupportStores.notifiedSupport) {
             mySupportStores.mainEmailAdress = store.configuration.emailAdress;
             mySupportStores.supportStoreId = store.id;
             mySupportStores.defaultWebAddress = store.getDefaultWebAddress();
@@ -401,7 +411,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
             supportDatabase.save(mySupportStores);
             saveObject(mySupportStores);
             lastUpdatedAllStores = null;
-//        }
+        }
     }
 
     @Override

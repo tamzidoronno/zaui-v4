@@ -7,17 +7,24 @@
     <input type="text" class="inputsearch end_date_input" value="<?php echo date("d.m.Y", time()+86400); ?>">
 </label>
 <div class="dosearchbox">
-    <span class="guestselectionbox"><div class='guestselectiontext'><?php echo $this->__w("Room"); ?></div>
+    <span class="guestselectionbox" style='display:none;'><div class='guestselectiontext'><?php echo $this->__w("Room"); ?></div>
         <div>
             <span class="btn docounter minus"><i class="fa fa-minus"></i></span>
             <input type="text" class="countselection" value="1" gsname='rooms'>
             <span class="btn docounter"><i class="fa fa-plus"></i></span>
         </div>
     </span>
-    <span class="guestselectionbox"><div class='guestselectiontext'><?php echo $this->__w("Guests"); ?></div>
+    <span class="guestselectionbox"><div class='guestselectiontext'><?php echo $this->__w("Adults"); ?></div>
         <div>
             <span class="btn docounter minus"><i class="fa fa-minus"></i></span>
             <input type="text" class="countselection" value="1" gsname='guests'>
+            <span class="btn docounter"><i class="fa fa-plus"></i></span>
+        </div>
+    </span>
+    <span class="guestselectionbox"><div class='guestselectiontext'><?php echo $this->__w("Children"); ?></div>
+        <div>
+            <span class="btn docounter minus"><i class="fa fa-minus"></i></span>
+            <input type="text" class="countselection" value="1" gsname='children'>
             <span class="btn docounter"><i class="fa fa-plus"></i></span>
         </div>
     </span>
@@ -82,32 +89,33 @@ function getshop_getsessionid() {
         
         var end = moment.utc($('.end_date_input').val(), "DD.MM.YYYY").local();
         var endDate = end.format('MMM DD, YYYY ') + time;
-        
+        var children = $("[gsname='children']").val();
         var data = {
             "start": startDate,
             "end": endDate,
             "rooms": parseInt($('[gsname="rooms"]').val()),
             "adults": parseInt($('[gsname="guests"]').val()),
-            "children": 0,
+            "children": children,
             "discountCode": parseInt($('[gsname="discountcode"]').val()),
             "bookingId": ""
         };
         
         var endpoints = [];
         endpoints.push({
-            "name" : 'F2 harstad',
-            "endpoint" : "https://f2harstad.getshop.com/",
-            "image" : "https://f2hotel.no/wp-content/uploads/2018/02/F2-FASADE-07-gammelt-1024x777.jpg",
-            "nextpage" : "/?page=f2"
+            "name" : 'City Living schøller',
+            "endpoint" : "https://scholler.getshop.com/",
+            "image" : "https://www.cityliving.no/displayImage.php?id=dd7f5842-e304-470f-929e-e21c37d4d5c0&width=500",
+            "nextpage" : "/?page=kongsvinger"
         });
         endpoints.push({
-            "name" : 'Kongsvinger budget hotel',
-            "endpoint" : "https://20356.getshop.com/",
-            "image" : "http://www.kongsvingerbudgethotel.no/displayImage.php?id=6132d5d9-68fb-43a1-b6d3-51b4fd7e3075",
-            "nextpage" : "/?page=kongsvinger"
+            "name" : 'City Living sentrum',
+            "endpoint" : "https://citylivingsentrum.getshop.com/",
+            "image" : "https://www.cityliving.no/displayImage.php?id=57cc799e-8576-450b-b7db-07ddb3615355&width=500",
+            "nextpage" : "/?page=a57e135d-ab63-4479-a657-0979ad4a5143"
         });
         $('.resultarea').html('');
         gsglobaldooddrow=true;
+        getshopmaxcategories = 0;
         for(var k in endpoints) {
             var dataObject = endpoints[k];
             $.ajax(dataObject.endpoint + '/scripts/bookingprocess.php?method=startBooking', {
@@ -122,6 +130,10 @@ function getshop_getsessionid() {
                     hotel.find('.hotelname').html(this.internaldataobject.name);
                     hotel.removeClass('gstemplate');
                     hotel.find('.resultimage').css('background-image','url("'+this.internaldataobject.image+'")');
+                    if(getshopmaxcategories < res.rooms.length) {
+                        getshopmaxcategories = res.rooms.length;
+                    }
+                    
                     for(var roomId in res.rooms) {
                         var room = res.rooms[roomId];
                         var roomRow = hotel.find('.roomresultrowtemplate.gstemplate').clone();
@@ -133,7 +145,21 @@ function getshop_getsessionid() {
                         hotel.find('.continuebutton').attr('nextpage',this.internaldataobject.nextpage);
                         var room = res.rooms[roomId];
                     }
+                    hotel.find('.roomsarea').append('<div style="clear:both;"></div>');
+                    var maxRoomAreaHeight = 0;
+                    $('.roomsarea').each(function() {
+                        if($(this).outerHeight() > maxRoomAreaHeight) {
+                            maxRoomAreaHeight = parseInt($(this).outerHeight());
+                        }
+                    });
+                    console.log(getshopmaxcategories);
+                    $('.roomsarea').each(function() {
+                        $(this).css('height', (getshopmaxcategories*29) + "px");
+                    });
                     hotel.find('.bestdealprice').html(res.totalAmount);
+                    if(res.totalAmount <= 0) {
+                        hotel.find('.bestpricetextprice').hide();
+                    }
                     if(!gsglobaldooddrow) {
                         hotel.addClass('even');
                         gsglobaldooddrow=true;
@@ -142,7 +168,6 @@ function getshop_getsessionid() {
                         hotel.addClass('odd');
                     }
                     $('.resultarea').append(hotel); 
-                   console.log(res);
                 }
             });
         }
@@ -152,12 +177,29 @@ function getshop_getsessionid() {
         var nextpage = $(this).attr('nextpage');
         var rooms = parseInt($('[gsname="rooms"]').val());
         var adults = parseInt($('[gsname="guests"]').val());
-        var children = 0;
+        var children = $("[gsname='children']").val();
         var discountcode = $('[gsname="discountcode"]').val();
-        var end = $('.end_date_input').val().replace(".","-");
-        var start = $('.start_date_input').val().replace(".","-");
+        var end = $('.end_date_input').val();
+        var start = $('.start_date_input').val();
+        var start = $('.start_date_input').val();
+        start = getshop_do_formatDate(start);
+        end = getshop_do_formatDate(end);
         window.location.href=nextpage + "#start="+start+"&end="+end+"&rooms="+rooms+"&adults="+adults+"&children="+children+"&discount="+discountcode;
     });
+    
+    function getshop_do_formatDate(date) {
+        var from = date.split(".")
+        var d = new Date(from[2], from[1] - 1, from[0])
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+    
     
     $('.docounter').on('click', function() {
         var counterbox = $(this).closest('.guestselectionbox').find('.countselection');

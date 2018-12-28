@@ -9,9 +9,11 @@
     <div class='roomsarea'></div>
     <div style='clear:both;'></div>
     <div class='bestpricedealrow'>
-        <?php echo $this->__w("Best deal"); ?>
-        <span class='bestdealprice'></span>
-        <span class='continuebutton'><?php echo $this->__w("Continue"); ?></span>
+        <span class='bestpricetextprice'>
+            <?php echo $this->__w("Best deal"); ?>
+            <span class='bestdealprice'></span>
+        </span>
+        <span class='continuebutton shop_button'><?php echo $this->__w("Continue"); ?> <i class='fa fa-arrow-right'></i></span>
     </div>
 </div>
 
@@ -27,10 +29,11 @@
     .roomresultrowtemplate .name,
     .roomresultrowtemplate .availabilty,
     .roomresultrowtemplate .price { display:inline-block; float:left; padding: 5px; border-bottom: solid 1px #bbb; box-sizing: border-box; }
-    .resulttempate .continuebutton { float:right; cursor:pointer; font-weight: bold; color: blue; }
+    .resulttempate .continuebutton { float:right; background: #329ad6; }
     .roomresultrowtemplate .name { width: 80%; }
     .roomresultrowtemplate .availabilty {width: 10%; }
     .roomresultrowtemplate .price { width: 10%; }
+    .bestpricetextprice { line-height: 40px;}
     .resulttempate .resultimage { height: 250px;background-size: cover; }
     .bestpricedealrow { padding: 5px; box-sizing: border-box; font-size: 20px; }
 </style>

@@ -1960,6 +1960,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void processor() {
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();
+        getShopLockSystemManager.pingServers();
     }
 
     void warnArxDown() {

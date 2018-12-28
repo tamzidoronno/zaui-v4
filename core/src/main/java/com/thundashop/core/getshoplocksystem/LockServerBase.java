@@ -40,6 +40,7 @@ public abstract class LockServerBase extends DataCommon {
     private Date connectionDown;
     private Date lastConnected;
     
+    public Date lastPing;
     public String hostname;
     public String username;
     public String givenName;

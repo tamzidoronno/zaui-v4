@@ -169,4 +169,19 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
     @Override
     public void pulseOpenLock(String lockId) {
     }
+
+    @Override
+    public String getHostname() {
+        return hostname;
+    }
+
+    @Override
+    public void setLastPing(Date date) {
+        lastPing = date;
+    }
+
+    @Override
+    public Date getLastPing() {
+        return lastPing;
+    }
 }

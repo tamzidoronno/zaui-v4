@@ -27,7 +27,7 @@ class PaymentMethod1 extends \PaymentApplication implements \Application {
     }
     
     public function paymentCallback() {
-        $this->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderid']);
+        $this->order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($_GET['orderid'], "gfdsg9o3454835nbsfdg");
         if(!$this->order) {
             echo "Order where not found, are you sure you are using a correct order id?";
         } else {

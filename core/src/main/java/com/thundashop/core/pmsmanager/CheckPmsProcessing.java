@@ -19,9 +19,6 @@ public class CheckPmsProcessing extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-        if (getApi().getStoreManager().getStoreId().equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
-//            return;
-        }
         
         String name = getMultiLevelName();
         getApi().getPmsManager().processor(name);

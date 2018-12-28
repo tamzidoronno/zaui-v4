@@ -64,6 +64,9 @@ public interface IGetShopLockSystemManager {
     public String restCall(String serverId, String path);
     
     @Administrator
+    public void pingServers();
+    
+    @Administrator
     public void updateZwaveRoute(String serverId, String lockId);
     
     /**

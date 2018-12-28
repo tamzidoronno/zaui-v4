@@ -1,0 +1,20 @@
+<?php
+/* @var $this \ns_1ba01a11_1b79_4d80_8fdd_c7c2e286f94c\PmsSearchBox */
+$servers = (array)$this->getApi()->getGetShopLockSystemManager()->getLockServers();
+
+foreach($servers as $server) {
+    $down = false;
+    if(!$server->lastPing) {
+        $down = true;
+    }
+    $diff = time() - strtotime($server->lastPing);
+    if($diff > 300) {
+        $down = true;
+    }
+    if($down) {
+        echo "<div style='font-size:14px; color:red; font-weight:bold; text-align:left'>";
+        echo "WARNING: Server with servername: " . $server->givenName . " is not responding please double check that the internet connection is working properly, if so try restarting the server, last contact: ". date("d.m.Y H:i", strtotime($server->lastPing));
+        echo "</div>";
+    }
+}
+?>

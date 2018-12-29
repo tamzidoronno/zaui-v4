@@ -53,6 +53,10 @@ class ModulePage {
             return $this->getTopMenuSalesPoint();
         }
         
+        if ($this->module == "apac") {
+            return $this->getTopMenuApac();
+        }
+        
     }
 
     /**
@@ -337,6 +341,15 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Servers", "serverstatus", "fa-server");
         $menu->entries[] = new ModulePageMenuItem("Manuals", "getshopusermanual", "fa-support");
         return $menu;
+    }
+
+    public function getTopMenuApac() {
+       $menu = new \ModulePageMenu();
+        $menu->entries[] = new ModulePageMenuItem("Access List", "home", "gsicon-gs-user");
+        $menu->entries[] = new ModulePageMenuItem("New Access", "newaccess", "gsicon-gs-new");
+        $menu->entries[] = new ModulePageMenuItem("Doors", "doors", "fa fa-history");
+        $menu->entries[] = new ModulePageMenuItem("Configuration", "configuration", "gsicon-gs-gears");
+        return $menu; 
     }
 
 }

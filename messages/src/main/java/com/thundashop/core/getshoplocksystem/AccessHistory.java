@@ -20,10 +20,11 @@ public class AccessHistory extends DataCommon {
     public String code;
     public String serverId = "";
 
-    AccessHistoryResult toResult(String doorName) {
+    AccessHistoryResult toResult(String doorName, String name) {
         AccessHistoryResult ret = new AccessHistoryResult();
         ret.time = accessTime;
         ret.doorName = doorName;
+        ret.name = name;
         return ret;
     }
 }

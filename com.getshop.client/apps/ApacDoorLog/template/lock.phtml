@@ -1,0 +1,28 @@
+<?
+/* @var $this \ns_4bab2f13_491b_4c34_973c_e776ca2d88d6\ApacDoorLog */
+
+$options = new \core_common_FilterOptions();
+
+$attributes = array(
+    array('doorName', 'doorName', 'doorName'),
+    array('time', 'Created', 'time'),
+    array('name', 'Name', 'name')
+);
+
+$args = array();
+$args[] = $_SESSION['ns_4bab2f13_491b_4c34_973c_e776ca2d88d6_serverid'];
+$args[] = $_SESSION['ns_4bab2f13_491b_4c34_973c_e776ca2d88d6_lockid'];
+$args[] = $options;
+?>
+<div class='dooractions'>
+    <div class='shop_button' gsclick='forceOpen'><? echo $this->__f("Set to always be open"); ?></div>
+    <div class='shop_button' gsclick='forceClose'><? echo $this->__f("Set to Normally closed"); ?></div>
+</div>
+<?
+$table = new \GetShopModuleTable($this, 'GetShopLockSystemManager', 'getAccessLog', $args, $attributes);
+$table->renderPagedTable();
+?>
+
+<div class='dooractions'>
+    <div class='shop_button' gsclick='cancelLockSelection'><? echo $this->__f("Go back to doors"); ?></div>
+</div>

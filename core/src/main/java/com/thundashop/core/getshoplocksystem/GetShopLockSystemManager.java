@@ -661,7 +661,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 //        
             List<AccessHistoryResult> hist = database.query(getClass().getSimpleName(), getStoreId(), query).stream()
                 .map(o -> (AccessHistory)o)
-                .map(o -> o.toResult(getDoorName(o.serverId, o.lockId)))
+                .map(o -> o.toResult(getDoorName(o.serverId, o.lockId), ""))
                 .collect(Collectors.toList());
             
             history.addAll(hist);
@@ -755,6 +755,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         saveObject(settings);
     }
 
+    @Override
     public void openLock(String lockId) {
         lockServers.values()
                 .stream()
@@ -771,6 +772,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 });
     }    
     
+    @Override
     public void closeLock(String lockId) {
         lockServers.values()
             .stream()
@@ -828,4 +830,59 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
     }
 
+    @Override
+    public FilteredData getAccessLog(String serverId, String lockId, FilterOptions filterOptions) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", AccessHistory.class.getCanonicalName());
+        query.put("lockId", lockId);
+        query.put("serverId", serverId);
+        
+        List<AccessHistoryResult> hist = database.query(getClass().getSimpleName(), getStoreId(), query).stream()
+            .map(o -> (AccessHistory)o)
+            .map(o -> o.toResult(getDoorName(o.serverId, o.lockId), getName(o)))
+            .collect(Collectors.toList());
+
+        return pageIt(hist, filterOptions);
+    }
+
+    private String getName(AccessHistory history) {
+        
+        List<LockGroup> connectedToGroups = getAllGroups().stream()
+                .filter(o -> o.isConnectedToLock(history.serverId, history.lockId))
+                .collect(Collectors.toList());
+        
+        for (LockGroup connectedToLockGroup : connectedToGroups) {
+            for (Integer slotId : connectedToLockGroup.getGroupLockCodes().keySet()) {
+                MasterUserSlot masterUserSlot = connectedToLockGroup.getGroupLockCodes().get(slotId);
+                for (UserSlot subSlot : masterUserSlot.subSlots) {
+                    if (subSlot.slotId == history.userSlot && subSlot.connectedToLockId.equals(history.lockId)) {
+                        System.out.println("Got match on " + masterUserSlot.slotId + " | " + connectedToLockGroup.name);
+                        return getNameForLastUserWithAccessTo(connectedToLockGroup.id, slotId, history.accessTime);
+                    }
+                }
+            }
+        }
+                
+        return "";
+    }
+
+
+    private String getNameForLastUserWithAccessTo(String groupId, Integer slotId, Date accessTime) {
+        List<AccessGroupUserAccess> accessUsers = users.values().stream()
+                .filter(o -> o.lockGroupId.equals(groupId) && o.lockCode != null && o.lockCode.slotId == slotId)
+                .filter(o -> o.rowCreatedDate.before(accessTime))
+                .collect(Collectors.toList());
+        
+        if (accessUsers.isEmpty()) {
+            return "N/A";
+        }
+        
+        accessUsers.sort((AccessGroupUserAccess o1, AccessGroupUserAccess o2) -> {
+            return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+        });
+        
+        return accessUsers.get(0).fullName;
+    }
+
+    
 }

@@ -5,7 +5,7 @@ $tab = $this->getCurrentTab();
 
 <h2><? echo $this->__f("How much cash do you want to withdraw?"); ?></h2>
 <div gstype='form' method='addCashWithdrawal'>
-    <input class='gsniceinput1' type='textfield' gsname='amount' value='<? echo $tab->cashWithDrawal; ?>'>
+    <input class='gsniceinput1' type='textfield' gstype='numpad' gsnumpadtitle='How much to withdraw?' gsname='amount' value='<? echo $tab->cashWithDrawal; ?>'>
     <br/>
     <br/><div class='shop_button'  gsclick='activateView' view='cashwithdrawal'><?  echo $this->__f("Cancel"); ?></div>&nbsp;&nbsp;&nbsp;<div gstype='submit' class='shop_button'><?  echo $this->__f("Add to tab"); ?></div>    
 </div>

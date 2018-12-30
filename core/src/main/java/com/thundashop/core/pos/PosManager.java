@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -375,10 +377,22 @@ public class PosManager extends ManagerBase implements IPosManager {
         PosTab tab = getTab(tabId);
         if (tab == null)
             return;
+
+        List<CartItem> clonedItems = new ArrayList();
         
+        tab.cartItems.stream().forEach(o -> {
+            try {
+                clonedItems.add((CartItem)o.clone());
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(PosManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
         Order order = new Order();
         order.cart = new Cart();
-        order.cart.addCartItems(tab.cartItems);
+        order.cart.addCartItems(clonedItems);
+        order.cashWithdrawal = tab.cashWithDrawal;
+        order.setOverridePricesFromCartItem();
         
         invoiceManager.sendOrderToGdsDevice(cashPointDeviceId, order);
     }

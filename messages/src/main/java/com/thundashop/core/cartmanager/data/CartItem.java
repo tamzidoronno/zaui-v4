@@ -32,7 +32,7 @@ import org.mongodb.morphia.annotations.Transient;
  *
  * @author ktonder
  */
-public class CartItem implements Serializable {
+public class CartItem implements Serializable, Cloneable {
     private String cartItemId = UUID.randomUUID().toString();
     private Map<String, String> variations = new HashMap(); 
    
@@ -642,5 +642,10 @@ public class CartItem implements Serializable {
         if (product.price < 0.00001 && product.price > -0.00001) {
             product.price = 0;
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
 }

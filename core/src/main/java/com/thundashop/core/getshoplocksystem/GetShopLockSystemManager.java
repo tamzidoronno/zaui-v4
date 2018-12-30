@@ -529,7 +529,15 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     public void sendSmsToCustomer(String userId, String textMessage) {
         AccessGroupUserAccess user = users.get(userId);
         if (user != null) {
-            String smsMessageId = messageManager.sendSms("nexmo", ""+user.phonenumber, textMessage, ""+user.prefix);
+            
+            String smsMessageId = null;
+            
+            if (user.prefix == 47) {
+                smsMessageId = messageManager.sendSms("sveve", ""+user.phonenumber, textMessage, ""+user.prefix);
+            } else {
+                smsMessageId = messageManager.sendSms("nexmo", ""+user.phonenumber, textMessage, ""+user.prefix);
+            }
+            
             user.smsMessages.add(smsMessageId);
             saveObject(user);
         }

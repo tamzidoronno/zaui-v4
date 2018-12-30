@@ -421,6 +421,10 @@ thundashop.Ajax = {
     postgeneral: function() {
         var method = $(this).attr('gsclick');
         
+        if ($(this).attr('numpadgsmethod')) {
+            method = $(this).attr('numpadgsmethod');
+        }
+        
         var data = {};
         
         var javascriptCallback = $(this).attr('gs_callback');
@@ -1204,6 +1208,8 @@ thundashop.framework = {
 }
 
 getshopnumpad = {
+    isPassword : false,
+    
     init: function() {
         $(document).on('click', '.gs_numpad_element', getshopnumpad.elementClicked);
     },
@@ -1222,11 +1228,17 @@ getshopnumpad = {
         }
         
         var innerPad = $(this).closest('.innernumpad').find('.numpadvalue');
+        var newText = "";
+        
         if (value == "x") {
-            innerPad.text(innerPad.text().slice(0,-1));
+            newText = innerPad.attr('value').slice(0,-1);
         } else {
-            innerPad.text(innerPad.text() + value);
+            newText = innerPad.attr('value') + value;
         }
+        
+        var displayText = getshopnumpad.isPassword ? newText.replace(/./g, '*') : newText;
+        innerPad.text(displayText);
+        innerPad.attr('value', newText);
     },
     
     close: function() {
@@ -1235,7 +1247,7 @@ getshopnumpad = {
     
     execute: function() {
         var innerPad = $('.gsnumpad').find('.numpadvalue');
-        var newValue = innerPad.text();
+        var newValue = innerPad.attr('value');
         
         if (!newValue) 
             newValue = 0;
@@ -1254,9 +1266,16 @@ getshopnumpad = {
             var toExecute = new Function ("newValue", "fromTarget", javaScriptFunction+"(newValue, fromTarget)");
             toExecute.call(getshopnumpad.fromTarget, newValue, getshopnumpad.fromTarget);
         }
+        
+        var gsMethodToExecute = $(getshopnumpad.fromTarget).attr('numpadgsmethod');
+        if (gsMethodToExecute) {
+            thundashop.Ajax.postgeneral.apply(getshopnumpad.fromTarget);
+        }
     },
     
     show: function(fromTarget) {
+        getshopnumpad.isPassword = $(fromTarget).attr('gsnumpadispassword') === "true";
+        
         var numpad = $('.gsnumpad');
         var title = $(fromTarget).attr('gsnumpadtitle');
         
@@ -1270,9 +1289,11 @@ getshopnumpad = {
             oldValue = "";
         }
         
+        var displayText = getshopnumpad.isPassword ? oldValue.replace(/./g, '*') : oldValue;
         getshopnumpad.fromTarget = fromTarget;
         numpad.find('.numpadtitle').text(title);
-        numpad.find('.numpadvalue').text(oldValue);
+        numpad.find('.numpadvalue').text(displayText);
+        numpad.find('.numpadvalue').attr('value', oldValue);
         numpad.show();
     }
 }

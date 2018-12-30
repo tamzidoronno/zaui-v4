@@ -515,4 +515,10 @@ public interface IUserManager {
     
     @Editor
     public User createUserAndCompany(Company company);
+    
+    @Editor
+    public User changeUserByUsingPinCode(String userId, String pinCode);
+    
+    @Editor
+    public List<User> getUsersThatHasPinCode();
 }

@@ -350,6 +350,12 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $this->getApi()->getUserManager()->updatePasswordSecure($user->id, $_POST['data']['password']);
     }
     
+    public function changePinCode() {
+        $user = $this->getUser();
+        $user->secondaryLoginCode = $_POST['data']['pincode'];
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     public function regeneratTotpKey() {
         $this->loadData();
         $user = $this->getUser();

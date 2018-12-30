@@ -1,0 +1,27 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$usersWithPincodes = $this->getApi()->getUserManager()->getUsersThatHasPinCode();
+
+if (!is_array($usersWithPincodes) || !count($usersWithPincodes)) {
+    echo "<h2>".$this->__f("No users found, make sure you set a pincode under passwords section to activate this feature")."</h2>";
+    return;
+}
+
+$currentUser = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+
+if ($this->errorMsg) {
+    echo "<div style='font-size: 20px; text-align: center; padding: 20px; font-weight: bold; color: red;'>".$this->errorMsg."</div>";
+}
+echo "<h1>".$this->__f("Select user")."</h1>";
+
+foreach ($usersWithPincodes as $user) {
+    $checked = $currentUser->id == $user->id ? "<i class='fa fa-check'></i> " : "";
+    ?>
+    <div style="margin-top: 5px;">
+        <div class="shop_button" style="width: 100%" gstype='numpad' gsnumpadtitle='Please enter pincode' gsnumpadispassword='true' numpadgsmethod='changeUser' userid='<? echo $user->id; ?>'>
+            <? echo $checked.$user->fullName; ?>
+        </div>
+    </div>
+    <?
+}
+?>

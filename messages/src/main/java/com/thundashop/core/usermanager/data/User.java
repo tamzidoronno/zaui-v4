@@ -36,6 +36,7 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean triedToFetch = false;
     public boolean suspended = false;
     public boolean visibleOnlyInMainCompany = false;
+   
     
     /**
      * This is set true if the user of this is 100% 
@@ -332,6 +333,9 @@ public class User extends DataCommon implements Comparable<User> {
     public String accountingId = "";
     public String referenceKey = "";
     public String pinCode = null;
+    
+    @Administrator
+    public String secondaryLoginCode = null;
     public boolean isCompanyOwner = false;
     
     /**

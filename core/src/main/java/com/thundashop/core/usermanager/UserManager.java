@@ -2480,4 +2480,36 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         saveUser(user);
         return user;
     }
+
+    @Override
+    public User changeUserByUsingPinCode(String userId, String pinCode) {
+        User user = getUserById(userId);
+        
+        User currentUser = getSession().currentUser;
+        if (currentUser == null || currentUser.type < User.Type.EDITOR) {
+            throw new ErrorException(26);
+        }
+        
+        if (user.type > getSession().currentUser.type) {
+            throw new ErrorException(26);
+        }
+        
+        if (user.secondaryLoginCode == null || user.secondaryLoginCode.isEmpty()) {
+            throw new ErrorException(26);
+        }
+        
+        if (user.secondaryLoginCode.equals(pinCode)) {
+            forceLogon(user);
+            return user;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public List<User> getUsersThatHasPinCode() {
+        return getAllUsers().stream()
+                .filter(o -> o.secondaryLoginCode != null && !o.secondaryLoginCode.isEmpty())
+                .collect(Collectors.toList());
+    }
 }

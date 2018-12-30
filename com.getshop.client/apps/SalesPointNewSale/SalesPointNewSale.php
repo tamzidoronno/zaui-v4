@@ -2,7 +2,8 @@
 namespace ns_57db782b_5fe7_478f_956a_ab9eb3575855;
 
 class SalesPointNewSale extends SalesPointCommon implements \Application {
-
+    public $errorMsg = "";
+    public $userChanged = false;
     
     public function getDescription() {
         
@@ -24,6 +25,11 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
 
     public function render() {
         if ($this->preRender()) {
+            return;
+        }
+        
+        if ($this->userChanged) {
+            echo "<script>document.location = document.location</script>";
             return;
         }
         
@@ -211,6 +217,8 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             $this->includefile("cashwithdrawal");
         } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables") {
             $this->includefile("tables");
+        } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "changeuserview") {
+            $this->includefile("changeuserview");
         } else {
             $this->includefile("listview");
         }
@@ -281,6 +289,17 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     public function setTabDiscount() {
         $tab = $this->getCurrentTab();
         $this->getApi()->getPosManager()->setTabDiscount($tab->id, $_POST['data']['discount']);
+    }
+    
+    public function changeUser() {
+        $user = $this->getApi()->getUserManager()->changeUserByUsingPinCode($_POST['data']['userid'], $_POST['data']['value']);
+        if (!$user) {
+            $this->errorMsg = $this->__f("Access Denied"); 
+            return;
+        }
+        
+        $this->userChanged = true;
+        \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
     }
 
 }

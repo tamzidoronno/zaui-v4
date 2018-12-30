@@ -9,15 +9,15 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductPriceOverride;
+import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -53,9 +54,12 @@ public class CartItem implements Serializable {
     public boolean disabled = false;
     public String addedByGetShopModule = "";
     public String pmsBookingId = "";
+    private List<ProductPriceOverride> overridePriceHistory = new ArrayList();
     
     @Transient
     public String orderId;
+    
+    public Double overridePriceIncTaxes;
     
     public CartItem() {
     }
@@ -328,7 +332,7 @@ public class CartItem implements Serializable {
     }
     
     public double getTotalAmount() {
-        return count * getProduct().price;
+        return count * getProductPrice();
     }
 
     public BigDecimal getTotalExRoundedWithTwoDecimals(int precision) {
@@ -566,5 +570,77 @@ public class CartItem implements Serializable {
         double taxDivideFactor = product.taxGroupObject.getTaxRate() + 1; 
         double priceExTaxes = price / taxDivideFactor;
         return priceExTaxes;
+    }   
+
+    public double getPriceIncTaxes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void addOverridePriceHistory(ProductPriceOverride override, String userId) {
+        overridePriceHistory.stream().forEach(o -> {
+            o.deleteEntry(userId);
+        });
+        overridePriceHistory.add(override);
+        calculateOverridePrice();
+    }
+
+    public int getOverridePriceHistoryCount() {
+        return overridePriceHistory.size();
+    }
+
+    private void calculateOverridePrice() {
+        overridePriceHistory.sort((ProductPriceOverride o1, ProductPriceOverride o2) -> {
+            return o1.getDate().compareTo(o2.getDate());
+        });
+        
+        overridePriceHistory.stream()
+            .filter(o -> !o.isDeleted())
+            .forEach(history -> {
+                
+                if (history.getType().equals(ProductPriceOverrideType.fixedprice)) {
+                    overridePriceIncTaxes = history.getNewValue();
+                }
+
+                if (history.getType().equals(ProductPriceOverrideType.discountpercent)) {
+                    if (history.getNewValue() == 0) {
+                        overridePriceIncTaxes = null;
+                    } else {
+                        overridePriceIncTaxes = ((100 - history.getNewValue())/100) * getProduct().price;
+                    }
+                }
+                
+            });
+    }
+
+    public void updateOverridePricesToProduct() {
+        if (overridePriceIncTaxes != null) {
+            getProduct().price = overridePriceIncTaxes;
+        }
+    }
+
+    public double getProductPrice() {
+        if (overridePriceIncTaxes != null) {
+            return overridePriceIncTaxes;
+        }
+        
+        return getProduct().price;
+    }
+
+    public void remove(CartItem cartItem) {
+        double diff = cartItem.getProductPrice() - getProductPrice();
+        
+        if (diff == 0) {
+            count = count - cartItem.count;
+        } else {
+            overridePriceIncTaxes = ((getProductPrice() * (double)count) - (cartItem.getProductPrice() * (double)cartItem.count)) / (double)count ;
+        }
+        
+        if (overridePriceIncTaxes != null && overridePriceIncTaxes < 0.00001 && overridePriceIncTaxes > -0.00001) {
+            overridePriceIncTaxes = 0D;
+        }
+        
+        if (product.price < 0.00001 && product.price > -0.00001) {
+            product.price = 0;
+        }
     }
 }

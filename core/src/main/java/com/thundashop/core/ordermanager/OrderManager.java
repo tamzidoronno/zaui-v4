@@ -851,6 +851,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.incrementOrderId = -1;
         }
         
+        order.setOverridePricesFromCartItem();
+        
         order.doFinalize();
         if (!dummy) {
             feedGrafana(order);

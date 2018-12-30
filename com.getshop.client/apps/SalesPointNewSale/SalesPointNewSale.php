@@ -146,14 +146,17 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     public function changePrice() {
         $tab = $this->getCurrentTab();
-        foreach ($tab->cartItems as $item) {
-            if ($item->cartItemId == $_POST['data']['cartitemid']) {
-                $item->product->price = $_POST['data']['price'];
-                $this->getApi()->getPosManager()->addToTab($tab->id, $item);
-                echo $_POST['data']['price'].";".$this->getApi()->getPosManager()->getTotal($tab->id);
-                die();
-            }
-        }
+        $item = $this->getApi()->getPosManager()->setNewProductPrice($tab->id, $_POST['data']['cartitemid'], $_POST['data']['price']);
+        echo $this->getPriceHtml($item).";".$this->getApi()->getPosManager()->getTotal($tab->id);
+        die();
+    }
+    
+    public function changeDiscount() {
+        $tab = $this->getCurrentTab();
+        $item = $this->getApi()->getPosManager()->setDiscountToCartItem($tab->id, $_POST['data']['cartitemid'], $_POST['data']['discountValue']);
+        $priceToUse = $item->overridePriceIncTaxes ? $item->overridePriceIncTaxes : $item->product->price;
+        echo $this->getPriceHtml($item).";".$this->getApi()->getPosManager()->getTotal($tab->id).";".$priceToUse;
+        die();
     }
     
     public function removeItemFromTab() {
@@ -262,5 +265,23 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         
         $this->getApi()->getPosManager()->changeTaxRate($tab->id, "");
     }
+
+    public function getPriceHtml($item) {
+        $priceToUse = $item->product->price;
+        $oldPrice = "";
+
+        if ($item->overridePriceIncTaxes) {
+            $priceToUse = $item->overridePriceIncTaxes;
+            $oldPrice = "<span class='oldprice'>".$item->product->price."</span>";
+        }
+        
+        return $oldPrice.$priceToUse;
+    }
+    
+    public function setTabDiscount() {
+        $tab = $this->getCurrentTab();
+        $this->getApi()->getPosManager()->setTabDiscount($tab->id, $_POST['data']['discount']);
+    }
+
 }
 ?>

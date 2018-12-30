@@ -23,23 +23,25 @@ public class PosTab extends DataCommon {
     public int incrementalTabId = 0;
     public int printedToKitchenTimes = 0;
     public String tabTaxGroupId;
+    public Double discount;
 
     
     void removeCartItem(CartItem cartItem) {
-        for (CartItem item : cartItems) {
-            if (item.getCartItemId().equals(cartItem.getCartItemId())) {
-                double diff = item.getProduct().price - cartItem.getProduct().price;
-                for (int i=0; i<cartItem.getCount(); i++) {
-                    item.getProduct().price = diff;
-                }
-            }
+        CartItem oldCartItem = cartItems.stream()
+                .filter(o -> o.getCartItemId().equals(cartItem.getCartItemId()))
+                .findFirst()
+                .orElse(null);
+        
+        if (oldCartItem == null) {
+            return;
         }
         
+        oldCartItem.remove(cartItem);
+     
         clearEmptyLines();
     }
     
     private void clearEmptyLines() {
         cartItems.removeIf(item -> item.getTotalAmount() == 0);
     }
- 
 }

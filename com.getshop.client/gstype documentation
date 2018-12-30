@@ -175,6 +175,12 @@ Settings configuration example:
     <input gstype="submit" type="button" value='Save'>
 </div>
 
+GetShop Numpad (A numpad will be displayed and the entered value will be returned, once its completed gsmethod will be execute):
+    NOTE ( Only implemented for new modules using the framework introduced in 2018 )
+    <div gstype='numpad' gsmethod='methodToExecute' gsnumpadtitle='Please enter value' value='100' gsnumpad_on_ok='function(newValue, fromTarget)'></div>
+    <input gstype='numpad' gsmethod='methodToExecute' gsnumpadtitle='Please enter value'  value='100'/>
+
+    It will also trigger the change event
 
 KaiPal template:
 <div class="isnotactive">

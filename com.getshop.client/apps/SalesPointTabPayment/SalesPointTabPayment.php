@@ -80,6 +80,7 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
                 $cartItemFromTab = $this->getItemFromTab($newItem['cartitemid']);
                 $cartItemFromTab->product->price = $newItem['price'];
                 $cartItemFromTab->count = $newItem['count'];
+                $cartItemFromTab->overridePriceIncTaxes = null;
                 $itemsToCheck[] = $cartItemFromTab;
             }
         }

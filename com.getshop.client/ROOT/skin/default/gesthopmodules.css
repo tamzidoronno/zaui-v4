@@ -395,6 +395,73 @@ body {
     display: inline-block;
 }
 
+.gsnumpad {
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    z-index: 5;
+    background-color: rgba(0,0,0,0.9);
+    
+    -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   display: none;
+}
+
+.gsnumpad .innernumpad .numpadtitle {
+    color: #FFF;
+    text-align: center;
+    font-size: 20px;
+    padding-top: 20px;
+    padding-bottom: 0px;
+    
+}
+.gsnumpad .innernumpad {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.gsnumpad .gs_numpad_element {
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: calc(25% - 10px);
+    height: 100px;
+    margin: 5px;
+    float: right;
+    background-color: #FFF;
+    font-size: 30px;
+    text-align: center;
+    line-height: 100px;
+    cursor: pointer;
+}
+
+.gsnumpad .gs_numpad_element:hover {
+    background-color: #EEE;
+}
+
+.gsnumpad .gs_numpad_element.v2 {
+    height: 210px;
+    line-height: 210px;
+}
+.gsnumpad .gs_numpad_element.h2 {
+    width: calc(50% - 10px);
+}
+
+.gsnumpad .numpadvalue {
+    line-height: 50px;
+    font-size: 30px;
+    color: #FFF;
+    text-align: center;
+    height: 50px;
+}
+    
+
 .kaipal.infobox .image.talking { background-image: url('/skin/default/images/kaipal-100px-talking.png'); }
 .kaipal.infobox .image.happy { background-image: url('/skin/default/images/kaipal-100px-happy.png'); }
 .kaipal.infobox .image.sad { background-image: url('/skin/default/images/kaipal-100px-sad.png'); }

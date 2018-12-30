@@ -20,12 +20,18 @@ if (!$tab || !count($tab->cartItems)) {
 $cartItems = $tab->cartItems;
 
 foreach ($cartItems as $cartItem) {
+    $priceToUse = $cartItem->product->price;
+
+    if ($cartItem->overridePriceIncTaxes) {
+        $priceToUse = $cartItem->overridePriceIncTaxes;
+    }
+
     ?>
     <div class='cartitem itemlines' cartitemid='<? echo $cartItem->cartItemId; ?>'>
         <div class='col checkbox'><input type='checkbox' checked='true'/></div>
         <div class='col productname'><?php echo $cartItem->product->name; ?></div>
-        <div class='col count'><input class='gsniceinput1' value='<? echo $cartItem->count; ?>'/> x</div>
-        <div class='col price'><input class='gsniceinput1' value='<? echo $cartItem->product->price; ?>'/></div>
+        <div class='col count'><input gstype='numpad' gsnumpadtitle='Please enter new count' class='gsniceinput1' value='<? echo $cartItem->count; ?>'/> x</div>
+        <div class='col price'><input gstype='numpad' gsnumpadtitle='Please enter new price' class='gsniceinput1' value='<? echo $priceToUse; ?>'/></div>
     </div>
     <?
 }

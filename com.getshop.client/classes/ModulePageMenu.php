@@ -31,6 +31,7 @@ class ModulePageMenu {
      * @param core_usermanager_data_User $user
      */
     public function renderTop($user) {
+        $this->renderNumPad();
         $menuEntries = $this->getEntries();
         ?>
 
@@ -59,6 +60,31 @@ class ModulePageMenu {
                         }
                     } ?>
                 </div>
+            </div>
+        </div>
+        <?
+    }
+
+    public function renderNumPad() {
+        ?>
+        <div class='gsnumpad'>
+            <div class='innernumpad'>
+                <div class='numpadtitle'> TITLE </div>
+                <div class='numpadvalue'></div>
+                <div class='gs_numpad_element' value='CANCEL'>X</div>
+                <div class='gs_numpad_element' value='3'>3</div>
+                <div class='gs_numpad_element' value='2'>2</div>
+                <div class='gs_numpad_element' value='1'>1</div>
+                <div class='gs_numpad_element v2' value='x'><-</div>
+                <div class='gs_numpad_element' value='6'>6</div>
+                <div class='gs_numpad_element' value='5'>5</div>
+                <div class='gs_numpad_element' value='4'>4</div>
+                <div class='gs_numpad_element' value='9'>9</div>
+                <div class='gs_numpad_element' value='8'>8</div>
+                <div class='gs_numpad_element' value='7'>7</div>
+                <div class='gs_numpad_element h2' value='OK'>OK</div>
+                <div class='gs_numpad_element' value='.'>,</div>
+                <div class='gs_numpad_element' value='0'>0</div>
             </div>
         </div>
         <?

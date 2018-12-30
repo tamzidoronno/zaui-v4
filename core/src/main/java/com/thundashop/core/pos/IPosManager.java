@@ -139,4 +139,13 @@ public interface IPosManager {
     
     @Editor
     public void changeTaxRate(String tabId, String taxGroupNumber);
+    
+    @Editor
+    public CartItem setNewProductPrice(String tabId, String cartItemId, double newValue);
+    
+    @Editor
+    public CartItem setDiscountToCartItem(String tabId, String cartItemId, double newValue);
+    
+    @Editor
+    public void setTabDiscount(String tabId, double discount);
 }

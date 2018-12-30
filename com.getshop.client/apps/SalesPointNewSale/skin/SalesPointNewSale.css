@@ -198,6 +198,8 @@
 
 .SalesPointNewSale .cartitemline .details input {
     width: 50px;
+    height: 24px;
+    text-align: center;
 }
 
 .SalesPointNewSale .cartitemline .col {
@@ -421,4 +423,15 @@
 
 .SalesPointNewSale .taxrates {
     text-align: center;
+}
+
+.SalesPointNewSale .oldprice {
+    margin-right: 10px;
+    text-decoration: line-through;
+}
+
+.SalesPointNewSale .tabmenu {
+    text-align: center;
+    border-bottom: solid 10px #DDD;
+    padding-bottom: 20px;
 }

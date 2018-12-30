@@ -11,6 +11,7 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
@@ -25,6 +26,8 @@ import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.ProductPriceOverride;
+import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Date;
@@ -153,8 +156,13 @@ public class PosManager extends ManagerBase implements IPosManager {
             }
             
             tab.cartItems.add(cartItem);
+            
+            if (tab.discount != null) {
+                setDiscountToCartItem(tab.id, cartItem.getCartItemId(), tab.discount);
+            }
+            
+            saveObject(tab);
         }
-        saveObject(tab);
     }
 
     @Override
@@ -648,5 +656,72 @@ public class PosManager extends ManagerBase implements IPosManager {
         tab.tabTaxGroupId = taxGroupNumber;
         
         saveObject(tab);
+    }
+
+    @Override
+    public CartItem setNewProductPrice(String tabId, String cartItemId, double newValue) {
+        String userId = getSession().currentUser.id;
+        ProductPriceOverride override = new ProductPriceOverride(userId, "New fixed price set", newValue, ProductPriceOverrideType.fixedprice, "direct");
+        addOverridePrice(tabId, cartItemId, override);
+        
+        CartItem cartItem = getCartItem(tabId, cartItemId);
+        return cartItem;
+    }        
+
+    @Override
+    public CartItem setDiscountToCartItem(String tabId, String cartItemId, double newValue) {
+        String userId = getSession().currentUser.id;
+        ProductPriceOverride override = new ProductPriceOverride(userId, "New discount", newValue, ProductPriceOverrideType.discountpercent, "direct");
+        addOverridePrice(tabId, cartItemId, override);
+        
+        CartItem cartItem = getCartItem(tabId, cartItemId);
+        return cartItem;
+    }
+    
+    private void addOverridePrice(String tabId, String cartItemId, ProductPriceOverride override) throws ErrorException {
+        PosTab tab = getTab(tabId);
+        if (tab == null) {
+            return;
+        }
+        
+        CartItem cartItem = getCartItem(tabId, cartItemId);
+        
+        String userId = getSession().currentUser.id;
+        
+        if (cartItem != null) {
+            int seq = cartItem.getOverridePriceHistoryCount();
+            override.setSequence(seq);
+            cartItem.addOverridePriceHistory(override, userId);
+            
+            saveObject(tab);
+        }
+    }
+    
+    private CartItem getCartItem(String tabId, String cartItemId) {
+        PosTab tab = getTab(tabId);
+        if (tab == null) {
+            return null;
+        }
+        
+        return tab.cartItems.stream()
+            .filter(cartItem -> cartItem.getCartItemId().equals(cartItemId))
+            .findFirst()
+            .orElse(null);
+    }
+
+    @Override
+    public void setTabDiscount(String tabId, double discount) {
+        PosTab tab = getTab(tabId);
+        tab.discount = discount;
+        saveObject(tab);
+        updateCartItemsWithTabDiscount(tab);
+    }
+
+    private void updateCartItemsWithTabDiscount(PosTab tab) {
+        tab.cartItems.stream()
+                .filter(item -> item.overridePriceIncTaxes == null || tab.discount == null || tab.discount == 0)
+                .forEach(item -> {
+                    setDiscountToCartItem(tab.id, item.getCartItemId(), tab.discount);
+                });
     }
 }

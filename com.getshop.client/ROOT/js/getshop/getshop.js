@@ -263,6 +263,11 @@ thundashop.Ajax = {
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
         $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
         $(document).on('click','*[gstype="downloadpdf"]', thundashop.Ajax.downloadPdf);
+        $(document).on('click','*[gstype="numpad"]', thundashop.Ajax.showGetShopNumpad);
+    },
+    
+    showGetShopNumpad: function() {
+        getshopnumpad.show(this);
     },
     
     downloadPdf: function() {
@@ -1197,5 +1202,81 @@ thundashop.framework = {
         if($('.gsoverlay2').is(':visible')) { thundashop.framework.reloadOverLayType2(); }
     }
 }
+
+getshopnumpad = {
+    init: function() {
+        $(document).on('click', '.gs_numpad_element', getshopnumpad.elementClicked);
+    },
+    
+    elementClicked: function() {
+        var value = $(this).attr('value');
+        
+        if (value == "CANCEL") {
+            getshopnumpad.close();
+            return;
+        }
+        
+        if (value == "OK") {
+            getshopnumpad.execute();
+            return;
+        }
+        
+        var innerPad = $(this).closest('.innernumpad').find('.numpadvalue');
+        if (value == "x") {
+            innerPad.text(innerPad.text().slice(0,-1));
+        } else {
+            innerPad.text(innerPad.text() + value);
+        }
+    },
+    
+    close: function() {
+        $('.gsnumpad').hide();
+    },
+    
+    execute: function() {
+        var innerPad = $('.gsnumpad').find('.numpadvalue');
+        var newValue = innerPad.text();
+        
+        if (!newValue) 
+            newValue = 0;
+        
+        if ($(getshopnumpad.fromTarget).is('input')) {
+            $(getshopnumpad.fromTarget).val(newValue);
+        } else {
+            $(getshopnumpad.fromTarget).attr('value', newValue);
+        }
+        
+        getshopnumpad.close();
+        $(getshopnumpad.fromTarget).trigger('change');
+        
+        var javaScriptFunction = $(getshopnumpad.fromTarget).attr('gsnumpad_on_ok');
+        if (javaScriptFunction) {
+            var toExecute = new Function ("newValue", "fromTarget", javaScriptFunction+"(newValue, fromTarget)");
+            toExecute.call(getshopnumpad.fromTarget, newValue, getshopnumpad.fromTarget);
+        }
+    },
+    
+    show: function(fromTarget) {
+        var numpad = $('.gsnumpad');
+        var title = $(fromTarget).attr('gsnumpadtitle');
+        
+        var oldValue = $(fromTarget).attr('value');
+        
+        if ($(fromTarget).is('input')) {
+            oldValue = $(fromTarget).val();
+        }
+        
+        if (!oldValue) {
+            oldValue = "";
+        }
+        
+        getshopnumpad.fromTarget = fromTarget;
+        numpad.find('.numpadtitle').text(title);
+        numpad.find('.numpadvalue').text(oldValue);
+        numpad.show();
+    }
+}
+
+getshopnumpad.init();
 
 thundashop.framework.init();

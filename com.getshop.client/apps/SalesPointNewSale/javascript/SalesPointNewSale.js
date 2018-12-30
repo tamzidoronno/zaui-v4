@@ -17,6 +17,33 @@ app.SalesPointNewSale = {
         this.bindScrollEvent();
     },
     
+    setTabDiscount: function(newValue, fromTarget) {
+        var data = {
+            discount : newValue
+        };
+        
+        thundashop.Ajax.simplePost(fromTarget, "setTabDiscount", data);
+    },
+    
+    itemDiscountChange: function(newValue, fromTarget) {
+        var data = {
+            cartitemid : $(fromTarget).closest('.cartitemline').attr('cartitemid'),
+            discountValue : newValue
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "changeDiscount", fromTarget, data);
+        event['synchron'] = true;
+        var me = fromTarget;
+        
+        thundashop.Ajax.post(event, function(res) {
+            var result = res.split(';');
+            $(me).closest('.cartitemline').find('.price').html(result[0]);
+            $(me).closest('.cartitemline').find('.changeprice').val(result[2]);
+            $('.SalesPointNewSale .tabtotal span').html(result[1]);
+            app.SalesPointNewSale.tabChanged();
+        });
+    },
+    
     toggleCheckBox: function() {
         var type = $(this).closest('.extraoptiongroup').attr('type');
         

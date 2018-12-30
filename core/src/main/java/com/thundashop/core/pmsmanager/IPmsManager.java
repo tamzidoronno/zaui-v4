@@ -349,6 +349,14 @@ public interface IPmsManager {
     @Administrator
     public void failedChargeCard(String orderId, String bookingId);
     
+    /**
+     * Whenever a card has been fetched using the automated process this function is called 
+     * DO NOT CHANGE IT!
+     * @param bookingId 
+     */
+    @Administrator
+    public void doChargeCardFromAutoBooking(String bookingId);
+    
     @Administrator
     public void sendMissingPayment(String orderId, String bookingId);
     
@@ -546,4 +554,8 @@ public interface IPmsManager {
     
     @Administrator
     public void cleanupOrdersThatDoesNoLongerExists();
+    
+    @Administrator
+    public List<PmsWubookCCardData> getCardsToSave();
+    
 }

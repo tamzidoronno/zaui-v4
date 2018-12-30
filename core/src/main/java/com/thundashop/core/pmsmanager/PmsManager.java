@@ -9354,14 +9354,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void cleanupOrdersThatDoesNoLongerExists() {
         bookings.values().stream()
-                .forEach(b -> {
-                    for (String orderId : b.orderIds) {
-                        Order order = orderManager.getOrderSecure(orderId);
-                        if (order == null) {
-                            b.orderIds.remove(orderId);
-                            saveObject(b);
-                        }
-                    }
-                });
+        .forEach(b -> {
+            for (String orderId : b.orderIds) {
+                Order order = orderManager.getOrderSecure(orderId);
+                if (order == null) {
+                    b.orderIds.remove(orderId);
+                    saveObject(b);
+                }
+            }
+        });
+    }
+
+    @Override
+    public List<PmsWubookCCardData> getCardsToSave() {
+        
+        List<PmsBooking> allbookings = getAllBookings(null);
+        for(PmsBooking book : allbookings) {
+            List<PmsWubookCCardData> resultToReturn = new ArrayList();
+            PmsWubookCCardData test = new PmsWubookCCardData();
+            test.bookingId = book.id;
+            test.userId = book.userId;
+            test.reservationCode = "23123123";
+            test.email = "test@test.no";
+            resultToReturn.add(test);
+            return resultToReturn;
+        }
+        return new ArrayList();
+    }
+
+    @Override
+    public void doChargeCardFromAutoBooking(String bookingId) {
+        System.out.println("need to charge booking : "+ bookingId);
     }
 }

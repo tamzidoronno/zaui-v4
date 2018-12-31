@@ -1,7 +1,7 @@
 <?php
 namespace ns_11234b3f_452e_42ce_ab52_88426fc48f8d;
 
-class SalesPointTabPayment extends \MarketingApplication implements \Application {
+class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointCommon implements \Application {
     private $tab = null;
     private $currentOrder = null;
     
@@ -14,6 +14,10 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
     }
 
     public function render() {
+        if ($this->preRender()) {
+            return;
+        }
+        
         // Pay on room
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom'])) {
             $this->includefile("ns_f86e7042_f511_4b9b_bf0d_5545525f42de");
@@ -133,9 +137,11 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
     }
     
     public function completeCurrentOrder() {
-        $gdsDevice = $this->getCurrentGdsDevice();
+        $receiptPrinterId = $this->getSelectedReceiptPrinter();
+        $kitchenPrinterId = $this->getSelectedKitchenPrinter();
+        
         $tab = $this->getCurrentTab();
-        $this->getApi()->getPosManager()->completeTransaction($tab->id, $this->getCurrentOrder()->id, $gdsDevice->id);
+        $this->getApi()->getPosManager()->completeTransaction($tab->id, $this->getCurrentOrder()->id, $receiptPrinterId, $kitchenPrinterId);
         unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment']);
         
         $totalForTab = $this->getApi()->getPosManager()->getTotal($tab->id);
@@ -205,24 +211,6 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
         return $activeDevices;
     }
 
-    public function getCurrentGdsDevice() {
-        $gdsDevices = $this->getApi()->getGdsManager()->getDevices();
-        $cashPointDevices = array();
-        
-        foreach ($gdsDevices as $device) {
-            if ($device->type === "cashap") {
-                $cashPointDevices[] = $device;
-            }
-        }
-        
-        // Support only one Cash Point Device
-        if (count($cashPointDevices) == 1) {
-            return $cashPointDevices[0];
-        }
-        
-        return null;
-    }
-
     public function getItemName($items, $id) {
         foreach ($items as $item) {
             if ($item->id == $id) {
@@ -253,9 +241,9 @@ class SalesPointTabPayment extends \MarketingApplication implements \Application
             $guestName = @$room->guests[0]->name;
         }
         
-        $gdsDeviceId = $this->getCurrentGdsDevice();
+        $gdsDeviceId = $this->getSelectedReceiptPrinter();
         
-        $this->getApi()->getPosManager()->printRoomReceipt($gdsDeviceId->id, $roomName, $guestName, $cartItems);
+        $this->getApi()->getPosManager()->printRoomReceipt($gdsDeviceId, $roomName, $guestName, $cartItems);
         $this->getApi()->getPosManager()->removeItemsFromTab($this->getCurrentTab()->id, $cartItems);
         $this->cancelCurrentOrder();
     }

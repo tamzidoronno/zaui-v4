@@ -18,6 +18,9 @@ import java.util.Map;
  * @author ktonder
  */
 public class LockGroup extends DataCommon {
+    /**
+     * Key = slotid
+     */
     private HashMap<Integer, MasterUserSlot> groupLockCodes = new HashMap();
     
     /**

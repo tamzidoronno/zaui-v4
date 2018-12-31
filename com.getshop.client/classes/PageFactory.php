@@ -40,6 +40,9 @@ class PageFactory {
         if ($moduleId == "intranet") {
             $this->createIntranetPages();
         }
+        if ($moduleId == "apac") {
+            $this->createApacPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -484,6 +487,55 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['getshopusermanual'] = $page;
+    }
+
+    public function createApacPages() {
+        $page = new \ModulePage("home", "apac");
+        $page->addExtraApplications('0cf90108-6e9f-49fd-abfe-7541d1526ba2');
+        $row = $page->createRow();
+        $row->addText("Access List");
+        $row = $page->createRow();
+        $row->addColumn("93a55f7a-07ef-4199-8ab2-1a3019c160cd", "44879835-95ab-42b5-a531-f480a7688c45");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("newaccess", "apac");
+        $page->addExtraApplications('0cf90108-6e9f-49fd-abfe-7541d1526ba2');
+        $row = $page->createRow();
+        $row->addColumn("b698ac77-15f3-45b7-a412-47186a2defb6", "666ac2e7-d72c-4806-944e-5dd25ce20ee6");
+        $this->pages['newaccess'] = $page;
+        
+        $page = new \ModulePage("accessgroups", "apac");
+        $page->setLeftMenu(\ModulePageMenu::getApacLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("25c15968-4b9b-4c23-9e44-dc5cdb83244c", "a6472054-66eb-46e2-90fb-ea34783ea001");
+        $this->pages['accessgroups'] = $page;
+        
+        $page = new \ModulePage("lockssetting", "apac");
+        $page->setLeftMenu(\ModulePageMenu::getApacLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("01b8bd0c-0375-42fa-a44e-d177485db704", "401be417-a9db-455f-9233-bcd93b9260b7");
+        $this->pages['lockssetting'] = $page;
+        
+        $page = new \ModulePage("gensettings", "apac");
+        $page->setLeftMenu(\ModulePageMenu::getApacLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("df05feab-f657-49ee-a338-82d5f8c14ed5", "3c17718a-76f5-4e56-b02a-3b8c7e61c28b");
+        $this->pages['gensettings'] = $page;
+        
+        $page = new \ModulePage("doors", "apac");
+        $row = $page->createRow();
+        $row = $page->createRow();
+        $row->addColumn("4bab2f13-491b-4c34-973c-e776ca2d88d6", "741f98aa-e8ed-4423-b41f-1ba63d1bc526");
+        $this->pages['doors'] = $page;
+        
+        $page = new \ModulePage("configuration", "apac");
+        $page->setLeftMenu(\ModulePageMenu::getApacLeftMenu());
+        $row = $page->createRow();
+        $row->addText("Gateways");
+        
+        $row = $page->createRow();
+        $row->addColumn("2d6a27b9-b238-4406-9f03-c4ca8184f590", "d6529811-8d13-4771-8631-b4fab9fbfed7");
+        $this->pages['configuration'] = $page;
     }
 
 }

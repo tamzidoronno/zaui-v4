@@ -172,10 +172,9 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     }
     
     public function printCurrentTab() {
-        $tabPayment = new \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment();
         $tab = $this->getCurrentTab();
-        $gdsDevice = $tabPayment->getCurrentGdsDevice();
-        $this->getApi()->getPosManager()->printOverview($tab->id, $gdsDevice->id);
+        $receiptPrinterId = $this->getSelectedReceiptPrinter();
+        $this->getApi()->getPosManager()->printOverview($tab->id, $receiptPrinterId);
     }
     
     
@@ -230,10 +229,9 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     }
     
     public function printCurrentToKitchen() {
-        $tabPayment = new \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment();
         $tab = $this->getCurrentTab();
-        $gdsDevice = $tabPayment->getCurrentGdsDevice();
-        $this->getApi()->getPosManager()->printKitchen($tab->id, $gdsDevice->id);
+        $kitchenPrinterId = $this->getSelectedKitchenPrinter();
+        $this->getApi()->getPosManager()->printKitchen($tab->id, $kitchenPrinterId);
     }
     
     public function getDistinctAdditionalTaxCodes($tab) {

@@ -304,6 +304,8 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
                 $scopeId = $_POST['scopeid'];
                 if($module->name == "PMS") {
                     echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon PMS</div></a>";
+                } elseif (strtolower($module->name) == "apac") {
+                    echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon APAC</div></a>";
                 } elseif ($module->name == "Salespoint") {
                     echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon SalesPoint</div></a>";
                 } else {

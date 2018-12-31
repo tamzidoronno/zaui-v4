@@ -11,7 +11,10 @@ app.SalesPointCashPoints = {
         
         $(".selectedposlist:checked").each(function() {
             data.productlistsids.push($(this).val());
-        })
+        });
+        
+        data.receiptprinter = $('.config_sales_point select[gsname="receiptprinter"]').val();
+        data.kitchenprinter = $('.config_sales_point select[gsname="kitchenprinter"]').val();
         
         thundashop.Ajax.simplePost($('.SalesPointCashPoints'), "saveConfig", data);
         $('.gsoverlay2.active').click();

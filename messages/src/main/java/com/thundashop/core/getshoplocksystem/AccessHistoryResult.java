@@ -11,7 +11,13 @@ import java.util.Date;
  *
  * @author ktonder
  */
-public class AccessHistoryResult {
+public class AccessHistoryResult implements Comparable<AccessHistoryResult> {
     public String doorName;
     public Date time;
+    public String name;
+
+    @Override
+    public int compareTo(AccessHistoryResult o) {
+        return time.compareTo(o.time);
+    }
 }

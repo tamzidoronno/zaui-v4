@@ -16,4 +16,7 @@ import java.util.List;
 public class CashPoint extends DataCommon {
     public String cashPointName = "";
     public List<String> productListIds = new ArrayList();
+    
+    public String receiptPrinterGdsDeviceId = "";
+    public String kitchenPrinterGdsDeviceId = "";
 }

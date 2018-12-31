@@ -56,4 +56,23 @@ class SalesPointCommon extends \MarketingApplication {
     public function disconnectedView() {
         unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_view_id']);
     }
+    
+    public function getSelectedKitchenPrinter() {
+        $cashPointId = $this->getSelectedCashPointId();
+        if ($cashPointId) {
+            return $this->getApi()->getPosManager()->getCashPoint($cashPointId)->kitchenPrinterGdsDeviceId;
+        }
+        
+        return "";
+    }
+    
+    public function getSelectedReceiptPrinter() {
+        $cashPointId = $this->getSelectedCashPointId();
+        
+        if ($cashPointId) {
+            return $this->getApi()->getPosManager()->getCashPoint($cashPointId)->receiptPrinterGdsDeviceId;
+        }
+        
+        return "";
+    }
 }

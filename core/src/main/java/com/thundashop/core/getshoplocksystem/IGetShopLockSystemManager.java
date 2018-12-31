@@ -170,4 +170,13 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public boolean canShowAccessLog();
+    
+    @Administrator
+    public FilteredData getAccessLog(String serverId, String lockId, FilterOptions filterOptions);
+    
+    @Administrator
+    public void openLock(String lockId);
+    
+    @Administrator
+    public void closeLock(String lockId);
 }

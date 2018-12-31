@@ -117,6 +117,8 @@ class ModulePageMenu {
                 echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br>PMS</div></a>";
             } elseif ($module->name == "Salespoint") {
                 echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>SalesPoint</div></a>";
+            } elseif (strtolower($module->name) == "apac") {
+                echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Apac</div></a>";
             } else {
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
             }
@@ -183,4 +185,14 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Tables", "tables", "");
         return $menu;
     }
+
+    public static function getApacLeftMenu() {
+        $menu = new \ModulePageMenu();
+        $menu->entries[] = new ModulePageMenuItem("Gateways", "configuration", "fa fa-server");
+        $menu->entries[] = new ModulePageMenuItem("Access Groups", "accessgroups", "fa fa-users");
+        $menu->entries[] = new ModulePageMenuItem("Locks", "lockssetting", "fa fa-key");
+        $menu->entries[] = new ModulePageMenuItem("General Settings", "gensettings", "fa fa-gears");
+        return $menu;
+    }
+
 }

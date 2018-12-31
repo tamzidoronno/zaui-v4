@@ -212,7 +212,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId) {
+    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId) {
         Order order = orderManager.getOrder(orderId);
         
         if (!order.isFullyPaid() && !order.isSamleFaktura()) {
@@ -220,6 +220,10 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         PosTab tab = getTab(tabId);
+        
+        if (tab != null && kitchenDeviceId != null && !kitchenDeviceId.isEmpty()) {
+            printKitchen(tabId, kitchenDeviceId);
+        }
         
         order.cart.getItems().stream()
                 .forEach(cartItem -> {

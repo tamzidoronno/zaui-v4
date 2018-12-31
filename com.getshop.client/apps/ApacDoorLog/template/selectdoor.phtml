@@ -1,0 +1,12 @@
+<?
+/* @var $this \ns_4bab2f13_491b_4c34_973c_e776ca2d88d6\ApacDoorLog */
+$lockServers = $this->getApi()->getGetShopLockSystemManager()->getLockServers();
+?>
+<h2><? echo $this->__f("Please select lock"); ?></h2>
+<?
+foreach ($lockServers as $lockServer) {
+    foreach ($lockServer->locks as $lock) {
+        echo "<div gsclick='selectLock' serverid='$lockServer->id' lockid='$lock->id' class='shop_button'>$lockServer->givenName - $lock->name</div> ";
+    }
+}
+?>

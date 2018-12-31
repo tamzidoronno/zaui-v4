@@ -130,6 +130,9 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                         if(charge.getPaid()) {
                             orderManager.markAsPaid(orderId, new Date(), amount);
                             return true;
+                        } else {
+                            order.status = Order.Status.PAYMENT_FAILED;
+                            orderManager.saveOrder(order);
                         }
                     }catch(Exception d) {
                         logPrintException(d);

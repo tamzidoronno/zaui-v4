@@ -60,21 +60,32 @@ public class GetShopPaymentProcessor {
     }
 
     private void start() throws IOException {
-        readAccounts();
-        for(AccountDetails detail : accounts) {
-            currentAccount = detail;
-            if(isDevMode) {
-                currentAccount.address = currentAccount.address.replace(".getshop", ".3.0.local.getshop");
+        while(true) {
+            readAccounts();
+            for(AccountDetails detail : accounts) {
+                logPrint("start", "Running autocarding for : " + detail.address);
+                currentAccount = detail;
+                if(isDevMode) {
+                    currentAccount.address = currentAccount.address.replace(".getshop", ".3.0.local.getshop");
+                }
+                try {
+                    checkForCardsToSave();
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
-            try {
-                checkForCardsToSave();
-            }catch(Exception e) {
-                e.printStackTrace();
+            if(isDevMode) {
+                break;
+            }
+            try { Thread.sleep(60000);} catch(Exception e) {
+                System.out.println("sleep failed");
+                break;
             }
         }
     }
 
     private void readAccounts() throws IOException {
+        accounts = new ArrayList();
         String content = new String(Files.readAllBytes(Paths.get("/source/getshop/3.0.0/GetShopStripe/src/getshopstripe/accounts.txt")));
         String[] lines = content.split("\n");
         for(String line : lines) {
@@ -97,12 +108,21 @@ public class GetShopPaymentProcessor {
     }
 
     private void checkForCardsToSave() throws IOException, Exception {
+        logPrint("checkForCardsToSave", "Checking for cards to save");
         //First find new bookings
         LinkedList<PmsWubookCCardData> bookings = fetchBookings();
+        if(bookings.size() > 0) {
+            logPrint("checkForCardsToSave", "Found " + bookings.size() + " bookings");
+        }
         
         //Fetch credit card
         for(PmsWubookCCardData booking : bookings) {
             CreditCard ccard = fetchCreditCard(booking.reservationCode);
+            if(ccard == null) {
+                logPrint("checkForCardsToSave", "Did not find credit card: for booking : " + booking.bookingId);
+                continue;
+            }
+            logPrint("checkForCardsToSave", "Found credit card: " + ccard.expMonth + " / " + ccard.expYear + " for booking : " + booking.bookingId);
             
             String key = currentAccount.StripeLiveKey;
             if(isDevMode) {
@@ -111,7 +131,7 @@ public class GetShopPaymentProcessor {
             
             //Save credit card
             GetShopStripe stripe = new GetShopStripe();
-            logPrint("checkForCardsToSave", "Trying to save card for booking " + booking.bookingId);
+            logPrint("checkForCardsToSave", "Trying to save card into stripe " + booking.bookingId);
             UserCard savedCard = stripe.saveCard(ccard.cardNumber, new Integer(ccard.expMonth), new Integer(ccard.expYear), key, booking.email);
             saveCardInGetShop(savedCard, booking);
             notifyChargeBooking(booking);
@@ -238,7 +258,7 @@ public class GetShopPaymentProcessor {
 
     private void logPrint(String method, String string) {
         if(printDebug) {
-            System.out.println(method + ":-:" + string);
+            System.out.println(string + " (" + method + ")");
         }
     }
 
@@ -257,6 +277,7 @@ public class GetShopPaymentProcessor {
     }
 
     private void saveCardInGetShop(UserCard savedCard, PmsWubookCCardData booking) throws IOException {
+        logPrint("saveCardInGetShop", "Saving stripe card on getshopuser for booking " + booking.bookingId + " card: " + savedCard.id);
         Gson gson = new Gson();
         LinkedHashMap<String, String> args = new LinkedHashMap();
         args.put("userId", gson.toJson(booking.userId));
@@ -265,6 +286,7 @@ public class GetShopPaymentProcessor {
     }
 
     private void notifyChargeBooking(PmsWubookCCardData booking) throws IOException {
+        logPrint("saveCardInGetShop", "Notifying getshop about try to charge card on user " + booking.bookingId);
         Gson gson = new Gson();
         LinkedHashMap<String, String> args = new LinkedHashMap();
         args.put("bookingId", booking.bookingId);

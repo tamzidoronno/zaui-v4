@@ -75,6 +75,7 @@ public class PmsBooking extends DataCommon {
     public double totalUnsettledAmount = 0.0;
     Double unsettled;
     public boolean nonrefundable = false;
+    public boolean tryAutoCharge = false;
     
     @Administrator
     public String secretBookingId = "";

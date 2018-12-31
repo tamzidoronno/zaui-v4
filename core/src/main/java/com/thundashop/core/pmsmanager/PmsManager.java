@@ -60,6 +60,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.ratemanager.BookingComRateManagerManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.stripe.StripeManager;
 import com.thundashop.core.ticket.Ticket;
 import com.thundashop.core.ticket.TicketManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -145,6 +146,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     CartManager cartManager;
 
+    @Autowired
+    StripeManager stripeManager;
+    
     @Autowired
     DoorManager doorManager;
 
@@ -9367,15 +9371,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsWubookCCardData> getCardsToSave() {
+        PmsConfiguration config = getConfigurationSecure();
+        if(!config.wubookAutoCharging) {
+            config.wubookAutoCharging = true;
+            saveConfiguration(config);
+        }
+        
         
         List<PmsBooking> allbookings = getAllBookings(null);
         for(PmsBooking book : allbookings) {
+            if(!frameworkConfig.productionMode) {
+                PmsWubookCCardData test = new PmsWubookCCardData();
+                test.bookingId = book.id;
+                test.userId = book.userId;
+                test.reservationCode = "34234";
+                test.email = "test@test.no";
+                List<PmsWubookCCardData> res = new ArrayList();
+                res.add(test);
+                return res;
+            }
+            if(!book.tryAutoCharge) {
+                continue;
+            }
+            
             List<PmsWubookCCardData> resultToReturn = new ArrayList();
             PmsWubookCCardData test = new PmsWubookCCardData();
             test.bookingId = book.id;
             test.userId = book.userId;
-            test.reservationCode = "23123123";
-            test.email = "test@test.no";
+            test.reservationCode = book.wubookreservationid;
+            User usr = userManager.getUserById(test.userId);
+            if(usr != null) {
+                test.email = usr.emailAddress;
+            }
+            if(test.email == null || !test.email.contains("@")) {
+                test.email = "noemail@getshop.com";
+            }
+            
             resultToReturn.add(test);
             return resultToReturn;
         }
@@ -9385,5 +9416,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void doChargeCardFromAutoBooking(String bookingId) {
         System.out.println("need to charge booking : "+ bookingId);
+        PmsBooking booking = getBooking(bookingId);
+        User usr = userManager.getUserById(booking.userId);
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrder(orderId);
+            if(ord.status == Order.Status.CREATED) {
+                boolean charged = false;
+                for(UserCard card : usr.savedCards) {
+                    if(charged) { continue; }
+                    if(card.savedByVendor.equals("stripe")) {
+                        charged = stripeManager.chargeOrder(ord.id, card.id);
+                    }
+                }
+                if(!charged) {
+                    String email = storeManager.getMyStore().configuration.emailAdress;
+                    if (!configuration.sendAdminTo.isEmpty()) {
+                        email = configuration.sendAdminTo;
+                    }
+                    messageManager.sendMail(email, email, "Failed to autocharge order" + ord.incrementOrderId, "We where not able to charge the card given by user", "post@getshop.com", "post@getshop.com");
+                }
+            }
+        }
     }
 }

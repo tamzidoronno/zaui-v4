@@ -1023,6 +1023,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
             pmsInvoiceManager.clearOrdersOnBooking(newbooking);
+            newbooking.tryAutoCharge = pmsManager.getConfigurationSecure().wubookAutoCharging;
             newbooking = pmsManager.doCompleteBooking(newbooking);
             boolean doNormalPricing = true;
             if(newbooking == null) {

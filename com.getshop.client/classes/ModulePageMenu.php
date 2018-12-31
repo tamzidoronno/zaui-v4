@@ -13,9 +13,10 @@
 class ModulePageMenu {
 
     public $entries = array();
+    private $moduleName;
 
-    function __construct() {
-        
+    function __construct($moduleName="pms") {
+        $this->moduleName = $moduleName;
     }
 
     /**
@@ -33,6 +34,12 @@ class ModulePageMenu {
     public function renderTop($user) {
         $this->renderNumPad();
         $menuEntries = $this->getEntries();
+        $useraccess = (array)$user->pmsPageAccess;
+        
+        if ($this->moduleName == "salespoint") {
+            $useraccess = (array)$user->salesPointPageAccess;
+        }
+
         ?>
 
         <div class="Menu">
@@ -43,7 +50,6 @@ class ModulePageMenu {
             <div class="menuentries horizontal">
                 <div class="entries">
                     <? foreach ($menuEntries as $entry) {
-                        $useraccess = (array)$user->pmsPageAccess;
                         if(!empty($useraccess)) {
                             if(!in_array($entry->getPageId(),$useraccess)) {
                                 continue;

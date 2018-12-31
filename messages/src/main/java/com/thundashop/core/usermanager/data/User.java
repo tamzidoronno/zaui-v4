@@ -51,6 +51,8 @@ public class User extends DataCommon implements Comparable<User> {
     public Double orderAmount = 0.0;
     public List<String> pmsPageAccess = new ArrayList();
     
+    public List<String> salesPointPageAccess = new ArrayList();
+    
     public List<String> hasAccessToModules = new ArrayList();
     
     public List<String> userRoleIds = new ArrayList();

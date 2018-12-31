@@ -290,7 +290,7 @@ class ModulePage {
     }
 
     public function getTopMenuSrs() {
-        $menu = new \ModulePageMenu();
+        $menu = new \ModulePageMenu("srs");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Reservations", "3a0bc113-d800-4658-a68e-a0086973eb80", "gsicon-dinner");
         $menu->entries[] = new ModulePageMenuItem("Menu", "94c0e942-a7f5-4bbb-89f0-598c0e080ec1", "gsicon-list");
@@ -300,7 +300,7 @@ class ModulePage {
     }
 
     public function getTopMenuGetShopSupport() {
-        $menu = new \ModulePageMenu();
+        $menu = new \ModulePageMenu("support");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Dev center", "getshopdevcenter", "gsicon-list");
         $menu->entries[] = new ModulePageMenuItem("Manuals", "getshopusermanual", "fa-support");
@@ -308,7 +308,7 @@ class ModulePage {
     }
 
     public function getTopMenuPms() {
-        $menu = new \ModulePageMenu();
+        $menu = new \ModulePageMenu("pms");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Bookings", "a90a9031-b67d-4d98-b034-f8c201a8f496", "gsicon-gs-booking");
         $menu->entries[] = new ModulePageMenuItem("New", "4d89b5cf-5a00-46ea-9dcf-46ea0cde32e8", "gsicon-gs-new");
@@ -324,7 +324,7 @@ class ModulePage {
     }
 
     public function getTopMenuSalesPoint() {
-        $menu = new \ModulePageMenu();
+        $menu = new \ModulePageMenu("salespoint");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("New Sale", "new", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Products", "products", "gsicon-basket");
@@ -335,7 +335,7 @@ class ModulePage {
     }
 
     public function getTopMenuIntranet() {
-        $menu = new \ModulePageMenu();
+        $menu = new \ModulePageMenu("intranet");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Dev center", "getshopdevcenter", "gsicon-list");
         $menu->entries[] = new ModulePageMenuItem("Servers", "serverstatus", "fa-server");
@@ -344,7 +344,7 @@ class ModulePage {
     }
 
     public function getTopMenuApac() {
-       $menu = new \ModulePageMenu();
+       $menu = new \ModulePageMenu("apac");
         $menu->entries[] = new ModulePageMenuItem("Access List", "home", "gsicon-gs-user");
         $menu->entries[] = new ModulePageMenuItem("New Access", "newaccess", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Doors", "doors", "fa fa-history");

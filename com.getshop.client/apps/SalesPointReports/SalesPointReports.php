@@ -4,6 +4,8 @@ namespace ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7;
 class SalesPointReports extends \MarketingApplication implements \Application {
     private $users = array();
     
+    private $cachedPaymentNames = array();
+    
     public function getDescription() {
         
     }
@@ -113,6 +115,20 @@ class SalesPointReports extends \MarketingApplication implements \Application {
         if (isset($_POST['data']['addorder']) && isset($_POST['data']['password']) && isset($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report']) && $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report']) {
             $this->getApi()->getPosManager()->addOrderIdToZReport($_POST['data']['addorder'], $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report'], $_POST['data']['password']);
         }
+    }
+
+    public function getPaymentMethodName($paymentNameSpaceId) {
+        if (isset($this->cachedPaymentNames[$paymentNameSpaceId])) {
+            return $this->cachedPaymentNames[$paymentNameSpaceId];
+        }
+        
+        $paymentAppId = str_replace("ns_", "", $paymentNameSpaceId);
+        $paymentAppId = str_replace("_", "-", $paymentAppId);
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication($paymentAppId);
+        $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $name = $instance->getName();
+        $this->cachedPaymentNames[$paymentNameSpaceId] = $name;
+        return $name;
     }
 
 }

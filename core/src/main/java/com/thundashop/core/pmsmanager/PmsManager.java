@@ -9379,6 +9379,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         
         List<PmsBooking> allbookings = getAllBookings(null);
+        List<PmsWubookCCardData> resultToReturn = new ArrayList();
         for(PmsBooking book : allbookings) {
             if(!frameworkConfig.productionMode) {
                 PmsWubookCCardData test = new PmsWubookCCardData();
@@ -9394,7 +9395,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 continue;
             }
             
-            List<PmsWubookCCardData> resultToReturn = new ArrayList();
             PmsWubookCCardData test = new PmsWubookCCardData();
             test.bookingId = book.id;
             test.userId = book.userId;
@@ -9409,9 +9409,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             book.tryAutoCharge = false;
             saveBooking(book);
             resultToReturn.add(test);
-            return resultToReturn;
         }
-        return new ArrayList();
+        return resultToReturn;
     }
 
     @Override

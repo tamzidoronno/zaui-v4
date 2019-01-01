@@ -12,6 +12,7 @@ if($bookingEngineBooking) {
 }
 $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 $codes = $this->getApi()->getCartManager()->getCoupons();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 ?>
 <div class="row odd">
     <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
@@ -69,6 +70,27 @@ if ($pmsBooking->wubookreservationid) {
     }
     ?>
 </div>
+
+<?php
+if($config->wubookAutoCharging) {
+?>
+    <div class="row odd">
+        <div class="col col1"><? echo $this->__f("Autocharge card"); ?></div>
+        <?php
+        if ($pmsBooking->tryAutoCharge) {
+            ?>
+            <div class="col col2">Yes, <span style='color:blue;cursor:pointer;' gsclick='toggleautocharging'>stop autocharging</span></div>    
+            <?php
+        } else {
+            ?>
+            <div class="col col2">No, <span style='color:blue;cursor:pointer;' gsclick='toggleautocharging'>retry autocharging</span></div>    
+            <?php
+        }
+        ?>
+    </div>
+<?php
+}
+?>
 
 <div class="row">
     <div class="col col1"><? echo $this->__f("Date created"); ?></div>

@@ -129,7 +129,7 @@ app.SalesPointNewSale = {
     
     tabChanged: function() {
         var tabActive = $('.SalesPointNewSale .rightmenu .header');
-        console.log(tabActive);
+        
         if (tabActive.length) {
             $('.SalesPointNewSale .cash_disabled').removeClass('cash_disabled');
         } else {

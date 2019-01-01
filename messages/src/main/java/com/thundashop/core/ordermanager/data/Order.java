@@ -1221,6 +1221,13 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
+
+    public boolean isGiftCard() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("giftcard")) {
+            return true;
+        }
+        return false;
+    }
     
     public static class Status  {
         public static int CREATED = 1;

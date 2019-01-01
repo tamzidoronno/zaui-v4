@@ -517,5 +517,19 @@ public class ProductManager extends AProductManager implements IProductManager {
         return oldGroupHasNoAccountingTaxAccounnt && newTaxGroupHasAccounting;
     }
 
+    public void createGiftCardProduct() {
+        if (getProduct("giftcard") != null) 
+            return;
+        
+        Product product = new Product();
+        product.id = "giftcard";
+        product.name = "Gift Card";
+        product.taxgroup = 0;
+        product.accountingAccount = "2901";
+        saveObject(product);
+        
+        products.put(product.id, product);
+    }
+
     
 }

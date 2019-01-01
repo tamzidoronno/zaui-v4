@@ -302,5 +302,15 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
     }
 
+    public function addGiftCart() {
+        $tab = $this->getCurrentTab();
+        
+        if (!$tab) {
+            $this->createNewTab();
+            $tab = $this->getCurrentTab();
+        }
+        
+        $this->getApi()->getPosManager()->addGiftCardToTab($tab->id, $_POST['data']['value']);
+    }
 }
 ?>

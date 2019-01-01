@@ -12,7 +12,9 @@ import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.ProductList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -48,7 +50,7 @@ public interface IPosManager {
     public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId);
     
     @Editor
-    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId);
+    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId, HashMap<String,String> paymentMetaData);
     
     @Editor
     public int getTabCount();
@@ -148,4 +150,7 @@ public interface IPosManager {
     
     @Editor
     public void setTabDiscount(String tabId, double discount);
+    
+    @Editor
+    public void addGiftCardToTab(String tabId, double value);
 }

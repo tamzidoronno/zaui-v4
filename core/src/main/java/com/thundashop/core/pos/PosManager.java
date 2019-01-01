@@ -16,6 +16,7 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
@@ -25,6 +26,7 @@ import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.ProductPriceOverride;
 import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -69,6 +72,9 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Autowired
     private ProductManager productManager;
+    
+    @Autowired
+    private GiftCardManager giftCardManager;
     
     /**
      * Never access this variable directly! Always 
@@ -222,10 +228,11 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId) {
+    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId, HashMap<String, String> paymentMetaData) {
         Order order = orderManager.getOrder(orderId);
         
         if (!order.isFullyPaid() && !order.isSamleFaktura()) {
+            order.payment.metaData = paymentMetaData;
             orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order) + order.cashWithdrawal);
         }
         
@@ -246,6 +253,11 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         if (cashPointDeviceId != null) {
             invoiceManager.sendReceiptToCashRegisterPoint(cashPointDeviceId, order.id);
+            
+            giftCardManager.getGiftCardsCreatedByOrderId(order.id).stream()
+                    .forEach(giftCard -> {
+                        giftCardManager.printGiftCard(cashPointDeviceId, giftCard.id);
+                    });
         }
     }
 
@@ -737,5 +749,26 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .forEach(item -> {
                     setDiscountToCartItem(tab.id, item.getCartItemId(), tab.discount);
                 });
+    }
+
+    @Override
+    public void addGiftCardToTab(String tabId, double value) {
+        PosTab tab = getTab(tabId);
+        
+        if (tab == null)
+            return;
+        
+        Product product = productManager.getProduct("giftcard");
+        
+        if (product == null) {
+            productManager.createGiftCardProduct();
+            product = productManager.getProduct("giftcard");
+        }
+        
+        CartItem cartItem = new CartItem();
+        cartItem.setCount(1);
+        cartItem.setProduct(product);
+        cartItem.getProduct().price = value;
+        addToTab(tabId, cartItem);
     }
 }

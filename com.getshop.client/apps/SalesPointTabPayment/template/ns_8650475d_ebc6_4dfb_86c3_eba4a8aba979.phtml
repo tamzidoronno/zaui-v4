@@ -1,0 +1,25 @@
+<?php
+/* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+$order = $this->getCurrentOrder();
+$total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+?>
+
+<div class='completepayment giftcard' total='<? echo $total; ?>'>
+    <div class='total' value='<? echo $total; ?>'>
+        <? echo $this->__f("Total")." ".$total; ?>
+    </div>
+    
+    <div>
+        <? echo $this->__f("Gift Card Code"); ?>
+        <br/> <input class="gsniceinput1 giftcardcode"/>
+    </div>
+    
+    <div class="giftcardvalue" value='0'>
+        
+    </div>
+    
+    <div class='buttonarea'>
+        <div class='shop_button' gs_precheck='app.SalesPointTabPayment.checkGiftCardCodeBeforePost' gsclick='completeCurrentOrder'><? echo $this->__f("Complete transaction"); ?></div>
+        <div class='shop_button' gsclick='cancelCurrentOrder'><? echo $this->__f("Cancel"); ?></div>
+    </div>
+</div>

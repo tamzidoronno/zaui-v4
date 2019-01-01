@@ -3,7 +3,7 @@ namespace ns_8650475d_ebc6_4dfb_86c3_eba4a8aba979;
 
 class GiftCard extends \PaymentApplication implements \Application {
     public function getDescription() {
-        
+        return $this->__f("Used for collecting payments after you have sold a Gift Card");
     }
 
     public function addPaymentMethods() {
@@ -21,7 +21,7 @@ class GiftCard extends \PaymentApplication implements \Application {
     }
     
     public function isPublicPaymentApp() {
-        return false;
+        return true;
     }
 }
 ?>

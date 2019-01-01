@@ -3,7 +3,46 @@ app.SalesPointTabPayment = {
         $(document).on('change', '.SalesPointTabPayment #receivedpayment', app.SalesPointTabPayment.calculateCashRefund);
         $(document).on('change', '.SalesPointTabPayment .itemlines input', app.SalesPointTabPayment.overviewChanged);
         $(document).on('keyup', '.SalesPointTabPayment .filterpayonroomlist', app.SalesPointTabPayment.filterPayOnRoomList);
+        $(document).on('keyup', '.SalesPointTabPayment .giftcardcode', app.SalesPointTabPayment.checkGiftCardCode);
         $(document).on('click', '.SalesPointTabPayment .startpayment', app.SalesPointTabPayment.startPayment);
+    },
+    
+    checkGiftCardCode: function() {
+        var giftCardCode = $(this).val();
+        var data = {
+            code : giftCardCode
+        };
+        var event = thundashop.Ajax.createEvent(null, "getRemainingGiftCard", this, data);
+        event['sychron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            var container = $('.giftcard .giftcardvalue');
+            container.attr('value', res);
+            
+            if (!res) {
+                container.html('Card not found, please check gift card code');
+            } else {
+                container.html('Remaining value: ' + res);
+            }
+        }, [], true, true);
+    },
+    
+    checkGiftCardCodeBeforePost: function() {
+        var total = $('.SalesPointTabPayment .giftcard .total').attr('value');
+        var remainingOnGiftCard = $('.SalesPointTabPayment .giftcardvalue').attr('value');
+        total = parseInt(total, 10);
+        remainingOnGiftCard = parseInt(remainingOnGiftCard, 10);
+        var enough = remainingOnGiftCard > total;
+        
+        if (!enough) {
+            alert("Not enough credit on given gift card");
+            return false;
+        }
+        
+        var extraData = {
+            giftCardCode : $('.SalesPointTabPayment .giftcard .giftcardcode').val()
+        }
+        
+        return extraData;
     },
     
     filterPayOnRoomList: function() {

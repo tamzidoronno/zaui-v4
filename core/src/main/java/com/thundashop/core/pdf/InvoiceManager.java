@@ -14,7 +14,9 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.AnnotationExclusionStrategy;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.DevicePrintMessage;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.ItemLine;
@@ -77,6 +79,9 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Autowired
     private GdsManager gdsManager;
+
+    @Autowired
+    private GiftCardManager giftCardManager;
     
     @Override
     public void createInvoice(String orderId) throws ErrorException {
@@ -349,6 +354,10 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         
         if (application.id.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
             return "faktura";
+        }
+        
+        if (order.isGiftCard()) {
+            return "Gavekort, restverdi: " + TwoDecimalRounder.roundTwoDecimals(giftCardManager.getGiftCard(order.payment.metaData.get("giftCardCode")).remainingValue, 2);
         }
         
         return application.appName;

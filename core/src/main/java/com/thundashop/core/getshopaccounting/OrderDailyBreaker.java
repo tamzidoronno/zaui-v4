@@ -206,7 +206,7 @@ public class OrderDailyBreaker {
                 entry.cartItemId = item.getCartItemId();
                 entry.orderId = order.id;
                 entry.incrementalOrderId = order.incrementOrderId;
-                entry.isActualIncome = true;
+                entry.isActualIncome = item.getProduct().isActuallyIncome();
                 entry.amount = TwoDecimalRounder.roundTwoDecimals(item.priceMatrix.get(dateString), precision);
                 entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getPriceMatrixWithoutTax(dateString), precision);
                 
@@ -239,7 +239,7 @@ public class OrderDailyBreaker {
             entry.amountExTax = TwoDecimalRounder.roundTwoDecimals((total / taxFactor), precision);
             entry.incrementalOrderId = order.incrementOrderId;
             entry.date = i.date;
-            entry.isActualIncome = true;
+            entry.isActualIncome = item.getProduct().isActuallyIncome();
             if (order.overrideAccountingDate != null)
                 entry.date = order.overrideAccountingDate;
             entry.accountingNumber = getAccountingNumberForProduct(item);
@@ -255,7 +255,7 @@ public class OrderDailyBreaker {
         entry.cartItemId = item.getCartItemId();
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
-        entry.isActualIncome = true;
+        entry.isActualIncome = item.getProduct().isActuallyIncome();
         entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmount(), precision);
         entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalEx(), precision);
         entry.date = order.rowCreatedDate;

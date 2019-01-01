@@ -80,6 +80,7 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
                 $cartItemFromTab = $this->getItemFromTab($newItem['cartitemid']);
                 $cartItemFromTab->product->price = $newItem['price'];
                 $cartItemFromTab->count = $newItem['count'];
+                $cartItemFromTab->overridePriceIncTaxes = null;
                 $itemsToCheck[] = $cartItemFromTab;
             }
         }
@@ -141,7 +142,10 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         $kitchenPrinterId = $this->getSelectedKitchenPrinter();
         
         $tab = $this->getCurrentTab();
-        $this->getApi()->getPosManager()->completeTransaction($tab->id, $this->getCurrentOrder()->id, $receiptPrinterId, $kitchenPrinterId);
+        
+        $metaData = isset($_POST['data']['gsextradatafromprecheck']) ? $_POST['data']['gsextradatafromprecheck'] : array();
+        
+        $this->getApi()->getPosManager()->completeTransaction($tab->id, $this->getCurrentOrder()->id, $receiptPrinterId, $kitchenPrinterId, $metaData);
         unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment']);
         
         $totalForTab = $this->getApi()->getPosManager()->getTotal($tab->id);
@@ -290,6 +294,24 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->completeCurrentOrder();
         unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid']);
+    }
+
+    public function getNameOfPaymentMethod($paymentAppId) {
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication($paymentAppId);
+        $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        return $instance->getName();
+    }
+
+    public function getRemainingGiftCard() {
+        $giftCard = $this->getApi()->getGiftCardManager()->getGiftCard($_POST['data']['code']);
+        
+        if (!$giftCard) {
+            echo "0";
+            die();
+        }
+        
+        echo $giftCard->remainingValue;
+        die();
     }
 }
 ?>

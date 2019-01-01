@@ -1,10 +1,11 @@
 <?
 /* @var $this \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
 $cashwithdrawalective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "cashwithdrawal" ? "active" : "";
+$changeuserview = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "changeuserview" ? "active" : "";
 $tablesective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables" ? "active" : "";
 $views = $this->getApi()->getPosManager()->getViews();
 $hasTables = $this->getApi()->getPosManager()->hasTables();
-$tabActive = !$this->getCurrentTab() ? "cash_disabled" : "";
+$tabActive = !$this->getCurrentTab() ? "cash_disabled gs_disabled" : "";
 ?>
 
 <div class='topmenu'>
@@ -72,5 +73,15 @@ $tabActive = !$this->getCurrentTab() ? "cash_disabled" : "";
     <?
     }
     ?>
+    
+    <div gs_precheck='app.SalesPointNewSale.checkIfDisabled' class='entry' gstype='numpad' numpadgsmethod='addGiftCart' gsnumpadtitle='Please enter gift card value'>
+        <i class='fa fa-gift'></i>
+        Sell giftcard
+    </div>
+    
+    <div gs_precheck='app.SalesPointNewSale.checkIfDisabled' class='entry changeuserview <? echo $changeuserview; ?>' gsclick='activateView' view='changeuserview'>
+        <i class='fa fa-users'></i>
+        Change User
+    </div>
     
 </div>

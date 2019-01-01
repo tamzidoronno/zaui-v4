@@ -128,6 +128,11 @@ public class Cart extends DataCommon {
     private Double getCartItemTotal(CartItem cartItem) {
         Product product = cartItem.getProduct();
         double usePrice = product.price;
+        
+        if (cartItem.overridePriceIncTaxes != null) {
+            usePrice = cartItem.overridePriceIncTaxes;
+        }
+        
         return usePrice * cartItem.getCount();
     }
     

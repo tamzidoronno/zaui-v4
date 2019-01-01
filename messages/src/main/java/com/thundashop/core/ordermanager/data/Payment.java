@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -23,8 +24,9 @@ public class Payment implements Serializable {
     public List<Date> triedAutoPay = new ArrayList();
     public boolean captured = false;
     public HashMap<String, String> callBackParameters = new HashMap();
+    public Map<String, String> metaData = new HashMap();
     public String paymentId = "";
-
+    
     public String readablePaymentType() {
         if(paymentType.contains("\\")) {
             return paymentType.substring(paymentType.indexOf("\\")+1);

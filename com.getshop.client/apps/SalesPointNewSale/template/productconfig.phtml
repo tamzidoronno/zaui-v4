@@ -7,13 +7,12 @@ $extras = $product->extras;
 foreach ($extras as $extra) {
     echo "<div class='extraoptiongroup' type='$extra->type' extraid='$extra->id'>";
         echo "<h2>".$extra->name."</h2>";
-        $checked = $extra->type == "checkbox" ? "checked" : "";
 
         foreach ($extra->extras as $option) {
         ?>
             <div class="product checkbox">
 
-                <div class="checkboxinner <? echo $checked; ?>" optionid="<? echo $option->optionsubid; ?>">
+                <div class="checkboxinner" optionid="<? echo $option->optionsubid; ?>">
                     <i class="fa fa-check-circle"></i>
                     <i class="fa fa-circle"></i>
                 </div>

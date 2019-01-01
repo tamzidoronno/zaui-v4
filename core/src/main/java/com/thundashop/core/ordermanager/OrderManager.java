@@ -23,6 +23,7 @@ import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
+import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -152,6 +153,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private GetShopApplicationPool getShopApplicationPool; 
     
     @Autowired
+    private GiftCardManager giftCardManager;
+    
+    @Autowired
     private GetShopPullService getShopPullService; 
     private boolean queuedEmptied = false;
     
@@ -190,8 +194,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(CartItem item : credited.cart.getItems()) {
             item.setCount(item.getCount() * -1);
         }
-        incrementingOrderId++;
-        credited.incrementOrderId = incrementingOrderId;
+        
+        credited.incrementOrderId = getNextIncrementalOrderId();
         credited.isCreditNote = true;
         credited.status = Order.Status.CREATED;
         credited.parentOrder = order.id;
@@ -332,6 +336,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void markAsPaidInternal(Order order, Date date, Double amount) {
         checkPaymentDateValidation(order, date);
         
+        giftCardManager.createNewCards(order);
+        
+        if (order.isGiftCard()) {
+            giftCardManager.registerOrderAgainstGiftCard(order, amount);
+        }
+        
         order.paymentDate = date;
         order.status = Order.Status.PAYMENT_COMPLETED;
         order.captured = true;
@@ -344,6 +354,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order.payment != null && order.payment.transactionLog != null) {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
         }
+        
+        saveObject(order);
     }
     
     private void unMarkPaidOrder(Order order) {
@@ -845,11 +857,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         finalizeCart(order.cart);
         
         if (!dummy) {
-            incrementingOrderId++;
-            order.incrementOrderId = incrementingOrderId;
+            order.incrementOrderId = getNextIncrementalOrderId();
         } else {
             order.incrementOrderId = -1;
         }
+        
+        order.setOverridePricesFromCartItem();
         
         order.doFinalize();
         if (!dummy) {
@@ -3039,5 +3052,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> o.parentOrder != null && o.parentOrder.equals(id))
                 .collect(Collectors.toList());
     }
+
+    private long getNextIncrementalOrderId() {
+        incrementingOrderId++;
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        if (settings.incrementalOrderId > incrementingOrderId) {
+            return settings.incrementalOrderId;
+        }
+        
+        return incrementingOrderId;
+    }
+
+    @Override
+    public void setNewStartIncrementalOrderId(long incrementalOrderId, String password) {
+        if (!password.equals("9adsf9023749haskdfh213847h7shafdiuhqw741hyiuher")) {
+            return;
+        }
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        settings.incrementalOrderId = incrementalOrderId;
+        saveObject(settings);
+    }
+
     
 }

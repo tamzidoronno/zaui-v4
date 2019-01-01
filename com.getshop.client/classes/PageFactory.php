@@ -460,6 +460,10 @@ class PageFactory {
         $row->addColumn("300e2528-8518-411b-b343-28ad83eced77", "259188e6-3cba-4829-baa5-4e3eec71caf0");
         $this->pages['tables'] = $page;
         
+        $page = new \ModulePage("giftcards", "salespoint");
+        $row = $page->createRow();
+        $row->addColumn("8a98611e-bfb4-437e-af0d-561a882b0777", "1dabc933-bfa4-4ccd-baf9-2cb6e91d849d");
+        $this->pages['giftcards'] = $page;
     }
 
     public function createIntranetPages() {

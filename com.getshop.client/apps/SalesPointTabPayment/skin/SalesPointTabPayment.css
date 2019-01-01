@@ -132,5 +132,13 @@
 }
 .SalesPointTabPayment .show_edit_user.edit_user_btn i {
     font-size: 14px;
-    
+}
+
+.SalesPointTabPayment .giftcardcode {
+    text-align: center;
+}
+
+.SalesPointTabPayment .giftcardvalue {
+    height: 50px;
+    line-height: 50px;
 }

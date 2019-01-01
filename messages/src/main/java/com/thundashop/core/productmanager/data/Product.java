@@ -333,4 +333,15 @@ public class Product extends DataCommon implements Comparable<Product>  {
         
         return toAdd;
     }
+
+    /**
+     * If this product should not be counted in the income-report it will return false.
+     * 
+     * Example, giftcards and cash withdrawal are not products that should generate any income.
+     * 
+     * @return 
+     */
+    public boolean isActuallyIncome() {
+        return !id.equals("giftcard");
+    }
 }

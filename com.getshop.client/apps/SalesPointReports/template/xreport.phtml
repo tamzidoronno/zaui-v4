@@ -23,7 +23,7 @@ $ordersGrouped = array();
 foreach ($orders as $order) {
     $terminalData = $this->getApi()->getOrderManager()->getTerminalInformation($order->id);
     $paymentTypeArr = explode("\\", $order->payment->paymentType);
-    $paymentType = $paymentTypeArr[1];
+    $paymentType = $this->getPaymentMethodName($paymentTypeArr[0]);
     
     if ($terminalData) {
         $paymentType .= " - ".ucfirst(strtolower(trim($terminalData->issuerName)))."";

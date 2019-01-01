@@ -299,12 +299,24 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
     }
     
     public function updatePmsRights() {
-        $menu = new \ModulePage(null);
+        $menu = new \ModulePage(null, "pms");
         $user = $this->getUser();
         $user->pmsPageAccess = array();
         foreach($menu->getTopMenuPms()->getEntries() as $entry) {
             if($_POST['data'][$entry->getPageId()] == "true") {
                 $user->pmsPageAccess[] = $entry->getPageId();
+            }
+        }
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
+    public function updateSalesPointRights() {
+        $menu = new \ModulePage(null, "salespoint");
+        $user = $this->getUser();
+        $user->salesPointPageAccess = array();
+        foreach($menu->getTopMenuSalesPoint()->getEntries() as $entry) {
+            if($_POST['data'][$entry->getPageId()] == "true") {
+                $user->salesPointPageAccess[] = $entry->getPageId();
             }
         }
         $this->getApi()->getUserManager()->saveUser($user);
@@ -348,6 +360,12 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
     public function changePassword() {
         $user = $this->getUser();
         $this->getApi()->getUserManager()->updatePasswordSecure($user->id, $_POST['data']['password']);
+    }
+    
+    public function changePinCode() {
+        $user = $this->getUser();
+        $user->secondaryLoginCode = $_POST['data']['pincode'];
+        $this->getApi()->getUserManager()->saveUser($user);
     }
     
     public function regeneratTotpKey() {

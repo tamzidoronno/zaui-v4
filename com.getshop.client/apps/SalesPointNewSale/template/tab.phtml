@@ -70,36 +70,59 @@ if (count($taxesToSelectBetween) || $tab->tabTaxGroupId) {
 $cartItems = $tab->cartItems;
 foreach ($cartItems as $item) {
     $foodIcon = $item->product->isFood ? "<i title='Food' class='fa fa-cutlery'></i> " : "";
+    
+    $priceToUse = $item->product->price;
+    
+    if ($item->overridePriceIncTaxes) {
+        $priceToUse = $item->overridePriceIncTaxes;
+    }
+        
+    $priceText = $this->getPriceHtml($item);
+    
     echo "<div class='cartitemline' cartitemid='$item->cartItemId'>";
         echo "<div class='col count'>".$item->count."</div>";
         echo "<div class='col productname'>$foodIcon".$item->product->name."</div>";
-        echo "<div class='col price'>".$item->product->price."</div>";
+        echo "<div class='col price'>".$priceText."</div>";
         
         echo "<div class='details'>";
         
-        if (count((array)$item->product->selectedExtras)) {
-            
-            foreach ($item->product->selectedExtras as $optionId => $extraIds) {
-                echo "<div class='row_for_extras'>";
-                    $extraOption = $this->getExtraOption($item->product->extras, $optionId);
-                    
-                    echo "<b>".$extraOption->name."</b>:";
-                    $i = 0;
-                    foreach ($extraIds as $extraId) {
-                        $i++;
-                        $extraOptionSub = $this->getExtraOption($extraOption->extras, $extraId);
-                        echo $extraOptionSub->name;
-                        if ($i < count($extraIds)) {
-                            echo ",";
+            if (count((array)$item->product->selectedExtras)) {
+
+                foreach ($item->product->selectedExtras as $optionId => $extraIds) {
+                    echo "<div class='row_for_extras'>";
+                        $extraOption = $this->getExtraOption($item->product->extras, $optionId);
+
+                        echo "<b>".$extraOption->name."</b>:";
+                        $i = 0;
+                        foreach ($extraIds as $extraId) {
+                            $i++;
+                            $extraOptionSub = $this->getExtraOption($extraOption->extras, $extraId);
+                            echo $extraOptionSub->name;
+                            if ($i < count($extraIds)) {
+                                echo ",";
+                            }
                         }
-                    }
-                echo "</div>";
+                    echo "</div>";
+                }
             }
-        }
-        
-        echo '<i class="gs_shop_small_icon fa fa-trash removefromtab"></i> ';
-        echo $this->__f("Count").": <input class='changecount' value='".$item->count."'/> ";
-        echo $this->__f("Price").": <input class='changeprice' value='".$item->product->price."'/>";
+            
+            echo "<input class='gsniceinput1 changecount' value='".$item->count."' gstype='numpad' gsnumpadtitle='Please enter new count'/> ";
+            echo " x <input class='gsniceinput1 changeprice' value='".$priceToUse."' gstype='numpad' gsnumpadtitle='Please enter new price'/>";
+            ?>
+
+            <span class="gs_shop_small_icon" title="<? echo $this->__f("Discount"); ?>" cartitemid='<? echo $item->cartItemId; ?>' gstype='numpad' gsmethod='methodToExecute' gsnumpadtitle='Please enter discount percent' gsnumpad_on_ok='app.SalesPointNewSale.itemDiscountChange'>
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-certificate fa-stack-2x"></i>
+                    <i class="fa fa-tag fa-stack-1x fa-inverse"></i>
+                </span> 
+            </span>
+
+            <span class="gs_shop_small_icon removefromtab">
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-stack-2x  fa-trash "></i>
+                </span> 
+            </span>
+            <?
         echo "</div>";
     echo "</div>";
 }
@@ -112,10 +135,18 @@ foreach ($cartItems as $item) {
     
     if ($tab->cashWithDrawal) {
     ?>
-
         <div>
             + Cash withdraw: <? echo $tab->cashWithDrawal; ?>
         </div>
     <? } ?>
     
+</div>
+
+<div class="tabmenu">
+    <span class="gs_shop_small_icon" title="<? echo $this->__f("Tab discount"); ?>" gstype='numpad' gsnumpadtitle='Please enter discount percent' gsnumpad_on_ok='app.SalesPointNewSale.setTabDiscount'>
+        <span class="fa-stack fa-lg">
+            <i class="fa fa-certificate fa-stack-2x"></i>
+            <i class="fa fa-tag fa-stack-1x fa-inverse"></i>
+        </span> 
+    </span>
 </div>

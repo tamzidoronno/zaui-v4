@@ -7,7 +7,7 @@ $taxes = $this->getApi()->getProductManager()->getTaxes();
 
 Default tax:
 <div>
-    <select class="gsniceselect1">
+    <select class="gsniceselect1 defaulttax" gschange='setDefaultTaxRate'>
     <?
         foreach ($taxes as $tax) {
             $selected = $product->taxGroupObject && $product->taxGroupObject->id == $tax->id ? "selected='true'" : "";

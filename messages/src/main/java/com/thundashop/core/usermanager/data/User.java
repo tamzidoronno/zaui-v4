@@ -36,6 +36,7 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean triedToFetch = false;
     public boolean suspended = false;
     public boolean visibleOnlyInMainCompany = false;
+   
     
     /**
      * This is set true if the user of this is 100% 
@@ -49,6 +50,8 @@ public class User extends DataCommon implements Comparable<User> {
     public Date lastOrdered = null;
     public Double orderAmount = 0.0;
     public List<String> pmsPageAccess = new ArrayList();
+    
+    public List<String> salesPointPageAccess = new ArrayList();
     
     public List<String> hasAccessToModules = new ArrayList();
     
@@ -332,6 +335,9 @@ public class User extends DataCommon implements Comparable<User> {
     public String accountingId = "";
     public String referenceKey = "";
     public String pinCode = null;
+    
+    @Administrator
+    public String secondaryLoginCode = null;
     public boolean isCompanyOwner = false;
     
     /**

@@ -2,7 +2,8 @@
 namespace ns_57db782b_5fe7_478f_956a_ab9eb3575855;
 
 class SalesPointNewSale extends SalesPointCommon implements \Application {
-
+    public $errorMsg = "";
+    public $userChanged = false;
     
     public function getDescription() {
         
@@ -24,6 +25,11 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
 
     public function render() {
         if ($this->preRender()) {
+            return;
+        }
+        
+        if ($this->userChanged) {
+            echo "<script>document.location = document.location</script>";
             return;
         }
         
@@ -146,14 +152,17 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     public function changePrice() {
         $tab = $this->getCurrentTab();
-        foreach ($tab->cartItems as $item) {
-            if ($item->cartItemId == $_POST['data']['cartitemid']) {
-                $item->product->price = $_POST['data']['price'];
-                $this->getApi()->getPosManager()->addToTab($tab->id, $item);
-                echo $_POST['data']['price'].";".$this->getApi()->getPosManager()->getTotal($tab->id);
-                die();
-            }
-        }
+        $item = $this->getApi()->getPosManager()->setNewProductPrice($tab->id, $_POST['data']['cartitemid'], $_POST['data']['price']);
+        echo $this->getPriceHtml($item).";".$this->getApi()->getPosManager()->getTotal($tab->id);
+        die();
+    }
+    
+    public function changeDiscount() {
+        $tab = $this->getCurrentTab();
+        $item = $this->getApi()->getPosManager()->setDiscountToCartItem($tab->id, $_POST['data']['cartitemid'], $_POST['data']['discountValue']);
+        $priceToUse = $item->overridePriceIncTaxes ? $item->overridePriceIncTaxes : $item->product->price;
+        echo $this->getPriceHtml($item).";".$this->getApi()->getPosManager()->getTotal($tab->id).";".$priceToUse;
+        die();
     }
     
     public function removeItemFromTab() {
@@ -208,6 +217,8 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             $this->includefile("cashwithdrawal");
         } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables") {
             $this->includefile("tables");
+        } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "changeuserview") {
+            $this->includefile("changeuserview");
         } else {
             $this->includefile("listview");
         }
@@ -261,6 +272,45 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             return;
         
         $this->getApi()->getPosManager()->changeTaxRate($tab->id, "");
+    }
+
+    public function getPriceHtml($item) {
+        $priceToUse = $item->product->price;
+        $oldPrice = "";
+
+        if ($item->overridePriceIncTaxes) {
+            $priceToUse = $item->overridePriceIncTaxes;
+            $oldPrice = "<span class='oldprice'>".$item->product->price."</span>";
+        }
+        
+        return $oldPrice.$priceToUse;
+    }
+    
+    public function setTabDiscount() {
+        $tab = $this->getCurrentTab();
+        $this->getApi()->getPosManager()->setTabDiscount($tab->id, $_POST['data']['discount']);
+    }
+    
+    public function changeUser() {
+        $user = $this->getApi()->getUserManager()->changeUserByUsingPinCode($_POST['data']['userid'], $_POST['data']['value']);
+        if (!$user) {
+            $this->errorMsg = $this->__f("Access Denied"); 
+            return;
+        }
+        
+        $this->userChanged = true;
+        \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
+    }
+
+    public function addGiftCart() {
+        $tab = $this->getCurrentTab();
+        
+        if (!$tab) {
+            $this->createNewTab();
+            $tab = $this->getCurrentTab();
+        }
+        
+        $this->getApi()->getPosManager()->addGiftCardToTab($tab->id, $_POST['data']['value']);
     }
 }
 ?>

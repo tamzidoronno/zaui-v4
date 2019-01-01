@@ -227,7 +227,7 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
         
         if (!$isCmsLayout) {
             echo '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">';
-            echo '<link rel="stylesheet" type="text/css" href="skin/default/gesthopmodules.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="skin/default/getshopmodules.css" />';
         }
         ?>
     <script>

@@ -11,10 +11,12 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
@@ -24,12 +26,18 @@ import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.ProductPriceOverride;
+import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,6 +72,9 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Autowired
     private ProductManager productManager;
+    
+    @Autowired
+    private GiftCardManager giftCardManager;
     
     /**
      * Never access this variable directly! Always 
@@ -153,8 +164,13 @@ public class PosManager extends ManagerBase implements IPosManager {
             }
             
             tab.cartItems.add(cartItem);
+            
+            if (tab.discount != null) {
+                setDiscountToCartItem(tab.id, cartItem.getCartItemId(), tab.discount);
+            }
+            
+            saveObject(tab);
         }
-        saveObject(tab);
     }
 
     @Override
@@ -212,10 +228,11 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId) {
+    public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId, HashMap<String, String> paymentMetaData) {
         Order order = orderManager.getOrder(orderId);
         
         if (!order.isFullyPaid() && !order.isSamleFaktura()) {
+            order.payment.metaData = paymentMetaData;
             orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order) + order.cashWithdrawal);
         }
         
@@ -236,6 +253,11 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         if (cashPointDeviceId != null) {
             invoiceManager.sendReceiptToCashRegisterPoint(cashPointDeviceId, order.id);
+            
+            giftCardManager.getGiftCardsCreatedByOrderId(order.id).stream()
+                    .forEach(giftCard -> {
+                        giftCardManager.printGiftCard(cashPointDeviceId, giftCard.id);
+                    });
         }
     }
 
@@ -367,10 +389,22 @@ public class PosManager extends ManagerBase implements IPosManager {
         PosTab tab = getTab(tabId);
         if (tab == null)
             return;
+
+        List<CartItem> clonedItems = new ArrayList();
         
+        tab.cartItems.stream().forEach(o -> {
+            try {
+                clonedItems.add((CartItem)o.clone());
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(PosManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
         Order order = new Order();
         order.cart = new Cart();
-        order.cart.addCartItems(tab.cartItems);
+        order.cart.addCartItems(clonedItems);
+        order.cashWithdrawal = tab.cashWithDrawal;
+        order.setOverridePricesFromCartItem();
         
         invoiceManager.sendOrderToGdsDevice(cashPointDeviceId, order);
     }
@@ -648,5 +682,93 @@ public class PosManager extends ManagerBase implements IPosManager {
         tab.tabTaxGroupId = taxGroupNumber;
         
         saveObject(tab);
+    }
+
+    @Override
+    public CartItem setNewProductPrice(String tabId, String cartItemId, double newValue) {
+        String userId = getSession().currentUser.id;
+        ProductPriceOverride override = new ProductPriceOverride(userId, "New fixed price set", newValue, ProductPriceOverrideType.fixedprice, "direct");
+        addOverridePrice(tabId, cartItemId, override);
+        
+        CartItem cartItem = getCartItem(tabId, cartItemId);
+        return cartItem;
+    }        
+
+    @Override
+    public CartItem setDiscountToCartItem(String tabId, String cartItemId, double newValue) {
+        String userId = getSession().currentUser.id;
+        ProductPriceOverride override = new ProductPriceOverride(userId, "New discount", newValue, ProductPriceOverrideType.discountpercent, "direct");
+        addOverridePrice(tabId, cartItemId, override);
+        
+        CartItem cartItem = getCartItem(tabId, cartItemId);
+        return cartItem;
+    }
+    
+    private void addOverridePrice(String tabId, String cartItemId, ProductPriceOverride override) throws ErrorException {
+        PosTab tab = getTab(tabId);
+        if (tab == null) {
+            return;
+        }
+        
+        CartItem cartItem = getCartItem(tabId, cartItemId);
+        
+        String userId = getSession().currentUser.id;
+        
+        if (cartItem != null) {
+            int seq = cartItem.getOverridePriceHistoryCount();
+            override.setSequence(seq);
+            cartItem.addOverridePriceHistory(override, userId);
+            
+            saveObject(tab);
+        }
+    }
+    
+    private CartItem getCartItem(String tabId, String cartItemId) {
+        PosTab tab = getTab(tabId);
+        if (tab == null) {
+            return null;
+        }
+        
+        return tab.cartItems.stream()
+            .filter(cartItem -> cartItem.getCartItemId().equals(cartItemId))
+            .findFirst()
+            .orElse(null);
+    }
+
+    @Override
+    public void setTabDiscount(String tabId, double discount) {
+        PosTab tab = getTab(tabId);
+        tab.discount = discount;
+        saveObject(tab);
+        updateCartItemsWithTabDiscount(tab);
+    }
+
+    private void updateCartItemsWithTabDiscount(PosTab tab) {
+        tab.cartItems.stream()
+                .filter(item -> item.overridePriceIncTaxes == null || tab.discount == null || tab.discount == 0)
+                .forEach(item -> {
+                    setDiscountToCartItem(tab.id, item.getCartItemId(), tab.discount);
+                });
+    }
+
+    @Override
+    public void addGiftCardToTab(String tabId, double value) {
+        PosTab tab = getTab(tabId);
+        
+        if (tab == null)
+            return;
+        
+        Product product = productManager.getProduct("giftcard");
+        
+        if (product == null) {
+            productManager.createGiftCardProduct();
+            product = productManager.getProduct("giftcard");
+        }
+        
+        CartItem cartItem = new CartItem();
+        cartItem.setCount(1);
+        cartItem.setProduct(product);
+        cartItem.getProduct().price = value;
+        addToTab(tabId, cartItem);
     }
 }

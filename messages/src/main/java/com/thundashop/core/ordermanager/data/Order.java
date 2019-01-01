@@ -393,6 +393,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         sentToCustomerDate = null;
     }
 
+    public void setOverridePricesFromCartItem() {
+        if (cart != null) {
+            cart.getItems().stream()
+                    .forEach(item -> {
+                        item.updateOverridePricesToProduct();
+                    });
+        }
+    }
+
     public void markAsSent(String type, String adress) {
         OrderShipmentLogEntry entry = new OrderShipmentLogEntry();
         entry.date = new Date();
@@ -1208,6 +1217,13 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public boolean isDibs() {
         if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("dibs")) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isGiftCard() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("giftcard")) {
             return true;
         }
         return false;

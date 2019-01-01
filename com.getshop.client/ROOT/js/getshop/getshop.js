@@ -263,6 +263,11 @@ thundashop.Ajax = {
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
         $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
         $(document).on('click','*[gstype="downloadpdf"]', thundashop.Ajax.downloadPdf);
+        $(document).on('click','*[gstype="numpad"]', thundashop.Ajax.showGetShopNumpad);
+    },
+    
+    showGetShopNumpad: function() {
+        getshopnumpad.show(this);
     },
     
     downloadPdf: function() {
@@ -415,6 +420,10 @@ thundashop.Ajax = {
     
     postgeneral: function() {
         var method = $(this).attr('gsclick');
+        
+        if ($(this).attr('numpadgsmethod')) {
+            method = $(this).attr('numpadgsmethod');
+        }
         
         var data = {};
         
@@ -1197,5 +1206,98 @@ thundashop.framework = {
         if($('.gsoverlay2').is(':visible')) { thundashop.framework.reloadOverLayType2(); }
     }
 }
+
+getshopnumpad = {
+    isPassword : false,
+    
+    init: function() {
+        $(document).on('click', '.gs_numpad_element', getshopnumpad.elementClicked);
+    },
+    
+    elementClicked: function() {
+        var value = $(this).attr('value');
+        
+        if (value == "CANCEL") {
+            getshopnumpad.close();
+            return;
+        }
+        
+        if (value == "OK") {
+            getshopnumpad.execute();
+            return;
+        }
+        
+        var innerPad = $(this).closest('.innernumpad').find('.numpadvalue');
+        var newText = "";
+        
+        if (value == "x") {
+            newText = innerPad.attr('value').slice(0,-1);
+        } else {
+            newText = innerPad.attr('value') + value;
+        }
+        
+        var displayText = getshopnumpad.isPassword ? newText.replace(/./g, '*') : newText;
+        innerPad.text(displayText);
+        innerPad.attr('value', newText);
+    },
+    
+    close: function() {
+        $('.gsnumpad').hide();
+    },
+    
+    execute: function() {
+        var innerPad = $('.gsnumpad').find('.numpadvalue');
+        var newValue = innerPad.attr('value');
+        
+        if (!newValue) 
+            newValue = 0;
+        
+        if ($(getshopnumpad.fromTarget).is('input')) {
+            $(getshopnumpad.fromTarget).val(newValue);
+        } else {
+            $(getshopnumpad.fromTarget).attr('value', newValue);
+        }
+        
+        getshopnumpad.close();
+        $(getshopnumpad.fromTarget).trigger('change');
+        
+        var javaScriptFunction = $(getshopnumpad.fromTarget).attr('gsnumpad_on_ok');
+        if (javaScriptFunction) {
+            var toExecute = new Function ("newValue", "fromTarget", javaScriptFunction+"(newValue, fromTarget)");
+            toExecute.call(getshopnumpad.fromTarget, newValue, getshopnumpad.fromTarget);
+        }
+        
+        var gsMethodToExecute = $(getshopnumpad.fromTarget).attr('numpadgsmethod');
+        if (gsMethodToExecute) {
+            thundashop.Ajax.postgeneral.apply(getshopnumpad.fromTarget);
+        }
+    },
+    
+    show: function(fromTarget) {
+        getshopnumpad.isPassword = $(fromTarget).attr('gsnumpadispassword') === "true";
+        
+        var numpad = $('.gsnumpad');
+        var title = $(fromTarget).attr('gsnumpadtitle');
+        
+        var oldValue = $(fromTarget).attr('value');
+        
+        if ($(fromTarget).is('input')) {
+            oldValue = $(fromTarget).val();
+        }
+        
+        if (!oldValue) {
+            oldValue = "";
+        }
+        
+        var displayText = getshopnumpad.isPassword ? oldValue.replace(/./g, '*') : oldValue;
+        getshopnumpad.fromTarget = fromTarget;
+        numpad.find('.numpadtitle').text(title);
+        numpad.find('.numpadvalue').text(displayText);
+        numpad.find('.numpadvalue').attr('value', oldValue);
+        numpad.show();
+    }
+}
+
+getshopnumpad.init();
 
 thundashop.framework.init();

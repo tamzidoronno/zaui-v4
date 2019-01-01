@@ -21,4 +21,10 @@ public class OrderManagerSettings extends DataCommon {
      * Note, its all orders until this date, not including.
      */
     public Date closedTilPeriode = null;
+    
+    /**
+     * If this orderId is higher then the current incrementalOrderId it will
+     * uses this one from the very next order created
+     */
+    public long incrementalOrderId = 0;
 }

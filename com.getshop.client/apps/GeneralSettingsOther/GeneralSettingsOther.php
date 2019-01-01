@@ -328,5 +328,8 @@ class GeneralSettingsOther extends \WebshopApplication implements \Application {
         return $countries;
     }
 
+    public function changeStartOrderId() {
+        $this->getApi()->getOrderManager()->setNewStartIncrementalOrderId($_POST['data']['incrementalorderid'], $_POST['data']['password']);
+    }
 }
 ?>

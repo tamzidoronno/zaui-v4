@@ -261,6 +261,13 @@ $slaves = $this->getApi()->getStoreManager()->getSlaves();
                 <input type="txt" class="gsniceinput1" gsname="domain">
                 <span class="shop_button" gstype="submit">Add address</span>
             </div>
+            
+            <div gstype="form" method="changeStartOrderId" style='margin-top: 50px; margin-bottom: 50px;'>
+                <div style="font-size:16px;text-align: left;">Change start order id</div>
+                <input type="txt" class="gsniceinput1" gsname="incrementalorderid" placeholder='10000'>
+                <input type="txt" class="gsniceinput1" gsname="password" placeholder='password'>
+                <span class="shop_button" gstype="submit">Set start create orderid</span>
+            </div>
 
             <div style="text-align: left">
                 <?php

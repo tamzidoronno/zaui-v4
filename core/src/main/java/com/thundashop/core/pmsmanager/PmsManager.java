@@ -60,6 +60,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.ratemanager.BookingComRateManagerManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.stripe.StripeManager;
 import com.thundashop.core.ticket.Ticket;
 import com.thundashop.core.ticket.TicketManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -145,6 +146,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     CartManager cartManager;
 
+    @Autowired
+    StripeManager stripeManager;
+    
     @Autowired
     DoorManager doorManager;
 
@@ -9354,14 +9358,82 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void cleanupOrdersThatDoesNoLongerExists() {
         bookings.values().stream()
-                .forEach(b -> {
-                    for (String orderId : b.orderIds) {
-                        Order order = orderManager.getOrderSecure(orderId);
-                        if (order == null) {
-                            b.orderIds.remove(orderId);
-                            saveObject(b);
-                        }
+        .forEach(b -> {
+            for (String orderId : b.orderIds) {
+                Order order = orderManager.getOrderSecure(orderId);
+                if (order == null) {
+                    b.orderIds.remove(orderId);
+                    saveObject(b);
+                }
+            }
+        });
+    }
+
+    @Override
+    public List<PmsWubookCCardData> getCardsToSave() {
+        PmsConfiguration config = getConfigurationSecure();
+        if(!config.wubookAutoCharging) {
+            config.wubookAutoCharging = true;
+            saveConfiguration(config);
+        }
+        
+        
+        List<PmsBooking> allbookings = getAllBookings(null);
+        List<PmsWubookCCardData> resultToReturn = new ArrayList();
+        for(PmsBooking book : allbookings) {
+            if(!book.tryAutoCharge) {
+                continue;
+            }
+            
+            PmsWubookCCardData test = new PmsWubookCCardData();
+            test.bookingId = book.id;
+            test.userId = book.userId;
+            test.reservationCode = book.getHigestReservationCode();
+            User usr = userManager.getUserById(test.userId);
+            if(usr != null) {
+                test.email = usr.emailAddress;
+            }
+            if(test.email == null || !test.email.contains("@")) {
+                test.email = "noemail@getshop.com";
+            }
+            book.tryAutoCharge = false;
+            saveBooking(book);
+            resultToReturn.add(test);
+        }
+        return resultToReturn;
+    }
+
+    @Override
+    public void doChargeCardFromAutoBooking(String bookingId) {
+        System.out.println("need to charge booking : "+ bookingId);
+        PmsBooking booking = getBooking(bookingId);
+        User usr = userManager.getUserById(booking.userId);
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrder(orderId);
+            if(ord.status == Order.Status.CREATED) {
+                boolean charged = false;
+                for(UserCard card : usr.savedCards) {
+                    if(charged) { continue; }
+                    if(card.savedByVendor.equals("stripe")) {
+                        charged = stripeManager.chargeOrder(ord.id, card.id);
                     }
-                });
+                }
+                if(!charged) {
+                    String email = storeManager.getMyStore().configuration.emailAdress;
+                    if (!configuration.sendAdminTo.isEmpty()) {
+                        email = configuration.sendAdminTo;
+                    }
+                    messageManager.sendMail(email, email, "Failed to autocharge order" + ord.incrementOrderId, "We where not able to charge the card given by user", "post@getshop.com", "post@getshop.com");
+                } else {
+                    ord.payment.paymentType = "ns_3d02e22a_b0ae_4173_ab92_892a94b457ae\\StripePayments";
+                    orderManager.saveOrderInternal(ord);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void wubookCreditCardIsInvalid(String bookingId, String reason) {
+        logEntry("Credit card is invalid from channel manager msg: " + reason, bookingId, null);
     }
 }

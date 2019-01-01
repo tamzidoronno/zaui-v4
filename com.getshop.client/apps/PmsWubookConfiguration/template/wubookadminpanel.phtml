@@ -1,12 +1,13 @@
 <?php /* @var $this \ns_2b4a865c_6aed_416e_bf52_ab6e2428bd1f\PmsWubookConfiguration */
 
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-$callbackactive = $config->wubookcallbackactivated ? "<span style='color:green;'>callback is active</span>" : "<span style='color:red;'>callback is not active</span>";
+$callbackactive = $config->wubookcallbackactivated ? "<div style='color:green;'>callback is active</div>" : "<span style='color:red;'>callback is not active</span>";
+$autochargeactive = $config->wubookAutoCharging ? "<div style='color:green;'>Autocharging of credit cards are active</div>" : "";
 $callbackurl = $this->getApi()->getWubookManager()->getCallbackUrl($this->getSelectedMultilevelDomainName());
 ?>
 <br>
     <div class='section'>
-        <h2>Actions available, <?php echo $callbackactive; ?></h2>
+        <h2>Actions available, <?php echo $callbackactive . $autochargeactive; ?></h2>
         <div>
             <?php echo "Callback url will be: " .$callbackurl; ?>
         </div>

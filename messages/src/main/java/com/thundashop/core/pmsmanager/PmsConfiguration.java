@@ -296,6 +296,7 @@ public class PmsConfiguration extends DataCommon {
     public String sendAdminTo = "";
     
     /* Wubook settings */
+    public boolean wubookAutoCharging = false;
     public String wubookusername = "";
     @Administrator
     public String wubookpassword = "";

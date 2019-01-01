@@ -75,6 +75,7 @@ public class PmsBooking extends DataCommon {
     public double totalUnsettledAmount = 0.0;
     Double unsettled;
     public boolean nonrefundable = false;
+    public boolean tryAutoCharge = false;
     
     @Administrator
     public String secretBookingId = "";
@@ -793,4 +794,21 @@ public class PmsBooking extends DataCommon {
     public int getTotalGuestCount() {
         return getActiveRooms().stream().mapToInt(room -> room.guests.size()).sum();
     }
+    
+    
+    String getHigestReservationCode() {
+        long highestCode = -1;
+        String curCode = wubookreservationid;
+        if(curCode != null && !curCode.isEmpty()) {
+            highestCode = new Long(curCode);
+        }
+        for(String code : wubookModifiedResId) {
+            long tmp = new Long(code);
+            if(tmp > highestCode) {
+                highestCode = tmp;
+            }
+        }
+        return highestCode + "";
+    }
+
 }

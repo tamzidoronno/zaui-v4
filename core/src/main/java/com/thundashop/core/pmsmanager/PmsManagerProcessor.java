@@ -1018,6 +1018,8 @@ public class PmsManagerProcessor {
             return;
         }
         
+        boolean hasAutoCharge = manager.getConfigurationSecure().wubookAutoCharging;
+        
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         
@@ -1052,6 +1054,10 @@ public class PmsManagerProcessor {
                 continue;
             }
             if(book.isSynxis()) {
+                continue;
+            }
+            
+            if(hasAutoCharge && !book.isOld(10) && book.isWubook()) {
                 continue;
             }
             

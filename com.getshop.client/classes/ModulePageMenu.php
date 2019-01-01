@@ -81,10 +81,11 @@ class ModulePageMenu {
                 <div class='gs_numpad_element' value='3'>3</div>
                 <div class='gs_numpad_element' value='2'>2</div>
                 <div class='gs_numpad_element' value='1'>1</div>
-                <div class='gs_numpad_element v2' value='x'><-</div>
+                <div class='gs_numpad_element' value='-'>+/-</div>
                 <div class='gs_numpad_element' value='6'>6</div>
                 <div class='gs_numpad_element' value='5'>5</div>
                 <div class='gs_numpad_element' value='4'>4</div>
+                <div class='gs_numpad_element' value='x'><-</div>
                 <div class='gs_numpad_element' value='9'>9</div>
                 <div class='gs_numpad_element' value='8'>8</div>
                 <div class='gs_numpad_element' value='7'>7</div>

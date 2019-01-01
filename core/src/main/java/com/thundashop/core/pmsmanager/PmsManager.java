@@ -9381,16 +9381,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> allbookings = getAllBookings(null);
         List<PmsWubookCCardData> resultToReturn = new ArrayList();
         for(PmsBooking book : allbookings) {
-            if(!frameworkConfig.productionMode) {
-                PmsWubookCCardData test = new PmsWubookCCardData();
-                test.bookingId = book.id;
-                test.userId = book.userId;
-                test.reservationCode = "34234";
-                test.email = "test@test.no";
-                List<PmsWubookCCardData> res = new ArrayList();
-                res.add(test);
-                return res;
-            }
             if(!book.tryAutoCharge) {
                 continue;
             }
@@ -9398,7 +9388,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             PmsWubookCCardData test = new PmsWubookCCardData();
             test.bookingId = book.id;
             test.userId = book.userId;
-            test.reservationCode = book.wubookreservationid;
+            test.reservationCode = book.getHigestReservationCode();
             User usr = userManager.getUserById(test.userId);
             if(usr != null) {
                 test.email = usr.emailAddress;
@@ -9440,5 +9430,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    @Override
+    public void wubookCreditCardIsInvalid(String bookingId, String reason) {
+        logEntry("Credit card is invalid from channel manager msg: " + reason, bookingId, null);
     }
 }

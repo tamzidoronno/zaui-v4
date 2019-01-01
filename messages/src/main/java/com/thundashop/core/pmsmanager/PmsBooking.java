@@ -794,4 +794,21 @@ public class PmsBooking extends DataCommon {
     public int getTotalGuestCount() {
         return getActiveRooms().stream().mapToInt(room -> room.guests.size()).sum();
     }
+    
+    
+    String getHigestReservationCode() {
+        long highestCode = -1;
+        String curCode = wubookreservationid;
+        if(curCode != null && !curCode.isEmpty()) {
+            highestCode = new Long(curCode);
+        }
+        for(String code : wubookModifiedResId) {
+            long tmp = new Long(code);
+            if(tmp > highestCode) {
+                highestCode = tmp;
+            }
+        }
+        return highestCode + "";
+    }
+
 }

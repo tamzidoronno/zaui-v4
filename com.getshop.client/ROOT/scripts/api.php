@@ -15,6 +15,8 @@ if (isset($event['username']) && isset($event['password'])) {
        header("HTTP/1.1 401 Unauthorized");
        return;
    }
+   unset($event['username']);
+   unset($event['password']);
 }
 
 $config = new ConfigReader();
@@ -32,6 +34,7 @@ if (!isset($event['args'])) {
 
 if(isset($event['getshop_fdsaf3234234fdsafsadbfdargsdfsahjoiuwenflksadnfueirhnb'])) {
     $event['args'] = json_decode($event['getshop_fdsaf3234234fdsafsadbfdargsdfsahjoiuwenflksadnfueirhnb']);
+    unset($event['getshop_fdsaf3234234fdsafsadbfdargsdfsahjoiuwenflksadnfueirhnb']);
 }
 
 $result = $commhelper->sendMessage($event);

@@ -7,6 +7,7 @@ package getshopstripe;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.stripe.exception.CardException;
 import com.stripe.model.Card;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -44,7 +45,7 @@ import org.apache.xmlrpc.XmlRpcException;
 public class GetShopPaymentProcessor {
     private List<AccountDetails> accounts = new ArrayList();
     private AccountDetails currentAccount;
-    private boolean isDevMode = true;
+    private boolean isDevMode = false;
     private boolean printDebug = true;
     private XmlRpcClient client;
     private String token = "";
@@ -64,8 +65,8 @@ public class GetShopPaymentProcessor {
             readAccounts();
             for(AccountDetails detail : accounts) {
                 logPrint("start", "Running autocarding for : " + detail.address);
-                currentAccount = detail;
-                if(isDevMode) {
+                currentAccount = detail; 
+               if(isDevMode) {
                     currentAccount.address = currentAccount.address.replace(".getshop", ".3.0.local.getshop");
                 }
                 try {
@@ -132,9 +133,14 @@ public class GetShopPaymentProcessor {
             //Save credit card
             GetShopStripe stripe = new GetShopStripe();
             logPrint("checkForCardsToSave", "Trying to save card into stripe " + booking.bookingId);
-            UserCard savedCard = stripe.saveCard(ccard.cardNumber, new Integer(ccard.expMonth), new Integer(ccard.expYear), key, booking.email);
-            saveCardInGetShop(savedCard, booking);
-            notifyChargeBooking(booking);
+            try {
+                UserCard savedCard = stripe.saveCard(ccard.cardNumber, new Integer(ccard.expMonth), new Integer(ccard.expYear), key, booking.email);
+                saveCardInGetShop(savedCard, booking);
+                notifyChargeBooking(booking);
+            }catch(CardException e) {
+                //Notify invalid card.
+                notifyInvalidCard(booking, e.getMessage());
+            }
         }
     }
 
@@ -177,7 +183,7 @@ public class GetShopPaymentProcessor {
             return true;
         }
         
-        client = new XmlRpcClient("https://wubook.net/xrws/");
+        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
 
         Vector<String> params = new Vector<String>();
         params.addElement(wubookusername);
@@ -291,5 +297,19 @@ public class GetShopPaymentProcessor {
         LinkedHashMap<String, String> args = new LinkedHashMap();
         args.put("bookingId", booking.bookingId);
         doApiCall("doChargeCardFromAutoBooking", "core.pmsmanager.IPmsManager", args);
+    }
+
+    private void notifyInvalidCard(PmsWubookCCardData booking, String message) throws IOException {
+        logPrint("saveCardInGetShop", "Notifying about invalid credit card " + booking.bookingId);
+        Gson gson = new Gson();
+        LinkedHashMap<String, String> args = new LinkedHashMap();
+        
+        if(message== null) {
+            message = "uknown reason";
+        }
+        
+        args.put("bookingId", booking.bookingId);
+        args.put("reason", gson.toJson(message));
+        doApiCall("wubookCreditCardIsInvalid", "core.pmsmanager.IPmsManager", args);
     }
 }

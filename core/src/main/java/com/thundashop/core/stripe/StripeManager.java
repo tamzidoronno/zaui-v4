@@ -127,6 +127,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                     customerParams.put("customer", card.card);
                     try {
                         Charge charge = Charge.create(customerParams);
+                        order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to charge card: " + card.mask + ", " + card.card + ", " + card.id);
                         if(charge.getPaid()) {
                             orderManager.markAsPaid(orderId, new Date(), amount);
                             return true;
@@ -135,10 +136,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                             orderManager.saveOrder(order);
                         }
                     }catch(Exception d) {
+                        order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to charge card: " + d.getMessage());
                         logPrintException(d);
                     }
                 }
             }
+            orderManager.saveOrderInternal(order);
         }catch(Exception e) {
             logPrintException(e);
             messageManager.sendErrorNotification("Stripe integration exception", e);

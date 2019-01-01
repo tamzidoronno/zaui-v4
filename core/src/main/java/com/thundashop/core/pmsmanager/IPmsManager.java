@@ -557,5 +557,8 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsWubookCCardData> getCardsToSave();
-    
+        
+    @Administrator
+    public void wubookCreditCardIsInvalid(String bookingId, String reason);
+
 }

@@ -36,45 +36,40 @@ public class GetShopStripe {
         Integer expYear = 21;
         
         GetShopStripe striper = new GetShopStripe();
-        UserCard savedCard = striper.saveCard(card, expMonth, expYear, key, "pal@getshop.com");
+//        UserCard savedCard = striper.saveCard(card, expMonth, expYear, key, "pal@getshop.com");
         
         
     }
     
-    public UserCard saveCard(String card, Integer expMonth, Integer expYear, String key, String email) {
+    public UserCard saveCard(String card, Integer expMonth, Integer expYear, String key, String email) throws Exception {
         Stripe.apiKey = key;
-        
-        try {
-            // Create a Customer:
-            Map<String, Object> chargeParams = new HashMap<>();
-            chargeParams.put("email", email);
-            //Somehow put this into the source and create the customer.
-            Customer customer = Customer.create(chargeParams);
-            
-            Map<String, Object> cardParams = new HashMap<String, Object>();
-            cardParams.put("object", "card");
-            cardParams.put("number", card);
-            cardParams.put("exp_month", expMonth);
-            cardParams.put("exp_year", expYear);
- 
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("source", cardParams);
-            Card savedCard = (Card)customer.getSources().create(params);
-            
-            UserCard ucard = new UserCard();
-            Card stripecard = savedCard;
-            ucard.expireMonth = stripecard.getExpMonth();
-            ucard.expireYear = stripecard.getExpYear();
-            ucard.card = customer.getId();
-            ucard.mask = stripecard.getLast4();
-            ucard.savedByVendor = "stripe";
-            ucard.id = stripecard.getId();
-            ucard.registeredDate = new Date();
-            return ucard;
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        // Create a Customer:
+        Map<String, Object> chargeParams = new HashMap<>();
+        chargeParams.put("email", email);
+        //Somehow put this into the source and create the customer.
+        Customer customer = Customer.create(chargeParams);
+
+        Map<String, Object> cardParams = new HashMap<String, Object>();
+        cardParams.put("object", "card");
+        cardParams.put("number", card);
+        cardParams.put("exp_month", expMonth);
+        cardParams.put("exp_year", expYear);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("source", cardParams);
+        Card savedCard = (Card)customer.getSources().create(params);
+
+        UserCard ucard = new UserCard();
+        Card stripecard = savedCard;
+        ucard.expireMonth = stripecard.getExpMonth();
+        ucard.expireYear = stripecard.getExpYear();
+        ucard.card = customer.getId();
+        ucard.mask = stripecard.getLast4();
+        ucard.savedByVendor = "stripe";
+        ucard.id = stripecard.getId();
+        ucard.registeredDate = new Date();
+        return ucard;
     }    
 
 }

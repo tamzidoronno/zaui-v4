@@ -194,8 +194,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(CartItem item : credited.cart.getItems()) {
             item.setCount(item.getCount() * -1);
         }
-        incrementingOrderId++;
-        credited.incrementOrderId = incrementingOrderId;
+        
+        credited.incrementOrderId = getNextIncrementalOrderId();
         credited.isCreditNote = true;
         credited.status = Order.Status.CREATED;
         credited.parentOrder = order.id;
@@ -857,8 +857,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         finalizeCart(order.cart);
         
         if (!dummy) {
-            incrementingOrderId++;
-            order.incrementOrderId = incrementingOrderId;
+            order.incrementOrderId = getNextIncrementalOrderId();
         } else {
             order.incrementOrderId = -1;
         }
@@ -3052,6 +3051,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .stream()
                 .filter(o -> o.parentOrder != null && o.parentOrder.equals(id))
                 .collect(Collectors.toList());
+    }
+
+    private long getNextIncrementalOrderId() {
+        incrementingOrderId++;
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        if (settings.incrementalOrderId > incrementingOrderId) {
+            return settings.incrementalOrderId;
+        }
+        
+        return incrementingOrderId;
+    }
+
+    @Override
+    public void setNewStartIncrementalOrderId(long incrementalOrderId, String password) {
+        if (!password.equals("9adsf9023749haskdfh213847h7shafdiuhqw741hyiuher")) {
+            return;
+        }
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        settings.incrementalOrderId = incrementalOrderId;
+        saveObject(settings);
     }
 
     

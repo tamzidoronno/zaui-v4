@@ -376,4 +376,6 @@ public interface IOrderManager {
      */
     @Administrator
     public void checkGroupInvoicing(String password);
+    
+    public void setNewStartIncrementalOrderId(long incrementalOrderId, String password);
 }

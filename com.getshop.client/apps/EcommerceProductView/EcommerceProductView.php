@@ -221,5 +221,17 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         $this->getApi()->getProductManager()->saveProduct($product);
     }
     
+    public function setDefaultTaxRate() {
+        $product = $this->getProduct();
+        $taxes = $this->getApi()->getProductManager()->getTaxes();
+        foreach ($taxes as $taxGroup) {
+            if ($taxGroup->id == $_POST['data']['gsvalue']) {
+                $product->taxGroupObject = $taxGroup;
+                $product->taxgroup = $taxGroup->groupNumber;
+                break;
+            }
+        }
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
 }
 ?>

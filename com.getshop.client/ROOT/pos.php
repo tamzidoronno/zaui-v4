@@ -19,7 +19,7 @@ $_SESSION['firstloadpage'] = true;
         <title><? echo $page->getTitle(); ?></title>
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">
-        <link rel="stylesheet" href="/skin/default/gesthopmodules.css">
+        <link rel="stylesheet" href="/skin/default/getshopmodules.css">
         <link rel="stylesheet" href="/skin/default/pos.css">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
 

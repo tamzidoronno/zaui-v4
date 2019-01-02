@@ -2,11 +2,11 @@
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
 import socket
-import fcntl
 import struct
 
 import uuid
 import pickledb
+import fcntl
 
 class config:
     def __init__(self):
@@ -21,8 +21,6 @@ class config:
         if not self.token:
             self.token = str(uuid.uuid4());
             commondatabase.set('token', self.token)
-
-        self.openVpnIp = self.getIp("tun0")
   
     def getIp(self, ifname):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

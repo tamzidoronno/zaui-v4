@@ -239,7 +239,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         PosTab tab = getTab(tabId);
         
         if (tab != null && kitchenDeviceId != null && !kitchenDeviceId.isEmpty()) {
-            printKitchen(tabId, kitchenDeviceId);
+            sendToKitchenInternal(kitchenDeviceId, tab, order.cart.getItems());
         }
         
         order.cart.getItems().stream()
@@ -632,7 +632,11 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (tab == null)
             return;
         
-        List<CartItem> itemsToPrint = tab.cartItems.stream()
+        sendToKitchenInternal(gdsDeviceId, tab, tab.cartItems);
+    }
+
+    private void sendToKitchenInternal(String gdsDeviceId, PosTab tab, List<CartItem> cartItems) {
+        List<CartItem> itemsToPrint = cartItems.stream()
                 .filter(item -> item.getProduct() != null && item.getProduct().isFood)
                 .collect(Collectors.toList());
         
@@ -656,7 +660,6 @@ public class PosManager extends ManagerBase implements IPosManager {
        
         gdsManager.sendMessageToDevice(gdsDeviceId, printMsg);
     }
-
     @Override
     public void changeTaxRate(String tabId, String taxGroupNumber) {
         PosTab tab = getTab(tabId);

@@ -1232,6 +1232,8 @@ getshopnumpad = {
         
         if (value == "x") {
             newText = innerPad.attr('value').slice(0,-1);
+        } else if(value == "-") {
+            newText = parseInt(innerPad.attr('value'), 10) * -1;
         } else {
             newText = innerPad.attr('value') + value;
         }

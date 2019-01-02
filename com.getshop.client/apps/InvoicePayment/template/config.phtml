@@ -56,6 +56,13 @@ $langauges['nb_no'] = "Norsk";
         </div>
     </div>
     <div class="textfield gss_setting"  id="ordertype">
+        <span class="title"><?php echo $this->__f("Phone number"); ?></span>
+        <input type="textfield" gs_model='invoicepaymentmodel' gs_model_attr='phoneNumber' value="<? echo $this->getConfigurationSetting("phoneNumber"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("This is the company name that will be printed on the invoice, example GetShop"); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="ordertype">
         <span class="title"><?php echo $this->__f("Post code"); ?></span>
         <input type="textfield" gs_model='invoicepaymentmodel' gs_model_attr='postCode' value="<? echo $this->getConfigurationSetting("postCode"); ?>">
         <div class="description">

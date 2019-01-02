@@ -1,13 +1,7 @@
-# To change this license header, choose License Headers in Project Properties.
-# To change this template file, choose Tools | Templates
-# and open the template in the editor.
-
-
 import uuid
 import pickledb
-import datetime
 import urllib, urllib2
-
+from datetime import datetime, time
 
 class ZwaveLogHandler:
     def __init__(self, config):
@@ -31,10 +25,24 @@ class ZwaveLogHandler:
     
     # /?route=zwaveloghandler&action=accesscodeused&deviceId={deviceId}&slot={slot}
     def handleUserCode(self, query_components):
+        if (self.isRestartTime()):
+            return
+        
+        print "Saved Request";
         deviceId = query_components['deviceId'][0]
         slot = query_components['slot'][0]
         self.addCode(deviceId, slot)
     
+    def isRestartTime(self):
+        now = datetime.now()
+        now_time = now.time()
+        if now_time >= time(02,24) and now_time <= time(02,30):
+            return True
+
+        
+        return False
+        
+        
     def addCode(self, deviceId, slot):
         key = str(uuid.uuid4());
         print "key: " + key
@@ -43,7 +51,7 @@ class ZwaveLogHandler:
             'id' : key,
             'deviceId' : deviceId,
             'slot' : slot,
-            'time' : datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            'time' : datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         
         self.database.set(key, data);
@@ -85,6 +93,11 @@ class ZwaveLogHandler:
             
             if (contents == "OK"):
                 self.database.rem(key)
+                
+                
+    def processMessage(self, message):
+        if (message['className'] == "something"):
+            print "handle message";
         
         
 if __name__ == "__main__":

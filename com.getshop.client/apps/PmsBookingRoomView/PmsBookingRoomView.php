@@ -935,7 +935,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
 
     public function loadTypes() {
         if (!$this->types) {
-            $this->types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+            $this->types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         }
     }
     

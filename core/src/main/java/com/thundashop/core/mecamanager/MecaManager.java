@@ -58,7 +58,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Autowired
     public StoreApplicationInstancePool instancePool;
     
-    public boolean requestDisabled = true;
+    public boolean requestDisabled = false;
     
     private Map<String, MecaFleet> fleets = new HashMap();
     private Map<String, MecaCar> cars = new HashMap();
@@ -69,6 +69,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         for (DataCommon obj : data.data) {
             if (obj instanceof MecaFleet) {
                 MecaFleet fleet = (MecaFleet) obj;
+                fleet.resetNaggingLevel();
                 fleets.put(fleet.id, fleet);
             }    
         }
@@ -546,6 +547,11 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Override
     public void sendKilometerRequest(String carId) {
         MecaCar car = getCar(carId);
+        
+        if (!canDoNotification(car)) {
+            return;
+        }
+        
         if (car != null && shouldBeFollowedUpAutomatically(car)) {
             if (car.tokens == null || car.tokens.isEmpty()) {
                 sendSmsKilometersRequest(car);
@@ -556,7 +562,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     }
 
     private void sendRequestByPushNotification(MecaCar car) throws ErrorException {
-        if (requestDisabled)
+        if (!canDoNotification(car))
             return;
         
         MecaFleet fleet = getFleetByCar(car);
@@ -566,6 +572,22 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         notifyByPush(car.cellPhone, msg);
         car.requestKilomters.markAsSentPushNotification(fleet);
         saveObject(car);
+    }
+
+    private boolean canDoNotification(MecaCar car) {
+        if (requestDisabled) {
+            return false;
+        }
+        
+        if (!shouldBeFollowedUpAutomatically(car)) {
+            return false;
+        }
+        
+        if (!car.requestKilomters.canSendNotification()) {
+            return false;
+        }
+        
+        return true;
     }
 
     @Override
@@ -641,17 +663,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     }
 
     private void sendSmsKilometersRequest(MecaCar car) {
-        if (!shouldBeFollowedUpAutomatically(car)) {
+        if (!canDoNotification(car))
             return;
-        } 
-        
-        if (!car.requestKilomters.canSendNotification()) {
-            return;
-        }
-        
-        if (requestDisabled) {
-            return;
-        }
         
         String message = getMailContent("smsRequestKilomters");
         message = replaceContactVariables(car, message, car.cellPhone, "");
@@ -792,6 +805,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
 
     @Override
     public void saveFleet(MecaFleet fleet) {
+        
         if (!fleet.followup) {
             getCarsForMecaFleet(fleet.pageId).stream()
                     .forEach(car -> {
@@ -799,7 +813,14 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
                     });
         }
         
+        
         fleets.put(fleet.id, fleet);
+        
+        getCarsForMecaFleet(fleet.pageId).stream()
+                .forEach(car -> {
+                    car.requestKilomters.calculateNextRequest(fleet);
+                });
+        
         saveObject(fleet);
     }
 

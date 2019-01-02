@@ -33,16 +33,16 @@ class MecaFleetTitlePrinter extends \MarketingApplication implements \Applicatio
             $fleet->contactDetails = @$_POST['data']['contactDetails'];
             $fleet->contactOther = $_POST['data']['contactOther'];
             
-            if (isset($_POST['data']['frequency_none'])) {
-                $fleet->naggingInterval = "frequency_none";
+            if (isset($_POST['data']['frequency_monthly'])) {
+                $fleet->naggingInterval = "frequency_monthly";
             }
             
-            if (isset($_POST['data']['frequency_daily'])) {
-                $fleet->naggingInterval = "frequency_daily";
+            if (isset($_POST['data']['frequency_quartly'])) {
+                $fleet->naggingInterval = "frequency_quartly";
             }
             
-            if (isset($_POST['data']['frequency_weekly'])) {
-                $fleet->naggingInterval = "frequency_weekly";
+            if (isset($_POST['data']['frequency_halfayear'])) {
+                $fleet->naggingInterval = "frequency_halfayear";
             }
             
             if ($fleet->followup === "false") {

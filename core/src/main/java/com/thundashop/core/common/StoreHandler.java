@@ -202,10 +202,6 @@ public class StoreHandler {
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             
-            if (isFromSynchronizedCall) {
-                fireEvents();
-            }
-            
             TranslationHandler handle = new TranslationHandler();
             updateLanguage(manager, handle, result);
             return result;
@@ -608,10 +604,4 @@ public class StoreHandler {
         sessions.remove(sessionId);
     }
 
-    /**
-     * We need to fire the events at the end.
-     */
-    private void fireEvents() {
-        AppContext.appContext.getBean(OrderManager.class).fireEvents();
-    }
 }

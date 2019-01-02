@@ -49,17 +49,17 @@ if ($isAdmin) {
     
     <?
     if (!$followup) {
-        $text_none = "Det er kun hovedforspørselen som blir sendt ut.";
-        $text_daily = "Sender først 1 reminder dagen etter hovedforspørselen, deretter en til 2 dager etter hovedforspørselen.";
-        $text_weekly = "Sender først 1 reminder en uke etter hovedforspørselen, deretter en til etter 2 uker etter hovedforspørselen.";
+        $text_none = "Det vil bli sendt ut en forspørsel den første i hver måned";
+        $text_daily = "Det vil bli sendt ut en forspørsel den først i hvert kvartal.";
+        $text_weekly = "Det sendes ut forspørsel 1 januar og 1 juli.";
     ?>
     <div class='followupoptions'>
         <b>Oppfølgingsfrekvens på kilometerstand forespørsel:</b>
-        <div style="font-size: 13px; padding-top: 10px; padding-right: 100px;"> Systemet gjør forspørsler 1 gang i måneden etter kilometerstand. Ved å stille inn under så setter du hvor ofte systemet skal "mase" på brukerene. Dersom du ønsker at systemet aldri skal spørre etter kilometerstanden velger du "Manuell oppfølging"</div>
+        <div style="font-size: 13px; padding-top: 10px; padding-right: 100px;"> Velg ønsket oppfølingsfrekvens</div>
         <br/>
-        <input type='radio' name='frequency' gsname='frequency_none'   <? echo $fleet->naggingInterval == "frequency_none" ? 'checked="true"' : ""; ?> /> Ingen    <i title='<? echo $text_none; ?>' class='fa fa-info-circle'></i>
-        <input type='radio' name='frequency' gsname='frequency_daily'  <? echo $fleet->naggingInterval == "frequency_daily" ? 'checked="true"' : ""; ?> /> Daglig   <i title="<? echo $text_daily; ?>" class='fa fa-info-circle'></i>
-        <input type='radio' name='frequency' gsname='frequency_weekly' <? echo $fleet->naggingInterval == "frequency_weekly" ? 'checked="true"' : ""; ?> /> Ukentlig <i title="<? echo $text_weekly; ?>" class='fa fa-info-circle'></i>
+        <input type='radio' name='frequency' gsname='frequency_monthly'   <? echo $fleet->naggingInterval == "frequency_monthly" ? 'checked="true"' : ""; ?> /> En gang pr måned <i title='<? echo $text_none; ?>' class='fa fa-info-circle'></i>
+        <input type='radio' name='frequency' gsname='frequency_quartly'  <? echo $fleet->naggingInterval == "frequency_quartly" ? 'checked="true"' : ""; ?> /> En gang i kvartalet <i title="<? echo $text_daily; ?>" class='fa fa-info-circle'></i>
+        <input type='radio' name='frequency' gsname='frequency_halfayear' <? echo $fleet->naggingInterval == "frequency_halfayear" ? 'checked="true"' : ""; ?> /> En gang i halvåret <i title="<? echo $text_weekly; ?>" class='fa fa-info-circle'></i>
     </div>
     <?
     }

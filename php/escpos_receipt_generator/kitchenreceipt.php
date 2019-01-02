@@ -21,21 +21,21 @@ $connector = new FilePrintConnector("/tmp/receipt_kitchen.prn");
 function createItems($text, $price) {
     $items = array();
     
-    if (strlen($text) > 30) {
-        $multiplines = explode( "\n", wordwrap( $text, 33));
-        
-        $i = 0;
-        foreach ($multiplines as $line) {
-            $i++;
-            if (count($multiplines) == $i) {
-                $items[] = new item($line, $price);
-            } else {
-                $items[] = new item($line, "");
-            }
-        }
-    } else {
+//    if (strlen($text) > 30) {
+//        $multiplines = explode( "\n", wordwrap( $text, 33));
+//        
+//        $i = 0;
+//        foreach ($multiplines as $line) {
+//            $i++;
+//            if (count($multiplines) == $i) {
+//                $items[] = new item($line, $price);
+//            } else {
+//                $items[] = new item($line, "");
+//            }
+//        }
+//    } else {
         $items[] = new item($text, "");
-    }
+//    }
     
     return $items;
 }
@@ -65,7 +65,7 @@ foreach ($printMessage->cartItems as $cartItem) {
         foreach ($cartItem->product->selectedExtras as $optionId => $extraIds) {
             $extraOption = getExtraOption($cartItem->product->extras, $optionId);
             
-            $text .= $extraOption->name.": ";
+            $text .= "  ".$extraOption->name.": ";
             $i = 0;
             foreach ($extraIds as $extraId) {
                 $i++;
@@ -103,9 +103,9 @@ $printer -> setJustification(Printer::JUSTIFY_LEFT);
 $printer -> setEmphasis(false);
 $printer -> selectPrintMode();
 
-
-$printer -> setTextSize(1, 2);
 $printer -> setFont(Printer::FONT_B);
+
+$printer -> setTextSize(2, 2);
 foreach ($items as $item) {
     $printer -> text($item);
 }
@@ -147,7 +147,7 @@ class item
     public function __toString()
     {
         $rightCols = 10;
-        $leftCols = 32;
+        $leftCols = 20;
         if ($this -> dollarSign) {
             $leftCols = $leftCols / 2 - $rightCols / 2;
         }
@@ -155,6 +155,6 @@ class item
         
         $sign = ($this -> dollarSign ? 'Kr ' : '');
         $right = str_pad($sign . $this -> price, $rightCols, ' ', STR_PAD_LEFT);
-        return "$left$right\n";
+        return "$left\n";
     }
 }

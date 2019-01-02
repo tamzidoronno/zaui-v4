@@ -125,7 +125,7 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Notifications", "notifications", "");
         $menu->entries[] = new ModulePageMenuItem("Budget", "budget", "");
         $menu->entries[] = new ModulePageMenuItem("GetShop Express", "getshopexpressconfig", "");
-        $menu->entries[] = new ModulePageMenuItem("Restricitions", "restrictionsconfig", "");
+        $menu->entries[] = new ModulePageMenuItem("Restrictions", "restrictionsconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Channel manager", "channelmanagerconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Lock setup", "lockconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Global setttings", "globalsettings", "");

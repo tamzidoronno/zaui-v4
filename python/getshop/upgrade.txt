@@ -1,0 +1,48 @@
+upgrade procedure:
+sftp pi@xxxx
+put getshop.tar.gz
+put index.js
+ssh pi@xxx
+sudo -s
+cd /storage
+tar xzvf /home/pi/getshop.tar.gz
+pip install pickledb
+cd getshop
+python getshop.py
+# Husk å legg inn token i getshop.
+kill -9 `ps aux |grep python |grep getshop.py |awk '{print $2}'`
+cd /opt/z-way-server/automation/
+ln -s /storage/getshop/token.txt .
+cd modules/ZWave/
+cp /home/pi/index.js index.js
+/etc/init.d/z-way-server restart
+crontab -e
+25 2 * * * /etc/init.d/z-way-server restart
+vi /etc/rc.local
+   /root/startGetshop.sh
+
+vi /root/startGetshop.sh
+
+----------------
+#!/bin/bash
+if [ ! -f /storage/getshop/token.txt ]
+then
+	echo "Cant start service as not configured yet";
+	echo "Not Started" > /tmp/started.txt;
+else
+	echo "Started " > /tmp/started.txt;
+	echo `whoami` >> /tmp/started.txt;
+	cd /storage/getshop;
+	python getshop.py&
+fi
+------------------
+
+chmod +x /root/startGetshop.sh
+
+   
+
+
+
+
+
+

@@ -37,3 +37,12 @@ foreach($msgs as $msg) {
 }
 
 ?>
+<h1>Email template</h1>
+<?php
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+?>
+<div gstype='form' method='saveEmailTemplate'>
+<textarea style='width:100%; height: 400px;' gsname='email'><?php echo $config->emailTemplate; ?></textarea>
+<div style='text-align:right;'>
+    <span class="shop_button" gstype='submit'>Update email template</span>
+</div>

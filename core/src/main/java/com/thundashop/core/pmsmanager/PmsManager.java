@@ -1792,6 +1792,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 bookingEngine.deleteBooking(remove.bookingId);
                 remove.delete();
                 logEntry(roomName + " removed from booking ", bookingId, null);
+                if(!booking.isWubook()) {
+                    doNotification("room_cancelled", booking, remove);
+                }
             } else {
                 try {
                     Booking tmpbook = createBooking(remove);

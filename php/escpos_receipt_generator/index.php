@@ -57,6 +57,13 @@ $printer = new Printer($connector);
 $printer -> setJustification(Printer::JUSTIFY_CENTER);
 
 $receiptText = $printMessage->paymentDate ? "KVITTERING" : "IKKE KVITTERING FOR SALG";
+
+$logoFileName = "/storage/logo.png";
+if (file_exists($logoFileName)) {
+    $img = EscposImage::load($logoFileName, false);
+    $printer -> bitImageColumnFormat($img);
+}
+
 /* Title of receipt */
 $printer -> setEmphasis(true);
 $printer -> setTextSize(2, 3);
@@ -73,6 +80,9 @@ $printer -> text($printMessage->accountDetails->address."\n");
 $printer -> text($printMessage->accountDetails->postCode."\n");
 $printer -> text("Orgnr: ".$printMessage->accountDetails->vatNumber."\n");
 $printer -> text("Epost: ".$printMessage->accountDetails->contactEmail."\n");
+if (isset($printMessage->accountDetails->phoneNumber)) {
+    $printer -> text("Telefon: ".$printMessage->accountDetails->phoneNumber."\n");
+}
 $printer -> feed();
 
 

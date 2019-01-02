@@ -27,6 +27,7 @@ public class AccountingDetails {
     public String useLanguage = "";
     public String bankName = "";
     public String logo = "";
+    public String phoneNumber;
 
     public boolean isTypeOne() {
         if (type == null || type.isEmpty() || type.equals("type1"))

@@ -61,6 +61,7 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $this->setConfigurationSetting("iban", $_POST['iban']);
         $this->setConfigurationSetting("swift", $_POST['swift']);
         $this->setConfigurationSetting("language", $_POST['language']);
+        $this->setConfigurationSetting("phoneNumber", $_POST['phoneNumber']);
         $this->setConfigurationSetting("logo", $_POST['logo']);
     }
     

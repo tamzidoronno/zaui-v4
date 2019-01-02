@@ -63,6 +63,10 @@ foreach ($printMessage->cartItems as $cartItem) {
     
     if (count((array)$cartItem->product->selectedExtras)) {
         foreach ($cartItem->product->selectedExtras as $optionId => $extraIds) {
+            if (!is_array($extraIds) || !count($extraIds)) {
+                continue;
+            }
+            
             $extraOption = getExtraOption($cartItem->product->extras, $optionId);
             
             $text .= "  ".$extraOption->name.": ";

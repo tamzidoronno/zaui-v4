@@ -310,6 +310,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             List<String> codesAdded = new ArrayList();
             for(String masterLockId : deviceToUpdate.masterLocks) {
                 GetShopDevice masterLock = getDevice(masterLockId);
+                if (masterLock.codes == null) {
+                    continue;
+                }
                 for(GetShopLockCode code : masterLock.codes.values()) {
                     if(code.inUse()) {
                         String curCode = code.fetchCodeToAddToLock();

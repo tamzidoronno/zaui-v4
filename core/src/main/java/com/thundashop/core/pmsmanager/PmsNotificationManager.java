@@ -543,7 +543,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(type.equals("admin")) {
             PmsGuests guest = new PmsGuests();
             guest.phone = storeManager.getMyStore().configuration.phoneNumber;
-            guest.prefix = "47";
+            guest.prefix = storeManager.getMyStore().configuration.defaultPrefix + "";
             recipients.add(guest);
         }
         

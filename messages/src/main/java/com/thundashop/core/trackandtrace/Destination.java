@@ -6,6 +6,7 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.usermanager.data.Company;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import org.mongodb.morphia.annotations.Transient;
  *
  * @author ktonder
  */
+@PermenantlyDeleteData
 public class Destination extends DataCommon {
     
     public List<String> companyIds = new ArrayList();

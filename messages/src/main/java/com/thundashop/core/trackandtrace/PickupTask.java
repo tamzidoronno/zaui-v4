@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.common.PermenantlyDeleteData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author ktonder
  */
+@PermenantlyDeleteData
 public class PickupTask extends Task {
     public List<PickupOrder> orders = new ArrayList();
     public boolean cage;

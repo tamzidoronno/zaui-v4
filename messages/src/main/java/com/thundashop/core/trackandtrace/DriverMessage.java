@@ -6,12 +6,14 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.PermenantlyDeleteData;
 import java.util.Date;
 
 /**
  *
  * @author ktonder
  */
+@PermenantlyDeleteData
 public class DriverMessage extends DataCommon {
     public String driverId;
     public boolean isRead = false;

@@ -551,7 +551,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             User user = userManager.getUserById(booking.userId);
             PmsGuests guest = new PmsGuests();
             guest.phone = user.cellPhone;
-            guest.prefix = "47";
+            guest.prefix = user.prefix;
             recipients.add(guest);
         }
         

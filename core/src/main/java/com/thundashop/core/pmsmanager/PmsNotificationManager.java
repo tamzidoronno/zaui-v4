@@ -550,7 +550,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(type.equals("booker")) {
             User user = userManager.getUserById(booking.userId);
             PmsGuests guest = new PmsGuests();
-            guest.phone = user.prefix;
+            guest.phone = user.cellPhone;
             guest.prefix = "47";
             recipients.add(guest);
         }

@@ -24,6 +24,10 @@ if ($routes) {
     </div>
     <?
     foreach ($routes as $route) {
+        
+        if ($route->isVritual)
+            continue;
+        
         $started = $route->startInfo != null && $route->startInfo->started ? "started" : "";
         $completedClass = $route->completedInfo != null && $route->completedInfo->completedTimeStamp ? "completed" : "";
         
@@ -35,7 +39,7 @@ if ($routes) {
             $hours = ($future - $date)/60/60;
             $hours = ceil($hours);
             $completedInfo = $route->completedInfo->completed ? "Completed, " : "";
-            $completed = " ( $completedInfo will be deleted in $hours hours ) ";
+            $completed = " ( $completedInfo will be deleted in $hours hours ) |".$route->rowCreatedDate."|";
         }
         echo "<div class='routeview $started $completedClass'> "
         . "<div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> ";

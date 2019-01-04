@@ -572,10 +572,11 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             String content = formatMessage(message.content, booking, room,key,"admin");
             String email = storeManager.getMyStore().configuration.emailAdress;
             String phone = storeManager.getMyStore().configuration.phoneNumber;
+            String prefix = storeManager.getMyStore().configuration.defaultPrefix + "";
             
             pmsManager.logEntry("Notified admin :" + content + " phone: " + phone + ", email:" + email, booking.id, null);
             messageManager.sendMail(email, "Administrator", "Notification", content, getFromEmail(), getFromName());
-            messageManager.sendSms("sveve", phone, content, "47");
+            messageManager.sendSms("sveve", phone, content, prefix);
         }
     }
 

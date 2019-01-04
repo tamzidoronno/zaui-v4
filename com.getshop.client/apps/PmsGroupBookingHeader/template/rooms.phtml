@@ -1,6 +1,6 @@
 <?php
 /* @var $this ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $start = date("d.m.Y", time());
 $end = date("d.m.Y", strtotime(date("d.m.Y",time()) . " +1 day"));
 $booking = $this->getCurrentBooking();

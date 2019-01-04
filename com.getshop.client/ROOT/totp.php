@@ -3,6 +3,14 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 $instance = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
 
+$redirect = "";
+if(isset($_GET['redirectto'])) {
+    $redirect = $_GET['redirectto'];
+}
+if(isset($_POST['redirect'])) {
+    $redirect = $_POST['redirect'];
+}
+
 $cookieFound = isset($_COOKIE['gstoken']) ? "found" : "not found";
 echo "<center><b>$cookieFound</b></center>";
 
@@ -10,6 +18,9 @@ if (isset($_COOKIE['gstoken'])) {
     $user = $factory->getApi()->getUserManager()->logonUsingToken($_COOKIE['gstoken']);
     if ($user) {
         \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
+        if($redirect) {
+            header('location: ' . $redirect);
+        }
     } else {
         unset($_COOKIE['gstoken']);
     }
@@ -18,13 +29,6 @@ if (isset($_COOKIE['gstoken'])) {
 $settings = $factory->getApplicationPool()->getApplicationSetting("d755efca-9e02-4e88-92c2-37a3413f3f41");
 $settingsInstance = $factory->getApplicationPool()->createInstace($settings);
 
-$redirect = "";
-if(isset($_GET['redirectto'])) {
-    $redirect = $_GET['redirectto'];
-}
-if(isset($_POST['redirect'])) {
-    $redirect = $_POST['redirect'];
-}
 
 $username = "";
 $password = "";

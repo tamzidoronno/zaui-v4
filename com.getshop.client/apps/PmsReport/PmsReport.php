@@ -776,7 +776,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             return true;
         }
         
-        return true;
+        return false;
     }
 
     public function getIncomeReportData() {

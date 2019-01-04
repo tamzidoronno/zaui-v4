@@ -1752,7 +1752,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function printAvailableRoomsFromCategory($start, $end) {
         $start = $this->convertToJavaDate(strtotime($start));
         $end = $this->convertToJavaDate(strtotime($end));
-        $categories = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $categories = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         echo "<option value=''>Choose a category</option>";
         foreach($categories as $cat) {
             $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $cat->id, $start, $end);

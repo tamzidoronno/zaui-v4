@@ -543,15 +543,15 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(type.equals("admin")) {
             PmsGuests guest = new PmsGuests();
             guest.phone = storeManager.getMyStore().configuration.phoneNumber;
-            guest.prefix = "47";
+            guest.prefix = storeManager.getMyStore().configuration.defaultPrefix + "";
             recipients.add(guest);
         }
         
         if(type.equals("booker")) {
             User user = userManager.getUserById(booking.userId);
             PmsGuests guest = new PmsGuests();
-            guest.phone = user.prefix;
-            guest.prefix = "47";
+            guest.phone = user.cellPhone;
+            guest.prefix = user.prefix;
             recipients.add(guest);
         }
         
@@ -572,13 +572,11 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             String content = formatMessage(message.content, booking, room,key,"admin");
             String email = storeManager.getMyStore().configuration.emailAdress;
             String phone = storeManager.getMyStore().configuration.phoneNumber;
-
-            if (!pmsManager.getConfigurationSecure().sendAdminTo.isEmpty()) {
-                email = pmsManager.getConfigurationSecure().sendAdminTo;
-            }
+            String prefix = storeManager.getMyStore().configuration.defaultPrefix + "";
+            
             pmsManager.logEntry("Notified admin :" + content + " phone: " + phone + ", email:" + email, booking.id, null);
             messageManager.sendMail(email, "Administrator", "Notification", content, getFromEmail(), getFromName());
-            messageManager.sendSms("sveve", phone, content, "47");
+            messageManager.sendSms("sveve", phone, content, prefix);
         }
     }
 

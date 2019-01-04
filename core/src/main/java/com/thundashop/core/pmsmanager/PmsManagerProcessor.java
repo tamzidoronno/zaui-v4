@@ -379,7 +379,7 @@ public class PmsManagerProcessor {
                 if (!room.isStartingToday() && !room.isStarted()) {
                     continue;
                 }
-                if (room.isEnded()) {
+                if (room.isEnded() || room.triedToAutoAssign) {
                     continue;
                 }
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {

@@ -2867,6 +2867,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void autoAssignItem(PmsBookingRooms room) {
+        room.triedToAutoAssign = true;
+        
         try {
             if(room.bookingId == null || room.bookingId.isEmpty()) {
                 return;

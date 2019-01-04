@@ -53,6 +53,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean checkedin = false;
     public boolean checkedout = false;
     public boolean blocked = false;
+    public boolean triedToAutoAssign = false;
     
     @Editor
     public String code = "";

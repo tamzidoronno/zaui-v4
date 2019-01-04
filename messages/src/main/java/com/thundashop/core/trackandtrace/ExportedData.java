@@ -6,6 +6,7 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.PermenantlyDeleteData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  *
  * @author ktonder
  */
+@PermenantlyDeleteData
 public class ExportedData extends DataCommon {
     public List<AcculogixExport> exportedData = new ArrayList();
     public int exportSequence;

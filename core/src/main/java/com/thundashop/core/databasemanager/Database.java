@@ -18,6 +18,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerSubBase;
+import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -138,6 +139,17 @@ public class Database extends StoreComponent {
         }
 
     }
+    
+    private void permanentlyDeleteData(String id, String databaseName, String storeId) {
+        if (id == null || id.isEmpty()) {
+            // Really, nothing to delete;
+            return;
+        }
+        
+        BasicDBObject dbo = new BasicDBObject();
+        dbo.put("_id", id);
+        mongo.getDB(databaseName).getCollection(collectionPrefix + storeId).remove(dbo);
+    }
 
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
 //        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
@@ -254,6 +266,11 @@ public class Database extends StoreComponent {
         }
 
         if (isDeepFreezed(data)) {
+            return;
+        }
+        
+        if (data != null && data.getClass().getAnnotation(PermenantlyDeleteData.class) != null) {
+            permanentlyDeleteData(data.id, credentials.manangerName, data.storeId);
             return;
         }
 

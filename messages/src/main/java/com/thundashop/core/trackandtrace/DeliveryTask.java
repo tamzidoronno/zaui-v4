@@ -10,11 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.thundashop.core.common.PermenantlyDeleteData;
 
 /**
  *
  * @author ktonder
  */
+@PermenantlyDeleteData
 public class DeliveryTask extends Task {
     public List<DeliveryOrder> orders = new ArrayList();
 

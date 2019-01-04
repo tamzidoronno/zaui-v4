@@ -7,6 +7,7 @@ package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.PermenantlyDeleteData;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -21,6 +22,7 @@ import org.mongodb.morphia.annotations.Transient;
  *
  * @author ktonder
  */
+@PermenantlyDeleteData
 public class Route extends DataCommon {
 
     public String name = "Routename";

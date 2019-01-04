@@ -2,9 +2,7 @@
 /* @var $this \ns_0cf90108_6e9f_49fd_abfe_7541d1526ba2\ApacAccessView */
 $user = $this->getUser();
 
-echo "<pre>";
 echo "<h1>The code for " . $user->fullName . " is " . $user->lockCode->pinCode . "</h1>";
-echo "</pre>";
 
 if (!$user) {
     ?>

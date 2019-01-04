@@ -340,6 +340,10 @@ thundashop.Ajax = {
     openModal: function(modalName, data) {
         getshop.showOverlay("1");
         
+        if (typeof(data) !== "undefined") {
+            data.gs_show_modal = true;
+        }
+        
         var event = {};
         event.application = "";
         event.event = "";

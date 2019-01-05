@@ -291,6 +291,7 @@ class PmsBookingMessageFormatter {
         message = message.replace("{totalcost}", total + "");
         message = message.replace("{nightprice}", nightPrice + "");
         message = message.replace("{roomlist2}", getRoomList2(booking, bookingEngine));
+        message = message.replace("{roomlist3}", getRoomList3(booking, bookingEngine));
         message = formatSpecifics(message, booking);
         return message;
     }
@@ -386,6 +387,21 @@ class PmsBookingMessageFormatter {
             for (PmsBookingAddonItem addon : room.addons) {
                 list += "   <div class='addon' style='padding-left: 10px;'>" + addon.count + " x " + addon.getName() + "</div>";
             }
+            list += "</div>";
+        }
+        
+        return list;
+    }
+    private String getRoomList3(PmsBooking booking, BookingEngine bookingEngine) {
+        String list = "";
+        
+        SimpleDateFormat slf = new SimpleDateFormat("dd.MM.YY");
+        
+        for (PmsBookingRooms room : booking.rooms) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            
+            list += "<div class='roominfo'>"; 
+            list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "</div>";
             list += "</div>";
         }
         

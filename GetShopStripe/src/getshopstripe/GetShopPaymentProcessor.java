@@ -21,6 +21,7 @@ import java.net.ConnectException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -63,8 +64,10 @@ public class GetShopPaymentProcessor {
     private void start() throws IOException {
         while(true) {
             readAccounts();
+            Date d = new Date();
+            logPrint("start", d.toString() + " : Running autocarding for " + accounts.size() + " accounts");
             for(AccountDetails detail : accounts) {
-                logPrint("start", "Running autocarding for : " + detail.address);
+                token=null;
                 currentAccount = detail; 
                if(isDevMode) {
                     currentAccount.address = currentAccount.address.replace(".getshop", ".3.0.local.getshop");
@@ -109,11 +112,10 @@ public class GetShopPaymentProcessor {
     }
 
     private void checkForCardsToSave() throws IOException, Exception {
-        logPrint("checkForCardsToSave", "Checking for cards to save");
         //First find new bookings
         LinkedList<PmsWubookCCardData> bookings = fetchBookings();
         if(bookings.size() > 0) {
-            logPrint("checkForCardsToSave", "Found " + bookings.size() + " bookings");
+            logPrint("checkForCardsToSave", "Found " + bookings.size() + " bookings at " + currentAccount.address);
         }
         
         //Fetch credit card
@@ -155,8 +157,18 @@ public class GetShopPaymentProcessor {
             tmpCard.expYear = "35";
             return tmpCard;
         }
+        int i = 0;
+        while(true) {
+            boolean connected = connectToApi(currentAccount.wubookUsername, currentAccount.wubookPassword);
+            i++;
+            if(connected) {
+                break;
+            } else {
+                logPrint("fetchCreditCard", "Failed to connect to wubook, waiting and retrying");
+            }
+            try { Thread.sleep(60000); }catch(Exception e) {}
+        }
         
-        connectToApi(currentAccount.wubookUsername, currentAccount.wubookPassword);
         Vector params = new Vector();
         params.addElement(token); 
         params.addElement(currentAccount.wubookLCode);
@@ -173,12 +185,14 @@ public class GetShopPaymentProcessor {
             card.expMonth = expiring[0];
             card.expYear = expiring[1];
             return card;
+        } else {
+            logPrint("fetchCreditCard", "Failed to fetch credit card");
         }
         return null;
     }
     private boolean connectToApi(String wubookusername, String wubookpassword) throws Exception {
         
-        if(tokenCount < 30 && token != null && !token.isEmpty()) {
+        if(tokenCount < 10 && token != null && !token.isEmpty()) {
             tokenCount++;
             return true;
         }
@@ -225,7 +239,6 @@ public class GetShopPaymentProcessor {
             protocol = "http";
         }
         String addr = protocol+"://"+currentAccount.address+"/scripts/api.php";
-        logPrint("doApiCall", "Connecting to api: " + addr);
         HttpPost httppost = new HttpPost(addr);
 
         // Request parameters and other properties.

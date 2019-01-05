@@ -495,9 +495,16 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
         
         if(type.equals("room") && room != null) {
+            boolean sentToBooker = false;
             for(PmsGuests guest : room.guests) {
                 if(guest != null && guest.email != null && guest.email.contains("@")) {
                     recipients.add(guest.email);
+                } else {
+                    if(!sentToBooker) {
+                        User user = userManager.getUserById(booking.userId);
+                        recipients.add(user.emailAddress);
+                        sentToBooker = true;
+                    }
                 }
             }
         }
@@ -556,9 +563,19 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
         
         if(type.equals("room") && room != null) {
+            boolean sentToBooker = false;
             for(PmsGuests guest : room.guests) {
                 if(guest != null && guest.phone != null && !guest.phone.isEmpty()) {
                     recipients.add(guest);
+                } else {
+                    if(!sentToBooker) {
+                        User user = userManager.getUserById(booking.userId);
+                        PmsGuests tmpGuest = new PmsGuests();
+                        tmpGuest.phone = user.cellPhone;
+                        tmpGuest.prefix = user.prefix;
+                        recipients.add(tmpGuest);
+                        sentToBooker = true;
+                    }
                 }
             }
         }

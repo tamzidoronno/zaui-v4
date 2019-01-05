@@ -53,6 +53,7 @@ class ApacAccessView extends \MarketingApplication implements \Application {
         } 
         
         $this->setData();
+        $this->render();
     }
 
     public function getSentMessages() {

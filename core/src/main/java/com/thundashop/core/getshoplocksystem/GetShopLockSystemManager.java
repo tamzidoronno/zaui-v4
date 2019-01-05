@@ -509,7 +509,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     public void removeAccess(String id) {
         AccessGroupUserAccess access = users.remove(id);
         if (access != null) {
-            renewCodeForSlot(access.lockGroupId, access.lockCode.slotId);
+            if (access.lockCode != null) {
+                renewCodeForSlot(access.lockGroupId, access.lockCode.slotId);
+            }
+            
             deleteObject(access);
         }
     }

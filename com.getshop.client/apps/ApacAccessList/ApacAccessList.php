@@ -53,6 +53,8 @@ class ApacAccessList extends \MarketingApplication implements \Application {
         $args[] = $options;
                 
         $table = new \GetShopModuleTable($this, 'GetShopLockSystemManager', 'getAllAccessUsers', $args, $attributes);
+        $table->avoidAutoExpanding();
+        $table->loadContentInOverlay = true;
         $table->renderPagedTable();
     }
 

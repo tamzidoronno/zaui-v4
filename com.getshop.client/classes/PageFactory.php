@@ -508,6 +508,13 @@ class PageFactory {
         $row->addColumn("b698ac77-15f3-45b7-a412-47186a2defb6", "666ac2e7-d72c-4806-944e-5dd25ce20ee6");
         $this->pages['newaccess'] = $page;
         
+        $page = new \ModulePage("apac_access_user_view", "apac");
+        $row = $page->createRow();
+        $row->addText("Acces Code");
+        $row = $page->createRow();
+        $row->addColumn("0cf90108-6e9f-49fd-abfe-7541d1526ba2", "663ac2e7-d72c-4806-944e-5dd25ce20ee6");
+        $this->pages['apac_access_user_view'] = $page;
+        
         $page = new \ModulePage("accessgroups", "apac");
         $page->setLeftMenu(\ModulePageMenu::getApacLeftMenu());
         $row = $page->createRow();

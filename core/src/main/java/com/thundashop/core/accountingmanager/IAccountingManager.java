@@ -38,6 +38,9 @@ public interface IAccountingManager {
     public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception;
 
     @Administrator
+    public void forceTransferFiles();
+    
+    @Administrator
     public List<String> getLatestLogEntries() throws Exception;
     
     @Administrator

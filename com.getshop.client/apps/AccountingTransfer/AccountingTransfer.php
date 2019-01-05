@@ -19,7 +19,7 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
     }
     
     public function transferNewFiles() {
-        $this->getApi()->getAccountingManager()->transferFilesToAccounting();
+        $this->getApi()->getAccountingManager()->forceTransferFiles();
     }
     
     public function saveAccountingConfig() {

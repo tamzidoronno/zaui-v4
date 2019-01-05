@@ -5,13 +5,6 @@ package com.thundashop.core.accountingmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
-import com.getshop.svea.AddressType;
-import com.getshop.svea.CustomerData;
-import com.getshop.svea.CustomerData.Creditor;
-import com.getshop.svea.CustomerData.Creditor.Cases;
-import com.getshop.svea.CustomerData.Creditor.Cases.Case;
-import com.getshop.svea.CustomerData.Creditor.Cases.Case.Debtor;
-import com.getshop.svea.CustomerData.Creditor.Cases.Case.Invoice;
 import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
@@ -24,6 +17,7 @@ import com.thundashop.core.ftpmanager.FtpManager;
 import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
@@ -77,6 +71,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
     @Autowired
     UserManager userManager;
+
+    @Autowired
+    PaymentManager paymentManager;
     
     @Autowired
     FtpManager ftpManager;
@@ -248,6 +245,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 mgr.orderManager = orderManager;
                 mgr.productManager = productManager;
                 mgr.userManager = userManager;
+                mgr.paymentManager = paymentManager;
                 object.setManagers(mgr);
                 
                 interfaces.add(object);
@@ -322,34 +320,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public void transferFilesToAccounting() {
         //First create a file if needed.
-        if(!hasOrdersToTransfer()) {
+        
+        if(!isMonday()) {
             return;
         }
-        try {
-            createCombinedOrderFile(true);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        List<SavedOrderFile> filesToTransfer = getAllFilesNotTransferredToAccounting();
-        for(SavedOrderFile saved : filesToTransfer) {
-            String internalPath = saveFileToDisk(saved, config.extension);
-            String externalPath = config.path;
-            int minutesToWait = 0;
-            if(saved.subtype != null && !saved.subtype.isEmpty() && saved.subtype.equals("invoice")) {
-                externalPath = config.invoice_path;
-            }
-            if(saved.subtype != null && !saved.subtype.isEmpty() && saved.subtype.equals("ccard")) {
-                minutesToWait = 5;
-            }
-            try {
-                ftpManager.transferFile(config.username, config.password, config.hostname, internalPath, externalPath, config.port, config.useActiveMode, minutesToWait);
-
-                saved.transferred = true;
-                saveObject(saved);
-            }catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
+        forceTransferFiles();
     }
 
     private String saveFileToDisk(SavedOrderFile saved, String extension) {
@@ -423,11 +398,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         for(Order order : allOrders) {
             if(order.needToBeTranferredToCreditor()) {
                 if(config.vendor.equals("svea")) {
-                    String res = createSveaCreditorFile(order);
-                    result.add(res);
-                    order.transferredToCreditor = new Date();
-                    orderManager.saveOrder(order);
-                    orders.add(order);
+
                 }
             }
         }
@@ -447,111 +418,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
         }
         return res;
-    }
-
-    private String createSveaCreditorFile(Order order) {
-        User user = userManager.getUserById(order.userId);
-        CustomerData customer = new CustomerData();
-        
-        Cases cases = createCases(user, order);
-                
-        Creditor creditor = new Creditor();
-        creditor.setCaseFromCreditorWeb(false);
-        creditor.setCases(cases);
-        
-        customer.setCreditor(creditor);
-        String res = "";
-        try {
-            File file = SveaXML.createXmlFile();
-            JAXBContext jaxbContext = JAXBContext.newInstance(CustomerData.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-            // output pretty printed
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            
-            StringWriter sw = new StringWriter();
-            jaxbMarshaller.marshal(customer, file);
-            jaxbMarshaller.marshal(customer, sw);
-            String result = sw.toString();
-            return result;
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-
-        return res;
-    }
-
-    private Cases createCases(User user, Order order) {
-        Cases cases = new Cases();
-        
-        Case theCase = new Case();
-        Invoice inv = new Invoice();
-        inv.setCid(user.customerId + "");
-        inv.setCurrencyCode("NOK");
-        inv.setClaimTypeInvoice(1 + "");
-        inv.setInvoiceNumber(order.incrementOrderId + "");
-        
-        double total = orderManager.getTotalAmount(order);
-        inv.setInvoiceAmount(new BigDecimal(total));
-        inv.setInvoiceRemainingAmount(new BigDecimal(total));
-
-        List<Invoice> invoices = new ArrayList();
-        invoices.add(inv);
-        
-        Debtor dep = createDeptor(user, order);
-        theCase.setDebtor(dep);
-        theCase.setInvoice(invoices);
-        
-        dep.setName(user.fullName);
-        
-        List<Case> allCases = new ArrayList();
-        allCases.add(theCase);
-        
-        cases.setCases(allCases);
-        
-        return cases;
-    }
-
-    private Debtor createDeptor(User user, Order order) {
-        Debtor deptor = new Debtor();
-        deptor.setName(user.fullName);
-        BigInteger bigInt = new BigInteger(user.customerId.toString());
-        deptor.setCustomerNumber(bigInt);
-        
-        AddressType address = new AddressType();
-        address.setAddress1(user.address.address);
-        address.setAddress2(user.address.address2);
-        address.setPostalPlace(user.address.city);
-        address.setPostalNumber(user.address.postCode);
-        deptor.setAddress(address);
-        
-        if(user.getBirthDate() != null) {
-            try {
-                GregorianCalendar c = new GregorianCalendar();
-                c.setTime(user.getBirthDate());
-                XMLGregorianCalendar date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-                deptor.setBirthDate(date2);
-            }catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-        Debtor.CellularPhoneNumber cellNumber = new Debtor.CellularPhoneNumber();
-        cellNumber.setValue(user.cellPhone);
-        cellNumber.setIsSMSVerified(false);
-        
-        deptor.setCellularPhoneNumber(cellNumber);
-        deptor.setEmail(user.emailAddress);
-        deptor.setIsFirm(user.company.size() > 0);
-        if(user.companyObject != null) {
-            Company comp = user.companyObject;
-            deptor.setOrgNumberSocialnumber(comp.vatNumber + "");
-            deptor.setIsFirm(true);
-        } else {
-            deptor.setIsFirm(false);
-        }
-        return deptor;
     }
 
     @Override
@@ -1253,6 +1119,94 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public void transferAllToNewSystem() {
         newAccountingManager.transferOldFiles(otherFiles.values());
+    }
+
+    private void restOrdersFromFirstOfJuly() {
+        Calendar cal = Calendar.getInstance();
+        //Next time it will be: 3 as day of month, month will be: 9 (already set, ready to run).
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.MONTH, 0);
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.SECOND,0);
+        Date createdUntil = cal.getTime();
+        
+//        Calendar cal2 = Calendar.getInstance();
+//        cal2.set(Calendar.DAY_OF_MONTH, 31);
+//        cal2.set(Calendar.MONTH, 7);
+//        cal2.set(Calendar.HOUR_OF_DAY,23);
+//        cal2.set(Calendar.MINUTE,59);
+//        cal2.set(Calendar.SECOND,59);
+//        Date createdUntil = cal2.getTime();
+        
+        System.out.println("Created until:" + createdUntil);
+       
+        for(SavedOrderFile file : files.values()) {
+            Date dateToCheck = file.rowCreatedDate;
+            if(!file.rowCreatedDate.after(createdUntil)) {
+                continue;
+            }
+//            if(dateToCheck.before(createdFrom)) { continue;}
+//            if(dateToCheck.after(createdUntil)) { continue; }
+            System.out.println(dateToCheck);
+            
+            for(String orderId : file.orders) {
+                Order ord = orderManager.getOrderSecure(orderId);
+                if(ord != null) {
+                    ord.transferredToAccountingSystem = false;
+                    orderManager.saveOrder(ord);
+                } else {
+                    System.out.println("FAiled to find order: " + orderId);
+                }
+            }
+            
+        }
+        
+    }
+
+    private boolean isMonday() {
+        if(!frameworkConfig.productionMode) {
+            return true;
+        }
+        
+        Calendar startDate = Calendar.getInstance();
+        if (startDate.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    @Override
+    public void forceTransferFiles() {
+        if(!hasOrdersToTransfer()) {
+            return;
+        }
+        try {
+            createCombinedOrderFile(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        List<SavedOrderFile> filesToTransfer = getAllFilesNotTransferredToAccounting();
+        for(SavedOrderFile saved : filesToTransfer) {
+            String internalPath = saveFileToDisk(saved, config.extension);
+            String externalPath = config.path;
+            int minutesToWait = 0;
+            if(saved.subtype != null && !saved.subtype.isEmpty() && saved.subtype.equals("invoice")) {
+                externalPath = config.invoice_path;
+            }
+            if(saved.subtype != null && !saved.subtype.isEmpty() && saved.subtype.equals("ccard")) {
+                minutesToWait = 5;
+            }
+            try {
+                ftpManager.transferFile(config.username, config.password, config.hostname, internalPath, externalPath, config.port, config.useActiveMode, minutesToWait);
+
+                saved.transferred = true;
+                saveObject(saved);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }    
     }
 
 }

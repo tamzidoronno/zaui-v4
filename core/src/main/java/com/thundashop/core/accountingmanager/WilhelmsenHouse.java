@@ -1,22 +1,27 @@
-
 package com.thundashop.core.accountingmanager;
 
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
@@ -37,291 +42,67 @@ public class WilhelmsenHouse implements AccountingInterface {
 
     @Override
     public List<String> createUserFile(List<User> users) {
-        users.add(userManager.getUserById("a775ffcb-d3c4-469d-a980-a09f10144d2e")); //Dibs user.
-        users.add(userManager.getUserById("0e4e6040-e717-4ac0-9a21-c9831a9d1cb3")); //Vipps user.
-        List<String> lines = new ArrayList();
-        for(User user : users) {
-            /*
-               c,RecType,1,1,0,,,,,,,,,S,		'Fast A som forteller at det er Aktør
-               c,Actor.CustNo,2,10,0,,,,,,,,,I,	'Kundenummer
-               c,Actor.Nm,3,40,0,,,,,,,,,S,	'Kundenavn
-               c,Actor.Ad1,4,40,0,,,,,,,,,S,	'Kunde adresse 1
-               c,Actor.PNo,5,10,0,,,,,,,,,S,	'Kunde Postnummer
-               c,Actor.PArea,6,40,0,,,,,,,,,S,	'Kunde Poststed
-               c,Actor.MailAd,7,40,0,,,,,,,,,S,	'Kunde e-post
-               c,Actor.MobPh,8,40,0,,,,,,,,,S,	'Kunde mobil tlf.
-               c,Actor.BsNo,9,40,0,,,,,,,,,S,	'Kunde Org nr el fødselsnr.
-               c,Actor.cVatNo,10,40,0,,,,,,,,,S,	'Kunde avgiftskode hvis tom = mva pliktig
-               c,Actor.CPmtTrm,11,40,0,,,,,,,,,S,	'Kunde Betalingsbetingelse
-               c,Actor.CPmtMt,12,40,0,,,,,,,,,S,	'Kunde Betalingsmåte
-               c,Actor.DocSmt,12,40,0,,,,,,,,,S,	'Kunde sendemåte 3 hvis epost på kunden
-           */
-
-           if(user.fullName == null) {
-               user.fullName = "";
-           }
-           if(user.address == null) {
-               user.address = new Address();
-           }
-           if(user.address.address == null) {
-               user.address.address = "";
-           }
-           if(user.address.postCode == null) {
-               user.address.postCode = "";
-           }
-           if(user.address.city == null) {
-               user.address.city = "";
-           }
-           if(user.emailAddress == null) {
-               user.emailAddress = "";
-           }
-           if(user.cellPhone == null || user.cellPhone.contains("+")) {
-               user.cellPhone = "";
-           }
-           if(user.birthDay == null) {
-               user.birthDay = "";
-           }
-
-           String result = "A;"; //Fast A som forteller at det er Aktør
-           result += user.customerId + ";"; //Kundenummer
-           result += removeSemiColon(user.fullName) + ";"; //Kundenavn
-           result += removeSemiColon(user.address.address) + ";"; //Kunde adresse 1
-           result += removeSemiColon(user.address.postCode) + ";"; //Kunde Postnummer
-           result += removeSemiColon(user.address.city) + ";"; //Kunde Poststed
-           result += removeSemiColon(user.emailAddress) + ";"; //Kunde e-post
-           result += removeSemiColon(user.cellPhone) + ";"; //Kunde mobil tlf.
-
-           if(user.company.isEmpty()) {
-               Date date = null;
-               try {
-                   if(user.birthDay.contains(".")) {
-                       SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy"); 
-                       date = dt.parse(user.birthDay); 
-                   } else {
-                       if(user.birthDay.length() == 6) {
-                           SimpleDateFormat dt = new SimpleDateFormat("ddMMyy"); 
-                           date = dt.parse(user.birthDay);
-                       } else {
-                           SimpleDateFormat dt = new SimpleDateFormat("ddMMyy"); 
-                           date = dt.parse(user.birthDay);
-                       }
-                   }
-                   result += new SimpleDateFormat("ddMMyyyy").format(date) + ";"; //Kunde Org nr el fødselsnr.
-               }catch(Exception e) {
-                   result += ";"; //Kunde Org nr el fødselsnr.
-               }
-           } else {
-               result += user.birthDay + ";"; //Kunde Org nr el fødselsnr.
-           }
-           if(user.companyObject != null && user.companyObject.vatRegisterd) {
-               result += ";"; //Kunde avgiftskode hvis tom = mva pliktig
-           } else {
-               result += ";"; //ingen avgift.
-           }
-           result += "30;"; //Betaling per 30 dag.
-           result += "10;"; //Autogiro.
-           if(user.emailAddress != null && user.emailAddress.contains("@")) {
-               result += "3;";
-           } else {
-               result += "0;";
-           }
-
-           lines.add(result + "\r\n");
-        }
-
-        return lines;
+        return new ArrayList();
     }
 
     @Override
     public List<String> createOrderFile(List<Order> orders, String type) {
         if(type != null && type.equals("invoice")) {
             orders = removeExpediaPrepaid(orders);
-            return createInvoiceFile(orders);
+            return createInvoiceXledgerFile(orders);
         } else {
-            return createCreditCardFile(orders);
+            return creategbatfile(orders);
         }
     }
     
-    private void savePdfInvoice(Order order) throws Exception {
-        String base64 = invoiceManager.getBase64EncodedInvoice(order.id);
-
-        byte[] bytes = Base64.decodeBase64(base64);
-        String realName = order.incrementOrderId+".pdf";
-        String targetFile = "/tmp/"+realName;
-        Files.write(Paths.get(targetFile), bytes);
-    }
-    
-    private String getProductDebitNumber(Product product, Application app) {
-        return managers.productManager.getProduct(product.id).accountingAccount;
-    }
-
-    
-    public List<String> createCreditCardFile(List<Order> orders) {
-        
-        if (orders.isEmpty()) {
-            return new ArrayList();
-        }
-        
+    public List<String> creategbatfile(List<Order> orders) {
         List<String> lines = new ArrayList();
-        double debet = 0;
-        double credit = 0;
-        Application app = storeApplicationPool.getApplication("37d409be-1207-45e8-bf3b-6465442b58d9");
-        String result = "";        
-        result += "H;";
-        result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";";
-        result += "5;"; // 
-        result += "Overføring fra GetShop\r\n";
-        lines.add(result);
-        
-        for (Order order : orders) {
-            result = "";
+        for(Order order : orders) {
             User user = userManager.getUserById(order.userId);
             if(user == null || user.customerId == null) {
                 continue;
             }
-            String textDesc = "GetShop order: "+ order.incrementOrderId; 
-            result += "L;"; //Fixed value L
-            result += order.incrementOrderId+";"; // Voucher no (If Voucher serie no is used,this can be empty)
-            result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";"; // Voucher date
-            result += ";"; // Value date (Usees from Batch if empty)
-            double amount = orderManager.getTotalAmount(order);
-            if(order.incrementOrderId == 108605) {
-                System.out.println("found");
+            
+            Date periodeDate = order.getStartDateByItems();
+            if(periodeDate == null) {
+                periodeDate = order.rowCreatedDate;
             }
-            amount = (double)Math.round(amount * 100) / 100.0;
-            boolean doCredit = false;
-            if(amount < 0) {
-                doCredit = true;
-                amount *= -1;
-            }
-            if(!doCredit) {
-                result += "18071;"; // Debit account
-                result += ";"; // Credit account
-                debet += amount;
+            Integer accountingId = 1;
+            
+            if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
+                accountingId = 11072; // Expedia customer id.
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_d79569c6_ff6a_4ab5_8820_add42ae71170\\BookingComCollectPayments")) {
+                accountingId = 19982; // Bookingcom.
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
+                accountingId = 24359; // Vipps customer id.
             } else {
-                result += ";"; // Debit account
-                result += "18071;"; // Credit account
-                credit += amount;
+                accountingId = user.customerId; // Kundenr 
             }
-            result += amount+";"; // Total amount
-            result += ";"; // R3 Oppdrag ID
-            result += ";"+textDesc; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
-            result += ";"; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
-            lines.add(result+"\r\n");
-
-            for (CartItem item : order.cart.getItems()) {
-                result = "";
-                result += "L;"; //Fixed value L
-                result += order.incrementOrderId+";"; // Voucher no (If Voucher serie no is used,this can be empty)
-                result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";"; // Voucher date
-                result += ";"; // Value date (Usees from Batch if empty)
-                
-                amount = item.getProduct().price * item.getCount();
-                amount = Math.round(amount * 100) / 100.0;
-                doCredit = false;
-                if(amount < 0) {
-                    amount *= -1;
-                    doCredit = true;
-                }
-                if(!doCredit) {
-                    result += ";"; // Debit account
-                    result += getProductDebitNumber(item.getProduct(), app) +";"; // Credit account
-                    credit += amount;
-                } else {
-                    result += getProductDebitNumber(item.getProduct(), app) + ";"; // Debit account
-                    result += ";"; // Credit account
-                    debet += amount;
-                }
-                
-                
-                result += amount+";"; // Total amount
-                result += ";"; // R3 Oppdrag ID
-                String roomName = item.getProduct().additionalMetaData;
-                result += roomName +";"; // R4 Gjenstand ID
-                result += textDesc;
-                result += ";";
-                lines.add(result+"\r\n");
-            }
-            try {
-                savePdfInvoice(order);
-            }catch(Exception e) {
-                e.printStackTrace();
+            
+            List<HashMap<Integer, String>> tmplines = generateLine(order, periodeDate, accountingId);
+            for(HashMap<Integer, String> toConvert : tmplines) {
+                String line = makeLine(toConvert);
+                lines.add(line);
             }
         }
-        double diff = debet - credit;
-        System.out.println("failed on : " +  " " + debet + " - " + credit + " = " + diff);
 
         return lines;
-                
     }
     
-    public List<String> createInvoiceFile(List<Order> orders) {
-        List<String> result = new ArrayList();
-        for(Order order : orders) {
-            
-            User user = userManager.getUserById(order.userId);
-            
-            Date startedDate = order.getStartDateByItems();
-            
-            String ordrehode = "H;"; // Fast H
-            ordrehode += "1;"; // Fast 1 for salg
-            ordrehode += "1;"; // Fast 1 for normalordre
-            ordrehode += order.incrementOrderId + ";"; // GetShop ordre id
-            if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
-                ordrehode += "11072;"; // Expedia customer id.
-            } else if (order.payment != null && order.payment.paymentType.equals("ns_d79569c6_ff6a_4ab5_8820_add42ae71170\\BookingComCollectPayments")) {
-                ordrehode += "19982;"; // Bookingcom.
-            } else if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
-                ordrehode += "24359;"; // Vipps customer id.
-            } else {
-                ordrehode += user.customerId + ";"; // Kundenr 
+    private String makeLine(HashMap<Integer, String> line) {
+        String result = "";
+        for(Integer i = 0; i <= line.size(); i++) {
+            String toAdd = line.get(i);
+            if(toAdd == null) {
+                toAdd = "";
             }
-            ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate) + ";"; // Ordredato
-            if(startedDate != null) {
-                ordrehode += new SimpleDateFormat("yyyyMMdd").format(startedDate)+ ";"; // Leveringsdato
-            }            
-            if (order.payment != null && order.payment.paymentType.equals("ns_565ea7bd_c56b_41fe_b421_18f873c63a8f\\PayOnDelivery")) {
-                ordrehode += "1;"; //Betalingsbetingelse
-                ordrehode += "1;"; //Betalingsmåte
-            } else if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
-                ordrehode += "30;"; //Betalingsbetingelse
-                ordrehode += "30;"; //Betalingsmåte
-            } else if (order.payment != null && order.payment.paymentType.equals("ns_d79569c6_ff6a_4ab5_8820_add42ae71170\\BookingComCollectPayments")) {
-                ordrehode += "30;"; //Betalingsbetingelse
-                ordrehode += "30;"; //Betalingsmåte
-            } else if (order.payment != null && order.payment.paymentType.equals("ns_639164bc_37f2_11e6_ac61_9e71128cae77\\AirBNBCollect")) {
-                ordrehode += "14;"; //Betalingsbetingelse
-                ordrehode += "40;"; //Betalingsmåte
-            } else {
-                ordrehode += "14;"; //Betalingsbetingelse
-                ordrehode += "20;"; //Betalingsmåte ( 10 = avtalegiro )
+            toAdd = toAdd.replace(";", "");
+            result += toAdd;
+            if(i != line.size()) {
+                result += ";";
             }
-            ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
-            ordrehode += order.incrementOrderId + ";";
-            result.add(ordrehode +"\r\n");
-
-            for (CartItem item : order.cart.getItems()) {
-                if(item.getProduct() == null || item.getProduct().accountingSystemId == null) {
-                    continue;
-                }
-                Integer vismaId = new Integer(item.getProduct().accountingSystemId);
-                String orderline = "L;"; // Fast L for orderline
-                orderline += vismaId + ";"; // ProdNO
-                orderline += ";"; // Avgiftskode ( hentes fra kunden )
-                orderline += createLineText(item, order) + ";"; // Produkt beskrivelse
-                orderline += item.getCount() + ";"; // Antall mnder
-                orderline += Math.round(item.getProduct().priceExTaxes*100)/100.0+ ";"; // Pris pr antall, hvis blank hentes pris fra Visma
-                orderline += ";"; // ikke i bruk
-                String roomName = item.getProduct().additionalMetaData;
-                orderline += roomName + ";"; // R4 Gjenstand ID
-                orderline += ";"; // 
-                result.add(orderline+"\r\n");
-            }
-            
-            System.out.println(" - done.");
         }
-
-        return result;
+        return result + "\r\n";
     }
     
     private String createLineText(CartItem item, Order order) {
@@ -365,7 +146,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         if(order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
             lineText = "(x)" + lineText;
         }
-        
+        lineText = makeSureIsOkay(lineText);
         return lineText;
     }
 
@@ -406,16 +187,288 @@ public class WilhelmsenHouse implements AccountingInterface {
                     toRemove.add(order);
                 }
             }
-            
-            if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
-                if(order.status != Order.Status.PAYMENT_COMPLETED) {
-                    toRemove.add(order);
-                }
-            }
         }
         orders.removeAll(toRemove);
         return orders;
     }
 
     
+    private List<HashMap<Integer, String>> generateLine(Order order, Date periodeDate, Integer customerId) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(order.rowCreatedDate);
+        
+        StorePaymentConfig storePaymentConfig = managers.paymentManager.getStorePaymentConfiguration(order.getPaymentApplicationId());
+
+        
+        managers.invoiceManager.generateKidOnOrder(order);
+        
+        List<HashMap<Integer, String>> lines = new ArrayList();
+        
+        int firstMonth = cal.get(Calendar.MONTH)+1;
+        int year = cal.get(Calendar.YEAR);
+        int duedays = 14;
+        
+        if(order.dueDays != null) {
+            duedays = order.dueDays;
+        }
+        
+        
+        
+        BigDecimal total = order.getTotalAmountVatRoundedTwoDecimals(2);
+        DecimalFormat df = new DecimalFormat("#.##");    
+        User user = managers.userManager.getUserById(order.userId);
+        String kid = order.kid;
+        if(kid == null) {
+            kid = "";
+        }
+        
+        String interimaccount = "1510";
+        
+        if(storePaymentConfig != null && storePaymentConfig.offsetAccountingId_accrude != null && !storePaymentConfig.offsetAccountingId_accrude.isEmpty()) {
+            interimaccount = storePaymentConfig.offsetAccountingId_accrude;
+        }
+        
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(order.rowCreatedDate);
+        cal2.add(Calendar.DAY_OF_YEAR, duedays);
+        Date dueDate = cal2.getTime();
+
+        HashMap<Integer, String> line = new HashMap();
+        line.put(0, "GBAT10");
+        line.put(1, order.incrementOrderId+ "");
+        line.put(2, format.format(order.rowCreatedDate)); //Ordredato
+        line.put(3, "1");
+        line.put(4, "");
+        line.put(5, "");
+        line.put(6, interimaccount);
+        line.put(7, "1");
+        line.put(8, df.format(total)+"");
+        line.put(9, customerId+"");
+        line.put(10, "");
+        line.put(11, makeSureIsOkay(user.fullName));
+        if(user.address != null) {
+            line.put(12, makeSureIsOkay(user.address.address));
+            line.put(13, makeSureIsOkay(user.address.postCode));
+            line.put(14, makeSureIsOkay(user.address.city));
+        } else {
+            line.put(12, "");
+            line.put(13, "");
+            line.put(14, "");
+        }
+        line.put(15, order.incrementOrderId + "");
+        line.put(16, kid); //KID
+        line.put(17, format.format(dueDate)); //Forfallsdato
+        line.put(18, "");
+        line.put(19, "");
+        line.put(20, "GetShop order: " + order.incrementOrderId);
+        line.put(21, order.payment.readablePaymentType()); //Forfallsdato
+        line.put(22, "");
+        line.put(23, "");
+        line.put(24, "");
+        line.put(25, "");
+        line.put(26, "");
+        line.put(27, "");
+        line.put(28, "X");
+        lines.add(line);
+        
+        Double linesTotal = 0.0;
+        for(CartItem item : order.cart.getItems()) {
+            linesTotal += item.getProduct().price * item.getCount();
+            
+            HashMap<Integer, String> subLine = new HashMap();
+            
+            Product product = managers.productManager.getProduct(item.getProduct().id);
+            if(product == null) {
+                product = managers.productManager.getDeletedProduct(item.getProduct().id);
+            }
+            
+            subLine.put(0, "GBAT10");
+            subLine.put(1, order.incrementOrderId+ "");
+            subLine.put(2, format.format(order.rowCreatedDate)); //Ordredato
+            subLine.put(3, "1");
+            subLine.put(4, "");
+            subLine.put(5, "");
+            subLine.put(6, product.sku);
+            subLine.put(7, product.sku);
+            BigDecimal itemamount = item.getTotalExRoundedWithTwoDecimals(2);
+            itemamount = itemamount.add(new BigDecimal(-1));
+            subLine.put(8, df.format(itemamount));
+            subLine.put(9, "");
+            subLine.put(10, "");
+            subLine.put(11, "");
+            subLine.put(12, "");
+            subLine.put(13, "");
+            subLine.put(14, "");
+            subLine.put(15, order.incrementOrderId + "");
+            subLine.put(16, kid); //KID
+            subLine.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
+            subLine.put(18, "");
+            subLine.put(19, "");
+            subLine.put(20, createLineText(item, order)); //Forfallsdato
+            subLine.put(21, order.payment.readablePaymentType()); //Forfallsdato
+            subLine.put(22, "");
+            subLine.put(23, "");
+            subLine.put(24, "");
+            subLine.put(25, "");
+            subLine.put(26, "");
+            subLine.put(27, "");
+            subLine.put(28, "X");
+            
+            lines.add(subLine);
+
+        }
+        
+        return lines;
+    }
+    
+    private String makeSureIsOkay(String text) {
+        if(text == null) {
+            return "";
+        }
+        return text.replaceAll(";", " ");
+    }    
+
+    private List<String> createInvoiceXledgerFile(List<Order> orders) {
+        List<String> lines = new ArrayList();
+        boolean first = true;
+        for(Order order : orders) {
+            User user = userManager.getUserById(order.userId);
+            if(user == null || user.customerId == null) {
+                continue;
+            }
+            
+            Date periodeDate = order.getStartDateByItems();
+            if(periodeDate == null) {
+                periodeDate = order.rowCreatedDate;
+            }
+            Integer accountingId = 1;
+            
+            accountingId = user.customerId; // Kundenr 
+            
+            List<HashMap<Integer, String>> tmplines = generateInvoiceLines(order, periodeDate, accountingId, first);
+            for(HashMap<Integer, String> toConvert : tmplines) {
+                String line = makeLine(toConvert);
+                lines.add(line);
+            }
+            first = false;
+        }
+
+        return lines;
+    }
+
+    private List<HashMap<Integer, String>> generateInvoiceLines(Order order, Date periodeDate, Integer accountingId, boolean first) {
+        User user = userManager.getUserByIdIncludedDeleted(order.userId);
+                
+        String zipcode = "";
+        if(user.address != null) { zipcode = user.address.postCode; }
+        if(zipcode == null) { zipcode = ""; }
+        String address = "";
+        if(user.address != null) { address = user.address.address; }
+        if(address == null) { address = ""; }
+        String city = "";
+        if(user.address != null) { city = user.address.city; }
+        if(city == null) { city = ""; }
+        String phone = user.cellPhone;
+        String email = user.emailAddress;
+        if(phone == null) { phone = ""; }
+        if(email == null) { email = ""; }
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        String date = format.format(periodeDate);
+
+        List<HashMap<Integer, String>> lines = new ArrayList();
+        
+        Integer lineNo = 1;
+        for(CartItem item : order.cart.getItems()) {
+            Product product = managers.productManager.getProduct(item.getProduct().id);
+            if(product == null) {
+                product = managers.productManager.getDeletedProduct(item.getProduct().id);
+            }
+            
+            LinkedHashMap<String, String> entries = new LinkedHashMap();
+            entries.put("ImpSystem", "");
+            entries.put("ImpSystemRef", "");
+            entries.put("InvoiceGroup", "");
+            entries.put("OrderNo", order.incrementOrderId + "");
+            entries.put("LineNo", lineNo+"");
+            entries.put("Date", date);
+            entries.put("CustomerNo", accountingId + "");
+            entries.put("InvoiceTemplate", "");
+            entries.put("ReadyToInvoice", "");
+            entries.put("Project", "");
+            entries.put("Object", "");
+            entries.put("ObjectValue", "");
+            entries.put("Posting1", "");
+            entries.put("Posting2", "");
+            entries.put("XGL", "");
+            entries.put("Currency", "NOK");
+            entries.put("Product", "");
+            entries.put("XLG", "");
+            entries.put("Text", createLineText(item, order));
+            entries.put("Pricelist", "");
+            entries.put("PriceGroup", "");
+            entries.put("Unit", "døgn");
+            entries.put("Quantity", item.getCount() + "");
+            entries.put("CostPrice", "");
+            entries.put("UnitPriceImp", item.getProduct().price + "");
+            entries.put("Discount", "");
+            entries.put("DiscountAmount", "");
+            entries.put("TaxRule", product.accountingSystemId + "");
+            entries.put("PrePaidToBank", "");
+            entries.put("PrePaidDate", "");
+            entries.put("PaymentRef", "");
+            entries.put("Xidentifier", "");
+            entries.put("ExternalOrder", "");
+            entries.put("SubledgerName", makeSureIsOkay(user.fullName));
+            entries.put("CompanyNo", "");
+            entries.put("SubledgerGroup", "");
+            entries.put("BankAccount", "");
+            entries.put("PaymentTerms", "");
+            entries.put("UpdateAddress", "");
+            entries.put("StreetAddressLine1", makeSureIsOkay(address));
+            entries.put("StreetAddressLine2", "");
+            entries.put("ZipCode", makeSureIsOkay(zipcode));
+            entries.put("City", makeSureIsOkay(city));
+            entries.put("State", "");
+            entries.put("Country", "");
+            entries.put("InvoiceStreetAddress2Line1", makeSureIsOkay(address));
+            entries.put("InvoiceStreetAddress2Line2", "");
+            entries.put("InvoiceZipCode2", makeSureIsOkay(zipcode));
+            entries.put("InvoiceCity2", makeSureIsOkay(city));
+            entries.put("InvoiceState2", "");
+            entries.put("InvoiceCountry2", "");
+            entries.put("Phone", makeSureIsOkay(phone));
+            entries.put("Email", makeSureIsOkay(email));
+            entries.put("YourRef", "");
+            entries.put("Dummy1", "");
+            entries.put("Dummy2", "");
+            entries.put("Dummy3", "");
+            entries.put("Dummy4", "");
+            entries.put("Dummy5", "");
+            entries.put("EOL", "X");
+            
+            if(first) {
+                HashMap<Integer, String> toAdd = new HashMap();
+                int j = 0;
+                for(String key : entries.keySet()) {
+                    toAdd.put(j, key);
+                    j++;
+                }
+                lines.add(toAdd);
+                
+                first = false;
+            }
+            
+            HashMap<Integer, String> toAdd = new HashMap();
+            int j = 0;
+            for(String key : entries.keySet()) {
+                toAdd.put(j, entries.get(key));
+                j++;
+            }
+            lines.add(toAdd);
+            lineNo++;
+        }
+        return lines;
+    }
 }

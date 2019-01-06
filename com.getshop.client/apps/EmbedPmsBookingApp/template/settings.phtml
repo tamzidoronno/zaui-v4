@@ -1,0 +1,24 @@
+<?
+$type = array();
+$type['start_date'] = "Start date";
+$type['end_date'] = "End date";
+$dateType = $this->getConfigurationSetting("date_type");
+?>
+
+<div gstype="form" method="saveSettings">
+    <table width="80%" class="contactConfigTable">
+        <tr>
+            <td width="50%">Endpoint</td>
+            <td width="50%"><input type="text" gsname="endpoint" style='width:100%;' value="<? echo $this->getConfigurationSetting("endpoint"); ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%">Websocket</td>
+            <td width="50%"><input type="text" gsname="websocket" style='width:100%;' value="<? echo $this->getConfigurationSetting("websocket"); ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%">Domain</td>
+            <td width="50%"><input type="text" gsname="domain" style='width:100%;' value="<? echo $this->getConfigurationSetting("domain"); ?>"></td>
+        </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

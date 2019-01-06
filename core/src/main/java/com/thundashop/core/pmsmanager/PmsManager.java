@@ -2823,7 +2823,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         logEntry(typeToAdd.name + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, null);
         processor();
-        return "";
+        return room.pmsBookingRoomId;
     }
 
     private Booking createBooking(PmsBookingRooms room) {
@@ -9440,5 +9440,38 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void wubookCreditCardIsInvalid(String bookingId, String reason) {
         logEntry("Credit card is invalid from channel manager msg: " + reason, bookingId, null);
+    }
+
+    @Override
+    public void splitStay(String roomId, Date splitDate) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        Date endDate = room.date.end;
+        LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap(room.priceMatrix);
+        List<PmsBookingAddonItem> addons = new ArrayList(room.addons);
+        
+        changeDatesOnRoom(room, room.date.start, splitDate);
+        String newRoomId = addBookingItemType(booking.id, room.bookingItemTypeId, splitDate, endDate, room.pmsBookingRoomId);
+        
+        if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+            setBookingItem(newRoomId, booking.id, room.bookingItemId, false);
+        }
+        
+        PmsBookingRooms newRoom = booking.getRoom(newRoomId);
+        
+        //Readd prices etc.
+        for(String key : newRoom.priceMatrix.keySet()) {
+            newRoom.priceMatrix.put(key, priceMatrix.get(key));
+        }
+        newRoom.addons.clear();
+        for(PmsBookingAddonItem item : addons) {
+            if(item.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {
+                newRoom.addons.add(item);
+            }
+        }
+        
+        saveBooking(booking);
+        
+        logEntry("Splitted stay", booking.id, room.bookingItemId);
     }
 }

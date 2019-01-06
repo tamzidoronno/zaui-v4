@@ -9,6 +9,7 @@ $case = $this->getApi()->getSupportManager()->getSupportCase($caseId);
         echo "<div class='dialogtitle'>";
         echo $case->title;
         echo "</div>";
+        echo "<input type='hidden' id='replycaseid' value='".$case->id. "'>";
         foreach($case->history as $history) {
             $isGetShop = "";
             if($this->isGetShopById($history->storeId)) {
@@ -19,7 +20,6 @@ $case = $this->getApi()->getSupportManager()->getSupportCase($caseId);
             echo $history->content;
             echo "</div>";
             echo "<div class='messagefooter'>";
-            echo "<input type='hidden' id='replycaseid' value='".$case->id. "'>";
             echo $history->fullName . " - " . date("d.m.Y H:i", strtotime($history->date));
             echo "</div>";
             echo "</div>";

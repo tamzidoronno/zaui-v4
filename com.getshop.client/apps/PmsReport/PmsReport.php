@@ -161,7 +161,7 @@ class PmsReport extends \MarketingApplication implements \Application {
          foreach($data->entries as $d) {
              $row = array();
              if($d->date) {
-                 $row[] = date("d.m.Y", strtotime($d->date));
+                 $row[] = date("d/m/Y", strtotime($d->date));
              } else {
                  $row[] = "";
              }
@@ -338,7 +338,7 @@ class PmsReport extends \MarketingApplication implements \Application {
     }
     
     public function downloadReportRaw() {
-        $rows = $this->getIncomeReportRows();
+        $rows = $this->getIncomeReportRows(true);
         $products = $this->getProductsArray();
         
         $headerrow = array();
@@ -360,15 +360,15 @@ class PmsReport extends \MarketingApplication implements \Application {
     }
     
     public function downloadReportRawNew() {
-        echo json_encode($this->getIncomeReportData());
+        echo json_encode($this->getIncomeReportData(true));
     }
     
     public function downloadIncomeReportExTaxesNew() {
-        echo json_encode($this->getIncomeReportData());
+        echo json_encode($this->getIncomeReportData(true));
     }
     
     public function downloadIncomeReportIncTaxesNew() {
-        echo json_encode($this->getIncomeReportData());
+        echo json_encode($this->getIncomeReportData(true));
     }
     
     
@@ -592,7 +592,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         return $order->incrementOrderId;
     }
 
-    public function getIncomeReportRows() {
+    public function getIncomeReportRows($convertToDateToExcel = false) {
         $this->setIncomeReportData();
         $data = $this->data;
 
@@ -610,7 +610,11 @@ class PmsReport extends \MarketingApplication implements \Application {
         //Creating daily rows.
         foreach($data->entries as $entry) {
             $row = new \stdClass();
-            $row->date = date("d.m.Y", strtotime($entry->day));
+            if($convertToDateToExcel) {
+                $row->date = date("d/m/Y", strtotime($entry->day));
+            } else {
+                $row->date = date("d.m.Y", strtotime($entry->day));
+            }
             $index = 0;
             $total = 0;
             foreach($products as $productId => $val) {
@@ -779,7 +783,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         return false;
     }
 
-    public function getIncomeReportData() {
+    public function getIncomeReportData($convertToExcelDate) {
         $selectedFilter = $this->getSelectedFilter();
         $filter = new \core_pmsmanager_CoverageAndIncomeReportFilter();
         $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
@@ -802,7 +806,9 @@ class PmsReport extends \MarketingApplication implements \Application {
         
         $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($filter);
         $result = $data->entries;
-        $this->printUsersTotal((array)$data->usersTotal);
+        if(!$convertToExcelDate) {
+            $this->printUsersTotal((array)$data->usersTotal);
+        }
         
         $matrix = array();
         $productsInUse = array();
@@ -830,7 +836,11 @@ class PmsReport extends \MarketingApplication implements \Application {
         $everything = 0;
         foreach($result as $day) {
             $row = array();
-            $row[] = date("d.m.Y", strtotime($day->day));
+            if($convertToExcelDate) {
+                $row[] = date("d/m/Y", strtotime($day->day));
+            } else {
+                $row[] = date("d.m.Y", strtotime($day->day));
+            }
             foreach($productsInUse as $prodId => $val) {
                 $row[$prodId] = $day->products->{$prodId};
                 $productsInUse[$prodId] += $row[$prodId];

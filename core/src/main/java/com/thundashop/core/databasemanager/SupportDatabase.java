@@ -74,6 +74,7 @@ public class SupportDatabase extends StoreComponent {
             mongo.getDB("SupportManager").getCollection(collectionPrefix + "all").save(dbObject);
             mongo.close();
         } catch (com.mongodb.CommandFailureException ex) {
+            mongo.close();
             ex.printStackTrace();
         } catch (UnknownHostException ex) {
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,6 +97,7 @@ public class SupportDatabase extends StoreComponent {
             mongo.close();
             return retlist;
         } catch (Exception ex) {
+            mongo.close();
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
         }
         
@@ -138,6 +140,7 @@ public class SupportDatabase extends StoreComponent {
             mongo.close();
             return retObjecs;
         } catch (Exception ex) {
+            mongo.close();
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
         }
         

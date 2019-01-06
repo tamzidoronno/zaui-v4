@@ -13,6 +13,7 @@
         getshop_nextPage = options.nextPage;
         getshop_successcallback = options.success;
         getshop_failurecallback = options.failure;
+        getshop_websockethost = options.websocket;
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
         sessionStorage.setItem('getshop_domain',options.domain);
         sessionStorage.setItem('getshop_booking_form_options', JSON.stringify(options));

@@ -10,14 +10,15 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://eilertsmith.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://sverre.kronen.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://eilertsmith.3.0.local.getshop.com/",
-                    "jsendpoint": "http://eilertsmith.3.0.local.getshop.com/",
+                    "endpoint": "http://sverre.kronen.3.0.local.getshop.com/",
+                    "jsendpoint": "http://sverre.kronen.3.0.local.getshop.com/",
                     "domain" : "default",
                     "language" : "no",
-                    'roomStepTroughConfig' : true
+                    "websocket" : "websocket5.getshop.com",
+//                    'roomStepTroughConfig' : true
 //                    "success" : function(res) {
 //                        console.log("booking completed");
 //                        console.log(res);
@@ -42,25 +43,39 @@
     });
 </script>
 
-<style>
-    .GslBooking #search_rooms { background-color:pink; }
-    .GslBooking .removeallselectedroomsbtn { background-color:blue !important; }
-    .GslBooking .continuetoguestinformationbtn { background-color:orange !important; }
-    .GslBooking .gsl_button.continue { background-color:brown !important; }
-    .GslBooking .gsl_button.return { background-color:black !important; }
+<style>.gsl_button {
+    background: #ab8b65 !important; }
+    .GslBooking .removeallselectedroomsbtn { background-color:#ab8b65 !important; }
+    .GslBooking .continuetoguestinformationbtn { background-color:#ab8b65 !important; }
+    .GslBooking .gsl_button.continue { background-color:#ab8b65 !important; }
+    .GslBooking .gsl_button.return { background-color:#ab8b65 !important; }
     
     .GslBooking,
-    .GslBooking .gslfront_1, .GslBooking .gslfront_1 input, .GslBooking .gslfront_1 select{font-family: "Comic Sans MS", cursive, sans-serif !important; }
-    .GslBooking .gslfront_1 .addons_overview, .GslBooking .gslfront_1 .overview { background-color: purple; }
+    .GslBooking .gslfront_1, .GslBooking .gslfront_1 input, .GslBooking .gslfront_1 select{font-family: "Open Sans", cursive, sans-serif !important; }
+    .GslBooking .gslfront_1 .addons_overview, .GslBooking .gslfront_1 .overview { background-color: #7f8795; }
+    
+    /* Removing border in guest information */
+    .GslBooking .gslfront_1 .addons_overview {
+        padding: 0px !important;
+    }
+    
+    /* White text + spacing in add guest */
+    .GslBooking .gslfront_1 .addguest { color: #fff !important; padding: 5px; }
+    
+    /* Change height of heading */
+    .gslfront_1 .roomheading { height: 40px !important; }
+    
+    /* remove guest button*/
+    .GslBooking .gslfront_1 .removeguest { height: 36px; }
     
     .GslBooking .gslfront_1 .product_availablerooms,
     .GslBooking .gslfront_1 .productentry_header,
     .GslBooking .gslfront_1 .innertext,
-    .GslBooking .gslfront_1 .roomheading { background-color: orange !important; }
-    .GslBooking .gslfront_1 .roomentry { border-color: orange !important; }
+    .GslBooking .gslfront_1 .roomheading { background-color: #7f8795 !important; }
+    .GslBooking .gslfront_1 .roomentry { border-color: #7f8795 !important; }
     
     .GslBooking .gslfront_1 .displayeditroom,
-    .GslBooking .gslfront_1 .removeguest { background-color: aqua !important; color:#000 !important; }
+    .GslBooking .gslfront_1 .removeguest { background-color: #7f8795 !important; color: #ffffff !important; }
 </style>
 
 </body>

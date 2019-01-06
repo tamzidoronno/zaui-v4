@@ -751,7 +751,7 @@ public class PmsBookingRooms implements Serializable {
             if(item.isIncludedInRoomPrice) {
                 continue;
             }
-            if(isDeleted() && !item.noRefundable) {
+            if(isDeleted() && (!item.noRefundable || deletedByChannelManagerForModification)) {
                 continue;
             }
             if (item.price != null && item.count != null) {
@@ -759,7 +759,7 @@ public class PmsBookingRooms implements Serializable {
             }
         }
         
-        if(isDeleted() && !nonrefundable) {
+        if(isDeleted() && (!nonrefundable || deletedByChannelManagerForModification)) {
             price = 0.0;
         } else {
             if(priceType.equals(PriceType.daily)) {

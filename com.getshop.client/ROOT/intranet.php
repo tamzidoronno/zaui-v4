@@ -12,7 +12,7 @@ if($timezone) {
 }
 
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
-    header('location:/login.php?redirectto=/pms.php');
+    header('location:/login.php?redirectto=/intranet.php');
     exit(0);
 }
 if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {

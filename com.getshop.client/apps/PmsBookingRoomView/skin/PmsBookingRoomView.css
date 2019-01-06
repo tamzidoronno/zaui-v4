@@ -14,6 +14,8 @@
     margin-bottom: 5px;
     color:#fff;
 }
+.PmsBookingRoomView .splistayoptions { display:none; margin-top:10px; }
+
 .PmsBookingRoomView .grouppaymentprocess {
     position: absolute;
     display:none;

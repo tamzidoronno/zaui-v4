@@ -9,9 +9,13 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         
     }
     
+    public function saveOrderDate() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->rowCreatedDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
     
     public static function sortByDate( $logEntrya, $logEntryb) {
-        die("TEST");
         return  strtotime($logEntrya->date) -  strtotime($logEntryb->date);
     }
 

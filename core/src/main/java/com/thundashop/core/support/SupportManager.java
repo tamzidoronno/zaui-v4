@@ -156,7 +156,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         if(filter.state >= 0) {
             obj.add(new BasicDBObject("state", filter.state));
         }
-        if(!filter.caseId.isEmpty()) {
+        if(filter.caseId != null && !filter.caseId.isEmpty()) {
             obj.add(new BasicDBObject("_id", filter.caseId));
             }
         if(!filter.userId.isEmpty()) {
@@ -247,6 +247,9 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         history.date = new Date();
         history.fullName = getSession().currentUser.fullName;
         SupportCase scase = getSupportCase(supportCaseId);
+        if(scase == null) {
+            return;
+        }
         scase.history.add(history);
         if(getSession() != null && getSession().currentUser != null) {
             if(scase.byUserName.isEmpty()) {

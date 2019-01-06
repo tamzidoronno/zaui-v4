@@ -230,6 +230,9 @@ public interface IPmsManager {
     public void splitBooking(List<String> roomIds);
     
     @Administrator
+    public void splitStay(String roomId, Date splitDate);
+    
+    @Administrator
     public String setBookingItem(String roomId, String bookingId, String itemId, boolean split);
     
     @Administrator

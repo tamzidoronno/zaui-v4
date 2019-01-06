@@ -55,7 +55,15 @@ if(stristr($booking->channel, "wubook_")) {
         } else if($room->checkedin && $room->checkedout) {
             echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:orange;'>Undo checkout</span>";
         }
+        echo "<span class='shop_button splitstaybutton' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:#00807a;' onclick='$(this).hide();$(\".PmsBookingRoomView .splistayoptions\").slideDown();'>Split stay</span>";
         ?>
+        <div class='splistayoptions' gstype='form' method='splitStay'>
+            <div>Specify split time</div>
+            <input type="hidden" class="gsniceinput1 splitstaydate" value="<?php echo $room->pmsBookingRoomId; ?>" gsname="roomid">
+            <input type="txt" class="gsniceinput1 splitstaydate" value="<?php echo date("d.m.Y"); ?>" gsname="date">
+            <input type="txt" class="gsniceinput1" value="<?php echo date("H:i"); ?>" gsname="time" style="width:60px;">
+            <span class="shop_button" gstype='submit'>Split stay</span>
+        </div>
     </div>
 
     <div class='itemview_inner roomandcats'>
@@ -94,3 +102,8 @@ if(stristr($booking->channel, "wubook_")) {
 </div>
 <div class="itemview_inner roomstoselect" style="display: none;"></div>
 <div style="border: solid 1px; text-align: right;background-color:red; color:#fff; <?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>
+
+
+<script>
+    $('.PmsBookingRoomView .splitstaydate').datepicker({ dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

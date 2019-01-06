@@ -81,15 +81,3 @@ $splitchange = false;
 if($start < time() && $diff > 86400 && date("dmY", $start) != date("dmY", time())) {
     $splitchange = true;
 }
-if($splitchange) {
-?>
-    <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='split'>Split change</span>
-<?php } ?>
-<div class="tiparea" style="width: 500px;">
-</div>
-<?php if($splitchange) { ?>
-    <div>
-        * Change moves the entire stay to the new room<br>
-        * Split change only move the stay from today.<br>
-    </div>
-<?php } ?>

@@ -20,6 +20,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function splitStay() {
+        $roomId = $_POST['data']['roomid'];
+        $splitTime = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['time']));
+        $this->getApi()->getPmsManager()->splitStay($this->getSelectedMultilevelDomainName(), $roomId, $splitTime);
+        $this->toggleListGroupRooms();
+    }
+    
     public function changeCountryCodeOnBooking() {
         $booking = $this->getPmsBooking();
         $booking->countryCode = $_POST['data']['gsvalue'];

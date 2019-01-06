@@ -1,0 +1,136 @@
+.InvoicingDashBoard {
+    max-width:1500px;
+    margin:auto;
+}
+.InvoicingDashBoard .statiticbox {
+    width: 145px;
+    height: 145px;
+    text-align: center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin: 8px;
+}
+
+
+.InvoicingDashBoard .statiticbox .subinfo {
+    font-size: 20px;
+}
+
+.InvoicingDashBoard .statiticbox .filecount { 
+    padding-top: 43px;
+    font-size: 35px;
+}
+
+.InvoicingDashBoard .statiticbox.counter.lightgreen {
+    color: #3fbdbd;
+    background-color: #3fbdbd;
+}
+
+.InvoicingDashBoard .statiticbox.counter.yellow {
+    color: #e6e158;
+    background-color: #e6e158;
+}
+
+.InvoicingDashBoard .statiticbox.counter.grey {
+    color: #b6ced9;
+    background-color: #b6ced9;
+}
+
+.InvoicingDashBoard .statiticbox.counter.pink {
+    color: #d29be8;
+    background-color: #d29be8;
+}
+
+.InvoicingDashBoard .statiticbox.counter.lightblue {
+    color: #82cdf3;
+    background-color: #82cdf3;
+}
+
+.InvoicingDashBoard .statiticbox.counter.green {
+    color: #a1ca36;
+    background-color: #a1ca36;
+}
+
+.InvoicingDashBoard .statiticbox.counter.orange {
+    color: #f1a130;
+    background-color: #f1a130;
+}
+
+.InvoicingDashBoard .statiticbox.counter .box_explainer {
+    color: #000;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 12px;
+} 
+
+.InvoicingDashBoard .statiticbox.counter {
+    color: #33455b;
+    background-image: url('{IMAGEFOLDER}/background.png');
+    background-size: contain;
+    background-position: center;
+} 
+
+
+.InvoicingDashBoard .statistics .dayheader {
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 20px;
+}
+
+.InvoicingDashBoard .dashboard_main { 
+    text-align: center;
+}
+
+.InvoicingDashBoard .statistics .header {
+    border-bottom: solid 1px #bbb;
+    padding: 20px;
+    position: relative;
+    
+    color:#000;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.InvoicingDashBoard .statistics .header i {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: #b6ced9;
+    font-size: 25px;
+}
+
+.InvoicingDashBoard {
+    font-size: 0px;
+}
+
+.InvoicingDashBoard .presetup {
+    font-size: 14px;
+}
+
+.InvoicingDashBoard .statistics_outer {
+    font-size: 15px;
+    width:25%;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 40px;
+}
+
+.InvoicingDashBoard .statistics {
+    background-color: #FFF;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+}
+
+.InvoicingDashBoard .statistics .inner { 
+    padding: 20px;
+}
+        
+
+@media screen and (max-width: 800px) {
+    .InvoicingDashBoard .statistics_outer { width: 100%; }
+}

@@ -1,0 +1,59 @@
+<?php
+/* @var $this ns_bf312f0d_d204_45e9_9519_a139064ee2a7\SalesPointDashBoard */
+
+$boxes = array();
+$link = array();
+$boxes["Overdue Invoices"] = "Overdue Invoices";
+$boxes["TOTAL SALES INVOICES"] = "Total outstanding amount invoices";
+$boxes["OVERDUE INVOICES"] = "Invoices that are overdue.";
+
+$colors["Overdue_Invoices"] = "green";
+$colors["TOTAL_SALES_INVOICES"] = "orange";
+$colors["OVERDUE_INVOICES"] = "pink";
+
+$count["Overdue_Invoices"] = count($this->getApi()->getOrderManager()->getOverdueInvoices(null));
+$count["TOTAL_SALES_INVOICES"] = round($this->getApi()->getOrderManager()->getTotalOutstandingInvoices(null));
+$count["OVERDUE_INVOICES"] = round($this->getApi()->getOrderManager()->getTotalOutstandingInvoicesOverdue(null));
+
+$link['OVERDUE_INVOICES'] = "overduelist";
+$link['Overdue_Invoices'] = "overduelist";
+?>
+
+<div class='dashboard_main'>
+    <?php
+    foreach($boxes as $title => $desc) {
+        $field = str_replace(" ", "_", $title);
+        if (isset($link[$field])) {
+            echo "<a href='/invoicing.php?page=$link[$field]'>";
+        }
+    ?>
+    <div class="statistics_outer <?php echo $field; ?>">
+        <div class="statistics <?php echo $field; ?>">
+            <div class='header'>
+                <?php echo $title; ?>
+                <i class='fa fa-info-circle' title='<?php echo $desc; ?>'></i> 
+            </div>
+            <div class='inner'>
+                <? $color = $colors[$field]; ?>
+                <div class="statiticbox counter <? echo $color; ?> counter1">
+                    <div class="filecount boldFont">
+                        <? 
+                        echo $count[$field];
+                        ?>
+                    </div>
+                    
+                    <div class="box_explainer">
+                    <?php echo $this->__f("Today"); ?>
+                    </div>
+                </div>
+                
+            </div>    
+        </div>
+    </div>
+    <?
+    if (isset($link[$field])) {
+        echo "</a>";
+    }
+    ?>
+<?php } ?>
+</div>

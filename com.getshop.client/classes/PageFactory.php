@@ -43,6 +43,9 @@ class PageFactory {
         if ($moduleId == "apac") {
             $this->createApacPages();
         }
+        if ($moduleId == "invoicing") {
+            $this->createInvoicingPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -91,6 +94,8 @@ class PageFactory {
 
     public function createPmsPages() {
         // Bookings
+        $this->createOrderViewPage("pms");
+        
         $page = new \ModulePage("a90a9031-b67d-4d98-b034-f8c201a8f496", "pms");
             
         $row = $page->createRow();
@@ -388,7 +393,7 @@ class PageFactory {
     }
 
     public function createSalesPointPages() {
-    
+        $this->createOrderViewPage("salespoint");
         // Bookings
         $page = new \ModulePage("home", "salespoint");
         $row = $page->createRow();
@@ -404,14 +409,7 @@ class PageFactory {
         $page->addExtraApplications("b5e9370e-121f-414d-bda2-74df44010c3b");
         $this->pages['new'] = $page;
         
-        $page = new \ModulePage("products", "salespoint");
-        $row = $page->createRow();
-        $row->addText("Products");
-        $row->addColumn("c282cfba-2873-46fd-876b-c44269eb0dfb", "144776d1-6d0f-47a8-a31c-aa8c3c40799f");
-        $row = $page->createRow();
-        $row->addColumn("0c6398b0-c301-481a-b4e7-faea0376e822", "90bc3ac3-a260-41e6-9831-68ce0eabc28e");
-        $page->addExtraApplications("4404dc7d-e68a-4fd5-bd98-39813974a606");
-        $this->pages['products'] = $page;
+        $this->createProductsPage("salespoint");
         
         $page = new \ModulePage("paymentmodal", "salespoint");
         $page->addExtraApplications("b5e9370e-121f-414d-bda2-74df44010c3b");
@@ -548,5 +546,41 @@ class PageFactory {
         $row->addColumn("2d6a27b9-b238-4406-9f03-c4ca8184f590", "d6529811-8d13-4771-8631-b4fab9fbfed7");
         $this->pages['configuration'] = $page;
     }
+    
+    private function createProductsPage($modulename) {
+        $page = new \ModulePage("products", $modulename);
+        $row = $page->createRow();
+        $row->addText("Products");
+        $row->addColumn("c282cfba-2873-46fd-876b-c44269eb0dfb", "144776d1-6d0f-47a8-a31c-aa8c3c40799f");
+        $row = $page->createRow();
+        $row->addColumn("0c6398b0-c301-481a-b4e7-faea0376e822", "90bc3ac3-a260-41e6-9831-68ce0eabc28e");
+        $page->addExtraApplications("4404dc7d-e68a-4fd5-bd98-39813974a606");
+        $this->pages['products'] = $page;
+    }
 
+    private function createOrderViewPage($modulename) {
+        $page = new \ModulePage("orderviewpage", $modulename);
+        $row = $page->createRow(true);
+        $row->addColumn("4be8e427-bead-491e-8d9f-7dd16356d8eb", "ab0b52a7-8745-4c69-8024-f3890a2849c0");
+        $this->pages['orderviewpage'] = $page;
+    }
+    
+    public function createInvoicingPages() {
+        $page = new \ModulePage("home", "invoicing");
+        $row = $page->createRow();
+        $row->addText("Dashboard");
+        $row = $page->createRow();
+        $row->addColumn("f9842d40-5f0a-4b48-86b2-84f314f5f025", "f2aaea3f-9bf7-444e-b502-374af6d504bd");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("overduelist", "invoicing");
+        $row = $page->createRow();
+        $row->addText("Overdue invoices");
+        $row = $page->createRow();
+        $row->addColumn("b7fb195b-8cea-4d7b-922e-dee665940de2", "c709209b-4765-4cde-82e9-7e372302b560");
+        $this->pages['overduelist'] = $page;
+        
+        $this->createOrderViewPage('invoicing');
+        $this->createProductsPage("invoicing");
+    }
 }

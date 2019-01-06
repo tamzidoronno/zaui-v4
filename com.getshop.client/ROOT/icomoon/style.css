@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?s7pai8');
-  src:  url('fonts/icomoon.eot?s7pai8#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.woff2?s7pai8') format('woff2'),
-    url('fonts/icomoon.ttf?s7pai8') format('truetype'),
-    url('fonts/icomoon.woff?s7pai8') format('woff'),
-    url('fonts/icomoon.svg?s7pai8#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?yat69m');
+  src:  url('fonts/icomoon.eot?yat69m#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.woff2?yat69m') format('woff2'),
+    url('fonts/icomoon.ttf?yat69m') format('truetype'),
+    url('fonts/icomoon.woff?yat69m') format('woff'),
+    url('fonts/icomoon.svg?yat69m#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -48,6 +48,21 @@
 }
 .gsicon-flag-checkered:before {
   content: "\e917";
+}
+.gsicon-calculator:before {
+  content: "\e93d";
+}
+.gsicon-alarm-error:before {
+  content: "\e93c";
+}
+.gsicon-receipt:before {
+  content: "\e93b";
+}
+.gsicon-price:before {
+  content: "\e93b";
+}
+.gsicon-invoice:before {
+  content: "\e93b";
 }
 .gsicon-glass-cocktail:before {
   content: "\e93a";
@@ -184,7 +199,7 @@
 .gsicon-lifebuoy:before {
   content: "\e912";
 }
-.gsicon-receipt:before {
+.gsicon-receipt1:before {
   content: "\e911";
 }
 .gsicon-users:before {

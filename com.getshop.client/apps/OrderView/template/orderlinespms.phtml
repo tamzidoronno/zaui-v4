@@ -1,0 +1,75 @@
+<?
+/* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
+$order = $this->getOrder();
+$cartItems = $this->getPmsCartItems();
+
+$closed = $order->closed;
+$disabled = "";
+if($closed) {
+    $disabled = "DISABLED";
+}
+if($order->manuallyClosed) {
+    $closed = true;
+}
+
+?>
+<div class="cartitem header">
+    <div class="col startdate"><? echo $this->__f("Start"); ?></div>
+    <div class="col enddate"><? echo $this->__f("End"); ?></div>
+    <div class="col product_desc"><? echo $this->__f("Product"); ?></div>
+    <div class="col additionalMetaData"><? echo $this->__f("Room"); ?></div>
+    <div class="col metaData"><? echo $this->__f("Guest"); ?></div>
+    <div class="col count" style='text-align: center; padding-left: 0px;'><? echo $this->__f("Count"); ?></div>
+    <div class="col price"><? echo $this->__f("Price"); ?></div>
+</div>
+<?
+
+foreach ($cartItems as $item) {
+    $product = $item->product;
+    $start = "";
+    $end = "";
+    if($item->startDate) { $start = date("d.m.Y", strtotime($item->startDate)); }
+    if($item->endDate) { $end = date("d.m.Y", strtotime($item->endDate)); }
+    $displayStyle = "";
+    $hasSpecialItems = false;
+    if(sizeof((array)$item->priceMatrix) > 0) {
+        $hasSpecialItems = true;
+    }
+    if(isset($item->itemsAdded) && $item->itemsAdded && sizeof((array)$item->itemsAdded) > 0) {
+        $hasSpecialItems = true;
+    }
+    $disabledCountAndPrice = "";
+    if($hasSpecialItems) {
+        $disabledCountAndPrice = "disabled";
+    }
+    $room = "";
+    if(isset($item->product->additionalMetaData)) {
+        $room = $item->product->additionalMetaData;
+    }
+    
+    ?>
+    <div class="cartitem open" style='<?php echo $displayStyle; ?>' cartitemid='<? echo $item->cartItemId; ?>'>
+        
+        <div class="col startdate"><input class="gsniceinput1 startdate" value="<? echo $start; ?>"  <?php echo $disabled; ?>/></div>
+        <div class="col enddate"><input class="gsniceinput1 enddate" value="<? echo $end; ?>" <?php echo $disabled; ?>/></div>
+        <div class="col product_desc"><input class="gsniceinput1 product_desc" value="<? echo $product->name; ?>" <?php echo $disabled; ?>/></div>
+        <div class="col additionalMetaData"><input class="gsniceinput1 additionalMetaData" value="<? echo $room; ?>" <?php echo $disabled; ?>/></div>
+        <div class="col metaData"><input class="gsniceinput1 metaData" value="<? echo $item->product->metaData; ?>" <?php echo $disabled; ?>/></div>
+        <div class="col count"><input class="gsniceinput1 count" value="<? echo $item->count; ?>" <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>/></div>
+            x <div class="col price"><input gsname='<? echo $item->cartItemId; ?>_price' class="gsniceinput1 price" value="<? echo $product->price; ?>" <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>/></div>
+        <?php 
+        if($hasSpecialItems && !$closed) {
+            echo "<div class='gs_shop_small_icon specialedit'>";
+                echo "<i class='fa fa-edit' itemid='".$item->cartItemId."' orderid='".$order->id."' style='cursor:pointer;'></i>";
+            echo "</div>";
+        }
+        ?>
+            
+        <?php if (!$closed) { ?>
+            <div class='gs_shop_small_icon removecartitemtfromorder'>
+                <i class='fa fa-trash-o removecartitemtfromorder' style='cursor:pointer;' orderid='<?php echo $order->id; ?>' itemid='<?php echo $item->cartItemId; ?>'></i> 
+            </div>
+        <?php } ?>
+    </div>
+    <?
+}

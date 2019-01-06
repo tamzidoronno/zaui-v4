@@ -57,6 +57,10 @@ class ModulePage {
             return $this->getTopMenuApac();
         }
         
+        if ($this->module == "invoicing") {
+            return $this->getTopMenuInvoicing();
+        }
+        
     }
 
     /**
@@ -67,8 +71,9 @@ class ModulePage {
         return $this->rows;
     }
 
-    public function createRow() {
+    public function createRow($ignoreTopRow=false) {
         $row = new ModulePageRow($this);
+        $row->ignoreTopRow = $ignoreTopRow;
         $this->rows[] = $row;
         return $row;
     }
@@ -266,7 +271,7 @@ class ModulePage {
         echo "<div class='gs_page_area' gs_page_content_id='$this->pageId'>";
         $rowcount = 0;
         foreach ($this->getRows() as $row) {
-            $topRowClass = $topRow && !$this->leftMenu ? 'module_toprow' : "";
+            $topRowClass = $topRow && !$row->ignoreTopRow && !$this->leftMenu ? 'module_toprow' : "";
             echo "<div class='gs_page_row $topRowClass'>";
             $cols = $row->getColumns();
             $colcount = 0;
@@ -287,6 +292,7 @@ class ModulePage {
             $rowcount++;
         }
         echo "</div>";
+        
     }
 
     public function getTopMenuSrs() {
@@ -353,5 +359,13 @@ class ModulePage {
         return $menu; 
     }
 
-    
+    public function getTopMenuInvoicing() {
+        $menu = new \ModulePageMenu("invoicing");
+        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Overdue", "overduelist", "gsicon-alarm-error");
+        $menu->entries[] = new ModulePageMenuItem("All", "home", "gsicon-receipt");
+        $menu->entries[] = new ModulePageMenuItem("Products", "products", "gsicon-basket");
+        return $menu;
+    }
+
 }

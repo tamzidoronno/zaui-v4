@@ -322,7 +322,14 @@ thundashop.Ajax = {
     reloadApp: function(appInstanceId, firstLoad) {
         var app = $('.app[appsettingsid="'+appInstanceId+'"]');
         $('.gs_loading_spinner').addClass('active');    
-        thundashop.Ajax.simplePost(app, "", {}, firstLoad);
+        
+        var data = {}
+        
+        if ($(app).attr('gs_getvariables')) {
+            data.gs_getvariables = $(app).attr('gs_getvariables');
+        }
+        
+        thundashop.Ajax.simplePost(app, "", data, firstLoad);
     },
     
     showModal: function() {

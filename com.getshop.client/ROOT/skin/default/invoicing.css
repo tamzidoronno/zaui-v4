@@ -1,0 +1,20 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 5, 2019, 11:42:19 AM
+    Author     : ktonder
+*/
+
+body {
+    background-color: #EFEFEF;
+}
+
+.gs_page_area[gs_page_content_id="overduelist"] .gs_page_row.module_toprow {
+    background-color: #DDD;
+    text-align: center;
+    padding-bottom: 15px;
+    margin-bottom: 40px;
+}

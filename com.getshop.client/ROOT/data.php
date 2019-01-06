@@ -13,6 +13,9 @@ if($timezone) {
     date_default_timezone_set($timezone);
 }
 
+if (isset($_POST['data']['gs_getvariables']) && $_POST['data']['gs_getvariables']) {
+    $_GET = json_decode($_POST['data']['gs_getvariables'], TRUE);
+}
 
 // UPDATE MODAL VARIABLES
 if (isset($_POST['data']['gs_show_modal'])) {

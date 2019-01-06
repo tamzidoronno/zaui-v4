@@ -1,0 +1,35 @@
+<?
+/* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+?>
+<div class="summaryheader"><? echo $this->__f("Order sent log"); ?></div>
+<?
+if (!count($order->shipmentLog)) {
+    echo "<div class='warning_not_sent'>";
+        echo "<i class='fa fa-warning'></i> ".$this->__f("This order has not been sent yet to your customer");
+    echo "</div>";
+} else {
+    foreach ($order->shipmentLog as $log) {
+        echo "<div class='shipmentlogline'>";
+            echo "<div class='date'>".date('d.m.Y H:i', strtotime($log->date))."</div>";
+            echo "<div class='to'>".$this->__f("Order sent by")." ".$log->type." ".$this->__f("to")." ".$log->address."</div>";
+        echo "</div>";
+    }
+}
+?>
+
+<div class="summaryheader"><? echo $this->__f("Payment log"); ?></div>
+<?
+if (!count($order->payment->transactionLog)) {
+    echo "<div class='warning_not_sent'>";
+        echo "<i class='fa fa-warning'></i> ".$this->__f("This order has not been sent yet to your customer");
+    echo "</div>";
+} else {
+    foreach ($order->payment->transactionLog as $time => $log) {
+        echo "<div class='shipmentlogline'>";
+            echo "<div class='date'>".date('d.m.Y H:i', ($time/1000))."</div>";
+            echo "<div class='to'>".$log."</div>";
+        echo "</div>";
+    }
+}
+?>

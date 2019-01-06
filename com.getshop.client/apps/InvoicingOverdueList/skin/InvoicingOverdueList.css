@@ -1,0 +1,81 @@
+.InvoicingOverdueList .col {
+    display: inline-block;
+}
+
+.InvoicingOverdueList .col.incrementalOrderId { width: 100px; text-align: center; }
+.InvoicingOverdueList .col.name { width: calc(100% - 600px); }
+.InvoicingOverdueList .col.duedate { width: 200px; }
+.InvoicingOverdueList .col.totalamount { width: 100px; }
+.InvoicingOverdueList .col.totalpaid { width: 100px; }
+
+.InvoicingOverdueList div.duerow.header {
+    font-weight: bold;
+}
+
+.InvoicingOverdueList div.duerow {
+    padding: 5px;
+}
+.InvoicingOverdueList div.duerow:nth-child(odd) {
+    background-color: #FFF;
+}
+
+.InvoicingOverdueList .duerow.blue .overduedays { color: blue; }
+.InvoicingOverdueList .duerow.yellow .overduedays { color: #ff6636; }
+.InvoicingOverdueList .duerow.red .overduedays { color: red; }
+
+.InvoicingOverdueList .orderlist {
+    width: 900px;
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+}
+
+.InvoicingOverdueList .summary {
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    padding: 20px;
+    background-color: #FFF;
+    border: solid 1px #DDD;
+    margin-left: 30px;
+}
+
+.InvoicingOverdueList {
+    max-width: 1230px;
+    margin: 0 auto;
+}
+
+.InvoicingOverdueList .innerbox {
+    text-align: center;
+}
+
+.InvoicingOverdueList .innerbox .number {
+    font-size: 40px;
+}
+
+.InvoicingOverdueList .innerbox {
+    border-top: solid 1px #DDD;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #2a324e;
+    cursor: pointer;
+}
+
+.InvoicingOverdueList .innerbox:hover {
+    background-color: #EFEFEF;
+}
+
+.InvoicingOverdueList .innerbox.active {
+    background-color: green;
+}
+
+.InvoicingOverdueList div.innerbox:first-child {
+    border-top: 0px;
+}
+
+.InvoicingOverdueList .desc {
+    font-style: italic;
+    font-size: 15px;
+}

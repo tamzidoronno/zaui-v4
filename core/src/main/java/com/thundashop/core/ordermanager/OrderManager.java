@@ -3075,5 +3075,65 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveObject(settings);
     }
 
+    @Override
+    public List<Order> getOverdueInvoices(FilterOptions filterData) {
+        List<Order> retOrders = orders.values()
+                .stream()
+                .filter(o -> o.isInvoice())
+                .filter(o -> o.isOverdue())
+                .collect(Collectors.toList());
+        
+        retOrders.forEach(o -> o.doFinalize());
+        
+        retOrders.sort((Order o1, Order o2) -> {
+            return o1.dueDate.compareTo(o2.dueDate);
+        });
+        
+        return retOrders;
+        
+    }
+
+    @Override
+    public Double getTotalOutstandingInvoices(FilterOptions filterData) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.isInvoice())
+                .filter(o -> !o.isFullyPaid())
+                .mapToDouble(o -> getTotalAmount(o))
+                .sum();
+    }
     
+    @Override
+    public Double getTotalOutstandingInvoicesOverdue(FilterOptions filterData) {
+        return getOverdueInvoices(filterData).stream()
+                .mapToDouble(o -> getTotalAmount(o))
+                .sum();
+    }
+
+    @Override
+    public void changeProductOnCartItem(String orderId, String cartItemId, String productId) {
+        Product product = productManager.getProduct(productId);
+        Order order = getOrder(orderId);
+        order.cart.getCartItem(cartItemId).setProduct(product);
+        saveOrder(order);
+    }
+
+    @Override
+    public void updateCartItemOnOrder(String orderId, CartItem cartItem) {
+        Order order = getOrder(orderId);
+        CartItem oldCartItem = order.cart.getCartItem(cartItem.getCartItemId());
+        
+        if (oldCartItem.getProduct() == null) {
+            return;
+        }
+        
+        oldCartItem.getProduct().name = cartItem.getProduct().name;
+        
+        if (!oldCartItem.isPmsAddons() && !oldCartItem.isPriceMatrixItem()) {
+            oldCartItem.setCount(cartItem.getCount());
+            oldCartItem.getProduct().price = cartItem.getProduct().price;
+        }
+        
+        saveOrder(order);
+    }
 }

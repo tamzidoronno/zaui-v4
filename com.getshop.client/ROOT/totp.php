@@ -213,6 +213,10 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
                 echo "<a class='gs_ignorenavigate' href='/apac.php' style='text-decoration:none;'>";
                 echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>APAC</div>";
                 echo "</a>";
+            } elseif(strtolower($module->name) == "invoicing") {
+                echo "<a class='gs_ignorenavigate' href='/invoicing.php' style='text-decoration:none;'>";
+                echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>Invoicing</div>";
+                echo "</a>";
             } else {
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=".strtolower($module->id)."&scopeid=NEW' style='text-decoration:none;'>";
                 echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" .$module->fontAwesome . "'></span> " . $module->name . "</div>";

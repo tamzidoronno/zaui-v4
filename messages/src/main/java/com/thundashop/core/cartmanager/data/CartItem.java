@@ -138,6 +138,9 @@ public class CartItem implements Serializable, Cloneable {
     }
 
     public Product getProduct() {
+        if (product == null)
+            return null;
+        
         product.doFinalize();
         return product;    
     }
@@ -154,13 +157,16 @@ public class CartItem implements Serializable, Cloneable {
     }
 
     public void doFinalize() {
-        product.doFinalize();
-        //Negative values on the price should never happen, the count should be negative instead.
-        if(product.price < 0) {
-            count *= -1;
-            product.price *= -1;
-            product.priceExTaxes *= -1;
+        if (product != null) {
+            product.doFinalize();
+            //Negative values on the price should never happen, the count should be negative instead.
+            if(product.price < 0) {
+                count *= -1;
+                product.price *= -1;
+                product.priceExTaxes *= -1;
+            }
         }
+        
         if(itemsAdded != null) {
             for(PmsBookingAddonItem toCheck : itemsAdded) {
                 
@@ -623,7 +629,13 @@ public class CartItem implements Serializable, Cloneable {
             return overridePriceIncTaxes;
         }
         
-        return getProduct().price;
+        Product retProduct = getProduct();
+        
+        if (retProduct == null) {
+            return 0;
+        }
+        
+        return retProduct.price;
     }
 
     public void remove(CartItem cartItem) {

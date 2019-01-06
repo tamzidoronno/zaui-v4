@@ -1,0 +1,21 @@
+<?
+/* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$searchWord = isset($_POST['data']['searchWord']) ? $_POST['data']['searchWord'] : "";
+
+$size = $searchWord ? 99999 : 10;
+
+$searchResult = $this->getApi()->getProductManager()->search($searchWord, $size, 1);
+echo "<br/>";
+
+if (!$searchResult->products) {
+    echo $this->__f("Did not find any products");
+}
+
+foreach ($searchResult->products as $product) {
+    ?>  
+    <div class='productrow selectproductid' productid='<? echo $product->id; ?>'>
+        <? echo $product->name ?>
+    </div>
+    <?
+}
+?>

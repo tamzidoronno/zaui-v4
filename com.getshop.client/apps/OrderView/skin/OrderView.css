@@ -1,0 +1,256 @@
+.OrderView .workarea,
+.OrderView .leftmenu {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.OrderView .rightmenu {
+    margin-top: 50px;
+}
+
+.OrderView .leftmenu {
+    width: 100px;
+    background-color: #23314e;
+    color: #FFF;
+    text-align: center;
+    min-height: calc(100% - 86px);
+}
+
+.OrderView .leftmenu .entry {
+    border-top: solid 1px #222;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+    font-size: 11px;
+    min-height: 46px;
+}
+
+.OrderView .leftmenu .entry i {
+    display: block;
+    font-size: 25px;
+}
+
+.OrderView .leftmenu .entry.tabnotactive {
+    color: #888;
+}
+
+.OrderView .workarea {
+    width: calc(100% - 100px);
+    box-sizing: border-box;
+}
+
+.OrderView .workareaheader {
+    background-color: #dfff98;
+    padding: 17px;
+    font-size: 25px;
+    text-align: center;
+}
+
+.OrderView .orderviewtab {
+    display: none;
+}
+
+.OrderView .orderviewtab .insideheader {
+    font-size: 20px;
+    padding: 10px;
+    background-color: #DDD;
+}
+
+.OrderView .cartitem {
+    padding-left: 20px;
+    padding-top: 10px;
+    line-height: 33px;
+}
+.OrderView .cartitem .col {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.OrderView .cartitem.header .col {
+    padding-left: 10px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.OrderView .cartitem .col.startdate,
+.OrderView .cartitem .col.startdate input {
+    width: 90px;
+    box-sizing: border-box;
+}
+
+.OrderView .cartitem .col.enddate,
+.OrderView .cartitem .col.enddate input {
+    width: 90px;
+    box-sizing: border-box;
+}
+
+.OrderView .cartitem .col.product,
+.OrderView .cartitem .col.product input {
+    width: 200px;
+    box-sizing: border-box;
+}
+
+.OrderView .cartitem .col.product_desc,
+.OrderView .cartitem .col.product_desc input {
+    width: 200px;
+    box-sizing: border-box;
+}
+
+.OrderView .cartitem .col.additionalMetaData,
+.OrderView .cartitem .col.additionalMetaData input {
+    width: 150px;
+    box-sizing: border-box;
+}
+
+.OrderView .cartitem .col.metaData {
+    width: calc(100% - 818px);
+}
+
+.OrderView .cartitem .col.metaData input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.OrderView .cartitem .col.count,
+.OrderView .cartitem .col.count input {
+    width: 50px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.OrderView .cartitem .col.price,
+.OrderView .cartitem .col.price input {
+    width: 100px;
+    box-sizing: border-box;
+}
+
+.OrderView .ordersummary {
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+.OrderView .orderlinesarea {
+    margin-bottom: 40px;
+}
+
+.OrderView .orderlinesarea.other .cartitem .col.product {
+    width: 200px;
+}
+
+.OrderView .orderlinesarea.other .cartitem .col.product_desc {
+    width: calc(100% - 430px);
+}
+
+.OrderView .orderlinesarea.other .cartitem .col.product_desc input,
+.OrderView .orderlinesarea.other .cartitem .col.product input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.OrderView .summaryheader {
+    padding: 20px;
+    font-size: 20px;
+    background-color: #DEDEDE;
+   
+}
+
+.OrderView .createnewOrderLine {
+    margin: 20px;
+}
+
+.OrderView .orderlinesarea .cartitem .gs_shop_small_icon {
+    height: 25px;
+    vertical-align: top;
+    display: inline-block;
+    line-height: 25px;
+    width: 25px;
+    text-align: center;
+}
+.OrderView .orderlinesarea .cartitem .gs_shop_small_icon i {
+    line-height: 25px;
+    font-size: 15px;
+}
+
+.OrderView .searchForProductBox .gs_shop_small_icon {
+    height: 20px;
+    padding-top: 10px;
+    vertical-align: top;
+    margin-left: 10px;
+}
+
+.OrderView .searchForProductBox {
+    position: absolute;
+    top: 20px;
+    background-color: #EEE;
+    padding: 20px;
+    width: 500px;
+    height: 300px;
+    border: solid 1px #DDD;
+    box-shadow: 0px 0px 5px #666;
+    box-sizing: border-box;
+    display: none;
+}
+
+.OrderView .searchForProductBox .searchForProductBoxInner {
+    position: relative;
+}
+
+.OrderView .searchForProductBox .searchForProductBoxInner .closebutton {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.OrderView .searchForProductBox .searchresult .productrow:hover {
+    background-color: #DDD;
+}
+
+.OrderView .searchForProductBox .searchresult .productrow {
+    border-bottom: solid 1px #DDD;
+    padding: 10px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+.OrderView .searchForProductBox .searchresult {
+    overflow-y: scroll;
+    height: 230px;
+}
+
+.orderviewtab .shipmentlogline {
+    border-bottom: solid 1px #DDD;
+}
+
+.orderviewtab .shipmentlogline .to,
+.orderviewtab .shipmentlogline .date {
+    display: inline-block;
+    font-size: 16px;
+    padding: 10px;
+    vertical-align: top;
+}
+
+.orderviewtab .shipmentlogline .to {
+    width: calc(100% - 168px);
+    overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.OrderView .warning_not_sent {
+    font-size: 20px;
+    color: red;
+    padding: 30px;
+}

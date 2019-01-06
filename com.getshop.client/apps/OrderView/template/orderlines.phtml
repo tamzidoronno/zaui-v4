@@ -1,0 +1,73 @@
+<?
+/* @var ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+$cart = $order->cart;
+$closed = $order->closed;
+$cartItemsPms = $this->getPmsCartItems();
+$cartItemsNormal = $this->getNormalCartItems();
+
+if($order->manuallyClosed) {
+    $closed = $order->manuallyClosed;
+}
+
+if (!count($cart->items)) {
+    echo $this->__f("No orderlines added to this order");
+}
+
+if (count($cartItemsPms)) {
+?>
+    <div class="orderlinesarea pms">
+        <div class='summaryheader'><? echo $this->__f("From PMS"); ?></div>
+        <?
+        $this->includefile('orderlinespms');
+        ?>
+    </div>
+<?
+}
+
+if (!($closed && !count($cartItemsNormal))) {
+?>
+
+<div class="orderlinesarea other">
+    <div class='summaryheader'><? echo $this->__f("Orderlines"); ?></div>
+    <?
+    $this->includefile('orderlinesother');
+    ?>
+</div>
+<?
+}
+?>
+
+<div class='ordersummary'>
+    <div class="cartitem header">
+       <?
+       $totalEx = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+       $totalInc = $this->getApi()->getOrderManager()->getTotalAmount($order);
+       
+       echo $this->__f("Total ex taxes").": ".round($totalEx, 2);
+       echo "<br/>".$this->__f("Total inc taxes").": ".round($totalInc, 2);
+       if ($order->cashWithdrawal) {
+            echo "<br/>".$this->__f("Cash withdrawal").": ".$order->cashWithdrawal;
+       }
+       ?>
+        <span class="price"></span>
+    </div>
+</div>
+<?
+if ($order->isCreditNote) {
+    $incid = $this->getApi()->getOrderManager()->getIncrementalOrderIdByOrderId($order->parentOrder);
+    echo "<span style='font-weight: bold; padding: 20px; color: red;'>Credit note! ref id: $incid</span>";
+}
+?>
+
+<div class='searchForProductBox'>
+    <div class='searchForProductBoxInner'>
+        <div class='closebutton'><i class='fa fa-close'></i></div>
+        <input class='gsniceinput1 searchword' placeholder='<? echo $this->__f("Product name"); ?>'/><div class='gs_shop_small_icon doproductsearch'><i class='fa fa-search'></i></div>    
+        <div class='searchresult'>
+            <?
+            $this->includefile("productsearchresult");
+            ?>
+        </div>
+    </div>
+</div>

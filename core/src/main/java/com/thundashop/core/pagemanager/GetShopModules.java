@@ -26,10 +26,10 @@ public class GetShopModules {
         addModule("crm", "CRM", true, 5, "14d46706-d524-4d3c-abde-7fb1a56ca2b9", "icon-users");   
         addModule("apac", "APAC", true, 6, "affd0624-7311-480c-93bc-06b72459b45d", "icon-key"); // GetShopModuleApacTheme
         addModule("settings", "Settings", true, 7, "75f4dc38-a356-4d04-866c-c8bc4e11d7ab", "icon-gs-gears"); // GetShopModuleSettingsTheme
-        addModule("account", "Accounting", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-receipt"); // AccountingModuleTheme
+        addModule("account", "Accounting", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-calculator"); // AccountingModuleTheme
         addModule("srs", "Resturant", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-dinner"); // AccountingModuleTheme
         addModule("ticket", "TicketSystem", true, 9, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-lifebuoy"); // TicketTheme
-        addModule("invoice", "Invoicing", true, 10, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-money-bill"); // Invoicing system
+        addModule("invoice", "Invoicing", true, 10, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-receipt"); // Invoicing system
         addModule("analytics", "Analytics", true, 11, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-chart-growth"); // Invoicing system
     }
 

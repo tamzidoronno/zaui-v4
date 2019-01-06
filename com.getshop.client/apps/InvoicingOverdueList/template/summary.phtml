@@ -1,0 +1,69 @@
+<?
+/* @var $this \ns_b7fb195b_8cea_4d7b_922e_dee665940de2\InvoicingOverdueList */
+$invoices = $this->getOverDueInvoices();
+
+$total = 0;
+$totalGrouped = array();
+
+$daysGroup = array(14,30,60, 180, 99999);
+
+foreach ($invoices as $invoice) {
+    $orderAmount = $this->getTotalAmountForOrder($invoice);
+    $total += $orderAmount;
+    $days = $this->calculateDaysSince($invoice->dueDate); 
+   
+    $totalGroupNumber = $this->getGroupNumber($daysGroup, $days);
+    $totalGrouped[$totalGroupNumber] += $orderAmount;
+}
+
+$total = number_format($total, 2, ',', ' ');
+ksort($totalGrouped);
+?>
+
+<div class="innerbox" range="all">
+    <div class="number">
+        <? echo $total; ?>
+    </div>
+    <div class="desc">
+        <? echo $this->__f("Total overdue"); ?>
+    </div>
+
+</div>
+
+<?
+$first = true;
+foreach ($daysGroup as $days) {
+    $amount = $totalGrouped[$days];
+    
+    if (!$amount)
+        continue;
+    
+    $amount = number_format($amount, 2, ',', ' ');
+    if ($first) {
+        $prev = 0;
+        $first = false;
+    }
+    
+?>
+    <div class="innerbox" range="<? echo $prev.",".$days; ?>">
+        <div class="number">
+            <? echo $amount; ?>
+        </div>
+        <div class="desc">
+            <? 
+            
+                if ($days == 99999) {
+                    echo $this->__f("Overdue more then")." $prev ".$this->__f("days"); 
+                } else {
+                    echo $this->__f("Overdue")." $prev - $days ".$this->__f("days"); 
+                }
+            
+            ?>
+        </div>
+    </div>
+<?
+    $prev = $days;
+}
+?>
+
+

@@ -14,6 +14,7 @@
 class ModulePageRow {
     private $columns = array();
     private $page;
+    public $ignoreTopRow = false;
     
     function __construct($page) {
         $this->page = $page;

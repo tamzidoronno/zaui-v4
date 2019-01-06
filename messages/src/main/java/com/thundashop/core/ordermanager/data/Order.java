@@ -135,6 +135,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     
     public boolean isUnderConstruction = false;
     
+    @Transient
+    public Date dueDate = null;
+    
     /**
      * If this is set to a date it will use this date for everything 
      * to accounting. 
@@ -391,6 +394,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         sentToPhone = null;
         sentToPhonePrefix = null;
         sentToCustomerDate = null;
+        
+        dueDate = getDueDate();
     }
 
     public void setOverridePricesFromCartItem() {
@@ -972,6 +977,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(dueDays == null) {
             dueDays = 14;
         }
+        
+        if (rowCreatedDate == null) {
+            return new Date();
+        }
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(rowCreatedDate);
         cal.add(Calendar.DAY_OF_YEAR, dueDays);
@@ -1227,6 +1237,17 @@ public class Order extends DataCommon implements Comparable<Order> {
             return true;
         }
         return false;
+    }
+
+    public boolean isOverdue() {
+        if (!isInvoice() || isFullyPaid()) {
+            return false;
+        }
+        
+        Date dueDate = getDueDate();
+        Date today = new Date();
+        
+        return today.after(dueDate);
     }
     
     public static class Status  {

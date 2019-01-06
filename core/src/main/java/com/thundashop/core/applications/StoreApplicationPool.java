@@ -74,14 +74,6 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     public List<Application> getApplications() {
         List<Application> finalizedList = new ArrayList();
         getApplicationsInternally().forEach(app -> finalizedList.add(finalizeApplication(app)));
-        
-//        if (!isCmsModule()) {
-//            List<String> ids = instancePool.getDistinctApplicationsUsedForPool();
-//            ids.add("b5e9370e-121f-414d-bda2-74df44010c3b");
-//            ids.add("9a6ea395-8dc9-4f27-99c5-87ccc6b5793d");
-//            finalizedList.removeIf(app -> !ids.contains(app.id) && !app.type.equals(Application.Type.Payment));
-//        }
-        
         return finalizedList;
     }
 

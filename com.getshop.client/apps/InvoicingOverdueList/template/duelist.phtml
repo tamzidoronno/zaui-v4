@@ -1,0 +1,62 @@
+<?
+/* @var $this \ns_b7fb195b_8cea_4d7b_922e_dee665940de2\InvoicingOverdueList */
+$overDueInvoices = $this->getOverDueInvoices();
+?>
+
+<div class="duerow header">
+    <div class="col incrementalOrderId"><? echo $this->__f("Order id"); ?></div>
+    <div class="col name"><? echo $this->__f("Name"); ?></div>
+    <div class="col duedate"><? echo $this->__f("Due date"); ?></div>
+    <div class="col totalamount"><? echo $this->__f("Total"); ?></div>
+    <div class="col totalpaid"><? echo $this->__f("Paid"); ?></div>
+    <div class="col remaining"><? echo $this->__f("Remaining"); ?></div>
+</div>
+
+<?
+$totalOrderAmount = 0;
+$totalOrderPaid = 0;
+
+foreach ($overDueInvoices as $order) {
+    $dueDays = $this->calculateDaysSince($order->dueDate);
+    $color = "blue";
+    $color = $dueDays > 14 ? "yellow" : $color;
+    $color = $dueDays > 30 ? "red" : $color;
+    ?>
+
+    <div class="duerow  <? echo $color; ?>" duedays='<? echo $dueDays; ?>'>
+        <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'>
+            <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?></div>
+            <div class="col name"><? echo $order->cart->address->fullName; ?></div>
+            <div class="col duedate">
+                <? echo date('d.m.Y', strtotime($order->dueDate)); ?>
+                <span class="overduedays"> ( <? echo $dueDays . " " . $this->__f("days") ?> )</span>
+            </div>
+            <div class="col totalamount">
+                <?
+                $amount = $this->getTotalAmountForOrder($order);
+                $totalOrderAmount += $amount;
+                echo $amount;
+                ?>
+            </div>
+            <div class="col totalpaid">
+                <?
+                $paidAmount = $this->getTotalPaidAmount($order);
+                $totalOrderPaid += $paidAmount;
+                echo $paidAmount;
+                ?>
+            </div>
+
+            <div class="col remaining">
+                <?
+                echo $amount - $paidAmount;
+                ?>
+            </div>
+        </a>
+    </div>
+
+    <?
+}
+?>
+<script>
+    app.InvoicingOverdueList.listLoaded();
+</script>

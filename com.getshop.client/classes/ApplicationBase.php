@@ -326,7 +326,9 @@ class ApplicationBase extends FactoryBase {
         }
 
         $hasInstance = $this->getConfiguration() ? "yes" : "no";
-        echo "<div $callbackInstance appid='$id' hasinstance='$hasInstance' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
+        $inData = json_encode($_GET);
+        
+        echo "<div $callbackInstance appid='$id' hasinstance='$hasInstance' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId' gs_getvariables='$inData'>";
 
         echo "<div class='applicationinner'>";
         if($appSettingsId == "1ba01a11-1b79-4d80-8fdd-c7c2e286f94c") {

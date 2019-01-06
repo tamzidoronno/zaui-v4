@@ -1,6 +1,7 @@
 package com.thundashop.core.ordermanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
@@ -378,4 +379,19 @@ public interface IOrderManager {
     public void checkGroupInvoicing(String password);
     
     public void setNewStartIncrementalOrderId(long incrementalOrderId, String password);
+    
+    @Editor
+    public List<Order> getOverdueInvoices(FilterOptions filterData);
+    
+    @Editor
+    public Double getTotalOutstandingInvoices(FilterOptions filterData);
+    
+    @Editor
+    public Double getTotalOutstandingInvoicesOverdue(FilterOptions filterData);
+    
+    @Editor
+    public void changeProductOnCartItem(String orderId, String cartItemId, String productId);
+    
+    @Editor
+    public void updateCartItemOnOrder(String orderId, CartItem cartItem);
 }

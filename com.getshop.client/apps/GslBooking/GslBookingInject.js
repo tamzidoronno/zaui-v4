@@ -2302,6 +2302,10 @@ GetShopApiWebSocketEmbeddedBooking.prototype = {
         } else {
             var address = "wss://websocket.getshop.com/";
         }
+        if(typeof(getshop_websockethost) !== "undefined" && getshop_websockethost) { 
+            address = "wss://" + getshop_websockethost;
+        }
+
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);
         this.socket.onclose = function() {

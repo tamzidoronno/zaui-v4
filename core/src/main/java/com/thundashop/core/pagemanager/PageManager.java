@@ -111,6 +111,34 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
+    public boolean hasAccessToModule(String moduleName) {
+        if(moduleName == null || moduleName.isEmpty()) {
+            moduleName = "cms";
+        }
+        if(!userManager.isLoggedIn()) {
+            if(moduleName.equals("cms")) {
+                return true;
+            }
+            return false;
+        }
+        
+        List<GetShopModule> availableModules = getModules();
+        if(availableModules.isEmpty()) {
+            if(moduleName.equalsIgnoreCase("cms")) {
+                return true;
+            }
+            return false;
+        }
+        
+        for(GetShopModule module : availableModules) {
+            if(module.name.equalsIgnoreCase(moduleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
     public ApplicationInstance addApplication(String applicationId, String pageCellId, String pageId ) {
         ApplicationInstance instance = instancePool.createNewInstance(applicationId);
         Page page = getPage(pageId);

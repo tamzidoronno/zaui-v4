@@ -120,7 +120,14 @@ if(!$factory->getApi()->getStoreManager()->isProductMode()) {
 echo "</script>";
 
 $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : ""; 
-
+$module = $factory->getPage()->javapage->getshopModule;
+if($module == "pms") {
+    header('location:/pms.php');
+}
+if(!$factory->getApi()->getPageManager()->hasAccessToModule($module)) {
+    echo "access denied to module";
+    exit(0);
+}
 ?>
 
 <html xmlns:fb="http://ogp.me/ns/fb#" <? echo $openModalClass; ?>>
@@ -270,7 +277,6 @@ $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOp
         
         $modules = $factory->getApi()->getPageManager()->getModules();
         $isLoggedInEditorOrAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
-
         $acceptedGdpr = $factory->getStore()->acceptedGDPR;
         if(!$acceptedGdpr && $isLoggedInEditorOrAdministrator) {
             echo "<div class='gdpracceptancewarning' style='text-align:center; padding: 10px;background-color:green; color:#fff;'>";

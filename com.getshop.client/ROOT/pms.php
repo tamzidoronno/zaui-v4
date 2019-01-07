@@ -23,7 +23,18 @@ if(isset($_GET['page']) && $_GET['page'] == "a90a9031-b67d-4d98-b034-f8c201a8f49
 }
 $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
 
+if(!$factory->getApi()->getPageManager()->hasAccessToModule("pms")) {
+    echo "Access denied";
+    return;
+}
+
 $_SESSION['firstloadpage'] = true;
+
+if(sizeof($user->pmsPageAccess) > 0) {
+    if(!in_array($page->getId(), $user->pmsPageAccess)) {
+        header('location:/pms.php?page='.$user->pmsPageAccess[0]);
+    }
+}
 
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="pms">

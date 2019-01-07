@@ -1179,6 +1179,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
     @Override
     public void forceTransferFiles() {
+//        restOrdersFromFirstOfJuly();
         if(!hasOrdersToTransfer()) {
             return;
         }

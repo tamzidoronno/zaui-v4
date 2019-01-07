@@ -6,11 +6,13 @@
 package com.thundashop.core.ordermanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.PermenantlyDeleteData;
 
 /**
  *
  * @author ktonder
  */
+@PermenantlyDeleteData
 public class VirtualOrder extends DataCommon {
     public Order order;
     public String reference;

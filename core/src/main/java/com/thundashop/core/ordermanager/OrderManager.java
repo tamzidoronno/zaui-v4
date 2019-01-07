@@ -2676,12 +2676,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getDayIncomes(Date start, Date end) {
-//        DayIncomeReport report = getReport(start, end);
-//        
-//        if (report != null) {
-//            return report.incomes;
-//        }
-                
+        List<DayIncome> dayIncomes = getReports(start, end);
+        
         OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager);
         breaker.breakOrders();
         
@@ -2689,9 +2685,60 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return breaker.getErrors();
         }
         
-        return breaker.getDayIncomes();
+        List<DayIncome> newlyBrokenIncome = breaker.getDayIncomes();
+        
+        newlyBrokenIncome.removeIf(income -> {
+            return isInArray(income, dayIncomes);
+        });
+        
+        newlyBrokenIncome.addAll(dayIncomes);
+        
+        newlyBrokenIncome.removeIf(o -> {
+            long startL = start.getTime();
+            long endL = end.getTime();
+            boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
+            return !completlyWithin;
+        });
+        
+        newlyBrokenIncome.stream()
+                .forEach(o -> System.out.println(o.start + " - " + o.end));
+        
+        return newlyBrokenIncome;
     }
 
+    private List<DayIncome> getReports(Date startDate, Date endDate) {
+        long start = startDate.getTime();
+        long end = endDate.getTime();
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", DayIncomeReport.class.getCanonicalName());
+        
+        List<DayIncomeReport> all = database.query("OrderManager", storeId, query).stream()
+                .map(o -> (DayIncomeReport)o)
+                .filter(r -> r.deleted == null)
+                .collect(Collectors.toList());
+        
+        for (DayIncomeReport rep : all) {
+            System.out.println(rep.id + " | " + rep.start + " - " + rep.end + " | " + rep.rowCreatedDate);
+        }
+        
+        List<DayIncome> dayIncomes = all.stream()
+                .filter(r -> {
+                    long iStart = r.start.getTime();
+                    long iEnd = r.end.getTime();
+                    
+                    boolean startIsWithin = iStart >= start && iStart <= end;
+                    boolean endIsWithin = iEnd >= start && iEnd <= end;
+                    boolean everythingIsBetween = iStart >= start && iEnd <= end;
+                    
+                    return startIsWithin || endIsWithin || everythingIsBetween;
+                })
+                .flatMap(o -> o.incomes.stream())
+                .collect(Collectors.toList());
+        
+        return dayIncomes;
+    }
+    
     private DayIncomeReport getReport(Date startDate, Date endDate) {
         long start = startDate.getTime();
         long end = endDate.getTime();
@@ -2841,7 +2888,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
         }
         
-        if (oldOrder != null && oldOrder.overrideAccountingDate.before(closedDate)) {
+        if (oldOrder != null && oldOrder.overrideAccountingDate != null && oldOrder.overrideAccountingDate.before(closedDate)) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
@@ -3146,5 +3193,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         saveOrder(order);
+    }
+
+    private boolean isInArray(DayIncome income, List<DayIncome> dayIncomes) {
+        for (DayIncome i : dayIncomes) {
+            if (i.start.equals(income.start) && i.end.equals(i.end)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

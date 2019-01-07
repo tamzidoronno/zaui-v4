@@ -115,6 +115,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         if(moduleName == null || moduleName.isEmpty()) {
             moduleName = "cms";
         }
+        
+        if (moduleName.equals("account")) {
+            moduleName = "accounting";
+        }
+        
         if(!userManager.isLoggedIn()) {
             if(moduleName.equals("cms")) {
                 return true;
@@ -124,10 +129,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         List<GetShopModule> availableModules = getModules();
         if(availableModules.isEmpty()) {
-            if(moduleName.equalsIgnoreCase("cms")) {
-                return true;
-            }
-            return false;
+            return true;
         }
         
         for(GetShopModule module : availableModules) {

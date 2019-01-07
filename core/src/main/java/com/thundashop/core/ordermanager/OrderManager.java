@@ -2695,13 +2695,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         newlyBrokenIncome.removeIf(o -> {
             long startL = start.getTime();
-            long endL = end.getTime();
+            long endL = end.getTime() + (1000*60*60*24);
             boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
             return !completlyWithin;
         });
         
         newlyBrokenIncome.stream()
                 .forEach(o -> System.out.println(o.start + " - " + o.end));
+        
+        newlyBrokenIncome.sort((DayIncome a, DayIncome b) -> {
+            return a.start.compareTo(b.start);
+        });
         
         return newlyBrokenIncome;
     }

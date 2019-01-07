@@ -101,6 +101,8 @@ public interface IPageManager {
     @Administrator
     public void linkPageCell(String pageId, String cellId, String link) throws ErrorException;
     
+    public boolean hasAccessToModule(String moduleName);
+    
     /**
      * Add an cell to an specific earea.
      * @param pageId

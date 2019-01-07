@@ -13,6 +13,12 @@ if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a
 // Add apps if not already added
 $_SESSION['firstloadpage'] = true;
 
+if(!$factory->getApi()->getPageManager()->hasAccessToModule("salespoint")) {
+    echo "Access denied";
+    return;
+}
+
+
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="salespoint">
     <head>

@@ -76,6 +76,10 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
             return "<i class='fa fa-check'></i>";
         }
     }
+    public function formatgetshopnone($user) {
+        return "";
+    }
+    
     public function formatinvoice($user) {
         if(in_array("invoice", $user->hasAccessToModules)) {
             return "<i class='fa fa-check'></i>";

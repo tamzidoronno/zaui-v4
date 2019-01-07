@@ -14,6 +14,16 @@ class EmbedPmsBookingApp extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("endpoint", $_POST['data']['endpoint']);
     }
     
+    public function saveSettings() {
+        $this->setConfigurationSetting("endpoint", $_POST['data']['endpoint']);
+        $this->setConfigurationSetting("websocket", $_POST['data']['websocket']);
+        $this->setConfigurationSetting("domain", $_POST['data']['domain']);
+    }
+    
+    public function showSettings() {
+        $this->includefile("settings");
+    }
+    
     public function render() {
         $addr = $this->getConfigurationSetting("endpoint");
         if(!$addr) {
@@ -21,6 +31,9 @@ class EmbedPmsBookingApp extends \MarketingApplication implements \Application {
             return;
         }
         $language = $this->getFactory()->getSelectedTranslation();
+        $domain = $this->getConfigurationSetting("domain");
+        if(!$domain) { $domain = "default"; }
+        $websocket = $this->getConfigurationSetting("websocket");
         ?>
 <div id='bookingprocess'><div style="text-align: center"><i class="fa fa-spinner"></i></div></div>
 
@@ -33,7 +46,8 @@ class EmbedPmsBookingApp extends \MarketingApplication implements \Application {
                             {
                                 "endpoint": "<?php echo $addr; ?>",
                                 "jsendpoint": "<?php echo $addr; ?>",
-                                "domain" : "default",
+                                "domain" : "<?php echo $domain; ?>",
+                                <?php if($websocket) { echo "\"websocket\" : \"".$websocket."\",\n"; } ?>
                                 "language" : "<?php echo $language; ?>"
                             }
                     );

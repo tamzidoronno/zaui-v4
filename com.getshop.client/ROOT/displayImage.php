@@ -63,7 +63,6 @@ if (!$imageLoader->found()) {
 
 
 $PageContent = ob_get_contents();
-ob_end_clean();
 $HashID = md5($PageContent);
  
 header("Content-type: image/png");
@@ -73,5 +72,6 @@ header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 2052000));
 header('ETag: ' . $HashID);
 
 
+ob_end_clean();
 echo $PageContent;
 ?>

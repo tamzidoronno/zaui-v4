@@ -1,0 +1,130 @@
+<?
+/* @var $this ns_0775b147_b913_43cd_b9f4_a2a721ad3277\InvoiceList */
+
+$selectedYear = $this->getYear();
+$selectedMonth = $this->getMonth();
+
+$startString = '01.'.str_pad("".$selectedMonth, 2, '0', STR_PAD_LEFT).'.'.$selectedYear.' 00:00';
+$start = strtotime($startString);
+$end = strtotime('+1 month', $start);
+
+$filterOptions = new \core_common_FilterOptions();
+$filterOptions->startDate = $this->convertToJavaDate($start);
+$filterOptions->endDate = $this->convertToJavaDate($end);
+$filterOptions->removeNullOrders = true;
+$filterOptions->extra = array();
+$filterOptions->extra['paymenttype'] = "70ace3f0_3981_11e3_aa6e_0800200c9a66";
+$resData = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
+
+$store = $this->getApi()->getStoreManager()->getMyStore();
+$storeYear = date('Y', strtotime($store->rowCreatedDate));
+echo "<script>";
+    echo "storeCreatedYear = ".$storeYear.";";
+    echo "storeCreatedMonth = ".date('m', strtotime($store->rowCreatedDate)).";";
+echo "</script>";
+?>
+<div class="infoheader">
+    <?
+    echo "<div class='head'>".$this->__f("Invoices")."</div>";
+    ?>
+    
+    <br/><b>Please select: </b>
+    <br/>
+    <div gstype='form' method='showMonth'>
+        <select  gsname='month' class='gsniceselect1 timeperiode'>
+            <option value="1" <? echo $selectedMonth == 1 ? 'selected="true"' :""; ?>>Jan</option>
+            <option value="2" <? echo $selectedMonth == 2 ? 'selected="true"' :""; ?>>Feb</option>
+            <option value="3" <? echo $selectedMonth == 3 ? 'selected="true"' :""; ?>>Mar</option>
+            <option value="4" <? echo $selectedMonth == 4 ? 'selected="true"' :""; ?>>Apr</option>
+            <option value="5" <? echo $selectedMonth == 5 ? 'selected="true"' :""; ?>>May</option>
+            <option value="6" <? echo $selectedMonth == 6 ? 'selected="true"' :""; ?>>June</option>
+            <option value="7" <? echo $selectedMonth == 7 ? 'selected="true"' :""; ?>>July</option>
+            <option value="8" <? echo $selectedMonth == 8 ? 'selected="true"' :""; ?>>Aug</option>
+            <option value="9" <? echo $selectedMonth == 9 ? 'selected="true"' :""; ?>>Sep</option>
+            <option value="10" <? echo $selectedMonth == 10 ? 'selected="true"' :""; ?>>Oct</option>
+            <option value="11" <? echo $selectedMonth == 11 ? 'selected="true"' :""; ?>>Nov</option>
+            <option value="12" <? echo $selectedMonth == 12 ? 'selected="true"' :""; ?>>Dec</option>
+        </select>
+        -
+        <select gsname='year' class='gsniceselect1 timeperiode'>
+            <?
+            $nextYear = date('Y');
+            for ($i=$storeYear; $i<=$nextYear; $i++) {
+                $year = $i;
+                $selected = $year == $selectedYear ? 'selected="true"' :""; 
+                echo "<option $selected year='$year'>$year</option>";
+            }
+            ?>
+        </select>
+        
+        <div class="shop_button showresultbutton " gstype='submit'><? echo $this->__f("Show invoices"); ?></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        app.InvoiceList.changePeriodeOptions();
+    })
+</script>
+
+<div class="duerow header">
+    <div class="col incrementalOrderId"><? echo $this->__f("Order id"); ?></div>
+    <div class="col name"><? echo $this->__f("Name"); ?></div>
+    <div class="col orderdate"><? echo $this->__f("Created date"); ?></div>
+    <div class="col duedate"><? echo $this->__f("Due date"); ?></div>
+    <div class="col totalamount"><? echo $this->__f("Total"); ?></div>
+    <div class="col totalpaid"><? echo $this->__f("Paid"); ?></div>
+    <div class="col remaining"><? echo $this->__f("Remaining"); ?></div>
+</div>
+
+<?
+$totalOrderAmount = 0;
+
+foreach ($resData->datas as $order) {
+    ?>
+
+    <div class="duerow  <? echo $color; ?>">
+        <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'>
+            <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?></div>
+            <div class="col name"><? echo $order->cart->address->fullName; ?></div>
+            <div class="col orderdate">
+                <? echo date('d.m.Y', strtotime($order->rowCreatedDate)); ?>
+            </div>
+            <div class="col duedate">
+                <? echo date('d.m.Y', strtotime($order->dueDate)); ?>
+            </div>
+            <div class="col totalamount">
+                <?
+                $amount = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
+                $totalOrderAmount += $amount;
+                echo $amount;
+                ?>
+            </div>
+            <div class="col totalpaid">
+                <?
+                $paidAmount = $this->getTotalPaidAmount($order);
+                $totalOrderPaid += $paidAmount;
+                echo $paidAmount;
+                ?>
+            </div>
+
+            <div class="col remaining">
+                <?
+                echo $amount - $paidAmount;
+                ?>
+            </div>
+        </a>
+    </div>
+
+    <?
+}
+?>
+
+<div class="duerow">
+    <div class="col incrementalOrderId"></div>
+    <div class="col name"><? echo $this->__f("Total"); ?></div>
+    <div class="col duedate"></div>
+    <div class="col totalamount"><? echo $totalOrderAmount; ?></div>
+    <div class="col totalpaid"></div>
+    <div class="col remaining"></div>
+</div>

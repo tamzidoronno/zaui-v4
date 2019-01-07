@@ -1,0 +1,27 @@
+<?
+/* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+?>
+
+<div class="summaryheader"><? echo $this->__f("Payment history"); ?></div>
+<?
+if (!count($order->orderTransactions)) {
+    echo "<div class='warning_not_sent'>";
+        echo "<i class='fa fa-warning'></i> ".$this->__f("This order has no payment records");
+    echo "</div>";
+} else {
+    echo "<div class='shipmentlogline'>";
+        echo "<div class='date'>".$this->__f("Date")."</div>";
+        echo "<div class='amount'>".$this->__f("Amount")."</div>";
+        echo "<div class='user'>".$this->__f("By user")."</div>";
+    echo "</div>";
+    foreach ($order->orderTransactions as $paymentLog) {
+        $user = $this->getApi()->getUserManager()->getUserById($paymentLog->userId);
+        echo "<div class='shipmentlogline'>";
+            echo "<div class='date'>".date('d.m.Y H:i', strtotime($paymentLog->date))."</div>";
+            echo "<div class='amount'>".$paymentLog->amount."</div>";
+            echo "<div class='user'>".$user->fullName."</div>";
+        echo "</div>";
+    }
+}
+?>

@@ -7,11 +7,23 @@ app.OrderView = {
         $(document).on('change', '.OrderView .gsniceinput1.searchword', app.OrderView.searchForProduct);
         $(document).on('click', '.OrderView .searchForProductBox .searchForProductBoxInner .closebutton', app.OrderView.closeSearchBox);
         $(document).on('click', '.OrderView .searchForProductBox .selectproductid', app.OrderView.selectProduct);
+        $(document).on('click', '.OrderView .changeoverridedatebox .shop_button', app.OrderView.submitNewOverrideDate);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.count', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.price', app.OrderView.cartItemChanged);
+    },
+    
+    submitNewOverrideDate: function() {
+        var data = app.OrderView.getData(this);
+        data.date = $(this).closest('.changeoverridedatebox').find('input').val();
+        
+        var event = thundashop.Ajax.createEvent(null, "changeOverrideDate", $(this), data);
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'accounting', data);
+        });
     },
     
     cartItemChanged: function() {

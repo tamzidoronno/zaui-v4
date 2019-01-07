@@ -224,6 +224,8 @@
 }
 
 .orderviewtab .shipmentlogline .to,
+.orderviewtab .shipmentlogline .amount,
+.orderviewtab .shipmentlogline .user,
 .orderviewtab .shipmentlogline .date {
     display: inline-block;
     font-size: 16px;
@@ -231,8 +233,16 @@
     vertical-align: top;
 }
 
+.orderviewtab .shipmentlogline .date {
+    width: 200px;
+}
+
+.orderviewtab .shipmentlogline .amount {
+    width: 100px;
+}
+
 .orderviewtab .shipmentlogline .to {
-    width: calc(100% - 168px);
+    width: calc(100% - 240px);
     overflow-wrap: break-word;
   word-wrap: break-word;
 
@@ -253,4 +263,28 @@
     font-size: 20px;
     color: red;
     padding: 30px;
+}
+
+.OrderView .row_account .col {
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top;
+    position: relative;
+}
+
+.OrderView .row_account .col1 {
+    width: 300px;
+}
+
+.OrderView .row_account {
+    border-bottom: solid 1px #DDD;
+}
+
+.OrderView .changeoverridedatebox {
+    position: absolute;
+    border: solid 1px #DDD;
+    padding: 20px;
+    background-color: #EFEFEF;
+    z-index: 1;
+    display: none;
 }

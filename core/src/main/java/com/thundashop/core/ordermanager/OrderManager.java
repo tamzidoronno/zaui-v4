@@ -1582,6 +1582,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(filterByOrderIdsInExtra(filterOptions))
                 .collect(Collectors.toList());
         
+        if (filterOptions.removeNullOrders) {
+            allOrders = allOrders.stream()
+                    .filter(o -> !o.isNullOrder())
+                    .collect(Collectors.toList());
+        }
+        
         if(filterOptions.extra.containsKey("paymenttype")) {
             String type = filterOptions.extra.get("paymenttype");
             List<Order> newOrderList = new ArrayList();
@@ -2831,12 +2837,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
         
-        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {
-            return;
-        }
-        
         if (order.id != null && !order.id.isEmpty()) {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
+        }
+        
+        if (oldOrder != null && oldOrder.overrideAccountingDate.before(closedDate)) {
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1053);
+        }
+        
+        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {
+            return;
         }
         
         if (order.needToStopDueToIllegalChangeOfPriceMatrix(oldOrder, closedDate) && !order.forcedOpen) {

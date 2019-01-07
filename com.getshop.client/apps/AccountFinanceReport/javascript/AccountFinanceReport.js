@@ -20,7 +20,6 @@ app.AccountFinanceReport = {
                     document.location = document.location;
                 }
             }, 1000);
-
         });
     },
     

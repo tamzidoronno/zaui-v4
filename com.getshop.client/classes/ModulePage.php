@@ -363,7 +363,7 @@ class ModulePage {
         $menu = new \ModulePageMenu("invoicing");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Overdue", "overduelist", "gsicon-alarm-error");
-        $menu->entries[] = new ModulePageMenuItem("All", "home", "gsicon-receipt");
+        $menu->entries[] = new ModulePageMenuItem("All", "allinvoices", "gsicon-receipt");
         $menu->entries[] = new ModulePageMenuItem("Products", "products", "gsicon-basket");
         return $menu;
     }

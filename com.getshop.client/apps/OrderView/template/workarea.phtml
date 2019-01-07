@@ -1,12 +1,7 @@
 <?
 /* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
 $order = $this->getOrder();
-$typenamespace = explode('\\', $order->payment->paymentType);
-$paymentType = $this->getPaymentMethodName($typenamespace[0]);
 ?>
-<div class='workareaheader'>
-    <? echo $this->__f("Order id") . ": " . $order->incrementOrderId; ?> ( <? echo $paymentType; ?> )
-</div>
 
 <div class='orderviewtab' tab='customers'>
     <? $this->includefile('customerview'); ?>
@@ -19,6 +14,12 @@ $paymentType = $this->getPaymentMethodName($typenamespace[0]);
 </div>
 <div class='orderviewtab' tab='history'>
     <? $this->includefile('history'); ?>
+</div>
+<div class='orderviewtab' tab='paymenthistory'>
+    <? $this->includefile('paymenthistory'); ?>
+</div>
+<div class='orderviewtab' tab='accounting'>
+    <? $this->includefile('accounting'); ?>
 </div>
 
     

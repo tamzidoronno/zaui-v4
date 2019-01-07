@@ -1,0 +1,43 @@
+.InvoiceList .showresultbutton {
+    height: 49px;
+    line-height: 49px;
+    vertical-align: top;
+    margin-top: 1px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.InvoiceList {
+    margin: 50px;
+}
+
+.InvoiceList .infoheader .head {
+    font-size: 30px;
+}
+
+.InvoiceList .col {
+    display: inline-block;
+}
+
+.InvoiceList .col.incrementalOrderId { width: 100px; text-align: center; }
+.InvoiceList .col.name { width: calc(100% - 800px); }
+.InvoiceList .col.orderdate { width: 200px; }
+.InvoiceList .col.duedate { width: 200px; }
+.InvoiceList .col.totalamount { width: 100px; }
+.InvoiceList .col.totalpaid { width: 100px; }
+
+
+.InvoiceList div.duerow.header {
+    font-weight: bold;
+}
+
+.InvoiceList div.duerow {
+    padding: 5px;
+}
+.InvoiceList div.duerow:nth-child(odd) {
+    background-color: #FFF;
+}
+
+.InvoiceList .duerow.header {
+    margin-top: 40px;
+}

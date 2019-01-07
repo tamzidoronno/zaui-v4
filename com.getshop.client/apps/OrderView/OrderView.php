@@ -22,6 +22,15 @@ class OrderView extends \MarketingApplication implements \Application {
         
         $orderId = $this->getOrder()->id;
         
+        $typenamespace = explode('\\', $this->getOrder()->payment->paymentType);
+        $paymentType = $this->getPaymentMethodName($typenamespace[0]);
+        
+        ?>
+        <div class='workareaheader'>
+            <? echo $this->__f("Order id") . ": " . $this->getOrder()->incrementOrderId; ?> ( <? echo $paymentType; ?> )
+        </div>
+        <?
+        
         echo "<div class='orderview' orderid='$orderId'>";
             echo "<div class='leftmenu'>";
                 $this->includefile("leftmenu");
@@ -212,6 +221,13 @@ class OrderView extends \MarketingApplication implements \Application {
         $name = $instance->getName();
         $this->cachedPaymentNames[$paymentNameSpaceId] = $name;
         return $name;
+    }
+    
+    public function changeOverrideDate() {
+        $order = $this->getOrder();
+        $order->overrideAccountingDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->rePrintTab("accounting");
     }
 }
 ?>

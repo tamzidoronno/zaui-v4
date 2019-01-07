@@ -1,13 +1,19 @@
 <?
+/* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+?>
+
+<?
 /* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
 $order = $this->getOrder();
 ?>
+
 <div class="insideheader">
     <?
     echo $this->__f("Accounting details");
     ?> 
 </div>
-<div class="row">
+
+<div class="row_account">
     <div class="col col1">
         <?
         echo $this->__f("Date to be transferred");
@@ -19,7 +25,7 @@ $order = $this->getOrder();
         ?>
     </div>
 </div>
-<div class="row">
+<div class="row_account">
     <div class="col col1">
         <?
         echo $this->__f("Should have been transferred");
@@ -31,7 +37,7 @@ $order = $this->getOrder();
         ?>
     </div>
 </div>
-<div class="row">
+<div class="row_account">
     <div class="col col1">
         <?
         echo $this->__f("Is transferred");
@@ -43,7 +49,7 @@ $order = $this->getOrder();
         ?>
     </div>
 </div>
-<div class="row">
+<div class="row_account">
     <div class="col col1">
         <?
         echo $this->__f("Tried to transfer");
@@ -55,7 +61,7 @@ $order = $this->getOrder();
         ?>
     </div>
 </div>
-<div class="row">
+<div class="row_account">
     <div class="col col1">
         <?
         echo $this->__f("Override accountingdate");
@@ -65,25 +71,29 @@ $order = $this->getOrder();
         <?
         echo $order->overrideAccountingDate;
         ?>
+        
+        <div style='color:blue; cursor: pointer;' class='' onclick='$(".OrderView .changeoverridedatebox").toggle()'>( <? echo $this->__f("change"); ?> )</div>
+        <div class='changeoverridedatebox'>
+            <input class='gsniceinput1 overrideboxdate'/>
+            <br/><div class='shop_button'><? echo $this->__f("Submit"); ?></div>
+        </div>
     </div>
 </div>
 
-<br/>
-<?
-if ($order->transferredToAccountingSystem) {
-?>
-<br/><div gsclick="markForResending" id="<? echo $order->id; ?>" class="shop_button"><? echo $this->__f("Mark for resending to accounting"); ?></div>
-<?
-}
-?>
+<div class="row_account">
+    <div class="col col1">
+        <?
+        echo $this->__f("Is order closed");
+        ?>
+    </div>
+    <div class="col col2">
+        <?
+        echo $order->closed ? 'Yes' : "No";
+        ?>
+    </div>
+</div>
 
-<?
-$directTransfer = $this->getApi()->getGetShopAccountingManager()->canOrderBeTransferredDirect($order->id);
-if ($directTransfer && !$order->transferredToAccountingSystem) {
-?>
-    <br/>
-    <div class='gserrorfield' id='errorMessage'></div>
-    <br/><div  gsclick="directTransferOrder" id="<? echo $order->id; ?>" class="shop_button"><? echo $this->__f("Transfer to accounting"); ?></div>
-<?
-}
-?>
+<script>
+    $('.OrderView .gsniceinput1.overrideboxdate').datepicker({dateFormat: "dd.mm.yy"});
+</script>
+    

@@ -580,6 +580,12 @@ class PageFactory {
         $row->addColumn("b7fb195b-8cea-4d7b-922e-dee665940de2", "c709209b-4765-4cde-82e9-7e372302b560");
         $this->pages['overduelist'] = $page;
         
+        $page = new \ModulePage("allinvoices", "invoicing");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("0775b147-b913-43cd-b9f4-a2a721ad3277", "2888fc8f-de8f-45c8-970d-cf74ec3b88e2");
+        $this->pages['allinvoices'] = $page;
+        
         $this->createOrderViewPage('invoicing');
         $this->createProductsPage("invoicing");
     }

@@ -19,5 +19,6 @@ public class FilterOptions {
     public int pageSize = 20;
     public Date startDate = null;
     public Date endDate = null;
+    public boolean removeNullOrders = false;
     public Map<String, String> extra = new HashMap();
 }

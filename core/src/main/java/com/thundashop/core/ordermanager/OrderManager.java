@@ -2717,11 +2717,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .map(o -> (DayIncomeReport)o)
                 .filter(r -> r.deleted == null)
                 .collect(Collectors.toList());
-        
-        for (DayIncomeReport rep : all) {
-            System.out.println(rep.id + " | " + rep.start + " - " + rep.end + " | " + rep.rowCreatedDate);
-        }
-        
+       
         List<DayIncome> dayIncomes = all.stream()
                 .filter(r -> {
                     long iStart = r.start.getTime();

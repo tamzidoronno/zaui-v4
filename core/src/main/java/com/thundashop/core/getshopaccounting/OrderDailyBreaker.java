@@ -86,7 +86,6 @@ public class OrderDailyBreaker {
     }
 
     public void breakOrders() {
-        System.out.println("Total orders: " + ordersToBreak.size());
         this.ordersToBreak.stream().forEach(order -> {
             try {
                 if (order.isNullOrder() || order.isVirtual)

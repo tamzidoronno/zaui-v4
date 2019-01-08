@@ -12,7 +12,6 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,8 +60,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                         continue;
                     }
                 }
-                BigDecimal totalforproduct = getTotalForProduct(income, prod.id, filter);
-                toadd.products.put(prod.id, totalforproduct);
+                BigDecimal totalforproduct = getTotalForProduct(income, prod.id, filter, toadd);
                 total = total.add(totalforproduct);
             }
             toadd.total = total.doubleValue();
@@ -73,7 +71,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         return toReturn;
     }
     
-    public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter) {
+    public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter, IncomeReportDayEntry toadd) {
         BigDecimal result = new BigDecimal(0);
         for(DayEntry entry : income.dayEntries) {
             if(!entry.isActualIncome || entry.isOffsetRecord) {
@@ -102,8 +100,19 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             }
             result = result.add(amount);
             addToUser(order.userId, amount);
+            
+            BigDecimal roomPriceAmount = new BigDecimal(0);
+            if(item.getProduct().externalReferenceId != null && toadd.roomsPrice.containsKey(item.getProduct().externalReferenceId)) {
+                roomPriceAmount = toadd.roomsPrice.get(item.getProduct().externalReferenceId);
+            }
+            roomPriceAmount = roomPriceAmount.add(amount);
+            
+            toadd.roomsPrice.put(item.getProduct().externalReferenceId, roomPriceAmount);
+            
         }
-        return result.multiply(new BigDecimal(-1));
+        BigDecimal res = result.multiply(new BigDecimal(-1));
+        toadd.products.put(productId, res);
+        return res;
     }
 
     void setTotalFromNewCoverageIncomeReport(PmsStatistics result, PmsBookingFilter filter) {
@@ -128,13 +137,20 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         
         IncomeReportResultData data = getStatistics(cfilter);
         LinkedList<IncomeReportDayEntry> incomeresult = data.entries;
-        for(IncomeReportDayEntry dayEntry : incomeresult) {
-            for(StatisticsEntry entry : result.entries) {
+        for(StatisticsEntry entry : result.entries) {
+           boolean found = false;
+           for(IncomeReportDayEntry dayEntry : incomeresult) {
                 if (PmsBookingRooms.isSameDayStatic(entry.date, dayEntry.day)) {
                     entry.totalForcasted = entry.totalPrice;
                     entry.totalPrice = dayEntry.total;
+                    addRoomPrices(entry, dayEntry);
+                    found = true;
                 }
             }
+           if(!found) {
+                entry.totalForcasted = 0.0;
+                entry.totalPrice = 0.0;
+           }
         }
     }
 
@@ -180,5 +196,16 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         }
         useramount = useramount.add(amount);
         usersTotal.put(userId, useramount);
+    }
+
+    private void addRoomPrices(StatisticsEntry entry, IncomeReportDayEntry dayEntry) {
+        entry.roomsPrice.clear();
+        for(String key : dayEntry.roomsPrice.keySet()) {
+            entry.roomsPrice.put(key, dayEntry.roomsPrice.get(key).doubleValue()*-1);
+            if(!entry.roomsIncluded.contains(key)) {
+                entry.roomsIncluded.add(key);
+                entry.roomsPriceForecasted.put(key, 0.0);
+            }
+        }
     }
 }

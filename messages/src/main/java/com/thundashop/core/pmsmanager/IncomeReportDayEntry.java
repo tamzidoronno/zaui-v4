@@ -13,5 +13,6 @@ import java.util.LinkedHashMap;
 public class IncomeReportDayEntry implements Serializable {
     public Date day;
     public LinkedHashMap<String, BigDecimal> products = new LinkedHashMap();
+    public LinkedHashMap<String, BigDecimal> roomsPrice = new LinkedHashMap();
     public Double total;
 }

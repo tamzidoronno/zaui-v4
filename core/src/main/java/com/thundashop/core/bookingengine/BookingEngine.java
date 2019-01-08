@@ -320,7 +320,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         }
         
         List<BookingItem> res = new ArrayList();
-        List<BookingItemType> types = getBookingItemTypes();
+        List<BookingItemType> types = getBookingItemTypesWithSystemType(null);
         for(BookingItemType type : types) {
             List<BookingItem> found = getAvailbleItemsWithBookingConsidered(type.id, start, end, bookingid);
             res.addAll(found);

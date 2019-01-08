@@ -34,6 +34,7 @@ public class StatisticsEntry {
     public HashMap<String, Integer> guestsRegular = new HashMap();
     public List<String> roomsIncluded = new ArrayList();
     public List<String> ordersUsed = new ArrayList();
+    public List<String> roomsNotOnSameDay = new ArrayList();
     boolean isTotal = false;
     public Integer squareMetres = 0;
     public Integer totalRoomsOriginal;

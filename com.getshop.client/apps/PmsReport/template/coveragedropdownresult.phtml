@@ -22,7 +22,11 @@
         if(date("d.m.Y", strtotime($entry->date)) == date("d.m.Y", strtotime($_POST['data']['rowdate']))) {
             foreach($entry->roomsIncluded as $roomIncluded) {
                 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomIncluded);
-                foreach($booking->rooms as $room) {
+                $rooms = array();
+                if($booking) {
+                    $rooms = (array)$booking->rooms;
+                }
+                foreach($rooms as $room) {
                     if($room->pmsBookingRoomId == $roomIncluded) {
                         $orderIds = array();
                         foreach($entry->ordersUsed as $tmpid) {
@@ -32,8 +36,12 @@
                         }
                         
                         $remaining = 0;
+                        $striketrough = "";
+                        if(in_array($room->pmsBookingRoomId, $entry->roomsNotOnSameDay)) {
+                            $striketrough = "style='text-decoration: line-through;'";
+                        }
                         echo "<tr>";
-                        echo "<td valign='top'>";
+                        echo "<td valign='top' $striketrough>";
                         $found = false;
                         foreach($orderIds as $ordId) {
                             $order = $this->getApi()->getOrderManager()->getOrder($ordId);
@@ -51,25 +59,31 @@
                         echo $room->guests[0]->name . "<br>";
                         echo "</td>";
                         echo "<td valign='top'>";
-                        $price = $entry->roomsPrice->{$room->pmsBookingRoomId};
+                        $price = 0;
+                        if(isset($entry->roomsPrice->{$room->pmsBookingRoomId})) {
+                            $price = $entry->roomsPrice->{$room->pmsBookingRoomId};
+                        }
                         echo round($price);
                         $total += $price;
                         echo "</td>";
                         echo "<td>";
                         $pricef = $entry->roomsPriceForecasted->{$room->pmsBookingRoomId};
                         $remaining = $pricef-$price;
+                        if($remaining < 0.1 && $remaining > -0.1) {
+                            $remaining = 0;
+                        }
                         echo round($pricef);
                         $totalForcasted += $pricef;
                         $totalRemaining += $remaining;
                         echo "</td>";
                         echo "<td>".round($remaining)."</td>";
-                        echo "<td>";
+                        echo "<td $striketrough>";
                         if($room->bookingItemTypeId) {
                             $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId)->name;
                             echo $type;
                         }
                         echo "</td>";
-                        echo "<td>";
+                        echo "<td $striketrough>";
                         if($room->bookingItemId) {
                             $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
                             echo $item->bookingItemName;
@@ -77,8 +91,8 @@
                             echo "floating";
                         }
                         echo "</td>";
-                        echo "<td>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
-                        echo "<td>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
+                        echo "<td $striketrough>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
+                        echo "<td $striketrough>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
                         echo "</tr>";
                     }
                 }

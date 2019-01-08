@@ -203,6 +203,15 @@ class PmsReport extends \MarketingApplication implements \Application {
         return "<span title='Average from billed'>" . $row->avgPrice . "</span> / <span title='Average from total'>" . $row->avgPriceForcasted . "</span>";
     }
     
+    public function roundTotalPrice($row) {
+        return round($row->totalPrice, 0);
+    }
+    
+    public function formatRemaining($in) {
+        $rest = $in->totalForcasted - $in->totalPrice;
+        return round($rest, 0);
+    }
+    
     public function printCoverageReport() {
         $date = date("d-m-Y", time());
         echo "<div style='text-align:right;'>";
@@ -221,8 +230,8 @@ class PmsReport extends \MarketingApplication implements \Application {
             array('avprice', 'Avg. price', "avgPrice", "formatAvgPrice"),
             array('revpar', 'RevPar', 'revPar', "formatRevPar"),
             array('total', 'Total', 'totalForcasted', null),
-            array('totalbilled', 'Billed', 'totalPrice', null),
-            array('totalremaining', 'Remaining', 'totalRemaining', null),
+            array('totalbilled', 'Billed', 'totalPrice', 'roundTotalPrice'),
+            array('totalremaining', 'Remaining', 'totalRemaining', 'formatRemaining'),
             array('Coverage', 'Coverage', 'coverage', null)
         );
         

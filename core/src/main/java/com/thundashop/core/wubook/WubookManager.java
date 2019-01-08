@@ -659,7 +659,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return new ArrayList();
         }
         
-        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         List<String> errors = new ArrayList();
         for (BookingItemType type : types) {
             String added = "";

@@ -205,6 +205,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             if(!entry.roomsIncluded.contains(key)) {
                 entry.roomsIncluded.add(key);
                 entry.roomsPriceForecasted.put(key, 0.0);
+                entry.roomsNotOnSameDay.add(key);
             }
         }
     }

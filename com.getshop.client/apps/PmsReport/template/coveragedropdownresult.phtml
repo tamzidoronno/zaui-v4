@@ -36,8 +36,12 @@
                         }
                         
                         $remaining = 0;
+                        $striketrough = "";
+                        if(in_array($room->pmsBookingRoomId, $entry->roomsNotOnSameDay)) {
+                            $striketrough = "style='text-decoration: line-through;'";
+                        }
                         echo "<tr>";
-                        echo "<td valign='top'>";
+                        echo "<td valign='top' $striketrough>";
                         $found = false;
                         foreach($orderIds as $ordId) {
                             $order = $this->getApi()->getOrderManager()->getOrder($ordId);
@@ -73,13 +77,13 @@
                         $totalRemaining += $remaining;
                         echo "</td>";
                         echo "<td>".round($remaining)."</td>";
-                        echo "<td>";
+                        echo "<td $striketrough>";
                         if($room->bookingItemTypeId) {
                             $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId)->name;
                             echo $type;
                         }
                         echo "</td>";
-                        echo "<td>";
+                        echo "<td $striketrough>";
                         if($room->bookingItemId) {
                             $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
                             echo $item->bookingItemName;
@@ -87,8 +91,8 @@
                             echo "floating";
                         }
                         echo "</td>";
-                        echo "<td>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
-                        echo "<td>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
+                        echo "<td $striketrough>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
+                        echo "<td $striketrough>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
                         echo "</tr>";
                     }
                 }

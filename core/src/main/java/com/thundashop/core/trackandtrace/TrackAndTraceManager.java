@@ -1520,33 +1520,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         return false;
     }
 
-    @Override
-    public List<Serializable> getMyQueueMessages() {
-        String userId = getSession().currentUser.id;
-        List<Serializable> retQueue = new ArrayList();
-        
-        retQueue.addAll(getQueue(userId));
-        getQueue(userId).clear();
-        
-        return retQueue;
-    }
-
-    private void addMessage(String driverId, Serializable object) {
-        List<Serializable> queue = getQueue(driverId);
-        
-        if (object != null && !queue.contains(object)) {
-            queue.add(object);
-        }
-    }
-
-    private List<Serializable> getQueue(String userId) {
-        List<Serializable> queue = userMessages.get(userId);
-        
-        if (queue == null) {
-            queue = new ArrayList();
-            userMessages.put(userId, queue);
-        }
-        
-        return queue;
+    private void addMessage(String userId, Serializable dataCommon) {
+        gdsManager.addUserMessageToQueue(userId, dataCommon);
     }
 }

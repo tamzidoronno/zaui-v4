@@ -582,6 +582,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         verifyPhoneOnBooking(booking, true);
         booking.deleted = null;
         booking.completedDate = new Date();
+        setSameAsBookerIfNessesary(booking);
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -9473,5 +9474,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
         
         logEntry("Splitted stay", booking.id, room.bookingItemId);
+    }
+
+    private void setSameAsBookerIfNessesary(PmsBooking booking) {
+        if(!booking.setGuestsSameAsBooker) {
+            return;
+        }
+        
+        User user = userManager.getUserById(booking.userId);
+        for(PmsBookingRooms r : booking.rooms) {
+            for(PmsGuests g : r.guests) {
+                g.email = user.emailAddress;
+                g.name = user.fullName;
+                g.phone = user.cellPhone;
+                g.prefix = user.prefix;
+            }
+        }
     }
 }

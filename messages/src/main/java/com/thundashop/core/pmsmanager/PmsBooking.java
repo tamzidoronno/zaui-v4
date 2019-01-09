@@ -59,6 +59,7 @@ public class PmsBooking extends DataCommon {
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
     public boolean avoidAutoDelete = false;
+    public boolean setGuestsSameAsBooker = false;
     public Integer incrementBookingId = null;
     
     public String countryCode = "";

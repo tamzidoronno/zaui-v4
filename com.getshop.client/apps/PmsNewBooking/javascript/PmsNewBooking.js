@@ -21,7 +21,10 @@ app.PmsNewBooking = {
         });
         $(document).on('click','.PmsNewBooking .selectuser',app.PmsNewBooking.selectUser);
         $(document).on('click','.PmsNewBooking .selecteduser .fa-trash-o',app.PmsNewBooking.removeSelectedUser);
+        $(document).on('click','.PmsNewBooking .sameasbookerinfocheckbox',app.PmsNewBooking.markAsSameAsBooker);
+        $(document).on('click','.PmsNewBooking .createOrderAndSendPaymentLinkCheckBox',app.PmsNewBooking.createOrderAndSendPaymentLinkCheckBox);
         $(document).on('keyup','.PmsNewBooking .roomtypecount',app.PmsNewBooking.countRoomsToAdd);
+        $(document).on('keyup','.PmsNewBooking .guestrow input',app.PmsNewBooking.updateGuestRow);
         $(document).on('keyup','.PmsNewBooking .discountcode',app.PmsNewBooking.setDiscountCode);
         $(document).on('keyup','.PmsNewBooking .guestcounter',app.PmsNewBooking.changeGuestCount);
         $(document).on('click','.PmsNewBooking .totalcount',app.PmsNewBooking.selectAllRooms);
@@ -33,6 +36,40 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .usedefaultpricescheckbox', app.PmsNewBooking.usedefaultpricescheckbox);
         $(document).on('keyup','.PmsNewBooking .roomprice', app.PmsNewBooking.changeRoomPrice);
     },
+    
+    createOrderAndSendPaymentLinkCheckBox : function() {
+        var event = thundashop.Ajax.createEvent('','toggleCreateOrderAndSendPaymentLink',$(this),{
+            "checked" : $(this).is(':checked')
+        });
+        thundashop.Ajax.post(event, function(res) {
+        });
+    },
+    
+    updateGuestRow : function() {
+        var guestRow = $(this).closest('.guestrow');
+        var guestId = guestRow.attr('guestid');
+        var roomId = guestRow.closest('.guestinformation').attr('roomid');
+        var data = {};
+        data.name = guestRow.find('.guestname').val();
+        data.email = guestRow.find('.guestemail').val();
+        data.prefix = guestRow.find('.guestprefix').val();
+        data.phone = guestRow.find('.guestphone').val();
+        var event = thundashop.Ajax.createEvent('','saveGuestInformation',$(this), {
+            "guestinfo" : data,
+            "guestid" : guestId,
+            "roomid" : roomId
+        });
+        
+        if(typeof(app.PmsNewBooking.updateGuestInfoTimer) !== "undefined") {
+            clearTimeout(app.PmsNewBooking.updateGuestInfoTimer);
+        }
+        
+        app.PmsNewBooking.updateGuestInfoTimer = setTimeout(function() {
+            thundashop.Ajax.postWithCallBack(event, function(res) {});
+        }, "200");
+        
+    },
+    
     usedefaultpricescheckbox : function() {
         var checkbox = $(this);
         var event = thundashop.Ajax.createEvent('','toggleUseDefaultPrices', $(this), {
@@ -74,9 +111,24 @@ app.PmsNewBooking = {
             row.find('.col_cost').html(obj.price);
             row.find('.addonsarea').html(obj.addons);
             $('.totalcostindicator').html(obj.totalcost);
+            $('.guestinformation[roomid="'+roomId+'"]').html(obj.guests);
         });
     },
-    
+    markAsSameAsBooker : function() {
+        var count = $(this).is(':checked');
+        var roomId = $(this).attr('roomid');
+        var guestId = $(this).attr('guestid');
+        var event = thundashop.Ajax.createEvent('','updateSameAsBooker', $(this), {
+            "roomid" : roomId,
+            "guestid" : guestId,
+            "sameasbooker" : count
+        });
+
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            var obj = JSON.parse(res);
+            $('.guestinformation[roomid="'+roomId+'"]').html(obj.guests);
+        });
+    },
     changeRoomPrice : function() {
         var count = $(this).val();
         var roomId = $(this).attr('roomid');

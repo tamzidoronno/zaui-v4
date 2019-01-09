@@ -42,7 +42,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     public IncomeReportResultData getStatistics(CoverageAndIncomeReportFilter filter) {
         IncomeReportResultData toReturn = new IncomeReportResultData();
         LinkedList<IncomeReportDayEntry> res = new LinkedList();
-        List<DayIncome> toinclude = orderManager.getDayIncomes(filter.start, filter.end);
+        List<DayIncome> toinclude = orderManager.getDayIncomesIgnoreConfig(filter.start, filter.end);
         usersTotal = new HashMap();
         List<Product> products = productManager.getAllProducts();
         

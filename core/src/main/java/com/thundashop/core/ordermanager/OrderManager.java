@@ -2676,9 +2676,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getDayIncomes(Date start, Date end) {
+        return getDayIncomesInternal(start, end, false);
+    }
+
+    private List<DayIncome> getDayIncomesInternal(Date start, Date end, boolean ignoreConfig) {
         List<DayIncome> dayIncomes = getReports(start, end);
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2699,9 +2703,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
             return !completlyWithin;
         });
-        
-        newlyBrokenIncome.stream()
-                .forEach(o -> System.out.println(o.start + " - " + o.end));
         
         newlyBrokenIncome.sort((DayIncome a, DayIncome b) -> {
             return a.start.compareTo(b.start);
@@ -2776,7 +2777,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -3203,5 +3204,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return false;
+    }
+
+    public List<DayIncome> getDayIncomesIgnoreConfig(Date start, Date end) {
+        return getDayIncomesInternal(start, end, true);
     }
 }

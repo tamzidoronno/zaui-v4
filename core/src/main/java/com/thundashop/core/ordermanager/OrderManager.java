@@ -2125,8 +2125,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         orderIds.stream().forEach(orderId -> { 
             Order order = getOrder(orderId);
             Order creditedOrder = createCreatditOrder(orderId, "ordermanager_merged_order"); 
-            markAsPaid(orderId, new Date(), 0.0); 
-            markAsPaid(creditedOrder.id, new Date(), 0.0);
+            markAsPaid(orderId, new Date(), order.getPaidRest()); 
+            markAsPaid(creditedOrder.id, new Date(), order.getPaidRest());
             order.closed = true;
             saveObject(order);
         });

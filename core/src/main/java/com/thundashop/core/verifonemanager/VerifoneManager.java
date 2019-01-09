@@ -184,7 +184,8 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             logPrint("Card succesfully paid");
             printFeedBack("completed");
             if(orderToPay != null) {
-                orderManager.markAsPaid(orderToPay.id, new Date(), orderToPay.getTotalAmount());
+                double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
+                orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
             }
         } else {
             logPrint("Failed to pay");

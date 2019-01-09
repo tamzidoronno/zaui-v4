@@ -1986,7 +1986,7 @@ function getshop_searchRooms(e) {
                         }
                     });
                 }
-            }            
+            }
         });
     }catch(e) { getshop_handleException(e); }
 }

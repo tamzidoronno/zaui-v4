@@ -1320,13 +1320,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String getMessage(String bookingId, String key) {
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.setOrderIdToSend(null);
-            return pmsNotificationManager.getMessageFormattedMessage(bookingId, key, "sms");
+            String msg = pmsNotificationManager.getMessageFormattedMessage(bookingId, key, "sms");
+            if(msg == null || msg.isEmpty()) {
+                msg = pmsNotificationManager.getMessageFormattedMessage(bookingId, key, "email");
+            }
+            return msg;
         }
         orderIdToSend = null;
 
         PmsBooking booking = getBooking(bookingId);
         String message = getMessageToSend(key, "sms", booking, booking.language);
         message = formatMessage(message, booking, null, null);
+        
+        if(message == null || message.isEmpty()) {
+            message = getMessageToSend(key, "email", booking, booking.language);
+            message = formatMessage(message, booking, null, null);
+        }
+        
         return message;
     }
 

@@ -40,6 +40,9 @@ public interface IPmsInvoiceManager {
     public String sendRecieptOrInvoice(String orderId, String email, String bookingId);
     
     @Administrator
+    public String sendRecieptOrInvoiceWithMessage(String orderId, String email, String bookingId, String message);
+    
+    @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
     
     @Administrator

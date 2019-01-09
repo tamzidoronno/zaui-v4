@@ -52,7 +52,15 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         <td width='50%' valign='top' class='otheroptionstd'>
             <h3>Other options</h3>
             <div gstype='form' method='resendConfirmation'>
-                <input type='text' class='gsniceinput1' style='width:300px;' value='<?php echo $user->emailAddress; ?>' gsname='email'><span class='shop_button' gstype='submit'>Send confirmation</span>
+                <select class='gsniceselect1' gsname='email' style='width:100%; box-sizing: border-box;'>
+                    <?php
+                    echo "<option value='".$user->emailAddress."'>$user->emailAddress</option>";
+                    foreach($guests as $guest) {
+                        echo "<option value='".$guest->email."'>$guest->email</option>";
+                    }
+                    ?>
+                </select>
+                <span class='shop_button' gstype='submit' style='float:right; margin-top: 5px;'>Send booking confirmation</span>
             </div>
         </td>
     </tr>

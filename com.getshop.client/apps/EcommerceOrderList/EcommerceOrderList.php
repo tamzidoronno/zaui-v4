@@ -282,7 +282,8 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $email = $_POST['data']['bookerEmail'];
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
-        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId);
+        $msg = $_POST['data']['emailMessage'];
+        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg);
     }
     
     public function sendByEhf() {

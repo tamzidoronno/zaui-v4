@@ -193,7 +193,6 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         if(!$this->getSelectedName()) {
             echo "PLease specify a booking engine first";
         } else {
-            echo $this->getSelectedMultilevelDomainName();
             $types = (array)$this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
             if(sizeof($types) == 0) {
                 $this->includefile("nocategoriesyet");

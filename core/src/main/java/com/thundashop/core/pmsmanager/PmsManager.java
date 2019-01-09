@@ -4495,7 +4495,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void sendSmsOnRoom(String prefix, String phone, String message, String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         logEntry(message + "<br> +" + prefix + " " + phone, booking.id, null, roomId, "sms");
-        message = configuration.emailTemplate.replace("{content}", message);
         if (prefix.equals("47")) {
             messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
         } else {

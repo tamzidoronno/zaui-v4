@@ -9,7 +9,9 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.UserQueueMessage;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Component;
 public class GdsManager extends ManagerBase implements IGdsManager {
     public HashMap<String, GetShopDevice> devices = new HashMap();
     public ConcurrentHashMap<String, DeviceMessageQueue> messages = new ConcurrentHashMap();
+    public ConcurrentHashMap<String, UserMessageQueue> userMessageQueue = new ConcurrentHashMap();
     
     @Override
     public void saveDevice(GetShopDevice device) {
@@ -46,6 +49,9 @@ public class GdsManager extends ManagerBase implements IGdsManager {
             }
             if (common instanceof DeviceMessageQueue) {
                 messages.put(common.id, (DeviceMessageQueue)common);
+            }
+            if (common instanceof UserMessageQueue) {
+                userMessageQueue.put(common.id, (UserMessageQueue)common);
             }
         }
     }
@@ -161,5 +167,77 @@ public class GdsManager extends ManagerBase implements IGdsManager {
     @Override
     public List<GetShopDevice> getDevices() {
         return new ArrayList(devices.values());
+    }
+    
+    public void addUserMessageToQueue(String userId, Serializable dataCommon) {
+        removeExpiredUserMessages();
+        
+        UserMessageQueue queue = getQueueForUser(userId);
+        UserQueueMessage msg = new UserQueueMessage();
+        msg.dataCommon = dataCommon;
+        
+        queue.messages.removeIf(o -> o.equals(dataCommon));
+        queue.messages.add(msg);
+    }
+
+    @Override
+    public List<Serializable> getMessageForUser() {
+        removeExpiredUserMessages();
+        
+        String userId = getSession().currentUser.id;
+        
+        UserMessageQueue queue = getQueueForUser(userId);
+        
+        queue.markMessagesPulled();
+        
+        if (queue.isEmpty()) {
+            for (int i=0; i<180; i++) {
+                try { Thread.sleep(100); } catch (Exception ex) {};
+                if (!queue.messages.isEmpty()) {
+                    break;
+                }
+            }
+        }
+        
+        if (queue.isEmpty()) {
+            return new ArrayList();
+        }
+        
+        List<Serializable> retMessages= new ArrayList(
+                queue.messages
+                        .stream()
+                        .map(m -> m.dataCommon)
+                        .collect(Collectors.toList())
+        );
+        
+        queue.clear();
+        
+        saveObject(queue);
+        
+        return retMessages;
+    }
+
+    private UserMessageQueue getQueueForUser(String userId) {
+        UserMessageQueue queue = userMessageQueue.values()
+                .stream()
+                .filter(q -> q.userId.equals(userId))
+                .findFirst()
+                .orElse(createQueueForUser(userId));
+        return queue;
+    }
+
+    private UserMessageQueue createQueueForUser(String userId) {
+        UserMessageQueue queue = new UserMessageQueue();
+        queue.userId = userId;
+        saveObject(queue);
+        userMessageQueue.put(queue.id, queue);
+        return queue;
+    }
+
+    private void removeExpiredUserMessages() {
+        userMessageQueue.values()
+                .forEach(queue -> {
+                    queue.messages.removeIf(o -> o.hasExpired());
+                });
     }
 }

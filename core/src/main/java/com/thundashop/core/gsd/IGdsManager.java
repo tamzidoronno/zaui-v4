@@ -6,9 +6,12 @@
 package com.thundashop.core.gsd;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -25,6 +28,10 @@ public interface IGdsManager {
     
     @ForceAsync
     public List<GetShopDeviceMessage> getMessages(String tokenId);
+    
+    @Customer
+    @ForceAsync
+    public List<Serializable> getMessageForUser();
     
     @Internal
     public void sendMessageToDevice(String deviceId, GetShopDeviceMessage message);

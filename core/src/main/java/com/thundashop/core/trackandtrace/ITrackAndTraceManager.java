@@ -199,6 +199,4 @@ public interface ITrackAndTraceManager {
     @Administrator
     public void setSortingOfRoutes(String sortingName);
     
-    @Customer
-    public List<Serializable> getMyQueueMessages();
 }

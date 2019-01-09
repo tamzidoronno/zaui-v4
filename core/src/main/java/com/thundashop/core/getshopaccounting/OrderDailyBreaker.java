@@ -43,14 +43,16 @@ public class OrderDailyBreaker {
     private List<DayEntry> orderDayEntries;
     private List<String> errors = new ArrayList();
     private int precision = 10;
+    public boolean ignoreConfig = false;
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager, boolean ignoreConfig) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
         this.start = start;
         this.end = end;        
         this.paymentManager = paymentManager;
         this.productManager = productManager;
+        this.ignoreConfig = ignoreConfig;
         correctStartAndEndTime();
         createEmptyDays();
     }
@@ -345,7 +347,7 @@ public class OrderDailyBreaker {
             .collect(Collectors.toList());
         
         long time = System.currentTimeMillis();
-        OrderDailyBreaker dayBreaker = new OrderDailyBreaker(orders, start, end, null, null);
+        OrderDailyBreaker dayBreaker = new OrderDailyBreaker(orders, start, end, null, null, false);
         dayBreaker.breakOrders();
         
         List<DayIncome> dayIncomes = dayBreaker.getDayIncomes();
@@ -551,6 +553,12 @@ public class OrderDailyBreaker {
         List<DayEntry> toAdd = new ArrayList();
         
         StorePaymentConfig storePaymentConfig = paymentManager.getStorePaymentConfiguration(order.getPaymentApplicationId());
+        
+        if (ignoreConfig) {
+            storePaymentConfig = new StorePaymentConfig();
+            storePaymentConfig.offsetAccountingId_prepayment = "1";
+            storePaymentConfig.offsetAccountingId_accrude = "2";
+        }
         
         for (DayEntry entry : orderDayEntries) {
             DayEntry entryAccrude = entry.clone();

@@ -3,6 +3,8 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 $instance = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
 
+$productionMode = $factory->getApi()->getStoreManager()->isProductMode();
+
 $redirect = "";
 if(isset($_GET['redirectto'])) {
     $redirect = $_GET['redirectto'];
@@ -11,18 +13,20 @@ if(isset($_POST['redirect'])) {
     $redirect = $_POST['redirect'];
 }
 
-$cookieFound = isset($_COOKIE['gstoken']) ? "found" : "not found";
+$cookieName = "gstoken_".str_replace(".", "_", $_SERVER['HTTP_HOST']);
+$cookieFound = isset($_COOKIE[$cookieName]) ? "found" : "not found";
 echo "<center><b>$cookieFound</b></center>";
 
-if (isset($_COOKIE['gstoken'])) {
-    $user = $factory->getApi()->getUserManager()->logonUsingToken($_COOKIE['gstoken']);
+if (isset($_COOKIE[$cookieName])) {
+    $user = $factory->getApi()->getUserManager()->logonUsingToken($_COOKIE[$cookieName]);
     if ($user) {
         \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
         if($redirect) {
             header('location: ' . $redirect);
         }
     } else {
-        unset($_COOKIE['gstoken']);
+        unset($_COOKIE[$cookieName]);
+        setcookie( $cookieName, null, time()-60*60*24*60, '/totp.php', $_SERVER['HTTP_HOST'], $productionMode, true);
     }
 }
 
@@ -177,7 +181,6 @@ if(isset($_POST['username'])) {
 }
 
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
-    $productionMode = $factory->getApi()->getStoreManager()->isProductMode();
     
     $actual_link = "https://$_SERVER[HTTP_HOST]/totp.php";
     
@@ -185,12 +188,12 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
         $actual_link = "";
     }
     
-    if (!isset($_COOKIE['gstoken'])) {
+    if (!isset($_COOKIE[$cookieName])) {
         $tokenId = $factory->getApi()->getUserManager()->createTokenAccess();
         
-        setcookie( 'gstoken', $tokenId, time()+60*60*24*60, '/totp.php', $_SERVER['HTTP_HOST'], $productionMode, true);
+        setcookie( $cookieName, $tokenId, time()+60*60*24*60, '/totp.php', $_SERVER['HTTP_HOST'], $productionMode, true);
     } else {
-        setcookie( 'gstoken', $_COOKIE['gstoken'], time()+60*60*24*60, '/totp.php', $_SERVER['HTTP_HOST'], $productionMode, true);
+        setcookie( $cookieName, $_COOKIE[$cookieName], time()+60*60*24*60, '/totp.php', $_SERVER['HTTP_HOST'], $productionMode, true);
     }
     
     if(isset($_POST['redirect'])) {

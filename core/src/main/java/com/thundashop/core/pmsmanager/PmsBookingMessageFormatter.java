@@ -400,9 +400,7 @@ class PmsBookingMessageFormatter {
         for (PmsBookingRooms room : booking.rooms) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             
-            list += "<div class='roominfo'>"; 
-            list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "</div>";
-            list += "</div>";
+            list +=  type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "\n";
         }
         
         return list;

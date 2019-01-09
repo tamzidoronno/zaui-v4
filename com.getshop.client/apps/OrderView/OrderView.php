@@ -16,6 +16,14 @@ class OrderView extends \MarketingApplication implements \Application {
     public function getName() {
         return "OrderView";
     }
+    
+    
+    public function saveInternalCommentOnOrder() {
+        $this->setOrder();
+        $order = $this->getOrder();
+        $order->internalComment = $_POST['data']['ordercomment'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
 
     public function render() {
         $this->setOrder();

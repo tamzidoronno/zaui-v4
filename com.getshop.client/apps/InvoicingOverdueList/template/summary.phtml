@@ -13,6 +13,9 @@ foreach ($invoices as $invoice) {
     $days = $this->calculateDaysSince($invoice->dueDate); 
    
     $totalGroupNumber = $this->getGroupNumber($daysGroup, $days);
+    if(!isset($totalGrouped[$totalGroupNumber])) {
+        $totalGrouped[$totalGroupNumber] = 0;
+    }
     $totalGrouped[$totalGroupNumber] += $orderAmount;
 }
 
@@ -33,7 +36,10 @@ ksort($totalGrouped);
 <?
 $first = true;
 foreach ($daysGroup as $days) {
-    $amount = $totalGrouped[$days];
+    $amount = 0;
+    if(isset($totalGrouped[$days])) {
+        $amount = $totalGrouped[$days];
+    }
     
     if (!$amount)
         continue;

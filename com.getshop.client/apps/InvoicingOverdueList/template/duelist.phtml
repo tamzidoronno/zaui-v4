@@ -25,7 +25,13 @@ foreach ($overDueInvoices as $order) {
 
     <div class="duerow  <? echo $color; ?>" duedays='<? echo $dueDays; ?>'>
         <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'>
-            <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?></div>
+            <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?>
+                <?php
+                if($order->internalComment) {
+                    echo '<i class="fa fa-comment" title="'.$order->internalComment.'"></i>';
+                }
+                ?>
+            </div>
             <div class="col name"><? echo $order->cart->address->fullName; ?></div>
             <div class="col duedate">
                 <? echo date('d.m.Y', strtotime($order->dueDate)); ?>

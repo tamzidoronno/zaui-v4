@@ -1,11 +1,42 @@
-.PmsNewBooking .GetShopModuleTable .col { width: 100px; }
+.PmsNewBooking .GetShopModuleTable .col { width: 87px; }
 .PmsNewBooking .GetShopModuleTable .col.col_4 { width: 70px; }
 .PmsNewBooking .GetShopModuleTable .col.col_5 { text-align: center; }
 .PmsNewBooking .GetShopModuleTable .col.col_4 input { width: 40px; text-align: center;}
 .PmsNewBooking .GetShopModuleTable .col.col_6 input { width: 40px; text-align: center;}
 .PmsNewBooking .GetShopModuleTable .col.col_1 { width: 275px; }
+.PmsNewBooking .roominformation .col { display:inline-block; font-size: 16px; }
+.PmsNewBooking .roominformation .addonsarea { font-size: 12px; }
+.PmsNewBooking .guestinformation { padding-left: 35px; }
+.PmsNewBooking .guestname { width: 212px; margin-right: 10px;}
+.PmsNewBooking .guestemail { width: 245px; margin-right: 10px;}
+.PmsNewBooking .guestprefix { width: 21px; }
+
+.PmsNewBooking label.sameasbooker {
+  display: block;
+  padding-left: 15px;
+  text-indent: -15px;
+}
+.PmsNewBooking label.sameasbooker input {
+  width: 13px;
+  height: 13px;
+  padding: 0;
+  margin:0;
+  vertical-align: bottom;
+  position: relative;
+  top: -1px;
+  *overflow: hidden;
+}
+
+.PmsNewBooking .guestinformation { border-bottom: solid 1px #bbb; padding-bottom: 10px; margin-bottom: 10px;  padding-top: 5px; }
+.PmsNewBooking .roominformation .col_1 { width: 266px; }
+.PmsNewBooking .roominformation .col_2 { width:140px; }
+.PmsNewBooking .roominformation .col_3 { width: 140px; }
+.PmsNewBooking .roominformation .col_4 { width: 120px; }
+.PmsNewBooking .roominformation .col_6 { width: 265px; }
 .PmsNewBooking .addnewroom { width: 68%; float:left;}
 .PmsNewBooking .availablerooms {    display: inline-block;width: 30%;float: right; }
+.PmsNewBooking .roominformation .guestcounter { width: 20px; text-align: center; }
+.PmsNewBooking .roominformation .roomprice { width: 60px; text-align: center; }
 .PmsNewBooking .availablerooms.hasconference { display:none; }
 .PmsNewBooking .conferenceroom { width: 30%;float:right; padding-left: 50px; box-sizing: border-box;}
 .PmsNewBooking .hasDatepicker {  max-width: 115px; }

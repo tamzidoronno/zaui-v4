@@ -5,8 +5,16 @@ app.EcommerceOrderList = {
         $(document).on('click','.EcommerceOrderList .closesendpaymentlink', app.EcommerceOrderList.closesendpaymentlink);
         $(document).on('click','.EcommerceOrderList .deleteOrder', app.EcommerceOrderList.deleteOrder);
         $(document).on('click','.EcommerceOrderList .creditOrder', app.EcommerceOrderList.creditOrder);
+        $(document).on('change','.EcommerceOrderList .sendlinktouser', app.EcommerceOrderList.changePaymentLinkUser);
     },
-    
+    changePaymentLinkUser : function() {
+        var val = $(this).val();
+        var splitted = val.split(":");
+        var box = $(this).closest('.dosendbox');
+        box.find('[gsname="bookerPrefix"]').val(splitted[0]);
+        box.find('[gsname="bookerPhone"]').val(splitted[1]);
+        box.find('[gsname="bookerEmail"]').val(splitted[2]);
+    },
     showSendingEhfMessage: function() {
         $('.sendehfbox').hide(); 
         $('.sendingehf').show();

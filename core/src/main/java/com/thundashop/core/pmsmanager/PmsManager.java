@@ -582,6 +582,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         verifyPhoneOnBooking(booking, true);
         booking.deleted = null;
         booking.completedDate = new Date();
+        setSameAsBookerIfNessesary(booking);
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -1319,13 +1320,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String getMessage(String bookingId, String key) {
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.setOrderIdToSend(null);
-            return pmsNotificationManager.getMessageFormattedMessage(bookingId, key, "sms");
+            String msg = pmsNotificationManager.getMessageFormattedMessage(bookingId, key, "sms");
+            if(msg == null || msg.isEmpty()) {
+                msg = pmsNotificationManager.getMessageFormattedMessage(bookingId, key, "email");
+            }
+            return msg;
         }
         orderIdToSend = null;
 
         PmsBooking booking = getBooking(bookingId);
         String message = getMessageToSend(key, "sms", booking, booking.language);
         message = formatMessage(message, booking, null, null);
+        
+        if(message == null || message.isEmpty()) {
+            message = getMessageToSend(key, "email", booking, booking.language);
+            message = formatMessage(message, booking, null, null);
+        }
+        
         return message;
     }
 
@@ -4494,7 +4505,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void sendSmsOnRoom(String prefix, String phone, String message, String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         logEntry(message + "<br> +" + prefix + " " + phone, booking.id, null, roomId, "sms");
-        message = configuration.emailTemplate.replace("{content}", message);
         if (prefix.equals("47")) {
             messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
         } else {
@@ -9473,5 +9483,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
         
         logEntry("Splitted stay", booking.id, room.bookingItemId);
+    }
+
+    private void setSameAsBookerIfNessesary(PmsBooking booking) {
+        if(!booking.setGuestsSameAsBooker) {
+            return;
+        }
+        
+        User user = userManager.getUserById(booking.userId);
+        for(PmsBookingRooms r : booking.rooms) {
+            for(PmsGuests g : r.guests) {
+                g.email = user.emailAddress;
+                g.name = user.fullName;
+                g.phone = user.cellPhone;
+                g.prefix = user.prefix;
+            }
+        }
     }
 }

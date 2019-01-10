@@ -60,6 +60,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private Date cacheCoverage = null;
     
     @Autowired
+    PmsNotificationManager pmsNotificationManager;
+    
+    @Autowired
     StoreApplicationPool storeApplicationPool;
     
     @Autowired
@@ -1781,6 +1784,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public String sendRecieptOrInvoice(String orderId, String email, String bookingId) {
+        return sendRecieptOrInvoiceWithMessage(orderId, email, bookingId, null);
+    }
+    
+    @Override
+    public String sendRecieptOrInvoiceWithMessage(String orderId, String email, String bookingId, String message) {
         Order order = orderManager.getOrderSecure(orderId);
         orderManager.saveObject(order);
         String res = "";
@@ -1789,6 +1797,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             pmsManager.setOrderIdToSend(orderId);
             pmsManager.setEmailToSendTo(email);
+            if(message != null) {
+                pmsNotificationManager.setEmailMessageToSend(message);
+            }
             if(order.status == Order.Status.PAYMENT_COMPLETED) {
                 pmsManager.doNotification("sendreciept", bookingId);
             } else {
@@ -1803,6 +1814,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return res;
     }
+
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
         PmsBooking booking = pmsManager.getBooking(bookingId);

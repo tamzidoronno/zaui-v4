@@ -48,14 +48,15 @@ $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTyp
         array('guests', 'Guest count', 'numberOfGuests', "formatNumberOfGuests"),
         array('available', 'Available', 'available', null),
         array('price', 'Room price', 'price', "formatRoomPrice"),
-        array('cost', 'Cost', 'cost', null)
+        array('cost', 'Cost', 'cost', null),
+        array('sameAsBooker', 'Same as booker', 'cost', null)
     );
     if (!$found) {
         echo "No rooms added yet, add one or more rooms above.";
     } else {
-        $table = new \GetShopModuleTable($this, null, null, null, $attributes);
-        $table->setData($rows);
-        $table->render();
+        
+        $this->printAddedRooms($rows);
+        
         echo "<div style='text-align:right;font-size:16px;padding:10px;margin-right:10px;'>";
         echo "Total cost: <span class='totalcostindicator'>" . $booking->totalPrice . "</span>";
         echo "</div>";
@@ -89,6 +90,10 @@ if($found) {
                 <span class='shop_button newcustomertypebutton' type='nextstepexisting'>Existing customer</span>
                 <span class='shop_button newcustomertypebutton' gstype='clicksubmit' method='completequickreservation'>Quick reservation</span>
             </div>
+            <label class='createOrderAndSendPaymentLink' style='margin-top:10px;'>
+                <?php $checkedSend = $this->doCreateOrderAndSendPaymentLink() ? "checked='checked'" : ""; ?>
+            <input type='checkbox' class='createOrderAndSendPaymentLinkCheckBox' <?php echo $checkedSend; ?>> Create order and send payment link.
+            </label>
 
             <div class='nextstep nextstepexisting' gstype='form' method='searchExistingCustomer'>
                 <br>

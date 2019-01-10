@@ -4,6 +4,8 @@ namespace ns_74220775_43f4_41de_9d6e_64a189d17e35;
 class PmsNewBooking extends \WebshopApplication implements \Application {
     public $canNotAddConferenceRoom = false;
     private $products = array();
+    /* @var $this->selectedBooking \core_pmsmanager_PmsBooking */
+    private $selectedBooking;
     
     
     public function getDescription() {
@@ -217,6 +219,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
                     break;
                 }
             }
+            $this->createAndSendPaymentLink($currentBooking);
             $this->msg = ""; 
             $this->msg .= "<script>";
             $this->msg .= "window.location.href='/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496&loadBooking=".$res->id."';";
@@ -302,10 +305,29 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
         }
         
+        $currentBooking->setGuestsSameAsBooker = (sizeof($currentBooking->rooms) == 1);
+        
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $currentBooking, true);
         $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $currentBooking->id);
     }
 
+    public function saveGuestInformation() {
+        $room = $this->getRoom($_POST['data']['roomid']);
+        /* @var $booking core_pmsmanager_PmsBooking */
+        $booking = $this->selectedBooking;
+        foreach($booking->rooms as $room) {
+            foreach($room->guests as $guest) {
+                if($guest->guestId == $_POST['data']['guestid']) {
+                    $guest->email = $_POST['data']['guestinfo']['email'];
+                    $guest->prefix = $_POST['data']['guestinfo']['prefix'];
+                    $guest->name = $_POST['data']['guestinfo']['name'];
+                    $guest->phone = $_POST['data']['guestinfo']['phone'];
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function addAddonToBooking() {
         $productId = $_POST['data']['productid'];
         $curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
@@ -472,6 +494,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $result['price'] = $pmsRoom->price;
         $result['addons'] = $this->createAcronymAddonsRow($pmsRoom);
         $result['totalcost'] = $booking->totalPrice;
+        ob_start();
+        $this->printGuestInformation($pmsRoom->pmsBookingRoomId);
+        $guestinfo = ob_get_contents();
+        ob_end_clean();
+        $result['guests'] = $guestinfo;
         echo json_encode($result);
     }
 
@@ -498,6 +525,114 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $current[] = $guest;
         }
         return $current;
+    }
+
+    public function printAddedRooms($rows) {
+        /*
+         * array('type', 'Room type', 'type', null),
+         * array('checkin', 'Check in', 'start', null),
+         * array('checkout', 'Check out', 'end', null),
+         * array('guests', 'Guest count', 'numberOfGuests', "formatNumberOfGuests"),
+         * array('available', 'Available', 'available', null),
+         * array('price', 'Room price', 'price', "formatRoomPrice"),
+         * array('cost', 'Cost', 'cost', null),
+         * array('sameAsBooker', 'Same as booker', 'cost', null)
+         */
+        foreach($rows as $row) {
+            echo "<div class='roominformation datarow'>";
+            echo "<span class='col col_5'>" . $row->available . "</span>";
+            echo "<span class='col col_1'>" . $row->type . "</span>";
+            echo "<span class='col col_2'>" . $row->start . "</span>";
+            echo "<span class='col col_3'>" . $row->end . "</span>";
+            echo "<span class='col col_4'>" . $this->formatNumberOfGuests($row) . " guests </span>";
+            echo "<span class='col col_6'>" . $this->formatRoomPrice($row) . " per night</span>";
+            echo "<span class='col col_7 col_cost'>" . $row->cost . "</span>";
+            echo "</div>";
+            echo "<div class='guestinformation' roomid='".$row->roomid."'>";
+            $this->printGuestInformation($row->roomid);
+            echo "</div>";
+        }
+    }
+
+    public function updateSameAsBooker() {
+    $pmsRoom = $this->getRoom($_POST['data']['roomid']);
+    $this->selectedBooking->setGuestsSameAsBooker = $_POST['data']['sameasbooker'] == "true";
+    $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $this->selectedBooking);
+    $result = array();
+    ob_start();
+    $this->printGuestInformation($pmsRoom->pmsBookingRoomId);
+    $guestinfo = ob_get_contents();
+    ob_end_clean();
+    $result['guests'] = $guestinfo;
+    echo json_encode($result);
+    }
+    
+    public function printGuestInformation($roomId) {
+        $room = $this->getRoom($roomId);
+        $setGuestsSameAsBooker = $this->selectedBooking->setGuestsSameAsBooker;
+        $hideGuests = $setGuestsSameAsBooker ? "style='display:none;'" : "";
+        $checkedBox = $setGuestsSameAsBooker ? "checked='checked'" : "";
+        echo "<label class='sameasbooker'>";
+        echo "<input type='checkbox' class='sameasbookerinfocheckbox' roomid='".$room->pmsBookingRoomId."' $checkedBox> Use same information for guest(s) as for booker.";
+        echo "</label>";
+        
+        foreach($room->guests as $guest) {
+            $name = @$guest->name ? $guest->name : "";
+            $email = @$guest->email ? $guest->email : "";
+            $prefix = @$guest->prefix ? $guest->prefix : "";
+            $phone = @$guest->phone ? $guest->phone : "";
+            echo "<div class='guestrow' guestId='".$guest->guestId."' $hideGuests>";
+            echo "<input type='text' class='gsniceinput1 guestname' placeholder='Guest name' value='".$name."'> ";
+            echo "<input type='text' class='gsniceinput1 guestemail' placeholder='Guest email' value='".$email."'> ";
+            echo "<input type='text' class='gsniceinput1 guestprefix' placeholder='47'  value='".$prefix."'> ";
+            echo "<input type='text' class='gsniceinput1 guestphone' placeholder='Guest phone number' value='".$phone."'>";
+            echo "</div>";
+        }
+    }
+
+    /**
+     * 
+     * @param type $roomId
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getRoom($roomId) {
+        if(!$this->selectedBooking) {
+            $this->selectedBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        }
+        foreach($this->selectedBooking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomId) {
+                return $room;
+            }
+        }
+        return null;
+    }
+    
+    public function toggleCreateOrderAndSendPaymentLink() {
+        $_SESSION['toggleCreateOrderAndSendPaymentLink'] = $_POST['data']['checked'] == "true";
+    }
+    
+    public function doCreateOrderAndSendPaymentLink() {
+        if(!isset($_SESSION['toggleCreateOrderAndSendPaymentLink'])) {
+            return false;
+        }
+        return $_SESSION['toggleCreateOrderAndSendPaymentLink'];
+    }
+
+    public function createAndSendPaymentLink($booking) {
+        if(!$this->doCreateOrderAndSendPaymentLink()) {
+            return;
+        }
+        $bookingId = $booking->id;
+        $orderId = $this->getApi()->getPmsInvoiceManager()->createOrderOnUnsettledAmount($this->getSelectedMultilevelDomainName(), $bookingId);
+        
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $email = $user->emailAddress;
+        $prefix = $user->prefix;
+        $phone = $user->cellPhone;
+        
+        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), $orderId, $bookingId, $email, $prefix, $phone);
+        $this->getApi()->getPmsManager()->doNotification($this->getSelectedMultilevelDomainName(), "booking_completed", $bookingId);
+        unset($_SESSION['toggleCreateOrderAndSendPaymentLink']);
     }
 
 }

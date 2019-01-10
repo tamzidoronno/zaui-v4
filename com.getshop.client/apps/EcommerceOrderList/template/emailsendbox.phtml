@@ -16,8 +16,6 @@ $guests = array();
 if($room != null) {
     $guests = $room->guests;
 }
-$msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
-
 $user = $this->getApi()->getUserManager()->getUserById($order->userId);
 $invoiceEmail = $user->emailAddress;
 if ($user->emailAddressToInvoice) {
@@ -34,18 +32,87 @@ if(isset($_GET['sendcallback'])) {
 if(isset($_GET['sendcallbackehf'])) {
     $sendEmailCallbackEhf = $_GET['sendcallbackehf'];
 }
-?>
-<span class='sendpaymentlinkbox dosendbox dontExpand' gstype='form' method='sendEmail'>
-    <div style='padding-bottom: 10px;'>
-        <i class='fa fa-close closesendpaymentlink' style='float:right;cursor:pointer;'></i>
-        <input type='txt' gsname="bookerEmail" value="<?php echo $invoiceEmail; ?>" placeholder="Email">
-        <input type='hidden' gsname="bookingid" value="<?php echo $booking->id; ?>">
-        <input type='hidden' gsname="orderid" value="<?php echo $order->id; ?>">
-        <input type="button" gstype='submit' value='Send' gs_callback='<?php echo $sendEmailCallback; ?>'>
-    </div>
-</span>
 
-<?php
+$roomId = $_POST['data']['roomid'];
+$booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
+$room = null;
+$guests = array();
+foreach($booking->rooms as $r) {
+    if($r->pmsBookingRoomId == $roomId) {
+        $room = $r;
+    }
+}
+if($room != null) {
+    $guests = $room->guests;
+}
+if($order->status != 7) {
+    $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "sendinvoice");
+} else {
+    $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "sendreciept");
+}
+$order = $this->getSelectedOrder();
+
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$invoiceEmail =  $user->emailAddress;
+if($user->emailAddressToInvoice) {
+    $invoiceEmail = $user->emailAddressToInvoice;
+}
+$phonePrefix = $user->prefix;
+$phoneNumber = $user->cellPhone;
+$bookerName = $user->fullName;
+
+
+echo "<span class='sendpaymentlinkbox dosendbox dontExpand' gstype='form' method='sendEmail'>";
+echo "<div style='padding-bottom: 10px;'>";
+echo "<i class='fa fa-close closesendpaymentlink' style='float:right;cursor:pointer;'></i>";
+echo "Send order / invoice";
+echo "</div>";
+echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
+echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
+echo "<div>";
+echo "<select style='width:100%; margin-bottom: 5px;' class='sendlinktouser'>";
+echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail'>Booker : $bookerName</option>";
+$selectedPhone = $phoneNumber;
+$selectedEmail = $invoiceEmail;
+$selectedPrefix = $phonePrefix;
+
+
+$k = 1;
+foreach($guests as $guest) {
+    /* @var $guest core_pmsmanager_PmsGuests */
+    if(!$guest->name) {
+        continue;
+    }
+    $pref = $guest->prefix;
+    $phone = $guest->phone;
+    $email = $guest->email;
+    $selected = "";
+    if($k == $guestSelectedOffset) {
+        $selectedPhone = $phone;
+        $selectedEmail = $email;
+        $selectedPrefix = $pref;
+        $selected = "SELECTED";
+    }
+
+    echo "<option value='$pref:$phone:$email' $selected>Guest : " . $guest->name . "</option>";
+    $k++;
+}
+if($order->status != 7) {
+    $sendText = "Send invoice";
+} else {
+    $sendText = "Send reciept";
+}
+
+echo "</select><br>";
+echo "<input type='txt' value='".$selectedEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";
+echo "<span style='font-size:12px;'>Message</span><br>";
+echo "<textarea style='font-size:10px; width:100%; height: 100px;' gsname='emailMessage'>$msg</textarea>";
+echo "<input type='button' gstype='submit' gsvalue='sendtobooker' value='$sendText' gs_callback='app.EcommerceOrderList.doneSendingPaymentLink' style='width:100%; box-sizing:border-box; margin-top:3px;'>";
+
+echo "</div>";
+
+echo "</span>";  
+
 $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
 $isCompany = $user->companyObject != null && $user->companyObject->vatNumber;
 

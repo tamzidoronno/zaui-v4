@@ -78,6 +78,12 @@ public class SupportDatabase extends StoreComponent {
             ex.printStackTrace();
         } catch (UnknownHostException ex) {
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mongo.close();
+            } catch (Exception ex) {
+                // Will, then there is not much more we can do?
+            }
         }
     }
 

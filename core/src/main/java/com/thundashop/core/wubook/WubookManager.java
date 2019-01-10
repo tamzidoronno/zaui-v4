@@ -1709,8 +1709,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     continue;
                 }
                 
-                logPrint("Checking: " + start + " - " + end);
-                
                 int count = 0;
                 try {
                     count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end, false, false);

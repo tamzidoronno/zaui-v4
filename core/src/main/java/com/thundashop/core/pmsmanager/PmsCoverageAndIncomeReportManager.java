@@ -144,6 +144,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                     entry.totalForcasted = entry.totalPrice;
                     entry.totalPrice = dayEntry.total;
                     addRoomPrices(entry, dayEntry);
+                    entry.finalize();
                     found = true;
                 }
             }

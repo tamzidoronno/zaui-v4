@@ -586,6 +586,12 @@ class PageFactory {
         $row->addColumn("0775b147-b913-43cd-b9f4-a2a721ad3277", "2888fc8f-de8f-45c8-970d-cf74ec3b88e2");
         $this->pages['allinvoices'] = $page;
         
+        $page = new \ModulePage("incomes", "invoicing");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("6c5268a0-26ea-4905-8f23-79f5410912a8", "dd11ceff-c204-41c7-8d14-bf3cbff7245b");
+        $this->pages['incomes'] = $page;
+        
         $this->createOrderViewPage('invoicing');
         $this->createProductsPage("invoicing");
     }

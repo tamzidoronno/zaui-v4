@@ -38,6 +38,7 @@ import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
+import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
 import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
@@ -3225,5 +3226,34 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             saveObject(order);
         }
+    }
+    
+    public List<OrderTransactionDTO> getAllTransactionsForInvoices(Date start, Date end) {
+        List<Order> invoices = getAllOrders().stream()
+                .filter(o -> o.isInvoice())
+                .collect(Collectors.toList());
+        
+        List<OrderTransactionDTO> retList = new ArrayList();
+        
+        for (Order order : invoices) {
+            if (order.orderTransactions == null)
+                continue;
+            
+            OrderLight orderLight = new OrderLight(order);
+            
+            for (OrderTransaction trans : order.orderTransactions) {
+                boolean transactionWithinPeriode = (start.before(trans.date) && end.after(trans.date));
+                
+                if (start.equals(trans.date) || transactionWithinPeriode) {
+                    OrderTransactionDTO dto = new OrderTransactionDTO();
+                    dto.orderLight = orderLight;
+                    dto.orderTransaction = trans;
+                    retList.add(dto);
+                }
+                
+            }
+        }
+        
+        return retList;
     }
 }

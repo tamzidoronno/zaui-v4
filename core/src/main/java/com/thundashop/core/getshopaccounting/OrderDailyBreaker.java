@@ -104,7 +104,6 @@ public class OrderDailyBreaker {
 
                 proccessOrder(order);
             } catch (Exception ex) {
-                ex.printStackTrace();
                 errors.add(ex.getMessage());
             }
         });

@@ -299,12 +299,12 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
     
     @Override
-    public void checkForOrdersToCapture() {
+    public boolean checkForOrdersToCapture() {
         Gson gson = new Gson();
         
         Application dibsApp = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8");
         if (dibsApp == null) {
-            return;
+            return false;
         }
         
         
@@ -341,6 +341,8 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 messageManager.sendMail("post@getshop.com", "post@getshop.com", "Pullserver", "Back online again", "post@getshop.com", "post@getshop.com");
             }
             sentPollFailed = false;
+            
+            return !messages.isEmpty();
         } catch (Exception ex) {
             if (!sentPollFailed) {
                 messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed to fetch from pull server", "Is pull server down: " + ex.getMessage(), "post@getshop.com", "post@getshop.com");
@@ -348,6 +350,8 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 logPrintException(ex);
             }
         }
+        
+        return false;
     }
 
     private void saveCardOnUser(Order order) {

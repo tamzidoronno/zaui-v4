@@ -7,5 +7,5 @@ import com.thundashop.core.common.GetShopApi;
  */
 @GetShopApi
 public interface IEpayManager {
-    public void checkForOrdersToCapture();
+    public boolean checkForOrdersToCapture();
 }

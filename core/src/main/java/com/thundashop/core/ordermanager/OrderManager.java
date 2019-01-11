@@ -665,11 +665,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         logPrint("Checking for orders to collect.. " + getSession().currentUser.fullName);
-        dibsManager.checkForOrdersToCapture();
-        epayManager.checkForOrdersToCapture();
+        boolean dibs = dibsManager.checkForOrdersToCapture();
+        boolean epay = epayManager.checkForOrdersToCapture();
 //        bamboraManager.checkForOrdersToCapture();
 
-        emptyPullServerQueue();
+        if (dibs || epay) {
+            emptyPullServerQueue();
+        }
     }
     
     @Override

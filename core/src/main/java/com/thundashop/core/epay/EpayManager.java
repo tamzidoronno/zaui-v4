@@ -68,9 +68,9 @@ public class EpayManager extends ManagerBase implements IEpayManager {
     UserManager userManager;
     
     @Override
-    public void checkForOrdersToCapture() {
+    public boolean checkForOrdersToCapture() {
         String pollKey = getCallBackId();
-        if(pollKey == null) { return; }
+        if(pollKey == null) { return false; }
         if(frameworkConfig.productionMode) {
             pollKey += "-prod";
         } else {
@@ -119,9 +119,12 @@ public class EpayManager extends ManagerBase implements IEpayManager {
                 }
                 getShopPullService.markMessageAsReceived(msg.id, storeId);
             }
+            return !messages.isEmpty();
         }catch(Exception e) {
             logPrintException(e);
         }
+        
+        return false;
     }
     
     private void saveCardOnUser(Order order) {

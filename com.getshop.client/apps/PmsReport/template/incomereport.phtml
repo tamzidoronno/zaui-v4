@@ -18,7 +18,7 @@ foreach($data as $row) {
     echo "<div>";
     foreach($row as $res) {
         $firstClass = $first ? "first" : "";
-        echo "<span class='column $firstClass'>" . $res . "</span>";
+        echo "<span class='column $firstClass'>" . round($res,2). "</span>";
     }
     $first = false;
     echo "</div>";

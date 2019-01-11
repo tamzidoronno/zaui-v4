@@ -2905,7 +2905,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new ErrorException(1053);
         }
         
-        if (order.needToStopDueToIllegalChangePaymentDate(oldOrder, closedDate) && !order.forcedOpen) {
+        if (order.needToStopDueToIllegalChangePaymentDate(oldOrder, closedDate) && !order.forcedOpen && !order.isInvoice()) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
         }
@@ -3220,6 +3220,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order != null) {
             String userId = getSession().currentUser.id;
             order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment);
+            if (order.isFullyPaid()) {
+                markAsPaidInternal(order, paymentDate, amount);
+            }
             saveObject(order);
         }
     }

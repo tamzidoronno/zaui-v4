@@ -432,6 +432,11 @@ thundashop.Ajax = {
     postgeneral: function() {
         var method = $(this).attr('gsclick');
         
+        if ($(this).closest('.app').attr('gstypes_disabled')) {
+            alert("GS Types has been disabled for this app. Please use javacsript and make sure its AJAX based updating...");
+            return;
+        }
+        
         if ($(this).attr('numpadgsmethod')) {
             method = $(this).attr('numpadgsmethod');
         }
@@ -1052,6 +1057,11 @@ thundashop.framework = {
     },
     
     submitFromEvent: function(event) {
+        if ($(event.target).closest('.app').attr('gstypes_disabled')) {
+            alert("GS Types has been disabled for this app. Please use javacsript and make sure its AJAX based updating...");
+            return;
+        }
+        
         if($(this).hasClass('disabled')) {
             return;
         }
@@ -1064,6 +1074,11 @@ thundashop.framework = {
     },
     
      submitFromElement: function (element) {
+        if ($(element).closest('.app').attr('gstypes_disabled')) {
+            alert("GS Types has been disabled for this app. Please use javacsript and make sure its AJAX based updating...");
+            return;
+        }
+        
         var form = element.closest('*[gstype="form"]');
         var method = form.attr('method');
         var args = thundashop.framework.createGsArgs(form);
@@ -1104,6 +1119,12 @@ thundashop.framework = {
     },
     
     submitElement: function (event) {
+        
+        if ($(event.target).closest('.app').attr('gstypes_disabled')) {
+            alert("GS Types has been disabled for this app. Please use javacsript and make sure its AJAX based updating...");
+            return;
+        }
+        
         var element = $(event.target);
         var name = element.attr('gsname');
         var value = element.attr('gsvalue');

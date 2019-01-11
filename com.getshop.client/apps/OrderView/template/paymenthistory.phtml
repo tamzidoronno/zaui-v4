@@ -14,6 +14,8 @@ if (!count($order->orderTransactions)) {
         echo "<div class='date'>".$this->__f("Date")."</div>";
         echo "<div class='amount'>".$this->__f("Amount")."</div>";
         echo "<div class='user'>".$this->__f("By user")."</div>";
+        echo "<div class='comment'>".$this->__f("Comment")."</div>";
+        echo "<div class='addeddate'>".$this->__f("Date added")."</div>";
     echo "</div>";
     foreach ($order->orderTransactions as $paymentLog) {
         $user = $this->getApi()->getUserManager()->getUserById($paymentLog->userId);
@@ -21,7 +23,31 @@ if (!count($order->orderTransactions)) {
             echo "<div class='date'>".date('d.m.Y H:i', strtotime($paymentLog->date))."</div>";
             echo "<div class='amount'>".$paymentLog->amount."</div>";
             echo "<div class='user'>".$user->fullName."</div>";
+            echo "<div class='comment'>".$paymentLog->comment."</div>";
+            echo "<div class='addeddate'>".date('d.m.Y H:i', strtotime($paymentLog->rowCreatedDate))."</div>";
         echo "</div>";
     }
 }
 ?>
+
+<div class="manualregisterpayment">
+
+    <h1><? echo $this->__f("Manually register payment"); ?></h1>
+    <?
+    $now = date('d.m.Y');
+    ?>
+    <input class="gsniceinput1 manualregisterpaymentdate" value="<? echo $now; ?>"/>
+    <input class="gsniceinput1 manualregisterpaymentcomment" placeholder="<? echo $this->__f('Optional comment'); ?>" />
+    <input class="gsniceinput1 manualregisterpaymentamount" value="<? echo $order->restAmount; ?>" />
+    
+    <div class="shop_button registerpayment">
+        <? 
+        echo $this->__f("Register payment");
+        ?>
+    </div>
+    
+</div>
+
+<script>
+    $('.manualregisterpaymentdate').datepicker({ dateFormat: "dd.mm.yy"});
+</script>

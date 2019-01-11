@@ -23,6 +23,7 @@ class OrderView extends \MarketingApplication implements \Application {
         $order = $this->getOrder();
         $order->internalComment = $_POST['data']['ordercomment'];
         $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->rePrintTab("history");
     }
 
     public function render() {
@@ -69,6 +70,13 @@ class OrderView extends \MarketingApplication implements \Application {
         if (!$this->order) {
             $this->order = $this->getApi()->getOrderManager()->getOrder($orderid);
         }
+    }
+    
+    public function addTransactionRecord() {
+        $order = $this->getOrder();
+        $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $this->getApi()->getOrderManager()->addOrderTransaction($order->id, $_POST['data']['amount'], $_POST['data']['comment'], $date);
+        $this->rePrintTab("paymenthistory");
     }
     
     /**
@@ -236,6 +244,10 @@ class OrderView extends \MarketingApplication implements \Application {
         $order->overrideAccountingDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->rePrintTab("accounting");
+    }
+    
+    public function disableGsTypes() {
+        return true;
     }
 }
 ?>

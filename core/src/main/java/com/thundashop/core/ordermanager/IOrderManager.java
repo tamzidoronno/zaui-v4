@@ -394,4 +394,7 @@ public interface IOrderManager {
     
     @Editor
     public void updateCartItemOnOrder(String orderId, CartItem cartItem);
+    
+    @Editor
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate);
 }

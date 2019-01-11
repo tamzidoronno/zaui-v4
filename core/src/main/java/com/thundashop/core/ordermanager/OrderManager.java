@@ -2613,7 +2613,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId);
+            order.registerTransaction(date, amount, userId, transactiontype, refId, "");
             feedGrafanaPaymentAmount(amount);
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
@@ -2885,16 +2885,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = (Order)data;
         Order oldOrder = null;
         
-        stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
-        
         if (order.id != null && !order.id.isEmpty()) {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
         }
         
-        if (oldOrder != null && oldOrder.overrideAccountingDate != null && oldOrder.overrideAccountingDate.before(closedDate)) {
-            resetOrder(oldOrder, order);
-            throw new ErrorException(1053);
-        }
+        stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
         
         if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {
             return;
@@ -2922,17 +2917,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void stopIfOverrideDateConflictingClosedDate(Order order, Date closedDate, Order oldOrder) throws ErrorException {
-        if (order.overrideAccountingDate != null && order.overrideAccountingDate.before(closedDate)) {
-            if (oldOrder == null) {
+        
+        // There are noe changes to the override accounting date. 
+        if (oldOrder != null && oldOrder.overrideAccountingDate != null && oldOrder.overrideAccountingDate.equals(order.overrideAccountingDate)) {
+            return;
+        }
+        
+        // This prevents the user from moving an override accountingdate out of its locked periode.
+        if (oldOrder != null && oldOrder.overrideAccountingDate != null && oldOrder.overrideAccountingDate.before(closedDate)) {
+            if (!order.overrideAccountingDate.equals(oldOrder.overrideAccountingDate)) {
                 resetOrder(oldOrder, order);
-                throw new ErrorException(1053);
+                throw new ErrorException(1053);    
             }
-            
-            double oldTotal = oldOrder.getTotalAmount();
-            double newTotal = order.getTotalAmount();
-            if (oldTotal != newTotal) {
-                throw new ErrorException(1053);
-            }
+        }
+        
+        // Prevents order to be put into an closed periode
+        if (order.overrideAccountingDate != null && order.overrideAccountingDate.before(closedDate)) {
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1053);
         }
     }
 
@@ -3210,5 +3212,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public List<DayIncome> getDayIncomesIgnoreConfig(Date start, Date end) {
         return getDayIncomesInternal(start, end, true);
+    }
+
+    @Override
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate) {
+        Order order = getOrder(orderId);
+        if (order != null) {
+            String userId = getSession().currentUser.id;
+            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment);
+            saveObject(order);
+        }
     }
 }

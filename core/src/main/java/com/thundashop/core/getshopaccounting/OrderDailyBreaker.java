@@ -7,6 +7,7 @@ package com.thundashop.core.getshopaccounting;
 
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.data.Order;
@@ -231,7 +232,11 @@ public class OrderDailyBreaker {
         
         for (PmsBookingAddonItem i : item.itemsAdded) {
             double total = ((double)i.count * i.price); 
-            double taxFactor = item.getProduct().taxGroupObject.getTaxRate() + 1;
+            double taxFactor = 1;
+            
+            if (item.getProduct().taxGroupObject != null) {
+                taxFactor = item.getProduct().taxGroupObject.getTaxRate() + 1;
+            }             
             
             DayEntry entry = new DayEntry();
             entry.cartItemId = item.getCartItemId();
@@ -712,6 +717,11 @@ public class OrderDailyBreaker {
         for (DayEntry entry : entriesToCreateVATtransactionOf) {
             Product product = order.cart.getCartItem(entry.cartItemId).getProduct();
             TaxGroup taxGroup = product.taxGroupObject;
+            
+            if (taxGroup == null) {
+                continue;
+            }
+            
             if (taxGroup.accountingTaxAccount == null || taxGroup.accountingTaxAccount.isEmpty()) {
                 continue;
             }

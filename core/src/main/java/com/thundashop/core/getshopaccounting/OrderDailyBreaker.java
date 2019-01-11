@@ -104,6 +104,7 @@ public class OrderDailyBreaker {
 
                 proccessOrder(order);
             } catch (Exception ex) {
+                ex.printStackTrace();
                 errors.add(ex.getMessage());
             }
         });
@@ -441,6 +442,10 @@ public class OrderDailyBreaker {
     }
 
     private String getAccountingNumberForProduct(CartItem item) throws DailyIncomeException {
+        if (ignoreConfig) {
+            return "";
+        }
+        
         String result = getAccountingNumberForProduct(item.getProduct().id);
         
         if (result == null || result.isEmpty()) {

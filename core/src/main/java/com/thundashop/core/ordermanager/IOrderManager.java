@@ -19,6 +19,7 @@ import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
+import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -394,4 +395,10 @@ public interface IOrderManager {
     
     @Editor
     public void updateCartItemOnOrder(String orderId, CartItem cartItem);
+    
+    @Editor
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate);
+    
+    @Editor
+    public List<OrderTransactionDTO> getAllTransactionsForInvoices(Date start, Date end);
 }

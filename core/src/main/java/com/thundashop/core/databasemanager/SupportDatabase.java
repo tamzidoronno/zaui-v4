@@ -11,7 +11,11 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientOptions.Builder;
 import com.mongodb.MongoClientURI;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -40,7 +44,7 @@ public class SupportDatabase extends StoreComponent {
 
     public static int mongoPort = 27017;
 
-    private Mongo mongo;
+    private MongoClient mongo;
     private Morphia morphia;
     
     private String collectionPrefix = "col_";
@@ -52,13 +56,27 @@ public class SupportDatabase extends StoreComponent {
     public SupportDatabase() throws UnknownHostException {
         morphia = new Morphia();
         morphia.map(DataCommon.class);
+        
+        List<MongoCredential> creds = new ArrayList<MongoCredential>();  
+        creds.add(MongoCredential.createCredential("getshop", "SupportManager", "aisdfjoiw3j4q2oaijsdfoiajsfdoi23joiASD__ASDF".toCharArray()));
+
+        MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
+        optionsBuilder.connectTimeout(2000);
+        optionsBuilder.socketTimeout(2000);
+
+        MongoClientOptions options = optionsBuilder.build();
+
+        mongo = new MongoClient(new ServerAddress("192.168.100.1", 27017), options);
     }
 
-    private void connect() throws UnknownHostException {
-        String connectionString = "mongodb://getshop:aisdfjoiw3j4q2oaijsdfoiajsfdoi23joiASD__ASDF@192.168.100.1/SupportManager";
-        mongo = new MongoClient(new MongoClientURI(connectionString));
+    private boolean isConnected() {
+        try {
+            mongo.getAddress();
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Support MongoDB is down");
+        }
     }
-    
 
     private void checkId(DataCommon data) throws ErrorException {
         if (data.id == null || data.id.isEmpty()) {
@@ -67,18 +85,10 @@ public class SupportDatabase extends StoreComponent {
     }
 
     private void addDataCommonToDatabase(DataCommon data) {
+        isConnected();
         data.gs_manager = "SupportManager";
         DBObject dbObject = morphia.toDBObject(data);
-        try {
-            connect();
-            mongo.getDB("SupportManager").getCollection(collectionPrefix + "all").save(dbObject);
-            mongo.close();
-        } catch (com.mongodb.CommandFailureException ex) {
-            mongo.close();
-            ex.printStackTrace();
-        } catch (UnknownHostException ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        mongo.getDB("SupportManager").getCollection(collectionPrefix + "all").save(dbObject);
     }
 
     public void delete(DataCommon data) throws ErrorException {
@@ -87,21 +97,11 @@ public class SupportDatabase extends StoreComponent {
     }
 
     public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
-        
-        try {
-            connect();
-            
-            DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
-            Stream<DataCommon> retlist = col.find().toArray().stream()
-                    .map(o -> morphia.fromDBObject(DataCommon.class, o));
-            mongo.close();
-            return retlist;
-        } catch (Exception ex) {
-            mongo.close();
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
-        }
-        
-        return null;
+        isConnected();
+        DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
+        Stream<DataCommon> retlist = col.find().toArray().stream()
+                .map(o -> morphia.fromDBObject(DataCommon.class, o));
+        return retlist;
     }
 
     /**
@@ -123,27 +123,18 @@ public class SupportDatabase extends StoreComponent {
     
     public List<DataCommon> query(DBObject query) {
         
-        try  {
-            connect();
-            
-            DB db = mongo.getDB("SupportManager");
-            DBCollection col = db.getCollection("col_all");
-            DBCursor res = col.find(query);
-            List<DataCommon> retObjecs = new ArrayList();
+        isConnected();
+        DB db = mongo.getDB("SupportManager");
+        DBCollection col = db.getCollection("col_all");
+        DBCursor res = col.find(query);
+        List<DataCommon> retObjecs = new ArrayList();
 
-            while (res.hasNext()) {
-                DBObject nx = res.next();
-                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
-                retObjecs.add(data);
-            }
-
-            mongo.close();
-            return retObjecs;
-        } catch (Exception ex) {
-            mongo.close();
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+        while (res.hasNext()) {
+            DBObject nx = res.next();
+            DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+            retObjecs.add(data);
         }
-        
-        return new ArrayList();
+
+        return retObjecs;
     }
 }

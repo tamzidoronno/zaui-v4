@@ -155,6 +155,9 @@ public class Order extends DataCommon implements Comparable<Order> {
      */
     public boolean billable = false;
     
+    @Transient
+    public double restAmount;
+    
     public Order jsonClone() {
         Gson gson = new Gson();
         String gsonOrder = gson.toJson(this);
@@ -396,6 +399,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         sentToPhone = null;
         sentToPhonePrefix = null;
         sentToCustomerDate = null;
+        
+        restAmount = getPaidRest();
         
         dueDate = getDueDate();
     }
@@ -990,13 +995,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         return cal.getTime();
     }
 
-    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId) {
+    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment) {
         OrderTransaction transaction = new OrderTransaction();
         transaction.date = date;
         transaction.amount = amount;
         transaction.userId = userId;
         transaction.refId = refId;
         transaction.transactionType = transactionType;
+        transaction.comment = comment;
         orderTransactions.add(transaction);
     }
 
@@ -1281,6 +1287,11 @@ public class Order extends DataCommon implements Comparable<Order> {
     public static class OrderTransactionType {
         public static Integer UNKNOWN = 1;
         public static Integer OCR = 2;
+        
+        /**
+         * If the operatolr manually enter this transaaction.
+         */
+        public static Integer MANUAL = 3;
     }
     
     

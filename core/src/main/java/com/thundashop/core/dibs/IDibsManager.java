@@ -10,5 +10,5 @@ import com.thundashop.core.common.GetShopApi;
 @GetShopApi
 public interface IDibsManager {
     @Administrator
-    public void checkForOrdersToCapture();
+    public boolean checkForOrdersToCapture();
 }

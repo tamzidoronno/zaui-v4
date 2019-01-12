@@ -8,11 +8,41 @@ app.OrderView = {
         $(document).on('click', '.OrderView .searchForProductBox .searchForProductBoxInner .closebutton', app.OrderView.closeSearchBox);
         $(document).on('click', '.OrderView .searchForProductBox .selectproductid', app.OrderView.selectProduct);
         $(document).on('click', '.OrderView .changeoverridedatebox .shop_button', app.OrderView.submitNewOverrideDate);
+        $(document).on('click', '.OrderView .shop_button.save_history_comment', app.OrderView.saveHistoryComment);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.count', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.price', app.OrderView.cartItemChanged);
+        
+        // Payment History
+        $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
+    },
+    
+    registerPayment: function() {
+        var tab = $(this).closest('.app').find('.orderviewtab[tab="paymenthistory"]');
+        
+        var data = app.OrderView.getData(this);
+        data.date = $(tab).find('.manualregisterpaymentdate').val();
+        data.amount = $(tab).find('.manualregisterpaymentamount').val();
+        data.comment = $(tab).find('.manualregisterpaymentcomment').val();
+        
+        var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(this), data);
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'paymenthistory', data);
+        });
+    },
+    
+    saveHistoryComment: function() {
+        var data = app.OrderView.getData(this);
+        data.ordercomment = $(this).closest('.app').find('.orderviewtab[tab="history"] [gsname="ordercomment"]').val();
+      
+        var event = thundashop.Ajax.createEvent(null, "saveInternalCommentOnOrder", $(this), data);
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'history', data);
+        });
     },
     
     submitNewOverrideDate: function() {

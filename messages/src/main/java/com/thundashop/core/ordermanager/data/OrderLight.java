@@ -15,12 +15,14 @@ public class OrderLight {
     private final long incrementOrderId;
     private final Date paymentDate;
     private String paymentType;
+    private String id;
     private final Date createdDate;
     
     public OrderLight(Order order) {
         this.incrementOrderId = order.incrementOrderId;
         this.paymentDate = order.paymentDate;
         this.createdDate = order.createdDate;
+        this.id = order.id;
         if (order.payment != null) {
             this.paymentType = order.payment.paymentType;
         }

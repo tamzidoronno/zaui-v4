@@ -13,6 +13,8 @@ public class OrderTransaction implements Serializable {
     public Integer transactionType = 1;
     public String refId = "";
     public boolean transferredToAccounting = false;
+    public Date rowCreatedDate = new Date();
+    public String comment = "";
     
     @Transient
     public String orderId = "";

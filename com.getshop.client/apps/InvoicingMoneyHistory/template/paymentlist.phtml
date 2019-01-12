@@ -1,0 +1,135 @@
+<?
+/* @var $this ns_6c5268a0_26ea_4905_8f23_79f5410912a8\InvoicingMoneyHistory */
+
+$selectedYear = $this->getYear();
+$selectedMonth = $this->getMonth();
+
+$startString = '01.'.str_pad("".$selectedMonth, 2, '0', STR_PAD_LEFT).'.'.$selectedYear.' 00:00';
+$start = strtotime($startString);
+$end = strtotime('+1 month', $start);
+
+$resData = (array)$this->getApi()->getOrderManager()->getAllTransactionsForInvoices($this->convertToJavaDate($start), $this->convertToJavaDate($end));
+
+$store = $this->getApi()->getStoreManager()->getMyStore();
+$storeYear = date('Y', strtotime($store->rowCreatedDate));
+echo "<script>";
+    echo "storeCreatedYear = ".$storeYear.";";
+    echo "storeCreatedMonth = ".date('m', strtotime($store->rowCreatedDate)).";";
+echo "</script>";
+?>
+<div class="infoheader">
+    <?
+    echo "<div class='head'>".$this->__f("Payment transactions for your Invoices")."</div>";
+    
+    echo "<div style='margin-top: 10px; font-size: 14px;'>";
+        echo $this->__f("This view can be used to keep control of all the incoming invoices payments. Once you register a payment for you invoice it will be displayed here.");
+    echo "</div>";
+    
+    ?>
+    
+    <br/><b>Please select: </b>
+    <br/>
+    <div gstype='form' method='showMonth'>
+        <select  gsname='month' class='gsniceselect1 timeperiode'>
+            <option value="1" <? echo $selectedMonth == 1 ? 'selected="true"' :""; ?>>Jan</option>
+            <option value="2" <? echo $selectedMonth == 2 ? 'selected="true"' :""; ?>>Feb</option>
+            <option value="3" <? echo $selectedMonth == 3 ? 'selected="true"' :""; ?>>Mar</option>
+            <option value="4" <? echo $selectedMonth == 4 ? 'selected="true"' :""; ?>>Apr</option>
+            <option value="5" <? echo $selectedMonth == 5 ? 'selected="true"' :""; ?>>May</option>
+            <option value="6" <? echo $selectedMonth == 6 ? 'selected="true"' :""; ?>>June</option>
+            <option value="7" <? echo $selectedMonth == 7 ? 'selected="true"' :""; ?>>July</option>
+            <option value="8" <? echo $selectedMonth == 8 ? 'selected="true"' :""; ?>>Aug</option>
+            <option value="9" <? echo $selectedMonth == 9 ? 'selected="true"' :""; ?>>Sep</option>
+            <option value="10" <? echo $selectedMonth == 10 ? 'selected="true"' :""; ?>>Oct</option>
+            <option value="11" <? echo $selectedMonth == 11 ? 'selected="true"' :""; ?>>Nov</option>
+            <option value="12" <? echo $selectedMonth == 12 ? 'selected="true"' :""; ?>>Dec</option>
+        </select>
+        -
+        <select gsname='year' class='gsniceselect1 timeperiode'>
+            <?
+            $nextYear = date('Y');
+            for ($i=$storeYear; $i<=$nextYear; $i++) {
+                $year = $i;
+                $selected = $year == $selectedYear ? 'selected="true"' :""; 
+                echo "<option $selected year='$year'>$year</option>";
+            }
+            ?>
+        </select>
+        
+        <div class="shop_button showresultbutton " gstype='submit'><? echo $this->__f("Show invoices"); ?></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        app.InvoicingMoneyHistory.changePeriodeOptions();
+    })
+</script>
+
+<?
+if (!count($resData)) {
+    echo "<h2>".$this->__f("Not transactions found")."</h2>";
+    return;
+}
+
+?>
+
+<div>
+    <?
+    $grouped = array();
+    foreach ($resData as $transactionDto) {
+        $date = date('d.m.Y', strtotime($transactionDto->orderTransaction->date));
+        if (!isset($grouped[$date])) {
+            $grouped[$date] = array();
+        }
+        
+        $grouped[$date][] = $transactionDto;
+    }
+    
+    $nullOrderFilter = $this->getNullOrdersArray($grouped);
+    
+    ksort($grouped);
+    
+    $newArray = array();
+    foreach ($grouped as $day => $transactionDtos) {
+        foreach ($transactionDtos as $transactionDto) {
+            if (isset($nullOrderFilter[$day][$transactionDto->orderLight->incrementOrderId])) {
+                continue;
+            }
+            
+            $newArray[$day][] = $transactionDto;
+        }
+    }
+    
+    $grouped = $newArray;
+        
+    foreach ($grouped as $day => $transactionDtos) {
+        
+        ?>
+        <div class='paymentday'>
+            <div class='dayheader'><? echo $day; ?></div>
+            <?
+            $dayTotal = 0;
+            foreach ($transactionDtos as $transactionDto) {
+                $transactionType = $transactionDto->orderTransaction->transactionType == 2 ? "OCR" : "Manuel";
+                $dayTotal += $transactionDto->orderTransaction->amount;
+            ?>
+                <div class='paymenttransrow'>
+                    <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $transactionDto->orderLight->id; ?>'>
+                        <div class='col orderid'><? echo $transactionDto->orderLight->incrementOrderId ." ( $transactionType ) ";; ?></div>
+                        <div class='col amount'><? echo $transactionDto->orderTransaction->amount; ?></div>
+                    </a>
+                </div>  
+            <?
+            }
+            ?>
+            
+            <div class='totalrow'>
+                <div class='col orderid'><? echo $this->__f("Total"); ?></div>
+                <div class='col amount'><? echo $dayTotal; ?></div>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

@@ -1,0 +1,75 @@
+
+.InvoicingMoneyHistory {
+    margin: 50px;
+}
+
+.InvoicingMoneyHistory .infoheader .head {
+    font-size: 30px;
+}
+
+.InvoicingMoneyHistory .col {
+    display: inline-block;
+}
+
+.InvoicingMoneyHistory .col.incrementalOrderId { width: 100px; text-align: center; }
+.InvoicingMoneyHistory .col.name { width: calc(100% - 800px); }
+.InvoicingMoneyHistory .col.orderdate { width: 200px; }
+.InvoicingMoneyHistory .col.duedate { width: 200px; }
+.InvoicingMoneyHistory .col.totalamount { width: 100px; }
+.InvoicingMoneyHistory .col.totalpaid { width: 100px; }
+
+
+.InvoicingMoneyHistory div.duerow.header {
+    font-weight: bold;
+}
+
+.InvoicingMoneyHistory .paymentday {
+    /*margin-bottom: 20px;*/
+    margin-top: 20px;
+    border: solid 1px #DDD;
+}
+
+.InvoicingMoneyHistory .paymentday .paymenttransrow  {
+    font-size: 16px;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.InvoicingMoneyHistory .paymentday div.paymenttransrow:nth-child(odd) {
+    background-color: #DDD;
+}
+
+.InvoicingMoneyHistory .paymentday .dayheader {
+    border-bottom: solid 1px #DDD;
+    font-size: 20px;
+    padding: 10px;
+    background-color: #fbffcd;
+    text-align: center;
+}
+
+.InvoicingMoneyHistory .paymentday .paymenttransrow .orderid {
+    width: calc(100% - 210px);
+    box-sizing: border-box;
+}
+.InvoicingMoneyHistory .paymentday .paymenttransrow .amount {
+    width: 200px;
+    text-align: right;
+    box-sizing: border-box;
+}
+    
+.InvoicingMoneyHistory .totalrow {
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    padding-left: 20px;
+    border-top: solid 1px #DDD;
+}
+
+.InvoicingMoneyHistory {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    
+}

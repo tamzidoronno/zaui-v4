@@ -226,6 +226,8 @@
 .orderviewtab .shipmentlogline .to,
 .orderviewtab .shipmentlogline .amount,
 .orderviewtab .shipmentlogline .user,
+.orderviewtab .shipmentlogline .comment,
+.orderviewtab .shipmentlogline .addeddate,
 .orderviewtab .shipmentlogline .date {
     display: inline-block;
     font-size: 16px;
@@ -237,8 +239,15 @@
     width: 200px;
 }
 
+.orderviewtab .shipmentlogline .user {
+    width: 200px;
+}
 .orderviewtab .shipmentlogline .amount {
     width: 100px;
+}
+
+.orderviewtab .shipmentlogline .comment {
+    width: calc(100% - 800px)
 }
 
 .orderviewtab .shipmentlogline .to {
@@ -280,6 +289,7 @@
     border-bottom: solid 1px #DDD;
 }
 
+
 .OrderView .changeoverridedatebox {
     position: absolute;
     border: solid 1px #DDD;
@@ -287,4 +297,7 @@
     background-color: #EFEFEF;
     z-index: 1;
     display: none;
+}
+.OrderView .manualregisterpayment {
+    padding: 10px;
 }

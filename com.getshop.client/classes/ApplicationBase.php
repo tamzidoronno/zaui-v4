@@ -328,7 +328,8 @@ class ApplicationBase extends FactoryBase {
         $hasInstance = $this->getConfiguration() ? "yes" : "no";
         $inData = json_encode($_GET);
         
-        echo "<div $callbackInstance appid='$id' hasinstance='$hasInstance' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId' gs_getvariables='$inData'>";
+        $ignoreGsTyeps = $this->disableGsTypes() ? "gstypes_disabled='true'" : "";
+        echo "<div $ignoreGsTyeps $callbackInstance appid='$id' hasinstance='$hasInstance' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId' gs_getvariables='$inData'>";
 
         echo "<div class='applicationinner'>";
         if($appSettingsId == "1ba01a11-1b79-4d80-8fdd-c7c2e286f94c") {
@@ -826,6 +827,15 @@ class ApplicationBase extends FactoryBase {
     
     public function gsAlsoUpdate() {
         return array();
+    }
+    
+    /**
+     * If the app returns this as true there will be
+     * shown a warning if the app uses the convetials
+     * gstypes.
+     */
+    public function disableGsTypes() {
+        return false;
     }
 }
 ?>

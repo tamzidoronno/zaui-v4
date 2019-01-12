@@ -58,6 +58,11 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         }
         printFeedBack("Starting payment process");
         Order order = orderManager.getOrderSecure(orderId);
+        
+        if (order.isFullyPaid() || order.status == Order.Status.PAYMENT_COMPLETED) {
+            return;
+        }
+        
         order.payment.paymentType = "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\\VerifoneTerminal";
         orderManager.saveOrder(order);
         logPrint("Start charging: " + order.payment.paymentType);

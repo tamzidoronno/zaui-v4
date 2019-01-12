@@ -194,7 +194,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             }
         } else {
             logPrint("Failed to pay");
-            if(orderToPay != null) {
+            if(orderToPay != null && orderToPay.status != Order.Status.PAYMENT_COMPLETED) {
                 orderToPay.status = Order.Status.PAYMENT_FAILED;
             }
             printFeedBack("payment failed");

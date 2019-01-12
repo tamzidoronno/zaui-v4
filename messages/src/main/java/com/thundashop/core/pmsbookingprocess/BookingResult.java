@@ -11,4 +11,5 @@ public class BookingResult {
     boolean goToCompleted = false;
     double amount = 0;
     public List<BookingResultRoom> roomList = new ArrayList();
+    BookingResultUserData userData;
 }

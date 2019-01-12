@@ -878,6 +878,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             res.roomList.add(roomToReturn);
         }
         
+        User usr = userManager.getUserById(booking.userId);
+        BookingResultUserData userData = new BookingResultUserData();
+        userData.setUser(usr);
+        res.userData = userData;
+        
+        
         return res;
     }
 

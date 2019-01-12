@@ -1270,6 +1270,19 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
+
+    public BigDecimal getTotalExAmountRoundedTwoDecimals(int precision) {
+      BigDecimal amount = new BigDecimal(0D);
+        
+        for(CartItem item : cart.getItems()) {
+            amount = amount.add(item.getTotalExRoundedWithTwoDecimals(precision));
+        }
+        return amount;
+    }
+
+    public boolean isFromSamleFaktura() {
+        return !createdBasedOnOrderIds.isEmpty();
+    }
     
     public static class Status  {
         public static int CREATED = 1;

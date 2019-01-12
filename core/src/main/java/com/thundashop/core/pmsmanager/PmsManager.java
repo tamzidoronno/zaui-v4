@@ -695,11 +695,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
         booking.calculateTotalCost();
-        Double totalOrder = 0.0;
-        for (String orderId : booking.orderIds) {
-            Order order = orderManager.getOrderSecure(orderId);
-            totalOrder += orderManager.getTotalAmount(order);
-        }
+        Double totalOrder = pmsInvoiceManager.getTotalOrdersOnBooking(booking.id);
         Double diff = booking.getTotalPrice() - totalOrder;
         if (diff < 2 && diff > 2) {
             diff = 0.0;
@@ -6297,14 +6293,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!test.payedFor) {
             return false;
         }
-        test.calculateTotalCost();
-        double total = test.getTotalPrice();
-        double orderTotal = 0.0;
-        for (String orderId : test.orderIds) {
-            Order order = orderManager.getOrderSecure(orderId);
-            orderTotal += orderManager.getTotalAmount(order);
-        }
-        double diff = total - orderTotal;
+        test = getBooking(test.id);
+        double diff = test.unsettled;
         if (diff < -3 || diff > 3) {
             test.totalUnsettledAmount = diff;
             return true;

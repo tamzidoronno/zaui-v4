@@ -10,23 +10,23 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://sverre.kronen.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://20461.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://sverre.kronen.3.0.local.getshop.com/",
-                    "jsendpoint": "http://sverre.kronen.3.0.local.getshop.com/",
+                    "endpoint": "http://20461.3.0.local.getshop.com/",
+                    "jsendpoint": "http://20461.3.0.local.getshop.com/",
                     "domain" : "default",
                     "language" : "no",
-                    "websocket" : "websocket5.getshop.com",
+//                    "websocket" : "websocket.getshop.com",
 //                    'roomStepTroughConfig' : true
-//                    "success" : function(res) {
-//                        console.log("booking completed");
-//                        console.log(res);
-//                    },
-//                    "failure" : function(res) {
-//                        console.log("booking failed");
-//                        console.log(res);
-//                    }
+                    "success" : function(res) {
+                        console.log("booking completed");
+                        console.log(res);
+                    },
+                    "failure" : function(res) {
+                        console.log("booking failed");
+                        console.log(res);
+                    }
                 }
             );
             

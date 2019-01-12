@@ -215,7 +215,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         
         
         
-        BigDecimal total = order.getTotalAmountVatRoundedTwoDecimals(2);
+        BigDecimal total = order.getTotalExAmountRoundedTwoDecimals(2);
         DecimalFormat df = new DecimalFormat("#.##");    
         User user = managers.userManager.getUserById(order.userId);
         String kid = order.kid;
@@ -272,9 +272,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         line.put(28, "X");
         lines.add(line);
         
-        Double linesTotal = 0.0;
         for(CartItem item : order.cart.getItems()) {
-            linesTotal += item.getProduct().price * item.getCount();
             
             HashMap<Integer, String> subLine = new HashMap();
             
@@ -289,10 +287,9 @@ public class WilhelmsenHouse implements AccountingInterface {
             subLine.put(3, "1");
             subLine.put(4, "");
             subLine.put(5, "");
-            subLine.put(6, product.sku);
+            subLine.put(6, product.accountingAccount);
             subLine.put(7, product.sku);
             BigDecimal itemamount = item.getTotalExRoundedWithTwoDecimals(2);
-            itemamount = itemamount.add(new BigDecimal(-1));
             subLine.put(8, df.format(itemamount));
             subLine.put(9, "");
             subLine.put(10, "");

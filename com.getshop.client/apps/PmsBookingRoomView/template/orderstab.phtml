@@ -18,12 +18,12 @@ $unsettledRoom = $totalOnRoom - $totalOrdersRoom;
 
 $totalOnBooking = $pmsBooking->totalPrice;
 $totalMissingOnGroup = 0.0;
-$totalNotPaidOnRoom = 0.0;
+$totalOrdersOnGroup = 0.0;
 foreach($pmsBooking->orderIds as $ordId) {
     $order = $this->getApi()->getOrderManager()->getOrder($ordId);
-    $totalNotPaidOnRoom += $this->getApi()->getOrderManager()->getTotalAmount($order);
+    $totalOrdersOnGroup += $this->getApi()->getOrderManager()->getTotalAmount($order);
 }
-$totalMissingOnGroup = $pmsBooking->totalPrice - $totalNotPaidOnRoom;
+$totalMissingOnGroup = $pmsBooking->totalPrice - $totalOrdersOnGroup;
 
 if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
     ?>

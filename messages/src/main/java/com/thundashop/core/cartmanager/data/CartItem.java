@@ -660,4 +660,11 @@ public class CartItem implements Serializable, Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public boolean containsRoom(String pmsBookingRoomId) {
+        if(product != null && product.externalReferenceId != null) {
+            return product.externalReferenceId.equals(pmsBookingRoomId);
+        }
+        return false;
+    }
 }

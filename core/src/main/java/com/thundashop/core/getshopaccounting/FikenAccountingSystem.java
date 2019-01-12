@@ -154,4 +154,9 @@ public class FikenAccountingSystem extends AccountingSystemBase {
         return true;
     }
 
+    @Override
+    boolean isPrimitive() {
+        return false;
+    }
+
 }

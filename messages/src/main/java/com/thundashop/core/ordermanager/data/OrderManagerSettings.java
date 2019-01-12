@@ -27,4 +27,19 @@ public class OrderManagerSettings extends DataCommon {
      * uses this one from the very next order created
      */
     public long incrementalOrderId = 0;
+    
+    /**
+     * if this is changed to another number then 0, it will be doing accounting
+     * days between the day. Lets say you want to do accounting from 05:00 to 05:00, set this to 5.
+     * 
+     * Default is 0 that is 00:00 -> 00:00
+     */
+    public int whatHourOfDayStartADay = 0;
+    
+    
+    /**
+     * If this is activated the system will automatically closes yesterdays data so 
+     * its ready to be transferred to PMI, Accounting etc.
+     */
+    public boolean autoCloseFinancialDataWhenCreatingZReport = false;
 }

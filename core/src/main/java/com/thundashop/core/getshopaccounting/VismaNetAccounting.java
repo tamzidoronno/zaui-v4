@@ -53,4 +53,9 @@ public class VismaNetAccounting extends AccountingSystemBase {
         ret.put("vismacompanyid", "Visma Company ID");
         return ret;
     }
+
+    @Override
+    boolean isPrimitive() {
+        return true;
+    }
 }

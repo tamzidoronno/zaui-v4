@@ -6,25 +6,10 @@
 package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
-import com.google.gson.Gson;
-import com.ibm.icu.util.Calendar;
-import com.powerofficego.data.AccessToken;
-import com.powerofficego.data.ApiCustomerResponse;
-import com.powerofficego.data.ApiOrderTransferResponse;
-import com.powerofficego.data.Customer;
-import com.powerofficego.data.PowerOfficeGoImportLine;
-import com.powerofficego.data.PowerOfficeGoSalesOrder;
-import com.powerofficego.data.PowerOfficeGoSalesOrderLines;
-import com.powerofficego.data.SalesOrderTransfer;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
-import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.getshopaccounting.fikenservice.FikenInvoiceService;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.usermanager.data.User;
-import java.net.URLEncoder;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,12 +51,45 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
     public HashMap<String, String> getConfigOptions() {
         HashMap<String, String> ret = new HashMap();
         ret.put("password", "PowerOfficeGo Application Key");
-        ret.put("department", "PowerOfficeGo Department");
         return ret;
     }
 
     @Override
     boolean isUsingProductTaxCodes() {
         return true;
+    }
+
+    @Override
+    boolean isPrimitive() {
+        return true;
+    }
+
+    @Override
+    public boolean supportDirectTransfer() {
+        return true;
+    }
+
+    @Override
+    public void transfer(List<DayIncome> incomes) {
+        
+        for (DayIncome income : incomes) {    
+            System.out.println("================ Day : " + income.start + " - " + income.end + " ============");
+            BigDecimal zeroCheck = new BigDecimal(BigInteger.ZERO);
+            
+            Map<String, List<DayEntry>> groupedIncomes = income.getGroupedByAccountExTaxes();
+            
+            for (String accountingNumber : groupedIncomes.keySet()) {
+                
+                BigDecimal total = groupedIncomes.get(accountingNumber).stream()
+                        .map(o -> o.amount)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                zeroCheck = zeroCheck.add(total);
+                
+                System.out.println("To be transfered on account: " + accountingNumber + ", total: " + total);
+            }
+            
+            System.out.println("Zero check: " + zeroCheck);
+        }
     }
 }

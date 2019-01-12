@@ -442,4 +442,9 @@ public class NorwegianAccounting extends AccountingSystemBase {
         
         return true;
     }
+
+    @Override
+    boolean isPrimitive() {
+        return true;
+    }
 }

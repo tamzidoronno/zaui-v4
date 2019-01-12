@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -19,6 +21,7 @@ import org.mongodb.morphia.annotations.Transient;
 public class DayIncome {
     public Date start;
     public Date end;
+    public boolean isFinal = false;
     public List<DayEntry> dayEntries = new ArrayList();
     
     /**
@@ -44,5 +47,11 @@ public class DayIncome {
             }
         }
         return total;
+    }
+    
+    public Map<String, List<DayEntry>> getGroupedByAccountExTaxes() {
+        return dayEntries.stream()
+                .filter(o -> !o.isTaxTransaction)
+                .collect(Collectors.groupingBy(DayEntry::getAccountingNumber));
     }
 }

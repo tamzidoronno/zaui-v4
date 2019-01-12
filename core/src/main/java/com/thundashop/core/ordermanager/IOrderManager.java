@@ -17,6 +17,7 @@ import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
+import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
@@ -401,4 +402,10 @@ public interface IOrderManager {
     
     @Editor
     public List<OrderTransactionDTO> getAllTransactionsForInvoices(Date start, Date end);
+    
+    @Administrator
+    public void changeAutoClosePeriodesOnZRepport(boolean autoClose);
+    
+    @Administrator
+    public OrderManagerSettings getOrderManagerSettings();
 }

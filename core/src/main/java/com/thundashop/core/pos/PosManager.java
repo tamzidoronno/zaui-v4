@@ -32,6 +32,7 @@ import com.thundashop.core.productmanager.data.ProductPriceOverride;
 import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -330,6 +331,10 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.totalAmount = getTotalAmountForZReport(report);
         saveObject(report);
         zReports.put(report.id, report);
+        
+        if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport) {
+            closeFinancialPeriode();
+        }
     }
     
     /**
@@ -773,5 +778,12 @@ public class PosManager extends ManagerBase implements IPosManager {
         cartItem.setProduct(product);
         cartItem.getProduct().price = value;
         addToTab(tabId, cartItem);
+    }
+
+    private void closeFinancialPeriode() {
+        Calendar cal = Calendar.getInstance(); 
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        orderManager.closeTransactionPeriode(cal.getTime());
     }
 }

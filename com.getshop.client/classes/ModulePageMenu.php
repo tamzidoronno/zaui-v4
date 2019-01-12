@@ -218,6 +218,7 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Cashpoints", "cashpoints", "");
         $menu->entries[] = new ModulePageMenuItem("Views", "views", "");
         $menu->entries[] = new ModulePageMenuItem("Tables", "tables", "");
+        $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "");
         return $menu;
     }
 

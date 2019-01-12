@@ -11,6 +11,8 @@ $monthHasPassed = strtotime($end) < time();
 $selectedYear = date('Y', strtotime($start));
 $selectedMonth = date('m', strtotime($start));
 
+$isSuportingDirectTransfer = $this->getApi()->getGetShopAccountingManager()->isCurrentSelectedSupportingDirectTransfer();
+
 $errors  = array();
 foreach ($dayIncomes as $dayIncome) {
     if ($dayIncome->errorMsg) {
@@ -134,26 +136,34 @@ echo "<div class='outer'>";
     echo "</div>";
     
     foreach ($dayIncomes as $dayIncome) {
-         echo "<div class='row' gsclick='showDetailedReport' start='$dayIncome->start' end='$dayIncome->end' >";
-            $grouped = $this->groupOnAccounting($dayIncome->dayEntries);
-            echo "<div class='col orderid'>".date('d.m.Y', strtotime($dayIncome->start))."</div>";
-            $controlSum = 0;
-            foreach ($accounts as $account) {
-                if (isset($grouped[$account]) && $grouped[$account]) {
-                    $sum[$account] = @$sum[$account] + $grouped[$account];
-                }
-
-                if (isset($grouped[$account]) && $grouped[$account]) {
-                    $controlSum += ($grouped[$account]);
-                }
-
-                $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : "&nbsp;";
-                echo "<div class='col $account'>".round($val,2)."</div>";
-            }
-            if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
+         echo "<div class='row' >";
+            echo "<div class='inner_row' gsclick='showDetailedReport'  start='$dayIncome->start' end='$dayIncome->end' >";
+                $isLocked = $dayIncome->isFinal ? "<i class='fa fa-lock'></i>" : "";
+                $grouped = $this->groupOnAccounting($dayIncome->dayEntries);
+                echo "<div class='col orderid'>$isLocked ".date('d.m.Y H:i', strtotime($dayIncome->start))." - ".date('H:i', strtotime($dayIncome->end))."</div>";
                 $controlSum = 0;
+                foreach ($accounts as $account) {
+                    if (isset($grouped[$account]) && $grouped[$account]) {
+                        $sum[$account] = @$sum[$account] + $grouped[$account];
+                    }
+
+                    if (isset($grouped[$account]) && $grouped[$account]) {
+                        $controlSum += ($grouped[$account]);
+                    }
+
+                    $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : "&nbsp;";
+                    echo "<div class='col $account'>".round($val,2)."</div>";
+                }
+
+                if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
+                    $controlSum = 0;
+                }
+                echo "<div class='col controlsum'>".$controlSum."</div>";
+            echo "</div>";
+            
+            if ($isSuportingDirectTransfer && $dayIncome->isFinal) {
+                echo "<div class='col' gsclick='startUploadOfData' start='$dayIncome->start' end='$dayIncome->end' >".'<i class="gs_shop_small_icon fa fa-upload"></i>'."</div>";
             }
-            echo "<div class='col controlsum'>".$controlSum."</div>";
 
         echo "</div>";
     }

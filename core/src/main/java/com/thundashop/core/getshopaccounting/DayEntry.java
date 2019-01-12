@@ -74,4 +74,7 @@ public class DayEntry implements Serializable, Cloneable {
         return (DayEntry) super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public String getAccountingNumber() {
+        return accountingNumber;
+    }
 }

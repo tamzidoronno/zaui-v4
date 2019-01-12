@@ -1,0 +1,36 @@
+<?
+/* @var $this \ns_80fe9499_b4f5_41b4_8ce0_89c872b5bd87\AccountProducts */
+$products = $this->getProducts();
+$taxGroups = $this->getApi()->getProductManager()->getTaxes();
+
+?>
+<div class="product_row">
+    <div class="name"><? echo $this->__f("Product name"); ?></div>
+    <div class="taxes"><? echo $this->__f("Tax rate"); ; ?></div>
+    <div class="accountingcode"><? echo $this->__f("Accounting Account"); ?></div>
+</div>
+<div>
+    <?
+    foreach ($products as $product) {
+        if($product->deleted) {
+            continue;
+        }
+        
+        $accountingInformation = $this->getAccountinProductInfoForTaxCode($product, $product->taxGroupObject->groupNumber);
+        $accountingNumber = $accountingInformation ? $accountingInformation->accountingNumber : "";
+        foreach ($product->accountingConfig as $accountinInfo) {
+            $accountingInformation = $this->getAccountinProductInfoForTaxCode($product, $accountinInfo->taxGroupNumber);
+            $accountingNumber = $accountingInformation ? $accountingInformation->accountingNumber : "";
+            $taxGroup = $this->getTaxGroup($accountinInfo->taxGroupNumber, $taxGroups);
+            ?>
+                <div class="product_row" productid="<? echo $product->id; ?>" accountingid="<? echo $accountinInfo->id; ?>" taxgroup="<? echo $accountinInfo->taxGroupNumber; ?>">
+                    <div class="name"> <? echo $product->name ? $product->name : $this->__f("N/A"); ?></div>
+                    <div class="taxes"> <? echo $taxGroup->taxRate; ?>%</div>
+                    <div class="accointingtax"><input class="gsniceinput1 accountingnumber" value="<? echo $accountingInformation ? $accountingInformation->accountingNumber : ""; ?>"></div>
+                </div>
+            <?
+        }
+    }
+    ?>
+    <div class="shop_button saveaccountinginfo"><? echo $this->__f("Save"); ?></div>
+</div>

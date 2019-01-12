@@ -3,7 +3,6 @@ package com.thundashop.core.ordermanager;
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
-import com.thundashop.core.accountingmanager.AccountingTransaction;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -17,7 +16,6 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.epay.EpayManager;
-import com.thundashop.core.eventbooking.EventLog;
 import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
@@ -48,7 +46,6 @@ import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
-import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
@@ -66,12 +63,10 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -2684,8 +2679,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private List<DayIncome> getDayIncomesInternal(Date start, Date end, boolean ignoreConfig) {
         List<DayIncome> dayIncomes = getReports(start, end);
+        dayIncomes.stream().forEach(o -> o.isFinal = true);
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig, getOrderManagerSettings().whatHourOfDayStartADay);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2727,17 +2723,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .collect(Collectors.toList());
        
         List<DayIncome> dayIncomes = all.stream()
+                .flatMap(o -> o.incomes.stream())
                 .filter(r -> {
                     long iStart = r.start.getTime();
                     long iEnd = r.end.getTime();
                     
-                    boolean startIsWithin = iStart >= start && iStart <= end;
-                    boolean endIsWithin = iEnd >= start && iEnd <= end;
-                    boolean everythingIsBetween = iStart >= start && iEnd <= end;
+                    boolean startIsWithin = iStart >= start && iStart < end;
+                    boolean endIsWithin = iEnd >= start && iEnd < end;
+                    boolean everythingIsBetween = iStart >= start && iEnd < end;
                     
                     return startIsWithin || endIsWithin || everythingIsBetween;
                 })
-                .flatMap(o -> o.incomes.stream())
                 .collect(Collectors.toList());
         
         return dayIncomes;
@@ -2780,7 +2776,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false, getOrderManagerSettings().whatHourOfDayStartADay);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -2811,17 +2807,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Calendar cal = Calendar.getInstance();
         cal.setTime(closeDate);
         
-        // If hour, minute, second is not exaclty the beginning of the day, change time to be in the beginning of the very next day.
-        if (cal.get(Calendar.HOUR_OF_DAY) != 0 || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0) {
-            cal.set(Calendar.HOUR_OF_DAY, 0);
+        OrderManagerSettings settings = getOrderManagerSettings();
+        
+        // If hour, minute, second is not exaclty the closing date, change time to be in the beginning of the very next day with the accounting closing date.
+        if (cal.get(Calendar.HOUR_OF_DAY) != settings.whatHourOfDayStartADay || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0) {
+            cal.set(Calendar.HOUR_OF_DAY, settings.whatHourOfDayStartADay);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
             cal.add(Calendar.DAY_OF_MONTH, 1);
             closePeriodeToDate = cal.getTime();
         }
         
-        if (!lastDayOfPrevMonthClosed(closeDate)) {
-            throw new ErrorException(1054);
+        if (closeDate.equals(closePeriodeToDate) || closePeriodeToDate.before(closeDate)) {
+            throw new RuntimeException("The periode has already been closed.");
         }
         
         Date now = new Date();
@@ -2829,7 +2827,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new RuntimeException("We can not close down for the future");
         }
         
-        OrderManagerSettings settings = getOrderManagerSettings();
         
         List<DayIncome> days = getDayIncomes(settings.closedTilPeriode, closeDate);
         
@@ -2845,7 +2842,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveObject(settings);
     }   
     
-    private OrderManagerSettings getOrderManagerSettings() {
+    public OrderManagerSettings getOrderManagerSettings() {
         BasicDBObject query = new BasicDBObject();
         query.put("className", "com.thundashop.core.ordermanager.data.OrderManagerSettings");
         
@@ -2949,20 +2946,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Date closed = getOrderManagerSettings().closedTilPeriode;
         boolean isClosed = closed.after(date);
         return isClosed;
-    }
-
-    private boolean lastDayOfPrevMonthClosed(Date closeDate) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(closeDate);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.add(Calendar.DAY_OF_MONTH, -1);
-        Date lastDayInPrevMonth = cal.getTime();
-        
-        return getOrderManagerSettings().closedTilPeriode.after(lastDayInPrevMonth);
     }
 
     @Override
@@ -3255,5 +3238,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return retList;
+    }
+
+    @Override
+    public void changeAutoClosePeriodesOnZRepport(boolean autoClose) {
+        OrderManagerSettings settings = getOrderManagerSettings();
+        settings.autoCloseFinancialDataWhenCreatingZReport = autoClose;
+        saveObject(settings);
     }
 }

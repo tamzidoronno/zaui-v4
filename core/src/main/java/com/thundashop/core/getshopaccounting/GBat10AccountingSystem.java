@@ -266,4 +266,9 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
     boolean isUsingProductTaxCodes() {
         return true;
     }
+
+    @Override
+    boolean isPrimitive() {
+        return false;
+    }
 }

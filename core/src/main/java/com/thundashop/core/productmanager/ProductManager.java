@@ -12,6 +12,7 @@ import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductDynamicPrice;
@@ -59,6 +60,8 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
         product.original_price = product.price;
 
+        product.doFinalize();
+        
         saveObject(product);
         
         if (product.deleted == null) {
@@ -529,6 +532,13 @@ public class ProductManager extends AProductManager implements IProductManager {
         saveObject(product);
         
         products.put(product.id, product);
+    }
+
+    @Override
+    public void saveAccountingInformation(String productId, List<ProductAccountingInformation> infos) {
+        Product product = getProduct(productId);
+        product.accountingConfig = infos;
+        saveProduct(product);
     }
 
     

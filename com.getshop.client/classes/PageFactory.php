@@ -458,6 +458,12 @@ class PageFactory {
         $row->addColumn("300e2528-8518-411b-b343-28ad83eced77", "259188e6-3cba-4829-baa5-4e3eec71caf0");
         $this->pages['tables'] = $page;
         
+        $page = new \ModulePage("othersettings", "salespoint");
+        $page->setLeftMenu(\ModulePageMenu::getSalesPointSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("47dec929-fc34-4d7d-9356-a9600d04797e", "98cb6ffa-ad8e-4aa0-8837-5abdc0e2610c");
+        $this->pages['othersettings'] = $page;
+        
         $page = new \ModulePage("giftcards", "salespoint");
         $row = $page->createRow();
         $row->addColumn("8a98611e-bfb4-437e-af0d-561a882b0777", "1dabc933-bfa4-4ccd-baf9-2cb6e91d849d");

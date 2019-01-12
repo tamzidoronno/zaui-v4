@@ -216,6 +216,13 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         || $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'] == "yes"
         || !$_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'];
     }
+    
+    public function startUploadOfData() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $this->getApi()->getGetShopAccountingManager()->transferData($start, $end);
+    }
+
 
 }
 ?>

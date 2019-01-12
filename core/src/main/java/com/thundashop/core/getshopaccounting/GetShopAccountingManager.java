@@ -6,22 +6,17 @@
 package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.accountingmanager.AccountingTransaction;
-import com.thundashop.core.accountingmanager.ProductStatiticsResult;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
-import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.ordermanager.data.OrderTransaction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -312,6 +307,29 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     public String createBankTransferFile() {
         AccountingSystemBase res = getActivatedAccountingSystemInvoices();
         return res.createBankTransferFile();
+    }
+
+    @Override
+    public boolean isCurrentSelectedAccountingSystemPrimitive() {
+        return getActivatedAccountingSystemOther().isPrimitive();
+    }
+
+    @Override
+    public boolean isCurrentSelectedSupportingDirectTransfer() {
+        return getActivatedAccountingSystemOther().supportDirectTransfer();
+    }
+
+    @Override
+    public void transferData(Date start, Date end) {
+        List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
+        
+        for (DayIncome income : incomes) {
+            if (!income.isFinal) {
+                throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
+            }
+        }
+        
+        getActivatedAccountingSystemOther().transfer(incomes);
     }
 
 }

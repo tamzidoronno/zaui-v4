@@ -7,6 +7,10 @@ app.AccountFinanceReport = {
         $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
     },
     
+    checkShowRow: function(e) {
+        return false;
+    },
+    
     doVismaLogin: function() {
         var event = thundashop.Ajax.createEvent(null, "createVismaNETLoginLink", $('.AccountFinanceReport'), {});
         event['synchron'] = true;

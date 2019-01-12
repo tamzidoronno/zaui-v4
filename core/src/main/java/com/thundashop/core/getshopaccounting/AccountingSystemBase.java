@@ -565,4 +565,18 @@ public abstract class AccountingSystemBase extends ManagerBase {
     public String createBankTransferFile() {
         return null;
     }
+
+    /**
+     * If this returns true the system should not transfer advanced 
+     * records to the accotuning system, like products, orders, etc.
+     * 
+     * Only a record of accounts and financial difference for each day by using OrderDailyBreaker.
+     * 
+     * @return 
+     */
+    abstract boolean isPrimitive();
+
+    public void transfer(List<DayIncome> incomes) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -9,6 +9,7 @@ import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductLight;
@@ -264,4 +265,7 @@ public interface IProductManager {
     
     @Editor
     public Product changeTaxCode(Product product, String taxGroupId);
+    
+    @Editor
+    public void saveAccountingInformation(String productId, List<ProductAccountingInformation> infos);
 }

@@ -72,4 +72,13 @@ public interface IGetShopAccountingManager {
 
     @Administrator
     public String createBankTransferFile();
+    
+    @Administrator
+    public boolean isCurrentSelectedAccountingSystemPrimitive();
+    
+    @Administrator
+    public boolean isCurrentSelectedSupportingDirectTransfer();
+    
+    @Administrator
+    public void transferData(Date start, Date end);
 }

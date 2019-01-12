@@ -17,6 +17,7 @@ import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.math.BigDecimal;
 import java.net.UnknownHostException;
@@ -37,8 +38,8 @@ public class OrderDailyBreaker {
     private final PaymentManager paymentManager;
     private final List<DayIncome> dayIncomes;
     private final List<Order> ordersToBreak;
-    private final int whatHourOfDayStartADay = 0;
     private final ProductManager productManager;
+    private int whatHourOfDayStartADay = 0;
     private Date end;
     private Date start;
     private List<DayEntry> orderDayEntries;
@@ -46,7 +47,7 @@ public class OrderDailyBreaker {
     private int precision = 10;
     public boolean ignoreConfig = false;
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager, boolean ignoreConfig) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager, boolean ignoreConfig, int whatHourOfDayStartADay) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
         this.start = start;
@@ -54,6 +55,7 @@ public class OrderDailyBreaker {
         this.paymentManager = paymentManager;
         this.productManager = productManager;
         this.ignoreConfig = ignoreConfig;
+        this.whatHourOfDayStartADay = whatHourOfDayStartADay;
         correctStartAndEndTime();
         createEmptyDays();
     }
@@ -101,7 +103,7 @@ public class OrderDailyBreaker {
                 if (!order.payment.isPaymentTypeValid()  && !ignoreConfig) {
                     throw new RuntimeException("Missing payment method on order? " + order.incrementOrderId);
                 }
-
+                
                 proccessOrder(order);
             } catch (Exception ex) {
                 errors.add(ex.getMessage());
@@ -217,7 +219,7 @@ public class OrderDailyBreaker {
                 if (order.overrideAccountingDate != null)
                     entry.date = order.overrideAccountingDate;
         
-                entry.accountingNumber = getAccountingNumberForProduct(item);
+                entry.accountingNumber = getAccountingNumberForProduct(item, order);
                 entries.add(entry);
             }
 
@@ -248,7 +250,7 @@ public class OrderDailyBreaker {
             entry.isActualIncome = item.getProduct().isActuallyIncome();
             if (order.overrideAccountingDate != null)
                 entry.date = order.overrideAccountingDate;
-            entry.accountingNumber = getAccountingNumberForProduct(item);
+            entry.accountingNumber = getAccountingNumberForProduct(item, order);
             
             entries.add(entry);
         }
@@ -269,7 +271,7 @@ public class OrderDailyBreaker {
         if (order.overrideAccountingDate != null)
             entry.date = order.overrideAccountingDate;
         
-        entry.accountingNumber = getAccountingNumberForProduct(item);
+        entry.accountingNumber = getAccountingNumberForProduct(item, order);
         return entry;
     }
 
@@ -352,7 +354,7 @@ public class OrderDailyBreaker {
             .collect(Collectors.toList());
         
         long time = System.currentTimeMillis();
-        OrderDailyBreaker dayBreaker = new OrderDailyBreaker(orders, start, end, null, null, false);
+        OrderDailyBreaker dayBreaker = new OrderDailyBreaker(orders, start, end, null, null, false, 0);
         dayBreaker.breakOrders();
         
         List<DayIncome> dayIncomes = dayBreaker.getDayIncomes();
@@ -440,22 +442,32 @@ public class OrderDailyBreaker {
         return null;
     }
 
-    private String getAccountingNumberForProduct(CartItem item) throws DailyIncomeException {
+    private String getAccountingNumberForProduct(CartItem item, Order order) throws DailyIncomeException {
         if (ignoreConfig) {
             return "";
         }
         
-        String result = getAccountingNumberForProduct(item.getProduct().id);
-        
+        String result = getAccountingNumberForProduct(item.getProduct(), item.getProduct().id);
+       
         if (result == null || result.isEmpty()) {
-            throw new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name);
+            throw new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+item.getProduct().taxGroupObject.taxRate+"% )");
         }
         
         return result;
     }
     
-    public String getAccountingNumberForProduct(String productId) {
-        return productManager.getProduct(productId).accountingAccount;
+    public String getAccountingNumberForProduct(Product inProduct, String productId) {
+        if (inProduct.taxGroupObject == null)
+            return "";
+        
+        Product product = productManager.getProduct(productId);
+        ProductAccountingInformation res = product.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
+        
+        if (res == null) {
+            return "";
+        }
+        
+        return res.accountingNumber;
     }
 
     private void calculatePrePaidAndAccrued(List<DayEntry> orderDayEntries, Order order) {

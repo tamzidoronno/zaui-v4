@@ -2,7 +2,6 @@ package com.thundashop.core.productmanager.data;
 
 import org.mongodb.morphia.annotations.Transient;
 import com.google.gson.Gson;
-import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
@@ -11,13 +10,11 @@ import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.pagemanager.data.Page;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 
 /**
  * 
@@ -85,8 +82,17 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     /**
      * This is the accounting-number in the accounting-system.
+     * 
+     * (Legacy, not in use in the new Accounting Report System (f-report))
+     * Uses accountingConfig instaed.
+     *
      */
     public String accountingAccount;
+    
+    /**
+     * Used on the new accounting (primitiv) way.
+     */
+    public List<ProductAccountingInformation> accountingConfig = new ArrayList();
     
     public HashMap<String, AttributeItem> addedAttributes = new HashMap();
     
@@ -108,6 +114,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     @Transient
     public HashMap<String, String> attributesToSave = new HashMap();
+    
+    @Transient
+    public ProductAccountingInformation activeAccountingInformation = null;
     
     public boolean isGroupedProduct = false;
     
@@ -266,6 +275,10 @@ public class Product extends DataCommon implements Comparable<Product>  {
         if(Double.isNaN(priceExTaxes)) {
             priceExTaxes = 0.0;
         }
+        
+        createEmptyAccountingInformationObjects();
+        
+        setActiveAccountingInformation();
     }
 
     public BigDecimal getPriceExTaxesWithTwoDecimals(int precision) {
@@ -343,5 +356,51 @@ public class Product extends DataCommon implements Comparable<Product>  {
      */
     public boolean isActuallyIncome() {
         return !id.equals("giftcard");
+    }
+
+    private void setActiveAccountingInformation() {
+        if (taxGroupObject != null) {
+            activeAccountingInformation = accountingConfig.stream()
+                    .filter(o -> o.taxGroupNumber != null && o.taxGroupNumber.equals(taxGroupObject.groupNumber))
+                    .findAny()
+                    .orElse(null);
+            
+            if (activeAccountingInformation != null) {
+                accountingAccount = activeAccountingInformation.accountingNumber;
+            } 
+        }
+    }
+
+    private void createEmptyAccountingInformationObjects() {
+        List<Integer> taxGroupNumbers = new ArrayList();
+        
+        if (taxGroupObject != null) {
+            taxGroupNumbers.add(taxGroupObject.groupNumber);
+        }
+        
+        for (TaxGroup taxGroup : additionalTaxGroupObjects) {
+            taxGroupNumbers.add(taxGroup.groupNumber);
+        }
+        
+        for (Integer taxGroupNumber : taxGroupNumbers) {
+            ProductAccountingInformation existing = accountingConfig.stream()
+                    .filter(o -> o.taxGroupNumber != null && o.taxGroupNumber.equals(taxGroupNumber))
+                    .findAny()
+                    .orElse(null);
+            
+            if (existing == null) {
+                existing = new ProductAccountingInformation();
+                existing.taxGroupNumber = taxGroupNumber;
+                accountingConfig.add(existing);
+            }
+        }
+    }
+
+    public ProductAccountingInformation getAccountingInformation(int taxGroupNumber) {
+        return accountingConfig.stream()
+                    .filter(o -> o.taxGroupNumber != null && o.taxGroupNumber.equals(taxGroupNumber))
+                    .findAny()
+                    .orElse(null);
+            
     }
 }

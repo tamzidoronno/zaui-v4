@@ -7,6 +7,9 @@
     text-align: center;
 }
 
+.AccountFinanceReport .row .inner_row {
+    display: inline-block;
+}
 .AccountFinanceReport .row {
     border-bottom: solid 1px #DDD;
     padding: 5px;
@@ -60,7 +63,7 @@
 }
 
 .AccountFinanceReport .col.orderid {
-    width: 150px;
+    width: 170px;
 }
 
 .AccountFinanceReport .col.rowdate {
@@ -100,3 +103,4 @@
 .AccountFinanceReport .inbalance {
     color: green;
 }
+

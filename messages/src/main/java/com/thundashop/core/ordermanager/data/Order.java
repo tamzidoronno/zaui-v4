@@ -13,6 +13,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.User;
 import java.math.BigDecimal;
@@ -1249,6 +1250,19 @@ public class Order extends DataCommon implements Comparable<Order> {
         Date today = new Date();
         
         return today.after(dueDate);
+    }
+
+    public boolean containsRoom(String pmsBookingRoomId) {
+        for(CartItem item : cart.getItems()) {
+            if(item == null) {
+                continue;
+            }
+            Product prod = item.getProduct();
+            if(prod != null && prod.externalReferenceId != null && prod.externalReferenceId.equals(pmsBookingRoomId)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public static class Status  {

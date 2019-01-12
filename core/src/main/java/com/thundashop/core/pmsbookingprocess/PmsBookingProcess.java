@@ -754,6 +754,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             
             PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
             for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(!order.containsRoom(room.pmsBookingRoomId)) {
+                    continue;
+                }
                 if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                     BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                     text += "--------------------\r\n";

@@ -24,13 +24,9 @@ $unsettledRoom = round($totalOnRoom - $totalOrdersRoom);
 $totalOrdersRoom = round($totalOrdersRoom);
 $totalOnBooking = round($pmsBooking->totalPrice);
 $totalMissingOnGroup = 0.0;
-$totalNotPaidOnRoom = 0.0;
-foreach($pmsBooking->orderIds as $ordId) {
-    $order = $this->getApi()->getOrderManager()->getOrder($ordId);
-    $totalNotPaidOnRoom += $this->getApi()->getOrderManager()->getTotalAmount($order);
-}
-$totalMissingOnGroup = round($pmsBooking->totalPrice - $totalNotPaidOnRoom);
-$totalNotPaidOnRoom = round($totalNotPaidOnRoom);
+$totalOrdersOnGroup = $this->getApi()->getPmsInvoiceManager()->getTotalOrdersOnBooking($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+$totalMissingOnGroup = round($pmsBooking->totalPrice - $totalOrdersOnGroup);
+$totalOrdersOnGroup = round($totalOrdersOnGroup);
 
 ?>
 <div style='height: 155px; display:inline-block; width:100%;'>
@@ -53,7 +49,7 @@ $totalNotPaidOnRoom = round($totalNotPaidOnRoom);
         <tr>
             <td>Orders</td>
             <td align='center'><?php echo $totalOrdersRoom; ?></td>
-            <td align='center'><?php echo $totalNotPaidOnRoom; ?></td>
+            <td align='center'><?php echo $totalOrdersOnGroup; ?></td>
         </tr>
     </table>
 </div>

@@ -136,4 +136,7 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public AccountingSystemStatisticsResult getAccountingStatistics(PmsOrderStatsFilter filter);
+    
+    @Administrator
+    public Double getTotalOrdersOnBooking(String bookingId);
 }

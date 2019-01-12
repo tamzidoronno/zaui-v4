@@ -1279,6 +1279,10 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return amount;
     }
+
+    public boolean isFromSamleFaktura() {
+        return !createdBasedOnOrderIds.isEmpty();
+    }
     
     public static class Status  {
         public static int CREATED = 1;

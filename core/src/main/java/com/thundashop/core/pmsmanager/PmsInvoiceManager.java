@@ -959,6 +959,28 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return false;
     }
 
+    @Override
+    public Double getTotalOrdersOnBooking(String bookingId) {
+        PmsBooking booking = pmsManager.getBookingUnfinalized(bookingId);
+        Double amount = 0.0;
+        List<String> roomIds = booking.rooms.stream().map(e->e.pmsBookingRoomId).collect(Collectors.toList());
+        
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrderSecure(orderId);
+            if(ord.isFromSamleFaktura()) {
+                for(CartItem item : ord.getCartItems()) {
+                    if(item.getProduct() != null && item.getProduct().externalReferenceId != null && roomIds.contains(item.getProduct().externalReferenceId)) {
+                        amount += item.getTotalAmount();
+                    }
+                }
+            } else {
+                amount += orderManager.getTotalAmount(ord);
+            }
+        }
+        return amount;
+    }
+
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

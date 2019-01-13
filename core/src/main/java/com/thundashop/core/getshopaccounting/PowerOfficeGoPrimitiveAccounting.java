@@ -142,16 +142,16 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
             toAdd.amount = total.doubleValue();
             
             DayEntry dayEntry = groupedIncomes.get(accountingNumber).get(0);
-            
-            if(dayEntry.isIncome || dayEntry.isAccrued || dayEntry.isPrePayment) {
-                toAdd.vatCode = "0";
-            } else {
+
+            if(dayEntry.isActualIncome && !dayEntry.isOffsetRecord) {
                 AccountingDetail detail = productManager.getAccountingDetail(toAdd.accountNumber);
                 if(detail == null) {
                     System.out.println("nullpointer occurded when it should not.");
                     addToLog("nullpointer occurded when it should not on account: " + toAdd.accountNumber);
                 }
                 toAdd.vatCode = detail.taxgroup + "";
+            } else {
+                toAdd.vatCode = "0";
             }
 
             String currency = storeManager.getStoreSettingsApplicationKey("currencycode");

@@ -40,6 +40,10 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     $scope.$on('messageReceived', function(msg, data) {
         if ($api.getLoggedOnUser()) {
             if (data.driverId === $api.getLoggedOnUser().id) {
+                if (!datarepository.driverMessages) {
+                    datarepository.driverMessages = [];
+                }
+                
                 datarepository.driverMessages.push(data);
                 datarepository.save();
 

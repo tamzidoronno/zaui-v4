@@ -13,21 +13,21 @@ angular.module('TrackAndTrace').factory('datarepository', function($api) {
     
 });
 
-angular.module('TrackAndTrace').factory('$exceptionHandler', 
-
-    function($injector) {
-
-        return function(exception, cause) {
-            var $state = $injector.get("$state");
-            var datarepository = $injector.get('datarepository');
-            datarepository.lastError = exception;
-            $state.transitionTo('base.errorhandler');
-            
-//            exception.message += ' (caused by "' + cause + '")';
-//            alert("Unexpected error: \n" + exception.message + "\n" + exception.stack);
-//            throw exception;
-        };
-    });
+//angular.module('TrackAndTrace').factory('$exceptionHandler', 
+//
+//    function($injector) {
+//
+//        return function(exception, cause) {
+//            var $state = $injector.get("$state");
+//            var datarepository = $injector.get('datarepository');
+//            datarepository.lastError = exception;
+//            $state.transitionTo('base.errorhandler');
+//            
+////            exception.message += ' (caused by "' + cause + '")';
+////            alert("Unexpected error: \n" + exception.message + "\n" + exception.stack);
+////            throw exception;
+//        };
+//    });
 
 angular.module('TrackAndTrace')
  .run( function($rootScope, $location) {
@@ -114,6 +114,7 @@ angular.module('TrackAndTrace').run(function($state, $api) {
         
         if (typeof(messagePersister) !== "undefined" && messagePersister) {
             messagePersister.load($api);
+            messagePersister = null;
         }
         
     });

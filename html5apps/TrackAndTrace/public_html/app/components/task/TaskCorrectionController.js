@@ -10,6 +10,7 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
     $scope.numbers = 10;
     $scope.api = $api;
     $scope.countPickupContainerType = "";
+    $scope.showOldValue = true;
     
     $scope.setOrder = function() {
         $scope.task = datarepository.getTaskById($stateParams.taskId);
@@ -34,6 +35,18 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
     }
     
     $scope.getOldQuantity = function(order) {
+        
+        if ($stateParams.type === "collection") {
+            $scope.showOldValue = false;
+            return 0;
+        }
+        
+        if ($stateParams.type === "collectionChequeAmount") {
+            var destination = datarepository.getDestinationById($stateParams.destinationId);
+            destination.collectionChequeAmount;
+            return destination.codAdjustment;
+        }
+        
         if ($stateParams.type === "normal") {
             return order.quantity;
         }
@@ -56,8 +69,46 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
         return 0;
     }
     
+    $scope.getOldQuantityText = function() {
+         if ($stateParams.type === "collection")
+            return "Old amount";
+        
+        return "Old quantity:";
+    }
+    
+    $scope.getNewQuantityText = function() {
+        console.log($stateParams);
+        if ($stateParams.type === "collection" && $stateParams.collectionData.action === "registerchequenumber")
+            return "Cheque number";
+        
+        if ($stateParams.type === "collection")
+            return "New amount";
+        
+        return "New quantity:";
+    }
+    
     $scope.makeCorrection = function(a, b) {
-        var newQuantity = parseInt(b, 10);
+        var newQuantity = parseFloat(b, 10);
+        
+        if (isNaN(newQuantity)) {
+            newQuantity = 0;
+        }
+        
+        if ($stateParams.type === "collection") {
+            var collectionData = $stateParams.collectionData;
+            collectionData.newAmount = newQuantity;
+            
+            $state.transitionTo('base.collection', { 
+                destinationId: $stateParams.destinationId,  
+                routeId: $stateParams.routeId, 
+                action : {}, 
+                collectionData: collectionData, 
+                collectionType: $stateParams.collectionData.collectionType, 
+                collectionSubType: $stateParams.collectionData.collectionSubType 
+            });
+            return;
+        }
+        
         if ($stateParams.type === "normal") {
             $scope.order.quantity = newQuantity;
             datarepository.save();
@@ -112,8 +163,35 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
     }
     
     $scope.goBack = function(a, b) {
+        if ($stateParams.type === "collection") {
+            
+            $state.transitionTo('base.collection', { 
+                destinationId: $stateParams.destinationId,  
+                routeId: $stateParams.routeId, 
+                action : {}, 
+                collectionData: $stateParams.collectionData, 
+                collectionType: $stateParams.collectionData.collectionType, 
+                collectionSubType: $stateParams.collectionData.collectionSubType 
+            });
+            
+            return;
+        }
+        
         $state.transitionTo('base.task', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId, taskId: $stateParams.taskId });
     }
     
+    $scope.showExtraButtons = function() {
+        $('.numpadcomma').hide();
+        $('.plusminus').hide();
+        
+        if ($stateParams.type === "collection") {
+            setTimeout(function() {
+                $('.plusminus').attr('style', 'display: inline-block !important;');
+                $('.numpadcomma').attr('style', 'display: inline-block !important;');
+            }, 0);
+        }
+    }
+    
     $scope.setOrder();
+    $scope.showExtraButtons();
 }

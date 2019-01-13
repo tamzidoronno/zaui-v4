@@ -23,6 +23,7 @@ controllers.SettingsController = function($scope, $api, datarepository, $state) 
 
     $scope.clearDb = function() {
         if (messagePersister) {
+            $('.fa-spinner').show();
             messagePersister.clearSentMessages();
         }
     }

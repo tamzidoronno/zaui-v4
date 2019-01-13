@@ -1,0 +1,77 @@
+<div class='collection' ng-if="destination.collectCos"> 
+    Cos not developed yet :(
+</div>
+
+<div class='collection cod' ng-if="!paymentView"> 
+    
+    <div class='podBarcode'> {{ getDistinctPodCodes() }} </div>
+    
+    <div ng-repeat="order in getTasks()">
+        <div class='refnumber'>{{ order.referenceNumber }}</div>
+        <div class='orderamount'>{{ order.amount }}</div>
+    </div>
+    
+    <div class='subtotal'>
+        <div class='refnumber'>Subtotal</div>
+        <div class='orderamount'>{{ getSubTotal() }}</div>
+    </div>
+    
+    <div class='adjustment_row'>
+        <div class='refnumber'><div ng-mobile-click="openAdjustment('adjustedReturnCredit')" class='adjustment'><i class='fa fa-edit'></i></div> Return Credit</div>
+        <div class='orderamount'> {{ getReturnCredit() }}</div>
+    </div>
+    
+    <div class='adjustment_row'>
+        <div class='refnumber'><div ng-mobile-click="openAdjustment('adjustment')" class='adjustment'><i class='fa fa-edit'></i></div> Adjustments</div>
+        <div class='orderamount'>{{ getAdjustment() }}</div>
+    </div>
+    
+    <div class='adjustment_row'>
+        <div class='refnumber'><div ng-mobile-click="openAdjustment('adjustmentPreviouseCredit')" class='adjustment'><i class='fa fa-edit'></i></div> Previous Invoice Credit</div>
+        <div class='orderamount'>{{ getPreviouseInvoiceCredit() }}</div>
+    </div>
+    
+    <div class='subtotal'>
+        <div class='refnumber'>Total Credit</div>
+        <div class='orderamount'>{{ getTotalCredit() }}</div>
+    </div>
+    
+    <div class=''>
+        <div class='refnumber'>Payment</div>
+        <div class='orderamount'>{{ getTotalPayment() }}</div>
+    </div>
+
+    <div class="button ng-scope" ng-mobile-click="showPayment()">Continue to payment</div>
+</div>
+
+<div class="collection" ng-if="paymentView">
+    <div class=''>
+        <div class='refnumber'>Total:</div>
+        <div class='orderamount'>{{ getTotalPayment() }}</div>
+    </div>
+    
+    <div class=''>
+        <div class='refnumber'>- 
+            Cash amount:</div>
+        <div class='orderamount'> {{ getRegisteredCashAmount() }} </div>
+    </div>
+    
+    <div class=''>
+        <div class='refnumber'>- Check amount:</div>
+        <div class='orderamount'>{{ getRegisteredChequeAmount() }}</div>
+    </div>
+    
+    <div ng-if="destination.collectionChequeNumber">
+        <div class='refnumber'> ( Check number )</div>
+        <div class='orderamount'>{{ getRegisteredChequeNumber() }}</div>
+    </div>
+    
+    <div class='subtotal'>
+        <div class='refnumber'>Remaining  / diff </div>
+        <div class='orderamount'>{{ getTotalPaymentSelected() }}</div>
+    </div>
+
+    <div class="button ng-scope" ng-mobile-click="registerCashPayment()">Register cash payment</div>
+    <div class="button ng-scope" ng-mobile-click="registerChequePayment()">Register check payment</div>
+    <div class="button ng-scope" ng-mobile-click="collectionCompleted()" ng-if="paymentAmountValid()">Collection completed</div>
+</div>

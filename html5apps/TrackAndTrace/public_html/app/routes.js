@@ -155,6 +155,31 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.collection', {
+        url: '/collection/:destinationId/:routeId/:collectionType/:collectionSubType',
+        
+        params: { 
+            action : { state : 'normal' },
+            collectionData : {
+                collectionType : '',
+                collectionSubType : '',
+                newAmount : 0,
+                action: false
+            }
+        },
+        
+        views: {
+            main: {
+                templateUrl : 'components/collection/collection.html',
+                controller : controllers.CollectionController
+            },
+            footer: {
+                templateUrl : 'components/collection/footer.html',
+                controller : controllers.CollectionController
+            }
+        }
+    });
+    
     $stateProvider.state('base.keyreference', {
         url: '/keyreference/:destinationId/:routeId/:taskId',
         
@@ -229,9 +254,21 @@ angular.module('TrackAndTrace')
     $stateProvider.state('base.ordercorrection', {
         url: '/destination/exceptions/:destinationId/:routeId/:taskId/:orderId/:type',
         
+        params : {
+            collectionData : {
+                collectionType : 'collectionType',
+                collectionSubType : '',
+                action: false
+            }
+        },
+        
         views: {
             main: {
                 templateUrl : 'components/task/correction.html',
+                controller : controllers.TaskCorrectionController
+            },
+            footer: {
+                templateUrl : 'components/task/correctionfooter.html',
                 controller : controllers.TaskCorrectionController
             }
         }

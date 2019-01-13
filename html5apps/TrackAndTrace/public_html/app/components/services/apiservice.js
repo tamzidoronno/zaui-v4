@@ -7,7 +7,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         this.fetchQueue = function() {
             var me = this;
             
-            if (!me.api || !me.api.GdsManager) {
+            if (!me.api || !me.api.GdsManager || !localStorage.getItem("username")) {
                 setTimeout(function() {
                     me.fetchQueue.apply(me);
                 }, 5000);

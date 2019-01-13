@@ -114,7 +114,6 @@ angular.module('TrackAndTrace').run(function($state, $api) {
         
         if (typeof(messagePersister) !== "undefined" && messagePersister) {
             messagePersister.load($api);
-            messagePersister = null;
         }
         
     });

@@ -199,4 +199,7 @@ public interface ITrackAndTraceManager {
     @Administrator
     public void setSortingOfRoutes(String sortingName);
     
+    @Customer
+    public void registerCollectionData(String destinationId, CollectionTasks collectionTasks);
+    
 }

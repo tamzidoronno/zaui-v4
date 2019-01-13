@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -80,6 +81,7 @@ public class AcculogixDataImporter {
         createRoutes();
         addDestinationsToRoutes();
         addDeliveryTasksToDestinations();
+        addCollectionOrders();
         addPickupTasksToDestinations();
         makeLogEntry();
         saveRoutes();
@@ -163,12 +165,13 @@ public class AcculogixDataImporter {
         destination.onDemandInstructions = args[23];
         destination.pickupInstruction = args[22] + args[53];
         destination.deliveryInstruction = args[21];
+        destination.collectionPayType = args[69];
+        destination.customerNumber = args[76];
+        
         if (args.length > 68) {
             destination.signatureRequired = !args[68].contains("N");
         }
         
-        System.out.println(destination.signatureRequired);
-
         trackAndTraceManager.saveDestinationDirect(destination);
         destinations.put(destination.id, destination);
         return destination;
@@ -179,13 +182,52 @@ public class AcculogixDataImporter {
        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
+    private void addCollectionOrders() {
+        
+        for (Destination destination : destinations.values()) {
+            List<String[]> collectionDatas = datas.stream()
+                    .filter(row -> destination.companyIds.contains(row[50]))
+                    .filter(row -> destination.seq.equals(Integer.parseInt(row[20])))
+                    .filter(row -> row[64].equals("DELIVERY"))
+                    .filter(row -> isCollectionRow(row))
+                    .collect(Collectors.toList());
+            
+            List<CollectionTask> collectionTasks = collectionDatas
+                    .stream()
+                    .map(o -> createCollectionTask(o))
+                    .collect(Collectors.toList());
+
+            collectionTasks.removeIf(o -> !o.isCod && !o.isOptional && !o.isCos);
+            
+            Map<String, List<CollectionTask>> groupedByCollectionType = collectionTasks
+                    .stream()
+                    .collect(Collectors.groupingBy(CollectionTask::getCollectionType));
+            
+            List<CollectionTasks> taskList = new ArrayList();
+            
+            for (String type : groupedByCollectionType.keySet()) {
+                CollectionTasks task = new CollectionTasks();
+                task.collectionTasks = groupedByCollectionType.get(type);
+                task.type = type;
+                taskList.add(task);
+            }
+            
+            destination.collectionTasks = taskList;
+            
+            trackAndTraceManager.saveObject(destination);
+        }
+    }
+    
     private void addDeliveryTasksToDestinations() {
         for (Destination destination : destinations.values()) {
             List<String[]> deliveryOrderDatas = datas.stream()
                     .filter(row -> destination.companyIds.contains(row[50]))
                     .filter(row -> destination.seq.equals(Integer.parseInt(row[20])))
+                    .filter(row -> !row[33].isEmpty())
                     .filter(row -> row[64].equals("DELIVERY"))
                     .collect(Collectors.toList());
+            
+            deliveryOrderDatas.removeIf(row -> rowIsDeliveryButNotDelivery(row));
             
             List<DeliveryOrder> deliveryOrders = deliveryOrderDatas.stream()
                     .map(task -> createDeliveryOrder(task))
@@ -238,7 +280,6 @@ public class AcculogixDataImporter {
         order.referenceNumber = data[33].trim();
         order.podBarcode = data[34];
         
-        System.out.println(data[32] + " | " + order.podBarcode);
         if (!data[61].isEmpty()) {
             if (data[62].equalsIgnoreCase("CAGE LG"))
                 order.containerType = ContainerType.CAGE_LG;
@@ -325,7 +366,6 @@ public class AcculogixDataImporter {
         order.container = !data[60].isEmpty();
         order.mustScanBarcode = data[67].toLowerCase().equals("scan");
         order.originalQuantity = !data[32].isEmpty() ? Integer.parseInt(data[32]) : 0;
-        System.out.println(data[32] + " " + order.podBarcode);
         return order;
     }
 
@@ -370,5 +410,63 @@ public class AcculogixDataImporter {
         }
         
         return false;
+    }
+
+    /**
+     * Well....
+     * 
+     * Instead of just adding new records for a destionation that was clearly 
+     * COD and COS features, there was simply added more data to the Delivery tasks.
+     * 
+     * It turns out that its not enough with using only the extra rows for the collections,
+     * so they needed to add extra rows for delivery that really is only for pickup.
+     * 
+     * @param row
+     * @return 
+     */
+    private boolean rowIsDeliveryButNotDelivery(String[] row) {
+        String orderReference = row[33].trim().toLowerCase();
+        
+        /**
+         * Ref email with brent 12.01.2019 14:31
+         * 
+         * "On the delivery task you can hide the cod only transactions by filtering 
+         * out any transactions references that start with a S, T, or X 
+         * (do this from memory out of office at moment)"
+         * 
+         */
+        boolean filterByOrderReference = orderReference.trim().startsWith("s") 
+                || orderReference.trim().startsWith("x") 
+                || orderReference.trim().startsWith("t");
+        
+        return filterByOrderReference;
+    }
+
+    private boolean isCollectionRow(String[] row) {
+        return !row[71].isEmpty() || row[72].toLowerCase().equals("true") || row[70].toLowerCase().equals("true") || row[72].toLowerCase().equals("true");
+    }
+
+    private CollectionTask createCollectionTask(String[] data) {
+        CollectionTask task = new CollectionTask();
+        task.isCod = data[70].toLowerCase().trim().equals("true");
+        task.isCos = data[72].toLowerCase().trim().equals("true");
+        task.isOptional = data[73].toLowerCase().trim().equals("true");
+        task.podBarcode = data[34];
+        
+        if (!data[71].isEmpty()) {
+            task.amount = Double.parseDouble(data[71].replace(",", "."));
+        }
+        
+        task.collectPreviouseInvoiceCredit = data[74].toLowerCase().equals("true");
+        
+        if (!data[75].isEmpty()) {
+            task.previouseCreditAmount = Double.parseDouble(data[75].replace(",", "."));
+        }
+        
+        task.customerNumber = data[76]; 
+        
+        task.referenceNumber = data[33].trim();
+        
+        return task;
     }
 }

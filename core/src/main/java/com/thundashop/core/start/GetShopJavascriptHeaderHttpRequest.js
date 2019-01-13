@@ -119,7 +119,6 @@ GetShopApiWebSocket.prototype = {
     sendUnsentMessages: function(incommingMessage) {
         if (typeof(messagePersister) != null && messagePersister) {
             var messages = messagePersister.getAllUnsentMessages();
-            console.log(messages);
             for (var i in messages) {
                 var message = messages[i];
                 this.send(message, false, true);

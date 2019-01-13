@@ -18,6 +18,9 @@ public class DayEntry implements Serializable, Cloneable {
      * This is set to true if the
      * entry is an entry that represent a 
      * actual income.
+     * 
+     * This will be the total amount of money paid on the order and the 
+     * day its paid.
      */
     public boolean isIncome = false;
     public String cartItemId;

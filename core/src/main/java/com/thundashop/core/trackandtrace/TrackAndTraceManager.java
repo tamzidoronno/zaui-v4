@@ -1523,4 +1523,25 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     private void addMessage(String userId, Serializable dataCommon) {
         gdsManager.addUserMessageToQueue(userId, dataCommon);
     }
+
+    @Override
+    public void registerCollectionData(String destinationId, CollectionTasks collectionTasks) {
+        Destination dest = getDestination(destinationId);
+        
+        if (dest != null) {
+            CollectionTasks inMemory = dest.getCollectionTasks(collectionTasks.id);
+            
+            inMemory.date = collectionTasks.date;
+
+            inMemory.cashAmount = collectionTasks.cashAmount;
+            inMemory.chequeAmount = collectionTasks.chequeAmount;
+            inMemory.chequeNumber = collectionTasks.chequeNumber;
+
+            inMemory.adjustedReturnCredit = collectionTasks.adjustedReturnCredit;
+            inMemory.adjustment = collectionTasks.adjustment;
+            inMemory.adjustmentPreviouseCredit = collectionTasks.adjustmentPreviouseCredit;
+            
+            saveObject(dest);
+        }
+    }
 }

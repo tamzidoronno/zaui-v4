@@ -65,6 +65,11 @@ public class Destination extends DataCommon {
     public boolean extraInstractionsRead = false;
     public Date extraInstractionsReadDate = null;
     
+    public String collectionPayType = "";
+    
+    public String customerNumber = "";
+    
+    public List<CollectionTasks> collectionTasks = new ArrayList();
    
     public Destination() {
     }
@@ -138,4 +143,12 @@ public class Destination extends DataCommon {
         
         return new ArrayList(podBarcodes);
     }
+
+    public CollectionTasks getCollectionTasks(String id) {
+        return collectionTasks.stream()
+                .filter(o -> o.id.equals(id))
+                .findAny()
+                .orElse(null);
+    }
+   
 }

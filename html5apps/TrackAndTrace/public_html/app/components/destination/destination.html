@@ -13,10 +13,13 @@
     
 
 <div ng-if='destination.extraInstructions' class='subinstruction'>
-        <b>Extra instruction</b>
-        <br/> {{ destination.extraInstructions }}    
-    </div>
+    <b>Extra instruction</b>
+    <br/> {{ destination.extraInstructions }}    
+</div>
 
+<div ng-if='destination.collectionPayType' class='subinstruction' style="background-color: rgba(255,0,0,0.1); border: solid 1px red; padding: 5px;">
+    <i class="fa fa-dollar"></i><b> Payment type:</b> {{ destination.collectionPayType }}    
+</div>
 
 <div ng-show="destination.extraInstructions && !destination.extraInstractionsRead" class='instruction'>
     <div  class='subinstruction'>
@@ -79,6 +82,24 @@
 
                     <div ng-if="getStatus(task) === 'unknown'">
                         -
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div ng-repeat="col in destination.collectionTasks">
+            <div ng-mobile-click="openCollectionTask(destination.id, route.id, col)">
+                <div class='destination_task' ng-if="!isOptinalAndNot(col)">
+                    Collection - {{ getCollectionTypeName(col.type) }} 
+
+                    <div class='dest_status'>
+                        <div ng-if="isCollected(col.type)">
+                            <i class='fa fa-check' style="color: green"></i>
+                        </div>
+
+                        <div ng-if="!isCollected(col.type)">
+                            -
+                        </div>
                     </div>
                 </div>
             </div>

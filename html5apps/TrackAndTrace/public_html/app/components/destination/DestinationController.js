@@ -92,11 +92,52 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         return "unknown";
     }
     
+    $scope.openCollectionTask = function(destionationId, routeId, tasks) {        
+        $state.transitionTo('base.collection', { destinationId: destionationId,  routeId: routeId, collectionType: tasks.type, collectionSubType : 'normal' });
+    }
+    
+    $scope.isOptinalAndNot = function(tasks) {
+        if (tasks.type === "optional")
+            return true;
+        
+        return false;
+    }
+    
+    $scope.isCollected = function(type) {
+        for (var i in $scope.destination.collectionTasks) {
+            var groupedTask = $scope.destination.collectionTasks[i];
+            if (groupedTask.type === type) {
+                return groupedTask.date;
+            }
+        }
+        
+        return false;
+    }
+    
+    $scope.getCollectionTypeName = function(type) {
+        if (type == "codmandatory") {
+            return "COD";
+        }
+        
+        if (type == "cosmandatory") {
+            return "COS";
+        }
+    },
+            
     $scope.allTaskCompleted = function() {
         for (var i in $scope.destination.tasks) {
             var task = $scope.destination.tasks[i];
             
             if ($scope.getStatus(task) === "unknown") {
+                return false;
+            }
+        }
+        
+        for (var i in $scope.destination.collectionTasks) {
+            var groupedTask = $scope.destination.collectionTasks[i];
+            
+            if (groupedTask.type !== "optional" && !groupedTask.date) {
+                console.log("fase", groupedTask);
                 return false;
             }
         }
@@ -141,5 +182,28 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     
     $scope.doShowReplyMessage = function() {
         $scope.showReplyMessage = true;
+    }
+    
+    $scope.hasMandatoryCodTasks = function() {
+        console.log($scope.destination);
+        for (var i in $scope.destination.collectionTasks) {
+            var task = $scope.destination.collectionTasks[i];
+            if (task.isCod && !task.isOptional) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    $scope.hasMandatoryCosTask = function() {
+        var task = $scope.destination.collectionTasks[i];
+        for (var i in $scope.destination.collectionTasks) {
+            if (task.isCos && !task.isOptional) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

@@ -11,6 +11,8 @@ messagePersister = {
     
     persist: function(message) {
         message.sent = false;
+        message.messageId = this.guid();
+        
         this.messages.push(message);
         if (db) {
             this.addMessageToDatabase(message);
@@ -19,17 +21,37 @@ messagePersister = {
             this.save();
         }
     },
+      
+    guid: function() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+    },
     
     clearSentMessages: function() {
-        alert("Starting deletion of database, press ok and wait for next message.");
+        this.messages = [];
         if (typeof(db) !== "undefined" && db) {
-            var me = this;
-        
-            db.transaction(function(tx) {
-                tx.executeSql(me.sentMessageTableSQL);
-                db.executeSql("DELETE FROM SentMessages");
-                alert("Deletion completed.");
+            db.close(function() {
+                window.sqlitePlugin.deleteDatabase({name: 'tntdatabase.db', location: 'default'}, function() { 
+                    db = window.sqlitePlugin.openDatabase({name: 'tntdatabase.db', location: 'default'});
+                    alert("Database deleted and restarted."); 
+                    $('.fa-spinner').hide();
+                }, function() { 
+                    alert("Was not able to delete database"); 
+                    $('.fa-spinner').hide();
+                });
+            }, function() {
+                alert("Sorry, was not able to close database");
+                $('.fa-spinner').hide();
             });
+        }
+        
+        if (typeof(db) === "undefined" || !db) {
+            localStorage.setItem("sentMessages", []);
         }
     },
     
@@ -159,7 +181,11 @@ messagePersister = {
         if (db) {
             this.loadFromDb($api);
         } else {
-            this.messages = JSON.parse(localStorage.getItem("sentMessages"));
+            try {
+                this.messages = JSON.parse(localStorage.getItem("sentMessages"));
+            } catch (err) {
+                this.messages = [];
+            }
         }
         
         if (!this.messages) {

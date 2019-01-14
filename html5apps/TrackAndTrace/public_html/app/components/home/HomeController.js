@@ -36,13 +36,15 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     }
     
     $scope.openPool = function() {
-        if (!$api.getApi().connectionEstablished) {
+        var loggedInCall = $api.getApi().UserManager.isLoggedIn();
+        loggedInCall.fail(function(res) {
             alert("This function is not available offline, please make sure you are connected to internet.");
-            return;
-        }
+        })
         
-        $scope.loadData();
-        $state.transitionTo("base.pool", {});
+        loggedInCall.done(function(res) {
+            $scope.loadData();
+            $state.transitionTo("base.pool", {});    
+        });
     }
     
     $scope.logOut = function() {
@@ -104,7 +106,9 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         if (confirmed) {
             
             navigator.geolocation.getCurrentPosition(function(position) {
-                $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), $routeToUse.startInfo.lon, $routeToUse.startInfo.lat).done(function(res) {
+                var start = $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), $routeToUse.startInfo.lon, $routeToUse.startInfo.lat, false, true);
+                
+                start.done(function(res) {
                     $routeToUse.startInProgress = false;
                     
                     if (res === "SERVICEDATE_IN_FUTURE") {
@@ -123,10 +127,18 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
                     }
                     
                     $scope.$evalAsync();
-                })
+                });
+                
+                start.fail(function() {
+                    $routeToUse.startInProgress = false;
+                    alert('You need to be online to start a route');
+                    $scope.$evalAsync();
+                });
                 
             }, function(failare, b, c) {
-                $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), 0, 0).done(function() {
+                var start = $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), 0, 0, false, true);
+                
+                start.done(function() {
                     $routeToUse.startInProgress = false;
                     
                     if (res === "SERVICEDATE_IN_FUTURE") {
@@ -147,7 +159,16 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
                     
                     $scope.$evalAsync();
                 });
+                
+                start.fail(function() {
+                    $routeToUse.startInProgress = false;
+                    alert('You need to be online to start a route');
+                    $scope.$evalAsync();
+                });
+        
             }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
+            
+            
         }
     }
     

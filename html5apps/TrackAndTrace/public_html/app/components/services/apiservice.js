@@ -4,6 +4,52 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         this.$state = state;
         this.lastShownError = 0;
         
+        this.fetchQueue = function() {
+            var me = this;
+            
+            if (!me.api || !me.api.GdsManager || !localStorage.getItem("username")) {
+                setTimeout(function() {
+                    me.fetchQueue.apply(me);
+                }, 5000);
+                return;
+            }
+            
+            var pullService = me.api.GdsManager.getMessageForUser(false, true);
+            
+            pullService.done(function(res) {
+                try {
+                    if (res) {
+                        for (var i in res) {
+                            var msg = res[i];
+                            if (msg.className === "com.thundashop.core.trackandtrace.DriverRemoved") {
+                                me.driverRemoved(msg);
+                            }
+                            if (msg.className === "com.thundashop.core.trackandtrace.DriverMessage") {
+                                me.messageReceived(msg);
+                            }
+                            if (msg.className === "com.thundashop.core.trackandtrace.Route") {
+                                me.refreshRoute(msg);
+                            }
+                        }
+                    }
+                } catch (ex) {
+                    console.log(ex);
+                }
+                
+                me.fetchQueue();
+            });
+            
+            pullService.fail(function(res) {
+                console.log("Restarting due to failed", me);
+                setTimeout(function() {
+                    me.fetchQueue.apply(me);
+                }, 5000);
+            });
+        }
+        
+        this.showErrorMessage = function(text) {
+            
+        }
         
         this.setConnectionDetails = function(identifier) {
             this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
@@ -51,18 +97,13 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             });
             
             var me = this;
-            
-            this.api.setConnectedEvent(function() {
-                $rootScope.$broadcast("connectionEstablished", "");
-                $rootScope.$digest();
-                
-                me.logon(false);
-            });
-            
             this.api.listeners = [];
-            this.api.addListener("com.thundashop.core.trackandtrace.Route", this.refreshRoute, me);
-            this.api.addListener("com.thundashop.core.trackandtrace.DriverMessage", this.messageReceived, me);
-            this.api.addListener("com.thundashop.core.trackandtrace.DriverRemoved", this.driverRemoved, me);
+            
+            setTimeout(function() {
+                me.fetchQueue();
+            }, 10000);
+            
+            this.api.sendUnsentMessages();
         },
               
         this.showErrorMessage = function(msg) {
@@ -76,22 +117,15 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         },
                 
         this.refreshRoute = function(route) {
-            if (this.api.sessionId === route.sentFromSessionId)
-                return;
-            
             if (!localStorage.getItem("username")) {
                 return;
             }
   
             $rootScope.$broadcast("refreshRouteEven1", route);
-            $rootScope.$apply();
-            
+            $rootScope.$apply();  
         },
                 
         this.messageReceived = function(msg) {
-            if (this.api.sessionId === msg.sentFromSessionId)
-                return;
-            
             if (!localStorage.getItem("username")) {
                 return;
             }
@@ -101,14 +135,10 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         },
                 
         this.driverRemoved = function(msg) {
-            if (this.api.sessionId === msg.sentFromSessionId)
-                return;
-            
             if (!localStorage.getItem("username")) {
                 return;
             }
- 
-  
+            
             $rootScope.$broadcast("driverRemoved", msg);
             $rootScope.$apply();
         },
@@ -124,7 +154,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             $getShopApi = this.getApi();
             var me = this;
             
-            var deffered = $getShopApi.UserManager.logOn(username, password);
+            var deffered = $getShopApi.UserManager.logOn(username, password, false, true);
             deffered.done(function(user) {
                 if($getShopApi) {
                     $getShopApi.sendUnsentMessages();
@@ -133,6 +163,14 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
 
                 if (fromLogin) {
                     me.loadDataAndGoToHome(me);
+                }
+            });
+            
+            deffered.fail(function(res) {
+                if (fromLogin) {
+                    alert("Logon failed, make sure you entered correct username and password and that your device is online");
+                    $('.login-shower').removeClass('login-shower');
+                    $('.loginbutton').find('i').remove();
                 }
             });
         },
@@ -187,7 +225,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             $getShopApi = this.getApi();
             $getShopApi.connect();
             var me = this;
-            
+//            
             this.logon(fromLogin);
         }
     }

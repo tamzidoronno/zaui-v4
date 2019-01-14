@@ -144,6 +144,29 @@ $deliverytypes['admin'] = "Admin";
         echo "</table>";
         ?>
     </div>
+    <div class='roomtypesoptions'>
+        <br>
+        <div class='headingtext'>Filter for room types</div>
+        <?php
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $roomTypes = (array)$msg->roomTypes;
+        $allroomtypes = sizeof($prefixes) == 0 ? "checked" : "";
+        echo "<table width='100%'>";
+        echo "<tr><td><input type='checkbox' value='' class='allroomtypes' $allprefixselected>All room types</td></tr>";
+        echo "<tr>";
+        $counter = 0;
+        foreach($types as $type) {
+            $checkedprefix = in_array($type->id, $roomTypes) ? "checked" : "";
+            echo "<td><input type='checkbox' class='roomtypeselectionbox' value='".$type->id."' $checkedprefix>" . $type->name . "</td>";
+            $counter++;
+            if($counter % 9 == 0) {
+                echo "<tr></tR>";
+            }
+        }
+        echo "</tr>";
+        echo "</table>";
+        ?>
+    </div>
 </div>
 <style>
     .PmsSendMessagesConfiguration .availablemessages { width: 100%; min-height: 360px;     padding: 10px;

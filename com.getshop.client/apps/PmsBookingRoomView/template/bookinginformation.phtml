@@ -4,6 +4,15 @@ $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $sendmsgconfig = new ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration();
 $langs = $sendmsgconfig->getLanguageCodes();
+
+$guestcount = (int)$pmsSelectedRoom->numberOfGuests;
+$numberofguests = (int)sizeof($pmsSelectedRoom->guests);
+if($guestcount > $numberofguests) {
+    for($i = $numberofguests; $i < $guestcount; $i++) {
+        $pmsSelectedRoom->guests[] = new core_pmsmanager_PmsGuests();
+//        echo $i;
+    }
+}
 ?>
 <div class="bookinginformation">
 <div class="guestinfo">

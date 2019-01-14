@@ -4,6 +4,8 @@ app.PmsSendMessagesConfiguration = {
         $(document).on('click', '.PmsSendMessagesConfiguration [loadeditmeesage]', app.PmsSendMessagesConfiguration.createNewAutomatedMessage);
         $(document).on('mousedown', '.PmsSendMessagesConfiguration .loadeditevent', app.PmsSendMessagesConfiguration.hideEditEvent);
         $(document).on('click', '.PmsSendMessagesConfiguration .languageselectionbox', app.PmsSendMessagesConfiguration.updateLangaugeSelection);
+        $(document).on('click', '.PmsSendMessagesConfiguration .allroomtypes', app.PmsSendMessagesConfiguration.updateAllRoomTypesSelection);
+        $(document).on('click', '.PmsSendMessagesConfiguration .roomtypeselectionbox', app.PmsSendMessagesConfiguration.updateRoomSelection);
         $(document).on('click', '.PmsSendMessagesConfiguration .alllangaugeselectionbox', app.PmsSendMessagesConfiguration.updateAllLangaugeSelection);
         $(document).on('click', '.PmsSendMessagesConfiguration .prefixselectionbox', app.PmsSendMessagesConfiguration.updatPrefixSelection);
         $(document).on('click', '.PmsSendMessagesConfiguration .allprefixesbox', app.PmsSendMessagesConfiguration.updateAllPrefixSelection);
@@ -24,6 +26,15 @@ app.PmsSendMessagesConfiguration = {
                 btn.closest('.messageboxnew').remove();
             });
         }
+    },
+    updateRoomSelection : function() {
+        $('.allroomtypes').attr('checked',null);
+    },
+    
+    updateAllRoomTypesSelection : function() {
+        if($(this).is(':checked')) {
+             $('.roomtypeselectionbox').attr('checked',null);
+         }
     },
     doUpdateMessage : function() {
         var data = {
@@ -46,8 +57,16 @@ app.PmsSendMessagesConfiguration = {
             }
         });
         
+        var roomtypes = [];
+        $('.roomtypeselectionbox').each(function() {
+            if($(this).is(':checked')) {
+                roomtypes.push($(this).val());
+            }
+        });
+        
         data.languages = languages;
         data.prefixes = prefixes;
+        data.roomtypes = roomtypes;
         
         var event = thundashop.Ajax.createEvent('','updateCreateMessage', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(res) {

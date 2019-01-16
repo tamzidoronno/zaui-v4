@@ -364,6 +364,9 @@ public interface IOrderManager {
     public boolean isLocked(Date date);
     
     @Administrator
+    public boolean isBankAccountClosed(Date date);
+    
+    @Administrator
     public PaymentTerminalInformation getTerminalInformation(String orderId);
     
     @Administrator
@@ -408,4 +411,7 @@ public interface IOrderManager {
     
     @Administrator
     public OrderManagerSettings getOrderManagerSettings();
+    
+    @Administrator
+    public void closeBankAccount(Date endDate);
 }

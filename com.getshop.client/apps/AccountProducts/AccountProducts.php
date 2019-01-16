@@ -13,8 +13,6 @@ class AccountProducts extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->checkForProductsWithoutTax();
-        
         if ($this->getApi()->getGetShopAccountingManager()->isCurrentSelectedAccountingSystemPrimitive()) {
             $this->includefile("primitivproductconfig");
         } else {
@@ -96,14 +94,14 @@ class AccountProducts extends \MarketingApplication implements \Application {
         
         foreach ($products as $product) {
             if (!$product->taxGroupObject) {
-                echo $this->__f("Product with name " + $product->name + " does not have any tax code set, please set this first");
+                echo "<div>";
+                    echo $this->__f("Product with name " . $product->name . " does not have any tax code set, please set this first");
+                echo "</div>";
                 $allOk = false;
             }
         }
         
-        if (!$allOk) {
-            die();
-        }
+        return $allOk;
     }
 
     /**

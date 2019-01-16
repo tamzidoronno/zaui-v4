@@ -2681,7 +2681,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> dayIncomes = getReports(start, end);
         dayIncomes.stream().forEach(o -> o.isFinal = true);
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig, getOrderManagerSettings().whatHourOfDayStartADay, this);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2690,22 +2690,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<DayIncome> newlyBrokenIncome = breaker.getDayIncomes();
         
-        newlyBrokenIncome.removeIf(income -> {
-            return isInArray(income, dayIncomes);
-        });
-        
-        newlyBrokenIncome.addAll(dayIncomes);
-        
-        newlyBrokenIncome.removeIf(o -> {
-            long startL = start.getTime();
-            long endL = end.getTime() + (1000*60*60*24);
-            boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
-            return !completlyWithin;
-        });
-        
-        newlyBrokenIncome.sort((DayIncome a, DayIncome b) -> {
-            return a.start.compareTo(b.start);
-        });
+//        newlyBrokenIncome.removeIf(income -> {
+//            return isInArray(income, dayIncomes);
+//        });
+//        
+//        newlyBrokenIncome.addAll(dayIncomes);
+//        
+//        newlyBrokenIncome.removeIf(o -> {
+//            long startL = start.getTime();
+//            long endL = end.getTime() + (1000*60*60*24);
+//            boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
+//            return !completlyWithin;
+//        });
+//        
+//        newlyBrokenIncome.sort((DayIncome a, DayIncome b) -> {
+//            return a.start.compareTo(b.start);
+//        });
         
         return newlyBrokenIncome;
     }
@@ -2776,7 +2776,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false, getOrderManagerSettings().whatHourOfDayStartADay, this);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -2802,6 +2802,36 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     @Override
+    public void closeBankAccount(Date closeDate) {
+        Date closePeriodeToDate = closeDate;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(closeDate);
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        
+        // If hour, minute, second is not exaclty the closing date, change time to be in the beginning of the very next day with the accounting closing date.
+        if (cal.get(Calendar.HOUR_OF_DAY) != 0 || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0) {
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            closePeriodeToDate = cal.getTime();
+        }
+        
+        if (settings.bankAccountClosedToDate.equals(closePeriodeToDate) || closePeriodeToDate.before(settings.bankAccountClosedToDate)) {
+            throw new RuntimeException("The periode has already been closed.");
+        }
+        
+        Date now = new Date();
+        if (now.before(closePeriodeToDate)) {
+            throw new RuntimeException("We can not close down for the future");
+        }
+        
+        settings.bankAccountClosedToDate = closePeriodeToDate;
+        saveObject(settings);
+    }
+    
+    @Override
     public void closeTransactionPeriode(Date closeDate) {
         Date closePeriodeToDate = closeDate;
         Calendar cal = Calendar.getInstance();
@@ -2818,7 +2848,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             closePeriodeToDate = cal.getTime();
         }
         
-        if (closeDate.equals(closePeriodeToDate) || closePeriodeToDate.before(closeDate)) {
+        if (settings.closedTilPeriode.equals(closePeriodeToDate) || closePeriodeToDate.before(settings.closedTilPeriode)) {
             throw new RuntimeException("The periode has already been closed.");
         }
         
@@ -2860,8 +2890,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (this.orderManagerSettings.closedTilPeriode == null || this.orderManagerSettings.closedTilPeriode.equals(new Date(0))) {
             this.orderManagerSettings.closedTilPeriode = getStore().rowCreatedDate;
+            saveObject(this.orderManagerSettings);
         }
         
+        if (this.orderManagerSettings.bankAccountClosedToDate == null || this.orderManagerSettings.bankAccountClosedToDate.equals(new Date(0))) {
+            this.orderManagerSettings.bankAccountClosedToDate = getStore().rowCreatedDate;
+            saveObject(this.orderManagerSettings);
+        }
         
         return this.orderManagerSettings;
     }
@@ -2887,6 +2922,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
         }
         
+        stopIfNewPaymentDatesConflictWithClosedPeriode(order, getOrderManagerSettings().bankAccountClosedToDate, oldOrder);
         stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
         
         if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {
@@ -2937,8 +2973,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void resetOrder(Order oldOrder, Order order) {
-        if (oldOrder != null)
-            order = oldOrder;
+        if (oldOrder != null) {
+            oldOrder = (Order)database.getObject(getCredentials(), oldOrder.id);
+            orders.put(oldOrder.id, oldOrder);
+        }
     }
 
     @Override
@@ -2946,6 +2984,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Date closed = getOrderManagerSettings().closedTilPeriode;
         boolean isClosed = closed.after(date);
         return isClosed;
+    }
+    
+    @Override
+    public boolean isBankAccountClosed(Date date) {
+        Date closed = getOrderManagerSettings().bankAccountClosedToDate;
+        return closed.after(date);
     }
 
     @Override
@@ -3145,8 +3189,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return orders.values()
                 .stream()
                 .filter(o -> o.isInvoice())
-                .filter(o -> !o.isFullyPaid())
-                .mapToDouble(o -> getTotalAmount(o))
+                .mapToDouble(o -> o.getPaidRest())
                 .sum();
     }
     
@@ -3245,5 +3288,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         OrderManagerSettings settings = getOrderManagerSettings();
         settings.autoCloseFinancialDataWhenCreatingZReport = autoClose;
         saveObject(settings);
+    }
+
+    private void stopIfNewPaymentDatesConflictWithClosedPeriode(Order order, Date closedDate, Order oldOrder) {
+        List<OrderTransaction> newTransactions = order.orderTransactions.stream()
+                .filter(o -> !oldOrder.orderTransactions.contains(o))
+                .collect(Collectors.toList());
+        
+        for (OrderTransaction transsaction : newTransactions) {
+            if (transsaction.date.before(closedDate)) {
+                resetOrder(oldOrder, order);
+                throw new ErrorException(1053);
+            }
+        }
     }
 }

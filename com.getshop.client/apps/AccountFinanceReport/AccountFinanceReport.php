@@ -151,6 +151,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $this->getApi()->getOrderManager()->closeTransactionPeriode($this->getEnd());
     }
     
+    public function closeBankAccount() {
+        $this->getApi()->getOrderManager()->closeBankAccount($this->getEnd());
+    }
+    
     public function downloadReport() {
         $this->includefile("pdfreport");
     }
@@ -223,6 +227,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $this->getApi()->getGetShopAccountingManager()->transferData($start, $end);
     }
 
+    public function downloadYearReport() {
+        $this->includefile("excelreport");
+    }
 
 }
 ?>

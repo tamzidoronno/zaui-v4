@@ -1,0 +1,60 @@
+<?
+/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$start = $this->getStart();
+$end = $this->getEnd();
+
+if ($_POST['event'] === "downloadYearReport") {
+    $start = $this->convertToJavaDate(strtotime('01.01.'.date('Y', strtotime($end))." 00:00:00"));
+}
+
+$dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
+
+foreach ($dayIncomes as $dayIncome) {
+    if ($dayIncome->errorMsg) {
+        $errors[] = $dayIncome->errorMsg;
+    } else {
+        foreach ($dayIncome->dayEntries as $entry) {
+            
+            if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+                continue;
+            }
+            
+            $allAccountNumbers[] = $entry->accountingNumber;
+        }
+    }
+}
+
+$accounts = array_unique($allAccountNumbers);
+
+$rows = array();
+
+$header = array();
+$header[] = 'Date';
+foreach ($accounts as $account) {
+    $header[] = $account;
+}
+
+$rows[] = $header;
+
+foreach ($dayIncomes as $dayIncome) {
+    $grouped = $this->groupOnAccounting($dayIncome->dayEntries);
+    $rowToAdd = array();
+    $rowToAdd[] = date('d.m.Y H:i', strtotime($dayIncome->start))." - ".date('H:i', strtotime($dayIncome->end));
+    foreach ($accounts as $account) {
+        if (isset($grouped[$account]) && $grouped[$account]) {
+            $sum[$account] = @$sum[$account] + $grouped[$account];
+        }
+
+        if (isset($grouped[$account]) && $grouped[$account]) {
+            $controlSum += ($grouped[$account]);
+        }
+
+        $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : 0;
+        $rowToAdd[] = $val;
+    }
+    
+    $rows[] = $rowToAdd;
+}
+
+echo json_encode($rows);
+?>

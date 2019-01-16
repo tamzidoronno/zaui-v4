@@ -12,10 +12,7 @@ $taxGroups = $this->getApi()->getProductManager()->getTaxes();
 <div>
     <?
     foreach ($products as $product) {
-        if($product->deleted) {
-            continue;
-        }
-        
+        $deleted = $product->deleted ? "(".$this->__f("Deleted").")" : "";
         $accountingInformation = $this->getAccountinProductInfoForTaxCode($product, $product->taxGroupObject->groupNumber);
         $accountingNumber = $accountingInformation ? $accountingInformation->accountingNumber : "";
         foreach ($product->accountingConfig as $accountinInfo) {
@@ -24,7 +21,7 @@ $taxGroups = $this->getApi()->getProductManager()->getTaxes();
             $taxGroup = $this->getTaxGroup($accountinInfo->taxGroupNumber, $taxGroups);
             ?>
                 <div class="product_row" productid="<? echo $product->id; ?>" accountingid="<? echo $accountinInfo->id; ?>" taxgroup="<? echo $accountinInfo->taxGroupNumber; ?>">
-                    <div class="name"> <? echo $product->name ? $product->name : $this->__f("N/A"); ?></div>
+                    <div class="name"> <? echo $product->name ? $product->name : $this->__f("N/A"); ?> <? echo $deleted ?></div>
                     <div class="taxes"> <? echo $taxGroup->taxRate; ?>%</div>
                     <div class="accointingtax"><input class="gsniceinput1 accountingnumber" value="<? echo $accountingInformation ? $accountingInformation->accountingNumber : ""; ?>"></div>
                 </div>

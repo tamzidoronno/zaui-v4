@@ -5,7 +5,12 @@
  */
 package com.thundashop.core.getshopaccounting;
 
+import com.google.gson.Gson;
 import com.getshop.scope.GetShopSession;
+import com.powerofficego.data.AccessToken;
+import com.powerofficego.data.ApiOrderTransferResponse;
+import com.powerofficego.data.PowerOfficeGoImportLine;
+import com.powerofficego.data.PowerOfficeGoSalesOrder;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.ordermanager.data.Order;
 import java.math.BigDecimal;
@@ -16,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
+import com.powerofficego.data.SalesOrderTransfer;
+import com.thundashop.core.productmanager.data.AccountingDetail;
 
 /**
  *
@@ -71,25 +78,100 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
 
     @Override
     public void transfer(List<DayIncome> incomes) {
-        
-        for (DayIncome income : incomes) {    
-            System.out.println("================ Day : " + income.start + " - " + income.end + " ============");
-            BigDecimal zeroCheck = new BigDecimal(BigInteger.ZERO);
-            
-            Map<String, List<DayEntry>> groupedIncomes = income.getGroupedByAccountExTaxes();
-            
-            for (String accountingNumber : groupedIncomes.keySet()) {
-                
-                BigDecimal total = groupedIncomes.get(accountingNumber).stream()
-                        .map(o -> o.amount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+        createAccessToken();
 
-                zeroCheck = zeroCheck.add(total);
-                
-                System.out.println("To be transfered on account: " + accountingNumber + ", total: " + total);
-            }
-            
-            System.out.println("Zero check: " + zeroCheck);
+        for (DayIncome income : incomes) {    
+            transferIncomeData(income);
         }
     }
+    private String createAccessToken() {
+        try {
+            Gson gson = new Gson();
+            String auth = "e5fdab3b-97b5-4041-bddb-5b2a48ccee1c:" + getConfig("password");
+            String res = webManager.htmlPostBasicAuth("https://go.poweroffice.net/OAuth/Token", "grant_type=client_credentials", false, "UTF-8", auth);
+            AccessToken atoken = gson.fromJson(res, AccessToken.class);
+            token = atoken.access_token;
+            return atoken.access_token;
+        }catch(Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+    
+    private String transferIncomeData(DayIncome income) {
+        String endpoint = "http://api.poweroffice.net/Import/";
+        List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
+
+        SalesOrderTransfer transferObject = new SalesOrderTransfer();
+        transferObject.description = "getshop file for: " +income.start + " - " + income.end;
+        transferObject.importLines = createImportLines(income);
+        Gson gson = new Gson();
+        String data = gson.toJson(transferObject);
+        try {
+            String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
+            ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
+            if(resp.success) {
+                addToLog("Sucesfully uploaded data");
+            } else {
+                /* @TODO HANDLE PROPER WARNING */
+                addToLog("Failed to transfer customer: " + result);
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private List<PowerOfficeGoImportLine> createImportLines(DayIncome income) {
+        System.out.println("================ Day : " + income.start + " - " + income.end + " ============");
+        BigDecimal zeroCheck = new BigDecimal(BigInteger.ZERO);
+
+        Map<String, List<DayEntry>> groupedIncomes = income.getGroupedByAccountExTaxes();
+        List<PowerOfficeGoImportLine> result = new ArrayList();
+        for (String accountingNumber : groupedIncomes.keySet()) {
+            BigDecimal total = groupedIncomes.get(accountingNumber).stream()
+                    .map(o -> o.amount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            zeroCheck = zeroCheck.add(total);
+            
+            System.out.println("To be transfered on account: " + accountingNumber + ", total: " + total);
+            PowerOfficeGoImportLine toAdd = new PowerOfficeGoImportLine();
+            toAdd.accountNumber = new Integer(accountingNumber);
+            toAdd.postingDate = income.start;
+            toAdd.amount = total.doubleValue();
+            
+            DayEntry dayEntry = groupedIncomes.get(accountingNumber).get(0);
+
+            if(dayEntry.isActualIncome && !dayEntry.isOffsetRecord) {
+                AccountingDetail detail = productManager.getAccountingDetail(toAdd.accountNumber);
+                if(detail == null) {
+                    System.out.println("nullpointer occurded when it should not.");
+                    addToLog("nullpointer occurded when it should not on account: " + toAdd.accountNumber);
+                }
+                toAdd.vatCode = detail.taxgroup + "";
+            } else {
+                toAdd.vatCode = "0";
+            }
+
+            String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
+            if(currency == null || currency.isEmpty()) {
+                currency = "NOK";
+            }
+            
+            toAdd.currencyAmount = toAdd.amount;
+            toAdd.documentDate = new Date();
+            toAdd.currencyCode = currency;
+            String department = getConfigOptions().get("department");
+            if(department != null && !department.isEmpty()) {
+                toAdd.departmentCode = getConfig("department");
+            }
+            
+            result.add(toAdd);
+        }
+        return result;
+    }
+    
+    
+    
 }

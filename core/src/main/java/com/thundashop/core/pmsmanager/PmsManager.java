@@ -3814,6 +3814,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms room = booking.getRoom(roomId);
+        setGuestOnRoomInternal(room, guests, bookingId, roomId, booking);
+        verifyAddons(room);
+        saveBooking(booking);
+    }
+    
+    @Override
+    public void setGuestOnRoomWithoutModifyingAddons(List<PmsGuests> guests, String bookingId, String roomId) {
+        PmsBooking booking = getBooking(bookingId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        setGuestOnRoomInternal(room, guests, bookingId, roomId, booking);
+        saveBooking(booking);
+    }
+
+    private void setGuestOnRoomInternal(PmsBookingRooms room, List<PmsGuests> guests, String bookingId, String roomId, PmsBooking booking) throws ErrorException {
         room.guests = guests;
         room.numberOfGuests = guests.size();
         String newguestinfo = "";
@@ -3849,10 +3863,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-
-        verifyAddons(room);
-
-        saveBooking(booking);
     }
 
     @Override
@@ -4557,7 +4567,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public HashMap<String, String> getChannelMatrix() {
         HashMap<String, String> res = new HashMap();
-        res.put("web", "Website");
+        res.put("web", "Admins");
+        res.put("website", "Website");
         HashMap<String, PmsChannelConfig> getChannels = configuration.getChannels();
         for (String key : getChannels.keySet()) {
             if (getChannels.get(key).channel != null && !getChannels.get(key).channel.isEmpty()) {
@@ -4605,6 +4616,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Date end = new Date();
         for (String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
+            
             for (CartItem item : order.cart.getItems()) {
                 if (item.getProduct().externalReferenceId.equals(roomId)) {
                     if (item.getEndingDate().after(end)) {
@@ -5724,9 +5736,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (coupon.containsAddonProductToInclude(item.productId)) {
                     item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price, days, room.numberOfGuests, room.bookingItemTypeId);
                 }
-            }
-            if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
-                item.isIncludedInRoomPrice = true;
             }
         }
 

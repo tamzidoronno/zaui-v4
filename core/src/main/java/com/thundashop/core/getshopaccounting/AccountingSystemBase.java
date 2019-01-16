@@ -18,6 +18,7 @@ import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
@@ -61,6 +62,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     @Autowired
     public WebManager webManager;
+    
+    @Autowired
+    public StoreManager storeManager;
     
     public HashMap<String, SavedOrderFile> files = new HashMap();
     

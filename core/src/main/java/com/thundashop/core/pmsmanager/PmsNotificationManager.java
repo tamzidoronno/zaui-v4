@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -264,11 +265,13 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         List<String> languagesSupported = getLanguagesForMessage(key, type);
         List<String> prefixesSupported = getPrefixesForMessage(key, type);
         
+        List<String> roomTypes = booking.rooms.stream().map(e->e.bookingItemTypeId).collect(Collectors.toList());
+        
         for(PmsNotificationMessage msg : messages.values()) {
             if(!msg.type.equals(type)) {
                 continue;
             }
-            if(msg.languages.isEmpty() && msg.prefixes.isEmpty()) {
+            if(msg.languages.isEmpty() && msg.prefixes.isEmpty() && msg.roomTypes.isEmpty()) {
                 continue;
             }
             if(languagesSupported.contains(language) && !msg.containsLanguage(language)) {
@@ -281,6 +284,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 continue;
             }
             if(!msg.prefixes.isEmpty() && !msg.prefixes.contains(prefix)) {
+                continue;
+            }
+            if(!msg.roomTypes.isEmpty() && !msg.containsOneOrMoreRoomType(roomTypes)) {
                 continue;
             }
             if(msg.key.equalsIgnoreCase(key)) {
@@ -301,6 +307,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 continue;
             }
             if(!msg.prefixes.isEmpty()) {
+                continue;
+            }
+            if(!msg.roomTypes.isEmpty()) {
                 continue;
             }
             if(msg.content == null) { msg.content = ""; }

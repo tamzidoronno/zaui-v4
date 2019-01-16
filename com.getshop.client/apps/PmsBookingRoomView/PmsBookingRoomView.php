@@ -806,7 +806,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             }
         }
         
-        $this->getApi()->getPmsManager()->setGuestOnRoom($this->getSelectedMultilevelDomainName(), $guests, $pmsBooking->id, $selectedRoom->pmsBookingRoomId);
+        $this->getApi()->getPmsManager()->setGuestOnRoomWithoutModifyingAddons($this->getSelectedMultilevelDomainName(), $guests, $pmsBooking->id, $selectedRoom->pmsBookingRoomId);
         $this->forceUpdate();
         $pmsBooking = $this->getPmsBooking();
         foreach($pmsBooking->rooms as $r) {

@@ -303,7 +303,8 @@ class PmsSearchBookingColumnFormatters {
 
     public function getChannels() {
         $channels = array();
-        $channels['web'] = "Website";
+        $channels['web'] = "Admins";
+        $channels['website'] = "Website";
         $channels['wubook_0'] = "Wubook";
         $channels['wubook_1'] = "Exp.";
         $channels['wubook_2'] = "b.com";
@@ -320,8 +321,8 @@ class PmsSearchBookingColumnFormatters {
             $langcode = "no";
         }
         if($langcode == "en_EN") {
-            $langcode = "en";
-        }
+            $langcode = "en"; 
+       }
         if($langcode == "en_en") {
             $langcode = "en";
         }

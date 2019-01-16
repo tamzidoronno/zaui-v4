@@ -849,12 +849,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
+        booking.channel = "website";
+        
         if(input.payLater) {
             booking.avoidAutoDelete = true;
-            pmsManager.saveBooking(booking);
             pmsManager.logEntry("Pay later button pressed", booking.id, null);
             res.continuetopayment = 0;
         }
+        pmsManager.saveBooking(booking);
         
         if(input.paymentMethod != null && !input.paymentMethod.isEmpty() && !booking.orderIds.isEmpty()) {
             Order order = orderManager.getOrderSecure(booking.orderIds.get(0));

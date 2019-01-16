@@ -271,6 +271,9 @@ public interface IPmsManager {
     public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId);
     
     @Administrator
+    public void setGuestOnRoomWithoutModifyingAddons(List<PmsGuests> guests, String bookingId, String roomId);
+    
+    @Administrator
     public void updateAddonsBasedOnGuestCount(String pmsRoomId);
     
     @Administrator

@@ -19,6 +19,7 @@ public class PmsNotificationMessage extends DataCommon {
     public String type = "";
     public List<String> languages = new ArrayList();
     public List<String> prefixes = new ArrayList();
+    public List<String> roomTypes = new ArrayList();
     public String key;
     public boolean isDefault = false;
 
@@ -28,6 +29,17 @@ public class PmsNotificationMessage extends DataCommon {
         }
         if(languages.contains(language)) {
             return true;
+        }
+        return false;
+    }
+
+    boolean containsOneOrMoreRoomType(List<String> toCheckTypes) {
+        for(String toCheck : toCheckTypes) {
+            if(toCheck != null) {
+                if(roomTypes.contains(toCheck)) {
+                    return true;
+                }
+            }
         }
         return false;
     }

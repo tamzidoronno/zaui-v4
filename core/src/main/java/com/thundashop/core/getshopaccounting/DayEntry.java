@@ -80,4 +80,8 @@ public class DayEntry implements Serializable, Cloneable {
     public String getAccountingNumber() {
         return accountingNumber;
     }
+    
+    public String getOrderId() {
+        return orderId;
+    }
 }

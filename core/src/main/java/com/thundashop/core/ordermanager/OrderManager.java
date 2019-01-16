@@ -21,6 +21,7 @@ import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
+import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
@@ -3313,4 +3314,37 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
     }
+
+    @Override
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate) {
+        Date startDate = getStore().rowCreatedDate;
+        List<DayIncome> dayEntries = getDayIncomes(startDate, endDate);
+        
+        Map<String, List<DayEntry>> groupedEntries = dayEntries.stream()
+                .flatMap(dayEntry -> dayEntry.dayEntries.stream())
+                .filter(dayEntry -> dayEntry.accountingNumber.equals(accountNumber))
+                .collect(Collectors.groupingBy(DayEntry::getOrderId));
+     
+        List<OrderUnsettledAmountForAccount> retList = new ArrayList();
+        
+        for (String orderId : groupedEntries.keySet()) {
+            List<DayEntry> entries = groupedEntries.get(orderId);
+            double sumOfAccount = entries.stream()
+                    .mapToDouble(o -> o.amount.doubleValue())
+                    .sum();
+            
+            if (sumOfAccount < 0.00001 && sumOfAccount > -0.00001) {
+                continue;
+            }
+            
+            OrderUnsettledAmountForAccount unsettledAmount = new OrderUnsettledAmountForAccount();
+            unsettledAmount.amount = sumOfAccount;
+            unsettledAmount.order = getOrder(orderId);
+            unsettledAmount.account = accountNumber;
+            retList.add(unsettledAmount);
+        }
+        
+        return retList;
+    }
+     
 }

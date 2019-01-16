@@ -8,6 +8,8 @@ $bankAccountClosed = $this->getApi()->getOrderManager()->isBankAccountClosed($en
 $isShowingExTaxes = $this->isShowingIncTaxes();
 $invoiceActivated = $this->getApi()->getStoreApplicationPool()->isActivated('70ace3f0-3981-11e3-aa6e-0800200c9a66');
 
+$this->getApi()->getPmsManager()->markOtaPaymentsAutomaticallyPaidOnCheckin($this->getSelectedMultilevelDomainName(), $start, $end);
+
 $monthHasPassed = strtotime($end) < time();
 
 $selectedYear = date('Y', strtotime($start));

@@ -2,25 +2,12 @@
 /* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
 $start = $this->getStart();
 $end = $this->getEnd();
-$dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
-
-$recordGroup = array();
-foreach ($dayIncomes as $dayIncome) {
-    foreach ($dayIncome->dayEntries as $entry) {
-        if ($entry->accountingNumber == $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary']) {
-            if (!isset($recordGroup[$entry->incrementalOrderId])) {
-                $recordGroup[$entry->incrementalOrderId] = array();
-            }
-            $recordGroup[$entry->incrementalOrderId][] = $entry;
-        }
-    }
-}
-
+$unsettledAmounts = $this->getApi()->getOrderManager()->getOrdersUnsettledAmount($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'], $end);
 ?>
 <div class="infoheader">
     <?
     echo "<div class='head'>".$this->__f("Summary of unbalanced account transaction, account").": ".$_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary']."</div>";
-    echo $this->__f("Periode").": ".date('d.m.Y H:i', strtotime($start))." - ".date('d.m.Y H:i', strtotime($end));
+    echo $this->__f("Accountbalance pr").": ".date('d.m.Y H:i', strtotime($end));
     ?>
     <div>
         <? echo $this->__f("This list show you only the unbalanced transactions for the account within the periode."); ?>
@@ -32,57 +19,22 @@ foreach ($dayIncomes as $dayIncome) {
     <div gsclick='cancelAccountOverview' class='shop_button'>Back</div>
 </div>
 <?
-
 $total = 0;
+foreach ($unsettledAmounts as $unsettledAmount) {
+    ?>
 
-
-
-foreach ($recordGroup as $orderId => $records) {
-    $isInBalance = $this->getOrderBalance($orderId, $records);
-    
-    if (!$isInBalance)
-        continue;
-    
-    $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($orderId);
-    
-    $orderTotal = 0;
-    echo "<h2> Order Id: ".$order->incrementOrderId."</h2>";
-    
-    echo "<div class='row'>";
-        echo "<div class='col rowdate'>OrderId</div>";
-        echo "<div class='col rowdate'>Accounting Date</div>";
-        echo "<div class='col rowdate'>Amount</div>";
-        echo "<div class='col rowdate'>Payment Type</div>";
-        echo "<div class='col rowdate'>Order created date</div>";
-    echo "</div>";
-    
-    foreach ($records as $record) {
-        echo "<div class='row'>";
-            echo "<div class='col rowdate'>$record->incrementalOrderId</div>";
-            echo "<div class='col rowdate'>".date('d.m.Y h:m', strtotime($record->date))."</div>";
-            echo "<div class='col rowdate'>".$record->amount."</div>";
-            echo "<div class='col rowdate'>".$this->getPaymentName($order->payment->paymentType)."</div>";
-            echo "<div class='col rowdate'>".date('d.m.Y h:m', strtotime($order->rowCreatedDate))."</div>";
-        echo "</div>";
-
-        $total += $record->amount;
-        $orderTotal += $record->amount;
-    }
-    
-    echo "<div class='row'>";
-        echo "<div class='col rowdate'>Total</div>";
-        echo "<div class='col rowdate'></div>";
-        echo "<div class='col rowdate'>$orderTotal</div>";
-        echo "<div class='col rowdate'></div>";
-        echo "<div class='col rowdate'></div>";
-    echo "</div>";
+    <div class='row'>
+        <a class='gs_ignorenavigate' href="/invoicing.php?page=orderviewpage&orderid=<? echo $unsettledAmount->order->id;?>">
+            <div class='col orderid'><? echo $unsettledAmount->order->incrementOrderId; ?></div>
+            <div class='col name'><? echo $unsettledAmount->order->cart->address->fullName; ?></div>
+            <div class='col amount'><? echo $unsettledAmount->amount; ?></div>
+        </a>
+    </div>
+    <?
+    $total += $unsettledAmount->amount;
 }
+echo "<h2 style='margin-left: 50px;'>"."Total: ".$total."</h2>";
 
-
-echo "<br/>";
-echo "<br/>";
-echo "<br/>";
-echo "<h2> Overall total: ".$total."</h2>";    
 ?>
 
 <div class='buttonarea'>

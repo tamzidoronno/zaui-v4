@@ -2922,7 +2922,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
         }
         
-        stopIfNewPaymentDatesConflictWithClosedPeriode(order, getOrderManagerSettings().bankAccountClosedToDate, oldOrder);
+        /**
+         * We need to make sure that none of the payments registered are in a closed periode where
+         * the f-report has been finalized.
+         * 
+         * for invoices we allow it as long as the bank account has not been closed.
+         */
+        if (!order.isInvoice()) {
+            stopIfNewPaymentDatesConflictWithClosedPeriode(order, getOrderManagerSettings().closedTilPeriode, oldOrder);
+        } else {
+            stopIfNewPaymentDatesConflictWithClosedPeriode(order, getOrderManagerSettings().bankAccountClosedToDate, oldOrder);
+        }
+        
         stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
         
         if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {

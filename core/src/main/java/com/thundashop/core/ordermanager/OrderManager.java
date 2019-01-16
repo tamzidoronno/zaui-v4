@@ -2690,22 +2690,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<DayIncome> newlyBrokenIncome = breaker.getDayIncomes();
         
-//        newlyBrokenIncome.removeIf(income -> {
-//            return isInArray(income, dayIncomes);
-//        });
-//        
-//        newlyBrokenIncome.addAll(dayIncomes);
-//        
-//        newlyBrokenIncome.removeIf(o -> {
-//            long startL = start.getTime();
-//            long endL = end.getTime() + (1000*60*60*24);
-//            boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
-//            return !completlyWithin;
-//        });
-//        
-//        newlyBrokenIncome.sort((DayIncome a, DayIncome b) -> {
-//            return a.start.compareTo(b.start);
-//        });
+        newlyBrokenIncome.removeIf(income -> {
+            return isInArray(income, dayIncomes);
+        });
+        
+        newlyBrokenIncome.addAll(dayIncomes);
+        
+        newlyBrokenIncome.removeIf(o -> {
+            long startL = start.getTime();
+            long endL = end.getTime() + (1000*60*60*24);
+            boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
+            return !completlyWithin;
+        });
+        
+        newlyBrokenIncome.sort((DayIncome a, DayIncome b) -> {
+            return a.start.compareTo(b.start);
+        });
         
         return newlyBrokenIncome;
     }

@@ -184,13 +184,20 @@ public class OrderDailyBreaker {
     }
 
     private DayEntry createIncomeEntry(Order order) {
+        boolean shouldDoublePost = shouldRegisterPaymentTransactions(order);
+        boolean isPaid = order.status == Order.Status.PAYMENT_COMPLETED && order.paymentDate != null;
+        
+        if (!shouldDoublePost && !isPaid) {
+            return null;
+        }
+        
         DayEntry dayEntry = new DayEntry();
         dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision);
         dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
         dayEntry.isIncome = true;
         dayEntry.orderId = order.id;
         dayEntry.incrementalOrderId = order.incrementOrderId;
-        dayEntry.date = order.rowCreatedDate;
+        dayEntry.date = shouldDoublePost ? order.rowCreatedDate : order.paymentDate;
         dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.payment.getPaymentTypeId());
         return dayEntry;
     }

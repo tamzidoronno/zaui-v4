@@ -1471,6 +1471,10 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void resetTransferToAccounting() {
         transferredToAccountingSystem = false;
         triedTransferredToAccountingSystem  = false;
+        
+        if (status != Status.PAYMENT_COMPLETED) {
+            closed = false;
+        }
     }
     
     public void markAsTransferredToAccounting() {

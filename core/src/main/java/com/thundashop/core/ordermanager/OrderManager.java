@@ -2789,6 +2789,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             DayIncomeReport report = getReport(start, end);
             
             if (report != null) {
+                
+                report.incomes.stream()
+                        .flatMap(dayIncome -> dayIncome.dayEntries.stream())
+                        .forEach(o -> resetTransferToAccount(o.orderId));
+                
                 deleteObject(report);
                 
                 OrderManagerSettings settings = getOrderManagerSettings();

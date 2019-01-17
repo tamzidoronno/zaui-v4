@@ -50,8 +50,9 @@ class PmsCheckList extends \MarketingApplication implements \Application {
         $month = $monthText[1];
         $monthEnd = (int)$monthText[1]+1;
         
-        $from = $this->convertToJavaDate(strtotime("$month/01-$year 00:00:00"));
-        $end = $this->convertToJavaDate(strtotime("$monthEnd/01-$year 00:00:00"));
+        $startTime = strtotime("01.$month.$year 00:00:00");
+        $from = $this->convertToJavaDate($startTime);
+        $end = $this->convertToJavaDate(strtotime("+1 month", $startTime));
         $this->getApi()->getPmsManager()->markOtaPaymentsAutomaticallyPaidOnCheckin($this->getSelectedMultilevelDomainName(), $from, $end);
         $result = $this->getApi()->getChecklistManager()->getErrors($this->getSelectedMultilevelDomainName(), $from, $end);
 

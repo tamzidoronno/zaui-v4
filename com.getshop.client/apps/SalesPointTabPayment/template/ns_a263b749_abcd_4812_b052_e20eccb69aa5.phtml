@@ -1,0 +1,21 @@
+<?php
+/* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+$order = $this->getCurrentOrder();
+$total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+?>
+
+<div class='completepayment cash' total='<? echo $total; ?>'>
+    <div class='total'>
+        <? echo $this->__f("Total")." ".$total; ?>
+        
+    </div>
+    <?
+    echo $this->__f("Click complete tranasction once the bank payment has been completed.");
+    ?>
+
+    
+    <div class='buttonarea'>
+        <div class='shop_button' gsclick='completeCurrentOrder'><? echo $this->__f("Complete transaction"); ?></div>
+        <div class='shop_button' gsclick='cancelCurrentOrder'><? echo $this->__f("Cancel"); ?></div>
+    </div>
+</div>

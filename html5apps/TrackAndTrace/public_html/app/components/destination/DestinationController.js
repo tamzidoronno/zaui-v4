@@ -92,11 +92,26 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         return "unknown";
     }
     
+    $scope.hasOptionalTasks = function() {
+        for (var i in $scope.destination.collectionTasks) {
+            var groupedTask = $scope.destination.collectionTasks[i];
+            if (groupedTask.type === "optional") {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     $scope.openCollectionTask = function(destionationId, routeId, tasks) {        
-        $state.transitionTo('base.collection', { destinationId: destionationId,  routeId: routeId, collectionType: tasks.type, collectionSubType : 'normal' });
+        var collectionSubType = tasks.type === "codmandatory" ? 'normal' : 'payment';
+        $state.transitionTo('base.collection', { destinationId: destionationId,  routeId: routeId, collectionType: tasks.type, collectionSubType : collectionSubType });
     }
     
     $scope.isOptinalAndNot = function(tasks) {
+        if (tasks.type === "optional" && tasks.date)
+            return false;
+        
         if (tasks.type === "optional")
             return true;
         
@@ -121,6 +136,10 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         
         if (type == "cosmandatory") {
             return "COS";
+        }
+        
+        if (type == "optional") {
+            return "Optional";
         }
     },
             

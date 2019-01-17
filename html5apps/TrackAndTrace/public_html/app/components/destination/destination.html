@@ -108,6 +108,14 @@
         <div class='destination_task addTask' ng-mobile-click="showAddPickupTask()">
             <i class='fa fa-plus'></i> New pickup task
         </div>
+        
+        <br/>
+        
+        <div ng-repeat="col in destination.collectionTasks">
+            <div class='destination_task addTask' ng-if='isOptinalAndNot(col)' ng-mobile-click="openCollectionTask(destination.id, route.id, col)">
+                <i class='fa fa-plus'></i> New collection
+            </div>
+        </div>
 
         <div class='button' ng-if="allTaskCompleted() == true" ng-mobile-click="departedTapped()">Departing</div>
         <div class='button exceptionbutton' ng-if="!allTaskCompleted() == true" ng-mobile-click="showDestinationExceptions()">Exception</div>

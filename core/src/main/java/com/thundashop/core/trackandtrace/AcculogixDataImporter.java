@@ -165,7 +165,6 @@ public class AcculogixDataImporter {
         destination.onDemandInstructions = args[23];
         destination.pickupInstruction = args[22] + args[53];
         destination.deliveryInstruction = args[21];
-        destination.collectionPayType = args[69];
         destination.customerNumber = args[76];
         
         if (args.length > 68) {
@@ -202,6 +201,13 @@ public class AcculogixDataImporter {
             Map<String, List<CollectionTask>> groupedByCollectionType = collectionTasks
                     .stream()
                     .collect(Collectors.groupingBy(CollectionTask::getCollectionType));
+            
+            destination.collectionPayType = String.join(",", 
+                    collectionDatas.stream()
+                        .map(o -> o[69])
+                        .distinct()
+                        .collect(Collectors.toList())
+                );
             
             List<CollectionTasks> taskList = new ArrayList();
             

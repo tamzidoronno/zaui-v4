@@ -9301,26 +9301,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public void markOtaPaymentsAutomaticallyPaidOnCheckin(Date start, Date end) {
-        if (!storeId.equals("7bb18e4a-7a5c-4a0a-9a59-7e7705f0f004")) {
-            // We need to find a better solution for this, but it needs to work for City Living.
-            return;
-        }
-        
-        bookings.values().stream()
-                .filter(o -> o.startDate != null && o.startDate.before(new Date()))
-                .forEach(booking -> {
-                    for (String orderId : booking.orderIds) {
-                        Order order = orderManager.getOrder(orderId);
-                        if (order.status == Order.Status.PAYMENT_COMPLETED) {
-                            continue;
-                        }
-                        
-                        if (order.isBookingCom() || order.isExpedia()) {
-                            Date checkoutDate = booking.endDate;
-                            orderManager.markAsPaid(orderId, checkoutDate, order.getTotalAmount());
-                        }
-                    }
-                });
+        // needs to be done manually.
     }
 
     private List<PmsBooking> filterByCustomers(List<PmsBooking> finalized, List<String> customers) {

@@ -4,7 +4,11 @@ $start = $this->getStart();
 $end = $this->getEnd();
 $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
 $isLocked = $this->getApi()->getOrderManager()->isLocked($end);
+$bankAccountClosed = $this->getApi()->getOrderManager()->isBankAccountClosed($end);
 $isShowingExTaxes = $this->isShowingIncTaxes();
+$invoiceActivated = $this->getApi()->getStoreApplicationPool()->isActivated('70ace3f0-3981-11e3-aa6e-0800200c9a66');
+
+$this->getApi()->getPmsManager()->markOtaPaymentsAutomaticallyPaidOnCheckin($this->getSelectedMultilevelDomainName(), $start, $end);
 
 $monthHasPassed = strtotime($end) < time();
 
@@ -107,8 +111,33 @@ echo "</script>";
                 $this->includefile($system."_BUTTON");
             }
         }
+        
+        if ($selectedMonth == 12) {
+            ?>
+            <div class="shop_button showresultbutton" gs_fileName='year.xls' gs_downloadExcelReport="downloadYearReport"> <? echo $this->__f("Download year excel"); ?></div>
+            <?
+        }
         ?>
     </div>
+    
+    <?
+    if ($invoiceActivated && $monthHasPassed) {
+        echo "<h2>".$this->__f("Bank account")."</h2>";
+        if ($bankAccountClosed) {
+        ?>
+            <div><? echo $this->__f("Bank account has been closed for this periode"); ?></div>
+        <?
+        } else {
+        ?>
+            <div>
+                <? echo $this->__f("When a bank account is open for the periode you can register manually payments for the periode. This is normally done with manually mark invoices as paid."); ?>
+                <br/>
+                <br/><div class="shop_button" gsclick="closeBankAccount"> <? echo $this->__f("Close bank account"); ?></div>
+            </div>
+        <?
+        }
+    }
+    ?>
     
 </div>
 

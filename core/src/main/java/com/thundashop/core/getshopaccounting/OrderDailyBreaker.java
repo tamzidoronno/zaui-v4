@@ -7,9 +7,9 @@ package com.thundashop.core.getshopaccounting;
 
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.paymentmanager.PaymentManager;
@@ -45,9 +45,10 @@ public class OrderDailyBreaker {
     private List<DayEntry> orderDayEntries;
     private List<String> errors = new ArrayList();
     private int precision = 10;
+    private OrderManager orderManager;
     public boolean ignoreConfig = false;
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager, boolean ignoreConfig, int whatHourOfDayStartADay) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager, boolean ignoreConfig, int whatHourOfDayStartADay, OrderManager orderManager) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
         this.start = start;
@@ -55,6 +56,7 @@ public class OrderDailyBreaker {
         this.paymentManager = paymentManager;
         this.productManager = productManager;
         this.ignoreConfig = ignoreConfig;
+        this.orderManager = orderManager;
         this.whatHourOfDayStartADay = whatHourOfDayStartADay;
         correctStartAndEndTime();
         createEmptyDays();
@@ -340,39 +342,6 @@ public class OrderDailyBreaker {
                 });
     }
     
-    public static void main(String[] args) throws ParseException, UnknownHostException {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date start = dateFormatter.parse("2018-10-01 00:00:00");
-        Date end = dateFormatter.parse("2018-10-31 00:00:00");
-        
-        Database database = new Database();
-        
-        List<Order> orders = database.getAll("OrderManager", "fd2fecef-1ca1-4231-86a6-0ec445fbac83")
-            .filter(dataCommon -> dataCommon.isOf(Order.class))
-            .map(dataCommon -> (Order)dataCommon)
-            .filter(o -> !o.isSamleFaktura())
-            .collect(Collectors.toList());
-        
-        long time = System.currentTimeMillis();
-        OrderDailyBreaker dayBreaker = new OrderDailyBreaker(orders, start, end, null, null, false, 0);
-        dayBreaker.breakOrders();
-        
-        List<DayIncome> dayIncomes = dayBreaker.getDayIncomes();
-        
-        for (DayIncome dayIncome : dayIncomes) {
-            BigDecimal totalForMonth = new BigDecimal(0D);
-            
-            for (DayEntry dayEntry : dayIncome.dayEntries) {
-                if (dayEntry.isIncome)
-                    continue;
-                
-                totalForMonth = totalForMonth.add(dayEntry.amount);
-            }
-            
-            System.out.println(totalForMonth);
-        }
-    }
-
     private void correctRoundingProblemsDueToExTaxes(List<DayEntry> orderDayEntries) {
         BigDecimal sum = new BigDecimal(0D);
         for (DayEntry dayEntry : orderDayEntries) {
@@ -462,6 +431,14 @@ public class OrderDailyBreaker {
         
         Product product = productManager.getProduct(productId);
         ProductAccountingInformation res = product.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
+        
+        if (res == null) {
+            if (!product.soldOnTaxGroups.contains(inProduct.taxGroupObject.groupNumber)) {
+                product.soldOnTaxGroups.add(inProduct.taxGroupObject.groupNumber);
+                product.createEmptyAccountingInformationObjects();
+                productManager.saveObject(product);
+            }
+        }
         
         if (res == null) {
             return "";

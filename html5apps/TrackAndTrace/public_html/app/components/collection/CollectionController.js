@@ -7,6 +7,14 @@
 
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
+function sortByReferenceNumber(a,b) {
+  if (a.referenceNumber < b.referenceNumber)
+    return -1;
+  if (a.referenceNumber > b.referenceNumber)
+    return 1;
+  return 0;
+}
+
 controllers.CollectionController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
     
@@ -42,6 +50,7 @@ controllers.CollectionController = function($scope, datarepository, $stateParams
             }
         }
 
+        retList.sort(sortByReferenceNumber);
         
         return retList;
     }
@@ -99,6 +108,10 @@ controllers.CollectionController = function($scope, datarepository, $stateParams
     }
     
     $scope.paymentAmountValid = function() {
+        if ($stateParams.collectionType === "optional") {
+            return true;
+        }
+        
         var total = $scope.getTotalPaymentSelected();
         return !total;
     }
@@ -184,7 +197,7 @@ controllers.CollectionController = function($scope, datarepository, $stateParams
     }
     
     $scope.doTheBack = function() {
-        if ($stateParams.collectionSubType === "payment") {
+        if ($stateParams.collectionSubType === "payment" && $stateParams.collectionType === "codmandatory") {
             $state.transitionTo('base.collection', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId, collectionType: $stateParams.collectionType, collectionSubType : 'normal' });
             return;
         }

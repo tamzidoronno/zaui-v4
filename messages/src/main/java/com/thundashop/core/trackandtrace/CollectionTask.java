@@ -40,11 +40,13 @@ public class CollectionTask {
         if (isCos && !isOptional)
             collectionType ="cosmandatory";
         
+        // NEVER
         if (isCos && isOptional)
-            collectionType ="cosoptional";
+            throw new RuntimeException("This should never happen");
         
+        // NEVER HAPPEN
         if (isCod && isOptional)
-            collectionType ="codoptional";
+            throw new RuntimeException("This should never happen");
         
         if (isOptional)
             collectionType ="optional"; 

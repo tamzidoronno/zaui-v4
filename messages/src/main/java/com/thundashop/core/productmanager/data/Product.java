@@ -162,6 +162,12 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public HashMap<String, List<String>> selectedExtras  = new HashMap();
     
+    /**
+     * This contains a distinct list of taxgroupnumbers that this
+     * product has been sold on.
+     */
+    public List<Integer> soldOnTaxGroups = new ArrayList();
+    
     public void setMainImage(String fileId) {
         mainImage = fileId;
     }
@@ -371,7 +377,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
         }
     }
 
-    private void createEmptyAccountingInformationObjects() {
+    public void createEmptyAccountingInformationObjects() {
         List<Integer> taxGroupNumbers = new ArrayList();
         
         if (taxGroupObject != null) {
@@ -380,6 +386,10 @@ public class Product extends DataCommon implements Comparable<Product>  {
         
         for (TaxGroup taxGroup : additionalTaxGroupObjects) {
             taxGroupNumbers.add(taxGroup.groupNumber);
+        }
+        
+        if (soldOnTaxGroups != null) {
+            taxGroupNumbers.addAll(soldOnTaxGroups);
         }
         
         for (Integer taxGroupNumber : taxGroupNumbers) {
@@ -401,6 +411,5 @@ public class Product extends DataCommon implements Comparable<Product>  {
                     .filter(o -> o.taxGroupNumber != null && o.taxGroupNumber.equals(taxGroupNumber))
                     .findAny()
                     .orElse(null);
-            
     }
 }

@@ -42,4 +42,13 @@ public class OrderManagerSettings extends DataCommon {
      * its ready to be transferred to PMI, Accounting etc.
      */
     public boolean autoCloseFinancialDataWhenCreatingZReport = false;
+    
+    /**
+     * We will close the bank accounting for register incomes on invoices.
+     * 
+     * If the bank account is closed the operators should not be able 
+     * to register payments within that periode.
+     * 
+     */
+    public Date bankAccountClosedToDate = null;
 }

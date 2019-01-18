@@ -418,7 +418,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<Product> getAllProductsIncDeleted() throws ErrorException {
         List<DataCommon> res = database.findWithDeleted("col_" + storeId, null, null, "ProductManager", null, true);
-        System.out.println("Products: " + res.size());
+        
         List<Product> result = new ArrayList();
         for(DataCommon com : res) {
             if(com instanceof Product) {
@@ -536,7 +536,15 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public void saveAccountingInformation(String productId, List<ProductAccountingInformation> infos) {
-        Product product = getProduct(productId);
+        Product product = getAllProductsIncDeleted().stream()
+                .filter(o -> o.id.equals(productId))
+                .findAny()
+                .orElse(null);
+        
+        if (product == null) {
+            throw new ErrorException(28);
+        }
+        
         product.accountingConfig = infos;
         saveProduct(product);
     }

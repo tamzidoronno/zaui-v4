@@ -102,7 +102,9 @@ if (!count($resData)) {
     }
     
     $grouped = $newArray;
-        
+
+    $monthTotal = 0;
+    
     foreach ($grouped as $day => $transactionDtos) {
         
         ?>
@@ -122,6 +124,8 @@ if (!count($resData)) {
                 </div>  
             <?
             }
+            
+            $monthTotal += $dayTotal;
             ?>
             
             <div class='totalrow'>
@@ -132,4 +136,8 @@ if (!count($resData)) {
         <?
     }
     ?>
+    
+    <h2>
+        <? echo $this->__f("Total for month")." ".$monthTotal; ?>
+    </h2>
 </div>

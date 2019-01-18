@@ -26,6 +26,7 @@ import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -364,6 +365,9 @@ public interface IOrderManager {
     public boolean isLocked(Date date);
     
     @Administrator
+    public boolean isBankAccountClosed(Date date);
+    
+    @Administrator
     public PaymentTerminalInformation getTerminalInformation(String orderId);
     
     @Administrator
@@ -408,4 +412,10 @@ public interface IOrderManager {
     
     @Administrator
     public OrderManagerSettings getOrderManagerSettings();
+    
+    @Administrator
+    public void closeBankAccount(Date endDate);
+    
+    @Administrator
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date date);
 }

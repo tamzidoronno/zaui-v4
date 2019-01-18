@@ -183,11 +183,17 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
     $scope.showExtraButtons = function() {
         $('.numpadcomma').hide();
         $('.plusminus').hide();
-        
-        if ($stateParams.type === "collection") {
+       
+        if ($stateParams.type === "collection" && $stateParams.collectionData && $stateParams.collectionData.action !== "adjustment") {
             setTimeout(function() {
-                $('.plusminus').attr('style', 'display: inline-block !important;');
                 $('.numpadcomma').attr('style', 'display: inline-block !important;');
+            }, 0);
+        }
+        
+        if ($stateParams.type === "collection" && $stateParams.collectionData && $stateParams.collectionData.action === "adjustment") {
+            setTimeout(function() {
+                $('.numpadcomma').attr('style', 'display: inline-block !important;');
+                $('.plusminus').attr('style', 'display: inline-block !important;');
             }, 0);
         }
     }

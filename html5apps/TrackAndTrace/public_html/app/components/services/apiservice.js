@@ -52,10 +52,16 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         }
         
         this.setConnectionDetails = function(identifier) {
-            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
-//            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
-//            this.api = new GetShopApiWebSocket('192.168.10.190', '31330', identifier, true);
-//            this.api = new GetShopApiWebSocket('trackandtrace.3.0.mpal.getshop.com', '31330', identifier, true);
+            if (identifier === "prologix") {
+                this.api = new GetShopApiWebSocket('prologix.getshop.com', '31332', identifier, true);
+            } else if (identifier === "local") {
+                this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
+            } else if (identifier === "acculogix") {
+                this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
+            } else {
+                alert("Warning, unknown company, please check your company inputs");
+                this.api = new GetShopApiWebSocket('unkown.getshop.com', '31332', identifier, true);
+            }
 
             this.api.setMessageCountChangedEvent(function() {
                 $rootScope.$broadcast("messageCountChanged", "");

@@ -14,14 +14,14 @@ and open the template in the editor.
 }
 
 .collection .orderamount {
-    width: 120px;
+    width: 100px;
     text-align: right;
     box-sizing: border-box;
     padding-right: 10px;
 }
 
 .collection .refnumber {
-    width: calc(100% - 130px);
+    width: calc(100% - 110px);
     box-sizing: border-box;
     padding-left: 10px;
 }

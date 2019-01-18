@@ -66,6 +66,11 @@
     width: 170px;
 }
 
+.AccountFinanceReport .col.name {
+    width: 500px;
+    text-align: left;
+}
+
 .AccountFinanceReport .col.rowdate {
     width: 150px;
 }

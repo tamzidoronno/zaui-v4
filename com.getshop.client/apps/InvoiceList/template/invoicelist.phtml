@@ -11,6 +11,7 @@ $end = strtotime('+1 month', $start);
 $filterOptions = new \core_common_FilterOptions();
 $filterOptions->startDate = $this->convertToJavaDate($start);
 $filterOptions->endDate = $this->convertToJavaDate($end);
+$filterOptions->pageSize = 9999;
 $filterOptions->removeNullOrders = true;
 $filterOptions->extra = array();
 $filterOptions->extra['paymenttype'] = "70ace3f0_3981_11e3_aa6e_0800200c9a66";
@@ -81,6 +82,8 @@ echo "</script>";
 $totalOrderAmount = 0;
 
 foreach ($resData->datas as $order) {
+    
+    $override = $order->overrideAccountingDate ? '<i class="fa fa-warning" title="The income for this invoice is being accounted for '.date('d.m.Y', strtotime($order->overrideAccountingDate)).'"></i> ' : "";
     ?>
 
     <div class="duerow  <? echo $color; ?>">
@@ -88,7 +91,7 @@ foreach ($resData->datas as $order) {
             <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?></div>
             <div class="col name"><? echo $order->cart->address->fullName; ?></div>
             <div class="col orderdate">
-                <? echo date('d.m.Y', strtotime($order->rowCreatedDate)); ?>
+                <? echo $override.date('d.m.Y', strtotime($order->rowCreatedDate)); ?>
             </div>
             <div class="col duedate">
                 <? echo date('d.m.Y', strtotime($order->dueDate)); ?>
@@ -110,7 +113,17 @@ foreach ($resData->datas as $order) {
 
             <div class="col remaining">
                 <?
-                echo $amount - $paidAmount;
+                $rest = $amount - $paidAmount;
+                
+                if ($paidAmount != 0 && $rest ) {
+                    echo '<i class="fa fa-arrows" title="Payment registered but still not zero."></i> ';
+                }
+                
+                if ($paidAmount && $order->status != 7) {
+                    echo '<i class="fa fa-arrows" title="what?"></i> ';
+                }
+                
+                echo round($rest,2);
                 ?>
             </div>
         </a>
@@ -123,6 +136,7 @@ foreach ($resData->datas as $order) {
 <div class="duerow">
     <div class="col incrementalOrderId"></div>
     <div class="col name"><? echo $this->__f("Total"); ?></div>
+    <div class="col orderdate"></div>
     <div class="col duedate"></div>
     <div class="col totalamount"><? echo $totalOrderAmount; ?></div>
     <div class="col totalpaid"></div>

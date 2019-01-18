@@ -99,6 +99,11 @@ public class Order extends DataCommon implements Comparable<Order> {
     public List<OrderTransaction> orderTransactions = new ArrayList();
     
     /**
+     * Key = productid, value is a list of taxgroups used 
+     * for this order on the given product.
+     */
+    public HashMap<String, List<Integer>> taxGroupsUsed = null;
+    /**
      * This will be populated if the order is created by merging multiple 
      * of other orders.
      */
@@ -1466,6 +1471,10 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void resetTransferToAccounting() {
         transferredToAccountingSystem = false;
         triedTransferredToAccountingSystem  = false;
+        
+        if (status != Status.PAYMENT_COMPLETED) {
+            closed = false;
+        }
     }
     
     public void markAsTransferredToAccounting() {
@@ -1492,5 +1501,21 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public String getParentOrder() {
         return parentOrder;
+    }
+    
+    public void setTaxCodesUsed() {
+        taxGroupsUsed = new HashMap();
+        
+        for (CartItem cartItem : getCartItems()) {
+            if (taxGroupsUsed.get(cartItem.getProduct().id) == null) {
+                taxGroupsUsed.put(cartItem.getProduct().id, new ArrayList());
+            }
+            
+            int taxGroupToUse = cartItem.getProduct().taxGroupObject == null ? cartItem.getProduct().taxgroup : cartItem.getProduct().taxGroupObject.groupNumber;
+            if (!taxGroupsUsed.get(cartItem.getProduct().id).contains(taxGroupToUse)) {
+                taxGroupsUsed.get(cartItem.getProduct().id).add(taxGroupToUse);
+            }
+        }
+                
     }
 }

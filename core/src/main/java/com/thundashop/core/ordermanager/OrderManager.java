@@ -21,6 +21,7 @@ import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
+import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
@@ -2681,7 +2682,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> dayIncomes = getReports(start, end);
         dayIncomes.stream().forEach(o -> o.isFinal = true);
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig, getOrderManagerSettings().whatHourOfDayStartADay, this);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2776,7 +2777,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false, getOrderManagerSettings().whatHourOfDayStartADay, this);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -2788,6 +2789,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             DayIncomeReport report = getReport(start, end);
             
             if (report != null) {
+                
+                report.incomes.stream()
+                        .flatMap(dayIncome -> dayIncome.dayEntries.stream())
+                        .forEach(o -> resetTransferToAccount(o.orderId));
+                
                 deleteObject(report);
                 
                 OrderManagerSettings settings = getOrderManagerSettings();
@@ -2799,6 +2805,36 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 saveObject(settings);
             }
         }
+    }
+    
+    @Override
+    public void closeBankAccount(Date closeDate) {
+        Date closePeriodeToDate = closeDate;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(closeDate);
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        
+        // If hour, minute, second is not exaclty the closing date, change time to be in the beginning of the very next day with the accounting closing date.
+        if (cal.get(Calendar.HOUR_OF_DAY) != 0 || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0) {
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            closePeriodeToDate = cal.getTime();
+        }
+        
+        if (settings.bankAccountClosedToDate.equals(closePeriodeToDate) || closePeriodeToDate.before(settings.bankAccountClosedToDate)) {
+            throw new RuntimeException("The periode has already been closed.");
+        }
+        
+        Date now = new Date();
+        if (now.before(closePeriodeToDate)) {
+            throw new RuntimeException("We can not close down for the future");
+        }
+        
+        settings.bankAccountClosedToDate = closePeriodeToDate;
+        saveObject(settings);
     }
     
     @Override
@@ -2818,7 +2854,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             closePeriodeToDate = cal.getTime();
         }
         
-        if (closeDate.equals(closePeriodeToDate) || closePeriodeToDate.before(closeDate)) {
+        if (settings.closedTilPeriode.equals(closePeriodeToDate) || closePeriodeToDate.before(settings.closedTilPeriode)) {
             throw new RuntimeException("The periode has already been closed.");
         }
         
@@ -2860,8 +2896,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (this.orderManagerSettings.closedTilPeriode == null || this.orderManagerSettings.closedTilPeriode.equals(new Date(0))) {
             this.orderManagerSettings.closedTilPeriode = getStore().rowCreatedDate;
+            saveObject(this.orderManagerSettings);
         }
         
+        if (this.orderManagerSettings.bankAccountClosedToDate == null || this.orderManagerSettings.bankAccountClosedToDate.equals(new Date(0))) {
+            this.orderManagerSettings.bankAccountClosedToDate = getStore().rowCreatedDate;
+            saveObject(this.orderManagerSettings);
+        }
         
         return this.orderManagerSettings;
     }
@@ -2885,6 +2926,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order.id != null && !order.id.isEmpty()) {
             oldOrder = (Order)database.getObject(getCredentials(), order.id);
+        }
+        
+        /**
+         * We need to make sure that none of the payments registered are in a closed periode where
+         * the f-report has been finalized.
+         * 
+         * for invoices we allow it as long as the bank account has not been closed.
+         */
+        if (!order.isInvoice()) {
+            stopIfNewPaymentDatesConflictWithClosedPeriode(order, getOrderManagerSettings().closedTilPeriode, oldOrder);
+        } else {
+            stopIfNewPaymentDatesConflictWithClosedPeriode(order, getOrderManagerSettings().bankAccountClosedToDate, oldOrder);
         }
         
         stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
@@ -2937,8 +2990,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void resetOrder(Order oldOrder, Order order) {
-        if (oldOrder != null)
-            order = oldOrder;
+        if (oldOrder != null) {
+            oldOrder = (Order)database.getObject(getCredentials(), oldOrder.id);
+            orders.put(oldOrder.id, oldOrder);
+        }
     }
 
     @Override
@@ -2946,6 +3001,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Date closed = getOrderManagerSettings().closedTilPeriode;
         boolean isClosed = closed.after(date);
         return isClosed;
+    }
+    
+    @Override
+    public boolean isBankAccountClosed(Date date) {
+        Date closed = getOrderManagerSettings().bankAccountClosedToDate;
+        return closed.after(date);
     }
 
     @Override
@@ -3145,8 +3206,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return orders.values()
                 .stream()
                 .filter(o -> o.isInvoice())
-                .filter(o -> !o.isFullyPaid())
-                .mapToDouble(o -> getTotalAmount(o))
+                .mapToDouble(o -> o.getPaidRest())
                 .sum();
     }
     
@@ -3246,4 +3306,50 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         settings.autoCloseFinancialDataWhenCreatingZReport = autoClose;
         saveObject(settings);
     }
+
+    private void stopIfNewPaymentDatesConflictWithClosedPeriode(Order order, Date closedDate, Order oldOrder) {
+        List<OrderTransaction> newTransactions = order.orderTransactions.stream()
+                .filter(o -> !oldOrder.orderTransactions.contains(o))
+                .collect(Collectors.toList());
+        
+        for (OrderTransaction transsaction : newTransactions) {
+            if (transsaction.date.before(closedDate)) {
+                resetOrder(oldOrder, order);
+                throw new ErrorException(1053);
+            }
+        }
+    }
+
+    @Override
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate) {
+        Date startDate = getStore().rowCreatedDate;
+        List<DayIncome> dayEntries = getDayIncomes(startDate, endDate);
+        
+        Map<String, List<DayEntry>> groupedEntries = dayEntries.stream()
+                .flatMap(dayEntry -> dayEntry.dayEntries.stream())
+                .filter(dayEntry -> dayEntry.accountingNumber.equals(accountNumber))
+                .collect(Collectors.groupingBy(DayEntry::getOrderId));
+     
+        List<OrderUnsettledAmountForAccount> retList = new ArrayList();
+        
+        for (String orderId : groupedEntries.keySet()) {
+            List<DayEntry> entries = groupedEntries.get(orderId);
+            double sumOfAccount = entries.stream()
+                    .mapToDouble(o -> o.amount.doubleValue())
+                    .sum();
+            
+            if (sumOfAccount < 0.00001 && sumOfAccount > -0.00001) {
+                continue;
+            }
+            
+            OrderUnsettledAmountForAccount unsettledAmount = new OrderUnsettledAmountForAccount();
+            unsettledAmount.amount = sumOfAccount;
+            unsettledAmount.order = getOrder(orderId);
+            unsettledAmount.account = accountNumber;
+            retList.add(unsettledAmount);
+        }
+        
+        return retList;
+    }
+     
 }

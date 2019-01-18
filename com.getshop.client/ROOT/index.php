@@ -13,6 +13,11 @@ if ($localmode && isset($_GET['changeGetShopModule']) && $_GET['changeGetShopMod
     $_SESSION['getshop_current_module_id'] = $_GET['changeGetShopModule'];
 }
 
+if(isset($_GET['network-code']) && isset($_GET['messageId'])) {
+    exit(0);
+}
+
+
 ob_start();
 //phpinfo();
 //return;

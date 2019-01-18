@@ -2,9 +2,6 @@
 $filecontent = file_get_contents("../etc/config.txt");
 $localmode = strstr($filecontent, "localhost");
 
-if (isset($_GET['msisdn']) && isset($_GET['client-ref']))
-    return;
-
 if ($localmode) {
     session_start();
 }

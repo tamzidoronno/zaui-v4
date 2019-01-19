@@ -46,6 +46,9 @@ class PageFactory {
         if ($moduleId == "invoicing") {
             $this->createInvoicingPages();
         }
+        if ($moduleId == "settings") {
+            $this->createSettingsPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -601,4 +604,40 @@ class PageFactory {
         $this->createOrderViewPage('invoicing');
         $this->createProductsPage("invoicing");
     }
+
+    public function createSettingsPages() {
+        $page = new \ModulePage("home", "settings");
+        $row = $page->createRow();
+        $row->addText("Dashboard");
+        $row = $page->createRow();
+        $row->addColumn("80ddbee0-09ee-4b05-8e2d-01c7055b9ab3", "50357490-7764-42d1-8438-77d34928a718");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("othersettings", "settings");
+        $page->setLeftMenu(\ModulePageMenu::getSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("afbe1ef5-6c62-45c7-a5a0-fd16d380d7cb", "c34a7143-711b-4c0f-ad4b-95e689330fa4");
+        $this->pages[$page->getId()] = $page;
+        
+        $page = new \ModulePage("departments", "settings");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("d3bd5a9e-2e8d-4992-b6c4-aacec6ae284e", "4db0d49a-b041-4016-a8ec-b9852d40e40b");
+        $this->pages[$page->getId()] = $page;
+        
+        $page = new \ModulePage("segments", "settings");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("45779056-ad4a-44ce-8c9a-1a4adc75477b", "a4af40d2-6efd-46f1-85e1-a1b5a3b47435");
+        $this->pages[$page->getId()] = $page;
+        
+        $page = new \ModulePage("useraccounts", "settings");
+        $page->setLeftMenu(\ModulePageMenu::getSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("27656859-aeed-41f7-9941-f01d0f860212", "f05c190e-2ba5-4604-b8cc-ffe93647e46c");
+        $this->pages[$page->getId()] = $page;
+        
+    }
+
 }

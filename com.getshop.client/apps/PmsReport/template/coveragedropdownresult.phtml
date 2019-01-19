@@ -40,6 +40,17 @@
                         if(in_array($room->pmsBookingRoomId, $entry->roomsNotOnSameDay)) {
                             $striketrough = "style='text-decoration: line-through;'";
                         }
+                        
+                        $price = 0;
+                        if(isset($entry->roomsPrice->{$room->pmsBookingRoomId})) {
+                            $price = $entry->roomsPrice->{$room->pmsBookingRoomId};
+                        }
+                        
+                        $pricef = $entry->roomsPriceForecasted->{$room->pmsBookingRoomId};
+                        
+                        if (!$pricef && !$price)
+                            continue;
+                        
                         echo "<tr>";
                         echo "<td valign='top' $striketrough>";
                         $found = false;
@@ -59,15 +70,21 @@
                         echo $room->guests[0]->name . "<br>";
                         echo "</td>";
                         echo "<td valign='top'>";
-                        $price = 0;
-                        if(isset($entry->roomsPrice->{$room->pmsBookingRoomId})) {
-                            $price = $entry->roomsPrice->{$room->pmsBookingRoomId};
+                        
+                        if(isset($entry->roomsPriceOnDifferentTypes->{$room->pmsBookingRoomId})) {
+                            $priceOnDifferentTypes = $entry->roomsPriceOnDifferentTypes->{$room->pmsBookingRoomId};
                         }
+                        
+                        if ($priceOnDifferentTypes) {
+                            echo "<i class='fa fa-warning' title='There has been invoiced ".round($priceOnDifferentTypes)." on different types'></i> ";
+                        }
+                        
                         echo round($price);
+                        
                         $total += $price;
                         echo "</td>";
                         echo "<td>";
-                        $pricef = $entry->roomsPriceForecasted->{$room->pmsBookingRoomId};
+                        
                         $remaining = $pricef-$price;
                         if($remaining < 0.1 && $remaining > -0.1) {
                             $remaining = 0;

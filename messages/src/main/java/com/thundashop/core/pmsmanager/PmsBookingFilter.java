@@ -93,6 +93,7 @@ public class PmsBookingFilter extends DataCommon {
     public boolean removeAddonsIncludedInRoomPrice = false;
     public List<String> typeFilter = new ArrayList();
     public List<String> itemFilter = new ArrayList();
+    public List<String> departmentIds = new ArrayList();
     public String filterName = "";
     boolean fromPms = false;
 

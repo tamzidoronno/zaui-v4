@@ -12,6 +12,9 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +51,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     
     @Autowired
     public BookingEngineNew bookingEngineNew;
+    
+    @Autowired
+    public OrderManager orderManager;
     
     private IBookingEngineAbstract getBookingEngine() {
         if (useNewEngine.contains(storeId)) {
@@ -406,5 +412,39 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     public Booking getActiveBookingOnBookingItem(String bookingItemId) {
         return getBookingEngine().getActiveBookingOnBookingItem(bookingItemId);
+    }
+
+    @Override
+    public void changeDepartmentOnType(String bookingItemTypeId, String departmentId) {
+        getBookingEngine().changeDepartmentOnType(bookingItemTypeId, departmentId);
+        BookingItemType type = getBookingItemType(bookingItemTypeId);
+        
+        if (type != null && type.departmentId != null && !type.departmentId.isEmpty()) {
+            updateAllOrdersToUseNewDepartment(bookingItemTypeId, departmentId);
+        }
+    }
+
+    private void updateAllOrdersToUseNewDepartment(String bookingItemTypeId, String departmentId) {
+        List<Order> allOrders = orderManager.getAllOrders();
+        BookingItemType type = getBookingItemType(bookingItemTypeId);
+        
+        for (Order order : allOrders) {
+            boolean anyUpdated = false;
+            
+            for (CartItem item : order.getCartItems()) {
+                if (item.departmentId == null || !item.departmentId.isEmpty()) {
+                    continue;
+                }
+                    
+                if (item.getProduct() != null && item.getProduct().id.equals(type.productId)) {
+                    item.departmentId = type.departmentId;
+                    anyUpdated = true;
+                }
+            }
+            
+            if (anyUpdated) {
+                orderManager.saveObject(order);
+            }
+        }
     }
 }

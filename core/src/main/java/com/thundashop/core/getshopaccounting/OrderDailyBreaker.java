@@ -8,8 +8,6 @@ package com.thundashop.core.getshopaccounting;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.TwoDecimalRounder;
-import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.paymentmanager.PaymentManager;
@@ -20,7 +18,6 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.math.BigDecimal;
-import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,31 +37,25 @@ public class OrderDailyBreaker {
     private final List<Order> ordersToBreak;
     private final ProductManager productManager;
     private int whatHourOfDayStartADay = 0;
-    private Date end;
-    private Date start;
     private List<DayEntry> orderDayEntries;
-    private List<String> errors = new ArrayList();
-    private int precision = 10;
-    private OrderManager orderManager;
-    public boolean ignoreConfig = false;
+    private final List<String> errors = new ArrayList();
+    private final int precision = 10;
+    private final DayIncomeFilter filter;
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, Date start, Date end, PaymentManager paymentManager, ProductManager productManager, boolean ignoreConfig, int whatHourOfDayStartADay, OrderManager orderManager) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
-        this.start = start;
-        this.end = end;        
+        this.filter = filter;        
         this.paymentManager = paymentManager;
         this.productManager = productManager;
-        this.ignoreConfig = ignoreConfig;
-        this.orderManager = orderManager;
-        this.whatHourOfDayStartADay = whatHourOfDayStartADay;
+        this.whatHourOfDayStartADay = whatHourOfDayStartADayorderManager;
         correctStartAndEndTime();
         createEmptyDays();
     }
 
     private void correctStartAndEndTime() {
-        start = calculateStartTimeForDate(start);
-        end = calculateEndTimeForDate(end);
+        filter.start = calculateStartTimeForDate(filter.start);
+        filter.end = calculateEndTimeForDate(filter.end);
     }
     
     /**
@@ -73,7 +64,7 @@ public class OrderDailyBreaker {
      */
     private void createEmptyDays() {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
+        cal.setTime(filter.start);
         
         while(true) {
             Date dayStart = cal.getTime();
@@ -86,7 +77,7 @@ public class OrderDailyBreaker {
             
             dayIncomes.add(dayIncome);
             
-            if (dayEnd.equals(this.end) || dayEnd.after(this.end)) {
+            if (dayEnd.equals(this.filter.end) || dayEnd.after(this.filter.end)) {
                 break;
             }
         }
@@ -102,7 +93,7 @@ public class OrderDailyBreaker {
                     return;
                 }
 
-                if (!order.payment.isPaymentTypeValid()  && !ignoreConfig) {
+                if (!order.payment.isPaymentTypeValid()  && !filter.ignoreConfig) {
                     throw new RuntimeException("Missing payment method on order? " + order.incrementOrderId);
                 }
                 
@@ -153,6 +144,12 @@ public class OrderDailyBreaker {
         }
         
         order.cart.getItems().stream().forEach(item -> {
+            if (filter.departmentIds != null && !filter.departmentIds.isEmpty()) {
+                if (!filter.departmentIds.contains(item.departmentId)) {
+                    return;
+                }
+            }
+            
             if (item.isPriceMatrixItem()) {
                 List<DayEntry> entries = createEntriesOfPriceMatrix(order, item);
                 orderDayEntries.addAll(entries);
@@ -412,7 +409,7 @@ public class OrderDailyBreaker {
     }
 
     private String getAccountingNumberForProduct(CartItem item, Order order) throws DailyIncomeException {
-        if (ignoreConfig) {
+        if (filter.ignoreConfig) {
             return "";
         }
         
@@ -515,7 +512,7 @@ public class OrderDailyBreaker {
     }
 
     private Date calculateEndTimeForDate(Date date) {
-        if (date.equals(end))
+        if (date.equals(filter.end))
             return date;
         
         Calendar cal = Calendar.getInstance();
@@ -552,7 +549,7 @@ public class OrderDailyBreaker {
         
         StorePaymentConfig storePaymentConfig = paymentManager.getStorePaymentConfiguration(order.getPaymentApplicationId());
         
-        if (ignoreConfig) {
+        if (filter.ignoreConfig) {
             storePaymentConfig = new StorePaymentConfig();
             storePaymentConfig.offsetAccountingId_prepayment = "1";
             storePaymentConfig.offsetAccountingId_accrude = "2";

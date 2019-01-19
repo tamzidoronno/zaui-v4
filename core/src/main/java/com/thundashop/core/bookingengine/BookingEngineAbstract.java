@@ -22,6 +22,8 @@ import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.department.Department;
+import com.thundashop.core.department.DepartmentManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
@@ -57,6 +59,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     
     @Autowired
     public UserManager userManager;
+    
+    @Autowired
+    public DepartmentManager departmentManager;
     
     public static ArrayList<String> usingNewSystem = new ArrayList();
     public static ArrayList<String> usingNewSystem2 = new ArrayList();
@@ -1501,5 +1506,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     @Override
     public Booking getActiveBookingOnBookingItem(String bookingItemId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void changeDepartmentOnType(String bookingItemTypeId, String departmentId) {
+        BookingItemType type = getBookingItemType(bookingItemTypeId);
+        Department department = departmentManager.getDepartment(departmentId);
+        
+        if (department != null) {
+            type.departmentId = departmentId;
+            saveObject(type);
+        }
     }
 }

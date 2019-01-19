@@ -1,0 +1,30 @@
+<?
+/* @var $this ns_d3bd5a9e_2e8d_4992_b6c4_aacec6ae284e\SettingsDepartments */
+$departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
+
+?>
+
+<div class='header'>
+    <h2><? echo $this->__f("Departments"); ?></h2>
+    <? 
+    echo $this->__f("If your company has multiple departments, then there are a good chance you want to segregate the data depending on what departments they are created from. You can connect salespoints to the different departments, and room categories can be connected to a department.");
+    ?>
+</div>
+
+<?
+if (!count($departments)) {
+    echo "<h2 style='margin-left: 50px;'>".$this->__f("No departments created yet")."</h2>";
+    return;
+}
+
+echo "<h2 style='margin-left: 50px;'>".$this->__f("Your departments")."</h2>";
+foreach ($departments as $department) {
+    ?>
+    <div class='row'>
+        <div class='col'><i class='gs_shop_small_icon fa fa-trash' gsclick='deleteDepartment' departmentid='<? echo $department->id; ?>'></i></div>
+        <div class='col'><? echo $department->name; ?></div>
+    </div>
+    <?
+}
+
+?>

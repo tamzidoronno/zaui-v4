@@ -19,6 +19,7 @@ import com.thundashop.core.epay.EpayManager;
 import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
+import com.thundashop.core.getshopaccounting.DayIncomeFilter;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
@@ -2675,14 +2676,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getDayIncomes(Date start, Date end) {
-        return getDayIncomesInternal(start, end, false);
+        DayIncomeFilter filter = new DayIncomeFilter();
+        filter.start = start;
+        filter.end = end;
+        filter.ignoreConfig = false;
+        
+        return getDayIncomesInternal(filter);
     }
 
-    private List<DayIncome> getDayIncomesInternal(Date start, Date end, boolean ignoreConfig) {
-        List<DayIncome> dayIncomes = getReports(start, end);
+    private List<DayIncome> getDayIncomesInternal(DayIncomeFilter filter) {
+        List<DayIncome> dayIncomes = getDayIncomesFromDatabase(filter.start, filter.end);
         dayIncomes.stream().forEach(o -> o.isFinal = true);
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), start, end, paymentManager, productManager, ignoreConfig, getOrderManagerSettings().whatHourOfDayStartADay, this);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2698,8 +2704,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newlyBrokenIncome.addAll(dayIncomes);
         
         newlyBrokenIncome.removeIf(o -> {
-            long startL = start.getTime();
-            long endL = end.getTime() + (1000*60*60*24);
+            long startL = filter.start.getTime();
+            long endL = filter.end.getTime() + (1000*60*60*24);
             boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
             return !completlyWithin;
         });
@@ -2711,7 +2717,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return newlyBrokenIncome;
     }
 
-    private List<DayIncome> getReports(Date startDate, Date endDate) {
+    private List<DayIncome> getDayIncomesFromDatabase(Date startDate, Date endDate) {
         long start = startDate.getTime();
         long end = endDate.getTime();
         
@@ -2775,9 +2781,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Date start = order.rowCreatedDate;
         Date end = order.rowCreatedDate;
         
+        DayIncomeFilter filter = new DayIncomeFilter();
+        filter.start = start;
+        filter.end = end;
+        
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, start, end, paymentManager, productManager, false, getOrderManagerSettings().whatHourOfDayStartADay, this);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -3254,8 +3264,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return false;
     }
 
-    public List<DayIncome> getDayIncomesIgnoreConfig(Date start, Date end) {
-        return getDayIncomesInternal(start, end, true);
+    public List<DayIncome> getDayIncomesIgnoreConfig(DayIncomeFilter filter) {
+        filter.ignoreConfig = true;
+        return getDayIncomesInternal(filter);
     }
 
     @Override

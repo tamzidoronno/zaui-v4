@@ -1656,6 +1656,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (hasNoBookings()) {
             return new PmsStatistics();
         }
+        
+        // We change the filter types to only use the ones connected to the departments.
+        if (filter.departmentIds != null && !filter.departmentIds.isEmpty()) {
+            for(String departmentId : filter.departmentIds) {
+                List<String> allProductIdsForDepartment = bookingEngine.getBookingItemTypes().stream()
+                        .filter(o -> o.departmentId != null && o.departmentId.equals(departmentId))
+                        .map(o -> o.id)
+                        .collect(Collectors.toList());
+                
+                filter.typeFilter.addAll(allProductIdsForDepartment);
+            }
+        }
+
         if (!filter.includeNonBookable && filter.typeFilter.isEmpty()) {
             List<BookingItemType> types = bookingEngine.getBookingItemTypes();
             for (BookingItemType type : types) {
@@ -1664,7 +1677,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-
+        
         convertTextDates(filter);
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);

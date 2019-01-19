@@ -54,6 +54,7 @@ public class CartItem implements Serializable, Cloneable {
     public boolean disabled = false;
     public String addedByGetShopModule = "";
     public String pmsBookingId = "";
+    public String departmentId = "";
     private List<ProductPriceOverride> overridePriceHistory = new ArrayList();
     
     @Transient

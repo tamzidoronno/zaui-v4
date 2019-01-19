@@ -84,6 +84,11 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
                 $res .= "<i class='fa fa-$icon' title='".$acc->title."'></i> ";
             }
         }
+        
+        if ($type->departmentId) {
+            $res .= "<br/><b>Department:</b> ".$this->getApi()->getDepartmentManager()->getDepartment($type->departmentId)->name;
+        }
+        
         return $res;
     }
     
@@ -240,6 +245,8 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $product = $this->getApi()->getProductManager()->getProduct($type->productId);
         $product->taxgroup = $_POST['data']['tax'];
         $this->getApi()->getProductManager()->saveProduct($product);
+        
+        $this->getApi()->getBookingEngine()->changeDepartmentOnType($this->getSelectedMultilevelDomainName(), $type->id, $_POST['data']['department']);
         
     }
     

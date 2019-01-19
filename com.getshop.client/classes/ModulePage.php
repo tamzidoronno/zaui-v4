@@ -61,6 +61,10 @@ class ModulePage {
             return $this->getTopMenuInvoicing();
         }
         
+        if ($this->module == "settings") {
+            return $this->getSettingsMenu();
+        }
+        
     }
 
     /**
@@ -366,6 +370,15 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("All", "allinvoices", "gsicon-receipt");
         $menu->entries[] = new ModulePageMenuItem("Incomes", "incomes", "fa-dollar");
         $menu->entries[] = new ModulePageMenuItem("Products", "products", "gsicon-basket");
+        return $menu;
+    }
+
+    public function getSettingsMenu() {
+        $menu = new \ModulePageMenu("settings");
+        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Departments", "departments", "gsicon-site-map");
+        $menu->entries[] = new ModulePageMenuItem("Segments", "segments", "gsicon-make-group");
+        $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "gsicon-gs-gears");
         return $menu;
     }
 

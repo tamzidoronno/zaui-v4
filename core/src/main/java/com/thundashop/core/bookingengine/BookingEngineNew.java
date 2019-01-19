@@ -22,6 +22,8 @@ import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.department.Department;
+import com.thundashop.core.department.DepartmentManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
@@ -55,6 +57,9 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     
     @Autowired
     public UserManager userManager;
+    
+    @Autowired
+    public DepartmentManager departmentManager;
     
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, BookingItem> items = new HashMap();
@@ -1069,5 +1074,16 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
                 .filter(b -> b.isCurrentlyActive())
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void changeDepartmentOnType(String bookingItemTypeId, String departmentId) {
+        BookingItemType type = getBookingItemType(bookingItemTypeId);
+        Department department = departmentManager.getDepartment(departmentId);
+        
+        if (department != null) {
+            type.departmentId = departmentId;
+            saveObject(type);
+        }
     }
 }

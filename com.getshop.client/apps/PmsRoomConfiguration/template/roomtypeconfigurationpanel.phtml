@@ -12,6 +12,7 @@ $readable = $this->getFactory()->getLanguageReadable();
 $product = $this->getApi()->getProductManager()->getProduct($type->productId);
 $taxes = $this->getApi()->getProductManager()->getTaxes();
 $systemCategories = $this->getTypeSystemCategories();
+$departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
 ?>
 <div gstype='form' method='saveTypeSettings'>
     <input type='hidden' gsname='id' value='<?php echo $id; ?>'>
@@ -104,7 +105,24 @@ $systemCategories = $this->getTypeSystemCategories();
             }
             ?>
         </select>
-    </div>
+    
+        <?
+        if (count($departments)) {
+        ?>
+            <br/><br/><b>Department: </b>
+            <select gsname='department' class="gsniceselect1">
+                <?php
+                echo "<option value=''>Not selected</option>";
+                
+                foreach($departments as $department) {
+                    $selected = $type->departmentId == $department->id ? "selected='true'" : "";
+                    echo "<option value='" . $department->id . "' $selected>" . $department->name . "</option>";
+                }
+                ?>
+            </select>
+        <?
+        }
+        ?>
     <div style='text-align:right;padding-top: 20px;'>
         <input type='button' style='padding:9px; width: 200px;' gstype='submit' value='Save'>
     </div>

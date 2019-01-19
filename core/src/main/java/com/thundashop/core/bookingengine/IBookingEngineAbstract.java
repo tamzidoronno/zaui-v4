@@ -75,4 +75,6 @@ public interface IBookingEngineAbstract {
     public List<TimeRepeaterData> getOpeningHours(String typeId);
     public void deleteOpeningHours(String repeaterId);
     public Booking getActiveBookingOnBookingItem(String bookingItemId);
+
+    public void changeDepartmentOnType(String bookingItemTypeId, String departmentId);
 }

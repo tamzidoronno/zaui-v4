@@ -55,5 +55,7 @@ public class BookingItemType extends DataCommon {
     
     //0 = default hotel room, 1 = conference room, 2 = restaurant
     public Integer systemCategory = 0;
+    
+    public String departmentId = "";
 
 }

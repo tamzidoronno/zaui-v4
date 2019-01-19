@@ -14,7 +14,7 @@ public class StartBookingResult {
     public boolean supportPayLaterButton = false;
     public List<String> supportedPaymentMethods = new ArrayList();
     String prefilledContactUser = "";
-    
+
     public List<RoomsSelected> getRoomsSelected() {
         List<RoomsSelected> res = new ArrayList();
         for(BookingProcessRooms room : rooms) {

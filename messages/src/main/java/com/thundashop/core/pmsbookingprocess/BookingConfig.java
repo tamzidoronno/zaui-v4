@@ -18,4 +18,6 @@ public class BookingConfig {
     public String currencyText = "NOK";
     public String defaultCheckinTime = "";
     public boolean startYesterday = false;
+    public boolean ignoreGuestInformation = false;
+    public boolean doNotRecommendBestPrice = false;
 }

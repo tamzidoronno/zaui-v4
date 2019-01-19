@@ -139,47 +139,76 @@ class PmsReport extends \MarketingApplication implements \Application {
     }
 
     public function downloadCoverageReport() {
+        $channels = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
+        $sheets = array();
+        $sheets['useMultipleSheets'] = "true";
+        
+        $newChans = array();
+        $newChans[''] = "Total";
+        foreach($channels as $chan => $text) {
+            $newChans[$chan] = $text;
+        }
+        $channels = $newChans;
+        
+
+        $pmssearchbox = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
+        $chnls = $pmssearchbox->getChannels();        
+        $chnls[""] = "Total";
+        
+        $haederSet = false;
         $filter = $this->getCoverageFilter();
-         $data = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
-         $rows = array();
-         $header = array();
-         $header[] = "Date";
-         $header[] = "Available";
-         $header[] = "Rented out";
-         $header[] = "Arrivals";
-         $header[] = "Departures";
-         $header[] = "Guests";
-         $header[] = "Avg. Price total";
-         $header[] = "Avg. Price billed";
-         $header[] = "Revpar";
-         $header[] = "Total";
-         $header[] = "Billed";
-         $header[] = "Remaining";
-         $header[] = "Coverage";
-         $rows[] = $header;
-         
-         foreach($data->entries as $d) {
-             $row = array();
-             if($d->date) {
-                 $row[] = date("d/m/Y", strtotime($d->date));
-             } else {
-                 $row[] = "";
-             }
-             $row[] = $d->spearRooms;
-             $row[] = $d->roomsRentedOut;
-             $row[] = $d->arrivals;
-             $row[] = $d->departures;
-             $row[] = $d->guestCount;
-             $row[] = $d->avgPriceForcasted;
-             $row[] = $d->avgPrice;
-             $row[] = $d->revPar;
-             $row[] = $d->totalForcasted;
-             $row[] = $d->totalPrice;
-             $row[] = $d->totalRemaining;
-             $row[] = $d->coverage;
-             $rows[] = $row;
-         }
-         echo json_encode($rows);
+        foreach($channels as $chan => $text) {
+            $chanName = "unkown";
+            if(isset($chnls[$chan])) {
+                $chanName = $chnls[$chan];
+            }
+
+            
+            $filter->channel = $chan;
+            $data = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
+            $rows = array();
+            $header = array();
+            $header[] = "Date";
+            $header[] = "Available";
+            $header[] = "Rented out";
+            $header[] = "Arrivals";
+            $header[] = "Departures";
+            $header[] = "Guests";
+            $header[] = "Avg. Price total";
+            $header[] = "Avg. Price billed";
+            $header[] = "Revpar";
+            $header[] = "Total";
+            $header[] = "Billed";
+            $header[] = "Remaining";
+            $header[] = "Coverage";
+            $rows[] = $header;
+
+            foreach($data->entries as $d) {
+                $row = array();
+                if($d->date) {
+                    $row[] = date("d/m/Y", strtotime($d->date));
+                } else {
+                    $row[] = "";
+                }
+                $row[] = $d->spearRooms;
+                $row[] = $d->roomsRentedOut;
+                $row[] = $d->arrivals;
+                $row[] = $d->departures;
+                $row[] = $d->guestCount;
+                $row[] = $d->avgPriceForcasted;
+                $row[] = $d->avgPrice;
+                $row[] = $d->revPar;
+                $row[] = $d->totalForcasted;
+                $row[] = $d->totalPrice;
+                $row[] = $d->totalRemaining;
+                $row[] = $d->coverage;
+                $rows[] = $row;
+            }
+            
+            
+            $sheets[$chanName] = $rows;
+        }
+         echo json_encode($sheets);
     }
     
     public function downloadAccountingReport() {

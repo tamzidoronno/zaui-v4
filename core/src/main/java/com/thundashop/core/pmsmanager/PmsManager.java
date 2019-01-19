@@ -9114,7 +9114,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for (PmsBookingAddonItem item : room.addons) {
                 if (item.productId.equals(productId)) {
                     if(avoidProductInStayPeriode) {
-                        if((room.date.start.after(item.date) || room.date.end.before(item.date)) && !PmsBookingRooms.isSameDayStatic(item.date, room.date.start)) {
+                        boolean isDailyAndOnCheckoutDate = (!item.isSingle && PmsBookingRooms.isSameDayStatic(item.date, room.date.end));
+                        if((isDailyAndOnCheckoutDate || room.date.start.after(item.date) || room.date.end.before(item.date)) && !PmsBookingRooms.isSameDayStatic(item.date, room.date.start)) {
                             toRemove.add(item);
                         }
                     } else {

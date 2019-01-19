@@ -233,7 +233,7 @@ class PmsSearchBookingColumnFormatters {
         return "<i class='gsicon-chevrons-expand-vertical'></i>";
     }
     
-    private function createAddonText($room) {
+    public function createAddonText($room, $plaintext = false) {
         $products = $this->pmsSearchBooking->getAllProducts();
         $typesAdded = array();
         $iconsAdded = array();
@@ -270,9 +270,17 @@ class PmsSearchBookingColumnFormatters {
                 if(isset($iconsAdded[$addon->productId]) && $iconsAdded[$addon->productId]) {
                     $acronym = "<i class='fa fa-" . $iconsAdded[$addon->productId] . "'></i>";
                 }
-                $res[] = "<span title='$title' style='cursor:pointer;'>$acronym</span>";
+                if($plaintext) {
+                    $res[] = $title;
+                } else {
+                    $res[] = "<span title='$title' style='cursor:pointer;'>$acronym</span>";
+                }
             } else {
-                $res[] = "<span title='$title' style='cursor:pointer;'>(deleted product)</span>";
+                if($plaintext) {
+                    $res[] = "(deleted product)";
+                } else {
+                    $res[] = "<span title='$title' style='cursor:pointer;'>(deleted product)</span>";
+                }
             }
         }
         $text = "";

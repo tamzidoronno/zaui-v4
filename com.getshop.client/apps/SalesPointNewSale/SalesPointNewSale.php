@@ -53,6 +53,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             echo "</div>";
         echo "</div>";
         
+        $this->showPaymentIfInProgress();
     }
 
     /**
@@ -311,6 +312,13 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         }
         
         $this->getApi()->getPosManager()->addGiftCardToTab($tab->id, $_POST['data']['value']);
+    }
+    
+    public function showPaymentIfInProgress() {
+        if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment']) && $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment']) {
+            $_SESSION['gs_error_message_payment'] = $this->__f("Please complete the payment or cancel it");
+            echo "<script>$('.startpaymentbutton').click();</script>";
+        }
     }
 }
 ?>

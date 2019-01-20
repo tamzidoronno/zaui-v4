@@ -702,6 +702,15 @@ public class PmsBooking extends DataCommon {
         return this.channel.equals(channelToCheck);
     }
 
+    boolean isStarted() {
+        for(PmsBookingRooms r : rooms) {
+            if(r.isStarted()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

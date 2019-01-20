@@ -162,6 +162,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         cfilter.incTaxes = false;
         cfilter.channel = filter.channel;
         cfilter.departmentIds = filter.departmentIds;
+        cfilter.segments = filter.segments;
         if(filter.customers != null && !filter.customers.isEmpty()) {
             cfilter.userIds.addAll(filter.customers);
         }
@@ -204,6 +205,17 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         List<PmsBooking> allbookings = pmsManager.getAllBookingsUnfinalized();
         HashMap<String,Integer> orderIdMap = new HashMap();
         for(PmsBooking booking : allbookings) {
+
+            if(!filter.segments.isEmpty()) {
+                if(!booking.segmentId.isEmpty() && !filter.segments.contains(booking.segmentId)) {
+                    continue;
+                }
+                if(booking.segmentId.isEmpty() && !filter.segments.contains("none")) {
+                    continue;
+                }
+            }
+        
+            
             if(booking.isChannel(filter.channel)) {
                 for(String orderId : booking.orderIds) {
                     if(!filter.orderIds.contains(orderId)) {
@@ -222,6 +234,9 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     private void includeLostOrders(List<DayIncome> toinclude, CoverageAndIncomeReportFilter filter) {
         if(filter.channel != null && (!filter.channel.equals("web") || filter.channel.equals("")) && !filter.channel.isEmpty()) {
+            return;
+        }
+        if(!filter.segments.isEmpty()) {
             return;
         }
         for(DayIncome income : toinclude) {
@@ -337,6 +352,9 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     public void recalculateSegments(String segmentId) {
         List<PmsBooking> bookings = pmsManager.getAllBookings(null);
         for(PmsBooking booking : bookings) {
+            if(booking.segmentId != null && !booking.segmentId.isEmpty()) {
+                continue;
+            }
             PmsSegment segment = getSegmentForBooking(booking.id);
             if(segment != null && segment.id.equals(segmentId)) {
                 booking.segmentId = segment.id;
@@ -344,5 +362,6 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             }
         }
     }
+
 
 }

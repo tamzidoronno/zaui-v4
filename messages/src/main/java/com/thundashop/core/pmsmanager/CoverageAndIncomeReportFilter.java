@@ -15,5 +15,6 @@ public class CoverageAndIncomeReportFilter {
     public List<String> orderIds = new ArrayList();
     public List<String> ignoreOrderIds = new ArrayList();
     public List<String> allProducts = new ArrayList();
+    public List<String> segments = new ArrayList();
 
 }

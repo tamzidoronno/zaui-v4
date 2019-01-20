@@ -94,6 +94,7 @@ public class PmsBookingFilter extends DataCommon {
     public List<String> typeFilter = new ArrayList();
     public List<String> itemFilter = new ArrayList();
     public List<String> departmentIds = new ArrayList();
+    public List<String> segments = new ArrayList();
     public String filterName = "";
     boolean fromPms = false;
 

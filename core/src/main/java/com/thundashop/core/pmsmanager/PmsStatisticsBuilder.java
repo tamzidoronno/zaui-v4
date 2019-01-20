@@ -90,6 +90,12 @@ class PmsStatisticsBuilder {
                     continue;
                 }
                 
+                if(!filter.segments.isEmpty()) {
+                    if(!filter.segments.contains(booking.segmentId) && !filter.segments.contains("none") && !booking.segmentId.isEmpty()) {
+                        continue;
+                    }
+                }
+                
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(((!booking.payedFor && !invoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) && !filter.includeVirtual) && room.isEnded()) {
                         if(room.isActiveOnDay(cal.getTime())) {

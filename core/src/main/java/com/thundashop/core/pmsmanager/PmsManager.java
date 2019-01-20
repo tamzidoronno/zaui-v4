@@ -1006,6 +1006,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
+        
+        PmsBooking oldBooking = bookings.get(booking.id);
+        if(oldBooking != null) {
+            if(!oldBooking.segmentId.isEmpty() && !booking.segmentId.isEmpty() && !booking.segmentId.equals(oldBooking.segmentId)) {
+                if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
+                    //Do no allow changing segment on booking day after it has started.
+                    throw new ErrorException(1058);
+                }
+            }
+        }
+        
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }

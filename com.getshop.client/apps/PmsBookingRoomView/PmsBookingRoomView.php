@@ -40,6 +40,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
     
+    public function segmentDiscountCode() {
+        $segment = $_POST['data']['segment'];
+        $booking = $this->getPmsBooking();
+        $booking->segmentId = $segment;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function deleteWaitingListRoom() {
         $id = $_POST['data']['id'];
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $id);

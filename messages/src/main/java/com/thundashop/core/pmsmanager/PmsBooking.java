@@ -105,6 +105,7 @@ public class PmsBooking extends DataCommon {
      * in the checklist of tasks to do.
      */
     public boolean ignoreUnsettledAmount = false;
+    public String segmentId = "";
     
     public Double getTotalPrice() {
         return totalPrice;

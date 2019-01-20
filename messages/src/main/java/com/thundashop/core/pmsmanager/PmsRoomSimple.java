@@ -45,6 +45,7 @@ public class PmsRoomSimple implements Serializable {
     public boolean checkedOut;
     public boolean keyIsReturned = false;
     public boolean testReservation = false;
+    public String segmentName = "";
     public Integer numberOfRoomsInBooking = 0;
     public Date regDate;
     public Date invoicedTo;

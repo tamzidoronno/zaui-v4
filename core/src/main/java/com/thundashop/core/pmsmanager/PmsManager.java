@@ -210,7 +210,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private GdsManager gdsManager;
     
     @Autowired
-    private PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
+    public PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
     
     @Autowired
     private PmsNotificationManager pmsNotificationManager;
@@ -582,6 +582,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         verifyPhoneOnBooking(booking, true);
         booking.deleted = null;
         booking.completedDate = new Date();
+        PmsSegment segment = pmsCoverageAndIncomeReportManager.getSegmentForBooking(booking.id);
+        if(segment != null) {
+            booking.segmentId = segment.id;
+        }
         setSameAsBookerIfNessesary(booking);
         saveBooking(booking);
         feedGrafana(booking);

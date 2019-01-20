@@ -842,7 +842,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
         }
         
-        $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($filter);
+        $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $result = $data->entries;
         if(!$convertToExcelDate) {
             $this->printUsersTotal((array)$data->usersTotal);

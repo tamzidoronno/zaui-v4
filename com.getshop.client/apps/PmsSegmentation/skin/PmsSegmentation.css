@@ -1,0 +1,4 @@
+.PmsSegmentation .GetShopModuleTable { max-width: 100%; }
+.PmsSegmentation .GetShopModuleTable .col { width: 100px; }
+.PmsSegmentation .GetShopModuleTable .col_4 { width: 400px; }
+.PmsSegmentation .GetShopModuleTable .col_5 { width: calc(100% - 650px); }

@@ -26,7 +26,8 @@
     right: 10px;
     top: 10px;
 }
-.PmsBookingRoomView .bookinginfoarea .col { width: 45% !important; }
+.PmsBookingRoomView .bookinginfoarea .col.col1 { width: 40% !important; }
+.PmsBookingRoomView .bookinginfoarea .col.col2 { width: 59% !important; }
 .PmsBookingRoomView .editaddonpanel { z-index: 2; }
 .PmsBookingRoomView .isgroupinformation { padding: 5px; background-color:#efefef; color:#4c4b4b; }
 .PmsBookingRoomView .isdeletedinformation { background-color:red; color:#fff; padding: 5px; padding-left: 10px; }

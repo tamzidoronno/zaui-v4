@@ -157,6 +157,10 @@ public class PmsBookingSimpleFilter {
         simple.requestedEndDate = room.requestedEndDate;
         simple.userId = booking.userId;
         simple.language = room.language;
+        simple.segmentName = "";
+        if(booking.segmentId != null && !booking.segmentId.isEmpty()) {
+            simple.segmentName = manager.pmsCoverageAndIncomeReportManager.getSegment(booking.segmentId).name;
+        }
         if(simple.language == null || simple.language.isEmpty()) {
             simple.language = booking.language;
         }

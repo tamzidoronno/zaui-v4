@@ -9,6 +9,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
+import com.thundashop.core.getshopaccounting.DayIncomeFilter;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,9 +63,24 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     public IncomeReportResultData getStatistics(CoverageAndIncomeReportFilter filter) {
         IncomeReportResultData toReturn = new IncomeReportResultData();
         LinkedList<IncomeReportDayEntry> res = new LinkedList();
-        List<DayIncome> toinclude = orderManager.getDayIncomesIgnoreConfig(filter.start, filter.end);
+        
+        DayIncomeFilter dayIncomeFilter = new DayIncomeFilter();
+        dayIncomeFilter.start = filter.start;
+        dayIncomeFilter.end = filter.end;
+        
+        List<DayIncome> toinclude = orderManager.getDayIncomesIgnoreConfig(dayIncomeFilter);
         usersTotal = new HashMap();
         List<Product> products = productManager.getAllProducts();
+        List<Product> productsOnDifferentTypes = productManager.getAllProducts();
+        
+        productsOnDifferentTypes.removeIf(o -> !filter.allProducts.contains(o.id));
+        products.removeIf(o -> !filter.allProducts.contains(o.id));
+        
+        if (!filter.products.isEmpty()) {
+            products.removeIf(o -> !filter.products.contains(o.id));
+        } 
+        
+        productsOnDifferentTypes.removeIf(o -> filter.products.contains(o.id));
         
         addOrderIdsForFilter(filter);
         includeLostOrders(toinclude, filter);
@@ -74,14 +91,14 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             IncomeReportDayEntry toadd = new IncomeReportDayEntry();
             toadd.day = income.start;
             for(Product prod : products) {
-                if(!filter.products.isEmpty()) {
-                    if(!filter.products.contains(prod.id)) {
-                        continue;
-                    }
-                }
-                BigDecimal totalforproduct = getTotalForProduct(income, prod.id, filter, toadd);
+                BigDecimal totalforproduct = getTotalForProduct(income, prod.id, filter, toadd.roomsPrice, toadd.products);
                 total = total.add(totalforproduct);
             }
+            
+            for(Product prod : productsOnDifferentTypes) {
+                getTotalForProduct(income, prod.id, filter, toadd.roomsPriceOnDifferentTypes, null);
+            }
+            
             toadd.total = total.doubleValue();
             res.add(toadd);
         }
@@ -90,7 +107,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         return toReturn;
     }
     
-    public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter, IncomeReportDayEntry toadd) {
+    public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter, LinkedHashMap<String, BigDecimal> toadd, LinkedHashMap<String, BigDecimal> products) {
         BigDecimal result = new BigDecimal(0);
         for(DayEntry entry : income.dayEntries) {
             if(!entry.isActualIncome || entry.isOffsetRecord) {
@@ -121,17 +138,21 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             addToUser(order.userId, amount);
             
             BigDecimal roomPriceAmount = new BigDecimal(0);
-            if(item.getProduct().externalReferenceId != null && toadd.roomsPrice.containsKey(item.getProduct().externalReferenceId)) {
-                roomPriceAmount = toadd.roomsPrice.get(item.getProduct().externalReferenceId);
+            if(item.getProduct().externalReferenceId != null && toadd.containsKey(item.getProduct().externalReferenceId)) {
+                roomPriceAmount = toadd.get(item.getProduct().externalReferenceId);
             }
             roomPriceAmount = roomPriceAmount.add(amount);
             
-            toadd.roomsPrice.put(item.getProduct().externalReferenceId, roomPriceAmount);
-            
+            toadd.put(item.getProduct().externalReferenceId, roomPriceAmount);
         }
-        BigDecimal res = result.multiply(new BigDecimal(-1));
-        toadd.products.put(productId, res);
-        return res;
+        
+        if (products != null) {
+            BigDecimal res = result.multiply(new BigDecimal(-1));
+            products.put(productId, res);
+            return res;
+        }
+        
+        return BigDecimal.ZERO;
     }
 
     void setTotalFromNewCoverageIncomeReport(PmsStatistics result, PmsBookingFilter filter) {
@@ -140,6 +161,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         cfilter.end = filter.endDate;
         cfilter.incTaxes = false;
         cfilter.channel = filter.channel;
+        cfilter.departmentIds = filter.departmentIds;
         if(filter.customers != null && !filter.customers.isEmpty()) {
             cfilter.userIds.addAll(filter.customers);
         }
@@ -152,6 +174,10 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             for(BookingItemType type : BookingEngine.getBookingItemTypes()) {
                 cfilter.products.add(type.productId);
             }
+        }
+        
+        for(BookingItemType type : BookingEngine.getBookingItemTypes()) {
+            cfilter.allProducts.add(type.productId);
         }
         
         IncomeReportResultData data = getStatistics(cfilter);
@@ -222,6 +248,16 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         entry.roomsPrice.clear();
         for(String key : dayEntry.roomsPrice.keySet()) {
             entry.roomsPrice.put(key, dayEntry.roomsPrice.get(key).doubleValue()*-1);
+            if(!entry.roomsIncluded.contains(key)) {
+                entry.roomsIncluded.add(key);
+                entry.roomsPriceForecasted.put(key, 0.0);
+                entry.roomsNotOnSameDay.add(key);
+            }
+        }
+        
+        entry.roomsPriceOnDifferentTypes.clear();
+        for(String key : dayEntry.roomsPriceOnDifferentTypes.keySet()) {
+            entry.roomsPriceOnDifferentTypes.put(key, dayEntry.roomsPriceOnDifferentTypes.get(key).doubleValue()*-1);
             if(!entry.roomsIncluded.contains(key)) {
                 entry.roomsIncluded.add(key);
                 entry.roomsPriceForecasted.put(key, 0.0);

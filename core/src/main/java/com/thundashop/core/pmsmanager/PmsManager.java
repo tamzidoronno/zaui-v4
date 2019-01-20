@@ -1660,6 +1660,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (hasNoBookings()) {
             return new PmsStatistics();
         }
+        
+        // We change the filter types to only use the ones connected to the departments.
+        if (filter.departmentIds != null && !filter.departmentIds.isEmpty()) {
+            for(String departmentId : filter.departmentIds) {
+                List<String> allProductIdsForDepartment = bookingEngine.getBookingItemTypes().stream()
+                        .filter(o -> o.departmentId != null && o.departmentId.equals(departmentId))
+                        .map(o -> o.id)
+                        .collect(Collectors.toList());
+                
+                filter.typeFilter.addAll(allProductIdsForDepartment);
+            }
+        }
+
         if (!filter.includeNonBookable && filter.typeFilter.isEmpty()) {
             List<BookingItemType> types = bookingEngine.getBookingItemTypes();
             for (BookingItemType type : types) {
@@ -1668,7 +1681,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-
+        
         convertTextDates(filter);
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
@@ -9488,5 +9501,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 g.prefix = user.prefix;
             }
         }
+    }
+
+    @Override
+    public List<PmsBooking> getBookingsWithUnsettledAmountBetween(Date start, Date end) {
+        List<PmsBooking> bookingsInPeriode = bookings.values()
+                .stream()
+                .flatMap(b -> b.rooms.stream())
+                .filter(o -> {
+                    Booking b = bookingEngine.getBooking(o.bookingId);
+                    return b != null && b.within(start, end);
+                })
+                .map(room -> getBookingFromRoom(room.pmsBookingRoomId))
+                .map(room -> getBooking(room.id))
+                .filter(b -> b.unsettled > 0.005 || b.unsettled < -0.005)
+                .distinct()
+                .collect(Collectors.toList());
+        
+        return bookingsInPeriode;
     }
 }

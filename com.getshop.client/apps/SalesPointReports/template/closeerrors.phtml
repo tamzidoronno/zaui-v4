@@ -1,0 +1,43 @@
+<?
+/* @var $this ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$closeResult = $this->getCloseResult();
+
+if ($closeResult->canClose) {
+    return;
+}
+?>
+
+<div class="closewarnings">
+    <h2><? echo $this->__("Can not close due to the following problem(s)"); ?></h2>
+    <?
+    
+    if ($closeResult->fReportErrorCount > 0) {
+        ?>
+        <div class="row error_row">
+            <div class="col col_bookingnumber"><? echo $this->__f("You have products etc that is not configured properly, please check module accounting, then f-report. "); ?></div>
+        </div>
+        <?
+    }
+    
+    foreach ($closeResult->bookingsWithProblems as $pmsBooking) {
+        ?>
+        <div class="row error_row">
+            <div class="col col_bookingnumber"><? echo $this->__f("The booking with id ")." ".$pmsBooking->incrementBookingId." ".$this->__f("has an unsettled amount").": ".$pmsBooking->unsettled; ?></div>
+            <div class="rooms">
+                <?
+                echo "<b>".$this->__f("Rooms").":</b>";
+                foreach ($pmsBooking->rooms as $pmsSelectedRoom) {
+                    $totalOnRoom = round($pmsSelectedRoom->totalCost);
+                    $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
+                    $unsettledRoom = round($totalOnRoom - $totalOrdersRoom);
+                    $firstGuest = $pmsSelectedRoom->guests[0];
+                    echo '<div><i class="gs_shop_small_icon fa fa-edit" '.'gs_show_modal="booking_room_view" onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid="'.$pmsBooking->id.'" roomid="'.$pmsSelectedRoom->pmsBookingRoomId.'"'.'title='.$this->__f("Open booking").'></i> '."$firstGuest->name / Amount: $unsettledRoom</div>";
+
+                }
+                ?>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

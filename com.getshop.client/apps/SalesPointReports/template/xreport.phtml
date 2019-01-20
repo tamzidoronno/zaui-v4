@@ -112,7 +112,7 @@ foreach ($ordersGrouped as $paymentType => $orders) {
 </div>
 
 <?
-if (!$this->isCurrentZReportASavedReport()) {
+if (!$this->isCurrentZReportASavedReport() && $this->canMakeZReport()) {
 ?>
     <div style="padding: 50px;">
         <div class="shop_button" gsclick="createZReport"><? echo $this->__f("Create ZReport"); ?></div>

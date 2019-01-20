@@ -142,3 +142,13 @@
     height: 50px;
     line-height: 50px;
 }
+
+.SalesPointTabPayment .usererror {
+    background-color: #d18400;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    color: #FFF;
+    box-sizing: border-box;
+}

@@ -136,4 +136,7 @@ public interface IBookingEngine {
     
     @Administrator
     public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType);
+    
+    @Administrator
+    public void changeDepartmentOnType(String bookingItemTypeId, String departmentId);
 }

@@ -25,6 +25,13 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         }
         
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'])) {
+            
+            if (isset($_SESSION['gs_error_message_payment'])) {
+                echo "<div class='usererror'>".$_SESSION['gs_error_message_payment']."</div>";;
+            }
+            
+            unset($_SESSION['gs_error_message_payment']);
+            
             $order = $this->getCurrentOrder(); 
             $paymentType = $order->payment->paymentType;
             $paymentTypeArr = explode('\\', $paymentType);
@@ -168,6 +175,12 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         
         if ($messages && count($messages)) {
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_last_terminal_message'] = end($messages);
+        }
+        
+        $order = $this->getCurrentOrder();
+        
+        if ($order->status == 7) {
+            $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_last_terminal_message'] = "completed";
         }
         
         $this->updateState();

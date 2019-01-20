@@ -319,6 +319,8 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule($module)) {
                     echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon APAC</div></a>";
                 } elseif (strtolower($module->name) == "invoicing") {
                     echo "<a class='gs_ignorenavigate' href='invoicing.php'><div class='gs_framework_module $moduleActiveClass'>$icon Invoicing</div></a>";
+                } elseif (strtolower($module->name) == "settings") {
+                    echo "<a class='gs_ignorenavigate' href='settings.php'><div class='gs_framework_module $moduleActiveClass'>$icon Settings</div></a>";
                 } elseif ($module->name == "Salespoint") {
                     echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon SalesPoint</div></a>";
                 } else {

@@ -17,7 +17,7 @@ echo $this->getLastTerminalMessage();
         <?
     }
     
-    if ($state == "failed") {
+    if ($state == "failed" || !$state) {
         unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment_state']);
         unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_last_terminal_message']);
         ?>

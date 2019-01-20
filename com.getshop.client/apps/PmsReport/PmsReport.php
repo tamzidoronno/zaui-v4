@@ -127,6 +127,11 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->includeNonBookableRooms = $_POST['data']['includenonbookable'] == "true";
         $filter->channel = $_POST['data']['channel'];
         $filter->view = $_POST['data']['view'];
+        $filter->departmentIds = array();
+        
+        if (isset($_POST['data']['departmentid']) && $_POST['data']['departmentid']) {
+            $filter->departmentIds[] = $_POST['data']['departmentid'];
+        }
         
         $filter->typeFilter = array();
         foreach($_POST['data'] as $key => $val) {
@@ -565,6 +570,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->fromPms = true;
         $filter->removeAddonsIncludedInRoomPrice = true;
         $filter->typeFilter = $typeFilter;
+        $filter->departmentIds = $selectedFilter->departmentIds;
         
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
@@ -828,6 +834,8 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
         $filter->incTaxes = false;
         $filter->channel = $selectedFilter->channel;
+        $filter->departmentIds = $selectedFilter->departmentIds;
+    
         if(isset($_POST['event']) && $_POST['event'] == "downloadIncomeReportIncTaxesNew") {
             $filter->incTaxes = true;
         }

@@ -23,6 +23,7 @@ public class StatisticsEntry {
     public HashMap<Integer, Integer> addonsCount = new HashMap();
     public HashMap<Integer, Double> addonsPrice = new HashMap();
     public HashMap<String, Double> roomsPrice = new HashMap();
+    public HashMap<String, Double> roomsPriceOnDifferentTypes = new HashMap();
     public HashMap<String, Double> roomsPriceForecasted = new HashMap();
     public HashMap<Integer, Double> addonsPriceEx = new HashMap();
     public HashMap<String, Double> roomsRemovedFromStatistics = new HashMap();

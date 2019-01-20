@@ -1,0 +1,62 @@
+
+.SettingsDepartments .leftmenu,
+.SettingsDepartments .workarea {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.SettingsDepartments .leftmenu {
+    width: 100px;
+    background-color: #23314e;
+    color: #FFF;
+    text-align: center;
+    min-height: calc(100% - 86px);
+}
+
+
+.SettingsDepartments .topmenu .entry,
+.SettingsDepartments .leftmenu .entry {
+    border-top: solid 1px #222;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+    font-size: 11px;
+    min-height: 46px;
+}
+
+.SettingsDepartments .topmenu .entry i,
+.SettingsDepartments .leftmenu .entry i {
+    display: block;
+    font-size: 25px;
+}
+
+.SettingsDepartments .leftmenu .entry.tabnotactive {
+    color: #888;
+}
+
+.SettingsDepartments .createNewDepartment {
+    margin: 50px;
+}
+
+.SettingsDepartments .header {
+    font-size: 16px;
+    padding: 50px;
+    padding-top: 30px;
+}
+
+.SettingsDepartments .workarea {
+    width: calc(100% - 120px);
+    box-sizing: border-box;
+    
+}
+
+.SettingsDepartments .row .col {
+    display: inline-block;
+}
+
+.SettingsDepartments .row {
+    padding: 10px;
+    padding-left: 50px;
+}

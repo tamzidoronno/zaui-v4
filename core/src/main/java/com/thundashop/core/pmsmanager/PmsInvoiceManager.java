@@ -980,6 +980,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return amount;
     }
 
+    private void setDepartmentId(CartItem item, String roomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
+        
+        if (booking != null) {
+            PmsBookingRooms room = booking.getRoom(roomId);
+            if (room != null) {
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                if (type != null) {
+                    item.departmentId = type.departmentId;
+                }
+            }
+        }
+    }
 
     class BookingOrderSummary {
         Integer count = 0;
@@ -2742,6 +2755,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.setCount(count);
         item.pmsBookingId = pmsManager.getBookingFromRoom(roomId).id;
         roomIdsInCart.add(roomId);
+        
+        setDepartmentId(item, roomId);
+        
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
         }

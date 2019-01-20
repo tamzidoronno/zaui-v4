@@ -56,10 +56,14 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             printFeedBack("A payment is already being processed");
             return;
         }
+        
+        clearMessages();
+        
         printFeedBack("Starting payment process");
         Order order = orderManager.getOrderSecure(orderId);
         
         if (order.isFullyPaid() || order.status == Order.Status.PAYMENT_COMPLETED) {
+            printFeedBack("completed");
             return;
         }
         
@@ -221,6 +225,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             return;
         }
         
+        printFeedBack("payment failed");
         VerifonePaymentApp app = activePaymentApps.get(terminalId);
         app.closeCom();
         orderToPay = null;

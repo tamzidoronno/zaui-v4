@@ -6,6 +6,7 @@
 package com.thundashop.core.pos;
 
 import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.CartManager;
@@ -16,6 +17,7 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.KitchenPrintMessage;
@@ -25,6 +27,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductList;
@@ -76,6 +79,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     
     @Autowired
     private GiftCardManager giftCardManager;
+    
+    @Autowired
+    private GetShopSessionScope scope;
     
     /**
      * Never access this variable directly! Always 
@@ -785,5 +791,53 @@ public class PosManager extends ManagerBase implements IPosManager {
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_MONTH, -1);
         orderManager.closeTransactionPeriode(cal.getTime());
+    }
+
+    @Override
+    public void deleteZReport(String zreportId, String password) {
+        if (password != null && password.equals("as9d08f90213841nkajsdfi2u3h4kasjdf")) {
+            ZReport report = zReports.remove(zreportId);
+
+            if (report != null) {
+                deleteObject(report);
+            }
+        }
+    }
+
+    @Override
+    public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName) {
+        boolean autoClose = orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport;
+        
+        CanCloseZReport canClose = new CanCloseZReport();
+        
+        if (!autoClose) {
+            return canClose;
+        }
+        
+        Date start = getDateWithOffset(getPreviouseZReportDate(), -1);
+        Date end = getDateWithOffset(new Date(), 0);
+        
+        List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
+        
+        canClose.fReportErrorCount = incomes.stream()
+                .filter(o -> o != null && o.errorMsg != null && !o.errorMsg.isEmpty())
+                .count();
+        
+        PmsManager pmsManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsManager.class);
+        canClose.bookingsWithProblems = pmsManager.getBookingsWithUnsettledAmountBetween(start, end);
+        
+        canClose.finalize();
+        return canClose;
+    }
+
+    private Date getDateWithOffset(Date date, int addDays) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR, orderManager.getOrderManagerSettings().whatHourOfDayStartADay);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_MONTH, addDays);
+        return cal.getTime();
     }
 }

@@ -88,7 +88,7 @@
 }
 
 .SalesPointReports .col_rowaction {
-    width: 60px;
+    width: 100px;
 }
 
 .SalesPointReports .reportheader {
@@ -106,4 +106,22 @@
     text-align: center;
     font-size: 20px;
     color: #FFF;
+}
+.SalesPointReports .closewarnings .row {
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+.SalesPointReports .closewarnings {
+    border: solid 1px red;
+    margin: 50px;
+    padding: 20px;
+}
+
+.SalesPointReports .closewarnings h2 {
+    color: red;
+}
+
+.SalesPointReports .closewarnings .row .rooms {
+    padding-top: 20px;
+    padding-left: 20px;
 }

@@ -155,6 +155,8 @@ class ModulePageMenu {
                 echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Apac</div></a>";
             } elseif (strtolower($module->name) == "invoicing") {
                 echo "<a class='gs_ignorenavigate' href='invoicing.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Invoicing</div></a>";
+            } elseif (strtolower($module->name) == "settings") {
+                echo "<a class='gs_ignorenavigate' href='settings.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Settings</div></a>";
             } else {
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
             }
@@ -229,6 +231,14 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Access Groups", "accessgroups", "fa fa-users");
         $menu->entries[] = new ModulePageMenuItem("Locks", "lockssetting", "fa fa-key");
         $menu->entries[] = new ModulePageMenuItem("General Settings", "gensettings", "fa fa-gears");
+        return $menu;
+    }
+
+    public static function getSettingsLeftMenu() {
+        $menu = new \ModulePageMenu();
+        $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "fa gsicon-gs-gears");
+        $menu->entries[] = new ModulePageMenuItem("User accounts", "useraccounts", "fa fa-user");
+        
         return $menu;
     }
 

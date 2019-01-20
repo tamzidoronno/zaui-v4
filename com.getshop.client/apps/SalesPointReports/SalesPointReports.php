@@ -71,7 +71,15 @@ class SalesPointReports extends \MarketingApplication implements \Application {
     }
     
     public function formatActivateButton($row) {
-        return "<div class='gs_shop_small_icon' gsclick='selectZReport' zreportid='$row->id'>".$this->__f("show")."</div>";
+        $retString = "";
+        
+        if (strstr(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress, "getshop.com")) {
+            $retString = '<i zreportid="'.$row->id.'" gs_precheck="app.SalesPointReports.getpassword" gsclick="deleteZReport" class="gs_shop_small_icon fa fa-trash"></i> ';
+        }
+        
+        $retString .= "<div class='gs_shop_small_icon' gsclick='selectZReport' zreportid='$row->id'>".$this->__f("show")."</div>";
+        
+        return $retString;
     }
     
     public function formatUser($row) {
@@ -131,5 +139,23 @@ class SalesPointReports extends \MarketingApplication implements \Application {
         return $name;
     }
 
+    /**
+     * @return \core_pos_CanCloseZReport
+     */
+    public function getCloseResult() {
+        return $this->closeResult;
+    }
+    
+    public function canMakeZReport() {
+        $this->closeResult = $this->getApi()->getPosManager()->canCreateZReport($this->getSelectedMultilevelDomainName());
+        $this->includefile("closeerrors");
+        return $this->closeResult->canClose;
+    }
+    
+    public function deleteZReport() {
+        
+    }
+
 }
 ?>
+

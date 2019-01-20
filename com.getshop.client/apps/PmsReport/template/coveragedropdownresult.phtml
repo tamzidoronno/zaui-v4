@@ -48,7 +48,7 @@
                         
                         $pricef = $entry->roomsPriceForecasted->{$room->pmsBookingRoomId};
                         
-                        if (!$pricef && !$price)
+                        if (!round($pricef) && !round($price))
                             continue;
                         
                         echo "<tr>";

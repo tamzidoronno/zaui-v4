@@ -216,7 +216,7 @@ public class OrderDailyBreaker {
                 entry.date = sdf.parse(dateString+" 09:00:00");
                 
                 if (order.overrideAccountingDate != null)
-                    entry.date = order.overrideAccountingDate;
+                    entry.date = calculateDate(order.overrideAccountingDate, entry);
         
                 entry.accountingNumber = getAccountingNumberForProduct(item, order);
                 entries.add(entry);
@@ -248,7 +248,7 @@ public class OrderDailyBreaker {
             entry.date = i.date;
             entry.isActualIncome = item.getProduct().isActuallyIncome();
             if (order.overrideAccountingDate != null)
-                entry.date = order.overrideAccountingDate;
+                entry.date = calculateDate(order.overrideAccountingDate, entry);
             entry.accountingNumber = getAccountingNumberForProduct(item, order);
             
             entries.add(entry);
@@ -268,7 +268,7 @@ public class OrderDailyBreaker {
         entry.date = order.rowCreatedDate;
         
         if (order.overrideAccountingDate != null)
-            entry.date = order.overrideAccountingDate;
+            entry.date = calculateDate(order.overrideAccountingDate, entry);
         
         entry.accountingNumber = getAccountingNumberForProduct(item, order);
         return entry;
@@ -416,7 +416,8 @@ public class OrderDailyBreaker {
         String result = getAccountingNumberForProduct(item.getProduct(), item.getProduct().id);
        
         if (result == null || result.isEmpty()) {
-            throw new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+item.getProduct().taxGroupObject.taxRate+"% )");
+            String taxGroupPercent = item.getProduct().taxGroupObject != null ? ""+item.getProduct().taxGroupObject.taxRate : "0";
+            throw new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+taxGroupPercent+"% )");
         }
         
         return result;
@@ -728,6 +729,13 @@ public class OrderDailyBreaker {
             dayEntry.isTaxTransaction = true;
             orderDayEntries.add(dayEntry);
         }
+    }
+
+    private Date calculateDate(Date overrideAccountingDate, DayEntry entry) {
+        if (entry.date.before(overrideAccountingDate))
+            return overrideAccountingDate;
+        
+        return entry.date;
     }
 
 }

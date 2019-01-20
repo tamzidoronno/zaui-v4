@@ -231,7 +231,7 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
         ?>
         <br/>
         <b style="color: red;"> The periode is closed, do accounting on the following day instead: </b>
-        <br/> <input class="gsniceinput1 overridedate" gsname="overridedate" value="<? echo date('m/d/Y'); ?> "/>
+        <br/> <input class="gsniceinput1 overridedate" gsname="overridedate" value="<? echo date('m/d/Y', strtotime($this->getApi()->getOrderManager()->getOrderManagerSettings()->closedTilPeriode)); ?> "/>
         <br/>
         <br/>
         

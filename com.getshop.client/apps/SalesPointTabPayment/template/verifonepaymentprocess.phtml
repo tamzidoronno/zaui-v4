@@ -12,7 +12,7 @@ echo $this->getLastTerminalMessage();
         ?>
         <div class="shop_button" gs_callback='app.SalesPointTabPayment.nullFunction' synchron="true" gsclick="cancelVerifonePayment"> <? echo $this->__f("Cancel payment process"); ?> </div>
         <script>
-            setTimeout(app.SalesPointTabPayment.fetchTerminalMessages, 400);
+            setTimeout(app.SalesPointTabPayment.getLastTerminalMessage, 400);
         </script>
         <?
     }

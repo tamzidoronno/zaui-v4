@@ -10,9 +10,17 @@ package com.thundashop.core.getshopaccounting;
  * @author ktonder
  */
 public class DailyIncomeException extends RuntimeException {
-
+    private String msg = "";
+    
     public DailyIncomeException(String message) {
         super(message);
+        this.msg = message;
     }
+
+    @Override
+    public String getMessage() {
+        return msg;
+    }
+    
     
 }

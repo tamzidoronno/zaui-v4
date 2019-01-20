@@ -424,7 +424,31 @@ class PageFactory {
         $page = new \ModulePage("reports", "salespoint");
         $row = $page->createRow();
         $row->addColumn("c20ea6e2-bc0b-4fe1-b92a-0c73b67aead7", "c565d07f-51bb-46ee-b006-6bf42940fcaf");
+        
+        $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
+        $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
+        $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+        $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
+        $page->addExtraApplications('e8fedc44-b227-400b-8f4d-52d52e58ecfe');    
+
+        
         $this->pages['reports'] = $page;
+        
+        // MODAL
+        $page = new \ModulePage("booking_room_view", "settings");
+        $page->createRow()->addColumn("f8cc5247-85bf-4504-b4f3-b39937bd9955", "0a7bd783-97d7-4e4f-a092-4023d94e4f02");
+        $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
+        $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
+        $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+        $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
+        $page->addExtraApplications('e8fedc44-b227-400b-8f4d-52d52e58ecfe');    
+        $this->pages['booking_room_view'] = $page;   
         
         $page = new \ModulePage("invoicing", "salespoint");
         $row = $page->createRow();

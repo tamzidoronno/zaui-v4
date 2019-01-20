@@ -2125,6 +2125,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         orderIds.stream().forEach(orderId -> { 
             Order order = getOrder(orderId);
             Order creditedOrder = createCreatditOrder(orderId, "ordermanager_merged_order"); 
+            creditedOrder.overrideAccountingDate = new Date();
             markAsPaid(orderId, new Date(), order.getPaidRest()); 
             markAsPaid(creditedOrder.id, new Date(), order.getPaidRest());
             order.closed = true;
@@ -2146,6 +2147,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder.payment = createPayment(paymentMethod);
         newOrder.invoiceNote = note;
         newOrder.createdBasedOnOrderIds = orderIds;
+        newOrder.overrideAccountingDate = new Date();
         
         if (newOrder.cart != null) {
             newOrder.cart.reference = "ordermanager_merged_order";
@@ -2914,6 +2916,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             saveObject(this.orderManagerSettings);
         }
         
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.orderManagerSettings.closedTilPeriode);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        
+        this.orderManagerSettings.closedTilPeriode = cal.getTime();
+                
         return this.orderManagerSettings;
     }
 
@@ -2930,7 +2940,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         Date closedDate = getOrderManagerSettings().closedTilPeriode;
-        
+
         Order order = (Order)data;
         Order oldOrder = null;
         
@@ -2952,7 +2962,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         stopIfOverrideDateConflictingClosedDate(order, closedDate, oldOrder);
         
-        if (order.overrideAccountingDate != null && order.overrideAccountingDate.after(closedDate) && !order.forcedOpen) {
+        if (order.overrideAccountingDate != null && (order.overrideAccountingDate.after(closedDate) || order.overrideAccountingDate.equals(closedDate)) && !order.forcedOpen) {
             return;
         }
         

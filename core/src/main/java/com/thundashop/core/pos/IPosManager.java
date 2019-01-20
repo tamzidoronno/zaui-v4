@@ -6,6 +6,7 @@
 package com.thundashop.core.pos;
 
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
@@ -112,6 +113,9 @@ public interface IPosManager {
     @Editor
     public void deleteView(String viewId);
     
+    @Administrator
+    public void deleteZReport(String zreportId, String password);
+    
     @Editor
     public List<PosTable> getTables();
     
@@ -153,4 +157,7 @@ public interface IPosManager {
     
     @Editor
     public void addGiftCardToTab(String tabId, double value);
+    
+    @Editor
+    public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName);
 }

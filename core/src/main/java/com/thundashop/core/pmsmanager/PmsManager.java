@@ -9497,4 +9497,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
     }
+
+    @Override
+    public List<PmsBooking> getBookingsWithUnsettledAmountBetween(Date start, Date end) {
+        List<PmsBooking> bookingsInPeriode = bookings.values()
+                .stream()
+                .flatMap(b -> b.rooms.stream())
+                .filter(o -> {
+                    Booking b = bookingEngine.getBooking(o.bookingId);
+                    return b != null && b.within(start, end);
+                })
+                .map(room -> getBookingFromRoom(room.pmsBookingRoomId))
+                .map(room -> getBooking(room.id))
+                .filter(b -> b.unsettled > 0.005 || b.unsettled < -0.005)
+                .distinct()
+                .collect(Collectors.toList());
+        
+        return bookingsInPeriode;
+    }
 }

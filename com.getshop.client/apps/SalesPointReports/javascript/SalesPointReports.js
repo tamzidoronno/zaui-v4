@@ -35,6 +35,13 @@ app.SalesPointReports = {
             addorder : incrementalorderid,
             password : password
         });
+    },
+    
+    getpassword: function() {
+        var pass = prompt("password");
+        return {
+            password : pass
+        }
     }
 };
 

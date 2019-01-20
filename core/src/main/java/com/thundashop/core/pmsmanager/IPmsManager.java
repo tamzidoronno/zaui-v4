@@ -567,4 +567,6 @@ public interface IPmsManager {
     @Administrator
     public void wubookCreditCardIsInvalid(String bookingId, String reason);
 
+    @Administrator
+    public List<PmsBooking> getBookingsWithUnsettledAmountBetween(Date start, Date end);
 }

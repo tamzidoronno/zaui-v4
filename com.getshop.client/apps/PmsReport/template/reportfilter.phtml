@@ -78,24 +78,6 @@ $chnls = $pmssearchbox->getChannels();
                 echo "</select>";
                 ?>
             </td>
-            <?
-            if (count($departments)) {
-            ?>
-            <td>
-                Departments<br>
-                <?php
-                echo "<select gsname='departmentid' class='gsniceselect1' style='height:37px'>";
-                echo "<option value=''>All</option>";
-                foreach($departments as $department) {
-                    $selected = in_array($department->id, $filter->departmentIds ) ? "SELECTED" : "";
-                    echo "<option value='$department->id' $selected>".$department->name."</option>";
-                }
-                echo "</select>";
-                ?>
-            </td>
-            <?
-            }
-            ?>
             <td><br><input type='button' value='Load report' gstype='submit' style='padding: 9px;'><bR>
             </td>
         </tr>

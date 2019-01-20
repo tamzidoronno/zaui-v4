@@ -40,33 +40,7 @@ public class ExcelManager extends ManagerBase implements IExcelManager {
     @Override
     public String getBase64Excel(List<List<String>> array) {
         workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("sheet");
-        for(Integer i = 0; i < array.size(); i++) {
-            List<String> fields = array.get(i);
-            int j = 0;
-            Row row = sheet.createRow(i);
-            for(String field : fields) {
-                Cell cell = row.createCell(j);
-                cell.setCellValue(field);
-                if(isNumeric(field)) {
-                    cell.setCellType(CellType.NUMERIC);
-                    CellStyle cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#.#"));
-                    cell.setCellValue(new Double(field));
-                } else if(isDouble(field)) {
-                    CellStyle cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#.#"));
-                    cell.setCellValue(new Double(field));
-                    cell.setCellStyle(cellStyle);
-                }
-                if(i == 0) {
-                    setFontSize(cell, 12, true);
-                } else {
-                    setFontSize(cell, 12, false);
-                }
-                j++;
-            }
-        }
+        createExcelSheet("sheet", array);
         return getBase64Encoded();
     }
     
@@ -129,6 +103,50 @@ public class ExcelManager extends ManagerBase implements IExcelManager {
         }
         return false;
     }
-    
+
+    private void createExcelSheet(String sheetName, List<List<String>> array) {
+        XSSFSheet sheet = workbook.createSheet(sheetName);
+        for(Integer i = 0; i < array.size(); i++) {
+            List<String> fields = array.get(i);
+            int j = 0;
+            Row row = sheet.createRow(i);
+            for(String field : fields) {
+                Cell cell = row.createCell(j);
+                cell.setCellValue(field);
+                if(isNumeric(field)) {
+                    cell.setCellType(CellType.NUMERIC);
+                    CellStyle cellStyle = workbook.createCellStyle();
+                    cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#.#"));
+                    cell.setCellValue(new Double(field));
+                } else if(isDouble(field)) {
+                    CellStyle cellStyle = workbook.createCellStyle();
+                    cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#.#"));
+                    cell.setCellValue(new Double(field));
+                    cell.setCellStyle(cellStyle);
+                }
+                if(i == 0) {
+                    setFontSize(cell, 12, true);
+                } else {
+                    setFontSize(cell, 12, false);
+                }
+                j++;
+            }
+        }   
+    }
+
+    @Override
+    public void startExcelSheet() {
+        workbook = new XSSFWorkbook();
+    }
+
+    @Override
+    public void prepareExcelSheet(String name, List<List<String>> array) {
+        createExcelSheet(name, array);
+    }
+
+    @Override
+    public String getPreparedExcelSheet() {
+        return getBase64Encoded();
+    }
     
 }

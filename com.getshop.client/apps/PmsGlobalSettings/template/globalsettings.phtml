@@ -98,7 +98,7 @@ if(stristr($user->emailAddress, "@getshop.com")) {
             * Send sms'es from this name/number (max 8 characters).
         </span>
     </div>    
-    <h1>Payment and order creation</h1>
+    <h1>Booking engine</h1>
     <div class='container'>
         <span class='option'>
             <input type='checkbox' gsname='doNotRecommendBestPrice' <?php if($config->doNotRecommendBestPrice) { echo "CHECKED"; } ?>>
@@ -107,6 +107,27 @@ if(stristr($user->emailAddress, "@getshop.com")) {
             Do not recommend best possible price for the guest, give them a choice to choose themself.
         </span>
     </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='ignoreGuestInformation' <?php if($config->ignoreGuestInformation) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Do not force contact information on all guests.
+        </span>
+    </div>
+    
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='ignorePaymentWindowDaysAheadOfStay' value='<?php echo $config->ignorePaymentWindowDaysAheadOfStay; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            If stay is booked number of days before stay, do not show payment window.<br>
+            Set to 0 if you always want to display the pay later button.<br/>
+            To disable this feature set it to -1
+        </span>
+    </div>
+    
+    <h1>Payment and order creation</h1>
     <div class='container'>
         <span class='option'>
             <input type='text' class='gsniceinput1' gsname='numberOfDaysToSendPaymentLinkAheadOfStay' value='<?php echo $config->numberOfDaysToSendPaymentLinkAheadOfStay; ?>' style='width: 50px; text-align: center;'>
@@ -130,18 +151,6 @@ if(stristr($user->emailAddress, "@getshop.com")) {
         </span>
         <span class='title'>
             Automatically send invoices when they are created.
-        </span>
-    </div>
-    
-    
-    <div class='container'>
-        <span class='option'>
-            <input type='text' class='gsniceinput1' gsname='ignorePaymentWindowDaysAheadOfStay' value='<?php echo $config->ignorePaymentWindowDaysAheadOfStay; ?>' style='width: 50px; text-align: center;'>
-        </span>
-        <span class='title'>
-            If stay is booked number of days before stay, do not show payment window.<br>
-            Set to 0 if you always want to display the pay later button.<br/>
-            To disable this feature set it to -1
         </span>
     </div>
     

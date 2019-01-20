@@ -238,8 +238,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
 
         echo "<div class='GetShopModuleTableHeader'>";
         if($this->hasSamleFaktura()) {
-            echo "<span style='float:left;font-size:26px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></span>";
+            echo "<div style='font-size:20px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></div>";
         }
+        echo "<span  style='float:left;margin-right: 10px;' class='shop_button' gs_downloadExcelReport='downloadBookingListToExcel' gs_fileName='bookinglist'>Download list to excel</span> ";
+        echo "<span  style='float:left;margin-right: 10px;' class='shop_button' gs_downloadExcelReport='downloadBookingListToExcelAndGuestInfo' gs_fileName='bookinglist'>Download list to excel + guest information</span> ";
         echo "<input type='txt' class='gsniceinput1 tablefilterinput' placeholder='Do filter on table below by entering a text here'>";
         echo "<div class='nothinginfilertodisplay'>No result found, please choose a different filter string or clear this filter</div>";
         echo "<div class='pmscheckoutforrooms checkoutview'>";
@@ -305,6 +307,15 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         return $this->allProducts;
     }
         
+    
+    public function downloadBookingListToExcel() {
+        $this->downloadBookingListToExcelWithGuests(false);
+    }
+    
+    public function downloadBookingListToExcelAndGuestInfo() {
+        $this->downloadBookingListToExcelWithGuests(true);
+    }
+    
     public function getSelectedFilter() {
         if($_SERVER['PHP_SELF'] == "/json.php" || isset($_SESSION['firstloadpage'])) {
             unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
@@ -486,5 +497,60 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $this->hasSamleFakturaCheck = false;
         return false;
     }
+
+    public function downloadBookingListToExcelWithGuests($withGuests) {
+        $filter = $this->getSelectedFilter();
+        $data = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+        $rows = array();
+        
+        $header = array();
+        $header[] = "State";
+        $header[] = "Reg date";
+        $header[] = "Check-in";
+        $header[] = "Check-out";
+        $header[] = "Booker";
+        $header[] = "Email";
+        $header[] = "Prefix";
+        $header[] = "Phone";
+        $header[] = "Type";
+        $header[] = "Room";
+        $header[] = "Guest count";
+        $header[] = "Addons";
+        $rows[] = $header;
+        
+        foreach($data as $r) {
+            $row = array();
+            $row[] = $r->progressState;
+            $row[] = date("d/m/Y", strtotime($r->regDate));
+            $row[] = date("d/m/Y", $r->start/1000);
+            $row[] = date("d/m/Y", $r->end/1000);
+            $row[] = $r->owner;
+            $row[] = $r->ownersEmail;
+            $row[] = $r->ownersPrefix;
+            $row[] = $r->ownersPhone;
+            $row[] = $r->roomType;
+            $row[] = $r->room;
+            $row[] = $r->numberOfGuests;
+            $row[] = join(",",(array)$this->formatter->createAddonText($r, true));
+            $rows[] = $row;
+            if($withGuests) {
+                foreach($r->guest as $guest) {
+                    $row = array();
+                    $row[] = "";
+                    $row[] = "";
+                    $row[] = "";
+                    $row[] = "";
+                    $row[] = $guest->name;
+                    $row[] = $guest->email;
+                    $row[] = $guest->prefix;
+                    $row[] = $guest->phone;
+                    $rows[] = $row;
+                }
+            }
+        }
+            
+        echo json_encode($rows);
+    }
+
 }
 ?>

@@ -196,7 +196,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             result.rooms.add(room);
         }
         
-        if(!pmsManager.getConfigurationSecure().doNotRecommendBestPrice) {
+        PmsConfiguration pmsConfig = pmsManager.getConfigurationSecure();
+        if(!pmsConfig.doNotRecommendBestPrice) {
             selectMostSuitableRooms(result, arg);
         }
         result.totalAmount = pmsManager.getCurrentBooking().getTotalPrice();
@@ -1075,7 +1076,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         retval.currencyText = currencycode;
         retval.startYesterday = isMidleOfNight();
         retval.defaultCheckinTime = config.getDefaultStartRaw();
-        
+        retval.ignoreGuestInformation = config.ignoreGuestInformation;
+        retval.doNotRecommendBestPrice = config.doNotRecommendBestPrice;
+
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypesWithSystemType(null);
         HashMap<Integer, String> typesActive = new HashMap();
         for(BookingItemType type : bookingItemTypes) {

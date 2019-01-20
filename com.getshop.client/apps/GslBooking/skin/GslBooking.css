@@ -17,6 +17,8 @@ Error      : #de5353; red
 */
 
 /*-----------------gslfront_1-----------------*/
+.GslBooking .fa_box.guests { visibility: hidden; }
+.GslBooking .fa_box.coupon { border-left: solid 1px #ddd;}
 .GslBooking .yourstaysummary { padding-left: 10px; }
 .GslBooking .invalidinput { border-color: red; border: solid 1px red !important; }
 .GslBooking .guestentry { position:relative; }

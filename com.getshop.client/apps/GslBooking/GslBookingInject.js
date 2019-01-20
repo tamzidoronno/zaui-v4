@@ -56,7 +56,9 @@ function getshop_setBookingTranslation() {
             var text = getshop_translationMatrixLoaded['agebelow'];
             text = text.replace("{age}", config.childAge);
             $("[gstranslationfield='agebelow']").html(text);              
-
+            if(!config.doNotRecommendBestPrice) {
+                $('.GslBooking .fa_box.guests').css('visibility','visible');
+            }
             var text = getshop_translationMatrixLoaded['ischildtext'];
             text = text.replace("{age}", config.childAge);
             $("[gstranslationfield='ischildtext']").html(text);
@@ -755,6 +757,13 @@ function getshop_loadRooms(res) {
             guestRow.append('<i class="fa fa-times removeguest" title="'+translation['removeguest']+'"></i>');
             
             addedAddons = true;
+            if(getshop_bookingconfiguration.ignoreGuestInformation && i > 0) {
+                guestRow.find('[gsname="email"]').css('visibility','hidden');
+                guestRow.find('[gsname="prefix"]').css('visibility','hidden');
+                guestRow.find('[gsname="phone"]').css('visibility','hidden');
+                guestRow.find('.entryfield.phonefield').css('visibility','hidden');
+            }
+            
             newRoom.find('.guestRows').append(guestRow);
         }
         newRoom.attr('id','');

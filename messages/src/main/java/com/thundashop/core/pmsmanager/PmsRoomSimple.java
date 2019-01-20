@@ -20,6 +20,10 @@ public class PmsRoomSimple implements Serializable {
     @ExcludePersonalInformation
     public String ownersEmail = "";
     @ExcludePersonalInformation
+    public String ownersPrefix = "";
+    @ExcludePersonalInformation
+    public String ownersPhone = "";
+    @ExcludePersonalInformation
     public List<PmsGuests> guest = new ArrayList();
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public long start;

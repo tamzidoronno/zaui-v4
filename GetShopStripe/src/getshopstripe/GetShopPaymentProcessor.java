@@ -54,6 +54,7 @@ public class GetShopPaymentProcessor {
     
     public static void main(String args[]) {
         try {
+            System.out.println("Starting process");
             GetShopPaymentProcessor processor = new GetShopPaymentProcessor();
             processor.start();
         }catch(Exception e) {
@@ -90,7 +91,7 @@ public class GetShopPaymentProcessor {
 
     private void readAccounts() throws IOException {
         accounts = new ArrayList();
-        String content = new String(Files.readAllBytes(Paths.get("/source/getshop/3.0.0/GetShopStripe/src/getshopstripe/accounts.txt")));
+        String content = new String(Files.readAllBytes(Paths.get("accounts.txt")));
         String[] lines = content.split("\n");
         for(String line : lines) {
             if(line.startsWith("//")) {

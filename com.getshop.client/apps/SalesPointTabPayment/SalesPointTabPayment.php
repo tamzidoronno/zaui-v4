@@ -96,13 +96,14 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
     }
     
     public function startPayment() {
+        $cashPointId = $this->getSelectedCashPointId();
         $tab = $this->getCurrentTab();
         $cartItems = $this->getPostedCartItems();
         
         if ($_POST['data']['payementId'] == "f86e7042-f511-4b9b-bf0d-5545525f42de") {
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom'] = json_encode($cartItems);
         } else {
-            $order = $this->getApi()->getPosManager()->createOrder($cartItems, $_POST['data']['payementId'], $tab->id);
+            $order = $this->getApi()->getPosManager()->createOrder($cartItems, $_POST['data']['payementId'], $tab->id, $cashPointId);
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'] = $order->id;
         }
     }

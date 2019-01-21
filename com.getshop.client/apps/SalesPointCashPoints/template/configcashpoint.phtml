@@ -1,6 +1,7 @@
 <?
 /* @var $this \ns_5532e18a_3e3d_4804_8ded_30bbb33e5bd5\SalesPointCashPoints */
 $devices = $this->getApi()->getGdsManager()->getDevices();
+$departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
 
 ?>
 <div class='config_sales_point' cashpointid='<? echo $_POST['data']['id']; ?>'>
@@ -41,6 +42,23 @@ $devices = $this->getApi()->getGdsManager()->getDevices();
         </select>
     </div>
     <?
+    }
+    
+    if (is_array($departments) && count($departments)) {
+        echo "<br/>";
+        echo $this->__f("Department").":";
+        ?>
+        <br/>
+        <select gsname='departmentid' class="gsniceselect1">
+            <?
+            echo "<option value=''>Not selected</option>";
+            foreach ($departments as $deparment) {
+                $selected = $deparment->id == $cashPoint->departmentId ? "selected='true'" : "";
+                echo "<option $selected value='$deparment->id'>" . $deparment->name . "</option>";
+            }
+            ?>    
+        </select>
+        <?
     }
     ?>
     

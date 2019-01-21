@@ -3,6 +3,7 @@ package com.thundashop.core.storemanager.data;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -80,5 +81,13 @@ public class Store extends DataCommon {
         }
         
         return TimeZone.getTimeZone(timeZone);
+    }
+
+    public boolean isPikStore() {
+        Calendar pikTime = Calendar.getInstance();
+        pikTime.set(Calendar.YEAR, 2018);
+        pikTime.set(Calendar.MONTH, 3);
+        pikTime.set(Calendar.DAY_OF_MONTH, 1);
+        return rowCreatedDate.after(pikTime.getTime());
     }
 }

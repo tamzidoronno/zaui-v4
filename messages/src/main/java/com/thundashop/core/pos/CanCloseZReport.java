@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.pos;
 
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +19,14 @@ public class CanCloseZReport {
     
     public List<PmsBooking> bookingsWithProblems = new ArrayList();
     public long fReportErrorCount = 0;
+    public List<Order> uncompletedOrders = new ArrayList();
     
     public void finalize() {
         if (!bookingsWithProblems.isEmpty()) {
+            canClose = false;
+        }
+        
+        if (!uncompletedOrders.isEmpty()) {
             canClose = false;
         }
         

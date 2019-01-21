@@ -15,6 +15,11 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $this->includefile("searchbox");
     }
     
+    public function resetAutoAssignedStatusForCheckinsToday() {
+        $this->getApi()->getPmsManager()->resetCheckingAutoAssignedStatus($this->getSelectedMultilevelDomainName());
+        $this->runProcessor();
+    }
+    
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedMultilevelDomainName());
         $this->getApi()->getPmsManager()->hourlyProcessor($this->getSelectedMultilevelDomainName());

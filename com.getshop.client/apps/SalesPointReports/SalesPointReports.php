@@ -1,7 +1,7 @@
 <?php
 namespace ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7;
 
-class SalesPointReports extends \MarketingApplication implements \Application {
+class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointCommon implements \Application {
     private $users = array();
     
     private $cachedPaymentNames = array();
@@ -15,6 +15,10 @@ class SalesPointReports extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        if ($this->preRender()) {
+            return;
+        }
+        
         $this->addOrderToReport();
         $this->includefile("leftmenu");
         
@@ -147,13 +151,17 @@ class SalesPointReports extends \MarketingApplication implements \Application {
     }
     
     public function canMakeZReport() {
-        $this->closeResult = $this->getApi()->getPosManager()->canCreateZReport($this->getSelectedMultilevelDomainName());
+        $this->closeResult = $this->getApi()->getPosManager()->canCreateZReport($this->getSelectedMultilevelDomainName(), $this->getSelectedCashPointId());
         $this->includefile("closeerrors");
         return $this->closeResult->canClose;
     }
     
     public function deleteZReport() {
         
+    }
+    
+    public function deleteOrder() {
+        $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
     }
 
 }

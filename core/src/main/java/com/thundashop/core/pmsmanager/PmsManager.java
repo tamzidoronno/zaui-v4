@@ -9531,4 +9531,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return bookingsInPeriode;
     }
+
+    @Override
+    public void resetCheckingAutoAssignedStatus() {
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (room.isStartingToday() && room.triedToAutoAssign && (room.bookingItemId == null || room.bookingItemId.isEmpty())) {
+                    room.triedToAutoAssign = false;
+                    saveBooking(booking);
+                }
+            }
+        }
+    }
 }

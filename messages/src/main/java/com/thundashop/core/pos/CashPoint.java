@@ -19,4 +19,6 @@ public class CashPoint extends DataCommon {
     
     public String receiptPrinterGdsDeviceId = "";
     public String kitchenPrinterGdsDeviceId = "";
+    
+    public String departmentId = "";
 }

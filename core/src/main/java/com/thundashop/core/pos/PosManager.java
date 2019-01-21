@@ -23,9 +23,11 @@ import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
 import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.CashPointTag;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
+import com.thundashop.core.ordermanager.data.OrderTag;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
@@ -43,6 +45,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -213,7 +216,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId) {
+    public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId, String cashPointId) {
         PosTab tab = getTab(tabId);
         
         cartManager.clear();
@@ -221,6 +224,15 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         Order order = orderManager.createOrder(null);
         order.payment.paymentId = paymentId;
+        
+        CashPointTag tag = createOrderTag(cashPointId);
+        
+        order.addOrderTag(tag);
+        order.getCartItems().stream()
+                .forEach(item -> {
+                    item.departmentId = tag.departmentId;
+                });
+                
         
         Application paymentApplication = storeApplicationPool.getApplication(paymentId);
         order.payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
@@ -805,10 +817,19 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName) {
+    public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName, String cashPointId) {
         boolean autoClose = orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport;
         
         CanCloseZReport canClose = new CanCloseZReport();
+        
+        canClose.uncompletedOrders = orderManager.getAllOrders()
+                .stream()
+                .filter(o -> !o.isNullOrder())
+                .filter(o -> o.status != Order.Status.PAYMENT_COMPLETED)
+                .filter(o -> createdCashPoint(o, cashPointId))
+                .collect(Collectors.toList());
+        
+        canClose.finalize();
         
         if (!autoClose) {
             return canClose;
@@ -839,5 +860,30 @@ public class PosManager extends ManagerBase implements IPosManager {
         cal.set(Calendar.MILLISECOND, 0);
         cal.add(Calendar.DAY_OF_MONTH, addDays);
         return cal.getTime();
+    }
+
+    private CashPointTag createOrderTag(String cashPointId) {
+        CashPointTag tag = new CashPointTag();
+        tag.cashPointId = cashPointId;
+        
+        if (cashPointId != null && !cashPointId.isEmpty()) {
+            tag.departmentId = getCashPoint(cashPointId).departmentId;
+        }
+        
+        return tag;
+    }
+
+    private boolean createdCashPoint(Order o, String cashPointId) {
+        
+        for (OrderTag tag : o.getTags()) {
+            
+            if (tag instanceof CashPointTag) {
+                if (((CashPointTag) tag).cashPointId.equals(cashPointId))
+                    return true;
+                
+            }
+        }
+        
+        return false;
     }
 }

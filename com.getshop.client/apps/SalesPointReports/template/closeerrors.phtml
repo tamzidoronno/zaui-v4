@@ -8,8 +8,12 @@ if ($closeResult->canClose) {
 ?>
 
 <div class="closewarnings">
-    <h2><? echo $this->__("Can not close due to the following problem(s)"); ?></h2>
     <?
+    if (count($closeResult->bookingsWithProblems)) {
+    ?>
+        <h2><? echo $this->__("Can not close due to the following problem(s)"); ?></h2>
+    <?
+    }
     
     if ($closeResult->fReportErrorCount > 0) {
         ?>
@@ -39,5 +43,30 @@ if ($closeResult->canClose) {
         </div>
         <?
     }
+    
+    if (count($closeResult->uncompletedOrders)) {
+        ?>
+        <h2><? echo $this->__("Following orders has not yet been completed, please verify and delete them"); ?></h2>
+        <?
+        foreach ($closeResult->uncompletedOrders as $order) {
+            $paymentTypeArr = explode("\\", $order->payment->paymentType);
+            $paymentType = $this->getPaymentMethodName($paymentTypeArr[0]);
+            $totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            echo "<div class='orderline'>";
+                $deleteButton = "<i style='font-size: 14px;' class='gs_shop_small_icon fa fa-trash' gsclick='deleteOrder' orderid='$order->id'></i> ";
+                echo $deleteButton;
+                
+                echo "<a href='/pos.php?page=orderviewpage&orderid=$order->id'>";
+                    echo "<div class='col orderid'>".$order->incrementOrderId."</div>";
+                    echo "<div class='col date'>".$this->formatDate($order->rowCreatedDate)."</div>";
+                    echo "<div class='col name'>".$userFullName."</div>";
+                    echo "<div class='col type'>".$this->__f($paymentType)."</div>";
+                    echo "<div class='col totalfororder'>".$totalForOrder."</div>";
+                echo "</a>";
+            echo "</div>";
+        }
+    }
     ?>
 </div>
+
+

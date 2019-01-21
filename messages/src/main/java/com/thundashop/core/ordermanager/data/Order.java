@@ -119,6 +119,13 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date tryAutoPayWithDibs = null;
     
     /**
+     * Its possible to add different tags to the order,
+     * this can for instance be extra information from the salespoints, invoices
+     * etc.
+     */
+    private List<OrderTag> tags = new ArrayList();
+    
+    /**
      * If this order has been transferred to an accountingsystem
      * and there is a two way communincation, this field 
      * will store the information needed to find the order again
@@ -1288,6 +1295,10 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean isFromSamleFaktura() {
         return !createdBasedOnOrderIds.isEmpty();
     }
+
+    public List<OrderTag> getTags() {
+        return tags;
+    }
     
     public static class Status  {
         public static int CREATED = 1;
@@ -1517,5 +1528,9 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
                 
+    }
+    
+    public void addOrderTag(OrderTag tag) {
+        tags.add(tag);
     }
 }

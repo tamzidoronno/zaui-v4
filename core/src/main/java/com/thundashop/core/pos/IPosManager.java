@@ -48,7 +48,7 @@ public interface IPosManager {
     public Double getTotalForItems(List<CartItem> cartItems);
     
     @Editor
-    public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId);
+    public Order createOrder(List<CartItem> cartItems, String paymentId, String tabId, String cashPointId);
     
     @Editor
     public void completeTransaction(String tabId, String orderId, String cashPointDeviceId, String kitchenDeviceId, HashMap<String,String> paymentMetaData);
@@ -159,5 +159,5 @@ public interface IPosManager {
     public void addGiftCardToTab(String tabId, double value);
     
     @Editor
-    public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName);
+    public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName, String cashPointId);
 }

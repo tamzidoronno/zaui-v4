@@ -3387,7 +3387,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         for (DayIncome dayIncome : incomes) {
             
-            if (!dayIncome.isFinal) {
+            if (!dayIncome.isFinal && getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport) {
                 continue;
             }
             

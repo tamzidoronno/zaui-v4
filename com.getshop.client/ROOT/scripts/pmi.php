@@ -9,6 +9,7 @@ $storeId = $factory->getApi()->getStoreManager()->getMyStore()->id;
 $appBase = new ApplicationBase();
 $segments = $factory->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($_GET['domain']);
 $closeDate = strtotime($factory->getApi()->getOrderManager()->getOrderManagerSettings()->closedTilPeriode);
+$autoClose = strtotime($factory->getApi()->getOrderManager()->getOrderManagerSettings()->autoCloseFinancialDataWhenCreatingZReport);
 
 if($_GET['type'] == "roomrevenue") {
     $filter = new core_pmsmanager_PmsBookingFilter();
@@ -29,7 +30,7 @@ if($_GET['type'] == "roomrevenue") {
                 continue;
             }
             
-            if (strtotime($s->date) >= $closeDate) {
+            if (strtotime($s->date) >= $closeDate && $autoClose) {
                 continue;
             }
             

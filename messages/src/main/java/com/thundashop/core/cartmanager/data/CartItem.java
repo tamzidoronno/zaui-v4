@@ -146,6 +146,14 @@ public class CartItem implements Serializable, Cloneable {
         return product;    
     }
 
+    public String getProductId() {
+        if (this.product == null) {
+            return "";
+        }
+        
+        return this.product.id;
+    }
+    
     public Product getProductUnfinalized() {
         return product;
     }
@@ -667,5 +675,9 @@ public class CartItem implements Serializable, Cloneable {
             return product.externalReferenceId.equals(pmsBookingRoomId);
         }
         return false;
+    }
+    
+    public String getDepartmentId() {
+        return departmentId;
     }
 }

@@ -21,10 +21,13 @@ echo "<h2 style='margin-left: 50px;'>".$this->__f("Your departments")."</h2>";
 foreach ($departments as $department) {
     ?>
     <div class='row'>
-        <div class='col'><i class='gs_shop_small_icon fa fa-trash' gsclick='deleteDepartment' departmentid='<? echo $department->id; ?>'></i></div>
+        <div class='col'><i class='gs_shop_small_icon fa fa-edit' gsclick='startEditingDepartment' departmentid='<? echo $department->id; ?>'></i> <i class='gs_shop_small_icon fa fa-trash' gsclick='deleteDepartment' departmentid='<? echo $department->id; ?>'></i></div>
         <div class='col'><? echo $department->name; ?></div>
     </div>
     <?
 }
 
 ?>
+
+
+<div style='margin: 50px;' class='shop_button' gsclick='doARecalculationOfData' title='doARecalculationOfData'>Recalculate all orders with departments</div>

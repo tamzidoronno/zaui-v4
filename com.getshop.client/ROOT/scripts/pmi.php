@@ -42,31 +42,21 @@ if($_GET['type'] == "roomrevenue") {
 }
 if($_GET['type'] == "allrevenue") {
     //Income report
-    $filter = new core_pmsmanager_PmsOrderStatsFilter();
-    $filter->start = $appBase->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
-    $filter->end = $appBase->convertToJavaDate(strtotime($_GET['end'] . " 23:59"));
-    $filter->includeVirtual = true;
-    $filter->displayType = "dayslept";
-    $filter->priceType = "extaxes";
+    $startDate = $appBase->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
+    $endDate = $appBase->convertToJavaDate(strtotime($_GET['end'] . " 23:59"));
     
-    $res = $factory->getApi()->getPmsInvoiceManager()->generateStatistics($_GET['domain'], $filter);
+    $res = $factory->getApi()->getOrderManager()->getPmiResult($startDate, $endDate);
     $list = array();
     
-    foreach($res->entries as $s) {
-        $revenue = 0.0;
-        foreach($s->priceExOrders as $productId => $orders) {
-            $revenue = array_sum((array)$orders);
-            $revenue = round($revenue, 2);
-            $day = array();
-            $day['propertyid'] = $storeId;
-            $day['transactiondate'] = date("d.m.Y", strtotime($s->day));
-            $day['department'] = "";
-            $day['productName'] = $factory->getApi()->getProductManager()->getProduct($productId)->name;
-            $day['productId'] = $productId;
-            $day['revenue'] = $revenue;
-            $list[] = $day;
-        }
-        
+    foreach($res as $s) {
+        $day = array();
+        $day['propertyid'] = $s->propertyid;
+        $day['transactiondate'] = date("d.m.Y", strtotime($s->transactiondate));
+        $day['department'] = $s->department;
+        $day['productName'] = $s->productName;
+        $day['productId'] = $s->prodcutId;
+        $day['revenue'] = round($s->revenue,2);
+        $list[] = $day;
     }
     echo json_encode($list);
 }

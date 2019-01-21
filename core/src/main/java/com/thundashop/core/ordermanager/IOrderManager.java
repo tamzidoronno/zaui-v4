@@ -27,6 +27,7 @@ import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
+import com.thundashop.core.ordermanager.data.PmiResult;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -418,4 +419,7 @@ public interface IOrderManager {
     
     @Administrator
     public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date date);
+    
+    @Editor
+    public List<PmiResult> getPmiResult(Date start, Date end);
 }

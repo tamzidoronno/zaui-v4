@@ -9543,4 +9543,38 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
     }
+
+    @Override
+    public void resetDeparmentsOnOrders() {
+        for (PmsBooking booking : bookings.values()) {
+            for (String orderId : booking.orderIds) {
+                Order order = orderManager.getOrder(orderId);
+                boolean found = false;
+                if (order != null) {
+                    for (CartItem cartItem : order.getCartItems()) {
+                        
+                        if (cartItem.departmentId != null && !cartItem.departmentId.isEmpty()) {
+                            continue;
+                        }
+                        
+                        Product product = cartItem.getProduct();
+                        if (product != null && product.externalReferenceId != null && !product.externalReferenceId.isEmpty()) {
+                            PmsBookingRooms room = booking.getRoom(product.externalReferenceId);
+                            if (room != null) {
+                                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                                if (type != null) {
+                                    found = true;
+                                    cartItem.departmentId = type.departmentId;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (found) {
+                    orderManager.saveObject(order);
+                }
+            }
+        }
+    }
 }

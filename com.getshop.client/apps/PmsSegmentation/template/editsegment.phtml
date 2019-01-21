@@ -1,0 +1,44 @@
+
+<div style="padding-left: 20px;">
+    <?php
+    /* @var $this \ns_2399034c_bdc3_4dd6_87c4_df297d55bb2d\PmsSegmentation */
+    $segment = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegment($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+    if($segment->isPrivate || $segment->isBusiness) {
+        echo "<h1>Default addon ".$segment->name."</h1>This is a default segment, it can not be modified.<br><br>";
+        echo '<div><span class="shop_button" gsclick="recalculateSegment" segmentid="'.$segment->id.'">Recalcuate all bookings for this segment</span></div><br>';
+        return;
+    }
+    ?>
+    <h1>Code information</h1>
+    <div gstype='form' method='saveSegment'>
+        <input type="hidden" gsname="id" value="<?php echo $segment->id; ?>">
+        <input type="text" class="gsniceinput1" gsname="code" style="width:60px;" value="<?php echo $segment->code; ?>">
+        <input type="text" class="gsniceinput1" gsname="name" style="width: 120px" value="<?php echo $segment->name; ?>">
+        <input type="text" class="gsniceinput1" gsname="comment" style="width:200px;" value="<?php echo $segment->comment; ?>">
+        <h1>Autoselect when type is found in booking</h1>
+        <?php
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
+        foreach($types as $type) {
+            echo "<div>";
+            $checked = in_array($type->id, $segment->types) ? "CHECKED" : "";
+            echo "<input type='checkbox' gsname='bookingtype_".$type->id."' $checked>";
+            echo $type->name;
+            echo "</div>";
+        }
+        ?>
+        <div style="text-align: right">
+            <span class="shop_button" gstype="submit">Save segment</span>
+        </div>
+    </div>
+    <hr>
+    <h1>Other options</h1>
+    <div style="text-align: right">
+        <span style="float:left" class="shop_button" gsclick="recalculateSegment" segmentid="<?php echo $segment->id; ?>">Recalcuate all bookings for this segment</span>
+
+        <?php if(!$segment->isBusiness && !$segment->isPrivate) { ?>
+        <span class='shop_button' gsclick='deletesegment' gs_callback='getshop.pms.closeOverLaysMouse();' gs_ca gsvalue='<?php echo $segment->id; ?>' gsname='id' style='background-color: red'>Delete segment</span>
+        <?php } ?>
+    </div>
+    <div style="clear:both"></div>
+<br>
+</div>

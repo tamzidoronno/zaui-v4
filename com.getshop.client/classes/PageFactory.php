@@ -318,6 +318,11 @@ class PageFactory {
         $page->createRow()->addColumn("2b4a865c-6aed-416e-bf52-ab6e2428bd1f", "ccb41912-1a87-4407-9b1a-494f5d5e2f94");
         $this->pages['channelmanagerconfig'] = $page;   
         
+        $page = new \ModulePage("segmentation", "pms");
+        $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
+        $page->createRow()->addColumn("2399034c-bdc3-4dd6-87c4-df297d55bb2d", "4f1bfa5b-8f5a-4cbc-acad-979362fadb0c");
+        $this->pages['segmentation'] = $page;   
+        
         $page = new \ModulePage("lockconfig", "pms");
         $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
         $page->createRow()->addColumn("4b10210b-5da3-4b01-9bd9-1e6f0a2c7cfc", "1aef53b3-601c-4af9-8093-a90c2d490fe0");

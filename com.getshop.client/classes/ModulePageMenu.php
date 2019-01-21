@@ -131,6 +131,7 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Lock setup", "lockconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Global setttings", "globalsettings", "");
         $menu->entries[] = new ModulePageMenuItem("PGA", "pga", "");
+        $menu->entries[] = new ModulePageMenuItem("Segmentation", "segmentation", "");
         return $menu;
     }
 

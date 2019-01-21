@@ -104,6 +104,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             $filter->end = date("d.m.Y", time());
             $filter->includeNonBookableRooms = false;
             $filter->view = "daily";
+            $filter->segment = "";
         }
         
         if(!$filter->start) {
@@ -128,6 +129,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->channel = $_POST['data']['channel'];
         $filter->view = $_POST['data']['view'];
         $filter->departmentIds = array();
+        $filter->segment = $_POST['data']['segment'];
         
         if (isset($_POST['data']['departmentid']) && $_POST['data']['departmentid']) {
             $filter->departmentIds[] = $_POST['data']['departmentid'];
@@ -570,7 +572,10 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->fromPms = true;
         $filter->removeAddonsIncludedInRoomPrice = true;
         $filter->typeFilter = $typeFilter;
-        $filter->departmentIds = $selectedFilter->departmentIds;
+        $filter->segments = array();
+        if($selectedFilter->segment) {
+            $filter->segments[] = $selectedFilter->segment;
+        }
         
         if(stristr($selectedFilter->type, "forecasted")) {
             $filter->includeVirtual = true;
@@ -850,7 +855,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
         }
         
-        $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($filter);
+        $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $result = $data->entries;
         if(!$convertToExcelDate) {
             $this->printUsersTotal((array)$data->usersTotal);

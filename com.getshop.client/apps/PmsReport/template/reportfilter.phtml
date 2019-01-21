@@ -11,6 +11,7 @@ $departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
 
 $pmsManager = new ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement();
 $channels = $pmsManager->getChannelMatrix();
+$segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
 
 $pmssearchbox = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
 $chnls = $pmssearchbox->getChannels();
@@ -78,6 +79,19 @@ $chnls = $pmssearchbox->getChannels();
                 echo "</select>";
                 ?>
             </td>
+            <td>
+                Segment<br>
+                <?php
+                echo "<select gsname='segment' class='gsniceselect1' style='height:37px'>";
+                echo "<option value=''>All segments</option>";
+                echo "<option value='none'>Not segmented</option>";
+                foreach($segments as $segment) {
+                    $selected = ($filter->segment == $segment->id) ? "SELECTED" : "";
+                    echo "<option value='".$segment->id."' $selected>".$segment->name."</option>";
+                }
+                echo "</select>";
+                ?>
+            </td>
             <td><br><input type='button' value='Load report' gstype='submit' style='padding: 9px;'><bR>
             </td>
         </tr>
@@ -88,7 +102,8 @@ $chnls = $pmssearchbox->getChannels();
             <div class='filtercustomerresult'></div>
         </span>
     <input type='checkbox' gsname='includenonbookable' <?php echo $checked; ?>> Include non bookable rooms as well when calculating the coverage.
-        <div>
+    <?php $hideSelection = $this->getSelectedFilter()->segment ? "display:none;" : ""; ?>
+        <div class='typeselectionboxes' <?php echo "style='$hideSelection'"; ?>>
         <?php
         foreach($types as $type) {
             $checked = "";

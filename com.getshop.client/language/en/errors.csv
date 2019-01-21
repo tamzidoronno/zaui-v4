@@ -160,6 +160,7 @@
 "1055","Vat number can not be blank."
 "1056","Company already exists."
 "1057","There already exists a user with maincompany and has connection to the newly created company."
+"1058","Its not allowed to change the segment on bookings that has started."
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

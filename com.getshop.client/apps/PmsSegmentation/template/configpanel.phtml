@@ -1,0 +1,54 @@
+<?php
+/* @var $this \ns_2399034c_bdc3_4dd6_87c4_df297d55bb2d\PmsSegmentation */
+?>
+<h1>Segmentation settings</h1>
+<div class="kaipal infobox">
+        // faces: happy,sad,talking,danger
+    <div class="image happy"></div>
+    <div class="textbox">
+        <div class="header"><? echo $this->__f("Get better insight of your guests"); ?></div>
+        <div class="text">
+            <?
+            echo $this->__f("Segmentation is a way to tag bookings, this segments can then be used in reports to look at different kind of segments of your guests.");
+            ?>    
+        <br><bR>
+        </div>
+    </div>
+</div>
+<br>
+<div gstype='form' method='createSegment'>
+    <input type='txt' class='gsniceinput1' gsname='code' placeholder='Code' style='width:60px;'>
+    <input type='txt' class='gsniceinput1' gsname='name' placeholder='Name'>
+    <input type='txt' class='gsniceinput1' gsname='comment' placeholder='Comment (optional)' style='width:200px;'>
+    <span class='shop_button' gstype='submit'>Create segment</span>
+</div>
+<?php
+$segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+
+$attributes = array(
+    array('id', 'gs_hidden', 'id'),
+    array('code', 'Code', 'code'),
+    array('name', 'Name', 'name'),
+    array('comment', 'Comment', 'comment'),
+    array('typeText', 'Types', 'typeText')
+);
+echo "<br><br>";
+
+
+foreach($segments as $segment) {
+    $segment->typeText = "";
+    $segmentTypes = array();
+    foreach($segment->types as $typeId) {
+        $segmentTypes[] = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $typeId)->name;
+    }
+    $segment->typeText = join(", ", $segmentTypes);
+}
+
+$args = array(null);
+$table = new \GetShopModuleTable($this, 'PmsSegmentation', 'previewSegment', $args, $attributes);
+$table->setSorting(array("code","name","comment"));
+$table->loadContentInOverlay = true;
+$table->setData($segments);
+$table->render();
+
+?>

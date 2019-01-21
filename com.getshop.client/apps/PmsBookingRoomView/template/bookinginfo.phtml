@@ -13,6 +13,7 @@ if($bookingEngineBooking) {
 $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 $codes = $this->getApi()->getCartManager()->getCoupons();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
 ?>
 <div class="row odd">
     <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
@@ -21,15 +22,24 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
     </div>
 </div>
 <div class="row odd">
-    <div class="col col1"><? echo $this->__f("Discount code"); ?></div>
+    <div class="col col1"><? echo $this->__f("Discount code / segment"); ?></div>
     <div class="col col2">
         <span class="codeselection">
-            <select class="changediscountcode">
+            <select class="changediscountcode" style="width:45%">
                 <option value="">Not set</option>
                 <?php
                 foreach($codes as $code) {
                     $selected = (strtolower($code->code) == strtolower($pmsBooking->couponCode)) ? "SELECTED" : "";
                     echo "<option value='".$code->code."' $selected>" . $code->code . "</option>";
+                }
+                ?>
+            </select>
+            <select class="changesegment" style="width:45%; float:right;">
+                <option value="">Not set</option>
+                <?php
+                foreach($segments as $segment) {
+                    $selected = ($segment->id == $pmsBooking->segmentId) ? "SELECTED" : "";
+                    echo "<option value='".$segment->id."' $selected>" . $segment->name . "</option>";
                 }
                 ?>
             </select>

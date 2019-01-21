@@ -105,6 +105,7 @@ public class PmsBooking extends DataCommon {
      * in the checklist of tasks to do.
      */
     public boolean ignoreUnsettledAmount = false;
+    public String segmentId = "";
     
     public Double getTotalPrice() {
         return totalPrice;
@@ -699,6 +700,15 @@ public class PmsBooking extends DataCommon {
         }
         
         return this.channel.equals(channelToCheck);
+    }
+
+    boolean isStarted() {
+        for(PmsBookingRooms r : rooms) {
+            if(r.isStarted()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static class PriceType {

@@ -4,7 +4,9 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeFilter;
@@ -12,6 +14,8 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +33,8 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     private HashMap<String, BigDecimal> usersTotal = new HashMap();
     
+    private HashMap<String, PmsSegment> segments = new HashMap();
+    
     @Autowired
     OrderManager orderManager;
     
@@ -36,10 +42,22 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     ProductManager productManager;
     
     @Autowired
+    UserManager userManager;
+    
+    @Autowired
     BookingEngine BookingEngine;
     
     @Autowired
     PmsManager pmsManager;
+    
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for(DataCommon com : data.data) {
+            if(com instanceof PmsSegment) {
+                segments.put(com.id, (PmsSegment)com);
+            }
+        }
+    }
     
     @Override
     public IncomeReportResultData getStatistics(CoverageAndIncomeReportFilter filter) {
@@ -144,6 +162,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         cfilter.incTaxes = false;
         cfilter.channel = filter.channel;
         cfilter.departmentIds = filter.departmentIds;
+        cfilter.segments = filter.segments;
         if(filter.customers != null && !filter.customers.isEmpty()) {
             cfilter.userIds.addAll(filter.customers);
         }
@@ -186,6 +205,17 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         List<PmsBooking> allbookings = pmsManager.getAllBookingsUnfinalized();
         HashMap<String,Integer> orderIdMap = new HashMap();
         for(PmsBooking booking : allbookings) {
+
+            if(!filter.segments.isEmpty()) {
+                if(!booking.segmentId.isEmpty() && !filter.segments.contains(booking.segmentId)) {
+                    continue;
+                }
+                if(booking.segmentId.isEmpty() && !filter.segments.contains("none")) {
+                    continue;
+                }
+            }
+        
+            
             if(booking.isChannel(filter.channel)) {
                 for(String orderId : booking.orderIds) {
                     if(!filter.orderIds.contains(orderId)) {
@@ -204,6 +234,9 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     private void includeLostOrders(List<DayIncome> toinclude, CoverageAndIncomeReportFilter filter) {
         if(filter.channel != null && (!filter.channel.equals("web") || filter.channel.equals("")) && !filter.channel.isEmpty()) {
+            return;
+        }
+        if(!filter.segments.isEmpty()) {
             return;
         }
         for(DayIncome income : toinclude) {
@@ -247,4 +280,88 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             }
         }
     }
+
+    @Override
+    public List<PmsSegment> getSegments() {
+        if(segments.isEmpty()) {
+            PmsSegment segment = new PmsSegment();
+            segment.isBusiness = true;
+            segment.name = "Business";
+            segment.code = "business";
+            saveSegments(segment);
+            
+            segment = new PmsSegment();
+            segment.isPrivate = true;
+            segment.name = "Private";
+            segment.code = "private";
+            saveSegments(segment);
+        }
+        return new ArrayList(segments.values());
+    }
+
+    @Override
+    public void saveSegments(PmsSegment segment) {
+        saveObject(segment);
+        segments.put(segment.id, segment);
+    }
+
+    @Override
+    public void deleteSegment(String segmentId) {
+        PmsSegment segment = getSegment(segmentId);
+        deleteObject(segment);
+        segments.remove(segmentId);
+    }
+
+    @Override
+    public PmsSegment getSegment(String segmentId) {
+        return segments.get(segmentId);
+    }
+
+    @Override
+    public PmsSegment getSegmentForBooking(String bookingId) {
+        PmsBooking booking = pmsManager.getBookingUnfinalized(bookingId);
+        for(PmsSegment segment : segments.values()) {
+            if(segment.types.isEmpty()) {
+                continue;
+            }
+            List<String> types = booking.rooms.stream().map(e->e.bookingItemTypeId).collect(Collectors.toList());
+            for(String typeId : types) {
+                if(segment.types.contains(typeId)) {
+                    return segment;
+                }
+            }
+        }
+        
+        User user = userManager.getUserByIdUnfinalized(booking.userId);
+        if(user == null) {
+            return null;
+        }
+        boolean isCompany = user.companyObject != null;
+        for(PmsSegment segment : segments.values()) {
+            if(segment.isPrivate && !isCompany) {
+                return segment;
+            }
+            if(segment.isBusiness && isCompany) {
+                return segment;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void recalculateSegments(String segmentId) {
+        List<PmsBooking> bookings = pmsManager.getAllBookings(null);
+        for(PmsBooking booking : bookings) {
+            if(booking.segmentId != null && !booking.segmentId.isEmpty()) {
+                continue;
+            }
+            PmsSegment segment = getSegmentForBooking(booking.id);
+            if(segment != null && segment.id.equals(segmentId)) {
+                booking.segmentId = segment.id;
+                pmsManager.saveBooking(booking);
+            }
+        }
+    }
+
+
 }

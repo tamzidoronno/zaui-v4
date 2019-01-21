@@ -75,7 +75,7 @@
                             $priceOnDifferentTypes = $entry->roomsPriceOnDifferentTypes->{$room->pmsBookingRoomId};
                         }
                         
-                        if ($priceOnDifferentTypes) {
+                        if (isset($priceOnDifferentTypes)) {
                             echo "<i class='fa fa-warning' title='There has been invoiced ".round($priceOnDifferentTypes)." on different types'></i> ";
                         }
                         

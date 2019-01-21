@@ -210,7 +210,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private GdsManager gdsManager;
     
     @Autowired
-    private PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
+    public PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
     
     @Autowired
     private PmsNotificationManager pmsNotificationManager;
@@ -582,6 +582,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         verifyPhoneOnBooking(booking, true);
         booking.deleted = null;
         booking.completedDate = new Date();
+        PmsSegment segment = pmsCoverageAndIncomeReportManager.getSegmentForBooking(booking.id);
+        if(segment != null) {
+            booking.segmentId = segment.id;
+        }
         setSameAsBookerIfNessesary(booking);
         saveBooking(booking);
         feedGrafana(booking);
@@ -1002,6 +1006,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
+        
+        PmsBooking oldBooking = bookings.get(booking.id);
+        if(oldBooking != null) {
+            if(!oldBooking.segmentId.isEmpty() && !booking.segmentId.isEmpty() && !booking.segmentId.equals(oldBooking.segmentId)) {
+                if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
+                    //Do no allow changing segment on booking day after it has started.
+                    throw new ErrorException(1058);
+                }
+            }
+        }
+        
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }

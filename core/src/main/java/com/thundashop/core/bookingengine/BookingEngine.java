@@ -16,6 +16,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.storemanager.StoreManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,20 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         useNewEngine.add("fcaa6625-17da-447e-b73f-5c07b9b7d382"); // Banken Hotell Haugesund
         useNewEngine.add("87cdfab5-db67-4716-bef8-fcd1f55b770b"); // Renahotell
         useNewEngine.add("b6949f70-5e41-4c5e-abcf-d595450f8048"); // Trysilhotell
+        useNewEngine.add("32f280c2-ae25-4263-8529-624df2f01dec"); // Jegtvolden
     }
+
+    @Override
+    public void initialize() throws SecurityException {
+        super.initialize(); //To change body of generated methods, choose Tools | Templates.
+        
+        if (storeManager.getStore().isPikStore() && !useNewEngine.contains(storeId)) {
+            useNewEngine.add(storeId);
+        }
+    }
+    
+    @Autowired
+    private StoreManager storeManager;
     
     @Autowired
     public BookingEngineAbstract bookingEngineAbstract;

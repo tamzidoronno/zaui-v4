@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Property management system.<br>
@@ -569,4 +570,11 @@ public interface IPmsManager {
 
     @Administrator
     public List<PmsBooking> getBookingsWithUnsettledAmountBetween(Date start, Date end);
+    
+    /**
+     * If the autoassigned routines has failed for some reason, this will reset the status
+     * and let the system retry to autoassigned the failed rooms.
+     */
+    @Administrator
+    public void resetCheckingAutoAssignedStatus();
 }

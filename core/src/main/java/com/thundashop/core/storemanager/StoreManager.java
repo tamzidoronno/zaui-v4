@@ -94,12 +94,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
      */
     @Override
     public boolean isPikStore() {
-        Calendar pikTime = Calendar.getInstance();
-        pikTime.set(Calendar.YEAR, 2018);
-        pikTime.set(Calendar.MONTH, 3);
-        pikTime.set(Calendar.DAY_OF_MONTH, 1);
-        
-        return getMyStore().rowCreatedDate.after(pikTime.getTime());
+        return getMyStore().isPikStore();
     }
     
     @Override

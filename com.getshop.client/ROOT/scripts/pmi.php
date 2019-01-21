@@ -8,6 +8,7 @@ $factory->getApi()->getUserManager()->logOn($_GET['username'], $_GET['password']
 $storeId = $factory->getApi()->getStoreManager()->getMyStore()->id;
 $appBase = new ApplicationBase();
 $segments = $factory->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($_GET['domain']);
+$closeDate = strtotime($factory->getApi()->getOrderManager()->getOrderManagerSettings()->closedTilPeriode);
 
 if($_GET['type'] == "roomrevenue") {
     $filter = new core_pmsmanager_PmsBookingFilter();
@@ -22,10 +23,16 @@ if($_GET['type'] == "roomrevenue") {
         $filter->segments[] = $segment->id;
 
         $stats = $factory->getApi()->getPmsManager()->getStatistics($_GET['domain'], $filter);
+        
         foreach($stats->entries as $s) {
             if(!$s->date) { 
                 continue;
             }
+            
+            if (strtotime($s->date) >= $closeDate) {
+                continue;
+            }
+            
             $day = array();
             $day['propertyid'] = $storeId;
             $day['date'] = date("d.m.Y", strtotime($s->date));

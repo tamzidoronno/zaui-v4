@@ -186,18 +186,34 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
     }
     
-    
-    
     public boolean alreadyExported(AcculogixExport inExp) {
         String md5Sum = inExp.md5sum;
         
-        sortExportedData();
         
-        if (afInArray(inExp, sortedExports)) {
+        List<AcculogixExport> exportedData = new ArrayList();
+        
+        if (inExp.routeId != null && !inExp.routeId.isEmpty()) {
+            exportedData = exports.values().parallelStream()
+                .flatMap(o -> o.exportedData.stream())
+                .filter(o -> o.routeId != null && o.routeId.equals(inExp.routeId))
+                .collect(Collectors.toList());        
+            
+            exportedData.sort((AcculogixExport o1, AcculogixExport o2) -> {
+                Long l1 = o1.TNTUID;
+                Long l2 = o2.TNTUID;
+                return l2.compareTo(l1);
+            });
+            
+        } else {
+            sortExportedData();
+            exportedData = sortedExports;
+        }
+        
+        if (afInArray(inExp, exportedData)) {
             return true;
         }
         
-        for (AcculogixExport exp : sortedExports) {
+        for (AcculogixExport exp : exportedData) {
             if (exp.routeId != null && exp.routeId.equals(inExp.routeId) && exp.PODBarcodeID != null &&  exp.PODBarcodeID.equals(inExp.PODBarcodeID) &&  exp.ORReferenceNumber != null && exp.ORReferenceNumber.equals(inExp.ORReferenceNumber) && exp.md5sum != null && !exp.md5sum.equals(md5Sum)) {
                 return false;
             }

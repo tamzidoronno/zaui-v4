@@ -29,6 +29,8 @@ import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTag;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -845,7 +847,13 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .count();
         
         PmsManager pmsManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsManager.class);
-        canClose.bookingsWithProblems = pmsManager.getBookingsWithUnsettledAmountBetween(start, end);
+        
+        canClose.roomsWithProblems = pmsManager.getBookingsWithUnsettledAmountBetween(start, end)
+                .stream()
+                .flatMap(o -> o.rooms.stream())
+                .filter(o -> o.date.within(start, end))
+                .filter(o -> hasUnsettledAmount(o, pmsBookingMultilevelName))
+                .collect(Collectors.toList());
         
         canClose.finalize();
         return canClose;
@@ -885,5 +893,15 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         return false;
+    }
+
+    private boolean hasUnsettledAmount(PmsBookingRooms pmsSelectedRoom, String pmsBookingMultilevelName) {
+        PmsInvoiceManager invoiceManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsInvoiceManager.class);
+        
+        double totalOnRoom = Math.round(pmsSelectedRoom.totalCost);
+        double totalOrdersRoom = invoiceManager.getTotalOnOrdersForRoom(pmsSelectedRoom.pmsBookingRoomId, true);
+        double diff = totalOnRoom - totalOrdersRoom;
+        
+        return diff > 0.0001 || diff < -0.0001;
     }
 }

@@ -36,14 +36,17 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     console.log(ex);
                 }
                 
-                me.fetchQueue();
+                setTimeout(function() {
+                    me.fetchQueue.apply(me);
+                }, 20000);
+                
             });
             
             pullService.fail(function(res) {
                 console.log("Restarting due to failed", me);
                 setTimeout(function() {
                     me.fetchQueue.apply(me);
-                }, 5000);
+                }, 20000);
             });
         }
         

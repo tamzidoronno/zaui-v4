@@ -90,25 +90,20 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     $scope.startRoute = function($routeToUse) {
         var confirmed = confirm("Are you sure you want to start this route?");
         
-//        var inputDate = new Date($routeToUse.deliveryServiceDate);
-//        var todaysDate = new Date();
-//        
-//        var sameDay = inputDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0);
-//        var later = todaysDate.getTime() > inputDate.getTime();
-//        
-//        if (!sameDay && !later) {
-//            alert("This route is not scheduled for today");
-//            return;
-//        }
-
-        $routeToUse.startInProgress = true;
-        
         if (confirmed) {
+            $routeToUse.startInProgress = true;
+            $('.loaderbox_home_gps').show();
+            $('.loaderbox_home_gps span').html('Fetching GPS coordinates, please wait');
             
             navigator.geolocation.getCurrentPosition(function(position) {
+                
                 var start = $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), $routeToUse.startInfo.lon, $routeToUse.startInfo.lat, false, true);
                 
+                $('.loaderbox_home_gps span').html('Starting route... please wait..');
+                
                 start.done(function(res) {
+                    $('.loaderbox_home_gps').hide();
+                    
                     $routeToUse.startInProgress = false;
                     
                     if (res === "SERVICEDATE_IN_FUTURE") {
@@ -130,12 +125,18 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
                 });
                 
                 start.fail(function() {
+                    $('.loaderbox_home_gps').hide();
                     $routeToUse.startInProgress = false;
                     alert('You need to be online to start a route');
                     $scope.$evalAsync();
                 });
                 
             }, function(failare, b, c) {
+                $('.loaderbox_home_gps span').html('<span style="color: red;">Failed to fetch coordiantes!</span>');
+                setTimeout(function() {
+                    $('.loaderbox_home_gps').hide();
+                }, 2000)
+                
                 var start = $api.getApi().TrackAndTraceManager.markRouteAsStartedWithCheck($routeToUse.id, new Date(), 0, 0, false, true);
                 
                 start.done(function() {
@@ -167,8 +168,6 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
                 });
         
             }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
-            
-            
         }
     }
     

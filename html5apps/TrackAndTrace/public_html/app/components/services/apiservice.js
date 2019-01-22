@@ -52,6 +52,8 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         }
         
         this.setConnectionDetails = function(identifier) {
+            identifier = identifier.toLowerCase();
+            
             if (identifier === "prologix") {
                 this.api = new GetShopApiWebSocket('prologix.getshop.com', '31332', identifier, true);
             } else if (identifier === "local") {

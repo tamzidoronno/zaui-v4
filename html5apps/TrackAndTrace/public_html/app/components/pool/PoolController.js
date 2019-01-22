@@ -52,9 +52,10 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
     }
     
     $scope.fetchPooledDestination = function() {
+        var me = $scope;
         $api.getApi().TrackAndTraceManager.getPooledDestiontionsByUsersDepotId().done(function(res) {
-            $scope.pooledDestinations = res;
-            $scope.$evalAsync();
+            me.pooledDestinations = res;
+            me.$evalAsync();
         });
     }
     

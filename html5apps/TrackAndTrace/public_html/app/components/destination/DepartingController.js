@@ -11,6 +11,7 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
     $scope.forceSignature = false;
+    $scope.sigaturescreen = true;
     $scope.api = $api;
     
     $scope.typedName = "";
@@ -116,5 +117,9 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
         $scope.api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
         $scope.destination.skipInfo.skippedReasonId = "";
         datarepository.save();
+    }
+    
+    $scope.showTypeName = function() {
+        $scope.sigaturescreen = false;
     }
 }

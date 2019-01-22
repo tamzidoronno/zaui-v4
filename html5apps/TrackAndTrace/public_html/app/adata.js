@@ -23,7 +23,7 @@ adata = {
         }
 
         if ($scope) {
-            setTimeout($scope.$evalAsync(), 500);
+            setTimeout($scope.$applyAsync(), 1);
         }
 
         localStorage.setItem("currentVersion", "1.0.15");
@@ -56,6 +56,7 @@ adata = {
                         me.allLoaded($scope, completedFunction, $state);
                     });
                 } else {
+                    console.log("Data loaded");
                     me.allLoaded($scope, completedFunction);
                 }
             });    

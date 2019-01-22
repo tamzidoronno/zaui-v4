@@ -26,13 +26,13 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         }
     }
     
-    $scope.loadData = function() {
+    $scope.loadData = function(completeFunction) {
         if ($api.getApi().getUnsentMessageCount() > 0) {
             alert("You can not load routes until you have sent all your stored date, please make sure your device is connected to internet");
             return;
         }
         
-        datarepository.loadAllData($api, $scope);
+        datarepository.loadAllData($api, $scope, completeFunction);
     }
     
     $scope.openPool = function() {
@@ -42,8 +42,19 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         })
         
         loggedInCall.done(function(res) {
-            $scope.loadData();
-            $state.transitionTo("base.pool", {});    
+            
+            $('.loaderbox_home_gps').show();
+            $('.loaderbox_home_gps span').html('Loading data, please wait');
+
+            if ($api.getApi().getUnsentMessageCount() > 0) {
+                alert("You can not load routes until you have sent all your stored date, please make sure your device is connected to internet");
+                return;
+            }
+            
+            $scope.loadData(function(res) {
+                $('.loaderbox_home_gps').hide();
+                $state.transitionTo("base.pool", {});    
+            });
         });
     }
     

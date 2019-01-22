@@ -5,46 +5,47 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         this.lastShownError = 0;
         
         this.fetchQueue = function() {
-            var me = this;
-            
-            if (!me.api || !me.api.GdsManager || !localStorage.getItem("username")) {
-                setTimeout(function() {
-                    me.fetchQueue.apply(me);
-                }, 5000);
-                return;
-            }
-            
-            var pullService = me.api.GdsManager.getMessageForUser(false, true);
-            
-            pullService.done(function(res) {
-                try {
-                    if (res) {
-                        for (var i in res) {
-                            var msg = res[i];
-                            if (msg.className === "com.thundashop.core.trackandtrace.DriverRemoved") {
-                                me.driverRemoved(msg);
-                            }
-                            if (msg.className === "com.thundashop.core.trackandtrace.DriverMessage") {
-                                me.messageReceived(msg);
-                            }
-                            if (msg.className === "com.thundashop.core.trackandtrace.Route") {
-                                me.refreshRoute(msg);
-                            }
-                        }
-                    }
-                } catch (ex) {
-                    console.log(ex);
-                }
-                
-                me.fetchQueue();
-            });
-            
-            pullService.fail(function(res) {
-                console.log("Restarting due to failed", me);
-                setTimeout(function() {
-                    me.fetchQueue.apply(me);
-                }, 5000);
-            });
+//            console.log("Fetch queue started");
+//            var me = this;
+//            
+//            if (!me.api || !me.api.GdsManager || !localStorage.getItem("username")) {
+//                setTimeout(function() {
+//                    me.fetchQueue.apply(me);
+//                }, 5000);
+//                return;
+//            }
+//            
+//            var pullService = me.api.GdsManager.getMessageForUser(false, true);
+//            
+//            pullService.done(function(res) {
+//                try {
+//                    if (res) {
+//                        for (var i in res) {
+//                            var msg = res[i];
+//                            if (msg.className === "com.thundashop.core.trackandtrace.DriverRemoved") {
+//                                me.driverRemoved(msg);
+//                            }
+//                            if (msg.className === "com.thundashop.core.trackandtrace.DriverMessage") {
+//                                me.messageReceived(msg);
+//                            }
+//                            if (msg.className === "com.thundashop.core.trackandtrace.Route") {
+//                                me.refreshRoute(msg);
+//                            }
+//                        }
+//                    }
+//                } catch (ex) {
+//                    console.log(ex);
+//                }
+//                
+//                me.fetchQueue();
+//            });
+//            
+//            pullService.fail(function(res) {
+//                console.log("Restarting due to failed", me);
+//                setTimeout(function() {
+//                    me.fetchQueue.apply(me);
+//                }, 5000);
+//            });
         }
         
         this.showErrorMessage = function(text) {

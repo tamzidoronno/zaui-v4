@@ -27,7 +27,6 @@ adata = {
         }
 
         localStorage.setItem("currentVersion", "1.0.15");
-        }
     },
     
     loadAllData: function ($api, $scope, completedFunction, $state) {

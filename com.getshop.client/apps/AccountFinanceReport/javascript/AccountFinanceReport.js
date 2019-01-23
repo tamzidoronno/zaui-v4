@@ -69,6 +69,16 @@ app.AccountFinanceReport = {
     
     displayWarning: function() {
         alert('You can not close a periode that is not finished, if you want to close days, please select hower the row and close it from there');
+    },
+    
+    askForPassword: function() {
+        var pass = prompt("Already sent to accounting, please enter password to re-transmit");
+        
+        if (pass != "yes") {
+            return false;
+        }
+        
+        return true;
     }
 };
 

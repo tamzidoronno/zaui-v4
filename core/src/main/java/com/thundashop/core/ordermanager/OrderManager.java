@@ -23,6 +23,7 @@ import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeFilter;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
+import com.thundashop.core.getshopaccounting.DayIncomeTransferToAaccountingInformation;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.giftcard.GiftCardManager;
@@ -3424,5 +3425,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return result;
+    }
+
+    public void markAsTransferredToAccount(List<DayIncome> incomes) {
+        BasicDBObject query = new BasicDBObject();
+        for (DayIncome income : incomes) {
+            query.put("incomes.id", income.id);
+            List<DayIncomeReport> res = database.query("OrderManager", storeId, query).stream()
+                    .map(o -> (DayIncomeReport)o)
+                    .collect(Collectors.toList());
+            
+            for (DayIncomeReport rep : res) {
+                for (DayIncome inc : rep.incomes) {
+                    if (inc.id.equals(income.id)) {
+                        DayIncomeTransferToAaccountingInformation info = new DayIncomeTransferToAaccountingInformation();
+                        info.transferredByUserId = getSession().currentUser.id;
+                        inc.accountingTransfer.add(info);
+                    }
+                }
+                
+                database.save("OrderManager", "col_"+storeId, rep);
+            }            
+        }
+        
     }
 }

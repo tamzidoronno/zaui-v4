@@ -330,6 +330,7 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         }
         
         getActivatedAccountingSystemOther().transfer(incomes);
+        orderManager.markAsTransferredToAccount(incomes);
     }
 
 }

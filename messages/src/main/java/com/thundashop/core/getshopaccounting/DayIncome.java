@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -19,10 +19,12 @@ import org.mongodb.morphia.annotations.Transient;
  * @author ktonder
  */
 public class DayIncome {
+    public String id = UUID.randomUUID().toString();
     public Date start;
     public Date end;
     public boolean isFinal = false;
     public List<DayEntry> dayEntries = new ArrayList();
+    public List<DayIncomeTransferToAaccountingInformation> accountingTransfer = new ArrayList();
     
     /**
      * Used for return error messages to 

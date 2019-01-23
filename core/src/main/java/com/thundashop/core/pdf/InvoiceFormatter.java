@@ -31,7 +31,7 @@ public class InvoiceFormatter {
     public void replaceVariables() {
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        int tmpRest = (int)(order.getTotalAmount()-Math.floor(order.getTotalAmount()));
+        int tmpRest = (int)(order.getTotalAmount()*100-Math.floor(order.getTotalAmount())*100);
         String rest = tmpRest + "";
         if(tmpRest < 10) { rest = "0" + tmpRest; }
         

@@ -45,5 +45,21 @@ class SettingsDepartments extends \MarketingApplication implements \Application 
         $this->getApi()->getDepartmentManager()->deleteDepartment($_POST['data']['departmentid']);
     }
 
+    public function startEditingDepartment() {
+        $_SESSION['edit_department_id'] = $_POST['data']['departmentid'];
+        $this->setActiveTab('editdepartment');
+    }
+    
+    public function saveDepartment() {
+        $department = $this->getApi()->getDepartmentManager()->getDepartment($_SESSION['edit_department_id']);
+        $department->name = $_POST['data']['name'];
+        $department->code = $_POST['data']['code'];
+        $this->getApi()->getDepartmentManager()->saveDepartment($department);
+        $this->setActiveTab("departments");
+    }
+    
+    public function doARecalculationOfData() {
+        $this->getApi()->getPmsManager()->resetDeparmentsOnOrders($this->getSelectedMultilevelDomainName());
+    }
 }
 ?>

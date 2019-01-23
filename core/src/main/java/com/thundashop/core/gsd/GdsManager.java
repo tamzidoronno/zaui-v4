@@ -191,15 +191,6 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         queue.markMessagesPulled();
         
         if (queue.isEmpty()) {
-            for (int i=0; i<180; i++) {
-                try { Thread.sleep(100); } catch (Exception ex) {};
-                if (!queue.messages.isEmpty()) {
-                    break;
-                }
-            }
-        }
-        
-        if (queue.isEmpty()) {
             return new ArrayList();
         }
         

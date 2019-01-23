@@ -184,10 +184,12 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
         $('.numpadcomma').hide();
         $('.plusminus').hide();
        
+        $('.numpadcomma').attr('forcenegative', "false");
+        
         if ($stateParams.type === "collection" && $stateParams.collectionData && $stateParams.collectionData.action !== "adjustment") {
             setTimeout(function() {
                 $('.numpadcomma').attr('style', 'display: inline-block !important;');
-            }, 0);
+            }, 1);
         }
         
         if ($stateParams.type === "collection" && $stateParams.collectionData && $stateParams.collectionData.action === "adjustment") {
@@ -196,6 +198,16 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
                 $('.plusminus').attr('style', 'display: inline-block !important;');
             }, 0);
         }
+        
+        if ($stateParams.type === "collection" && $stateParams.collectionData) {
+            if ($stateParams.collectionData.action == "adjustedReturnCredit") {
+                setTimeout(function() { $('.numpadcomma').attr('forcenegative', true); },0);
+            }
+            
+            if ($stateParams.collectionData.action == "adjustmentPreviouseCredit") {
+                setTimeout(function() { $('.numpadcomma').attr('forcenegative', true); },0);
+            }
+        } 
     }
     
     $scope.setOrder();

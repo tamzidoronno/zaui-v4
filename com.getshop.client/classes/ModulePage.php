@@ -377,7 +377,6 @@ class ModulePage {
         $menu = new \ModulePageMenu("settings");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Departments", "departments", "gsicon-site-map");
-        $menu->entries[] = new ModulePageMenuItem("Segments", "segments", "gsicon-make-group");
         $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "gsicon-gs-gears");
         return $menu;
     }

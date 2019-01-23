@@ -44,4 +44,5 @@ if ($commhelper->errorCodes) {
     die();
 }
 echo json_encode($result);
+$factory->getApi()->getUserManager()->logout();
 ?>

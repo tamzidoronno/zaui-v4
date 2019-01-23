@@ -315,17 +315,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // If a max length is defined, verify we have not yet reached it
 	            if (!this.bcMaxLength || this.bcNumberModel.length < this.bcMaxLength) {
 	                this.bcNumberModel += number;
+                        if ($('.numpadcomma').attr('forcenegative') === "true" && parseInt(this.bcNumberModel, 10) > 0) {
+                            this.bcNumberModel *= -1;
+                            this.bcNumberModel = "" + this.bcNumberModel;
+                        }
 	            }
 	        }
-	
-	        /**
-	         * Delete the last number from the number model
-	         */
-	
+	    }, {
+	        key: 'changePositive',
+	        value: function changePositive() {
+                    
+                    if (this.bcNumberModel == "-") {
+                        this.bcNumberModel = "";
+                    } else if (this.bcNumberModel === "") {
+                        this.bcNumberModel = "-";
+                    } else {
+                        this.bcNumberModel *= -1;
+                        this.bcNumberModel = "" + this.bcNumberModel;
+                    }
+	        }
 	    }, {
 	        key: 'backspace',
 	        value: function backspace() {
 	            // If at least one number exists
+                    if (this.bcNumberModel == "-") {
+                        return;
+                    }
+                    
 	            if (this.bcNumberModel.length > 0) {
 	                this.bcNumberModel = this.bcNumberModel.substring(0, this.bcNumberModel.length - 1);
 	            } else {
@@ -452,7 +468,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	var path = '/Users/bc/Code/open-source/angular-keypad/src/templates/keypad.html';
-	var html = "<div class=bc-keypad> <div class=bc-keypad__key data-ng-repeat=\"number in ::vm.numbers track by number\"> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(number) angular-ripple aria-role=\"{{ ::number }}\"> {{ ::number }} </button> </div> <div class=\"bc-keypad__key bc-keypad__key--left\"> <ng-include src=\"vm.keyTemplate(vm.bcLeftButton, 'Left')\"></ng-include> </div> <div class=\"bc-keypad__key bc-keypad__key--center\"> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(vm.lastNumber) angular-ripple> {{ ::vm.lastNumber }} </button> </div> <div class=\"bc-keypad__key bc-keypad__key--right\"> <ng-include src=\"vm.keyTemplate(vm.bcRightButton, 'Right')\"></ng-include> </div> </div> ";
+	var html = "<div class=bc-keypad>";
+        html += "<div class=bc-keypad__key data-ng-repeat=\"number in ::vm.numbers track by number\"> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(number) angular-ripple aria-role=\"{{ ::number }}\"> {{ ::number }} </button> </div> <div class=\"bc-keypad__key bc-keypad__key--left\"> <ng-include src=\"vm.keyTemplate(vm.bcLeftButton, 'Left')\"></ng-include> </div> <div class=\"bc-keypad__key bc-keypad__key--center\"> <button class=bc-keypad__key-button data-ng-click=vm.setNumber(vm.lastNumber) angular-ripple> {{ ::vm.lastNumber }} </button> </div> <div class=\"bc-keypad__key bc-keypad__key--right\"> <ng-include src=\"vm.keyTemplate(vm.bcRightButton, 'Right')\"></ng-include> </div>";
+        html += "<div class='numpadcomma' data-ng-click=vm.setNumber('.') >,</div>"
+        html += "<div class='plusminus' data-ng-click=vm.changePositive() >+/-</div>"
+        html += "</div>";
+        
 	window.angular.module('ng').run(['$templateCache', function(c) { c.put(path, html) }]);
 	module.exports = path;
 

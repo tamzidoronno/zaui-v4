@@ -577,4 +577,7 @@ public interface IPmsManager {
      */
     @Administrator
     public void resetCheckingAutoAssignedStatus();
+    
+    @Administrator
+    public void resetDeparmentsOnOrders();
 }

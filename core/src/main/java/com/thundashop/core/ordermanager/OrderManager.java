@@ -14,6 +14,8 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.department.Department;
+import com.thundashop.core.department.DepartmentManager;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.epay.EpayManager;
 import com.thundashop.core.getshop.GetShopPullService;
@@ -42,6 +44,7 @@ import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
 import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
+import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
@@ -159,6 +162,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private PaymentManager paymentManager;
+    
+    @Autowired
+    private DepartmentManager departmentManager;
 
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -3373,4 +3379,50 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return retList;
     }
      
+    
+    public List<PmiResult> getPmiResult(Date start, Date end) {
+        ArrayList<PmiResult> result = new ArrayList();
+        
+        List<DayIncome> incomes = getDayIncomes(start, end);
+        
+        for (DayIncome dayIncome : incomes) {
+            
+            if (!dayIncome.isFinal && getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport) {
+                continue;
+            }
+            
+            Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
+                .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
+                .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).departmentId));
+
+
+            for (String departmentId : groupedByDepartmentId.keySet()) {
+                Department department = departmentManager.getDepartment(departmentId);
+                
+                List<DayEntry> itemsWithDepartment = groupedByDepartmentId.get(departmentId);
+                
+                Map<String, List<DayEntry>> groupedByProductId = itemsWithDepartment
+                        .stream()
+                        .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).getProductId()));
+
+                for (String productId : groupedByProductId.keySet()) {
+                    PmiResult toAdd = new PmiResult();
+                    toAdd.department = department != null ? department.code : "";
+                    toAdd.prodcutId = productId;
+                    toAdd.propertyid = storeId;
+                    toAdd.productName = productManager.getProduct(productId).name;
+                    toAdd.revenue = groupedByProductId.get(productId).stream()
+                            .mapToDouble(o -> o.amountExTax.doubleValue() * -1)
+                            .sum();
+                    toAdd.transactiondate = dayIncome.start;
+                    
+                    if (toAdd.revenue != 0) {
+                        result.add(toAdd);
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
 }

@@ -23,24 +23,24 @@ if ($closeResult->canClose) {
         <?
     }
     
-    foreach ($closeResult->bookingsWithProblems as $pmsBooking) {
+    if (count($closeResult->roomsWithProblems)) {
         ?>
         <div class="row error_row">
-            <div class="col col_bookingnumber"><? echo $this->__f("The booking with id ")." ".$pmsBooking->incrementBookingId." ".$this->__f("has an unsettled amount").": ".$pmsBooking->unsettled; ?></div>
             <div class="rooms">
-                <?
-                echo "<b>".$this->__f("Rooms").":</b>";
-                foreach ($pmsBooking->rooms as $pmsSelectedRoom) {
-                    $totalOnRoom = round($pmsSelectedRoom->totalCost);
-                    $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
-                    $unsettledRoom = round($totalOnRoom - $totalOrdersRoom);
-                    $firstGuest = $pmsSelectedRoom->guests[0];
-                    echo '<div><i class="gs_shop_small_icon fa fa-edit" '.'gs_show_modal="booking_room_view" onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid="'.$pmsBooking->id.'" roomid="'.$pmsSelectedRoom->pmsBookingRoomId.'"'.'title='.$this->__f("Open booking").'></i> '."$firstGuest->name / Amount: $unsettledRoom</div>";
+            <?
+            foreach ($closeResult->roomsWithProblems as $pmsSelectedRoom) {
 
-                }
-                ?>
+                $totalOnRoom = round($pmsSelectedRoom->totalCost);
+                $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
+                $unsettledRoom = round($totalOnRoom - $totalOrdersRoom);
+                $firstGuest = $pmsSelectedRoom->guests[0];
+                $start = date('d.m.Y' , strtotime($pmsSelectedRoom->date->start));
+                $end = date('d.m.Y' , strtotime($pmsSelectedRoom->date->end));
+                echo '<div><i class="gs_shop_small_icon fa fa-edit" '.'gs_show_modal="booking_room_view" onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid="'.$pmsBooking->id.'" roomid="'.$pmsSelectedRoom->pmsBookingRoomId.'"'.'title='.$this->__f("Open booking").'></i> '."$firstGuest->name / Amount: $unsettledRoom - ($start - $end)</div>";
+            }
+            ?>
             </div>
-        </div>
+        </div>        
         <?
     }
     

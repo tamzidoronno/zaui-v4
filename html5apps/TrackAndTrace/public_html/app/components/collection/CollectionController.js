@@ -66,7 +66,13 @@ controllers.CollectionController = function($scope, datarepository, $stateParams
     
     $scope.getReturnCredit = function() {
         var groupedTask = $scope.getGroupedTasks();
-        return groupedTask.adjustedReturnCredit;
+        var adjustedCredit = groupedTask.adjustedReturnCredit;
+        
+        if (!adjustedCredit) {
+            return 0;
+        }
+        
+        return adjustedCredit;
     }
     
     $scope.getAdjustment = function() {

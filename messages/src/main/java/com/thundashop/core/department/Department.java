@@ -13,6 +13,7 @@ import com.thundashop.core.common.DataCommon;
  */
 public class Department extends DataCommon {
 
-    public String name;
+    public String name = "";
     
+    public String code = "";
 }

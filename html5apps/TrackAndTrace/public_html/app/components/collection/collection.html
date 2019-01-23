@@ -41,7 +41,8 @@
         <div class='orderamount'>{{ getTotalPayment() | number : 2 }}</div>
     </div>
 
-    <div class="button ng-scope" ng-mobile-click="showPayment()">Continue to payment</div>
+    <div class="button ng-scope" ng-if='getTotalPayment()' ng-mobile-click="showPayment()">Continue to payment</div>
+    <div class="button ng-scope" ng-if='!getTotalPayment()' ng-mobile-click="collectionCompleted()">Collection completed</div>
 </div>
 
 <div class="collection" ng-if="paymentView">

@@ -512,6 +512,13 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         
         if(type.equals("room") && room != null) {
             boolean sentToBooker = false;
+            
+            for(PmsGuests guest : room.guests) {
+                if(guest != null && guest.email != null && guest.email.contains("@")) {
+                    sentToBooker = true;
+                }
+            }
+            
             for(PmsGuests guest : room.guests) {
                 if(guest != null && guest.email != null && guest.email.contains("@")) {
                     recipients.add(guest.email);
@@ -580,6 +587,13 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         
         if(type.equals("room") && room != null) {
             boolean sentToBooker = false;
+            
+            for(PmsGuests guest : room.guests) {
+                if(guest != null && guest.phone != null && !guest.phone.isEmpty()) {
+                    sentToBooker = true;
+                }
+            }
+            
             for(PmsGuests guest : room.guests) {
                 if(guest != null && guest.phone != null && !guest.phone.isEmpty()) {
                     recipients.add(guest);

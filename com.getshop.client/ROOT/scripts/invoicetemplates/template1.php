@@ -196,7 +196,7 @@ function doTranslation($key) {
     .alreadypaidtext { position:Absolute; width: 1030px; height:600px;z-index:2; background-color:rgba(0,0,0,0.8); text-align: center; font-size: 60px; color:#fff; box-sizing:border-box; padding-top: 100px; }
     .girfooterheadertext { font-weight: bold; font-size: 12px; }
     .kidarea { border-left: solid 1px; width: 200px; display: inline-block; float:left; height: 55px; margin-left: 40px; padding-left: 10px; padding-top: 5px; box-sizing: border-box; }
-    .intamountarea { border-left: solid 1px; width: 100px; display: inline-block; float:left; height: 55px;  margin-left: 40px; padding-left: 10px; padding-top: 5px; box-sizing: border-box; }
+    .intamountarea { border-left: solid 1px; width: 100px; display: inline-block; float:left; height: 55px;  margin-left: 40px; padding-left: 10px; padding-top: 17px; box-sizing: border-box; }
     .remainderarea { border-left: solid 1px; width: 100px; display: inline-block; float:left; height: 55px;  margin-left: 40px; padding-left: 10px; padding-top: 5px; box-sizing: border-box; }
     .toaccount { border-left: solid 1px; width: 200px; display: inline-block; float:left; height: 55px; margin-left: 40px; padding-left: 10px; padding-top: 5px; box-sizing: border-box; }
     .girofooterbottom { height: 20px; background-color: #fff685;}

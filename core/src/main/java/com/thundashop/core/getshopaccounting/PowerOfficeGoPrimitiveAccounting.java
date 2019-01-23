@@ -80,8 +80,10 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
     public void transfer(List<DayIncome> incomes) {
         createAccessToken();
 
+        int i = 0;
         for (DayIncome income : incomes) {    
-            transferIncomeData(income);
+            i++;
+            transferIncomeData(income, i);
         }
     }
     private String createAccessToken() {
@@ -98,13 +100,14 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
         }
     }
     
-    private String transferIncomeData(DayIncome income) {
+    private String transferIncomeData(DayIncome income, int number) {
         String endpoint = "http://api.poweroffice.net/Import/";
         List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
 
         SalesOrderTransfer transferObject = new SalesOrderTransfer();
         transferObject.description = "getshop file for: " +income.start + " - " + income.end;
-        transferObject.importLines = createImportLines(income);
+        transferObject.importLines = createImportLines(income, number);
+        transferObject.type = 99;
         Gson gson = new Gson();
         String data = gson.toJson(transferObject);
         try {
@@ -122,7 +125,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
         return "";
     }
 
-    private List<PowerOfficeGoImportLine> createImportLines(DayIncome income) {
+    private List<PowerOfficeGoImportLine> createImportLines(DayIncome income, int number) {
         System.out.println("================ Day : " + income.start + " - " + income.end + " ============");
         BigDecimal zeroCheck = new BigDecimal(BigInteger.ZERO);
 
@@ -137,9 +140,16 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
             
             System.out.println("To be transfered on account: " + accountingNumber + ", total: " + total);
             PowerOfficeGoImportLine toAdd = new PowerOfficeGoImportLine();
-            toAdd.accountNumber = new Integer(accountingNumber);
+            
+            if (accountingNumber.length() == 4) {
+                toAdd.accountNumber = new Integer(accountingNumber);
+            } else {
+                toAdd.customerCode = new Integer(accountingNumber);
+            }
+            
             toAdd.postingDate = income.start;
             toAdd.amount = total.doubleValue();
+            toAdd.documentNumber = number;
             
             DayEntry dayEntry = groupedIncomes.get(accountingNumber).get(0);
 

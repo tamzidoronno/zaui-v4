@@ -794,6 +794,9 @@ public class PmsManagerProcessor {
             if(isBookingExternalChannel && booking.channel.equals("terminal")) {
                 isBookingExternalChannel = false;
             }
+            if(isBookingExternalChannel && booking.channel.equals("website")) {
+                isBookingExternalChannel = false;
+            }
             boolean forceSend = isBookingExternalChannel;
             if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings && !manager.storeManager.isPikStore()) {
                 forceSend = true;

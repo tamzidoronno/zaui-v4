@@ -969,4 +969,12 @@ public class PmsBookingRooms implements Serializable {
         return false;
     }
 
+    boolean beforeFirstOfJan2019() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2019);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        return date.start.before(cal.getTime());
+    }
+
 }

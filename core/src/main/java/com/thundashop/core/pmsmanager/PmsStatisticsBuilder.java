@@ -97,7 +97,10 @@ class PmsStatisticsBuilder {
                 }
                 
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
-                    if(((!booking.payedFor && !invoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) && !filter.includeVirtual) && room.isEnded()) {
+                    
+                    // With the new accounting system as of 1th of january 2019, this makes no sense any more.
+                    // All orders should be part of the statistic, regardless of its paid or not.
+                    if(((!booking.payedFor && !invoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) && !filter.includeVirtual) && room.isEnded() && room.beforeFirstOfJan2019()) {
                         if(room.isActiveOnDay(cal.getTime())) {
                             entry.roomsNotIncluded++;
                         }

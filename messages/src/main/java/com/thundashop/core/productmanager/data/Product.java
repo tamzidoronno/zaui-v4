@@ -87,7 +87,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
      * Uses accountingConfig instaed.
      *
      */
-    public String accountingAccount;
+    private String accountingAccount;
     
     /**
      * Used on the new accounting (primitiv) way.
@@ -411,5 +411,22 @@ public class Product extends DataCommon implements Comparable<Product>  {
                     .filter(o -> o.taxGroupNumber != null && o.taxGroupNumber.equals(taxGroupNumber))
                     .findAny()
                     .orElse(null);
+    }
+
+    public String getAccountingAccount() {
+        if(accountingAccount != null && !accountingAccount.isEmpty()) {
+            return accountingAccount;
+        }
+
+        for(ProductAccountingInformation a : accountingConfig) {
+            if(a.accountingNumber != null && !a.accountingNumber.isEmpty()) {
+                return a.accountingNumber;
+            }
+        }
+        return null;
+    }
+
+    public void setAccountingAccount(String account) {
+        accountingAccount = account;
     }
 }

@@ -329,11 +329,11 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                     addToLog("Product does not exists on order " + order.incrementOrderId);
                     continue;
                 }
-                if(prod.accountingAccount == null) {
+                if(prod.getAccountingAccount() == null) {
                     addToLog("Product : " + prod.name + " does not have an accounting number, orderid: " + order.incrementOrderId);
                     continue;
                 }
-                line.accountNumber = new Integer(prod.accountingAccount);
+                line.accountNumber = new Integer(prod.getAccountingAccount());
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;
                 line.invoiceNo = incrementOrderId;

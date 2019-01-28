@@ -287,7 +287,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             subLine.put(3, "1");
             subLine.put(4, "");
             subLine.put(5, "");
-            subLine.put(6, product.accountingAccount);
+            subLine.put(6, product.getAccountingAccount());
             subLine.put(7, product.sku);
             BigDecimal itemamount = item.getTotalExRoundedWithTwoDecimals(2);
             subLine.put(8, df.format(itemamount));

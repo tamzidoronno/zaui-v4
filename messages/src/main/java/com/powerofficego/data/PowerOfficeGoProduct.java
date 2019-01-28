@@ -23,8 +23,8 @@ public class PowerOfficeGoProduct implements Serializable {
         costPrice = product.priceExTaxes;
         salesPrice = product.priceExTaxes;
         description = product.description;
-        if(product.accountingAccount != null && !product.accountingAccount.isEmpty()) {
-            salesAccount = new Integer(product.accountingAccount);
+        if(product.getAccountingAccount() != null && !product.getAccountingAccount().isEmpty()) {
+            salesAccount = new Integer(product.getAccountingAccount());
         }
     }
 }

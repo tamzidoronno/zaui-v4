@@ -126,7 +126,7 @@ public class RubiCon extends AccountingTransferOptions implements AccountingTran
 
         //This is the configuration
         if(item != null) {
-            account = managers.productManager.getProduct(item.getProduct().id).accountingAccount;
+            account = managers.productManager.getProduct(item.getProduct().id).getAccountingAccount();
             mvaKode = managers.productManager.getProduct(item.getProduct().id).sku;
         } else {
             if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {

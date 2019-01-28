@@ -267,7 +267,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
     }
     
     public String getAccountingNumberForProduct(String productId) {
-        return productManager.getProduct(productId).accountingAccount;
+        return productManager.getProduct(productId).getAccountingAccount();
     }
     
     public String getUniqueCustomerIdForOrder(Order order) {

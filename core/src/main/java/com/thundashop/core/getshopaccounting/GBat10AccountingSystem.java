@@ -212,7 +212,7 @@ public class GBat10AccountingSystem extends AccountingSystemBase {
             subLine.put(3, "1");
             subLine.put(4, firstMonth + "");
             subLine.put(5, year + "");
-            subLine.put(6, product.accountingAccount);
+            subLine.put(6, product.getAccountingAccount());
             subLine.put(7, product.sku);
             subLine.put(8, df.format(item.getProduct().price * item.getCount() * -1)+"");
             subLine.put(9, "");

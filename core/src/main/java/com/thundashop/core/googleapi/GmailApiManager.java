@@ -79,8 +79,8 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
     public void fetchAllMessages() {
         try {
             doFolder("in:inbox", false);
-//            doFolder("in:inbox/behandlet", false);
-//            doFolder("in:sent", true);
+            doFolder("in:inbox/behandlet", false);
+            doFolder("in:sent", true);
         } catch (IOException ex) {
             Logger.getLogger(GmailApiManager.class.getName()).log(Level.SEVERE, null, ex);
         }

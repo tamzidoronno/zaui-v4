@@ -20,6 +20,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.usermanager.data.User;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -303,11 +304,10 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                     addToLog("Product does not exists on order " + order.incrementOrderId);
                     continue;
                 }
-                if(prod.accountingAccount == null) {
-                    addToLog("Product : " + prod.name + " does not have an accounting number, orderid: " + order.incrementOrderId);
-                    continue;
-                }
-                line.accountNumber = new Integer(prod.accountingAccount);
+                String account = prod.getAccountingAccount();
+                
+                
+                line.accountNumber = new Integer(account);
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;
                 line.invoiceNo = (int)order.incrementOrderId;

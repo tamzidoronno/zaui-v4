@@ -69,7 +69,7 @@ public class Hybelhotell implements AccountingInterface {
             toAdd.put(6, format1.format(order.rowCreatedDate));
             toAdd.put(7, user.customerId + "");
             toAdd.put(16, "NOK");
-            toAdd.put(17, managers.productManager.getProduct(item.getProduct().id).accountingAccount); //Product code.
+            toAdd.put(17, managers.productManager.getProduct(item.getProduct().id).getAccountingAccount()); //Product code.
             toAdd.put(19, lineText);
             toAdd.put(22, "døgn");
             toAdd.put(23, item.getCount() + "");

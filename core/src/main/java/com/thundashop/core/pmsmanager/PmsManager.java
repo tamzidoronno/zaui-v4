@@ -5792,6 +5792,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (end != null) {
                 end = pmsInvoiceManager.normalizeDate(end, false);
                 while (true) {
+                    if((!addonConfig.isSingle || addonConfig.isIncludedInRoomPrice) && PmsBookingRooms.isSameDayStatic(room.date.end, start)) {
+                        break;
+                    }
                     PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start, room);
                     result.add(toAdd);
                     start = addTimeUnit(start, priceType);
@@ -9142,7 +9145,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for (PmsBookingAddonItem item : room.addons) {
                 if (item.productId.equals(productId)) {
                     if(avoidProductInStayPeriode) {
-                        boolean isDailyAndOnCheckoutDate = (!item.isSingle && PmsBookingRooms.isSameDayStatic(item.date, room.date.end));
+                        boolean isDailyAndOnCheckoutDate = ((!item.isSingle || item.isIncludedInRoomPrice) && PmsBookingRooms.isSameDayStatic(item.date, room.date.end));
                         if((isDailyAndOnCheckoutDate || room.date.start.after(item.date) || room.date.end.before(item.date)) && !PmsBookingRooms.isSameDayStatic(item.date, room.date.start)) {
                             toRemove.add(item);
                         }

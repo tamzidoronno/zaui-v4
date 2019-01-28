@@ -148,7 +148,7 @@ public class GBAT10Special extends AccountingTransferOptions implements Accounti
             subLine.put(3, "1");
             subLine.put(4, firstMonth + "");
             subLine.put(5, year + "");
-            subLine.put(6, managers.productManager.getProduct(item.getProduct().id).accountingAccount);
+            subLine.put(6, managers.productManager.getProduct(item.getProduct().id).getAccountingAccount());
             subLine.put(7, managers.productManager.getProduct(item.getProduct().id).sku);
             subLine.put(8, df.format(item.getProduct().price * item.getCount())+"");
             subLine.put(9, customerId+"");

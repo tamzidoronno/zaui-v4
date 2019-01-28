@@ -528,7 +528,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.id = "giftcard";
         product.name = "Gift Card";
         product.taxgroup = 0;
-        product.accountingAccount = "2901";
+        product.setAccountingAccount("2901");
         saveObject(product);
         
         products.put(product.id, product);

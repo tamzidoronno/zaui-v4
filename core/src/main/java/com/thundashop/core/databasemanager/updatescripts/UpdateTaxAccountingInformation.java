@@ -60,7 +60,7 @@ public class UpdateTaxAccountingInformation extends UpdateScriptBase implements 
             for (Product product : products) {
                 product.accountingConfig.clear();
                 ProductAccountingInformation pdai = new ProductAccountingInformation();
-                pdai.accountingNumber = product.accountingAccount;
+                pdai.accountingNumber = product.getAccountingAccount();
                 
                 if (product.taxGroupObject != null) {
                     pdai.taxGroupNumber = product.taxGroupObject.groupNumber;

@@ -1223,17 +1223,17 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         // PMS Addons
         if (needToStopDueToIllegalChangeInAddons(null, close)) {
-            overrideAccountingDate = new Date();
+            overrideAccountingDate = close;
             return;
         }
         
         if (needToStopDueToIllegalChangeOfPriceMatrix(null, close)) {
-            overrideAccountingDate = new Date();
+            overrideAccountingDate = close;
             return;
         }
         
         if (needToStopDueToIllegalChangePaymentDate(null, close)) {
-            overrideAccountingDate = new Date();
+            overrideAccountingDate = close;
             return;
         }
     }

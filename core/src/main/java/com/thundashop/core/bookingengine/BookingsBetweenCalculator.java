@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 public class BookingsBetweenCalculator {
     private final List<List<Booking>> possibleCombos = new ArrayList();
     private final Map<String, Booking> bookingsToCheck;
-    private final Date start;
-    private final Date end;
+    public final Date start;
+    public final Date end;
     private List<Booking> unassignedBookings;
     private List<Booking> bestCombo = new ArrayList();
     private long bestComboLength = -1;

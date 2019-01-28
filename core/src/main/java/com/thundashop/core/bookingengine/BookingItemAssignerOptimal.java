@@ -38,6 +38,7 @@ public class BookingItemAssignerOptimal {
     private boolean throwException = true;
     private HashMap<Booking, BookingItem> assigned = new HashMap();
     private final String storeId;
+    private ArrayList<String> overLoads = new ArrayList();
 
     public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items, Boolean throwException, String storeId) {
         this.type = type;
@@ -62,12 +63,17 @@ public class BookingItemAssignerOptimal {
      * it is considered to be ok.
      */
     public void canAssign() {
-        List<OptimalBookingTimeLine> bookingLines = preCheck();
+        List<OptimalBookingTimeLine> bookingLines = preCheck(null, null);
         dryRun = true;
     }
     
-    private List<OptimalBookingTimeLine> preCheck() {
-        List<OptimalBookingTimeLine> bookingLines = makeOptimalTimeLines();
+    private void canAssign(Date startDate, Date endDate) {
+        List<OptimalBookingTimeLine> bookingLines = preCheck(startDate, endDate);
+        dryRun = true;
+    }
+    
+    private List<OptimalBookingTimeLine> preCheck(Date startDate, Date endDate) {
+        List<OptimalBookingTimeLine> bookingLines = makeOptimalTimeLines(startDate, endDate);
         long maximumNumberOfLines = items.stream().mapToInt(o -> o.bookingSize).sum();
         
         if (bookingLines.size() > maximumNumberOfLines) {
@@ -94,7 +100,7 @@ public class BookingItemAssignerOptimal {
      * 
      * @return 
      */
-    private List<OptimalBookingTimeLine> makeOptimalTimeLines() {
+    private List<OptimalBookingTimeLine> makeOptimalTimeLines(Date startDate, Date endDate) {
         List<Booking> unassignedBookings = new ArrayList(getAllUnassignedBookings());
         List<Booking> assignedBookings = new ArrayList(getAllAssginedBookings());
         
@@ -110,7 +116,7 @@ public class BookingItemAssignerOptimal {
             addUnassignedBookingsToLineSingleItem(bookingLines, unassignedBookings);
         } else {
             if (usingNewSystem2.contains(storeId) || BookingEngine.useNewEngine.contains(storeId)) {
-                addBestCombosBetweenAssignedBookings(bookingLines, unassignedBookings);
+                addBestCombosBetweenAssignedBookings(bookingLines, unassignedBookings, startDate, endDate);
                 addUnassignedBookingsToLine(bookingLines, unassignedBookings);
             } else if (usingNewSystem.contains(storeId)) {
                 assignAllBookingsThatHasSinglePointOfPosition(bookingLines, unassignedBookings);
@@ -319,15 +325,17 @@ public class BookingItemAssignerOptimal {
         }
         
         List<String> retItems = new ArrayList();
+        
         for (BookingItem item : items) {
             booking.bookingItemId = item.id;
             try {
-                canAssign();
+                canAssign(booking.startDate, booking.endDate);
                 retItems.add(item.id);
             } catch (BookingEngineException ex) {
                 continue;
             }
         }
+        overLoads.clear();
         
         return retItems;
     }
@@ -419,7 +427,7 @@ public class BookingItemAssignerOptimal {
     }
 
     public List<String> getBookingsFromTimeLine(String bookingItemId) {
-        List<OptimalBookingTimeLine> availableBookingItems = preCheck();
+        List<OptimalBookingTimeLine> availableBookingItems = preCheck(null, null);
        
         for (OptimalBookingTimeLine timeLine : availableBookingItems) {
             if (timeLine.bookingItemId.equals(bookingItemId)) {
@@ -633,7 +641,7 @@ public class BookingItemAssignerOptimal {
     
     public List<OptimalBookingTimeLine> getOptimalAssigned() {
         dryRun = true;
-        return preCheck();
+        return preCheck(null, null);
     }
 
     private BookingItemTimeline getNextAvailableItem(OptimalBookingTimeLine line, List<OptimalBookingTimeLine> bookingLines, List<String> itemIdsUsed) {
@@ -819,7 +827,7 @@ public class BookingItemAssignerOptimal {
         return null;
     }
 
-    private void addBestCombosBetweenAssignedBookings(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+    private void addBestCombosBetweenAssignedBookings(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings, Date startDate, Date endDate) {
         
         List<BookingsBetweenCalculator> datesToCheck = new ArrayList();
         
@@ -846,6 +854,12 @@ public class BookingItemAssignerOptimal {
             }
         }
         
+        if (startDate != null && endDate != null) {
+            datesToCheck.removeIf(o -> o.start.after(endDate));
+        }
+        
+        datesToCheck.removeIf(o -> overLoads.contains(o.getTimeString()));
+        
         while(!datesToCheck.isEmpty()) {
             datesToCheck.parallelStream()
                     .forEach(o -> {
@@ -853,18 +867,33 @@ public class BookingItemAssignerOptimal {
                         o.process();
                 });
             
-            Collections.sort(datesToCheck, (BookingsBetweenCalculator a, BookingsBetweenCalculator b) -> {
+            overLoads.addAll(datesToCheck.stream()
+                .filter(o -> o.isOverflow())
+                .map(o -> o.getTimeString())
+                .collect(Collectors.toList())
+            );
+            
+            datesToCheck.removeIf(o -> o.isOverflow());
+            
+            List<BookingsBetweenCalculator> bookingsWithPossibleCombos = datesToCheck.stream()
+                    .filter(o -> !o.getBestCombo().isEmpty())
+                    .collect(Collectors.toList());
+            
+            if (bookingsWithPossibleCombos.isEmpty()) {
+                break;
+            }
+            
+            Collections.sort(bookingsWithPossibleCombos, (BookingsBetweenCalculator a, BookingsBetweenCalculator b) -> {
                 Double l1 = new Double(a.getCoveragePercent());
                 Double l2 = new Double(b.getCoveragePercent());
                 return l2.compareTo(l1);
             });
             
-            BookingsBetweenCalculator use = datesToCheck.get(0);
+            BookingsBetweenCalculator use = bookingsWithPossibleCombos.get(0);
             List<Booking> bookings = use.getBestCombo();
             use.getTimeLine().bookings.addAll(bookings);
             unassignedBookings.removeAll(bookings);
             datesToCheck.remove(use);
-//            System.out.println("SIze: " + unassignedBookings.size() + " Bookings: " + bookings.size() + " | " + datesToCheck.size() + " § time: " + use.getTotalTimeAvailableWithBestCombo());
         }
 
     }

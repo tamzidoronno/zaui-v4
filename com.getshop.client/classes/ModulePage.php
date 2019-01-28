@@ -65,6 +65,10 @@ class ModulePage {
             return $this->getSettingsMenu();
         }
         
+        if ($this->module == "getshop") {
+            return $this->getGetShopMenu();
+        }
+        
     }
 
     /**
@@ -377,6 +381,18 @@ class ModulePage {
         $menu = new \ModulePageMenu("settings");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Departments", "departments", "gsicon-site-map");
+        $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "gsicon-gs-gears");
+        return $menu;
+    }
+
+    public function getGetShopMenu() {
+        $menu = new \ModulePageMenu("settings");
+        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Customers", "customers", "gsicon-factory");
+        $menu->entries[] = new ModulePageMenuItem("Inbox", "inbox", "fa-inbox");
+        $menu->entries[] = new ModulePageMenuItem("Suppliers", "suppliers", "fa-truck");
+        $menu->entries[] = new ModulePageMenuItem("Inventory", "inventory", "gsicon-calculator");
+        $menu->entries[] = new ModulePageMenuItem("Support", "inventory", "fa-support");
         $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "gsicon-gs-gears");
         return $menu;
     }

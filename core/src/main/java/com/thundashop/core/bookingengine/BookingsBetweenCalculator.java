@@ -7,6 +7,7 @@ package com.thundashop.core.bookingengine;
 
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
+import com.thundashop.core.common.BookingEngineException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class BookingsBetweenCalculator {
     private final OptimalBookingTimeLine timeLine;
     private final long totalLength;
     private double coveragePercent;
+    private boolean overflow = false;
 
     public BookingsBetweenCalculator(Date start, Date end, List<Booking> unassignedBookings, OptimalBookingTimeLine timeLine) {
         this.bookingsToCheck = new HashMap();
@@ -68,7 +70,13 @@ public class BookingsBetweenCalculator {
         bookingsToCheck.values().stream()
                 .forEach(b -> flatten.add(b));
         
-        List<String> bookingIds = flatten.getAllPossibleCombos();
+        List<String> bookingIds = new ArrayList();
+        try {
+            bookingIds = flatten.getAllPossibleCombos();
+        } catch (BookingEngineException ex) {
+            this.overflow = true;
+        }
+        
         for (String bookingIdString : bookingIds) {
             String[] bookingIdsToUse = bookingIdString.split(",");
             List<Booking> bookingsCombo = new ArrayList();
@@ -137,4 +145,16 @@ public class BookingsBetweenCalculator {
         
         coveragePercent = (double)bestComboLength / (double)totalLength;
     }
+    
+    public boolean isOverflow() {
+        return overflow;
     }
+
+    public List getPossibleCombos() {
+        return possibleCombos;
+    }
+    
+    public String getTimeString() {
+        return start.getTime()+"_"+end.getTime();
+    }
+}

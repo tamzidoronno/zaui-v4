@@ -49,6 +49,9 @@ class PageFactory {
         if ($moduleId == "settings") {
             $this->createSettingsPages();
         }
+        if ($moduleId == "getshop") {
+            $this->createGetShopPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -667,6 +670,28 @@ class PageFactory {
         $row->addColumn("27656859-aeed-41f7-9941-f01d0f860212", "f05c190e-2ba5-4604-b8cc-ffe93647e46c");
         $this->pages[$page->getId()] = $page;
         
+    }
+    
+    public function createGetShopPages() {
+        $page = new \ModulePage("home", "getshop");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("80ddbee0-09ee-4b05-8e2d-01c7055b9ab3", "50357490-7764-42d1-8438-77d34928a718");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("customers", "getshop");
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("2f62f832-5adb-407f-a88e-208248117017", "50357490-7764-42d1-8438-72d34928a718");
+        $row->addColumn("a22fa681-6882-4869-8add-b1cc9c7b661b", "40357490-7764-42d1-8438-72d34928a718");
+        $this->pages['customers'] = $page;
+        
+        $page = new \ModulePage("inbox", "getshop");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn('f1706b4c-f779-4eb7-aec3-ee08f182e090', "40357190-7764-42d1-8436-72d34928a718");
+        $this->pages['inbox'] = $page;
     }
 
 }

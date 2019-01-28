@@ -352,11 +352,7 @@ public class BookingTimeLineFlatten implements Serializable {
         List<String> result = new ArrayList();
         
         for (String bookingId : timeLines.get(0).bookingIds) {
-            try {
-                getNextCombination(0, bookingId, timeLines, bookingId, result);
-            } catch (BookingEngineException ex) {
-                return new ArrayList();
-            }
+            getNextCombination(0, bookingId, timeLines, bookingId, result);
         }
         
         return result;

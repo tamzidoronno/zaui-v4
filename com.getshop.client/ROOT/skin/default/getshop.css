@@ -146,6 +146,7 @@ a {
 
 .gs_page_col {
     display: inline-block;
+    vertical-align: top;
 }
 
 .gs_page_col.col1 { width: 100%; }

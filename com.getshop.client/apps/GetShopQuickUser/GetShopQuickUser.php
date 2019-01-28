@@ -7,6 +7,7 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
     public $printEditDirect = false;
     public $hideWarning = false;
     public $avoidSaving = false;
+    public $invokeJavascriptFunctionAfterActions = "";
     
     public function getDescription() {
     }

@@ -1,0 +1,23 @@
+<?
+/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$admins = $this->getApi()->getUserManager()->getUsersByType(100);
+?>
+
+<div class='topmenu'>
+    
+    <div class='selected_checkbox_options'>
+        <div class='gs_shop_small_icon fa fa-arrow-circle-o-down checkboxaction'></div>
+        <div class='menu'>
+            <div class='entry'>Assign to:
+                <?
+                foreach ($admins as $admin) {
+                ?>
+                    <div class='subentry doassignment' userid='<? echo $admin->id; ?>'><? echo $admin->fullName." - ".$admin->emailAddress." - ".$admin->cellPhone; ?></div>
+                <?
+                }
+                ?>
+            </div>
+            <div class='entry ignore'>Archive Message</div>
+        </div>
+    </div>
+</div>

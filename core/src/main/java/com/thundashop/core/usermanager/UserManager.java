@@ -2512,4 +2512,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .filter(o -> o.secondaryLoginCode != null && !o.secondaryLoginCode.isEmpty())
                 .collect(Collectors.toList());
     }
+
+    public Company getCompanyByEmail(String emailAddress) {
+        return getUserStoreCollection(storeId).getAllUsers().stream()
+                .filter(u -> u.companyObject != null)
+                .filter(u -> u.emailAddress.toLowerCase().equals(emailAddress.toLowerCase()))
+                .map(u -> u.companyObject)
+                .findFirst()
+                .orElse(null);
+    }
 }

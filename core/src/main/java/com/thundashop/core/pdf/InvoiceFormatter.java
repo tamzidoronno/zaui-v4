@@ -35,8 +35,11 @@ public class InvoiceFormatter {
         String rest = tmpRest + "";
         if(tmpRest < 10) { rest = "0" + tmpRest; }
         
-        
-        this.base = this.base.replace("{fullName}", user.fullName);
+        if(user!=null) {
+            this.base = this.base.replace("{fullName}", user.fullName);
+        } else {
+            this.base = this.base.replace("{fullName}", "");
+        }
         if(accountingDetails.logo != null) {
             this.base = this.base.replace("{logo}", "<img src='"+accountingDetails.logo+"'></img>");
         } else {
@@ -64,7 +67,7 @@ public class InvoiceFormatter {
             }
         }
 
-        if(user.address != null) {
+        if(user != null && user.address != null) {
             if(user.address.address != null) { this.base = this.base.replace("{addressaddress}", user.address.address); }
             if(user.address.postCode != null) { this.base = this.base.replace("{addresspostCode}", user.address.postCode); }
             if(user.address.city != null) { this.base = this.base.replace("{addresscity}", user.address.city); }

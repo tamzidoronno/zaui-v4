@@ -1366,7 +1366,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void addGroupAddons(GuestAddonsSummary result) {
-        
         for (RoomInfo room : result.rooms) {
             List<PmsBookingAddonItem> addons = pmsManager.getAddonsWithDiscount(room.roomId);
             
@@ -1399,8 +1398,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         .collect(Collectors.toList());
                 
                 AddonItem addonItem = new AddonItem();
-                addonItem.setAddon(groupAddon);
+//                addonItem.setAddon(groupAddon);
+                
                 String curLang = getSession().language;
+                String translatedDesc = groupAddon.getTranslationsByKey("descriptionWeb", curLang);
+                if(translatedDesc != null && !translatedDesc.isEmpty()) {
+                    addonItem.descriptionWeb = translatedDesc;
+                }
+
+                
                 addonItem.name = productManager.getProduct(groupAddon.productId).name;
                 String translatedName = groupAddon.getTranslationsByKey("name", curLang);
                 if(translatedName != null && !translatedName.isEmpty()) {

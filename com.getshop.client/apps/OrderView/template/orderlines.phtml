@@ -71,3 +71,6 @@ if ($order->isCreditNote) {
         </div>
     </div>
 </div>
+<div style="margin-left: 20px;">
+    <span class="shop_button" onclick='window.open("/scripts/downloadInvoice.php?orderId=<?php echo $order->id; ?>&incrementalOrderId=<?php echo $order->incrementOrderId; ?>");'>Download</span>
+</div>

@@ -895,7 +895,7 @@ public class BookingItemAssignerOptimal {
             unassignedBookings.removeAll(bookings);
             datesToCheck.remove(use);
         }
-
+        
     }
 
 

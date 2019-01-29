@@ -103,7 +103,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     if (error != null && error.errorCode  != null && error.errorCode == 26 && !localStorage.getItem('username')) {
                         return;
                     }
-                    this.showErrorMessage(errorTextMatrix[error.errorCode]);
+                    me.showErrorMessage(errorTextMatrix[error.errorCode]);
                 }
             });
             

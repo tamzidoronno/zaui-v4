@@ -27,6 +27,7 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
                     datarepository.updateRoute(route[0]);
                     datarepository.selectedRouteForPoolController = route[0];
                     $scope.$evalAsync();
+                    $scope.fetchPooledDestination();
                 });
             }    
         });
@@ -45,6 +46,7 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
                     datarepository.updateRoute(route[0]);
                     datarepository.selectedRouteForPoolController = route[0];
                     $scope.$evalAsync();
+                    $scope.fetchPooledDestination();
                 });
             }
         });
@@ -57,6 +59,49 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
             me.pooledDestinations = res;
             me.$evalAsync();
         });
+    }
+    
+    $scope.isBoth = function(destination) {
+        var foundPick = false;
+        var foundDelivery = false;
+
+        for (var i in destination.tasks) {
+            if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.DeliveryTask") {
+                foundPick = true;
+            }
+            if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.PickupTask") {
+                foundDelivery = true;
+            }
+        }
+
+        return foundPick && foundDelivery;
+    }
+    
+    $scope.isTaskType = function(destination, pickup, delivery) {
+        var isBoth = $scope.isBoth(destination);
+        
+        if (pickup && delivery) {
+            return isBoth;
+        }
+        
+        if (pickup) {
+            for (var i in destination.tasks) {
+                if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.PickupTask") {
+                    return !isBoth;
+                }
+            }
+        }
+        
+        if (delivery) {
+            for (var i in destination.tasks) {
+                if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.DeliveryTask") {
+                    return !isBoth;
+                }
+            }
+        }
+        
+        
+        return false;
     }
     
     $scope.fetchPooledDestination();

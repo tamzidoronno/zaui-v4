@@ -7,7 +7,7 @@
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.AddPickupTaskController = function($scope, datarepository, $stateParams, $api, $state) {
-    $scope.taskType = false;
+    $scope.taskType = "container";
     $scope.numbers = "";
     
     $scope.goBack = function() {

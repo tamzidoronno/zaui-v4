@@ -866,7 +866,7 @@ public class BookingItemAssignerOptimal {
             datesToCheck.remove(use);
 //            System.out.println("SIze: " + unassignedBookings.size() + " Bookings: " + bookings.size() + " | " + datesToCheck.size() + " § time: " + use.getTotalTimeAvailableWithBestCombo());
         }
-
+        
     }
 
 

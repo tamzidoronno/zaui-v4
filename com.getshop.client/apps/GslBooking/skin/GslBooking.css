@@ -492,13 +492,12 @@ Error      : #de5353; red
     font-weight: bold;
 }
 .GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box .selecticon {
-    display: none;
     position: absolute;
     left: 0px;
     top: 5px;
 }
 
-.GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box .selecticon i {
+.GslBooking .gslfront_1 .getshop_room_config .guest_group_addon_select_box .selecticon .fa-check-square {
     color: green;
     font-size: 20px;
 }

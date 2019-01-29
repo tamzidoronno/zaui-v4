@@ -372,8 +372,11 @@ function getshop_addGuestProductChoice(template, room) {
         var main = groupAddonItem.mainItem;
         
         addonsRow.attr('productid', main.productId);
-        
-        var title = $('<div class="selectgroupheadertitle">'+translation.chose+" "+main.name+"</div>");
+        var name = main.name;
+        if(main.descriptionWeb) {
+            name += " " + main.descriptionWeb;
+        }
+        var title = $('<div class="selectgroupheadertitle">'+translation.chose+" "+name+"</div>");
         addonsRow.append(title);
         
         var first = true;
@@ -381,7 +384,7 @@ function getshop_addGuestProductChoice(template, room) {
             var addonDiv = $('<div/>');
             addonDiv.addClass('guest_group_addon_select_box');
             
-            var addonSelect = $('<div><i class="fa fa-check"></i></div>');
+            var addonSelect = $('<div><i class="fa fa-square"></i></div>');
             var addonTitle = $('<div>'+this.name+'</div>');
             var addonDesc = $('<div>'+this.descriptionWeb+'</div>');
             
@@ -392,17 +395,19 @@ function getshop_addGuestProductChoice(template, room) {
             addonDiv.append(addonTitle);
             addonDiv.append(addonDesc);
             
-            if (first) {
-                addonDiv.addClass('active');
-            }
-            
             first = false;
             
             addonDiv.attr('productid', this.productId);
             addonsRow.append(addonDiv);
             
             addonDiv.click(function() {
-                $(this).parent().find('.active').removeClass('active');
+                $(this).closest('.group_chose_option_guest').find('.active').removeClass('active');
+                $(this).closest('.group_chose_option_guest').find('.fa-check-square').each(function() {
+                    $(this).removeClass('fa-check-square');
+                    $(this).addClass('fa-square');
+                });
+                $(this).find('.fa-square').addClass('fa-check-square');
+                $(this).find('.fa-square').removeClass('fa-square');
                 $(this).addClass('active');
             });
         });
@@ -473,17 +478,17 @@ function getshop_saveCurrentStepTroughRoom() {
             "isChild" : $(this).find('[gsname="ischild"]').is(':checked')
         };
         
-        if (!getshop_validateEmail(info.email)) {
+        if (!getshop_validateEmail(info.email) && $(this).find('[gsname="email"]').is(':visible')) {
             containsErrors = true;
             $(this).find('[gsname="email"]').addClass('contains_error');
         }
         
-        if (!info.prefix) {
+        if (!info.prefix && $(this).find('[gsname="prefix"]').is(':visible')) {
             containsErrors = true;
             $(this).find('[gsname="prefix"]').addClass('contains_error');
         }
         
-        if (!info.phone) {
+        if (!info.phone && $(this).find('[gsname="phone"]').is(':visible')) {
             containsErrors = true;
             $(this).find('[gsname="phone"]').addClass('contains_error');
         }
@@ -516,7 +521,6 @@ function getshop_pushGuestInformationToServer() {
     
     var roomInformations = [];
     
-    console.log(getshop_current_booking_data);
     
     for (var i in getshop_current_booking_data.rooms) {
         
@@ -568,7 +572,6 @@ function getshop_showNextRoomToConfig() {
     var pmsBookingRoom = getshop_current_booking_data.rooms[getshop_currentRoomToConfig];
     var bookingItemType = getshop_getBookingItemType(pmsBookingRoom.bookingItemTypeId);
     
-    console.log(pmsBookingRoom);
     
     $('.getshop_room_config').show();
     
@@ -582,6 +585,16 @@ function getshop_showNextRoomToConfig() {
     
     for (var i=0; i<pmsBookingRoom.guestCount; i++) {
         var guestInfoTemplate = $(template).find('.guestinformationtemplate').clone();
+        
+        if(i === 0) {
+            guestInfoTemplate.closest('.guestinformation').find('.ischildbox').hide();
+        }
+        
+        if(getshop_bookingconfiguration.ignoreGuestInformation && i > 0) {
+            guestInfoTemplate.closest('.guestinformation').find('.email.col').hide();
+            guestInfoTemplate.closest('.guestinformation').find('.phone.col').hide();
+        }
+        
         guestInfoTemplate.removeClass('guestinformationtemplate');
         $(guestInfoTemplate).find('.guestnumber').html((i+1));
         getshop_addGuestProductChoice(guestInfoTemplate, pmsBookingRoom);
@@ -1175,7 +1188,7 @@ function getshop_saveBookerInformation() {
     } else {
         fields["choosetyperadio"] = "registration_private";
     }
-    var type = $("input[name='user']:checked").closest('label').attr('id');
+    var type = $("input[name='user']:checked").closest('label').attr('fortype');
     var data = {
         "profileType" : type,
         "fields" : fields,

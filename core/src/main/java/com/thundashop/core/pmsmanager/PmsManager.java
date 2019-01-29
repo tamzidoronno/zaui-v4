@@ -4251,7 +4251,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         toReturn.date = date;
         toReturn.bookingicon = addonConfig.bookingicon;
-        toReturn.descriptionWeb = addonConfig.descriptionWeb;
         toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
         toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
         toReturn.isActive = addonConfig.isActive;

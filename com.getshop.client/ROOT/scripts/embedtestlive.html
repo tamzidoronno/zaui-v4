@@ -8,16 +8,18 @@
 <div id='bookingprocess'></div>
 
 <script>
-    gsisdevmode = false;
+    gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) { 
-        $.getScript("thtps://wilhelmsenhouse.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://eilertsmith.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                     { 
-                       "endpoint": "https://wilhelmsenhouse.getshop.com/",
-                        "jsendpoint": "https://wilhelmsenhouse.getshop.com/",
-                        "domain" : "default",
-                        "success" : function(res) {
+                    "endpoint": "http://eilertsmith.3.0.local.getshop.com/",
+                    "jsendpoint": "http://eilertsmith.3.0.local.getshop.com/",
+                    "domain" : "default",
+                    "language" : "en",
+                    'roomStepTroughConfig' : true,
+                    "success" : function(res) {
                             console.log("booking completed");
                             console.log(res);
                         },
@@ -31,3 +33,7 @@
     });
 </script>
 </body>
+
+<style>
+    .product_availablerooms { display:none !important;  }
+</style>

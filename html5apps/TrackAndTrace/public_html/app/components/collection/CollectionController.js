@@ -119,14 +119,11 @@ controllers.CollectionController = function($scope, datarepository, $stateParams
         }
         
         var total = $scope.getTotalPaymentSelected();
-        return !total;
+        return total <= 0;
     }
     
     $scope.getTotalPayment = function() {
         var total = $scope.getSubTotal() + $scope.getTotalCredit();
-        
-        if (total < 0)
-            total = 0;
         
         return (Math.round(total*100)/100);
     }

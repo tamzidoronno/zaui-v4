@@ -229,7 +229,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         }
         
         
-        if (order.orderDriverDeliveries && !order.hasOwnProperty("driverDeliveryCopiesCounted")) {
+        if (order.orderDriverDeliveries && (!order.hasOwnProperty("driverDeliveryCopiesCounted") || order.driverDeliveryCopiesCounted == null)) {
             return false;
         }
         

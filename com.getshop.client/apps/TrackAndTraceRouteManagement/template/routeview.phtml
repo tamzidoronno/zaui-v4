@@ -41,9 +41,27 @@ if ($deldate) {
         </div>
         <?
         foreach ($route->destinations as $destionation) {
+            $pickupTask = false;
+            $deliveryTask = false;
+            foreach ($destionation->tasks as $task) {
+                if (strstr($task->className, "DeliveryTask")) {
+                    $deliveryTask = true;
+                }
+                if (strstr($task->className, "PickupTask")) {
+                    $pickupTask = true;
+                }
+            }
             ?>
             <div class='destinationrow'>
                 <?
+                
+                if ($pickupTask && $deliveryTask) {
+                    echo "<span class='tasktypetag'>D/P</span>";
+                } else if ($pickupTask) {
+                    echo "<span class='tasktypetag'>P</span>";
+                } else if ($deliveryTask) {
+                    echo "<span class='tasktypetag'>D</span>";
+                }
                 
                 if ($destionation->startInfo->completed) {
                     ?>
@@ -85,8 +103,29 @@ if ($deldate) {
         }
         foreach ($destinations as $poolDest) {
             $destination = $this->getApi()->getTrackAndTraceManager()->getDestinationById($poolDest->destionationId);
+            
+            $pickupTask = false;
+            $deliveryTask = false;
+            foreach ($destionation->tasks as $task) {
+                if (strstr($task->className, "DeliveryTask")) {
+                    $deliveryTask = true;
+                }
+                if (strstr($task->className, "PickupTask")) {
+                    $pickupTask = true;
+                }
+            }
             ?>
             <div class='destinationrow'>
+                <?
+                
+                if ($pickupTask && $deliveryTask) {
+                    echo "<span class='tasktypetag'>D/P</span>";
+                } else if ($pickupTask) {
+                    echo "<span class='tasktypetag'>P</span>";
+                } else if ($deliveryTask) {
+                    echo "<span class='tasktypetag'>D</span>";
+                }
+                ?>
                 <div class='gs_shop_small_icon' gsclick='addDestinationToRoute' destid='<? echo $poolDest->id; ?>'><i class='fa fa-arrow-up'></i></div>
                 <span style='width: 800px; display: inline-block;'><? echo $destination->seq." - ". $destination->company->name; ?></span>
                 <span><? echo $poolDest->originalRouteId; ?></span>

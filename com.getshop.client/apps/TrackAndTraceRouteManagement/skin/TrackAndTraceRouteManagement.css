@@ -74,3 +74,13 @@
     border: solid 1px #DDD;
     margin-bottom: 20px;
 }
+
+.TrackAndTraceRouteManagement .tasktypetag {
+    width: 50px;
+    text-align: center;
+    display: inline-block;
+    border: solid 1px #DDD;
+    height: 30px;
+    vertical-align: top;
+    line-height: 30px;
+}

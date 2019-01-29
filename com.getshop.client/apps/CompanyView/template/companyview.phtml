@@ -1,0 +1,33 @@
+<?
+/* @var $this \ns_2f62f832_5adb_407f_a88e_208248117017\CompanyView */
+$selectedCompany = $this->getSelectedCompany();
+?>
+
+<div class='workareaheader'>
+    <? echo $selectedCompany->name; ?>
+</div>
+<div class='topmenu'>
+    
+    <div class='entry taboperation' tab='details'>
+        <i class='fa fa-edit'></i>
+        Details
+    </div>
+    <div class='entry taboperation' tab='sales'>
+        <i class='fa fa-dollar'></i>
+        Sales
+    </div>
+    <div class='entry taboperation' tab='employees'>
+        <i class='fa fa-user'></i>
+        Employees
+    </div>
+    <div class='entry taboperation' tab='projects'>
+        <i class='fa fa-product-hunt'></i>
+        Projects
+    </div>
+</div>
+
+<div class='workarea_inner'>
+    <?
+    $this->includefile($this->getSubWorkArea());
+    ?>
+</div>

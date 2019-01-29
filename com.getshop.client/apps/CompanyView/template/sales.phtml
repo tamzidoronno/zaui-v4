@@ -1,0 +1,56 @@
+<?
+/* @var $this \ns_2f62f832_5adb_407f_a88e_208248117017\CompanyView */
+$users = $this->getApi()->getUserManager()->getUsersByCompanyId($this->getSelectedCompany()->id);
+$orders = array();
+
+foreach ($users as $user) {
+    
+    $ordersforuser = $this->getApi()->getOrderManager()->getAllOrdersForUser($user->id);
+    
+    foreach ($ordersforuser as $order) {
+        $orders[] = $order;
+    }
+}
+
+$totalAmount = 0;
+?>
+<div class="row header">
+    <div class="col date">Date</div>
+    <div class="col orderid">Orderid</div>
+    <div class="col amount">Amount</div>
+    <div class="col paidstatus">Paid?</div>
+</div>
+<?
+foreach ($orders as $order) {
+    
+    ?>
+    <div class="row">
+        <div class="col date"><? echo date('d.m.Y', strtotime($order->rowCreatedDate)); ?></div>
+        <div class="col orderid"><? echo $order->incrementOrderId; ?></div>
+        <div class="col amount">
+            <? 
+            $amount = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
+            $totalAmount += $amount;
+            echo round($amount, 2); 
+            ?>
+        </div>
+        <div class="col paidstatus">
+            <? 
+            
+            echo $order->status === 7 ? "Yes" : "No"; 
+            ?>
+        </div>
+    </div>
+    <?
+}
+?>
+
+<div class="row header">
+    <div class="col date">Sum</div>
+    <div class="col orderid">-</div>
+    <div class="col amount">
+        <? 
+        echo round($totalAmount,2); 
+        ?>
+    </div>
+</div>

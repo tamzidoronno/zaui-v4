@@ -1,0 +1,136 @@
+.CompanyView .workarea,
+.CompanyView .leftmenu {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.CompanyView .rightmenu {
+    margin-top: 50px;
+}
+
+.CompanyView .leftmenu {
+    width: 100px;
+    background-color: #23314e;
+    color: #FFF;
+    text-align: center;
+    min-height: calc(100% - 86px);
+
+}
+
+.CompanyView .leftmenu .entry {
+    border-top: solid 1px #222;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+    font-size: 11px;
+    min-height: 46px;
+}
+
+.CompanyView .leftmenu .entry i {
+    display: block;
+    font-size: 25px;
+}
+
+.CompanyView .leftmenu .entry.tabnotactive {
+    color: #888;
+}
+
+.CompanyView .workarea {
+    width: calc(100% - 100px);
+    box-sizing: border-box;
+}
+
+
+.CompanyView .workareaheader {
+    background-color: #dfff98;
+    padding: 17px;
+    font-size: 25px;
+    text-align: center;
+}
+
+.CompanyView {
+    border-right: solid 1px #DDD;
+}
+
+.CompanyView .row {
+    
+}
+
+.CompanyView div.row:nth-child(odd) {
+    background-color: #EDEDED;
+}
+
+.CompanyView .row .col {
+    display: inline-block;
+    padding: 10px;
+}
+
+
+.CompanyView .row.companysearch .col.companyname {
+    width: calc(100% - 200px);
+    padding-left: 50px;
+}
+
+.CompanyView .topmenu {
+    border-bottom: solid 1px #DDD;
+    background-color: #DEDEDE;
+    text-align: center;
+}
+
+.CompanyView .topmenu .entry {
+    display: inline-block;
+    padding: 10px;
+    border-right: solid 1px #EEE;
+    font-size: 16px;
+    padding-right: 20px;
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+.CompanyView .topmenu div.entry:last-child {
+    border-right: solid 0px;
+}
+
+.CompanyView .tab[tab="company"] {
+    display: none !important;
+}
+
+.CompanyView .user_view.userSelected {
+    display: none;
+}
+
+.CompanyView .show_change_user.edit_user_btn {
+    border-radius: 0px;
+    color: #FFF;
+    background: #23314e;
+    background-color: #23314e;
+    line-height: 34px;
+    height: 37px;
+    padding: 10px;
+    margin-left: 20px;
+}
+
+.CompanyView .row .col.emplyeemail {
+    width: 200px;
+}
+.CompanyView .row .col.employeename {
+    width: calc(100% - 500px);
+}
+
+.CompanyView .row .col.date {
+    width: 100px;
+}
+
+.CompanyView .row .col.orderid {
+    width: 200px;
+}
+
+.CompanyView .row .col.amount {
+    width: 100px;
+}
+
+.CompanyView .row.header .col {
+    font-weight: bold;
+}

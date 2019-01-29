@@ -1,0 +1,75 @@
+<?
+/* @var $this \ns_a22fa681_6882_4869_8add_b1cc9c7b661b\GetShopCompanySettings */
+?>
+
+<div class="workareaheader">
+    <? echo $this->__f("Messages"); ?>
+</div>
+
+<?
+$allMessages = $this->getApi()->getGmailApiManager()->getLightMessages($this->getSelectedCompany()->id);
+if (!$allMessages) {
+    echo "<div style='margin: 20px; font-size: 16px;'>";
+    echo $this->__f("No messages available");
+    echo "</div>";
+    return;
+}
+
+$groupedByMonth = array();
+
+foreach ($allMessages as $msg) {
+    $month = date('M Y', strtotime($msg->date));
+    $groupedByMonth[$month][] = $msg;
+}
+
+?>
+<div class="messagecountertop" >
+    <?
+    foreach ($groupedByMonth as $month => $messages) {
+    ?>
+        <div class='messagecountbox'>
+            <div class="count"><? echo count($messages); ?></div>
+            <div class="name"><? echo $month; ?></div>
+        </div>
+    <?
+    }
+    ?>
+    
+    <div class='messagecountbox'>
+        <div class="count"><? echo count($allMessages); ?></div>
+        <div class="name">Overall</div>
+    </div>
+    
+</div>
+<?
+
+foreach ($groupedByMonth as $month => $messages) {
+    echo "<div class='mail_month_header'>".$month."</div>";
+    foreach ($messages as $msg) {
+        $attachment = strstr($msg->contentType, "multipart/mixed") ? '<i class="fa fa-paperclip"></i>' : "";
+        ?>
+        <div class="row" >
+            <div class="col date">
+                <? 
+                echo date('d.m.Y H:i:s', strtotime($msg->date)); 
+                ?>
+            </div>
+            <div class="col snippet">
+                <? 
+                echo "<div style='border-bottom: solid 1px #DDD; font-style: italic;'>".$msg->subject."</div>";
+                echo $msg->snippet; 
+                ?>
+            </div>
+            <div class="col sent">
+                <? 
+                echo $msg->inSent ? '<i class=" fa fa-reply"></i>' : '<i></i>'; 
+                echo $attachment;
+                ?>
+            
+            </div>
+        </div>
+        <?
+    }
+}
+?>
+<i class="fa fa-paperclip"></i>

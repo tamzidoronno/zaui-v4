@@ -240,6 +240,7 @@ public class Database extends StoreComponent {
         obj.add(new BasicDBObject("deleted", null));
         
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
+        obj.add(addBannedClass("com.thundashop.core.googleapi.GmailMessage"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
         obj.add(addBannedClass("com.thundashop.core.ordermanager.data.VirtualOrder"));
         obj.add(addBannedClass("com.thundashop.core.ordermanager.data.EhfSentLog"));

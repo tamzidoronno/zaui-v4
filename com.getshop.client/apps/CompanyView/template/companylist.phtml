@@ -1,0 +1,18 @@
+<?
+/* @var $this \ns_2f62f832_5adb_407f_a88e_208248117017\CompanyView */
+
+$companies = $this->getApi()->getUserManager()->getAllCompanies();
+
+function sortByName($a, $b) {
+    return strcmp($a->name, $b->name);
+}
+
+usort($companies, 'sortByName');
+
+foreach ($companies as $result) {
+    echo "<div class='row companysearch'>";
+        echo "<div class='col companyname'>$result->name</div>";
+        echo "<div class='col buttons'><div class='gs_shop_small_icon' gsclick='selectCompany' companyId='$result->id'>Select</div></div>";
+    echo "</div>";
+}
+?>

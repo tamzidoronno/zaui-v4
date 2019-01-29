@@ -64,6 +64,17 @@ app.GetShopQuickUser = {
         app.GetShopQuickUser.updateFieldsAfterUserChangedOrCreated(result);
         app.GetShopQuickUser.closeChangeUser();
         $('.GetShopQuickUser .userNotSelected').removeClass('userNotSelected');
+        
+        if ($('.change_user_form').attr('invokeJavascriptFunctionAfterActions')) {
+            var javascriptCallbackFunction = $('.change_user_form').attr('invokeJavascriptFunctionAfterActions');
+            var callbackFunction = function(javascriptCallbackFunction) {
+                var funtionBody = javascriptCallbackFunction + "();";
+                var toExecute = new Function(funtionBody);
+                toExecute();
+            }
+            callbackFunction(javascriptCallbackFunction);
+        }
+        
         return false;
     },
     
@@ -78,6 +89,16 @@ app.GetShopQuickUser = {
         app.GetShopQuickUser.closeChangeUser();
         $('.GetShopQuickUser .edit_details_of_user').slideDown();
         $('.GetShopQuickUser .userNotSelected').removeClass('userNotSelected');
+        
+        if ($('.change_user_form').attr('invokeJavascriptFunctionAfterActions')) {
+            var javascriptCallbackFunction = $('.change_user_form').attr('invokeJavascriptFunctionAfterActions');
+            var callbackFunction = function(javascriptCallbackFunction) {
+                var funtionBody = javascriptCallbackFunction + "();";
+                var toExecute = new Function(funtionBody);
+                toExecute();
+            }
+            callbackFunction(javascriptCallbackFunction);
+        }
     },
     
     updateFieldsAfterUserChangedOrCreated: function(result) {

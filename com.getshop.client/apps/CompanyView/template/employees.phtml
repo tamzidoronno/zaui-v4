@@ -1,0 +1,50 @@
+<?
+/* @var $this \ns_2f62f832_5adb_407f_a88e_208248117017\CompanyView */
+$selectedCompany = $this->getSelectedCompany();
+$connectedUsers = $this->getApi()->getUserManager()->getUsersByCompanyId($selectedCompany->id);
+if (!$connectedUsers) {
+    echo "<h2 style='padding-left: 20px;'>".$this->__f("No employees")."</h2>";
+}
+
+foreach ($connectedUsers as $user) {
+    ?>
+    <div class='row'>
+        <div gsclick='removeUserFromCompany' userid='<? echo $user->id; ?>' class='col'><i class='gs_shop_small_icon fa fa-trash'></i></div>
+        <div gsclick='editUser' userid='<? echo $user->id; ?>' class='col'><i class='fa fa-user'></i></div>
+        <div gsclick='editUser' userid='<? echo $user->id; ?>' class='col employeename'><? echo $user->fullName; ?></div>
+        <div gsclick='editUser' userid='<? echo $user->id; ?>' class='col emplyeemail'><? echo $user->emailAddress; ?></div>
+        <div gsclick='editUser' userid='<? echo $user->id; ?>' class='col'><? echo $user->cellPhone; ?></div>
+    </div>
+    <?
+}
+?>
+<br/>
+<br/>
+<?
+
+$quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+if ($this->userToEdit) {
+    $quser->user = $this->getApi()->getUserManager()->getUserById($this->userToEdit);
+}
+$quser->invokeJavascriptFunctionAfterActions = 'app.CompanyView.userSaved';
+$quser->renderApplication(true, $this);
+?>
+
+<script>
+    $('.CompanyView .tab[tab="existinguser"]').click();
+    
+    <?
+    if (!$this->userToEdit) {
+    ?>
+        $('.change_user_form').hide();
+    <?
+    } else {
+    ?>
+        $('.show_edit_user.edit_user_btn').click();
+    <?
+    }
+    ?>
+    $('.CompanyView .show_change_user.edit_user_btn').html('<i class="fa fa-plus"></i> Add user');
+    
+    $('.CompanyView .edit_details_of_user .shop_button[gstype="submit"]').attr('gs_callback', 'app.CompanyView.userSaved');
+</script>

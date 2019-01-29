@@ -1,0 +1,30 @@
+<?
+/* @var $this \ns_2f62f832_5adb_407f_a88e_208248117017\CompanyView */
+
+?>
+
+<div class='workareaheader'>
+    <? echo $this->__f("Search for company"); ?>
+</div>
+
+<div style='margin: 50px;' gstype='form' method='doSearch'>
+    Name 
+    <br/><input class='gsniceinput1' gsname='searchname' gstype="submitenter" />
+    <br/>
+    <br/><div class='gs_shop_small_icon' gstype='submit'> <? echo $this->__f("Search"); ?></div>
+</div>
+
+<?
+if (!isset($_POST['data']['searchname'])) {
+    return;
+}
+
+$searchResult = $this->getApi()->getUserManager()->searchForCompanies($_POST['data']['searchname']);
+
+foreach ($searchResult as  $result) {
+    echo "<div class='row companysearch'>";
+        echo "<div class='col companyname'>$result->name</div>";
+        echo "<div class='col buttons'  gsclick='selectCompany' companyId='$result->id'><div class='gs_shop_small_icon'>Select</div></div>";
+    echo "</div>";
+}
+?>

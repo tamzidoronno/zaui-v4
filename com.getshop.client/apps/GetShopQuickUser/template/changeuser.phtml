@@ -9,7 +9,7 @@ foreach ($extraArgs as $key => $value) {
 }
 ?>
 
-<div class="change_user_form">
+<div class="change_user_form" invokeJavascriptFunctionAfterActions='<? echo $this->invokeJavascriptFunctionAfterActions; ?>' >
     <div class="tabs">
         <div class="tab gs_shop_small_icon tab_active" tab="existinguser"><i class="fa fa-check"></i> <? echo $this->__f("Existing user"); ?></div>
         <div class="tab gs_shop_small_icon" tab="newuser"><i class="fa fa-check"></i> <? echo $this->__f("New user"); ?></div>

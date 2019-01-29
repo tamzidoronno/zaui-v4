@@ -1,0 +1,78 @@
+<?
+/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$msgId = $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_currentmail'];
+$lightMsg = $this->getApi()->getGmailApiManager()->getMessageLight($msgId);
+
+?>
+
+<div class='subject'>
+    <? echo $lightMsg->subject; ?>
+</div>
+
+<?
+$content = $this->getContent($lightMsg);
+echo "<div class='innermailview'>".$content."</div>";
+?>
+
+<div class='getshop_information'>
+    <i class='fa fa-building'></i> 
+    <?
+    if ($lightMsg->connectedToCompanyId) {
+        $company = $this->getApi()->getUserManager()->getCompany($lightMsg->connectedToCompanyId);
+        echo $company->name;
+    } else {
+        echo "Not connected to a company";
+    }
+    
+    echo "<br/> <br/> Overdue invoices: 19999";
+    ?>
+</div>
+
+<style>
+.ck-editor__editable {
+    min-height: 400px;
+}
+</style>
+<div class='attachments'>
+    <i class='fa fa-paperclip'></i>&nbsp; Attachments: 
+    <?
+    $foundAny = false;
+    foreach ($parts as $part) {
+        if ($part->base64) {
+            $foundAny = true;
+            echo $part->fileName;
+        }
+    }
+    
+    if (!$foundAny) {
+        echo "None";
+    }
+    ?>
+</div>
+<div id='editor' style='height: 500px;'>
+    
+</div>
+
+<div class='buttons' style='padding: 20px;'>
+    <div class='shop_button sendreply' msgid='<? echo $msgId; ?>'>Reply</div>
+    <div class='shop_button'>Cancel</div>
+</div>
+
+<script>
+    var myEditor;
+    $(function() {
+        ClassicEditor.create( document.querySelector( '#editor' ), {
+             ckfinder: {
+                uploadUrl: '/getshopsupportfileuploader.php'
+            }
+        })
+        .then( editor => {
+            myEditor = editor;
+            console.log( editor );
+        })
+        .catch( error => {
+            console.error( error );
+        });
+        
+    });
+</script>

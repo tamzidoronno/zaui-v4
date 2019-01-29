@@ -9579,4 +9579,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
     }
+
+    @Override
+    public String getContractByLanguage(String language) throws Exception {
+        return getConfigurationSecure().contracts.get(language);
+    }
 }

@@ -300,6 +300,8 @@ public interface IPmsManager {
     @Editor
     public String getContract(String bookingId) throws Exception;
     
+    public String getContractByLanguage(String language) throws Exception;
+    
     @Editor
     public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter);
     

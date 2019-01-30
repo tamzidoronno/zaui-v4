@@ -21,11 +21,6 @@ if(!$factory->getApi()->getUUIDSecurityManager()->hasAccess($_GET['id'], true, f
 }
 
 ob_start();
-if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])){
-  // if the browser has a cached version of this image, send 304
-    header('Last-Modified: '.$_SERVER['HTTP_IF_MODIFIED_SINCE'],true,304);
-    exit;
-}
 
 $imageLoader = new ImageLoader();
 $imageLoader->load($_GET['id']);
@@ -67,8 +62,8 @@ $HashID = md5($PageContent);
  
 header("Content-type: image/png");
 
-header("Cache-Control: max-age=2052000");
-header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 2052000));
+header("Cache-Control: max-age=360");
+header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 360));
 header('ETag: ' . $HashID);
 
 

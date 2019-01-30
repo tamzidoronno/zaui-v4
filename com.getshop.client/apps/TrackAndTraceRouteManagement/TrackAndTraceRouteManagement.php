@@ -207,8 +207,8 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
     }
 
     public static function sortByName($a, $b) {
-        $routeA = substr($a->name, 0, 4);
-        $routeB = substr($b->name, 0, 4);
+        $routeA = substr($a->name, 0, 5);
+        $routeB = substr($b->name, 0, 5);
         
         if ($routeA == $routeB) {
             if (!$a->deliveryServiceDate) {

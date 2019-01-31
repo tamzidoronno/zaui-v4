@@ -46,7 +46,19 @@ public class Store extends DataCommon {
     public boolean isTemplate = false;
     public User registrationUser;
     public String country;
-    public String timeZone;
+    
+    /**
+     * Never make this one public,
+     * all functions to work with times should already be 
+     * existing her, see:
+     * 
+     * getCurrentTimeInTimeZone
+     * getTimeZoneDifferenceInHours
+     * convertToTimeZone
+     * 
+     */
+    private String timeZone;
+    
     public boolean acceptedGDPR = false;
     public Date acceptedGDPRDate = null;
     public String acceptedByUser = "";
@@ -74,15 +86,7 @@ public class Store extends DataCommon {
         
         return null;
     }
-    
-    public TimeZone getTimeZone() {
-        if (timeZone == null || timeZone.isEmpty()) {
-            return TimeZone.getTimeZone("Europe/Oslo");
-        }
-        
-        return TimeZone.getTimeZone(timeZone);
-    }
-
+   
     public boolean isPikStore() {
         Calendar pikTime = Calendar.getInstance();
         pikTime.set(Calendar.YEAR, 2018);
@@ -117,6 +121,27 @@ public class Store extends DataCommon {
         
         cal.add(Calendar.MILLISECOND, (int)timeDifference);
         return cal.getTime();
+    }
+
+    public int getTimeZoneDifferenceInHours(Date dateToCheckAgainst) {
+        
+        if(timeZone != null && !timeZone.isEmpty()) {
+            TimeZone tz1 = TimeZone.getTimeZone(timeZone);
+            TimeZone tz2 = TimeZone.getDefault();
+            long timeDifference = tz1.getOffset(dateToCheckAgainst.getTime())- tz2.getOffset(dateToCheckAgainst.getTime());
+            if(timeDifference != 0) {
+                long seconds = timeDifference / 1000;
+                long minutes = seconds / 60;
+                long hours = minutes / 60;
+                return (int)hours;
+            }
+        }
+        
+        return 0;
+    }
+
+    public void setTimeZone(String timezone) {
+        this.timeZone = timezone;
     }
     
 }

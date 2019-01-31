@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,13 +14,13 @@ import org.mongodb.morphia.annotations.Transient;
 public class PmsConfiguration extends DataCommon {
 
     @Transient
-    private String timezone = "";
+    private Store store = null;
     
     @Transient
     private boolean isPikStore = false;
     
-    void setTimeZone(String timeZone) {
-        this.timezone = timeZone;
+    void setTimeZone(Store store) {
+        this.store = store;
     }
     
     void setIsPikStore(boolean isPikStore) {
@@ -27,17 +28,7 @@ public class PmsConfiguration extends DataCommon {
     }
 
     public Date getCurrentTimeInTimeZone() {
-        if(timezone == null || timezone.isEmpty()) {
-            return new Date();
-        }
-        TimeZone tz1 = TimeZone.getTimeZone(timezone);
-        TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
-        long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
-        
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MILLISECOND, (int)timeDifference);
-        
-        return cal.getTime();
+        return store.getCurrentTimeInTimeZone();
     }
     
     private Date calculcateTimeZone(String toCheck, Date toDiff) {
@@ -325,20 +316,8 @@ public class PmsConfiguration extends DataCommon {
     /**
      * Timezone related data.
      */
-    public Integer getBoardingHour() {
-        if(timezone != null && !timezone.isEmpty()) {
-            TimeZone tz1 = TimeZone.getTimeZone(timezone);
-            TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
-            long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
-            if(timeDifference != 0) {
-                long seconds = timeDifference / 1000;
-                long minutes = seconds / 60;
-                long hours = minutes / 60;
-                minutes = minutes - (hours*60);
-                return hourOfDayToStartBoarding + (int)hours;
-            }
-        }
-        return hourOfDayToStartBoarding;
+    public Integer getBoardingHour(Date dateToCheckAgainst) {
+        return hourOfDayToStartBoarding + store.getTimeZoneDifferenceInHours(dateToCheckAgainst);
     }
     public String getDefaultEnd() {
         Calendar cal = Calendar.getInstance();
@@ -378,20 +357,8 @@ public class PmsConfiguration extends DataCommon {
     public Date getDefaultStart(Date inputDate) {
         return calculcateTimeZone(defaultStart, inputDate);
     }
-    public Integer getCloseRoomNotCleanedAtHour() {
-        if(timezone != null && !timezone.isEmpty()) {
-            TimeZone tz1 = TimeZone.getTimeZone(timezone);
-            TimeZone tz2 = TimeZone.getTimeZone("Europe/Oslo");
-            long timeDifference = tz1.getRawOffset() - tz2.getRawOffset() + tz1.getDSTSavings() - tz2.getDSTSavings();
-            if(timeDifference != 0) {
-                long seconds = timeDifference / 1000;
-                long minutes = seconds / 60;
-                long hours = minutes / 60;
-                minutes = minutes - (hours*60);
-                return closeRoomNotCleanedAtHour + (int)hours;
-            }
-        }
-        return closeRoomNotCleanedAtHour;
+    public Integer getCloseRoomNotCleanedAtHour(Date dateToCheckAgainst) {
+        return closeRoomNotCleanedAtHour + store.getTimeZoneDifferenceInHours(dateToCheckAgainst);
     }
     
     

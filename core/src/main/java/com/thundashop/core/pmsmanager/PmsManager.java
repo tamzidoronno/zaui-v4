@@ -3922,8 +3922,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsConfiguration getConfigurationSecure() {
-        String timeZone = storeManager.getMyStore().timeZone;
-        configuration.setTimeZone(timeZone);
+        configuration.setTimeZone(getStore());
         configuration.setIsPikStore(storeManager.isPikStore());
         configuration.setHasAccessControl(hasLockSystemActive());
         return configuration;
@@ -5235,7 +5234,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!getConfigurationSecure().automaticallyCloseRoomIfDirtySameDay) {
             return;
         }
-        Integer closeHour = getConfigurationSecure().getCloseRoomNotCleanedAtHour();
+        Integer closeHour = getConfigurationSecure().getCloseRoomNotCleanedAtHour(new Date());
         Date start = new Date();
         Calendar cal = Calendar.getInstance();
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);

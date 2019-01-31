@@ -591,7 +591,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void changeTimeZone(String timezone) {
         Store store = getMyStore();
-        store.timeZone = timezone;
+        store.setTimeZone(timezone);
         storePool.saveStore(store);
     }
 

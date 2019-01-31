@@ -57,6 +57,8 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.setPickupType = function() {
         $scope.task = datarepository.getTaskById($stateParams.taskId);
         
+        console.log($scope.task);
+        
         if (!$scope.task)
             return;
         

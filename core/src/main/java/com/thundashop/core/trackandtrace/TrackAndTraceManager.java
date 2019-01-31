@@ -889,7 +889,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        exportedCollectionData.values()
+        new ArrayList<ExportedCollectedData>(exportedCollectionData.values())
             .stream()
             .filter(o -> o.routId.equals(routeId))
             .forEach(o -> {

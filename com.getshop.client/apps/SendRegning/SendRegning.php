@@ -20,7 +20,11 @@ class SendRegning extends \PaymentApplication implements \Application {
     public function render() {
         
     }
-
+    
+    public function isPublicPaymentApp() {
+        return false;
+    }
+    
     public function saveSettings() {
         $this->setConfigurationSetting("email", $_POST['email']);
         $this->setConfigurationSetting("password", $_POST['password']);

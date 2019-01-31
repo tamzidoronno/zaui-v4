@@ -13,6 +13,10 @@ class PayPal extends \PaymentApplication implements \Application {
     public function getName() {
         return "PayPal";
     }
+    
+    public function isPublicPaymentApp() {
+        return false;
+    }
 
     public function addPaymentMethods() {
         $namespace = __NAMESPACE__;

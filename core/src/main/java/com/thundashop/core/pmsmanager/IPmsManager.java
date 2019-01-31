@@ -145,6 +145,9 @@ public interface IPmsManager {
     public void markAddonDelivered(String id);
     
     @Administrator
+    public void cancelRoom(String roomId);
+    
+    @Administrator
     public void checkOutRoom(String pmsBookingRoomId);
     
     @Administrator

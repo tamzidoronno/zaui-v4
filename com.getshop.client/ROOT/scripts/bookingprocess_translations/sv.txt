@@ -110,5 +110,7 @@
     "numberofrooms_3" : "Antal campingplatser",
     "numberofrooms_4" : "Antal stugor",
     "numberofrooms_5" : "Antal sängar",
-    "numberofrooms_6" :  "Antal lägenheter"
+    "numberofrooms_6" :  "Antal lägenheter",
+    "notetoorder" : "Anmälan till faktura",
+    "differentconfirmationemail" : "Skicka bekräftelse till ett annat email"
 }

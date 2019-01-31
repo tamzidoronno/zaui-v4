@@ -20,6 +20,7 @@ public class Application extends DataCommon implements Comparator<Application> {
         public static String Reporting = "ReportingApplication";
         public static String Shipment = "ShipmentApplication";
         public static String Theme = "ThemeApplication";
+        public static String DebtCollector = "DebtCollectorApplication";
     }
     
     /**

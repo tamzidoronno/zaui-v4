@@ -12,7 +12,7 @@ if (!count($order->shipmentLog)) {
     foreach ($order->shipmentLog as $log) {
         echo "<div class='shipmentlogline'>";
             echo "<div class='date'>".date('d.m.Y H:i', strtotime($log->date))."</div>";
-            echo "<div class='to'>".$this->__f("Order sent by")." ".$log->type." ".$this->__f("to")." ".$log->address."</div>";
+            echo "<div class='to'>".$this->__f("Order sent using")." ".$log->type." ".$this->__f("to")." ".$log->address."</div>";
         echo "</div>";
     }
 }

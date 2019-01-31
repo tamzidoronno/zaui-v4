@@ -1189,10 +1189,22 @@ function getshop_saveBookerInformation() {
         fields["choosetyperadio"] = "registration_private";
     }
     var type = $("input[name='user']:checked").closest('label').attr('fortype');
+    
+    $("[gsname='company_email']").each(function() {
+        if($(this).is(':visible') && $(this).val()) {
+            fields['company_email'] = $(this).val();
+        }
+    });
+   var ordertext = "";
+   $('[gsname="ordertext"]').each(function() {
+       if($(this).val()) {
+           ordertext = $(this).val();
+       }
+   });
     var data = {
         "profileType" : type,
         "fields" : fields,
-        "ordertext" : $('[gsname="ordertext"]').val(),
+        "ordertext" : ordertext,
         "agreeToTerms" : $('#agreeTerms').is(':checked')
     };
     var dfr = $.Deferred();

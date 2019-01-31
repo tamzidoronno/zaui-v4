@@ -419,6 +419,19 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public List<Application> getActivatedApplications(String systemType) {
+        if(!systemType.equals("DebtCollectorApplication")) {
+            return new ArrayList();
+        }
+        
+        List<Application> res = getApplications().stream()
+                .filter(app -> app.type.equals(systemType))
+                .collect(Collectors.toList());
+        return res;
+    }    
+    
     @Override
     public boolean isActivated(String appId) {
         for(Application app : activatedApplications) {
@@ -435,5 +448,6 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         namespace = namespace.replace("_", "-");
         return getApplication(namespace);
     }
+
 
 }

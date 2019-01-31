@@ -56,11 +56,12 @@ if($order->status != 7 && !$isManuallyClosed) {
     <?php } ?>
     <div class='markaspaidarea' gstype='form' method='markAsPaid'>
         <div style="text-align:left;">
-            <span style='display:inline-block; width:95px;'>Date</span>
+            <span style='display:inline-block; width:160px;'>Date</span>
             <span style='display:inline-block; width:100px;'>Amount</span>
         </div>
         <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
         <input type='text' class='gsniceinput1' value='<?php echo date("d.m.Y", time()); ?>' style='width:70px' gsname='date'>
+        <input type='text' class='gsniceinput1' value='<?php echo date("H:i", time()); ?>' style='width:40px' gsname='time'>
         <input type='text' class='gsniceinput1' value='<?php echo $total; ?>' style='width:70px;text-align: center' gsname='amount'>
         <span class='shop_button' gstype='submit' gs_callback="app.EcommerceOrderView.markPaidCompleted('<?php echo $order->id; ?>')">Mark as paid</span>
     </div>

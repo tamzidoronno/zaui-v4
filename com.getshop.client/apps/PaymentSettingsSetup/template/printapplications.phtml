@@ -16,13 +16,19 @@
 
     $applications = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
     $activated = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    $activatedDebtCollectors = $this->getApi()->getStoreApplicationPool()->getActivatedApplications("DebtCollectorApplication");
+    if(is_array($activatedDebtCollectors)) {
+        $activated = array_merge($activated, $activatedDebtCollectors);
+    }
+    
     $res = array();
     foreach($activated as $active) {
         $res[] = $active->id;
     }
-
+    
+    
     foreach($applications as $app) {
-        if($app->type == "PaymentApplication") {
+        if($app->type == "PaymentApplication" || $app->type == "DebtCollectorApplication") {
             $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
             if(!method_exists($instance, "isPublicPaymentApp")) {
                 continue;

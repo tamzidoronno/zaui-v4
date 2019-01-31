@@ -202,4 +202,6 @@ public interface ITrackAndTraceManager {
     @Customer
     public void registerCollectionData(String destinationId, CollectionTasks collectionTasks);
     
+    @Administrator
+    public List<CollectionTasks> getCompletedCollectionTasks(Date start, Date end);
 }

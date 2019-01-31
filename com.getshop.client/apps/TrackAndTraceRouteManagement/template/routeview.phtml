@@ -79,7 +79,7 @@ if ($deldate) {
                 ?>
                 
                 <div class='gs_shop_small_icon' gsclick='showEditDestionation' destionationid='<? echo $destionation->id; ?>'><i class='fa fa-edit'></i></div>
-                <? echo $destionation->company->name; ?>
+                <? echo $destionation->seq." - ".$destionation->company->name; ?>
                 </div>
             <?
         }

@@ -129,7 +129,7 @@
         <div ng-repeat="order in task.orders" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
             <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order), 'fa-warning' : order.exceptionId }"> 
                 </span> {{order.referenceNumber}}
-                <div ng-if='order.container'>
+                <div ng-if='order.countedContainers > 0'>
                     ( container )
                 </div>
             </div>

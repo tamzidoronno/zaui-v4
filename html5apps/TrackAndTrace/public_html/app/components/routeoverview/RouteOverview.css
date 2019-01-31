@@ -141,3 +141,17 @@ and open the template in the editor.
     background: linear-gradient(to bottom,  #ff8075 0%,#cf0404 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8075', endColorstr='#cf0404',GradientType=0 ); /* IE6-9 */
 }
+
+.completerouteoverlay {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    top: 10px;
+    background-color: rgba(0,0,0,0.8);
+    color: #FFF;
+    text-align: center;
+    font-size: 30px;
+    padding-top: 30px;
+    display: none;
+}

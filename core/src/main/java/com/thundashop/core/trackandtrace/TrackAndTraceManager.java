@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,6 +53,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public HashMap<String, TrackAndTraceException> exceptions = new HashMap();
     
     public HashMap<String, ExportedData> exports = new HashMap();
+    
+    public HashMap<String, ExportedCollectedData> exportedCollectionData = new HashMap();
     
     public HashMap<String, DriverMessage> driverMessages = new HashMap();
     
@@ -86,6 +90,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 route.id = route.id.replaceAll("\t", "");
 
                 routes.put(route.id, route);
+            }
+            
+            if (common instanceof ExportCounter) {
+                exportCounter = (ExportCounter)common;
             }
             
             if (common instanceof ExportCounter) {
@@ -881,6 +889,14 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
+        new ArrayList<ExportedCollectedData>(exportedCollectionData.values())
+            .stream()
+            .filter(o -> o.routId.equals(routeId))
+            .forEach(o -> {
+                exportedCollectionData.remove(o.id);
+                deleteObject(o);
+            });
+        
         if (route != null) {
             if (route.destinationIds != null) {
                 route.destinationIds.stream().forEach(destId -> {
@@ -1558,6 +1574,30 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             inMemory.adjustmentPreviouseCredit = collectionTasks.adjustmentPreviouseCredit;
             
             saveObject(dest);
+            
+            ExportedCollectedData exp = new ExportedCollectedData();
+            
+            try {
+                ExportCounter counter = getStartNumber();
+                exp.collectionTasks = (CollectionTasks) inMemory.clone();
+                exp.routId = getRouteByDestination(dest).id;
+                exp.tntId = counter.exportCounterCollection;
+                saveObject(exp);
+                exportedCollectionData.put(exp.id, exp);
+                counter.exportCounterCollection++;
+                saveObject(counter);
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(TrackAndTraceManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+    }
+
+    @Override
+    public List<CollectionTasks> getCompletedCollectionTasks(Date start, Date end) {
+        return exportedCollectionData.values()
+                .stream()
+                .map(o -> o.getCollectionTask())
+                .filter(o -> o.date.after(start) && o.date.before(end))
+                .collect(Collectors.toList());
     }
 }

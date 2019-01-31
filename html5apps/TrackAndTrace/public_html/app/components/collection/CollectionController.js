@@ -128,6 +128,12 @@ controllers.CollectionController = function($scope, datarepository, $stateParams
         return (Math.round(total*100)/100);
     }
     
+    $scope.needToDoPayment = function() {
+        var total = $scope.getSubTotal() + $scope.getTotalCredit();
+        
+        return (Math.round(total*100)/100) > 0;
+    }
+    
     $scope.getSubTotal = function() {
         var subTotal = 0;
         var tasks = $scope.getTasks();

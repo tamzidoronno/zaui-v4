@@ -1,0 +1,39 @@
+<?
+/* @var $this \ns_a22fa681_6882_4869_8add_b1cc9c7b661b\GetShopCompanySettings */
+if ($_POST['event'] == "setTab" && $_POST['data']['value']) {
+    $_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_systemid'] = $_POST['data']['value'];
+}
+$system = $this->getApi()->getSystemManager()->getSystem($_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_systemid']);
+?>
+
+
+<div class='workareaheader'>
+    <? echo $system->systemName; ?>
+</div>    
+
+<div class='systemview' gstype='form' method='updateSystem'>
+    <h2>System details</h2>
+    
+    <input type='hidden' gsname='systemid' value='<? echo $system->id; ?>'/>
+    <span style='width: 200px; display: inline-block;'>System name: </span><input class='gsniceinput1' gsname="systemName" value='<? echo $system->systemName; ?>'/><br/>
+    <span style='width: 200px; display: inline-block;'>Server vpn addr:</span><input class='gsniceinput1' gsname="serverVpnIpAddress" value='<? echo $system->serverVpnIpAddress; ?>'/><br/>
+    <span style='width: 200px; display: inline-block;'>Web address:</span><input class='gsniceinput1' gsname="webAddresses" value='<? echo $system->webAddresses; ?>'/><br/>
+    <span style='width: 200px; display: inline-block;'>Store id:</span><input class='gsniceinput1' gsname="remoteStoreId" value='<? echo $system->remoteStoreId; ?>'/><br/>
+    <br/>
+    
+    <h2>Contract details</h2>
+    
+    <?
+    $startDate = $system->activeFrom ? date('d.m.Y', strtotime($system->activeFrom)) : "";
+    $endDate = $system->activeTo ? date('d.m.Y', strtotime($system->activeTo)) : "";
+    ?>
+    <span style='width: 200px; display: inline-block;'>Active from:</span><input class='gsniceinput1' gsname="activeFrom" value='<? echo $startDate; ?>' placeholder="dd.mm.YYYY"/><br/>
+    <span style='width: 200px; display: inline-block;'>Active to:</span><input class='gsniceinput1' gsname="activeTo" value='<? echo $endDate; ?>' placeholder="dd.mm.YYYY"/><br/>
+    <span style='width: 200px; display: inline-block;'>Monthly price:</span><input class='gsniceinput1' gsname="monthlyPrice" value='<? echo $system->monthlyPrice; ?>'/><br/>
+    
+    <br/><div class='shop_button' gstype='submit'>Save</div>
+</div>
+
+<div style='margin: 50px;'>
+    <div class='shop_button' gsclick="deleteSystem" systemid="<? echo $system->id; ?>" gs_confirm="Area you sure you want to delete this system?">Delete system</div>    
+</div>

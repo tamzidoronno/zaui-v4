@@ -43,8 +43,12 @@ controllers.RouteCompleteController = function($scope, datarepository, $rootScop
         var routeId = $stateParams.routeId;
         var $routeToUse = datarepository.getRouteById(routeId);        
 
+        $('.completerouteoverlay').show();
+        
         navigator.geolocation.getCurrentPosition(function(position) {
-            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStampAndPassword(routeId, position.coords.latitude, position.coords.longitude, new Date(), $scope.password).done(function(res) {
+            var process = $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStampAndPassword(routeId, position.coords.latitude, position.coords.longitude, new Date(), $scope.password);
+            process.done(function(res) {
+                $('.completerouteoverlay').hide();
                 if (res) {
                     $routeToUse.completedInfo.completed = true;
                     datarepository.save();
@@ -53,8 +57,15 @@ controllers.RouteCompleteController = function($scope, datarepository, $rootScop
                     alert("Please check your password");
                 }
             });
+            
+            process.fail(function(res) {
+                $('.completerouteoverlay').hide();
+                alert("count not complete route, please check that your device is online and try again");
+            });
         }, function(failare, b, c) {
-            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStampAndPassword(routeId, 0, 0, new Date(), $scope.password).done(function(res) {
+            var process = $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStampAndPassword(routeId, 0, 0, new Date(), $scope.password);
+            process.done(function(res) {
+                $('.completerouteoverlay').hide();
                 if (res) {
                     $routeToUse.completedInfo.completed = true;
                     datarepository.save();
@@ -62,6 +73,11 @@ controllers.RouteCompleteController = function($scope, datarepository, $rootScop
                 } else {
                     alert("Please check your password");
                 }
+            });
+            
+            process.fail(function(res) {
+                $('.completerouteoverlay').hide();
+                alert("count not complete route, please check that your device is online and try again");
             });
         }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
     }

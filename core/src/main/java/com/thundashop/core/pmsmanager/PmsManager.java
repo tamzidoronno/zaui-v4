@@ -1803,6 +1803,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.addRoom(room);
         setBooking(booking);
     }
+    
+    @Override
+    public void cancelRoom(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms remove = booking.findRoom(roomId);
+        remove.addedToWaitingList = false;
+        bookingEngine.deleteBooking(remove.bookingId);
+        remove.delete();
+        
+        String roomName = "";
+        if (remove.bookingItemId != null && !remove.bookingItemId.isEmpty()) {
+            roomName = bookingEngine.getBookingItem(remove.bookingItemId).bookingItemName + " (" + convertToStandardTime(remove.date.start) + " - " + convertToStandardTime(remove.date.end) + ")";
+        } else if (remove.bookingItemTypeId != null && !remove.bookingItemTypeId.isEmpty()) {
+            roomName = bookingEngine.getBookingItemType(remove.bookingItemTypeId).name + " (" + convertToStandardTime(remove.date.start) + " - " + convertToStandardTime(remove.date.end) + ")";
+        }
+        
+        logEntry(roomName + " removed from booking ", booking.id, null);
+        if(!booking.isWubook()) {
+            doNotification("room_cancelled", booking, remove);
+        }
+    }
 
     @Override
     public String removeFromBooking(String bookingId, String roomId) throws Exception {

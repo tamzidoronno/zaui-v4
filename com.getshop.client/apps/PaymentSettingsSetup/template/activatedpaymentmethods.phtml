@@ -1,7 +1,11 @@
 <?php
 /* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
-$apps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$apps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$paymentMethods = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$debtCollectors = (array)$this->getApi()->getStoreApplicationPool()->getActivatedApplications("DebtCollectorApplication");
+
+$paymentMethods = array_merge($debtCollectors, $paymentMethods);
+$apps = array_merge($debtCollectors, $apps);
 
 $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
 $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);

@@ -155,7 +155,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function deleteRoom() {
         $room = $this->getSelectedRoom();
         $booking = $this->getPmsBooking();
-        $error = $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(),$booking->id, $room->pmsBookingRoomId);
+        $error = $this->getApi()->getPmsManager()->cancelRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId);
         if($error) {
             $this->errors[] = $error;
         }

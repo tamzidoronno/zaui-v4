@@ -1,6 +1,8 @@
 <?
 /* @var $this \ns_b7fb195b_8cea_4d7b_922e_dee665940de2\InvoicingOverdueList */
 $overDueInvoices = $this->getOverDueInvoices();
+$debtCollectors = (array)$this->getApi()->getStoreApplicationPool()->getActivatedApplications("DebtCollectorApplication");
+$hasDebtCollector = sizeof($debtCollectors) > 0;
 ?>
 
 <div class="duerow header">
@@ -10,6 +12,13 @@ $overDueInvoices = $this->getOverDueInvoices();
     <div class="col totalamount"><? echo $this->__f("Total"); ?></div>
     <div class="col totalpaid"><? echo $this->__f("Paid"); ?></div>
     <div class="col remaining"><? echo $this->__f("Remaining"); ?></div>
+    <?php
+    if($hasDebtCollector) {
+        ?>
+        <div class="col todebt"><? echo $this->__f(""); ?></div>
+        <?php
+    }
+    ?>
 </div>
 
 <?
@@ -21,6 +30,14 @@ foreach ($overDueInvoices as $order) {
     $color = "blue";
     $color = $dueDays > 14 ? "yellow" : $color;
     $color = $dueDays > 30 ? "red" : $color;
+    
+    $debtcollectorText = "";
+    foreach($order->shipmentLog as $slog) {
+        if($slog->type == "debtCollector") {
+            $debtcollectorText .= "Sent to debt collector at : " . date("d.m.Y H:i", strtotime($slog->date)) . "\r\n";
+        }
+    }
+    
     ?>
 
     <div class="duerow  <? echo $color; ?>" duedays='<? echo $dueDays; ?>'>
@@ -57,6 +74,24 @@ foreach ($overDueInvoices as $order) {
                 echo $amount - $paidAmount;
                 ?>
             </div>
+            
+            <?php if($hasDebtCollector) { 
+                
+                $appName = $debtCollectors[0]->appName;
+                $appId = $debtCollectors[0]->id;
+                $nameSpace = "ns_" . str_replace("-","_",$appId) . "\\" . $appName;
+                $orderId = $order->incrementOrderId;
+                ?>
+                <div class="col todebt" style='float:right;'>
+                    <a href='/scripts/transferToDebtCollector.php?app=<?php echo $nameSpace; ?>&orderid=<?php echo $orderId; ?>' target='_debtnew'>
+                        <?php if($debtcollectorText) { ?>
+                            <i title='<?php echo $debtcollectorText; ?>' class='fa fa-forward' style='color:#bbb;'></i>
+                        <?php } else { ?>
+                            <i title='Send to debt collector' class='fa fa-forward'></i>
+                        <?php } ?>
+                    </a>
+                </div>
+            <?php } ?>
         </a>
     </div>
 

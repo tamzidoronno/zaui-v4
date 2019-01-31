@@ -23,6 +23,11 @@ class BamboraPayments extends \PaymentApplication implements \Application {
         $this->addPaymentMethod("Visa / MasterCard", "");
     }
     
+    
+    public function isPublicPaymentApp() {
+        return false;
+    }
+    
     public function simplePayment() {
         $orderId = $this->getOrder()->id;
         $url = $this->getApi()->getBamboraManager()->getCheckoutUrl($orderId);

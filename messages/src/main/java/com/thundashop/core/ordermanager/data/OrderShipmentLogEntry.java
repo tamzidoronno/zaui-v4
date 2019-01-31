@@ -9,6 +9,7 @@ public class OrderShipmentLogEntry {
         public static String phone = "phone";
         public static String accounting = "accounting";
         public static String ehf = "ehf";
+        public static String debtCollector = "debtCollector";
     }
     
     public Date date;

@@ -103,7 +103,8 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         } else {
             $amount = str_replace(",",".", $amount);
         }
-        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($_POST['data']['date'])), $amount);
+        $time = $_POST['data']['date'] . " " . $_POST['data']['time'];
+        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($time)), $amount);
     }
     
     public function getName() {

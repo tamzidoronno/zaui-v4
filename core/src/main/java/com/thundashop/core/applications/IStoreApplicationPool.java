@@ -128,4 +128,6 @@ public interface IStoreApplicationPool {
     public List<Application> getShippingApplications();
     
     public List<Application> getActivatedPaymentApplications();
+    
+    public List<Application> getActivatedApplications(String systemType);
 }

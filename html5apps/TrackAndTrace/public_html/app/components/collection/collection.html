@@ -37,12 +37,13 @@
     </div>
     
     <div class=''>
-        <div class='refnumber'>Payment</div>
+        <div class='refnumber' ng-if='getTotalPayment() > 0'>Payment</div>
+        <div class='refnumber' ng-if='getTotalPayment() <= 0'>Credit</div>
         <div class='orderamount'>{{ getTotalPayment() | number : 2 }}</div>
     </div>
 
-    <div class="button ng-scope" ng-if='getTotalPayment()' ng-mobile-click="showPayment()">Continue to payment</div>
-    <div class="button ng-scope" ng-if='!getTotalPayment()' ng-mobile-click="collectionCompleted()">Collection completed</div>
+    <div class="button ng-scope" ng-if='needToDoPayment()' ng-mobile-click="showPayment()">Continue to payment</div>
+    <div class="button ng-scope" ng-if='!needToDoPayment()' ng-mobile-click="collectionCompleted()">Collection completed</div>
 </div>
 
 <div class="collection" ng-if="paymentView">

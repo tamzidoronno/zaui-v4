@@ -114,4 +114,6 @@
     "numberofrooms_4" : "Number of cabins",
     "numberofrooms_5" : "Number of beds",
     "numberofrooms_6" : "Number of aparments",
+    "notetoorder" : "Note to order",
+    "differentconfirmationemail" : "Send confirmation to a different email"
 }

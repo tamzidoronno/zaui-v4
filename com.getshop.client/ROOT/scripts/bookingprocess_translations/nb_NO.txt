@@ -112,5 +112,6 @@
     "numberofrooms_4" : "Antall hytter",
     "numberofrooms_5" : "Antall senger",
     "numberofrooms_6" : "Antall leiligheter",
+    "differentconfirmationemail" : "Send bekreftelsen til en annen e-post"
 
 }

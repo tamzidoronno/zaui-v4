@@ -435,7 +435,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
 
     private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, String title, String content) {
-        List<String> recipients = getEmailRecipients(booking, room, type);
+        List<String> recipients = getEmailRecipients(booking, room, type, key);
         
         HashMap<String, String> attachments = new HashMap();
         if (key.startsWith("booking_completed")) {
@@ -493,7 +493,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         return recipients;
     }
 
-    private List<String> getEmailRecipients(PmsBooking booking, PmsBookingRooms room, String type) {
+    private List<String> getEmailRecipients(PmsBooking booking, PmsBookingRooms room, String type, String key) {
         List<String> recipients = new ArrayList();
         if(emailToSendTo != null && !emailToSendTo.isEmpty()) {
             recipients.add(emailToSendTo);
@@ -506,8 +506,17 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
         
         if(type.equals("booker")) {
-            User user = userManager.getUserById(booking.userId);
-            recipients.add(user.emailAddress);
+            if (booking != null && booking.registrationData != null && 
+                    key != null && key.equals("booking_completed") &&
+                    booking.registrationData.resultAdded != null && 
+                    booking.registrationData.resultAdded.containsKey("company_email") &&
+                    booking.registrationData.resultAdded.get("company_email").contains("@")) {
+                        String companyEmail = booking.registrationData.resultAdded.get("company_email");
+                        recipients.add(companyEmail);
+            } else {
+                User user = userManager.getUserById(booking.userId);
+                recipients.add(user.emailAddress);
+            }
         }
         
         if(type.equals("room") && room != null) {

@@ -90,4 +90,33 @@ public class Store extends DataCommon {
         pikTime.set(Calendar.DAY_OF_MONTH, 1);
         return rowCreatedDate.after(pikTime.getTime());
     }
+    
+    public Date getCurrentTimeInTimeZone() {
+        if(timeZone == null || timeZone.isEmpty()) {
+            return new Date();
+        }
+        
+        Date date = new Date();
+        TimeZone tz1 = TimeZone.getTimeZone(timeZone);
+        TimeZone tz2 = TimeZone.getDefault();
+        long timeDifference = tz1.getOffset(date.getTime())- tz2.getOffset(date.getTime());
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MILLISECOND, (int)timeDifference);
+        
+        return cal.getTime();
+    }
+    
+    public Date convertToTimeZone(Date timing) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(timing);
+        
+        TimeZone tz1 = TimeZone.getTimeZone(timeZone);
+        TimeZone tz2 = TimeZone.getDefault();
+        long timeDifference = tz1.getOffset(timing.getTime())- tz2.getOffset(timing.getTime());
+        
+        cal.add(Calendar.MILLISECOND, (int)timeDifference);
+        return cal.getTime();
+    }
+    
 }

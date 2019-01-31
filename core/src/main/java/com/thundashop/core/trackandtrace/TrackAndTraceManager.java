@@ -1293,7 +1293,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (getSession() == null || getSession().currentUser == null)
             return "false";
         
-        if (!route.serviceDateToDayOrInPast()) {
+        if (!route.serviceDateToDayOrInPast(getStore())) {
             return "SERVICEDATE_IN_FUTURE";
         }
         

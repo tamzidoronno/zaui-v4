@@ -1,5 +1,6 @@
 <?
 /* @var $this \ns_a22fa681_6882_4869_8add_b1cc9c7b661b\GetShopCompanySettings */
+$company = $this->getSelectedCompany();
 ?>
 <div class='rightmenu'>
     <div class='entry taboperation' tab='messages'>
@@ -12,6 +13,32 @@
         Tickets
     </div>
     
+    <div class='entry taboperation' tab='usage'>
+        <i class='fa fa-dollar'></i>
+        Usage
+    </div>
+    
+    <?
+    if ($company) {
+        $systems = $this->getApi()->getSystemManager()->getSystemsForCompany($company->id);
+    ?>
+    <div class='entry' tab='systems'>
+        <i class='fa fa-umbrella'></i>
+        Systems
+        <div class="submenu">
+            <div class="submenuentry taboperation" tab='createnewsystem'>Create new system</div>
+            <?
+            foreach ($systems as $system) {
+                ?>
+                <div class="submenuentry taboperation" tab='systemview' value='<? echo $system->id; ?>'><? echo $system->systemName; ?></div>
+                <?
+            }
+            ?>
+        </div>
+    </div>
+    <?
+    }
+    ?>
     <div class='entry ' gsclick='fetchMessages'>
         <i class='fa fa-refresh'></i>
         Fetch all messages for company

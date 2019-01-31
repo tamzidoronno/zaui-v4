@@ -5,7 +5,8 @@ app.GetShopCompanySettings = {
 
     selectMenu: function() {
         var data = {
-            tab : $(this).attr('tab')
+            tab : $(this).attr('tab'),
+            value : $(this).attr('value')
         };
 
         thundashop.Ajax.simplePost(this, 'setTab', data);

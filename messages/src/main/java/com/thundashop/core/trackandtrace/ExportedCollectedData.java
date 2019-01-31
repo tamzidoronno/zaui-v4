@@ -11,7 +11,13 @@ import com.thundashop.core.common.DataCommon;
  *
  * @author ktonder
  */
-public class ExportCounter extends DataCommon {
-    public long exportCounter = 1L;
-    public long exportCounterCollection = 1L;
+public class ExportedCollectedData extends DataCommon {
+    public CollectionTasks collectionTasks;
+    public String routId = "";
+    public long tntId = 0;
+
+    public CollectionTasks getCollectionTask() {
+        collectionTasks.tntId = tntId;
+        return collectionTasks;
+    }
 }

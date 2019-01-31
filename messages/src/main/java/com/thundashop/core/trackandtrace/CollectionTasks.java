@@ -5,16 +5,19 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.common.PermenantlyDeleteData;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
  * @author ktonder
  */
-public class CollectionTasks {
+@PermenantlyDeleteData
+public class CollectionTasks implements Cloneable {
     public String id = UUID.randomUUID().toString();
     
     /**
@@ -51,4 +54,11 @@ public class CollectionTasks {
     public Double adjustment = 0D;
     public Double adjustmentPreviouseCredit = 0D;
     
+    @Transient
+    public long tntId = 0;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
 }

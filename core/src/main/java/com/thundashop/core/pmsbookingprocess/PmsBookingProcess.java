@@ -1206,6 +1206,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             for(String orderId : booking.orderIds) {
                 Order order = orderManager.getOrderSecure(orderId);
                 if(order != null && order.status != Order.Status.PAYMENT_COMPLETED) {
+                    if(order.isExpedia() || order.isBookingCom()) {
+                        continue;
+                    }
                     amount = orderManager.getTotalAmount(order);
                     if(amount > 0) {
                         orderIdToReturn = order.id;

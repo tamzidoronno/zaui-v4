@@ -105,6 +105,13 @@ public class OrderDailyBreaker {
     }
 
     private void proccessOrder(Order order) {
+        if (filter.onlyPaymentTransactionWhereDoubledPosting) {
+            List<DayEntry> orderDayEntries = new ArrayList();
+            createPaymentRecords(orderDayEntries, order);
+            addToDayIncome(orderDayEntries);
+            return;
+        }
+        
         orderDayEntries = getDayEntriesForOrder(order);
         setPostAndPreFlags(orderDayEntries, order);
         calculatePrePaidAndAccrued(orderDayEntries, order);
@@ -115,6 +122,10 @@ public class OrderDailyBreaker {
             createOffsetAccountEntries(orderDayEntries, order);
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if (filter.includePaymentTransaction) {
+            createPaymentRecords(orderDayEntries, order);
         }
         
         createVatLines(order, orderDayEntries);
@@ -166,7 +177,6 @@ public class OrderDailyBreaker {
             }
         });
         
-        createPaymentRecords(orderDayEntries, order);
         correctRoundingProblemsDueToExTaxes(orderDayEntries);
         
         boolean orderValidated = validateDayEntries(orderDayEntries, order);
@@ -638,8 +648,8 @@ public class OrderDailyBreaker {
         
         for (OrderTransaction orderTransaction : order.orderTransactions) {
             DayEntry dayEntry = new DayEntry();
-            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision);
-            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision);
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));;
+            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
             dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;

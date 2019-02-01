@@ -18,4 +18,6 @@ public class DayIncomeFilter {
     public Date end;
     public boolean ignoreConfig = false;
     public List<String> departmentIds = new ArrayList();
+    public boolean onlyPaymentTransactionWhereDoubledPosting = false;
+    public boolean includePaymentTransaction = false;
 }

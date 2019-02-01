@@ -422,4 +422,7 @@ public interface IOrderManager {
     
     @Editor
     public List<PmiResult> getPmiResult(Date start, Date end);
+    
+    @Editor
+    public List<DayIncome> getPaymentRecords(String paymentId, Date from, Date to);
 }

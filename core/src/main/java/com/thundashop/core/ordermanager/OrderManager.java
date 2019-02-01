@@ -2793,6 +2793,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         DayIncomeFilter filter = new DayIncomeFilter();
         filter.start = start;
         filter.end = end;
+        filter.includePaymentTransaction = true;
         
         List<Order> orders = new ArrayList();
         orders.add(order);
@@ -2805,24 +2806,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void resetLastMonthClose(String password, Date start, Date end) {
         if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
-            DayIncomeReport report = getReport(start, end);
+            List<DayIncome> dayIncomes = getDayIncomes(start, end);
             
-            if (report != null) {
-                
-                report.incomes.stream()
-                        .flatMap(dayIncome -> dayIncome.dayEntries.stream())
-                        .forEach(o -> resetTransferToAccount(o.orderId));
-                
-                deleteObject(report);
-                
-                OrderManagerSettings settings = getOrderManagerSettings();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(settings.closedTilPeriode);
-                cal.add(Calendar.MONTH, -1);
-                settings.closedTilPeriode = cal.getTime();
-                
-                saveObject(settings);
+            for (DayIncome income : dayIncomes) {
+                BasicDBObject query = new BasicDBObject();
+                query.put("incomes.id", income.id);
+                List<DataCommon> datas = database.query("OrderManager", storeId, query);
+                datas.stream().forEach(o -> {
+                    System.out.println("Deleted report");
+                    deleteObject(o);
+                });
             }
+            
+            OrderManagerSettings settings = getOrderManagerSettings();
+            settings.closedTilPeriode = start;
+
+            saveObject(settings);
         }
     }
     
@@ -3448,5 +3447,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }            
         }
         
+    }
+
+    @Override
+    public List<DayIncome> getPaymentRecords(String paymentId, Date from, Date to) {
+ 
+        List<Order> orders = this.orders.values()
+                .stream()
+                .filter(o -> o.payment != null && o.payment.getPaymentTypeId().equals(paymentId))
+                .filter(o -> o.hasTranscationBetween(from, to))
+                .collect(Collectors.toList());
+        
+        DayIncomeFilter filter = new DayIncomeFilter();
+        filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        filter.start = from;
+        filter.end = to;
+        
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+        breaker.breakOrders();
+        
+        return breaker.getDayIncomes();
     }
 }

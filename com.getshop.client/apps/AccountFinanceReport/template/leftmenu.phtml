@@ -1,0 +1,25 @@
+<?
+/* @var ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+
+$doubledPostedMethod = $this->getDoubledPostPaymentMethods();
+?>
+<div class='menu'>
+    <div class='entry taboperation' tab='companylist'>
+        <i class='fa fa-line-chart'></i>
+        Report
+    </div>
+    
+    <?
+    foreach ($doubledPostedMethod as $paymentMethod) {
+        ?>
+        <div class='entry taboperation' tab="doublepost" value="<? echo $paymentMethod->id; ?>">
+            <i class='fa fa-dollar' ></i>
+            <?
+            echo $this->getNameOfPaymentMethod($paymentMethod);
+            ?>
+        </div>
+        <?
+    }
+    ?>
+    
+</div>

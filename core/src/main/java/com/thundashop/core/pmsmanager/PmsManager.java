@@ -817,7 +817,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room.priceMatrix != null) {
                 for (String offset : room.priceMatrix.keySet()) {
                     Double res = room.priceMatrix.get(offset);
-                    if (res != null && res.isInfinite() || res.isNaN()) {
+                    if (res == null || res.isInfinite() || res.isNaN()) {
                         room.priceMatrix.put(offset, 0.0);
                     }
                 }

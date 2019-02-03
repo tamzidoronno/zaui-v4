@@ -1136,7 +1136,7 @@ class Factory extends FactoryBase {
     public function getLanguageReadable() {
         $states = array();
         $states['nb_NO'] = "Norwegian";
-        $states['se'] = "Swedish";
+        $states['sv'] = "Swedish";
         $states['dk'] = "Danish";
         $states['en_en'] = "English";
         $states['nl'] = "Dutch";

@@ -246,7 +246,11 @@ $slaves = $this->getApi()->getStoreManager()->getSlaves();
                         if (in_array($key, $codes)) {
                             $checked = "CHECKED";
                         }
+                        echo "<div style='display:inline-block; width:150px; white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;'>";
                         echo "<input type='checkbox' gsname='additionallanguage_" . $key . "' $checked>$lang ";
+                        echo "</div>";
                     }
                     ?>
                 </div>

@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.pmsbookingprocess.AddonItem;
 import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.Calendar;

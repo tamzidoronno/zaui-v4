@@ -4262,6 +4262,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, Date date, PmsBookingRooms room) {
 
+        Gson gson = new Gson();
+        String copy = gson.toJson(addonConfig);
+        addonConfig = gson.fromJson(copy, PmsBookingAddonItem.class);
+        
+        
         Product product = productManager.getProduct(addonConfig.productId);
         PmsBookingAddonItem toReturn = new PmsBookingAddonItem();
         toReturn.addonType = addonConfig.addonType;
@@ -9603,6 +9608,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String getContractByLanguage(String language) throws Exception {
-        return getConfigurationSecure().contracts.get(language);
+        String contract = getConfigurationSecure().contracts.get(language);
+        if(contract == null || contract.isEmpty()) {
+            for(String cont : getConfigurationSecure().contracts.values()) {
+                if(cont != null && !cont.isEmpty()) {
+                    contract = cont;
+                    break;
+                }
+            }
+        }
+        return contract;
     }
 }

@@ -11,13 +11,13 @@
     gsisdevmode = false;
     $ = jQuery;
     jQuery(function ($) { 
-        $.getScript("https://haugesund.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://eilertsmith.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                     { 
-                    "endpoint": "https://haugesund.getshop.com/",
-                    "jsendpoint": "https://haugesund.getshop.com/",
+                    "endpoint": "https://eilertsmith.getshop.com/",
+                    "jsendpoint": "https://eilertsmith.getshop.com/",
                     "domain" : "default",
-                    "language" : "en",
+                    "language" : "no",
                     'roomStepTroughConfig' : true,
                     "success" : function(res) {
                             console.log("booking completed");

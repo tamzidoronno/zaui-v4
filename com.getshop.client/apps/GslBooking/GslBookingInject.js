@@ -731,9 +731,9 @@ function getshop_loadTextualSummary(res) {
         }
         $('.yourstaysummary').append(text + "<br>");
     }
-    
-    $('[gstranslationfield="readTerms"]').attr('onclick',"window.open('"+getshop_endpoint+"/scripts/loadContractPdf.php?readable=true&engine=default')");
-    $('[gstranslationfield="downloadTerms"]').attr('onclick',"window.open('"+getshop_endpoint+"/scripts/loadContractPdf.php?engine=default')");
+    var lang = sessionStorage.getItem("getshop_language");
+    $('[gstranslationfield="readTerms"]').attr('onclick',"window.open('"+getshop_endpoint+"/scripts/loadContractPdf.php?readable=true&engine=default&language="+lang+"')");
+    $('[gstranslationfield="downloadTerms"]').attr('onclick',"window.open('"+getshop_endpoint+"/scripts/loadContractPdf.php?engine=default&language="+lang+"')");
 }
 
 function getshop_loadRooms(res) {

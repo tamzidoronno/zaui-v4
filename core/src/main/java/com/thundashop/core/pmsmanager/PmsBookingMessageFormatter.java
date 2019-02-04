@@ -288,6 +288,9 @@ class PmsBookingMessageFormatter {
         message = message.replace("{simpleRoomList}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + simpleRoomList + "</table>");
         message = message.replace("{bookingid}", booking.id);
         message = message.replace("{bookinginformation}", bookinginfo);
+        if(booking.incrementBookingId != null) {
+            message = message.replace("{referenceNumber}", booking.incrementBookingId + "");
+        }
         message = message.replace("{totalcost}", total + "");
         message = message.replace("{nightprice}", nightPrice + "");
         message = message.replace("{roomlist2}", getRoomList2(booking, bookingEngine));
@@ -376,16 +379,58 @@ class PmsBookingMessageFormatter {
         
         SimpleDateFormat slf = new SimpleDateFormat("dd.MM.YY");
         
+        HashMap<String, Integer> productCounter = new HashMap();
+        HashMap<String, String> productName = new HashMap();
+        
+        String lang = booking.language;
+        if(lang != null && lang.equalsIgnoreCase("en")) { lang = "en_en"; }
+        if(lang != null && lang.equalsIgnoreCase("no")) { lang = "nb_NO"; }
+        
         for (PmsBookingRooms room : booking.rooms) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            
+            for(PmsBookingAddonItem item : room.addons) {
+                Integer counter = productCounter.get(item.productId);
+                if(counter == null) {
+                    counter = 0;
+                }
+                counter += item.count;
+                productCounter.put(item.productId, counter);
+                String prodName = item.getName();
+                String nameTranslated = item.getTranslationsByKey("name", lang);
+                if(nameTranslated != null && !nameTranslated.isEmpty()) {
+                    prodName = nameTranslated;
+                }
+                if(prodName != null && !prodName.isEmpty()) {
+                    productName.put(item.productId, prodName);
+                }
+            }
             
             list += "<div class='roominfo' style='margin-top: 10px; margin-bottom: 10px;'>"; 
             list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "</div>";
             for (PmsGuests guest : room.guests) {
-                list += "   <div class='guestinfo' style='padding-left: 10px;'>" + guest.name + ", +" + guest.prefix + " " + guest.phone + ", " + guest.email + "</div>";
+                String text = guest.name;
+                String phone = "";
+                if(guest.prefix != null && !guest.prefix.isEmpty() && guest.phone != null && !guest.phone.isEmpty()) {
+                    text += ", +" + guest.prefix + guest.phone;
+                }
+                if(guest.email!=null && !guest.email.isEmpty()) {
+                    text += ", " + guest.email;
+                }
+                
+                if(!text.isEmpty()) {
+                    list += "   <div class='guestinfo' style='padding-left: 10px;'>" + text + "</div>";
+                }
             }
-            for (PmsBookingAddonItem addon : room.addons) {
-                list += "   <div class='addon' style='padding-left: 10px;'>" + addon.count + " x " + addon.getName() + "</div>";
+            for(String productId : productCounter.keySet()) {
+                Product product = productManager.getProduct(productId);
+                String prodName = product.name;
+                String prodNameFromItem = productName.get(productId);
+                if(prodNameFromItem != null) {
+                    prodName = prodNameFromItem;
+                }
+                Integer count = productCounter.get(productId);
+                list += "   <div class='addon' style='padding-left: 10px;'>" + count + " x " + prodName + "</div>";
             }
             list += "</div>";
         }

@@ -168,6 +168,8 @@ class PmsReport extends \MarketingApplication implements \Application {
             $chanName = "unkown";
             if(isset($chnls[$chan])) {
                 $chanName = $chnls[$chan];
+            } else {
+                continue;
             }
 
             

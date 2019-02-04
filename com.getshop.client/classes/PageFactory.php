@@ -666,6 +666,7 @@ class PageFactory {
         
         $page = new \ModulePage("useraccounts", "settings");
         $page->setLeftMenu(\ModulePageMenu::getSettingsLeftMenu());
+        $page->addExtraApplications('acb219a1-4a76-4ead-b0dd-6f3ba3776421');
         $row = $page->createRow();
         $row->addColumn("27656859-aeed-41f7-9941-f01d0f860212", "f05c190e-2ba5-4604-b8cc-ffe93647e46c");
         $this->pages[$page->getId()] = $page;

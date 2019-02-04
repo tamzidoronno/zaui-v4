@@ -116,6 +116,10 @@ public class PageManager extends ManagerBase implements IPageManager {
             moduleName = "cms";
         }
         
+        if(moduleName.equals("ticket")) {
+            moduleName = "TicketSystem";
+        }
+        
         if (moduleName.equals("account")) {
             moduleName = "accounting";
         }

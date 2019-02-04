@@ -64,7 +64,7 @@
     "readTerms" : "Läs användarvillkor",
     "downloadTerms" : "Ladda ner användarvillkor",
     "roomExample1" : "Rum 1 - Dubbelrum",
-    "noRoomsMessage" : "Tyvärr, vi säljs ut för ditt angivna urval",
+    "noRoomsMessage" : "De valda dagarna går ej att boka.",
     "numberofguests" : "Gäster",
     "guest" : "gäst",
     "adult" : "vuxen",

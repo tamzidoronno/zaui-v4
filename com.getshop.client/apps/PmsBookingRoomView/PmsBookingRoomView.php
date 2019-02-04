@@ -165,6 +165,18 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->clearCache();
     }
     
+    public function cancelRoom() {
+        $room = $this->getSelectedRoom();
+        $booking = $this->getPmsBooking();
+        $error = $this->getApi()->getPmsManager()->cancelRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId);
+        if($error) {
+            $this->errors[] = $error;
+        }
+        $this->pmsBooking = null;
+        $this->selectedRoom = null;
+        $this->clearCache();
+    }
+    
     public function removeFromOverBookingList() {
         $room = $this->getSelectedRoom();
         $booking = $this->getPmsBooking();

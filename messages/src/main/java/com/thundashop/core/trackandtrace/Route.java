@@ -8,6 +8,9 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.PermenantlyDeleteData;
+import com.thundashop.core.storemanager.data.Store;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -15,6 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -164,12 +168,13 @@ public class Route extends DataCommon {
         };
     }
 
-    public boolean serviceDateToDayOrInPast() {
+    public boolean serviceDateToDayOrInPast(Store store) {
         Date today = new Date();
         
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(today);
+        
+        cal1.setTime(store.getCurrentTimeInTimeZone());
         cal2.setTime(deliveryServiceDate);
         boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                           cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);

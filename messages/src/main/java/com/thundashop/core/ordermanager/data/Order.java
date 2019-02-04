@@ -1299,6 +1299,20 @@ public class Order extends DataCommon implements Comparable<Order> {
     public List<OrderTag> getTags() {
         return tags;
     }
+
+    public boolean hasTranscationBetween(Date from, Date to) {
+        for (OrderTransaction transaction : orderTransactions) {
+            if (transaction.date.after(from) && transaction.date.before(to)) {
+                return true;
+            }
+            
+            if (transaction.date.equals(from) || transaction.date.equals(to)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     public static class Status  {
         public static int CREATED = 1;

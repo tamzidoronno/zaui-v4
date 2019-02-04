@@ -46,7 +46,19 @@ public class Store extends DataCommon {
     public boolean isTemplate = false;
     public User registrationUser;
     public String country;
-    public String timeZone;
+    
+    /**
+     * Never make this one public,
+     * all functions to work with times should already be 
+     * existing her, see:
+     * 
+     * getCurrentTimeInTimeZone
+     * getTimeZoneDifferenceInHours
+     * convertToTimeZone
+     * 
+     */
+    private String timeZone;
+    
     public boolean acceptedGDPR = false;
     public Date acceptedGDPRDate = null;
     public String acceptedByUser = "";
@@ -74,15 +86,7 @@ public class Store extends DataCommon {
         
         return null;
     }
-    
-    public TimeZone getTimeZone() {
-        if (timeZone == null || timeZone.isEmpty()) {
-            return TimeZone.getTimeZone("Europe/Oslo");
-        }
-        
-        return TimeZone.getTimeZone(timeZone);
-    }
-
+   
     public boolean isPikStore() {
         Calendar pikTime = Calendar.getInstance();
         pikTime.set(Calendar.YEAR, 2018);
@@ -90,4 +94,54 @@ public class Store extends DataCommon {
         pikTime.set(Calendar.DAY_OF_MONTH, 1);
         return rowCreatedDate.after(pikTime.getTime());
     }
+    
+    public Date getCurrentTimeInTimeZone() {
+        if(timeZone == null || timeZone.isEmpty()) {
+            return new Date();
+        }
+        
+        Date date = new Date();
+        TimeZone tz1 = TimeZone.getTimeZone(timeZone);
+        TimeZone tz2 = TimeZone.getDefault();
+        long timeDifference = tz1.getOffset(date.getTime())- tz2.getOffset(date.getTime());
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MILLISECOND, (int)timeDifference);
+        
+        return cal.getTime();
+    }
+    
+    public Date convertToTimeZone(Date timing) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(timing);
+        
+        TimeZone tz1 = TimeZone.getTimeZone(timeZone);
+        TimeZone tz2 = TimeZone.getDefault();
+        long timeDifference = tz1.getOffset(timing.getTime())- tz2.getOffset(timing.getTime());
+        
+        cal.add(Calendar.MILLISECOND, (int)timeDifference);
+        return cal.getTime();
+    }
+
+    public int getTimeZoneDifferenceInHours(Date dateToCheckAgainst) {
+        
+        if(timeZone != null && !timeZone.isEmpty()) {
+            TimeZone tz1 = TimeZone.getTimeZone(timeZone);
+            TimeZone tz2 = TimeZone.getDefault();
+            long timeDifference = tz1.getOffset(dateToCheckAgainst.getTime())- tz2.getOffset(dateToCheckAgainst.getTime());
+            if(timeDifference != 0) {
+                long seconds = timeDifference / 1000;
+                long minutes = seconds / 60;
+                long hours = minutes / 60;
+                return (int)hours;
+            }
+        }
+        
+        return 0;
+    }
+
+    public void setTimeZone(String timezone) {
+        this.timeZone = timezone;
+    }
+    
 }

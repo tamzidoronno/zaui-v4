@@ -5,7 +5,18 @@ app.AccountFinanceReport = {
         $(document).on('click', '.AccountFinanceReport .showresultbutton.recalc', app.AccountFinanceReport.resetLastMonth);
         $(document).on('click', '.AccountFinanceReport .showresultbutton.vismaloginlink', app.AccountFinanceReport.doVismaLogin);
         $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
+        $(document).on('click', '.AccountFinanceReport .leftmenu .taboperation', app.AccountFinanceReport.changeMenu);
     },
+    
+    changeMenu: function() {
+        var data = {
+            tab : $(this).attr('tab'),
+            value : $(this).attr('value')
+        };
+        
+        thundashop.Ajax.simplePost(this, 'changeMenu', data);
+    },
+    
     
     checkShowRow: function(e) {
         return false;

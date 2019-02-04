@@ -449,7 +449,7 @@ public class AcculogixDataImporter {
     }
 
     private boolean isCollectionRow(String[] row) {
-        return row[72].toLowerCase().equals("true") || row[70].toLowerCase().equals("true") || row[72].toLowerCase().equals("true");
+        return row[72].toLowerCase().equals("true") || row[70].toLowerCase().equals("true") || row[73].toLowerCase().equals("true");
     }
 
     private CollectionTask createCollectionTask(String[] data) {

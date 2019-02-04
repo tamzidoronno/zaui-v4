@@ -1,6 +1,12 @@
 <?
 /* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
 
+if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'])) {
+    $dayIncomes = $this->getApi()->getOrderManager()->getPaymentRecords($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'], $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_start'], $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_end']);
+} else {
+    $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_start'], $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_end']);
+}
+
 $entries = $this->getApi()->getOrderManager()->getDayEntriesForOrder($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid']);
 $order = $this->getApi()->getOrderManager()->getOrder($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid']);
 ?>

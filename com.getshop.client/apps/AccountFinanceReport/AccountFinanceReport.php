@@ -30,7 +30,13 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
             return;
         } 
         
-        $this->includefile("freport");
+        echo "<div class='leftmenu'>";
+            $this->includefile("leftmenu");
+        echo "</div>";
+        
+        echo "<div class='workarea'>";
+            $this->includefile($this->getTab());
+        echo "</div>";
     }
 
     public function createGroupByAccount($dayIncome) {
@@ -229,6 +235,40 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
 
     public function downloadYearReport() {
         $this->includefile("excelreport");
+    }
+
+    public function changeMenu() {
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'] = $_POST['data']['tab'];
+    }
+    
+    public function getDoubledPostPaymentMethods() {
+        $ret = array();
+        $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach ($paymentApps as $paymentApp) {
+            $paymentConfig = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($paymentApp->id);
+            if ($paymentConfig->userCustomerNumberPaid != null && $paymentConfig->userCustomerNumberPaid != "") {
+                $ret[] = $paymentApp;
+            }
+        }
+        
+        return $ret;        
+    }
+    
+    public function getNameOfPaymentMethod($app) {
+        $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        return $instance->getName();
+    }
+
+    public function getTab() {
+        if (!isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'])) {
+            return "freport";
+        }
+        
+        if ($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'] == "doublepost") {
+            return "doublepost";
+        }
+        
+        return "freport";
     }
 
 }

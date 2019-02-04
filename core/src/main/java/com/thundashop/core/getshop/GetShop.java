@@ -777,7 +777,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             
             Store store = storePool.getStore(newStoreId);
             store.country = startData.country;
-            store.timeZone = startData.timeZone;
+            store.setTimeZone(startData.timeZone);
             
             storePool.saveStore(store);
             

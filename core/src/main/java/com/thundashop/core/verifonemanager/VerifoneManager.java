@@ -75,7 +75,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         if(!storeManager.isProductMode() && !overrideDevMode) {
 //            order.status = Order.Status.PAYMENT_COMPLETED;
 //            saveOrderSomeHow(orderToPay);
-            orderToPay = null;
+//            orderToPay = null;
             return;
         }
 
@@ -195,6 +195,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             if(orderToPay != null) {
                 double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
                 orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+                logPrint("Marked order " + orderToPay.incrementOrderId + " as completed with paid amount: " + paidAmount);
+            } else {
+                logPrint("Warning! Order is null, cant mark as completed... Why is it null?");
             }
         } else {
             logPrint("Failed to pay");
@@ -209,7 +212,6 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     
     private void saveOrderSomeHow(Order orderToPay) {
         if(orderToPay!= null) {
-            logPrint("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
             orderManager.saveOrderInternal(orderToPay);
         }
     }
@@ -233,6 +235,14 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     @Override
     public List<String> getTerminalMessages() {
+        
+        for (String msg : terminalMessages) {
+            if (msg != null && msg.equals("completed") && orderToPay != null && orderToPay.status != Order.Status.PAYMENT_COMPLETED) {
+                double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
+                orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+            }
+        }
+        
         return terminalMessages;
     }
 

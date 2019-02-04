@@ -5,6 +5,7 @@ app.SalesPointTabPayment = {
         $(document).on('keyup', '.SalesPointTabPayment .filterpayonroomlist', app.SalesPointTabPayment.filterPayOnRoomList);
         $(document).on('keyup', '.SalesPointTabPayment .giftcardcode', app.SalesPointTabPayment.checkGiftCardCode);
         $(document).on('click', '.SalesPointTabPayment .startpayment', app.SalesPointTabPayment.startPayment);
+        $(document).on('click', '.SalesPointTabPayment .debugaction', app.SalesPointTabPayment.postDebugMessage);
     },
     
     checkGiftCardCode: function() {
@@ -114,6 +115,19 @@ app.SalesPointTabPayment = {
     
     nullFunction: function(res) {
         // Used for not reprinting.
+    },
+    
+    postDebugMessage: function() {
+        var data = {
+            action : $(this).attr('action')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "handleDebugActions", this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            console.log("done");
+        }, [], true);
     }
 };
 

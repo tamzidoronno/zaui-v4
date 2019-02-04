@@ -327,5 +327,17 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         echo $giftCard->remainingValue;
         die();
     }
+    
+    public function handleDebugActions() {
+        if ($_POST['data']['action'] == "success") {
+            $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "completed");
+        }
+        if ($_POST['data']['action'] == "failed") {
+            $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "payment failed");
+        }
+        if ($_POST['data']['action'] == "other") {
+            $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "Please insert credit card");
+        }
+    }
 }
 ?>

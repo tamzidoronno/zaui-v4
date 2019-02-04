@@ -37,3 +37,14 @@ echo $this->getLastTerminalMessage();
     ?>
 </div>
 
+<?
+if (!$this->getApi()->getStoreManager()->isProductMode()) {
+    ?>
+    <div>
+        <div class='shop_button debugaction' action="success">Success</div>
+        <div class='shop_button debugaction' action="failed">Failed</div>
+    </div>
+    <?
+}
+?>
+

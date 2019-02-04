@@ -648,12 +648,14 @@ public class OrderDailyBreaker {
         
         for (OrderTransaction orderTransaction : order.orderTransactions) {
             DayEntry dayEntry = new DayEntry();
-            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));;
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
             dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
             dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;
             dayEntry.date = orderTransaction.date;
+            dayEntry.orderTransactionId = orderTransaction.transactionId;
+            
             orderDayEntries.add(dayEntry);
             
             try {

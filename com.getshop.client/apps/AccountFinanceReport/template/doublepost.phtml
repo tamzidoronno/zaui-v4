@@ -117,6 +117,55 @@ echo "</script>";
 </div>
 
 <?
+$system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
+$appTemplateFile = '../app/'.$appname.'/template/' . $system . "_BUTTON.phtml";
+
+if (file_exists($appTemplateFile)) {
+    $files = $this->getApi()->getOrderManager()->getAllDoublePostTransferFiles($paymentId, $start, $end);
+?>
+<div class="accountdownloadfilearea">
+    <h2>Accounting transfer</h2>
+    <?
+    foreach ($files as $file) {
+        $accountsSum = $this->getSum($file);
+        $user = $this->getApi()->getUserManager()->getUserById($file->userId);
+        
+        ?>
+        <div class='downloadlink'>
+            <div class='col'><? echo date('d.m.Y H:i', strtotime($file->rowCreatedDate)); ?></div>
+            <div class='col'><? echo $user->fullName; ?></div>
+            <?
+            foreach ($accountsSum as $acc => $sumi) {
+                ?>
+                <div  class='col'>
+                    <? echo "<b>".$acc."</b><br/> ".$sumi; ?>
+                </div>
+                <?
+            }
+            ?>
+            <div class='col'> 
+                <?
+                $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_current_doublepostfileid'] = $file->id;
+                $this->includefile($system."_BUTTON");
+                unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_current_doublepostfileid']);
+                ?>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+    <div class="shop_button" gsclick="createTransferFiles">
+        <?
+        echo $this->__f("Create new file");
+        ?>
+    </div>
+    <?
+    
+    ?>
+</div>
+<?
+}
+
 if ($this->extramessage) {
 ?>
     <div>
@@ -147,8 +196,12 @@ echo "<div class='outer'>";
                 echo "<div class='col orderid'>$isLocked ".date('d.m.Y H:i', strtotime($dayIncome->start))." - ".date('H:i', strtotime($dayIncome->end))."</div>";
                 $controlSum = 0;
                 foreach ($accounts as $account) {
+                    if (!isset($sum[$account])) {
+                        $sum[$account] = 0;
+                    }
+                    
                     if (isset($grouped[$account]) && $grouped[$account]) {
-                        $sum[$account] = @$sum[$account] + $grouped[$account];
+                        $sum[$account] = $sum[$account] + $grouped[$account];
                     }
 
                     if (isset($grouped[$account]) && $grouped[$account]) {

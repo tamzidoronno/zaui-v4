@@ -71,6 +71,11 @@ public class DayEntry implements Serializable, Cloneable {
     public boolean isActualIncome = false;
     public boolean isTaxTransaction = false;
     
+    /**
+     * Unique transactionid for each registered payment transaction
+     */
+    public String orderTransactionId = "";
+    
 
     @Override
     protected DayEntry clone() throws CloneNotSupportedException {

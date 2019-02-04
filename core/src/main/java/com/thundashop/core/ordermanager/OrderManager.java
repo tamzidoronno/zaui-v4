@@ -24,6 +24,7 @@ import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeFilter;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.DayIncomeTransferToAaccountingInformation;
+import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.giftcard.GiftCardManager;
@@ -70,6 +71,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -2808,20 +2810,29 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
             List<DayIncome> dayIncomes = getDayIncomes(start, end);
             
+            DayIncomeFilter filter = new DayIncomeFilter();
+            filter.start = start;
+            filter.end = end;
+            OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+            breaker.breakOrders();
+            List<DayIncome> newIncomes = breaker.getDayIncomes();
+            
             for (DayIncome income : dayIncomes) {
                 BasicDBObject query = new BasicDBObject();
                 query.put("incomes.id", income.id);
                 List<DataCommon> datas = database.query("OrderManager", storeId, query);
-                datas.stream().forEach(o -> {
-                    System.out.println("Deleted report");
-                    deleteObject(o);
-                });
+                datas.stream()
+                        .map(o -> (DayIncomeReport)o)
+                        .forEach(o -> {
+                            o.replaceDayIncomes(newIncomes);
+                            saveObject(o);
+                        });
             }
             
-            OrderManagerSettings settings = getOrderManagerSettings();
-            settings.closedTilPeriode = start;
-
-            saveObject(settings);
+//            OrderManagerSettings settings = getOrderManagerSettings();
+//            settings.closedTilPeriode = start;
+//
+//            saveObject(settings);
         }
     }
     
@@ -3467,5 +3478,75 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         breaker.breakOrders();
         
         return breaker.getDayIncomes();
+    }
+
+    @Override
+    public void createNewDoubleTransferFile(String paymentId, Date from, Date to) {
+        List<DayIncome> incomes = getPaymentRecords(paymentId, from, to);
+        
+        for (DayIncome inc : incomes) {
+            inc.dayEntries.removeIf(o -> transactionIsTransferredToAccount(o.orderId, o.orderTransactionId));
+        }
+        
+        incomes.removeIf(o -> o.dayEntries.isEmpty());
+        
+        if (incomes.isEmpty()) {
+            return;
+        }
+        
+        DoublePostAccountingTransfer accTransfer = new DoublePostAccountingTransfer();
+        accTransfer.incomes = incomes;
+        accTransfer.start = from;
+        accTransfer.end = to;
+        accTransfer.userId = getSession().currentUser.id;
+        
+        saveObject(accTransfer);
+        
+        incomes.stream()
+            .flatMap(o -> o.dayEntries.stream())
+            .forEach((Consumer<? super DayEntry>) o -> {
+                Order order = getOrder(o.orderId);
+                for (OrderTransaction transaction : order.orderTransactions) {
+                    if (transaction.transactionId.equals(o.orderTransactionId)) {
+                        transaction.transferredToAccounting = true;
+                    }
+                }
+                saveObject(order);
+            });
+    }
+
+    @Override
+    public List<DoublePostAccountingTransfer> getAllDoublePostTransferFiles(String paymentId, Date from, Date to) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", DoublePostAccountingTransfer.class.getCanonicalName());
+        
+        return database.query("OrderManager", storeId, query)
+                .stream()
+                .map(o -> (DoublePostAccountingTransfer)o)
+                .filter(o -> o.isWithinOrEqual(from, to))
+                .collect(Collectors.toList());
+    }
+
+    private boolean transactionIsTransferredToAccount(String orderId, String orderTransactionId) {
+        for (OrderTransaction transaction : getOrder(orderId).orderTransactions) {
+            if (transaction.transactionId.equals(orderTransactionId) && transaction.transferredToAccounting) {
+                return true;
+            }
+        }
+                
+        return false;
+    }
+
+    @Override
+    public DoublePostAccountingTransfer getDoublePostAccountingTransfer(String id) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", DoublePostAccountingTransfer.class.getCanonicalName());
+        query.put("_id", id);
+        
+        return database.query("OrderManager", storeId, query)
+                .stream()
+                .map(o -> (DoublePostAccountingTransfer)o)
+                .findAny()
+                .orElse(null);
     }
 }

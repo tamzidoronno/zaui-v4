@@ -12,6 +12,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
+import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
@@ -425,4 +426,13 @@ public interface IOrderManager {
     
     @Editor
     public List<DayIncome> getPaymentRecords(String paymentId, Date from, Date to);
+    
+    @Administrator
+    public void createNewDoubleTransferFile(String paymentId, Date from, Date to);
+    
+    @Administrator
+    public List<DoublePostAccountingTransfer> getAllDoublePostTransferFiles(String paymentId, Date from, Date to);
+    
+    @Administrator
+    public DoublePostAccountingTransfer getDoublePostAccountingTransfer(String id);
 }

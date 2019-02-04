@@ -2,8 +2,14 @@
 /* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
 $start = $this->getStart();
 $end = $this->getEnd();
-$dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
 
+
+if (isset($_POST['data']['doublepostid']) && $_POST['data']['doublepostid']) {
+    $file = $this->getApi()->getOrderManager()->getDoublePostAccountingTransfer($_POST['data']['doublepostid']);
+    $dayIncomes = $file->incomes;
+} else {
+    $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
+}
 
 $rows = array();
 foreach ($dayIncomes as $dayIncome) {
@@ -18,7 +24,7 @@ foreach ($dayIncomes as $dayIncome) {
         $row[5] = date('Y', strtotime($dayIncome->start));
         $row[6] = $accountNumber; 
         $row[7] = $this->getTaxCodeForAccount($accountNumber); 
-        $row[8] = $amount; 
+        $row[8] = str_replace(".", ",", $amount); 
         $row[9] = ''; 
         $row[10] = ''; 
         $row[11] = ''; 

@@ -271,5 +271,32 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         return "freport";
     }
 
+    public function createTransferFiles() {
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        $paymentId = $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'];
+        $this->getApi()->getOrderManager()->createNewDoubleTransferFile($paymentId, $start, $end);
+    }
+
+    /**
+     * 
+     * @param \core_getshopaccounting_DoublePostAccountingTransfer $file
+     */
+    public function getSum($file) {
+        $amounts = array();
+        foreach ($file->incomes as $income) {
+            
+            foreach ($income->dayEntries as $entry) {
+                if (!isset($amounts[$entry->accountingNumber])) {
+                    $amounts[$entry->accountingNumber] = 0;
+                }
+                
+                $amounts[$entry->accountingNumber] += $entry->amount;   
+            }
+        }
+        
+        return $amounts;
+    }
+
 }
 ?>

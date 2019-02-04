@@ -19,4 +19,22 @@ public class DayIncomeReport extends DataCommon {
     public Date end;
     public List<DayIncome> incomes = new ArrayList();
     public String createdBy = "";
+    
+    public void replaceDayIncomes(List<DayIncome> newIncomes) {
+        List<DayIncome> toReplace = new ArrayList();
+        for (DayIncome oldIncomce : incomes) {
+            DayIncome toBeReplaced = getReplacement(newIncomes, oldIncomce);
+            toReplace.add(toBeReplaced);
+        }
+        incomes = toReplace;
+    }
+
+    private DayIncome getReplacement(List<DayIncome> newIncomes, DayIncome oldIncomce) {
+        for (DayIncome o : newIncomes) {
+            if (o.start.equals(oldIncomce.start) && o.end.equals(oldIncomce.end))
+                return o;
+        }
+        
+        throw new NullPointerException("Did not find a replacement for the day");
+    }
 }

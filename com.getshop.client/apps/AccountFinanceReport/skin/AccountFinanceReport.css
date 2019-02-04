@@ -159,3 +159,15 @@
     vertical-align: top;
     box-sizing: border-box;
 }
+
+.AccountFinanceReport .downloadlink .col {
+    display: inline-block; 
+    vertical-align: top;
+}
+
+.AccountFinanceReport .accountdownloadfilearea {
+    border-left: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
+    padding: 20px;
+    margin-bottom: 20px;
+}

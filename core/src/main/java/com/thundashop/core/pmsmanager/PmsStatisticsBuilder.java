@@ -63,6 +63,7 @@ class PmsStatisticsBuilder {
         cal.setTime(filter.startDate);
         List<String> roomsAddedForGuests = new ArrayList();
         while(true) {
+            invoiceManager.gsTiming("Generating statistcs: " + cal.getTime());
             StatisticsEntry entry = buildStatsEntry(cal);
             entry.date = cal.getTime();
             entry.totalRoomsOriginal = totalRooms;
@@ -78,6 +79,8 @@ class PmsStatisticsBuilder {
                 entry.bugdet = budget.get(month).coverage_percentage.doubleValue();
             }
             statics.addEntry(entry);
+            long start = System.currentTimeMillis();
+            int counter = 0;
             
             for(PmsBooking booking : bookings) {
                 if(!booking.confirmed) {
@@ -89,15 +92,17 @@ class PmsStatisticsBuilder {
                 if(booking.isDeleted) {
                     continue;
                 }
-                
+                if(!booking.isActiveOnDay(cal.getTime())) {
+                    continue;
+                }
                 if(!filter.segments.isEmpty()) {
                     if(!filter.segments.contains(booking.segmentId) && !filter.segments.contains("none") && !booking.segmentId.isEmpty()) {
                         continue;
                     }
                 }
-                
+                counter++;
+
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
-                    
                     // With the new accounting system as of 1th of january 2019, this makes no sense any more.
                     // All orders should be part of the statistic, regardless of its paid or not.
                     if(((!booking.payedFor && !invoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) && !filter.includeVirtual) && room.isEnded() && room.beforeFirstOfJan2019()) {
@@ -122,8 +127,8 @@ class PmsStatisticsBuilder {
                         } else {
                             price = room.getPriceForDay(booking.priceType, cal);
                         }
-                        
-                        
+
+
                         if(!pricesExTax) {
                             price /= 1 + (room.taxes/100);
                         }
@@ -168,7 +173,7 @@ class PmsStatisticsBuilder {
                             if(addonPrice == null) { addonPrice = 0.0; }
                             count += addon.count;
                             addonPrice += (addon.price*addon.count);
-//                            addonPriceEx += addon.priceExTaxes;
+    //                            addonPriceEx += addon.priceExTaxes;
 
                             if (addon.addonType != null) {
                                 entry.addonsCount.put(addon.addonType, count);
@@ -184,6 +189,9 @@ class PmsStatisticsBuilder {
             if(cal.getTime().after(filter.endDate)) {
                 break;
             }
+//            if(true) {
+//                break;
+//            }
         }
         
         return statics;

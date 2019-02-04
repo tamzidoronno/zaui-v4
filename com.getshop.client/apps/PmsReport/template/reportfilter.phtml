@@ -74,7 +74,7 @@ $chnls = $pmssearchbox->getChannels();
                 echo "<option value=''>All channels</option>";
                 foreach($channels as $chanid => $chan) {
                     $selected = ($filter->channel == $chan) ? "SELECTED" : "";
-                    echo "<option value='$chan' $selected>".$chnls[$chanid]."</option>";
+                    echo "<option value='$chanid' $selected>".$chnls[$chanid]."</option>";
                 }
                 echo "</select>";
                 ?>

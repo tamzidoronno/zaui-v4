@@ -1668,9 +1668,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
-        if (hasNoBookings()) {
-            return new PmsStatistics();
-        }
         
         // We change the filter types to only use the ones connected to the departments.
         if (filter.departmentIds != null && !filter.departmentIds.isEmpty()) {
@@ -1722,10 +1719,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         builder.setBudget(getConfigurationSecure().budget);
 
         int totalRooms = getTotalRoomsBasedOnFilter(filter);
+        
+//        if (true) {
+//            return new PmsStatistics();
+//        }
 
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         gsTiming("After after build statistics");
-        if (storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6") || filter.includeOrderStatistics) {
+        if ((storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6") || filter.includeOrderStatistics) && !filter.fromPms) {
             result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         }
         if (getConfigurationSecure().getUsePriceMatrixOnOrder() && (storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018)) {

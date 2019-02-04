@@ -2,6 +2,16 @@
 <span class="shop_button" loadeditmeesage="-1">Create a new automated message</span>
 <br>
 <br>
+
+<?php
+$paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedMultilevelDomainName());
+echo "<h1>Payment link adress (web adress)</h1>";
+?>
+<div gstype='form' method='savepaymentlinksetup'>
+    <input class='webadressclass gsniceinput1' type='text' gsname='webadress' value='<?php echo $paymentProductConfig->webAdress; ?>' class=''>
+    <span class="shop_button" gstype='submit' gs_callback='alert("saved");'>Save</span>
+</div>
+<br>
 <?php
 /* @var $this ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
 $msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());

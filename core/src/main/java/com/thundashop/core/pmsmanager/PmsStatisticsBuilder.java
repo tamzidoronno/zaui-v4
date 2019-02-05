@@ -92,7 +92,7 @@ class PmsStatisticsBuilder {
                 if(booking.isDeleted) {
                     continue;
                 }
-                if(!booking.isActiveOnDay(cal.getTime())) {
+                if(!booking.isActiveOnDay(cal.getTime()) && !booking.isEndingAtDay(cal.getTime())) {
                     continue;
                 }
                 if(!filter.segments.isEmpty()) {

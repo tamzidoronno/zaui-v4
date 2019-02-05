@@ -711,6 +711,15 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    boolean isEndingAtDay(Date time) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.isEndingToday(time)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

@@ -276,7 +276,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     
     public function loadSendEmail() {
         $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
-        if (!$booking || 1 == 1) {
+        if (!$booking) {
             $this->includefile("emailsendboxwithoutbooking");
         } else {
             $this->includefile("emailsendbox");

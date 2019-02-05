@@ -174,8 +174,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
             
             if ($type == "merged") {
                 //Do something here.
-                $mainorder = $this->getApi()->getOrderManager()->mergeAndCreateNewOrder($_POST['data']['userid'], $orderIds, $payment, "");
-                $orderIds[] = $mainorder->id;
+                $this->getApi()->getOrderManager()->mergeAndCreateNewOrder($_POST['data']['userid'], $orderIds, $payment, "");
             }
             
             foreach ($orderIds as $orderId) {

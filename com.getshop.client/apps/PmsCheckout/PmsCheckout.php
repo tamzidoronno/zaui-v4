@@ -154,6 +154,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
             if(strtolower($card->savedByVendor) == "epay") { $payment = "8f5d04ca-11d1-4b9d-9642-85aebf774fee"; };
         }
         
+        $mainOrderId = null;
         $orderIds = array();
         if (isset($_POST['data']['appendtoorder']) && $_POST['data']['appendtoorder']) {
             $originalCart = $this->getOriginalCartFromSession();
@@ -174,7 +175,8 @@ class PmsCheckout extends \WebshopApplication implements \Application {
             
             if ($type == "merged") {
                 //Do something here.
-                $this->getApi()->getOrderManager()->mergeAndCreateNewOrder($_POST['data']['userid'], $orderIds, $payment, "");
+                $mainOrder = $this->getApi()->getOrderManager()->mergeAndCreateNewOrder($_POST['data']['userid'], $orderIds, $payment, "");
+                $mainOrderId = $mainOrder->id;
             }
             
             foreach ($orderIds as $orderId) {
@@ -196,6 +198,11 @@ class PmsCheckout extends \WebshopApplication implements \Application {
                 }
             }
         }
+        
+        if ($mainOrderId != null) {
+            $orderIds[] = $mainOrderId;
+        }
+        
         $this->printCreatedOrders($orderIds);
     }
 

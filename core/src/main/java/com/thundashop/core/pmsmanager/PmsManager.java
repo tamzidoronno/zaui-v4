@@ -9619,4 +9619,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return contract;
     }
+
+    @Override
+    public List<String> getExtraOrderIds(String pmsBookingId) {
+        PmsBooking booking = getBooking(pmsBookingId);
+        
+        return booking.orderIds.stream()
+                .map(orderId -> orderManager.getOrder(orderId))
+                .filter(o -> o.isSamleFaktura())
+                .map(o -> orderManager.getMainInvoice(o.id))
+                .distinct()
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<PmsBooking> getBookingsFromGroupInvoicing(String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        if (order == null || order.createdBasedOnOrderIds.isEmpty()) {
+            return new ArrayList();
+        }
+        
+        return bookings.values()
+                .stream()
+                .filter(o -> !Collections.disjoint(o.orderIds, order.createdBasedOnOrderIds))
+                .collect(Collectors.toList());
+    }
+
 }

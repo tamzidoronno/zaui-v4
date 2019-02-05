@@ -1480,6 +1480,22 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $ids[] = $this->selectedRoom->pmsBookingRoomId;
         $orderlist->setExternalReferenceIds($ids);
         $orderlist->renderApplication(true, $this);
+        
+        $extraOrderIds = $this->getApi()->getPmsManager()->getExtraOrderIds($this->getSelectedMultilevelDomainName(), $this->pmsBooking->id);
+
+        
+        if ( $extraOrderIds && count($extraOrderIds)) {
+            echo "<div style='border-top: solid 5px green; margin-top: 50px; padding-top: 50px;'>";
+                echo "<h2> Payments merged from multiple bookings (Group invoicing)</h2>";
+                $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+                $orderlist->setOrderIds($extraOrderIds);
+                $orderlist->setPaymentLinkCallBack("app.PmsBookingRoomView.refresh");
+                $ids = array();
+                $ids[] = $this->selectedRoom->pmsBookingRoomId;
+                $orderlist->setExternalReferenceIds($ids);
+                $orderlist->renderApplication(true, $this);    
+            echo "</div>";
+        }
     }
 
     public function doUpdatePriceMatrixWithPeriodePrice($room) {

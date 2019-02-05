@@ -5,7 +5,13 @@ $roomId = "";
 if(isset($_POST['data']['roomid'])) {
     $roomId = $_POST['data']['roomid'];
 }
-$booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $order->id);
+
+if (isset($_POST['data']['bookingid'])) {
+    $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+} else {
+    $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $order->id);
+}
+
 $room = null;
 foreach ($booking->rooms as $r) {
     if ($r->pmsBookingRoomId == $roomId) {
@@ -34,7 +40,13 @@ if(isset($_GET['sendcallbackehf'])) {
 }
 
 $roomId = $_POST['data']['roomid'];
-$booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
+
+if (isset($_POST['data']['bookingid'])) {
+    $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+} else {
+    $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
+}
+
 $room = null;
 $guests = array();
 foreach($booking->rooms as $r) {

@@ -75,6 +75,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -3546,6 +3547,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return database.query("OrderManager", storeId, query)
                 .stream()
                 .map(o -> (DoublePostAccountingTransfer)o)
+                .findAny()
+                .orElse(null);
+    }
+
+    public Order getMainInvoice(String id) {
+        Order order = getOrder(id);
+        
+        if (order == null) {
+            return null;
+        }
+        
+        return orders.values()
+                .stream()
+                .filter(o -> o.createdBasedOnOrderIds.contains(id))
                 .findAny()
                 .orElse(null);
     }

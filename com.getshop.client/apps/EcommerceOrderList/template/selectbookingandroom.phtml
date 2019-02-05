@@ -1,0 +1,19 @@
+<?php
+/* @var $this \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList */
+$bookings = $this->getApi()->getPmsManager()->getBookingsFromGroupInvoicing($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
+$order = $this->getSelectedOrder();
+
+echo "<span class='sendpaymentlinkbox dosendbox dontExpand' gstype='form' method='sendEmail'>";
+echo "<div style='padding-bottom: 10px;'>";
+echo "<i class='fa fa-close closesendpaymentlink' style='float:right;cursor:pointer;'></i>";
+echo "Please select what booking you want to send from:";
+echo "</div>";
+echo "</span>";  
+
+foreach ($bookings as $booking) {
+    $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+    $name = $user ? $user->fullName : "N/A";
+    $callback = $_POST['data']['callback'];
+    echo "<div class='selectSendBookingId dontExpand' orderid='$order->id' callback='$callback' bookingid='$booking->id'>".$booking->incrementBookingId." - ".$name."</div>";
+}
+?>

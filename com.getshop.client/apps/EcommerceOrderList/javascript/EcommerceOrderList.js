@@ -6,6 +6,7 @@ app.EcommerceOrderList = {
         $(document).on('click','.EcommerceOrderList .deleteOrder', app.EcommerceOrderList.deleteOrder);
         $(document).on('click','.EcommerceOrderList .creditOrder', app.EcommerceOrderList.creditOrder);
         $(document).on('change','.EcommerceOrderList .sendlinktouser', app.EcommerceOrderList.changePaymentLinkUser);
+        $(document).on('click','.EcommerceOrderList .selectSendBookingId', app.EcommerceOrderList.selectSendBookingId);
     },
     changePaymentLinkUser : function() {
         var val = $(this).val();
@@ -73,6 +74,7 @@ app.EcommerceOrderList = {
         
     },
     sendEmail : function() {
+        $('.sendpaymentlinkwindow').hide();
         var btn = $(this);
         var roomId = $(this).attr('roomid');
         var orderid = $(this).attr('orderid');
@@ -105,6 +107,18 @@ app.EcommerceOrderList = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             btn.parent().find('.sendpaymentlinkwindow').html(res);
             btn.parent().find('.sendpaymentlinkwindow').slideDown();
+        });
+    },
+    
+    selectSendBookingId: function() {
+        var event = thundashop.Ajax.createEvent('','loadSendEmail',$(this),{
+            "bookingid" : $(this).attr('bookingid'),
+            "id" : $(this).attr('orderid'),
+            "callback" : $(this).attr('callback')
+        });
+        var me = this;
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $(me).closest('.sendpaymentlinkwindow').html(res)
         });
     }
 };

@@ -585,4 +585,25 @@ public interface IPmsManager {
     
     @Administrator
     public void resetDeparmentsOnOrders();
+    
+    /**
+     * If the booking has one or more merged orders you can 
+     * use this function to get a list of all the orders connected 
+     * to it.
+     * 
+     * @param pmsBookingId
+     * @return 
+     */
+    @Administrator
+    public List<String> getExtraOrderIds(String pmsBookingId);
+    
+    /**
+     * If the orderId is for a group invoice this function
+     * will return all the bookings associated to it.
+     * 
+     * @param pmsBookingId
+     * @return 
+     */
+    @Administrator
+    public List<PmsBooking> getBookingsFromGroupInvoicing(String orderId);
 }

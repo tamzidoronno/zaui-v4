@@ -203,5 +203,5 @@ public interface ITrackAndTraceManager {
     public void registerCollectionData(String destinationId, CollectionTasks collectionTasks);
     
     @Administrator
-    public List<CollectionTasks> getCompletedCollectionTasks(Date start, Date end);
+    public List<ExportedCollectedData> getCompletedCollectionTasks(Date start, Date end);
 }

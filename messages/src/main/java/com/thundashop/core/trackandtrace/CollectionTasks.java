@@ -52,13 +52,25 @@ public class CollectionTasks implements Cloneable {
      */
     public Double adjustedReturnCredit = 0D;
     public Double adjustment = 0D;
-    public Double adjustmentPreviouseCredit = 0D;
+    public Double adjustmentPreviouseCredit = null;
     
     @Transient
     public long tntId = 0;
-
+   
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public double calculateSubTotal() {
+        return collectionTasks.stream()
+                .mapToDouble(o -> o.amount)
+                .sum();
+    }
+
+    public double getPreviouseCreditAmount() {
+        return collectionTasks.stream()
+                .mapToDouble(o -> o.previouseCreditAmount)
+                .sum();
     }
 }

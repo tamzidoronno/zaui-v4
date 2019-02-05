@@ -891,7 +891,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         new ArrayList<ExportedCollectedData>(exportedCollectionData.values())
             .stream()
-            .filter(o -> o.routId.equals(routeId))
+            .filter(o -> o.tntRouteId.equals(routeId))
             .forEach(o -> {
                 exportedCollectionData.remove(o.id);
                 deleteObject(o);
@@ -1561,7 +1561,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Destination dest = getDestination(destinationId);
         
         if (dest != null) {
+            
             CollectionTasks inMemory = dest.getCollectionTasks(collectionTasks.id);
+            
+            createExportCollection(destinationId, inMemory, collectionTasks);
             
             inMemory.date = collectionTasks.date;
 
@@ -1573,31 +1576,68 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             inMemory.adjustment = collectionTasks.adjustment;
             inMemory.adjustmentPreviouseCredit = collectionTasks.adjustmentPreviouseCredit;
             
+            inMemory.calculateSubTotal();
+            
             saveObject(dest);
-            
-            ExportedCollectedData exp = new ExportedCollectedData();
-            
-            try {
-                ExportCounter counter = getStartNumber();
-                exp.collectionTasks = (CollectionTasks) inMemory.clone();
-                exp.routId = getRouteByDestination(dest).id;
-                exp.tntId = counter.exportCounterCollection;
-                saveObject(exp);
-                exportedCollectionData.put(exp.id, exp);
-                counter.exportCounterCollection++;
-                saveObject(counter);
-            } catch (CloneNotSupportedException ex) {
-                Logger.getLogger(TrackAndTraceManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 
+    public void createExportCollection(String destinationId, CollectionTasks oldTasks, CollectionTasks newTasks) {
+        Destination destination = getDestination(destinationId);
+        ExportCounter counter = getStartNumber();
+        Route route = getRouteByDestination(destination);
+        
+        ExportedCollectedData exp = new ExportedCollectedData();
+        exp.tntRouteId = route.id;
+        exp.PODBarcodeId = destination.podBarcode;
+        
+        if (!destination.companyIds.isEmpty()) {
+            exp.CustomerNumber = destination.companyIds.get(0);
+        }
+
+        exp.routeId = route.originalId;
+        exp.tntRouteId = route.id;
+        exp.driverId = getSession().currentUser.id;
+        exp.pickupDateTime = newTasks.date;
+        exp.subTotal = oldTasks.calculateSubTotal();
+        exp.returnAmt = newTasks.adjustedReturnCredit;
+        exp.adjustmentAmt = newTasks.adjustment;
+        exp.prevInvoiceAmtOriginal = oldTasks.getPreviouseCreditAmount();
+        
+        if (newTasks.adjustmentPreviouseCredit == null) {
+            exp.prevInvoiceAmtEntered = exp.prevInvoiceAmtOriginal;
+        } else {
+            exp.prevInvoiceAmtEntered = newTasks.adjustmentPreviouseCredit;
+        }
+        
+        exp.creditAmt = newTasks.adjustedReturnCredit + newTasks.adjustment;
+        
+        if (newTasks.adjustmentPreviouseCredit != null) {
+            exp.creditAmt += newTasks.adjustmentPreviouseCredit;
+        } else {
+            exp.creditAmt += oldTasks.getPreviouseCreditAmount();
+        }
+        
+        exp.paymentAmtToCollect = oldTasks.calculateSubTotal() + exp.creditAmt;
+        exp.cashAmt = newTasks.cashAmount;
+        exp.checkAmt = newTasks.chequeAmount;
+        exp.checkNo = newTasks.chequeNumber;
+        exp.isCod = oldTasks.type.equals("codmandatory");
+        exp.isCos = oldTasks.type.equals("cosmandatory");
+        exp.isOptional = oldTasks.type.equals("isOptional");
+        exp.stopNo = destination.seq;
+        exp.tntId = counter.exportCounterCollection;
+        saveObject(exp);
+        exportedCollectionData.put(exp.id, exp);
+        counter.exportCounterCollection++;
+        saveObject(counter);
+    }
+    
     @Override
-    public List<CollectionTasks> getCompletedCollectionTasks(Date start, Date end) {
+    public List<ExportedCollectedData> getCompletedCollectionTasks(Date start, Date end) {
         return exportedCollectionData.values()
                 .stream()
-                .map(o -> o.getCollectionTask())
-                .filter(o -> o.date.after(start) && o.date.before(end))
+                .filter(o -> o.pickupDateTime.after(start) && o.pickupDateTime.before(end))
                 .collect(Collectors.toList());
     }
 }

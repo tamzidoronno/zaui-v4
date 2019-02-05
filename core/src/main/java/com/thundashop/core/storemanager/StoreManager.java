@@ -635,4 +635,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         return countrycode;
     }
+
+    @Override
+    public void toggleDeactivation(String password) {
+        if(!password.equals("gfdoten35345gfsgfdEE__!")) {
+            return;
+        }
+        Store store = getMyStore();
+        store.deactivated = !store.deactivated;
+        storePool.saveStore(store);
+    }
 }

@@ -8,6 +8,7 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -238,7 +239,8 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
     }
 
-    private PmsNotificationMessage getMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix) {
+    @Override
+    public PmsNotificationMessage getMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix) {
         if(messageToSend != null && !messageToSend.isEmpty() && (type.equals("sms") || type.equals("email"))) {
             PmsNotificationMessage notificationmsg = new PmsNotificationMessage();
             notificationmsg.content = messageToSend;

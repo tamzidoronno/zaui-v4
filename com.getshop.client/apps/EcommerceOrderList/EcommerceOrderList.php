@@ -144,6 +144,15 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $this->getApi()->getInvoiceManager()->sendReceiptToCashRegisterPoint($_POST['data']['deviceid'], $_POST['data']['orderid']);
     }
     
+    public function updatePaymentLinkText() {
+        $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $_POST['data']['orderid']);
+        $selectedPrefix = $_POST['data']['prefix'];
+        $mesage = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), "booking_sendpaymentlink", $booking, null, "sms", $selectedPrefix);
+        $msg = $mesage->content;
+        $msg = str_replace("{name}", $_POST['data']['name'], $msg);
+        echo $msg;
+    }
+    
     public function creditOrder() {
         $creditedOrder = $this->getApi()->getOrderManager()->creditOrder($_POST['data']['id']);
         $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);

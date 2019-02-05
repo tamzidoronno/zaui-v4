@@ -46,9 +46,11 @@ if($room != null) {
     $guests = $room->guests;
 }
 if($order->status != 7) {
-    $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "sendinvoice");
+    $mesage = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), "sendinvoice", $booking, $room, "email", null);
+    $msg = $mesage->content;
 } else {
-    $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "sendreciept");
+    $mesage = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), "sendreciept", $booking, $room, "email", null);
+    $msg = $mesage->content;
 }
 $order = $this->getSelectedOrder();
 

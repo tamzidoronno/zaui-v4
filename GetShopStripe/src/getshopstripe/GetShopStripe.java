@@ -68,7 +68,7 @@ public class GetShopStripe {
         ucard.mask = stripecard.getLast4();
         ucard.savedByVendor = "stripe";
         ucard.id = stripecard.getId();
-        ucard.registeredDate = new Date();
+        ucard.registeredDate = null;
         return ucard;
     }    
 

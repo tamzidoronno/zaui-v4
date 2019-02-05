@@ -12,9 +12,20 @@ app.EcommerceOrderList = {
         var val = $(this).val();
         var splitted = val.split(":");
         var box = $(this).closest('.dosendbox');
+        var orderid = box.find('[gsname="orderid"]').val();
         box.find('[gsname="bookerPrefix"]').val(splitted[0]);
         box.find('[gsname="bookerPhone"]').val(splitted[1]);
         box.find('[gsname="bookerEmail"]').val(splitted[2]);
+        var event = thundashop.Ajax.createEvent('','updatePaymentLinkText',$(this), {
+            "prefix" : splitted[0],
+            "phone" : splitted[1],
+            "email" : splitted[2],
+            "name" : splitted[3],
+            "orderid" : orderid
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('[gsname="smsMessage"]').val(res);
+        });
     },
     showSendingEhfMessage: function() {
         $('.sendehfbox').hide(); 

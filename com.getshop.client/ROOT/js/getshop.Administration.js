@@ -3,6 +3,10 @@ thundashop.Administration = {
         var event = thundashop.Ajax.createEvent("Administration", "enableSMS", false, { "type": "GetShopAdministration", "password" : password, "toggle" : toggle });
         thundashop.Ajax.post(event);
     },
+    toggleDeactivation: function(password) {
+        var event = thundashop.Ajax.createEvent("Administration", "toggleLockDown", false, { "type": "GetShopAdministration", "password" : password });
+        thundashop.Ajax.post(event);
+    },
     enableExtendedMode : function(password, toggle) {
         var event = thundashop.Ajax.createEvent("Administration", "enableExtendedMode", false, { "type": "GetShopAdministration", "password" : password, "toggle" : toggle });
         thundashop.Ajax.post(event);

@@ -34,7 +34,7 @@ echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
 echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
 echo "<div>";
 echo "<select style='width:100%; margin-bottom: 5px;' class='sendlinktouser'>";
-echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail'>Booker : $bookerName</option>";
+echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail:$bookerName'>Booker : $bookerName</option>";
 $selectedPhone = $phoneNumber;
 $selectedEmail = $invoiceEmail;
 $selectedPrefix = $phonePrefix;
@@ -57,10 +57,12 @@ foreach($guests as $guest) {
         $selected = "SELECTED";
     }
 
-    echo "<option value='$pref:$phone:$email' $selected>Guest : " . $guest->name . "</option>";
+    echo "<option value='$pref:$phone:$email:".$guest->name."' $selected>Guest : " . $guest->name . "</option>";
     $k++;
 }
-$msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
+
+$mesage = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), "booking_sendpaymentlink", $booking, null, "sms", $selectedPrefix);
+$msg = $mesage->content;
 
 echo "</select><br>";
 echo "<input type='txt' value='".$selectedEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";

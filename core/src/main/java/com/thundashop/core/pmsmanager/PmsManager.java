@@ -1244,6 +1244,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         PmsConfiguration toReturn = gson.fromJson(copy, PmsConfiguration.class);
+        toReturn.isDeactivated = storeManager.getMyStore().deactivated;
         return toReturn;
     }
 

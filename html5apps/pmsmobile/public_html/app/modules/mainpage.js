@@ -33,6 +33,13 @@ getshop.mainpageController = function($scope, $state) {
         $scope.hasConference = false;
         var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
         config.done(function(res) {
+            
+            if(res.isDeactivated) {
+                alert('Your system has been deactivated');
+                window.location.href="https://www.getshop.com";
+                return;
+            }
+            
             $scope.views = res.mobileViews;
             if(res.arxHostname || res.hasDoorLockSystem) {
                 $scope.hasDoorControl = true;

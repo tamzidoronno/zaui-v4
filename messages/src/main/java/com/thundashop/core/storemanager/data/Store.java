@@ -20,6 +20,7 @@ public class Store extends DataCommon {
     public boolean registeredDomain=false;
     public boolean readIntroduction=false;
     public boolean isExtendedMode=true;
+    public boolean deactivated=false;
     public StoreConfiguration configuration;
     public boolean isVIS = false; //Very important shop.
     public boolean isDeepFreezed = false;

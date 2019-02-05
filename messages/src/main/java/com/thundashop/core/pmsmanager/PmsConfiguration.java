@@ -16,6 +16,9 @@ public class PmsConfiguration extends DataCommon {
 
     @Transient
     private Store store = null;
+
+    @Transient
+    public boolean isDeactivated = false;
     
     @Transient
     private boolean isPikStore = false;

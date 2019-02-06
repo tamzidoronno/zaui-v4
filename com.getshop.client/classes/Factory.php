@@ -401,6 +401,7 @@ class Factory extends FactoryBase {
             $this->styleSheet = new StyleSheet();
         }
 
+        $this->checkForDeactivation();
     }
 
     public function loadLanguage() {
@@ -1334,6 +1335,14 @@ class Factory extends FactoryBase {
             $this->countryCode = "NO";
         }
         return $this->countryCode;
+    }
+
+    public function checkForDeactivation() {
+        if($this->store->deactivated && (!isset($_POST['event']) || $_POST['event'] != "toggleLockDown")) {
+            $this->loadJavascriptFiles();
+            include("../deactivatedinformation.php");
+            exit(0);
+        }
     }
 
 }

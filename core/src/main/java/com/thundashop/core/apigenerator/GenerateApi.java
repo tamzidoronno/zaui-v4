@@ -84,10 +84,7 @@ public class GenerateApi {
         allManagers = filterClasses(coreClasses);
         changedManagers = filterClasses(coreClassesChanged);
         GetShopLogHandler.logPrintStatic("Done finding datasource", null);
-        
-         if (GetShopLogHandler.isDeveloper) {
-            saveMd5Sums();
-        }
+
     }
 
     public void analyseApplications() throws UnknownHostException, IOException, ClassNotFoundException {
@@ -357,6 +354,10 @@ public class GenerateApi {
 //        buildDocumentation();
         if (!GetShopLogHandler.isDeveloper) {
             analyseApplications();
+        }
+        
+        if (GetShopLogHandler.isDeveloper) {
+            saveMd5Sums();
         }
     }
     

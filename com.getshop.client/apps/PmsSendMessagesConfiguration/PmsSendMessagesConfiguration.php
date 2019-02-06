@@ -79,7 +79,7 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
     }
     
     public function updateCreateMessage() {
-        $msg = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        $msg = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
         if($msg->id == "-1") {
             $msg->id = null;
         }

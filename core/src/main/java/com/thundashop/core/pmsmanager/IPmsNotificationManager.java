@@ -31,5 +31,5 @@ public interface IPmsNotificationManager {
     public List<String> getPrefixesForMessage(String key, String type);
     
     @Administrator
-    public PmsNotificationMessage getMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix);
+    public PmsNotificationMessage getSpecificMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix);
 }

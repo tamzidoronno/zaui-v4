@@ -194,7 +194,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private void notifyByEmail(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "email");
         List<String> emailRecipients = new ArrayList();
-        PmsNotificationMessage message = getMessage(key, booking, room, "email", null);
+        PmsNotificationMessage message = getSpecificMessage(key, booking, room, "email", null);
         if(message != null) {
             String title = formatMessage(message.title, booking, room, key, "email");
             String content = formatMessage(message.content, booking, room, key, "email");
@@ -240,7 +240,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
 
     @Override
-    public PmsNotificationMessage getMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix) {
+    public PmsNotificationMessage getSpecificMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix) {
         if(messageToSend != null && !messageToSend.isEmpty() && (type.equals("sms") || type.equals("email"))) {
             PmsNotificationMessage notificationmsg = new PmsNotificationMessage();
             notificationmsg.content = messageToSend;
@@ -370,12 +370,12 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private String checkIfNeedOverride(String key, PmsBooking booking, PmsBookingRooms room, String messageForm) {
         if(key.equals("booking_completed") && booking.channel != null && booking.channel.contains("wubook")) {
             boolean isChargedByOta = isChargedByOta(booking);
-            PmsNotificationMessage message = getMessage("booking_completed_ota", booking, room, messageForm, null);
+            PmsNotificationMessage message = getSpecificMessage("booking_completed_ota", booking, room, messageForm, null);
             if(message != null) {
                 key = "booking_completed_ota"; 
             }
             if(isChargedByOta) {
-                message = getMessage("booking_completed_payed_ota", booking, room, messageForm, null);
+                message = getSpecificMessage("booking_completed_payed_ota", booking, room, messageForm, null);
                 if(message != null) { 
                     key = "booking_completed_payed_ota"; 
                 }
@@ -403,7 +403,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     String getMessageFormattedMessage(String bookingId, String key, String type) {
         doConvertToNewSystem();
         PmsBooking booking = pmsManager.getBooking(bookingId);
-        PmsNotificationMessage message = getMessage(key, booking, null, type, null);
+        PmsNotificationMessage message = getSpecificMessage(key, booking, null, type, null);
         if(message==null) {
             return "";
         }
@@ -480,7 +480,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         
         List<PmsGuests> recipients = getSmsRecipients(booking, room, type);
         for(PmsGuests guest : recipients) {
-            PmsNotificationMessage message = getMessage(key, booking, room, "sms", guest.prefix);
+            PmsNotificationMessage message = getSpecificMessage(key, booking, room, "sms", guest.prefix);
             if(message != null) {
                 String content = formatMessage(message.content, booking, room, key, "sms");
                 if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
@@ -625,7 +625,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
 
     private void notifyAdmin(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "admin");
-        PmsNotificationMessage message = getMessage(key, booking, room, "admin", null);
+        PmsNotificationMessage message = getSpecificMessage(key, booking, room, "admin", null);
         if(message != null) {
             String content = formatMessage(message.content, booking, room,key,"admin");
             String email = storeManager.getMyStore().configuration.emailAdress;

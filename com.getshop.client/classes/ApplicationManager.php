@@ -837,7 +837,7 @@ class ApplicationManager extends FactoryBase {
 
     public function toggleLockDown() {
         $password = $_POST['data']['password'];
-        $this->getFactory()->getApi()->getStoreManager()->toggleDeactivation($password);
+        $this->getFactory()->getApi()->getStoreManager()->toggleDeactivation($password, $_POST['data']['deactivated']);
     }
 
     public function toggleApplicationSticky() {

@@ -58,7 +58,7 @@ public interface IStoreManager {
      */
     public void saveKey(String key, String value, boolean secure);
     public void removeKey(String key);
-    public void toggleDeactivation(String password);
+    public void toggleDeactivation(String password, boolean deactivated);
     public String getKey(String key);
     public String getKeySecure(String key, String password);
     

@@ -67,8 +67,6 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
     public DailyUsage getDailyUsage(String password, Date date) {
         checkPassword(password);
         
-        System.out.println("StoreId: " + storeId);
-        
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.set(Calendar.HOUR, 0);

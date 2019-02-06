@@ -1812,7 +1812,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms remove = booking.findRoom(roomId);
         remove.addedToWaitingList = false;
         bookingEngine.deleteBooking(remove.bookingId);
-        remove.delete();
+        deleteRoom(remove);
         
         String roomName = "";
         if (remove.bookingItemId != null && !remove.bookingItemId.isEmpty()) {
@@ -1848,7 +1848,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (PmsBookingRooms remove : toRemove) {
             if (!remove.isDeleted() && !remove.isOverBooking()) {
                 bookingEngine.deleteBooking(remove.bookingId);
-                remove.delete();
+                deleteRoom(remove);
                 logEntry(roomName + " removed from booking ", bookingId, null);
                 if(!booking.isWubook()) {
                     doNotification("room_cancelled", booking, remove);
@@ -1952,7 +1952,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if (room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.deleteBooking(room.bookingId);
-                room.delete();
+                deleteRoom(room);
             }
         }
 
@@ -3617,7 +3617,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
                     room.canBeAdded = false;
                     if(!room.isDeleted()) {
-                        room.delete();
+                        deleteRoom(room);
                         if (booking.isWubook() && !room.deletedByChannelManagerForModification) {
                             room.markAsOverbooking();
                         }
@@ -9645,6 +9645,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .stream()
                 .filter(o -> !Collections.disjoint(o.orderIds, order.createdBasedOnOrderIds))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteRoom(PmsBookingRooms remove) {
+        PmsBooking booking = getBookingFromRoom(remove.pmsBookingRoomId);
+        if(booking.nonrefundable || remove.nonrefundable) {
+            return;
+        }
+        remove.delete();
+        List<String> roomIds = new ArrayList();
+        roomIds.add(remove.pmsBookingRoomId);
+        
+        pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
     }
 
 }

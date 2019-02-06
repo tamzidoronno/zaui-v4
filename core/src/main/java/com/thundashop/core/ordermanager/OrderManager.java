@@ -264,11 +264,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (order.cleanMe()) {
                     saveObject(order);
                 }
-                if(storeId != null && storeId.equals("9099f6db-3095-4495-8616-a04551cabd89")) {
-                    if(order.payment != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8//Dibs")) {
-                        order.payment.paymentType = "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs";
-                        saveObject(order);
-                    }
+
+                if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8//Dibs")) {
+                    order.payment.paymentType = "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs";
+                    saveObject(order);
                 }
 
                 if (order.cart == null) {
@@ -3581,5 +3580,32 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> o.createdBasedOnOrderIds.contains(id))
                 .findAny()
                 .orElse(null);
+    }
+
+    @Override
+    public void readdTaxGroupToNullItems(String password) {
+        if(!password.equals("!gfdsgdsf456&%__")) {
+            return;
+        }
+        
+        for(Order order : orders.values()) {
+            boolean save = false;
+            if(order.payment != null && (order.payment.paymentType == null || order.payment.paymentType.isEmpty())) {
+                order.payment = getStorePreferredPayementMethod();
+                save = true;
+            }
+            
+            if(order.cart != null) {
+                for(CartItem item : order.getCartItems()) {
+                    if(item.getProduct() != null && item.getProduct().taxGroupObject == null) {
+                        item.getProduct().taxGroupObject = productManager.getProduct(item.getProductId()).taxGroupObject;
+                        save = true;
+                    }
+                }
+            }
+            if(save) {
+                saveOrder(order);
+            }
+        }
     }
 }

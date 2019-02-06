@@ -18,6 +18,10 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $this->getApi()->getPaymentManager()->resetAllAccountingConfigurationForUsersAndOrders($_POST['data']['prompt']);
     }
     
+    public function readdTaxGroups() {
+        $this->getApi()->getOrderManager()->readdTaxGroupToNullItems($_POST['data']['prompt']);
+    }
+    
     public function render() {
         $attributes = array(
             array('id', 'gs_hidden', 'id'),

@@ -426,6 +426,7 @@ public class OrderDailyBreaker {
         String result = getAccountingNumberForProduct(item.getProduct(), item.getProduct().id);
        
         if (result == null || result.isEmpty()) {
+            result = getAccountingNumberForProduct(item.getProduct(), item.getProduct().id);
             String taxGroupPercent = item.getProduct().taxGroupObject != null ? ""+item.getProduct().taxGroupObject.taxRate : "0";
             throw new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+taxGroupPercent+"% )");
         }
@@ -436,7 +437,7 @@ public class OrderDailyBreaker {
     public String getAccountingNumberForProduct(Product inProduct, String productId) {
         if (inProduct.taxGroupObject == null)
             return "";
-        
+            
         Product product = productManager.getProduct(productId);
         ProductAccountingInformation res = product.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
         

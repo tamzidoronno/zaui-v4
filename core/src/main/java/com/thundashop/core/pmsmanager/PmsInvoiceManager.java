@@ -1084,6 +1084,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         cartManager.clear();
         List<CartItem> allItemsToMove = new ArrayList();
+        List<String> orderIdsToRemove = new ArrayList();
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order.closed) {
@@ -1103,7 +1104,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 allItemsToMove.addAll(itemsToRemove);
             }
             orderManager.saveOrder(order);
+            
+            try {
+                Double amount = orderManager.getTotalAmount(order);
+                if(amount == 0.0) {
+                    orderIdsToRemove.add(orderId);
+                }
+            }catch(Exception e) {
+
+            }
         }
+        
+        if(!orderIdsToRemove.isEmpty()) {
+            booking.orderIds.removeAll(orderIdsToRemove);
+            pmsManager.saveBooking(booking);
+        }
+        
+        
         
         return allItemsToMove;
     }
@@ -2755,6 +2772,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.setCount(count);
         item.pmsBookingId = pmsManager.getBookingFromRoom(roomId).id;
         roomIdsInCart.add(roomId);
+        
+        try {
+            if(item.getProduct().taxGroupObject == null) {
+                messageManager.sendErrorNotificationToEmail("Null tax object found", "In product: " + productId, new Exception());
+            }
+        }catch(Exception error) {
+            
+        }
         
         setDepartmentId(item, roomId);
         

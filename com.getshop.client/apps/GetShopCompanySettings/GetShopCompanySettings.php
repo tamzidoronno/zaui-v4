@@ -16,7 +16,7 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
     }
 
     public function render() {
-        
+  
         echo "<div class='workarea'>";
             $selectedCompany = $this->getSelectedCompany();
             if (!$selectedCompany) {
@@ -30,7 +30,8 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
     }
     
     public function fetchMessages() {
-        $this->getApi()->getGmailApiManager()->fetchAllMessages("post@akershave.no");
+//        $this->getApi()->getGmailApiManager()->fetchAllMessages("post@akershave.no");
+        $this->getApi()->getDirectorManager()->syncFromOld();
     }
     
     public function getSelectedTab() {
@@ -64,6 +65,14 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
     
     public function deleteSystem() {
         $this->getApi()->getSystemManager()->deleteSystem($_POST['data']['systemid']);
+    }
+
+    public function clear() {
+        unset($_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_tab']);
+    }
+
+    public function syncSystem() {
+        $this->getApi()->getSystemManager()->syncSystem($_POST['data']['systemid']);
     }
 }
 ?>

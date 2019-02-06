@@ -3,6 +3,7 @@ package com.thundashop.core.ordermanager;
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -32,6 +33,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SmsMessage;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
@@ -2524,6 +2526,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(order);
     }
 
+    public List<EhfSentLog> getEhfSentLog(Date start, Date end) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", EhfSentLog.class.getCanonicalName());
+        query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", start).add("$lte", end).get());
+
+        List<DataCommon> datas = database.query(OrderManager.class.getSimpleName(), storeId, query);
+        ArrayList result = new ArrayList(datas);
+        
+        Collections.sort(result, new Comparator<DataCommon>(){
+             public int compare(DataCommon o1, DataCommon o2){
+                 return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+             }
+        });
+        
+        return result;
+    }
     public void markOrderAsTransferredToAccounting(String orderId) {
         Order order = getOrderSecure(orderId);
         

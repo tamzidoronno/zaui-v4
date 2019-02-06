@@ -58,6 +58,9 @@ class CompanyView extends \MarketingApplication implements \Application {
     }
     
     public function unselectCompany() {
+        $getshopCompanySettings = new \ns_a22fa681_6882_4869_8add_b1cc9c7b661b\GetShopCompanySettings();
+        $getshopCompanySettings->clear();
+        
         unset($_SESSION['ns_2f62f832_5adb_407f_a88e_208248117017_selectedcompany']);
     }
     

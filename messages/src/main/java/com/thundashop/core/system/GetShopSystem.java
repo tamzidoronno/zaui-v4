@@ -27,4 +27,5 @@ public class GetShopSystem extends DataCommon {
     public Date activeTo;
     
     public double monthlyPrice = 0;
+    public String productId = "";
 }

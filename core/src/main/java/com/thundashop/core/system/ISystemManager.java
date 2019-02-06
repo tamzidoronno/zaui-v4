@@ -6,7 +6,9 @@
 package com.thundashop.core.system;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.director.DailyUsage;
 import java.util.List;
 
 /**
@@ -29,4 +31,11 @@ public interface ISystemManager {
     
     @Administrator
     public List<GetShopSystem> getSystemsForCompany(String companyId);
+    
+    @Administrator
+    @ForceAsync
+    public void syncSystem(String systemId) throws Exception;
+    
+    @Administrator
+    public List<DailyUsage> getDailyUsage(String systemId);
 }

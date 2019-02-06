@@ -59,10 +59,18 @@ if($room != null) {
 }
 if($order->status != 7) {
     $mesage = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "sendinvoice", $booking, $room, "email", null);
-    $msg = $mesage->content;
+    if($mesage && $mesage->content) {
+        $msg = $mesage->content;
+    } else {
+        $msg = "Invoice for stay";
+    }
 } else {
     $mesage = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "sendreciept", $booking, $room, "email", null);
-    $msg = $mesage->content;
+    if($mesage && $mesage->content) {
+        $msg = $mesage->content;
+    } else {
+        $msg = "Reciept for stay";
+    }
 }
 $order = $this->getSelectedOrder();
 

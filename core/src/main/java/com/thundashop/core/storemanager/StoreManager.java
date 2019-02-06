@@ -637,12 +637,12 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     @Override
-    public void toggleDeactivation(String password) {
+    public void toggleDeactivation(String password, boolean deactivated) {
         if(!password.equals("gfdoten35345gfsgfdEE__!")) {
             return;
         }
         Store store = getMyStore();
-        store.deactivated = !store.deactivated;
+        store.deactivated = deactivated;
         storePool.saveStore(store);
     }
 }

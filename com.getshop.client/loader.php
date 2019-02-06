@@ -79,7 +79,6 @@ class AppRegister {
 include_once("events/API.php");
 include_once("events/API2.php");
 include_once("minifier.php");
-include_once("deactivated.php");
 
 function symLinkIfNeeded($class_name) {
     if(!file_exists("../app")) {

@@ -36,4 +36,44 @@ $system = $this->getApi()->getSystemManager()->getSystem($_SESSION['ns_a22fa681_
 
 <div style='margin: 50px;'>
     <div class='shop_button' gsclick="deleteSystem" systemid="<? echo $system->id; ?>" gs_confirm="Area you sure you want to delete this system?">Delete system</div>    
+    <div class='shop_button' gsclick="syncSystem" systemid="<? echo $system->id; ?>" gs_confirm="Area you sure you want to delete this system?">Sync system</div>    
 </div>
+
+<h2>Usage for system</h2>
+<?
+
+echo "<div class='row'>";
+        echo "<div class='col' style='width: 100px;'>Date</div>";
+        echo "<div class='col' style='width: 100px;'>Domestic SMS</div>";
+        echo "<div class='col' style='width: 100px;'>International SMS</div>";
+        echo "<div class='col' style='width: 100px;'>EHF</div>";
+    echo "</div>";
+    
+$usages = $this->getApi()->getSystemManager()->getDailyUsage($system->id);
+
+$sum = array();
+foreach ($usages as $usage) {
+    $dayAndMonth = date('Y.m', strtotime($usage->start));
+    
+    if (!isset($sum[$dayAndMonth])) {
+        $sum[$dayAndMonth] = array('domesticsms' => 0, 'internationalsms' => 0, 'ehfs' => 0);
+    }
+    
+    $monthArray = $sum[$dayAndMonth];
+    $monthArray['domesticsms'] += $usage->domesticSmses;
+    $monthArray['internationalsms'] += $usage->internationalSmses;
+    $monthArray['ehfs'] += $usage->ehfs;
+    $sum[$dayAndMonth] = $monthArray;
+}
+
+krsort($sum);
+
+foreach ($sum as $month => $monthArray) {
+    echo "<div class='row'>";
+        echo "<div class='col' style='width: 100px;'>$month</div>";
+        echo "<div class='col' style='width: 100px;'>".$monthArray['domesticsms']."</div>";
+        echo "<div class='col' style='width: 100px;'>".$monthArray['internationalsms']."</div>";
+        echo "<div class='col' style='width: 100px;'>".$monthArray['ehfs']."</div>";
+    echo "</div>";
+}
+?>

@@ -1624,7 +1624,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         exp.checkNo = newTasks.chequeNumber;
         exp.isCod = oldTasks.type.equals("codmandatory");
         exp.isCos = oldTasks.type.equals("cosmandatory");
-        exp.isOptional = oldTasks.type.equals("isOptional");
+        exp.isOptional = oldTasks.type.equals("optional");
         exp.stopNo = destination.seq;
         exp.tntId = counter.exportCounterCollection;
         saveObject(exp);

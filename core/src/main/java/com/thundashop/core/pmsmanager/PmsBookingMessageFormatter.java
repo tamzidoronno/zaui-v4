@@ -418,7 +418,7 @@ class PmsBookingMessageFormatter {
                     text += ", " + guest.email;
                 }
                 
-                if(!text.isEmpty()) {
+                if(text != null && !text.isEmpty()) {
                     list += "   <div class='guestinfo' style='padding-left: 10px;'>" + text + "</div>";
                 }
             }

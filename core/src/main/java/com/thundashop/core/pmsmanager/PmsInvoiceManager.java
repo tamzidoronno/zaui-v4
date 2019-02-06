@@ -2773,6 +2773,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.pmsBookingId = pmsManager.getBookingFromRoom(roomId).id;
         roomIdsInCart.add(roomId);
         
+        try {
+            if(item.getProduct().taxGroupObject == null) {
+                messageManager.sendErrorNotificationToEmail("Null tax object found", "In product: " + productId, new Exception());
+            }
+        }catch(Exception error) {
+            
+        }
+        
         setDepartmentId(item, roomId);
         
         if(!runningDiffRoutine) {

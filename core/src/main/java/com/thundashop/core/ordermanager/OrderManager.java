@@ -3297,6 +3297,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         oldCartItem.getProduct().name = cartItem.getProduct().name;
+        oldCartItem.getProduct().description = cartItem.getProduct().description;
         
         if (!oldCartItem.isPmsAddons() && !oldCartItem.isPriceMatrixItem()) {
             oldCartItem.setCount(cartItem.getCount());

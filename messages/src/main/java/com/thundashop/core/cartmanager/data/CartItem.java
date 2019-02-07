@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -131,7 +133,7 @@ public class CartItem implements Serializable, Cloneable {
     }
 
     public void setProduct(Product product) {
-        this.product = product;
+        this.product = product.clone();
     }
 
     public void setVariations(Map<String, String> variations) {

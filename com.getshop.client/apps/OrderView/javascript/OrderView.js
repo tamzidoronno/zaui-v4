@@ -119,6 +119,7 @@ app.OrderView = {
         data.productDescription = cartItemDivRow.find('input.product_desc').val();
         data.count = cartItemDivRow.find('input.count').val();
         data.price = cartItemDivRow.find('input.price').val();
+        data.name = cartItemDivRow.find('input.product').val();
         
         var event = thundashop.Ajax.createEvent(null, "updateCartItem", $(this), data);
         event['synchron'] = true;

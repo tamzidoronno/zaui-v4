@@ -256,6 +256,7 @@ class OrderView extends \MarketingApplication implements \Application {
         $itemFound->count = $_POST['data']['count'];
         $itemFound->product->price = $_POST['data']['price'];
         $itemFound->product->name = $_POST['data']['productDescription'];
+        $itemFound->product->description  = $_POST['data']['productDescription'];
         
         $this->getApi()->getOrderManager()->updateCartItemOnOrder($order->id, $itemFound);
         

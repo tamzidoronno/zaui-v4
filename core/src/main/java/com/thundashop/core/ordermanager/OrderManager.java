@@ -3590,8 +3590,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         for(Order order : orders.values()) {
             boolean save = false;
+            Payment defaultPaymentMethod = getStorePreferredPayementMethod();
+            if (defaultPaymentMethod == null) {
+                throw new RuntimeException("No default payment method set?");
+            }
+            
+            if(order.payment == null) {
+                order.payment = defaultPaymentMethod;
+                save = true;
+            }
+            
             if(order.payment != null && (order.payment.paymentType == null || order.payment.paymentType.isEmpty())) {
-                order.payment = getStorePreferredPayementMethod();
+                order.payment = defaultPaymentMethod;
                 save = true;
             }
             

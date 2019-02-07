@@ -9,6 +9,8 @@ app.OrderView = {
         $(document).on('click', '.OrderView .searchForProductBox .selectproductid', app.OrderView.selectProduct);
         $(document).on('click', '.OrderView .changeoverridedatebox .shop_button', app.OrderView.submitNewOverrideDate);
         $(document).on('click', '.OrderView .shop_button.save_history_comment', app.OrderView.saveHistoryComment);
+        $(document).on('click', '.OrderView .shop_button.dosendehf', app.OrderView.sendEhf);
+        $(document).on('click', '.OrderView .shop_button.sendByEmail', app.OrderView.sendByEmail);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
@@ -17,6 +19,60 @@ app.OrderView = {
         
         // Payment History
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
+    },
+    
+    reloadTab: function(from, tab) {
+        var data = app.OrderView.getData(from);
+        data.tabName = tab;
+        
+        var event = thundashop.Ajax.createEvent(null, 'rePrintTab', from, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, tab, data);
+        })
+        
+    },
+    
+    sendByEmail: function() {
+        var data = app.OrderView.getData(this);
+        data.emailaddress = $(this).closest('.sendByEhf').find('[gsname="emailaddress"]').val();
+        
+        console.log(data);
+        
+        var event = thundashop.Ajax.createEvent(null, "sendByEmail", this, data);
+        event['synchron'] = true;
+        var me = this;
+        
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.reloadTab(me, 'history');
+            $('.OrderView .sendByEhf .emailSent').show();
+            setTimeout(function() {
+                $('.OrderView .sendByEhf .emailSent').hide();
+            }, 5000);
+        });
+    },
+    
+    sendEhf: function() {
+        var data = app.OrderView.getData(this);
+        data.vatNumber = $(this).closest('.sendehfbox').find('[gsname="vatNumber"]').val();
+        
+        var event = thundashop.Ajax.createEvent(null, "sendEhf", this, data);
+        event['synchron'] = true;
+        $('.OrderView .sendehfbox').hide();
+        $('.OrderView .sendingehf').show();
+        $('.OrderView .sendehfbox .ehfresult').html("");
+        var me = this;
+        
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.reloadTab(me, 'history');
+            $('.OrderView .sendehfbox').show();
+            $('.OrderView .sendingehf').hide();
+            $('.OrderView .sendehfbox .ehfresult').html(res);
+            setTimeout(function() {
+                $('.OrderView .sendehfbox .ehfresult').html("");
+            }, 5000);
+        });
     },
     
     registerPayment: function() {

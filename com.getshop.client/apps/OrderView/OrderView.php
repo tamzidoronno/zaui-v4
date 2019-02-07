@@ -87,6 +87,33 @@ class OrderView extends \MarketingApplication implements \Application {
         return $this->order;
     }
     
+    public function getEhfProblems($order, $user) {
+        $ret = array();
+  
+        if (!$user->fullName) {
+            $ret[] = "The name of the customer can not be blank";
+        }
+        
+        if (!$user->address || !$user->address->address) {
+            $ret[] = "Street address of the customer can not be blank";
+        }
+        
+        if (!$user->address || !$user->address->city) {
+            $ret[] = "City of the customer address can not be blank";
+        }
+        
+        if (!$user->address || !$user->address->postCode) {
+            $ret[] = "Postcode of the customer address can not be blank";
+        }
+        
+        
+        if (!$user->companyObject || !$user->companyObject->name) {
+            $ret[] = "Customer company name can not be blank";
+        }
+        
+        return $ret;
+    }
+    
     /**
      * 
      * @return \core_cartmanager_data_CartItem[]
@@ -183,7 +210,11 @@ class OrderView extends \MarketingApplication implements \Application {
         
     }
 
-    public function rePrintTab($filename) {
+    public function rePrintTab($filename="") {
+        if (isset($_POST['data']['tabName']) && !$filename) {
+            $filename = $_POST['data']['tabName'];
+        }
+        
         $this->clearCachedOrderObject();
         $this->includefile($filename);
         die();
@@ -248,6 +279,36 @@ class OrderView extends \MarketingApplication implements \Application {
     
     public function disableGsTypes() {
         return true;
+    }
+    
+    public function sendByEmail() {
+        $subject = "Invoice attached";
+        $body = "Attached is the invoice for your order";
+        $this->getApi()->getOrderManager()->sendRecieptWithText($this->getOrder()->id, $_POST['data']['emailaddress'], $subject, $body);
+        $this->rePrintTab('history');
+    }
+    
+    public function sendEhf() {
+        $orderList = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        
+        $this->setOrder();
+        $orderid = $this->getOrder()->id;
+        $xml = $this->getApi()->getOrderManager()->getEhfXml($orderid);
+        if ($xml == "failed") {
+            echo "<span style='color: red'><i class='fa fa-warning'></i> Something wrong happend while creating EHF invoice, GetShop has been notified and will contact you once its sorted out.</span>";
+            return;
+        }
+        
+        $res = $orderList->sendDocument($xml);
+        if ($res[0] != "ok") {
+            echo "<span style='color: red'><i class='fa fa-warning'></i> Something went wrong during sending EHF, please contact GetShop Support.</span>";
+            return;
+        }
+        
+        $this->getApi()->getOrderManager()->registerSentEhf($orderid);
+        $this->getApi()->getOrderManager()->closeOrder($orderid, "Invoice sent by EHF to customer.");
+        echo "<span style='color: green'><i class='fa fa-check'></i> EHF Sent successfully</span>";
+    
     }
 }
 ?>

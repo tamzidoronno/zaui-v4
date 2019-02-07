@@ -301,3 +301,21 @@
 .OrderView .manualregisterpayment {
     padding: 10px;
 }
+.OrderView .sendByEhf {
+    margin: 50px;
+}
+
+.OrderView .sendByEhf h2 {
+    border-bottom: solid 2px #DDD;
+    padding-bottom: 10px;
+}
+
+.OrderView .sendByEhf .emailSent {
+    display: none;
+}
+
+.OrderView .ehfresult {
+    font-size: 16px;
+    padding-bottom: 5px;
+    font-weight: bold;
+}

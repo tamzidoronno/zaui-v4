@@ -1752,6 +1752,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             messageManager.sendInvoiceForOrder(orderId, email, subject, text);
             order.closed = true;
             order.payment.transactionLog.put(System.currentTimeMillis(), "Invoice or receipt sent to " + email);
+
+            OrderShipmentLogEntry logentry = new OrderShipmentLogEntry();
+            logentry.address = email;
+            logentry.type = OrderShipmentLogEntry.Type.email;
+            logentry.date = new Date();
+            
+            order.shipmentLog.add(logentry);
             saveObject(order);
         }
     }

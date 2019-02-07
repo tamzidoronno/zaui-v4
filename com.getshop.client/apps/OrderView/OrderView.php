@@ -54,6 +54,14 @@ class OrderView extends \MarketingApplication implements \Application {
             app.OrderView.orderviewLoaded('<? echo $orderId; ?>');
         </script>
         <?
+        
+        if (isset($_GET['tab'])) {
+            ?>
+            <script>
+                app.OrderView.showTab('<? echo $this->getOrder()->id; ?>', '<? echo $_GET['tab']; ?>')
+            </script>
+            <?
+        }
     }
 
     public function setOrder() {
@@ -308,7 +316,44 @@ class OrderView extends \MarketingApplication implements \Application {
         $this->getApi()->getOrderManager()->registerSentEhf($orderid);
         $this->getApi()->getOrderManager()->closeOrder($orderid, "Invoice sent by EHF to customer.");
         echo "<span style='color: green'><i class='fa fa-check'></i> EHF Sent successfully</span>";
-    
     }
+    
+    public function saveUser($user) {
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
+    public function changeUser($user) {
+        $order = $this->getOrder();
+        $order->userId = $user->id;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($order->id);
+    }
+    
+    public function createNewUser() {
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        $createUser = $this->getApi()->getUserManager()->createUser($user);
+        
+        $order = $this->getOrder();
+        $order->userId = $createUser->id;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($order->id);
+        
+        return $createUser;
+    }
+    
+    public function createCompany() {
+        $name = $_POST['data']['companyname'];
+        $vat = $_POST['data']['vatnumber'];
+        $user = $this->getApi()->getUserManager()->createCompany($vat, $name);
+        
+        $order = $this->getOrder();
+        $order->userId = $user->id;
+        $order->cart->address = $user->address;
+        $order->cart->address->fullName = $user->fullName;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        return $user;
+    }
+    
 }
 ?>

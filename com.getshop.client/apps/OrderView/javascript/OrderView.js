@@ -205,6 +205,10 @@ app.OrderView = {
         var tab = $(this).attr('tab');
         sessionStorage.setItem('orderview_'+orderid+'_last_active_tab', tab)
         app.OrderView.showTab(orderid, tab);
+        
+        if ($(this).attr('reprint')) {
+            app.OrderView.reloadTab(this, tab);
+        }
     },
     
     orderviewLoaded: function(orderid) {

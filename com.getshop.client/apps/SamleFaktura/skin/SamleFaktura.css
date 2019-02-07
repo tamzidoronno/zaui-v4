@@ -20,10 +20,10 @@
 .SamleFaktura .groupedbyuser .row:nth-child(odd) {
     background-color: #EFEFEF;   
 }
-.SamleFaktura .row .col1 { width: 30px; }
+.SamleFaktura .row .col1 { width: 60px; }
 .SamleFaktura .row .col2 { width: 100px; }
 .SamleFaktura .row .col3 { width: 130px; }
-.SamleFaktura .row .col4 { width: calc(100% - 400px); }
+.SamleFaktura .row .col4 { width: calc(100% - 430px); }
 .SamleFaktura .row .col5 { width: 100px; text-align: right;}
 
 .SamleFaktura .selectUser {

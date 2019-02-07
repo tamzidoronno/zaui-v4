@@ -8,6 +8,9 @@ $isCompany = $user->companyObject != null && $user->companyObject->vatNumber;
 $canUseEhf = false;
 $isInvoice = $order->payment && $order->payment->paymentId == "70ace3f0-3981-11e3-aa6e-0800200c9a66";
 
+// Add the payment methods that can be sent. (like dibs, etc)
+$supportToBeSent = $isInvoice;
+
 if ($isCompany && $isInvoice) {
     $vatnumber = $user->companyObject->vatNumber;
     $vatnumber = str_replace(' ', '', $vatnumber);
@@ -74,6 +77,19 @@ if ($isInvoice) {
             </div>
             <br/>
             <br/><div class='shop_button sendByEmail'>Send invoice</div>
+        </div>
+
+    </div>
+<?
+}
+
+if (!$supportToBeSent) {
+?>
+    <div class='sendByEhf'>
+        <h2>Cant be sent</h2>
+
+        <div>
+            This payment method does not support to be sent to your customer.
         </div>
 
     </div>

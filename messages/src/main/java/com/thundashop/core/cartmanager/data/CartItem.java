@@ -200,6 +200,11 @@ public class CartItem implements Serializable, Cloneable {
         if(newStartDate != null) {
             return newStartDate;
         }
+        
+        if (startDate == null) {
+            return addedDate;
+        }
+        
         return startDate;
     }
     
@@ -207,6 +212,11 @@ public class CartItem implements Serializable, Cloneable {
         if(newEndDate != null) {
             return newEndDate;
         }
+        
+        if (endDate == null) {
+            return addedDate;
+        }
+        
         return endDate;
     }
 

@@ -9,6 +9,7 @@ echo "</div>";
         
 /* @var $this ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
 $data = $this->getIncomeReportData(false);
+
 echo "<div class='newincomereportview'>";
 echo "<div class='innernewincomereport'>";
 $first = true;
@@ -18,7 +19,11 @@ foreach($data as $row) {
     echo "<div>";
     foreach($row as $res) {
         $firstClass = $first ? "first" : "";
-        echo "<span class='column $firstClass'>" . round($res,2). "</span>";
+        $r = $res;
+        if(!$first) {
+            $r = round($res,2);
+        }
+        echo "<span class='column $firstClass'>" . $r . "</span>";
     }
     $first = false;
     echo "</div>";

@@ -835,27 +835,7 @@ class PmsReport extends \MarketingApplication implements \Application {
     }
 
     public function getIncomeReportData($convertToExcelDate) {
-        $selectedFilter = $this->getSelectedFilter();
-        $filter = new \core_pmsmanager_CoverageAndIncomeReportFilter();
-        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
-        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
-        $filter->incTaxes = false;
-        $filter->channel = $selectedFilter->channel;
-        $filter->departmentIds = $selectedFilter->departmentIds;
-    
-        if(isset($_POST['event']) && $_POST['event'] == "downloadIncomeReportIncTaxesNew") {
-            $filter->incTaxes = true;
-        }
-        
-        foreach($selectedFilter->typeFilter as $typeId) {
-            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $typeId);
-            $filter->products[] = $type->productId;
-        }
-        if(isset($selectedFilter->customers)) {
-            foreach($selectedFilter->customers as $usrid => $val) {
-                $filter->userIds[] = $usrid;
-            }
-        }
+        $filter = $this->createPmsCoverageFilter();
         
         $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $result = $data->entries;
@@ -914,6 +894,38 @@ class PmsReport extends \MarketingApplication implements \Application {
         
         return $matrix;
     }
+    
+    public function quickloaduser() {
+        $selected = $this->getSelectedFilter();
+        $selected->customers = array();
+        $selected->customers[$_POST['data']['userid']] = 1;
+        $_SESSION['savedfilter'] = json_encode($selected);
+    }
+    
+    public function loadTop30Customers() {
+        $selectedFilter = $this->createPmsCoverageFilter();
+        $selectedFilter->userIds = array();
+        $md5 = md5(serialize($selectedFilter) . "-" . date("dmy"));
+//        
+        if(isset($_SESSION['top30res'][$md5])) {
+            $res = json_decode($_SESSION['top30res'][$md5], true);
+        } else {
+            $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($this->getSelectedMultilevelDomainName(), $selectedFilter);
+            $res = (array)$data->usersTotal;
+            $_SESSION['top30res'][$md5] = json_encode($data->usersTotal);
+        }
+        $i = 1;
+        
+        arsort($res);
+        foreach($res as $userId => $amount) {
+            $user = $this->getApi()->getUserManager()->getUserById($userId);
+            echo "<span class='top30customerbutton' gsclick='quickloaduser' userid='".$user->id."'>$i. " . $user->fullName . " : " . round($amount) . " </span>";
+            $i++;
+            if($i > 20) {
+                break;
+            }
+        }
+    }
 
     public function printUsersTotal($usersTotal) {
         arsort($usersTotal);
@@ -922,7 +934,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         foreach($usersTotal as $userId => $total) {
             echo "<tr>";
             echo "<td>" . $this->getApi()->getUserManager()->getUserById($userId)->fullName . "</td>";
-            echo "<td>" . $total . "</td>";
+            echo "<td>" . round($total,2) . "</td>";
             echo "</tr>";
             $counter++;
             if($counter > 30) {
@@ -930,6 +942,33 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
         }
         echo "</table>";
+    }
+
+    public function createPmsCoverageFilter() {
+        $selectedFilter = $this->getSelectedFilter();
+        $filter = new \core_pmsmanager_CoverageAndIncomeReportFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
+        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
+        $filter->incTaxes = false;
+        $filter->channel = $selectedFilter->channel;
+        $filter->departmentIds = $selectedFilter->departmentIds;
+        $filter->segments = array();
+        $filter->segments[] = $selectedFilter->segment;
+    
+        if(isset($_POST['event']) && $_POST['event'] == "downloadIncomeReportIncTaxesNew") {
+            $filter->incTaxes = true;
+        }
+        
+        foreach($selectedFilter->typeFilter as $typeId) {
+            $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $typeId);
+            $filter->products[] = $type->productId;
+        }
+        if(isset($selectedFilter->customers)) {
+            foreach($selectedFilter->customers as $usrid => $val) {
+                $filter->userIds[] = $usrid;
+            }
+        }
+        return $filter;
     }
 
 }

@@ -62,6 +62,9 @@ foreach($guests as $guest) {
 }
 
 $mesage = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "booking_sendpaymentlink", $booking, null, "sms", $selectedPrefix);
+if(!$mesage) {
+    $mesage = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "booking_sendpaymentlink", $booking, null, "email", $selectedPrefix);
+}
 $msg = $mesage->content;
 
 echo "</select><br>";

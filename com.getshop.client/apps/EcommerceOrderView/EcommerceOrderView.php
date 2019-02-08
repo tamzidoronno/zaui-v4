@@ -314,5 +314,10 @@ class EcommerceOrderView extends \MarketingApplication implements \Application {
         $this->includefile("openorderlines");
     }
 
+    public function sendInvoice() {
+        $subject = "Invoice attached";
+        $body = "Attached is the invoice for your order";
+        $this->getApi()->getOrderManager()->sendRecieptWithText($_SESSION['samlefaktura_order_id'], $_POST['data']['emailaddress'], $subject, $body);
+    }
 }
 ?>

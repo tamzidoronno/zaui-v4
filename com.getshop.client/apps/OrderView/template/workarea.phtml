@@ -4,7 +4,7 @@ $order = $this->getOrder();
 ?>
 
 <div class='orderviewtab' tab='customers'>
-    <? $this->includefile('customerview'); ?>
+    <? $this->includefile('customers'); ?>
 </div>
 <div class='orderviewtab' tab='orderlines'>
     <? $this->includefile('orderlines'); ?>
@@ -20,6 +20,9 @@ $order = $this->getOrder();
 </div>
 <div class='orderviewtab' tab='accounting'>
     <? $this->includefile('accounting'); ?>
+</div>
+<div class='orderviewtab' tab='sendorder'>
+    <? $this->includefile('sendorder'); ?>
 </div>
 
     

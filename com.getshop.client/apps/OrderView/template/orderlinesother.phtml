@@ -24,6 +24,7 @@ if (count($cartItems)) {
 }
 
 foreach ($cartItems as $item) {
+    $originalProduct = $this->getApi()->getProductManager()->getProduct($item->product->id);
     $product = $item->product;
     $start = "";
     $end = "";
@@ -53,7 +54,7 @@ foreach ($cartItems as $item) {
 
     <div class="cartitem open" style='<?php echo $displayStyle; ?>' cartitemid='<? echo $item->cartItemId; ?>'>
     
-        <div class="col product"><input readonly class="gsniceinput1 product" value="<? echo $product->name; ?>" <?php echo $disabled; ?>/></div>
+        <div class="col product"><input readonly class="gsniceinput1 product" value="<? echo $originalProduct->name; ?>" <?php echo $disabled; ?>/></div>
         <div class="col product_desc"><input class="gsniceinput1 product_desc" value="<? echo $product->name; ?>" <?php echo $disabled; ?>/></div>
         <div class="col count"><input class="gsniceinput1 count" value="<? echo $item->count; ?>" <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>/></div>
         x <div class="col price"><input class="gsniceinput1 price" value="<? echo $product->price; ?>" <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>/></div>

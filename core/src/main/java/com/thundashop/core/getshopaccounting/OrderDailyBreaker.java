@@ -93,7 +93,7 @@ public class OrderDailyBreaker {
                     return;
                 }
 
-                if (!order.payment.isPaymentTypeValid()  && !filter.ignoreConfig) {
+                if ((order.payment == null || !order.payment.isPaymentTypeValid()) && !filter.ignoreConfig) {
                     throw new RuntimeException("Missing payment method on order? " + order.incrementOrderId);
                 }
                 

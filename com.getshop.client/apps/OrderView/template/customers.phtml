@@ -1,0 +1,31 @@
+<?
+/* @var ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
+
+if (!$user) {
+    echo $this->__f("Not available");
+} else {
+    $user->address = $order->cart->address;
+    $user->emailAddress = $order->cart->address->emailAddress;
+    $user->prefix = $order->cart->address->prefix;
+    $user->cellPhone = $order->cart->address->phone;
+    if(isset($order->cart->address->fullName)) {
+        $user->fullName = $order->cart->address->fullName;
+    }
+    
+    $extraArgs = array();
+    $extraArgs['orderid'] = $order->id;
+
+    
+    $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+    $quser->setUser($user);
+    $quser->printEditDirect = true;
+    $quser->hideWarning = true;
+    $quser->avoidSaving = true;
+    $quser->disableChange = $order->closed;
+    $quser->setExtraArgs($extraArgs);
+    $quser->renderApplication(true, $this);
+}
+?>

@@ -301,3 +301,51 @@
 .OrderView .manualregisterpayment {
     padding: 10px;
 }
+.OrderView .sendByEhf {
+    margin: 50px;
+}
+
+.OrderView .sendByEhf h2 {
+    border-bottom: solid 2px #DDD;
+    padding-bottom: 10px;
+}
+
+.OrderView .sendByEhf .emailSent {
+    display: none;
+}
+
+.OrderView .ehfresult {
+    font-size: 16px;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.OrderView .orderviewtab[tab="customers"] .edit_details_directprint {
+    background-color: inherit;
+}
+
+.OrderView .orderviewtab[tab="customers"] .row {
+    margin-top: 10px;
+}
+
+.OrderView .orderviewtab[tab="customers"] .warning {
+    border: solid 1px #DDD;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #fb4545;
+    color: #FFF;
+}
+
+.OrderView .orderviewtab[tab="customers"] .buttonrow {
+    text-align: left !important;
+    margin-top: 30px;
+}
+.OrderView .orderviewtab[tab="customers"] .change_user {
+    margin-bottom: 20px;
+}
+.OrderView .orderviewtab[tab="customers"] {
+    max-width: 500px;
+    padding: 30px;
+}
+

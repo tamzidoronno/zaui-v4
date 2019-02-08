@@ -601,6 +601,7 @@ class PageFactory {
 
     private function createOrderViewPage($modulename) {
         $page = new \ModulePage("orderviewpage", $modulename);
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $row = $page->createRow(true);
         $row->addColumn("4be8e427-bead-491e-8d9f-7dd16356d8eb", "ab0b52a7-8745-4c69-8024-f3890a2849c0");
         $this->pages['orderviewpage'] = $page;

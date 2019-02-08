@@ -1752,6 +1752,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             messageManager.sendInvoiceForOrder(orderId, email, subject, text);
             order.closed = true;
             order.payment.transactionLog.put(System.currentTimeMillis(), "Invoice or receipt sent to " + email);
+
+            OrderShipmentLogEntry logentry = new OrderShipmentLogEntry();
+            logentry.address = email;
+            logentry.type = OrderShipmentLogEntry.Type.email;
+            logentry.date = new Date();
+            
+            order.shipmentLog.add(logentry);
             saveObject(order);
         }
     }
@@ -3290,6 +3297,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         oldCartItem.getProduct().name = cartItem.getProduct().name;
+        oldCartItem.getProduct().description = cartItem.getProduct().description;
         
         if (!oldCartItem.isPmsAddons() && !oldCartItem.isPriceMatrixItem()) {
             oldCartItem.setCount(cartItem.getCount());
@@ -3590,8 +3598,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         for(Order order : orders.values()) {
             boolean save = false;
+            Payment defaultPaymentMethod = getStorePreferredPayementMethod();
+            if (defaultPaymentMethod == null) {
+                throw new RuntimeException("No default payment method set?");
+            }
+            
+            if(order.payment == null) {
+                order.payment = defaultPaymentMethod;
+                save = true;
+            }
+            
             if(order.payment != null && (order.payment.paymentType == null || order.payment.paymentType.isEmpty())) {
-                order.payment = getStorePreferredPayementMethod();
+                order.payment = defaultPaymentMethod;
                 save = true;
             }
             

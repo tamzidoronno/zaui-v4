@@ -2,43 +2,10 @@
 $order = $this->getApi()->getOrderManager()->getOrder($_SESSION['samlefaktura_order_id']);
 $user = $this->getApi()->getUserManager()->getUserById($order->userId);
 
-$emailToUse = "";
-$emailToUse = $user != null && $user->emailAddress ? $user->emailAddress : "";
-$emailToUse = $emailToUse && $user != null && $user->emailAddressToInvoice ? $user->emailAddressToInvoice : "";
-$emailToUse = $emailToUse && $user != null && $user->companyObject && $user->companyObject!= null ? $user->companyObject->email : "";
-$emailToUse = $emailToUse && $user != null && $user->companyObject && $user->companyObject!= null ? $user->companyObject->invoiceEmail : "";
+echo "<script>";
+echo "window.open('/invoicing.php?page=orderviewpage&orderid=$order->id&tab=sendorder','_blank');";
+echo "</script>";
 
-if (isset($_POST['data']['emailaddress'])) {
-    $emailToUse = $_POST['data']['emailaddress'];
-}
-?>
-
-<h2>Success</h2>
-
-<div>
-    <a class='gs_ignorenavigate' href="/scripts/downloadInvoice.php?orderId=<? echo $order->id; ?>"><div class="shop_button">Download</div></a> 
-    <div class="shop_button" gsclick="cancel">Finished</div>    
-</div>
-
-<h2>Send invoice?</h2>
-
-<div gstype='form' method='sendInvoice'>
-    Email: <input class='gsniceinput1' gsname='emailaddress' value='<? echo $emailToUse; ?>'/>
-    <?
-    if (isset($_POST['data']['emailaddress'])) {
-        ?>
-        <div style='border: solid 1px  green; margin-top: 50px; margin-bottom: 50px; padding: 20px; text-align: center; color: green; font-size: 20px;'>
-            <i class='fa fa-check-circle'></i> Invoice sent
-        </div>
-
-        <?
-    }
-    ?>
-    <br/>
-    <br/><div class='shop_button' gstype='submit'>Send invoice</div>
-</div>
-    
-    
-
-
+echo "<h2> The order has been opened in new tab, make sure you allow popups from GetShop</h2>";
+echo "<br/><a href='/invoicing.php?page=orderviewpage&orderid=$order->id&tab=sendorder'><div class='shop_button'> Open order </div></a>";
     

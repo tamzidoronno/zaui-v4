@@ -1,0 +1,7 @@
+<?
+/* @var ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
+
+?>

@@ -13,6 +13,7 @@ class SamleFaktura extends \PaymentApplication implements \Application {
     public function render() {
         if (isset($_SESSION['samlefaktura_order_id'])) {
             $this->includefile("ordercompleted");
+            $this->cancel();
         } else if (!isset($_SESSION['samlefaktura_orders']) || !count($_SESSION['samlefaktura_orders'])) {
             $this->includefile("overview");
         } else {

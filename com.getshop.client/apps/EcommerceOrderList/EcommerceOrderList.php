@@ -368,7 +368,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     }
 
     
-    function sendDocument($doc) {
+    public function sendDocument($doc) {
         if (!$this->getApi()->getStoreManager()->isProductMode()) {
             return array("ok");
         }

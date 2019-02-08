@@ -56,7 +56,10 @@ foreach ($groupedOrders as $userId => $orders) {
             }
             ?> 
             <div class='row'>
-                <div class='col col1'><input type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/></div>
+                <div class='col col1'>
+                    <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'><i class="gs_shop_small_icon fa fa-dollar" title='Open invoice in invoice module'></i></a>
+                    <input type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/>
+                </div>
                 <div class='col col2'><? echo $incremental; ?></div>
                 <div class='col col3'><? echo $date; ?></div>
                 <div class='col col4'>

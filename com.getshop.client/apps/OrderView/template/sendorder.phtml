@@ -1,0 +1,98 @@
+<?
+/* @var ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+
+$order = $this->getOrder();
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
+
+$isCompany = $user->companyObject != null && $user->companyObject->vatNumber;
+$canUseEhf = false;
+$isInvoice = $order->payment && $order->payment->paymentId == "70ace3f0-3981-11e3-aa6e-0800200c9a66";
+
+// Add the payment methods that can be sent. (like dibs, etc)
+$supportToBeSent = $isInvoice;
+
+if ($isCompany && $isInvoice) {
+    $vatnumber = $user->companyObject->vatNumber;
+    $vatnumber = str_replace(' ', '', $vatnumber);
+    $canUseEhf = $this->getApi()->getGetShop()->canInvoiceOverEhf($vatnumber);
+}
+
+if ($canUseEhf) {
+    echo "<div class='sendByEhf'>";
+        echo "<h2>Send by EHF</h2>";
+        $ehfValitation = $this->getEhfProblems($order, $user);
+        $ehfConfigErrors = $this->getApi()->getOrderManager()->isConfiguredForEhf();
+
+        if (count($ehfConfigErrors)) {
+            echo "<hr>";
+            echo "<b>EHF:</b>";
+            echo "<div>";
+            echo "This ivoice can not be sent by EHF because you have not configured the invoice settings properly.";
+            foreach ($ehfConfigErrors as $error) {
+                echo "<div>* $error</div>";
+            }
+            echo "</div>";
+
+        } elseif (!$canUseEhf) {
+            echo $this->__f("This company can not receive invoice by EHF.");
+        } elseif (count($ehfValitation)) {
+            echo "<b>EHF Cant be sent due to:</b>";
+            foreach ($ehfValitation as $error) {
+                echo "<br/>* ".$error;
+            }
+        } else {
+            ?>
+            <span class='sendpaymentlinkbox dosendbox dontExpand sendehfbox' gstype='form' method='sendByEhf'>
+                <div style='padding-bottom: 10px;'>
+                    <input type='txt' class='gsniceinput1' gsname="vatNumber" value="<?php echo $user->companyObject->vatNumber; ?>" placeholder="Vat number">
+                </div>
+                <div class='ehfresult'>
+                </div>
+                <div class='shop_button dosendehf'>Send EHF </div>
+                <br/>
+                <br/>
+                
+                <?
+                echo $this->__f("* Ehf costs Kr 2.50,- pr invoice and you will be billed monthly.");
+                ?>
+            </span>
+            <div class="sendingehf" style="display: none;">
+                Sending EHF, please wait...
+            </div>
+
+            <?
+        }
+    echo "</div>";
+}
+
+if ($isInvoice) {
+?>
+    <div class='sendByEhf'>
+        <h2>Send by email</h2>
+
+        <div>
+            Email: <input class='gsniceinput1' gsname='emailaddress' value=''/>
+            <div class='emailSent' style='border: solid 1px  green; margin-top: 50px; margin-bottom: 50px; padding: 20px; text-align: center; color: green; font-size: 20px;'>
+                <i class='fa fa-check-circle'></i> Invoice sent
+            </div>
+            <br/>
+            <br/><div class='shop_button sendByEmail'>Send invoice</div>
+        </div>
+
+    </div>
+<?
+}
+
+if (!$supportToBeSent) {
+?>
+    <div class='sendByEhf'>
+        <h2>Cant be sent</h2>
+
+        <div>
+            This payment method does not support to be sent to your customer.
+        </div>
+
+    </div>
+<?
+}
+?>

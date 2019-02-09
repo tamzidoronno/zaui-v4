@@ -7,6 +7,7 @@ package com.thundashop.core.pos;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,4 +20,18 @@ public class PosView extends DataCommon {
     
     public List<String> productListsIds = new ArrayList();
     public List<String> tableListIds = new ArrayList();
+    
+    public HashMap<String, PosListConfig> listConfigs = new HashMap();
+
+    public void changeListMode(String listId, boolean showAsGroupButton) {
+        PosListConfig config = listConfigs.get(listId);
+        
+        if (config == null) {
+            config = new PosListConfig();
+            config.listId = listId;
+            listConfigs.put(listId, config);
+        }
+        
+        config.showAsGroupButton = showAsGroupButton;
+    }
 }

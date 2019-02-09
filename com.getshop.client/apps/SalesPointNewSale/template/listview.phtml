@@ -7,38 +7,76 @@ foreach ($lists as $list) {
     $productIds = array_merge($list->productIds, $productIds);
 }
 
+$grouped = array();
+$grouped['grouped'] = array();
+$grouped['loose'] = array();
+
+foreach ($lists as $list) {
+    if ($this->isGroupListMode($list->id)) {
+        $grouped['grouped'][] = $list;
+    } else {
+        $grouped['loose'][] = $list;
+    }
+}
+
 $viewId = $this->getSelectedViewId();
 $products = $this->getApi()->getProductManager()->getProductLight($productIds);
 
 foreach ($lists as $list) {
-    ?>
-    <div class='productlist'>
+    if ($this->isGroupListMode($list->id)) {
+        ?>
+        <div class='group openList' listid="<? echo $list->id; ?>">
+            <div class='inner'>
+                <div class='productname'><? echo $list->listName; ?></div>
+            </div>
+        </div>
         <?
-        
-        echo "<h2>";
-            echo $list->listName;
-            
-            if ($viewId) {
+    }
+}
+
+foreach ($grouped as $groupName => $lists) {
+    foreach ($lists as $list) {
+        $isGroup = $this->isGroupListMode($list->id);
+        $class = $isGroup ? "isgroup" :  "";
+        ?>
+        <div class='productlist <? echo $class; ?>' listid='<? echo $list->id; ?>'>
+            <?
+
+            echo "<h2>";
+                echo $list->listName;
+
+                if ($viewId) {
+                    ?>
+                    <div class='movebuttons'>
+                        <div class='gs_shop_small_icon configurelist' listid='<? echo $list->id; ?>'><i class='fa fa-cog'></i></div>
+                        <div class='gs_shop_small_icon' gsclick='movelist' listid='<? echo $list->id; ?>' type='down' ><i class='fa fa-arrow-up'></i></div>
+                        <div class='gs_shop_small_icon' gsclick='movelist' listid='<? echo $list->id; ?>' type='up' ><i class='fa fa-arrow-down'></i></div>
+
+                        <div class="viewconfig">
+                            <div class='entry'>
+                                View as group:
+                                <div class='entry_choice' gsclick='makeListToGroupMode' listid='<? echo $list->id; ?>'>On</div>
+                                <div class='entry_choice' gsclick='unmakeListToGroupMode' listid='<? echo $list->id; ?>'>Off</div>
+                            </div>
+                        </div>
+                    </div>
+                    <?
+                }
+            echo "</h2>";
+
+            foreach ($list->productIds as $productId) {
+                $product = $this->getProduct($products, $productId);
                 ?>
-                <div class='movebuttons'>
-                    <div class='gs_shop_small_icon' gsclick='movelist' listid='<? echo $list->id; ?>' type='down' ><i class='fa fa-arrow-up'></i></div>
-                    <div class='gs_shop_small_icon' gsclick='movelist' listid='<? echo $list->id; ?>' type='up' ><i class='fa fa-arrow-down'></i></div>
+                <div class='product addProductToCurrentTab' productid="<? echo $product->id; ?>">
+                    <div class='inner'>
+                        <div class='productname'><? echo $product->name; ?></div>
+                    </div>
                 </div>
                 <?
             }
-        echo "</h2>";
-        foreach ($list->productIds as $productId) {
-            $product = $this->getProduct($products, $productId);
             ?>
-            <div class='product addProductToCurrentTab' productid="<? echo $product->id; ?>">
-                <div class='inner'>
-                    <div class='productname'><? echo $product->name; ?></div>
-                </div>
-            </div>
-            <?
-        }
-        ?>
-    </div>
+        </div>
     <?
+    }
 }
 ?>

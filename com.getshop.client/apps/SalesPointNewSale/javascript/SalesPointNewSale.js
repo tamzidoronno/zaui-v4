@@ -13,8 +13,32 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .countadd', app.SalesPointNewSale.countAddClicked);
         $(document).on('click', '.SalesPointNewSale .changeviewmenu', app.SalesPointNewSale.showListOfViews);
         $(document).on('click', '.SalesPointNewSale .product.checkbox', app.SalesPointNewSale.toggleCheckBox);
+        $(document).on('click', '.SalesPointNewSale .configurelist', app.SalesPointNewSale.configureList);
+        $(document).on('click', '.SalesPointNewSale .openList', app.SalesPointNewSale.openList);
         
         this.bindScrollEvent();
+    },
+    
+    openList: function() {
+        var listId = $(this).attr('listid');
+        var listToShow = $('.SalesPointNewSale .productlist.isGroup[listid="'+listId+'"]');
+        
+        if (listToShow.is(':visible')) {
+            listToShow.hide();
+        } else {
+            $('.SalesPointNewSale .productlist.isGroup').hide();
+            listToShow.show();
+        }
+    },
+    
+    configureList: function() {
+        var configView = $(this).closest('.movebuttons').find('.viewconfig');
+        if (configView.is(':visible')) {
+            configView.slideUp();
+        } else {
+            configView.slideDown();
+        }
+        
     },
     
     setTabDiscount: function(newValue, fromTarget) {

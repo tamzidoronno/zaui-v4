@@ -518,6 +518,10 @@ public class PosManager extends ManagerBase implements IPosManager {
             
             i++;
             
+            if (id.equals(listId)) {
+                i--;
+            }
+            
             if (!id.equals(listId) && !newList.contains(id)) {
                 newList.add(id);
             }
@@ -903,5 +907,23 @@ public class PosManager extends ManagerBase implements IPosManager {
         double diff = totalOnRoom - totalOrdersRoom;
         
         return diff > 0.0001 || diff < -0.0001;
+    }
+
+    @Override
+    public void changeListView(String viewId, String listId, boolean showAsGroupButton) {
+        PosView view = getView(viewId);
+        if (view != null) {
+            view.changeListMode(listId, showAsGroupButton);
+            saveObject(view);
+        }
+    }
+
+    @Override
+    public void setView(String cashPointId, String viewId) {
+        CashPoint cpSkada = getCashPoint(cashPointId);
+        if (cpSkada != null) {
+            cpSkada.setUserView(getSession().currentUser.id, viewId);
+            saveObject(cpSkada);
+        }
     }
 }

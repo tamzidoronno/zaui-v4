@@ -160,4 +160,10 @@ public interface IPosManager {
     
     @Editor
     public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName, String cashPointId);
+    
+    @Editor
+    public void changeListView(String viewId, String listId, boolean showAsGroupButton);
+    
+    @Editor
+    public void setView(String cashPointId, String viewId);
 }

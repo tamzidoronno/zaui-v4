@@ -1,9 +1,11 @@
+.SalesPointNewSale .group .inner,
 .SalesPointNewSale .product .inner {
     position: relative;
     top: 50%;
     transform: translateY(-50%); 
 }
 
+.SalesPointNewSale .group,
 .SalesPointNewSale .product {
     width: 100px;
     height: 100px;
@@ -17,6 +19,14 @@
     padding: 5px;
     cursor: pointer;
     position: relative;
+}
+
+
+.SalesPointNewSale .group {
+    background-color: #91f07c;
+    color: black;
+    height: 70px;
+    width: 80px;
 }
 
 .SalesPointNewSale .product:hover {
@@ -43,15 +53,17 @@
 }
 
 .SalesPointNewSale .productlistouter {
-    width: calc(100% - 450px);
+    width: calc(100% - 300px);
     box-sizing: border-box;
     padding: 50px;
     padding-top: 0px;
-    margin-top: 80px;
+    margin-top: 70px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .SalesPointNewSale .rightmenu {
-    width: 450px;
+    width: 300px;
     background-color: #f4f4f4;
     min-height: calc(100% - 86px);
     border-left: solid 1px #DDD;
@@ -81,9 +93,11 @@
 }
 
 .SalesPointNewSale .header {
-    padding: 50px;
     padding-bottom: 0px;
-    padding-top: 20px;
+    margin-top: 25px;
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 10px;
 }
 
 .SalesPointNewSale .notabopen_desc {
@@ -128,10 +142,8 @@
 }
 
 .SalesPointNewSale .tabcreateinfo {
-    border: solid 1px #DDD;
-    padding: 20px;
-    margin-left: 50px;
-    margin-right: 50px;
+    padding: 10px;
+    background-color: #DDD
 }
 
 .SalesPointNewSale .cancelcreatenew {
@@ -181,8 +193,6 @@
 
 .SalesPointNewSale .cartitemline {
     border-bottom: solid 1px #DDD;
-    margin-left: 50px;
-    margin-right: 50px;
     cursor: pointer;
 }
 
@@ -215,15 +225,15 @@
 .SalesPointNewSale .cartitemline .col.price { width:90px; text-align: right;}
 
 .SalesPointNewSale .header2 {
-    padding-left: 50px;
-    margin-top: 50px;
-    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
 }
 
 .SalesPointNewSale .tabtotal {
     font-size: 25px;
     text-align: right;
-    padding: 50px;
+    padding-right: 10px;
     padding-top: 20px;
 }
 
@@ -261,6 +271,23 @@
     position: absolute;
     right: 10px;
     top: 10px;
+    z-index: 1;
+    display: none;
+}
+
+.SalesPointNewSale .movebuttons .viewconfig .entry .entry_choice {
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+.SalesPointNewSale .movebuttons .viewconfig .entry {
+    padding: 5px;
+}
+
+.SalesPointNewSale .movebuttons .viewconfig {
+    background-color: #DDD;
+    font-size: 13px;
+    font-weight: normal;
     display: none;
 }
 
@@ -422,7 +449,8 @@
 }
 
 .SalesPointNewSale .taxrates {
-    text-align: center;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .SalesPointNewSale .oldprice {
@@ -434,4 +462,8 @@
     text-align: center;
     border-bottom: solid 10px #DDD;
     padding-bottom: 20px;
+}
+
+.SalesPointNewSale .productlist.isgroup {
+    display: none;
 }

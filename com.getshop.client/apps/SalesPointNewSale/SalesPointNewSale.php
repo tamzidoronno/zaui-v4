@@ -4,6 +4,7 @@ namespace ns_57db782b_5fe7_478f_956a_ab9eb3575855;
 class SalesPointNewSale extends SalesPointCommon implements \Application {
     public $errorMsg = "";
     public $userChanged = false;
+    private $view = null;
     
     public function getDescription() {
         
@@ -320,5 +321,49 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             echo "<script>$('.startpaymentbutton').click();</script>";
         }
     }
+    
+    public function makeListToGroupMode() {
+        $viewId = $this->getSelectedViewId();
+        $this->getApi()->getPosManager()->changeListView($viewId, $_POST['data']['listid'], true);
+    }
+    
+    public function unmakeListToGroupMode() {
+        $viewId = $this->getSelectedViewId();
+        $this->getApi()->getPosManager()->changeListView($viewId, $_POST['data']['listid'], false);
+    }
+
+    /**
+     * 
+     * @return \core_pos_PosView
+     */
+    public function getView() {
+        $viewId = $this->getSelectedViewId();
+        
+        if (!$viewId) {
+            return null;
+        }
+        
+        if (!$this->view) {
+            $this->view = $this->getApi()->getPosManager()->getView($viewId);
+        }
+        
+        return $this->view;
+            
+    }
+
+    public function isGroupListMode($listId) {
+        $view = $this->getView();
+        
+        if ($view == null) {
+            return false;
+        }
+        
+        if (isset($view->listConfigs->{$listId}) && $view->listConfigs->{$listId}->showAsGroupButton) {
+            return true;
+        }
+        
+//        return false;
+    }
+
 }
 ?>

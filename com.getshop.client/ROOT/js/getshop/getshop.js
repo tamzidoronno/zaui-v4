@@ -1277,6 +1277,7 @@ getshopnumpad = {
     
     close: function() {
         $('.gsnumpad').hide();
+        $('body').unbind('keyup');
     },
     
     execute: function() {
@@ -1305,6 +1306,8 @@ getshopnumpad = {
         if (gsMethodToExecute) {
             thundashop.Ajax.postgeneral.apply(getshopnumpad.fromTarget);
         }
+        
+        $('body').unbind('keyup');
     },
     
     show: function(fromTarget) {
@@ -1326,12 +1329,50 @@ getshopnumpad = {
         var displayText = getshopnumpad.isPassword ? oldValue.replace(/./g, '*') : oldValue;
         getshopnumpad.fromTarget = fromTarget;
         numpad.find('.numpadtitle').text(title);
-        numpad.find('.numpadvalue').text(displayText);
-        numpad.find('.numpadvalue').attr('value', oldValue);
+        numpad.find('.numpadvalue').text("");
+        numpad.find('.numpadvalue').attr('value', "");
+        numpad.find('.oldvalue span').html(displayText);
+        
+        if (getshopnumpad.isPassword) {
+            numpad.find('.oldvalue').hide();
+        } else {
+            numpad.find('.oldvalue').show();
+        }
         numpad.show();
+        
+        $('body').keyup(function(e) {
+            var val = e.key;
+            if (val === "Backspace") {
+                val = 'x';
+            }
+            
+            if (val === "Enter") {
+                val = 'OK';
+            }
+            
+            $('.gs_numpad_element[value="'+val+'"]').click(); 
+        });
+        
+        $('.numpadinput').show();
+        $('.numpadinput').focus();
+        $('.numpadinput').hide();
     }
 }
 
 getshopnumpad.init();
 
 thundashop.framework.init();
+
+keepAlive = function() {
+    $.ajax({
+        type: "GET",
+        url: "/scripts/alive.php",
+        success: function(response) {
+            console.log(response);
+        }});
+    
+    setTimeout(keepAlive, 120000);
+}
+
+
+keepAlive();

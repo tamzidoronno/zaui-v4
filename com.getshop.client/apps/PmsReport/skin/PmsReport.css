@@ -2,6 +2,7 @@
 .PmsReport .pmsbutton.selected { background-color: yellow !important; color:#000; border-color: green; border-color:#fff; }
 .PmsReport .GetShopModuleTable .col { width: 7.3% !important; text-align: center; }
 .PmsReport .GetShopModuleTable .col_date { text-align: left; }
+.PmsReport .top30customerbutton { border: solid 1px #efefef; background-color:#fff; padding:2px; border-radius: 3px; display:inline-block; margin:3px; cursor:pointer; }
 .PmsReport .GetShopModuleTable .headercol {
     white-space: nowrap;
     overflow: hidden;

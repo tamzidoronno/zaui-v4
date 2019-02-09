@@ -13,12 +13,12 @@ app.PmsReport = {
         $(document).on('click', '.PmsReport .removecustomerfromfilter', app.PmsReport.removeCustomer);
         $(document).on('click', '.PmsReport .filterbycustomerbutton', app.PmsReport.toggleFilterByCustomer);
         $(document).on('click', '.PmsReport .displayto30list', app.PmsReport.toggleTop30List);
+        $(document).on('click', '.PmsReport .top30customerbutton', app.PmsReport.top30CustomersLoading);
         $(document).on('change', '.PmsReport [gsname="segment"]', app.PmsReport.changeSegments);
     },
     changeSegments : function() {
         var val = $(this).val();
         if(val && val !== "") {
-            console.log('hiude');
             $('.typeselectionboxes').hide();
             $('.typeselectionboxes input').each(function() {
                 $(this).attr('checked',null);
@@ -33,6 +33,13 @@ app.PmsReport = {
     toggleFilterByCustomer : function() {
         $('.customerfilter').toggle();
         $('.customerfilter input').focus();
+    
+        if($('.customerfilter').is(":visible")) {
+            var event = thundashop.Ajax.createEvent('', 'loadTop30Customers', $(this), {});
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                    $('.top30customerfilter').html(res);
+            });
+        }
     },
     removeCustomer : function() {
         var row = $(this).closest('.selectedcustomerrow');

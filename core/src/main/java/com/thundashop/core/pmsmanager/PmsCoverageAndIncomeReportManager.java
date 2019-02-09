@@ -73,8 +73,10 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         List<Product> products = productManager.getAllProducts();
         List<Product> productsOnDifferentTypes = productManager.getAllProducts();
         
-        productsOnDifferentTypes.removeIf(o -> !filter.allProducts.contains(o.id));
-        products.removeIf(o -> !filter.allProducts.contains(o.id));
+        if(!filter.allProducts.isEmpty()) {
+            productsOnDifferentTypes.removeIf(o -> !filter.allProducts.contains(o.id));
+            products.removeIf(o -> !filter.allProducts.contains(o.id));
+        }
         
         if (!filter.products.isEmpty()) {
             products.removeIf(o -> !filter.products.contains(o.id));
@@ -135,7 +137,9 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                 }
             }
             result = result.add(amount);
-            addToUser(order.userId, amount);
+            if(products != null) {
+                addToUser(order.userId, amount);
+            }
             
             BigDecimal roomPriceAmount = new BigDecimal(0);
             if(item.getProduct().externalReferenceId != null && toadd.containsKey(item.getProduct().externalReferenceId)) {

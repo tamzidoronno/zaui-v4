@@ -100,7 +100,10 @@ $chnls = $pmssearchbox->getChannels();
         <span class='customerfilter'>
             <div><input type='txt' class='gsniceinput1 customersearch' placeholder='Search for customer'></div>
             <div class='filtercustomerresult'></div>
+            <div class='top30customerfilter'></div>
         </span>
+    <div style='clear: both;'></div>
+        
     <input type='checkbox' gsname='includenonbookable' <?php echo $checked; ?>> Include non bookable rooms as well when calculating the coverage.
     <?php $hideSelection = $this->getSelectedFilter()->segment ? "display:none;" : ""; ?>
         <div class='typeselectionboxes' <?php echo "style='$hideSelection'"; ?>>

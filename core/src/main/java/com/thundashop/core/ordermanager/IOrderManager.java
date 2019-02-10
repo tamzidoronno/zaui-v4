@@ -438,4 +438,17 @@ public interface IOrderManager {
     
     @Administrator
     public DoublePostAccountingTransfer getDoublePostAccountingTransfer(String id);
+    
+    @Administrator
+    public boolean orderIsCredittedAndPaidFor(String orderId);
+    
+    /**
+     * Will filter out all the orderids that has a correcsponding 
+     * paid creditnote.
+     * 
+     * @param orderIds
+     * @return 
+     */
+    @Administrator
+    public List<String> filterOrdersIsCredittedAndPaidFor(List<String> orderIds);
 }

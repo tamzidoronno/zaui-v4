@@ -3663,4 +3663,42 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
         }
     }
+
+    @Override
+    public boolean orderIsCredittedAndPaidFor(String orderId) {
+        Order inOrder = getOrder(orderId);
+        Order order = null;
+        
+        if (inOrder == null)
+            return false;
+        
+        if (inOrder != null) {
+            if (inOrder.parentOrder != null && !inOrder.parentOrder.isEmpty()) {
+                order = getOrder(inOrder.parentOrder);
+            } else {
+                order = inOrder;
+            }
+        }
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            return false;
+        }
+        
+        double sumOfPaidCreditNotes = getCreditNotesForOrder(order.id)
+                .stream()
+                .filter(o -> o.status == Order.Status.PAYMENT_COMPLETED)
+                .mapToDouble(o -> o.getTotalAmount())
+                .sum();
+        
+        double diff = sumOfPaidCreditNotes + order.getTotalAmount();
+        
+        return diff < 0.0001 && diff > -0.0001;
+    }
+
+    @Override
+    public List<String> filterOrdersIsCredittedAndPaidFor(List<String> orderIds) {
+        return orderIds.stream()
+                .filter(id -> !orderIsCredittedAndPaidFor(id))
+                .collect(Collectors.toList());
+    }
 }

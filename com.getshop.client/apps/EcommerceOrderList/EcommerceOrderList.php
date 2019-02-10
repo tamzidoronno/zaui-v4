@@ -194,6 +194,19 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         }
         return $name;
     }
+    
+    public function formatIncrementOrderId($row) {
+        $ret = "";
+        if ($this->externalReferenceIds) {
+            $roomId = $this->externalReferenceIds[0];
+            $corroloate = $this->getApi()->getPmsManager()->doesOrderCorrolateToRoom($this->getSelectedMultilevelDomainName(),$roomId, $row->id);
+            if (!$corroloate) {
+                $ret .= "<i class='fa fa-warning not_connected_to_room' title='".$this->__f("This order has no orderlines for the current room you are looking at, probably belongs to other bookings in the group.")."'></i>";
+            }
+        }
+        $ret .= $row->incrementOrderId;
+        return $ret;
+    }
 
     public function printTable() {
         $filterOptions = new \core_common_FilterOptions();
@@ -210,7 +223,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
-            array('incrementOrderId', 'ORDER ID', 'incrementOrderId'),
+            array('incrementOrderId', 'ORDER ID', 'incrementOrderId', 'formatIncrementOrderId'),
             array('rowCreatedDate', 'CREATED', 'rowCreatedDate', 'formatRowCreatedDate'),
             array('paymentDate', 'PAYMENT DATE', null, 'formatPaymentDate'),
             array('transferredToAccounting', '<span title="Transferred to accounting">TFA</span>', null, 'formatTransferredToAccounting'),
@@ -226,6 +239,12 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $table->avoidAutoExpanding();
         $table->sortByColumn("incrementOrderId", false);
         $table->renderPagedTable();
+        ?>
+        <script>
+            $('.not_connected_to_room').closest('.datarow_inner').addClass('not_connected_to_rom_row');
+        </script>
+            
+        <?
     }
 
     

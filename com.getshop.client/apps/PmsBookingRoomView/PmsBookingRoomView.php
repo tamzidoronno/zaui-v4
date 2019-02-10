@@ -1473,16 +1473,22 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function printOrderList() {
+        $orderIds = $this->filterOrderIds($this->pmsBooking->orderIds);
         $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
-        $orderlist->setOrderIds($this->pmsBooking->orderIds);
+        $orderlist->setOrderIds($orderIds);
+
         $orderlist->setPaymentLinkCallBack("app.PmsBookingRoomView.refresh");
         $ids = array();
         $ids[] = $this->selectedRoom->pmsBookingRoomId;
         $orderlist->setExternalReferenceIds($ids);
-        $orderlist->renderApplication(true, $this);
+        if (count($orderIds)) {
+            $orderlist->renderApplication(true, $this);
+        } else {
+            echo $this->__f("No orders created for this group");
+        }
         
         $extraOrderIds = $this->getApi()->getPmsManager()->getExtraOrderIds($this->getSelectedMultilevelDomainName(), $this->pmsBooking->id);
-
+        $extraOrderIds = $this->filterOrderIds($extraOrderIds);
         
         if ( $extraOrderIds && count($extraOrderIds)) {
             echo "<div style='border-top: solid 5px green; margin-top: 50px; padding-top: 50px;'>";
@@ -1872,6 +1878,21 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             return $pmsSelectedRoom->countryCode;
         }
         return $pmsBooking->countryCode;
+    }
+
+    public function toggleCreditHistory() {
+        $showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'];
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'] = !$showCredittedHistory;
+    }
+
+    public function filterOrderIds($orderIds) {
+        $showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'];
+        
+        if ($orderIds && count($orderIds) && !$showCredittedHistory) {
+            return $this->getApi()->getOrderManager()->filterOrdersIsCredittedAndPaidFor($orderIds);
+        }
+        
+        return $orderIds;
     }
 
 }

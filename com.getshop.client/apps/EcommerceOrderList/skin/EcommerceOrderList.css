@@ -26,3 +26,7 @@
     z-index: 2;
     right: 0px;
 }
+
+.EcommerceOrderList .not_connected_to_rom_row {
+    color: #90008f;
+}

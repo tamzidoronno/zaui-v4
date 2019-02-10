@@ -201,7 +201,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             $roomId = $this->externalReferenceIds[0];
             $corroloate = $this->getApi()->getPmsManager()->doesOrderCorrolateToRoom($this->getSelectedMultilevelDomainName(),$roomId, $row->id);
             if (!$corroloate) {
-                $ret .= "<i class='fa fa-warning not_connected_to_room' title='".$this->__f("This order has no orderlines for the current room you are looking at, probably belongs to other bookings in the group.")."'></i>";
+                $ret .= "<i class='fa fa-warning not_connected_to_room' title='".$this->__f("This order has no orderlines for the current room you are looking at, probably belongs to other rooms in the group.")."'></i>";
             }
         }
         $ret .= $row->incrementOrderId;

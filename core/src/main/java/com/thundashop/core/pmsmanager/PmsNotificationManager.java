@@ -744,5 +744,17 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         this.emailMessage = message;
     }
 
+    boolean hasResendCode() {
+        if(messages == null) {
+            return false;
+        }
+        for(PmsNotificationMessage msg : messages.values()) {
+            if(msg != null && msg.key.equals("room_resendcode") && msg.content != null && !msg.content.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     
 }

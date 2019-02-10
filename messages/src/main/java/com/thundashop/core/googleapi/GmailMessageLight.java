@@ -19,6 +19,7 @@ import org.mongodb.morphia.annotations.Transient;
 public class GmailMessageLight extends DataCommon {
     public String messageId = "";
     public boolean inSent;
+    public boolean completed = false;
     public long historyId;
     public String snippet = "";
     public Date date;
@@ -32,6 +33,8 @@ public class GmailMessageLight extends DataCommon {
     public String replyTo = "";
     private List<GmailMessageAssigned> assignedTo = new ArrayList();
     private GmailMessageLightStatus status = GmailMessageLightStatus.NEW;
+    public Integer timeSpent = 0;
+    public Integer type = 0;
 
     public String connectedToCompanyId = "";
     

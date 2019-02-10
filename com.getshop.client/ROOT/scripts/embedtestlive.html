@@ -11,22 +11,21 @@
     gsisdevmode = false;
     $ = jQuery;
     jQuery(function ($) { 
-        $.getScript("https://eilertsmith.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://20356.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                     { 
-                    "endpoint": "https://eilertsmith.getshop.com/",
-                    "jsendpoint": "https://eilertsmith.getshop.com/",
+                    "endpoint": "https://20356.getshop.com/",
+                    "jsendpoint": "https://20356.getshop.com/",
                     "domain" : "default",
-                    "language" : "no",
-                    'roomStepTroughConfig' : true,
-                    "success" : function(res) {
-                            console.log("booking completed");
-                            console.log(res);
-                        },
-                        "failure" : function(res) {
-                            console.log("booking failed");
-                            console.log(res);
-                        }
+                    "language" : "no"
+//                    "success" : function(res) { //For special callbacks.
+//                            console.log("booking completed");
+//                            console.log(res);
+//                        },
+//                        "failure" : function(res) {
+//                            console.log("booking failed");
+//                            console.log(res);
+//                        }
                     }
             );
         });

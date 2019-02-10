@@ -150,7 +150,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $mesage = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "booking_sendpaymentlink", $booking, null, "sms", $selectedPrefix);
         if(!$mesage) {
             $mesage = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "booking_sendpaymentlink", $booking, null, "email", $selectedPrefix);
-        }
+        } 
         $msg = $mesage->content;
         $msg = str_replace("{name}", $_POST['data']['name'], $msg);
         echo $msg;

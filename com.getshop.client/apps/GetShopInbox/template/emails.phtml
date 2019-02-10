@@ -1,9 +1,8 @@
 <?
 /* @var $this \ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
 $emails = $this->getEmails();
-$admins = $this->getApi()->getUserManager()->getUsersByType(100);
+$types = $this->getAllTypes();
 ?>
-
 <div class='connectMailToCompany'>
     <?
     // Done like this as it might be case for speed improvement in future by loading
@@ -25,24 +24,28 @@ $admins = $this->getApi()->getUserManager()->getUsersByType(100);
         ?>
     </div>
     <div class="col company"><? echo $this->__f("Company"); ?></div>
+    <div class="col timespent"><? echo $this->__f("Time spent"); ?></div>
 
     <div class="col icons">
         
     </div>
 </div>
-
-<div class='mailview'>
-    <i class='fa fa-close closebox'></i>
-    <div class='inner_mail_view'>
+<?php
+if(!$this->isCompletedEmails()) {
+?>
+    <div class='mailview'>
+        <i class='fa fa-close closebox'></i>
+        <div class='inner_mail_view'>
+        </div>
     </div>
-</div>
 <?
+}
 
 foreach ($emails as $email) {
     if ($email->inSent) {
         continue;
     }
-    
+    $this->setCurrentEmail($email);
     $attachment = strstr($email->contentType, "multipart/mixed") ? '<i class="fa fa-paperclip"></i>' : "";
     $replied = $email->inSent ? '<i class=" fa fa-reply"></i>' : ""; 
     $company = $email->connectedToCompanyId ? $email->connectedToCompanyName : "<i class='gs_shop_small_icon fa fa-link connecttocompany' msgid='$email->id' title='Connect to company'></i>"; 
@@ -53,7 +56,10 @@ foreach ($emails as $email) {
         </div>
         
         <div class="col date"><? echo date('d.m.Y H:i', strtotime($email->date)); ?></div>
-        <div class="col subject"><? echo $email->subject; ?></div>
+        <div class="col subject"><? 
+        echo $email->subject . "<br>";
+        echo "<span style='color:#bbb;font-style: italic;'>" . $types[$email->type] . "</span>";
+        ?></div>
         <div class="col from">
             <? 
             $toPrint = str_replace(">", "", $email->from); 
@@ -62,6 +68,7 @@ foreach ($emails as $email) {
             ?>
         </div>
         <div class="col company"><? echo $company; ?></div>
+        <div class="col timespent timespentupdate" msgid="<?php echo $email->id;?>" style="padding: 10px;"><? echo $email->timeSpent; ?></div>
         
         <div class="col icons">
             <? echo $replied." ".$attachment; ?>
@@ -69,18 +76,9 @@ foreach ($emails as $email) {
         <div class='col buttons'>
             <div class='selected_checkbox_options'>
                 <div class='fa fa-arrow-circle-o-down checkboxaction'></div>
-                <div class='menu'>
-                    <div class='entry'>Assign to:
-                        <?
-                        foreach ($admins as $admin) {
-                        ?>
-                            <div class='subentry doassignment' userid='<? echo $admin->id; ?>'><? echo $admin->fullName." - ".$admin->emailAddress." - ".$admin->cellPhone; ?></div>
-                        <?
-                        }
-                        ?>
-                    </div>
-                    <div class='entry ignore'>Archive Message</div>
-                </div>
+                <?php
+                $this->includefile("emailassignmentmenu");
+                ?>
             </div>
         </div>
     </div>

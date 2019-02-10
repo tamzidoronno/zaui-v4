@@ -79,8 +79,8 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
     public void fetchAllMessages() {
         try {
             doFolder("in:inbox", false);
-            doFolder("in:inbox/behandlet", false);
-            doFolder("in:sent", true);
+//            doFolder("in:inbox/behandlet", false);
+//            doFolder("in:sent", true);
         } catch (IOException ex) {
             Logger.getLogger(GmailApiManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -503,5 +503,50 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
         Message message = new Message();
         message.setRaw(encodedEmail);
         return message;
+    }
+
+    @Override
+    public void updateTimeSpentOnMessage(String msgId, Integer timeSpent, boolean completed) {
+        GmailMessageLight msg = getMessageLight(msgId);
+        msg.timeSpent = timeSpent;
+        msg.completed = completed;
+        saveObject(msg);
+    }
+
+    @Override
+    public List<GmailMessageLight> getEmails(GmailMessageFilter filter) {
+        List<GmailMessageLight> msgs = new ArrayList();
+        for(GmailMessageLight msg : gmailMessages.values()) {
+            if(filter.userId != null && !msg.isAssignedTo(filter.userId)) {
+                continue;
+            }
+            if(!msg.isUnassigned() && filter.userId == null) {
+                continue;
+            }
+            if(filter.type >= 0 && !filter.type.equals(msg.type)) {
+                continue;
+            }
+            if(filter.completed != msg.completed) {
+                continue;
+            }
+            msgs.add(msg);
+        }
+        sortAndFinalize(msgs);
+        return msgs;
+
+    }
+
+    @Override
+    public void changeTypeOnMessage(String messageId, Integer type) {
+        GmailMessageLight msg = getMessageLight(messageId);
+        msg.type = type;
+        saveObject(msg);
+    }
+
+    @Override
+    public void updateTimeSpenOnMessage(String messageId, Integer time) {
+        GmailMessageLight msg = getMessageLight(messageId);
+        msg.timeSpent = time;
+        saveObject(msg);
     }
 }

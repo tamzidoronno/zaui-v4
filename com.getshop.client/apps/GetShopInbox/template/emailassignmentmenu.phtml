@@ -1,0 +1,26 @@
+<?php
+/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$email = $this->getCurrentEmail();
+$admins = $this->getAdmins();
+?>
+<div class='menu' msgid="<?php echo $this->getCurrentEmail()->id; ?>">
+    <?php
+    $types = $this->getAllTypes();
+    foreach($types as $type => $typeName) {
+        $selected = $type == $email->type ? "selected" : "";
+        echo "<span class='typeselection $selected' msgid='".$email->id."' type='$type'>" . $typeName . "</span>";
+    }
+    ?>
+    <div class='entry'>Assign to:
+        <?
+        foreach ($admins as $admin) {
+            if(!$admin->emailAddress || !$admin->fullName || !$admin->cellPhone) {
+                continue;
+            }
+        ?>
+            <div class='subentry doassignment' userid='<? echo $admin->id; ?>'><? echo $admin->fullName." - ".$admin->emailAddress." - ".$admin->cellPhone; ?></div>
+        <?
+        }
+        ?>
+    </div>
+</div>

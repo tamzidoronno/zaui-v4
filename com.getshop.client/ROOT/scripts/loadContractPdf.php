@@ -23,7 +23,7 @@ if(isset($_GET['language'])) {
 
 $id = session_id();
 $engine = $_GET['engine'];
-$address = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']."/scripts/loadContract.php?engine=".$engine."&bookingid=".$bookingid."&sessid=$id" ."language=".$lang;
+$address = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST']."/scripts/loadContract.php?engine=".$engine."&bookingid=".$bookingid."&sessid=$id" ."&language=".$lang;
 
 
 if(isset($_GET['bookingid']) && $_GET['bookingid']) {

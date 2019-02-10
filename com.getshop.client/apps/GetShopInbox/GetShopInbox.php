@@ -4,14 +4,39 @@ namespace ns_f1706b4c_f779_4eb7_aec3_ee08f182e090;
 
 class GetShopInbox extends \MarketingApplication implements \Application {
 
+    var $admins;
+    var $isCompletedEmails;
+    
     public function getDescription() {
         
     }
+    
+    public function getAllTypes() {
+        $types = array();
+        $types[0] = "Undefined";
+        $types[1] = "Support";
+        $types[2] = "Bug";
+        $types[3] = "Feature";
+        $types[4] = "Meeting";
+        return $types;
+    }
 
+    public function fetchemails() {
+        $this->getApi()->getGmailApiManager()->fetchAllMessages();
+    }
+    
     public function getName() {
         return "GetShopInbox";
     }
 
+    public function markEmailAsCompleted() {
+        $this->getApi()->getGmailApiManager()->updateTimeSpentOnMessage($_POST['data']['msgid'], 0, true);
+    }
+    
+    public function changeTypeOnMessage() {
+        $this->getApi()->getGmailApiManager()->changeTypeOnMessage($_POST['data']['msgid'], $_POST['data']['type']);
+    }
+    
     public function render() {
         echo "<div class='leftmenu'>";
         $this->includefile("leftmenu");
@@ -19,19 +44,49 @@ class GetShopInbox extends \MarketingApplication implements \Application {
 
         echo "<div class='workarea'>";
         $this->includefile("topmenu");
+        echo "<div class='emaillistarea'>";
+        echo "<h1>Todo</h1>";
+        $this->isCompletedEmails = false;
         $this->includefile("emails");
+        echo "</div>";
+        if(!$this->isUnassignedView()) {
+            echo "<div class='emaillistarea'>";
+            echo "<h1>Completed</h1>";
+            $this->isCompletedEmails = true;
+            $this->includefile("emails");
+            echo "</div>";
+        }
         echo "</div>";
     }
 
+    public function isCompletedEmails() {
+        return $this->isCompletedEmails;
+    }
+    
+    public function getSelectedType() {
+        if(isset($_SESSION['selectetypeinbox'])) {
+            return $_SESSION['selectetypeinbox'];
+        }
+        return -1;
+    }
+    
+    public function changeSelectedType() {
+        $_SESSION['selectetypeinbox'] = $_POST['data']['typeid'];
+    }
+    
     /**
      * @return \core_googleapi_GmailMessage[]
      */
     public function getEmails() {
-        if (isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view']) && $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view'] == "unassigned") {
-            return $this->getApi()->getGmailApiManager()->getAllUnassignedMessages();
-        } else {
-            return $this->getApi()->getGmailApiManager()->getMyUnsolvedMessages();
+        $filter = new \core_googleapi_GmailMessageFilter();
+        $filter->type = $this->getSelectedType();
+        $filter->completed = $this->isCompletedEmails();
+        
+        if (!$this->isUnassignedView()) {
+            $filter->userId = $this->getApi()->getUserManager()->getLoggedOnUser()->id;
         }
+        
+        return $this->getApi()->getGmailApiManager()->getEmails($filter);
     }
 
     public function doConnection() {
@@ -60,13 +115,22 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $this->includefile("mailview");
         die();
     }
+    
+    public function updateTimeSpent() {
+        $msgId = $_POST['data']['msgid'];
+        $timeSpent = $_POST['data']['time'];
+        $msg = $this->getApi()->getGmailApiManager()->getMessageLight($msgId);
+        $this->getApi()->getGmailApiManager()->updateTimeSpentOnMessage($msgId, $timeSpent, $msg->completed);
+    }
 
     public function sendReply() {
         $lightMsg = $this->getApi()->getGmailApiManager()->getMessageLight($_POST['data']['msgid']);
         $response = $_POST['data']['content'];
+        $timeSpent = $_POST['data']['timespent'];
         $response .= "On ".date('d.m.Y H:i', strtotime($lightMsg->date)).", ".htmlentities($lightMsg->from)." wrote:";
         $response .= "<div style='border-left: solid 2px #DDD; padding-left: 20px; '>".$this->getContent($lightMsg)."</div>";
         $this->getApi()->getGmailApiManager()->replyEmail($lightMsg->id, $response);
+        $this->getApi()->getGmailApiManager()->updateTimeSpentOnMessage($lightMsg->id, $timeSpent, true);
     }
 
     public function getContent($lightMsg) {
@@ -104,6 +168,24 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         }
         
         return $content;
+    }
+
+    public function setCurrentEmail($email) {
+        $this->currentEmail = $email;
+    }
+    public function getCurrentEmail() {
+        return $this->currentEmail;
+    }
+
+    public function getAdmins() {
+        if(!$this->admins) {
+            $this->admins = $this->getApi()->getUserManager()->getUsersByType(100);
+        }
+        return $this->admins;
+    }
+
+    public function isUnassignedView() {
+        return isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view']) && $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view'] == "unassigned";
     }
 
 }

@@ -566,7 +566,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             if(added > 0) {
                 String text = item.getName();
-                String translation = item.getTranslationsByKey("descriptionWeb", curLang);
+                String translation = item.getTranslationsByKey("name", curLang);
                 if(translation != null && !translation.isEmpty()) {
                     text = translation;
                 }
@@ -1401,7 +1401,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         .collect(Collectors.toList());
                 
                 AddonItem addonItem = new AddonItem();
-//                addonItem.setAddon(groupAddon);
+                addonItem.setAddon(groupAddon);
                 
                 PmsBookingAddonItem originalAddon = pmsManager.getBaseAddon(groupAddon.productId);
 

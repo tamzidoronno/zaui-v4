@@ -33,7 +33,13 @@ public interface IGmailApiManager {
     public List<GmailMessageLight> getMyUnsolvedMessages();
     
     @Administrator
+    public List<GmailMessageLight> getEmails(GmailMessageFilter filter);
+    
+    @Administrator
     public void assignMessageToUser(String messageId, String userId);
+    
+    @Administrator
+    public void changeTypeOnMessage(String messageId, Integer type);
     
     @Administrator
     public void reScanCompanyConnection();
@@ -58,4 +64,7 @@ public interface IGmailApiManager {
     
     @Administrator
     public void replyEmail(String msgId, String content);
+    
+    @Administrator
+    public void updateTimeSpentOnMessage(String msgId, Integer timeSpent, boolean completed);
 }

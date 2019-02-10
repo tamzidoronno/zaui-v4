@@ -1,11 +1,12 @@
+<span class="shop_button" gsclick="fetchemails" style="float:right">Fetch email</span>
 <?
 /* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
 $admins = $this->getApi()->getUserManager()->getUsersByType(100);
+$type = $this->getSelectedType();
 ?>
 
 <div class='topmenu'>
-    
-    <div class='selected_checkbox_options'>
+    <div class='selected_checkbox_options' style="display:inline-block; width:80px;">
         <div class='gs_shop_small_icon fa fa-arrow-circle-o-down checkboxaction'></div>
         <div class='menu'>
             <div class='entry'>Assign to:
@@ -20,4 +21,15 @@ $admins = $this->getApi()->getUserManager()->getUsersByType(100);
             <div class='entry ignore'>Archive Message</div>
         </div>
     </div>
+    
+    <span class="shop_button typeselectionbtn <?php if($type == -1) { echo "selected"; } ?>" typeid="-1" gsclick="changeSelectedType">All</span>
+    <?php
+    $types = $this->getAllTypes();
+    foreach($types as $typeId => $type) {
+        ?>
+    <span class="shop_button typeselectionbtn <?php if($this->getSelectedType() == $typeId) { echo "selected"; } ?>" typeid="<?php echo $typeId; ?>" gsclick="changeSelectedType"><?php echo $type; ?></span>
+        <?php
+    }
+    ?>
 </div>
+

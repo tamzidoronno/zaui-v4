@@ -7,9 +7,23 @@ $lightMsg = $this->getApi()->getGmailApiManager()->getMessageLight($msgId);
 
 <div class='subject'>
     <? echo $lightMsg->subject; ?>
+    <span style="position:Absolute;right:16px; top:4px;">
+        <span class="shop_button" onclick='$(".mailview").scrollTop(10000)'>Reply</span>
+        <span class="shop_button markCompleted" msgid='<? echo $msgId; ?>'>Mark completed</span>
+        <span class="shop_button assignaction">Assign</span>
+
+        <div class='selected_checkbox_options'>
+        <?php
+        $this->setCurrentEmail($lightMsg);
+        $this->includefile("emailassignmentmenu");
+        ?>
+        </div>
+
+    </span>
 </div>
 
 <?
+$parts = array();
 $content = $this->getContent($lightMsg);
 echo "<div class='innermailview'>".$content."</div>";
 ?>
@@ -54,8 +68,8 @@ echo "<div class='innermailview'>".$content."</div>";
 </div>
 
 <div class='buttons' style='padding: 20px;'>
+    <input type='text' class='gsniceinput1 timespentcounter' style='width:60px' value='5' onclick='$(this).val("")'>
     <div class='shop_button sendreply' msgid='<? echo $msgId; ?>'>Reply</div>
-    <div class='shop_button'>Cancel</div>
 </div>
 
 <script>

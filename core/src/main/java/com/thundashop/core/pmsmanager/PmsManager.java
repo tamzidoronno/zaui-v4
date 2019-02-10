@@ -4594,7 +4594,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 pmsNotificationManager.setPrefixToSendTo(prefix);
                 phoneToSend = phoneNumber;
                 prefixToSend = prefix;
-                doNotification("room_added_to_arx", booking, room);
+                if(pmsNotificationManager.hasResendCode()) {
+                    doNotification("room_resendcode", booking, room);
+                } else {
+                    doNotification("room_added_to_arx", booking, room);
+                }
             }
         }
     }
@@ -5447,7 +5451,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             createUserForBooking(booking);
             addDefaultAddons(booking);
-            replaceSelectedGuestAddons(booking);
             
             checkIfBookedBySubAccount(booking);
             if (userManager.getUserById(booking.userId) == null || userManager.getUserById(booking.userId).suspended) {
@@ -8524,6 +8527,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         
                         removeProductFromRoomInternal(room.pmsBookingRoomId, item.productId, true);
+                        if(item.isGroupAddon()) {
+                            for(String prodId : item.groupAddonSettings.groupProductIds) {
+                                removeProductFromRoomInternal(room.pmsBookingRoomId, prodId, true);
+                            }
+                        }
                         addProductToRoom(item.productId, room.pmsBookingRoomId, size, true);
                     }
                 }
@@ -9234,6 +9242,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(doNotAddIfExisting) {
                 List<PmsBookingAddonItem> avoidAddingAddon = new ArrayList();
                 for(PmsBookingAddonItem addon : addons) {
+                    if(addon.isGroupAddon()) {
+                        for(String prodid : addon.groupAddonSettings.groupProductIds) {
+                            //Remove if subproduct in groupaddon is located.
+                            PmsBookingAddonItem existingAddon = room.hasAddon(prodid, addon.date);
+                            if(existingAddon != null) {
+                                avoidAddingAddon.add(addon);
+                                break;
+                            }
+                        }
+                    }
+                    
                     PmsBookingAddonItem existingAddon = room.hasAddon(addon.productId, addon.date);
                     if(existingAddon != null) {
                         avoidAddingAddon.add(addon);
@@ -9241,8 +9260,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 addons.removeAll(avoidAddingAddon);
             }
-            
             room.addons.addAll(addons);
+            swapGroupAddonWithExistingAddon(room);
         }
         saveBooking(booking);    
     }
@@ -9391,25 +9410,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public String getDefaultCountryCode() {
         return storeManager.getcountryCode();
-    }
-    
-    private void replaceSelectedGuestAddons(PmsBooking booking) {
-        for (PmsBookingRooms room : booking.rooms) {
-            for (PmsGuests guest : room.guests) {
-                if (guest.orderedOption == null) {
-                    continue;
-                }
-                
-                for (String mainProductId : guest.orderedOption.keySet()) {
-                    String productId = guest.orderedOption.get(mainProductId);
-                    room.addons.removeIf(o -> o.productId.equals(mainProductId));
-                    List<PmsBookingAddonItem> addonsToAdd = createAddonsThatCanBeAddedToRoom(productId, room.pmsBookingRoomId);
-                    room.addons.addAll(addonsToAdd);
-                }
-            }
-        }
-        
-        saveBooking(booking);
     }
     
     @Override
@@ -9657,6 +9657,37 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         roomIds.add(remove.pmsBookingRoomId);
         
         pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
+    }
+
+    private void swapGroupAddonWithExistingAddon(PmsBookingRooms room) {
+        List<PmsBookingAddonItem> remove = new ArrayList();
+        List<PmsBookingAddonItem> add = new ArrayList();
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.isGroupAddon()) {
+                boolean  found = false;
+                for(String prodId : item.groupAddonSettings.groupProductIds) {
+                    if(room.hasAddonOfProduct(prodId)) {
+                        PmsBookingAddonItem replaceaddon = createAddonToAdd(getConfigurationSecure().getAddonFromProductId(prodId), item.date, room);
+                        add.add(replaceaddon);
+                        remove.add(item);
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    //default to what has been registered when booked
+                    for(PmsGuests g : room.guests) {
+                        if(g.orderedOption != null && g.orderedOption.containsKey(item.productId)) {
+                            PmsBookingAddonItem replaceaddon = createAddonToAdd(getConfigurationSecure().getAddonFromProductId(g.orderedOption.get(item.productId)), item.date, room);
+                            add.add(replaceaddon);
+                            remove.add(item);
+                            found = true;
+                        }
+                    }
+                }
+            }
+        }
+        room.addons.removeAll(remove);
+        room.addons.addAll(add);
     }
 
 }

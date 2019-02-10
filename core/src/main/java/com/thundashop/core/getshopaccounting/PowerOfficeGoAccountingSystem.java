@@ -105,7 +105,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 }
             }
         }
-        
+        boolean stopNow = false;
         for(Order order : orders) {
             if(order.cart == null) {
                 continue;
@@ -114,11 +114,16 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 Product product = productManager.getProduct(item.getProduct().id);
                 if(product == null) { product = productManager.getDeletedProduct(item.getProduct().id); }
                 if(product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
+                    logPrint("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
                     addToLog("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
-                    return null;
+                    stopNow = true;
+                } else {
+                    products.put(product.id, product);
                 }
-                products.put(product.id, product);
             }
+        }
+        if(stopNow) {
+            return null;
         }
         
         for(User user : users.values()) {

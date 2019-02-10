@@ -26,6 +26,13 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
         this.overrideName = overrideName;
     }
 
+    boolean isGroupAddon() {
+        if(groupAddonSettings != null && groupAddonSettings.groupProductIds != null && !groupAddonSettings.groupProductIds.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     public static class AddonTypes {
         public static Integer BREAKFAST = 1;
         public static Integer PARKING = 2;

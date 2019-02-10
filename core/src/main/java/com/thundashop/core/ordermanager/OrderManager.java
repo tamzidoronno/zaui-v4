@@ -2,6 +2,7 @@ package com.thundashop.core.ordermanager;
 
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionScope;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.applications.GetShopApplicationPool;
@@ -55,6 +56,8 @@ import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
@@ -172,6 +175,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private DepartmentManager departmentManager;
 
+    @Autowired
+    private GetShopSessionScope getShopSpringScope; 
+    
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
         Order order = getOrder(orderId);
@@ -200,6 +206,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private Order createCreatditOrder(String orderId, String newReference) throws ErrorException {
         Order order = getOrderSecure(orderId);
+
+        if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
+            addCreditNotesToBookings(order.createdBasedOnOrderIds);
+        }
+        
         Order credited = order.jsonClone();
         for(CartItem item : credited.cart.getItems()) {
             item.setCount(item.getCount() * -1);
@@ -220,11 +231,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (!newReference.isEmpty() && order.cart != null) {
             credited.cart.reference = newReference;
         }
-        
-        if (!order.createdBasedOnOrderIds.isEmpty()) {
-            resetMergedOrders(order.id);
-        }
-        
+
         saveOrder(credited);
         saveOrder(order);
         
@@ -2355,6 +2362,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order.closed)
             return;
         
+        if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
+            addCreditNotesToBookings(order.createdBasedOnOrderIds);
+        }
+        
         order.cart.clear();
         saveObject(order);
     }
@@ -3216,7 +3227,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .count() > 0;
     }
 
-    private List<Order> getCreditNotesForOrder(String id) {
+    public List<Order> getCreditNotesForOrder(String id) {
         return orders.values()
                 .stream()
                 .filter(o -> o.parentOrder != null && o.parentOrder.equals(id))
@@ -3624,6 +3635,32 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(save) {
                 saveOrder(order);
             }
+        }
+    }
+
+    private void addCreditNotesToBookings(List<String> createdBasedOnOrderIds) {
+        
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            
+            createdBasedOnOrderIds.stream()
+                    .forEach(orderId -> {
+                        PmsBooking booking = pmsManager.getBookingWithOrderId(orderId);
+                        
+                        if (booking == null) {
+                            return;
+                        }
+                        
+                        Order order = getOrder(orderId);
+                        
+                        for (Order creditNote : getCreditNotesForOrder(orderId)) {
+                            System.out.println("Adding: " + creditNote.id);
+                            pmsManager.addOrderToBooking(booking, creditNote.id);
+                        }
+                    });
+            
         }
     }
 }

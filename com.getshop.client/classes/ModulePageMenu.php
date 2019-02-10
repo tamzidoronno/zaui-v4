@@ -76,6 +76,7 @@ class ModulePageMenu {
         <div class='gsnumpad'>
             <div class='innernumpad'>
                 <div class='numpadtitle'> TITLE </div>
+                <div class='oldvalue'> Old value: <span></span></div>
                 <div class='numpadvalue'></div>
                 <div class='gs_numpad_element' value='CANCEL'>X</div>
                 <div class='gs_numpad_element' value='3'>3</div>
@@ -92,6 +93,7 @@ class ModulePageMenu {
                 <div class='gs_numpad_element h2' value='OK'>OK</div>
                 <div class='gs_numpad_element' value='.'>,</div>
                 <div class='gs_numpad_element' value='0'>0</div>
+                <input type='text' class='numpadinput' style='display: none;'/>
             </div>
         </div>
         <?

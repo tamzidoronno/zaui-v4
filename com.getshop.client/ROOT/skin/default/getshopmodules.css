@@ -418,8 +418,16 @@ body {
     font-size: 20px;
     padding-top: 20px;
     padding-bottom: 0px;
-    
 }
+
+.gsnumpad .innernumpad .oldvalue {
+    color: #FFF;
+    text-align: center;
+    font-size: 20px;
+    padding-top: 20px;
+    padding-bottom: 0px;
+}
+
 .gsnumpad .innernumpad {
     width: 100%;
     max-width: 400px;

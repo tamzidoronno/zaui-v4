@@ -54,7 +54,7 @@ app.EcommerceOrderList = {
                 "id" : orderid
             });
             thundashop.Ajax.postWithCallBack(event, function() {
-                row.remove();
+                thundashop.framework.reloadOverLayType1or2();
             });
         }
     },

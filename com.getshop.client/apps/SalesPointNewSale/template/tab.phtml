@@ -25,8 +25,8 @@ if (!$tab) {
 }
 ?>
 
-<div class='header'> 
-    <h2><? echo $this->__f("Tab").": ".$tab->name; ?></h2>
+<div class='header'>
+    <? echo $this->__f("Tab").": ".$tab->name; ?>
 </div>
 
 <div class='tabcreateinfo'>
@@ -41,7 +41,7 @@ if (!$tab) {
 if (count($taxesToSelectBetween) || $tab->tabTaxGroupId) {
     ?>
     <div class='header2'> 
-        <h2><? echo $this->__f("Change to different tax rate"); ?></h2>
+        <? echo $this->__f("Change to different tax rate"); ?>
     </div>
 
     <div class='taxrates'>
@@ -64,7 +64,7 @@ if (count($taxesToSelectBetween) || $tab->tabTaxGroupId) {
 }
 ?>
 <div class='header2'> 
-    <h2><? echo $this->__f("Added to tab"); ?></h2>
+    <? echo $this->__f("Added to tab"); ?>
 </div>
 <?
 $cartItems = $tab->cartItems;

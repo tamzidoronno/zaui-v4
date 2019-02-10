@@ -30,6 +30,7 @@ public class GetShopSessionScope implements Scope {
     private StorePool storePool = null;
     private Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
     private Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
+    private Map<Long, String> originalSessionBeanName = new ConcurrentHashMap<Long, String>();
     private Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
     private Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
     private Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
@@ -48,8 +49,8 @@ public class GetShopSessionScope implements Scope {
         
         String oldMultiLevelName = threadSessionBeanNames.get(threadId);
         
-        if (oldMultiLevelName != null && !oldMultiLevelName.isEmpty() && !oldMultiLevelName.equals(multiLevelName)) {
-            throw new RuntimeException("Its not allowed to use multiple multilevel names within one request. If you have a solution for this, please provide it :D");
+        if (oldMultiLevelName != null && !oldMultiLevelName.isEmpty() && !oldMultiLevelName.equals(multiLevelName) && originalSessionBeanName.get(threadId) != null) {
+            throw new RuntimeException("Its not possible to get multilevel names beans when you are already executing from one");
         }
         
         threadSessionBeanNames.put(threadId, multiLevelName);
@@ -197,6 +198,12 @@ public class GetShopSessionScope implements Scope {
         
         if (multiLevelName != null) {
             threadSessionBeanNames.put(threadId, multiLevelName);
+        }
+        
+        if (multiLevelName == null) {
+            originalSessionBeanName.remove(threadId);
+        } else {
+            originalSessionBeanName.put(threadId, multiLevelName);
         }
     }
 

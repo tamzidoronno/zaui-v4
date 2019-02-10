@@ -9621,17 +9621,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return contract;
     }
 
+    /**
+     * If there are samlefaktura orders conencted to the booking, 
+     * this will return a full set of orders 
+     * that has been created based on the samlefakturas.
+     * 
+     * @param pmsBookingId
+     * @return 
+     */
     @Override
     public List<String> getExtraOrderIds(String pmsBookingId) {
         PmsBooking booking = getBooking(pmsBookingId);
         
-        return booking.orderIds.stream()
+        List<String> orderIds = booking.orderIds.stream()
                 .map(orderId -> orderManager.getOrder(orderId))
                 .filter(o -> o.isSamleFaktura())
-                .map(o -> orderManager.getMainInvoice(o.id))
+                .map(o ->  orderManager.getMainInvoice(o.id))
                 .distinct()
+                .filter(o -> o != null && !o.isNullOrder())
                 .map(o -> o.id)
                 .collect(Collectors.toList());
+        
+        new ArrayList<String>(orderIds).stream()
+                .forEach(id -> {
+                    List<String> creditNotes = orderManager
+                            .getCreditNotesForOrder(id)
+                            .stream()
+                            .map(o -> o.id)
+                            .collect(Collectors.toList());
+                    
+                    orderIds.addAll(creditNotes);
+                });
+        
+        return orderIds;
     }
     
     @Override

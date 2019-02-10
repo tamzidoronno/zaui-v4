@@ -591,4 +591,15 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsBooking> getBookingsFromGroupInvoicing(String orderId);
+    
+    /**
+     * Returns true if there are anything in
+     * the order that related to the specified room id.
+     * 
+     * @param pmsBookingRoomsId
+     * @param orderId
+     * @return 
+     */
+    @Administrator
+    public boolean doesOrderCorrolateToRoom(String pmsBookingRoomsId, String orderId);
 }

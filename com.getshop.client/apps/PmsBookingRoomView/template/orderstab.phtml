@@ -11,6 +11,7 @@ $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $booking = $this->getBookingEngineBooking();
 $user = $this->getUserForBooking();
+$showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'];
 
 $totalOnRoom = $pmsSelectedRoom->totalCost;
 $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->pmsBookingRoomId, true);
@@ -53,7 +54,17 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     app.PmsBookingRoomView.activateSelectedTabSubOrders('<? echo $pmsSelectedRoom->pmsBookingRoomId; ?>');
 </script>
 <?php if($hasPaymentMethods) { ?>
-    <div class='insideheader'><? echo $this->__f("Payment history"); ?></div>
+<div class='insideheader'><? echo $this->__f("Payment history"); ?> 
+    <span class="showcredithistorybutton" gsclick='toggleCreditHistory'>
+        <?
+        if ($showCredittedHistory) {
+            echo $this->__f("Hide credit history");
+        } else {
+            echo $this->__f("Show credit history");
+        }
+        ?>
+    </span>
+</div>
     <?
     if (!count($this->pmsBooking->orderIds)) {
         echo "No orders has been created yet, create an order by pressing the Start payment process button.";

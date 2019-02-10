@@ -9681,6 +9681,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
     }
 
+    @Override
+    public boolean doesOrderCorrolateToRoom(String pmsBookingRoomsId, String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        
+        return order.getCartItems().stream()
+                .filter(o -> o.containsRoom(pmsBookingRoomsId))
+                .count() > 0;
+    }
+
     private void swapGroupAddonWithExistingAddon(PmsBookingRooms room) {
         List<PmsBookingAddonItem> remove = new ArrayList();
         List<PmsBookingAddonItem> add = new ArrayList();

@@ -543,10 +543,4 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
         saveObject(msg);
     }
 
-    @Override
-    public void updateTimeSpenOnMessage(String messageId, Integer time) {
-        GmailMessageLight msg = getMessageLight(messageId);
-        msg.timeSpent = time;
-        saveObject(msg);
-    }
 }

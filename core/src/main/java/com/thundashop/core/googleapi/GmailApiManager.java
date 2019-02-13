@@ -542,5 +542,5 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
         msg.type = type;
         saveObject(msg);
     }
-
+  
 }

@@ -1080,8 +1080,7 @@ function getshop_gotopayment(e) {
                         if(res.continuetopayment == 1) {
                             window.location.href = getshop_endpoint + "/?page=cart&payorder=" + res.orderid;
                         } else {
-                            $('.gslbookingBody').hide();
-                            $('.successcompleted').show();
+                            window.location.href = getshop_endpoint + "/?page=payment_success";
                         }
                     }
                 });

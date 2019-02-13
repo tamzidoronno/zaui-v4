@@ -1591,8 +1591,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         exp.tntRouteId = route.id;
         exp.PODBarcodeId = destination.podBarcode;
         
-        if (!destination.companyIds.isEmpty()) {
-            exp.CustomerNumber = destination.companyIds.get(0);
+        if (oldTasks.collectionTasks != null && !oldTasks.collectionTasks.isEmpty()) {
+            exp.CustomerNumber = oldTasks.collectionTasks.get(0).customerNumber;
         }
 
         exp.routeId = route.originalId;

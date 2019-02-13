@@ -902,7 +902,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     private boolean hasUnsettledAmount(PmsBookingRooms pmsSelectedRoom, String pmsBookingMultilevelName) {
         PmsInvoiceManager invoiceManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsInvoiceManager.class);
         
-        double totalOnRoom = Math.round(pmsSelectedRoom.totalCost);
+        double totalOnRoom = pmsSelectedRoom.totalCost;
         double totalOrdersRoom = invoiceManager.getTotalOnOrdersForRoom(pmsSelectedRoom.pmsBookingRoomId, true);
         double diff = totalOnRoom - totalOrdersRoom;
         

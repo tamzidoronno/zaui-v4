@@ -11,28 +11,16 @@
     gsisdevmode = false;
     $ = jQuery;
     jQuery(function ($) { 
-        $.getScript("https://20356.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://20440.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
-                    { 
-                    "endpoint": "https://20356.getshop.com/",
-                    "jsendpoint": "https://20356.getshop.com/",
+                { 
+                    "endpoint": "https://20440.getshop.com/",
+                    "jsendpoint": "https://20440.getshop.com/",
                     "domain" : "default",
-                    "language" : "no"
-//                    "success" : function(res) { //For special callbacks.
-//                            console.log("booking completed");
-//                            console.log(res);
-//                        },
-//                        "failure" : function(res) {
-//                            console.log("booking failed");
-//                            console.log(res);
-//                        }
-                    }
+                    "language" : "en"
+                }
             );
         });
     });
 </script>
 </body>
-
-<style>
-    .product_availablerooms { display:none !important;  }
-</style>

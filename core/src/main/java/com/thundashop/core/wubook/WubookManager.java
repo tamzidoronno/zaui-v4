@@ -880,8 +880,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
                 } else {
                     for(PmsBookingRooms room : newbooking.getActiveRooms()) {
-                        room.deletedByChannelManagerForModification = true;
-                        pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
                         if(room.isStarted()) {
                             newbooking.wubookModifiedResId.add(booking.reservationCode);
                             pmsManager.logEntry("Failed to update from channel manager, stay already started.", newbooking.id, null);
@@ -889,6 +887,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                             messageManager.sendErrorNotification("Failed to update already started stay from channel manager.", null);
                             return "";
                         }
+                        room.deletedByChannelManagerForModification = true;
+                        pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
                     }
                     pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
                     isUpdate = true;

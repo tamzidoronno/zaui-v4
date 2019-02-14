@@ -4,15 +4,15 @@ namespace ns_3e0e8a59_bb0c_467c_8198_2eceaa1fcc60;
 class IntrumInkasso extends \PaymentApplication implements \Application {
     /* @var $order core_ordermanager_data_Order */
     var $order;
-    var $intriumClientNumber = "12345";
-    var $intriumDepartment = "01";
+    var $intriumClientNumber = "29244";
+    var $intriumDepartment = "0";
     
     public function getDescription() {
-        return "Get a deal with Intrum and send the invoices to the debt collector with a click of a button.";
+        return "Get a deal with Lowell and send the invoices to the debt collector with a click of a button.";
     }
 
     public function getName() {
-        return "IntrumInkasso";
+        return "LowellInkasso";
     }
 
     public function render() {
@@ -44,9 +44,9 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
         $client = $this->createClient();
         $debtor = $this->createDeptor();
         $invoice = $this->createInvoice();
-        
+        $time = time();
         $totalLines = $innledning . "\r\n" . $client . "\r\n" . $debtor . "\r\n" . $invoice. "\r\n99";
-        echo $totalLines;
+        $this->transferToSftp($totalLines, "transfertest_" . $time .".txt");
         return true;
     }
 
@@ -73,18 +73,40 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
     }
 
     public function createClient() {
+        $instances = $this->getApi()->getStoreApplicationPool()->getApplication("3e0e8a59-bb0c-467c-8198-2eceaa1fcc60");
+        $this->intriumClientNumber = $instances->settings->customernumber->value;
+        $this->intriumDepartment = $instances->settings->department->value;
+        
+        $user = $this->getApi()->getUserManager()->getUserById($this->order->userId);
+        $countrycode = $user->address->countrycode;
+        if(!$countrycode) {
+            $countrycode = "NO";
+        }
+
+        
+        
+        $user = $this->getApi()->getUserManager()->getUserById($this->order->userId);
         $line = "01";
+        
         $line .= $this->appendSpaces($this->intriumClientNumber, 3, 7);
-        $line .= $this->appendSpaces($this->intriumDepartment, 8, 10);
-        $line .= $this->appendSpaces($this->order->incrementOrderId, 11, 40);
+        if(stristr($countrycode, "no")) {
+            $line .= $this->appendSpaces("1", 8, 10);
+        } else {
+            $line .= $this->appendSpaces("2", 8, 10);
+        }
+        $line .= $this->appendSpaces($user->customerId, 11, 40);
         return $line;
     }
 
     public function createDeptor() {
         $user = $this->getApi()->getUserManager()->getUserById($this->order->userId);
+        $countrycode = $user->address->countrycode;
+        if(!$countrycode) {
+            $countrycode = "NO";
+        }
         
         $line = "02";
-        $line .= $this->appendSpaces($user->customerId, 3, 32);
+        $line .= $this->appendSpaces("", 3, 32);
         $line .= $this->appendSpaces($user->fullName, 33, 82);
         if(!$user->address || !$user->address || !$user->address->postCode || !$user->address->city) {
             echo "Address is incorrect, please correct the address, city, address, postcode needs to be filled in correctly.";
@@ -93,12 +115,14 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
         $line .= $this->appendSpaces($user->address->address, 83, 112);
         $line .= $this->appendSpaces($user->address->address2, 113, 142);
         $line .= $this->appendSpaces("", 143, 202); //not in use
-        $line .= $this->appendSpaces($user->address->postCode, 203, 207); 
-        $countrycode = $user->address->countrycode;
-        if(!$countrycode) {
-            $countrycode = "NO";
+        
+        if(stristr($countrycode, "no")) {
+            $line .= $this->appendSpaces($user->address->postCode, 203, 207);
+            $line .= $this->appendSpaces($user->address->city, 208, 227); 
+        } else {
+            $line .= $this->appendSpaces("", 203, 207);
+            $line .= $this->appendSpaces($user->address->postCode . " " . $user->address->city, 208, 227); 
         }
-        $line .= $this->appendSpaces($user->address->city, 208, 227); 
         $line .= $this->appendSpaces($countrycode, 228, 229); 
         
         
@@ -111,7 +135,7 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
             $orgid = $user->birthDay;
             $length = 11;
         }
-        if(!$orgid || !ctype_digit($orgid) || strlen($orgid) != $length) {
+        if(stristr($countrycode, "no") && (!$orgid || !ctype_digit($orgid) || strlen($orgid) != $length)) {
             echo "Invalid organisation number or personal number: " . $orgid . " " . strlen($orgid) . " of " . $length . " in total length.";
             exit(0);
         }
@@ -149,6 +173,31 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
         $line .= $this->appendSpaces("", 198,388);
         $line .= $this->appendSpaces("", 389,396);
         return $line;
+    }
+
+    public function transferToSftp($totalLines, $csv_filename) {
+        
+        $strServer = "sftp-test.lowell.no";
+        $strServerPort = "22";
+        $strServerUsername = "201857";
+        $strServerPassword = "9lLR2Z3evWGRe5aF9xrC";
+
+        //connect to server
+        $resConnection = ssh2_connect($strServer, $strServerPort);
+
+        if(ssh2_auth_password($resConnection, $strServerUsername, $strServerPassword)){
+            //Initialize SFTP subsystem
+
+            $resSFTP = ssh2_sftp($resConnection);    
+            $resFile = fopen('ssh2.sftp://' . intval($resSFTP) ."/in/".$csv_filename, 'w');
+            fwrite($resFile, $totalLines);
+            fclose($resFile);                   
+            echo "sucessfully transferred";
+
+        }else{
+            echo "Unable to authenticate on server";
+        }
+                     
     }
 
 }

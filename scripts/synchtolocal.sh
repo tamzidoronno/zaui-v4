@@ -22,7 +22,7 @@ if [ $serverQuestion = "3" ]; then
 elif [ $serverQuestion = "4" ]; then
 	SERVER="138.201.203.177"
 elif [ $serverQuestion = "5" ]; then
-	SERVER="88.99.1.121"
+	SERVER="95.216.101.171"
 else 
 	echo "Invalid server setup";
 fi;

@@ -24,7 +24,7 @@ if [ $serverQuestion = "3" ]; then
 elif [ $serverQuestion = "4" ]; then
         SERVER="138.201.203.177"
 elif [ $serverQuestion = "5" ]; then
-        SERVER="88.99.1.121"
+        SERVER="95.216.101.171"
 else
         echo "Invalid server setup";
 fi;
@@ -97,12 +97,12 @@ rm -rf dump.tar.gz
 
 #transfer images
 echo -e " Syncing images";
-rsync -avz -e ssh naxa@10.0.4.32:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
+#rsync -avz -e ssh naxa@10.0.4.32:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
 
 echo -e " Done!"
 echo -e " Note: if you wish to run resin on port 80 run: "
 echo -e "   iptables -t nat -A OUTPUT -d localhost -p tcp --dport 80 -j REDIRECT --to-ports 8080";
 
 echo "Importing shared database"
-mongodump -o shareddump --host clients.getshop.com --port 27017 -u getshopadmin -p commondatabaseadministrator &> /dev/null
+mongodump -o shareddump --host 192.168.100.1 --port 27017 -u getshopadmin -p commondatabaseadministrator &> /dev/null
 mongorestore --port 27018 shareddump &> /dev/null

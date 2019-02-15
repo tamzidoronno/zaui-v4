@@ -216,7 +216,6 @@ public class WilhelmsenHouse implements AccountingInterface {
         
         
         BigDecimal total = order.getTotalExAmountRoundedTwoDecimals(2);
-        total = total.multiply(new BigDecimal(-1));
         
         DecimalFormat df = new DecimalFormat("#.##");    
         User user = managers.userManager.getUserById(order.userId);
@@ -292,6 +291,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             subLine.put(6, product.getAccountingAccount());
             subLine.put(7, product.sku);
             BigDecimal itemamount = item.getTotalExRoundedWithTwoDecimals(2);
+            itemamount = itemamount.multiply(new BigDecimal(-1));
             subLine.put(8, df.format(itemamount));
             subLine.put(9, "");
             subLine.put(10, "");

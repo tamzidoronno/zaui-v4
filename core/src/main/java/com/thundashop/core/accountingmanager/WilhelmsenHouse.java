@@ -216,6 +216,8 @@ public class WilhelmsenHouse implements AccountingInterface {
         
         
         BigDecimal total = order.getTotalExAmountRoundedTwoDecimals(2);
+        total = total.multiply(new BigDecimal(-1));
+        
         DecimalFormat df = new DecimalFormat("#.##");    
         User user = managers.userManager.getUserById(order.userId);
         String kid = order.kid;
@@ -242,7 +244,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         line.put(4, "");
         line.put(5, "");
         line.put(6, interimaccount);
-        line.put(7, "1");
+        line.put(7, "");
         line.put(8, df.format(total)+"");
         line.put(9, customerId+"");
         line.put(10, "");
@@ -302,7 +304,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             subLine.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
             subLine.put(18, "");
             subLine.put(19, "");
-            subLine.put(20, createLineText(item, order)); //Forfallsdato
+            subLine.put(20, "GetShop order: " + order.incrementOrderId); //Forfallsdato
             subLine.put(21, order.payment.readablePaymentType()); //Forfallsdato
             subLine.put(22, "");
             subLine.put(23, "");

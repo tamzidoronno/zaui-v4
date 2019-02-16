@@ -50,17 +50,19 @@ public class DirectorySyncUtils {
             User user = userManager.getUserById(booking.userId);
             if (user.companyObject != null) {
                 for (PmsBookingRooms room : booking.rooms) {
-                    if (room.guests.isEmpty())
+                    if (room.guests.isEmpty() || room.isDeleted())
                         continue;
                     
                     PmsGuests guest = room.guests.get(0);
                     BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                     
                     GetShopSystem system = systemManager.getSystem(room.pmsBookingRoomId);
-                    if (system == null) {
-                        system = new GetShopSystem();
-                        system.id = room.pmsBookingRoomId;
+                    if (system != null) {
+                        continue;
                     }
+                    
+                    system = new GetShopSystem();
+                    system.id = room.pmsBookingRoomId;
                     
                     system.activeFrom = room.date.start;
                     
@@ -74,6 +76,8 @@ public class DirectorySyncUtils {
                     system.productId = type.productId;
                     system.webAddresses = guest.name;
                     system.serverVpnIpAddress = "10.0.4.33";
+                    system.invoicedTo = room.invoicedTo;
+                    system.numberOfMonthsToInvoice = booking.periodesToCreateOrderOn == null ? 1 : booking.periodesToCreateOrderOn;
                     
                     Store store = storePool.getStoreByWebaddress(system.webAddresses);
                     if (store != null) {

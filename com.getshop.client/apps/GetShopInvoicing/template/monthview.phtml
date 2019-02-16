@@ -1,0 +1,46 @@
+<?
+/* @var $this ns_339af689_1617_4d67_ade9_ca26cf55bf44\GetShopInvoicing */
+$virtOrders = $this->getApi()->getDirectorManager()->createVirtualOrders();
+
+echo "<h2>Orders: ".count($virtOrders)."</h2>";
+$total = 0;
+$i = 0;
+
+foreach ($virtOrders as $virtOrder) {
+    $i++;
+    $odd = $i%2 == 0 ? "odd" : "even";
+    $user = $this->getApi()->getUserManager()->getUserById($virtOrder->userId);
+    $totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($virtOrder);
+    $total += $totalForOrder;
+    ?>
+    <div class="row <? echo $odd; ?>">
+        <div class="col col1 header"><? echo $user->fullName ?></div>
+        <div>
+            <? 
+            foreach ($virtOrder->cart->items as $item) {
+            ?>
+            <div class="innerrow">
+                <div class="col icol1"><? echo $item->product->name; ?></div>
+                <div class="col icol2"><? echo $item->product->description; ?></div>
+                <div class="col icol3"><? echo $item->count; ?></div>
+                <div class="col icol4"><? echo $item->product->price; ?></div>    
+                <div class="col icol5"><? echo round(($item->product->price * $item->count),2); ?></div>    
+            </div>
+            <?
+            }
+            ?>
+            
+            <div class="innerrow totalfororder">
+                <div class="col icol1">Total for order</div>
+                <div class="col icol2"></div>
+                <div class="col icol3"></div>
+                <div class="col icol4"></div>    
+                <div class="col icol5"><? echo round($totalForOrder,2); ?></div>    
+            </div>
+        </div>
+    </div>
+    <?
+}
+?>
+
+<h2> Sum: <? echo $total; ?></h2>

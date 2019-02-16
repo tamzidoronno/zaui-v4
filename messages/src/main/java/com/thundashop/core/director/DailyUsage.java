@@ -6,7 +6,12 @@
 package com.thundashop.core.director;
 
 import com.thundashop.core.common.DataCommon;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -21,6 +26,8 @@ public class DailyUsage extends DataCommon {
     public String systemId;
     public Date start;
     public Date end;
+    
+    private boolean hasBeenInvoiced = false;
 
     public boolean isOnDay(Date timeToGet) {
         long startL = start.getTime();
@@ -28,5 +35,34 @@ public class DailyUsage extends DataCommon {
         long check = timeToGet.getTime();
         
         return startL <= check && check < endL;
+    }
+
+    public boolean isForMonth(int month, int year) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        
+        int thisYear = cal.get(Calendar.YEAR);
+        int thisMonth = cal.get(Calendar.MONTH);
+        
+        return month == thisMonth && year == thisYear;
+    }
+    
+    public String getMonthAndYear() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        return cal.get(Calendar.YEAR)+" / "+String.format("%02d", (cal.get(Calendar.MONTH)+1));
+    }
+    
+    public boolean hasBeenInvoiced() {
+        try {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = dateFormatter.parse("2019-02-01 00:00:00");
+            
+            return start.before(date);
+        } catch (ParseException ex) {
+            Logger.getLogger(DailyUsage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+        return hasBeenInvoiced;
     }
 }

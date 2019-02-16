@@ -694,6 +694,11 @@ class PageFactory {
         $row->ignoreTopRow = true;
         $row->addColumn('f1706b4c-f779-4eb7-aec3-ee08f182e090', "40357190-7764-42d1-8436-72d34928a718");
         $this->pages['inbox'] = $page;
+        
+        $page = new \ModulePage("invoicing", "getshop");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn('339af689-1617-4d67-ade9-ca26cf55bf44', "40357190-7764-42d1-1436-72d34928a718");
+        $this->pages['invoicing'] = $page;
     }
-
 }

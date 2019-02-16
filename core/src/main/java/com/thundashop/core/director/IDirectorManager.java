@@ -8,7 +8,9 @@ package com.thundashop.core.director;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.ordermanager.data.Order;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -24,4 +26,10 @@ public interface IDirectorManager {
     
     @ForceAsync
     public Date getCreatedDate(String password);
+//    
+//    @Administrator
+//    public void createOrder(String companyId, int month, int year);
+    
+    @Administrator
+    public List<Order> createVirtualOrders();
 }

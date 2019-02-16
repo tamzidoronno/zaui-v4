@@ -16,7 +16,6 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
     }
 
     public function render() {
-  
         echo "<div class='workarea'>";
             $selectedCompany = $this->getSelectedCompany();
             if (!$selectedCompany) {
@@ -27,6 +26,10 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
         echo "</div>";
         
         $this->includefile("rightmenu");
+    }
+    
+    public function triggerTest() {
+        $this->getApi()->getDirectorManager()->createOrder($this->getSelectedCompany()->id, 11, 2018);
     }
     
     public function fetchMessages() {
@@ -60,6 +63,7 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
         $system->monthlyPrice = $_POST['data']['monthlyPrice'];
         $system->activeFrom = $_POST['data']['activeFrom'] ? $this->convertToJavaDate(strtotime($_POST['data']['activeFrom'])) : null;
         $system->activeTo = $_POST['data']['activeTo'] ? $this->convertToJavaDate(strtotime($_POST['data']['activeTo'])) : null;
+        $system->numberOfMonthsToInvoice = $_POST['data']['numberOfMonthsToInvoice'];
         $this->getApi()->getSystemManager()->saveSystem($system);
     }
     

@@ -2,9 +2,7 @@ package com.thundashop.core.system;
 
 
 import com.thundashop.core.common.DataCommon;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -28,4 +26,26 @@ public class GetShopSystem extends DataCommon {
     
     public double monthlyPrice = 0;
     public String productId = "";
+    
+    /**
+     * This represent the date where the system 
+     * has been invoiced to.
+     */
+    public Date invoicedTo;
+    
+    /**
+     * When the invoicedTo has passed, how many months should be 
+     * craeted new orders for.
+     */
+    public int numberOfMonthsToInvoice = 1;
+
+    public boolean isFinalInvoiced() {
+        if (activeTo == null)
+            return false;
+        
+        if (invoicedTo == null)
+            return false;
+        
+        return activeTo.after(invoicedTo) || invoicedTo.after(activeTo);
+    }
 }

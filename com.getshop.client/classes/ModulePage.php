@@ -393,6 +393,7 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Suppliers", "suppliers", "fa-truck");
         $menu->entries[] = new ModulePageMenuItem("Inventory", "inventory", "gsicon-calculator");
         $menu->entries[] = new ModulePageMenuItem("Support", "inventory", "fa-support");
+        $menu->entries[] = new ModulePageMenuItem("Invoicing", "invoicing", "fa-dollar");
         $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "gsicon-gs-gears");
         return $menu;
     }

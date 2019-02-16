@@ -1,0 +1,49 @@
+.GetShopInvoicing .row .col {
+    display: inline-block;
+}
+
+.GetShopInvoicing .row .col.col1 {
+    width: 300px;
+}
+
+.GetShopInvoicing .row {
+    padding: 20px;
+}
+
+.GetShopInvoicing .row .col.icol1 {
+    width: 200px;
+}
+
+.GetShopInvoicing .row .col.icol1:before {
+    content: ' - ';
+}
+
+.GetShopInvoicing .row .col.icol2 {
+    width: 400px;
+}
+
+.GetShopInvoicing .row .col.icol3 {
+    width: 50px;
+}
+
+.GetShopInvoicing .row .col.icol4 {
+    width: 80px;
+}
+
+.GetShopInvoicing .row .col.icol5 {
+    text-align: right;
+    width: 100px;
+}
+
+.GetShopInvoicing .row .col.header {
+    font-weight: bold;
+}
+
+.GetShopInvoicing .innerrow.totalfororder {
+    border-top: solid 1px #DDD;
+    font-style: italic;
+}
+
+.GetShopInvoicing .row.odd {
+    background-color: #EEE;
+}

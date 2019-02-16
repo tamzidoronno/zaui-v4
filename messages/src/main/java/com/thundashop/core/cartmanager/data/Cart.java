@@ -12,6 +12,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -318,5 +319,14 @@ public class Cart extends DataCommon {
 
     public void clearDisabledItems() {
         items.removeIf(i -> i.disabled);
+    }
+
+    public void sortByProducIds() {
+        Collections.sort(items, (CartItem o1, CartItem o2) -> {
+            if (o1.getProductId().equals(o2.getProductId()) && o1.getProduct().description != null && o2.getProduct().description != null) {
+                return o2.getProduct().description.compareTo(o1.getProduct().description);
+            }
+            return o1.getProductId().compareTo(o2.getProductId());
+        });
     }
 }

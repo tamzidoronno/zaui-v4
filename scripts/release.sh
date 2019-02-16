@@ -16,9 +16,9 @@ if [ $releaseAnswer = "1" ]; then
 		echo "Releasing";
 		ssh naxa@jenkins.getshop.com '/home/naxa/scripts/release.sh'
 	elif [ $serverQuestion = "4" ]; then
-		ssh naxa@jenkins.getshop.com '/home/naxa/scripts/releaseSoftware.sh 138.201.203.177'
+		ssh naxa@jenkins.getshop.com '/home/naxa/scripts/releaseSoftware.sh 10.0.4.1'
 	elif [ $serverQuestion = "5" ]; then
-		ssh naxa@jenkins.getshop.com '/home/naxa/scripts/releaseSoftware.sh 95.216.101.171'
+		ssh naxa@jenkins.getshop.com '/home/naxa/scripts/releaseSoftware.sh 10.0.5.1'
 	else 
 		echo "Invalid server setup";
 	fi;

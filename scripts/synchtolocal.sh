@@ -20,9 +20,9 @@ SERVER="NONE";
 if [ $serverQuestion = "3" ]; then
         SERVER="148.251.15.227";
 elif [ $serverQuestion = "4" ]; then
-	SERVER="138.201.203.177"
+	SERVER="10.0.4.1"
 elif [ $serverQuestion = "5" ]; then
-	SERVER="95.216.101.171"
+	SERVER="10.0.5.1"
 else 
 	echo "Invalid server setup";
 fi;

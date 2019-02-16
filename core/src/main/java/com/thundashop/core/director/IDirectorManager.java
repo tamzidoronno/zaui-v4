@@ -18,6 +18,7 @@ import java.util.List;
  */
 @GetShopApi
 public interface IDirectorManager {
+    @ForceAsync
     @Administrator
     public void syncFromOld();
     

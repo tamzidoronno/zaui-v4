@@ -1,9 +1,15 @@
 <div class='header'>PMS Restrictions</div>
 <?php
 /* @var $user core_usermanager_data_User */
+/* @var $this ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
 $user = $this->getUser();
 if($user->type < 100) {
     echo "User need to be an administrator to have access to modules";
+    return;
+}
+$loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
+if(sizeof($loggedOnUser->pmsPageAccess) > 0) {
+    echo "You do not have access to modify this area";
     return;
 }
 ?>

@@ -13,7 +13,6 @@ app.PmsReport = {
         $(document).on('click', '.PmsReport .removecustomerfromfilter', app.PmsReport.removeCustomer);
         $(document).on('click', '.PmsReport .filterbycustomerbutton', app.PmsReport.toggleFilterByCustomer);
         $(document).on('click', '.PmsReport .displayto30list', app.PmsReport.toggleTop30List);
-        $(document).on('click', '.PmsReport .top30customerbutton', app.PmsReport.top30CustomersLoading);
         $(document).on('change', '.PmsReport [gsname="segment"]', app.PmsReport.changeSegments);
     },
     changeSegments : function() {

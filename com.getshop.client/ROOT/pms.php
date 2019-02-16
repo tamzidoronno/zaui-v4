@@ -31,6 +31,10 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule("pms")) {
 $_SESSION['firstloadpage'] = true;
 
 if(sizeof($user->pmsPageAccess) > 0) {
+    if(in_array("a90a9031-b67d-4d98-b034-f8c201a8f496", $user->pmsPageAccess)) {
+        $user->pmsPageAccess[] = "groupbooking";
+    }
+    
     if(!in_array($page->getId(), $user->pmsPageAccess)) {
         header('location:/pms.php?page='.$user->pmsPageAccess[0]);
     }

@@ -10,6 +10,7 @@
     "paymentexplanation" : "Sett inn kortet og følg instruksjonene under. Når betalingen er gjennomført får du en kode på sms og epost etter innsjekk innsjekk klokken {time}.",
     "nights" : "netter",
     "paylater" : "Betal senere",
+    "noroomselected" : "Velg et rom under",
     "sameasguest" : "Samme som gjest",
     "warningstartyesterday" : "Advarsel, du booker for i natt, hvis du ønsker et rom senere på dagen, vennligst velg dagens dato som innsjekk.",
     "totalprice" : "Total pris",

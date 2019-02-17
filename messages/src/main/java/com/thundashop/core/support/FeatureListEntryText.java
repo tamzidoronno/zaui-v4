@@ -14,5 +14,5 @@ import java.io.Serializable;
 public class FeatureListEntryText implements Serializable {
     public String webDescription = "";
     public String manualDescription = "";
-    public String image = "";
+//    public String image = "";
 }

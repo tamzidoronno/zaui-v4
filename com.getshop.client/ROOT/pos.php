@@ -4,6 +4,7 @@ $pageFactory = new \PageFactory("salespoint");
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 $printPageMenuInModulesMenu=true;
+$versionnumber = "1.0";
 
 $factory = IocContainer::getFactorySingelton();
 if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
@@ -23,10 +24,10 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule("salespoint")) {
 <html pageid="<? echo $page->getId(); ?>" module="salespoint">
     <head>
         <title><? echo $page->getTitle(); ?></title>
-        <link rel="stylesheet" href="/icomoon/style.css">
-        <link rel="stylesheet" href="/skin/default/getshop.css">
-        <link rel="stylesheet" href="/skin/default/getshopmodules.css?asdifjasdofiasdf">
-        <link rel="stylesheet" href="/skin/default/pos.css">
+        <link rel="stylesheet" href="/icomoon/style.css?version=<? echo $versionnumber; ?>">
+        <link rel="stylesheet" href="/skin/default/getshop.css?version=<? echo $versionnumber; ?>">
+        <link rel="stylesheet" href="/skin/default/getshopmodules.css?version=<? echo $versionnumber; ?>">
+        <link rel="stylesheet" href="/skin/default/pos.css?version=1.0">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
 
         <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">
@@ -38,7 +39,7 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule("salespoint")) {
         <script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
         <script type="text/javascript" src="js/moments.js"></script>
-        <script type="text/javascript" src="js/getshop/getshop.js?92438ajsj"></script>
+        <script type="text/javascript" src="js/getshop/getshop.js?version=<? echo $versionnumber; ?>"></script>
         <script src="js/ckeditor/ckeditor.js"></script>
         <? $page->loadAppsJavascripts(); ?>
         

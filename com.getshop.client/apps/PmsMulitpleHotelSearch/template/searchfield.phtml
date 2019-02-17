@@ -102,13 +102,13 @@ function getshop_getsessionid() {
         
         var endpoints = [];
         endpoints.push({
-            "name" : 'City Living schøller',
+            "name" : 'City Living Schøller',
             "endpoint" : "https://scholler.getshop.com/",
             "image" : "https://www.cityliving.no/displayImage.php?id=242c8b07-0526-4113-9099-aa27cd4e0f95&width=500",
             "nextpage" : "/?page=scholler"
         });
         endpoints.push({
-            "name" : 'City Living sentrum',
+            "name" : 'City Living Sentrum',
             "endpoint" : "https://citylivingsentrum.getshop.com/",
             "image" : "https://www.cityliving.no/displayImage.php?id=57cc799e-8576-450b-b7db-07ddb3615355&width=500",
             "nextpage" : "/?page=a57e135d-ab63-4479-a657-0979ad4a5143"
@@ -136,6 +136,7 @@ function getshop_getsessionid() {
                     
                     for(var roomId in res.rooms) {
                         var room = res.rooms[roomId];
+                        console.log(room);
                         var roomRow = hotel.find('.roomresultrowtemplate.gstemplate').clone();
                         roomRow.removeClass('gstemplate');
                         roomRow.find('.name').html(room.name);
@@ -152,7 +153,6 @@ function getshop_getsessionid() {
                             maxRoomAreaHeight = parseInt($(this).outerHeight());
                         }
                     });
-                    console.log(getshopmaxcategories);
                     $('.roomsarea').each(function() {
                         $(this).css('height', (getshopmaxcategories*29) + "px");
                     });

@@ -80,7 +80,7 @@ public class BigStock extends ManagerBase implements IBigStock {
         int imageCost = 6;
         
         if (bigStockCreditAccount.creditAccount < imageCost) {
-            throw new ErrorException(102);
+//            throw new ErrorException(102);
         }
         
         String url = null;
@@ -88,7 +88,7 @@ public class BigStock extends ManagerBase implements IBigStock {
         String key = "72c2747254f7606977bf2c528430eb4f4bcdf703";
         String sha1String = getSha1Coded(key + accountId + imageId);
 
-        String address = frameworkConfig.productionMode ? "api.bigstockphoto.com": "testapi.bigstockphoto.com";
+        String address = frameworkConfig.productionMode ? "api.bigstockphoto.com": "api.bigstockphoto.com";
         address = "http://"+address+"/2/" + accountId;
         url = address + "/purchase?image_id=" + imageId + "&size_code=" + sizeCode + "&auth_key=" + sha1String;
         

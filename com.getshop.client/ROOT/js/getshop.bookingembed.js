@@ -50,7 +50,7 @@
     $('<link/>', {
        rel: 'stylesheet',
        type: 'text/css',
-       href: 'https://s3.amazonaws.com/icomoon.io/135206/GetShopIcons/style.css?tyxklk'
+       href: 'https://20420.getshop.com/icomoon/style.css?tyxklk'
     }).appendTo('head');
 
     $('<link/>', {

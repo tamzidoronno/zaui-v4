@@ -231,11 +231,7 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule($module)) {
 
         <title class='pagetitle'></title>
         <?
-        if (!$factory->isProductionMode()) {
-            echo '<link rel="stylesheet" href="https://i.icomoon.io/public/c0c7faf535/GetShopIcons/style.css">';
-        } else {
-            echo '<link rel="stylesheet" href="https://s3.amazonaws.com/icomoon.io/135206/GetShopIcons/style.css?ovks5i">';
-        }
+        echo '<link rel="stylesheet" href="/icomoon/style.css">';
         
         if (!$isCmsLayout) {
             echo '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">';

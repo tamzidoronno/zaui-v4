@@ -964,13 +964,13 @@ public class PmsManagerProcessor {
         
         List<PmsBooking> allNotDeleted = getAllConfirmedNotDeleted(true);
         for(PmsBooking booking : allNotDeleted) {
-            if(booking.id.equals("66a3109d-4fb5-4ec7-89ab-e782b6efb5a7")) {
+            if(booking.id.equals("0b9cd82f-c756-411c-b167-2a72f43f1db9")) {
                 System.out.println("check");
             }
             if(booking.payedFor) {
                 continue;
             }
-            if(booking.channel != null && !booking.channel.isEmpty()) {
+            if(booking.channel != null && !booking.channel.isEmpty() && !booking.channel.equals("website")) {
                 continue;
             }
             if(booking.bookedByUserId != null && !booking.bookedByUserId.isEmpty()) {

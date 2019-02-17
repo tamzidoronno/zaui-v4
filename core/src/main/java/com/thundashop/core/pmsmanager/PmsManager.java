@@ -9722,4 +9722,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.addons.addAll(add);
     }
 
+    @Override
+    public List<PmsGuestOption> findRelatedGuests(PmsGuests guest) {
+        List<PmsGuestOption> guests = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                for(PmsGuests g : room.guests) {
+                    if(g.guestId.equals(guest.guestId)) {
+                        continue;
+                    }
+                    if(g.hasAnyOfGuest(guest)) {
+                        PmsGuestOption guestoption = new PmsGuestOption();
+                        User usr = userManager.getUserById(booking.userId);
+                        guestoption.guest = g;
+                        if(usr != null) {
+                            guestoption.userName = usr.fullName;
+                            guestoption.userId = usr.id;
+                        }
+                        guests.add(guestoption);
+                    }
+                }
+            }
+        }
+        return guests;
+    }
+
+    @Override
+    public List<String> addSuggestedUserToBooking(String userId) {
+        PmsBooking booking = getCurrentBooking();
+        if(!booking.suggestedUserIds.contains(userId)) {
+            booking.suggestedUserIds.add(userId);
+        }
+        saveBooking(booking);
+        return booking.suggestedUserIds;
+    }
+
 }

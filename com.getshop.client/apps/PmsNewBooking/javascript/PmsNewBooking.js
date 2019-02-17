@@ -1,4 +1,5 @@
 app.PmsNewBooking = {
+    timeoutchangeprice : null,
     init : function() {
         $(document).on('change', '.PmsNewBooking select[gsname="type"]', function() {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
@@ -34,27 +35,62 @@ app.PmsNewBooking = {
         $(document).on('click','.PmsNewBooking .brregsearchresultrow', app.PmsNewBooking.selectBrregResult);
         $(document).on('click','.PmsNewBooking .addonoption', app.PmsNewBooking.addAddonToBooking);
         $(document).on('click','.PmsNewBooking .usedefaultpricescheckbox', app.PmsNewBooking.usedefaultpricescheckbox);
+        $(document).on('click','.PmsNewBooking .guestrowhintentry', app.PmsNewBooking.setGuestInformation);
+        $(document).on('click','.PmsNewBooking .usersuggestion', app.PmsNewBooking.selectUserAndCompleteBooking);
         $(document).on('keyup','.PmsNewBooking .roomprice', app.PmsNewBooking.changeRoomPrice);
+    },
+    selectUserAndCompleteBooking : function() {
+        var event = thundashop.Ajax.createEvent('','completeBookingBySpecificUser',$(this),{
+            "userid" : $(this).attr('userid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.specificsuggestions').html(res);
+        });
+        
+    },
+    
+    setGuestInformation : function() {
+        var box = $(this);
+        var guestRow = $(this).closest('.guestrow');
+        guestRow.find('.guestname').val(box.attr('name'));
+        guestRow.find('.guestemail').val(box.attr('email'));
+        guestRow.find('.guestprefix').val(box.attr('prefix'));
+        guestRow.find('.guestphone').val(box.attr('phone'));
+        var updating = app.PmsNewBooking.updateGuestRowByRow(guestRow);
+        updating.done(function() {
+           $('.guestrowhintentry').hide();
+        });
+        var event = thundashop.Ajax.createEvent('','addSuggestedUser', box, {
+            "userid" : box.attr('userid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.specificsuggestions').html(res);
+        });
     },
     
     createOrderAndSendPaymentLinkCheckBox : function() {
         var event = thundashop.Ajax.createEvent('','toggleCreateOrderAndSendPaymentLink',$(this),{
             "checked" : $(this).is(':checked')
         });
-        thundashop.Ajax.post(event, function(res) {
+        thundashop.Ajax.postWithCallBack(event, function(res) {
         });
     },
     
     updateGuestRow : function() {
         var guestRow = $(this).closest('.guestrow');
+        app.PmsNewBooking.updateGuestRowByRow(guestRow);
+    },
+    
+    updateGuestRowByRow(guestRow) {
         var guestId = guestRow.attr('guestid');
         var roomId = guestRow.closest('.guestinformation').attr('roomid');
         var data = {};
+        var promise = $.Deferred();
         data.name = guestRow.find('.guestname').val();
         data.email = guestRow.find('.guestemail').val();
         data.prefix = guestRow.find('.guestprefix').val();
         data.phone = guestRow.find('.guestphone').val();
-        var event = thundashop.Ajax.createEvent('','saveGuestInformation',$(this), {
+        var event = thundashop.Ajax.createEvent('','saveGuestInformation',guestRow, {
             "guestinfo" : data,
             "guestid" : guestId,
             "roomid" : roomId
@@ -65,11 +101,13 @@ app.PmsNewBooking = {
         }
         
         app.PmsNewBooking.updateGuestInfoTimer = setTimeout(function() {
-            thundashop.Ajax.postWithCallBack(event, function(res) {});
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                guestRow.find('.guestrowhint').html(res);
+                promise.resolve();
+            });
         }, "200");
-        
+        return promise;
     },
-    
     usedefaultpricescheckbox : function() {
         var checkbox = $(this);
         var event = thundashop.Ajax.createEvent('','toggleUseDefaultPrices', $(this), {
@@ -130,20 +168,26 @@ app.PmsNewBooking = {
         });
     },
     changeRoomPrice : function() {
-        var count = $(this).val();
-        var roomId = $(this).attr('roomid');
-        var event = thundashop.Ajax.createEvent('','updateRoomPrice', $(this), {
-            "roomid" : roomId,
-            "newprice" : count
-        });
-        var row = $(this).closest('.datarow');
-        thundashop.Ajax.postWithCallBack(event, function(res) {
-            var obj = JSON.parse(res);
-            row.find('.roomprice').val(obj.price);
-            row.find('.col_cost').html(obj.price);
-            row.find('.addonsarea').html(obj.addons);
-            $('.totalcostindicator').html(obj.totalcost);
-        });
+        if(typeof(app.PmsNewBooking.timeoutchangeprice) !== "undefined") {
+            clearTimeout(app.PmsNewBooking.timeoutchangeprice);
+        }
+        var inputfield = $(this);
+        app.PmsNewBooking.timeoutchangeprice = setTimeout(function() {
+            var count = inputfield.val();
+            var roomId = inputfield.attr('roomid');
+            var event = thundashop.Ajax.createEvent('','updateRoomPrice', inputfield, {
+                "roomid" : roomId,
+                "newprice" : count
+            });
+            var row = inputfield.closest('.datarow');
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                var obj = JSON.parse(res);
+                row.find('.roomprice').val(obj.price);
+                row.find('.col_cost').html(obj.price);
+                row.find('.addonsarea').html(obj.addons);
+                $('.totalcostindicator').html(obj.totalcost);
+            });
+        }, "500");
     },
     setDiscountCode : function() {
         if(typeof(waitToInsertCode) !== "undefined") {
@@ -240,7 +284,12 @@ app.PmsNewBooking = {
                 var count = $(this).text();
                 $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').attr('original', count);
                 $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').text(count);
-            })
+            });
+        });
+        
+        var event = thundashop.Ajax.createEvent('','checkClosedRooms',$('.PmsNewBooking'), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.closedroomwarning').html(res);
         });
     }
 };

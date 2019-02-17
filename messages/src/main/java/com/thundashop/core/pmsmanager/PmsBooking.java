@@ -33,6 +33,7 @@ public class PmsBooking extends DataCommon {
     public String bookedByUserId = "";
     public Integer state = 0;
     public List<String> orderIds = new ArrayList();
+    public List<String> suggestedUserIds = new ArrayList();
     public HashMap<String, Long> incOrderIds = new HashMap();
     public Integer priceType = 1;
     public boolean confirmed = false;

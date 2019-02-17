@@ -1,0 +1,59 @@
+<?php
+/* @var $this ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
+
+$closedtext = "";
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$selectedStartMillis = strtotime($this->getStartDate());
+$selectedEndMillis = strtotime($this->getEndDate());
+
+foreach($config->closedOfPeriode as $row) {
+    $startTime = strtotime($row->firstEvent->start);
+    $endTime = strtotime($row->firstEvent->end);
+    
+    $found = false;
+    if($selectedStartMillis <= $startTime && $startTime <= $selectedEndMillis) {
+        //Start is in timerange
+        $found = true;
+    }
+    if($selectedStartMillis <= $endTime && $endTime <= $selectedEndMillis) {
+        //End is in timerange
+        $found = true;
+    }
+    if($selectedStartMillis >= $startTime && $endTime >= $selectedEndMillis) {
+        //End is in timerange
+        $found = true;
+    }
+    
+    if($found) {
+        $closedtext .= "<div style='padding-left:5px;'>";
+        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->start)) . " - ";
+        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->end));
+        $closedtext .= "</div>";
+    }
+}
+if($closedtext) {
+    ?>
+    <div style='padding: 20px;'>
+        <div class="isnotactive">
+            <div class="kaipal infobox">
+                <div class="image sad"></div>
+                <div class="textbox">
+                    <div class="header"><? echo $this->__f("We have closed periods for the selected timespan"); ?></div>
+                    <div class="text">
+                        <?
+                        echo $closedtext;
+                        echo "<bR>";
+                        echo "<bR>";
+                        ?>    
+
+                        <div class="buttonarea">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+    <?php
+}
+?>

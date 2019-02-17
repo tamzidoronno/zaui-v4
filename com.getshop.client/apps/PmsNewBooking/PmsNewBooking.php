@@ -191,6 +191,9 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $this->includefile("availablerooms");
     }
     
+    public function checkClosedRooms() {
+        $this->includefile("closedwarning");
+    }
     
     public function completequickreservation() {
         $this->completeByUser($this->createSetUser());
@@ -202,7 +205,8 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $currentBooking->userId = $userId;
         $currentBooking->quickReservation = true;
         $currentBooking->avoidCreateInvoice = true;
-        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
+        $keepPrices = !$this->useDefaultPrices();
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $currentBooking, $keepPrices);
         $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedMultilevelDomainName());
         unset($_SESSION['currentgroupbookedarea']);
         if(!$res) {
@@ -305,7 +309,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
         }
         
-        $currentBooking->setGuestsSameAsBooker = (sizeof($currentBooking->rooms) == 1);
+        $currentBooking->setGuestsSameAsBooker = false;
         
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $currentBooking, true);
         $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $currentBooking->id);
@@ -315,9 +319,11 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $room = $this->getRoom($_POST['data']['roomid']);
         /* @var $booking core_pmsmanager_PmsBooking */
         $booking = $this->selectedBooking;
+        $guestData = null;
         foreach($booking->rooms as $room) {
             foreach($room->guests as $guest) {
                 if($guest->guestId == $_POST['data']['guestid']) {
+                    $guestData = $guest;
                     $guest->email = $_POST['data']['guestinfo']['email'];
                     $guest->prefix = $_POST['data']['guestinfo']['prefix'];
                     $guest->name = $_POST['data']['guestinfo']['name'];
@@ -326,6 +332,23 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             }
         }
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $related = (array)$this->getApi()->getPmsManager()->findRelatedGuests($this->getSelectedMultilevelDomainName(), $guestData);
+        $i = 0;
+        foreach($related as $rel) {
+            echo "<span class='guestrowhintentry' userid='".$rel->userId."' email='".$rel->guest->email."' phone='".$rel->guest->phone."' prefix='".$rel->guest->prefix."' name='".$rel->guest->name."'>Name: " . $rel->guest->name .
+                    "<br>Phone: (" . $rel->guest->prefix . ")" . $rel->guest->phone .
+                    "<br>E-mail: " . $rel->guest->email .
+                    "<br>Company: " . $rel->userName.
+                    "</span>";
+            $i++;
+            if($i > 10) {break; }
+        }
+    }
+    
+    public function addSuggestedUser() {
+        $userId = $_POST['data']['userid'];
+        $this->getApi()->getPmsManager()->addSuggestedUserToBooking($this->getSelectedMultilevelDomainName(), $userId);
+        $this->printSuggestedUsers();
     }
     
     public function addAddonToBooking() {
@@ -586,6 +609,7 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             echo "<input type='text' class='gsniceinput1 guestemail' placeholder='Guest email' value='".$email."'> ";
             echo "<input type='text' class='gsniceinput1 guestprefix' placeholder='47'  value='".$prefix."'> ";
             echo "<input type='text' class='gsniceinput1 guestphone' placeholder='Guest phone number' value='".$phone."'>";
+            echo "<div class='guestrowhint'></div>";
             echo "</div>";
         }
     }
@@ -633,6 +657,33 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), $orderId, $bookingId, $email, $prefix, $phone);
         $this->getApi()->getPmsManager()->doNotification($this->getSelectedMultilevelDomainName(), "booking_completed", $bookingId);
         unset($_SESSION['toggleCreateOrderAndSendPaymentLink']);
+    }
+
+    public function completeBookingBySpecificUser() {
+        $this->completeByUser($_POST['data']['userid']);
+        echo $this->msg;
+    }
+    
+    public function printSuggestedUsers() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $suggestedUsers = (array)$booking->suggestedUserIds;
+        if(!$suggestedUsers) {
+            return;
+        }
+        
+        echo "<h1>Suggested by above selection</h1>";
+        foreach($suggestedUsers as $sugusr) {
+            $user = $this->getApi()->getUserManager()->getUserById($sugusr);
+            echo "<span class='usersuggestion selecteduser' userid='".$user->id."'>";
+            echo "<table>";
+            echo "<tr><td>Name</td><td>" . $user->fullName . "</td></tr>";
+            echo "<tr><td>Email</td><td>" . $user->emailAddress . "</td></tr>";
+            echo "<tr><td>Phone</td><td>" . $user->prefix . " " . $user->cellPhone . "</td></tr>";
+            echo "<tr><td>Address</td><td>" . $user->address->address . "</td></tr>";
+            echo "<tr><td></td><td>" . $user->address->postCode . " " . $user->address->city . "</td></tr>";
+            echo "</table>";
+            echo "</span>";
+        }
     }
 
 }

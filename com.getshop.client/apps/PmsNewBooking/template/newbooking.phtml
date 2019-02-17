@@ -57,6 +57,13 @@ $codes = $this->getApi()->getCartManager()->getCoupons();
         </span>
         <br>
         <br>
+        
+        <div class='closedroomwarning'>
+        <?php
+        $this->includefile("closedwarning");
+        ?>
+        </div>
+        
         <div>
             <?php
             echo "<table width='100%'>";

@@ -284,7 +284,12 @@ app.PmsNewBooking = {
                 var count = $(this).text();
                 $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').attr('original', count);
                 $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').text(count);
-            })
+            });
+        });
+        
+        var event = thundashop.Ajax.createEvent('','checkClosedRooms',$('.PmsNewBooking'), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.closedroomwarning').html(res);
         });
     }
 };

@@ -191,6 +191,9 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
         $this->includefile("availablerooms");
     }
     
+    public function checkClosedRooms() {
+        $this->includefile("closedwarning");
+    }
     
     public function completequickreservation() {
         $this->completeByUser($this->createSetUser());

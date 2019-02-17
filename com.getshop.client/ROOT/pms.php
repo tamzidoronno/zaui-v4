@@ -127,5 +127,9 @@ if(sizeof($user->pmsPageAccess) > 0) {
             getshop.documentLoaded();
         });
     </script>
+    
+    <?
+    $page->renderBottom();
+    ?>
 </html>
 

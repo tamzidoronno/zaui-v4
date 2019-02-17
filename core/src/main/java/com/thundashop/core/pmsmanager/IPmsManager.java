@@ -501,8 +501,11 @@ public interface IPmsManager {
     @Administrator
     public void setNewStartDateAndAssignToRoom(String roomId, Date newStartDate, String bookingItemId);
     
+    @Administrator
+    public List<PmsGuestOption> findRelatedGuests(PmsGuests guest);
     
-    
+    @Administrator
+    public List<String> addSuggestedUserToBooking(String userId);
     
     @Administrator
     public void transferTicketsAsAddons();

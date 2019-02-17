@@ -10,6 +10,7 @@
 .PmsNewBooking .guestname { width: 212px; margin-right: 10px;}
 .PmsNewBooking .guestemail { width: 245px; margin-right: 10px;}
 .PmsNewBooking .guestprefix { width: 21px; }
+.PmsNewBooking .discountcodeselection {position:Absolute; right: 0px; width: 200px; }
 
 .PmsNewBooking label.sameasbooker {
   display: block;
@@ -41,12 +42,31 @@
 .PmsNewBooking .conferenceroom { width: 30%;float:right; padding-left: 50px; box-sizing: border-box;}
 .PmsNewBooking .hasDatepicker {  max-width: 115px; }
 .PmsNewBooking .disabled { color:#ddd; }
+.PmsNewBooking .usersuggestion { 
+    border: solid 1px;
+    display: inline-block;
+    height: 120px;
+    margin: 2px;
+    border-radius: 3px;
+    padding: 10px;
+    cursor: pointer;
+}
 .PmsNewBooking .availableroomsheading { border-bottom: solid 1px #DDD; padding-bottom: 10px; margin-bottom: 10px; }
 .PmsNewBooking .moreThenAvailableWarning { color: red; font-weight: bold; margin-top: 20px; display:none; }
 .PmsNewBooking .warninnotabletoadd { color:red; font-weight: bold; font-size: 24px; margin-top:20px; }
-.PmsNewBooking .section {  box-shadow: 0px 0px 10px rgba(0,0,0,0.3); padding: 10px; border: solid 1px #efefef; width:68%; box-sizing: border-box; background-color:#fff; }
+.PmsNewBooking .section {  box-shadow: 0px 0px 10px rgba(0,0,0,0.3); padding: 10px; border: solid 1px #efefef; width:68%; box-sizing: border-box; background-color:#fff; position:relative; }
 .PmsNewBooking .conferenceroom [method="addConferenceRoom"] { box-shadow: 0px 0px 10px rgba(0,0,0,0.3); padding: 10px; background-color: #fff; }
 .PmsNewBooking .nextstep { display:none; }
+.PmsNewBooking .guestrowhint .guestrowhintentry {
+    border: solid 1px #bbb;
+    border-radius: 3px;
+    padding: 3px;
+    margin: 1px;
+    display: inline-block;
+    background-color: #efefef;
+    font-size: 11px;
+}
+.PmsNewBooking .guestrowhint .guestrowhintentry:hover { background-color:#fff; cursor:pointer; }
 .PmsNewBooking .selectedbutton { background-color:green; }
 .PmsNewBooking .searchbrregbutton { color: blue; cursor:pointer; }
 .PmsNewBooking .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}

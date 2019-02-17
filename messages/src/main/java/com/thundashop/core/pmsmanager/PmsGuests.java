@@ -13,6 +13,7 @@ public class PmsGuests implements Serializable {
     public String guestId = UUID.randomUUID().toString();
     public boolean isChild = false;
     
+    
     /**
      * If the guests has the possibility
      * to order different options of a group addon type (option) 
@@ -22,4 +23,35 @@ public class PmsGuests implements Serializable {
      * Value = ProductId for the addon selected
      */
     public Map<String, String> orderedOption = new HashMap();
+
+    boolean hasAnyOfGuest(PmsGuests guest) {
+        boolean matchName = true;
+        boolean matchEmail = true;
+        boolean matchPhone = true;
+        
+        if(guest.name == null) { guest.name = ""; }
+        if(guest.email == null) { guest.email = ""; }
+        if(guest.phone == null) { guest.phone = ""; }
+        
+        if(!guest.name.isEmpty()) {
+            if(name == null || !name.toLowerCase().contains(guest.name.toLowerCase())) {
+                matchName = false;
+            }
+        }
+        
+        if(!guest.email.isEmpty()) {
+            if(email == null || !email.toLowerCase().contains(guest.email.toLowerCase())) {
+                matchEmail = false;
+            }
+        }
+        if(!guest.phone.isEmpty()) {
+            if(phone == null || !phone.toLowerCase().contains(guest.phone.toLowerCase())) {
+                matchPhone = false;
+            }
+        }
+        if(guest.phone.isEmpty() && guest.email.isEmpty() && guest.name.isEmpty()) {
+            return false;
+        }
+        return (matchEmail && matchName && matchPhone);
+    }
 }

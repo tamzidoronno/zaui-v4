@@ -11,7 +11,12 @@ $allTypes[] = $type;
 $types = $allTypes;
 
 $curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+$codes = $this->getApi()->getCartManager()->getCoupons();
 ?>
+<script src="/js/chosen/chosen.jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/js/chosen/chosen.css"></script>
+    
+    
 <h3>Step 1. Add a rooms</h3>
 <div class="section" style='width:100%;'>
     <div gstype='form' method='addRoom'>
@@ -38,7 +43,18 @@ $curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSele
 
             <i class="gsicon-calendar-text"></i>
         </div>
-        <input class="gsniceinput1 discountcode" gsname='discountcode' placeholder="Discount code" style="float:right;" value='<?php echo $curbooking->couponCode; ?>'>
+        <span style='position: absolute; right:10px;top:20px;'>
+            <select class='discountcodeselection'  gsname='discountcode' style='width:300px;'>
+                <?php
+                echo "<option value=''>No discount code</option>";
+                foreach($codes as $code) {
+                    $selected = $curbooking->couponCode == $code->code ? "SELECTED" : "";
+                    
+                    echo "<option value='".$code->code."' $selected>" . $code->code . "</option>";
+                }
+                ?> 
+            </select>
+        </span>
         <br>
         <br>
         <div>
@@ -145,4 +161,5 @@ $curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSele
     $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function () {
         $(this).closest('div').find('input').focus();
     });
+    $('.discountcodeselection').chosen(); 
 </script>

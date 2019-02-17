@@ -70,7 +70,7 @@ $codes = $this->getApi()->getCartManager()->getCoupons();
             echo "<tr>";
             echo "<th style='text-align:left;'>Room</th>";
             echo "<th>Price</th>";
-            echo "<th>Rooms left</th>";
+            echo "<th>Rooms left (<span class='totalcounter'></span>)</th>";
             echo "<th>Count</th>";
             echo "</tr>";
 
@@ -169,4 +169,5 @@ $codes = $this->getApi()->getCartManager()->getCoupons();
         $(this).closest('div').find('input').focus();
     });
     $('.discountcodeselection').chosen(); 
+    app.PmsNewBooking.reloadAvailability();
 </script>

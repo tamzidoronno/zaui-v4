@@ -279,12 +279,15 @@ app.PmsNewBooking = {
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.availablerooms').html(res);
+            var totalCounter = 0;
             $('.availableroomscounter').each(function() {
                 var roomtype = $(this).attr('roomtype');
                 var count = $(this).text();
+                totalCounter += parseInt(count);
                 $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').attr('original', count);
                 $('.roomstoaddrow[roomtype="'+roomtype+'"]').find('.roomsleftfield').text(count);
             });
+            $('.totalcounter').html(totalCounter);
         });
         
         var event = thundashop.Ajax.createEvent('','checkClosedRooms',$('.PmsNewBooking'), {});

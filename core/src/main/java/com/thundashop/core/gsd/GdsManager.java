@@ -11,6 +11,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.UserQueueMessage;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pos.PrinterMessageGenerator;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,8 +109,16 @@ public class GdsManager extends ManagerBase implements IGdsManager {
 
     @Override
     public void sendMessageToDevice(String deviceId, GetShopDeviceMessage message) {
+        GetShopDeviceMessage messageToUse = message;
+        
+        PrinterMessageGenerator generator = new PrinterMessageGenerator(storeId);
+        
+        if (generator.isPrintMessage(message) && deviceSupportDirectPrint(deviceId)) {
+            messageToUse = generator.generateEscPos(message);
+        }
+        
         DeviceMessageQueue queue = getQueue(deviceId);
-        queue.messages.add(message);
+        queue.messages.add(messageToUse);
         saveObject(queue);
     }
     
@@ -230,5 +239,23 @@ public class GdsManager extends ManagerBase implements IGdsManager {
                 .forEach(queue -> {
                     queue.messages.removeIf(o -> o.hasExpired());
                 });
+    }
+
+    private boolean deviceSupportDirectPrint(String deviceId) {
+        GetShopDevice device = devices.get(deviceId);
+        if (device != null) {
+            return device.getConfig("supportDirectPrint").equals("true");
+        }
+        
+        return false;
+    }
+
+    @Override
+    public void setGdsConfig(String tokenId, String key, String config) {
+        GetShopDevice gds = getDeviceByToken(tokenId);
+        if (gds != null) {
+            gds.extraConfigs.put(key, config);
+            saveDevice(gds);
+        }
     }
 }

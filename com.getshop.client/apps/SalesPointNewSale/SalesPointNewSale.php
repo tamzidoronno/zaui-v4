@@ -40,7 +40,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             $this->includefile("leftmenu");
         echo "</div>";
         
-        echo "<div style='display: inline-block; width: calc(100% - 100px)'>";
+        echo "<div style=''>";
             $this->includefile("topmenu");
             echo "<div class='productlistouter'>";
                 echo "<div class='productlistinner'>";

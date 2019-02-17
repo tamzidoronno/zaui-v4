@@ -1364,14 +1364,17 @@ getshopnumpad.init();
 thundashop.framework.init();
 
 keepAlive = function() {
+    var checkTime = 120000;
     $.ajax({
         type: "GET",
         url: "/scripts/alive.php",
-        success: function(response) {
+        complete: function(response) {
             console.log(response);
-        }});
+            setTimeout(keepAlive, checkTime);
+        }
+    });
     
-    setTimeout(keepAlive, 120000);
+    
 }
 
 

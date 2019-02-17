@@ -5,10 +5,14 @@
     transform: translateY(-50%); 
 }
 
+.SalesPointNewSale {
+    padding-left: 100px;
+}
+
 .SalesPointNewSale .group,
 .SalesPointNewSale .product {
     width: 100px;
-    height: 100px;
+    height: 70px;
     display: inline-block;
     border: solid 3px #FFF;
     vertical-align: top;
@@ -50,16 +54,19 @@
     color: #FFF;
     text-align: center;
     min-height: calc(100% - 86px);
+    padding-top: 67px;
+    position: fixed;
+    left: 0px;
 }
 
 .SalesPointNewSale .productlistouter {
     width: calc(100% - 300px);
     box-sizing: border-box;
     padding: 50px;
-    padding-top: 0px;
+    padding-top: 5px;
     margin-top: 70px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .SalesPointNewSale .rightmenu {
@@ -68,6 +75,8 @@
     min-height: calc(100% - 86px);
     border-left: solid 1px #DDD;
     box-sizing: border-box;
+    margin-top: 68px;
+    padding-top: 8px;
 }
 
 .SalesPointNewSale .topmenu .entry,
@@ -94,10 +103,14 @@
 
 .SalesPointNewSale .header {
     padding-bottom: 0px;
-    margin-top: 25px;
     font-size: 20px;
     font-weight: bold;
     padding-left: 10px;
+    background-color: #DDD;
+    margin-top: -8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 .SalesPointNewSale .notabopen_desc {
@@ -266,6 +279,8 @@
 .SalesPointNewSale h2 {
     position: relative;
     padding: 10px;
+    margin: 0px;
+    background-color: #DDD;
 }
 .SalesPointNewSale .movebuttons {
     position: absolute;
@@ -310,6 +325,7 @@
     box-sizing: border-box;
     padding-right: 5px;
     padding-left: 5px;
+    height: 67px;
 }
 
 .SalesPointNewSale .topmenu {
@@ -369,6 +385,8 @@
 
 .SalesPointNewSale .title {
     margin-bottom: 10px;
+    line-height: 0px;
+    padding-top: 6px;
 }
 
 .SalesPointNewSale .explenation {
@@ -458,12 +476,37 @@
     text-decoration: line-through;
 }
 
-.SalesPointNewSale .tabmenu {
+.SalesPointNewSale .tabmenu .gs_shop_small_icon {
     text-align: center;
-    border-bottom: solid 10px #DDD;
-    padding-bottom: 20px;
+    padding: 3px;
+    margin-left: 5px;
 }
 
 .SalesPointNewSale .productlist.isgroup {
     display: none;
+}
+
+.SalesPointNewSale .product_list_inner {
+    padding: 10px;
+}
+
+.SalesPointNewSale .tabmenu.paymentmethods {
+    text-align: center;
+}
+
+.SalesPointNewSale .outpaymentmethod {
+    width: 83px;
+    line-height: inherit !important;
+    vertical-align: top;
+    margin-top: 8px;
+    height: 50px;
+    padding-top: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+@media (max-width: 1050px) {
+    .SalesPointNewSale .topmenu .entry {
+        width: 70px;
+    }
 }

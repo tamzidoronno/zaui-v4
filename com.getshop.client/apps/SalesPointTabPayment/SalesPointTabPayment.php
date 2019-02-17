@@ -39,6 +39,18 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             $this->includefile($paymentId);
         } else {
             $this->includefile("taboveriew");
+        
+            $this->changeModalVariable("fromdirect", "false");
+            
+            if ($this->getModalVariable("paymentmethodid")) {
+                ?>
+                <script>
+                    $('.shop_button.startpayment[paymentid="<? echo $this->getModalVariable("paymentmethodid"); ?>"]').click();
+                </script>
+                <?
+                $this->changeModalVariable("paymentmethodid", "");
+                $this->changeModalVariable("fromdirect", "true");
+            }
         }
     }
 
@@ -142,6 +154,10 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom'])) {
             unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom']);
+        }
+        
+        if ($this->fromDirect()) {
+            $this->closeModal();
         }
     }
     
@@ -311,8 +327,18 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
     }
 
     public function getNameOfPaymentMethod($paymentAppId) {
+        if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_name_payment_method_'.$paymentAppId])) {
+            return $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_name_payment_method_'.$paymentAppId];
+        }
+        
         $app = $this->getApi()->getStoreApplicationPool()->getApplication($paymentAppId);
         $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        
+        if (!$instance)
+            return false;
+        
+        $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_name_payment_method_'.$paymentAppId] = $instance->getName();
+        
         return $instance->getName();
     }
 
@@ -339,5 +365,30 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "Please insert credit card");
         }
     }
+
+    public function getValidPaymentMethodIds() {
+        $validOptions = array('565ea7bd-c56b-41fe-b421-18f873c63a8f', 
+            '6dfcf735-238f-44e1-9086-b2d9bb4fdff2', 
+            'f1c8301d-9900-420a-ad71-98adb44d7475', 
+            'f86e7042-f511-4b9b-bf0d-5545525f42de', 
+            '7587fdcb-ff65-4362-867a-1684cbae6aef', 
+            'cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba',
+            'a263b749-abcd-4812-b052-e20eccb69aa5',
+            '8650475d-ebc6-4dfb-86c3-eba4a8aba979');
+        
+        $retVal = array();
+        foreach ($validOptions as $id) {
+            if ($this->getNameOfPaymentMethod($id)) {
+                $retVal[] = $id;
+            }
+        }
+        
+        return $retVal;
+   }
+   
+    public function fromDirect() { 
+        return $this->getModalVariable("fromdirect") == "true";
+    }
+
 }
 ?>

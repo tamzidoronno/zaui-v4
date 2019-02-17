@@ -219,7 +219,7 @@ body { background-color:#efefef; }
 
 .gs_page_area[gs_page_content_id="products"] .module_toprow .colcount_0.rowcount_0 {
     font-size: 20px;
-    line-height: 40px;
+    /*line-height: 40px;*/
 }
 
 .gs_page_area[gs_page_content_id="products"] .module_toprow .gs_page_col {
@@ -230,9 +230,38 @@ body { background-color:#efefef; }
     margin-bottom: 20px;
     padding: 10px;
     background-color: #DDD;
+    padding-left: 100px;
 }
+
+
+
 @media screen and (max-width: 1400px) {
     .gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner {
         width: 95%;
     }
+}
+
+.gsarea[area="header"] {
+    position: fixed;
+    z-index: 1;
+    height: 57px;
+    width: 70px;
+    height: 60px;
+    border-radius: 100px;
+    top: 5px;
+    left: 15px;
+}
+
+.gs_framework_module i {
+    font-size: 30px !important;
+}
+
+.gs_framework_modules {
+    top: 62px !important;
+    left: -15px !important;
+}
+
+.gs_framework_module {
+    width: 72px !important;
+    margin-top: 4px;
 }

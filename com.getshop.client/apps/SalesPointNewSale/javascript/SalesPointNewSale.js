@@ -15,8 +15,6 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .product.checkbox', app.SalesPointNewSale.toggleCheckBox);
         $(document).on('click', '.SalesPointNewSale .configurelist', app.SalesPointNewSale.configureList);
         $(document).on('click', '.SalesPointNewSale .openList', app.SalesPointNewSale.openList);
-        
-        this.bindScrollEvent();
     },
     
     openList: function() {
@@ -107,17 +105,6 @@ app.SalesPointNewSale = {
         }
     },
     
-    bindScrollEvent: function() {
-        $(window).scroll(function() {
-            var top = 76-window.scrollY;
-            if (top < 0) {
-                top = 0;
-            }
-            
-            $('.SalesPointNewSale .topmenu').css('top', top + 'px');
-        });
-    },
-    
     countAddClicked: function() {
         $('.SalesPointNewSale .countadd').removeClass('active');
         $(this).addClass('active');
@@ -159,6 +146,7 @@ app.SalesPointNewSale = {
         } else {
             $('.SalesPointNewSale .cashwithdrawal').addClass('cash_disabled');
         }
+        
     },
     
     removeItemFromTab: function() {

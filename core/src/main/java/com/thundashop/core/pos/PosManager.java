@@ -43,11 +43,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -288,12 +286,12 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public ZReport getZReport(String zReportId) {
+    public ZReport getZReport(String zReportId, String cashPointId) {
         if (zReportId != null && !zReportId.isEmpty()) {
             return zReports.get(zReportId);
         }
         
-        Date prevZReportDate = getPreviouseZReportDate();
+        Date prevZReportDate = getPreviouseZReportDate(cashPointId);
         
         ZReport report = new ZReport();
         report.start = prevZReportDate;
@@ -303,6 +301,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .stream()
                 .filter(order -> order.paymentDate !=  null && order.paymentDate.after(prevZReportDate))
                 .filter(order -> order.orderId != null && !order.orderId.isEmpty())
+                .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
                 .sorted((OrderResult o1, OrderResult o2) -> {
                     return o1.paymentDate.compareTo(o2.paymentDate);
                 })
@@ -333,10 +332,10 @@ public class PosManager extends ManagerBase implements IPosManager {
         return filter;
     }
 
-    private Date getPreviouseZReportDate() {
+    private Date getPreviouseZReportDate(String cashPointId) {
         Date start = new Date(0);
         for (ZReport rep : zReports.values()) {
-            if (rep.rowCreatedDate.after(start)) {
+            if (rep.rowCreatedDate.after(start) && (rep.cashPointId.equals(cashPointId) || rep.cashPointId.isEmpty())) {
                 start = rep.rowCreatedDate;
             }
         }
@@ -345,14 +344,15 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public void createZReport() {
-        ZReport report = getZReport("");
+    public void createZReport(String cashPointId) {
+        ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
         report.totalAmount = getTotalAmountForZReport(report);
+        report.cashPointId = cashPointId;
         saveObject(report);
         zReports.put(report.id, report);
         
-        if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport) {
+        if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport && isMasterCashPoint(cashPointId)) {
             closeFinancialPeriode();
         }
     }
@@ -374,7 +374,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         Order order = orderManager.getOrderByincrementOrderId(incrementalOrderId);
-        ZReport zreport = getZReport(zReportId);
+        ZReport zreport = getZReport(zReportId, "");
         zreport.orderIds.add(order.id);
         saveObject(zreport);
     }
@@ -400,8 +400,8 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public Double getTotalForCurrentZReport() {
-        ZReport report = getZReport("");
+    public Double getTotalForCurrentZReport(String cashPointId) {
+        ZReport report = getZReport("", cashPointId);
         
         return report.orderIds.stream()
                 .map(orderId -> orderManager.getOrder(orderId))
@@ -841,7 +841,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             return canClose;
         }
         
-        Date start = getDateWithOffset(getPreviouseZReportDate(), -1);
+        Date start = getDateWithOffset(getPreviouseZReportDate(cashPointId), -1);
         Date end = getDateWithOffset(new Date(), 0);
         
         List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
@@ -925,5 +925,12 @@ public class PosManager extends ManagerBase implements IPosManager {
             cpSkada.setUserView(getSession().currentUser.id, viewId);
             saveObject(cpSkada);
         }
+    }
+
+    private boolean isMasterCashPoint(String cashPointId) {
+        if (cashPoints.size() < 2)
+            return true;
+        
+        return getCashPoint(cashPointId).isMaster;
     }
 }

@@ -103,5 +103,9 @@ $_SESSION['firstloadpage'] = true;
             getshop.documentLoaded();
         });
     </script>
+
+    <?
+    $page->renderBottom();
+    ?>
 </html>
 

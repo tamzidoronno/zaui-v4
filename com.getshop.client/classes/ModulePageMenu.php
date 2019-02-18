@@ -31,42 +31,16 @@ class ModulePageMenu {
      * 
      * @param core_usermanager_data_User $user
      */
-    public function renderTop($user) {
-        $this->renderNumPad();
-        $menuEntries = $this->getEntries();
-        $useraccess = (array)$user->pmsPageAccess;
-        
-        if ($this->moduleName == "salespoint") {
-            $useraccess = (array)$user->salesPointPageAccess;
-        }
-
+    public function renderTop($user, $printPageMenuInModulesMenu=false) {
         ?>
 
         <div class="Menu">
-            
             <?php
-            $this->printChangedMenues();
+            $this->printChangedMenues($user, $printPageMenuInModulesMenu);
+            if (!$printPageMenuInModulesMenu) {
+                $this->printHorizantalMenu($user);
+            }
             ?>
-            <div class="menuentries horizontal">
-                <div class="entries">
-                    <? foreach ($menuEntries as $entry) {
-                        if(!empty($useraccess)) {
-                            if(!in_array($entry->getPageId(),$useraccess)) {
-                                continue;
-                            }
-                        }
-                        if($entry->getPageId() == "getshopsupport") {
-                            ?>
-                            <div class="entry"><a href="/getshopsupport.php" target='_new'><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
-                            <?php
-                        } else {
-                            ?>
-                            <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
-                            <?php
-                        }
-                    } ?>
-                </div>
-            </div>
         </div>
         <?
     }
@@ -99,16 +73,17 @@ class ModulePageMenu {
         <?
     }
 
-    public function renderLeft($moduleName="pms") {
+    public function renderLeft($moduleName="pms", $printPageMenuInModulesMenu=false) {
         $menuEntries = $this->getEntries();
+        $renderMenuInModules = $printPageMenuInModulesMenu ? "yes" : "no";
         ?>
 
-        <div class="Menu">
+        <div class="Menu" menurenderedinmodules="<? echo $renderMenuInModules; ?>">
             <div class="menuentries vertical">
                 <div class="entries">
                     <? foreach ($menuEntries as $entry) { ?>
                         <div class="entry"><a href="/<?echo $moduleName;?>.php?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
-                                    <? } ?>
+                    <? } ?>
                 </div>
             </div>
         </div>
@@ -137,35 +112,44 @@ class ModulePageMenu {
         return $menu;
     }
 
-    public function printChangedMenues() {
+    public function printChangedMenues($user, $printPageMenuInModulesMenu) {
+        
         $factory = IocContainer::getFactorySingelton();
         $modules = $factory->getApi()->getPageManager()->getModules();
         echo "<div class='gs_framework_modules'>";
-        foreach ($modules as $module) {
-            $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
-            $activeModule = $factory->getPage()->javapage->getshopModule == $module->id ? $module : $activeModule;
-            if (!$activeModule && $module->id == "cms") {
-                $activeModule = $module;
+        
+            if ($printPageMenuInModulesMenu) {
+                echo "<div class='inner_header_top_menu_gs'>Menu</div>";
+                $this->printHorizantalMenu($user);
             }
-            $icon = "<i class='fa gs".$module->fontAwesome."'></i>";
-            $scopeId = $_POST['scopeid'];
-            if($module->name == "PMS") {
-                echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br>PMS</div></a>";
-            } elseif ($module->name == "Salespoint") {
-                echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>SalesPoint</div></a>";
-            } elseif (strtolower($module->name) == "apac") {
-                echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Apac</div></a>";
-            } elseif (strtolower($module->name) == "invoicing") {
-                echo "<a class='gs_ignorenavigate' href='invoicing.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Invoicing</div></a>";
-            } elseif (strtolower($module->name) == "settings") {
-                echo "<a class='gs_ignorenavigate' href='settings.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Settings</div></a>";
-            } else {
-                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
+
+            echo "<div class='inner_header_top_menu_gs'>Modules</div>";
+            foreach ($modules as $module) {
+                $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
+                $activeModule = $factory->getPage()->javapage->getshopModule == $module->id ? $module : $activeModule;
+                if (!$activeModule && $module->id == "cms") {
+                    $activeModule = $module;
+                }
+                $icon = "<i class='fa gs".$module->fontAwesome."'></i>";
+                $scopeId = $_POST['scopeid'];
+                if($module->name == "PMS") {
+                    echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br>PMS</div></a>";
+                } elseif ($module->name == "Salespoint") {
+                    echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>SalesPoint</div></a>";
+                } elseif (strtolower($module->name) == "apac") {
+                    echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Apac</div></a>";
+                } elseif (strtolower($module->name) == "invoicing") {
+                    echo "<a class='gs_ignorenavigate' href='invoicing.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Invoicing</div></a>";
+                } elseif (strtolower($module->name) == "settings") {
+                    echo "<a class='gs_ignorenavigate' href='settings.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Settings</div></a>";
+                } else {
+                    echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
+                }
             }
-        }
-        echo "<a class='gs_ignorenavigate' href='/logout.php?goBackToHome=true'><div class='gs_framework_module'><i class='gsicon-user-lock'></i> <div>Sign out</div></div></a>";
+            echo "<a class='gs_ignorenavigate' href='/logout.php?goBackToHome=true'><div class='gs_framework_module'><i class='gsicon-user-lock'></i> <div>Sign out</div></div></a>";
         echo "</div>";
-        echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa gsicon-menu modulechangericon'></i> <div>Modules</div></div>";
+        $text = $printPageMenuInModulesMenu ? "Menu" : "Modules";
+        echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa gsicon-menu modulechangericon'></i> <div>$text</div></div>";
 
         
         
@@ -187,7 +171,7 @@ class ModulePageMenu {
                 font-size: 0px;
                 display: none;  
                 background-color: #23314e;
-                padding-bottom: 50px;
+                padding-bottom: 10px;
                 border-top: solid 1px rgba(255,255,255,0.2);
             }
             .gs_framework_module i { font-size: 40px; margin-top:5px;cursor:pointer; }
@@ -201,7 +185,7 @@ class ModulePageMenu {
                 right: 30px;
                 top: 0px;
                 width: 120px;
-                height: 120px;
+                height: 100px;
                 background-color: #FFF;
                 z-index: 1;
                 text-align: center;
@@ -211,7 +195,7 @@ class ModulePageMenu {
                 background-color: #23314e;
                 vertical-align: central;
                 box-sizing: border-box;
-                padding-top: 50px;
+                padding-bottom: 20px;
             }
         </style>
         <?php
@@ -242,6 +226,37 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("User accounts", "useraccounts", "fa fa-user");
         
         return $menu;
+    }
+
+    public function printHorizantalMenu($user) {
+        $menuEntries = $this->getEntries();
+        $useraccess = (array)$user->pmsPageAccess;
+        
+        if ($this->moduleName == "salespoint") {
+            $useraccess = (array)$user->salesPointPageAccess;
+        }
+        ?>
+        <div class="menuentries horizontal">
+                <div class="entries">
+                    <? foreach ($menuEntries as $entry) {
+                        if(!empty($useraccess)) {
+                            if(!in_array($entry->getPageId(),$useraccess)) {
+                                continue;
+                            }
+                        }
+                        if($entry->getPageId() == "getshopsupport") {
+                            ?>
+                            <div class="entry"><a href="/getshopsupport.php" target='_new'><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                            <?php
+                        } else {
+                            ?>
+                            <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                            <?php
+                        }
+                    } ?>
+                </div>
+            </div>
+        <?
     }
 
 }

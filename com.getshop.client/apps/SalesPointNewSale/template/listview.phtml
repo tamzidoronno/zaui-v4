@@ -63,20 +63,30 @@ foreach ($grouped as $groupName => $lists) {
                     <?
                 }
             echo "</h2>";
-
-            foreach ($list->productIds as $productId) {
-                $product = $this->getProduct($products, $productId);
-                ?>
-                <div class='product addProductToCurrentTab' productid="<? echo $product->id; ?>">
-                    <div class='inner'>
-                        <div class='productname'><? echo $product->name; ?></div>
+            
+            echo "<div class='product_list_inner'>";
+                foreach ($list->productIds as $productId) {
+                    $product = $this->getProduct($products, $productId);
+                    ?>
+                    <div class='product addProductToCurrentTab' productid="<? echo $product->id; ?>">
+                        <div class='inner'>
+                            <div class='productname'><? echo $product->name; ?></div>
+                        </div>
                     </div>
-                </div>
-                <?
-            }
+                    <?
+                }
+            echo "</div>";
             ?>
+            
         </div>
     <?
     }
+}
+if ($this->getSelectedCashPointName()) {
+?>
+    <div class='cashpointindicatorname'>
+        <? echo $this->getSelectedCashPointName(); ?>
+    </div>
+<?
 }
 ?>

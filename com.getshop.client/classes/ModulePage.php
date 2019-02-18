@@ -274,7 +274,7 @@ class ModulePage {
         $this->leftMenu = $leftMenu;
     }
 
-    public function renderPage() {
+    public function renderPage($modal=false) {
         $topRow = true;
         echo "<div class='gs_page_area' gs_page_content_id='$this->pageId'>";
         $rowcount = 0;
@@ -300,7 +300,6 @@ class ModulePage {
             $rowcount++;
         }
         echo "</div>";
-        
     }
 
     public function getTopMenuSrs() {
@@ -396,6 +395,10 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Invoicing", "invoicing", "fa-dollar");
         $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "gsicon-gs-gears");
         return $menu;
+    }
+
+    public function renderBottom() {
+        $this->getMenu()->renderNumPad();
     }
 
 }

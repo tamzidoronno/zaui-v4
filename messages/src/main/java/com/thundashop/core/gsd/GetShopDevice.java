@@ -7,6 +7,7 @@ package com.thundashop.core.gsd;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.Date;
+import java.util.HashMap;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -20,6 +21,16 @@ public class GetShopDevice extends DataCommon {
     public String token = "";
     public String type = "";
     
+    public HashMap<String, String> extraConfigs = new HashMap();
+    
     @Transient
     public Date lastPulledRequest;
+    
+    public String getConfig(String key) {
+        if (extraConfigs.get(key) == null) {
+            return "";
+        }
+        
+        return extraConfigs.get(key);
+    }
 }

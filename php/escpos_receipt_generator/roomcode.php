@@ -7,7 +7,7 @@
 //$STDOUT = fopen('/tmp/test.log', 'wb');
 //$STDERR = fopen('/tmp/error.log', 'wb');
 
-$jsonData = file_get_contents('/tmp/printcontent.txt');
+$jsonData = file_get_contents('/tmp/'.$argv[1].'.txt');
 $printMessage = json_decode($jsonData);
 require __DIR__ . '/vendor/autoload.php';
 
@@ -16,7 +16,7 @@ use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 
 /* Fill in your own connector here */
-$connector = new FilePrintConnector("/tmp/receipt2.prn");
+$connector = new FilePrintConnector("/tmp/".$argv[1].".prn");
 
 /* Information for the receipt */
 $items = array();

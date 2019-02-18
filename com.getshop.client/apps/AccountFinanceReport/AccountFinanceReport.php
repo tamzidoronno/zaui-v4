@@ -298,5 +298,34 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         return $amounts;
     }
 
+    public function downloadUnsettledAmountExcel() {
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        $unsettledAmounts = $this->getApi()->getOrderManager()->getOrdersUnsettledAmount($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'], $end);
+        
+        $rows = array();
+        
+        $rows[] = array('orderid', 'name', 'amount', 'VAT number', 'Address', 'City', 'PostCode');
+        
+        foreach ($unsettledAmounts as $unsettledAmount) {
+            $row = array();
+            $row[] = $unsettledAmount->order->incrementOrderId;
+            $row[] = $unsettledAmount->order->cart->address->fullName;
+            $row[] = $unsettledAmount->amount; 
+            
+            if ($row ) {
+                $user = $this->getApi()->getUserManager()->getUserById($unsettledAmount->order->userId);
+                $row[] = $user->isCompanyMainContact && $user->companyObject ? $user->companyObject->vatNumber : "N/A";
+            }
+            
+            $row[] = $unsettledAmount->order->cart->address->address;
+            $row[] = $unsettledAmount->order->cart->address->city;
+            $row[] = $unsettledAmount->order->cart->address->postCode;
+            
+            $rows[] = $row;
+        }
+        
+        echo json_encode($rows);
+    }
 }
 ?>

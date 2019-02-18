@@ -475,6 +475,30 @@ body {
 .kaipal.infobox .image.sad { background-image: url('/skin/default/images/kaipal-100px-sad.png'); }
 .kaipal.infobox .image.danger { background-image: url('/skin/default/images/kaipal-100px-warning.png'); }
 
+.Menu .gs_framework_modules .menuentries .entry {
+    height: 90px;
+}
+.Menu .gs_framework_modules .inner_header_top_menu_gs {
+    text-align: center;
+    padding: 5px;
+    width: 100%;
+    font-size: 20px;
+    color: #FFF;
+    background-color: rgba(255,255,255,0.05);
+    margin-bottom: 20px;
+}
+
+.Menu .gs_framework_modules .menuentries {
+    width: 100%;
+}
+
+.gs_body[hasleftmenu="yes"] .Menu[menurenderedinmodules="yes"] {
+    margin-top: 90px;
+    border: solid 1px #DDD;
+    border-bottom: solid 0px;
+}
+
+
 @media only all and (max-width:800px){
     .gsarea[area="header"] {padding-bottom:40px;}
     .gs_framework_modules {left:0 !important;}

@@ -16,8 +16,8 @@ $colors["Coverage"] = "yellow";
 $colors["Janitor"] = "green";
 
 $count["Open_Tabs"] = count($this->getApi()->getPosManager()->getAllTabs());
-$count["TOTAL_SALES"] = $this->getApi()->getPosManager()->getTotalForCurrentZReport();
-$count["NUMBER_OF_ORDERS"] = count($this->getApi()->getPosManager()->getZReport("")->orderIds);
+$count["TOTAL_SALES"] = $this->getApi()->getPosManager()->getTotalForCurrentZReport($this->getSelectedCashPointId());
+$count["NUMBER_OF_ORDERS"] = count($this->getApi()->getPosManager()->getZReport("", $this->getSelectedCashPointId())->orderIds);
 ?>
 
 <div class='dashboard_main'>

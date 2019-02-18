@@ -17,6 +17,7 @@ import java.util.List;
 public class ZReport extends DataCommon implements Comparable<ZReport> {
     public List<String> orderIds = new ArrayList();
     public String createdByUserId = "";
+    public String cashPointId = "";
     public Date start;
     public Date end;
     public double totalAmount;

@@ -10,6 +10,7 @@
     color: #FFF;
     text-align: center;
     min-height: calc(100% - 86px);
+    padding-top: 75px;
 }
 
 .SalesPointReports .leftmenu .entry {
@@ -95,8 +96,12 @@
     max-width: 1500px;
     margin: 0 auto;
     font-size: 25px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding-left: 28px;
+    background-color: #DDD;
+    padding-top: 10px;
+    padding-bottom: 15px;
 }
 
 .SalesPointReports .informationbox {
@@ -124,4 +129,12 @@
 .SalesPointReports .closewarnings .row .rooms {
     padding-top: 20px;
     padding-left: 20px;
+}
+
+.SalesPointReports .cashpointname {
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+    
+    background-color: #DDD;
 }

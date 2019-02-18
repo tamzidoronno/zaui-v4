@@ -1320,7 +1320,7 @@ public class Order extends DataCommon implements Comparable<Order> {
             cart.sortByProducIds();
         }
     }
-    
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;
@@ -1554,4 +1554,24 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void addOrderTag(OrderTag tag) {
         tags.add(tag);
     }
+    
+    public boolean isConnectedToCashPointId(String cashPointId) {
+        return tags.stream()
+                .filter(o -> (o instanceof CashPointTag))
+                .map(o -> (CashPointTag)o)
+                .filter(o -> o.cashPointId.equals(cashPointId))
+                .count() > 0;
+    }
+    
+    public String getCashPointId() {
+        return tags.stream()
+                .filter(o -> (o instanceof CashPointTag))
+                .map(o -> (CashPointTag)o)
+                .map(o -> o.cashPointId)
+                .findFirst()
+                .orElse("");
+                
+    }
+    
+    
 }

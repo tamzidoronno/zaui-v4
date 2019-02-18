@@ -14,6 +14,7 @@ class SalesPointCommon extends \MarketingApplication {
         
         if ($cashPoints && count($cashPoints) == 1) {
             $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_id'] = $cashPoints[0]->id;
+            $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_name'] = $cashPoints[0]->cashPointName;
         }
         
         if ($cashPoints && count($cashPoints) && !$this->getSelectedCashPointId()) {
@@ -37,6 +38,15 @@ class SalesPointCommon extends \MarketingApplication {
     
     public function selectCashPoint() {
         $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_id'] = $_POST['data']['cashpointid'];
+        $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_name'] = $this->getApi()->getPosManager()->getCashPoint($_POST['data']['cashpointid'])->cashPointName;
+    }
+    
+    public function getSelectedCashPointName() {
+        if (isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_name'])) {
+            return $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_name'];
+        }
+        
+        return "";
     }
     
     public function disconnectedCashPoint() {

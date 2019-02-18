@@ -12,6 +12,7 @@ import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -42,5 +43,5 @@ public interface IGdsManager {
     @Administrator
     public List<GetShopDevice> getDevices();
     
-    
+    public void setGdsConfig(String tokenId, String key, String config);
 }

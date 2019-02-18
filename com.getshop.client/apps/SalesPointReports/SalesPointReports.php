@@ -38,9 +38,9 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
 
     public function getCurrentZReport() {
         if ($this->isCurrentZReportASavedReport()) {
-            return $this->getApi()->getPosManager()->getZReport($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report']);
+            return $this->getApi()->getPosManager()->getZReport($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_selected_z_report'], $this->getSelectedCashPointId());
         } else {
-            return $this->getApi()->getPosManager()->getZReport("");
+            return $this->getApi()->getPosManager()->getZReport("", $this->getSelectedCashPointId());
         }
     }
     
@@ -63,11 +63,15 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     }
     
     public function createZReport() {
-        $this->getApi()->getPosManager()->createZReport();
+        $this->getApi()->getPosManager()->createZReport($this->getSelectedCashPointId());
     }
     
     public function formatRowCreatedDate($row) {
         return $this->formatDate($row->rowCreatedDate);
+    }
+    
+    public function formatCashPointName($row) {
+        return $this->getApi()->getPosManager()->getCashPoint($row->cashPointId)->cashPointName;
     }
     
     public function formatDate($date) {
@@ -109,7 +113,8 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
             array('id', 'gs_hidden', 'id'),
             array('rowCreatedDate', 'CREATED DATE', '', 'formatRowCreatedDate'),
             array('user', 'Created by', '', 'formatUser'),
-            array('totalAmount', 'TOTAL', 'totalAmount')
+            array('totalAmount', 'TOTAL', 'totalAmount'),
+            array('cashPointName', 'CASHPOINT', '', 'formatCashPointName')
         );
         
         $table = new \GetShopModuleTable($this, 'PosManager', 'getZReportsUnfinalized', $args, $attributes);

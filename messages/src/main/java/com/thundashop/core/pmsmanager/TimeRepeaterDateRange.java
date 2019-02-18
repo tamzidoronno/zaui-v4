@@ -14,6 +14,13 @@ public class TimeRepeaterDateRange implements Serializable {
         return false;
     }
 
+    public boolean isBetweenTimeOrStartingAt(Date dateToCheck) {
+        if((dateToCheck.after(start) && dateToCheck.before(end)) || dateToCheck.equals(start)) {
+                return true;
+        }
+        return false;
+    }
+
     public boolean containsRange(Date start, Date end) {
         if((this.start.before(start) || this.start.equals(start)) && (this.end.after(end) || this.end.equals(end))) {
             return true;

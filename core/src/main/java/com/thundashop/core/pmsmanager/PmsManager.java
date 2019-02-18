@@ -8947,7 +8947,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             TimeRepeater repeater = new TimeRepeater();
             LinkedList<TimeRepeaterDateRange> timeRanges = repeater.generateRange(data);
             for(TimeRepeaterDateRange range : timeRanges) {
-                if(range.isBetweenTime(start) || range.isBetweenTime(end)) {
+                if(range.isBetweenTimeOrStartingAt(start) || range.isBetweenTime(end)) {
                     return true;
                 }
             }

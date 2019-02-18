@@ -16,6 +16,14 @@ if (!$report->orderIds || !count($report->orderIds)) {
     return;
 }
 
+$cashPointName = $this->getSelectedCashPointName();
+if ($cashPointName) {
+    echo "<div class='cashpointname'>";
+        echo "Report for: ".$cashPointName;
+    echo "</div>";
+}
+
+
 $orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99999);
 $totalForPaymentMethods = array();
 $ordersGrouped = array();

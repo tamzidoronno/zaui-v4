@@ -3,6 +3,7 @@ package com.thundashop.core.ordermanager.data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class OrderResult {
    public String orderId;
@@ -23,6 +24,7 @@ public class OrderResult {
    public String invoiceNote = "";
    public List<OrderShipmentLogEntry> shipmentLog = new ArrayList();
    public String paymentType = "";
+   public String cashPointId = "";
 
     public void setOrder(Order ord) {
         amountPaid = ord.getTransactionAmount();
@@ -39,6 +41,7 @@ public class OrderResult {
         closed = ord.closed;
         invoiceNote = ord.invoiceNote;
         shipmentLog = ord.shipmentLog;
+        cashPointId = ord.getCashPointId();
         
         amountExTaxes = Math.round(amountExTaxes*100)/100;
         amountIncTaxes = Math.round(amountIncTaxes*100)/100;
@@ -46,5 +49,9 @@ public class OrderResult {
         restAmount = amountIncTaxes - amountPaid + ord.cashWithdrawal;
         start = ord.getStartDateByItems();
         end = ord.getEndDateByItems();
+    }
+
+    public boolean isConnectedToCashPointId(String cashPointId) {
+        return cashPointId.equals(this.cashPointId);
     }
 }

@@ -77,6 +77,7 @@
     box-sizing: border-box;
     margin-top: 68px;
     padding-top: 8px;
+    padding-bottom: 20px;
 }
 
 .SalesPointNewSale .topmenu .entry,
@@ -503,6 +504,16 @@
     padding-top: 10px;
     box-sizing: border-box;
     overflow: hidden;
+}
+
+.SalesPointNewSale .cashpointindicatorname {
+    position: fixed;
+    bottom: 0px;
+    line-height: 20px;
+    text-align: center;
+    background-color: #ffe18c;
+    left: 0px;
+    right: 0px;
 }
 
 @media (max-width: 1050px) {

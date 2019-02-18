@@ -82,4 +82,11 @@ foreach ($grouped as $groupName => $lists) {
     <?
     }
 }
+if ($this->getSelectedCashPointName()) {
+?>
+    <div class='cashpointindicatorname'>
+        <? echo $this->getSelectedCashPointName(); ?>
+    </div>
+<?
+}
 ?>

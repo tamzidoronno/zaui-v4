@@ -57,7 +57,7 @@ public interface IPosManager {
     public int getTabCount();
     
     @Editor
-    public ZReport getZReport(String zReportId);
+    public ZReport getZReport(String zReportId, String cashPointId);
     
     @Editor
     public FilteredData getZReportsUnfinalized(FilterOptions filterOptions);
@@ -66,10 +66,10 @@ public interface IPosManager {
     public void removeItemsFromTab(String tabId, List<CartItem> cartItems);
     
     @Editor
-    public void createZReport();
+    public void createZReport(String cashPointId);
     
     @Editor
-    public Double getTotalForCurrentZReport();
+    public Double getTotalForCurrentZReport(String cashPointId);
     
     @Editor
     public void printOverview(String tabId, String cashPointDeviceId);

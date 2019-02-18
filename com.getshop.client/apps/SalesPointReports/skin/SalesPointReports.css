@@ -130,3 +130,11 @@
     padding-top: 20px;
     padding-left: 20px;
 }
+
+.SalesPointReports .cashpointname {
+    text-align: center;
+    font-size: 16px;
+    padding: 10px;
+    
+    background-color: #DDD;
+}

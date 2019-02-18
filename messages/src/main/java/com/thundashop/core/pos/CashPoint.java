@@ -28,6 +28,13 @@ public class CashPoint extends DataCommon {
     public String kitchenPrinterGdsDeviceId = "";
     
     public String departmentId = "";
+    
+    /**
+     * A master cashpoint will handle the online payements, invoices etc.
+     * It will also be able to close the financial periode and make sure that it has 
+     * received the zreport for all other cashpoints, including external cashpoints.
+     */
+    public boolean isMaster = false;
 
     public void setUserView(String userId, String viewId) {
         selectedUserView.put(userId, viewId);

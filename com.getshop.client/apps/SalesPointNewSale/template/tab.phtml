@@ -127,8 +127,8 @@ foreach ($cartItems as $item) {
                 }
             }
             
-            echo "<input class='gsniceinput1 changecount' value='".$item->count."' gstype='numpad' gsnumpadtitle='Please enter new count'/> ";
-            echo " x <input class='gsniceinput1 changeprice' value='".$priceToUse."' gstype='numpad' gsnumpadtitle='Please enter new price'/>";
+            echo "<input class='gsniceinput1 changecount' readonly='true' value='".$item->count."' gstype='numpad' gsnumpadtitle='Please enter new count'/> ";
+            echo " x <input class='gsniceinput1 changeprice' readonly='true' value='".$priceToUse."' gstype='numpad' gsnumpadtitle='Please enter new price'/>";
             ?>
 
             <span class="gs_shop_small_icon" title="<? echo $this->__f("Discount"); ?>" cartitemid='<? echo $item->cartItemId; ?>' gstype='numpad' gsmethod='methodToExecute' gsnumpadtitle='Please enter discount percent' gsnumpad_on_ok='app.SalesPointNewSale.itemDiscountChange'>

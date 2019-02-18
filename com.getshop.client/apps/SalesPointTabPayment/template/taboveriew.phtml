@@ -30,8 +30,8 @@ foreach ($cartItems as $cartItem) {
     <div class='cartitem itemlines' cartitemid='<? echo $cartItem->cartItemId; ?>'>
         <div class='col checkbox'><input type='checkbox' checked='true'/></div>
         <div class='col productname'><?php echo $cartItem->product->name; ?></div>
-        <div class='col count'><input gstype='numpad' gsnumpadtitle='Please enter new count' class='gsniceinput1' value='<? echo $cartItem->count; ?>'/> x</div>
-        <div class='col price'><input gstype='numpad' gsnumpadtitle='Please enter new price' class='gsniceinput1' value='<? echo $priceToUse; ?>'/></div>
+        <div class='col count'><input readonly='true' gstype='numpad' gsnumpadtitle='Please enter new count' class='gsniceinput1' value='<? echo $cartItem->count; ?>'/> x</div>
+        <div class='col price'><input readonly='true' gstype='numpad' gsnumpadtitle='Please enter new price' class='gsniceinput1' value='<? echo $priceToUse; ?>'/></div>
     </div>
     <?
 }

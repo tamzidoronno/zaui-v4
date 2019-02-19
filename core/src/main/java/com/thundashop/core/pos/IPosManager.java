@@ -171,5 +171,5 @@ public interface IPosManager {
     public ZReport getPrevZReport(String cashPointId);
     
     @Editor
-    public double getTotalForZreport(String zReportId);
+    public Double getTotalForZreport(String zReportId);
 }

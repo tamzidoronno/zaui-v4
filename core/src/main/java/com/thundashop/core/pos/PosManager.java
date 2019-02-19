@@ -951,7 +951,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     @Override
-    public double getTotalForZreport(String zReportId) {
+    public Double getTotalForZreport(String zReportId) {
         return zReports.get(zReportId).orderIds.stream()
                 .map(orderId -> orderManager.getOrder(orderId))
                 .mapToDouble(order -> orderManager.getTotalAmount(order))

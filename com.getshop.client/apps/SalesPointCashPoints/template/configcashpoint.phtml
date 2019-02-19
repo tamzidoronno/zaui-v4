@@ -64,5 +64,10 @@ $departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
     
     <br/>
     <br/>
+    
+    Is master: <input type='checkbox' gsname='isMaster' <? echo $cashPoint->isMaster ? 'checked="true"' : ''; ?>/>
+    
+    <br/>
+    <br/>
     <div class='shop_button saveproductconfig'><? echo $this->__f("Save"); ?></div>
 </div>

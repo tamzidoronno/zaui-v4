@@ -166,4 +166,10 @@ public interface IPosManager {
     
     @Editor
     public void setView(String cashPointId, String viewId);
+    
+    @Editor
+    public ZReport getPrevZReport(String cashPointId);
+    
+    @Editor
+    public double getTotalForZreport(String zReportId);
 }

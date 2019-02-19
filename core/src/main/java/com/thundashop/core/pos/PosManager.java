@@ -933,4 +933,24 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         return getCashPoint(cashPointId).isMaster;
     }
+
+    @Override
+    public ZReport getPrevZReport(String cashPointId) {
+        return zReports.values()
+                .stream()
+                .filter(o -> o.cashPointId.equals(cashPointId))
+                .sorted((ZReport z1, ZReport z2) -> {
+                    return z2.rowCreatedDate.compareTo(z1.rowCreatedDate);
+                })
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public double getTotalForZreport(String zReportId) {
+        return zReports.get(zReportId).orderIds.stream()
+                .map(orderId -> orderManager.getOrder(orderId))
+                .mapToDouble(order -> orderManager.getTotalAmount(order))
+                .sum();
+    }
 }

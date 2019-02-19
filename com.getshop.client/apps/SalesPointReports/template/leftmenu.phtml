@@ -1,5 +1,7 @@
 <?
 /* @var $this ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCashPointId());
+
 ?>
 <div class="leftmenu">
    
@@ -13,5 +15,17 @@
             Z Report
             <br/>History
         </div>
+    
+        <?
+        if ($cashPoint->isMaster) {
+            ?>
+                <div class='entry all' tab='masterreport'>
+                    <i class='fa fa-lightbulb-o'></i>
+                    Master 
+                    <br/>Report
+                </div>
+            <?
+        }
+        ?>
     </div>
 </div>

@@ -16,6 +16,7 @@ app.SalesPointCashPoints = {
         data.receiptprinter = $('.config_sales_point select[gsname="receiptprinter"]').val();
         data.kitchenprinter = $('.config_sales_point select[gsname="kitchenprinter"]').val();
         data.departmentId = $('.config_sales_point select[gsname="departmentid"]').val();
+        data.isMaster = $('.config_sales_point input[gsname="isMaster"]').is(':checked');
         
         thundashop.Ajax.simplePost($('.SalesPointCashPoints'), "saveConfig", data);
         $('.gsoverlay2.active').click();

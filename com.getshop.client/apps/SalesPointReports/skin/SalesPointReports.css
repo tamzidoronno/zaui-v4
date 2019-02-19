@@ -138,3 +138,28 @@
     
     background-color: #DDD;
 }
+.SalesPointReports .masterrow {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+}
+.SalesPointReports .masterrow .col {
+    display: inline-block;
+    font-size: 16px;
+    vertical-align: top;
+}
+
+.SalesPointReports .masterrow.header .col {
+    font-weight: bold;
+}
+
+.SalesPointReports .masterrow .col.name {
+    width: 200px;
+}
+
+.SalesPointReports .masterrow .col.prevtext {
+    width: 500px;
+}
+
+.SalesPointReports .masterrow .col.prevtotal {
+    width: 200px;
+}

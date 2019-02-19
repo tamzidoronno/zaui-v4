@@ -1,0 +1,297 @@
+<?
+/* @var $this \ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+?>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<style>
+    .leftmenu,
+    .reportarea {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .leftmenu {
+        width: 100px;
+        background-color: #23314e;
+        color: #FFF;
+        text-align: center;
+        min-height: calc(100% - 86px);
+        padding-top: 75px;
+    }
+
+    .leftmenu .entry {
+        border-top: solid 1px #222;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        cursor: pointer;
+    }
+    .leftmenu .entry i {
+        display: block;
+        font-size: 30px;
+    }
+
+
+    .reportarea {
+        border: solid 1px #DDD;
+        width: calc(100% - 106px);
+    }
+
+    .orderline {
+        padding: 5px;
+        border-bottom: solid 1px #DDD;
+        padding-left: 20px;
+        font-size: 0px;
+    }
+
+    .orderline:nth-child(odd) {
+        background-color: #DDD;
+    }
+
+    .orderline .col {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 20px;
+        font-size: 14px;
+    }
+
+    .orderline .col.type {
+        width: 190px;
+    }
+
+    .orderline .col.name {
+        width: calc(100% - 600px);
+    }
+
+    .orderline .orderid { width: 100px; }
+    .orderline .date { width: 150px; }
+
+    .paymentrow {
+        border: solid 1px #DDD;
+        margin: 50px;
+    }
+    
+    .paymentrow.ordersummary {
+        page-break-after: always;
+    }
+
+    .paymentrow h2 {
+        padding-left: 20px;
+    }
+
+    .summary {
+        background-color: #DDD;
+        padding: 20px;
+    }
+
+    .summary .col.name {
+        width: 250px;
+    }
+
+    .summary .orderline {
+        border-bottom: solid 1px #efefef;
+    }
+
+    .nofound {
+        font-size: 25px;
+        text-align: center;
+        padding: 50px;
+        color: red;
+    }
+
+    .col_rowaction {
+        width: 100px;
+    }
+
+    .reportheader {
+        max-width: 1500px;
+        margin: 0 auto;
+        font-size: 25px;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding-left: 28px;
+        background-color: #DDD;
+        padding-top: 10px;
+        padding-bottom: 15px;
+    }
+
+    .informationbox {
+        background-color: red;
+        padding: 20px;
+        margin: 0px auto;
+        text-align: center;
+        font-size: 20px;
+        color: #FFF;
+    }
+    .closewarnings .row {
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+    .closewarnings {
+        border: solid 1px red;
+        margin: 50px;
+        padding: 20px;
+    }
+
+    .closewarnings h2 {
+        color: red;
+    }
+
+    .closewarnings .row .rooms {
+        padding-top: 20px;
+        padding-left: 20px;
+    }
+
+    .cashpointname {
+        text-align: center;
+        font-size: 16px;
+        padding: 10px;
+
+        background-color: #DDD;
+    }
+    .masterrow {
+        border-bottom: solid 1px #DDD;
+        padding: 5px;
+    }
+    .masterrow .col {
+        display: inline-block;
+        font-size: 16px;
+        vertical-align: top;
+    }
+
+    .masterrow.header .col {
+        font-weight: bold;
+    }
+
+    .masterrow .col.name {
+        width: 200px;
+    }
+
+    .masterrow .col.prevtext {
+        width: 500px;
+    }
+
+    .masterrow .col.prevtotal {
+        width: 200px;
+    }
+    
+    .top {
+        font-size: 20px;
+    }
+</style>
+<?
+$report = $this->getApi()->getPosManager()->getZReport($_POST['data']['zreportid'], "");
+if (!$report) {
+    echo "Not found";
+    return;
+}
+
+$user = $this->getApi()->getUserManager()->getUserById($report->createdByUserId);
+
+$cashPoint = $this->getApi()->getPosManager()->getCashPoint($report->cashPointId);
+?>
+<div class='top' style='margin-left: 50px; padding: 50px; background-color: #EFEFEF; margin-right: 50px;'>
+    <div style='font-size: 25px; font-weight: bold; text-align: center; margin-bottom: 20px;'>
+        Z-Report
+    </div>
+    Periode: <? echo date('d.m.Y H:i', strtotime($report->start))." - ".date('d.m.Y H:i', strtotime($report->end)); ?>
+    <br/> Report done by: <? echo $user->fullName; ?>
+    <br/> Downloaded date: <? echo date('d.m.Y H:i'); ?>
+    <?
+    if ($cashPoint) {
+    ?>
+        <br/> Cashpoint name: <? echo $cashPoint->cashPointName; ?>
+    <?
+    }
+    ?>
+</div>
+<?
+$orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99999);
+$totalForPaymentMethods = array();
+$ordersGrouped = array();
+
+foreach ($orders as $order) {
+    $terminalData = $this->getApi()->getOrderManager()->getTerminalInformation($order->id);
+    $paymentTypeArr = explode("\\", $order->payment->paymentType);
+    $paymentType = $this->getPaymentMethodName($paymentTypeArr[0]);
+
+    if ($terminalData) {
+        $paymentType .= " - " . ucfirst(strtolower(trim($terminalData->issuerName))) . "";
+    }
+
+    if ($order->cashWithdrawal) {
+        $cashWithdrawal = new stdClass();
+        $cashWithdrawal->id = $order->id;
+        $cashWithdrawal->incrementOrderId = $order->incrementOrderId;
+        $cashWithdrawal->paymentDate = $order->paymentDate;
+        $cashWithdrawal->userId = $order->userId;
+        $cashWithdrawal->cashWithdrawalCorrection = $order->cashWithdrawal * -1;
+
+        if (!isset($ordersGrouped['PayOnDelivery'])) {
+            $ordersGrouped['PayOnDelivery'] = array();
+        }
+
+        $ordersGrouped['PayOnDelivery'][] = $cashWithdrawal;
+    }
+
+    if (!isset($ordersGrouped[$paymentType])) {
+        $ordersGrouped[$paymentType] = array();
+    }
+
+    $ordersGrouped[$paymentType][] = $order;
+}
+
+foreach ($ordersGrouped as $paymentType => $orders) {
+    echo "<div class='paymentrow ordersummary'>";
+    echo "<h2>" . $this->__f($paymentType) . "</h2>";
+    ?>
+    <div class="orderline">
+        <div class='col orderid'><? echo $this->__f("id"); ?></div>
+        <div class='col date'><? echo $this->__f("Payment Date"); ?></div>
+        <div class='col name'><? echo $this->__f("Employee / customer"); ?></div>
+        <div class='col type'><? echo $this->__f("Payment type"); ?></div>
+        <div class='col totalfororder'><? echo $this->__f("Price"); ?></div>
+    </div>
+    <?
+    $total = 0;
+    foreach ($orders as $order) {
+        $user = $this->getUserById($order->userId);
+        $userFullName = $user ? $user->fullName : "N/A";
+
+        $totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+
+        if (isset($order->cashWithdrawalCorrection)) {
+            $totalForOrder = $order->cashWithdrawalCorrection;
+        }
+
+        $total += $totalForOrder;
+
+        echo "<div class='orderline'>";
+        echo "<div class='col orderid'>" . $order->incrementOrderId . "</div>";
+        echo "<div class='col date'>" . $this->formatDate($order->paymentDate) . "</div>";
+        echo "<div class='col name'>" . $userFullName . "</div>";
+        echo "<div class='col type'>" . $this->__f($paymentType) . "</div>";
+        echo "<div class='col totalfororder'>" . $totalForOrder . "</div>";
+        echo "</div>";
+    }
+
+    $totalForPaymentMethods[$paymentType] = $total;
+    echo "<h2> Total: " . $total . "</h2>";
+    echo "</div>";
+}
+?>
+
+<div class="paymentrow summary">
+    <h2><? echo $this->__f("Total summary"); ?></h2>
+    <?
+    $grandTotal = 0;
+    foreach ($totalForPaymentMethods as $paymentType => $total) {
+        echo '<div class="orderline">';
+        echo "<div class='col name'>$paymentType</div>";
+        echo "<div class='col'>$total</div>";
+        echo "</div>";
+        $grandTotal += $total;
+    }
+    ?>
+
+    <h2><? echo $this->__f("Grand total") . ": " . $grandTotal; ?></h2>
+</div>

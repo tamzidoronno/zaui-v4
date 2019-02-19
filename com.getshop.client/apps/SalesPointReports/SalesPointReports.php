@@ -80,6 +80,11 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         return date('d.m.Y H:i:s', strtotime($date));
     }
     
+    public function downloadPdfZreport() {
+        $this->includefile('pdfxreport');
+        die();
+    }
+    
     public function formatActivateButton($row) {
         $retString = "";
         
@@ -88,6 +93,9 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         }
         
         $retString .= "<div class='gs_shop_small_icon' gsclick='selectZReport' zreportid='$row->id'>".$this->__f("show")."</div>";
+        
+        $filename = date('d.m.Y h.i', strtotime($row))." - ".$this->getApi()->getPosManager()->getCashPoint($row->cashPointId)->cashPointName;
+        $retString .= "<div class='gs_shop_small_icon' gstype='downloadpdf' method='downloadPdfZreport' filename='$filename.pdf' zreportid='$row->id'><i class='fa fa-download'></i></div>";
         
         return $retString;
     }

@@ -89,7 +89,7 @@
 }
 
 .SalesPointReports .col_rowaction {
-    width: 100px;
+    width: 150px;
 }
 
 .SalesPointReports .reportheader {
@@ -157,7 +157,7 @@
 }
 
 .SalesPointReports .masterrow .col.prevtext {
-    width: 500px;
+    width: calc(100% - 500px);
 }
 
 .SalesPointReports .masterrow .col.prevtotal {

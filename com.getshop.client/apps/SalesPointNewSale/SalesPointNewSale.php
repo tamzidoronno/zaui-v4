@@ -23,6 +23,13 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     public function getName() {
         return "SalesPointNewSale";
     }
+    
+    public function reprintorder() {
+        $cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCashPointId());
+        $this->getApi()->getInvoiceManager()->sendReceiptToCashRegisterPoint( $cashPoint->receiptPrinterGdsDeviceId, $_POST['data']['orderid']);
+        $_POST['data']['view'] = "reprint";
+        $this->activateView();
+    }
 
     public function render() {
         if ($this->preRender()) {
@@ -217,6 +224,8 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         
         if ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "cashwithdrawal") {
             $this->includefile("cashwithdrawal");
+        } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "reprint") {
+            $this->includefile("reprint");
         } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables") {
             $this->includefile("tables");
         } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "changeuserview") {

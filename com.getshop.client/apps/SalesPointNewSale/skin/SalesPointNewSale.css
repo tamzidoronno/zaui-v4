@@ -516,6 +516,44 @@
     right: 0px;
 }
 
+.SalesPointNewSale .printmenu .entry.taboperation {
+    background-color: #29354e;
+    color: #FFF;
+}
+
+.SalesPointNewSale .printmenu {
+    background-color: #EEE;
+    display: none;
+}
+
+.SalesPointNewSale .orderrow {
+    padding: 10px;
+    font-size: 15px;
+    border-bottom: solid 1px #DDD;
+}
+.SalesPointNewSale .orderrow .col {
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 10px;
+}
+
+
+.SalesPointNewSale .orderrow .col.orderid {
+    width: 100px;
+}
+
+.SalesPointNewSale .orderrow .col.date {
+    width: 200px;
+}
+
+.SalesPointNewSale .orderrow .col.total {
+    width: 100px;
+}
+
+.SalesPointNewSale .orderrow .col.button {
+    padding-top: 0px;
+}
+
 @media (max-width: 1050px) {
     .SalesPointNewSale .topmenu .entry {
         width: 70px;

@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import logging
+from logging.handlers import RotatingFileHandler
 import sys
+import os
 
 from getshop.WebServer import WebServer
 from Config import config
@@ -8,8 +10,29 @@ from zwaveloghandler.ZwaveLogHandler import ZwaveLogHandler
 from messagehandler.MessageHandler import MessageHandler
 from printerhandler.PrinterHandler import PrinterHandler 
 
+def my_handler(type, value, tb):
+    logging.exception("Uncaught exception: {0}".format(str(value)))
+
+
 if __name__ == "__main__":
-    logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', level=logging.INFO)
+    
+    if not os.path.exists('/storage/log'):
+        os.makedirs('/storage/log');
+        
+    logging.basicConfig(level=logging.DEBUG)
+    
+    
+    
+    logger = logging.getLogger();
+    handler = RotatingFileHandler('/storage/log/getshop.log', maxBytes=20971520, backupCount=2)
+    logger.addHandler(handler);
+    
+    default_formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s');
+    handler.setFormatter(default_formatter);
+    
+    logging.info("Starting....");
+    
+    sys.excepthook = my_handler
     
     config = config();
     

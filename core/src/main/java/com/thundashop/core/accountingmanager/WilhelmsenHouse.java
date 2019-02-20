@@ -75,6 +75,8 @@ public class WilhelmsenHouse implements AccountingInterface {
                 accountingId = 19982; // Bookingcom.
             } else if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
                 accountingId = 24359; // Vipps customer id.
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
+                accountingId = 100; // Vipps customer id.
             } else {
                 accountingId = user.customerId; // Kundenr 
             }
@@ -247,16 +249,22 @@ public class WilhelmsenHouse implements AccountingInterface {
         line.put(8, df.format(total)+"");
         line.put(9, customerId+"");
         line.put(10, "");
-        line.put(11, makeSureIsOkay(user.fullName));
-        if(user.address != null) {
-            line.put(12, makeSureIsOkay(user.address.address));
-            line.put(13, makeSureIsOkay(user.address.postCode));
-            line.put(14, makeSureIsOkay(user.address.city));
-        } else {
+//        line.put(11, makeSureIsOkay(user.fullName));
+//        if(user.address != null) {
+//            line.put(12, makeSureIsOkay(user.address.address));
+//            line.put(13, makeSureIsOkay(user.address.postCode));
+//            line.put(14, makeSureIsOkay(user.address.city));
+//        } else {
+//            line.put(12, "");
+//            line.put(13, "");
+//            line.put(14, "");
+//        }
+
+            line.put(11, "");
             line.put(12, "");
             line.put(13, "");
             line.put(14, "");
-        }
+
         line.put(15, order.incrementOrderId + "");
         line.put(16, kid); //KID
         line.put(17, format.format(dueDate)); //Forfallsdato

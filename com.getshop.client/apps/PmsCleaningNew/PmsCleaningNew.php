@@ -167,6 +167,7 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
             $roomsNeedCleaning[$tmpr->roomId] = $tmpr;
         }
         $items = $this->getItems();
+        echo "<span class='roomisclosed' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is closed</span><br>";
         echo "<span class='notclean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
         echo "<span class='notcleancheckedout' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean checked out</span><br>";
         echo "<span class='clean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
@@ -179,6 +180,9 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
                 $res['inuse']++;
             } else if($state == 5) {
                 $isClean = "notcleancheckedout";
+                $res['dirty']++;
+            } else if($state == 6) {
+                $isClean = "roomisclosed";
                 $res['dirty']++;
             } else if($state == 1) {
                 $isClean = "clean";

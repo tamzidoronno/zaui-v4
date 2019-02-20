@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -222,6 +223,16 @@ public class PmsStatistics implements Serializable {
             }
         }
         return null;
+    }
+
+    Integer getStayOversForDate(Date time) {
+        for(StatisticsEntry entry : entries) {
+            if(entry.isSameDay(time)) {
+                return entry.roomsRentedOut - entry.departures;
+            }
+        }
+        return 0;
+        
     }
 
 }

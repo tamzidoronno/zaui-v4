@@ -25,8 +25,12 @@ class SalesPointCommon extends \MarketingApplication {
         $this->setViewForUser($cashPoints);
         
         return false; 
-   }
+    }
     
+    public static function sortOrdersByDate($l1, $l2) {
+       return strtotime($l2->paymentDate) > strtotime($l1->paymentDate);
+    }
+   
     public function getSelectedCashPointId() {
         
         if(isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_cashpoint_id'])) {

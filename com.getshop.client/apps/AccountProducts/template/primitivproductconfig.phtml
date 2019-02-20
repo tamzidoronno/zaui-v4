@@ -13,6 +13,10 @@ $taxGroups = $this->getApi()->getProductManager()->getTaxes();
     <?
     foreach ($products as $product) {
         $deleted = $product->deleted ? "(".$this->__f("Deleted").")" : "";
+        
+        if ($product->deleted)
+            continue;
+        
         $accountingInformation = $this->getAccountinProductInfoForTaxCode($product, $product->taxGroupObject->groupNumber);
         $accountingNumber = $accountingInformation ? $accountingInformation->accountingNumber : "";
         foreach ($product->accountingConfig as $accountinInfo) {

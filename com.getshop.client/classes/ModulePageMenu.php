@@ -67,7 +67,7 @@ class ModulePageMenu {
                 <div class='gs_numpad_element h2' value='OK'>OK</div>
                 <div class='gs_numpad_element' value='.'>,</div>
                 <div class='gs_numpad_element' value='0'>0</div>
-                <input type='text' class='numpadinput' style='display: none;'/>
+                <input type='text' readonly='true' class='numpadinput' style='display: none;'/>
             </div>
         </div>
         <?

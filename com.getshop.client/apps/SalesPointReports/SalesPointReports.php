@@ -26,6 +26,8 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         echo "<div class='reportarea'>";
             if ($tab == "reportlist") {
                 $this->showReportList(true);
+            } else if ($tab == "masterreport") {
+                $this->includefile("masterreport");
             } else {
                 $this->includefile("xreport");
             }
@@ -78,6 +80,11 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         return date('d.m.Y H:i:s', strtotime($date));
     }
     
+    public function downloadPdfZreport() {
+        $this->includefile('pdfxreport');
+        die();
+    }
+    
     public function formatActivateButton($row) {
         $retString = "";
         
@@ -86,6 +93,9 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         }
         
         $retString .= "<div class='gs_shop_small_icon' gsclick='selectZReport' zreportid='$row->id'>".$this->__f("show")."</div>";
+        
+        $filename = date('d.m.Y h.i', strtotime($row))." - ".$this->getApi()->getPosManager()->getCashPoint($row->cashPointId)->cashPointName;
+        $retString .= "<div class='gs_shop_small_icon' gstype='downloadpdf' method='downloadPdfZreport' filename='$filename.pdf' zreportid='$row->id'><i class='fa fa-download'></i></div>";
         
         return $retString;
     }
@@ -97,6 +107,13 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     
     public function showXReport($fromRender=false) {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "xreport";
+        $this->includefile('xreport');
+        die();
+    }
+    
+    public function showMasterReport($fromRender=false) {
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "masterreport";
+        $this->includefile('masterreport');
         $this->includefile('xreport');
         die();
     }

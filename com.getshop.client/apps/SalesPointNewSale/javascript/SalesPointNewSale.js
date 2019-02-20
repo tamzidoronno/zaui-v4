@@ -9,6 +9,7 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .cartitemline .removefromtab', app.SalesPointNewSale.removeItemFromTab);
         $(document).on('click', '.SalesPointNewSale .deletetab', app.SalesPointNewSale.deleteTab);
         $(document).on('click', '.SalesPointNewSale .printoverview', app.SalesPointNewSale.printOverview);
+        $(document).on('click', '.SalesPointNewSale .printcurrenttab', app.SalesPointNewSale.printCurrentTab);
         $(document).on('click', '.SalesPointNewSale .printkitchen', app.SalesPointNewSale.printCurrentToKitchen);
         $(document).on('click', '.SalesPointNewSale .countadd', app.SalesPointNewSale.countAddClicked);
         $(document).on('click', '.SalesPointNewSale .changeviewmenu', app.SalesPointNewSale.showListOfViews);
@@ -110,12 +111,17 @@ app.SalesPointNewSale = {
         $(this).addClass('active');
     },
     
-    printOverview: function() {
-        if ($(this).hasClass('tabnotactive')) {
-            return;
-        }
-        
+    printCurrentTab: function() {
         thundashop.Ajax.simplePost(this, "printCurrentTab", {});
+    },
+    
+    printOverview: function() {
+        var printMenu = $(this).parent().find('.printmenu');
+        if (printMenu.is(':visible')) {
+           printMenu.slideUp();
+        } else {
+           printMenu.slideDown(); 
+        }
     },
     
     printCurrentToKitchen: function() {

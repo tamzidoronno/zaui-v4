@@ -8,14 +8,28 @@ $cashpoints = $this->getApi()->getPosManager()->getCashPoints();
 ?>
 
 <div class='menu'>
-    <div class='entry taboperation <? echo $tabActive; ?> printoverview' tab='printpreview'>
+    <div class='entry taboperation printoverview' tab='printpreview'>
         <i class='fa fa-print'></i>
-        Print overview
+        Print / Reprint
     </div>
-    <div class='entry taboperation <? echo $tabActive; ?> printkitchen'>
-        <i class='fa fa-print'></i>
-        Print to kitchen
+    
+    <div class='printmenu'>
+        <div class='entry taboperation printcurrenttab' tab='printpreview'>
+            <i class='fa fa-bullhorn'></i>
+            Print preview
+        </div>
+
+        <div class='entry taboperation showreprint' gsclick='activateView' view='reprint' tab='printpreview'>
+            <i class='fa fa-history'></i>
+            Reprint
+        </div>
+
+        <div class='entry taboperation <? echo $tabActive; ?> printkitchen'>
+            <i class='fa fa-cutlery'></i>
+            Print to kitchen
+        </div>
     </div>
+    
     <div class='entry taboperation startpaymentbutton <? echo $tabActive; ?>'  <? echo $showpaymentmodal; ?> tab='listtab' tabid='<? echo $tabId; ?>' paymentmethodid="">
         <i class='fa fa-credit-card'></i>
         Payment

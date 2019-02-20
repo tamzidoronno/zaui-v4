@@ -1,0 +1,35 @@
+<?
+/* @var $this ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+$zReport = $this->getApi()->getPosManager()->getZReport("", $this->getSelectedCashPointId());
+
+?>
+<h2>Please select the order you wish to reprint</h2>
+<?
+if ($zReport == null || !count($zReport->orderIds)) {
+    echo "You have not completed any sales yet";
+} else {
+    $orders = array();
+    foreach ($zReport->orderIds as $orderId) {
+        $orders[] =  $this->getApi()->getOrderManager()->getOrderLight($orderId);
+    }
+    
+    usort($orders,  array('\\ns_57db782b_5fe7_478f_956a_ab9eb3575855\\SalesPointCommon','sortOrdersByDate'));
+    
+    foreach ($orders as $light) {
+        ?>
+        <div class='row orderrow'>
+            <div class='col orderid'><? echo $light->incrementOrderId; ?></div>
+            <div class='col date'><? echo date('d.m.Y H:i', strtotime($light->paymentDate)); ?></div>
+            <div class='col total'><? echo $this->getApi()->getOrderManager()->getTotalForOrderById($light->id); ?></div>
+            <div class='col button'>
+                <div class='gs_shop_small_icon fa fa-print' style='font-size: 30px;' gsclick='reprintorder' orderid='<? echo $light->id; ?>'></div>
+            </div>
+        </div>
+        <?
+    }
+}
+?>
+
+<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;<div class='shop_button' gsclick='activateView' view='reprint' >Cancel</div>

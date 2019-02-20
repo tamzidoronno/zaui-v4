@@ -1,0 +1,34 @@
+<?
+/* @var $this \ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+
+$cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCashPointId());
+if (!$cashPoint->isMaster) {
+    return;
+}
+
+$cashPoints = $this->getApi()->getPosManager()->getCashPoints();
+
+echo "<div class='masterrow header'>";
+    echo "<div class='col name'>".$this->__f("Name")."</div>";
+    echo "<div class='col prevtext'>".$this->__f("Previouse zreport")."</div>";
+    echo "<div class='col prevtotal'>".$this->__f("Previouse total")."</div>";
+    echo "<div class='col value'>".$this->__f("Currently")."</div>";
+echo "</div>";
+foreach ($cashPoints as $cashPoint) {
+    $prevZRport = $this->getApi()->getPosManager()->getPrevZReport($cashPoint->id);
+    $prevText = "N/A";
+    $prevTotal = "0";
+    
+    if ($prevZRport != null) {
+        $prevTotal = $this->getApi()->getPosManager()->getTotalForZreport($prevZRport->id);
+        $prevText = "Closed by: ".$this->getApi()->getUserManager()->getUserById($prevZRport->createdByUserId)->fullName." at ".date('d.m.Y H:i', strtotime($prevZRport->rowCreatedDate));
+    }
+            
+    echo "<div class='masterrow'>";
+        echo "<div class='col name'>".$cashPoint->cashPointName."</div>";
+        echo "<div class='col prevtext'>".$prevText."</div>";
+        echo "<div class='col prevtotal'>".$prevTotal."</div>";
+        echo "<div class='col value'>".$this->getApi()->getPosManager()->getTotalForCurrentZReport($cashPoint->id)."</div>";
+    echo "</div>";
+}
+?>

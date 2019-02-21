@@ -5717,7 +5717,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     needInterval = true;
                 }
             }
-            if (room.inUse && !checkoutToday && !room.closed && !checkinToday && !room.closedByCleaningProgram) {
+            if (room.closed && !room.closedByCleaningProgram) {
+                info.cleaningState = RoomCleanedInformation.CleaningState.closed;
+            } else if (room.inUse && !checkoutToday && !room.closed && !checkinToday && !room.closedByCleaningProgram) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.inUse;
             } else if (room.isClean() || room.isUsedToday()) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.isClean;
@@ -7216,9 +7218,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<SimpleCleaningOverview> getSimpleCleaningOverview(Date start, Date end) {
         Calendar test = Calendar.getInstance();
         List<SimpleCleaningOverview> result = new ArrayList<SimpleCleaningOverview>();
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.startDate = start;
+        filter.endDate = end;
+        
+        PmsStatistics report = getStatistics(filter);
+        
         while (true) {
-            PmsBookingFilter filter = new PmsBookingFilter();
-            filter.startDate = test.getTime();
 
             List<PmsBookingRooms> checkout = getRoomsNeedingCheckoutCleaning(test.getTime());
             List<PmsBookingRooms> interval = getRoomsNeedingIntervalCleaning(test.getTime());
@@ -7227,6 +7234,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             simple.date = test.getTime();
             simple.checkoutCleaningCount = checkout.size();
             simple.intervalCleaningCount = interval.size();
+            simple.stayOvers = report.getStayOversForDate(test.getTime());
 
             result.add(simple);
 

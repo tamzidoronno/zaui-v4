@@ -1,11 +1,21 @@
 <?php
 /* @var $this ns_f8d72daf_97d8_4be2_84dc_7bec90ad8462\PmsChartOverview */
 ?>
-<div style='font-size: 20px; margin-left: 20px;margin-bottom:20px;'>
+<div style='font-size: 20px; margin-left: 20px;margin-bottom:20px; color:red; font-weight: bold;'>
     <?php
     $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
     $pmethods = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    $products = $this->getApi()->getProductManager()->getAllProducts();
+    $notaxfound = "";
     
+    foreach($products as $prod) {
+        if(!$prod->taxGroupObject) {
+            $notaxfound .= "No tax group set for product: " . $prod->name . "<br>";
+        }
+    }
+    $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+    $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
+    $preferredPmethod = $ecomsettings->getConfigurationSetting("defaultPaymentMethod");
     
     if(!isset($config->contracts) || sizeof((array)$config->contracts) == 0) {
         echo "<div><i class='fa fa-warning'></i> The terms and condictions has not been set up yet, make sure you set up a policy the guest has to agree to before booking, do so by going to settings, terms and conditions</div>";
@@ -15,6 +25,12 @@
     }
     if(sizeof((array)$config->emails) == 0) {
         echo "<div><i class='fa fa-warning'></i> No automated messages has been set up yet. Automated messages helps you communicating automatically to your guests, do so by navigating to settings, messages to customer</div>";
+    }
+    if($notaxfound) {
+        echo "<div><i class='fa fa-warning'></i> $notaxfound</div>";
+    }
+    if(!$preferredPmethod) {
+        echo "<div><i class='fa fa-warning'></i> No preferred payment method has been selected yet, go to settings -> Payment methods and set a preferred payment method</div>";
     }
     
     ?>

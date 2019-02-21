@@ -1,6 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -87,5 +88,15 @@ public class StatisticsEntry {
                 roomsRemovedFromStatistics.put(tmpRoomId, entry.priceExRoom.get(roomId));
             }
         }
+    }
+
+    boolean isSameDay(Date time) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(time);
+        cal2.setTime(date);
+        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                          cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        return sameDay;
     }
 }

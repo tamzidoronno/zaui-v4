@@ -39,7 +39,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         if($this->types) {
             return $this->types;
         }
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $this->types = $this->indexList($types);
         return $this->types;
     }

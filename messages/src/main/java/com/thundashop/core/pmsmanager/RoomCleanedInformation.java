@@ -19,6 +19,7 @@ public class RoomCleanedInformation implements Serializable {
         public static Integer needCleaning = 3;
         public static Integer needIntervalCleaning = 4;
         public static Integer needCleaningCheckedOut = 5;
+        public static Integer closed = 6;
     }
     String roomId = "";
     Integer cleaningState = 0;

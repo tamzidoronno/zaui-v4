@@ -148,11 +148,11 @@ $deliverytypes['admin'] = "Admin";
         <br>
         <div class='headingtext'>Filter for room types</div>
         <?php
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $roomTypes = (array)$msg->roomTypes;
-        $allroomtypes = sizeof($prefixes) == 0 ? "checked" : "";
+        $allroomtypes = sizeof($roomTypes) == 0 ? "checked" : "";
         echo "<table width='100%'>";
-        echo "<tr><td><input type='checkbox' value='' class='allroomtypes' $allprefixselected>All room types</td></tr>";
+        echo "<tr><td><input type='checkbox' value='' class='allroomtypes' $allroomtypes>All room types</td></tr>";
         echo "<tr>";
         $counter = 0;
         foreach($types as $type) {

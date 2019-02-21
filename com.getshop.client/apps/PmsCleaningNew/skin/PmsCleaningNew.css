@@ -35,6 +35,7 @@
 
 .PmsCleaningNew .roombox {  color:#fff; display: inline-block; margin: 3px; padding: 3px; border: solid 1px #bbb; width: 60px; text-align: center; }
 .PmsCleaningNew .notclean { background-color: #35280d; }
+.PmsCleaningNew .roomisclosed { background-color: #7a7afe; }
 .PmsCleaningNew .inUse { background-color: purple; }
 .PmsCleaningNew .clean { background-color: green; }
 .PmsCleaningNew .notcleancheckedout { background-color: orange;cursor:pointer;  }

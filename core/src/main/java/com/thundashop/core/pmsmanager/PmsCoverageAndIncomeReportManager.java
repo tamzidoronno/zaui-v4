@@ -234,6 +234,10 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                 }
             }
         }
+        
+        if(!filter.segments.isEmpty() && filter.orderIds.isEmpty()) {
+            filter.orderIds.add("none");
+        }
     }
 
     private void includeLostOrders(List<DayIncome> toinclude, CoverageAndIncomeReportFilter filter) {

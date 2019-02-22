@@ -1089,6 +1089,7 @@ public class PmsManagerProcessor {
                 if(order.payment != null && order.payment.paymentType != null && 
                         (!order.payment.paymentType.toLowerCase().contains("dibs") &&
                         !order.payment.paymentType.toLowerCase().contains("netaxept") &&
+                        !order.payment.paymentType.toLowerCase().contains("stripe") &&
                         !order.payment.paymentType.toLowerCase().contains("epay"))) {
                     continue;
                 }
@@ -1108,15 +1109,6 @@ public class PmsManagerProcessor {
                     }
                     
                     key = key + "_" + order.id;
-                }
-                
-                if(order.payment.paymentType.toLowerCase().contains("dibsautocollect")) {
-                    if(order.tryAutoPayWithDibs == null) {
-                        order.tryAutoPayWithDibs = new Date();
-                        manager.orderManager.saveOrder(order);
-                        manager.getShop.addToDibsAutoCollect(order.id, manager.storeManager.getStoreId());
-                    }
-                    continue;
                 }
                 
                 if(book.notificationsSent.contains(key)) {

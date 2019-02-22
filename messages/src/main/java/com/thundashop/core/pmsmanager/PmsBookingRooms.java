@@ -746,7 +746,13 @@ public class PmsBookingRooms implements Serializable {
             days = getNumberOfMonths();
         }
         
-        totalCost += days * price;
+        if(priceType.equals(PriceType.daily) && priceMatrix != null && !priceMatrix.isEmpty()) {
+            for(Double price : priceMatrix.values()) {
+                totalCost += price;
+            }
+        } else {
+            totalCost += days * price;
+        }
         for(PmsBookingAddonItem item : addons) {
             if(item.isIncludedInRoomPrice) {
                 continue;

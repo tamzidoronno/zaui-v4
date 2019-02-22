@@ -228,7 +228,7 @@ public class PmsStatistics implements Serializable {
     Integer getStayOversForDate(Date time) {
         for(StatisticsEntry entry : entries) {
             if(entry.isSameDay(time)) {
-                return entry.roomsRentedOut - entry.departures;
+                return entry.roomsRentedOut - entry.arrivals;
             }
         }
         return 0;

@@ -46,7 +46,7 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
         $invoice = $this->createInvoice();
         $time = time();
         $totalLines = $innledning . "\r\n" . $client . "\r\n" . $debtor . "\r\n" . $invoice. "\r\n99";
-        $this->transferToSftp($totalLines, "transfertest_" . $time .".txt");
+        $this->transferToSftp($totalLines, "NewCase_" . $time .".txt");
         return true;
     }
 
@@ -182,6 +182,11 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
         $strServerUsername = "201857";
         $strServerPassword = "9lLR2Z3evWGRe5aF9xrC";
 
+        if($this->getApi()->getStoreManager()->isProductMode()) {
+            $strServer = "sftp.lowell.no";
+            $strServerPassword = "lCrHc6ElE1qg7qrFtCEo";
+        }
+        
         //connect to server
         $resConnection = ssh2_connect($strServer, $strServerPort);
 

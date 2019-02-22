@@ -138,6 +138,8 @@ getshop.cleaningController = function ($scope, $state, $stateParams, $sce) {
                                 room.inUseState = "needInterval";
                             } else if(addinfoitem.cleaningState === 5) {
                                 room.inUseState = "notcleancheckedout";
+                            } else if(addinfoitem.cleaningState === 6) {
+                                room.inUseState = "roomisclosed";
                             } else {
                                 room.inUseState = "notclean";
                             }

@@ -84,6 +84,7 @@
     <div class='roombox notclean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-warning"></i>&nbsp;&nbsp;&nbsp;Room is not clean</div>
     <div class='roombox notclean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-sign-out"></i>&nbsp;&nbsp;&nbsp;Room is not clean(checked out)</div>
     <div class='roombox needInterval' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Room need interval cleaning</div>
+    <div class='roombox roomisclosed' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Room is closed off by admin</div>
     
     <div class='row' style='padding: 10px;'>
         <i class="fa fa-clock-o"></i>  Early check in, priority room.<br>
@@ -96,14 +97,16 @@
 <div class='col-md-6'>
     <br><bR><span style='font-size: 16px;'> <b>Future view:</b></span><br><br>
     <div>
-        <span class="col-xs-6">Date</span>
+        <span class="col-xs-4">Date</span>
+        <span class="col-xs-2">Stayovers</span>
         <span class="col-xs-2">Checkout</span>
         <span class="col-xs-2">Interval</span>
         <span class="col-xs-2">Total</span>
      </div>
     
     <div ng-repeat="stat in cleaningstats">
-        <span class="col-xs-6">{{stat.dateFormatted}}</span>
+        <span class="col-xs-4">{{stat.dateFormatted}}</span>
+        <span class="col-xs-2">{{stat.stayOvers}}</span>
         <span class="col-xs-2">{{stat.checkoutCleaningCount}}</span>
         <span class="col-xs-2">{{stat.intervalCleaningCount}}</span>
         <span class="col-xs-2">{{stat.intervalCleaningCount + stat.checkoutCleaningCount}}</span>

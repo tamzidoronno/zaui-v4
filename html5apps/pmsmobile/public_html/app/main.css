@@ -41,6 +41,7 @@ body { background-color:#3a99d7; box-sizing: border-box; }
 .roombox.clean {background-color:green; color:#fff; }
 .roombox.inUse {background-color:purple; color:#fff; }
 .roombox.needInterval { background-color:#35280d !important; color:#fff; }
+.roombox.roomisclosed { background-color:#7a7afe !important; color:#fff; }
 .roomrow.notpaid a, 
 .roomrow.started a,
 .roomrow.waitingforlock a

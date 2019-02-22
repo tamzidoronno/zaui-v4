@@ -9665,6 +9665,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return orderIds;
     }
     
+    /**
+     * This function will return all the order ids that the booking 
+     * needs to consider, including the creditnotes for a samlefaktura 
+     * and created group invoices that are created from multiple bookings.
+     * 
+     * @param pmsBookingId
+     * @return 
+     */
+    public List<String> getAllOrderIds(String pmsBookingId) {
+        PmsBooking booking = getBooking(pmsBookingId);
+        
+        List<String> orderIds = getExtraOrderIds(pmsBookingId);
+        orderIds.addAll(booking.orderIds);
+        
+        List<String> creditNotes = booking.orderIds
+                .stream()
+                .map(id -> orderManager.getOrder(id))
+                .filter(o -> o.isSamleFaktura())
+                .flatMap(o -> orderManager.getCreditNotesForOrder(o.id).stream())
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+        
+        orderIds.addAll(creditNotes);
+        
+        return orderIds.stream()
+                .distinct()
+                .collect(Collectors.toList());
+    } 
+    
     @Override
     public List<PmsBooking> getBookingsFromGroupInvoicing(String orderId) {
         Order order = orderManager.getOrder(orderId);

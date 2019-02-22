@@ -2,6 +2,7 @@
 /* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
 $apps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 $paymentMethods = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$onlyPaymentMethods = $paymentMethods;
 $debtCollectors = (array)$this->getApi()->getStoreApplicationPool()->getActivatedApplications("DebtCollectorApplication");
 
 $paymentMethods = array_merge($debtCollectors, $paymentMethods);
@@ -15,10 +16,18 @@ $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
     <h1><?php echo $this->__f("Please select the default payment method"); ?></h1>
     <select class="config gsniceselect1" gs_model='ecommercesettings' gsname='defualtmethod' style='height: 36px;'>
         <option value="">Select payment method</option>
-        <? foreach ($paymentMethods as $key => $method) { 
+        <? foreach ($onlyPaymentMethods as $key => $method) { 
             $selected = $ecomsettings->getConfigurationSetting("defaultPaymentMethod") == $method->id ? "SELECTED" : "";
+            
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($method);
+            $name = $method->appName;
+            if(method_exists($instance, "getName")) {
+                $name = $instance->getName();
+            }
+
+            
             ?>
-            <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
+            <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $name; ?></option>
         <? } ?>
     </select>
     <span class='shop_button' gstype='submit'>Save default payment settings</span>

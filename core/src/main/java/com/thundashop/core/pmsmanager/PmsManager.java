@@ -9643,8 +9643,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(pmsBookingId);
         
         List<String> orderIds = booking.orderIds.stream()
-                .map(orderId -> orderManager.getOrder(orderId))
-                .filter(o -> o.isSamleFaktura())
+                .map(orderId -> orderManager.getOrderDirect(orderId))
+                .filter(o -> o != null && o.isSamleFaktura())
                 .map(o ->  orderManager.getMainInvoice(o.id))
                 .distinct()
                 .filter(o -> o != null && !o.isNullOrder())
@@ -9681,8 +9681,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<String> creditNotes = booking.orderIds
                 .stream()
-                .map(id -> orderManager.getOrder(id))
-                .filter(o -> o.isSamleFaktura())
+                .map(id -> orderManager.getOrderDirect(id))
+                .filter(o -> o != null && o.isSamleFaktura())
                 .flatMap(o -> orderManager.getCreditNotesForOrder(o.id).stream())
                 .map(o -> o.id)
                 .collect(Collectors.toList());

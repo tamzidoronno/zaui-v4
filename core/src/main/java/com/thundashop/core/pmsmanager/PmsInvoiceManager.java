@@ -966,7 +966,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<String> roomIds = booking.rooms.stream().map(e->e.pmsBookingRoomId).collect(Collectors.toList());
         
         for(String orderId : booking.orderIds) {
-            Order ord = orderManager.getOrderSecure(orderId);
+            Order ord = orderManager.getOrderDirect(orderId);
+            if(ord == null) { continue; }
             if(ord.isFromSamleFaktura()) {
                 for(CartItem item : ord.getCartItems()) {
                     if(item.getProduct() != null && item.getProduct().externalReferenceId != null && roomIds.contains(item.getProduct().externalReferenceId)) {
@@ -1351,12 +1352,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             preferredChannel = getChannelPreferredPaymentMethod(booking);
         }
         Payment preferredUser = orderManager.getUserPrefferedPaymentMethodOnly(booking.userId);
-        
-        if(preferredUser != null && preferredUser.paymentType != null && preferredUser.paymentType.toLowerCase().contains("invoice")) {
-            if(userManager.getLoggedOnUser() == null) {
-                preferredUser = null;
-            }
-        }
         
         Payment preferredBooking = getPreferredPaymentTypeFromBooking(booking);
         

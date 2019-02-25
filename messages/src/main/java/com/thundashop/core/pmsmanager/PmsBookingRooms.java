@@ -748,6 +748,9 @@ public class PmsBookingRooms implements Serializable {
         
         if(priceType.equals(PriceType.daily) && priceMatrix != null && !priceMatrix.isEmpty()) {
             for(Double price : priceMatrix.values()) {
+                if(isDeleted() && (!nonrefundable || deletedByChannelManagerForModification)) {
+                    continue;
+                }
                 totalCost += price;
             }
         } else {

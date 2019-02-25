@@ -12,7 +12,7 @@
                     <input type='checkbox' class='checkallclosingtypes'> Select all<br>
                     <?php
                     $allRestrictions = $this->getApi()->getWubookManager()->getAllRestriction($this->getSelectedMultilevelDomainName());
-                    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+                    $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
                     foreach($types as $type) {
                         echo "<input type='checkbox' class='closeforota' gsname='type_".$type->id."'> " . $type->name . "<br>";
                     }

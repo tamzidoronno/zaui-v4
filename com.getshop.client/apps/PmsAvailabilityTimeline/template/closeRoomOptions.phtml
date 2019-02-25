@@ -50,7 +50,7 @@ if($closed) {
             <h3>2. Select rooms to close</h3>
             <input type='checkbox' class='checkallclosingroom'> Select all<br>
             <?php
-            $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+            $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedName(), null);
             foreach($items as $item) {
                 $selected = "";
                 if(isset($_POST['data']["item_".$item->id])) {
@@ -73,7 +73,7 @@ if($closed) {
             <h3>2. Select rooms to close</h3>
             <input type='checkbox' class='checkallclosingtypes'> Select all<br>
             <?php
-            $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+            $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedName(), null);
             foreach($types as $type) {
                 echo "<input type='checkbox' class='closeforota' gsname='type_".$type->id."'> " . $type->name . "<br>";
             }

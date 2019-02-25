@@ -68,7 +68,10 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         dayIncomeFilter.start = filter.start;
         dayIncomeFilter.end = filter.end;
         
+        
+        gsTiming("Before get day income");
         List<DayIncome> toinclude = orderManager.getDayIncomesIgnoreConfig(dayIncomeFilter);
+        gsTiming("After get day income");
         usersTotal = new HashMap();
         List<Product> products = productManager.getAllProducts();
         List<Product> productsOnDifferentTypes = productManager.getAllProducts();
@@ -84,9 +87,11 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         
         productsOnDifferentTypes.removeIf(o -> filter.products.contains(o.id));
         
+        gsTiming("bofre Included lost orders");
         addOrderIdsForFilter(filter);
+        gsTiming("between Included lost orders");
         includeLostOrders(toinclude, filter);
-        
+        gsTiming("Included lost orders");
         
         for(DayIncome income : toinclude) {
             BigDecimal total = new BigDecimal(0);
@@ -207,8 +212,8 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     private void addOrderIdsForFilter(CoverageAndIncomeReportFilter filter) {
         List<PmsBooking> allbookings = pmsManager.getAllBookingsUnfinalized();
-        List<String> usedOrderIds = new ArrayList();
-        
+        HashMap<String, Boolean> usedOrderIds = new HashMap();
+        HashMap<String, Boolean> filterOrderIds = new HashMap();
         for(PmsBooking booking : allbookings) {
 
             if(!filter.segments.isEmpty()) {
@@ -219,24 +224,28 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                     continue;
                 }
             }
-        
+            
             List<String> orderIds = pmsManager.getAllOrderIds(booking.id);
             
             if(booking.isChannel(filter.channel)) {
                 for(String orderId : orderIds) {
-                    if(!filter.orderIds.contains(orderId) && !usedOrderIds.contains(orderId)) {
+                    if(!filterOrderIds.containsKey(orderId) && !usedOrderIds.containsKey(orderId)) {
+                        filterOrderIds.put(orderId, true);
                         filter.orderIds.add(orderId);
                     }
                 }
             } else {
                 for(String orderId : orderIds) {
-                    if(!filter.ignoreOrderIds.contains(orderId) && !usedOrderIds.contains(orderId)) {
+                    if(!filter.ignoreOrderIds.contains(orderId) && !usedOrderIds.containsKey(orderId)) {
                         filter.ignoreOrderIds.add(orderId);
                     }
                 }
             }
             
-            usedOrderIds.addAll(orderIds);
+            for(String ordId : orderIds) {
+                usedOrderIds.put(ordId, true);
+            }
+            
         }
         
         if(!filter.segments.isEmpty() && filter.orderIds.isEmpty()) {

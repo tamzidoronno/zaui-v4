@@ -207,7 +207,8 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     private void addOrderIdsForFilter(CoverageAndIncomeReportFilter filter) {
         List<PmsBooking> allbookings = pmsManager.getAllBookingsUnfinalized();
-        HashMap<String,Integer> orderIdMap = new HashMap();
+        List<String> usedOrderIds = new ArrayList();
+        
         for(PmsBooking booking : allbookings) {
 
             if(!filter.segments.isEmpty()) {
@@ -219,20 +220,23 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                 }
             }
         
+            List<String> orderIds = pmsManager.getAllOrderIds(booking.id);
             
             if(booking.isChannel(filter.channel)) {
-                for(String orderId : booking.orderIds) {
-                    if(!filter.orderIds.contains(orderId)) {
+                for(String orderId : orderIds) {
+                    if(!filter.orderIds.contains(orderId) && !usedOrderIds.contains(orderId)) {
                         filter.orderIds.add(orderId);
                     }
                 }
             } else {
-                for(String orderId : booking.orderIds) {
-                    if(!filter.ignoreOrderIds.contains(orderId)) {
+                for(String orderId : orderIds) {
+                    if(!filter.ignoreOrderIds.contains(orderId) && !usedOrderIds.contains(orderId)) {
                         filter.ignoreOrderIds.add(orderId);
                     }
                 }
             }
+            
+            usedOrderIds.addAll(orderIds);
         }
         
         if(!filter.segments.isEmpty() && filter.orderIds.isEmpty()) {

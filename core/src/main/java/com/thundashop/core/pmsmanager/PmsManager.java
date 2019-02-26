@@ -4608,8 +4608,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info) {
         List<PmsAdditionalItemInformation> toRemove = new ArrayList();
         for (PmsAdditionalItemInformation test : addiotionalItemInfo.values()) {
-            if (test.itemId.equals(info.itemId)) {
-                System.out.println("Match: " + info.itemId);
+            if (test.itemId != null && test.itemId.equals(info.itemId)) {
                 toRemove.add(test);
             }
         }

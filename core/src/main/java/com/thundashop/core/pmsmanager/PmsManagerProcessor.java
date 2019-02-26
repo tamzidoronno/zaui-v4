@@ -831,61 +831,6 @@ public class PmsManagerProcessor {
         }
     }
 
-    private void runAutoPayWithCard() {
-        if(!manager.getConfigurationSecure().runAutoPayWithCard) {
-            return;
-        }
-        int daysToWarn = manager.getConfigurationSecure().warnWhenOrderNotPaidInDays;
-        manager.orderManager.checkForOrdersToAutoPay(manager.getConfigurationSecure().numberOfDaysToTryToPayWithCardAfterStayOrderHasBeenCreated);
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, daysToWarn);
-        Date threeDaysAhead = cal.getTime();
-        for(PmsBooking booking : bookings) {
-            if(booking.isEnded()) {
-                continue;
-            }
-            boolean needSaving = false;
-            for(String orderId : booking.orderIds) {
-                if(booking.orderIds.size() <= 1) {
-                    //No need to warning first order.
-                    continue;
-                }
-                Order order = manager.orderManager.getOrderSecure(orderId);
-                if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                    continue;
-                }
-                manager.setOrderIdToSend(order.id);
-                for(CartItem item : order.cart.getItems()) {
-                    if(item.startDate == null) {
-                        continue;
-                    }
-                    if(threeDaysAhead.after(item.startDate)) {
-                        String key = order.id + "_order_unabletopaywithsavecardwarning";
-                        if(!booking.notificationsSent.contains(key)) {
-                            manager.doNotificationFromProcessor("order_unabletopaywithsavecardwarning", booking, null);
-                            needSaving = true;
-                            booking.notificationsSent.add(key);
-                            manager.saveBooking(booking);
-                        }
-                    }
-                    if(new Date().after(item.startDate)) {
-                        String key = order.id + "_order_unabletopaywithsavecard";
-                        if(!booking.notificationsSent.contains(key)) {
-                            manager.doNotificationFromProcessor("order_unabletopaywithsavecard", booking, null);
-                            needSaving = true;
-                            booking.notificationsSent.add(key);
-                            manager.saveBooking(booking);
-                        }
-                    }
-                }
-            }
-            if(needSaving) {
-                manager.saveBooking(booking);
-            }
-        }
-    }
-
     private void clearCachedObject() {
         cachedResult_includepaidfor = null;
         cachedResult = null;
@@ -964,9 +909,6 @@ public class PmsManagerProcessor {
         
         List<PmsBooking> allNotDeleted = getAllConfirmedNotDeleted(true);
         for(PmsBooking booking : allNotDeleted) {
-            if(booking.id.equals("0b9cd82f-c756-411c-b167-2a72f43f1db9")) {
-                System.out.println("check");
-            }
             if(booking.payedFor) {
                 continue;
             }

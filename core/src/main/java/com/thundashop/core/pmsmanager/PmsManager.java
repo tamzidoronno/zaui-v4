@@ -9642,6 +9642,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<String> getExtraOrderIds(String pmsBookingId) {
         PmsBooking booking = getBooking(pmsBookingId);
         
+        if(booking == null) {
+            return new ArrayList();
+        }
+        
         List<String> orderIds = booking.orderIds.stream()
                 .map(orderId -> orderManager.getOrderDirect(orderId))
                 .filter(o -> o != null && o.isSamleFaktura())

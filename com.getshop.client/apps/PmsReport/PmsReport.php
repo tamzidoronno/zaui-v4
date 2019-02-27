@@ -953,8 +953,9 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->channel = $selectedFilter->channel;
         $filter->departmentIds = $selectedFilter->departmentIds;
         $filter->segments = array();
-        $filter->segments[] = $selectedFilter->segment;
-    
+        if($selectedFilter->segment) {
+            $filter->segments[] = $selectedFilter->segment;
+        } 
         if(isset($_POST['event']) && $_POST['event'] == "downloadIncomeReportIncTaxesNew") {
             $filter->incTaxes = true;
         }

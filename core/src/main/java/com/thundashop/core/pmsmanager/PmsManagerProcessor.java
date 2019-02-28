@@ -53,6 +53,8 @@ public class PmsManagerProcessor {
         checkTimer("sendPaymentLinkOnUnpaidBookings");
         try { sendRecieptsOnCompletedPayments(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("sendRecieptsOnCompletedPayments");
+        try { autoMarkOrdersAsPaid(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("autoMarkOrdersAsPaid");
     }
     
     public void hourlyProcessor() {
@@ -131,6 +133,7 @@ public class PmsManagerProcessor {
             if(booking.isEnded()) {
                 continue;
             }
+            
             boolean save = false;
             
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -1361,6 +1364,16 @@ public class PmsManagerProcessor {
                 manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
             }
         }
+    }
+
+    private void autoMarkOrdersAsPaid() {
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        
+        bookings.stream()
+                .filter(o -> o.isStarted() && !o.isEnded())
+                .forEach(booking -> {
+                    manager.orderManager.autoMarkAsPaid(booking.orderIds);
+                });
     }
 
 

@@ -3701,4 +3701,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(id -> !orderIsCredittedAndPaidFor(id))
                 .collect(Collectors.toList());
     }
+
+    public void autoMarkAsPaid(List<String> orderIds) {
+        orderIds.stream()
+            .map(id -> orders.get(id))
+            .filter(order -> !order.hasTriedToAutoCollect)
+            .filter(order -> order != null && order.payment.paymentType != null && order.status != Order.Status.PAYMENT_COMPLETED)
+            .forEach(order -> {
+                order.hasTriedToAutoCollect = true;
+                try {
+                    Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
+                    if(paymentapp != null) {
+                        String automarkpaid = paymentapp.getSetting("automarkpaid");
+                        if(automarkpaid != null && automarkpaid.equals("true")) {
+                            markAsPaid(order.id, new Date(), getTotalAmount(order));
+                        }
+                    }
+                }catch(Exception e) {
+                    messageManager.sendErrorNotification("Failed to automark order as paid", e);
+                }
+                saveObject(order);
+            });  
+    }
 }

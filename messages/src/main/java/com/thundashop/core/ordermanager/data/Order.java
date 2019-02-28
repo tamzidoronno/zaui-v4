@@ -64,6 +64,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Payment payment = new Payment();
     public String session;
     public String internalComment = "";
+    public boolean hasTriedToAutoCollect = false;
     public String recieptEmail = "";
     public String trackingNumber = "";
     public long incrementOrderId = 0;

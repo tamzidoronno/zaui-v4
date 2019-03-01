@@ -1831,11 +1831,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public String sendRecieptOrInvoice(String orderId, String email, String bookingId) {
-        return sendRecieptOrInvoiceWithMessage(orderId, email, bookingId, null);
+        return sendRecieptOrInvoiceWithMessage(orderId, email, bookingId, null, null);
     }
     
     @Override
-    public String sendRecieptOrInvoiceWithMessage(String orderId, String email, String bookingId, String message) {
+    public String sendRecieptOrInvoiceWithMessage(String orderId, String email, String bookingId, String message, String subject) {
         Order order = orderManager.getOrderSecure(orderId);
         orderManager.saveObject(order);
         String res = "";
@@ -1846,6 +1846,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             pmsManager.setEmailToSendTo(email);
             if(message != null) {
                 pmsNotificationManager.setEmailMessageToSend(message);
+                pmsNotificationManager.setEmailSubject(subject);
             }
             if(order.status == Order.Status.PAYMENT_COMPLETED) {
                 pmsManager.doNotification("sendreciept", bookingId);

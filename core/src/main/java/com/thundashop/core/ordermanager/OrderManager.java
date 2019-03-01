@@ -3723,4 +3723,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 saveObject(order);
             });  
     }
+
+    @Override
+    public void forceSetNewPaymentDate(String orderId, Date date, String password) {
+        if (password == null || !password.equals("fdsvb4354345345")) {
+            return;
+        }
+        
+        Order order = orders.get(orderId);
+        if (order != null) {
+            order.paymentDate = date;
+            super.saveObject(order);
+        }
+    }
 }

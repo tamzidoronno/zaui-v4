@@ -5254,12 +5254,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void sendStatistics() throws Exception {
-        User user = userManager.getInternalApiUser();
-        String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
-
-        PmsMailStatistics mailer = new PmsMailStatistics(webAddress, user.username, user.internalPassword, null, "");
-        Thread t = new Thread(mailer, "My Thread");
-        t.start();
+        //Depractaed, not in use anymore.-
+//        User user = userManager.getInternalApiUser();
+//        String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
+//
+//        PmsMailStatistics mailer = new PmsMailStatistics(webAddress, user.username, user.internalPassword, null, "");
+//        Thread t = new Thread(mailer, "My Thread");
+//        t.start();
     }
 
     public void checkForRoomsToClose() {

@@ -1816,6 +1816,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->getApi()->getUserManager()->saveUser($user);
     }
     
+    public function saveOrderNote() {
+        $booking = $this->getPmsBooking();
+        $booking->invoiceNote = $_POST['data']['comment'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function reloadAvailableRooms() {
         $start = $_POST['data']['start'];
         $end = $_POST['data']['end'];

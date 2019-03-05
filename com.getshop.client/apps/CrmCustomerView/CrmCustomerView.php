@@ -77,12 +77,13 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
         $user->showExTaxes = $_POST['data']['showExTaxes'] == "true";
         $user->referenceKey = $_POST['data']['referencecode'];
+        
         $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
         $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
         $discount->discountType = 0;
         $discount->pricePlan = "default";
         $discount->attachedDiscountCode = $_POST['data']['attachedDiscountCode'];
-        
+
         if($_POST['data']['discounttype'] == "fixedprice") {
             $discount->discountType = 1;
         }
@@ -90,10 +91,11 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
             if(stristr($index, "discount_")) {
                 $room = str_replace("discount_", "", $index);
                 if($val && is_numeric($val)) {
-                    $discount->discounts->{$roomsaveDiscounts} = $val;
+                    $discount->discounts->{$room} = $val;
                 }
             }
         }
+        
         $enabledMethods = array();
         foreach($_POST['data'] as $index => $val) {
             if(stristr($index, "enabledpmethod_")) {
@@ -109,7 +111,9 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($domain, $discount);
         $this->getApi()->getUserManager()->saveUser($user);
         
-        $this->updateDiscountCode();
+        if($_POST['data']['attachedDiscountCode']) {
+            $this->updateDiscountCode();
+        }
     }
     
     /** @param \core_pmsmanager_PmsBooking $booking */

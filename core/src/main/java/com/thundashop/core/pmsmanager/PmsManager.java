@@ -7870,6 +7870,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         order.shippingDate = pmsInvoiceManager.getPaymentLinkSendingDate(booking.id);
         order.createByManager = "PmsDailyOrderGeneration";
         order.userId = booking.userId;
+        if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
+            order.invoiceNote = booking.invoiceNote;
+        }
 
         orderManager.saveOrder(order);
 

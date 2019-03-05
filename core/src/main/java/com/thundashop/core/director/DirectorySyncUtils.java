@@ -57,6 +57,11 @@ public class DirectorySyncUtils {
                     BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                     
                     GetShopSystem system = systemManager.getSystem(room.pmsBookingRoomId);
+                    if (system != null && (system.note == null || system.note.isEmpty())) {
+                        system.note = booking.invoiceNote;
+                        systemManager.saveSystem(system);
+                    }
+                    
                     if (system != null) {
                         continue;
                     }
@@ -77,6 +82,7 @@ public class DirectorySyncUtils {
                     system.webAddresses = guest.name;
                     system.serverVpnIpAddress = "10.0.4.33";
                     system.invoicedTo = room.invoicedTo;
+                    System.out.println(booking.invoiceNote);
                     system.numberOfMonthsToInvoice = booking.periodesToCreateOrderOn == null ? 1 : booking.periodesToCreateOrderOn;
                     
                     Store store = storePool.getStoreByWebaddress(system.webAddresses);

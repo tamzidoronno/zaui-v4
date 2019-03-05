@@ -27,6 +27,8 @@ public class GetShopSystem extends DataCommon {
     public double monthlyPrice = 0;
     public String productId = "";
     
+    public String note = "";
+    
     /**
      * This represent the date where the system 
      * has been invoiced to.

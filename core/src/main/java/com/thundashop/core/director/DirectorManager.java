@@ -188,6 +188,7 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
             
             order.sortCartByProducts();
             
+            addInvoiceNote(order, systems);
             if (isNonNorwegian(company)) {
                 order.changeAllTaxes(productManager.getTaxGroup(0));
             }
@@ -439,5 +440,16 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
 
     private boolean isNonNorwegian(Company company) {
         return company.currency != null && !company.currency.isEmpty() && !company.currency.toLowerCase().equals("nok");
+    }
+
+    private void addInvoiceNote(Order order, List<GetShopSystem> systems) {
+        String note = "";
+        for (GetShopSystem system : systems) {
+            if (system.note != null && !system.note.isEmpty()) {
+                note += "Note for " + system.webAddresses + ": " + system.note;
+            }
+        }
+        
+        order.invoiceNote = note;
     }
 }

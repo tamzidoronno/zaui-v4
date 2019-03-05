@@ -134,7 +134,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Override
     public String getBase64EncodedInvoice(String orderId) {
-        if(storeManager.isPikStore()) {
+        if(storeManager.isPikStore() || storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
             return generateInvoiceByPHP(orderId, "template1");
         }
         Order order = orderManager.getOrder(orderId);

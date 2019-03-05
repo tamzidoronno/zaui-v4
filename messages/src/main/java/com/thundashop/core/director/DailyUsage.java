@@ -58,11 +58,17 @@ public class DailyUsage extends DataCommon {
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = dateFormatter.parse("2019-02-01 00:00:00");
             
-            return start.before(date);
+            if (start.before(date)) {
+                return true;
+            }
         } catch (ParseException ex) {
             Logger.getLogger(DailyUsage.class.getName()).log(Level.SEVERE, null, ex);
         }
     
         return hasBeenInvoiced;
+    }
+    
+    public void markAsInvoiced() {
+        this.hasBeenInvoiced = true;
     }
 }

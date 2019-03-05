@@ -11,6 +11,7 @@ import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductPriceOverride;
 import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -691,5 +692,13 @@ public class CartItem implements Serializable, Cloneable {
     
     public String getDepartmentId() {
         return departmentId;
+    }
+
+    public void changeAllTaxes(TaxGroup taxGroupObject) {
+        if (product != null) {
+            product.taxgroup = taxGroupObject.groupNumber;
+            product.taxGroupObject = taxGroupObject;
+            product.price = product.priceExTaxes * (taxGroupObject.getTaxRate()+1);
+        }
     }
 }

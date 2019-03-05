@@ -1831,11 +1831,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public String sendRecieptOrInvoice(String orderId, String email, String bookingId) {
-        return sendRecieptOrInvoiceWithMessage(orderId, email, bookingId, null);
+        return sendRecieptOrInvoiceWithMessage(orderId, email, bookingId, null, null);
     }
     
     @Override
-    public String sendRecieptOrInvoiceWithMessage(String orderId, String email, String bookingId, String message) {
+    public String sendRecieptOrInvoiceWithMessage(String orderId, String email, String bookingId, String message, String subject) {
         Order order = orderManager.getOrderSecure(orderId);
         orderManager.saveObject(order);
         String res = "";
@@ -1846,6 +1846,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             pmsManager.setEmailToSendTo(email);
             if(message != null) {
                 pmsNotificationManager.setEmailMessageToSend(message);
+                pmsNotificationManager.setEmailSubject(subject);
             }
             if(order.status == Order.Status.PAYMENT_COMPLETED) {
                 pmsManager.doNotification("sendreciept", bookingId);
@@ -2313,28 +2314,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             orderManager.saveOrder(order);
         }
-        
-        
-        automarkOrderAsPaidIfNessesary(order);
          
         return order;
-    }
-
-    private void automarkOrderAsPaidIfNessesary(Order order) {
-        if(order == null || order.payment == null || order.payment.paymentType == null) {
-            return;
-        }
-        try {
-            Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
-            if(paymentapp != null) {
-                String automarkpaid = paymentapp.getSetting("automarkpaid");
-                if(automarkpaid != null && automarkpaid.equals("true")) {
-                    orderManager.markAsPaid(order.id, new Date(), orderManager.getTotalAmount(order));
-                }
-            }
-        }catch(Exception e) {
-            messageManager.sendErrorNotification("Failed to automark order as paid", e);
-        }
     }
 
     private LinkedHashMap<String, Double> calculateProgressivePrice(String typeId, Date start, Date end, int offset, Integer priceType, PmsPricing prices) {

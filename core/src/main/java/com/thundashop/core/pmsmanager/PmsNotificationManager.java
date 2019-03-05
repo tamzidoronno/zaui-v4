@@ -75,6 +75,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private String messageToSend;
     private PmsNotificationMessage messageInUse;
     private String emailMessage;
+    private String emailSubject;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -249,6 +250,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(emailMessage != null && type.equals("email")) {
             PmsNotificationMessage notificationmsg = new PmsNotificationMessage();
             notificationmsg.content = emailMessage;
+            notificationmsg.title = emailSubject != null ? emailSubject : "";
             return notificationmsg;
         }
         
@@ -434,6 +436,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         messageToSend = null;
         messageInUse = null;
         emailMessage = null;
+        emailSubject = null;
     }
 
     private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, String title, String content) {
@@ -754,6 +757,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             }
         }
         return false;
+    }
+
+    void setEmailSubject(String subject) {
+        this.emailSubject = subject;
     }
 
     

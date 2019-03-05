@@ -16,15 +16,21 @@ import com.thundashop.core.messagemanager.SmsMessage;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.system.GetShopSystem;
 import com.thundashop.core.system.SystemManager;
+import com.thundashop.core.ticket.Ticket;
+import com.thundashop.core.ticket.TicketFilter;
+import com.thundashop.core.ticket.TicketManager;
+import com.thundashop.core.ticket.TicketState;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -67,6 +73,9 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
     
     @Autowired
     private ProductManager productManager;
+    
+    @Autowired
+    private TicketManager ticketManager;
     
     private DirectorySyncUtils syncUtils;
     
@@ -143,37 +152,30 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         return getStore().rowCreatedDate;
     }
 
-//    @Override
-//    public void createOrder(String companyId, int month, int year) {
-//        createOrderForCompany(companyId, month, year, false);
-//    }   
-
     private Order createOrderForCompany(String companyId, boolean virtual) throws ErrorException {
-        Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
         Company company = userManager.getCompany(companyId);
+        
         if (company == null)
             return null;
         
         cartManager.clear();
-        User mainCompanyUser = userManager.getUsersByCompanyId(companyId)
-                .stream()
-                .filter(o -> o.isCompanyMainContact)
-                .findAny()
-                .orElse(null);
+        User mainCompanyUser = userManager.getMainCompanyUser(companyId);
         
         List<GetShopSystem> systems = systemManager.getSystemsForCompany(company.id);
-        systems.forEach(system -> addSmsAndEhf(system));
+        systems.forEach(system -> addSmsAndEhf(system, virtual, company));
         systems.forEach(system -> addMonthlyCost(system));
+        
+        if (mainCompanyUser != null) {
+            addTickets(mainCompanyUser, virtual);
+        }
         
         if (!cartManager.getCart().isNullCart()) {
             Order order;
             
             if (virtual) {
-                order = orderManager.createVirtualOrder(company.address, "").order;
+                order = orderManager.createVirtualOrder(mainCompanyUser.address, "").order;
             } else {
-                order = orderManager.createOrder(company.address);
+                order = orderManager.createOrder(mainCompanyUser.address);
             }
             
             order.payment.paymentId = "70ace3f0-3981-11e3-aa6e-0800200c9a66";
@@ -186,8 +188,16 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
             
             order.sortCartByProducts();
             
+            if (isNonNorwegian(company)) {
+                order.changeAllTaxes(productManager.getTaxGroup(0));
+            }
+            
             if (!virtual) {
+                order.currency = company.currency;
+                order.language = company.language;
                 saveObject(order);
+                systems.stream().forEach(o -> setInvoicedToDate(o));
+                orderManager.getOrder(order.id);
             }
             return order;
         }
@@ -195,14 +205,22 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         return null;
     }   
 
-    private void addSmsAndEhf(GetShopSystem system) {
+    private void addSmsAndEhf(GetShopSystem system, boolean virtual, Company company) {
         
         List<DailyUsage> dailyUsages = systemManager.getDailyUsage(system.id);
         
-        Map<String, List<DailyUsage>> usageForMonthGroupedByMonth = dailyUsages.stream()
-            .collect(Collectors.groupingBy(DailyUsage::getMonthAndYear));
+        Map<String, List<DailyUsage>> usageForMonthGroupedByMonth = 
+                dailyUsages.stream()
+                    .filter(o -> !o.hasBeenInvoiced())
+                    .collect(Collectors.groupingBy(DailyUsage::getMonthAndYear));
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        String currentMonth = cal.get(Calendar.YEAR)+" / "+String.format("%02d", (cal.get(Calendar.MONTH)+1));
         
         for (String periode : usageForMonthGroupedByMonth.keySet()) {
+            if (periode.equals(currentMonth))
+                continue;
             
             List<DailyUsage> usageForMonth = usageForMonthGroupedByMonth.get(periode);
             
@@ -211,9 +229,6 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
             int ehf = 0;
 
             for (DailyUsage usage : usageForMonth) {
-                if (usage.hasBeenInvoiced())
-                    continue;
-
                 smsInternational += usage.internationalSmses;
                 ehf += usage.ehfs;
                 smsDomestic += usage.domesticSmses;
@@ -221,17 +236,28 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
 
             if (smsDomestic > 0) {
                 CartItem item = cartManager.addProductItem("90621fc2-f584-4443-9918-9c4f87e59dd7", smsDomestic);
-                item.getProduct().description = "Year/Month: "+periode;
+                item.getProduct().name += ": Periode "+periode + " ( " + system.webAddresses + " ) ";
+                if (isNonNorwegian(company)) {
+                    item.getProduct().price = 0.04 * 1.25;
+                }
             }
 
             if (smsInternational > 0) {
                 CartItem item = cartManager.addProductItem("2f7a5b3d-cd5d-4f9c-83ba-b8e7dbad9256", smsInternational);
-                item.getProduct().description = "Year/Month: "+periode;
+                item.getProduct().name += ": Periode "+periode + " ( " + system.webAddresses + " )";
+                
+                if (isNonNorwegian(company)) {
+                    item.getProduct().price = 0.04 * 1.25;
+                }
             }
 
             if (ehf > 0) {
                 CartItem item = cartManager.addProductItem("a4db77c8-441a-4a04-8887-7376e5d4df0c", ehf);
-                item.getProduct().description = "Year/Month: "+periode;
+                item.getProduct().name += ": Periode "+periode + " ( " + system.webAddresses + " )";
+            }
+            
+            if (!virtual) {
+                usageForMonth.stream().forEach(usage -> systemManager.markUsageAsBilled(usage));
             }
         }
     }
@@ -255,9 +281,9 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         CartItem item = new CartItem();
         item.setProduct(productManager.getProduct(system.productId));
         item.getProduct().description = "Periode: "+periode+" ("+system.webAddresses+")";
-//        item.getProduct().name = "Periode: "+ periode + " ("+system.webAddresses+")";
+        item.getProduct().name += " Periode: "+ periode + " ("+system.webAddresses+")";
         item.setCount(1);
-        item.getProduct().price = system.monthlyPrice;
+        item.getProduct().price = system.monthlyPrice * (item.getProduct().taxGroupObject.getTaxRate() + 1);
         items.add(item);
         
         cartManager.getCart().addCartItems(items);
@@ -330,5 +356,88 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return (cal.get(Calendar.MONTH)+1)+"."+cal.get(Calendar.YEAR);
+    }
+
+    private void addTickets(User mainCompanyUser, boolean virtual) {
+        TicketFilter filter = new TicketFilter();
+        filter.userId = mainCompanyUser.id;
+        filter.state = TicketState.COMPLETED;
+        ticketManager.getAllTickets(filter).stream()
+            .filter(ticket -> !ticket.transferredToAccounting)
+            .forEach(ticket -> {
+                int seconds = (int) (ticket.timeInvoice * 60 * 60);
+                String timeSpent = timeConversion(seconds);
+
+                Product ticketProduct = getTicketProduct(ticket).clone();
+                ticketProduct.price = (ticketProduct.price * ticket.timeInvoice);
+                ticketProduct.name = "Support: " + ticket.incrementalId + " - " + ticket.title + " ( " + timeSpent + " )";
+                CartItem item = cartManager.getCart().createCartItem(ticketProduct, 1);
+                
+                if (!virtual) {
+                    ticketManager.markTicketAsTransferredToAccounting(ticket.id);
+                }
+            });
+    }
+    
+    private Product getTicketProduct(Ticket ticket) {
+        Product ticketProduct = productManager.getProduct("TICKET-" + ticket.type);
+        if (ticketProduct == null) {
+            ticketProduct = new Product();
+            ticketProduct.id = "TICKET-" + ticket.type;
+            ticketProduct.price = 1000;
+            productManager.saveProduct(ticketProduct);
+        }
+        
+        return ticketProduct;
+    }
+    
+    private String timeConversion(int seconds) {
+
+        final int MINUTES_IN_AN_HOUR = 60;
+        final int SECONDS_IN_A_MINUTE = 60;
+
+        int minutes = seconds / SECONDS_IN_A_MINUTE;
+        seconds -= minutes * SECONDS_IN_A_MINUTE;
+
+        int hours = minutes / MINUTES_IN_AN_HOUR;
+        minutes -= hours * MINUTES_IN_AN_HOUR;
+
+        if (hours < 1) {
+            return minutes + " minutes";
+        }
+
+        if (minutes < 1 && hours > 1) {
+            return hours + " hours";
+        }
+
+        if (minutes < 1 && hours == 1) {
+            return hours + " hour";
+        }
+
+        return hours + " hours and " + minutes + " minutes";
+    }
+
+    @Override
+    public List<Order> createOrders() {
+        List<Company> companies = userManager.getAllCompanies();
+        List<Order> retOrders = new ArrayList();
+        
+        for (Company company : companies) {
+            Order order = createOrderForCompany(company.id, false);
+            if (order != null) {
+                retOrders.add(order);
+            }
+        }
+        
+        return retOrders;
+    }
+
+    private void setInvoicedToDate(GetShopSystem o) {
+        o.invoicedTo = getNextToDate(o);
+        systemManager.saveSystem(o);
+    }
+
+    private boolean isNonNorwegian(Company company) {
+        return company.currency != null && !company.currency.isEmpty() && !company.currency.toLowerCase().equals("nok");
     }
 }

@@ -279,6 +279,10 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 
     @Override
     public ApplicationInstance getApplicationInstanceWithModule(String applicationInstanceId, String moduleName) {
+        if (moduleApplicationInstances.get(moduleName) == null) {
+            return null;
+        }
+        
         ApplicationInstance instance = moduleApplicationInstances.get(moduleName).get(applicationInstanceId);
         if (instance == null) {
             return null;

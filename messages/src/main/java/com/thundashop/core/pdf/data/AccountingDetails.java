@@ -42,4 +42,17 @@ public class AccountingDetails {
         
         return false;
     }
+
+    public String getPhpTemplate() {
+        if (type == null) {
+            return null;
+        }
+        
+        if (type.startsWith("php")) {
+            String[] templatearr = type.split("_");
+            return templatearr[1];
+        }
+        
+        return null;
+    }
 }

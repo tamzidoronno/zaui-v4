@@ -134,3 +134,27 @@
 .CompanyView .row.header .col {
     font-weight: bold;
 }
+
+.CompanyView h2,
+.CompanyView .textfield {
+    display: block;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.CompanyView .textfield .title {
+    width: 100px;
+    display: inline-block;
+}
+
+.CompanyView .textfield textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    width: 302px;
+    height: 100px;
+}
+
+.CompanyView .gss_button_area {
+    margin: 30px;
+}

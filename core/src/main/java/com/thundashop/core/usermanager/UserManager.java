@@ -2521,4 +2521,64 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .findFirst()
                 .orElse(null);
     }
+
+    /**
+     * When a invoice is created for the company it will
+     * use this user as the user connected to the invoice.
+     * 
+     * This user should also be pretty much the same details as the company details.
+     * 
+     * @param companyId
+     * @return 
+     */
+    public User getMainCompanyUser(String companyId) {
+        List<User> allUsers = getUserStoreCollection(storeId).getAllUsersNotFinalized()
+                .stream()
+                .filter(o -> o.company.contains(companyId) || (o.mainCompanyId != null && o.mainCompanyId.equals(companyId)))
+                .collect(Collectors.toList());
+        
+        User user = allUsers
+                .stream()
+                .filter(o -> o.primaryCompanyUser)
+                .findFirst()
+                .orElse(null);
+        
+        if (user != null) {
+            return user;
+        }
+        
+        return allUsers
+                .stream()
+                .filter(o -> o.isCompanyMainContact)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public Company saveOrCreateCompanyAndUpdatePrimaryUser(Company company) {
+        company = saveCompany(company);
+        
+        company.address.vatNumber = company.vatNumber;
+        
+        User user = getMainCompanyUser(company.id);
+        if (user == null) {
+            user = new User();
+        }
+        
+        user.fullName = company.name;
+        user.emailAddress = company.email;
+        
+        if (user.address == null) {
+            user.address = new Address();
+        }
+        
+        user.address = company.address;
+        user.address.vatNumber = company.vatNumber;
+        user.primaryCompanyUser = true;
+        user.mainCompanyId = company.id;
+        
+        saveUser(user);
+        
+        return company;
+    }
 }

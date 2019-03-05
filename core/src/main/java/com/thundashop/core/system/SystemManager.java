@@ -149,4 +149,10 @@ public class SystemManager extends ManagerBase implements ISystemManager {
         cal.add(Calendar.DAY_OF_MONTH, -1);
         return cal.getTime();
     }
+
+    public void markUsageAsBilled(DailyUsage usage) {
+        usage.markAsInvoiced();
+        saveObject(usage);
+        usages.put(usage.id, usage);
+    }
 }

@@ -34,6 +34,9 @@ public class Company extends DataCommon implements Comparable<Company> {
     
     public String invoiceReference = "";
     
+    public String language = "";
+    public String currency = "";
+    
     public List<Company> subCompanies = new ArrayList();
     
     public String companyLeaderUserId = "";

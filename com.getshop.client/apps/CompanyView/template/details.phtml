@@ -1,1 +1,261 @@
-DETAILS
+<?
+/* @var $this \ns_2f62f832_5adb_407f_a88e_208248117017\CompanyView */
+$company = $this->getSelectedCompany();
+//$company = new \core_usermanager_data_Company();
+?>
+<div gstype="form" method='saveCompany'>
+
+    <input type="hidden" gsname="companyid" value="<? echo $company->id; ?>">
+    <h2>Company information</h2>
+    <div class="textfield gss_setting" id="vatNumber">
+        <span class="title">Vat number</span>
+        <input class='gsniceinput1' gsname="vatNumber" value='<? echo $company->vatNumber; ?>'>
+    </div>
+    <div class="textfield gss_setting" id="name">
+        <span class="title">Name</span>
+        <input class='gsniceinput1' gsname="name" value='<? echo $company->name; ?>'>
+    </div>
+    <div class="textfield gss_setting" id="prefix">
+        <span class="title">Phone prefix</span>
+        <input class='gsniceinput1' gsname="prefix" value='<? echo $company->prefix; ?>'>
+    </div>
+    <div class="textfield gss_setting" id="phone">
+        <span class="title">Phone</span>
+        <input class='gsniceinput1' gsname="phone" value="<? echo $company->phone; ?>">
+    </div>
+    <div class="textfield gss_setting" id="email">
+        <span class="title">Email</span>
+        <input class='gsniceinput1' gsname="email" value="<? echo $company->email; ?>">
+    </div>
+    <div class="textfield gss_setting" id="invoiceEmail">
+        <span class="title">Invoice email</span>
+        <input class='gsniceinput1' gsname="invoiceEmail" value="<? echo $company->invoiceEmail; ?>">
+    </div>
+    <div class="textfield gss_setting" id="website">
+        <span class="title">Website</span>
+        <input class='gsniceinput1' gsname="website" value="<? echo $company->website; ?>">
+    </div>
+    <div class="textfield gss_setting" id="contactPerson">
+        <span class="title">Contact</span>
+        <input class='gsniceinput1' gsname="contactPerson" value="<? echo $company->contactPerson; ?>">
+    </div>
+    <div class="textfield gss_setting" id="contactPerson">
+        <span class="title">Reference</span>
+        <input class='gsniceinput1' gsname="reference" value="<? echo $company->reference; ?>">
+    </div>
+    <div class="textfield gss_setting" id="contactPerson">
+        <span class="title">Description</span>
+        <br/>
+        <textarea gsname="description"><? echo $company->description; ?></textarea>
+    </div>
+    <br><br>
+    <h2>Address</h2>
+    <div class="textfield gss_setting" id="address">
+        <span class="title">Address</span>
+        <input class='gsniceinput1' gsname="address" value="<? echo $company->address->address; ?>">
+    </div>
+    <div class="textfield gss_setting" id="city">
+        <span class="title">Postcode</span>
+        <input class='gsniceinput1' gsname="postCode" value="<? echo $company->address->postCode; ?>">
+    </div>
+    <div class="textfield gss_setting" id="postcode">
+        <span class="title">City</span>
+        <input class='gsniceinput1' gsname="city" value="<? echo $company->address->city; ?>">
+    </div>
+    
+    <h2>Regional Settings</h2>
+    <div class="textfield gss_setting" id="address">
+        <span class="title">Language</span>
+        <select gsname="language" class="gsniceselect1">
+            <option>Not selected</option>
+            <?php
+            $states = $this->getFactory()->getLanguageReadable();
+            foreach ($states as $key => $lang) {
+                $selected = $company->language == $key ? "selected='true'" : "";
+                ?>
+                <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    
+    <div class="textfield gss_setting" id="address">
+        <span class="title">Currency</span>
+        <select class='gsniceselect1' gsname='currency' gs_model='ecommercesettings' gs_model_attr='currency'>
+            <option value=''>Not specified</option>
+            <option value='AED' <? echo $this->isCurrency($company, "AED"); ?>>United Arab Emirates dirham</option>
+            <option value='AFN' <? echo $this->isCurrency($company, "AFN"); ?>>Afghan afghani</option>
+            <option value='ALL' <? echo $this->isCurrency($company, "ALL"); ?>>Albanian lek</option>
+            <option value='AMD' <? echo $this->isCurrency($company, "AMD"); ?>>Armenian dram</option>
+            <option value='ANG' <? echo $this->isCurrency($company, "ANG"); ?>>Netherlands Antillean guilder</option>
+            <option value='AOA' <? echo $this->isCurrency($company, "AOA"); ?>>Angolan kwanza</option>
+            <option value='ARS' <? echo $this->isCurrency($company, "ARS"); ?>>Argentine peso</option>
+            <option value='AUD' <? echo $this->isCurrency($company, "AUD"); ?>>Australian dollar</option>
+            <option value='AWG' <? echo $this->isCurrency($company, "AWG"); ?>>Aruban florin</option>
+            <option value='AZN' <? echo $this->isCurrency($company, "AZN"); ?>>Azerbaijani manat</option>
+            <option value='BAM' <? echo $this->isCurrency($company, "BAM"); ?>>Bosnia and Herzegovina convertible mark</option>
+            <option value='BBD' <? echo $this->isCurrency($company, "BBD"); ?>>Barbados dollar</option>
+            <option value='BDT' <? echo $this->isCurrency($company, "BDT"); ?>>Bangladeshi taka</option>
+            <option value='BGN' <? echo $this->isCurrency($company, "BGN"); ?>>Bulgarian lev</option>
+            <option value='BHD' <? echo $this->isCurrency($company, "BHD"); ?>>Bahraini dinar</option>
+            <option value='BIF' <? echo $this->isCurrency($company, "BIF"); ?>>Burundian franc</option>
+            <option value='BMD' <? echo $this->isCurrency($company, "BMD"); ?>>Bermudian dollar</option>
+            <option value='BND' <? echo $this->isCurrency($company, "BND"); ?>>Brunei dollar</option>
+            <option value='BOB' <? echo $this->isCurrency($company, "BOB"); ?>>Boliviano</option>
+            <option value='BOV' <? echo $this->isCurrency($company, "BOV"); ?>>Bolivian Mvdol</option>
+            <option value='BRL' <? echo $this->isCurrency($company, "BRL"); ?>>Brazilian real</option>
+            <option value='BSD' <? echo $this->isCurrency($company, "BSD"); ?>>Bahamian dollar</option>
+            <option value='BTN' <? echo $this->isCurrency($company, "BTN"); ?>>Bhutanese ngultrum</option>
+            <option value='BWP' <? echo $this->isCurrency($company, "BWP"); ?>>Botswana pula</option>
+            <option value='BYR' <? echo $this->isCurrency($company, "BYR"); ?>>Belarusian ruble</option>
+            <option value='BZD' <? echo $this->isCurrency($company, "BZD"); ?>>Belize dollar</option>
+            <option value='CAD' <? echo $this->isCurrency($company, "CAD"); ?>>Canadian dollar</option>
+            <option value='CDF' <? echo $this->isCurrency($company, "CDF"); ?>>Congolese franc</option>
+            <option value='CHE' <? echo $this->isCurrency($company, "CHE"); ?>>WIR Euro (complementary currency)</option>
+            <option value='CHF' <? echo $this->isCurrency($company, "CHF"); ?>>Swiss franc</option>
+            <option value='CHW' <? echo $this->isCurrency($company, "CHW"); ?>>WIR Franc (complementary currency)</option>
+            <option value='CLF' <? echo $this->isCurrency($company, "CLF"); ?>>Unidad de Fomento (funds code)</option>
+            <option value='CLP' <? echo $this->isCurrency($company, "CLP"); ?>>Chilean peso</option>
+            <option value='CNY' <? echo $this->isCurrency($company, "CNY"); ?>>Chinese yuan</option>
+            <option value='COP' <? echo $this->isCurrency($company, "COP"); ?>>Colombian peso</option>
+            <option value='COU' <? echo $this->isCurrency($company, "COU"); ?>>Unidad de Valor Real</option>
+            <option value='CRC' <? echo $this->isCurrency($company, "CRC"); ?>>Costa Rican colon</option>
+            <option value='CUC' <? echo $this->isCurrency($company, "CUC"); ?>>Cuban convertible peso</option>
+            <option value='CUP' <? echo $this->isCurrency($company, "CUP"); ?>>Cuban peso</option>
+            <option value='CVE' <? echo $this->isCurrency($company, "CVE"); ?>>Cape Verde escudo</option>
+            <option value='CZK' <? echo $this->isCurrency($company, "CZK"); ?>>Czech koruna</option>
+            <option value='DJF' <? echo $this->isCurrency($company, "DJF"); ?>>Djiboutian franc</option>
+            <option value='DKK' <? echo $this->isCurrency($company, "DKK"); ?>>Danish krone</option>
+            <option value='DOP' <? echo $this->isCurrency($company, "DOP"); ?>>Dominican peso</option>
+            <option value='DZD' <? echo $this->isCurrency($company, "DZD"); ?>>Algerian dinar</option>
+            <option value='EGP' <? echo $this->isCurrency($company, "EGP"); ?>>Egyptian pound</option>
+            <option value='ERN' <? echo $this->isCurrency($company, "ERN"); ?>>Eritrean nakfa</option>
+            <option value='ETB' <? echo $this->isCurrency($company, "ETB"); ?>>Ethiopian birr</option>
+            <option value='EUR' <? echo $this->isCurrency($company, "EUR"); ?>>Euro</option>
+            <option value='FJD' <? echo $this->isCurrency($company, "FJD"); ?>>Fiji dollar</option>
+            <option value='FKP' <? echo $this->isCurrency($company, "FKP"); ?>>Falkland Islands pound</option>
+            <option value='GBP' <? echo $this->isCurrency($company, "GBP"); ?>>Pound sterling</option>
+            <option value='GEL' <? echo $this->isCurrency($company, "GEL"); ?>>Georgian lari</option>
+            <option value='GHS' <? echo $this->isCurrency($company, "GHS"); ?>>Ghanaian cedi</option>
+            <option value='GIP' <? echo $this->isCurrency($company, "GIP"); ?>>Gibraltar pound</option>
+            <option value='GMD' <? echo $this->isCurrency($company, "GMD"); ?>>Gambian dalasi</option>
+            <option value='GNF' <? echo $this->isCurrency($company, "GNF"); ?>>Guinean franc</option>
+            <option value='GTQ' <? echo $this->isCurrency($company, "GTQ"); ?>>Guatemalan quetzal</option>
+            <option value='GYD' <? echo $this->isCurrency($company, "GYD"); ?>>Guyanese dollar</option>
+            <option value='HKD' <? echo $this->isCurrency($company, "HKD"); ?>>Hong Kong dollar</option>
+            <option value='HNL' <? echo $this->isCurrency($company, "HNL"); ?>>Honduran lempira</option>
+            <option value='HRK' <? echo $this->isCurrency($company, "HRK"); ?>>Croatian kuna</option>
+            <option value='HTG' <? echo $this->isCurrency($company, "HTG"); ?>>Haitian gourde</option>
+            <option value='HUF' <? echo $this->isCurrency($company, "HUF"); ?>>Hungarian forint</option>
+            <option value='IDR' <? echo $this->isCurrency($company, "IDR"); ?>>Indonesian rupiah</option>
+            <option value='ILS' <? echo $this->isCurrency($company, "ILS"); ?>>Israeli new sheqel</option>
+            <option value='INR' <? echo $this->isCurrency($company, "INR"); ?>>Indian rupee</option>
+            <option value='IQD' <? echo $this->isCurrency($company, "IQD"); ?>>Iraqi dinar</option>
+            <option value='IRR' <? echo $this->isCurrency($company, "IRR"); ?>>Iranian rial</option>
+            <option value='ISK' <? echo $this->isCurrency($company, "ISK"); ?>>Icelandic króna</option>
+            <option value='JMD' <? echo $this->isCurrency($company, "JMD"); ?>>Jamaican dollar</option>
+            <option value='JOD' <? echo $this->isCurrency($company, "JOD"); ?>>Jordanian dinar</option>
+            <option value='JPY' <? echo $this->isCurrency($company, "JPY"); ?>>Japanese yen</option>
+            <option value='KES' <? echo $this->isCurrency($company, "KES"); ?>>Kenyan shilling</option>
+            <option value='KGS' <? echo $this->isCurrency($company, "KGS"); ?>>Kyrgyzstani som</option>
+            <option value='KHR' <? echo $this->isCurrency($company, "KHR"); ?>>Cambodian riel</option>
+            <option value='KMF' <? echo $this->isCurrency($company, "KMF"); ?>>Comoro franc</option>
+            <option value='KPW' <? echo $this->isCurrency($company, "KPW"); ?>>North Korean won</option>
+            <option value='KRW' <? echo $this->isCurrency($company, "KRW"); ?>>South Korean won</option>
+            <option value='KWD' <? echo $this->isCurrency($company, "KWD"); ?>>Kuwaiti dinar</option>
+            <option value='KYD' <? echo $this->isCurrency($company, "KYD"); ?>>Cayman Islands dollar</option>
+            <option value='KZT' <? echo $this->isCurrency($company, "KZT"); ?>>Kazakhstani tenge</option>
+            <option value='LAK' <? echo $this->isCurrency($company, "LAK"); ?>>Lao kip</option>
+            <option value='LBP' <? echo $this->isCurrency($company, "LBP"); ?>>Lebanese pound</option>
+            <option value='LKR' <? echo $this->isCurrency($company, "LKR"); ?>>Sri Lankan rupee</option>
+            <option value='LRD' <? echo $this->isCurrency($company, "LRD"); ?>>Liberian dollar</option>
+            <option value='LSL' <? echo $this->isCurrency($company, "LSL"); ?>>Lesotho loti</option>
+            <option value='LTL' <? echo $this->isCurrency($company, "LTL"); ?>>Lithuanian litas</option>
+            <option value='LVL' <? echo $this->isCurrency($company, "LVL"); ?>>Latvian lats</option>
+            <option value='LYD' <? echo $this->isCurrency($company, "LYD"); ?>>Libyan dinar</option>
+            <option value='MAD' <? echo $this->isCurrency($company, "MAD"); ?>>Moroccan dirham</option>
+            <option value='MDL' <? echo $this->isCurrency($company, "MDL"); ?>>Moldovan leu</option>
+            <option value='MGA' <? echo $this->isCurrency($company, "MGA"); ?>>Malagasy ariary</option>
+            <option value='MKD' <? echo $this->isCurrency($company, "MKD"); ?>>Macedonian denar</option>
+            <option value='MMK' <? echo $this->isCurrency($company, "MMK"); ?>>Myanma kyat</option>
+            <option value='MNT' <? echo $this->isCurrency($company, "MNT"); ?>>Mongolian tugrik</option>
+            <option value='MOP' <? echo $this->isCurrency($company, "MOP"); ?>>Macanese pataca</option>
+            <option value='MRO' <? echo $this->isCurrency($company, "MRO"); ?>>Mauritanian ouguiya</option>
+            <option value='MUR' <? echo $this->isCurrency($company, "MUR"); ?>>Mauritian rupee</option>
+            <option value='MVR' <? echo $this->isCurrency($company, "MVR"); ?>>Maldivian rufiyaa</option>
+            <option value='MWK' <? echo $this->isCurrency($company, "MWK"); ?>>Malawian kwacha</option>
+            <option value='MXN' <? echo $this->isCurrency($company, "MXN"); ?>>Mexican peso</option>
+            <option value='MXV' <? echo $this->isCurrency($company, "MXV"); ?>>Mexican Unidad de Inversion</option>
+            <option value='MYR' <? echo $this->isCurrency($company, "MYR"); ?>>Malaysian ringgit</option>
+            <option value='MZN' <? echo $this->isCurrency($company, "MZN"); ?>>Mozambican metical</option>
+            <option value='NAD' <? echo $this->isCurrency($company, "NAD"); ?>>Namibian dollar</option>
+            <option value='NGN' <? echo $this->isCurrency($company, "NGN"); ?>>Nigerian naira</option>
+            <option value='NIO' <? echo $this->isCurrency($company, "NIO"); ?>>Nicaraguan córdoba</option>
+            <option value='NOK' <? echo $this->isCurrency($company, "NOK"); ?>>Norwegian krone</option>
+            <option value='NPR' <? echo $this->isCurrency($company, "NPR"); ?>>Nepalese rupee</option>
+            <option value='NZD' <? echo $this->isCurrency($company, "NZD"); ?>>New Zealand dollar</option>
+            <option value='OMR' <? echo $this->isCurrency($company, "OMR"); ?>>Omani rial</option>
+            <option value='PAB' <? echo $this->isCurrency($company, "PAB"); ?>>Panamanian balboa</option>
+            <option value='PEN' <? echo $this->isCurrency($company, "PEN"); ?>>Peruvian nuevo sol</option>
+            <option value='PGK' <? echo $this->isCurrency($company, "PGK"); ?>>Papua New Guinean kina</option>
+            <option value='PHP' <? echo $this->isCurrency($company, "PHP"); ?>>Philippine peso</option>
+            <option value='PKR' <? echo $this->isCurrency($company, "PKR"); ?>>Pakistani rupee</option>
+            <option value='PLN' <? echo $this->isCurrency($company, "PLN"); ?>>Polish złoty</option>
+            <option value='PYG' <? echo $this->isCurrency($company, "PYG"); ?>>Paraguayan guaraní</option>
+            <option value='QAR' <? echo $this->isCurrency($company, "QAR"); ?>>Qatari rial</option>
+            <option value='RON' <? echo $this->isCurrency($company, "RON"); ?>>Romanian new leu</option>
+            <option value='RSD' <? echo $this->isCurrency($company, "RSD"); ?>>Serbian dinar</option>
+            <option value='RUB' <? echo $this->isCurrency($company, "RUB"); ?>>Russian rouble</option>
+            <option value='RWF' <? echo $this->isCurrency($company, "RWF"); ?>>Rwandan franc</option>
+            <option value='SAR' <? echo $this->isCurrency($company, "SAR"); ?>>Saudi riyal</option>
+            <option value='SBD' <? echo $this->isCurrency($company, "SBD"); ?>>Solomon Islands dollar</option>
+            <option value='SCR' <? echo $this->isCurrency($company, "SCR"); ?>>Seychelles rupee</option>
+            <option value='SDG' <? echo $this->isCurrency($company, "SDG"); ?>>Sudanese pound</option>
+            <option value='SEK' <? echo $this->isCurrency($company, "SEK"); ?>>Swedish krona/kronor</option>
+            <option value='SGD' <? echo $this->isCurrency($company, "SGD"); ?>>Singapore dollar</option>
+            <option value='SHP' <? echo $this->isCurrency($company, "SHP"); ?>>Saint Helena pound</option>
+            <option value='SLL' <? echo $this->isCurrency($company, "SLL"); ?>>Sierra Leonean leone</option>
+            <option value='SOS' <? echo $this->isCurrency($company, "SOS"); ?>>Somali shilling</option>
+            <option value='SRD' <? echo $this->isCurrency($company, "SRD"); ?>>Surinamese dollar</option>
+            <option value='SSP' <? echo $this->isCurrency($company, "SSP"); ?>>South Sudanese pound</option>
+            <option value='STD' <? echo $this->isCurrency($company, "STD"); ?>>São Tomé and Príncipe dobra</option>
+            <option value='SYP' <? echo $this->isCurrency($company, "SYP"); ?>>Syrian pound</option>
+            <option value='SZL' <? echo $this->isCurrency($company, "SZL"); ?>>Swazi lilangeni</option>
+            <option value='THB' <? echo $this->isCurrency($company, "THB"); ?>>Thai baht</option>
+            <option value='TJS' <? echo $this->isCurrency($company, "TJS"); ?>>Tajikistani somoni</option>
+            <option value='TMT' <? echo $this->isCurrency($company, "TMT"); ?>>Turkmenistani manat</option>
+            <option value='TND' <? echo $this->isCurrency($company, "TND"); ?>>Tunisian dinar</option>
+            <option value='TOP' <? echo $this->isCurrency($company, "TOP"); ?>>Tongan paʻanga</option>
+            <option value='TRY' <? echo $this->isCurrency($company, "TRY"); ?>>Turkish lira</option>
+            <option value='TTD' <? echo $this->isCurrency($company, "TTD"); ?>>Trinidad and Tobago dollar</option>
+            <option value='TWD' <? echo $this->isCurrency($company, "TWD"); ?>>New Taiwan dollar</option>
+            <option value='TZS' <? echo $this->isCurrency($company, "TZS"); ?>>Tanzanian shilling</option>
+            <option value='UAH' <? echo $this->isCurrency($company, "UAH"); ?>>Ukrainian hryvnia</option>
+            <option value='UGX' <? echo $this->isCurrency($company, "UGX"); ?>>Ugandan shilling</option>
+            <option value='USD' <? echo $this->isCurrency($company, "USD"); ?>>United States dollar</option>
+            <option value='UYI' <? echo $this->isCurrency($company, "UYI"); ?>>Uruguay Peso (URUIURUI)</option>
+            <option value='UYU' <? echo $this->isCurrency($company, "UYU"); ?>>Uruguayan peso</option>
+            <option value='UZS' <? echo $this->isCurrency($company, "UZS"); ?>>Uzbekistan som</option>
+            <option value='VEF' <? echo $this->isCurrency($company, "VEF"); ?>>Venezuelan bolívar fuerte</option>
+            <option value='VND' <? echo $this->isCurrency($company, "VND"); ?>>Vietnamese đồng</option>
+            <option value='VUV' <? echo $this->isCurrency($company, "VUV"); ?>>Vanuatu vatu</option>
+            <option value='WST' <? echo $this->isCurrency($company, "WST"); ?>>Samoan tala</option>
+            <option value='XAF' <? echo $this->isCurrency($company, "XAF"); ?>>CFA franc BEAC</option>
+            <option value='XCD' <? echo $this->isCurrency($company, "XCD"); ?>>East Caribbean dollar</option>
+            <option value='XDR' <? echo $this->isCurrency($company, "XDR"); ?>>Special drawing rights</option>
+            <option value='XFU' <? echo $this->isCurrency($company, "XFU"); ?>>UIC franc (special settlement currency)</option>
+            <option value='XOF' <? echo $this->isCurrency($company, "XOF"); ?>>CFA Franc BCEAO</option>
+            <option value='XPF' <? echo $this->isCurrency($company, "XPF"); ?>>CFP franc</option>
+            <option value='YER' <? echo $this->isCurrency($company, "YER"); ?>>Yemeni rial</option>
+            <option value='ZAR' <? echo $this->isCurrency($company, "ZAR"); ?>>South African rand</option>
+            <option value='ZMK' <? echo $this->isCurrency($company, "ZMK"); ?>>Zambian kwacha</option>
+            <option value='ZWL' <? echo $this->isCurrency($company, "ZWL"); ?>>Zimbabwe dollar</option>
+        </select>
+    </div>
+    
+    
+    <div class="gss_button_area">
+        <div class="shop_button" gss_method="deleteCompany" gss_confirmation="Are you sure you want to delete this company?" gss_model="companymodel"><i class="fa fa-remove"></i>Slett firma</div>
+        <div class="shop_button" gstype="submit"><i class="fa fa-save"></i> Save</div>
+    </div>
+
+</div>

@@ -64,6 +64,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Payment payment = new Payment();
     public String session;
     public String internalComment = "";
+    public boolean hasTriedToAutoCollect = false;
     public String recieptEmail = "";
     public String trackingNumber = "";
     public long incrementOrderId = 0;
@@ -98,6 +99,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String attachedToRoom = null;
     public LinkedList<OrderShipmentLogEntry> shipmentLog = new LinkedList();
     public List<OrderTransaction> orderTransactions = new ArrayList();
+    public String currency = "";
+    public String language = "";
     
     /**
      * Key = productid, value is a list of taxgroups used 
@@ -1319,6 +1322,10 @@ public class Order extends DataCommon implements Comparable<Order> {
         if (cart != null) {
             cart.sortByProducIds();
         }
+    }
+
+    public void changeAllTaxes(TaxGroup taxGroupNumber) {
+        cart.getItems().stream().forEach(item -> item.changeAllTaxes(taxGroupNumber));
     }
 
     public static class Status  {

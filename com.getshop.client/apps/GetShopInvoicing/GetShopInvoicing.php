@@ -14,5 +14,9 @@ class GetShopInvoicing extends \MarketingApplication implements \Application {
         $this->includefile("monthselector");
         $this->includefile("monthview");
     }
+    
+    public function createRealOrders() {
+        $this->getApi()->getDirectorManager()->createOrders();
+    }
 }
 ?>

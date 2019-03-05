@@ -11,12 +11,9 @@
 }
 
 .GetShopInvoicing .row .col.icol1 {
-    width: 200px;
+    width: 500px;
 }
 
-.GetShopInvoicing .row .col.icol1:before {
-    content: ' - ';
-}
 
 .GetShopInvoicing .row .col.icol2 {
     width: 400px;

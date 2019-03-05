@@ -323,7 +323,8 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
         $msg = $_POST['data']['emailMessage'];
-        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg);
+        $subject = $_POST['data']['subject'];
+        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg, $subject);
     }
     
     public function sendByEhf() {
@@ -352,13 +353,14 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $prefix = $_POST['data']['bookerPrefix'];
         $phone = $_POST['data']['bookerPhone'];
         $msg = $_POST['data']['smsMessage'];
+        $subject = $_POST['data']['subject'];
 
         echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
         echo "<i class='fa fa-info'></i> Paymentlink has been sent.";
         echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
         echo "</div>";
         
-        $this->getApi()->getPmsManager()->sendPaymentLinkWithText($this->getSelectedMultilevelDomainName(), $orderid, $bookingid, $email, $prefix, $phone, $msg);
+        $this->getApi()->getPmsManager()->sendPaymentLinkWithText($this->getSelectedMultilevelDomainName(), $orderid, $bookingid, $email, $prefix, $phone, $msg, $subject);
     }
     
     

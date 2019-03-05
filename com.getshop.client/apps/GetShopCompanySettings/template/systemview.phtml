@@ -4,6 +4,8 @@ if ($_POST['event'] == "setTab" && $_POST['data']['value']) {
     $_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_systemid'] = $_POST['data']['value'];
 }
 $system = $this->getApi()->getSystemManager()->getSystem($_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_systemid']);
+
+$products = $this->getApi()->getProductManager()->getAllProducts();
 ?>
 
 
@@ -19,6 +21,17 @@ $system = $this->getApi()->getSystemManager()->getSystem($_SESSION['ns_a22fa681_
     <span style='width: 200px; display: inline-block;'>Server vpn addr:</span><input class='gsniceinput1' gsname="serverVpnIpAddress" value='<? echo $system->serverVpnIpAddress; ?>'/><br/>
     <span style='width: 200px; display: inline-block;'>Web address:</span><input class='gsniceinput1' gsname="webAddresses" value='<? echo $system->webAddresses; ?>'/><br/>
     <span style='width: 200px; display: inline-block;'>Store id:</span><input class='gsniceinput1' gsname="remoteStoreId" value='<? echo $system->remoteStoreId; ?>'/><br/>
+    <span style='width: 200px; display: inline-block;'>Product: </span>
+    <select class='gsniceselect1' gsname='productid'>
+    <?
+    foreach ($products as $product) {
+        $selected = $product->id == $system->productId ? "selected='true'" : "";
+        ?>
+        <option <? echo $selected; ?> value='<? echo $product->id; ?>'><? echo $product->name; ?></option>
+        <?
+    }
+    ?>
+    </select>
     <br/>
     
     <h2>Contract details</h2>

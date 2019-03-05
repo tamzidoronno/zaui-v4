@@ -9683,6 +9683,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<String> getAllOrderIds(String pmsBookingId) {
         PmsBooking booking = getBooking(pmsBookingId);
         
+        if (booking == null) {
+            return new ArrayList();
+        }
+        
         List<String> orderIds = getExtraOrderIds(pmsBookingId);
         orderIds.addAll(booking.orderIds);
         

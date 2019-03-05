@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -107,7 +108,13 @@ public class EhfXmlGenerator {
         if (order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
             xml += "         <cbc:Note>" + order.invoiceNote + "</cbc:Note>\n";
         }
-        xml += "         <cbc:TaxPointDate>" + dateFormatter.format(order.getStartDateByItems()) + "</cbc:TaxPointDate>\n";
+        
+        Date taxDate = order.getStartDateByItems();
+        if (taxDate == null) {
+            taxDate = order.rowCreatedDate;
+        }
+        
+        xml += "         <cbc:TaxPointDate>" + dateFormatter.format(taxDate) + "</cbc:TaxPointDate>\n";
         xml += "         <cbc:DocumentCurrencyCode listID=\"ISO4217\">" + getCurrentByCode() + "</cbc:DocumentCurrencyCode>\n";
         if (order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
             xml += "         <cbc:AccountingCost>" + order.invoiceNote + "</cbc:AccountingCost>\n";
@@ -271,7 +278,7 @@ public class EhfXmlGenerator {
                 + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals(2)) + "</cbc:PayableAmount>\n"
                 + "        </cac:LegalMonetaryTotal>\n";
 
-        xml += createInvoiceLines();
+        xml += createInvoiceLines(taxDate);
 
         if (isCreditNote) {
             xml += "</CreditNote>";
@@ -282,7 +289,7 @@ public class EhfXmlGenerator {
         return xml;
     }
 
-    private String createInvoiceLines() {
+    private String createInvoiceLines(Date taxDate) {
         String xml = "";
 
         int i = 0;
@@ -298,14 +305,27 @@ public class EhfXmlGenerator {
             }
             String invoicelinetext = isCreditNote ? "CreditNoteLine" : "InvoiceLine";
             String invoieqtytext = isCreditNote ? "CreditedQuantity" : "InvoicedQuantity";
+            
+            Date startDate = item.getStartingDate();
+            
+            if (startDate == null) {
+                startDate = taxDate;
+            }
+            
+            Date endDate = item.getEndingDate();
+            
+            if (endDate == null) {
+                endDate = taxDate;
+            }
+            
             xml += "        <cac:"+invoicelinetext+">\n"
                     + "                <cbc:ID>" + i + "</cbc:ID>\n"
                     + "                <cbc:"+invoieqtytext+" unitCode=\"NAR\" unitCodeListID=\"UNECERec20\">" + count + "</cbc:"+invoieqtytext+">\n"
                     + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + total + "</cbc:LineExtensionAmount>\n"
                     + "                <cbc:AccountingCost>BookingCode001</cbc:AccountingCost>\n"
                     + "                <cac:InvoicePeriod>\n"
-                    + "                        <cbc:StartDate>" + dateFormatter.format(item.getStartingDate()) + "</cbc:StartDate>\n"
-                    + "                        <cbc:EndDate>" + dateFormatter.format(item.getEndingDate()) + "</cbc:EndDate>\n"
+                    + "                        <cbc:StartDate>" + dateFormatter.format(startDate) + "</cbc:StartDate>\n"
+                    + "                        <cbc:EndDate>" + dateFormatter.format(endDate) + "</cbc:EndDate>\n"
                     + "                </cac:InvoicePeriod>\n"
                     + "                <cac:OrderLineReference>\n"
                     + "                        <cbc:LineID>" + i + "</cbc:LineID>\n"

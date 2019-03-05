@@ -87,8 +87,8 @@ app.PsmConfigurationAddons = {
         var row = $(this).closest('tr');
         var data = thundashop.framework.createGsArgs(row.find('.saveExtendedInformationForm'));
         data['onlyForItems'] =  [];
-        $('.selectedItem').each(function() {
-            data['onlyForItems'].push(row.find('.loadExtendedProductInformation').attr('itemid'));
+        row.find('.selectedItem').each(function() {
+            data['onlyForItems'].push($(this).attr('itemid'));
         });
         var event = thundashop.Ajax.createEvent('','saveExtendedProductInfo', row, data);
         thundashop.Ajax.postWithCallBack(event, function() {
@@ -136,7 +136,6 @@ app.PsmConfigurationAddons = {
             });
             var dataToSave = thundashop.framework.createGsArgs(form);
             dataToSave.onlyForItems = onlyForItems;
-            console.log(dataToSave);
             data[form.attr('productid')] = dataToSave;
         });
         var toPost = {};

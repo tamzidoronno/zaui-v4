@@ -159,7 +159,7 @@ public class PmsManagerProcessor {
                 booking = manager.finalize(booking);
                 save = true;
                 manager.doNotificationFromProcessor(key, booking, room);
-                room.notificationsSent.add(key);
+                room.notificationsSent.add(key);               
             }
             if (save) {
                 manager.saveBooking(booking);
@@ -352,7 +352,7 @@ public class PmsManagerProcessor {
                     }
                 }
             }
-            
+
             //Also deleted rooms needs to be removed from arx.
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if(!room.addedToArx) {

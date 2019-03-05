@@ -5,6 +5,7 @@ app.PmsBookingRoomView = {
         $(document).on('change', '.PmsBookingRoomView .changesegment', this.changeSegment);
         $(document).on('click', '.PmsBookingRoomView .opengroup', this.openGroup);
         $(document).on('click', '.PmsBookingRoomView .adduserdescription', this.changeUserDescription);
+        $(document).on('click', '.PmsBookingRoomView .addordernote', this.addOrderNote);
         $(document).on('click', '.PmsBookingRoomView .addaddonsbutton', this.loadAddAddonsArea);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .closebutton', this.closePreview);
         $(document).on('click', '.PmsBookingRoomView .orderpreview .continue', this.continueToBooking);
@@ -76,6 +77,17 @@ app.PmsBookingRoomView = {
         var comment = prompt("Please enter a comment", text);
         $('.PmsBookingRoomView .userdescription').html(comment);
         var event = thundashop.Ajax.createEvent('','saveUserDescription',$(this), {
+            "comment" : comment
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            
+        });
+    },
+    addOrderNote : function() {
+        var text = $('.PmsBookingRoomView .userdescription').text();
+        var comment = prompt("Please enter a comment", text);
+        $('.PmsBookingRoomView .ordernote').html(comment);
+        var event = thundashop.Ajax.createEvent('','saveOrderNote',$(this), {
             "comment" : comment
         });
         thundashop.Ajax.postWithCallBack(event, function() {

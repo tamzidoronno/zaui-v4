@@ -166,7 +166,7 @@ class RegistrateUsers {
             return;
         }
         
-        echo "<div style='text-align:left; width: 100%; display:inline-block;font-size: 20px; margin-top: 20px; font-weight:bold;'>We already have " . sizeof($text) . " users matching this search, is it one of the below?</div>";
+        echo "<div style='text-align:left; width: 100%; display:inline-block;font-size: 20px; margin-top: 20px; font-weight:bold;'>We already have users matching this search, is it one of the below?</div>";
         echo "<table style=width:100%;text-align:left; margin-bottom: 50px;'>";
         echo "<tr>";
         echo "<th>Name</th>";

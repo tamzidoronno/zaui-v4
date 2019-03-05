@@ -135,6 +135,8 @@ class IntrumInkasso extends \PaymentApplication implements \Application {
             $orgid = $user->birthDay;
             $length = 11;
         }
+        $orgid = trim($orgid);
+        
         if(stristr($countrycode, "no") && (!$orgid || !ctype_digit($orgid) || strlen($orgid) != $length)) {
             echo "Invalid organisation number or personal number: " . $orgid . " " . strlen($orgid) . " of " . $length . " in total length.";
             exit(0);

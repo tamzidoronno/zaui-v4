@@ -4,7 +4,7 @@ $pmsSelectedRoom = $this->getSelectedRoom();
 
     $comments = (array) $pmsBooking->comments;
     ksort($comments);
-    echo "<div style='overflow:auto; height: 100px; display:inline-block;' id='internalcommentsfield'>";
+    echo "<div style='overflow:auto; height: 100px; display:inline-block;width:100%;' id='internalcommentsfield'>";
     if(sizeof($comments) == 0) {
         echo "No comments";
     }

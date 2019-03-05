@@ -33,4 +33,7 @@ public interface IDirectorManager {
     
     @Administrator
     public List<Order> createVirtualOrders();
+    
+    @Administrator
+    public List<Order> createOrders();
 }

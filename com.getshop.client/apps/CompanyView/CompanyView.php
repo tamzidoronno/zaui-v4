@@ -31,6 +31,10 @@ class CompanyView extends \MarketingApplication implements \Application {
         
     }
     
+    public function isCurrency($company, $currencycode) {
+        return $company->currency == $currencycode ? "selected='true'" : "";
+    }
+    
     public function changeMenu() {
         $this->unselectCompany();
         
@@ -116,6 +120,35 @@ class CompanyView extends \MarketingApplication implements \Application {
     
     public function removeUserFromCompany() {
         $this->getApi()->getUserManager()->removeUserFromCompany($this->getSelectedCompany()->id, $_POST['data']['userid']);
+    }
+    
+    public function saveCompany() {
+        $company = new \core_usermanager_data_Company();
+        if (isset($_POST['data']['companyid']) && $_POST['data']['companyid']) {
+            $company = $this->getApi()->getUserManager()->getCompany($_POST['data']['companyid']);
+        }
+        
+        $company->name = $_POST['data']['name'];
+        $company->prefix = $_POST['data']['prefix'];
+        $company->phone = $_POST['data']['phone'];
+        $company->email = $_POST['data']['email'];
+        $company->invoiceEmail = $_POST['data']['invoiceEmail'];
+        $company->website = $_POST['data']['website'];
+        $company->contactPerson = $_POST['data']['contactPerson'];
+        $company->reference = $_POST['data']['reference'];
+        $company->description = $_POST['data']['description'];
+        
+        if (!$company->address) {
+            $company->address = new \core_usermanager_data_Address();
+        }
+        
+        $company->address->address = $_POST['data']['address'];
+        $company->address->postCode = $_POST['data']['postCode'];
+        $company->address->city = $_POST['data']['city'];
+        $company->language = $_POST['data']['language'];
+        $company->currency = $_POST['data']['currency'];
+       
+        $this->getApi()->getUserManager()->saveOrCreateCompanyAndUpdatePrimaryUser($company);
     }
 }
 ?>

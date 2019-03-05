@@ -521,4 +521,7 @@ public interface IUserManager {
     
     @Editor
     public List<User> getUsersThatHasPinCode();
+    
+    @Editor
+    public Company saveOrCreateCompanyAndUpdatePrimaryUser(Company company);
 }

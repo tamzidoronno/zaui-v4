@@ -23,6 +23,7 @@ import com.thundashop.core.gsd.ItemLine;
 import com.thundashop.core.gsd.VatLine;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.InvoiceData;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
 import com.thundashop.core.pdf.data.AccountingDetails;
@@ -134,12 +135,17 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Override
     public String getBase64EncodedInvoice(String orderId) {
+        AccountingDetails details = getAccountingDetails();
+        
+        if (details.getPhpTemplate() != null) {
+            return generateInvoiceByPHP(orderId, details.getPhpTemplate());
+        }
+        
         if(storeManager.isPikStore()) {
             return generateInvoiceByPHP(orderId, "template1");
         }
         Order order = orderManager.getOrder(orderId);
         checkForNullNameOnProduct(order);
-        AccountingDetails details = getAccountingDetails();
         generateKidOnOrder(order);
         InvoiceGenerator generator = new InvoiceGenerator(order, details);
         
@@ -255,7 +261,15 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             }
             addr += "?status=" + order.status;
             AccountingDetails details = getAccountingDetails();
-            String base = webManager.htmlGet(addr);
+            
+            InvoiceData invoiceData = new InvoiceData();
+            invoiceData.order = order;
+            invoiceData.accountingDetails = getAccountingDetails();
+            
+            Gson gson = new Gson();
+            String orderInJson = gson.toJson(invoiceData);
+            
+            String base = webManager.htmlPost(addr, orderInJson, true, "UTF-8");
             InvoiceFormatter formatter = new InvoiceFormatter(base);
             formatter.setUser(userManager.getUserById(order.userId));
             formatter.setOrder(order);

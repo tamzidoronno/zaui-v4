@@ -224,6 +224,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     public void cancelPaymentProcess(String terminalId) {
         if(!storeManager.isProductMode()) {
             printFeedBack("payment failed");
+            orderToPay = null;
             return;
         }
         
@@ -249,6 +250,24 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     @Override
     public void clearMessages() {
         terminalMessages.clear();
+    }
+
+    @Override
+    public Boolean isPaymentInProgress() {
+        return orderToPay != null;
+    }
+
+    @Override
+    public String getCurrentPaymentOrderId() {
+        if (orderToPay != null) {
+            return orderToPay.id;
+        }
+        
+        return null;
+    }
+
+    public void removeOrderToPay() {
+        orderToPay = null;
     }
 
 }

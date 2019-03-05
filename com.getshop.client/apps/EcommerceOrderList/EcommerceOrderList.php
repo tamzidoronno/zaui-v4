@@ -487,6 +487,9 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
     }
     
     public function sendToVerifone() {
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "in_progress";
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_order_id'] = $_POST['data']['orderid'];
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_id'] = $_POST['data']['verifonid'];
         $this->getApi()->getVerifoneManager()->chargeOrder($_POST['data']['orderid'], $_POST['data']['verifonid'], false);
     }
     

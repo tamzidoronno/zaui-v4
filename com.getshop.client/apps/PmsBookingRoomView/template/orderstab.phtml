@@ -26,6 +26,7 @@ foreach($pmsBooking->orderIds as $ordId) {
 }
 $totalMissingOnGroup = $pmsBooking->totalPrice - $totalOrdersOnGroup;
 
+
 if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) {
     ?>
     <div class="kaipal infobox">
@@ -73,6 +74,13 @@ if(isset($pmsSelectedRoom->hasBeenUpdated) && $pmsSelectedRoom->hasBeenUpdated) 
     }
 } else {
     $this->includefile("nopaymentmethodsyet");
+}
+
+$verifonePaymentInProgress = $this->getApi()->getVerifoneManager()->isPaymentInProgress();
+if ($verifonePaymentInProgress) {
+    echo '<div class="verifonestatus">';
+    $this->includefile("verifonepaymentprocess");
+    echo '</div>';
 }
 ?>
     

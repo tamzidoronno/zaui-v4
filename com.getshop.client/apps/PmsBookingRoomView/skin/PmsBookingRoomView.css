@@ -667,6 +667,20 @@
     cursor: pointer;
 }
 
+.PmsBookingRoomView .verifonestatus {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 2;
+    background-color: rgba(0,0,0,0.8);
+    color: #FFF;
+    text-align: center;
+    padding: 50px;
+    font-size: 30px;
+}
+
 @media screen and (max-width: 1300px) {
     .PmsBookingRoomView .isgroupinformation {
         font-size: 10px;

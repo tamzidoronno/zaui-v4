@@ -1,0 +1,49 @@
+
+<?
+/* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+$state = $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'];
+echo $this->getLastTerminalMessage();
+?>
+
+
+<div class="buttonarea">
+    <?
+    if ($state == "in_progress" || !$state) {
+        ?>
+        <div class="shop_button" gs_callback='app.PmsBookingRoomView.nullFunction' synchron="true" gsclick="cancelVerifonePayment"> <? echo $this->__f("Cancel payment process"); ?> </div>
+        <script>
+            setTimeout(app.PmsBookingRoomView.fetchTerminalMessages, 400);
+        </script>
+        <?
+    }
+
+    if ($state == "failed" || !$state) {
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment_state']);
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_last_terminal_message']);
+        ?>
+        <div class="shop_button" gsclick="cancelCurrentOrder"><? echo $this->__f("Cancel"); ?> </div>
+        <div class="shop_button" gsclick="restartVerifonePayment"><? echo $this->__f("Retry payment"); ?> </div>
+        <?
+    }
+
+    if ($state == "completed") {
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment_state']);
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_last_terminal_message']);
+        ?>
+        <script>$('.gsoverlay1').click();</script>
+        <script>$('.shop_button.listpaymentbutton').click();</script>
+        <?
+    }
+    ?>
+</div>
+
+<?
+if (!$this->getApi()->getStoreManager()->isProductMode()) {
+    ?>
+    <div>
+        <div class='shop_button debugaction' action="success">Success</div>
+        <div class='shop_button debugaction' action="failed">Failed</div>
+    </div>
+    <?
+}
+?>

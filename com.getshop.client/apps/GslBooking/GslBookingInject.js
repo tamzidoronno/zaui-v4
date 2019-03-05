@@ -58,6 +58,8 @@ function getshop_setBookingTranslation() {
             $("[gstranslationfield='agebelow']").html(text);              
             if(!config.doNotRecommendBestPrice) {
                 $('.GslBooking .fa_box.guests').css('visibility','visible');
+            } else {
+                $('.GslBooking .fa_box.guests').addClass('donotrecommendprices');
             }
             var text = getshop_translationMatrixLoaded['ischildtext'];
             text = text.replace("{age}", config.childAge);

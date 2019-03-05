@@ -27,7 +27,7 @@
     "search" : "Search",
     "remove" : "Remove",
     "removeguest" : "Remove guest",
-    "discountcode" : "Discount coupon?",
+    "discountcode" : "Booking code?",
     "logout" : "Logout",
     "signinbutton" : "Sign in",
     "inLuckAvailable" : "Your selection!",

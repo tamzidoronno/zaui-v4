@@ -68,14 +68,24 @@ echo "</script>";
     })
 </script>
 
+<div class="topmenu">
+    <div class="dropdownmenu">
+        <i class="fa fa-list"></i>
+    </div>
+    <div class='innermenu'>
+        <div class='menuentry showsendmenu'><i class='fa fa-envelope'></i> <? echo $this->__f("Send"); ?></div>
+    </div>
+</div>
+
 <div class="duerow header">
-    <div class="col incrementalOrderId"><? echo $this->__f("Order id"); ?></div>
+    <div class="col incrementalOrderId"><input type="checkbox"/> <? echo $this->__f("Order id"); ?></div>
     <div class="col name"><? echo $this->__f("Name"); ?></div>
     <div class="col orderdate"><? echo $this->__f("Created date"); ?></div>
     <div class="col duedate"><? echo $this->__f("Due date"); ?></div>
     <div class="col totalamount"><? echo $this->__f("Total"); ?></div>
     <div class="col totalpaid"><? echo $this->__f("Paid"); ?></div>
     <div class="col remaining"><? echo $this->__f("Remaining"); ?></div>
+    <div class="col sentlog"><? echo $this->__f("Status"); ?></div>
 </div>
 
 <?
@@ -83,12 +93,17 @@ $totalOrderAmount = 0;
 
 foreach ($resData->datas as $order) {
     
+    $sentDate = $this->getLastSentDate($order);
+    
     $override = $order->overrideAccountingDate ? '<i class="fa fa-warning" title="The income for this invoice is being accounted for '.date('d.m.Y', strtotime($order->overrideAccountingDate)).'"></i> ' : "";
     ?>
 
-    <div class="duerow  <? echo $color; ?>">
+    <div class="duerow  <? echo $color; ?> realrow">
         <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'>
-            <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?></div>
+            <div class="col incrementalOrderId">
+                <input type="checkbox" value='<? echo $order->id; ?>'/>
+                <? echo $order->incrementOrderId; ?>
+            </div>
             <div class="col name"><? echo $order->cart->address->fullName; ?></div>
             <div class="col orderdate">
                 <? echo $override.date('d.m.Y', strtotime($order->rowCreatedDate)); ?>
@@ -100,14 +115,14 @@ foreach ($resData->datas as $order) {
                 <?
                 $amount = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
                 $totalOrderAmount += $amount;
-                echo $amount;
+                echo round($amount, 2);
                 ?>
             </div>
             <div class="col totalpaid">
                 <?
                 $paidAmount = $this->getTotalPaidAmount($order);
                 $totalOrderPaid += $paidAmount;
-                echo $paidAmount;
+                echo round($paidAmount,2);
                 ?>
             </div>
 
@@ -124,6 +139,12 @@ foreach ($resData->datas as $order) {
                 }
                 
                 echo round($rest,2);
+                ?>
+            </div>
+            
+            <div class="col sentlog">
+                <? 
+                echo $sentDate; 
                 ?>
             </div>
         </a>

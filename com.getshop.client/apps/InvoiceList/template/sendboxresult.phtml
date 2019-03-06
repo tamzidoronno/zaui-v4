@@ -1,0 +1,52 @@
+<?
+/* @var $this \ns_0775b147_b913_43cd_b9f4_a2a721ad3277\InvoiceList */
+if (!count($_POST['data']['orderIds'])) {
+    echo $this->__f("No orders selected, please select one from the list before you click send.");
+} else {
+    foreach ($_POST['data']['orderIds'] as $orderId) {
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $sendType = $this->getDefaultSentType($order);
+        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+        ?>
+        <div class='orderrow row' orderid='<? echo $orderId; ?>'>
+            <div class='col col1'><? echo $order->incrementOrderId; ?></div>
+            <div class='col col2'><? echo $user->fullName; ?></div>
+            <div class='col col3'><? echo round($this->getApi()->getOrderManager()->getTotalForOrderById($order->id), 2); ?></div>
+            <div class='col col4'>
+                <? 
+                if ($sendType == "ehf") {
+                    ?>
+                    <i class='fa fa-asterisk' style='margin-right: 20px;'></i> <span><? echo $user->companyObject->vatNumber; ?></span>
+                    <?  
+                } else {
+                    ?>
+                    <i class='fa fa-envelope' style='margin-right: 20px;'></i> <input class='gsniceinput1' value='<? echo $order->cart->address->emailAddress; ?>'/>
+                    <?
+                }
+                ?>
+            </div>
+        </div>
+        <?
+    }
+?>
+    
+<?
+}
+?>
+<br/>
+<br/>
+<div>
+    <div class='shop_button closesendinvoices'>
+        <?
+        echo $this->__f("Cancel");
+        ?>
+    </div>
+    
+    &nbsp;
+    <div class='shop_button send_invoices'>
+        <?
+        echo $this->__f("Start sending");
+        ?>
+    </div>
+</div>
+

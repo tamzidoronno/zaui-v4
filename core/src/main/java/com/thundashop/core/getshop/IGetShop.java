@@ -131,5 +131,5 @@ public interface IGetShop {
     public void loadEhfCompanies();
     
     @Administrator
-    public boolean canInvoiceOverEhf(Long vatNumber);
+    public boolean canInvoiceOverEhf(String vatNumber);
 }

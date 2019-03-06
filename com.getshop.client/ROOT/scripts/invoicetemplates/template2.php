@@ -139,6 +139,20 @@ $calculatedTaxes = array();
     </div>
 </div>
 
+<?
+if ($order->invoiceNote) {
+?>
+<div class='page' style='margin: 20px;' >
+    <div style='border-bottom: solid 1px #DDD; padding: 5px;  padding-left: 10px; text-transform: uppercase; color: #3b7fb1; font-size: 22px;'><? echo $translator->translate("Note"); ?></div>
+    <div style="padding: 5px; padding-left: 10px;">
+        <?
+        echo nl2br($order->invoiceNote);
+        ?>
+    </div>
+</div>
+<?
+}
+?>
 <div class='productrow productrowheader'>
     <div class='col col1'><? echo $translator->translate("Product"); ?></div>
     <div class='col col2'><? echo $translator->translate("Unit Price"); ?></div>

@@ -42,7 +42,36 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .checkoutguest', this.checkInCheckOutGuest);
         $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
         $(document).on('click', '.PmsBookingRoomView .expandmessage', this.expandmessage);
+        $(document).on('click', '.PmsBookingRoomView .debugaction', this.postDebugMessage);
     },
+    
+    // Needs to be here for the Verifone Payment Process
+    nullFunction: function() {
+        
+    },
+    
+    fetchTerminalMessages: function() {
+        var event = thundashop.Ajax.createEvent(null, "getPaymentProcessMessage", $('.PmsBookingRoomView'), {});
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.PmsBookingRoomView .verifonestatus').html(res);
+        }, null, true, true);
+    },
+    
+    postDebugMessage: function() {
+        var data = {
+            action : $(this).attr('action')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "handleDebugActions", this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            console.log("done");
+        }, [], true);
+    },
+    
     changeUserDescription : function() {
         var text = $('.PmsBookingRoomView .userdescription').text();
         var comment = prompt("Please enter a comment", text);

@@ -44,7 +44,8 @@ $products = $this->getApi()->getProductManager()->getAllProducts();
     <span style='width: 200px; display: inline-block;'>Active to:</span><input class='gsniceinput1' gsname="activeTo" value='<? echo $endDate; ?>' placeholder="dd.mm.YYYY"/><br/>
     <span style='width: 200px; display: inline-block;'>Monthly price:</span><input class='gsniceinput1' gsname="monthlyPrice" value='<? echo $system->monthlyPrice; ?>'/><br/>
     <span style='width: 200px; display: inline-block;'>Invoiced to:</span><input class='gsniceinput1' gsname="invoicedTo" value='<? echo $system->invoicedTo; ?>'/><br/>
-    <span style='width: 200px; display: inline-block;'>Number of months to unvoice:</span><input class='gsniceinput1' gsname="numberOfMonthsToInvoice" value='<? echo $system->numberOfMonthsToInvoice; ?>'/><br/>
+    <span style='width: 200px; display: inline-block;'>Number of months to invoice:</span><input class='gsniceinput1' gsname="numberOfMonthsToInvoice" value='<? echo $system->numberOfMonthsToInvoice; ?>'/><br/>
+    <span style='width: 200px; display: inline-block;'>Invoice note:</span><input class='gsniceinput1' gsname="note" value='<? echo $system->note; ?>'/><br/>
     
     <br/><div class='shop_button' gstype='submit'>Save</div>
 </div>

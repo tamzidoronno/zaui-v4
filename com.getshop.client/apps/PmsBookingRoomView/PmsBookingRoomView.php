@@ -1901,5 +1901,76 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $orderIds;
     }
 
+    public function getLastTerminalMessage() {
+        $messages = $this->getApi()->getVerifoneManager()->getTerminalMessages();
+        $this->getApi()->getVerifoneManager()->clearMessages();
+        
+        if ($messages && count($messages)) {
+            $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_last_terminal_message'] = end($messages);
+        }
+        
+        $this->updateState();
+        
+        return $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_last_terminal_message'];
+    }
+    
+    public function updateState() {
+        if ($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_last_terminal_message'] == "completed") {
+            $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "completed";
+        }
+        
+        if ($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_last_terminal_message'] == "payment failed") {
+            $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "failed";
+        }
+    }
+    
+    public function getPaymentProcessMessage() {
+        $this->includefile("verifonepaymentprocess");
+        die();
+    }
+    
+    public function cancelVerifonePayment() {
+        $deviceId = $this->getCurrentTerminalId();
+        $this->getApi()->getVerifoneManager()->cancelPaymentProcess($deviceId);
+        die();
+    }
+    
+    public function getCurrentTerminalId() {
+        $devices = $this->getActiveVerifoneDevices();
+        $deviceId = str_replace("ipaddr", "", $devices[0]->name);
+        return $deviceId;
+    }
+    
+    public function getActiveVerifoneDevices() {
+        $verifoneApp = $this->getApi()->getStoreApplicationPool()->getApplication('6dfcf735-238f-44e1-9086-b2d9bb4fdff2');
+
+        $activeDevices = array();
+        foreach ($verifoneApp->settings as $key => $setting) {
+            if (strstr($key, "ipaddr") && $setting->value) {
+                $activeDevices[] = $setting;
+            }
+        }
+        
+        return $activeDevices;
+    }
+    
+    public function handleDebugActions() {
+        if ($_POST['data']['action'] == "success") {
+            $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "completed");
+        }
+        if ($_POST['data']['action'] == "failed") {
+            $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "payment failed");
+        }
+        if ($_POST['data']['action'] == "other") {
+            $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "Please insert credit card");
+        }
+    }
+
+    public function restartVerifonePayment() {
+        $deviceId = $this->getCurrentTerminalId();
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "in_progress";
+        $this->getApi()->getVerifoneManager()->chargeOrder($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_order_id'], $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_id'], false);
+    }
+
 }
 ?>

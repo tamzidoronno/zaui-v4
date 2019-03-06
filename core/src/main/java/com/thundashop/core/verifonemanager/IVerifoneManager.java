@@ -26,4 +26,10 @@ public interface IVerifoneManager {
     
     @Editor
     public void clearMessages();
+    
+    @Editor
+    public Boolean isPaymentInProgress();
+    
+    @Editor
+    public String getCurrentPaymentOrderId();
 }

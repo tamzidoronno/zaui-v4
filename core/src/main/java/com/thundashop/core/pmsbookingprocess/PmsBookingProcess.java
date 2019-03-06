@@ -1240,6 +1240,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public void cancelPaymentProcess(StartPaymentProcess data) {
         if(!storeManager.isProductMode() && !testTerminalPaymentTerminal) {
             verifoneManager.getTerminalMessages().add("payment failed");
+            verifoneManager.removeOrderToPay();
             return;
         }
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
@@ -1302,6 +1303,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         verifoneManager.getTerminalMessages().add(message);
+        if (message.equals("payment failed") || message.equals("completed")) {
+            verifoneManager.removeOrderToPay();
+        }
     }
 
     @Override

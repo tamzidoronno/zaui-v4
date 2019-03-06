@@ -270,14 +270,19 @@ public class EhfXmlGenerator {
         xml += "        </cac:TaxTotal>\n";
 
         BigDecimal roundedTotalWithoutVat = order.getTotalAmountRoundedTwoDecimals(calculatePresision).subtract(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision));
+        
+        BigDecimal toPay = makePositive(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision))
+                .add(makePositive(roundedTotalWithoutVat));
+        
+        
         xml += "        <cac:LegalMonetaryTotal>\n"
                 + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:LineExtensionAmount>\n"
                 + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:TaxExclusiveAmount>\n"
-                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals(calculatePresision)) + "</cbc:TaxInclusiveAmount>\n"
+                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(toPay) + "</cbc:TaxInclusiveAmount>\n"
                 + "                <cbc:ChargeTotalAmount currencyID=\"NOK\">0</cbc:ChargeTotalAmount>\n"
                 + "                <cbc:PrepaidAmount currencyID=\"NOK\">0</cbc:PrepaidAmount>\n"
                 + "                <cbc:PayableRoundingAmount currencyID=\"NOK\">0</cbc:PayableRoundingAmount>\n"
-                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals(calculatePresision)) + "</cbc:PayableAmount>\n"
+                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(toPay) + "</cbc:PayableAmount>\n"
                 + "        </cac:LegalMonetaryTotal>\n";
 
         xml += createInvoiceLines(taxDate);

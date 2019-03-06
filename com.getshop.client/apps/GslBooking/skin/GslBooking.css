@@ -701,7 +701,6 @@ Error      : #de5353; red
     .GslBooking .bestValue span[gstranslationfield="bestValue"]{display: none;}
     .GslBooking .totalprice:before{content: "Total ";}
     .GslBooking .failedlogon{font-size: 16px;}
-    .GslBooking .picker_header { display: none; }
     .GslBooking .gslfront_1,
     .GslBooking .gslfront_1 .productentry table td{font-size: 12px;}
 

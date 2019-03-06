@@ -558,7 +558,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "Failed to update price, " + result.get(1);
         }
         
-        updateMinStay();
+        updateMinStay(); 
         
         return "";
     }

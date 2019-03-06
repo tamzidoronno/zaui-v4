@@ -2531,6 +2531,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
      * @param companyId
      * @return 
      */
+    @Administrator
     public User getMainCompanyUser(String companyId) {
         List<User> allUsers = getUserStoreCollection(storeId).getAllUsersNotFinalized()
                 .stream()

@@ -680,7 +680,7 @@ Error      : #de5353; red
 @media only all and (max-width:800px){  
     
     .GslBooking .continuetoguestinfooptions { position:relative; width: 100%; right:10px; top: 10px; text-align: right; display:none;}
-    
+    .GslBooking .donotrecommendprices {display:none; }
     .GslBooking .organisationinputbox,
     .GslBooking .privateinputbox
     { margin-top: 5px; }
@@ -701,7 +701,6 @@ Error      : #de5353; red
     .GslBooking .bestValue span[gstranslationfield="bestValue"]{display: none;}
     .GslBooking .totalprice:before{content: "Total ";}
     .GslBooking .failedlogon{font-size: 16px;}
-    .GslBooking .picker_header { display: none; }
     .GslBooking .gslfront_1,
     .GslBooking .gslfront_1 .productentry table td{font-size: 12px;}
 
@@ -773,8 +772,8 @@ Error      : #de5353; red
     .GslBooking .gslfront_1 .fa_box.guests{width:100% !important;padding: 10px 0;}
     .GslBooking .gslfront_1 .fa_box #guests{display:none;padding: 10px 20px; }
     .GslBooking .gslfront_1 .fa_box #coupon_input {border: 1px solid #ddd !important;border-width: 1px 0px 1px 0px;}
-    .GslBooking .gslfront_1 .fa_box.coupon {width:65%;}
-    .GslBooking .gslfront_1 .fa_box.gsl_button{width:35%;height:60px;line-height:60px;}
+    .GslBooking .gslfront_1 .fa_box.coupon {width:50%;}
+    .GslBooking .gslfront_1 .fa_box.gsl_button{width:50%;height:60px;line-height:60px;}
     .GslBooking .gslfront_1 .gslbookingHeader input{border:0 !important;font-size: 14px;padding:0 20px;height:60px;line-height:60px;}
     .GslBooking .gslfront_1 .gslbookingHeader .guestInfoBox input{box-shadow: 0 0 0;height:50px;line-height:50px;}
     .GslBooking .gslfront_1 .guestInfoBox i{padding:8px;}

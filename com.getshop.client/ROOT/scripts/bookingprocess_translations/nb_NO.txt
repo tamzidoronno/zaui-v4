@@ -28,7 +28,7 @@
     "logout" : "Logg ut",
     "signinbutton" : "Logg in",
     "remove" : "Fjern",
-    "discountcode" : "Rabattkode?",
+    "discountcode" : "Booking kode?",
     "inLuckAvailable" : "Ditt valg!",
     "continue" : "Fortsett",
     "addons" : "Addons",

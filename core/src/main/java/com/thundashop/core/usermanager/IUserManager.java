@@ -73,6 +73,9 @@ public interface IUserManager {
     public User logOn(String username, String password) throws ErrorException;
     
     @Administrator
+    public User getMainCompanyUser(String companyId);
+    
+    @Administrator
     public void connectCompanyToUser(String userId, String taxNumber);
     
     @Administrator

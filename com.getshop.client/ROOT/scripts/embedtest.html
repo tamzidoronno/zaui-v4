@@ -10,15 +10,15 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://20360.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://eilertsmith.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://20360.3.0.local.getshop.com/",
-                    "jsendpoint": "http://20360.3.0.local.getshop.com/",
-                    "domain" : "demo",
+                    "endpoint": "http://eilertsmith.3.0.local.getshop.com/",
+                    "jsendpoint": "http://eilertsmith.3.0.local.getshop.com/",
+                    "domain" : "default",
                     "language" : "en",
 //                    "websocket" : "websocket.getshop.com",
-//                    'roomStepTroughConfig' : true,
+                    'roomStepTroughConfig' : true,
 //                    "success" : function(res) {
 //                        console.log("booking completed");
 //                        console.log(res);

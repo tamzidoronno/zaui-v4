@@ -548,6 +548,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
+        
+        if(getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay > -1) {
+            Date start = booking.getStartDate();
+            int daysBetween = (int)( (start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+            if(daysBetween >= getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay) {
+                booking.avoidAutoDelete = true;
+            }
+        }
+        
         return doCompleteBooking(booking);
     }
 

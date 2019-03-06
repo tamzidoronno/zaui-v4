@@ -14,9 +14,13 @@ $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
 $codes = $this->getApi()->getCartManager()->getCoupons();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 $segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+$title = "Avoid autodelete disabled";
+if($pmsBooking->avoidAutoDelete) {
+    $title = "Avoid autodelete done";
+}
 ?>
 <div class="row odd">
-    <div class="col col1"><? echo $this->__f("GetShop booking id"); ?></div>
+    <div class="col col1" title="<?php echo $title; ?>"><? echo $this->__f("GetShop booking id"); ?></div>
     <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
         <span style='float:right; color:#bbb;'><span title='Language'><?php echo $this->getLanguage($pmsSelectedRoom, $pmsBooking) . "</span> / <span title='countryCode'>" . $pmsBooking->countryCode; ?></span></span>
     </div>

@@ -804,12 +804,9 @@ public class PmsManagerProcessor {
             if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings && !manager.storeManager.isPikStore()) {
                 forceSend = true;
             }
-            if(manager.getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay > -1) {
-                Date start = booking.getStartDate();
-                int daysBetween = (int)( (start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-                if(daysBetween >= manager.getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay) {
-                    forceSend = true;
-                }
+            
+            if(booking.avoidAutoDelete) {
+                forceSend = true;
             }
             
             if(booking.payedFor != payedfor) {
@@ -915,6 +912,9 @@ public class PmsManagerProcessor {
             if(booking.payedFor) {
                 continue;
             }
+            if(booking.avoidAutoDelete) {
+                continue;
+            }
             if(booking.channel != null && !booking.channel.isEmpty() && !booking.channel.equals("website")) {
                 continue;
             }
@@ -935,19 +935,6 @@ public class PmsManagerProcessor {
             }
             if(booking.getActiveRooms().isEmpty()) {
                 continue;
-            }
-            
-            if(configuration.ignorePaymentWindowDaysAheadOfStay > -1) {
-                Date startDate = booking.getStartDate();
-                Calendar cal = Calendar.getInstance();
-                int daysAhead = configuration.ignorePaymentWindowDaysAheadOfStay;
-                if (daysAhead == 0) {
-                    daysAhead = 1;
-                }
-                cal.add(Calendar.DAY_OF_YEAR, daysAhead);
-                if(cal.getTime().before(startDate)) {
-                    continue;
-                }
             }
             
             manager.removeAllUnclosedOrders(booking.id);

@@ -833,8 +833,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 }
             }
         }
-        
-        booking = pmsManager.completeCurrentBooking();
+        booking = pmsManager.doCompleteBooking(pmsManager.getCurrentBooking());
         
         BookingResult res = new BookingResult();
         res.success = 1;

@@ -226,21 +226,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     } 
 
     public void generateKidOnOrder(Order order) {
-        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
-            AccountingDetails details = getAccountingDetails();
-            if(details.kidType != null && !details.kidType.isEmpty()) {
-                if(details.kidType.equals("orderid")) {
-                    order.generateKidLuhn(order.incrementOrderId + "", details.kidSize);
-                } else if(details.kidType.equals("customerid")) {
-                    User user = userManager.getUserById(order.userId);
-                    order.generateKidLuhn(user.customerId + "", details.kidSize);
-                } else if(details.kidType.equals("customeridandorderid")) {
-                    User user = userManager.getUserById(order.userId);
-                    order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
-                }
-                orderManager.saveOrder(order);
-            }
-        }
+        orderManager.generateKid(order);
     }
 
     public void checkForNullNameOnProduct(Order order) {

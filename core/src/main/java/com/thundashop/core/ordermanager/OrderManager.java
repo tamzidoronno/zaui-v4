@@ -1667,8 +1667,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void finalize(List<Order> result) {
         for(Order order : result) {
             order.doFinalize();
+            generateKid(order);
         }
-        
     }
 
     public void forceDeleteOrder(Order order) {
@@ -3734,6 +3734,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order != null) {
             order.paymentDate = date;
             super.saveObject(order);
+        }
+    }
+
+    public void generateKid(Order order) {
+        boolean kidExists = order.kid != null && !order.kid.isEmpty();
+        
+        if (kidExists || !order.isInvoice()) {
+            return;
+        }
+        
+        AccountingDetails details = invoiceManager.getAccountingDetails();
+        if(details.kidType != null && !details.kidType.isEmpty()) {
+            if(details.kidType.equals("orderid") && order.incrementOrderId > 0) {
+                order.generateKidLuhn(order.incrementOrderId + "", details.kidSize);
+            } else if(details.kidType.equals("customerid")) {
+                User user = userManager.getUserById(order.userId);
+                order.generateKidLuhn(user.customerId + "", details.kidSize);
+            } else if(details.kidType.equals("customeridandorderid")) {
+                User user = userManager.getUserById(order.userId);
+                order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
+            }
+            saveOrder(order);
         }
     }
 }

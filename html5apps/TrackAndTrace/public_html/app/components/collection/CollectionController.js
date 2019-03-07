@@ -118,8 +118,18 @@ controllers.CollectionController = function($scope, datarepository, $stateParams
             return true;
         }
         
-        var total = $scope.getTotalPaymentSelected();
+        var total = $scope.getTotalPaymentSelectedWithRounding();
         return total <= 0;
+    }
+    
+    $scope.getTotalPaymentSelectedWithRounding = function() {
+        var total = $scope.getTotalPaymentSelected();
+        
+        if ($scope.getRegisteredCashAmount() != 0 && total >= -0.03 && total <= 0.03) {
+            return 0;
+        }
+        
+        return total;
     }
     
     $scope.getTotalPayment = function() {

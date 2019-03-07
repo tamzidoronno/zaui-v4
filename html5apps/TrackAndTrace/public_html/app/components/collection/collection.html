@@ -70,7 +70,7 @@
     
     <div class='subtotal'>
         <div class='refnumber'>Remaining  / diff </div>
-        <div class='orderamount'>{{ getTotalPaymentSelected() | number : 2 }}</div>
+        <div class='orderamount'>{{ getTotalPaymentSelectedWithRounding() | number : 2 }}</div>
     </div>
 
     <div class="button ng-scope" ng-mobile-click="registerCashPayment()">Register cash payment</div>

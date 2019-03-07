@@ -135,7 +135,7 @@ public class EhfXmlGenerator {
         
         
         xml += "         <cac:ContractDocumentReference>\n";
-        xml += "                 <cbc:ID>" + useId + "</cbc:ID>\n";
+        xml += "                 <cbc:ID>" + order.incrementOrderId + "</cbc:ID>\n";
         xml += "                 <cbc:DocumentTypeCode listID=\"UNCL1001\">2</cbc:DocumentTypeCode>\n";
         xml += "                 <cbc:DocumentType>Normal</cbc:DocumentType>\n";
         xml += "         </cac:ContractDocumentReference>\n";
@@ -256,7 +256,7 @@ public class EhfXmlGenerator {
         xml +=  "       <cac:PaymentMeans>\n" +
                 "            <cbc:PaymentMeansCode listID=\"UNCL4461\">31</cbc:PaymentMeansCode>\n" +
                 "            <cbc:PaymentDueDate>"+dateFormatter.format(order.getDueDate())+"</cbc:PaymentDueDate>\n" +
-                "            <cbc:PaymentID>"+order.incrementOrderId+"</cbc:PaymentID>\n" +
+                "            <cbc:PaymentID>"+useId+"</cbc:PaymentID>\n" +
                 "            <cac:PayeeFinancialAccount>\n" +
                 "              <cbc:ID schemeID=\"BBAN\">"+details.accountNumber+"</cbc:ID>\n" +
                 "            </cac:PayeeFinancialAccount>\n" +

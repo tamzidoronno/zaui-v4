@@ -1,0 +1,9 @@
+.ComfortGateways .gatewaylist { font-size: 16px; margin-top: 10px; }
+.ComfortGateways .gatewayrow .name { display:inline-block; width: 30%; }
+.ComfortGateways .gatewayrow .token { display:inline-block; width: 30%; }
+.ComfortGateways .gatewayrow .createddate { display:inline-block; width: 20%; }
+.ComfortGateways .gatewayrow .lastpull { display:inline-block; width: 10%; }
+.ComfortGateways .gatewayrow .type { display:inline-block; width: 10%; }
+.ComfortGateways .gatewayrow .fa-edit { cursor:pointer; }
+.ComfortGateways .gatewayrowheader { font-weight: bold; }
+.ComfortGateways .addGatewayForm { display:none; margin-top:20px;}

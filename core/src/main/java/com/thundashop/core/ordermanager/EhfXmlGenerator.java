@@ -7,6 +7,7 @@ package com.thundashop.core.ordermanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -34,7 +35,8 @@ import org.joda.time.DateTime;
  * @author ktonder
  */
 public class EhfXmlGenerator {
-
+    private int calculatePresision = 20;
+    private int printPreceision = 2;
     private Order order;
     private SimpleDateFormat dateFormatter;
     private final AccountingDetails details;
@@ -133,7 +135,7 @@ public class EhfXmlGenerator {
         
         
         xml += "         <cac:ContractDocumentReference>\n";
-        xml += "                 <cbc:ID>" + useId + "</cbc:ID>\n";
+        xml += "                 <cbc:ID>" + order.incrementOrderId + "</cbc:ID>\n";
         xml += "                 <cbc:DocumentTypeCode listID=\"UNCL1001\">2</cbc:DocumentTypeCode>\n";
         xml += "                 <cbc:DocumentType>Normal</cbc:DocumentType>\n";
         xml += "         </cac:ContractDocumentReference>\n";
@@ -254,28 +256,33 @@ public class EhfXmlGenerator {
         xml +=  "       <cac:PaymentMeans>\n" +
                 "            <cbc:PaymentMeansCode listID=\"UNCL4461\">31</cbc:PaymentMeansCode>\n" +
                 "            <cbc:PaymentDueDate>"+dateFormatter.format(order.getDueDate())+"</cbc:PaymentDueDate>\n" +
-                "            <cbc:PaymentID>"+order.incrementOrderId+"</cbc:PaymentID>\n" +
+                "            <cbc:PaymentID>"+useId+"</cbc:PaymentID>\n" +
                 "            <cac:PayeeFinancialAccount>\n" +
                 "              <cbc:ID schemeID=\"BBAN\">"+details.accountNumber+"</cbc:ID>\n" +
                 "            </cac:PayeeFinancialAccount>\n" +
                 "       </cac:PaymentMeans>\n";
 
         xml += "        <cac:TaxTotal>\n"
-                + "                <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountVatRoundedTwoDecimals(2)) + "</cbc:TaxAmount>\n";
+                + "                <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision)) + "</cbc:TaxAmount>\n";
 
         xml += generateSubTaxes();
 
         xml += "        </cac:TaxTotal>\n";
 
-        BigDecimal roundedTotalWithoutVat = order.getTotalAmountRoundedTwoDecimals(2).subtract(order.getTotalAmountVatRoundedTwoDecimals(2));
+        BigDecimal roundedTotalWithoutVat = order.getTotalAmountRoundedTwoDecimals(calculatePresision).subtract(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision));
+        
+        BigDecimal toPay = makePositive(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision))
+                .add(makePositive(roundedTotalWithoutVat));
+        
+        
         xml += "        <cac:LegalMonetaryTotal>\n"
                 + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:LineExtensionAmount>\n"
                 + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:TaxExclusiveAmount>\n"
-                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals(2)) + "</cbc:TaxInclusiveAmount>\n"
+                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(toPay) + "</cbc:TaxInclusiveAmount>\n"
                 + "                <cbc:ChargeTotalAmount currencyID=\"NOK\">0</cbc:ChargeTotalAmount>\n"
                 + "                <cbc:PrepaidAmount currencyID=\"NOK\">0</cbc:PrepaidAmount>\n"
                 + "                <cbc:PayableRoundingAmount currencyID=\"NOK\">0</cbc:PayableRoundingAmount>\n"
-                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountRoundedTwoDecimals(2)) + "</cbc:PayableAmount>\n"
+                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(toPay) + "</cbc:PayableAmount>\n"
                 + "        </cac:LegalMonetaryTotal>\n";
 
         xml += createInvoiceLines(taxDate);
@@ -295,7 +302,7 @@ public class EhfXmlGenerator {
         int i = 0;
         for (CartItem item : order.cart.getItems()) {
             i++;
-            BigDecimal unitPrice =  isCreditNote ? makePositive(item.getProduct().getPriceExTaxesWithTwoDecimals(2)) : item.getProduct().getPriceExTaxesWithTwoDecimals(2);
+            BigDecimal unitPrice =  isCreditNote ? makePositive(item.getProduct().getPriceExTaxesWithTwoDecimals(calculatePresision)) : item.getProduct().getPriceExTaxesWithTwoDecimals(calculatePresision);
             BigDecimal total = item.getTotalExRoundedWithTwoDecimals(2); 
             double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
             
@@ -400,7 +407,7 @@ public class EhfXmlGenerator {
     }
 
     private String generateSubTaxes() {
-        Map<TaxGroup, BigDecimal> taxes = order.getTaxesRoundedWithTwoDecimals(2);
+        Map<TaxGroup, BigDecimal> taxes = order.getTaxesRoundedWithTwoDecimals(calculatePresision);
         String xml = "";
         for (TaxGroup group : taxes.keySet()) {
             String taxCode = group.taxRate < 25.0 ? "AA" : "S";
@@ -479,13 +486,13 @@ public class EhfXmlGenerator {
     }
 
     private BigDecimal makePositive(BigDecimal number) {
-        return number.plus();
+        return TwoDecimalRounder.roundTwoDecimals(number.plus().doubleValue(), printPreceision);
     }
     
     private double makePositive(double number) {
         if (number < 0)
             return number * -1;
         
-        return number;
+        return TwoDecimalRounder.roundTwoDecimals(number, printPreceision).doubleValue();
     }
 }

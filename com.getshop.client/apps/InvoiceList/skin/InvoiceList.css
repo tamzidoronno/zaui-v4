@@ -20,11 +20,13 @@
 }
 
 .InvoiceList .col.incrementalOrderId { width: 100px; text-align: center; }
-.InvoiceList .col.name { width: calc(100% - 800px); }
-.InvoiceList .col.orderdate { width: 200px; }
-.InvoiceList .col.duedate { width: 200px; }
-.InvoiceList .col.totalamount { width: 100px; }
-.InvoiceList .col.totalpaid { width: 100px; }
+.InvoiceList .col.name { width: calc(100% - 850px); }
+.InvoiceList .col.orderdate { width: 150px; }
+.InvoiceList .col.duedate { width: 100px; }
+.InvoiceList .col.totalamount { width: 100px; text-align: right;}
+.InvoiceList .col.totalpaid { width: 100px; text-align: right;}
+.InvoiceList .col.remaining { width: 100px; text-align: right;}
+.InvoiceList .col.sentlog { width: 76px; padding-left: 20px;}
 
 
 .InvoiceList div.duerow.header {
@@ -40,4 +42,66 @@
 
 .InvoiceList .duerow.header {
     margin-top: 40px;
+}
+
+.InvoiceList .topmenu .dropdownmenu {
+    border: solid 1px #DDD;
+    padding: 5px;
+    border-radius: 100px;
+    width: 40px;
+    text-align: center;
+    font-size: 25px;
+    height: 30px;
+    padding-top: 15px;
+    background-color: blue;
+    color: #FFF;
+}
+
+.InvoiceList .topmenu .innermenu {
+    background-color: #FFF;
+    width: 300px;
+    box-shadow: 5px 5px 10px rgba(0,0,0, 0.3);
+    position: absolute;
+    display: none;
+}
+
+.InvoiceList .topmenu .innermenu .menuentry {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.InvoiceList .topmenu {
+    margin-top: 30px;
+}
+
+.InvoiceList .sendboxouter {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    background-color: rgba(0,0,0,0.8);
+    display: none;
+}
+
+.InvoiceList .sendboxouter .sendboxinner {
+    position: fixed;
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
+    top: 30px;
+    background-color: #FFF;
+    padding: 30px;
+    overflow-y: scroll;
+}
+
+.InvoiceList .sendboxinner .orderrow .col.col1 { width: 100px; }
+.InvoiceList .sendboxinner .orderrow .col.col2 { width: 562px; }
+.InvoiceList .sendboxinner .orderrow .col.col3 { width: 100px; }
+.InvoiceList .sendboxinner .orderrow .col.col4 { width: 300px; }
+
+.InvoiceList .sendboxinner .orderrow {
+    font-size: 16px;
+    padding: 5px;
+    border-bottom: solid 1px #DDD;
 }

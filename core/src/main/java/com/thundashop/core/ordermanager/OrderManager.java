@@ -3704,8 +3704,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
                     if(paymentapp != null) {
                         String automarkpaid = paymentapp.getSetting("automarkpaid");
+                        Date date = order.getEndDateByItems();
+                        
+                        if (date == null) {
+                            date = new Date();
+                        }
+                        
                         if(automarkpaid != null && automarkpaid.equals("true")) {
-                            markAsPaid(order.id, new Date(), getTotalAmount(order));
+                            markAsPaid(order.id, date, getTotalAmount(order));
                         }
                     }
                 }catch(Exception e) {

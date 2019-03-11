@@ -2843,32 +2843,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void resetLastMonthClose(String password, Date start, Date end) {
-        if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
+       if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
             List<DayIncome> dayIncomes = getDayIncomes(start, end);
-            
-            DayIncomeFilter filter = new DayIncomeFilter();
-            filter.start = start;
-            filter.end = end;
-            OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
-            breaker.breakOrders();
-            List<DayIncome> newIncomes = breaker.getDayIncomes();
             
             for (DayIncome income : dayIncomes) {
                 BasicDBObject query = new BasicDBObject();
                 query.put("incomes.id", income.id);
                 List<DataCommon> datas = database.query("OrderManager", storeId, query);
-                datas.stream()
-                        .map(o -> (DayIncomeReport)o)
-                        .forEach(o -> {
-                            o.replaceDayIncomes(newIncomes);
-                            saveObject(o);
-                        });
+                datas.stream().forEach(o -> {
+                    System.out.println("Deleted report");
+                    deleteObject(o);
+                });
             }
             
-//            OrderManagerSettings settings = getOrderManagerSettings();
-//            settings.closedTilPeriode = start;
-//
-//            saveObject(settings);
+            OrderManagerSettings settings = getOrderManagerSettings();
+            settings.closedTilPeriode = start;
+
+            saveObject(settings);
         }
     }
     
@@ -3713,8 +3704,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
                     if(paymentapp != null) {
                         String automarkpaid = paymentapp.getSetting("automarkpaid");
+                        Date date = order.getEndDateByItems();
+                        
+                        if (date == null) {
+                            date = new Date();
+                        }
+                        
                         if(automarkpaid != null && automarkpaid.equals("true")) {
-                            markAsPaid(order.id, new Date(), getTotalAmount(order));
+                            markAsPaid(order.id, date, getTotalAmount(order));
                         }
                     }
                 }catch(Exception e) {

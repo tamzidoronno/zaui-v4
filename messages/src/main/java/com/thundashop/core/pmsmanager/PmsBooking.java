@@ -690,7 +690,7 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean isChannel(String channelToCheck) {
-        if(channelToCheck == null) {
+        if(channelToCheck == null || channelToCheck.isEmpty()) {
             return true;
         }
         if(channelToCheck.equals("web") && (channel == null || channel.isEmpty())) {

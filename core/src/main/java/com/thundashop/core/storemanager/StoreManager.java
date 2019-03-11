@@ -480,16 +480,35 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public List<String> getMultiLevelNames() throws ErrorException {
         Set<String> names = new TreeSet();
         
-        for (GetShopSessionBeanNamed named : getShopScope.getSessionNamedObjects()) {
-            if(named == null || named.getName() == null) {
-                logPrint("Null name");
-            } else {
-                if(!named.getName().contains("'")) {
-                    names.add(named.getName());
+        List<String> fasthotelsOld = new ArrayList();
+        fasthotelsOld.add("a152b5bd-80b6-417b-b661-c7c522ccf305");
+        fasthotelsOld.add("3b647c76-9b41-4c2a-80db-d96212af0789");
+        fasthotelsOld.add("e625c003-9754-4d66-8bab-d1452f4d5562");
+
+        List<String> oldDefaults = new ArrayList();
+        oldDefaults.add("123865ea-3232-4b3b-9136-7df23cf896c6");
+        
+        if(fasthotelsOld.contains(storeId)) {
+            names.clear();
+            names.add("demo");
+        } else if(oldDefaults.contains(storeId)) {
+            names.clear();
+            names.add("default");
+        } else if(isPikStore()) {
+            names.clear();
+            names.add("default");
+        } else {
+            for (GetShopSessionBeanNamed named : getShopScope.getSessionNamedObjects()) {
+                if(named == null || named.getName() == null) {
+                    logPrint("Null name");
+                } else {
+                    if(!named.getName().contains("'")) {
+                        names.add(named.getName());
+                    }
                 }
             }
         }
-        
+
         return new ArrayList(names);
     }
 

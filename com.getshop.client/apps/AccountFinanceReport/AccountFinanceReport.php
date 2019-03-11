@@ -185,9 +185,14 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function cancelAccountOverview() {
         unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary']);
     }
-
+    
     public function getTaxCodeForAccount($accountNumber) {
-        return $this->getApi()->getProductManager()->getAccountingDetail($accountNumber)->taxgroup;
+        $accounttaxgrp = $this->getApi()->getProductManager()->getAccountingDetail($accountNumber);
+        if(!$accounttaxgrp) {
+            return "";
+        } else {
+            return $accounttaxgrp->taxgroup;
+        }
     }
 
     public function resetLastMonth() {

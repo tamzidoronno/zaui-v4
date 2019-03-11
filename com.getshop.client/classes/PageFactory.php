@@ -28,6 +28,9 @@ class PageFactory {
         if ($moduleId == "pms") {
             $this->createPmsPages();
         }
+        if ($moduleId == "comfort") {
+            $this->createComfortPages();
+        }
         if ($moduleId == "srs") {
             $this->createSrsPages();
         }
@@ -96,6 +99,51 @@ class PageFactory {
         }
         
         return null;
+    }
+    
+    
+    public function createComfortPages() {
+        $page = new \ModulePage("home", "comfort");
+        $row = $page->createRow();
+        $row->addColumn("8f7198af-bd49-415a-8c39-9d6762ef1440", "f68d5145-e4c9-4430-9b25-69df5c8458d2");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("gateways", "comfort");
+        $row = $page->createRow();
+        $row->addColumn("d40f9875-95e5-4ee2-a041-989efa0f4f5c", "2f3a799d-db60-420f-9c90-f0b2d2cfd8a1");
+        $this->pages['gateways'] = $page;   
+        
+        $page = new \ModulePage("configuration", "comfort");
+        $page->setLeftMenu(\ModulePageMenu::getComfortLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("1cd5d045-04d8-4d37-83a8-47f8fcc6b49c", "4d09439a-f918-44c3-aec0-b4b4bae16c52");
+        $this->pages['configuration'] = $page;   
+        
+        
+        
+        
+        $page = new \ModulePage("comfortunits", "comfort");
+        $page->setLeftMenu(\ModulePageMenu::getComfortLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("f462df2e-2a2e-4e3b-9bfc-13ff2cf03f4f", "1a058488-58b8-46e8-b886-a5eac815537b");
+        $this->pages['comfortunits'] = $page;   
+        
+        $page = new \ModulePage("roomconfiguration", "comfort");
+        $page->setLeftMenu(\ModulePageMenu::getComfortLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("aed99d87-1cc0-4b26-bddc-5583ea260392", "30b8d7f2-0bfb-4ca7-830a-54bdad0aa1ca");
+        $this->pages['roomconfiguration'] = $page;   
+        
+        
+        $page = new \ModulePage("statesconfig", "comfort");
+        $page->setLeftMenu(\ModulePageMenu::getComfortLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("39f77b93-59f5-4178-9963-34ba254aea42", "aa5852ea-bcad-4421-9699-ea56f2328547");
+        $this->pages['statesconfig'] = $page;   
+        
+        
+        
+        
     }
 
     public function createPmsPages() {

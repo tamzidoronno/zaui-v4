@@ -1,0 +1,57 @@
+<?php
+/* @var $this \ns_d40f9875_95e5_4ee2_a041_989efa0f4f5c\ComfortGateways */
+$gateways = $this->getApi()->getGdsManager()->getDevices();
+?>
+
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Gateways are important"); ?></div>
+            <div class="text">
+                <?
+                echo "Gateways are important, they act as a communication hub between me and the room units. What I do is to communicate directly to the gateways, then the gateways rely the message to the nessesary node.<br>";
+                echo "When the node recieve the message it either cuts the power, adjust the temperature or whatever else im telling it to do.<br>";
+                echo "Below is a list of all gateways I have access to.";
+                ?>    
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Is there something else I can do for you?"); ?></div>
+                    <div class="shop_button" onclick="$('.ComfortGateways .addGatewayForm').slideDown();"><? echo $this->__f("Add a new gateway"); ?></div>
+                </div>
+                <div gstype="form" class="addGatewayForm" method="createGateway">
+                    <input type="txt" placeholder="Name" class="gsniceinput1" gsname="name">
+                    <input type="txt" placeholder="Token"  class="gsniceinput1" gsname="token">
+                    <span class="shop_button" gstype="submit">Add</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div>
+    <div class='title'>
+        List of gateways
+    </div>
+    <div class="gatewaylist">
+        <?php
+        echo "<div class='gatewayrow gatewayrowheader'>";
+        echo "<span class='name'>Gateway name</span>";
+        echo "<span class='token'>Token</span>";
+        echo "<span class='createddate'>Created date</span>";
+        echo "<span class='lastpull'>Last pull</span>";
+        echo "<span class='type'>Type</span>";
+        echo "</div>";
+        foreach($gateways as $gateway) {
+            echo "<div class='gatewayrow'>";
+            echo "<span class='name'> " . $gateway->name . "</span>";
+            echo "<span class='token'>" .$gateway->token . "</span>";
+            echo "<span class='createddate'>" .date("d.m.Y H:i", strtotime($gateway->rowCreatedDate)) . "</span>";
+            echo "<span class='lastpull'>" .$gateway->lastPulledRequest . "</span>";
+            $type = $gateway->type ? $gateway->type : "Unkown";
+            echo "<span class='type'>" .$type . "</span>";
+            echo "</div>";
+        }
+        ?>
+        
+    </div>
+</div>

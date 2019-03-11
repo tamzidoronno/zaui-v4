@@ -67,7 +67,10 @@ $store = $factory->getStore();
     <?php
         if($store->acceptedByUser) {
             echo "<br><br><div style='text-align: center; font-size: 30px;'>Thank you for accepting so we can continue to serve you.</div>";
-            return;
+            if($factory->getApi()->getUserManager()->getLoggedOnUser()->type == 100) {
+                $usr = $factory->getApi()->getUserManager()->getUserById($store->acceptedByUser);
+                echo "<div>Where accepted at : " . date("d.m.Y H:i", strtotime($store->acceptedGDPRDate)) . " by " . $usr->fullName . "</div>";
+            }
         }
 
     ?>
@@ -119,11 +122,13 @@ $store = $factory->getStore();
                             
                         </div>
                         <br>
-                        <div style='text-align: center;'>
-                            <a href='?iaccept=true'>
-                                <span style='border: solid 1px #bbb;padding: 10px; cursor:pointer;background-color:purple; color:#fff;'>On behalf of my business I accept that GetShop can handle this data information for me.</span>
-                            </a>
-                        </div>
+                        <?php if(!$store->acceptedByUser) { ?>
+                            <div style='text-align: center;'>
+                                <a href='?iaccept=true'>
+                                    <span style='border: solid 1px #bbb;padding: 10px; cursor:pointer;background-color:purple; color:#fff;'>On behalf of my business I accept that GetShop can handle this data information for me.</span>
+                                </a>
+                            </div>
+                    <? } ?>
                 <? } ?>
         </div>
 </div>

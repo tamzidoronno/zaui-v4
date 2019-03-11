@@ -90,6 +90,14 @@ class ModulePageMenu {
         <?
     }
 
+    public static function getComfortLeftMenu() {
+        $menu = new \ModulePageMenu("comfort");
+        $menu->entries[] = new ModulePageMenuItem("States", "statesconfig", "");
+        $menu->entries[] = new ModulePageMenuItem("Comfort units", "comfortunits", "");
+        $menu->entries[] = new ModulePageMenuItem("Room configuration", "roomconfiguration", "");
+        return $menu;
+    }
+    
     public static function getPmsLeftMenu() {
         $menu = new \ModulePageMenu();
         $menu->entries[] = new ModulePageMenuItem("Messages", "messages", "");
@@ -136,6 +144,8 @@ class ModulePageMenu {
                     echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br>PMS</div></a>";
                 } elseif ($module->name == "Salespoint") {
                     echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>SalesPoint</div></a>";
+                } elseif ($module->name == "Comfort") {
+                    echo "<a class='gs_ignorenavigate' href='/comfort.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-sun-o'></i><br/>Comfort</div></a>";
                 } elseif (strtolower($module->name) == "apac") {
                     echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>Apac</div></a>";
                 } elseif (strtolower($module->name) == "invoicing") {

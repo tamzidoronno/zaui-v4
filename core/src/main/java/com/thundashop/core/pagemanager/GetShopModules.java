@@ -31,7 +31,8 @@ public class GetShopModules {
         addModule("ticket", "TicketSystem", true, 9, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-lifebuoy"); // TicketTheme
         addModule("invoice", "Invoicing", true, 10, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-receipt"); // Invoicing system
         addModule("analytics", "Analytics", true, 11, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-chart-growth"); // Invoicing system
-        addModule("getshopnone", "None", true, 11, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-none"); // None, used to block users from all other modules
+        addModule("comfort", "Comfort", true, 11, "c9c1f200-41c6-4f27-8676-5b63c4da30c3", "fa-thermometer"); // Comfort system
+        addModule("getshopnone", "None", true, 12, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-none"); // None, used to block users from all other modules
     }
 
     private void addModule(String nameAndId, String displayName, boolean externalPageTemplate, int sequence, String themeApplicationId, String fontAwesome) {

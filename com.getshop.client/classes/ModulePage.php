@@ -38,6 +38,9 @@ class ModulePage {
         if ($this->module == "pms") {
             return $this->getTopMenuPms();
         }
+        if ($this->module == "comfort") {
+            return $this->getTopMenuComfort();
+        }
         
         if ($this->module == "srs") {
             return $this->getTopMenuSrs();
@@ -333,6 +336,14 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Checklist", "checklist", "gsicon-list");
         $menu->entries[] = new ModulePageMenuItem("Settings", "messages", "gsicon-gs-gears");
         $menu->entries[] = new ModulePageMenuItem("Support", "getshopsupport", "fa-support");
+        return $menu;
+    }
+
+    public function getTopMenuComfort() {
+        $menu = new \ModulePageMenu("comfort");
+        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Gateways", "gateways", "fa-server");
+        $menu->entries[] = new ModulePageMenuItem("Configuration", "configuration", "gsicon-gs-gears");
         return $menu;
     }
 

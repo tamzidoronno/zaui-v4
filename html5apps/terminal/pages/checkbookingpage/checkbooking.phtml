@@ -1,6 +1,8 @@
 <?php
 /* @var $this CheckBookingPage */
 $bookings = $this->getApi()->getPmsBookingProcess()->getBooking($this->getBookingEngineName(), $_GET['bookingid']);
+$phone = $this->getApi()->getStoreManager()->getMyStore()->configuration->phoneNumber;
+$cleanText = "Your room is clean and ready to be used, a code for your room has been sent to you by email and sms, if you have not recieved a code, please call us at {phone}";
 ?>
 <div class="heading">
     <?php
@@ -12,7 +14,8 @@ $bookings = $this->getApi()->getPmsBookingProcess()->getBooking($this->getBookin
         
         $i = 0;
         foreach ($bookings as $room) {
-            $cleanText = $room->roomIsClean ? $this->__f("Your room is clean and ready to be used") : $this->__f("Your room is not yet cleaned, you will receive code by sms and email as soon as it is ready");
+            $cleanText = $room->roomIsClean ? $this->__f($cleanText) : $this->__f("Your room is not yet cleaned, you will receive code by sms and email as soon as it is ready");
+            $cleanText = str_replace("{phone}", $phone, $cleanText);
             $cleaningClass = $room->roomIsClean ? 'green' : "";
             
             $timeText = $room->checkinDateOk ? $this->__f("Check-in time is all good") : $this->__f("You are a bit early, we will send you a sms and email as soon as the room is ready");

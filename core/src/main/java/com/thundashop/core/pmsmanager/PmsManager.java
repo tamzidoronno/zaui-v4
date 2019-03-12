@@ -26,6 +26,7 @@ import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
+import com.thundashop.core.comfortmanager.ComfortManager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;

@@ -1,0 +1,24 @@
+<br>
+<br>
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("States makes it all possible"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("A state is a way to set a room in a current state, either that is occupied state, a preparing state, a waiting state.");
+                ?>
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
+                    <div class="shop_button" onclick="$('.ComfortStateSettings .newstatebox').slideDown();"><? echo $this->__f("Create a new state"); ?></div>
+                    <div gstype="form" method="createState" class="newstatebox">
+                        <input type="txt" gsname="statename" placeholder="State name" class="gsniceinput1">
+                        <span class="shop_button" gstype="submit">Create state</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

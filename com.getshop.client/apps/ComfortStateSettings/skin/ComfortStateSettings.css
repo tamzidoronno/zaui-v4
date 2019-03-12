@@ -1,0 +1,6 @@
+.ComfortStateSettings .newstatebox { margin-top: 10px; display:none; }
+.ComfortStateSettings .stateconfigbox { border: solid 1px #efefef; display:inline-block; width: 350px; }
+.ComfortStateSettings .stateconfigbox .stateconfigtitle { border-bottom: solid 1px; padding: 10px; font-size: 20px; text-align: center; background-color:#23314e; color:#fff; }
+.ComfortStateSettings .stateconfigbox .stateconfigtitle .fa { float:right; cursor: pointer; }
+.ComfortStateSettings .stateconfigbox .stateconfigpanel { padding: 10px; }
+.ComfortStateSettings .stateconfigbox .stateconfigoption { font-size: 16px; line-height: 40px; margin-top: 5px;}

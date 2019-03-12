@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -257,5 +258,24 @@ public class GdsManager extends ManagerBase implements IGdsManager {
             gds.extraConfigs.put(key, config);
             saveDevice(gds);
         }
+    }
+
+    @Override
+    public List<GetShopDeviceUnit> getAllUnits(GetShopDeviceUnitFilter filter) {
+        List<String> names = new ArrayList();
+        names.add("Radiator 1");
+        names.add("Radiator 2");
+        names.add("Radiator 3");
+        names.add("Radiator 4");
+        
+        List<GetShopDeviceUnit> units = new ArrayList();
+        for(String name : names) {
+            GetShopDeviceUnitTemperatureSensor sensor = new GetShopDeviceUnitTemperatureSensor();
+            sensor.name = name;
+            sensor.id = name;
+            units.add(sensor);
+        }
+        
+        return units;
     }
 }

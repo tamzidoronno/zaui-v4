@@ -1178,9 +1178,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return null;
         }
         
-        boolean allPaidFor = bookings.stream()
-                .filter(b -> !b.payedFor)
-                .count() == 0;
+        boolean allPaidFor = true;
+        for(PmsBooking booking : bookings) {
+            for(PmsBookingRooms r : booking.rooms) {
+                if(!pmsInvoiceManager.isRoomPaidFor(r.pmsBookingRoomId)) {
+                    allPaidFor = false;
+                }
+            }
+        }
+        
         
         if (allPaidFor) {
             StartPaymentProcessResult result = new StartPaymentProcessResult();
@@ -1324,9 +1330,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                         status.roomIsClean = false;
                     } else {
-                        status.roomIsClean = pmsManager.isClean(room.bookingItemId);
+                        status.roomIsClean = room.addedToArx;
                     }
-                    status.paymentCompleted = booking.payedFor;
+                    status.paymentCompleted = pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
                     retList.add(status);
                 });
         }

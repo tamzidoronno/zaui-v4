@@ -353,6 +353,11 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             }
         }
         
+        if(booking == null) {
+            logPrint("Booking not exists when getting segment for booking?");
+            return null;
+        }
+        
         User user = userManager.getUserByIdUnfinalized(booking.userId);
         if(user == null) {
             return null;

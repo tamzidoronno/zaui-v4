@@ -8,6 +8,7 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.comfortmanager.ComfortManager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -62,6 +63,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     
     @Autowired
     InvoiceManager invoiceManager;
+    
+    @Autowired
+    ComfortManager comfortManager;
     
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
@@ -180,6 +184,15 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         String addNotificationSent = key;
         getAllMessages();
+        
+        try {
+            if(room != null && room.bookingItemId != null) {
+                comfortManager.pmsEvent(key, room.bookingItemId);
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+
         try {
             notifyAdmin(key, booking, room);
             notifyBySms(key, booking, room);

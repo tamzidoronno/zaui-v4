@@ -3,3 +3,6 @@
 .ComfortDashBoard .informationarea .title { font-size: 25px; text-align: center; border-bottom: solid 1px #efefef; padding-bottom: 10px; margin-bottom: 10px; }
 .ComfortDashBoard .informationarea .summarytext { font-size: 20px; }
 .ComfortDashBoard .informationarea .summarytextamount { float:right; }
+.ComfortDashBoard .logentry .date { display:inline-block; width: 25%; }
+.ComfortDashBoard .logentry .description { display:inline-block; width: 70%; }
+.ComfortDashBoard .logentry .room { float:right; }

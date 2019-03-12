@@ -11,7 +11,7 @@ class ComfortUnitConfig extends \WebshopApplication implements \Application {
     }
 
     public function render() {
-        echo "Room unit config";
+        $this->includefile("unitconfig");
     }
 }
 ?>

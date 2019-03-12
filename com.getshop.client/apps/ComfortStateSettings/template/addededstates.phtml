@@ -1,0 +1,60 @@
+<br><br>
+<?php
+/* @var $this \ns_39f77b93_59f5_4178_9963_34ba254aea42\ComfortStateSettings */
+$states = (array)$this->getApi()->getComfortManager()->getAllStates();
+
+$pmsSend = new \ns_8f7198af_bd49_415a_8c39_9d6762ef1440\ComfortDashBoard();
+$notifications = $pmsSend->getEventsArray();
+
+if(!$states) {
+    echo "<h1>You have not yet created any states</h1>";
+    return;
+}
+echo "<h1>Current states set up</h1>";
+foreach($states as $state) {
+    ?>
+    <div class="stateconfigbox" gstype="form" method="updateState">
+        <input type="hidden" value='<?php echo $state->id; ?>' gsname="stateid">
+        <div class="stateconfigtitle">
+            <?php echo $state->name; ?>
+            <i class="fa fa-trash-o" gsclick="removeConfig" gs_confirm="Are you sure you want to delete?" stateid="<?php echo $state->id; ?>"></i>
+        </div>
+        <div class="stateconfigpanel">
+            <div class="stateconfigoption">
+                Temperature (-1 disabled)
+                <input type="text" class="gsniceinput1" style="width:30px; float:right;" gsname="temperature" value="<?php echo $state->temperature; ?>">
+            </div>
+            <div class="stateconfigoption">
+                Light shutdown
+                <select class="gsniceselect1" style="float:right;" gsname="lightShutDown">
+                    <option value="0" <?php if($state->lightShutDown == 0) { echo "SELECTED"; } ?>>Ignore</option>
+                    <option value="1" <?php if($state->lightShutDown == 1) { echo "SELECTED"; } ?> >No</option>
+                    <option value="2" <?php if($state->lightShutDown == 2) { echo "SELECTED"; } ?>>Yes</option>
+                </select>
+            </div>
+            
+            <div class="stateconfigoption">
+                Event
+                <select class="gsniceselect1" style="width:100%;" gsname="event">
+                    <option value="">Choose event for state</option>
+                    <?php
+                    foreach($notifications as $not => $val) {
+                        $selected = $state->event == $not ? "SELECTED" : "";
+                        echo "<option value='$not' $selected>$val</option>";
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="stateconfigoption">
+                <span class="shop_button" style="width:100%;box-sizing: border-box;" gstype="submit">Update state</span>
+            </div>
+            
+            <br>
+            
+        </div>
+    </div>
+    <?php
+}
+
+?>

@@ -44,4 +44,7 @@ public interface IGdsManager {
     public List<GetShopDevice> getDevices();
     
     public void setGdsConfig(String tokenId, String key, String config);
+    
+    @Administrator
+    public List<GetShopDeviceUnit> getAllUnits(GetShopDeviceUnitFilter filter);
 }

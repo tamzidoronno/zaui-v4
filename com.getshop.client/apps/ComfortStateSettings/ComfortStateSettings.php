@@ -11,7 +11,25 @@ class ComfortStateSettings extends \WebshopApplication implements \Application {
     }
 
     public function render() {
-        echo "STATE SETTINGS";
+        $this->includefile("configurationpanel");
+        $this->includefile("addededstates");
+    }
+    
+    public function updateState() {
+        $state = $this->getApi()->getComfortManager()->getState($_POST['data']['stateid']);
+        $state->lightShutDown = $_POST['data']['lightShutDown'];
+        $state->event = $_POST['data']['event'];
+        $state->temperature = $_POST['data']['temperature'];
+        $this->getApi()->getComfortManager()->saveState($state);
+    }
+    
+
+    public function removeConfig() {
+        $this->getApi()->getComfortManager()->deleteState($_POST['data']['stateid']);
+    }
+    
+    public function createState() {
+        $this->getApi()->getComfortManager()->createState($_POST['data']['statename']);
     }
 }
 ?>

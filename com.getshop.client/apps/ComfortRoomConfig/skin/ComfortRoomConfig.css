@@ -1,0 +1,6 @@
+.ComfortRoomConfig .roomrowcontainer { margin-top: 10px; border: solid 1px #bbb; }
+.ComfortRoomConfig .roomrowcontainer .roomrowheader { padding: 10px; font-size: 16px; border-bottom: solid 1px #bbb; }
+.ComfortRoomConfig .roomrowcontainer .unitconfig { display:inline-block; width: 300px; border-right: solid 1px #efefef; font-size: 14px; padding: 10px; background-color:#bbb; cursor:pointer; }
+.ComfortRoomConfig .roomrowcontainer .unitconfig:hover { background-color: #efefef;}
+.ComfortRoomConfig .roomrowcontainer .selectedunit { background-color: green; color:#fff; }
+.ComfortRoomConfig .roomrowcontainer .selectedunit:hover { background-color: greenyellow; color:#000; }

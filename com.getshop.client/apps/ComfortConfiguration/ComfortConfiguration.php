@@ -11,7 +11,7 @@ class ComfortConfiguration extends \WebshopApplication implements \Application {
     }
 
     public function render() {
-        echo "comfort configuration site";
+        echo "comfort configuration site, not sure what to put here.";
     }
 }
 ?>

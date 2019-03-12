@@ -1,3 +1,6 @@
+<?php
+/* @var $this \ns_8f7198af_bd49_415a_8c39_9d6762ef1440\ComfortDashBoard */
+?>
 <div class="isnotactive">
     <div class="kaipal infobox">
         <div class="image happy"></div>
@@ -29,5 +32,31 @@
 
 <div class="informationarea right">
     <div class='title'>Comfort automation log</div>
-    <div>No entries registered yet</div>
+    <div>
+    <?php
+    $entries = (array)$this->getApi()->getComfortManager()->getAllLogEntries();
+    $found = false;
+    foreach($entries as $entry) {
+        $textEvent = $this->translateEventFromText($entry->pmsEvent);
+        $room = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $entry->roomId);
+        if(!$textEvent || !$room) {
+            continue;
+        }
+        $found = true;
+        echo "<div class='logentry'>";
+        echo "<span class='date'>" . date("d.m.Y H:i", strtotime($entry->rowCreatedDate)) . "</span>";
+        echo "<span class='description'>";
+        echo $textEvent;
+        if($entry->state) {
+            echo ", temperature adjusted to: " . $entry->state->temperature . " degrees";
+        }
+        echo "</span>";
+        echo "<span class='room'>" . $room->bookingItemName . "</span>";
+        echo "</div>";
+    }
+    if(!$found) {
+        echo "No entries logged yet";
+    }
+    ?>
+    </div>
 </div>

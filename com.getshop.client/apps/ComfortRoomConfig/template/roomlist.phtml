@@ -1,0 +1,46 @@
+<br>
+<br>
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("I am ready to welcome the guest"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("Below is a list of all rooms registered in your PMS, for each room there is units from our comfort module. Connect the units to each rooms to make me understand what is connected to what room.<bR><br>");
+                echo $this->__f("You do so by clicking on the units you would like to add to each room.");
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+
+<?php
+/* @var $this ns_f462df2e_2a2e_4e3b_9bfc_13ff2cf03f4f\ComfortUnitConfig */
+$names = $this->getApi()->getStoreManager()->getMultiLevelNames();
+$units = $this->getApi()->getGdsManager()->getAllUnits(null);
+foreach($names as $name) {
+    $rooms = $this->getApi()->getBookingEngine()->getBookingItems($name);
+    foreach($rooms as $room) {
+        $roomConfig = $this->getApi()->getComfortManager()->getComfortRoom($room->id);
+        echo "<div class='roomrowcontainer'>";
+        echo "<div class='roomrowheader'>" . $room->bookingItemName;
+        echo "<span style='float:right;'>" . $roomConfig->currentState . "</span>";
+        echo "</div>";
+        echo "<div class='roomrowbody'>";
+        foreach($units as $unit) {
+            $selected = "";
+            if(in_array($unit->id, $roomConfig->getshopDeviceUnitsConnected)) {
+                $selected = "selectedunit";
+            }
+            echo "<div class='unitconfig $selected' synchron='true' gsclick='toggleUnitToRoom' roomid='".$room->id."' unitid='".$unit->id."' gs_callback='app.ComfortRoomConfig.toggleUnitAdded'>";
+            echo $unit->name;
+            echo "</div>";
+        }
+        echo "</div>";
+        echo "</div>";
+    }
+}
+?>

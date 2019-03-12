@@ -1745,7 +1745,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             } else {
                 setTotalFromIncomeReport(result, filter);
             }
-            
         }
         gsTiming("After after setting income report");
         result.setView(filter);
@@ -2091,6 +2090,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         gsTiming("Checking types 3");
 
         List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimalIngoreErrors(filter.start, filter.end);
+        
+        List<String> bookingIdsForBooking = filter.pmsBookingIds.stream()
+                    .map(id -> getBooking(id))               
+                    .flatMap(booking -> booking.rooms.stream())
+                    .map(o -> o.bookingId)
+                    .collect(Collectors.toList());
+        
+        if (!bookingIdsForBooking.isEmpty()) {
+            lines.stream().forEach(line -> {
+                        line.getBookings().removeIf(o -> !bookingIdsForBooking.contains(o.id));
+                    });
+        }
+        
         gsTiming("Checking types 4");
 
         for (BookingItem item : items) {

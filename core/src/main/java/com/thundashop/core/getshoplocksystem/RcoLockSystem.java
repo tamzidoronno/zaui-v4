@@ -110,14 +110,5 @@ public class RcoLockSystem extends LockServerBase implements LockServer {
         return hostname;
     }
 
-    @Override
-    public void setLastPing(Date date) {
-        lastPing = date;
-    }
-
-    @Override
-    public Date getLastPing() {
-        return lastPing;
-    }
     
 }

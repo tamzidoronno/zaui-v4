@@ -291,3 +291,11 @@
 .PmsAvailability .contains_booking.reservedfloating.mouseover {  background-color: red !important; background: red !important; } 
 .PmsAvailability .contains_booking.reservedfloating .acronyme {  color: #FFF; } 
 .PmsAvailability .contains_booking.header {background-color: #FFF; }
+
+.PmsAvailability .group_view_warning {
+    background-color: #3dea69;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+}

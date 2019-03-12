@@ -413,15 +413,5 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         return hostname;
     }
 
-    @Override
-    public void setLastPing(Date date) {
-        this.lastPing = date;
-    }
-
-    @Override
-    public Date getLastPing() {
-        return lastPing;
-    }
-
 
 }

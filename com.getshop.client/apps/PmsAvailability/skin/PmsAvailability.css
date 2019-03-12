@@ -37,7 +37,7 @@
     padding-bottom: 5px;
     display: inline-block;
     box-sizing: border-box;
-    padding-top: 23px;
+    padding-top: 40px;
     padding-bottom: 10px;
     margin-bottom: 30px;
 }
@@ -65,7 +65,7 @@
 
 .PmsAvailability .category_name {
     border-bottom: solid 2px;
-    height: 23px;
+    height: 40px;
     box-sizing: border-box;
     padding: 3px;
     font-weight: bold;
@@ -77,15 +77,16 @@
 .PmsAvailability .header {
     font-size: 12px;
     position: absolute;
-    top: -22px;
+    top: -39px;
     padding-bottom: 3px;
     padding-bottom: 3px;
-    height: 20px;
+    height: 37px;
     box-sizing: border-box;
     text-align: center;
     font-weight: bold;
     color:#000;
     border-bottom: solid 2px #000;
+    border-right: solid 1px #DDD;
     
 }
 .PmsAvailability .showdropnotpossible { background-color:red; }

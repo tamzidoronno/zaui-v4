@@ -400,6 +400,31 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         unset($_SESSION['tmpselectedroom']);
     }
 
+    public function getBookingCount($timelines, $time, $typeIds) {
+        
+        $sorting = $this->getSortType();
+        $allInOne = false;
+        if($sorting == "room") {
+            $allInOne = true;
+        }
+
+        $count = 0;
+        foreach ($timelines->itemTimeLines as $itemId => $itemTimeLines) {
+            foreach ($itemTimeLines as $itime => $date) {
+                if (count($typeIds) && !in_array($date->typeId, $typeIds)) {
+                    continue;
+                }
+                
+                if ($itime == $time && $date->state == "normal") {
+                    $count += $date->count;
+                    print_r($date);
+                }
+            }
+        }
+        
+        return $count;
+    }
+
 }
 
 ?>

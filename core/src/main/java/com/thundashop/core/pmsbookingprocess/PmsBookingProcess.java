@@ -1330,7 +1330,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                         status.roomIsClean = false;
                     } else {
-                        status.roomIsClean = pmsManager.isClean(room.bookingItemId);
+                        status.roomIsClean = room.addedToArx;
                     }
                     status.paymentCompleted = pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
                     retList.add(status);

@@ -4,14 +4,31 @@ $roomId = $_POST['data']['roomid'];
 $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
 $room = null;
 $guests = array();
-foreach($booking->rooms as $r) {
-    if($r->pmsBookingRoomId == $roomId) {
-        $room = $r;
+if(!$booking) {
+    $bookings = $this->getApi()->getPmsManager()->getBookingsFromGroupInvoicing($this->getSelectedMultilevelDomainName(), $this->getSelectedOrder()->id);
+    if(!$bookings) {
+        echo "Failed to find booking";
+        return;
+    }
+    $booking = $bookings[0];
+    foreach($bookings as $b) {
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $roomId) {
+                $room = $r;
+            }
+        }
+    }
+} else {
+    foreach($booking->rooms as $r) {
+        if($r->pmsBookingRoomId == $roomId) {
+            $room = $r;
+        }
     }
 }
 if($room != null) {
     $guests = $room->guests;
 }
+
 $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedMultilevelDomainName(), $booking->id, "booking_sendpaymentlink");
 $order = $this->getSelectedOrder();
 

@@ -149,6 +149,14 @@ public class ComfortManager extends ManagerBase implements IComfortManager {
 
     private void signalGetShopUnitsAboutChange(ComfortState state, ComfortRoom room) {
         //This is where the magic happends.
+        
+        /**
+         * What is left to do:
+         * 1. Create a unit system for fetching all units like radiators etc (should be done in the gdsmanager)
+         * 2. send signals using the gds manager to adjust temperature to begin with.
+         */
+        
+        
 //        for(String getshopUnitId : room.getshopDeviceUnitsConnected) {
 //            sendSignalToUnitAboutTemperatureChange(state.temperature);
 //        }

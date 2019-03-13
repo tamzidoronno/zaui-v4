@@ -214,6 +214,14 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         return null;
     }
 
+    public function getCount($items) {
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item->count;
+        }
+        return $total;
+    }
+
 }
 ?>
 

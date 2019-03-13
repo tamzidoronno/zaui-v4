@@ -139,6 +139,7 @@ foreach ($ordersGrouped as $paymentType => $orders) {
             echo "<div class='col sum_product_inc_tax'>TaxRate</div>";
             echo "<div class='col sum_product_inc_tax'>Total inc tax</div>";
             echo "<div class='col sum_product_ex_tax'>Total ex tax</div>";
+            echo "<div class='col sum_product_ex_tax'>Count</div>";
         echo "</div>";
 
         $taxGroups = $this->getApi()->getProductManager()->getTaxes();
@@ -149,11 +150,13 @@ foreach ($ordersGrouped as $paymentType => $orders) {
                 $product = $this->getApi()->getProductManager()->getProduct($productId);
                 $lineTotalIncTaxes = $this->getSumTotalOfItems($items, true);
                 $lineTotalExTaxes = $this->getSumTotalOfItems($items, false);
+                $lineCount = $this->getCount($items);
                 echo '<div class="orderline">';
                     echo "<div class='col name'>$product->name</div>";
                     echo "<div class='col sum_product_inc_tax'>$taxGroup->taxRate%</div>";
                     echo "<div class='col sum_product_inc_tax'>$lineTotalIncTaxes</div>";
                     echo "<div class='col sum_product_ex_tax'>$lineTotalExTaxes</div>";
+                    echo "<div class='col sum_product_ex_tax'>$lineCount</div>";
                 echo "</div>";
             }
         }

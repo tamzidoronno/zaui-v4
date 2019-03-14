@@ -10,3 +10,16 @@
 .PmsNewBooking20 .user_view { display:none !important; }
 .PmsNewBooking20 .GetShopQuickUser .change_user_form, 
 .PmsNewBooking20 .GetShopQuickUser .edit_details_of_user { position:initial; margin: auto; }
+.PmsNewBooking20 .edit_details_of_user,
+.PmsNewBooking20 .change_user { text-align: left; }
+.PmsNewBooking20 .edit_details_of_user .colbox .row { margin-bottom: 10px; }
+.PmsNewBooking20 .GetShopQuickUser .change_user_form .tabs .tab { 
+    border-radius: 0px;
+    color: #FFF;
+    background: #23314e;
+    background-color: #23314e;
+    line-height: 34px;
+    height: 37px;
+    width:110px;
+    text-align: center;
+}

@@ -5,10 +5,10 @@
 $extraArgs = array();
 $extraArgs['avoidCloseButton'] = "true";
 $extraArgs['hideWarning'] = "true";
-$extraArgs['overridesavebutton'] = "<span class='shop_button'>Continue <i class='fa fa-arrow-right'></i></span>";
+$extraArgs['overridesavebutton'] = "<span class='shop_button' gstype='submit' gs_callback='app.PmsNewBooking20.continueToStep2'>Continue <i class='fa fa-arrow-right' gs_callback='app.'></i></span>";
 
 $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
 $quser->extraArgs = $extraArgs;
-
+$quser->invokeJavascriptFunctionAfterActions = 'app.PmsNewBooking20.userSavedUpdated';
 $quser->renderApplication(true, $this);
 ?>

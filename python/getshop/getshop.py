@@ -15,7 +15,7 @@ def my_handler(type, value, tb):
 
 
 if __name__ == "__main__":
-    
+
     if not os.path.exists('/storage/log'):
         os.makedirs('/storage/log');
         

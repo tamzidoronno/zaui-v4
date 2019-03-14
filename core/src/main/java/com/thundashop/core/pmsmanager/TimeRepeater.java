@@ -57,7 +57,7 @@ public class TimeRepeater {
     }
 
     private LinkedList<TimeRepeaterDateRange> generateWeeklyRepeats(TimeRepeaterData data) {
-        LinkedList list = new LinkedList();
+        LinkedList<TimeRepeaterDateRange> list = new LinkedList();
         if(!data.avoidFirstEvent) {
             list.add(data.firstEvent);
         }
@@ -80,6 +80,10 @@ public class TimeRepeater {
         
         while(true) {
             startIterator = startIterator.plusWeeks(data.repeatEachTime);
+            if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
+                System.out.println("Breaking at : " + startIterator + " - " + data.endingAt);
+                break;
+            }
             TimeRepeaterDateRange range = null;
             
             DateTime starting = startTime.withDayOfWeek(DateTimeConstants.MONDAY);
@@ -141,12 +145,18 @@ public class TimeRepeater {
             
             startTime = startTime.plusWeeks(data.repeatEachTime);
             endTime = endTime.plusWeeks(data.repeatEachTime);
-            
-            if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
-                break;
-            }
-
         }
+        
+        //remove all overdues.
+        LinkedList<TimeRepeaterDateRange> remove = new LinkedList();
+        for(TimeRepeaterDateRange res : list) {
+            if(res.start.after(data.endingAt)) {
+                remove.add(res);
+            }
+        }
+        
+        list.removeAll(remove);
+        
         return list;
     }
 

@@ -1,0 +1,12 @@
+.PmsNewBooking20 .newbookingoption { width: 300px; display:inline-block; height: 300px; border: solid 1px #bbb; text-align: center; margin: 20px;  box-sizing: border-box; cursor:pointer; background-color:#fff; }
+.PmsNewBooking20 .newbookingoption:hover,
+.PmsNewBooking20 .newbookingoption:hover .title
+{ border-color: green; }
+.PmsNewBooking20 .newbookingoption .title { font-size: 20px; border-bottom: solid 1px #bbb; padding: 10px; }
+.PmsNewBooking20 .newbookingoption .descriptionimage img { height: 150px; width: 150px; margin-top: 10px; margin-bottom: 10px; }
+.PmsNewBooking20 .newbookingprocess { display:none; text-align: center;}
+.PmsNewBooking20 .newbookingprocess[for="start"] { display:block; text-align: center;}
+.PmsNewBooking20 .edit_user_btn,
+.PmsNewBooking20 .user_view { display:none !important; }
+.PmsNewBooking20 .GetShopQuickUser .change_user_form, 
+.PmsNewBooking20 .GetShopQuickUser .edit_details_of_user { position:initial; margin: auto; }

@@ -1,0 +1,14 @@
+<h1>Step 1 of 3 - Create a new customer</h1>
+
+<?php
+/* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$extraArgs = array();
+$extraArgs['avoidCloseButton'] = "true";
+$extraArgs['hideWarning'] = "true";
+$extraArgs['overridesavebutton'] = "<span class='shop_button'>Continue <i class='fa fa-arrow-right'></i></span>";
+
+$quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+$quser->extraArgs = $extraArgs;
+
+$quser->renderApplication(true, $this);
+?>

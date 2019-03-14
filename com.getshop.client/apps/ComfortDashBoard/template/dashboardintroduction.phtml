@@ -48,7 +48,7 @@
         echo "<span class='description'>";
         echo $textEvent;
         if($entry->state) {
-            echo ", temperature adjusted to: " . $entry->state->temperature . " degrees";
+            echo ", temperature adjusted to " . $entry->state->temperature . " degrees";
         }
         echo "</span>";
         echo "<span class='room'>" . $room->bookingItemName . "</span>";

@@ -18,7 +18,7 @@ if (strlen($searchvalue) < 3) {
 $extra = "";
 foreach ($_POST['data'] as $key => $value) {
     if($key != "userid") {
-        $extra .= $key."='".$value."' ";
+        $extra .= $key."=\"".$value."\" ";
     }
 }
 

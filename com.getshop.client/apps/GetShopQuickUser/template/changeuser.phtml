@@ -35,7 +35,9 @@ foreach ($extraArgs as $key => $value) {
             <input type="hidden" gsname="gs_extras" value="<? echo $extra; ?>"/>
             <br/>
             <br/>
+            <?php if(!isset($this->extraArgs['avoidCloseButton']) || $this->extraArgs['avoidCloseButton'] != "true") { ?>
             <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+            <?php } ?>
             <div class="shop_button" gstype="submit" gs_callback="app.GetShopQuickUser.userCreated"><i class="fa fa-save"></i> <? echo $this->__f("Create user"); ?></div>
         </div>
         
@@ -63,7 +65,9 @@ foreach ($extraArgs as $key => $value) {
             </div>
             
             <br/>
-            <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+            <?php if(!isset($this->extraArgs['avoidCloseButton']) || $this->extraArgs['avoidCloseButton'] != "true") { ?>
+                <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+            <?php } ?>
         </div>
        
         <div class='tab_content' tab_content="company">
@@ -90,7 +94,9 @@ foreach ($extraArgs as $key => $value) {
                 <? echo $this->__f("Company name"); ?><br/> <input gs_callback="app.GetShopQuickUser.userCreated" gsname='companyname' gstype="submitenter" class="gsniceinput1" value="" />
                 <br/><br/><? echo $this->__f("Vat Number"); ?><br/> <input gs_callback="app.GetShopQuickUser.userCreated" gsname='vatnumber' gstype="submitenter" class="gsniceinput1" value="" /> 
                 <br/><br/>
-                <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+                <?php if(!isset($this->extraArgs['avoidCloseButton']) || $this->extraArgs['avoidCloseButton'] != "true") { ?>
+                    <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
+                <?php } ?>
                 <div gs_callback="app.GetShopQuickUser.userCreated" gstype="submit" class="shop_button"><i class="fa fa-building"></i> <? echo $this->__f("Create"); ?></div>
             </div>
         </div>

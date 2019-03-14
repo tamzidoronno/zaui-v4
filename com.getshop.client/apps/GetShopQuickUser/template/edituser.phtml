@@ -54,7 +54,7 @@ if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
     <?php } ?>
 
     <input type="hidden" gsname="userid" value="<? echo $user ? $user->id : ""; ?>"/>
-    <?php if(!$this->hideWarning) { ?>
+    <?php if(!$this->hideWarning && (!isset($this->extraArgs['avoidCloseButton']) || $this->extraArgs['avoidCloseButton'] != "true")) { ?>
         <div class="warning">
             <i class="fa fa-warning"></i> <? echo $this->__f("When you update information here, you will change it for all other bookings connected to this user."); ?>
             <br/><i class="fa fa-info-circle"></i> <? echo $this->__f("The name of the booker, if a company this is the company name. If its a private person its the name of the person."); ?>
@@ -146,9 +146,11 @@ if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
         <?php
         if(!$this->printEditDirect) {
             ?>
-            <div class="shop_button show_edit_user">
-                <i class="fa fa-close"></i> <? echo $this->__f("Close"); ?>
-            </div>
+                <?php if(!isset($this->extraArgs['avoidCloseButton']) || $this->extraArgs['avoidCloseButton'] != "true") { ?>
+                    <div class="shop_button show_edit_user">
+                        <i class="fa fa-close"></i> <? echo $this->__f("Close"); ?>
+                    </div>
+                <?php } ?>
             <?php
         }
         
@@ -157,11 +159,16 @@ if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
         if(isset($xtra['savebtnname'])) {
             $xtra = $xtra['savebtnname'];
         }
-        
+        if(isset($xtra['overridesavebutton'])) {
+            echo $xtra['overridesavebutton'];
+        } else {
+            ?>
+            <div class="shop_button" gstype="submit">
+                <i class="fa fa-save"></i> <? echo $name; ?>
+            </div>
+            <?php
+        }
         ?>
-        <div class="shop_button" gstype="submit">
-            <i class="fa fa-save"></i> <? echo $name; ?>
-        </div>
     </div>
 
 </div>

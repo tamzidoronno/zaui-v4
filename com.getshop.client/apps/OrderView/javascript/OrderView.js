@@ -11,6 +11,8 @@ app.OrderView = {
         $(document).on('click', '.OrderView .shop_button.save_history_comment', app.OrderView.saveHistoryComment);
         $(document).on('click', '.OrderView .shop_button.dosendehf', app.OrderView.sendEhf);
         $(document).on('click', '.OrderView .shop_button.sendByEmail', app.OrderView.sendByEmail);
+        $(document).on('click', '.OrderView .creditorder', app.OrderView.creditOrder);
+        $(document).on('click', '.OrderView .deleteorder', app.OrderView.deleteOrder);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
@@ -21,6 +23,36 @@ app.OrderView = {
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
     },
     
+    creditOrder: function() {
+        var validated = confirm("Are you sure you want to credit this order?");
+        if (validated) {
+            var from = $(this).closest('.app').find('.orderview');
+            var data = app.OrderView.getData(from);
+            
+            var event = thundashop.Ajax.createEvent(null, 'creditOrder', from, data);
+            event['synchron'] = true;
+            
+            thundashop.Ajax.post(event, function(res) {
+                from.closest('.app').html(res);
+            })
+        }
+    },
+    
+    deleteOrder: function() {
+        var validated = confirm("Are you sure you want to delete this order?");
+        if (validated) {
+            var from = $(this).closest('.app').find('.orderview');
+            var data = app.OrderView.getData(from);
+            
+            var event = thundashop.Ajax.createEvent(null, 'deleteOrder', from, data);
+            event['synchron'] = true;
+            
+            thundashop.Ajax.post(event, function(res) {
+                from.closest('.app').html(res);
+            });
+        }
+    },
+
     reloadTab: function(from, tab) {
         var data = app.OrderView.getData(from);
         data.tabName = tab;

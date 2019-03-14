@@ -174,6 +174,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     @Transient
     public double restAmount;
     
+    public boolean virtuallyDeleted = false;
+    
     public Order jsonClone() {
         Gson gson = new Gson();
         String gsonOrder = gson.toJson(this);
@@ -186,7 +188,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.createdDate = new Date();
         orderNew.logLines.clear();
         orderNew.transactions.clear();
-
+        orderNew.orderTransactions.clear();
+        
         if (orderNew.cart != null) {
             orderNew.cart.rowCreatedDate = new Date();
         }

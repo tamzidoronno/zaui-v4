@@ -1,8 +1,0 @@
-<div ng-if="sessions.length < 1"  class='no_sessions_available'>
-    Ingen tidligere sesjoner tilgjengelig for dette bordet.
-</div>
-
-<div ng-if="sessions.length > 0" ng-repeat='session in sessions' class='tablesessionloader' ng-click="changeToDifferentSession(session)">
-    <div>Items: {{ session.cartItems.length }} </div>
-    <div class='createdinfo'>Dato: {{ session.started }} / {{ session.createByUser.fullName }}</div>
-</div>

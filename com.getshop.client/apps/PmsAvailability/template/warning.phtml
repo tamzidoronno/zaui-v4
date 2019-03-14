@@ -1,0 +1,14 @@
+<?
+/* @var $this \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+$ids = $this->getPmsBookingFilterIds();
+if (count($ids)) {
+    ?>
+    <div class="group_view_warning">
+        <b>Your currently looking at a group booking.</b>
+        <br/> You will only see the bookings that are within that group, if you wish to see all bookings click here to cancel group view.
+        <br/>
+        <br/> <a href="/pms.php?page=0da68de9-da08-4b60-9652-3ac456da2627&groupview=cancel"><div class="shop_button">Cancel</div></a>
+    </div>
+    <?
+}
+?>

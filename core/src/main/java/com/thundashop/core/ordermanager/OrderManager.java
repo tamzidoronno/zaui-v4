@@ -225,6 +225,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         credited.closed = false;
         credited.transferredToAccountingSystem = false;
         credited.moveAllTransactionToTodayIfItsBeforeDate(getOrderManagerSettings().closedTilPeriode);
+        if (credited.overrideAccountingDate != null && credited.overrideAccountingDate.before(getOrderManagerSettings().closedTilPeriode)) {
+            credited.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
+        }
         order.creditOrderId.add(credited.id);
         order.doFinalize();
         
@@ -239,6 +242,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             markAsPaid(order.id, new Date(), order.getTotalAmount());
             markAsPaid(credited.id, new Date(), credited.getTotalAmount());
         }
+        
+        createNewSamleFakturaOrders(order);
         
         return credited;
     }
@@ -379,6 +384,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.status = Order.Status.WAITING_FOR_PAYMENT;
         order.markedAsPaidByUserId = "";
         order.payment.transactionLog.put(System.currentTimeMillis(), "Order unmarked as paid : " + getSession().currentUser.fullName);
+        order.creditOrderId = new ArrayList();
         saveObject(order);
     }
 
@@ -2120,23 +2126,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return retOrders;
     }
-
-    private void resetMergedOrders(String orderId) {
-        Order mergedOrder = getOrder(orderId);
-        mergedOrder.createdBasedOnOrderIds.stream()
-            .forEach(orderToResetId -> {
-                Order orderToReset = getOrder(orderToResetId);
-                for (String credittedOrderId : orderToReset.creditOrderId) {
-                     Order orderToDelete = orders.remove(credittedOrderId);
-                     deleteObject(orderToDelete);
-                }
-                orderToReset.creditOrderId = new ArrayList();
-                unMarkPaidOrder(orderToReset);
-                saveObject(orderToReset);
-            });
-    }
-    
-    @Override
+ 
+   @Override
     public Order mergeAndCreateNewOrder(String userId, List<String> orderIds, String paymentMethod, String note) {
         User user = userManager.getUserById(userId);
         
@@ -2366,8 +2357,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             addCreditNotesToBookings(order.createdBasedOnOrderIds);
         }
         
+        createNewSamleFakturaOrders(order);
+        
+        order.virtuallyDeleted = true;
         order.cart.clear();
         saveObject(order);
+    }
+
+    private void createNewSamleFakturaOrders(Order order) {
+        List<String> newOrders = new ArrayList();
+        
+        order.createdBasedOnOrderIds.stream()
+                .forEach(id -> {
+                    Order gOrder = getOrder(id);
+                    Order newOrder = gOrder.jsonClone();
+                    newOrder.closed = false;
+                    newOrder.overrideAccountingDate = new Date();
+                    unMarkPaidOrder(newOrder);
+                    orders.put(newOrder.id, newOrder);
+                    newOrders.add(newOrder.id);
+                });
+        
+        addOrdersToBookings(newOrders);
     }
 
     public HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
@@ -3629,6 +3640,34 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    private void addOrdersToBookings(List<String> createdBasedOnOrderIds) {
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        
+        createdBasedOnOrderIds.stream()
+            .map(id -> getOrder(id))
+            .forEach(order -> {
+                List<String> roomIdsForOrder = order.getCartItems().stream()
+                    .map(o -> o.getProduct().externalReferenceId)
+                    .filter(o -> o != null)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+                for (String multilevelName : multiLevelNames) {
+                    PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+                    for (String pmsRoomId : roomIdsForOrder) {
+                        PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
+                        if (booking == null) {
+                            continue;
+                        }
+                        
+                        if (!booking.orderIds.contains(order.id)) {
+                            pmsManager.addOrderToBooking(booking, order.id);
+                        }
+                    }
+                }
+            });
+    }
+    
     private void addCreditNotesToBookings(List<String> createdBasedOnOrderIds) {
         
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);

@@ -25,9 +25,28 @@ class OrderView extends \MarketingApplication implements \Application {
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->rePrintTab("history");
     }
+    
+    public function creditOrder() {
+        $this->setOrder();
+        $this->getApi()->getOrderManager()->creditOrder($this->getOrder()->id);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($this->getOrder()->id);
+        $this->render();
+    }
+    
+    public function deleteOrder() {
+        $this->setOrder();
+        $this->getApi()->getOrderManager()->deleteOrder($this->getOrder()->id);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($this->getOrder()->id);
+        $this->render();
+        die();
+    }
 
     public function render() {
         $this->setOrder();
+        if ($this->getOrder()->virtuallyDeleted) {
+            echo "<div style='text-align: center; font-size: 20px; padding: 30px;'>This order has been deleted</div>";
+            return;
+        }
         
         $orderId = $this->getOrder()->id;
         
@@ -36,9 +55,19 @@ class OrderView extends \MarketingApplication implements \Application {
         
         ?>
         <div class='workareaheader'>
-            <? echo $this->__f("Order id") . ": " . $this->getOrder()->incrementOrderId; ?> ( <? echo $paymentType; ?> )
+            <div class="headertitle">
+                <? echo $this->__f("Order id") . ": " . $this->getOrder()->incrementOrderId; ?> ( <? echo $paymentType; ?> )
+            </div>
+            
+            <div class="actions">
+                <?
+                $this->includefile("actions");
+                ?>
+            </div>
         </div>
         <?
+        
+        $this->includefile("headerwarnings");
         
         echo "<div class='orderview' orderid='$orderId'>";
             echo "<div class='leftmenu'>";

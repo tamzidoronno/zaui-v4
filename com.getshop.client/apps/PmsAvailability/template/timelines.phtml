@@ -76,7 +76,9 @@ foreach ($types as $type) {
                         $colTime = $time;
                         
                         if ($j == 0) {
-                            $header = "<div class='header col_width'>$colDate</div>";
+                            $typeIds = $allInOne ? $cats : array($type->id);
+                            $bookingCount = $this->getBookingCount($timelines, $time, $typeIds);
+                            $header = "<div class='header col_width'>$colDate <br/> <span title='Number of rooms in use this day'>($bookingCount)</span></div>";
                         }
                         
                         $nextBookingIds = $this->getNextBookingIds($itemTimeLines, $time);

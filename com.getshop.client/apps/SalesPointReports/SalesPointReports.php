@@ -186,6 +186,42 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
     }
 
+    public function getSumTotalOfItems($items, $includeTaxes) {
+        $total = 0;
+        foreach ($items as $item) {
+            if ($includeTaxes) {
+                $total += $item->count * $item->product->price;
+            } else {
+                $total += $item->count * $item->product->priceExTaxes;
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * 
+     * @param type $taxGroupNumber
+     * @param \core_productmanager_data_TaxGroup[] $taxGroups
+     * @return \core_productmanager_data_TaxGroup TaxGroup
+     */
+    public function getTaxGroup($taxGroupNumber, $taxGroups) {
+        foreach ($taxGroups as $taxGroup) {
+            if ($taxGroup->groupNumber == $taxGroupNumber) {
+                return $taxGroup;
+            }
+        }
+        
+        return null;
+    }
+
+    public function getCount($items) {
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item->count;
+        }
+        return $total;
+    }
+
 }
 ?>
 

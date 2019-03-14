@@ -5,7 +5,7 @@ $report = $this->getCurrentZReport();
 if ($this->isCurrentZReportASavedReport()) {
     echo "<div class='informationbox'>";
         echo $this->__f("You are looking at an old/saved Z-Report");
-        echo "<br/><br/><div gsclick='cancelCurrentZReport' class='shop_button'>".$this->__f("Cancel")."</div>";
+        echo "<br/><br/><div gsclick='cancelCurrentZReport' class='shop_button'>".$this->__f("Close")."</div>";
     echo "</div>";
 }
 
@@ -28,10 +28,15 @@ $orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99
 $totalForPaymentMethods = array();
 $ordersGrouped = array();
 
+/* @var $allCartItems \core_cartmanager_data_CartItem[] */
+$allCartItems = array();
+
 foreach ($orders as $order) {
     $terminalData = $this->getApi()->getOrderManager()->getTerminalInformation($order->id);
     $paymentTypeArr = explode("\\", $order->payment->paymentType);
     $paymentType = $this->getPaymentMethodName($paymentTypeArr[0]);
+    
+    $allCartItems = array_merge($allCartItems, $order->cart->items);
     
     if ($terminalData) {
         $paymentType .= " - ".ucfirst(strtolower(trim($terminalData->issuerName)))."";
@@ -119,6 +124,45 @@ foreach ($ordersGrouped as $paymentType => $orders) {
     <h2><? echo $this->__f("Grand total").": ".$grandTotal; ?></h2>
 </div>
 
+<div class="paymentrow summary">
+    <h2><? echo $this->__f("Prouduct summary"); ?></h2>
+        <?
+        $groupedCartItems = array();
+        
+        foreach ($allCartItems as $item) {
+            $taxGroupNumber = $item->product->taxGroupObject->groupNumber;
+            $groupedCartItems[$item->product->id][$taxGroupNumber][] = $item;
+        }
+        
+        echo '<div class="orderline">';
+            echo "<div class='col name'>Product</div>";
+            echo "<div class='col sum_product_inc_tax'>TaxRate</div>";
+            echo "<div class='col sum_product_inc_tax'>Total inc tax</div>";
+            echo "<div class='col sum_product_ex_tax'>Total ex tax</div>";
+            echo "<div class='col sum_product_ex_tax'>Count</div>";
+        echo "</div>";
+
+        $taxGroups = $this->getApi()->getProductManager()->getTaxes();
+        
+        foreach ($groupedCartItems as $productId => $groupByTaxGroup) {
+            foreach ($groupByTaxGroup as $taxGroupNumber => $items) {
+                $taxGroup = $this->getTaxGroup($taxGroupNumber, $taxGroups);
+                $product = $this->getApi()->getProductManager()->getProduct($productId);
+                $lineTotalIncTaxes = $this->getSumTotalOfItems($items, true);
+                $lineTotalExTaxes = $this->getSumTotalOfItems($items, false);
+                $lineCount = $this->getCount($items);
+                echo '<div class="orderline">';
+                    echo "<div class='col name'>$product->name</div>";
+                    echo "<div class='col sum_product_inc_tax'>$taxGroup->taxRate%</div>";
+                    echo "<div class='col sum_product_inc_tax'>$lineTotalIncTaxes</div>";
+                    echo "<div class='col sum_product_ex_tax'>$lineTotalExTaxes</div>";
+                    echo "<div class='col sum_product_ex_tax'>$lineCount</div>";
+                echo "</div>";
+            }
+        }
+        ?>
+   
+</div>
 <?
 if (!$this->isCurrentZReportASavedReport() && $this->canMakeZReport()) {
 ?>

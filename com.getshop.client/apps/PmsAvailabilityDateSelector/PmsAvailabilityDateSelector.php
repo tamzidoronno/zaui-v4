@@ -17,6 +17,7 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
             $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
             $app->setStartDate(date("d.m.Y", time()-86400));
             $app->setEndDate(date("d.m.Y", time()+(86400*14)));
+            $app->setPmsBookingIdsFilter();
         }
         
         $this->includefile("selector");

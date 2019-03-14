@@ -1,0 +1,26 @@
+<?
+/* @var $this \ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+
+if ($this->getOrder()->creditOrderId) {
+    ?>
+    <div class='workareaheader warning'>
+        <div class="headertitle">
+            <? echo $this->__f("This order has been creditted"); ?>
+        </div>
+
+    </div>    
+    <?
+}
+
+if ($this->getOrder()->isCreditNote) {
+    ?>
+    <div class='workareaheader warning'>
+        <div class="headertitle">
+            <? echo $this->__f("This is a credit note"); ?>
+        </div>
+
+    </div>    
+    <?
+}
+
+?>

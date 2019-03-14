@@ -1,0 +1,21 @@
+<?
+/* @var $this \ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+if ($order->closed) {
+    if (!$order->isCreditNote && !$order->creditOrderId) {
+    ?>
+        <div class="actionbutton creditorder" > 
+            <div class="icon"><i class="fa fa-history"></i></div>
+            <div class="title"><? echo $this->__f("Credit order"); ?></div>
+        </div>
+    <?
+    }
+} else {
+    ?>
+    <div class="actionbutton deleteorder" > 
+        <div class="icon"><i class="fa fa-trash"></i></div>
+        <div class="title"><? echo $this->__f("Delete order"); ?></div>
+    </div>
+    <?
+}
+?>

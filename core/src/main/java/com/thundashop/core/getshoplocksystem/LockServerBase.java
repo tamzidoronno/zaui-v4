@@ -322,4 +322,12 @@ public abstract class LockServerBase extends DataCommon {
     public String getGivenName() {
         return givenName;
     }
+    
+    public void setLastPing(Date date) {
+        lastPing = date;
+    }
+
+    public Date getLastPing() {
+        return lastPing;
+    }
 }

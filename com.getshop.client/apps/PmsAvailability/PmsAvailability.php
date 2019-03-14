@@ -67,6 +67,10 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $app->setEndDate(date("d.m.Y", time()+(86400*14)));
         }
 
+        $this->setPmsBookingIdsFilter();
+        
+        $this->includefile("warning");
+        
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 
         if(sizeof($items) == 0) {
@@ -88,6 +92,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $filter = new \core_pmsmanager_PmsIntervalFilter();
         $filter->start = $this->convertToJavaDate($this->getStartDate());
         $filter->end = $this->convertToJavaDate($this->getEndDate());
+        $filter->pmsBookingIds = $this->getPmsBookingFilterIds(); 
         $filter->interval = 60 * 60 * 24;
         return $filter;
     }
@@ -398,6 +403,54 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
         $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $booking->id, $_POST['data']['roomid']);
         unset($_SESSION['tmpselectedroom']);
+    }
+
+    public function getBookingCount($timelines, $time, $typeIds) {
+        
+        $sorting = $this->getSortType();
+        $allInOne = false;
+        if($sorting == "room") {
+            $allInOne = true;
+        }
+
+        $count = 0;
+        foreach ($timelines->itemTimeLines as $itemId => $itemTimeLines) {
+            foreach ($itemTimeLines as $itime => $date) {
+                if (count($typeIds) && !in_array($date->typeId, $typeIds)) {
+                    continue;
+                }
+                
+                if ($itime == $time && $date->state == "normal") {
+                    $count += $date->count;
+                    print_r($date);
+                }
+            }
+        }
+        
+        return $count;
+    }
+
+    public function getPmsBookingFilterIds() {
+        if (!isset($_SESSION['PMS_AVIAILABILITY_BOOKING_IDS_FILTER'])) {
+            return array();
+        }
+        
+        return $_SESSION['PMS_AVIAILABILITY_BOOKING_IDS_FILTER'];
+    }
+
+    public function setPmsBookingIdsFilter() {
+        if ($_GET['groupview'] == "cancel") {
+            unset($_SESSION['PMS_AVIAILABILITY_BOOKING_IDS_FILTER']);
+            return;
+        }
+        
+        if (isset($_GET['groupview'])) {
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $_GET['groupview']);
+            $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
+            $app->setStartDate(date("d.m.Y", strtotime($booking->startDate)));
+            $app->setEndDate(date("d.m.Y", strtotime($booking->endDate)));
+            $_SESSION['PMS_AVIAILABILITY_BOOKING_IDS_FILTER'] = array($_GET['groupview']);
+        }
     }
 
 }

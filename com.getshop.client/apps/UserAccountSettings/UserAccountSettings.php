@@ -36,6 +36,12 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
             return $this->formatAccessToPages($access);
         }
     }
+    public function formatcomfort($user) {
+        if(in_array("comfort", $user->hasAccessToModules)) {
+            return "<i class='fa fa-check'></i>";
+        }
+    }
+    
     public function formatsalespoint($user) {
         if(in_array("salespoint", $user->hasAccessToModules)) {
             return "<i class='fa fa-check'></i>";

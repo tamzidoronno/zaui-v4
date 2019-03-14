@@ -150,3 +150,13 @@ python/**/*.pyc
 python/getshop/token.txt
 **/*.swp
 /com.getshop.printclient/nbproject/private/
+**/*$py.class
+
+html5apps/terminal/etc/*
+/util/EhfValidator/target/
+/php/escpos_receipt_generator/nbproject/private/
+
+com.getshop.printclient/nbproject/build-impl.xml
+com.getshop.printclient/nbproject/genfiles.properties
+com.getshop.printclient/nbproject/project.properties
+

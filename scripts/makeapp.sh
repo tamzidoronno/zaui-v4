@@ -62,6 +62,7 @@ echo "16. SRS";
 echo "17. INVOICING";
 echo "18. Analythics";
 echo "19. GetShop Support";
+echo "20. Settings";
 
 read moduleNumber
 
@@ -130,6 +131,10 @@ if [ $moduleNumber = "18" ]; then
     defaultActivated=true
 fi
 if [ $moduleNumber = "19" ]; then 
+    module=getshopsupport
+    defaultActivated=true
+fi
+if [ $moduleNumber = "20" ]; then 
     module=getshopsupport
     defaultActivated=true
 fi

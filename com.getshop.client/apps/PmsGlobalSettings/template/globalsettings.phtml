@@ -171,6 +171,20 @@ if(stristr($user->emailAddress, "@getshop.com")) {
             Automatically summarize items in cart when create order (credits and debets).
         </span>
     </div>
+    <?php
+    if($config->wubookAutoCharging) {
+    ?>
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='autochargeCardDaysBefore' value='<?php echo $config->autochargeCardDaysBefore; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Number of days to before stay to try to automatically charge card.<br>
+            -1 means disabled
+        </span>
+    </div>
+    <?php } ?> 
+    
     
     <h1>Enterprise settings</h1>
     <div class='container'>

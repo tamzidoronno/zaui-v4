@@ -293,6 +293,7 @@ public class PmsConfiguration extends DataCommon {
     
     /* Wubook settings */
     public boolean wubookAutoCharging = false;
+    public Integer autochargeCardDaysBefore = -1;
     public String wubookusername = "";
     @Administrator
     public String wubookpassword = "";

@@ -9455,12 +9455,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             config.wubookAutoCharging = true;
             saveConfiguration(config);
         }
-        
+        Integer daysBeforeToCharge = config.autochargeCardDaysBefore;
+        if(daysBeforeToCharge < 0) {
+            return new ArrayList();
+        }
         
         List<PmsBooking> allbookings = getAllBookings(null);
         List<PmsWubookCCardData> resultToReturn = new ArrayList();
         for(PmsBooking book : allbookings) {
+            
             if(!book.tryAutoCharge) {
+                continue;
+            }
+            
+            Integer daysUntilStart = getDaysUntilStart(book);
+            
+            if(daysUntilStart > daysBeforeToCharge) {
+                continue;
+            }
+            
+            boolean avoidChargeNow = false;
+            for(String orderId : book.orderIds) {
+                Order ord = orderManager.getOrder(orderId);
+                if(ord.isPrepaidByOTA() && daysUntilStart != 0) {
+                    avoidChargeNow = true;
+                }
+            }
+            if(avoidChargeNow && daysUntilStart > 0) {
                 continue;
             }
             
@@ -9813,6 +9834,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         saveBooking(booking);
         return booking.suggestedUserIds;
+    }
+
+    private Integer getDaysUntilStart(PmsBooking book) {
+        Date now = new Date();
+        Date startDate = book.getStartDate();
+        long diff = (startDate.getTime() - now.getTime());
+        if(diff < 86400000 && diff > 1080000) {
+            return 1;
+        }
+        return (int)( diff / (1000 * 60 * 60 * 24));
     }
 
 }

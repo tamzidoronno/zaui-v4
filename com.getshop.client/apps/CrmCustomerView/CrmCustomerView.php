@@ -406,5 +406,20 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $pmsPricing->saveDiscountCode();
     }
 
+    public function createCodeSuggestion($user) {
+        
+        $expr = '/(?<=\s|^)[a-z]/i';
+        preg_match_all($expr, $user->fullName, $matches);
+        while(true) {
+            $code = join("", $matches[0]). rand(1000,9999);
+            $coupon = $this->getApi()->getCartManager()->getCoupon($code);
+            if(!$coupon) {
+                break;
+            }
+        }
+        
+        return strtoupper($code);
+    }
+
 }
 ?>

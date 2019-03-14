@@ -31,7 +31,8 @@ app.CrmCustomerView = {
         }
     },
     doCreateNewDicountCode : function() {
-        var code = prompt("Enter the new code");
+        var suggestion = $(this).attr('suggestion');
+        var code = prompt("Enter the new code", suggestion);
         if(!code) {
             return;
         }

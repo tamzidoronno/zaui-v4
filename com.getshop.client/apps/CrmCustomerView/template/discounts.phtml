@@ -18,6 +18,7 @@ foreach ($domains as $domain) {
     }
     $rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($domain);
     $discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($domain, $user->id);
+    $codesuggestion = $this->createCodeSuggestion($user);
     ?>
     <div class='dashboard_panel' gstype='form' method='saveDiscountPreferences'>
         <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
@@ -88,7 +89,7 @@ foreach ($domains as $domain) {
                     <td class='rowinput'><input type='text' class='gsniceinput1' gsname='referencecode' value='<?php echo $user->referenceKey; ?>' style='width:80px;'><br><br></td>
                 </tr>
                 <tr>
-                    <td><b>Attached discount code (<a style='color:blue; cursor:pointer;' class='docreatenewcode'>create a new code</a>)</b><br>
+                    <td><b>Attached discount code (<a style='color:blue; cursor:pointer;' class='docreatenewcode' suggestion='<?php echo $codesuggestion; ?>'>create a new code</a>)</b><br>
                         Attach a discount code for this user, all bookings with the attached discounts will be booked on this user<br>
                     <td class='rowinput'>
                         <select class='gsniceselect1' gsname='attachedDiscountCode'>

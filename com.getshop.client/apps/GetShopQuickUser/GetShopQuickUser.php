@@ -40,7 +40,11 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
             
             foreach ($toAdd as $key) {
                 if ($key) {
-                    $this->extraArgs[$key] = $_POST['data'][$key];
+                    if(!isset($_POST['data'][$key])) {
+                        $this->extraArgs[$key] = $_POST['data'][strtolower($key)];
+                    } else {
+                        $this->extraArgs[$key] = $_POST['data'][$key];
+                    }
                 }
             }
         }

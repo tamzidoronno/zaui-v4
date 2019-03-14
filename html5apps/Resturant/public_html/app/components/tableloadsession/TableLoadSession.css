@@ -1,7 +1,0 @@
-.tablesessionloader {
-    border-bottom: dashed 1px;
-}
-
-.tablesessionloader:last-child {
-    border-bottom: solid 0px;
-}

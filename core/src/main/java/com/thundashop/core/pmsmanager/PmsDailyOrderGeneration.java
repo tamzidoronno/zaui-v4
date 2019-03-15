@@ -305,6 +305,11 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
         CartItem item = createCartItemForRoom(count, total, room,start, end, productId);
         if(item != null) {
+            String name = itemsAdded.get(0).getName();
+            if(name != null && !name.trim().isEmpty()) {
+                item.getProduct().name = name;
+            }
+            
             item.itemsAdded = itemsAdded;
             item.hideDates = true;
             addCartItem(item);

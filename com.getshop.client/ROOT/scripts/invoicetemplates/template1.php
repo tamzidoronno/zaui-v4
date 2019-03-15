@@ -248,7 +248,8 @@ function doTranslation($key) {
     .orderitemprice { display:inline-block; width: 120px; }
     .orderitemheader .orderitemprice { width: 110px; }
     .orderitemheader .orderitemtax { display:inline-block;  width:74px; }
+    .orderitemtax { display:inline-block;  width:75px; }
     .orderitemcount { display:inline-block; width: 80px; }
-    .orderitemtotal { display:inline-block; width: 120px; text-align: right; }
+    .orderitemtotal { display:inline-block; width: 120px; text-align: right;}
     .page2 { padding: 20px; }
 </style>

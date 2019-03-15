@@ -63,20 +63,26 @@ function doTranslation($key) {
             echo "<br>";
             echo "<div class='emailheader'>" . $contactEmail . "</div>";
             echo "<div class='orderemailinfo'>";
-            echo doTranslation("Order date") . ": " . $rowCreatedDate;
-            echo "<span class='ordernumberinfo'>";
-            echo doTranslation("Order number") . ": " . $incrementOrderId;
+            echo doTranslation("Order date") . "<span style='float:right'>" . $rowCreatedDate . "</span><br>";
+            echo doTranslation("Order number") . "<span style='float:right'>" . $incrementOrderId . "</span><br>";
+            echo doTranslation("Due date") . "<span style='float:right'>" . $dueDate . "</span><br>";
+            echo doTranslation("To account") . "<span style='float:right'>" . $accountNumber . "</span><br>";
+            echo doTranslation("IBAN") . "<span style='float:right'>" . $iban . "</span><br>";
+            echo doTranslation("BIC/SWIFT") . "<span style='float:right'>" . $swift . "</span><br>";
             echo "</div>";
-            echo "<div class='orderemailinfo'>";
-            echo doTranslation("Due date") . ": " . $dueDate;
-            echo "<span class='ordernumberinfo'>";
-            echo doTranslation("To account") . ": " . $accountNumber;
-            echo "</div>";
-            echo "</span>";
             ?>
         </div>
         <div class='headerseperator'></div>
         <div class='itemsarea'>
+            
+            <div class='orderitemheader'>
+                <span class='orderitemdescription'><b><?php echo doTranslation("Description"); ?></b></span>
+                <span class='orderitemcount'><b><?php echo doTranslation("Count"); ?></b></span>
+                <span class='orderitemprice'><b><?php echo doTranslation("Ex tax"); ?></b></span>
+                <span class='orderitemtax'><b><?php echo doTranslation("Tax"); ?></b></span>
+                <span class='orderitemtotal'><b><?php echo doTranslation("Inc tax"); ?></b></span>
+            </div>
+
             
             <?php
             echo $itemLines;
@@ -193,6 +199,7 @@ function doTranslation($key) {
 </body>
 
 <style>
+    .orderitemheader { font-weight: bold; padding-bottom: 10px;}
     .alreadypaidtext { position:Absolute; width: 1030px; height:600px;z-index:2; background-color:rgba(0,0,0,0.8); text-align: center; font-size: 60px; color:#fff; box-sizing:border-box; padding-top: 100px; }
     .girfooterheadertext { font-weight: bold; font-size: 12px; }
     .kidarea { border-left: solid 1px; width: 200px; display: inline-block; float:left; height: 55px; margin-left: 40px; padding-left: 10px; padding-top: 5px; box-sizing: border-box; }
@@ -234,11 +241,14 @@ function doTranslation($key) {
     .ordernumberinfo { float:right; }
     .headerseperator { clear:both; height: 80px; }
     .companyname { font-weight: bold; }
-    .emailheader {border-bottom: solid 1px; margin-bottom: 5px; padding-bottom: 5px; font-size: 12px; }
-    .orderemailinfo { font-size: 12px; }
-    .orderitemdescription { display:inline-block; width: 650px; }
+    .emailheader {border-bottom: solid 1px; margin-bottom: 5px; padding-bottom: 5px; font-size: 14px; }
+    .orderemailinfo { font-size: 14px; }
+    .orderitemdescription { display:inline-block; width: 610px; }
+    .orderitemheader .orderitemdescription { width: 600px; }
     .orderitemprice { display:inline-block; width: 120px; }
-    .orderitemcount { display:inline-block; width: 40px; }
+    .orderitemheader .orderitemprice { width: 110px; }
+    .orderitemheader .orderitemtax { display:inline-block;  width:74px; }
+    .orderitemcount { display:inline-block; width: 80px; }
     .orderitemtotal { display:inline-block; width: 120px; text-align: right; }
     .page2 { padding: 20px; }
 </style>

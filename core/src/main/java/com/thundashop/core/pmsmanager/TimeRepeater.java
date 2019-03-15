@@ -80,7 +80,7 @@ public class TimeRepeater {
         
         while(true) {
             startIterator = startIterator.plusWeeks(data.repeatEachTime);
-            if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
+            if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt) && !isSameWeek(endTime.toDate(), data.endingAt)) {
                 System.out.println("Breaking at : " + startIterator + " - " + data.endingAt);
                 break;
             }
@@ -229,5 +229,24 @@ public class TimeRepeater {
         cal.add(Calendar.SECOND, (int)((firstEvent.end.getTime()-firstEvent.start.getTime())/1000));
         result.end = cal.getTime();
         return result;
+    }
+
+    private boolean isSameWeek(Date toDate, Date endingAt) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(toDate);
+        cal1.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        int year1 = cal1.get(Calendar.YEAR);
+        int week1 = cal1.get(Calendar.WEEK_OF_YEAR);
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(endingAt);
+        cal2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        int year2 = cal2.get(Calendar.YEAR);
+        int week2 = cal2.get(Calendar.WEEK_OF_YEAR);
+
+        if(year1 == year2 && week1 == week2){
+            return true;
+        }
+        return false;
     }
 }

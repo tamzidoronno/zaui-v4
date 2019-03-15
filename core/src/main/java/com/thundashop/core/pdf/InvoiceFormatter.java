@@ -45,6 +45,16 @@ public class InvoiceFormatter {
         } else {
             this.base = this.base.replace("{logo}", "");
         }
+        if(accountingDetails.swift != null) {
+            this.base = this.base.replace("{swift}", accountingDetails.swift);
+        } else {
+            this.base = this.base.replace("{swift}", "");
+        }
+        if(accountingDetails.iban != null) {
+            this.base = this.base.replace("{iban}", accountingDetails.iban);
+        } else {
+            this.base = this.base.replace("{iban}", "");
+        }
         
         if(order.cart.address != null) {
             if(order.cart.address.address != null && !order.cart.address.address.isEmpty()) {
@@ -101,9 +111,9 @@ public class InvoiceFormatter {
     
     public void setOrderLines() {
         String lines = "";
+        
         for(CartItem item : order.cart.getItems()) {
             String text = "";
-            
             text += "<div class='orderitem'>";
             text += "<span class='orderitemdescription'>" + getItemText(item) + "</span>";
             text += "<span class='orderitemcount'>" + item.getCount() + "</span>";

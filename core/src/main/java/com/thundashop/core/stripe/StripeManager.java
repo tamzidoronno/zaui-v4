@@ -113,7 +113,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 currency = "NOK";
             }
 
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             User user = userManager.getUserById(order.userId);
             Double amount = orderManager.getTotalAmount(order);
             for(UserCard card : user.savedCards) {

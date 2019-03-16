@@ -106,14 +106,11 @@ app.PmsNewBooking20 = {
     
     doGoToStep : function(goto) {
         localStorage.setItem("newbookinglastpage", goto);
-        $.when($('.PmsNewBooking20 .newbookingprocess').fadeOut(100))
-                               .done(function() {
-            $('.PmsNewBooking20 .newbookingprocess[for="'+goto+'"]').fadeIn();
-    
-            if(goto === "newbookingstep2") {
-                app.PmsNewBooking20.loadSelectedBooking();
-            }
-        });
+        $('.PmsNewBooking20 .newbookingprocess').hide();
+        $('.PmsNewBooking20 .newbookingprocess[for="'+goto+'"]').fadeIn();
+        if(goto === "newbookingstep2") {
+            app.PmsNewBooking20.loadSelectedBooking();
+        }
     }
 };
 

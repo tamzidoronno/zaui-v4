@@ -47,6 +47,10 @@ attribute gstypes;
     submitenter, makes it to submit when pressing enter. 
         example: <div gstype="form" method="addEntry"><input gstype="submitenter" type="txt" name='example' placeholder="Enter a menu name"></div>
 
+    synchron:
+        Force syncron call,
+        <div gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue" synchron="true">
+
     clicksubmit, submit whenever someone click this element:
         example: <div gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">
         example: <div gstype="clicksubmitToInfoBox" method="renameEntry" gsname="id" gsvalue="somevalue">

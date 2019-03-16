@@ -52,6 +52,9 @@ public interface IPmsManager {
     public boolean hasLockSystemActive();
     
     @Administrator
+    public Double getPriceForRoomWhenBooking(Date start, Date end, String itemType);
+            
+    @Administrator
     public void createAllVirtualOrders();
     
     @Administrator
@@ -503,6 +506,9 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsGuestOption> findRelatedGuests(PmsGuests guest);
+    
+    @Administrator
+    public List<PmsGuestOption> findRelatedByUserId(String userId);
     
     @Administrator
     public List<String> addSuggestedUserToBooking(String userId);

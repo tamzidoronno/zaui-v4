@@ -3,7 +3,43 @@
 ?>
 <div class='newbookingprocess' for='newbookingstep2'>
     <h1>Step 2 of 3 - Adding room</h1>
-    <input type="text" class="gsniceinput1" placeholder="Start date">
-    <input type="text" class="gsniceinput1" placeholder="End date">
-    <span class="shop_button">Search for rooms to add</span>
+    <div gstype="form" method="searchfreerom" gstoarea=".availablerooms">
+        <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
+        <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
+        <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
+    </div>
+    <br><br>
+    <div class='availablerooms'></div>
+    <div class='roomsaddedarea'>
+        <img class="fa fa-spin" style="margin-top: 100px;" src="data:image/png;base64,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">
+    </div>
 </div>
+
+<script>
+     $('.PmsNewBooking20 .startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay : 1,
+        onSelect: function(dateText) {
+            var curEnd = moment($('.PmsNewBooking20 .enddate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = curEnd.valueOf() - date.valueOf();
+            if(diff <= 0) {
+                date.add(1, 'days');
+                $('.PmsNewBooking20 .enddate').val(date.format('DD.MM.YYYY')); 
+            }
+            $('.searchforfreeroomsbutton').click();
+        }
+    });
+    $('.PmsNewBooking20 .enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay : 1,
+        onSelect: function(dateText) {
+            var curStart = moment($('.PmsNewBooking20 .startdate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+            
+            var diff = date.valueOf() - curStart.valueOf();
+            if(diff <= 0) {
+                date.add(-1, 'days');
+                $('.PmsNewBooking20 .startdate').val(date.format('DD.MM.YYYY')); 
+            }
+            $('.searchforfreeroomsbutton').click();
+        }
+    });
+</script>

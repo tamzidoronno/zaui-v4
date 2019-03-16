@@ -1,0 +1,59 @@
+<?php
+/* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$start = $_POST['data']['start'] . " " . $config->defaultStart;
+$start = $this->convertToJavaDate(strtotime($start));
+
+if(!$_POST['data']['start'] || !$_POST['data']['end']) {
+    echo "<div class='searchforbooking'>The date you have selected are invalid, please choose another time periode.</div>";
+    return;
+}
+
+$end = $_POST['data']['end'] . " " . $config->defaultEnd;
+$end = $this->convertToJavaDate(strtotime($end));
+$items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+foreach($items as $item) {
+    $count = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(),$item->id, $start, $end);
+    $price = $this->getApi()->getPmsManager()->getPriceForRoomWhenBooking($this->getSelectedMultilevelDomainName(), $start, $end,$item->id);
+    ?>
+    <div class="freeroomresultbox" gstype='form' method='addTypesToBooking'>
+        <input type='hidden' gsname='typeid' value='<?php echo $item->id; ?>'>
+        <input type='hidden' gsname='start' value='<?php echo strtotime($start); ?>'>
+        <input type='hidden' gsname='end' value='<?php echo strtotime($end); ?>'>
+        <div class="roomname"><?php echo $item->name; ?></div>
+        <div class="availroomstep">Available</div>
+        <div class="numberavailable"><?php echo $count; ?></div>
+        <div class="price">Price <?php echo round($price,2); ?> / day</div>
+        <div class="counterrow">
+            <span class='outercountbutton'><i class="fa fa-minus-circle decreaseroomcounter"></i></span>
+            <input type="txt" class="gsniceinput1 roomcount" gsname='count' style="width:20px;text-align: center;" value="0">
+            <span class='outercountbutton'><i class="fa fa-plus-circle increaseroomcounter"></i></span>
+        </div>
+        <div class='selectbutton'>
+            <span class='shop_button dochoosebutton' gstype='submit' gs_callback='app.PmsNewBooking20.roomsAddedToBooking'>Choose room</span>
+        </div>
+    </div>
+    <?php
+}
+?>
+<style>
+    .freeroomresultbox .counterrow .fa {    
+        font-size: 25px;
+        cursor: pointer;
+        position: absolute;
+        top: 13px;
+        left: 4px; 
+    }
+    .freeroomresultbox { width: 200px; display:inline-block; border: solid 1px #bbb; background-color:#fff; margin: 10px; }
+    .freeroomresultbox .dochoosebutton { margin-top: 10px; width: 100%; display:inline-block; box-sizing: border-box; border:solid 1px #bbb; }
+    .freeroomresultbox .roomname { font-size: 20px; text-align: center; border-bottom: solid 1px #bbb;padding: 10px; }
+    .freeroomresultbox .numberavailable { font-size: 40px; text-align: center; }
+    .freeroomresultbox .price { padding: 10px; }
+    .freeroomresultbox .availroomstep { margin-top: 10px;}
+    .freeroomresultbox .outercountbutton { 
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+    }
+</style>

@@ -1,0 +1,130 @@
+<?php
+/* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$suggestions = $this->getApi()->getPmsManager()->findRelatedByUserId($this->getSelectedMultilevelDomainName(), $user->id);
+?>
+<h1>Room registered to <span class='bookersname'><?php echo $user->fullName; ?></span></h1>
+<div class='roomsaddedlist'>
+    <?php 
+    if(sizeof($booking->rooms) == 0) {
+        echo "No rooms has been added yet, select a time periode above and add some rooms.";
+    } else {
+        foreach($booking->rooms as $room) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+            ?>
+            <div class='roominformationbox'>
+                <div class='title'> <?php echo $item->name; ?>
+                    <span style='float:right;'>
+                        <?php
+                        echo date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end));
+                        ?>
+                    </span>
+                </div>
+                <div class='guestinformation'>
+                    <?php
+                    for($i = 0; $i < $room->numberOfGuests; $i++) {
+                        $guest = $room->guests[$i];
+                        ?>
+                        <div class='eachguestarea'>
+                            <div class='guestinformationrow' guestid='<?php echo $guest->guestId; ?>'>
+                                <span class='removeguest' 
+                                    gsclick='removeGuestFromRoom'
+                                    synchron="true" 
+                                    roomid='<?php echo $room->pmsBookingRoomId; ?>' 
+                                    gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'
+                                    guestid='<?php echo $guest->guestId; ?>'>
+                                    <i class='fa fa-trash-o'></i>
+                                </span>
+                                <input type='txt' class='gsniceinput1 nameinput updateguestinfofield' value='<?php echo $guest->name; ?>' placeholder='Guest name' fortype='name'>
+                                <input type='txt' class='gsniceinput1 emailinput updateguestinfofield' value='<?php echo $guest->email; ?>' placeholder='Guest email' fortype='email'>
+                                <input type='txt' class='gsniceinput1 prefixinput updateguestinfofield' value='<?php echo $guest->prefix; ?>' placeholder='Prefix' fortype='prefix'>
+                                <input type='txt' class='gsniceinput1 phoneinput updateguestinfofield' value='<?php echo $guest->phone; ?>' placeholder='Phone' fortype='phone'>
+                            </div>
+                            <div class='guestionsuggestionarea'><?php if(!$guest->name) { $this->printSuggestions($suggestions); } ?></div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    <span class='addanotherguest'
+                          gsclick='addGuestToRoom'
+                          synchron="true" 
+                          roomid='<?php echo $room->pmsBookingRoomId; ?>' 
+                          gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'
+                    >Add another guest</span>
+                </div>
+                <div class='roomfooterarea'>
+                    <span class='removeroom' 
+                          gsclick='removeRoomFromBooking'
+                          synchron="true" 
+                          roomid='<?php echo $room->pmsBookingRoomId; ?>' 
+                          gs_confirm='Are you sure you want to remove this room?'
+                          gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'>
+                        <i class='fa fa-trash-o' ></i>
+                    </span>
+                    <span class='pricetoroom'>
+                        <?php echo round($room->price, 2); ?>
+                        <i class='fa fa-edit'></i>
+                    </span>
+                </div>
+            </div>
+            <?php
+        }
+    }
+    if(sizeof($booking->rooms) > 0) { ?>
+        <span class='shop_button completeregistrationbutton' gsclick='completeBooking' synchron='true' gs_callback='app.PmsNewBooking20.bookingCompleted'>Complete registration <i class='fa fa-arrow-right'></i></span>
+    <?php } ?>
+ 
+</div>
+
+<style>
+    .pricetoroom { padding: 10px; box-sizing: border-box; font-size: 20px; line-height: 20px; cursor:pointer; border-left:  solid 1px #ddd; display:inline-block; float:right;}
+    .nameinput { width: 200px; margin-right: 10px; }
+    .emailinput { width: 250px; margin-right: 10px; }
+    .guestsuggestionrow { position:relative; }
+    .prefixinput { width: 30; margin-right: 4px; text-align: center; }
+    .phoneinput { width: 120px; margin-right: 10px; }
+    .roomfooterarea { font-size: 16px; background-color:#f6f6f6; color:#000; border-top: solid 1px #bbb; }
+    .removeguest {     background-color: red;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 16px;
+    margin-right: 2px;
+    cursor: pointer;
+    text-align: center;
+    width: 18px;
+    display: inline-block;}
+    .roomfooterarea .removeroom { padding: 10px; box-sizing: border-box; font-size: 20px; cursor:pointer; border-right:  solid 1px #ddd; display:inline-block; }
+    
+    .guestsuggestionname {
+        display:inline-block;
+        width: 35%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .guestsuggestionemail {
+        display:inline-block;
+        width: 35%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .guestsuggestionphone
+    {
+        display:inline-block;
+        width: 20%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .guestionsuggestionarea { padding: 10px; padding-left: 40px; }
+    .guestionsuggestionarea .addsuggestionarrow {
+        position: absolute;
+        left: -18px;
+        top: 4px;
+        cursor:pointer;
+    }
+    
+</style>

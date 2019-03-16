@@ -4412,6 +4412,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return null;
     }
 
+    @Override
+    public Double getPriceForRoomWhenBooking(Date start, Date end, String itemType) {
+         PmsBookingRooms room = new PmsBookingRooms();
+        room.bookingItemTypeId = itemType;
+        room.date = new PmsBookingDateRange();
+        room.date.start = start;
+        room.date.end = end;
+        room.guests.add(new PmsGuests());
+        setPriceOnRoom(room, true, getCurrentBooking());
+        return room.price;
+    }
+    
     public void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         room.priceWithoutDiscount = new Double(room.price);
@@ -9817,6 +9829,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsGuestOption> findRelatedGuests(PmsGuests guest) {
         List<PmsGuestOption> guests = new ArrayList();
         for(PmsBooking booking : bookings.values()) {
+            if(!booking.isCompletedBooking()) {
+                continue;
+            }
             for(PmsBookingRooms room : booking.rooms) {
                 for(PmsGuests g : room.guests) {
                     if(g.guestId.equals(guest.guestId)) {
@@ -9856,6 +9871,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return 1;
         }
         return (int)( diff / (1000 * 60 * 60 * 24));
+    }
+
+    @Override
+    public List<PmsGuestOption> findRelatedByUserId(String userId) {
+        List<PmsGuestOption> guests = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.userId == null || !booking.userId.equals(userId)) {
+                continue;
+            }
+            for(PmsBookingRooms room : booking.rooms) {
+                for(PmsGuests g : room.guests) {
+                    if(!g.hasAnyOfGuests(guests)) {
+                        PmsGuestOption guestoption = new PmsGuestOption();
+                        User usr = userManager.getUserById(booking.userId);
+                        guestoption.guest = g;
+                        if(usr != null) {
+                            guestoption.userName = usr.fullName;
+                            guestoption.userId = usr.id;
+                        }
+                        guests.add(guestoption);
+                    }
+                }
+            }
+        }
+        return guests;
     }
 
 }

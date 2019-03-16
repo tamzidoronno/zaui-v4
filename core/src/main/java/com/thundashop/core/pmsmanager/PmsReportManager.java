@@ -456,5 +456,26 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         }
         System.out.println("Total missing: " + totalMissing);
     }
+
+    @Override
+    public PmsUserStats getUserStatistics(String userId) {
+        PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(userId);
+        
+        PmsUserStats res = new PmsUserStats();
+        res.discounts = discount.discounts;
+        res.discountCode = discount.attachedDiscountCode;
+        res.discountType = discount.discountType;
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.userId = userId;
+        List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
+        res.numberOfBookings = bookings.size();
+        for(PmsBooking booking : bookings) {
+            if(res.lastBookingDate == null || res.lastBookingDate.before(booking.rowCreatedDate)) {
+                res.lastBookingDate = booking.rowCreatedDate;
+            }
+        }
+        return res;
+    }
     
 }

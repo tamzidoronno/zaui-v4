@@ -16,6 +16,13 @@ $bookingfilter->filterType = "active";
 $bookingfilter->includeDeleted = true;
 
 $list = $factory->getApi()->getPmsManager()->getSimpleRooms($_GET['engine'], $bookingfilter);
+
+$tmplist = array();
+foreach($list as $r) {
+    $tmplist[$r->room] = $r;
+}
+ksort($tmplist);
+$list = $tmplist;
 ?>
 <table cellspacing='1' cellpadding='1' bgcolor='#bbb'>
     <tr bgcolor='#fff' style='font-weight: bold;'>

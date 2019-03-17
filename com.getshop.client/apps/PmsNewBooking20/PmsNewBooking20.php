@@ -40,12 +40,30 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "</div>";
         
         echo "<script>";
-//        echo "app.PmsNewBooking20.setLastPage();";
+        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
+    }
+    
+    public function updateprice() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                foreach($r->priceMatrix as $day => $price) {
+                    $r->priceMatrix->{$day} = $_POST['data']['price'];
+                }
+                $r->price = $_POST['data']['price'];
+                $this->lockPriceOnRoom($r->pmsBookingRoomId);
+            }
+        }
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
     }
     
     public function changeUser($user) {
         
+    }
+    
+    public function unlockroom() {
+        $this->unlockPriceOnRoom($_POST['data']['roomid']);
     }
     
     public function completeBooking() {
@@ -146,7 +164,8 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             }
         }
         
-        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
+        $updatePrice = $this->hasLockedPrice($_POST['data']['roomid']);
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, $updatePrice);
         $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $booking->id);
     }
     
@@ -161,7 +180,8 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             }
         }
         
-        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
+        $updatePrice = $this->hasLockedPrice($_POST['data']['roomid']);
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, $updatePrice);
         $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $booking->id);
     }
 
@@ -185,6 +205,25 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             }
         }
     }
+
+    public function lockPriceOnRoom($roomId) {
+        if(!isset($_SESSION['lockpriceonroom'])) {
+            $_SESSION['lockpriceonroom'] = array();
+        }
+        $_SESSION['lockpriceonroom'][$roomId] = true;
+    }
+    
+    public function unlockPriceOnRoom($roomId) {
+        unset($_SESSION['lockpriceonroom'][$roomId]);
+    }
+    
+    public function hasLockedPrice($roomId) {
+        if(isset($_SESSION['lockpriceonroom'][$roomId])) {
+            return true;
+        }
+        return false;
+    }
+    
 
 }
 ?>

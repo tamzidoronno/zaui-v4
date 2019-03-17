@@ -6,7 +6,14 @@ app.PmsNewBooking20 = {
         $(document).on('click','.PmsNewBooking20 .increaseroomcounter', app.PmsNewBooking20.increaseRoomCounter);
         $(document).on('click','.PmsNewBooking20 .decreaseroomcounter', app.PmsNewBooking20.decreaseRoomCounter);
         $(document).on('click','.PmsNewBooking20 .addsuggestionarrow', app.PmsNewBooking20.addSuggestion);
+        $(document).on('click','.PmsNewBooking20 .editpriceonroombutton', app.PmsNewBooking20.toggleEditPrice);
         $(document).on('keyup','.PmsNewBooking20 .updateguestinfofield', app.PmsNewBooking20.updateGuestInfo);
+    },
+    toggleEditPrice : function() {
+        $(this).closest('.pricetoroom').hide();
+        $(this).closest('.roomfooterarea').find('.editpriceonroom').show();
+        $(this).closest('.roomfooterarea').find('.editpriceonroom').find('.editroompriceinput').focus();
+        $(this).closest('.roomfooterarea').find('.editpriceonroom').find('.editroompriceinput').select();
     },
     updateGuestInfo : function() {
         var updatingRoomVal = $(this).val();
@@ -110,6 +117,9 @@ app.PmsNewBooking20 = {
         $('.PmsNewBooking20 .newbookingprocess[for="'+goto+'"]').fadeIn();
         if(goto === "newbookingstep2") {
             app.PmsNewBooking20.loadSelectedBooking();
+        }
+        if(goto === "search") {
+            $('.searchcustomerinput').focus();
         }
     }
 };

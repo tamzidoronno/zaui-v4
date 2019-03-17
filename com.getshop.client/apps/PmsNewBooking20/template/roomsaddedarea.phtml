@@ -62,9 +62,30 @@ $suggestions = $this->getApi()->getPmsManager()->findRelatedByUserId($this->getS
                           gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'>
                         <i class='fa fa-trash-o' ></i>
                     </span>
+                    <span class='editpriceonroom' gstype="form" method="updateprice" synchron='true'>
+                        <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
+                        <input type='txt' 
+                               class='gsniceinput1 editroompriceinput' 
+                               gsname='price'
+                               gstype='submitenter' 
+                               gs_callback='app.PmsNewBooking20.loadSelectedBooking' 
+                               value="<?php echo round($room->price, 2); ?>">
+                        <span class='shop_button' gstype='submit' gs_callback='app.PmsNewBooking20.loadSelectedBooking'>Update price</span>
+                    </span>
                     <span class='pricetoroom'>
+                        <?php
+                        if($this->hasLockedPrice($room->pmsBookingRoomId)) {
+                            ?><i class='fa fa-lock' 
+                               gstype='clicksubmit'
+                               gsname='roomid'
+                               gsvalue='<?php echo $room->pmsBookingRoomId; ?>'
+                               method='unlockroom'
+                               gs_callback='app.PmsNewBooking20.loadSelectedBooking' 
+                               title='Room price is locked to this price, meaning it will not change due to changes if you update guest count etc, click to remove lock.'></i><?php
+                        }
+                        ?>
                         <?php echo round($room->price, 2); ?>
-                        <i class='fa fa-edit'></i>
+                        <i class='fa fa-edit editpriceonroombutton'></i>
                     </span>
                 </div>
             </div>
@@ -78,6 +99,8 @@ $suggestions = $this->getApi()->getPmsManager()->findRelatedByUserId($this->getS
 </div>
 
 <style>
+    .editroompriceinput { width: 70px; }
+    .editpriceonroom { display: none; float:right;padding-top: 2px;padding-right: 2px; }
     .pricetoroom { padding: 10px; box-sizing: border-box; font-size: 20px; line-height: 20px; cursor:pointer; border-left:  solid 1px #ddd; display:inline-block; float:right;}
     .nameinput { width: 200px; margin-right: 10px; }
     .emailinput { width: 250px; margin-right: 10px; }
@@ -85,16 +108,18 @@ $suggestions = $this->getApi()->getPmsManager()->findRelatedByUserId($this->getS
     .prefixinput { width: 30; margin-right: 4px; text-align: center; }
     .phoneinput { width: 120px; margin-right: 10px; }
     .roomfooterarea { font-size: 16px; background-color:#f6f6f6; color:#000; border-top: solid 1px #bbb; }
-    .removeguest {     background-color: red;
-    color: #fff;
-    padding: 5px;
-    border-radius: 3px;
-    font-size: 16px;
-    margin-right: 2px;
-    cursor: pointer;
-    text-align: center;
-    width: 18px;
-    display: inline-block;}
+    .removeguest {     
+        background-color: red;
+        color: #fff;
+        padding: 5px;
+        border-radius: 3px;
+        font-size: 16px;
+        margin-right: 2px;
+        cursor: pointer;
+        text-align: center;
+        width: 18px;
+        display: inline-block;
+    }
     .roomfooterarea .removeroom { padding: 10px; box-sizing: border-box; font-size: 20px; cursor:pointer; border-right:  solid 1px #ddd; display:inline-block; }
     
     .guestsuggestionname {

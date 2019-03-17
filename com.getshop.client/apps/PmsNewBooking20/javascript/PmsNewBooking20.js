@@ -15,6 +15,9 @@ app.PmsNewBooking20 = {
         $(document).on('keyup','.PmsNewBooking20 .updateguestinfofield', app.PmsNewBooking20.updateGuestInfo);
         $(document).on('keyup','.PmsNewBooking20 .filteraddonsinlist', app.PmsNewBooking20.filterAddAddonsList);
     },
+    bookingSelected : function() {
+        app.PmsNewBooking20.continueToStep2();
+    },
     filterAddAddonsList : function() {
         var val = $(this).val();
         $('.addaddonrow').each(function() {
@@ -179,6 +182,9 @@ app.PmsNewBooking20 = {
         }
         if(goto === "search") {
             $('.searchcustomerinput').focus();
+        }
+        if(goto === "addtoexisting") {
+            $('.searchforbookinginput').focus();
         }
     }
 };

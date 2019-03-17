@@ -18,6 +18,10 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("roomsaddedarea");
     }
     
+    public function selectbooking() {
+        $this->getApi()->getPmsManager()->setCurrentBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+    }
+    
     public function addTypesToBooking() {
         $type = $_POST['data']['typeid'];
         $start = $this->convertToJavaDate($_POST['data']['start']);
@@ -31,6 +35,10 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     
     public function loadRoomsAddedToBookingList() {
         $this->includefile("roomsaddedarea");
+    }
+    
+    public function searchBooking() {
+        $this->includefile("searchbookingresult");
     }
     
     public function render() {
@@ -67,7 +75,8 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     }
     
     public function completeBooking() {
-        $booking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $this->getApi()->getPmsManager()->simpleCompleteCurrentBooking($this->getSelectedMultilevelDomainName());
         echo $booking->id;
     }
     

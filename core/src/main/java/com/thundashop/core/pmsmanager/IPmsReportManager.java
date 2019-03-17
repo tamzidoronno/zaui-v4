@@ -35,5 +35,8 @@ public interface IPmsReportManager {
     @Administrator
     public List<PmsLog> getCleaningLog(Date start, Date end);
     
+    @Administrator
+    public PmsUserStats getUserStatistics(String userId);
+    
    
 }

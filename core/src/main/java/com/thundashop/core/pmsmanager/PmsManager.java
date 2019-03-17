@@ -228,6 +228,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String overrideNotificationTitle;
     private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
     private boolean convertedDiscountSystem = false;
+    private String currentBookingId = "";
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -514,7 +515,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (getSession() == null) {
             logPrint("Warning, no session set yet");
         }
+        
+        
         PmsBooking result = findBookingForSession();
+        if(currentBookingId != null && !currentBookingId.isEmpty()) {
+            result = getBookingUnsecure(currentBookingId);
+        }
 
         if (result == null) {
             result = startBooking();
@@ -529,6 +535,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking startBooking() {
+        currentBookingId = null;
         PmsBooking currentBooking = findBookingForSession();
 
         if (currentBooking != null) {
@@ -1903,7 +1910,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void removeFromCurrentBooking(String roomId) throws Exception {
         PmsBooking booking = getCurrentBooking();
         ArrayList toRemove = new ArrayList();
-        for (PmsBookingRooms room : booking.getActiveRooms()) {
+        for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            if(room.isAddedToBookingEngine()) {
+                bookingEngine.deleteBooking(room.bookingId);
+            }
             if (room.pmsBookingRoomId.equals(roomId)) {
                 toRemove.add(room);
             }
@@ -4412,6 +4422,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return null;
     }
 
+    @Override
+    public Double getPriceForRoomWhenBooking(Date start, Date end, String itemType) {
+         PmsBookingRooms room = new PmsBookingRooms();
+        room.bookingItemTypeId = itemType;
+        room.date = new PmsBookingDateRange();
+        room.date.start = start;
+        room.date.end = end;
+        room.guests.add(new PmsGuests());
+        setPriceOnRoom(room, true, getCurrentBooking());
+        return room.price;
+    }
+    
     public void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         room.priceWithoutDiscount = new Double(room.price);
@@ -9467,12 +9489,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             config.wubookAutoCharging = true;
             saveConfiguration(config);
         }
-        
+        Integer daysBeforeToCharge = config.autochargeCardDaysBefore;
+        if(daysBeforeToCharge < 0) {
+            return new ArrayList();
+        }
         
         List<PmsBooking> allbookings = getAllBookings(null);
         List<PmsWubookCCardData> resultToReturn = new ArrayList();
         for(PmsBooking book : allbookings) {
+            
             if(!book.tryAutoCharge) {
+                continue;
+            }
+            
+            Integer daysUntilStart = getDaysUntilStart(book);
+            
+            if(daysUntilStart > daysBeforeToCharge) {
+                continue;
+            }
+            
+            boolean avoidChargeNow = false;
+            for(String orderId : book.orderIds) {
+                Order ord = orderManager.getOrder(orderId);
+                if(ord.isPrepaidByOTA() && daysUntilStart != 0) {
+                    avoidChargeNow = true;
+                }
+            }
+            if(avoidChargeNow && daysUntilStart > 0) {
                 continue;
             }
             
@@ -9796,6 +9839,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsGuestOption> findRelatedGuests(PmsGuests guest) {
         List<PmsGuestOption> guests = new ArrayList();
         for(PmsBooking booking : bookings.values()) {
+            if(!booking.isCompletedBooking()) {
+                continue;
+            }
             for(PmsBookingRooms room : booking.rooms) {
                 for(PmsGuests g : room.guests) {
                     if(g.guestId.equals(guest.guestId)) {
@@ -9827,6 +9873,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return booking.suggestedUserIds;
     }
 
+
     @Override
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId) {
         PmsBooking booking = getBooking(pmsBookingId);
@@ -9850,6 +9897,83 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         summary.sortIt();
         return summary;
 
+    }
+    
+    private Integer getDaysUntilStart(PmsBooking book) {
+        Date now = new Date();
+        Date startDate = book.getStartDate();
+        long diff = (startDate.getTime() - now.getTime());
+        if(diff < 86400000 && diff > 1080000) {
+            return 1;
+        }
+        return (int)( diff / (1000 * 60 * 60 * 24));
+    }
+
+    @Override
+    public List<PmsGuestOption> findRelatedByUserId(String userId) {
+        List<PmsGuestOption> guests = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.userId == null || !booking.userId.equals(userId)) {
+                continue;
+            }
+            for(PmsBookingRooms room : booking.rooms) {
+                for(PmsGuests g : room.guests) {
+                    if(!g.hasAnyOfGuests(guests)) {
+                        if(g.name == null || g.name.trim().isEmpty()) {
+                            continue;
+                        }
+                        PmsGuestOption guestoption = new PmsGuestOption();
+                        User usr = userManager.getUserById(booking.userId);
+                        guestoption.guest = g;
+                        if(usr != null) {
+                            guestoption.userName = usr.fullName;
+                            guestoption.userId = usr.id;
+                        }
+                        guests.add(guestoption);
+                    }
+                }
+            }
+        }
+        
+        if(guests.isEmpty()) {
+            User user = userManager.getUserById(userId);
+            PmsGuests g = new PmsGuests();
+            g.email = user.emailAddress;
+            g.name = user.fullName;
+            g.phone = user.cellPhone;
+            g.prefix = user.prefix;
+            
+            PmsGuestOption opt = new PmsGuestOption();
+            opt.guest = g;
+            guests.add(opt);
+        }
+        
+        return guests;
+    }
+
+    @Override
+    public void setCurrentBooking(String bookingId) {
+        currentBookingId = bookingId;
+    }
+
+    @Override
+    public void simpleCompleteCurrentBooking() {
+        PmsBooking currentBooking = getCurrentBooking();
+        List<String> roomInWaiting = new ArrayList();
+        for(PmsBookingRooms room : currentBooking.rooms) {
+            if(!room.isAddedToBookingEngine()) {
+                String added = addBookingToBookingEngine(currentBooking, room);
+                if(added != null && !added.isEmpty()) {
+                    roomInWaiting.add(room.pmsBookingRoomId);
+                }
+            }
+        }
+        for(String roomId : roomInWaiting) {
+            addToWaitingList(roomId);
+        }
+        currentBooking.confirmed = true;
+        currentBooking.markAsCompleted();
+        saveBooking(currentBooking);
     }
 
 }

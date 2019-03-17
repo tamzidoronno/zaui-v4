@@ -1633,7 +1633,7 @@ function getshop_setDatePicker() {
         }
         $('.ui-datepicker').remove();
         
-        $('.date_picker_start_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        $('.date_picker_start_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay: 1,
             onSelect: function(dateText) {
                var date = moment.utc(dateText, "DD.MM.YYYY").local();
                var currentEnd = $('#date_picker_end').val();
@@ -1655,7 +1655,7 @@ function getshop_setDatePicker() {
                }
              }
          });
-        $('.date_picker_end_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        $('.date_picker_end_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay: 1,
             onSelect: function(dateText) {
                var date = moment.utc(dateText, "DD.MM.YYYY").local();
                var currentStart = $('.date_picker_start_gsl').val();

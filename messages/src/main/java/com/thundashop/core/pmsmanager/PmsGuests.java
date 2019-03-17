@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,5 +54,14 @@ public class PmsGuests implements Serializable {
             return false;
         }
         return (matchEmail && matchName && matchPhone);
+    }
+
+    boolean hasAnyOfGuests(List<PmsGuestOption> guests) {
+        for(PmsGuestOption opt : guests) {
+            if(hasAnyOfGuest(opt.guest)) {
+               return true; 
+            }
+        }
+        return false;
     }
 }

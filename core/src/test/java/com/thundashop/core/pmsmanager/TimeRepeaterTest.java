@@ -84,6 +84,7 @@ public class TimeRepeaterTest {
         doTestWeeklyRepeatInterval(2, false, false, false, false, false, true, true,5);
         doTestWeeklyRepeatInterval(5, false, false, false, false, false, true, true,1);
         doTestWeeklyRepeatInterval(10, false, false, false, false, false, true, true,1);
+        doSpecialWeeklyTest();
     }
     
     @Test
@@ -229,6 +230,44 @@ public class TimeRepeaterTest {
             }
         }
         
+    }
+
+    private void doSpecialWeeklyTest() {
+        TimeRepeaterData data = new TimeRepeaterData();
+        int expect = 6;
+        TimeRepeaterDateRange firstEvent = new TimeRepeaterDateRange();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            firstEvent.start = sdf.parse("2016-01-04");
+            data.endingAt = sdf.parse("2016-01-14");
+        }catch(Exception e) {
+            assertTrue(false);
+        }
+        
+        firstEvent.end = new Date(firstEvent.start.getTime()+(60*1000*60*3));
+        
+        data.firstEvent = firstEvent;
+        data.repeatPeride = 1;
+        data.repeatEachTime = 1;
+        
+        data.repeatMonday = true;
+        data.repeatTuesday = true;
+        data.repeatWednesday = true;
+        data.repeatThursday = false;
+        data.repeatFriday = false;
+        data.repeatSaturday = false;
+        data.repeatSunday = false;
+        
+        
+        TimeRepeater instance = new TimeRepeater();
+        List<TimeRepeaterDateRange> result = instance.generateRange(data);
+        
+        assertEquals(expect, result.size());
+        
+        for(TimeRepeaterDateRange res : result) {
+            assertNotNull(res.start);
+            assertNotNull(res.end);
+        }
     }
 
     

@@ -1,0 +1,47 @@
+<?php
+/* @var $this \ns_74220775_43f4_41de_9d6e_64a189d17e35\PmsNewBooking */
+
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->searchWord = $_POST['data']['keyword'];
+
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedMultilevelDomainName(), $filter);
+
+$i = 0;
+foreach($bookings as $booking) {
+    $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+    $firstCheckIn = null;
+    $lastCheckout = null;
+    foreach($booking->rooms as $r) {
+        if($firstCheckIn == null || $firstCheckIn > strtotime($r->date->start)) {
+            $firstCheckIn = strtotime($r->date->start);
+        }
+        if($lastCheckout == null || $lastCheckout < strtotime($r->date->end)) {
+            $lastCheckout = strtotime($r->date->end);
+        }
+    }
+    ?>
+    <div class='searchbookingresultentry'>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Booking id</span><span class='searchbookingresultentryrowvalue'><?php echo $booking->incrementBookingId; ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Name</span><span class='searchbookingresultentryrowvalue'><?php echo $user->fullName; ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Number of rooms</span><span class='searchbookingresultentryrowvalue'><?php echo sizeof($booking->rooms); ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>First check in</span><span class='searchbookingresultentryrowvalue'><?php echo date("d.m.Y", $firstCheckIn); ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Last checkout</span><span class='searchbookingresultentryrowvalue'><?php echo date("d.m.Y", $lastCheckout); ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Total price</span><span class='searchbookingresultentryrowvalue'><?php echo $booking->totalPrice; ?></span></div>
+        <div class="searchbookingresultentryrow">
+            <span class="shop_button selectbookingbox" gsclick='selectbooking' bookingid='<?php echo $booking->id; ?>' gs_callback='app.PmsNewBooking20.bookingSelected' synchron='true'>Select booking</span>
+        </div>
+    </div>
+    <?php
+    $i++;
+    if($i >= 20) {
+        break;
+    }
+}
+?>
+
+<style>
+.searchbookingresultentry { width: 250px; background-color:#fff; text-align: left; display:inline-block; margin: 10px; box-sizing: border-box; border: solid 1px #bbb; border-bottom: solid 0px; }
+.searchbookingresultentryrow { padding: 3px; border-bottom: solid 1px #bbb;}
+.selectbookingbox { width: 100%; box-sizing: border-box; }
+.searchbookingresultentryrowkey { display:inline-block; width: 120px; }
+</style>

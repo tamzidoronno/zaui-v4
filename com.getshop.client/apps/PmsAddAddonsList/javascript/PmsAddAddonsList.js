@@ -3,6 +3,17 @@ app.PmsAddAddonsList = {
         $(document).on('click', '.PmsAddAddonsList .addAddonsToRoom', app.PmsAddAddonsList.addAddonsToRoom);
         $(document).on('click', '.PmsAddAddonsList .goBackToStart', app.PmsAddAddonsList.showFirstStep);
         $(document).on('click', '.PmsAddAddonsList .completeAddAddon', app.PmsAddAddonsList.completeAddAddon);
+        $(document).on('keyup', '.PmsAddAddonsList .searchaddaddonslist', app.PmsAddAddonsList.searchAddAddonsList);
+    },
+    searchAddAddonsList : function() {
+        var val = $(this).val();
+        $('.addonsrow').each(function() {
+            if($(this).text().toLowerCase().indexOf(val.toLowerCase()) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
     },
     completeAddAddon : function() {
         var panel = $(this).closest('[gstype="form"]');

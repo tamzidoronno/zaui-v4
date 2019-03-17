@@ -1,0 +1,133 @@
+.PmsNewBooking20 .newbookingoption { width: 300px; display:inline-block; height: 300px; border: solid 1px #bbb; text-align: center; margin: 20px;  box-sizing: border-box; cursor:pointer; background-color:#fff; }
+.PmsNewBooking20 .newbookingoption:hover,
+.PmsNewBooking20 .newbookingoption:hover .title
+{ border-color: green; }
+.PmsNewBooking20 .newbookingoption .title { font-size: 20px; border-bottom: solid 1px #bbb; padding: 10px; }
+.PmsNewBooking20 .newbookingoption .descriptionimage img { height: 150px; width: 150px; margin-top: 10px; margin-bottom: 10px; }
+.PmsNewBooking20 .newbookingprocess { display:none; text-align: center;}
+.PmsNewBooking20 .newbookingprocess[for="start"] { display:block; text-align: center;}
+.PmsNewBooking20 .edit_user_btn,
+.PmsNewBooking20 .user_view { display:none !important; }
+.PmsNewBooking20 .GetShopQuickUser .change_user_form, 
+.PmsNewBooking20 .GetShopQuickUser .edit_details_of_user { position:initial; margin: auto; }
+.PmsNewBooking20 .edit_details_of_user,
+.PmsNewBooking20 .change_user { text-align: left; }
+.PmsNewBooking20 .edit_details_of_user .colbox .row { margin-bottom: 10px; }
+.PmsNewBooking20 .GetShopQuickUser .change_user_form .tabs .tab { 
+    border-radius: 0px;
+    color: #FFF;
+    background: #23314e;
+    background-color: #23314e;
+    line-height: 34px;
+    height: 37px;
+    width:110px;
+    text-align: center;
+}
+
+
+.PmsNewBooking20 .insideheader { text-align: center; border-bottom: solid 1px #efefef;padding-bottom: 3px; margin-bottom: 3px; }
+.PmsNewBooking20 .bookinginformationkey { display:inline-block; width: 110px; }
+.PmsNewBooking20 .searchcustomerresultbox { border: solid 1px #bbb; display:inline-block; width: 270px; box-sizing: border-box; background-color:#fff; margin: 10px; }
+.PmsNewBooking20 .searchcustomerresultbox .fullname { 
+    font-size: 16px; border-bottom: solid 1px #bbb;padding: 10px;  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.PmsNewBooking20 .searchcustomerresultbox .usersresult { text-align: left; padding: 10px; height:180px; }
+.PmsNewBooking20 .searchcustomerresultbox .selectusersbutton { width: 100%; box-sizing: border-box; }
+
+
+
+/* Step2 */
+.PmsNewBooking20 .newbookingprocess[for="newbookingstep2"] .startdate { width: 80px; text-align: center; }
+.PmsNewBooking20 .newbookingprocess[for="newbookingstep2"] .enddate { width: 80px; text-align: center; }
+.PmsNewBooking20 .searchforbooking { padding: 10px; background-color: #fff; }
+.PmsNewBooking20 .roominformationbox { text-align: left; background-color:#fff; border: solid 1px #bbb; max-width: 800px; margin:auto;margin-bottom: 10px; }
+.PmsNewBooking20 .roominformationbox .title { font-size: 16px; padding: 10px; border-bottom: solid 1px #bbb; margin-bottom: 10px; }
+.PmsNewBooking20 .roominformationbox .addanotherguest { color: blue; font-size: 12px; cursor:pointer; margin-top: 5px; display:inline-block; }
+.PmsNewBooking20 .roominformationbox .guestinformation { padding: 10px; }
+.PmsNewBooking20 .completeregistrationbutton { max-width: 780px; width:100%; margin-bottom: 100px;}
+.PmsNewBooking20 .addroomssummary {     background-color: #fff; max-width: 780px; margin: auto; padding: 10px; border: solid 1px #bbb;font-size: 20px;margin-top: 20px;margin-bottom: 20px; }
+.PmsNewBooking20 .addroomssummary .description { display:none; }
+.PmsNewBooking20 .addroomssummary .addroomscategories {width: 100%;box-sizing: border-box; }
+.PmsNewBooking20 .addroomssummary.disabled .description { display:block; }
+.PmsNewBooking20 .addroomssummary.disabled .addroomscategories { background-color:#efefef; cursor: initial;  }
+.PmsNewBooking20 .addAddonButton {color: blue; cursor:pointer; }
+.PmsNewBooking20 .editroompriceinput { width: 70px; }
+.PmsNewBooking20 .editpriceonroom { display: none; float:right;padding-top: 2px;padding-right: 2px; }
+.PmsNewBooking20 .pricetoroom { padding: 10px; box-sizing: border-box; font-size: 20px; line-height: 20px; cursor:pointer; border-left:  solid 1px #ddd; display:inline-block; float:right;}
+.PmsNewBooking20 .nameinput { width: 200px; margin-right: 10px; }
+.PmsNewBooking20 .emailinput { width: 250px; margin-right: 10px; }
+.PmsNewBooking20 .guestsuggestionrow { position:relative; }
+.PmsNewBooking20 .prefixinput { width: 30; margin-right: 4px; text-align: center; }
+.PmsNewBooking20 .phoneinput { width: 120px; margin-right: 10px; }
+.PmsNewBooking20 .roomfooterarea { font-size: 16px; background-color:#f6f6f6; color:#000; border-top: solid 1px #bbb; }
+.PmsNewBooking20 .removeguest {     
+        background-color: red;
+        color: #fff;
+        padding: 5px;
+        border-radius: 3px;
+        font-size: 16px;
+        margin-right: 2px;
+        cursor: pointer;
+        text-align: center;
+        width: 18px;
+        display: inline-block;
+    }
+.PmsNewBooking20 .roomfooterarea .removeroom { padding: 10px; box-sizing: border-box; font-size: 20px; cursor:pointer; border-right:  solid 1px #ddd; display:inline-block; }
+    
+.PmsNewBooking20 .guestsuggestionname {
+        display:inline-block;
+        width: 35%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+.PmsNewBooking20 .guestsuggestionemail {
+        display:inline-block;
+        width: 35%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+.PmsNewBooking20 .guestsuggestionphone
+    {
+        display:inline-block;
+        width: 20%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+.PmsNewBooking20 .guestionsuggestionarea { padding: 10px; padding-left: 40px; }
+.PmsNewBooking20 .guestionsuggestionarea .addsuggestionarrow {
+    position: absolute;
+    left: -18px;
+    top: 4px;
+    cursor:pointer;
+}
+.PmsNewBooking20 .listaddon { color: blue; cursor:pointer; }
+.PmsNewBooking20 .addaddonrow:hover { background-color:#efefef; padding-left: 20px; } 
+.PmsNewBooking20 .addaddonrow { padding: 10px; border-bottom: solid 1px #bbb; cursor:pointer;text-align: left; }
+.PmsNewBooking20 .addaddonrow.hideaddonrow { display: none; }
+.PmsNewBooking20 .closeaddonspanel { padding: 10px; border-bottom: solid 1px #bbb; cursor:pointer; }
+.PmsNewBooking20 .addonspanel { border: solid 1px #bbb; background-color:#fff; width: 300px; display:inline-block; border-bottom: solid 0px; display:none; z-index:2;}
+.PmsNewBooking20 .addonspanel .fa { float:right; }
+.freeroomresultbox .counterrow .fa {    
+        font-size: 25px;
+        cursor: pointer;
+        position: absolute;
+        top: 13px;
+        left: 4px; 
+    }
+.PmsNewBooking20 .freeroomresultbox { width: 200px; display:inline-block; border: solid 1px #bbb; background-color:#fff; margin: 10px; }
+.PmsNewBooking20 .freeroomresultbox .dochoosebutton { margin-top: 10px; width: 100%; display:inline-block; box-sizing: border-box; border:solid 1px #bbb; }
+.PmsNewBooking20 .freeroomresultbox .roomname { font-size: 20px; text-align: center; border-bottom: solid 1px #bbb;padding: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.PmsNewBooking20 .freeroomresultbox .numberavailable { font-size: 40px; text-align: center; }
+.PmsNewBooking20 .freeroomresultbox .price { padding: 10px; }
+.PmsNewBooking20 .freeroomresultbox .availroomstep { margin-top: 10px;}
+.PmsNewBooking20 .freeroomresultbox .outercountbutton { 
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+    }

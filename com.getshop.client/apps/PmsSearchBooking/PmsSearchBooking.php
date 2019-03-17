@@ -115,7 +115,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $this->includefile("nobookingsyet");
             return;
         }
-//        
+        $this->getApi()->getPmsManager()->getCardsToSave($this->getSelectedMultilevelDomainName());
         return $this->renderDataTable();
     }
     

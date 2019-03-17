@@ -1,0 +1,59 @@
+<?php
+/* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$searchfield = $_POST['data']['searchfield'];
+
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->searchWord = $searchfield;
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedMultilevelDomainName(), $filter);
+
+$uniqueusers = array();
+$uniqueusersbookings = array();
+foreach($bookings as $booking) {
+    if(!in_array($booking->userId,$uniqueusers)) {
+        $uniqueusersbookings[] = $booking;
+        $uniqueusers[] = $booking->userId;
+    }
+}
+$i = 0;
+foreach($uniqueusers as $userId) {
+    $user = $this->getApi()->getUserManager()->getUserById($userId);
+    $name = $user->fullName ? $user->fullName : "N/A";
+    echo "<div class='searchcustomerresultbox'>";
+    echo "<div class='fullname'>" . $name . "</div>";
+    echo "<div class='usersresult'>";
+    echo "<div class='insideheader'>Address</div>";
+    if($user->address) {
+        echo $user->address->address . "<br>";
+        echo $user->address->city . " " . $user->address->postCode . "<br>";
+    } else { 
+        echo "<br><br>";
+    }
+    
+    $bookingstats = $this->getApi()->getPmsReportManager()->getUserStatistics($this->getSelectedMultilevelDomainName(), $userId);
+    
+    $discounts = "N/A";
+    if(sizeof(array_keys((array)$bookingstats->discounts)) > 0) {
+        $discounts = "<b>Yes (" . $this->translateDiscountType($bookingstats->discountType) . ")</b>";
+    }
+    if($bookingstats->discountCode) {
+        $discounts = "<b>Yes, discount code</b>";
+    }
+    
+    
+    echo "<br>";
+    echo "<div class='insideheader'>Booking information</div>";
+    echo "<span class='bookinginformationkey'>Booking count</span>".$bookingstats->numberOfBookings."<br>";
+    echo "<span class='bookinginformationkey'>Discount</span>".$discounts."<br>";
+    echo "<span class='bookinginformationkey'>Last booked</span>".date("d.m.Y", strtotime($bookingstats->lastBookingDate))."<br>";
+    
+    $code = $bookingstats->discountCode ? $bookingstats->discountCode : "N/A";
+    echo "<span class='bookinginformationkey'>Discount code</span>".$code."<br>";
+    echo "</div>";
+    echo "<span class='shop_button selectusersbutton' gsclick='selectUser' userid='$userId' gs_callback='app.PmsNewBooking20.continueToStep2'>Select customer</span>";
+    echo "</div>";
+    $i++;
+    if($i >= 20) {
+        break;
+    }
+}
+?>

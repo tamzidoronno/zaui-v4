@@ -1,0 +1,57 @@
+<?php
+/* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$start = $_POST['data']['start'] . " " . $config->defaultStart;
+$start = $this->convertToJavaDate(strtotime($start));
+
+if (!$_POST['data']['start'] || !$_POST['data']['end']) {
+    echo "<div class='searchforbooking'>The date you have selected are invalid, please choose another time periode.</div>";
+    return;
+}
+
+$end = $_POST['data']['end'] . " " . $config->defaultEnd;
+$end = $this->convertToJavaDate(strtotime($end));
+$items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
+$total = 0;
+?>
+<div class='datetitle'><?php echo date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end)); ?></div>
+<div class='avilabilityarea' gstype='form' method='registerRoomsFromAvailabilityCheck' synchron='true' gstoarea='.roomsreadytobeadded'>
+    <input type='hidden' gsname='start' value='<?php echo strtotime($start); ?>'>
+    <input type='hidden' gsname='end' value='<?php echo strtotime($end); ?>'>
+    <?php
+    foreach ($items as $item) {
+        $count = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $item->id, $start, $end);
+        $total += $count;
+        ?>
+        <div class='searchbookingrow'>
+            <span class='itemtypename'><?php echo $item->name; ?></span>
+            <span class='numberavailable'><?php echo $count; ?></span>
+            <span class='selection counterrow'>
+                <i class='fa fa-minus-circle decreaseroomcounter'></i>
+                <input type='text' value='0' class='gsniceinput1 roomcount' gsname='<?php echo $item->id; ?>' style='width: 20px;text-align: center;'>
+                <i class='fa fa-plus-circle increaseroomcounter'></i>
+            </span>
+        </div>
+        <?php
+    }
+    ?>
+    <div class='searchbookingrow'>
+        <span class='itemtypename'>Total</span>
+        <span class='numberavailable'><?php echo $total; ?></span>
+        <span class='selection'><span class='selectallbutton'>select all</span>
+        </span>
+    </div>
+    <div><span class='shop_button selectavailablerooms' gstype='submit'>Select room(s)</span></div>
+</div>
+<style>
+    .avilabilityarea .fa { cursor:pointer; }
+    .selectavailablerooms {max-width: 480px; width: 100%; }
+    .selectallbutton { color: blue; cursor:pointer; }
+    .avilabilityarea { border: solid 1px #bbb; border-bottom: solid 0px;background-color:#fff; max-width: 510px; display:inline-block; margin:auto;}
+    .searchbookingrow { border-bottom: solid 1px #bbb; padding: 5px; margin:auto; text-align: left; font-size: 18px; }
+    .selection .fa { font-size: 18px; }
+    .itemtypename { width: 200px; display:inline-block; }
+    .numberavailable { width: 200px; display:inline-block; }
+    .datetitle { font-size: 30px; margin-bottom: 10px; }
+</style>
+

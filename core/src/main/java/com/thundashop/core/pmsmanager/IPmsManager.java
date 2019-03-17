@@ -40,6 +40,12 @@ public interface IPmsManager {
     public void warnFailedBooking(PmsBooking booking);
     
     @Administrator
+    public void setCurrentBooking(String bookingId);
+    
+    @Administrator
+    public void simpleCompleteCurrentBooking();
+    
+    @Administrator
     public void markRoomAsCleanedWithoutLogging(String itemId);
             
     @Administrator
@@ -51,6 +57,9 @@ public interface IPmsManager {
     @Administrator
     public boolean hasLockSystemActive();
     
+    @Administrator
+    public Double getPriceForRoomWhenBooking(Date start, Date end, String itemType);
+            
     @Administrator
     public void createAllVirtualOrders();
     
@@ -503,6 +512,9 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsGuestOption> findRelatedGuests(PmsGuests guest);
+    
+    @Administrator
+    public List<PmsGuestOption> findRelatedByUserId(String userId);
     
     @Administrator
     public List<String> addSuggestedUserToBooking(String userId);

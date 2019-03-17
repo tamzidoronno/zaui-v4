@@ -177,6 +177,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->clearCache();
     }
     
+    public function moveToWaitingList() {
+        $room = $this->getSelectedRoom();
+        $this->getApi()->getPmsManager()->addToWaitingList($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId);
+        $this->clearCache();
+    }
+    
     public function removeFromOverBookingList() {
         $room = $this->getSelectedRoom();
         $booking = $this->getPmsBooking();

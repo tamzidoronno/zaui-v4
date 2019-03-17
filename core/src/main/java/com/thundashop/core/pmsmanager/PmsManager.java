@@ -9827,4 +9827,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return booking.suggestedUserIds;
     }
 
+    @Override
+    public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId) {
+        PmsBooking booking = getBooking(pmsBookingId);
+        
+        if (booking == null) {
+            return null;
+        }
+        
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        List<String> orderIds = getExtraOrderIds(booking.id);
+        orderIds.addAll(booking.orderIds);
+        
+        List<Order> orders = orderIds
+            .stream()
+            .map(id -> orderManager.getOrder(id))
+            .collect(Collectors.toList());
+
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+        PmsRoomPaymentSummary summary = differ.getSummary();
+        summary.sortIt();
+        return summary;
+
+    }
+
 }

@@ -681,6 +681,144 @@
     font-size: 30px;
 }
 
+.PmsBookingRoomView .row_payment_status_line.notok {
+    color: red;
+}
+
+.PmsBookingRoomView .row_payment_status_line.allok {
+    color: green;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_date {
+    width: 100px;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_value {
+    width: 100px;
+    text-align: right;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_product {
+    width: calc(100% - 570px);
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_paid {
+    width: 100px;
+    text-align: right;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_remaining {
+    width: 100px;
+    text-align: right;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_status {
+    width: 20px;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_orderid {
+    width: 75px;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_amount {
+    width: 90px;
+}
+
+.PmsBookingRoomView .row_payment_status_line.header .col {
+    vertical-align: top;
+    font-weight: bold;
+}
+
+.PmsBookingRoomView .room_view_outer {
+    position: relative;
+}
+
+.PmsBookingRoomView .row_payment_status_line {
+    padding: 5px;
+    border-top: solid 1px #DDD;
+    font-size: 16px;
+}
+
+.PmsBookingRoomView .row_payment_status_line.header {
+    border-top: solid 0px;
+}
+
+.PmsBookingRoomView .ordermenu {
+    position: absolute;
+    background-color: #FFF;
+    width: 250px;
+    border: solid 1px #DDD;
+    border-bottom: solid 0px;
+    display: none;
+    right: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+}
+
+.PmsBookingRoomView .ordermenu .entry {
+    padding: 5px;
+    border-bottom: solid 1px #DDD;
+    cursor: pointer;
+}
+
+.PmsBookingRoomView .ordermenu .entry:hover {
+    background-color: #EFEFEF;
+}
+
+.PmsBookingRoomView .small_payment_summary {
+    text-align: center;
+    font-size: 0px;
+}
+.PmsBookingRoomView .payment_summary_view_box {
+    width: calc(100% / 2);
+    display: inline-block;
+    border: solid 1px #EFEFEF;
+    box-sizing: border-box;
+    padding: 20px;
+    vertical-align: top;
+    height: 255px;
+}
+
+.PmsBookingRoomView .payment_summary_view_box i {
+    font-size: 60px;
+    color: orange;
+}
+
+.PmsBookingRoomView .payment_summary_view_box .text {
+    font-size: 20px;
+}
+
+.PmsBookingRoomView .payment_summary_view_box .amount {
+    font-size: 30px;
+    color: green;
+}
+
+.PmsBookingRoomView .markaspaidwindow .innner_area {
+    background-color: #FFF;
+    margin: 0 auto;
+    width: 600px;
+    min-height: 200px;
+    margin-top: 30px;
+    position: relative;
+}
+
+.PmsBookingRoomView .markaspaidwindow .innner_area .closebutton {
+    right: 10px;
+    top: 10px;
+    font-size: 30px;
+    position: absolute;
+    cursor: pointer;
+}
+
+.PmsBookingRoomView .markaspaidwindow {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-color: rgba(0,0,0,0.8);
+    display: none;
+}
+
 @media screen and (max-width: 1300px) {
     .PmsBookingRoomView .isgroupinformation {
         font-size: 10px;

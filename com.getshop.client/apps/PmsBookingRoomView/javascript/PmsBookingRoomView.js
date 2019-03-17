@@ -43,6 +43,47 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .saveaddons', this.saveAddonsOnRoom);
         $(document).on('click', '.PmsBookingRoomView .expandmessage', this.expandmessage);
         $(document).on('click', '.PmsBookingRoomView .debugaction', this.postDebugMessage);
+        $(document).on('click', '.PmsBookingRoomView .row_payment_status_line .toggle_action_menu', this.toggleActionMenu);
+        $(document).on('click', '.PmsBookingRoomView .markaspaidwindow .innner_area .closebutton', this.hideMarkAsPaidWindow)
+        $(document).on('click', '.PmsBookingRoomView .ordermenu .showmarkorderaspaid', this.showPaymentWindow)
+    },
+    
+    markAsPaidCompleted: function() {
+        $(this).closest('.app').find('.markaspaidwindow').fadeOut();
+        var refreshing = app.PmsBookingRoomView.refresh(true);
+        refreshing.done(function() {
+            $('.menuentry[tab="orderstab"]').click();
+        });
+    },
+    
+    showPaymentWindow: function() {
+        var data = {
+            orderid : $(this).attr('orderid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "showMarkAsPaidWindow", this, data);
+        event['synchron'] = true;
+        
+        $(this).closest('.app').find('.markaspaidwindow').fadeIn();
+        var me = $(this);
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            me.closest('.app').find('.markaspaidwindow .inner_work_area').html(res);
+        });
+    },
+    
+    hideMarkAsPaidWindow: function() {
+        $(this).closest('.app').find('.markaspaidwindow').fadeOut();
+    },
+    
+    toggleActionMenu: function() {
+        var menu = $(this).closest('.col').find('.ordermenu');
+        var visible = $(menu).is(':visible');
+        
+        $('.ordermenu').hide();
+        if (!visible) {
+            menu.show();
+        }
     },
     
     // Needs to be here for the Verifone Payment Process

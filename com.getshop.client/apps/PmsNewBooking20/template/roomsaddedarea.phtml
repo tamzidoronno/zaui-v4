@@ -1,5 +1,6 @@
 <?php
 /* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$this->addReadyToAddListToBooking();
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $suggestions = $this->getApi()->getPmsManager()->findRelatedByUserId($this->getSelectedMultilevelDomainName(), $user->id);
@@ -20,108 +21,112 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
 <h1>Room registered to <span class='bookersname'><?php echo $user->fullName; ?></span></h1>
 <div class='roomsaddedlist'>
     <?php 
-    if(sizeof($booking->rooms) == 0) {
-        echo "No rooms has been added yet, select a time periode above and add some rooms.";
-    } else {
-        foreach($booking->rooms as $room) {
-            $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
-            ?>
-            <div class='roominformationbox'>
-                <div class='title'> <?php echo $item->name; ?>
-                    <span style='float:right;'>
-                        <?php
-                        echo date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end));
-                        ?>
-                    </span>
-                </div>
-                <div class='guestinformation'>
+    $found = false;
+    foreach($booking->rooms as $room) {
+        if($room->deleted) {
+            continue;
+        }
+        $found= true;
+        $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+        ?>
+        <div class='roominformationbox'>
+            <div class='title'> <?php echo $item->name; ?>
+                <span style='float:right;'>
                     <?php
-                    for($i = 0; $i < $room->numberOfGuests; $i++) {
-                        $guest = $room->guests[$i];
-                        ?>
-                        <div class='eachguestarea'>
-                            <div class='guestinformationrow' guestid='<?php echo $guest->guestId; ?>'>
-                                <span class='removeguest' 
-                                    gsclick='removeGuestFromRoom'
-                                    synchron="true" 
-                                    roomid='<?php echo $room->pmsBookingRoomId; ?>' 
-                                    gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'
-                                    guestid='<?php echo $guest->guestId; ?>'>
-                                    <i class='fa fa-trash-o' title='Remove guest'></i>
-                                </span>
-                                <input type='txt' class='gsniceinput1 nameinput updateguestinfofield' value='<?php echo $guest->name; ?>' placeholder='Guest name' fortype='name'>
-                                <input type='txt' class='gsniceinput1 emailinput updateguestinfofield' value='<?php echo $guest->email; ?>' placeholder='Guest email' fortype='email'>
-                                <input type='txt' class='gsniceinput1 prefixinput updateguestinfofield' value='<?php echo $guest->prefix; ?>' placeholder='Prefix' fortype='prefix'>
-                                <input type='txt' class='gsniceinput1 phoneinput updateguestinfofield' value='<?php echo $guest->phone; ?>' placeholder='Phone' fortype='phone'>
-                            </div>
-                            <div class='guestionsuggestionarea'><?php if(!$guest->name) { $this->printSuggestions($suggestions); } ?></div>
+                    echo date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end));
+                    ?>
+                </span>
+            </div>
+            <div class='guestinformation'>
+                <?php
+                for($i = 0; $i < $room->numberOfGuests; $i++) {
+                    $guest = $room->guests[$i];
+                    ?>
+                    <div class='eachguestarea'>
+                        <div class='guestinformationrow' guestid='<?php echo $guest->guestId; ?>'>
+                            <span class='removeguest' 
+                                gsclick='removeGuestFromRoom'
+                                synchron="true" 
+                                roomid='<?php echo $room->pmsBookingRoomId; ?>' 
+                                gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'
+                                guestid='<?php echo $guest->guestId; ?>'>
+                                <i class='fa fa-trash-o' title='Remove guest'></i>
+                            </span>
+                            <input type='txt' class='gsniceinput1 nameinput updateguestinfofield' value='<?php echo $guest->name; ?>' placeholder='Guest name' fortype='name'>
+                            <input type='txt' class='gsniceinput1 emailinput updateguestinfofield' value='<?php echo $guest->email; ?>' placeholder='Guest email' fortype='email'>
+                            <input type='txt' class='gsniceinput1 prefixinput updateguestinfofield' value='<?php echo $guest->prefix; ?>' placeholder='Prefix' fortype='prefix'>
+                            <input type='txt' class='gsniceinput1 phoneinput updateguestinfofield' value='<?php echo $guest->phone; ?>' placeholder='Phone' fortype='phone'>
                         </div>
-                        <?php
+                        <div class='guestionsuggestionarea'><?php if(!$guest->name) { $this->printSuggestions($suggestions); } ?></div>
+                    </div>
+                    <?php
+                }
+                ?>
+                <span class='addanotherguest'
+                      gsclick='addGuestToRoom'
+                      synchron="true" 
+                      roomid='<?php echo $room->pmsBookingRoomId; ?>' 
+                      gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'
+                >Add another guest</span>
+            </div>
+            <div class='roomfooterarea'>
+                <span class='removeroom' 
+                      gsclick='removeRoomFromBooking'
+                      synchron="true" 
+                      roomid='<?php echo $room->pmsBookingRoomId; ?>' 
+                      gs_confirm='Are you sure you want to remove this room?'
+                      gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'>
+                    <i class='fa fa-trash-o' title='Remove room'></i>
+                </span>
+                <?php
+                $addoncount = $this->getAddonsCount($room);
+                $addonsprice = $this->getAddonsPrice($room);
+                if($addoncount == 0) {
+                  echo "No addons added";  
+                } else {
+                  echo "<span class='listaddon'><span class='addonscount'>" . $addoncount . "</span> addons</span> added, total: " . $addonsprice;
+                  $this->printAddonsAdded($room);
+                }
+                ?>, <span class='addAddonButton' roomid='<?php echo $room->pmsBookingRoomId; ?>'>add addon</span>.
+
+                <span class='editpriceonroom' gstype="form" method="updateprice" synchron='true'>
+                    <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
+                    <input type='txt' 
+                           class='gsniceinput1 editroompriceinput' 
+                           gsname='price'
+                           gstype='submitenter' 
+                           gs_callback='app.PmsNewBooking20.loadSelectedBooking' 
+                           value="<?php echo round($room->price, 2); ?>">
+                    <span class='shop_button' gstype='submit' gs_callback='app.PmsNewBooking20.loadSelectedBooking'>Update price</span>
+                </span>
+                <span class='pricetoroom'>
+                    <?php
+                    if($this->hasLockedPrice($room->pmsBookingRoomId)) {
+                        ?>
+                        <span gstype='form' method='unlockroom'>
+                            <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
+                            <i class='fa fa-lock' 
+                               gstype='submit'
+                               synchron="true"
+                               gs_callback='app.PmsNewBooking20.loadSelectedBooking' 
+                               title='Room price is locked to this price, meaning it will not change due to changes if you update guest count etc, click to remove lock.'>
+                            </i>
+                        </span>
+                    <?php
                     }
                     ?>
-                    <span class='addanotherguest'
-                          gsclick='addGuestToRoom'
-                          synchron="true" 
-                          roomid='<?php echo $room->pmsBookingRoomId; ?>' 
-                          gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'
-                    >Add another guest</span>
-                </div>
-                <div class='roomfooterarea'>
-                    <span class='removeroom' 
-                          gsclick='removeRoomFromBooking'
-                          synchron="true" 
-                          roomid='<?php echo $room->pmsBookingRoomId; ?>' 
-                          gs_confirm='Are you sure you want to remove this room?'
-                          gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'>
-                        <i class='fa fa-trash-o' title='Remove room'></i>
-                    </span>
-                    <?php
-                    $addoncount = $this->getAddonsCount($room);
-                    $addonsprice = $this->getAddonsPrice($room);
-                    if($addoncount == 0) {
-                      echo "No addons added";  
-                    } else {
-                      echo "<span class='listaddon'><span class='addonscount'>" . $addoncount . "</span> addons</span> added, total: " . $addonsprice;
-                      $this->printAddonsAdded($room);
-                    }
-                    ?>, <span class='addAddonButton' roomid='<?php echo $room->pmsBookingRoomId; ?>'>add addon</span>.
-                    
-                    <span class='editpriceonroom' gstype="form" method="updateprice" synchron='true'>
-                        <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
-                        <input type='txt' 
-                               class='gsniceinput1 editroompriceinput' 
-                               gsname='price'
-                               gstype='submitenter' 
-                               gs_callback='app.PmsNewBooking20.loadSelectedBooking' 
-                               value="<?php echo round($room->price, 2); ?>">
-                        <span class='shop_button' gstype='submit' gs_callback='app.PmsNewBooking20.loadSelectedBooking'>Update price</span>
-                    </span>
-                    <span class='pricetoroom'>
-                        <?php
-                        if($this->hasLockedPrice($room->pmsBookingRoomId)) {
-                            ?>
-                            <span gstype='form' method='unlockroom'>
-                                <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
-                                <i class='fa fa-lock' 
-                                   gstype='submit'
-                                   synchron="true"
-                                   gs_callback='app.PmsNewBooking20.loadSelectedBooking' 
-                                   title='Room price is locked to this price, meaning it will not change due to changes if you update guest count etc, click to remove lock.'>
-                                </i>
-                            </span>
-                        <?php
-                        }
-                        ?>
-                        <?php echo round($room->price, 2); ?>
-                        <i class='fa fa-edit editpriceonroombutton'></i>
-                    </span>
-                </div>
+                    <?php echo round($room->price, 2); ?>
+                    <i class='fa fa-edit editpriceonroombutton'></i>
+                </span>
             </div>
-            <?php
-        }
+        </div>
+        <?php
     }
-    if(sizeof($booking->rooms) > 0) { ?>
+    if($found) { ?>
         <span class='shop_button completeregistrationbutton' gsclick='completeBooking' synchron='true' gs_callback='app.PmsNewBooking20.bookingCompleted'>Complete registration <i class='fa fa-arrow-right'></i></span>
-    <?php } ?>
+    <?php } else {
+        echo "No rooms has been added yet, select a time periode above and add some rooms.";
+    }
+?>
  
 </div>

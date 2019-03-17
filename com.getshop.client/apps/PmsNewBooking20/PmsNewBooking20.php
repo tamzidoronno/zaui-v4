@@ -14,6 +14,21 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("searchcustomerresult");
     }
     
+    public function printavailability() {
+        $this->includefile("availability");
+    }
+    
+    public function registerRoomsFromAvailabilityCheck() {
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
+        foreach($types as $type) {
+            $this->addToReadyList($type->id, $_POST['data'][$type->id], $_POST['data']['start'], $_POST['data']['end']);
+        }
+        $this->printRoomsAddedToReadyList();
+    }
+    public function printRoomsAddedToReadyList() {
+        $this->includefile("roomsregisteredfromavailabilitycheck");
+    }
+    
     public function loadCurrentBooking() {
         $this->includefile("roomsaddedarea");
     }
@@ -26,10 +41,8 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $type = $_POST['data']['typeid'];
         $start = $this->convertToJavaDate($_POST['data']['start']);
         $end = $this->convertToJavaDate($_POST['data']['end']);
-        $bookingengine = $this->getSelectedMultilevelDomainName();
-        $bookingId = $this->getApi()->getPmsManager()->getCurrentBooking($bookingengine)->id;
-        for($i = 0; $i < $_POST['data']['count']; $i++) {
-            $this->getApi()->getPmsManager()->addBookingItemType($bookingengine, $bookingId, $type, $start, $end, "");
+        foreach($_POST['data']['items'] as $typeId => $count) {
+            $this->addTypeToBooking($start, $end, $count, $typeId);
         }
     }
     
@@ -300,6 +313,84 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             }
         }
         echo json_encode($res);
+    }
+
+    public function quickReserveBookingList() {
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
+        $booking->userId = "quickreservation";
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
+        $this->addReadyToAddListToBooking();
+        $this->completeBooking();
+    }
+    
+    public function removefromreadyroomlist() {
+        $typeid = $_POST['data']['typeid'];
+        $time = $_POST['data']['time'];
+        $list = $this->getReadyToAddList();
+        unset($list[$time][$typeid]);
+        if(!isset($list[$time]) || sizeof($list[$time]) == 0) {
+            unset($list[$time]);
+        }
+        $_SESSION['pmsnewbooking20_readylist'] = $list;
+        $res = array();
+        $res['type'] = $typeid;
+        $res['time'] = $time;
+        $res['empty'] = !$list;
+        echo json_encode($res);
+        
+    }
+    
+    public function addToReadyList($type, $count, $start, $end) {
+        if($count == 0) {
+            return;
+        }
+        if(!isset($_SESSION['pmsnewbooking20_readylist'])) {
+            $_SESSION['pmsnewbooking20_readylist'] = array();
+        }
+
+        $time = $start . "_" . $end;
+        
+        $counter = 0;
+        if(!isset($_SESSION['pmsnewbooking20_readylist'][$time])) {
+            $_SESSION['pmsnewbooking20_readylist'][$time] = array();
+        }
+        if(isset($_SESSION['pmsnewbooking20_readylist'][$time][$type])) {
+            $counter = $_SESSION['pmsnewbooking20_readylist'][$time][$type];
+        }
+        $counter += $count;
+        $_SESSION['pmsnewbooking20_readylist'][$time][$type] = $counter;
+    }
+    
+    public function clearRoomList() {
+        unset($_SESSION['pmsnewbooking20_readylist']);
+    }
+    
+    public function getReadyToAddList() {
+         if(!isset($_SESSION['pmsnewbooking20_readylist'])) {
+            $_SESSION['pmsnewbooking20_readylist'] = array();
+        }
+        return $_SESSION['pmsnewbooking20_readylist'];
+    }
+
+    public function addReadyToAddListToBooking() {
+        $list = $this->getReadyToAddList();
+        foreach($list as $time => $typesToAdd) {
+            $timePart = explode("_", $time);
+            $start = $this->convertToJavaDate($timePart[0]);
+            $end = $this->convertToJavaDate($timePart[1]);
+            foreach($typesToAdd as $typeId => $count) {
+                $this->addTypeToBooking($start, $end, $count, $typeId);
+            }
+        }
+        $this->clearRoomList();
+    }
+
+    public function addTypeToBooking($start, $end, $count, $typeId) {
+        $bookingengine = $this->getSelectedMultilevelDomainName();
+        $bookingId = $this->getApi()->getPmsManager()->getCurrentBooking($bookingengine)->id;
+        for($i = 0; $i < $count; $i++) {
+            $this->getApi()->getPmsManager()->addBookingItemType($bookingengine, $bookingId, $typeId, $start, $end, "");
+        }
     }
 
 }

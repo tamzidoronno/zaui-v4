@@ -1,1 +1,12 @@
+<?php
+/* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+?>
 <h1>Check availability</h1>
+<div gstype="form" method="printavailability" gstoarea=".availabilityoverview">
+    <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
+    <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
+    <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
+</div>
+<br><br>
+<div class='availabilityoverview'></div>
+<div class='roomsreadytobeadded'><?php $this->printRoomsAddedToReadyList(); ?></div>

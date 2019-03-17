@@ -3,6 +3,7 @@ app.PmsNewBooking20 = {
     
     init : function() {
         $(document).on('click','.PmsNewBooking20 .newbookingoption', app.PmsNewBooking20.goToStep);
+        $(document).on('click','.PmsNewBooking20 .navigatetonext', app.PmsNewBooking20.goToStep);
         $(document).on('click','.PmsNewBooking20 .increaseroomcounter', app.PmsNewBooking20.increaseRoomCounter);
         $(document).on('click','.PmsNewBooking20 .decreaseroomcounter', app.PmsNewBooking20.decreaseRoomCounter);
         $(document).on('click','.PmsNewBooking20 .addsuggestionarrow', app.PmsNewBooking20.addSuggestion);
@@ -12,8 +13,43 @@ app.PmsNewBooking20 = {
         $(document).on('click','.PmsNewBooking20 .closeaddonspanel', app.PmsNewBooking20.closeAddonsPanel);
         $(document).on('click','.PmsNewBooking20 .listaddon', app.PmsNewBooking20.showAddedAddonsPanel);
         $(document).on('click','.PmsNewBooking20 .addedaddonspanel .closeaddedaddonspanel', app.PmsNewBooking20.closeAddedAddonsPanel);
+        $(document).on('click','.PmsNewBooking20 .addroomscategories', app.PmsNewBooking20.addAllRooms);
+        $(document).on('click','.PmsNewBooking20 .selectallbutton', app.PmsNewBooking20.selectAll);
         $(document).on('keyup','.PmsNewBooking20 .updateguestinfofield', app.PmsNewBooking20.updateGuestInfo);
         $(document).on('keyup','.PmsNewBooking20 .filteraddonsinlist', app.PmsNewBooking20.filterAddAddonsList);
+        $(document).on('keyup','.PmsNewBooking20 .roomcount', app.PmsNewBooking20.updateTotalRoomSelectCount);
+    },
+    selectAll : function() {
+        $('.numberavailable').each(function() {
+            var count = parseInt($(this).text());
+            $(this).closest('.searchbookingrow').find('.roomcount').val(count);
+        });
+    },
+    removedEntryFromReadyList : function(res) {
+        $('.removeroomfrombooking[time="'+res.time+'"][typeid="'+res.type+'"]').closest('.selectedroomsrow').slideUp();
+        if(res.empty) {
+            $('.roomsreadytobeadded').html('');
+        }
+    },
+    addAllRooms : function() {
+        var start = null;
+        var end = null;
+        var items = {};
+        $('.freeroomresultbox').each(function() {
+            start = $(this).find('[gsname="start"]').val();
+            end = $(this).find('[gsname="end"]').val();
+            items[$(this).find('[gsname="typeid"]').val()] = parseInt($(this).find('.roomcount').val());
+        });
+        var data = {
+            "start" : start,
+            "end" : end,
+            "items" : items
+        }
+        var event = thundashop.Ajax.createEvent('','addTypesToBooking',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            $('.availablerooms').html('');
+            app.PmsNewBooking20.reloadAddedRoomsList();
+        });
     },
     bookingSelected : function() {
         app.PmsNewBooking20.continueToStep2();
@@ -124,7 +160,21 @@ app.PmsNewBooking20 = {
         var counter = $(this).closest('.counterrow').find('.roomcount').val();
         counter++;
         $(this).closest('.counterrow').find('.roomcount').val(counter);
+        app.PmsNewBooking20.updateTotalRoomSelectCount();
     },
+    updateTotalRoomSelectCount : function() {
+        var count = 0;
+        $('.roomcount').each(function() {
+            count += parseInt($(this).val());
+        });
+        $('.roomselection').html(count);
+        if(count > 0) {
+            $('.addroomssummary').removeClass('disabled');
+        } else {
+            $('.addroomssummary').addClass('disabled');
+        }
+    },
+    
     addonRemove : function(res) {
         var row = $('.addedaddonsrow[addonid="'+res.id+'"]');
         row.slideUp();
@@ -146,6 +196,7 @@ app.PmsNewBooking20 = {
             counter = 0;
         }
         $(this).closest('.counterrow').find('.roomcount').val(counter);
+        app.PmsNewBooking20.updateTotalRoomSelectCount();
     },
     setLastPage : function() {
         var lastPage = localStorage.getItem('newbookinglastpage');
@@ -161,6 +212,9 @@ app.PmsNewBooking20 = {
     },
     searchCustomerResult : function(res) {
         $('.customersearcharea').html(res);
+    },
+    roomListCleared : function() {
+        $('.roomsreadytobeadded').html('');
     },
     goToStep : function() {
         var goto = $(this).attr('goto');

@@ -47,7 +47,11 @@
 .PmsNewBooking20 .roominformationbox .addanotherguest { color: blue; font-size: 12px; cursor:pointer; margin-top: 5px; display:inline-block; }
 .PmsNewBooking20 .roominformationbox .guestinformation { padding: 10px; }
 .PmsNewBooking20 .completeregistrationbutton { max-width: 780px; width:100%; margin-bottom: 100px;}
-
+.PmsNewBooking20 .addroomssummary {     background-color: #fff; max-width: 780px; margin: auto; padding: 10px; border: solid 1px #bbb;font-size: 20px;margin-top: 20px;margin-bottom: 20px; }
+.PmsNewBooking20 .addroomssummary .description { display:none; }
+.PmsNewBooking20 .addroomssummary .addroomscategories {width: 100%;box-sizing: border-box; }
+.PmsNewBooking20 .addroomssummary.disabled .description { display:block; }
+.PmsNewBooking20 .addroomssummary.disabled .addroomscategories { background-color:#efefef; cursor: initial;  }
 .PmsNewBooking20 .addAddonButton {color: blue; cursor:pointer; }
 .PmsNewBooking20 .editroompriceinput { width: 70px; }
 .PmsNewBooking20 .editpriceonroom { display: none; float:right;padding-top: 2px;padding-right: 2px; }

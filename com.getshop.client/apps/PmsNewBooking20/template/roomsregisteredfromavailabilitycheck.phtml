@@ -1,0 +1,72 @@
+<?php
+$items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
+$items = $this->indexList($items);
+/* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$list = $this->getReadyToAddList();
+if(!$list) {
+    echo "No room selected yet.";
+    return;
+}
+
+$totalrooms = 0;
+?>
+
+<div class='selectedroomsrow'>
+    <span class='selectedroomname'><b>Room type</b></span>
+    <span class='selectedroomcount'><b>Rooms</b></span>
+    <span class='selectedroomstartdate'><b>Check-in</b></span>
+    <span class='selectedroomenddate'><b>Check-out</b></span>
+</div>
+
+<?php
+foreach($list as $time => $rooms) {
+    $timepart = explode("_", $time);
+    foreach($list[$time] as $typeid => $count) {
+        ?>
+        <div class='selectedroomsrow'>
+            <i class='fa fa-trash-o removeroomfrombooking'
+               gsclick='removefromreadyroomlist'
+               synchron='true'
+               gs_callback='app.PmsNewBooking20.removedEntryFromReadyList'
+               time='<?php echo $time; ?>' 
+               typeid='<?php echo $typeid; ?>'></i> 
+            <span class='selectedroomname'><?php echo $items[$typeid]->name; ?></span>
+            <span class='selectedroomcount'><?php echo $count; ?></span>
+            <span class='selectedroomstartdate'><?php echo date("d.m.Y", $timepart[0]); ?></span>
+            <span class='selectedroomenddate'><?php echo  date("d.m.Y", $timepart[1]); ?></span>
+        </div>
+        <?php
+        $totalrooms += $count;
+    }
+}
+?>
+<div class='selectedroomsummary'>
+    Total rooms <?php echo $totalrooms; ?>
+    <span class='removeallrooms' gsclick='clearRoomList' synchron='true' gs_callback='app.PmsNewBooking20.roomListCleared'>clear roomlist</span>
+</div>
+<div style='text-align: center;margin-bottom: 3px;'>
+    <span class='shop_button proceedwithreservation quickreservation'
+          gsclick='quickReserveBookingList' 
+          synchron='true' 
+          gs_callback='app.PmsNewBooking20.bookingCompleted'>Quick<br>reservation</span>
+    <span class='shop_button proceedwithreservation navigatetonext newcustomer' goto="newcustomer">New<br>customer</span>
+    <span class='shop_button proceedwithreservation navigatetonext existingcustomer' goto="search">Existing<br>customer</span>
+    <span class='shop_button proceedwithreservation navigatetonext existingbooking' goto="addtoexisting">Existing<br>booking</span>
+</div>
+<style>
+    .removeroomfrombooking { cursor:pointer; }
+    .proceedwithreservation { width: 20%;height: 50px;line-height: 20px;padding-top: 10px; }
+    .proceedwithreservation:hover { font-weight: bold; }
+    .removeallrooms { color: blue; cursor:pointer; }
+    .selectedroomsrow { padding: 5px; }
+    .selectedroomsummary { padding: 10px; }
+    .roomsreadytobeadded { max-width: 500px; background-color:#fff; text-align: left; margin: auto; border-radius: 3px; margin-top: 50px;border: solid 1px #bbb; }
+    .selectedroomname { display:inline-block; width: 200px; }
+    .selectedroomcount { display:inline-block; width: 60px; text-align: center; }
+    .selectedroomstartdate { display:inline-block; width: 90px; }
+    .selectedroomenddate { display:inline-block; width: 90px; }
+    .existingcustomer { background-color: #3423de; }
+    .existingbooking { background-color: #3629b1; }
+    .newcustomer { background-color: #6558e1; }
+    .quickreservation { background-color: #847bde; }
+</style>

@@ -721,6 +721,13 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    void markAsCompleted() {
+        if(completedDate == null) {
+            completedDate = new Date();
+            sessionId = "";
+        }
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

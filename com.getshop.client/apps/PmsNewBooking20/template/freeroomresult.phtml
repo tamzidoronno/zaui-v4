@@ -11,9 +11,9 @@ if(!$_POST['data']['start'] || !$_POST['data']['end']) {
 
 $end = $_POST['data']['end'] . " " . $config->defaultEnd;
 $end = $this->convertToJavaDate(strtotime($end));
-$items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 foreach($items as $item) {
-    $count = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(),$item->id, $start, $end);
+    $count = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(),$item->id, $start, $end);
     $price = $this->getApi()->getPmsManager()->getPriceForRoomWhenBooking($this->getSelectedMultilevelDomainName(), $start, $end,$item->id);
     ?>
     <div class="freeroomresultbox" gstype='form' method='addTypesToBooking'>
@@ -29,10 +29,12 @@ foreach($items as $item) {
             <input type="txt" class="gsniceinput1 roomcount" gsname='count' style="width:20px;text-align: center;" value="0">
             <span class='outercountbutton'><i class="fa fa-plus-circle increaseroomcounter"></i></span>
         </div>
-        <div class='selectbutton'>
-            <span class='shop_button dochoosebutton' gstype='submit' gs_callback='app.PmsNewBooking20.roomsAddedToBooking'>Choose room</span>
-        </div>
+        <br>
     </div>
     <?php
 }
 ?>
+<div class='addroomssummary disabled'>
+    <div class='description'>You have not selected any rooms yet.<br>Please choose one or more rooms in the options above.</div>
+    <span class='shop_button addroomscategories'>Add <span class='roomselection'>0</span> room(s)</span>
+</div>

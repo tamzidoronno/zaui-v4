@@ -40,6 +40,12 @@ public interface IPmsManager {
     public void warnFailedBooking(PmsBooking booking);
     
     @Administrator
+    public void setCurrentBooking(String bookingId);
+    
+    @Administrator
+    public void simpleCompleteCurrentBooking();
+    
+    @Administrator
     public void markRoomAsCleanedWithoutLogging(String itemId);
             
     @Administrator

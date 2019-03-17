@@ -228,6 +228,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String overrideNotificationTitle;
     private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
     private boolean convertedDiscountSystem = false;
+    private String currentBookingId = "";
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -514,7 +515,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (getSession() == null) {
             logPrint("Warning, no session set yet");
         }
+        
+        
         PmsBooking result = findBookingForSession();
+        if(currentBookingId != null && !currentBookingId.isEmpty()) {
+            result = getBookingUnsecure(currentBookingId);
+        }
 
         if (result == null) {
             result = startBooking();
@@ -529,6 +535,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking startBooking() {
+        currentBookingId = null;
         PmsBooking currentBooking = findBookingForSession();
 
         if (currentBooking != null) {
@@ -1903,7 +1910,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void removeFromCurrentBooking(String roomId) throws Exception {
         PmsBooking booking = getCurrentBooking();
         ArrayList toRemove = new ArrayList();
-        for (PmsBookingRooms room : booking.getActiveRooms()) {
+        for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            if(room.isAddedToBookingEngine()) {
+                bookingEngine.deleteBooking(room.bookingId);
+            }
             if (room.pmsBookingRoomId.equals(roomId)) {
                 toRemove.add(room);
             }
@@ -9913,6 +9923,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return guests;
+    }
+
+    @Override
+    public void setCurrentBooking(String bookingId) {
+        currentBookingId = bookingId;
+    }
+
+    @Override
+    public void simpleCompleteCurrentBooking() {
+        PmsBooking currentBooking = getCurrentBooking();
+        List<String> roomInWaiting = new ArrayList();
+        for(PmsBookingRooms room : currentBooking.rooms) {
+            if(!room.isAddedToBookingEngine()) {
+                String added = addBookingToBookingEngine(currentBooking, room);
+                if(added != null && !added.isEmpty()) {
+                    roomInWaiting.add(room.pmsBookingRoomId);
+                }
+            }
+        }
+        for(String roomId : roomInWaiting) {
+            addToWaitingList(roomId);
+        }
+        currentBooking.confirmed = true;
+        currentBooking.markAsCompleted();
+        saveBooking(currentBooking);
     }
 
 }

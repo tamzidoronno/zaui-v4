@@ -8,6 +8,7 @@ if(isset($_SESSION['quickaddaddons'])) {
     <h3>Addons possible to add to this room</h3>
 </center>
 <div class="addaddonrows step1">
+    <input type='text' class='gsniceinput1 searchaddaddonslist' placeholder='Search' style='width:360px; box-sizing: border-box; margin: 10px;'>
     <?php
     /* @var $this ns_7ca01dc3_49e7_4bad_a0f9_4f1eae1199d6\PmsAddonSelection */
     $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());

@@ -617,4 +617,8 @@ public interface IPmsManager {
      */
     @Administrator
     public boolean doesOrderCorrolateToRoom(String pmsBookingRoomsId, String orderId);
+    
+    @Administrator
+    public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId);
+    
 }

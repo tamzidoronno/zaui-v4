@@ -245,6 +245,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         createNewSamleFakturaOrders(order);
         
+        List<String> credittedOrders = new ArrayList();
+        credittedOrders.add(credited.id);
+        addOrdersToBookings(credittedOrders);
+        
         return credited;
     }
     
@@ -2359,9 +2363,29 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         createNewSamleFakturaOrders(order);
         
+        if (order.isCreditNote) {
+            orders.values()
+                    .stream()
+                    .filter(o -> o.creditOrderId.contains(orderId))
+                    .forEach(o -> {
+                        o.creditOrderId.remove(orderId);
+                        saveObject(o);
+                    });
+        }
+        
         order.virtuallyDeleted = true;
         order.cart.clear();
         saveObject(order);
+        
+        removeOrderFromBooking(order.id);
+    }
+    
+    private void removeOrderFromBooking(String orderId) {
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            pmsManager.orderChanged(orderId);
+        }
     }
 
     private void createNewSamleFakturaOrders(Order order) {
@@ -3686,7 +3710,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         Order order = getOrder(orderId);
                         
                         for (Order creditNote : getCreditNotesForOrder(orderId)) {
-                            System.out.println("Adding: " + creditNote.id);
                             pmsManager.addOrderToBooking(booking, creditNote.id);
                         }
                     });

@@ -414,6 +414,10 @@ public class CartItem implements Serializable, Cloneable {
 
         return val;
     }
+
+    public List<PmsBookingAddonItem> getItemsAdded() {
+        return itemsAdded;
+    }
     
     public boolean correctIncorrectCalculation() {
         double total = getTotalAmount();

@@ -1,5 +1,8 @@
-
 <?
+if ($this->shouldUseNewPaymentWindow()) {
+    $this->includefile("orderstab_new");
+    return;
+}
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $methods = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 $hasPaymentMethods = false;
@@ -88,3 +91,14 @@ if ($verifonePaymentInProgress) {
     .pricetext { display:inline-block; width: 130px; }
     .pricetag { display:inline-block; width: 80px; }
 </style>
+
+<?
+if (!$this->getApi()->getStoreManager()->isProductMode()) {
+?>
+    <div class="information" style="border: solid 1px #DDD; padding: 10px; background-color: #feffc1; text-align: center">
+        A new version of this process is under development (beta version), you can test it if you wish.
+        <div class="gs_shop_small_icon" gsclick="switchToNewPaymentWindow">Show new version</div>
+    </div>
+<?
+}
+?>

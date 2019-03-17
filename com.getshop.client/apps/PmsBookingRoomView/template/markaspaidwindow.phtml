@@ -1,0 +1,39 @@
+<?
+/* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+$now = date('d.m.Y');
+$nowTime = date('H:i');
+?>
+<div gstype="form" method='markAsPaid' style="margin: 30px; font-size: 20px; width: calc(100% - 350px); display: inline-block; box-sizing: border-box; vertical-align: top;">
+    <input type="hidden" gsname="orderid" value="<? echo $order->id; ?>">
+    <?
+    echo $this->__f("Payment date");
+    ?>
+    <br/>
+    <input class="gsniceinput1 datetime" gsname="date" value="<? echo $now; ?>"  />
+    <input class="gsniceinput1 datetime" gsname="time" value="<? echo $nowTime; ?>" />
+    <br/>
+    <br/>
+    <?
+    echo $this->__f("Paid amount");
+    ?>
+    <br/>
+    <input class="gsniceinput1" gsname='amount' value="<? echo $order->restAmount; ?>" />
+    <br/>
+    <br/><div gstype='submit' class="shop_button" gs_callback="app.PmsBookingRoomView.markAsPaidCompleted()" ><? echo $this->__f("Register payment"); ?></div>
+    <br/>
+    <br/>
+</div>
+
+<div style="margin: 30px; font-size: 16px; padding: 10px; width: 200px;  display: inline-block; box-sizing: border-box; vertical-align: top; background-color: #EFEFEF;">
+    <?
+    echo "<b>".$this->__f("Order id").":</b> ".$order->incrementOrderId."<br/>";
+    echo "<br/><b>".$this->__f("Order total amount").":</b><br/>".$this->getApi()->getOrderManager()->getTotalForOrderById($order->id)."<br/>";
+    echo "<br/><b>".$this->__f("Order created date").":</b><br/>".date('d.m.Y H:i', strtotime($order->rowCreatedDate));
+    ?>
+</div>
+
+
+<script>
+    $('.gsniceinput1.datetime').datetimepicker();
+</script>

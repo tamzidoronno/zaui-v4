@@ -251,8 +251,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 }
             }
         }
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
-        
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking); 
+    }
+    
+    public function switchToNewPaymentWindow() {
+        $_SESSION['use_new_payment_view'] = true;
     }
 
     public function loadEditEvent() {
@@ -263,14 +266,43 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return "PmsBookingRoomView";
     }
 
-    public function render() {
-        if(isset($_POST['data']['getshop_resetlistmode']) && $_POST['data']['getshop_resetlistmode'] == "true") {
-            $this->removeGroupList();
+    public function creditOrDeleteOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        
+        if (!$order->closed) {
+            $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
+            return;
         }
-        $this->setModalVariable();
-        $this->includefile("bookingoverview");
+        
+        $creditedOrder = $this->getApi()->getOrderManager()->creditOrder($order->id);
+        $booking = $this->getPmsBooking();
+        
+        if($booking) {
+            $booking->orderIds[] = $creditedOrder->id;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+            $this->getApi()->getOrderManager()->saveOrder($creditedOrder);
+        }
+            
+        
+    }
+    
+    public function render() {
+        echo "<div class='room_view_outer'>";
+            if(isset($_POST['data']['getshop_resetlistmode']) && $_POST['data']['getshop_resetlistmode'] == "true") {
+                $this->removeGroupList();
+            }
+            $this->setModalVariable();
+            $this->includefile("bookingoverview");
+        echo "</div>";
+    }
+    
+    public function shouldUseNewPaymentWindow() {
+        return isset($_SESSION['use_new_payment_view']);
     }
 
+    public function switchToOldVersion() {
+        unset($_SESSION['use_new_payment_view']);
+    }
     public function loadChangesPanel() {
         $this->includefile("differenceinroom");
     }
@@ -1601,7 +1633,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
     }
 
-
     public function needToCreateOrders() {
         $this->refreshCartForRoom();
         $cart = $this->getApi()->getCartManager()->getCart();
@@ -1612,7 +1643,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         return true;
     }
-    
+
     public function loadUnpaidView() {
         $this->includefile("unpaidview");
     }
@@ -1977,6 +2008,21 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "in_progress";
         $this->getApi()->getVerifoneManager()->chargeOrder($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_order_id'], $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_id'], false);
     }
-
+    
+    public function showMarkAsPaidWindow() {
+        $this->includefile("markaspaidwindow");
+    }
+    
+    public function markAsPaid() {
+        $amount = $_POST['data']['amount'];
+        if(!$amount) {
+            $amount = 0.0;
+        } else {
+            $amount = str_replace(",",".", $amount);
+        }
+        $time = $_POST['data']['date'] . " " . $_POST['data']['time'];
+        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($time)), $amount);
+    }
+    
 }
 ?>

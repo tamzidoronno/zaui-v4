@@ -40,7 +40,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "</div>";
         
         echo "<script>";
-        echo "app.PmsNewBooking20.setLastPage();";
+//        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
     }
     
@@ -185,8 +185,15 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->setDefaultAddons($this->getSelectedMultilevelDomainName(), $booking->id);
     }
 
+    public function addAddonToRoom() {
+        $productId = $_POST['data']['productid'];
+        $pmsRoomId = $_POST['data']['roomid'];
+        $this->getApi()->getPmsManager()->addProductToRoom($this->getSelectedMultilevelDomainName(), $productId, $pmsRoomId, -1);
+    }
+    
     public function printSuggestions($suggestions) {
         $suggestioncount = 0;
+        $suggestions =  (array)$suggestions;
         foreach($suggestions as $suggestion) {
             if(!$suggestion->guest->name) {
                 continue;
@@ -223,7 +230,68 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         }
         return false;
     }
+
+    /**
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
+    public function getAddonsCount($room) {
+        $count = 0;
+        foreach($room->addons as $addon) {
+            $count += $addon->count;
+        }
+        return $count;
+    }
+
+    /**
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
+    public function getAddonsPrice($room) {
+        $price = 0;
+        foreach($room->addons as $addon) {
+            $price += $addon->price * $addon->count;
+        }
+        return $price;
+    }
+
+    /**
+     * @param \core_pmsmanager_PmsBookingRooms $room
+     */
+    public function printAddonsAdded($room) {
+        echo "<div class='addedaddonspanel'>";
+        foreach($room->addons as $addon) {
+            echo "<div class='addedaddonsrow' addonid='".$addon->addonId."'>";
+            $product = $this->getApi()->getProductManager()->getProduct($addon->productId);
+            $name = $addon->name ? $addon->name : $product->name;
+            echo "<i class='fa fa-trash-o removeaddon' addonid='".$addon->addonId."' gsclick='removeAddon' synchron='true' roomid='".$room->pmsBookingRoomId."' gs_callback='app.PmsNewBooking20.addonRemove'></i> " . date("d.m.Y", strtotime($addon->date)) . " - " . $name . " - " . $addon->count . " - " . $addon->price;
+            echo "</div>";
+        }
+        echo "<div class='closeaddedaddonspanel'>Close</div>";
+        echo "</div>";
+        ?>
+        <style>
+            .addedaddonspanel { position:absolute; background-color: #fff; border: solid 1px #bbb; border-bottom: 0px; display:none; }
+            .addedaddonspanel .addedaddonsrow { padding: 6px; border-bottom: solid 1px #bbb; }
+            .addedaddonspanel .addedaddonsrow:hover { background-color:#efefef; }
+            .addedaddonspanel .addedaddonsrow .removeaddon { cursor: pointer; }
+            .addedaddonspanel .closeaddedaddonspanel { text-align: center; padding: 6px; border-bottom: solid 1px #bbb; cursor:pointer; }
+        </style>
+        <?php
+    }
     
+    public function removeAddon() {
+        $id = $_POST['data']['addonid'];
+        $roomid = $_POST['data']['roomid'];
+        $this->getApi()->getPmsManager()->removeAddonFromRoomById($this->getSelectedMultilevelDomainName(), $id, $roomid);
+        $res = array();
+        $res['id'] = $id;
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $roomid) {
+                $res['count'] = $this->getAddonsCount($r);
+            }
+        }
+        echo json_encode($res);
+    }
 
 }
 ?>

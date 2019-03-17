@@ -7,7 +7,58 @@ app.PmsNewBooking20 = {
         $(document).on('click','.PmsNewBooking20 .decreaseroomcounter', app.PmsNewBooking20.decreaseRoomCounter);
         $(document).on('click','.PmsNewBooking20 .addsuggestionarrow', app.PmsNewBooking20.addSuggestion);
         $(document).on('click','.PmsNewBooking20 .editpriceonroombutton', app.PmsNewBooking20.toggleEditPrice);
+        $(document).on('click','.PmsNewBooking20 .addAddonButton', app.PmsNewBooking20.openAddAddons);
+        $(document).on('click','.PmsNewBooking20 .addaddonrow', app.PmsNewBooking20.addAddons);
+        $(document).on('click','.PmsNewBooking20 .closeaddonspanel', app.PmsNewBooking20.closeAddonsPanel);
+        $(document).on('click','.PmsNewBooking20 .listaddon', app.PmsNewBooking20.showAddedAddonsPanel);
+        $(document).on('click','.PmsNewBooking20 .addedaddonspanel .closeaddedaddonspanel', app.PmsNewBooking20.closeAddedAddonsPanel);
         $(document).on('keyup','.PmsNewBooking20 .updateguestinfofield', app.PmsNewBooking20.updateGuestInfo);
+        $(document).on('keyup','.PmsNewBooking20 .filteraddonsinlist', app.PmsNewBooking20.filterAddAddonsList);
+    },
+    filterAddAddonsList : function() {
+        var val = $(this).val();
+        $('.addaddonrow').each(function() {
+            if($(this).text().toLowerCase().indexOf(val.toLowerCase()) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    },
+    closeAddedAddonsPanel : function() {
+        var panel = $(this).closest('.addedaddonspanel');
+        panel.slideUp();
+    }, 
+   
+    showAddedAddonsPanel : function() {
+        var panel = $(this).closest('.roomfooterarea').find('.addedaddonspanel');
+        panel.slideDown();
+    },
+    addAddons : function() {
+        var addonid = $(this).attr('addonid');
+        var productid = $(this).attr('productid');
+        var roomId = app.PmsNewBooking20.addonsLoadedPanelRoomId;
+        var event = thundashop.Ajax.createEvent('','addAddonToRoom', $(this), {
+            "roomid" : roomId,
+            "addonid" : addonid,
+            "productid" : productid
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsNewBooking20.reloadAddedRoomsList();
+        });
+    },
+    closeAddonsPanel : function() {
+        var panel = $('.PmsNewBooking20 .addonspanel');
+        panel.slideUp();
+    },
+    openAddAddons : function() {
+        app.PmsNewBooking20.addonsLoadedPanelRoomId = $(this).attr('roomid');
+        var panel = $('.PmsNewBooking20 .addonspanel');
+        panel.css('position','absolute');
+        panel.css('left',$(this).position().left);
+        panel.css('top',$(this).position().top);
+        panel.show();
+        panel.find('.filteraddonsinlist').focus();
     },
     toggleEditPrice : function() {
         $(this).closest('.pricetoroom').hide();
@@ -70,6 +121,14 @@ app.PmsNewBooking20 = {
         var counter = $(this).closest('.counterrow').find('.roomcount').val();
         counter++;
         $(this).closest('.counterrow').find('.roomcount').val(counter);
+    },
+    addonRemove : function(res) {
+        var row = $('.addedaddonsrow[addonid="'+res.id+'"]');
+        row.slideUp();
+        $(row.closest('.roomfooterarea').find('.addonscount').html(res.count)); 
+        if(res.count === 0) {
+            app.PmsNewBooking20.reloadAddedRoomsList();
+        }
     },
     reloadAddedRoomsList : function() {
         var event = thundashop.Ajax.createEvent('','loadRoomsAddedToBookingList',$('.PmsNewBooking20'), {});

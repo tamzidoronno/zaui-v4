@@ -9883,6 +9883,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(PmsBookingRooms room : booking.rooms) {
                 for(PmsGuests g : room.guests) {
                     if(!g.hasAnyOfGuests(guests)) {
+                        if(g.name == null || g.name.trim().isEmpty()) {
+                            continue;
+                        }
                         PmsGuestOption guestoption = new PmsGuestOption();
                         User usr = userManager.getUserById(booking.userId);
                         guestoption.guest = g;
@@ -9895,6 +9898,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        if(guests.isEmpty()) {
+            User user = userManager.getUserById(userId);
+            PmsGuests g = new PmsGuests();
+            g.email = user.emailAddress;
+            g.name = user.fullName;
+            g.phone = user.cellPhone;
+            g.prefix = user.prefix;
+            
+            PmsGuestOption opt = new PmsGuestOption();
+            opt.guest = g;
+            guests.add(opt);
+        }
+        
         return guests;
     }
 

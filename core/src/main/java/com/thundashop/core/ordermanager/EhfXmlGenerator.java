@@ -269,15 +269,15 @@ public class EhfXmlGenerator {
 
         xml += "        </cac:TaxTotal>\n";
 
-        BigDecimal roundedTotalWithoutVat = order.getTotalAmountRoundedTwoDecimals(calculatePresision).subtract(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision));
+        BigDecimal totalExTax = getTotalExTax();
         
         BigDecimal toPay = makePositive(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision))
-                .add(makePositive(roundedTotalWithoutVat));
+                .add(makePositive(totalExTax));
         
         
         xml += "        <cac:LegalMonetaryTotal>\n"
-                + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:LineExtensionAmount>\n"
-                + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(roundedTotalWithoutVat) + "</cbc:TaxExclusiveAmount>\n"
+                + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(totalExTax) + "</cbc:LineExtensionAmount>\n"
+                + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(totalExTax) + "</cbc:TaxExclusiveAmount>\n"
                 + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(toPay) + "</cbc:TaxInclusiveAmount>\n"
                 + "                <cbc:ChargeTotalAmount currencyID=\"NOK\">0</cbc:ChargeTotalAmount>\n"
                 + "                <cbc:PrepaidAmount currencyID=\"NOK\">0</cbc:PrepaidAmount>\n"
@@ -294,6 +294,16 @@ public class EhfXmlGenerator {
         }
 
         return xml;
+    }
+    
+    private BigDecimal getTotalExTax() {
+        BigDecimal ret = new BigDecimal(0);
+        
+        for (CartItem item : order.cart.getItems()) {
+            ret = ret.add(item.getTotalExRoundedWithTwoDecimals(2));
+        }
+        
+        return ret;
     }
 
     private String createInvoiceLines(Date taxDate) {

@@ -16,7 +16,6 @@ $bookingfilter->filterType = "active";
 $bookingfilter->includeDeleted = true;
 
 $list = $factory->getApi()->getPmsManager()->getSimpleRooms($_GET['engine'], $bookingfilter);
-
 $tmplist = array();
 foreach($list as $r) {
     $tmplist[$r->room] = $r;
@@ -43,9 +42,16 @@ foreach($list as $room) {
     foreach((array)$room->guest as $g) {
         $guests[] = $g->name;
     }
-    if(!$room->transferredToArx) {
-        continue;
+    if($_GET['useCheckinInstead']) {
+        if(!$room->checkedIn || $room->checkedOut) {
+            continue;
+        } 
+    } else {
+        if(!$room->transferredToArx) {
+            continue;
+        }
     }
+    
     echo "<tr bgcolor='#fff'>";
     echo "<td>" . $room->code . "</td>";
     echo "<td>" . $room->room . "</td>";

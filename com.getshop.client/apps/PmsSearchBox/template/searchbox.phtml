@@ -163,7 +163,18 @@ if($filter->groupByBooking) {
     <div class="top-row-icon <? echo $searchWord ? 'active' : ''; ?>" gstype='submit' title='Show filtering'><i class="gsicon-search"></i></div>
     <div class="top-row-icon advancesearchtoggle"><i class="gsicon-search2" title='Advance search'></i></div>
     <div class="top-row-icon clearfilter" title='Clear filter'><i class="fa fa-trash-o"></i></div>
-    <div class="top-row-icon" onclick="window.open('/scripts/securitylist.php?engine=<?php echo $this->getSelectedMultilevelDomainName(); ?>', 'securitylisttab')" title='Printable list'><i class="fa fa-file-pdf-o"></i></div>
+    
+    <?php
+    if($this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName())) {
+        ?>
+        <div class="top-row-icon" onclick="window.open('/scripts/securitylist.php?engine=<?php echo $this->getSelectedMultilevelDomainName(); ?>', 'securitylisttab')" title='Printable list'><i class="fa fa-file-pdf-o"></i></div>
+        <?php
+    } else {
+        ?>
+        <div class="top-row-icon" onclick="window.open('/scripts/securitylist.php?engine=<?php echo $this->getSelectedMultilevelDomainName(); ?>&useCheckinInstead=true', 'securitylisttab')" title='Printable list'><i class="fa fa-file-pdf-o"></i></div>
+        <?php
+    }
+    ?>
 </span>
 
 

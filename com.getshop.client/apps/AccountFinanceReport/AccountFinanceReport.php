@@ -12,9 +12,22 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function getName() {
         return "AccountFinanceReport";
     }
+    
+    public function showDetailedProductView() {
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_product_view'] = $_POST['data']['accountnumber'];
+    }
 
+    public function cancelDetailedProductView() {
+        unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_product_view']);
+    }
+    
     public function render() {
         $this->fetchConfigs();
+        
+        if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_product_view'])) {
+            $this->includefile("productsummary");
+            return;
+        }
         
         if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'])) {
             $this->includefile("accountsummary");

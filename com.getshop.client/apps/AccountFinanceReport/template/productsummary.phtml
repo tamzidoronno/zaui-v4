@@ -1,0 +1,77 @@
+<?
+/* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$accountNumber = $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_product_view'];
+$start = $this->getStart();
+$end = $this->getEnd();
+
+$dayIncomes = array();
+
+if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_start']) && $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_start']) {
+    $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_start'], $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_end']);
+} else {
+    $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
+}
+
+/**
+ * 
+ * @param \core_ordermanager_data_Order $order
+ * @param type $cartItemId
+ * @return \core_cartmanager_data_CartItem
+ */
+function getCartItem($order, $cartItemId) {
+    foreach ($order->cart->items as $item) {
+        if ($item->cartItemId == $cartItemId) {
+            return $item;
+        }
+    }
+    
+    return null;
+}
+
+$entries = array();
+foreach ($dayIncomes as $dayEntry) {
+    foreach ($dayEntry->dayEntries as $entry) {
+        if ($entry->accountingNumber == $accountNumber) {
+            $entries[$entry->orderId][] = $entry;
+        }
+    }
+}
+
+$entriesByProductId = array();
+foreach ($entries as $orderId => $entries) {
+    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+    foreach ($entries as $entry) {
+        $cartItem = getCartItem($order, $entry->cartItemId);
+        $entriesByProductId[$cartItem->product->id][] = $entry;
+    }
+}
+echo "<div style='padding: 30px;'>";
+
+    echo "<h2>Summary for $accountNumber</h2>";
+
+    echo "<div class='row'>";
+        echo "<div class='col' style='width: 400px; text-align: left;' >Product name</div>";
+        echo "<div class='col'>Total ex taxes</div>";
+        echo "<div class='col'>Total inc taxes</div>";
+    echo "</div>";
+
+    foreach ($entriesByProductId as $productId => $entries) {
+        $product = $this->getApi()->getProductManager()->getProduct($productId);
+        $totalExTax = 0;
+        $totalIncTax = 0;
+        foreach ($entries as $entry) {
+            $totalExTax += $entry->amountExTax;
+            $totalIncTax += $entry->amount;
+        }
+
+        echo "<div class='row'>";
+            echo "<div class='col' style='width: 400px; text-align: left;' >$product->name</div>";
+            echo "<div class='col'>".round($totalExTax,2)."</div>";
+            echo "<div class='col'>".round($totalIncTax,2)."</div>";
+        echo "</div>";
+    }
+    echo "<br/>";
+    echo "<br/>";
+    echo "<div class='shop_button' gsclick='cancelDetailedProductView'>Go back</div>";
+echo "</div>";
+?>

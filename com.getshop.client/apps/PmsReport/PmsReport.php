@@ -560,6 +560,14 @@ class PmsReport extends \MarketingApplication implements \Application {
         $_SESSION['savedfilter'] = json_encode($filter);
      }
      
+
+     public function removeCode() {
+        $code = $_POST['data']['code'];
+        $filter = $this->getSelectedFilter();
+        unset($filter->codes->{$code});
+        $_SESSION['savedfilter'] = json_encode($filter);
+     }
+     
     public function getCoverageFilter() {
         $selectedFilter = $this->getSelectedFilter();
         $typeFilter = array();
@@ -590,6 +598,13 @@ class PmsReport extends \MarketingApplication implements \Application {
                 $filter->customers[] = $id;
             }
         }
+        $filter->codes = array();
+        if(isset($selectedFilter->codes)) {
+            foreach($selectedFilter->codes as $id => $val) {
+                $filter->codes[] = $id;
+            }
+        }
+        
         return $filter;
     }
 
@@ -902,6 +917,17 @@ class PmsReport extends \MarketingApplication implements \Application {
         $_SESSION['savedfilter'] = json_encode($selected);
     }
     
+    public function quickloadcode() {
+        $selected = $this->getSelectedFilter();
+        if(!isset($selected->codes)) {
+            $selected->codes = array();
+        } else {
+            $selected->codes = (array)$selected->codes;
+        }
+        $selected->codes[$_POST['data']['code']] = 1;
+        $_SESSION['savedfilter'] = json_encode($selected);
+    }
+    
     public function loadTop30Customers() {
         $selectedFilter = $this->createPmsCoverageFilter();
         $selectedFilter->userIds = array();
@@ -970,6 +996,15 @@ class PmsReport extends \MarketingApplication implements \Application {
             }
         }
         return $filter;
+    }
+
+    public function printAddedDiscountCodes() {
+        $selectedfilter = $this->getSelectedFilter();
+        if(isset($selectedfilter->codes)) {
+            foreach($selectedfilter->codes as $code => $val) {
+                echo "<div class='selectedcustomerrow'><span class='fa fa-trash-o removecodefromfilter' code='".$code."'></i> " . $code . "</div>";
+            }
+        }
     }
 
 }

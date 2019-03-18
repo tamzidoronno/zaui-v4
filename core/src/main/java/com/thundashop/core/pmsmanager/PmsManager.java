@@ -1754,6 +1754,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 setTotalFromIncomeReport(result, filter);
             }
         }
+        
+        if(filter.codes != null && !filter.codes.isEmpty()) {
+            result.clearBilled();
+        }
+        
         gsTiming("After after setting income report");
         result.setView(filter);
         result.buildTotal();
@@ -4487,7 +4492,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     newuser.cellPhone = curcompany.phone;
                     newuser.prefix = curcompany.prefix;
                     newuser.address = curcompany.address;
-                    newuser.isCompanyMainContact = true;
+                    newuser.isCompanyMainContact = true;    
                 }
 
                 userManager.saveUserSecure(newuser);

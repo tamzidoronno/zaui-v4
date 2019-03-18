@@ -100,6 +100,9 @@ class PmsStatisticsBuilder {
                         continue;
                     }
                 }
+                if(filter.codes!= null && !filter.codes.isEmpty() && !filter.containsCode(booking.couponCode)) {
+                    continue;
+                }
                 counter++;
 
                 for(PmsBookingRooms room : booking.getActiveRooms()) {

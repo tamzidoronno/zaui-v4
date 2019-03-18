@@ -11,6 +11,7 @@ app.PmsReport = {
         $(document).on('click', '.PmsReport .includecustomerinfilter', app.PmsReport.includeInFilter);
         $(document).on('keyup', '.PmsReport .customersearch', app.PmsReport.searchCustomer);
         $(document).on('click', '.PmsReport .removecustomerfromfilter', app.PmsReport.removeCustomer);
+        $(document).on('click', '.PmsReport .removecodefromfilter', app.PmsReport.removeDiscount);
         $(document).on('click', '.PmsReport .filterbycustomerbutton', app.PmsReport.toggleFilterByCustomer);
         $(document).on('click', '.PmsReport .displayto30list', app.PmsReport.toggleTop30List);
         $(document).on('change', '.PmsReport [gsname="segment"]', app.PmsReport.changeSegments);
@@ -49,6 +50,16 @@ app.PmsReport = {
             row.remove();
         });
     },
+    removeDiscount : function() {
+        var row = $(this).closest('.selectedcustomerrow');
+        var event = thundashop.Ajax.createEvent('','removeCode',$(this), {
+            "code" : $(this).attr('code')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            row.remove();
+        });
+    },
+    
     includeInFilter : function() {
         var event = thundashop.Ajax.createEvent('','includeCustomerToFilter',$(this), {
             "userid" : $(this).attr('userid')

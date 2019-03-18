@@ -142,7 +142,7 @@ echo "<div class='outer'>";
     echo "<div class='row header'>";
         echo "<div class='col orderid header'>Date</div>";
         foreach ($accounts as $account) {
-            echo "<div class='col $account header'>".$account;
+            echo "<div class='col $account header' gsclick='showDetailedProductView' accountnumber='$account'>".$account;
                 echo "<div class='accountdesc'>".$this->getAccountDescription($account)."</div>";;
             echo "</div>";
         }

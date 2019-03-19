@@ -72,13 +72,20 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
     public String createOrderOnProductId = "";
 
     public Date getDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         try {
-            return sdf.parse(date);
+            Date date2 = sdf.parse(date.trim());
+            return date2;
         } catch (ParseException ex) {
             Logger.getLogger(PmsRoomPaymentSummaryRow.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return null;
+    }
+
+    public boolean needToCreateOrderFor() {
+        double diff = priceInBooking - createdOrdersFor;
+        boolean needToCreate =  !(diff < 0.1 && diff > -0.01);
+        return needToCreate;
     }
 }

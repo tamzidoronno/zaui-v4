@@ -22,15 +22,13 @@ if($pmsBooking->avoidAutoDelete) {
 <div class='col_box_width_2'>
     <div class="row odd">
         <div class="col col1" title="<?php echo $title; ?>"><? echo $this->__f("GetShop booking id"); ?></div>
-        <div class="col col2" style="width: 230px;"><? echo $pmsBooking->incrementBookingId; ?>
-            <span style='float:right; color:#bbb;'><span title='Language'><?php echo $this->getLanguage($pmsSelectedRoom, $pmsBooking) . "</span> / <span title='countryCode'>" . $pmsBooking->countryCode; ?></span></span>
-        </div>
+        <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>
     </div>
     <div class="row odd">
         <div class="col col1"><? echo $this->__f("Discount code / segment"); ?></div>
         <div class="col col2">
             <span class="codeselection">
-                <select class="changediscountcode gsniceselect1" style="width:45%">
+                <select class="changediscountcode gsniceselect1" style="width:48%">
                     <option value="">Not set</option>
                     <?php
                     foreach($codes as $code) {
@@ -39,7 +37,7 @@ if($pmsBooking->avoidAutoDelete) {
                     }
                     ?>
                 </select>
-                <select class="changesegment gsniceselect1" style="width:45%; float:right;">
+                <select class="changesegment gsniceselect1" style="width:50%; float:right;">
                     <option value="">Not set</option>
                     <?php
                     foreach($segments as $segment) {
@@ -76,11 +74,11 @@ if($pmsBooking->avoidAutoDelete) {
         <?php
         if ($pmsSelectedRoom->nonrefundable) {
             ?>
-            <div class="col col2">Yes, <span style='color:blue;cursor:pointer;' gsclick='togglerefundable'>make it refundable</span></div>    
+            <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='togglerefundable'>make it refundable</span></div>    
             <?php
         } else {
             ?>
-            <div class="col col2">No, <span style='color:blue;cursor:pointer;' gsclick='togglerefundable'>make it non refundable</span></div>    
+            <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='togglerefundable'>make it non refundable</span></div>    
             <?php
         }
         ?>
@@ -94,11 +92,11 @@ if($pmsBooking->avoidAutoDelete) {
             <?php
             if ($pmsBooking->tryAutoCharge) {
                 ?>
-                <div class="col col2">Yes, <span style='color:blue;cursor:pointer;' gsclick='toggleautocharging'>stop autocharging</span></div>    
+                <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>stop autocharging</span></div>    
                 <?php
             } else {
                 ?>
-                <div class="col col2">No, <span style='color:blue;cursor:pointer;' gsclick='toggleautocharging'>retry autocharging</span></div>    
+                <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>retry autocharging</span></div>    
                 <?php
             }
             ?>
@@ -111,7 +109,7 @@ if($pmsBooking->avoidAutoDelete) {
 <div class='col_box_width_2 second'>
     <div class="row">
         <div class="col col1"><? echo $this->__f("Date created"); ?></div>
-        <div class="col col2"><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
+        <div class="col col2"><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
             <?php if($pmsBooking->bookedByUserId) { 
 
                 if($pmsBooking->bookedByUserId == "gs_system_scheduler_user") {
@@ -126,6 +124,7 @@ if($pmsBooking->avoidAutoDelete) {
             } else {
                 echo $user->fullName;
             } ?>
+            </b>
         </div>    
     </div>
 
@@ -147,7 +146,7 @@ if($pmsBooking->avoidAutoDelete) {
     </div>
     <div class="row odd">
         <div class="col col1"><i class="fa fa-info-circle" title="This email is used to send payment link, invoice and reciepts to"></i> <span><? echo $this->__f("Email (for payments)"); ?></span></div>
-        <div class="col col2"><?php echo $user->emailAddress; ?></div>
+        <div class="col col2 bookinghighlightcolor"><?php echo $user->emailAddress; ?></div>
     </div>
 
     <div class="row odd">

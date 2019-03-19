@@ -32,7 +32,7 @@
 
 .PmsBookingRoomView .isgroupinformation { 
     padding: 5px; 
-    background-color:#e0ebef; 
+    background-color:#e0ebee; 
     color:#4c4b4b; 
     margin-top: -25px;
     height: 40px;
@@ -42,6 +42,15 @@
     font-size: 12px;
     line-height: 40px;
     margin-bottom: 20px;
+    padding-left: 35px;
+    padding-right: 16px;
+    position:relative;
+}
+.PmsBookingRoomView .isgroupinformation .fa-info-circle {
+    font-size: 18px;
+    position: absolute;
+    top: 16px;
+    left: 15px;
 }
 
 .PmsBookingRoomView .isdeletedinformation { background-color:red; color:#fff; padding: 5px; padding-left: 10px; }
@@ -820,6 +829,10 @@
     padding-bottom: 30px;
 }
 
+.PmsBookingRoomView .first_collapsable_shadowbox {
+    margin-top: 20px !important;
+}
+
 .PmsBookingRoomView .collapsable_shadowbox .collapser {
     font-size: 35px;
     position: absolute;
@@ -847,6 +860,8 @@
     margin: 20px;
     padding: 14px;
     background-color: #ffffff;
+    margin-top:10px;
+    margin-bottom:10px;
 }
 .PmsBookingRoomView .collapsable_shadowbox .col {
     display: inline-block;
@@ -862,8 +877,14 @@
     color: #777;
 }
 
+.PmsBookingRoomView .show_edit_user,
+.PmsBookingRoomView .show_change_user,
+.PmsBookingRoomView .bookinghighlightcolor
+{ color:#4da6cb; }
+
 .PmsBookingRoomView .collapsable_shadowbox .col2 {
     padding-left: 10px;
+    width: calc(100% - 200px);
 }
 
 .PmsBookingRoomView .collapsable_shadowbox .col_box_width_2 {
@@ -879,10 +900,10 @@
 
 .PmsBookingRoomView .collapsable_shadowbox .row {
     border-top: solid 1px #e8ebed;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
     min-height: 33px;
-    line-height: 33px;
+    line-height: 30px;
 }
 
 .PmsBookingRoomView .collapsable_shadowbox div.row:nth-child(odd) {
@@ -911,6 +932,10 @@
 .PmsBookingRoomView .colheader .extraheaderstuff .text {
     width:180px;
     display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 10px;
 }
 .PmsBookingRoomView .colheader .extraheaderstuff .title {
     width: 109px;
@@ -929,12 +954,28 @@
 .PmsBookingRoomView .guestinformation[tab="orderstab"] .EcommerceOrderList .col_inctaxes,
 .PmsBookingRoomView .guestinformation[tab="orderstab"] .EcommerceOrderList .col_extaxes,
 .PmsBookingRoomView .guestinformation[tab="orderstab"] .EcommerceOrderList .col_incrementOrderId { width: 70px !important; }
-
+.PmsBookingRoomView .missingonroomgroup { position:absolute; right: 50px; color:#bbb; }
 .PmsBookingRoomView .guestinformation[tab="orderstab"] .EcommerceOrderList .col_user { width: calc(100% - 740px) !important; }
+
+
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_reg { display:none; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_checkout { width: 80px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_price { width: 50px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_state { width: 40px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_totalprice { width: 55px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_expandbutton { width: 50px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_bookedfor { width: 100px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_room { width: 51px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_addons { width: 60px; }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 670px); }
+.PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .secondary_text { color: #888;overflow: hidden;text-transform: none; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 
 @media screen and (max-width: 1300px) {
     .PmsBookingRoomView .isgroupinformation {
         font-size: 10px;
     }
     .PmsBookingRoomView .bookinginfocolheader .shop_button { width: 75px; font-size: 10px; }
+}
+@media screen and (max-width: 1024px) {
+    .PmsBookingRoomView .collapsable_shadowbox .col2 { width: 100%; }
 }

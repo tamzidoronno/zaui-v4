@@ -1,15 +1,16 @@
 <?php
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
+$pmsBookingRoom = $this->getSelectedRoom();
 ?>
 
 <div class='headerboxes'>
 
-    <div class='collapsable_shadowbox' defaultclosed='false'>
+    <div class='collapsable_shadowbox first_collapsable_shadowbox' defaultclosed='false'>
         <div class='colheader'>
             Booking information
-            <div class='collapser closed'><i class='fa fa-caret-up'></i></div>
-            <div class='collapser open'><i class='fa fa-caret-down'></i></div>
+            <div class='collapser closed'><i class='fa fa-angle-up'></i></div>
+            <div class='collapser open'><i class='fa fa-angle-down'></i></div>
         </div>
         <div class='collapsable_content'><?php $this->includefile("bookinginfo"); ?></div>
     </div>
@@ -23,8 +24,8 @@ $pmsBooking = $this->getPmsBooking();
                 <span class='title'>Order note:</span>
                 <span class='text'><? echo $pmsBooking->invoiceNote; ?></span>
             </div>
-            <div class='collapser closed'><i class='fa fa-caret-up'></i></div>
-            <div class='collapser open'><i class='fa fa-caret-down'></i></div>
+            <div class='collapser closed'><i class='fa fa-angle-up'></i></div>
+            <div class='collapser open'><i class='fa fa-angle-down'></i></div>
         </div>
         
         <div class="subheader">
@@ -43,16 +44,24 @@ $pmsBooking = $this->getPmsBooking();
             Payments
             
             <div class='extraheaderstuff'>
-                <div class="shop_button addselecteditemstocart" style="background-color: green; color: #FFF; vertical-align: top; margin-top: -10px;"><? echo $this->__f("Start payment process"); ?></div>
+                <div class="shop_button addselecteditemstocart" style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Start payment process"); ?></div>
+                <span class='missingonroomgroup'>
+                    <?php 
+                    $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoom->pmsBookingRoomId, true);
+                    $unsettledRoom = round($pmsBookingRoom->totalCost - $totalOrdersRoom);
+                    echo "Missing on group: " . $pmsBooking->unsettled; 
+                    echo ", Missing on room: " . $unsettledRoom;
+                    ?>
+                </span>
             </div>
             
-            <div class='collapser closed'><i class='fa fa-caret-up'></i></div>
-            <div class='collapser open'><i class='fa fa-caret-down'></i></div>
+            <div class='collapser closed'><i class='fa fa-angle-up'></i></div>
+            <div class='collapser open'><i class='fa fa-angle-down'></i></div>
         </div>
         
         <div class='pmsroomcheckoutview checkoutview'>
             <i class='fa fa-close' onclick='$(".checkoutview").hide();$(".getshoptableoverlaybody").css("height","auto");' style='position:absolute;right:1px; top:1px; cursor:pointer;'></i>
-            <i class='fa fa-caret-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
+            <i class='fa fa-angle-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
             <div class='checkoutviewinner'></div>
         </div>
         

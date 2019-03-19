@@ -44,18 +44,20 @@ $this->includefile("overlayheader");
 
 if($numberOfRooms > 0) {
     echo "<div class='isgroupinformation'>";
-    echo "<i class='fa fa-arrow-down'></i> ";
+    echo "<i class='fa fa-info-circle' title='The information above is for the booking itself included the whole group, below is for the room you are in now.'></i> ";
     $listGroupButton= "";
     if(!$this->listGroupRooms()) {
-        $listGroupButton = " - <a style='color:blue; cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>list group</a>";
+        $listGroupButton = " <a class='bookinghighlightcolor' style='cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>list group</a>";
     }
    
-    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='color:blue; cursor:pointer;' class='opengroup'>open group</a>, <a href='/pms.php?page=0da68de9-da08-4b60-9652-3ac456da2627&groupview=$pmsBooking->id' style='color:blue; cursor:pointer;' class='opengroup'>open group in availability</a>, $listGroupButton";
+    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open group</a>, <a href='/pms.php?page=0da68de9-da08-4b60-9652-3ac456da2627&groupview=$pmsBooking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open group in availability</a>, $listGroupButton";
     
     echo "<span class='roomindication'>";
+    echo "<b>";
     if(sizeof($pmsSelectedRoom->guests) > 0 && $pmsSelectedRoom->guests[0]->name) {
         echo $pmsSelectedRoom->guests[0]->name . " ";
     }
+    echo "</b>";
     echo "(" . date("d.m.Y H:i", strtotime($pmsSelectedRoom->date->start)) . " - ";
     echo date("d.m.Y H:i", strtotime($pmsSelectedRoom->date->end)) . ")";
     if($pmsSelectedRoom->bookingItemTypeId) {
@@ -64,8 +66,6 @@ if($numberOfRooms > 0) {
     if($pmsSelectedRoom->bookingItemId) {
         echo  " (" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $pmsSelectedRoom->bookingItemId)->bookingItemName . ")";
     }
-    echo " <i class='fa fa-arrow-down'></i>";
-    
     echo "</span>";
     
     echo "</div>";

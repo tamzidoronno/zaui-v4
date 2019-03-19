@@ -13,6 +13,9 @@ $end = $_POST['data']['end'] . " " . $config->defaultEnd;
 $end = $this->convertToJavaDate(strtotime($end));
 $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 foreach($items as $item) {
+    if($item->id == "gsconference") {
+        continue;
+    }
     $count = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(),$item->id, $start, $end);
     $price = $this->getApi()->getPmsManager()->getPriceForRoomWhenBooking($this->getSelectedMultilevelDomainName(), $start, $end,$item->id);
     ?>
@@ -33,8 +36,51 @@ foreach($items as $item) {
     </div>
     <?php
 }
+
+
+$closedtext = "";
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$selectedStartMillis = strtotime($start);
+$selectedEndMillis = strtotime($end);
+
+foreach($config->closedOfPeriode as $row) {
+    $startTime = strtotime($row->firstEvent->start);
+    $endTime = strtotime($row->firstEvent->end);
+    
+    $found = false;
+    if($selectedStartMillis <= $startTime && $startTime <= $selectedEndMillis) {
+        //Start is in timerange
+        $found = true;
+    }
+    if($selectedStartMillis <= $endTime && $endTime <= $selectedEndMillis) {
+        //End is in timerange
+        $found = true;
+    }
+    if($selectedStartMillis >= $startTime && $endTime >= $selectedEndMillis) {
+        //End is in timerange
+        $found = true;
+    }
+    
+    if($found) {
+        $closedtext .= "<div style='padding-left:5px;'>";
+        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->start)) . " - ";
+        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->end));
+        $closedtext .= "</div>";
+    }
+}
+$closedRoom = "";
+if($closedtext) {
+    echo "<div>";
+    echo "<div class='warnclosedroom'>";
+    echo "<h2>We have closed rooms in this time periode.</h2>";
+    echo $closedtext;
+    echo "<span class='shop_button' onclick='$(\".warnclosedroom\").hide();$(\".addroomssummary\").show();'>Yes, I understand that we are closed in this periode.</span>";
+    echo "</div>";
+    echo "</div>";
+    $closedRoom = "isclosed";
+}
 ?>
-<div class='addroomssummary disabled'>
+<div class='addroomssummary disabled <?php echo $closedRoom; ?>'>
     <div class='description'>You have not selected any rooms yet.<br>Please choose one or more rooms in the options above.</div>
     <span class='shop_button addroomscategories'>Add <span class='roomselection'>0</span> room(s)</span>
 </div>

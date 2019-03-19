@@ -1,12 +1,44 @@
 <?php
 /* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$today = date("d.m.Y");
+$conferenceRooms = array();
+$allRooms = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+foreach ($allRooms as $r) {
+    if ($r->bookingItemTypeId == "gsconference") {
+        $conferenceRooms[] = $r;
+    }
+}
 ?>
 <div class='newbookingprocess' for='newbookingstep2'>
-    <h1>Step 2 of 3 - Adding room</h1>
-    <div gstype="form" method="searchfreerom" gstoarea=".availablerooms">
-        <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
-        <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
-        <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
+    <h1>Step 2 / 3 adding rooms</h1>
+    <div class='addroomboxes'>
+        <div class='addroombox addhotelroombox'>
+            <h1>Rooms</h1>
+            <div gstype="form" method="searchfreerom" gstoarea=".availablerooms">
+                <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
+                <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
+                <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
+            </div>
+        </div>
+        <?php if (sizeof($conferenceRooms) > 0) { ?>
+            <div class='addroombox addconferenceroombox'>
+                <h1>Conference room</h1>
+                <div gstype="form" method="addconferenceroom" synchron='true' gscallback='app.PmsNewBooking20.reloadAddedRoomsList'>
+                    <select class='gsniceselect1' style='width: 200px;margin-bottom: 3px;padding: 3px;height: 35px;' gsname='item'>
+                        <?php
+                        foreach ($conferenceRooms as $confroom) {
+                            echo "<option value='" . $confroom->id . "'>" . $confroom->bookingItemName . "</option>";
+                        }
+                        ?>
+                    </select>
+                    <input type="text" class="gsniceinput1 startconferencedate" gstype="submitenter" placeholder="Start date" gsname="start" style='width:70px;' value='<?php echo $today; ?>'>
+                    <input type="text" class="gsniceinput1 startdatetime" gstype="submitenter" gsname="starttime" value='12:00' style='width:40px;'>
+                    <input type="text" class="gsniceinput1 endconferencedate" gstype="submitenter" placeholder="End date" gsname="end" style='width:70px;' value='<?php echo $today; ?>'>
+                    <input type="text" class="gsniceinput1 enddatetime" gstype="submitenter" gsname="endtime" value='13:00' style='width:40px;'>
+                    <span class="shop_button" gstype="submit">Search</span>
+                </div>
+            </div>
+        <?php } ?>
     </div>
     <br><br>
     <div class='availablerooms'></div>
@@ -16,30 +48,41 @@
 </div>
 
 <script>
-     $('.PmsNewBooking20 .startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay : 1,
-        onSelect: function(dateText) {
+    $('.PmsNewBooking20 .startdate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, firstDay: 1,
+        onSelect: function (dateText) {
             var curEnd = moment($('.PmsNewBooking20 .enddate').val(), "DD.MM.YYYY");
             var date = moment(dateText, "DD.MM.YYYY");
-            
+
             var diff = curEnd.valueOf() - date.valueOf();
-            if(diff <= 0) {
+            if (diff <= 0) {
                 date.add(1, 'days');
-                $('.PmsNewBooking20 .enddate').val(date.format('DD.MM.YYYY')); 
+                $('.PmsNewBooking20 .enddate').val(date.format('DD.MM.YYYY'));
             }
             $('.searchforfreeroomsbutton').click();
         }
     });
-    $('.PmsNewBooking20 .enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay : 1,
-        onSelect: function(dateText) {
+    $('.PmsNewBooking20 .enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, firstDay: 1,
+        onSelect: function (dateText) {
             var curStart = moment($('.PmsNewBooking20 .startdate').val(), "DD.MM.YYYY");
             var date = moment(dateText, "DD.MM.YYYY");
-            
+
             var diff = date.valueOf() - curStart.valueOf();
-            if(diff <= 0) {
+            if (diff <= 0) {
                 date.add(-1, 'days');
-                $('.PmsNewBooking20 .startdate').val(date.format('DD.MM.YYYY')); 
+                $('.PmsNewBooking20 .startdate').val(date.format('DD.MM.YYYY'));
             }
             $('.searchforfreeroomsbutton').click();
         }
     });
+    $('.PmsNewBooking20 .startconferencedate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, firstDay: 1,
+        onSelect: function (dateText) {
+            var curEnd = moment($('.PmsNewBooking20 .endconferencedate').val(), "DD.MM.YYYY");
+            var date = moment(dateText, "DD.MM.YYYY");
+
+            var diff = curEnd.valueOf() - date.valueOf();
+            if (diff <= 0) {
+                $('.PmsNewBooking20 .endconferencedate').val(date.format('DD.MM.YYYY'));
+            }
+        }});
+    $('.PmsNewBooking20 .endconferencedate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, firstDay: 1});
 </script>

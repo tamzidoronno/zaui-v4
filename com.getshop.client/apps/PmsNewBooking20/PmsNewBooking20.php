@@ -29,6 +29,37 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("roomsregisteredfromavailabilitycheck");
     }
     
+    public function addconferenceroom() {
+        $start = strtotime($_POST['data']['start'] . " " . $_POST['data']['starttime']);
+        $end = strtotime($_POST['data']['end'] . " " . $_POST['data']['endtime']);
+        
+        $start = $this->convertToJavaDate($start);
+        $end = $this->convertToJavaDate($end);
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $_POST['data']['item']);
+        
+        $booking = new \core_bookingengine_data_Booking();
+        $booking->bookingItemId = $item->id;
+        $booking->bookingItemTypeId = $item->bookingItemTypeId;
+        $booking->startDate = $start;
+        $booking->endDate = $end;
+
+        if(!$this->getApi()->getBookingEngine()->canAddBooking($this->getSelectedMultilevelDomainName(), $booking)) {
+            $this->canNotAddConferenceRoom = true;
+        } else {
+            $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+            $room = new \core_pmsmanager_PmsBookingRooms();
+            $room->date = new \core_pmsmanager_PmsBookingDateRange();
+            $room->date->start = $start;
+            $room->date->end = $end;
+            $room->numberOfGuests = 1;
+            $room->bookingItemId = $item->id;
+            $room->bookingItemTypeId = $item->bookingItemTypeId;
+            $room->priceMatrix = $this->getApi()->getPmsInvoiceManager()->calculatePriceMatrix($this->getSelectedMultilevelDomainName(), $currentBooking, $room);
+            $currentBooking->rooms[] = $room;
+            $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $currentBooking);
+        }
+    }
+    
     public function loadCurrentBooking() {
         $this->includefile("roomsaddedarea");
     }
@@ -61,7 +92,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "</div>";
         
         echo "<script>";
-//        echo "app.PmsNewBooking20.setLastPage();";
+        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
     }
     

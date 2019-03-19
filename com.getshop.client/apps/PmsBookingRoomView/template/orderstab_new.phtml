@@ -74,6 +74,7 @@ foreach ($pmsBooking->orderIds as $orderId) {
     <?
     $totalRemainingGuestOwe = 0;
     foreach ($grouped as $productId => $rows) {
+        usort($rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
         $product = $this->getApi()->getProductManager()->getProduct($productId);
         echo "<div style='border: solid 1px #DDD; margin-top: 30px;'>";
             echo "<div style='background-color: #EFEFEF; font-size: 16px; padding: 3px; text-align: center;'>".$product->name."</div>";

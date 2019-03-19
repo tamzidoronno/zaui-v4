@@ -42,7 +42,7 @@ select.gsniceselect1 {
     background-position: right 8px top 10px;
     background-size: 18px 18px;
     
-    height: 51px;
+    height: 35px;
 }
 select.gsniceselect1:active {
     border: 1px solid #000;
@@ -186,11 +186,11 @@ a {
 .gsoverlay1 .gsoverlayinner {
     background-color: #FFF;
     margin: 0px auto;
-    width: 70%;
+    width: 1086px;
     margin-top: 40px;
     position: relative;
-    padding: 5px;
     background-color:#fff;
+    border: solid 1px #DDD;
 }
 
 .gsoverlay2 .gs_loading_spinner,

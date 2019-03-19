@@ -46,6 +46,24 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .row_payment_status_line .toggle_action_menu', this.toggleActionMenu);
         $(document).on('click', '.PmsBookingRoomView .markaspaidwindow .innner_area .closebutton', this.hideMarkAsPaidWindow)
         $(document).on('click', '.PmsBookingRoomView .ordermenu .showmarkorderaspaid', this.showPaymentWindow)
+        $(document).on('click', '.PmsBookingRoomView .collapsable_shadowbox .colheader', this.toggleCollapse)
+    },
+    
+    toggleCollapse: function(e) {
+        if ($(e.target).hasClass('shop_button')) {
+            return;
+        }
+        var collapse = $(this).closest('.collapsable_shadowbox');
+        var content = collapse.find('.collapsable_content');
+        if (content.is(':visible')) {
+            collapse.find('.collapser.open').show();
+            collapse.find('.collapser.closed').hide();
+            content.slideUp();
+        } else {
+            collapse.find('.collapser.open').hide();
+            collapse.find('.collapser.closed').show();
+            content.slideDown();
+        }
     },
     
     markAsPaidCompleted: function() {
@@ -116,24 +134,28 @@ app.PmsBookingRoomView = {
     changeUserDescription : function() {
         var text = $('.PmsBookingRoomView .userdescription').text();
         var comment = prompt("Please enter a comment", text);
+        
+        if (!comment) {
+            return;
+        }
+
         $('.PmsBookingRoomView .userdescription').html(comment);
         var event = thundashop.Ajax.createEvent('','saveUserDescription',$(this), {
             "comment" : comment
         });
-        thundashop.Ajax.postWithCallBack(event, function() {
-            
-        });
+        thundashop.Ajax.post(event);
     },
     addOrderNote : function() {
         var text = $('.PmsBookingRoomView .userdescription').text();
         var comment = prompt("Please enter a comment", text);
+        if (!comment) {
+            return;
+        }
         $('.PmsBookingRoomView .ordernote').html(comment);
         var event = thundashop.Ajax.createEvent('','saveOrderNote',$(this), {
             "comment" : comment
         });
-        thundashop.Ajax.postWithCallBack(event, function() {
-            
-        });
+        thundashop.Ajax.post(event);
     },
     changeCouponCode : function() {
         var newCode = $(this).val();

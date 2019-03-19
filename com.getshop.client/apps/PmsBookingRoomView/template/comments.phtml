@@ -1,0 +1,33 @@
+<?
+/* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+
+$pmsBooking = $this->getPmsBooking();
+
+$comments = (array) $pmsBooking->comments;
+ksort($comments);
+
+foreach ($comments as $time => $comment) {
+    echo "<div style='vertical-align: top; border-bottom: solid 1px #DDD; padding: 3px;' >";
+
+        $style = "";
+        if ($comment->deleted) {
+            $style = "text-decoration: line-through;";
+        }
+
+        echo "<div style='display: inline-block; vertical-align: top; color:#777;$style'>";
+            echo "<i class='fa fa-trash-o deletecomment' time='$time' style='cursor:pointer;'></i> ";
+            echo date("d.m.Y H:i", $time / 1000);
+        echo "</div>";
+
+        echo "<div style='display: inline-block; margin-left: 20px; $style'>";
+            echo nl2br($comment->comment);
+        echo "</div>";
+
+        if ($comment->userId) {
+            $commentUser = $this->getApi()->getUserManager()->getUserById($comment->userId);
+            echo "<span style='float:right; color:#777;$style '>" . $commentUser->fullName . "</span>";
+        }
+    
+    echo "</div>";
+}
+?>

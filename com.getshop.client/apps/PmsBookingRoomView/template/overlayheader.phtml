@@ -1,29 +1,65 @@
 <?php
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
-$user = $this->getUserForBooking();
 $pmsBooking = $this->getPmsBooking();
 ?>
-<table width="100%" cellspacing='0' cellpadding='0'>
-    <tr>
-        <td width="33.3%" valign="top" class='bookinginfoarea bookinginfocolheader'><div class='colheader'>Booking information</div>
-            <div style='padding-left: 10px;'><?php $this->includefile("bookinginfo"); ?>
-        </td>
-        <td width="33.3%" class='bookinginfocolheader' valign="top" style=' border-left: solid 1px #efefef; border-right: solid 1px #efefef;'><div class='colheader'>Internal comments (not exposed to guests)</div>
-            <div style='padding-left: 10px; height: 20px;'><span title='A comment pinned to all bookings for this customer'><i class='fa fa-edit adduserdescription' style='cursor:pointer;'></i> Pinned comment:</span> 
-                <b><span class='userdescription'><?php echo $user->description; ?></span></b>
+
+<div class='headerboxes'>
+
+    <div class='collapsable_shadowbox' defaultclosed='false'>
+        <div class='colheader'>
+            Booking information
+            <div class='collapser closed'><i class='fa fa-caret-up'></i></div>
+            <div class='collapser open'><i class='fa fa-caret-down'></i></div>
+        </div>
+        <div class='collapsable_content'><?php $this->includefile("bookinginfo"); ?></div>
+    </div>
+
+    <div class='collapsable_shadowbox' defaultclosed='true'>
+        <div class='colheader'>
+            Internal Comments
+            <div class='extraheaderstuff'>
+                <span class='title'>Pinned comment:</span>
+                <span class='text'><? echo $this->getPinnedComment(); ?></span>
+                <span class='title'>Order note:</span>
+                <span class='text'><? echo $pmsBooking->invoiceNote; ?></span>
             </div>
-            <div style='padding-left: 10px; height: 20px;'><span title='A comment to attach to the orders'><i class='fa fa-edit addordernote' style='cursor:pointer;'></i> Order note:</span> 
-                <b><span class='ordernote'><?php echo $pmsBooking->invoiceNote; ?></span></b>
-            </div>
-            <div style='padding-left: 10px; padding-right:10px;padding-bottom:10px;'><?php $this->includefile("internalcomments"); ?></div>
-        </td>
-        <td width="33.3%" valign="top" class='bookinginfocolheader'>
-            <div class='colheader'>Payments</div>
-            <div style='padding-left: 10px;padding-right:10px;'>
-            <?php
-            $this->includefile("paymentsheader");
+            <div class='collapser closed'><i class='fa fa-caret-up'></i></div>
+            <div class='collapser open'><i class='fa fa-caret-down'></i></div>
+        </div>
+        
+        <div class="subheader">
+            <?
+            $this->includefile("comments");
             ?>
+        </div>
+        <div class='collapsable_content' style="background-color: #EFEFEF; ">
+            
+            <div><?php $this->includefile("internalcomments"); ?></div>
+        </div>
+    </div>
+
+    <div class='collapsable_shadowbox' defaultclosed='true'>
+        <div class='colheader'>
+            Payments
+            
+            <div class='extraheaderstuff'>
+                <div class="shop_button addselecteditemstocart" style="background-color: green; color: #FFF; vertical-align: top; margin-top: -10px;"><? echo $this->__f("Start payment process"); ?></div>
             </div>
-        </td>
-    </tr>
-</table>
+            
+            <div class='collapser closed'><i class='fa fa-caret-up'></i></div>
+            <div class='collapser open'><i class='fa fa-caret-down'></i></div>
+        </div>
+        
+        <div class='pmsroomcheckoutview checkoutview'>
+            <i class='fa fa-close' onclick='$(".checkoutview").hide();$(".getshoptableoverlaybody").css("height","auto");' style='position:absolute;right:1px; top:1px; cursor:pointer;'></i>
+            <i class='fa fa-caret-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
+            <div class='checkoutviewinner'></div>
+        </div>
+        
+        <div class='collapsable_content'>
+        <?php
+        $this->includefile("paymentsheader");
+        ?>
+        </div>
+    </div>
+</div>

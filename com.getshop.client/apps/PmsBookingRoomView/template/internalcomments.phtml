@@ -1,39 +1,27 @@
 <?php
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
+$user = $this->getUserForBooking();
 
-    $comments = (array) $pmsBooking->comments;
-    ksort($comments);
-    echo "<div style='overflow:auto; height: 100px; display:inline-block;width:100%;' id='internalcommentsfield'>";
-    if(sizeof($comments) == 0) {
-        echo "No comments";
-    }
-    foreach ($comments as $time => $comment) {
-        $style = "";
-        if ($comment->deleted) {
-            $style = "text-decoration: line-through;";
-        }
-        echo "<div style='$style'>";
-        echo $comment->comment;
-        echo "</div>";
-        echo "<div style='color:#bbb;$style'>";
-        echo "<i class='fa fa-trash-o deletecomment' time='$time' style='cursor:pointer;'></i> ";
-        echo date("d.m.Y H:i", $time / 1000);
-        if ($comment->userId) {
-            $commentUser = $this->getApi()->getUserManager()->getUserById($comment->userId);
-            echo "<span style='float:right;$style'>" . $commentUser->fullName . "</span>";
-        }
-        echo "</div>";
-    }
-    echo "</div>";
-    ?>
-    <textarea style='width:100%;height: 35px;box-sizing: border-box; margin-' class='commenttext'></textarea>
+$comments = (array) $pmsBooking->comments;
+ksort($comments);
+
+?>
+
+<div class="column1" style="width: 300px; border-right: solid 1px #DDD; padding: 20px; box-sizing: border-box; display: inline-block;">
+    <div class="shop_button adduserdescription" style="width: 100%; box-sizing: border-box;"><span title='A comment pinned to all bookings for this customer'>Set pinned comment </span> 
+    </div>
+    <br/>
+    <br/>
+    <div class="shop_button addordernote"  style="width: 100%; box-sizing: border-box;"><span title='A comment to attach to the orders'>Set Order Note</span> 
+    </div>
+</div>
+
+<div class="column2" style="width: calc(100% - 304px); display: inline-block; vertical-align: top; padding: 20px; box-sizing: border-box;">
+    <textarea style='width:100%;height: 91px; box-sizing: border-box; border: solid 1px #DDD;' class='commenttext'></textarea>
+    <br/>
+    <br/>
     <div style='text-align: right;'>
-        <span class='shop_button displaylogbutton' style='float:left;'>Display log</span>
         <span class='shop_button addcommentbutton'>Add comment</span>
     </div>
-    <script>
-        $('#internalcommentsfield').scrollTop(10000);
-    </script>
-
-<?php
+</div>

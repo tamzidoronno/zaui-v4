@@ -197,7 +197,7 @@ body { background-color:#efefef; }
     padding-bottom: 10px;
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1150px) {
     .gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner {
         width: 95%;
     }

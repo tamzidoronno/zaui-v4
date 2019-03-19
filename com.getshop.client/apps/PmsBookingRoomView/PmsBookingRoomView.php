@@ -20,6 +20,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public static function sortSummaryRowByDate($a, $b) {
+        $aDate = strtotime($a->date);
+        $bDate = strtotime($b->date);
+        return $aDate > $bDate;
+    }
+    
     public function splitStay() {
         $roomId = $_POST['data']['roomid'];
         $splitTime = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['time']));
@@ -2023,6 +2029,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $time = $_POST['data']['date'] . " " . $_POST['data']['time'];
         $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $this->convertToJavaDate(strtotime($time)), $amount);
     }
-    
+
+    public function getPinnedComment() {
+        $user = $this->getUserForBooking();
+        return $user->description;
+    }
+
 }
 ?>

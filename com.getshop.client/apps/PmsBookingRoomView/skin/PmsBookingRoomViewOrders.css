@@ -20,6 +20,6 @@ and open the template in the editor.
 }
 
 .PmsBookingRoomView .guestinformation[tab="orderstab"] {
-    padding-top: 30px;
     padding-right: 20px;
+    padding-bottom: 20px;
 }

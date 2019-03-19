@@ -29,9 +29,11 @@ import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTag;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsRoomPaymentSummary;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductList;
@@ -863,8 +865,27 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(o -> hasUnsettledAmount(o, pmsBookingMultilevelName))
                 .collect(Collectors.toList());
         
+        canClose.roomsWithProblems.removeIf(room -> noUnsettledAmountInPast(room, pmsManager));
+        
         canClose.finalize();
         return canClose;
+    }
+    
+    public boolean noUnsettledAmountInPast(PmsBookingRooms room, PmsManager pmsManager) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+        PmsRoomPaymentSummary summary = pmsManager.getSummary(booking.id, room.pmsBookingRoomId);
+        
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, -2);
+        
+        Date yesterDay = cal.getTime();
+        Date closeTilDate = orderManager.changeCloseDateToCorrectDate(yesterDay);
+        
+        long numberOfProblemsInPast = summary.rows.stream()
+                .filter(o -> o.getDate().before(closeTilDate) && o.needToCreateOrderFor())
+                .count();
+        
+        return numberOfProblemsInPast == 0;
     }
 
     private Date getDateWithOffset(Date date, int addDays) {

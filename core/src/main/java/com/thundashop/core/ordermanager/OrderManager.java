@@ -2933,19 +2933,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void closeTransactionPeriode(Date closeDate) {
         Date closePeriodeToDate = closeDate;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(closeDate);
         
         OrderManagerSettings settings = getOrderManagerSettings();
         
-        // If hour, minute, second is not exaclty the closing date, change time to be in the beginning of the very next day with the accounting closing date.
-        if (cal.get(Calendar.HOUR_OF_DAY) != settings.whatHourOfDayStartADay || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0) {
-            cal.set(Calendar.HOUR_OF_DAY, settings.whatHourOfDayStartADay);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-            closePeriodeToDate = cal.getTime();
-        }
+        closePeriodeToDate = changeCloseDateToCorrectDate(closePeriodeToDate);
         
         if (settings.closedTilPeriode.equals(closePeriodeToDate) || closePeriodeToDate.before(settings.closedTilPeriode)) {
             throw new RuntimeException("The periode has already been closed.");
@@ -2970,6 +2961,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         settings.closedTilPeriode = closePeriodeToDate;
         saveObject(settings);
     }   
+
+    public Date changeCloseDateToCorrectDate(Date closePeriodeToDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(closePeriodeToDate);
+        
+        OrderManagerSettings settings = getOrderManagerSettings();
+        
+        // If hour, minute, second is not exaclty the closing date, change time to be in the beginning of the very next day with the accounting closing date.
+        if (cal.get(Calendar.HOUR_OF_DAY) != settings.whatHourOfDayStartADay || cal.get(Calendar.MINUTE) != 0 || cal.get(Calendar.SECOND) != 0) {
+            cal.set(Calendar.HOUR_OF_DAY, settings.whatHourOfDayStartADay);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            closePeriodeToDate = cal.getTime();
+        }
+        return closePeriodeToDate;
+    }
     
     public OrderManagerSettings getOrderManagerSettings() {
         BasicDBObject query = new BasicDBObject();

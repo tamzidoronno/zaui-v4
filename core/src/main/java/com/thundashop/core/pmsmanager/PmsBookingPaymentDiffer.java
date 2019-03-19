@@ -169,7 +169,6 @@ public class PmsBookingPaymentDiffer {
                 continue;
             }
             for (CartItem item :order.getCartItems()) {
-                System.out.println(order.id +  " - " + item.getCartItemId());
                 if (item.getCartItemId().equals(id))
                     retItem = item;
             }

@@ -6,10 +6,16 @@
 .PmsNewBooking20 .newbookingoption .descriptionimage img { height: 150px; width: 150px; margin-top: 10px; margin-bottom: 10px; }
 .PmsNewBooking20 .newbookingprocess { display:none; text-align: center;}
 .PmsNewBooking20 .newbookingprocess[for="start"] { display:block; text-align: center;}
+.PmsNewBooking20 .spacerinrooms { height: 100px; }
 .PmsNewBooking20 .edit_user_btn,
 .PmsNewBooking20 .user_view { display:none !important; }
 .PmsNewBooking20 .GetShopQuickUser .change_user_form, 
 .PmsNewBooking20 .GetShopQuickUser .edit_details_of_user { position:initial; margin: auto; }
+.PmsNewBooking20 .addconferenceroombox { background-color: #fff; display:inline-block; width: 400px; }
+.PmsNewBooking20 .addroomboxes { text-align: center; }
+.PmsNewBooking20 .roominformationbox.conferenceroom .guestinformation { display:none; }
+.PmsNewBooking20 .roominformationbox.conferenceroom .title { margin-bottom: 0px; border-bottom: 0px; background-color:green; color:#fff; }
+.PmsNewBooking20 .addroombox { background-color: #fff; display:inline-block; width: 630px; border: solid 1px #bbb; padding: 10px; height: 125px;}
 .PmsNewBooking20 .edit_details_of_user,
 .PmsNewBooking20 .change_user { text-align: left; }
 .PmsNewBooking20 .edit_details_of_user .colbox .row { margin-bottom: 10px; }
@@ -52,6 +58,8 @@
 .PmsNewBooking20 .addroomssummary .addroomscategories {width: 100%;box-sizing: border-box; }
 .PmsNewBooking20 .addroomssummary.disabled .description { display:block; }
 .PmsNewBooking20 .addroomssummary.disabled .addroomscategories { background-color:#efefef; cursor: initial;  }
+.PmsNewBooking20 .warnclosedroom { padding: 10px; border: solid 1px #bbb; background-color:red; display:inline-block; width: 800px; color:#fff; line-height: 25px; font-size: 16px; }
+.PmsNewBooking20 .addroomssummary.isclosed { display:none; }
 .PmsNewBooking20 .addAddonButton {color: blue; cursor:pointer; }
 .PmsNewBooking20 .editroompriceinput { width: 70px; }
 .PmsNewBooking20 .editpriceonroom { display: none; float:right;padding-top: 2px;padding-right: 2px; }
@@ -126,8 +134,8 @@
 .PmsNewBooking20 .freeroomresultbox .price { padding: 10px; }
 .PmsNewBooking20 .freeroomresultbox .availroomstep { margin-top: 10px;}
 .PmsNewBooking20 .freeroomresultbox .outercountbutton { 
-        position: relative;
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-    }
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}

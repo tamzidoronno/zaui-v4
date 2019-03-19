@@ -25,9 +25,13 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.data.User;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +46,13 @@ import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  *
@@ -408,7 +419,7 @@ public class Database extends StoreComponent {
         if (data instanceof VirtualOrder) {
             return;
         }
-        
+        logToFile(data);
         checkId(data);
         DBCollection col = mongo.getDB(database).getCollection(collection);
         DBObject dbObject = morphia.toDBObject(data);
@@ -472,7 +483,7 @@ public class Database extends StoreComponent {
 
         checkId(data);
         data.onSaveValidate();
-
+        logToFile(data);
         if (sandbox) {
             return;
         }
@@ -556,7 +567,21 @@ public class Database extends StoreComponent {
 
         Collections.sort(all, new DataCommonSorter());
 
-        return all;    }
+        return all;    
+    }
+    
+    private void logToFile(DataCommon data) {
+        try {
+            if(data instanceof SessionFactory) {
+                System.out.println("Saving sessionfactory");
+            }
+            String txt = new Date() + ";" + storeId + ";" + data.id + ";" + data.className + "\r\n";
+            Path logPath = Paths.get("/tmp/dbwritelog.txt");
+            Files.write(logPath, txt.getBytes(), APPEND);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 class DataCommonSorter implements Comparator<DataCommon> {

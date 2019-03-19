@@ -670,6 +670,8 @@ Error      : #de5353; red
     z-index: 2000;
     bottom: 0px;
 }
+.GslBooking .gslfront_1 .fa_box #coupon_input { padding-left: 10px; padding-right: 10px; }
+
 @media only all and (min-width:800px){
     .GslBooking .gslfront_1 .guestentry input::-webkit-input-placeholder{color:#c8c8c8;}
     .GslBooking .gslfront_1 .guestentry input::-moz-placeholder{color:#c8c8c8 !important;}

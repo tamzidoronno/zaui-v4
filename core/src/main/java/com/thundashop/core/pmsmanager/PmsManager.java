@@ -1755,9 +1755,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        if(filter.codes != null && !filter.codes.isEmpty()) {
-            result.clearBilled();
-        }
         
         gsTiming("After after setting income report");
         result.setView(filter);
@@ -1779,6 +1776,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         result.deliveryStats = deliveryStats;
+        
+        if(filter.codes != null && !filter.codes.isEmpty()) {
+            if(startYear >= 2019) {
+                result.clearBilled();
+            } else if(startYear == 2018) {
+                result.clearBilled();
+            } else {
+                result.moveBilledToTotal();
+            }
+        }
 
         return result;
     }
@@ -8603,10 +8610,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsRoomSimple> removeByCustomersCodesAndAddons(List<PmsRoomSimple> res, PmsBookingFilter filter) {
         List<PmsRoomSimple> finalList = new ArrayList();
         for (PmsRoomSimple r : res) {
+            PmsBooking booking = getBooking(r.bookingId);
             if (!filter.customers.isEmpty() && !filter.customers.contains(r.userId)) {
                 continue;
             }
-            if (!filter.codes.isEmpty() && !filter.containsCode(getBooking(r.bookingId).couponCode)) {
+            if (!filter.codes.isEmpty() && !filter.containsCode(booking.couponCode)) {
                 continue;
             }
 

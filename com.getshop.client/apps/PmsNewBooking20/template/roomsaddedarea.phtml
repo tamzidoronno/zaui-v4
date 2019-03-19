@@ -28,9 +28,20 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
         }
         $found= true;
         $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+        $name = $item->name;
+        $isconference = false;
+        if($item->id == "gsconference") {
+            $bookingitem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+            $name = "Conference room " . strtolower($bookingitem->bookingItemName);
+            $isconference = true;
+        }
+        $conferenceclass = "";
+        if($isconference) {
+            $conferenceclass = "conferenceroom";
+        }
         ?>
-        <div class='roominformationbox'>
-            <div class='title'> <?php echo $item->name; ?>
+        <div class='roominformationbox <?php echo $conferenceclass; ?>'>
+            <div class='title'> <?php echo $name; ?>
                 <span style='float:right;'>
                     <?php
                     echo date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end));

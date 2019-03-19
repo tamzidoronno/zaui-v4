@@ -1882,7 +1882,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function getPrinters() {
-        $devices = $this->getApi()->getGdsManager()->getDevices();
+        $devices = (array)$this->getApi()->getGdsManager()->getDevices();
         $ret = array();
         
         foreach ($devices as $device) {

@@ -289,6 +289,10 @@ public class PmsBookingPaymentDiffer {
     private int getCountForRoom(String productId, Date date) {
         int count = 0;
         for (PmsBookingAddonItem addon : room.addons) {
+            if (addon == null || addon.date == null || addon.productId == null || date == null) {
+                continue;
+            }
+            
             if (sdf.format(addon.date).equals(sdf.format(date)) && addon.productId.equals(productId)) {
                 count += addon.count;
             }
@@ -300,6 +304,10 @@ public class PmsBookingPaymentDiffer {
     private double getPriceForRoom(String productId, Date date) {
         double count = 0;
         for (PmsBookingAddonItem addon : room.addons) {
+            if (addon == null || addon.date == null || addon.productId == null || date == null) {
+                continue;
+            }
+            
             if (sdf.format(addon.date).equals(sdf.format(date)) && addon.productId.equals(productId)) {
                 count += addon.price;
             }

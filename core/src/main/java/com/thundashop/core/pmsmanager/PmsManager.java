@@ -9899,7 +9899,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
         PmsRoomPaymentSummary summary = differ.getSummary();
-        summary.sortIt();
+        
         return summary;
 
     }

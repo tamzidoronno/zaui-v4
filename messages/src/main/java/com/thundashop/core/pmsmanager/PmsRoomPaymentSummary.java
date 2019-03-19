@@ -18,15 +18,5 @@ public class PmsRoomPaymentSummary {
     public String pmsBookingRoomId;
     public List<PmsRoomPaymentSummaryRow> rows = new ArrayList();
     public List<String> orderIds = new ArrayList();
-    
-    public void sortIt() {
-        Collections.sort(rows, (PmsRoomPaymentSummaryRow a, PmsRoomPaymentSummaryRow b) -> {
-            if (a.createOrderOnProductId.equals(b.createOrderOnProductId)) {
-                return a.getDate().compareTo(b.getDate());
-            }
-            
-            return 0;
-        });
-    }
-
+ 
 }

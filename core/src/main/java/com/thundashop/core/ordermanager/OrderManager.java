@@ -713,8 +713,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     public List<String> getOrdersToAutoSend() {
         List<String> toSend = new ArrayList(ordersToAutoSend.orderIds);
-        ordersToAutoSend.orderIds.clear();
-        saveObject(ordersToAutoSend);
+        if(toSend.size() > 0) {
+            ordersToAutoSend.orderIds.clear();
+            saveObject(ordersToAutoSend);
+        }
         return toSend;
     }
     

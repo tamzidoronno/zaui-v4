@@ -330,13 +330,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     private User addUserToSession(User user) throws ErrorException {
         sessionFactory.addToSession(getSession().id, "user", user.id);
-        saveSessionFactory();
+        if(user.id == null || !user.id.equals("gs_system_scheduler_user")) {
+            saveSessionFactory();
+        }
 
         user.prevLoggedIn = user.lastLoggedIn;
         
         user.lastLoggedIn = new Date();
         user.loggedInCounter++;
-        saveObject(user);
+        if(user.id == null || !user.id.equals("gs_system_scheduler_user")) {
+            saveObject(user);
+        }
         return user;
     }
     
@@ -348,8 +352,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public void logout() throws ErrorException {
+        User loggedOnUser = getLoggedOnUser();
         sessionFactory.removeFromSession(getSession().id);
-        saveSessionFactory();
+        
+        if(loggedOnUser.id == null || !loggedOnUser.id.equals("gs_system_scheduler_user")) {
+            saveSessionFactory();
+        }
     }
 
     @Override

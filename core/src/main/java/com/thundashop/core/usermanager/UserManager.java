@@ -355,8 +355,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User loggedOnUser = getLoggedOnUser();
         sessionFactory.removeFromSession(getSession().id);
         
-        if(loggedOnUser == null || loggedOnUser.id == null || !loggedOnUser.id.equals("gs_system_scheduler_user")) {
-            saveSessionFactory();
+        if(loggedOnUser != null) {
+            if(loggedOnUser.id == null || !loggedOnUser.id.equals("gs_system_scheduler_user")) {
+                saveSessionFactory();
+            }
         }
     }
 

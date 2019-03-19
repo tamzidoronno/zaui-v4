@@ -43,8 +43,10 @@ public class PmsBookingSimpleFilter {
                     }
                 }
             }
-            if(i >= 200) {
-                break;
+            if(filter.codes == null || filter.codes.isEmpty()) {
+                if(i >= 200) {
+                    break;
+                }
             }
         }
         this.manager.gsTiming("before sorting list");
@@ -299,6 +301,8 @@ public class PmsBookingSimpleFilter {
             if(booking.createOrderAfterStay) {
                 return true;
             }
+        } else if (filter.codes != null && !filter.codes.isEmpty() && !filter.containsCode(booking.couponCode)) {
+            return true;
         } else if (filter.filterType.equals("activecheckin")) {
             if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate)) {
                 return true;

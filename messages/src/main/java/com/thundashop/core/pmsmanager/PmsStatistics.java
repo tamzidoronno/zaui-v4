@@ -238,6 +238,16 @@ public class PmsStatistics implements Serializable {
     void clearBilled() {
          for(StatisticsEntry entry : entries) {
              entry.totalPrice = 0.0;
+             entry.avgPrice = 0.0;
+         }
+    }
+
+    void moveBilledToTotal() {
+         for(StatisticsEntry entry : entries) {
+             entry.totalForcasted = entry.totalPrice;
+             entry.avgPriceForcasted = entry.avgPrice;
+             entry.totalPrice = 0.0;
+             entry.avgPrice = 0.0;
          }
     }
 

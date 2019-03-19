@@ -80,8 +80,6 @@ class PmsSearchBookingColumnFormatters {
             $name = $guest[0]->name;
         }
         
-        
-        
         $vistorText .= "<img src='/skin/flags/blank.gif' class='flag flag-".$room->countryCode."' style='float:left;'/><div class='guestinfo2' getshop_sorting='".$name."'>";
             foreach($room->guest as $guest) {
                 $vistorText .= "<div class='guestname'>".$guest->name."</div>";
@@ -90,6 +88,7 @@ class PmsSearchBookingColumnFormatters {
                 $vistorText .= "<br>";
             }
             $vistorText .= "<span style='color:#bbb;padding-left:10px'>Speaking ".  strtolower($this->printLanguage($room->language));
+            $vistorText .= $room->code;
             if($room->segmentName) {
                 $vistorText .= ", - " . strtolower($room->segmentName);
             }

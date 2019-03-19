@@ -119,12 +119,14 @@ public class ComfortManager extends ManagerBase implements IComfortManager {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -3);
         Date old = cal.getTime();
+        List<ComfortLog> entiresToRemove = new ArrayList();
         for(ComfortLog logEntry : logEntries) {
             if(logEntry.rowCreatedDate.before(old)) {
-                logEntries.remove(logEntry);
+                entiresToRemove.add(logEntry);
                 deleteObject(logEntry);
             }
         }
+        logEntries.removeAll(entiresToRemove);
     }
 
     @Override

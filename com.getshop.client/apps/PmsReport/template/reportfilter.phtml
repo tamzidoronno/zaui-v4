@@ -94,7 +94,16 @@ $chnls = $pmssearchbox->getChannels();
             </td>
         </tr>
     </table>
-        <span class='shop_button filterbycustomerbutton' style="float:right;">Filter by customers</span>
+        <span class='shop_button filterbycustomerbutton' style="float:right;">Filter by customers</span> 
+        <span class='shop_button filterbydiscountcodes' style="float:right; margin-right: 10px;" onclick='$(".PmsReport .discountcodeselection").toggle();'>Filter by discount codes</span>
+        <span class='discountcodeselection'>
+            <?php
+            $codes = $this->getApi()->getCartManager()->getCoupons();
+            foreach($codes as $code) {
+                echo "<span class='customercodebtn' gsclick='quickloadcode' code='".$code->code."'>".$code->code. "</span> ";
+            }
+            ?>
+        </span>
         <span class='customerfilter'>
             <div><input type='txt' class='gsniceinput1 customersearch' placeholder='Search for customer'></div>
             <div class='filtercustomerresult'></div>
@@ -119,6 +128,9 @@ $chnls = $pmssearchbox->getChannels();
         </div>
         <div class='filteredcustomerslist'>
             <?php $this->printAddedCustomers(); ?>
+        </div>
+        <div class='filtereddiscountlist'>
+            <?php $this->printAddedDiscountCodes(); ?>
         </div>
     </div>
 </div>

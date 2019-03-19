@@ -1184,7 +1184,7 @@ function getshop_saveBookerInformation() {
         var val = $(this).val();
         fields[field] = val;
     });
-    if($('#organization input').is(':checked')) {
+    if($('#organization').is(':checked')) {
         fields["choosetyperadio"] = "registration_company";
     } else {
         fields["choosetyperadio"] = "registration_private";

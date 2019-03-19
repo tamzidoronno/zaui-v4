@@ -235,4 +235,10 @@ public class PmsStatistics implements Serializable {
         
     }
 
+    void clearBilled() {
+         for(StatisticsEntry entry : entries) {
+             entry.totalPrice = 0.0;
+         }
+    }
+
 }

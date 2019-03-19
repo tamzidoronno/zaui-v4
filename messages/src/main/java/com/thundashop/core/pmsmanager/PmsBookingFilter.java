@@ -15,7 +15,7 @@ public class PmsBookingFilter extends DataCommon {
             return false;
         }
         for(String code : codes) {
-            if(code.toLowerCase().equals(couponCode)) {
+            if(code.equalsIgnoreCase(couponCode)) {
                 return true;
             }
         }

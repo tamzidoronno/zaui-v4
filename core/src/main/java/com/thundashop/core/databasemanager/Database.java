@@ -572,12 +572,10 @@ public class Database extends StoreComponent {
     
     private void logToFile(DataCommon data) {
         try {
-            if(data instanceof SessionFactory) {
-                System.out.println("Saving sessionfactory");
-            }
+            
             String txt = new Date() + ";" + storeId + ";" + data.id + ";" + data.className + "\r\n";
             Path logPath = Paths.get("/tmp/dbwritelog.txt");
-            Files.write(logPath, txt.getBytes(), APPEND);
+            Files.write(logPath, txt.getBytes(), APPEND, CREATE);
         }catch(Exception e) {
             e.printStackTrace();
         }

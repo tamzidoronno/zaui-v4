@@ -134,6 +134,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
         List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
         
+        uniqueList.addAll(pmsManager.getExtraOrderIds(currentBooking.id));
+        
         if (!room.orderUnderConstructionId.isEmpty()) {
             if (orderManager.getOrder(room.orderUnderConstructionId) != null) {
                 uniqueList.add(room.orderUnderConstructionId);
@@ -488,6 +490,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         addonsToAdd = gson.fromJson(copy, type);
       
         List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
+        uniqueList.addAll(pmsManager.getExtraOrderIds(currentBooking.id));
         
         if (!room.orderUnderConstructionId.isEmpty()) {
             if (orderManager.getOrder(room.orderUnderConstructionId) != null) {
@@ -674,7 +677,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         List<String> result = new ArrayList();
         HashMap<String, Integer> roomIdsFoundOnOrders = new HashMap();
         List<String> roomIdsFoundOnBooking = new ArrayList();
-        for(String orderId : currentBooking.orderIds) {
+        List<String> uniqueOrderList = currentBooking.orderIds;
+        uniqueOrderList.addAll(pmsManager.getExtraOrderIds(currentBooking.id));
+        
+        for(String orderId : uniqueOrderList) {
             Order order = orderManager.getOrder(orderId);
             for(CartItem item : order.cart.getItems()) {
                 roomIdsFoundOnOrders.put(item.getProduct().externalReferenceId, 1);
@@ -704,7 +710,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     }
 
     private String tryFindFromOrder(PmsBookingRooms room, String type) {
-        for(String orderId : currentBooking.orderIds) {
+        List<String> uniqueOrderList = currentBooking.orderIds;
+        uniqueOrderList.addAll(pmsManager.getExtraOrderIds(currentBooking.id));
+        
+        for(String orderId : uniqueOrderList) {
             Order order = orderManager.getOrder(orderId);
             for(CartItem item : order.cart.getItems()) {
                 if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {

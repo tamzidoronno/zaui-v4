@@ -362,7 +362,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public void addTempUserForcedLogon(User user) {
         getUserStoreCollection(storeId).addUserDirect(user);
         sessionFactory.addToSession(getSession().id, "user", user.id);
-        saveSessionFactory();
     }
     
     @Override
@@ -370,10 +369,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User loggedOnUser = getLoggedOnUser();
         sessionFactory.removeFromSession(getSession().id);
         
-        if(loggedOnUser != null) {
-            if(loggedOnUser.id == null || !loggedOnUser.id.equals("gs_system_scheduler_user")) {
-                saveSessionFactory();
-            }
+        if(loggedOnUser != null && loggedOnUser.lastLoggedIn != null) {
+            saveSessionFactory();
         }
     }
 
@@ -738,7 +735,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return null;
         }
         
-        logonEncrypted(refCode, user.password, true);
+        logonEncrypted(refCode, user.password, false);
         return user;
     }
 
@@ -749,7 +746,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user == null) {
             throw new ErrorException(26);
         }
-        logonEncrypted(user.username, user.password, true);
+        logonEncrypted(user.username, user.password, false);
 
         user.key = null;
         saveObject(user);
@@ -1163,7 +1160,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     public void forceLogon(User user) {
         if (user != null) {
-            addUserToSession(user, true);
+            addUserToSession(user, false);
         }
     }
 
@@ -1218,7 +1215,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User user = getUserByUserNameAndPassword(username, password);
         
         if (user != null && user.pinCode != null && user.pinCode.equals(pinCode)) {
-            addUserToSession(user, true);
+            addUserToSession(user, false);
             return user;
         }
         

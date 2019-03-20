@@ -66,7 +66,7 @@ class Login extends \SystemApplication implements \Application {
         if ($pincode) {
             $userLoggedIn = $this->getApi()->getUserManager()->loginWithPincode($username, $password, $pincode);
         } else {
-            $userLoggedIn = $this->getApi()->getUserManager()->logOn($username, $password);
+            $userLoggedIn = $this->getApi()->getUserManager()->logOnKeepLoggedOnAfterUpdate($username, $password);
         }
 
         if ($userLoggedIn != null && isset($userLoggedIn)) {

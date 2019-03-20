@@ -29,7 +29,6 @@ public class FrameworkConfig {
         String line = "";
         
         File f = new File("config.txt");
-        
         if (!f.exists()) {
             
             f = new File("../config.txt");

@@ -22,6 +22,7 @@ import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
@@ -572,7 +573,9 @@ public class Database extends StoreComponent {
     
     private void logToFile(DataCommon data) {
         try {
-            
+            if(data instanceof ZwaveLockServer) {
+                System.out.println("saving zwave server");
+            }
             String txt = new Date() + ";" + storeId + ";" + data.id + ";" + data.className + "\r\n";
             Path logPath = Paths.get("/tmp/dbwritelog.txt");
             Files.write(logPath, txt.getBytes(), APPEND, CREATE);

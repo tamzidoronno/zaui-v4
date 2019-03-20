@@ -72,6 +72,15 @@ public interface IUserManager {
      */
     public User logOn(String username, String password) throws ErrorException;
     
+    /**
+     * Logon a given user.
+     * @param email The username to use when logging on, an also be the users email.
+     * @param password The password for this user in plain text.
+     * @return
+     * @throws ErrorException 
+     */
+    public User logOnKeepLoggedOnAfterUpdate(String username, String password) throws ErrorException;
+    
     @Administrator
     public User getMainCompanyUser(String companyId);
     

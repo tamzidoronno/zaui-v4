@@ -25,14 +25,14 @@ public class TrackerManager extends ManagerBase implements ITrackerManager  {
 
     @Override
     public void logTracking(String applicationName, String type, String value, String textDescription) {
-        TrackLog log = new TrackLog();
-        log.sessionId = getSession() != null ? getSession().id : "";
-        log.applicationName = applicationName;
-        log.date = new Date();
-        log.type = type;
-        log.value = value;
-        log.textDescription = textDescription;
-        saveObject(log);
+//        TrackLog log = new TrackLog();
+//        log.sessionId = getSession() != null ? getSession().id : "";
+//        log.applicationName = applicationName;
+//        log.date = new Date();
+//        log.type = type;
+//        log.value = value;
+//        log.textDescription = textDescription;
+//        saveObject(log);
     }
 
     @Override

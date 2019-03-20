@@ -1818,7 +1818,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for(Long key : toRemove) {
             log.logEntries.remove(key);
         }
-        saveObject(log);
     }
 
     @Override

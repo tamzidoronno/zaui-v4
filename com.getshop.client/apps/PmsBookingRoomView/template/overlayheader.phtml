@@ -2,6 +2,12 @@
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
 $pmsBookingRoom = $this->getSelectedRoom();
+
+$isgroup = "no";
+if (sizeof($pmsBooking->rooms) > 1) {
+    $isgroup = "yes";
+}
+
 ?>
 
 <div class='headerboxes'>
@@ -44,7 +50,7 @@ $pmsBookingRoom = $this->getSelectedRoom();
             Payments
             
             <div class='extraheaderstuff'>
-                <div class="shop_button addselecteditemstocart" style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Start payment process"); ?></div>
+                <div class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<? echo $pmsBookingRoom->pmsBookingRoomId; ?>' style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Start payment process"); ?></div>
                 <span class='missingonroomgroup'>
                     <?php 
                     $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoom->pmsBookingRoomId, true);

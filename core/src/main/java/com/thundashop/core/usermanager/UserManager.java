@@ -113,6 +113,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     private TotpHandler totpHandler;
+    private Date lastSaved;
     
     
     @Override
@@ -678,8 +679,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private void saveSessionFactory() throws ErrorException {
+        if(lastSaved != null) {
+            long diff = new Date().getTime() - lastSaved.getTime();
+            if(diff < 180000) {
+                return;
+            }
+       }
         sessionFactory.storeId = storeId;
         saveObject(sessionFactory);
+        lastSaved = new Date();
     }
     
     public User getUserByIdIncludedDeleted(String id) {

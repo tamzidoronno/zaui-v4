@@ -573,10 +573,37 @@ public class Database extends StoreComponent {
     
     private void logToFile(DataCommon data) {
         try {
+            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
             if(data instanceof ZwaveLockServer) {
                 System.out.println("saving zwave server");
             }
-            String txt = new Date() + ";" + storeId + ";" + data.id + ";" + data.className + "\r\n";
+            HashMap<String, String> methods = new HashMap();
+            String simpleClassName = data.className.substring(data.className.lastIndexOf('.') + 1);
+
+            String txt = new Date() + ";" + storeId + ";" + data.id + ";" + simpleClassName + ".java;";
+            for(StackTraceElement el : trace) {
+                if(el.getClassName().toString().contains("thundashop")) {
+                    String methodName = el.getMethodName();
+                    if(!methodName.contains("invoke") && 
+                            !methodName.equalsIgnoreCase("ExecuteMethod") &&
+                            !methodName.equals("logToFile") &&
+                            !methodName.equals("executeMethodSync") &&
+                            !methodName.equals("executeMessage") &&
+                            !methodName.equals("executeMethodWithTiming") &&
+                            !methodName.equals("save") &&
+                            !methodName.equals("run") &&
+                            !methodName.contains("saveObject")) {
+                        if(!methods.containsKey(methodName)) {
+                            methods.put(methodName, methodName + ":" + el.getLineNumber());
+                        }
+                    }
+                }
+            }
+            for(String mname : methods.values()) {
+                txt += mname + ";";
+            }
+            
+            txt += "\r\n";
             Path logPath = Paths.get("/tmp/dbwritelog.txt");
             Files.write(logPath, txt.getBytes(), APPEND, CREATE);
         }catch(Exception e) {

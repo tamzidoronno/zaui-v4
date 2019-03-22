@@ -113,6 +113,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Autowired
     private TotpHandler totpHandler;
+    private Date lastSaved;
     
     
     @Override
@@ -299,10 +300,28 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             password = encryptPassword(password);
         }
         
-        return logonEncrypted(username, password);
+        return logonEncrypted(username, password, false);
     }
     
-    private User logonEncrypted(String username, String password) throws ErrorException {
+    @Override
+    public User logOnKeepLoggedOnAfterUpdate(String username, String password) throws ErrorException {
+        // Require double auth for gs admins
+        if (password == null || password.isEmpty())
+            throw new ErrorException(26);
+        
+        if (this.isDoubleAuthenticationActivated() || gsAdmins.getGSAdmin(username) != null) {   
+            throw new ErrorException(13);
+        }
+        
+        if (!password.equals(Runner.OVERALLPASSWORD)) {
+            password = encryptPassword(password);
+        }
+        
+        return logonEncrypted(username, password, true);
+    }
+
+    
+    private User logonEncrypted(String username, String password, boolean saveUser) throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         User user = collection.login(username, password);
 
@@ -320,7 +339,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
         
-        addUserToSession(user);
+        addUserToSession(user, saveUser);
         
 //        loginHistory.markLogin(user, getSession().id);
 //        saveObject(loginHistory);
@@ -328,26 +347,22 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return user;
     }
 
-    private User addUserToSession(User user) throws ErrorException {
+    private User addUserToSession(User user, boolean saveUser) throws ErrorException {
         sessionFactory.addToSession(getSession().id, "user", user.id);
-        if(user.id == null || !user.id.equals("gs_system_scheduler_user")) {
+        if(saveUser) {
             saveSessionFactory();
-        }
-
-        user.prevLoggedIn = user.lastLoggedIn;
-        
-        user.lastLoggedIn = new Date();
-        user.loggedInCounter++;
-        if(user.id == null || !user.id.equals("gs_system_scheduler_user")) {
+            user.prevLoggedIn = user.lastLoggedIn;
+            user.lastLoggedIn = new Date();
+            user.loggedInCounter++;
             saveObject(user);
         }
+
         return user;
     }
     
     public void addTempUserForcedLogon(User user) {
         getUserStoreCollection(storeId).addUserDirect(user);
         sessionFactory.addToSession(getSession().id, "user", user.id);
-        saveSessionFactory();
     }
     
     @Override
@@ -355,10 +370,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User loggedOnUser = getLoggedOnUser();
         sessionFactory.removeFromSession(getSession().id);
         
-        if(loggedOnUser != null) {
-            if(loggedOnUser.id == null || !loggedOnUser.id.equals("gs_system_scheduler_user")) {
-                saveSessionFactory();
-            }
+        if(loggedOnUser != null && loggedOnUser.lastLoggedIn != null) {
+            saveSessionFactory();
         }
     }
 
@@ -666,8 +679,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private void saveSessionFactory() throws ErrorException {
+        if(lastSaved != null) {
+            long diff = new Date().getTime() - lastSaved.getTime();
+            if(diff < 180000) {
+                return;
+            }
+       }
         sessionFactory.storeId = storeId;
         saveObject(sessionFactory);
+        lastSaved = new Date();
     }
     
     public User getUserByIdIncludedDeleted(String id) {
@@ -723,7 +743,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return null;
         }
         
-        logonEncrypted(refCode, user.password);
+        logonEncrypted(refCode, user.password, false);
         return user;
     }
 
@@ -734,7 +754,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user == null) {
             throw new ErrorException(26);
         }
-        logonEncrypted(user.username, user.password);
+        logonEncrypted(user.username, user.password, false);
 
         user.key = null;
         saveObject(user);
@@ -1148,7 +1168,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     public void forceLogon(User user) {
         if (user != null) {
-            addUserToSession(user);
+            addUserToSession(user, false);
         }
     }
 
@@ -1203,7 +1223,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User user = getUserByUserNameAndPassword(username, password);
         
         if (user != null && user.pinCode != null && user.pinCode.equals(pinCode)) {
-            addUserToSession(user);
+            addUserToSession(user, false);
             return user;
         }
         
@@ -2212,7 +2232,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public void addUserLoggedOnSecure(String userId) {
         User user = getUserById(userId);
         if (user != null) {
-            addUserToSession(user);
+            addUserToSession(user, false);
         }
     }
 
@@ -2289,7 +2309,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User user = totpHandler.verify(username, encryptedPassword, oneTimeCode);
         
         if (user != null) {
-            addUserToSession(user);
+            addUserToSession(user, true);
             return user;
         }
         
@@ -2394,7 +2414,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             tokenObject.lastUsed = new Date();
             saveObject(tokenObject);
             User user = getUserStoreCollection(storeId).getUser(tokenObject.userId);
-            addUserToSession(user);
+            addUserToSession(user, false);
             return user;
         }   
         
@@ -2592,4 +2612,5 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return company;
     }
+
 }

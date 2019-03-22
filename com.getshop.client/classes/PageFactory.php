@@ -203,13 +203,18 @@ class PageFactory {
 //        $row->addText("Create a new booking");
         
         $row = $page->createRow();
-        if(@$this->getApi()->getStoreManager()->getMyStore()->storeId == "93fadf31-1039-4196-9e4f-77c3be0ef8d1") {
-            $row->addColumn("74220775-43f4-41de-9d6e-64a189d17e35", "bd2b31ad-816f-4b96-89a1-e664a58d0d2a");
-        } else {
-            $row->addColumn("bf644a39-c932-4e3b-a6c7-f6fd16baa34d", "21a412a6-b15e-4524-85bf-a36f83cdf11a");
-            $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
-        }
+        $row->addColumn("74220775-43f4-41de-9d6e-64a189d17e35", "bd2b31ad-816f-4b96-89a1-e664a58d0d2a");
         $this->pages['4d89b5cf-5a00-46ea-9dcf-46ea0cde32e8'] = $page;   
+        
+        // NEW
+        $page = new \ModulePage("048e2e10-1be3-4d77-a235-4b47e3ebfaab", "pms");
+        $row = $page->createRow();
+//        $row->addText("Create a new booking");
+        
+        $row = $page->createRow();
+        $row->addColumn("bf644a39-c932-4e3b-a6c7-f6fd16baa34d", "21a412a6-b15e-4524-85bf-a36f83cdf11a");
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $this->pages['048e2e10-1be3-4d77-a235-4b47e3ebfaab'] = $page;   
         
         // REPORTS
         $page = new \ModulePage("afe687b7-219e-4396-9e7b-2848f5ed034d", "pms");

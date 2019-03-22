@@ -156,7 +156,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         
         if (!thread.successfullyCompleted) {
             threadFailed(thread);
-            saveMe();
         } else {
             LocstarLock lock = locks.get(thread.getLockId());
             if (lock != null && lock.prioritizeLockUpdate && lock.getJobSize() == 0) {
@@ -235,7 +234,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         if (lock != null) {
             lock.delayUpdateForMinutes(120);
         }
-        saveMe();
     }
 
     @Override

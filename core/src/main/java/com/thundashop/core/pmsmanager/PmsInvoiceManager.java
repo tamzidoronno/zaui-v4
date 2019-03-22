@@ -842,12 +842,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private Double increasePriceByAdvanceCoverage(String typeId, Date start, Double price) {
         Integer coverage = null;
-        if(!savedCoverage.containsKey(start.getTime()/10000) && doCacheCoverage()) {
-            coverage = bookingEngine.getCoverageForDate(start);
-            savedCoverage.put(start.getTime()/10000, coverage);
+        
+        if (useCacheCoverage()) {
+            if(!savedCoverage.containsKey(start.getTime()/10000)) {
+                coverage = bookingEngine.getCoverageForDate(start);
+                savedCoverage.put(start.getTime()/10000, coverage);
+            } else {
+                coverage = savedCoverage.get(start.getTime()/10000);
+            }
         } else {
-            coverage = savedCoverage.get(start);
+            coverage = bookingEngine.getCoverageForDate(start);
         }
+        
         AdvancePriceYieldCalculator calculator = new AdvancePriceYieldCalculator(advancePriceYields);
         return calculator.doCalculation(price, coverage,typeId, start);
     }
@@ -932,11 +938,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return ordersToUse;
     }
 
-    private boolean doCacheCoverage() {
-        if(cacheCoverage == null || (cacheCoverage.getTime() / 10000) < (System.currentTimeMillis() / 10000)) {
+    private boolean useCacheCoverage() {
+        long millisecondSinceWubookStarted = Long.MAX_VALUE;
+        long cacheValidFor60Seconds = 60000;
+        
+        if (cacheCoverage != null) {
+            millisecondSinceWubookStarted = System.currentTimeMillis() - cacheCoverage.getTime();
+        }
+        
+        if(millisecondSinceWubookStarted > cacheValidFor60Seconds) {
             savedCoverage.clear();
             return false;
         }
+        
         return true;
     }
 

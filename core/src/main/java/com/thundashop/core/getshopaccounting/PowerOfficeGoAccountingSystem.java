@@ -44,23 +44,28 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
 
     @Override
     public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
-        Map<String, List<Order>> groupedOrders = groupOrders(orders);
+        try {
+            Map<String, List<Order>> groupedOrders = groupOrders(orders);
 
-        ArrayList<SavedOrderFile> retFiles = new ArrayList();
+            ArrayList<SavedOrderFile> retFiles = new ArrayList();
 
-        for (String subType : groupedOrders.keySet()) {
-            if (groupedOrders.get(subType) == null) {
-                return new ArrayList();
+            for (String subType : groupedOrders.keySet()) {
+                if (groupedOrders.get(subType) == null) {
+                    return new ArrayList();
+                }
+
+                SavedOrderFile file = generateFile(orders, subType);
+                if(file != null) {
+                    file.subtype = subType;
+                    retFiles.add(file);
+                }
             }
-            
-            SavedOrderFile file = generateFile(orders, subType);
-            if(file != null) {
-                file.subtype = subType;
-                retFiles.add(file);
-            }
+
+            return retFiles;
+        }catch(Exception e) {
+            logPrintException(e);
         }
-
-        return retFiles;
+        return null;
     }
 
     @Override
@@ -237,9 +242,8 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                         order.transferredToAccountingSystem = true;
                         order.dateTransferredToAccount = new Date();
                         orderManager.saveOrder(order);
-
-                        return resp.data;
                     }
+                    return resp.data;
                 } else {
                     /* @TODO HANDLE PROPER WARNING */
                     addToLog("Failed to transfer customer: " + result);

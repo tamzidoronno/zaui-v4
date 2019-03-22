@@ -580,7 +580,7 @@ public class Database extends StoreComponent {
             HashMap<String, String> methods = new HashMap();
             String simpleClassName = data.className.substring(data.className.lastIndexOf('.') + 1);
 
-            String txt = new Date() + ";" + storeId + ";" + data.id + ";" + simpleClassName + ".java;";
+            String txt = new Date() + ";" + data.storeId + ";" + data.id + ";" + simpleClassName + ".java;";
             for(StackTraceElement el : trace) {
                 if(el.getClassName().toString().contains("thundashop")) {
                     String methodName = el.getMethodName();

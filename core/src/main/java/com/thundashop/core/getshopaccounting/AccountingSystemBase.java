@@ -290,6 +290,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
     }
     
     public void addToLog(String text) {
+        logPrint(text);
         logEntries.add(text);
     }
    

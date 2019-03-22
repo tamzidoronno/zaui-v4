@@ -1518,4 +1518,33 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
             saveObject(type);
         }
     }
+
+    @Override
+    public Integer getNumberOfAvailableExcludeClose(String bookingItemTypeId, Date start, Date end) {
+        int totalAvailble = getTotalSpotsForBookingItemType(bookingItemTypeId);
+        BookingTimeLineFlatten timeline = new BookingTimeLineFlatten(totalAvailble, bookingItemTypeId);
+        
+        bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(bookingItemTypeId))
+                .filter(booking -> booking.interCepts(start, end))
+                .filter(booking -> booking.source.isEmpty())
+                .forEach(o -> timeline.add(o));
+        
+        timeline.start = start;
+        timeline.end = end;
+        
+        int higest = 9999;
+        List<BookingTimeLine> timeLines = timeline.getTimelines();
+        
+        if (timeLines.isEmpty()) {
+            return getTotalSpotsForBookingItemType(bookingItemTypeId);
+        }
+        
+        for(BookingTimeLine line : timeLines) {
+            if(line.getAvailableSpots() < higest) {
+                higest = line.getAvailableSpots();
+            }
+        }
+        return higest;
+    }
 }

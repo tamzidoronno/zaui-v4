@@ -8400,6 +8400,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         long now = filter.startDate.getTime();
         List<PmsRoomSimple> simplerooms = getSimpleRooms(filter);
         for (PmsRoomSimple simple : simplerooms) {
+            if(simple == null || simple.bookingItemId == null) {
+                continue;
+            }
             if (simple.bookingItemId.equals(itemId) && simple.start < now && simple.end > now) {
                 return simple;
             }

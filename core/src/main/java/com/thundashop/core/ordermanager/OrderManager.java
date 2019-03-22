@@ -3623,7 +3623,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .orElse(null);
     }
 
-    public Order getMainInvoice(String id) {
+    /**
+     * Will return the main invoice for a samlefaktura, but will
+     * also return the creditnote for a main invoice if created.
+     * 
+     * @param id
+     * @return 
+     */
+    public List<Order> getMainInvoices(String id) {
         Order order = getOrder(id);
         
         if (order == null) {
@@ -3632,9 +3639,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return orders.values()
                 .stream()
-                .filter(o -> o.createdBasedOnOrderIds.contains(id))
-                .findAny()
-                .orElse(null);
+                .filter(o -> o.createdBasedOnOrderIds.contains(id) && !o.isCreditNote)
+                .collect(Collectors.toList());
     }
 
     @Override

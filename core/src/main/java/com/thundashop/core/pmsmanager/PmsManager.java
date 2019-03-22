@@ -704,6 +704,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
+        return getBookingInternal(bookingId, true);
+    }
+    
+    public PmsBooking getBookingInternal(String bookingId, boolean calculateUnsettledAmount) {
         if(!convertedDiscountSystem) { 
             cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; 
         }
@@ -716,12 +720,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
         booking.calculateTotalCost();
-        Double totalOrder = pmsInvoiceManager.getTotalOrdersOnBooking(booking.id);
-        Double diff = booking.getTotalPrice() - totalOrder;
-        if (diff < 2 && diff > 2) {
-            diff = 0.0;
+        
+        if (calculateUnsettledAmount) {
+            Double totalOrder = pmsInvoiceManager.getTotalOrdersOnBooking(booking.id);
+            Double diff = booking.getTotalPrice() - totalOrder;
+            if (diff < 2 && diff > 2) {
+                diff = 0.0;
+            }
+            booking.unsettled = diff;
         }
-        booking.unsettled = diff;
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             try {
@@ -9721,7 +9728,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
      */
     @Override
     public List<String> getExtraOrderIds(String pmsBookingId) {
-        PmsBooking booking = getBooking(pmsBookingId);
+        PmsBooking booking = getBookingInternal(pmsBookingId, false);
         
         if(booking == null) {
             return new ArrayList();
@@ -9730,7 +9737,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<String> orderIds = booking.orderIds.stream()
                 .map(orderId -> orderManager.getOrderDirect(orderId))
                 .filter(o -> o != null && o.isSamleFaktura())
-                .map(o ->  orderManager.getMainInvoice(o.id))
+                .flatMap(o ->  orderManager.getMainInvoices(o.id).stream())
                 .distinct()
                 .filter(o -> o != null && !o.isNullOrder())
                 .map(o -> o.id)

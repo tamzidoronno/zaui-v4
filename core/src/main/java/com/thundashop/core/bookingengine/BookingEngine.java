@@ -276,6 +276,18 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     /**
+     * @WARNING do not use this unless you are 100% sure about what you do. This is not secure and might fail.
+     * Use getNumberOfAvailable instead. This will fail if you use it for more than one day at the time due to the shuffling problem.
+     * @param itemType
+     * @param start
+     * @param end
+     * @return 
+     */
+    public Integer getNumberOfAvailableWeakButFasterExcludeClose(String itemType, Date start, Date end) {
+        return getBookingEngine().getNumberOfAvailableExcludeClose(itemType, start, end);
+    }
+
+    /**
      * @TODO Make unit tests for this?
      * @return 
      */
@@ -399,8 +411,10 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
             if(!type.visibleForBooking) {
                 continue;
             }
-            available += getNumberOfAvailableWeakButFaster(type.id, dateStart, dateObject);
-            total += getBookingItemsByType(type.id).size();
+            int availableNumber = getNumberOfAvailableWeakButFasterExcludeClose(type.id, dateStart, dateObject);
+            available += availableNumber;
+            int totalNumber = getBookingItemsByType(type.id).size();
+            total += totalNumber;
         }
         
         Double res = ((double)(total - available) / (double)total) * 100;

@@ -154,8 +154,9 @@
 .PmsBookingRoomView .pricerow .col2,
 .PmsBookingRoomView .pricerow .col2 input { 
     width: 50px;
+    height: 28px;
+    margin-top: 2px;
 }
-
 .PmsBookingRoomView .pricerow .col1 {
     width: 100px;
     line-height: 35px;
@@ -184,15 +185,34 @@
     padding:0px;
     margin-top: 20px;
 }
+.PmsBookingRoomView .stayheader { 
+    border-bottom: solid 1px #e9ebed;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
 
 .PmsBookingRoomView .totalrow {
     font-size: 16px;
-    margin-top: 20px;
+    margin-top: 6px;
+    text-align: right;
+    padding-right: 16px;
 }
+
 .PmsBookingRoomView .extrainfo {
-    font-style: italic;
     margin-top: 10px;
     font-size: 13px;
+    text-align: left;
+    padding-left: 20px;
+    position: relative;
+}
+
+.PmsBookingRoomView .extrainfo .fa-info-circle {
+    position: absolute;
+    left: 0px;
+    top: 5px;
+    color:#7bcff6;
 }
 
 .PmsBookingRoomView .roomandcats,
@@ -212,7 +232,5 @@
 
 .PmsBookingRoomView .roomandcats {
     height: 370px;
-    border-left: solid 1px #DDD;
-    border-right: solid 1px #DDD;
     position: relative;
 }

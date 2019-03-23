@@ -158,7 +158,17 @@
 .PmsBookingRoomView .bookingoverview_content_row {
     font-size: 0px;
     background-color: #FFF;
+    margin-bottom: 20px;
 }
+.PmsBookingRoomView .checkinheadertext {font-size: 12px; }
+.PmsBookingRoomView .secondarytextcolor { color: #718188; }
+.PmsBookingRoomView .changedatespanel { display:none; }
+.PmsBookingRoomView .datepresentation { border-bottom: solid 1px #e9ebed; padding-bottom: 10px; margin-bottom: 10px; cursor:pointer; }
+.PmsBookingRoomView .checkincheckoutbutton {width: 100%;
+    cursor: pointer;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    display: block;}
 
 .PmsBookingRoomView .bookingoverview_content_row .menuarea,
 .PmsBookingRoomView .bookingoverview_content_row .workarea {

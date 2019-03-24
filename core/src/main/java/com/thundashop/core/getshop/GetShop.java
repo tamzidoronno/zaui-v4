@@ -394,7 +394,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     public String copyStore(String originalStoreId, String newAddress, StartData start) throws UnknownHostException {
         String newStoreId = UUID.randomUUID().toString();
         
-        Mongo m = new MongoClient("localhost", Database.mongoPort);
+        Mongo m = new MongoClient("localhostdb", Database.mongoPort);
 
         for (String databaseName : m.getDatabaseNames()) {
             if (databaseName.equals("LoggerManager") || databaseName.equals("UserManager")) {

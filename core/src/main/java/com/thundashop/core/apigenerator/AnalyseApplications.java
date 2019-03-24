@@ -58,7 +58,7 @@ public class AnalyseApplications {
         morphia.map(DataCommon.class);
         
         List<Application> result = new ArrayList();
-        Mongo m = new Mongo("localhostdb", Database.mongoPort);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("ApplicationPool");
         Set<String> collections = db.getCollectionNames();
         for (String colection : collections) {

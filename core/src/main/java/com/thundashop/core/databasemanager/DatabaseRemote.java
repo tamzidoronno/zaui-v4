@@ -104,7 +104,7 @@ public class DatabaseRemote extends StoreComponent {
     }
     
     private void connectLocal() throws UnknownHostException {
-        mongo = new Mongo("localhostdb", Database.mongoPort);
+        mongo = new Mongo("localhost", Database.mongoPort);
     }
 
     private void checkId(DataCommon data) throws ErrorException {

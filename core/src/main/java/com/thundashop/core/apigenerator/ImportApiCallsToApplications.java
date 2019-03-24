@@ -50,7 +50,7 @@ public class ImportApiCallsToApplications {
     }
 
     public void run() throws UnknownHostException, ClassNotFoundException {
-        Mongo m = new Mongo("localhostdb", Database.mongoPort);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("ApplicationPool");
         DBCollection collection = db.getCollection("col_all");
         

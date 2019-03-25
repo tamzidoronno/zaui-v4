@@ -109,7 +109,7 @@ if($pmsBooking->avoidAutoDelete) {
 <div class='col_box_width_2 second'>
     <div class="row">
         <div class="col col1"><? echo $this->__f("Date created"); ?></div>
-        <div class="col col2"><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
+        <div class="col col2"><div class='ellipsis'><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
             <?php if($pmsBooking->bookedByUserId) { 
 
                 if($pmsBooking->bookedByUserId == "gs_system_scheduler_user") {
@@ -124,7 +124,7 @@ if($pmsBooking->avoidAutoDelete) {
             } else {
                 echo $user->fullName;
             } ?>
-            </b>
+                </b></div>
         </div>    
     </div>
 

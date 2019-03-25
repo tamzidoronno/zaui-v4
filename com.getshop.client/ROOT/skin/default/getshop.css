@@ -176,10 +176,11 @@ a {
     cursor:pointer;
     padding: 10px;
     position: absolute;
-    right: -17px;
-    background-color: #fff;
+    right: -44px;
     border-radius: 56%;
-    top: -20px;
+    top: -19px;
+    color:#71cdf2;
+    font-size: 40px;
 }
 
 .gsoverlay2 .gsoverlayinner,

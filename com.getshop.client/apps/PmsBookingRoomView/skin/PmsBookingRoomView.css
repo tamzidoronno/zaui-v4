@@ -477,6 +477,14 @@
 .PmsBookingRoomView .bookinginformation .guest_col4 { width: 35px; }
 .PmsBookingRoomView .bookinginformation .guest_col5 { width: 225px; }
 
+.PmsBookingRoomView .ellipsis {white-space: nowrap; overflow: hidden;text-overflow: ellipsis; } 
+.PmsBookingRoomView .GetShopQuickUser .booked_for {
+    display: inline-block;
+    width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+} 
 .PmsBookingRoomView .insideheader {
     padding: 0px;
     margin: 0px;

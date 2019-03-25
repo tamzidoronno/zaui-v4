@@ -153,9 +153,10 @@
 }
 .PmsBookingRoomView .pricerow .col2,
 .PmsBookingRoomView .pricerow .col2 input { 
-    width: 50px;
+    width: 65px;
     height: 28px;
     margin-top: 2px;
+    text-align: center;
 }
 .PmsBookingRoomView .pricerow .col1 {
     width: 100px;

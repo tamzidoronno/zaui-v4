@@ -255,14 +255,11 @@ class ModulePageMenu {
                             }
                         }
                         if($entry->getPageId() == "getshopsupport") {
-                            ?>
-                            <div class="entry"><a href="/getshopsupport.php" target='_new'><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
-                            <?php
-                        } else {
-                            ?>
-                            <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
-                            <?php
-                        }
+                            continue;
+                        } 
+                        ?>
+                        <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                        <?php
                     } ?>
                 </div>
             </div>

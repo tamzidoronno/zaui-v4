@@ -8343,10 +8343,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             messageManager.sendErrorNotification("Order added to a different booking: " + " : " + order.incrementOrderId + " - " + orderId + " booking: " + booking.id, new Exception());
             return;
         }
-        booking.orderIds.add(orderId);
+        
+        if (!booking.orderIds.contains(orderId)) {
+            booking.orderIds.add(orderId);
+        }
     }
 
     private boolean checkDuplicateOrders(String orderId, String currentBookingId) {
+        Order order = orderManager.getOrder(orderId);
+        
+        if (order != null && order.supportMultipleBookings) {
+            return false;
+        }
+        
         List<String> orderIds = new ArrayList();
         for (PmsBooking booking : bookings.values()) {
             if (booking.id.equals(currentBookingId)) {
@@ -9997,6 +10006,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         currentBooking.confirmed = true;
         currentBooking.markAsCompleted();
         saveBooking(currentBooking);
+    }
+
+    @Override
+    public String createOrderFromCheckout(List<PmsOrderCreateRow> rows) {
+        PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this);
+        Order order = invoiceManager.createOrder(rows);
+        
+        rows.stream()
+            .forEach(o -> {
+                PmsBooking booking = getBookingFromRoom(o.roomId);
+                if (!booking.orderIds.contains(order.id)) {
+                    booking.orderIds.add(order.id);
+                    saveBooking(booking);
+                }
+            });
+        
+        return order.id;
     }
 
 }

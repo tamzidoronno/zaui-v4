@@ -1,0 +1,47 @@
+<?
+/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+
+$start = $this->getStart();
+$end = $this->getEnd();
+$dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($start, $end);
+?>
+<div style='margin: 50px;'>
+    <div class='row'>
+        <div class='col amount'>Date</div>
+        <div class='col amount'>OrderId</div>
+        <div class='col amount'>Amount</div>
+        <div class='col amount'>Ex tax</div>
+        <div class='col name'>Name</div>
+    </div>
+    <?
+
+    foreach ($dayIncome as $income) {
+        $day = date('d.m.Y', strtotime($income->start));
+        foreach ($income->dayEntries as $entry) {
+            if ($entry->accountingNumber != $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions']) {
+                continue;
+            }
+
+            ?>
+            <div class='row'>
+                <a class='gs_ignorenavigate' href="/invoicing.php?page=orderviewpage&orderid=<? echo $entry->orderId;?>">
+                    <div class='col amount'><? echo $day; ?></div>
+                    <div class='col amount'><? echo $entry->incrementalOrderId; ?></div>
+                    <div class='col amount'><? echo round($entry->amount,2); ?></div>
+                    <div class='col amount'><? echo round($entry->amountExTax,2); ?></div>
+                    <div class='col name'><? echo $entry->metaData->{"Guest name"}; ?></div>
+                </a>
+            </div>
+            <?
+        }
+    }
+    ?>
+    <br/>
+    <br/>
+    
+    <div class='shop_button' gsclick='cancelAllTransactionView'>Go back</div>
+    <?
+    $excelfilename = "all_transaction_".$_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions'].date('d-m-Y', strtotime($start));
+    ?>
+    <div class='shop_button' gs_downloadExcelReport='downloadAllTransactionsToExcel' gs_fileName="<? echo $excelfilename; ?>">Download to excel</div>
+</div>

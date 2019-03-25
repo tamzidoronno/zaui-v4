@@ -1,0 +1,93 @@
+<?
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+$bookings = $this->getSelectedBookings();
+?>
+<br/>
+<br/>
+
+<div class="header">
+    <? echo $this->__f("Step 2 - Please select rooms"); ?>
+</div>
+
+<div class='selectedpaymentmethod'>
+    <?
+    echo $this->__f("Selected payment method").": ".$this->getNameOfSelectedPaymentMethod();
+    ?>
+</div>
+
+<div class='informationbox'>
+    <i class='fa fa-info-circle'></i>
+    <?
+    echo $this->__f("Please select the rooms you want to do a payment for");
+    ?>
+</div>
+<?
+foreach ($bookings as $booking) {
+    
+    $extrainforforbooking = "";
+    if ($booking->userId) {
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $extrainforforbooking = " / ".$user->fullName;
+    }
+?>
+    <div class='sub_header'>
+        <? echo $this->__f("Booking").": ". $booking->incrementBookingId.$extrainforforbooking; ?>
+    </div>
+
+    <div class="rooms">
+        <?
+        foreach ($booking->rooms as $room) {
+            $roomName = $room->bookingItemId ? $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId)->bookingItemName : "Floating";
+            $selected = $this->isSelectedRoom($room->pmsBookingRoomId) ? "checked='true'" : "";
+            ?>
+            <div class="row roomrow">
+                <div class="col checkbox">
+                    <input class="roomcheckbox" <? echo $selected; ?> type="checkbox" value='<? echo $room->pmsBookingRoomId; ?>' />
+                </div>
+
+                <div class="col roomname">
+                    <? echo $roomName; ?>
+                </div>
+                <div class="col col2 date">
+                    <?
+                    echo date('d.m.Y H:i', strtotime($room->date->start));
+                    ?>
+                </div>
+                -
+                <div class="col col3 date">
+                    <?
+                    echo date('d.m.Y H:i', strtotime($room->date->end));
+                    ?>
+                </div>
+
+                <div class="guests">
+                    <?
+                    $i = 0;
+                    foreach ($room->guests as $guest) {
+                        $i++;
+                        ?>
+                        <div class="row guestrow">
+                            <div class="col guestcounter"><? echo $this->__f("guest").": ".$i; ?></div>
+                            <div class="col guestname"><? echo $guest->name; ?></div>
+                            <div class="col guestemail"><? echo $guest->email; ?></div>
+                            <div class="col guestprefix"><? echo $guest->prefix; ?></div>
+                            <div class="col guestphone"><? echo $guest->phone; ?></div>
+                        </div>
+                        <?
+                    }
+                    ?>
+
+                </div>
+            </div>    
+            <?
+        }
+        ?>
+    </div>
+<?
+}
+?>
+<br/>
+<div class='buttonarea'>
+    <div class='shop_button' gsclick='gotopaymentselection'><i class='fa fa-arrow-left'></i> <? echo $this->__f("Back"); ?></div>
+    <div class='shop_button setrooms' style='float: right;'><? echo $this->__f("Next"); ?> <i class='fa fa-arrow-right'></i></div>
+</div>

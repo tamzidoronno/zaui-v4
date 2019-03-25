@@ -154,6 +154,7 @@ a {
 .gs_page_col.col3 { width: 33%; }
 .gs_page_col.col4 { width: 25%; }
 
+.gsoverlay3,
 .gsoverlay2,
 .gsoverlay1 {
     display: none;
@@ -167,6 +168,12 @@ a {
     overflow:auto;
 }
 
+.gsoverlay3 {
+    background-color: #eeeeee;
+    z-index: 3;
+}
+
+.gsoverlay3.active,
 .gsoverlay2.active,
 .gsoverlay1.active {
     display: block;
@@ -324,7 +331,7 @@ a {
     width: 420px;
     margin-left: 10px;
     margin-top: 6px;
-    font-size: 14px;
+    font-size: 14px;    
 }
 
 #messagebox .title {
@@ -341,3 +348,41 @@ a {
     vertical-align: top;    
 }
 
+
+.getshop_box_1 {
+    width: 240px;
+    height: 280px;
+    display: inline-block;
+    text-align: center;
+    color: #FFF;
+    vertical-align: top;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.1);
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    background-image: url(getshop_box_1_mask.png);
+    background-repeat: no-repeat;
+    background-position-x: 5px;
+    background-position-y: 5px;
+}
+
+.getshop_box_1:hover {
+    background-image: url(getshop_box_1_mask_hover.png);
+}
+
+.getshop_box_1 .title {
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: bold;
+    height: 50px;
+}
+.getshop_box_1 .descriptionimage img {
+    max-width: 240px;
+    max-height: 160px;
+}
+
+.getshop_box_1.pink { background-color: #d02077; }
+.getshop_box_1.pink { box-shadow: 5px 5px 5px rgba(81,12,47,0.2); }
+
+.getshop_box_1.orange { background-color: #f09a32; }
+.getshop_box_1.orange { box-shadow: 5px 5px 5px rgba(94,60,20,0.2); }

@@ -1,0 +1,99 @@
+.PmsPaymentProcess {
+    padding-left: 50px;
+    padding-right: 50px;
+    margin: 0 auto;
+}
+.PmsPaymentProcess .getshop_box_1 {
+    margin: 10px !important;
+}
+
+.PmsPaymentProcess .sub_header {
+    padding: 10px;
+    text-transform: uppercase;
+    font-size: 20px;
+    background-color: #DDD;
+    margin-top: 30px;
+}
+
+.PmsPaymentProcess .header {
+    text-transform: uppercase;
+    font-size: 20px;
+    text-align: center;
+}
+
+.PmsPaymentProcess .selectedpaymentmethod {
+    font-size: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.PmsPaymentProcess .row .col {
+    display: inline-block;
+}
+
+.PmsPaymentProcess .rooms .guests {
+    padding-left: 25px;
+    color: #555;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.PmsPaymentProcess .rooms .roomname {
+    width: 300px;
+}
+.PmsPaymentProcess .rooms .roomrow {
+    padding-top: 5px;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: solid 1px #DDD;
+    font-weight: bold;
+}
+
+.PmsPaymentProcess .informationbox {
+    background-color: #fffdd4;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.PmsPaymentProcess .cart_room_summary .totalrow {
+    font-size: 20px;
+    padding: 20px;
+    padding-left: 0px;
+    padding-left: 20px;
+}
+
+.PmsPaymentProcess .cart_room_summary .roominformation {
+    font-size: 16px;
+    padding: 10px;
+    border-bottom: solid 1px #DDD;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.PmsPaymentProcess .cart_room_summary .cartitemline {
+    border-bottom: solid 1px #DDD;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 20px;
+    border-left: solid 1px #DDD;
+    padding-left: 20px;
+}
+
+.PmsPaymentProcess .cart_room_summary .date {
+    line-height: 37px;
+}
+.PmsPaymentProcess .cart_room_summary .productname {
+    width: 200px;
+    margin-left: 20px;
+    
+}
+
+.PmsPaymentProcess .cart_room_summary .item_price,
+.PmsPaymentProcess .cart_room_summary .item_count {
+    width: 50px;
+}
+.PmsPaymentProcess .paymentmethodsselection {
+    text-align: center;
+    padding-top: 50px;
+}

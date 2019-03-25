@@ -229,6 +229,10 @@ class ApplicationBase extends FactoryBase {
     public function showDescription() {
         $this->includefile('applicationdescription', 'Common');
     }
+    
+    public function renderStandAlone() {
+        $this->renderApplication(true);
+    }
 
     public function renderApplication($appNotAddedToPage=false, $fromApplication=false) {
         $changeable = '';

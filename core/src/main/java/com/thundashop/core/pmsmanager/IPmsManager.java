@@ -621,4 +621,7 @@ public interface IPmsManager {
     @Administrator
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId);
     
+    @Administrator
+    public String createOrderFromCheckout(List<PmsOrderCreateRow> row);
+    
 }

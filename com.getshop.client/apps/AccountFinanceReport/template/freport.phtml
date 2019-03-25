@@ -7,6 +7,7 @@ $isLocked = $this->getApi()->getOrderManager()->isLocked($end);
 $bankAccountClosed = $this->getApi()->getOrderManager()->isBankAccountClosed($end);
 $isShowingExTaxes = $this->isShowingIncTaxes();
 $autoCloseActivated = $this->getApi()->getOrderManager()->getOrderManagerSettings()->autoCloseFinancialDataWhenCreatingZReport;
+$incomeBalance = $this->getApi()->getOrderManager()->getBalance($start);
 
 $this->getApi()->getPmsManager()->markOtaPaymentsAutomaticallyPaidOnCheckin($this->getSelectedMultilevelDomainName(), $start, $end);
 
@@ -39,6 +40,21 @@ if (count($errors)) {
         echo "<div style='color: red; margin-left: 50px;'>- ".$error."</div>";
     }
     return;
+}
+
+function printIncomeValues($accounts, $incomeBalance, $text) {
+    echo "<div class='row' >";
+        echo "<div class='inner_row inbalance2' >";
+            echo "<div class='col orderid'>$text</div>";
+            
+            foreach ($accounts as $account) {
+                $val = $incomeBalance->balances->{$account};
+                echo "<div class='col $account'>".round($val,2)."</div>";
+            }
+            
+            echo "<div class='col controlsum'>-</div>";
+        echo "</div>";
+    echo "</div>";
 }
 
 $accounts = array_unique($allAccountNumbers);
@@ -149,9 +165,16 @@ echo "<div class='outer'>";
         echo "<div class='col controlsum'>Zero Check</div>";
     echo "</div>";
     
+    $i = 0;
     foreach ($dayIncomes as $dayIncome) {
-         echo "<div class='row' >";
+        $i++;
+        if ($i == 1) {
+            printIncomeValues($accounts, $incomeBalance, $this->__f("Balance in"));
+        }
+        
+        echo "<div class='row' >";
             echo "<div class='inner_row' gsclick='showDetailedReport'  start='$dayIncome->start' end='$dayIncome->end' >";
+                
                 $isLocked = $dayIncome->isFinal ? "<i class='fa fa-lock'></i>" : "";
                 $grouped = $this->groupOnAccounting($dayIncome->dayEntries);
                 echo "<div class='col orderid'>$isLocked ".date('d.m.Y H:i', strtotime($dayIncome->start))." - ".date('H:i', strtotime($dayIncome->end))."</div>";
@@ -187,16 +210,28 @@ echo "<div class='outer'>";
     
     echo "<div class='row summaryrow'>";
 
-        echo "<div class='col orderid'>Total</div>";
+        echo "<div class='col orderid'>Total for month</div>";
 
         foreach ($accounts as $account) {
+            if (!isset($incomeBalance->balances->{$account})) {
+                $incomeBalance->balances->{$account} = 0;
+            }
+            
             $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
-            echo "<div gsclick='showSummaryForAccount' account='$account' class='col $account'>".round($val,2)."</div>";
+            $incomeBalance->balances->{$account} += $val;
+            echo "<div account='$account' class='col $account totalcolforaccount'>".round($val,2);
+            ?>
+            <div class='summarymenu'>
+                <div class='entry' gsclick='showSummaryForAccount' account='<? echo $account; ?>' ><? echo $this->__f("Show open balances pr")." ".date('d.m.Y', strtotime($end)); ?></div>
+                <div class='entry' gsclick='showAllTransactionsForMonth' account='<? echo $account; ?>' ><? echo $this->__f("Show all transactions for month"); ?></div>
+            </div>
+            <?
+            echo "</div>";
         }
 
     echo "</div>";
-
     
+    printIncomeValues($accounts, $incomeBalance, $this->__f("Balance out"));
 echo "</div>";
 
 ?>

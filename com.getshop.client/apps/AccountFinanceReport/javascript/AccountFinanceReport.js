@@ -6,6 +6,18 @@ app.AccountFinanceReport = {
         $(document).on('click', '.AccountFinanceReport .showresultbutton.vismaloginlink', app.AccountFinanceReport.doVismaLogin);
         $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
         $(document).on('click', '.AccountFinanceReport .leftmenu .taboperation', app.AccountFinanceReport.changeMenu);
+        $(document).on('click', '.AccountFinanceReport .totalcolforaccount', app.AccountFinanceReport.showSummaryRow);
+    },
+    
+    showSummaryRow: function() {
+        var menu = $(this).find('.summarymenu');
+        var wasVisible = menu.is(':visible');
+        
+        $('.summarymenu').hide();
+        
+        if (!wasVisible) {
+            menu.show();
+        }
     },
     
     changeMenu: function() {

@@ -34,6 +34,11 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
             return;
         }
         
+        if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions'])) {
+            $this->includefile("alltransactions");
+            return;
+        }
+        
         if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid'])) {
             $this->includefile("orderview");
             return;
@@ -67,8 +72,36 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         }
     }
     
+    public function downloadAllTransactionsToExcel() {
+        $excel = array();
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($start, $end);
+        
+        $excel[] = array("Date", "Order id", "Amount inc tax", "Amount ex tax");
+        foreach ($dayIncome as $income) {
+            $day = date('d.m.Y', strtotime($income->start));
+            foreach ($income->dayEntries as $entry) {
+                if ($entry->accountingNumber != $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions']) {
+                    continue;
+                }
+                $excel[] = array($day, $entry->incrementalOrderId, round($entry->amount,2), round($entry->amountExTax,2));
+            }
+        }
+        
+        echo json_encode($excel);
+    }
+
     public function showSummaryForAccount() {
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'] = $_POST['data']['account'];
+    }
+    
+    public function cancelAllTransactionView() {
+        unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions']);
+    }
+    
+    public function showAllTransactionsForMonth() {
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions'] = $_POST['data']['account'];
     }
     
     public function showDetailedReport() {
@@ -345,5 +378,6 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
         echo json_encode($rows);
     }
+    
 }
 ?>

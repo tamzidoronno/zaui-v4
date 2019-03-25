@@ -9,6 +9,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     private $logEntries = array();
     
+    private $cachedProducts = array();
+    
     private $defaultPrefix;
     
     
@@ -293,7 +295,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function render() {
-        echo "<div class='room_view_outer'>";
+        echo "<div class='room_view_outer' usenewpayment='".$this->shouldUseNewPaymentWindow()."'>";
             if(isset($_POST['data']['getshop_resetlistmode']) && $_POST['data']['getshop_resetlistmode'] == "true") {
                 $this->removeGroupList();
             }
@@ -2033,6 +2035,26 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function getPinnedComment() {
         $user = $this->getUserForBooking();
         return $user->description;
+    }
+
+    /**
+     * 
+     * @param type $productId
+     * @return \core_productmanager_data_Product
+     */
+    public function getProduct($productId) {
+        if (isset($this->cachedProducts[$productId])) {
+            return $this->cachedProducts[$productId];
+        }
+        
+        $this->cachedProducts[$productId] = $this->getApi()->getProductManager()->getProduct($productId);
+        
+        return $this->cachedProducts[$productId];
+    }
+
+    public function getPaymentType($order) {
+        $orderList = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+        return $orderList->formatPaymentType($order);
     }
 
 }

@@ -10,6 +10,11 @@ app.PmsSearchBooking = {
         $(document).on('click','.PmsSearchBooking .continuetocheckout', app.PmsSearchBooking.startCheckoutProcess);
     },
     startCheckoutProcess : function() {
+        if ($(this).hasClass('usenew')) {
+            app.PmsSearchBooking.startNewCheckoutProcess();
+            return;
+        };
+        
         var rooms = app.PmsSearchBooking.getAddedToCheckoutList();
         var event = thundashop.Ajax.createEvent('','startPaymentProcessForSelectedRooms', $(this), {
             "rooms" : rooms 
@@ -20,6 +25,12 @@ app.PmsSearchBooking = {
             $('.pmscheckoutforrooms').show();
         });
     },
+    
+    startNewCheckoutProcess: function() {
+        var rooms = app.PmsSearchBooking.getAddedToCheckoutList();
+        thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", { pmsBookingRoomId : rooms, state: 'bookings_summary'}); 
+    },
+    
     clearCheckoutProcess : function() {
         $('.checkoutview').hide();
         localStorage.setItem("addedtocheckout", JSON.stringify([]));

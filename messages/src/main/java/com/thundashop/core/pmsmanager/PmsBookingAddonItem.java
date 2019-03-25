@@ -4,6 +4,7 @@ import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -139,5 +140,20 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
         return name;
     }
     
+    public String getStringDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
+        return sdf.format(date);
+    }
     
+    /**
+     * This is the key used to indentify the same addons
+     * for the same day.
+     * 
+     * @return 
+     */
+    public String getKey() {
+        String key = productId;
+        key += isIncludedInRoomPrice ? ";isincluded;" : ";notincluded;";
+        return key;
+    }
 }

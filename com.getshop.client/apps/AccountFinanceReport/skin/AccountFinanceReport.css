@@ -109,6 +109,10 @@
     color: green;
 }
 
+.AccountFinanceReport .inbalance2 {
+    background-color: #56dbff;
+}
+
 .AccountFinanceReport .workarea,
 .AccountFinanceReport .leftmenu {
     display: inline-block;
@@ -165,9 +169,27 @@
     vertical-align: top;
 }
 
+.AccountFinanceReport .totalcolforaccount {
+    position: relative;
+}
+
 .AccountFinanceReport .accountdownloadfilearea {
     border-left: solid 1px #DDD;
     border-bottom: solid 1px #DDD;
     padding: 20px;
     margin-bottom: 20px;
+}
+
+.AccountFinanceReport .summarymenu .entry {
+    padding: 10px;
+    font-weight: normal;
+}
+
+.AccountFinanceReport .summarymenu {
+    background-color: #FFF;
+    position: absolute;
+    bottom: 30px;
+    border: solid 1px #DDD;
+    display: none;
+    
 }

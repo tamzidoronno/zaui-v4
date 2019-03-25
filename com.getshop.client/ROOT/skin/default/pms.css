@@ -10,7 +10,7 @@ body { overflow-y: scroll; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .module_toprow { max-width: 100%; padding-left: 20px; padding-right: 20px; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .colcount_0.rowcount_0 { display:none; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .colcount_1.rowcount_0 { width: 100%; }
-body { background-color:#efefef; }
+body { background-color:#f4f8fa; }
 
 .gss_settings_header {
     background-color: #efefef;
@@ -189,6 +189,10 @@ body { background-color:#efefef; }
     background-image: linear-gradient(to bottom, #63819f 1px, #63819f 19px, #466585 20px, #466585 100% );
 }
 
+.gsshadowbox {
+    background-color: #FFF;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+}
 
 .gss_button_area {
     margin-top: 20px;

@@ -19,7 +19,7 @@ foreach($items as $item) {
     $count = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(),$item->id, $start, $end);
     $price = $this->getApi()->getPmsManager()->getPriceForRoomWhenBooking($this->getSelectedMultilevelDomainName(), $start, $end,$item->id);
     ?>
-    <div class="freeroomresultbox" gstype='form' method='addTypesToBooking'>
+    <div class="freeroomresultbox gsshadowbox" gstype='form' method='addTypesToBooking'>
         <input type='hidden' gsname='typeid' value='<?php echo $item->id; ?>'>
         <input type='hidden' gsname='start' value='<?php echo strtotime($start); ?>'>
         <input type='hidden' gsname='end' value='<?php echo strtotime($end); ?>'>

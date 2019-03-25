@@ -187,7 +187,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
             currentThread = null;
         }
         
-        if (!this.activated) {
+        if (!this.activated) { 
             return;
         }
         

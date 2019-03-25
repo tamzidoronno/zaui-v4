@@ -1,8 +1,28 @@
-.PmsNewBooking20 .newbookingoption { width: 300px; display:inline-block; height: 300px; border: solid 1px #bbb; text-align: center; margin: 20px;  box-sizing: border-box; cursor:pointer; background-color:#fff; }
+.PmsNewBooking20 .newbookingoption { width: 264px; display:inline-block; height: 300px; text-align: center; margin: 20px;  box-sizing: border-box; cursor:pointer; background-color:#fff; }
+.PmsNewBooking20 .steptitle { text-transform: uppercase; font-weight: bold; font-size: 16px; margin-top: 70px; margin-bottom: 70px; }
+.PmsNewBooking20 .stepboxtitle { text-transform: uppercase; font-weight: bold; font-size: 16px; border-bottom: solid 1px #eaecee; text-align: left; padding: 10px; }
+.PmsNewBooking20 .stepboxbody { padding: 10px; }
+.PmsNewBooking20 .searchcustomerbox { margin: auto; max-width: 500px; }
+
+.PmsNewBooking20 .GetShopQuickUser .change_user_form .tabs .tab {
+    background: none !important;
+    color: #000 !important;
+    text-transform: uppercase !important;
+    border: none !important;
+    font-weight: bold;
+}
+.PmsNewBooking20 .GetShopQuickUser .change_user_form .tabs .tab.tab_active {
+    border-bottom: solid 2px #72cff4 !important;
+}
+.PmsNewBooking20 .GetShopQuickUser .change_user_form .tabs .tab .fa-check {
+    display:none;
+}
+.PmsNewBooking20 .GetShopQuickUser .change_user_form .tabs {
+    border-bottom: solid 1px #72cff4;
+}
 .PmsNewBooking20 .newbookingoption:hover,
-.PmsNewBooking20 .newbookingoption:hover .title
-{ border-color: green; }
-.PmsNewBooking20 .newbookingoption .title { font-size: 20px; border-bottom: solid 1px #bbb; padding: 10px; }
+.PmsNewBooking20 .newbookingoption:hover .title { border-color: green; }
+.PmsNewBooking20 .newbookingoption .title { font-size: 20px; padding: 10px; }
 .PmsNewBooking20 .newbookingoption .descriptionimage img { height: 150px; width: 150px; margin-top: 10px; margin-bottom: 10px; }
 .PmsNewBooking20 .newbookingprocess { display:none; text-align: center;}
 .PmsNewBooking20 .newbookingprocess[for="start"] { display:block; text-align: center;}
@@ -15,7 +35,7 @@
 .PmsNewBooking20 .addroomboxes { text-align: center; }
 .PmsNewBooking20 .roominformationbox.conferenceroom .guestinformation { display:none; }
 .PmsNewBooking20 .roominformationbox.conferenceroom .title { margin-bottom: 0px; border-bottom: 0px; background-color:green; color:#fff; }
-.PmsNewBooking20 .addroombox { background-color: #fff; display:inline-block; width: 630px; border: solid 1px #bbb; padding: 10px; height: 125px;}
+.PmsNewBooking20 .addroombox { background-color: #fff; display:inline-block; width: 630px; height: 125px;}
 .PmsNewBooking20 .edit_details_of_user,
 .PmsNewBooking20 .change_user { text-align: left; }
 .PmsNewBooking20 .edit_details_of_user .colbox .row { margin-bottom: 10px; }
@@ -31,16 +51,18 @@
 }
 
 
-.PmsNewBooking20 .insideheader { text-align: center; border-bottom: solid 1px #efefef;padding-bottom: 3px; margin-bottom: 3px; }
-.PmsNewBooking20 .bookinginformationkey { display:inline-block; width: 110px; }
+.PmsNewBooking20 .insideheader { text-align: left; border-bottom: solid 1px #efefef;padding-bottom: 3px; margin-bottom: 3px; text-transform: uppercase; color:#777;  }
+.PmsNewBooking20 .insidebody { padding-left: 15px; }
+.PmsNewBooking20 .bookinginformationkey { display:inline-block; width: 110px; color:#777; }
 .PmsNewBooking20 .searchcustomerresultbox { border: solid 1px #bbb; display:inline-block; width: 270px; box-sizing: border-box; background-color:#fff; margin: 10px; }
 .PmsNewBooking20 .searchcustomerresultbox .fullname { 
     font-size: 16px; border-bottom: solid 1px #bbb;padding: 10px;  white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left;
 }
 .PmsNewBooking20 .searchcustomerresultbox .usersresult { text-align: left; padding: 10px; height:180px; }
-.PmsNewBooking20 .searchcustomerresultbox .selectusersbutton { width: 100%; box-sizing: border-box; }
+.PmsNewBooking20 .searchcustomerresultbox .selectusersbutton { width: 90%; box-sizing: border-box; margin-bottom: 10px; text-transform: uppercase; }
 
 
 
@@ -120,14 +142,14 @@
 .PmsNewBooking20 .closeaddonspanel { padding: 10px; border-bottom: solid 1px #bbb; cursor:pointer; }
 .PmsNewBooking20 .addonspanel { border: solid 1px #bbb; background-color:#fff; width: 300px; display:inline-block; border-bottom: solid 0px; display:none; z-index:2;}
 .PmsNewBooking20 .addonspanel .fa { float:right; }
-.freeroomresultbox .counterrow .fa {    
+.freeroomresultbox .counterrow .fa {
         font-size: 25px;
         cursor: pointer;
         position: absolute;
         top: 13px;
-        left: 4px; 
-    }
-.PmsNewBooking20 .freeroomresultbox { width: 200px; display:inline-block; border: solid 1px #bbb; background-color:#fff; margin: 10px; }
+        left: 4px;
+}
+.PmsNewBooking20 .freeroomresultbox { width: 200px; display:inline-block;  background-color:#fff; margin: 10px; }
 .PmsNewBooking20 .freeroomresultbox .dochoosebutton { margin-top: 10px; width: 100%; display:inline-block; box-sizing: border-box; border:solid 1px #bbb; }
 .PmsNewBooking20 .freeroomresultbox .roomname { font-size: 20px; text-align: center; border-bottom: solid 1px #bbb;padding: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .PmsNewBooking20 .freeroomresultbox .numberavailable { font-size: 40px; text-align: center; }

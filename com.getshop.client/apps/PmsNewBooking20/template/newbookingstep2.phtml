@@ -10,11 +10,11 @@ foreach ($allRooms as $r) {
 }
 ?>
 <div class='newbookingprocess' for='newbookingstep2'>
-    <h1>Step 2 / 3 adding rooms</h1>
-    <div class='addroomboxes'>
-        <div class='addroombox addhotelroombox'>
-            <h1>Rooms</h1>
-            <div gstype="form" method="searchfreerom" gstoarea=".availablerooms">
+    <div class='steptitle'>Step 2 / 3 adding rooms</div>
+    <div class='addroomboxes '>
+        <div class='addroombox addhotelroombox gsshadowbox'>
+            <div class='stepboxtitle'>Rooms</div>
+            <div gstype="form" method="searchfreerom" gstoarea=".availablerooms" class='stepboxbody'>
                 <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
                 <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
                 <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>

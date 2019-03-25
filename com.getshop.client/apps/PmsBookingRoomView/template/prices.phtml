@@ -17,7 +17,7 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
 
 <div class="item_prices">
     <div class='pricecontainerbox'>
-        <h2>Daily prices <i class='fa fa-edit' style='float:right;cursor:pointer;' onclick='$(".masseditpricesbox").toggle()'></i></h2>
+        <div class="stayheader">Daily prices <i class='fa fa-edit bookinghighlightcolor' style='float:right;cursor:pointer;font-size:20px;' onclick='$(".masseditpricesbox").toggle()'></i></div>
         <div class='masseditpricesbox' style='display:none;'>
             <select class="gsniceselect1 masseditpricestay" style="width:100%; margin-bottom: 5px;">
                 <option value="dayprice">Same price all days</option>
@@ -39,15 +39,16 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
             $total = 0;
             foreach ($priceMatrix as $date => $price) {
                 $total += $price;
-                echo "<div class='pricerow' date='$date'> <div class='col col1'>$date </div> <div class='col col2' style='float:right;    margin-right: 32px;'><input class='gsniceinput1 unitprice_changed' gsname='$date' value='$price' ></div> </div>";
+                $datetext = date("d.m.Y", strtotime($date));
+                echo "<div class='pricerow' date='$date'> <div class='col col1 secondarytextcolor'>$datetext </div> <div class='col col2' style='float:right;    margin-right: 14px;'><input class='gsniceinput1 unitprice_changed' gsname='$date' value='$price' ></div> </div>";
                 echo "<div style='clear:both;'></div>";
             }
             ?>
         </div>
 
-        <div class='totalrow'>
+        <div class='totalrow secondarytextcolor'>
             <?
-            echo $this->__f("Total").": <span>".$total."</span>";
+            echo "<span style='color:#000000'>" .  $this->__f("Total").": <span><b>".$total."</b></span></span>";
             ?>
             <div class='extrainfo'>
                 <i class='fa fa-info-circle'></i>

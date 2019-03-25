@@ -16,9 +16,9 @@ if($guestcount > $numberofguests) {
 ?>
 <div class="bookinginformation">
 <div class="guestinfo">
-    <div class='insideheader' style='border:solid 0px;'>
-        <? echo $this->__f("Language"); ?>
-        <select class="gsniceselect1" style='float:right;height:35px;' id='roomlanguage'>
+    <div class='countrylanguagebox'>
+        <div class='secondarytextcolor'><? echo $this->__f("Language"); ?></div>
+        <select class="gsniceselect1" id='roomlanguage'>
             <?php
             foreach($langs as $lang => $name) {
                 $selected = $this->getLanguage($pmsSelectedRoom, $pmsBooking) == $lang ? "SELECTED" : "";
@@ -27,10 +27,10 @@ if($guestcount > $numberofguests) {
             ?>
         </select>
     </div>
-    <div class='insideheader' style='border:solid 0px;'>
-        <? echo $this->__f("Country"); ?>
-
-        <select gsname="countryCode" class="gsniceselect1" style='float:right;height:35px;' id='countrycodeselection'>
+    
+    <div class='countrylanguagebox'>
+        <div class='secondarytextcolor'><? echo $this->__f("Country"); ?></div>
+        <select gsname="countryCode" class="gsniceselect1" id='countrycodeselection'>
             <?php
             $genothersettings = new ns_afbe1ef5_6c62_45c7_a5a0_fd16d380d7cb\GeneralSettingsOther();
             $countries = $genothersettings->getCountryCodes();
@@ -42,9 +42,11 @@ if($guestcount > $numberofguests) {
             ?>
         </select>
     </div>
-    
+    <br>
+    <br>
+    <br>
     <div class='insideheader'>
-        <? echo $this->__f("Guests"); ?>
+        <? echo $this->__f("GUESTS"); ?>
         <div class="gs_shop_small_icon add_more_guests" title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
     </div>
     <div class="guest_row header">

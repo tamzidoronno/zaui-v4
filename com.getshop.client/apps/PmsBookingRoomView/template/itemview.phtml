@@ -33,55 +33,74 @@ if(stristr($booking->channel, "wubook_")) {
 <div style="border: solid 1px; text-align: right;background-color:red; color:#fff;<?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>
 <div class="outerstay">
     <div class='itemview_inner stayperiodecontainer'>
-        <h2>Stay periode</h2>
-        Check-in<br>
-        <input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo date("d.m.Y", $startDate); ?>"/>
-        <input type="textfield" class="gsniceinput1 starttime time starttime" gsname="startTime" value="<? echo date("H:i", $startDate); ?>"/><br><br>
-        Check-out<br>
-        <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo date("d.m.Y", $endDate); ?>"/> 
+        <div class="stayheader">Stay periode</div>
+        <div class='changedatesinformation'>
+            <div class='checkinheadertext secondarytextcolor'>Check-in</div>
+            <div class='datepresentation' onclick='app.PmsBookingRoomView.showChangeDatePanel("checkin")'><? echo date("d M Y", $startDate); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<? echo date("H:i", $startDate); ?></div>
+            <div class='checkinheadertext secondarytextcolor'>Check-out</div>
+            <div class='datepresentation' onclick='app.PmsBookingRoomView.showChangeDatePanel("checkout")'><? echo date("d M Y", $endDate); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<? echo date("H:i", $endDate); ?></div>
+            
+            <?php
+            if(isset($room->warningText)) {
+                echo "<div style='font-weight:bold; color:red;'><i>" . $room->warningText . "</i></div>";
+            }
+            ?>
+            <div class='bookinghighlightcolor'
+                 onclick='app.PmsBookingRoomView.showChangeDatePanel("")'
+                 style='width:100%;margin-top:5px;box-sizing: border-box;cursor:pointer;margin-bottom: 10px;margin-top: 23px; margin-bottom: 5px;'><i class='fa fa-refresh'></i> Change dates</div>
+                 
+            <?php
+            if($this->isStartingToday($room) && !$room->checkedin) {
+                echo "<span class='checkinguest bookinghighlightcolor checkincheckoutbutton'><i class='fa fa-sign-in'></i> Check in guest</span>";
+            } else if($room->checkedin && !$room->checkedout) {
+                echo "<span class='checkoutguest bookinghighlightcolor checkincheckoutbutton'><i class='fa fa-sign-out'></i> Check out guest</span>";
+            } else if($room->checkedin && $room->checkedout) {
+                echo "<span class='checkoutguest bookinghighlightcolor checkincheckoutbutton'><i class='fa fa-refresh'></i> Undo checkout</span>";
+            }
+            echo "<span class='shop_button splitstaybutton' style='width:100%; margin-top: 5px;box-sizing:border-box;' onclick='$(this).hide();$(\".PmsBookingRoomView .splistayoptions\").slideDown();'>Split stay</span>";
+            ?>
+            <div class='splistayoptions' gstype='form' method='splitStay'>
+                <div>Specify split time</div>
+                <input type="hidden" class="gsniceinput1 splitstaydate" value="<?php echo $room->pmsBookingRoomId; ?>" gsname="roomid">
+                <input type="txt" class="gsniceinput1 splitstaydate" value="<?php echo date("d.m.Y"); ?>" gsname="date">
+                <input type="txt" class="gsniceinput1" value="<?php echo date("H:i"); ?>" gsname="time" style="width:60px;">
+                <span class="shop_button" gstype='submit'>Split stay</span>
+            </div>
+        </div>
+        <div class='changedatespanel'>
+            Check-in<br>
+            <input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo date("d.m.Y", $startDate); ?>"/>
+            <input type="textfield" class="gsniceinput1 starttime time starttime" gsname="startTime" value="<? echo date("H:i", $startDate); ?>"/><br><br>
+            Check-out<br>
+            <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo date("d.m.Y", $endDate); ?>"/> 
 
-        <input type="textfield" class="gsniceinput1 endtime time endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
-        <?php
-        if(isset($room->warningText)) {
-            echo "<div style='font-weight:bold; color:red;'><i>" . $room->warningText . "</i></div>";
-        }
-        ?>
-        <span class='shop_button setnewdates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>
-        <?php
-        if($this->isStartingToday($room) && !$room->checkedin) {
-            echo "<span class='shop_button checkinguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:green;'>Check in guest</span>";
-        } else if($room->checkedin && !$room->checkedout) {
-            echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:blue;'>Check out guest</span>";
-        } else if($room->checkedin && $room->checkedout) {
-            echo "<span class='shop_button checkoutguest' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:orange;'>Undo checkout</span>";
-        }
-        echo "<span class='shop_button splitstaybutton' style='width:100%; margin-top: 5px;box-sizing:border-box; background-color:#00807a;' onclick='$(this).hide();$(\".PmsBookingRoomView .splistayoptions\").slideDown();'>Split stay</span>";
-        ?>
-        <div class='splistayoptions' gstype='form' method='splitStay'>
-            <div>Specify split time</div>
-            <input type="hidden" class="gsniceinput1 splitstaydate" value="<?php echo $room->pmsBookingRoomId; ?>" gsname="roomid">
-            <input type="txt" class="gsniceinput1 splitstaydate" value="<?php echo date("d.m.Y"); ?>" gsname="date">
-            <input type="txt" class="gsniceinput1" value="<?php echo date("H:i"); ?>" gsname="time" style="width:60px;">
-            <span class="shop_button" gstype='submit'>Split stay</span>
+            <input type="textfield" class="gsniceinput1 endtime time endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
+            <?php
+            if(isset($room->warningText)) {
+                echo "<div style='font-weight:bold; color:red;'><i>" . $room->warningText . "</i></div>";
+            }
+            ?>
+            <span class='shop_button setnewdates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>
         </div>
     </div>
 
     <div class='itemview_inner roomandcats'>
-        <h2>Room and categories</h2>
+        <div class="stayheader">Room & categories</div>
 
         <?
-        echo $this->__f("Selected category").": ".$selectedType->name;
-        echo "<br>".$this->__f("Selected room").": ";
+        echo "<div style='margin-bottom: 10px;margin-top:30px;'><span class='secondarytextcolor'>" . $this->__f("Selected category").":</span> ".$selectedType->name . "</div>";
+        echo "<div style='margin-bottom: 10px;'><span class='secondarytextcolor'>".$this->__f("Selected room").":</span> ";
         if ($selectedItem) {
             echo $selectedItem->bookingItemName;
-            $isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $selectedItem->id);
-            if($isClean) {
-                echo "<div>Room is clean</div>";
-            } else {
-                echo "<div>Room is <b>not</b> clean</div>";
-            }
         } else {
             echo $this->__f("Floating");
+        }
+        echo "</div>";
+        $isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $selectedItem->id);
+        if($isClean) {
+            echo "<div style='color:green'><i class='fa fa-check'></i> Room is clean</div>";
+        } else {
+            echo "<div class='secondarytextcolor'>Room is <b style='color:#000000'>not</b> clean</div>";
         }
         if(!$validSelection) {
             echo "<div class='notvalidselection'>This room selection is not valid.</div>";
@@ -90,10 +109,10 @@ if(stristr($booking->channel, "wubook_")) {
         ?>
         <br/>
         <br/>
-        <div class="shop_button showroomstoselect"><? echo $this->__f("Change room or category"); ?></div>
+        <div class="showroomstoselect bookinghighlightcolor" style='cursor:pointer;margin-bottom: 5px;'><i class='fa fa-refresh'></i> <? echo $this->__f("Change room or category"); ?></div>
         <?php if(!$savedRoom->deleted && !$savedRoom->addedToWaitingList) { ?>
-           <span class='shop_button' gsclick='cancelRoom' gs_confirm="Are you sure you want to cancel this room?" style='bottom:-27px;background-color:red;'>Cancel this room</span>
-           <span class='shop_button' gsclick='moveToWaitingList' gs_confirm="Are you sure you want to move this room to waiting list?" style='bottom:-27px;background-color:#b2bf22;'>Move to waiting list</span>
+           <div class='bookinghighlightcolor'  style='cursor:pointer; margin-bottom: 20px;' gsclick='cancelRoom' gs_confirm="Are you sure you want to cancel this room?"><i class='fa fa-stop-circle-o'></i> Cancel this room</div>
+           <div class='shop_button'  style='cursor:pointer;' gsclick='moveToWaitingList' gs_confirm="Are you sure you want to move this room to waiting list?" style='bottom:-27px;background-color:#b2bf22;'>Move to waiting list</div>
         <?php } ?>
     </div>
 

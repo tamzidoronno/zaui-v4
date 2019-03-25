@@ -48,7 +48,16 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .ordermenu .showmarkorderaspaid', this.showPaymentWindow)
         $(document).on('click', '.PmsBookingRoomView .collapsable_shadowbox .colheader', this.toggleCollapse)
     },
-    
+    showChangeDatePanel : function(type) {
+        $('.changedatesinformation').hide();
+        $('.changedatespanel').show();
+        if(type === "checkin") {
+            $('.changedatespanel .startdate').focus();
+        }
+        if(type === "checkout") {
+            $('.changedatespanel .enddate').focus();
+        }
+    },
     toggleCollapse: function(e) {
         if ($(e.target).hasClass('shop_button')) {
             return;

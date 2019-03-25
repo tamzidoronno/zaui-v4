@@ -18,16 +18,18 @@ $i = 0;
 foreach($uniqueusers as $userId) {
     $user = $this->getApi()->getUserManager()->getUserById($userId);
     $name = $user->fullName ? $user->fullName : "N/A";
-    echo "<div class='searchcustomerresultbox'>";
+    echo "<div class='searchcustomerresultbox gsshadowbox'>";
     echo "<div class='fullname'>" . $name . "</div>";
     echo "<div class='usersresult'>";
-    echo "<div class='insideheader'>Address</div>";
+    echo "<div class='insideheader'><i class='fa fa-home'></i> Address</div>";
+    echo "<div class='insidebody'>";
     if($user->address) {
-        echo $user->address->address . "<br>";
+        echo $user->address->address . ", ";
         echo $user->address->city . " " . $user->address->postCode . "<br>";
     } else { 
-        echo "<br><br>";
+        echo "<br>";
     }
+    echo "</div>";
     
     $bookingstats = $this->getApi()->getPmsReportManager()->getUserStatistics($this->getSelectedMultilevelDomainName(), $userId);
     
@@ -41,13 +43,15 @@ foreach($uniqueusers as $userId) {
     
     
     echo "<br>";
-    echo "<div class='insideheader'>Booking information</div>";
+    echo "<div class='insideheader'><i class='fa fa-info-circle'></i> Booking information</div>";
+    echo "<div class='insidebody'>";
     echo "<span class='bookinginformationkey'>Booking count</span>".$bookingstats->numberOfBookings."<br>";
     echo "<span class='bookinginformationkey'>Discount</span>".$discounts."<br>";
     echo "<span class='bookinginformationkey'>Last booked</span>".date("d.m.Y", strtotime($bookingstats->lastBookingDate))."<br>";
     
     $code = $bookingstats->discountCode ? $bookingstats->discountCode : "N/A";
     echo "<span class='bookinginformationkey'>Discount code</span>".$code."<br>";
+    echo "</div>";
     echo "</div>";
     echo "<span class='shop_button selectusersbutton' gsclick='selectUser' userid='$userId' gs_callback='app.PmsNewBooking20.continueToStep2'>Select customer</span>";
     echo "</div>";

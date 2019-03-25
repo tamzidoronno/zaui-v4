@@ -6,7 +6,6 @@ var timezones = [
     "isdst": false,
     "text": "(UTC-12:00) International Date Line West",
     "utc": [
-      "Etc/GMT+12"
     ]
   },
   {
@@ -16,7 +15,6 @@ var timezones = [
     "isdst": false,
     "text": "(UTC-11:00) Coordinated Universal Time-11",
     "utc": [
-      "Etc/GMT+11",
       "Pacific/Midway",
       "Pacific/Niue",
       "Pacific/Pago_Pago"
@@ -29,7 +27,6 @@ var timezones = [
     "isdst": false,
     "text": "(UTC-10:00) Hawaii",
     "utc": [
-      "Etc/GMT+10",
       "Pacific/Honolulu",
       "Pacific/Johnston",
       "Pacific/Rarotonga",
@@ -85,8 +82,7 @@ var timezones = [
       "America/Creston",
       "America/Dawson_Creek",
       "America/Hermosillo",
-      "America/Phoenix",
-      "Etc/GMT+7"
+      "America/Phoenix"
     ]
   },
   {
@@ -130,7 +126,6 @@ var timezones = [
       "America/Guatemala",
       "America/Managua",
       "America/Tegucigalpa",
-      "Etc/GMT+6",
       "Pacific/Galapagos"
     ]
   },
@@ -196,8 +191,7 @@ var timezones = [
       "America/Jamaica",
       "America/Lima",
       "America/Panama",
-      "America/Rio_Branco",
-      "Etc/GMT+5"
+      "America/Rio_Branco"
     ]
   },
   {
@@ -319,8 +313,7 @@ var timezones = [
       "America/St_Lucia",
       "America/St_Thomas",
       "America/St_Vincent",
-      "America/Tortola",
-      "Etc/GMT+4"
+      "America/Tortola"
     ]
   },
   {
@@ -391,8 +384,7 @@ var timezones = [
       "America/Recife",
       "America/Santarem",
       "Antarctica/Rothera",
-      "Atlantic/Stanley",
-      "Etc/GMT+3"
+      "Atlantic/Stanley"
     ]
   },
   {
@@ -433,8 +425,7 @@ var timezones = [
     "text": "(UTC-02:00) Coordinated Universal Time-02",
     "utc": [
       "America/Noronha",
-      "Atlantic/South_Georgia",
-      "Etc/GMT+2"
+      "Atlantic/South_Georgia"
     ]
   },
   {
@@ -463,8 +454,7 @@ var timezones = [
     "isdst": false,
     "text": "(UTC-01:00) Cape Verde Is.",
     "utc": [
-      "Atlantic/Cape_Verde",
-      "Etc/GMT+1"
+      "Atlantic/Cape_Verde"
     ]
   },
   {
@@ -485,8 +475,7 @@ var timezones = [
     "isdst": false,
     "text": "(UTC) Coordinated Universal Time",
     "utc": [
-      "America/Danmarkshavn",
-      "Etc/GMT"
+      "America/Danmarkshavn"
     ]
   },
   {
@@ -619,8 +608,7 @@ var timezones = [
       "Africa/Ndjamena",
       "Africa/Niamey",
       "Africa/Porto-Novo",
-      "Africa/Tunis",
-      "Etc/GMT-1"
+      "Africa/Tunis"
     ]
   },
   {
@@ -717,8 +705,7 @@ var timezones = [
       "Africa/Lusaka",
       "Africa/Maputo",
       "Africa/Maseru",
-      "Africa/Mbabane",
-      "Etc/GMT-2"
+      "Africa/Mbabane"
     ]
   },
   {
@@ -831,7 +818,6 @@ var timezones = [
       "Africa/Mogadishu",
       "Africa/Nairobi",
       "Antarctica/Syowa",
-      "Etc/GMT-3",
       "Indian/Antananarivo",
       "Indian/Comoro",
       "Indian/Mayotte"
@@ -880,8 +866,7 @@ var timezones = [
     "text": "(UTC+04:00) Abu Dhabi, Muscat",
     "utc": [
       "Asia/Dubai",
-      "Asia/Muscat",
-      "Etc/GMT-4"
+      "Asia/Muscat"
     ]
   },
   {
@@ -951,7 +936,6 @@ var timezones = [
       "Asia/Oral",
       "Asia/Samarkand",
       "Asia/Tashkent",
-      "Etc/GMT-5",
       "Indian/Kerguelen",
       "Indian/Maldives"
     ]
@@ -1008,7 +992,6 @@ var timezones = [
       "Asia/Bishkek",
       "Asia/Qyzylorda",
       "Asia/Urumqi",
-      "Etc/GMT-6",
       "Indian/Chagos"
     ]
   },
@@ -1059,7 +1042,6 @@ var timezones = [
       "Asia/Pontianak",
       "Asia/Saigon",
       "Asia/Vientiane",
-      "Etc/GMT-7",
       "Indian/Christmas"
     ]
   },
@@ -1109,8 +1091,7 @@ var timezones = [
       "Asia/Kuching",
       "Asia/Makassar",
       "Asia/Manila",
-      "Asia/Singapore",
-      "Etc/GMT-8"
+      "Asia/Singapore"
     ]
   },
   {
@@ -1165,7 +1146,6 @@ var timezones = [
       "Asia/Dili",
       "Asia/Jayapura",
       "Asia/Tokyo",
-      "Etc/GMT-9",
       "Pacific/Palau"
     ]
   },
@@ -1231,7 +1211,6 @@ var timezones = [
     "text": "(UTC+10:00) Guam, Port Moresby",
     "utc": [
       "Antarctica/DumontDUrville",
-      "Etc/GMT-10",
       "Pacific/Guam",
       "Pacific/Port_Moresby",
       "Pacific/Saipan",
@@ -1269,7 +1248,6 @@ var timezones = [
     "text": "(UTC+11:00) Solomon Is., New Caledonia",
     "utc": [
       "Antarctica/Macquarie",
-      "Etc/GMT-11",
       "Pacific/Efate",
       "Pacific/Guadalcanal",
       "Pacific/Kosrae",
@@ -1307,7 +1285,6 @@ var timezones = [
     "isdst": false,
     "text": "(UTC+12:00) Coordinated Universal Time+12",
     "utc": [
-      "Etc/GMT-12",
       "Pacific/Funafuti",
       "Pacific/Kwajalein",
       "Pacific/Majuro",
@@ -1357,7 +1334,6 @@ var timezones = [
     "isdst": false,
     "text": "(UTC+13:00) Nuku'alofa",
     "utc": [
-      "Etc/GMT-13",
       "Pacific/Enderbury",
       "Pacific/Fakaofo",
       "Pacific/Tongatapu"

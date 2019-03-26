@@ -8,8 +8,10 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
+import com.thundashop.core.getshopaccounting.AccountingBalance;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
@@ -359,8 +361,13 @@ public interface IOrderManager {
     @Administrator
     public void markOrderAsBillabe(String orderId);
     
+    @ForceAsync
     @Administrator
     public List<DayIncome> getDayIncomes(Date start, Date end);
+    
+    @ForceAsync
+    @Administrator
+    public List<DayIncome> getDayIncomesWithMetaData(Date start, Date end);
     
     @Administrator
     public List<DayEntry> getDayEntriesForOrder(String orderId);
@@ -453,4 +460,12 @@ public interface IOrderManager {
      */
     @Administrator
     public List<String> filterOrdersIsCredittedAndPaidFor(List<String> orderIds);
+    
+    @Administrator
+    @ForceAsync
+    public AccountingBalance getBalance(Date date);
+    
+    @Administrator
+    @ForceAsync
+    public List<DayIncome> getDoublePostingDayIncomes(String paymentId, Date start, Date end);
 }

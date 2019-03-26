@@ -21,6 +21,7 @@ import com.thundashop.core.department.DepartmentManager;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.epay.EpayManager;
 import com.thundashop.core.getshop.GetShopPullService;
+import com.thundashop.core.getshopaccounting.AccountingBalance;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeFilter;
@@ -214,6 +215,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order credited = order.jsonClone();
         for(CartItem item : credited.cart.getItems()) {
             item.setCount(item.getCount() * -1);
+            item.creditPmsAddonsAndPriceMatrix();
         }
         
         credited.incrementOrderId = getNextIncrementalOrderId();
@@ -228,6 +230,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (credited.overrideAccountingDate != null && credited.overrideAccountingDate.before(getOrderManagerSettings().closedTilPeriode)) {
             credited.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
         }
+        
         order.creditOrderId.add(credited.id);
         order.doFinalize();
         
@@ -2187,6 +2190,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrderInternal(newOrder);
         
         finalizeOrder(newOrder);
+        
+        addOrderToBooking(newOrder);
+        
         return newOrder;
     }
     
@@ -3832,5 +3838,107 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             saveOrder(order);
         }
+    }
+
+    @Override
+    public AccountingBalance getBalance(Date date) {
+        AccountingBalance balance = new AccountingBalance();
+        balance.balanceToDate = date;
+        
+        
+        List<DayIncome> res = getDayIncomes(getStore().rowCreatedDate, date);
+        
+        addBalance(res, balance);
+        
+        return balance;
+    }
+
+    private void addBalance(List<DayIncome> res, AccountingBalance balance) {
+        Map<String, List<DayEntry>> groupedByAccountNumber = res.stream()
+                .flatMap(o -> o.dayEntries.stream())
+                .collect(Collectors.groupingBy(o -> o.accountingNumber));
+        
+        for (String accountNumber : groupedByAccountNumber.keySet()) {
+            Double total = groupedByAccountNumber.get(accountNumber).stream()
+                    .mapToDouble(o -> o.amount.doubleValue())
+                    .sum();
+            
+            balance.balances.put(accountNumber, total);
+        }
+    }
+
+    @Override
+    public List<DayIncome> getDayIncomesWithMetaData(Date start, Date end) {
+        List<DayIncome> incomes = getDayIncomes(start, end);
+        
+        incomes.stream()
+                .flatMap(o -> o.dayEntries.stream())
+                .forEach(dayIncome -> {
+                    addMetaDataToDayIncome(dayIncome);
+                });
+        
+        return incomes;
+    }
+
+    private void addMetaDataToDayIncome(DayEntry dayIncome) {
+        Order order = getOrder(dayIncome.orderId);
+        CartItem item = order.cart.getCartItem(dayIncome.cartItemId);
+        
+        if (item != null) {
+            if (item.isPmsAddons()) {
+                dayIncome.metaData.put("Guest name", item.getProduct().metaData);
+            } else if (item.isPriceMatrixItem()) {
+                dayIncome.metaData.put("Guest name", item.getProduct().metaData);
+            } else {
+                dayIncome.metaData.put("Guest name", "N/A");
+            }
+        } else {
+            if (order.cart.address != null && order.cart.address.fullName != null) {
+                dayIncome.metaData.put("Guest name", order.cart.address.fullName);
+            } else {
+                User user = userManager.getUserById(order.id);
+                if (user != null) {
+                    dayIncome.metaData.put("Guest name", user.fullName);
+                } else {
+                    dayIncome.metaData.put("Guest name", "N/A");
+                }
+            }   
+        }        
+    }
+
+    @Override
+    public List<DayIncome> getDoublePostingDayIncomes(String paymentId, Date start, Date end) {
+        
+        List<DayIncome> res = getDayIncomes(start, end);
+        res.addAll(getPaymentRecords(paymentId, start, end));
+        
+        return res;
+    }    
+    
+    public Map<String, List<String>> getOrdersGroupedByExternalReferenceId() {
+        
+        Map<String, List<String>> retMap = new HashMap();
+        
+        for (Order order : orders.values()) {
+            for (CartItem cartItem : order.getCartItems()) {
+                if (cartItem.getProduct() != null && cartItem.getProduct().externalReferenceId != null && !cartItem.getProduct().externalReferenceId.isEmpty()) {
+                    List<String> externalRefIds = retMap.get(order.id);
+                    if (externalRefIds == null) {
+                        externalRefIds = new ArrayList();
+                        retMap.put(order.id, externalRefIds);
+                    }
+                    
+                    externalRefIds.add(cartItem.getProduct().externalReferenceId);
+                }
+            }
+        }
+        
+        return retMap;
+    }
+
+    private void addOrderToBooking(Order order) {
+        List<String> ids = new ArrayList();
+        ids.add(order.id);
+        addOrdersToBookings(ids);
     }
 }

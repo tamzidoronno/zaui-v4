@@ -1,0 +1,99 @@
+<?
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+$bookings = $this->getSelectedBookings();
+?>
+<br/>
+<br/>
+<div class='header'>
+    <? 
+    echo $this->__f("Step 3 - Select orderlines");
+    ?>
+</div>
+<br/>
+<br/>
+<div class='informationbox'>
+    <i class='fa fa-info-circle'></i> <? echo $this->__f("Please select what you want to create an order for and what you want to take payment for."); ?>
+</div>
+
+<?
+foreach ($bookings as $booking) {
+    ?>
+    <div class='sub_header'>
+        <? echo $this->__f("Booking").": ". $booking->incrementBookingId.$extrainforforbooking; ?>
+    </div>
+    
+    <div class="cart_room_summary">
+
+        <?
+        foreach ($booking->rooms as $room) {
+            if (!$this->isSelectedRoom($room->pmsBookingRoomId)) {
+                continue;
+            }
+            
+            echo "<div class='room' roomid='$room->pmsBookingRoomId'>";
+                echo "<div class='roominformation'>";
+                    echo $this->formatRoomHeader($room);
+                echo "</div>";
+                $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
+
+                $anyFound = false;
+
+                foreach ($summary->rows as $row) {
+                    if ($row->count == 0)
+                        continue;
+
+                    $anyFound = true;
+                    $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+                    ?>
+                    <div class='row cartitemline' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
+                        <div class='col date'><? echo $row->date; ?></div>
+                        <div class='col productname'><? echo $product->name; ?></div>
+                        <div class='col count'><input class='gsniceinput1 item_count' value='<? echo $row->count; ?>'/></div>
+                        <div class='col'> x </div>
+                        <div class='col price'><input class='gsniceinput1 item_price' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
+                    </div>
+                    <?
+                }
+
+                if (!$anyFound) {
+                ?>
+                    <div class='row cartitemline'>
+                        <div class='col date'>&nbsp;</div>
+                        <div class='col productname'><i class="fa fa-warning"></i><? echo $this->__f("Nothing to do"); ?></div>
+                        <div class='col count'></div>
+                        <div class='col'></div>
+                        <div class='col price'></div>
+                    </div>
+                <?
+                }
+            echo "</div>";
+        }
+        ?>
+        
+        <div class="row totalrow">
+            <div class="col totaltext">
+                <?
+                echo $this->__f("Total for booking").": ";
+                ?>
+            </div>
+            <div class="col totalval">
+                -
+            </div>
+        </div>
+    </div>
+    <?
+}
+?>
+
+<br/>
+<div class='buttonarea'>
+    <div class='shop_button' gsclick='gotoroomselection'><i class='fa fa-arrow-left'></i> <? echo $this->__f("Back"); ?></div>
+    <div class='shop_button createorder'  style='float: right;'><? echo $this->__f("Next"); ?> <i class='fa fa-arrow-right'></i></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        app.PmsPaymentProcess.updateTotalValue();
+    });
+</script>
+    

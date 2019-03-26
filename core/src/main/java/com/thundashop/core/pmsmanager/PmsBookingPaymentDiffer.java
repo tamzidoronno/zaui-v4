@@ -11,12 +11,10 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.data.Order;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  *
@@ -35,7 +33,7 @@ public class PmsBookingPaymentDiffer {
         this.booking = booking;
         this.room = room;
         this.pmsManager = pmsManager;
-        this.sdf = new SimpleDateFormat("dd-MM-YYYY");
+        this.sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         setProductIdsForRoom();
     }
@@ -47,30 +45,55 @@ public class PmsBookingPaymentDiffer {
         summary.rows.addAll(createListRoom());
         summary.rows.addAll(createAddonList());
         removeIncludedAddonsFromRoomPrice(summary);
+        calculateRoomCount(summary);
+        setPriceToUseForOrders(summary);
+        removeNullRows(summary);
+        invertNegativeCountToCreateOrdersFor(summary);
         return summary;
     }
 
     private List<PmsRoomPaymentSummaryRow> createAddonList() {
+        List<PmsBookingAddonItem> roomsAddon = clone(getAllPmsAddonsFromRoom(room)); 
+        List<PmsBookingAddonItem> ordersAddon = clone(getAllPmsAddonsFromOrders());
+        List<PmsBookingAddonItem> paidAddon = clone(getAllPmsAddonsFromOrdersPaid());
+        
+        changeCountAndPriceIfNegative(roomsAddon);
+        changeCountAndPriceIfNegative(ordersAddon);
+        changeCountAndPriceIfNegative(paidAddon);
+        
+        Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay = groupByDay(roomsAddon);
+        Map<String, List<PmsBookingAddonItem>> orderAddonsGroupedByDay = groupByDay(ordersAddon);
+        Map<String, List<PmsBookingAddonItem>> paidAddonsGroupedByDay = groupByDay(paidAddon);
+        
+        Map<String, List<String>> addAddonsByKey = getAddonKeys(roomAddonsGroupedByDay, orderAddonsGroupedByDay);
+        
         List<PmsRoomPaymentSummaryRow> retList = new ArrayList();
         
-        
-        List<PmsBookingAddonItem> allItems = getAllItems();
-        
-        for (PmsBookingAddonItem addonItem : allItems) {
-            double value = getCountForRoom(addonItem.productId, addonItem.date) * getPriceForRoom(addonItem.productId, addonItem.date);
-            PmsRoomPaymentSummaryRow row = new PmsRoomPaymentSummaryRow();
-            List<String> addonProductsIds = new ArrayList();
-            addonProductsIds.add(addonItem.productId);
-            row.date = sdf.format(addonItem.date);
-            row.priceInBooking = value;
-            row.cartItemIds = getCartItemsIds(addonProductsIds);
-            row.includedInRoomPrice = addonItem.isIncludedInRoomPrice;
-            row.createOrderOnProductId = addonItem.productId;
-            row.count = addonItem.count;
-            finalizeRow(row, retList);
+        for (String date : addAddonsByKey.keySet()) {
+            for (String key : addAddonsByKey.get(date)) {
+                PmsRoomPaymentSummaryRow row = new PmsRoomPaymentSummaryRow();
+                row.date = date;
+                row.priceInBooking = getAvaragePrice(date, key, roomAddonsGroupedByDay);
+                row.includedInRoomPrice = key.contains(";isincluded;");
+                row.createOrderOnProductId = key.split(";")[0];
+                
+                row.countFromBooking = getCount(date, key, roomAddonsGroupedByDay);
+                row.countFromOrders = getCount(date, key, orderAddonsGroupedByDay);
+                row.count = row.countFromBooking - row.countFromOrders;
+                
+                row.actuallyPaidAmount = getAvaragePrice(date, key, paidAddonsGroupedByDay) * getCount(date, key, paidAddonsGroupedByDay);
+                
+                row.createdOrdersFor = getAvaragePrice(date, key, orderAddonsGroupedByDay);
+                retList.add(row);
+            }
         }
-
+        
         return retList;
+    }
+    
+    private List<PmsBookingAddonItem> clone(List<PmsBookingAddonItem> toClone) {
+        Gson gson = new Gson();
+        return gson.fromJson(gson.toJson(toClone), new TypeToken<List<PmsBookingAddonItem>>(){}.getType());
     }
     
     private List<PmsRoomPaymentSummaryRow> createListRoom() {
@@ -82,35 +105,52 @@ public class PmsBookingPaymentDiffer {
         for (String date : allDatesToLookAt) {
             PmsRoomPaymentSummaryRow row = new PmsRoomPaymentSummaryRow();
             row.date = date;
-            row.count = 1;
-            row.priceInBooking = room.priceMatrix.get(date) != null ? room.priceMatrix.get(date) : 0D;
+            row.priceInBooking = 0;
+            
+            if (!room.isDeleted() || room.nonrefundable) { 
+                row.priceInBooking = room.priceMatrix.get(date) != null ? room.priceMatrix.get(date) : 0D;
+            }
+            
             row.cartItemIds = getCartItemsIds(roomProductIds);
-//            row.productIds = getProductIds(roomProductIds);
             row.isAccomocation = true;
+            row.countFromBooking = 1;
+            row.countFromOrders = 1;
             row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
-            finalizeRow(row, retList);
+            
+            calculateAmountInOrders(row);
+            calculatePaidAmount(row);
+            retList.add(row);
         }
         
         return retList;
     }
 
-    private void finalizeRow(PmsRoomPaymentSummaryRow row, List<PmsRoomPaymentSummaryRow> retList) {
-        calculateAmountInOrders(row);
-        calculatePaidAmount(row);
-        retList.add(row);
-    }
-
     private void setProductIdsForRoom() {
-        roomProductIds = orders.stream()
-                .flatMap(o -> o.getCartItems().stream())
-                .filter(o -> o.isPriceMatrixItem() && o.getProduct().externalReferenceId != null && !o.getProduct().externalReferenceId.isEmpty())
-                .map(o -> pmsManager.getBookingFromRoom(o.getProduct().externalReferenceId).getRoom(o.getProduct().externalReferenceId))
-                .map(room -> pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId))
+        roomProductIds = pmsManager.bookingEngine.getBookingItemTypes().stream()
+                .filter(type -> type.productId != null && !type.productId.isEmpty())
                 .map(type -> type.productId)
                 .collect(Collectors.toList());
                 
     }
 
+    private HashMap<String, List<String>> getCartItemsIds(PmsBookingAddonItem addonItem) {
+        HashMap<String, List<String>> retMap = new HashMap();
+        
+        for (Order order : orders) {
+            for (CartItem item : order.getCartItems()) {
+                List<String> itemIds = new ArrayList();
+                if (item.isPmsAddons() && item.itemsAdded.contains(addonItem)) {
+                    itemIds.add(item.getCartItemId());
+                }
+                
+                retMap.put(order.id, itemIds);
+            }
+        }
+        
+        return retMap;
+        
+    }
+    
     private HashMap<String, List<String>> getCartItemsIds(List<String> productList) {
         HashMap<String, List<String>> retMap = new HashMap();
         
@@ -219,7 +259,7 @@ public class PmsBookingPaymentDiffer {
                 .forEach(includedInRoomPriceRow -> {
                     PmsRoomPaymentSummaryRow accomodationRow = getAccomodationRow(summary, includedInRoomPriceRow.date);
                     if (accomodationRow != null) {
-                        accomodationRow.priceInBooking -= includedInRoomPriceRow.priceInBooking;
+                        accomodationRow.priceInBooking -= (includedInRoomPriceRow.priceInBooking * includedInRoomPriceRow.countFromBooking);
                     }
                 });
     }
@@ -256,64 +296,141 @@ public class PmsBookingPaymentDiffer {
         return dates;
     }
 
-    private List<PmsBookingAddonItem> getAllItems() {
-        List<PmsBookingAddonItem> itemsFromOrders = orders.stream()
+    private List<PmsBookingAddonItem> getAllPmsAddonsFromOrders() {
+        return orders.stream()
                 .flatMap(o -> o.getCartItems().stream())
-                .filter(o -> o.isPmsAddons())
-                .flatMap(o -> o.getItemsAdded().stream())
+                .filter(item -> item.isPmsAddons())
+                .filter(item -> item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId))
+                .flatMap(item -> item.itemsAdded.stream())
                 .collect(Collectors.toList());
+    }
+
+    private Map<String, List<PmsBookingAddonItem>> groupByDay(List<PmsBookingAddonItem> roomsAddon) {
+        List<PmsBookingAddonItem> allItems = new ArrayList();
+        allItems.addAll(roomsAddon);
+        Map<String, List<PmsBookingAddonItem>> res = allItems.stream()
+                .collect(Collectors.groupingBy(PmsBookingAddonItem::getStringDate));
         
-        Gson gson = new Gson();
-        List<PmsBookingAddonItem> ordersList = gson.fromJson(gson.toJson(itemsFromOrders), new TypeToken<List<PmsBookingAddonItem>>(){}.getType());
+        return res;
+    }
+
+    private Map<String, List<String>> getAddonKeys(Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay, Map<String, List<PmsBookingAddonItem>> orderAddonsGroupedByDay) {
+        Map<String, List<String>> retList = new HashMap();
         
-        List<PmsBookingAddonItem> retList = new ArrayList();
-        retList.addAll(room.addons);
-        
-        for (PmsBookingAddonItem item : ordersList) {
-            int countFromRoom = getCountForRoom(item.productId, item.date);
-            double priceFromRoom = getPriceForRoom(item.productId, item.date);
-            double diff = (item.count * item.price) - (priceFromRoom * countFromRoom);
-            
-            if (diff != 0) {
-                item.count = item.count - countFromRoom;
-                item.price = diff / (double)item.count;
-                retList.removeIf(o -> o.productId.equals(item.productId) && sdf.format(o.date).equals(sdf.format(item.date)));
-                retList.add(item);  
-            } 
-            
-        }
+        addKeys(roomAddonsGroupedByDay, retList);
+        addKeys(orderAddonsGroupedByDay, retList);
         
         return retList;
     }
-    
-    private int getCountForRoom(String productId, Date date) {
-        int count = 0;
-        for (PmsBookingAddonItem addon : room.addons) {
-            if (addon == null || addon.date == null || addon.productId == null || date == null) {
-                continue;
+
+    private void addKeys(Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay, Map<String, List<String>> retList) {
+        for (String date : roomAddonsGroupedByDay.keySet()) {
+            List<String> keys = retList.get(date);
+            if (keys == null) {
+                keys = new ArrayList();
+                retList.put(date, keys);
             }
             
-            if (sdf.format(addon.date).equals(sdf.format(date)) && addon.productId.equals(productId)) {
-                count += addon.count;
-            }
-        }
-        
-        return count;
-    }
-    
-    private double getPriceForRoom(String productId, Date date) {
-        double count = 0;
-        for (PmsBookingAddonItem addon : room.addons) {
-            if (addon == null || addon.date == null || addon.productId == null || date == null) {
-                continue;
-            }
+            keys.addAll(roomAddonsGroupedByDay.get(date).stream()
+                    .map(addon -> addon.getKey())
+                    .collect(Collectors.toList()));
             
-            if (sdf.format(addon.date).equals(sdf.format(date)) && addon.productId.equals(productId)) {
-                count += addon.price;
-            }
+            keys = keys.stream().distinct().collect(Collectors.toList());
+            retList.put(date, keys);
         }
-        
-        return count;
     }
 
+    private double getAvaragePrice(String date, String key, Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay) {
+        if (roomAddonsGroupedByDay.get(date) == null)
+            return 0;
+        
+        List<PmsBookingAddonItem> items = roomAddonsGroupedByDay.get(date).stream()
+                .filter(addon -> addon.getKey().equals(key))
+                .collect(Collectors.toList());
+        
+        double sum = items.stream().mapToDouble(item -> item.price * item.count).sum();
+        double count = items.stream().mapToInt(item -> item.count).sum();
+        
+        if (sum == 0)
+            return 0;
+        
+        return (sum/count);
+    }
+
+    private int getCount(String date, String key, Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay) {
+        if (roomAddonsGroupedByDay.get(date) == null)
+            return 0;
+        
+        List<PmsBookingAddonItem> items = roomAddonsGroupedByDay.get(date).stream()
+                .filter(addon -> addon.getKey().equals(key))
+                .collect(Collectors.toList());
+        
+        return items.stream().mapToInt(item -> item.count).sum();
+    }
+
+    private void calculateRoomCount(PmsRoomPaymentSummary summary) {
+        summary.rows.stream()
+                .filter(row -> row.isAccomocation)
+                .forEach(row -> {
+                    
+                    double diff = row.priceInBooking - row.createdOrdersFor;
+
+                    if ( diff < 0.01 && diff > -0.01) {
+                        row.count = 0;
+                    } else if(diff < -0.1) {
+                        row.count = -1;
+                    } else {
+                        row.count = 1;
+                    }
+                });
+    }
+
+    private List<PmsBookingAddonItem> getAllPmsAddonsFromOrdersPaid() {
+            return orders.stream()
+                .filter(o -> o.status == 7)
+                .flatMap(o -> o.getCartItems().stream())
+                .filter(item -> item.isPmsAddons())
+                .filter(item -> item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId))
+                .flatMap(item -> item.itemsAdded.stream())
+                .collect(Collectors.toList());
+    }
+
+    private void removeNullRows(PmsRoomPaymentSummary summary) {
+        summary.rows.removeIf(o -> o.isEmpty());
+    }
+
+    private void setPriceToUseForOrders(PmsRoomPaymentSummary summary) {
+        summary.rows.stream()
+                .forEach(o -> {
+                    o.priceToCreateOrders = (o.priceInBooking * o.countFromBooking) - (o.createdOrdersFor * o.countFromOrders);
+                    
+                    if (o.count != 0) {
+                        o.priceToCreateOrders = o.priceToCreateOrders / o.count;
+                    }
+                });
+        
+    }
+
+    private void changeCountAndPriceIfNegative(List<PmsBookingAddonItem> addons) {
+        addons.stream().forEach(addon -> {
+            if (addon.price < 0) {
+                addon.price = addon.price * -1;
+                addon.count = addon.count * -1;
+            }
+        });
+    }
+
+    private List<PmsBookingAddonItem> getAllPmsAddonsFromRoom(PmsBookingRooms room) {
+        if (room.isDeleted() && !room.nonrefundable) {
+            return room.addons.stream()
+                .filter(o -> o.noRefundable)
+                .collect(Collectors.toList());
+        } 
+        
+        return room.addons;
+    }
+
+    private void invertNegativeCountToCreateOrdersFor(PmsRoomPaymentSummary summary) {
+
+    }
 }

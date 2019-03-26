@@ -5,181 +5,243 @@ $pmsBooking = $this->getPmsBooking();
 $extraOrders = $this->getApi()->getPmsManager()->getExtraOrderIds($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
 
 $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
-$grouped = array();
 
 $orderMissing = 0;
 $paymentMissing = 0;
 
-foreach ($summary->rows as $row) {
-    $grouped[$row->createOrderOnProductId][] = $row;
-    $orderMissing += $row->priceInBooking - $row->createdOrdersFor;
-    $paymentMissing += $row->priceInBooking - $row->actuallyPaidAmount;
-}
-
 $orders = array();
-?>
-<div class="information" style="margin-bottom: 30px; border: solid 1px #DDD; padding: 10px; background-color: #feffc1; text-align: center">
-    This version is in early development phase, its just for preview but we will be doing lots of development on this during the upcoming days.
-    <div class="gs_shop_small_icon" gsclick="switchToOldVersion">Go back to old version</div>
-</div>
-<?
-foreach ($pmsBooking->orderIds as $orderId) {
-    $orders[] = $this->getApi()->getOrderManager()->getOrder($orderId);
+
+$allOrderIds = $pmsBooking->orderIds;
+
+
+if ($extraOrders) {
+    $allOrderIds = array_merge($allOrderIds, $extraOrders);
 }
 
-?>
+$allOrderIds = $this->filterOrderIds($allOrderIds);
 
-<div style="width: calc(100% - 254px); display:inline-block; vertical-align: top; box-sizing: border-box; margin-bottom: 20px;">
-    <h2>Payment summary <? echo $room->guests[0]->name; ?></h2>
-    <div class='small_payment_summary'>
-        <div class='payment_summary_view_box'>
-            <i class='fa fa-warning'></i>
-            <div class='text'>
-                <? echo $this->__f("Missing orders"); ?>
-            </div>
-            <div class='amount'>
-                <? 
-                echo $orderMissing; 
-                ?>
-            </div>
-            <?
-            if ($orderMissing != 0) {
-            ?>
-            <div class='shop_button' style='margin-top: 10px;'>
-                <? echo $this->__f("Start payment process"); ?>
-            </div>
-            <?
-            }
-            ?>
-        </div>
-        
-        <div class='payment_summary_view_box'>
-            <i class='fa fa-money'></i>
-            <div class='text'>
-                <? echo $this->__f("Payment not collected"); ?>
-            </div>
-            <div class='amount'>
-                <? 
-                echo $paymentMissing; 
-                ?>
-            </div>
-            
-            <div style='font-size: 15px;'>
-                Normally you complete the collection process when you create an order, but you can also start it by clicking on the gear icon in the payments box.
-            </div>
-        </div>
-    </div>
+$unpaidOrders = false;
+
+foreach ($allOrderIds as $orderId) {
+    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
     
-    <h2>Detailed summary for <? echo $room->guests[0]->name; ?></h2>
-    <?
-    $totalRemainingGuestOwe = 0;
-    foreach ($grouped as $productId => $rows) {
-        usort($rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
-        $product = $this->getApi()->getProductManager()->getProduct($productId);
-        echo "<div style='border: solid 1px #DDD; margin-top: 30px;'>";
-            echo "<div style='background-color: #EFEFEF; font-size: 16px; padding: 3px; text-align: center;'>".$product->name."</div>";
-            ?>
-            <div class="row row_payment_status_line header">
-                <div class="col col_status"></div>
-                <div class="col col_date"></div>
-                <div class="col col_value"><? echo $this->__f("Price"); ?></div>
-                <div class="col col_paid"><? echo $this->__f("In orders"); ?></div>
-                <div class="col col_paid"><? echo $this->__f("Payment"); ?></div>
-                <div class="col col_remaining"><? echo $this->__f("Balance"); ?></div>
-            </div>
-            <?
-            $balance = 0;
-            foreach ($rows as $row) {
-                $remaining = $row->priceInBooking - $row->actuallyPaidAmount;
-                $allOk = round($remaining, 0) == 0;
-                $status = "";
-                $totalRemainingGuestOwe += $row->priceInBooking - $row->actuallyPaidAmount;
-                $balance += $remaining;
-                ?>
-                <div class="row <? echo $allOk ? 'allok' : 'notok'; ?> row_payment_status_line ">
-                    <div class="col col_status"><? echo $status; ?></div>
-                    <div class="col col_date"><? echo $row->date; ?></div>
-                    <div class="col col_value"><? echo $row->priceInBooking; ?></div>
-                    <div class="col col_paid"><? echo $row->createdOrdersFor; ?></div>
-                    <div class="col col_paid"><? echo $row->actuallyPaidAmount; ?></div>
-                    <div class="col col_remaining"><? echo $remaining; ?></div>
-                </div>
-                <?
-            }
-            ?>
-            <div class="row row_payment_status_line header">
-                <div class="col col_status"></div>
-                <div class="col col_date">Total</div>
-                <div class="col col_value"></div>
-                <div class="col col_paid"></div>
-                <div class="col col_paid"></div>
-                <div class="col col_remaining"><? echo $balance; ?></div>
-            </div>
-            <?
-            echo "</div>";
-            
-        }
+    if ($order->status != 7) {
+        $unpaidOrders = true;
+    }
+    
+    $orders[] = $order;
+}
+
+$totalUnpaid = 0;
+$totalForRoom = 0;
+
+foreach ($summary->rows as $row) {
+    $priceInOrders = $row->createdOrdersFor * $row->countFromOrders;
+    
+    $priceInBooking = $row->priceInBooking * $row->countFromBooking;
+    $missingInOrders = ($row->priceInBooking * $row->countFromBooking) - ($row->createdOrdersFor * $row->countFromOrders);
+    
+    $totalUnpaid += ($priceInBooking - $priceInOrders);
+    $needToCreateOrdersFor += $missingInOrders;
+    $totalForRoom += $priceInBooking;
+}
+
+$missingInOrders = round($missingInOrders, 2);
+
 ?>
 
+
+<h2>Payment summary <? echo $room->guests[0]->name; ?></h2>
+<div style='font-size: 16px;'>
+    <? 
+    echo "<div style='color: #8abf45; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
+    
+    if ($needToCreateOrdersFor) {
+        echo "<div style='color: #ff9856; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("You need to create orders for")." ".$needToCreateOrdersFor."</div>";
+    }
+    
+    if ($orders && $unpaidOrders) {
+        echo "<div style='color: #ff5656; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("Note, you have unpaid orders... Please make sure that all orders are paid.")."</div>";
+    }
+    ?>
 </div>
-<div style="display: inline-block; width: 250px; display:inline-block; vertical-align: top; border: solid 1px #DDD;  box-sizing: border-box; margin-top: 59px;" >
-    <div style="background-color: #EDEDED; font-size: 16px; text-align: center; padding: 5px;" >
-        <? echo $this->__f("Payments"); ?>
-    </div>
+<div >
+    <h2><? echo $this->__f("Payments")." (".$this->__f("Orders created").")"; ; ?></h2>
+    
+   <?
+   if (!count($orders)) {
+        echo "<div style='font-size: 16px; padding-left: 10px;'>";
+            echo $this->__f("No orders to show");
+        echo "</div>";
+   } else {
+   ?>
     <div class="row row_payment_status_line header">
         <div class="col col_status"> </div>
         <div class="col col_orderid"> Order id</div>
         <div class="col col_amount"> Amount </div>
+        <div class="col col_paymenttype"> Payment Type </div>
+        <div class="col col_paymentdate"> Payment Date </div>
     </div>
     <?
-    foreach ($orders as $order) {
-        $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
-        ?>
-        <div class="row row_payment_status_line ">
-            <div class="col col_status"> <? echo $order->status == 7 ? "<i class='fa fa-check'></i>" : "<i style='color: red;' class='gsicon-bag-dollar'></i>"; ?> </div>
-            <div class="col col_orderid"> <? echo $order->incrementOrderId; ?> </div>
-            <div class="col col_amount"> <? echo $totalForOrder; ?></div>
-            <div class="col col_action">
-                <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
-    
-                <div class="ordermenu">
-                    <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>">
+        foreach ($orders as $order) {
+            $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y h:i', strtotime($order->paymentDate)) : 'N/A';
+            $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
+            ?>
+            <div class="row row_payment_status_line ">
+                <div class="col col_status"> <? echo $order->status == 7 ? "<i class='fa fa-check'></i>" : "<i style='color: red;' class='gsicon-bag-dollar'></i>"; ?> </div>
+                <div class="col col_orderid"> <? echo $order->incrementOrderId; ?> </div>
+                <div class="col col_amount"> <? echo $totalForOrder; ?></div>
+                <div class="col col_paymenttype"> <? echo $this->getPaymentType($order); ?></div>
+                <div class="col col_paymentdate"> <? echo $paymentDate; ?></div>
+                <div class="col col_action">
+                    <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
+
+                    <div class="ordermenu">
                         <?
-                        if ($order->closed) {
+                        if (!count($order->creditOrderId) && !$order->isCreditNote) {
                         ?>
-                            <i class="fa fa-history"></i> <? echo $this->__f("Credit order"); ?>
-                        <?
-                        } else {?>
-                            <i class="fa fa-trash"></i> <? echo $this->__f("Delete order"); ?>
+                        <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>">
+                            <?
+                            if ($order->closed) {  
+                            ?>
+                                <i class="fa fa-history"></i> <? echo $this->__f("Credit order"); ?>
+                            <?
+                            } else {?>
+                                <i class="fa fa-trash"></i> <? echo $this->__f("Delete order"); ?>
+                            <?
+                            }
+                            ?>
+                        </div>
                         <?
                         }
                         ?>
-                    </div>
 
-                    <?
-                    if ($order->status != 7) {
-                        ?>
-                        <div class='entry showmarkorderaspaid' orderid="<? echo $order->id; ?>">
-                            <i class="fa fa-dollar"></i> <? echo $this->__f("Mark order as paid"); ?>
-                        </div>
                         <?
-                    }
-                    ?>
+                        if ($order->status != 7) {
+                            ?>
+                            <div class='entry showmarkorderaspaid' orderid="<? echo $order->id; ?>">
+                                <i class="fa fa-dollar"></i> <? echo $this->__f("Mark order as paid"); ?>
+                            </div>
+                            <?
+                        }
+                        ?>
 
-                    <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
-                        <div class='entry' orderid="<? echo $order->id; ?>">
-                            <i class="fa fa-arrow-right"></i> <? echo $this->__f("Open"); ?>
-                        </div>
-                    </a>
+                        <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
+                            <div class='entry' orderid="<? echo $order->id; ?>">
+                                <i class="fa fa-arrow-right"></i> <? echo $this->__f("Open"); ?>
+                            </div>
+                        </a>
+                    </div>
                 </div>
+            </div>
+            <?
+        
+        }
+   }
+    ?>
+</div>
+
+
+<div>
+
+    
+    <h2>Detailed summary for <? echo $room->guests[0]->name; ?></h2>
+    
+    <?
+    $totalRemainingGuestOwe = 0;
+    usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
+    ?>
+    <div class="row row_payment_status_line header">
+        <div class="col col_status"></div>
+        <div class="col col_date"></div>
+        <div class="col col_productname"></div>
+        <div class="col col_value"><? echo $this->__f("Price"); ?></div>
+        <div class="col col_paid odd"><? echo $this->__f("In orders"); ?></div>
+        <div class="col col_paid"><? echo $this->__f("Paid"); ?></div>
+        <div class="col col_paid odd  large"><? echo $this->__f("Missing Orders"); ?></div>
+        <div class="col col_remaining  large"><? echo $this->__f("Missing Payments"); ?></div>
+    </div>
+
+    <?
+    
+    $totalMissing = 0;
+    $totalPaid = 0;
+    $prevDate = "";
+    $i = 0;
+    
+    foreach ($summary->rows as $row) {
+        if ($row->date != $prevDate ) {
+            $i++;
+            $prevDate = $row->date;
+        }
+        
+        $oddrow = $i%2 ? "oddrow" : "evenrow";
+        $product = $this->getProduct($row->createOrderOnProductId);
+       
+        $balance = 0;
+        $remaining = ($row->priceInBooking * $row->countFromBooking) - $row->actuallyPaidAmount;
+        $allOk = round($remaining, 0) == 0;
+        $status = "";
+        $balance += $remaining;
+        $missingInOrders = ($row->priceInBooking * $row->countFromBooking) - ($row->createdOrdersFor * $row->countFromOrders);
+        $orderColor = $missingInOrders != 0 ? '#ff7a00' : 'green';
+        $paymentColor = $remaining != 0 ? 'red' : 'green';
+        
+        $totalMissing += $missingInOrders;
+        $totalPaid += $remaining;
+        ?>
+    
+        <div class="row row_payment_status_line <? echo $oddrow; ?>">
+            <div class="col col_status"><? echo $status; ?></div>
+            <div class="col col_date"><? echo $row->date; ?></div>
+            <div class="col col_productname"><? echo $product->name; ?></div>
+            <div class="col col_value"><? echo round(($row->priceInBooking * $row->countFromBooking),2); ?></div>
+            <div class="col col_paid odd"><? echo round(($row->createdOrdersFor * $row->countFromOrders),2); ?></div>
+            <div class="col col_paid"><? echo round($row->actuallyPaidAmount,2); ?></div>
+            <div class="col col_paid odd large" style='color: <? echo $orderColor; ?>'>
+                <? 
+                if ($orderColor == '#ff7a00') {
+                    echo "<i class='fa fa-warning' title='You need to create order for this payment, click start payment process'></i> ";
+                }
+                
+                echo round($missingInOrders,2); 
+                ?>
+            </div>
+            <div class="col col_remaining large" style='color: <? echo $paymentColor; ?>'>
+                <? 
+                
+                if ($paymentColor == 'red') {
+                    echo "<i class='fa fa-warning' title='Make sure all orders are created and marked as paid...'></i> ";
+                }
+                
+                echo round($remaining,2); 
+                
+                
+                ?>
+            
             </div>
         </div>
         <?
         
     }
     ?>
-</div>
+    <div class="row row_payment_status_line header" style='border-top: solid 1px #DDD;'>
+        <div class="col col_status"></div>
+        <div class="col col_date"></div>
+        <div class="col col_productname"></div>
+        <div class="col col_value"></div>
+        <div class="col col_paid"></div>
+        <div class="col col_paid"><? echo $this->__f("Total"); ?></div>
+        <div class="col col_paid odd  large"><? echo round($totalMissing,2); ?></div>
+        <div class="col col_remaining  large"><? echo round($totalPaid,2); ?></div>
+    </div>
+    <?
+?>
 
+</div>
+<br/>
+<br/>
+<br/>
 <div class="markaspaidwindow">
     <div class="innner_area">
         
@@ -190,4 +252,10 @@ foreach ($pmsBooking->orderIds as $orderId) {
         </div>
     </div>
     
+</div>
+
+
+<div class="information" style="margin-bottom: 30px; border: solid 1px #DDD; padding: 10px; background-color: #feffc1; text-align: center">
+    This version is in early development phase, its just for preview but we will be doing lots of development on this during the upcoming days.
+    <div class="gs_shop_small_icon" gsclick="switchToOldVersion">Go back to old version</div>
 </div>

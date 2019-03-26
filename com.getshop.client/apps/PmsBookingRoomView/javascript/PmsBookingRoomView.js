@@ -414,6 +414,12 @@ app.PmsBookingRoomView = {
     },
     
     addSelectedItemsToCart: function() {
+        
+        if ($(this).closest('.room_view_outer').attr('usenewpayment') == "1") {
+            thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", { pmsBookingRoomId : [$(this).attr('roomid')], state: 'clear'}); 
+            return;
+        }
+        
         if($(this).attr('isgroup') === "yes") {
             var btn = $(this);
             var paymentpanel = $('.grouppaymentprocess');

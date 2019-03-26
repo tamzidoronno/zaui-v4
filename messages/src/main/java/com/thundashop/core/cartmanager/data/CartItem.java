@@ -423,7 +423,9 @@ public class CartItem implements Serializable, Cloneable {
         double total = getTotalAmount();
         double totalOnMeta = getTotalOnMeta();
         double diff = total + totalOnMeta;
-        if(diff > -0.1 && diff < 0.1) {
+        boolean orderIsNull = total > -0.1 && total < 0.1;
+        
+        if(diff > -0.1 && diff < 0.1 && !orderIsNull) {
             if(itemsAdded != null) {
                 for(PmsBookingAddonItem item : itemsAdded) {
                     if (item != null && item.price != null && item.count != null) {
@@ -703,6 +705,23 @@ public class CartItem implements Serializable, Cloneable {
             product.taxgroup = taxGroupObject.groupNumber;
             product.taxGroupObject = taxGroupObject;
             product.price = product.priceExTaxes * (taxGroupObject.getTaxRate()+1);
+        }
+    }
+
+    public void creditPmsAddonsAndPriceMatrix() {
+        if (itemsAdded != null) {
+            itemsAdded.stream().forEach(item -> {
+                item.price = item.price * -1;
+                if (item.priceExTaxes != null) {
+                    item.priceExTaxes = item.priceExTaxes * -1;
+                }
+            });
+        }
+        
+        if (priceMatrix != null) { 
+            for (String date : priceMatrix.keySet()) {
+                priceMatrix.put(date, priceMatrix.get(date)*-1);
+            }
         }
     }
 }

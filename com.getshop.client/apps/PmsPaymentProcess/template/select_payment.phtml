@@ -1,0 +1,34 @@
+<?
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+?>
+
+<div class="header">
+    <? echo $this->__f("Step 1 - Please select payment method"); ?>
+</div>
+<div class='paymentmethodsselection'>
+    <?
+    foreach ($paymentMethods as $method) {
+        $appInstance = $this->getFactory()->getApplicationPool()->createInstace($method);
+
+        ?>
+        <div class="getshop_box_1 pink" goto="checkavailability" gsclick="selectPaymentMethod" method="<? echo $method->id; ?>">
+
+            <div class="descriptionimage">
+                <img src="https://cdn1.iconfinder.com/data/icons/navigation-icon/128/check-512.png">
+            </div>
+
+            <div class="title"><? echo $appInstance->getName(); ?></div>
+            <div class="description">
+                <?
+                if (method_exists($appInstance, "getShortPaymentDescription")) {
+                    echo $appInstance->getShortPaymentDescription();
+                }
+                ?>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+
+</div>

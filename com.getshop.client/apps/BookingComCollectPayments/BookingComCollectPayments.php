@@ -23,6 +23,9 @@ class BookingComCollectPayments extends \PaymentApplication implements \Applicat
         $this->setConfigurationSetting("automarkpaid", $_POST['automarkpaid']);
     }
     
+    public function getShortPaymentDescription() {
+        return "Payments from booking.com";
+    }
     
 }
 ?>

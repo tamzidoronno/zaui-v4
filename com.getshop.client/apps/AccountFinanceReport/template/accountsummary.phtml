@@ -21,12 +21,16 @@ $unsettledAmounts = $this->getApi()->getOrderManager()->getOrdersUnsettledAmount
 <?
 $total = 0;
 foreach ($unsettledAmounts as $unsettledAmount) {
+    $name = $unsettledAmount->order->cart->address->fullName;
+    if (!$name) {
+        $name = "N/A";
+    }
     ?>
 
     <div class='row'>
         <a class='gs_ignorenavigate' href="/invoicing.php?page=orderviewpage&orderid=<? echo $unsettledAmount->order->id;?>">
             <div class='col orderid'><? echo $unsettledAmount->order->incrementOrderId; ?></div>
-            <div class='col name'><? echo $unsettledAmount->order->cart->address->fullName; ?></div>
+            <div class='col name'><? echo $name; ?></div>
             <div class='col amount'><? echo $unsettledAmount->amount; ?></div>
         </a>
     </div>

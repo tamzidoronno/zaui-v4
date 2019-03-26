@@ -175,6 +175,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public double restAmount;
     
     public boolean virtuallyDeleted = false;
+    public boolean supportMultipleBookings = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();

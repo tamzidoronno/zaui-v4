@@ -8,6 +8,8 @@ package com.thundashop.core.getshopaccounting;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -75,6 +77,9 @@ public class DayEntry implements Serializable, Cloneable {
      * Unique transactionid for each registered payment transaction
      */
     public String orderTransactionId = "";
+    
+    @Transient
+    public HashMap<String, String> metaData = new HashMap();
     
 
     @Override

@@ -46,9 +46,19 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
     public double actuallyPaidAmount;
     
     /**
-     * Count from booking
+     * This is the count needed to be created orders for.
      */
     public int count;
+    
+    /**
+     * The count of this product in the order.
+     */
+    public int countFromOrders = 0;
+    
+    /**
+     * The count of this product in the booking.
+     */
+    public int countFromBooking = 0;
     
     /**
      * The date where this should be accounted for.
@@ -65,6 +75,11 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
      * Sepeartes if this is a accomodation row.
      */
     boolean isAccomocation = false;
+    
+    /**
+     * Use this price when you want to create and order.
+     */
+    double priceToCreateOrders = 0D;
     
     /**
      * What product id should be used when creating the next order.
@@ -87,5 +102,15 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
         double diff = priceInBooking - createdOrdersFor;
         boolean needToCreate =  !(diff < 0.1 && diff > -0.01);
         return needToCreate;
+    }
+
+    boolean isEmpty() {
+        if (count == 0 && countFromBooking == 0 && countFromOrders == 0)
+            return true;
+        
+        double totalInBooking = countFromBooking * priceInBooking;
+        double totalInOrder = countFromOrders * createdOrdersFor;
+        
+        return totalInBooking == 0 && totalInOrder == 0;
     }
 }

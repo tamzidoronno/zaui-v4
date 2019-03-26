@@ -338,6 +338,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
+        
+        // Added 26.03.2019 - Save to remove after a few days and should be removed.
+        recheckOrdersAddedToBooking();
     }
 
     @Override
@@ -8338,34 +8341,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void addOrderToBooking(PmsBooking booking, String orderId) {
-        if (checkDuplicateOrders(orderId, booking.id)) {
-            Order order = orderManager.getOrder(orderId);
-            messageManager.sendErrorNotification("Order added to a different booking: " + " : " + order.incrementOrderId + " - " + orderId + " booking: " + booking.id, new Exception());
-            return;
-        }
-        
         if (!booking.orderIds.contains(orderId)) {
             booking.orderIds.add(orderId);
         }
-    }
-
-    private boolean checkDuplicateOrders(String orderId, String currentBookingId) {
-        Order order = orderManager.getOrder(orderId);
-        
-        if (order != null && order.supportMultipleBookings) {
-            return false;
-        }
-        
-        List<String> orderIds = new ArrayList();
-        for (PmsBooking booking : bookings.values()) {
-            if (booking.id.equals(currentBookingId)) {
-                continue;
-            }
-            if (booking.orderIds != null && booking.orderIds.contains(orderId)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -9766,6 +9744,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     orderIds.addAll(creditNotes);
                 });
         
+        orderIds.removeIf(id -> booking.orderIds.contains(id));
+        
         return orderIds;
     }
     
@@ -10025,4 +10005,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return order.id;
     }
 
+    @Override
+    public void recheckOrdersAddedToBooking() {
+        Map<String, List<String>> res = orderManager.getOrdersGroupedByExternalReferenceId();
+        for (String orderId : res.keySet()) {
+            for (String roomId : res.get(orderId)) {
+                PmsBooking booking = getBookingFromRoomSecure(roomId);
+                if (booking != null) {
+                    addOrderToBooking(booking, orderId);
+                }
+            }
+        }
+    }
 }

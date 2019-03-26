@@ -2188,6 +2188,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrderInternal(newOrder);
         
         finalizeOrder(newOrder);
+        
+        addOrderToBooking(newOrder);
+        
         return newOrder;
     }
     
@@ -3908,5 +3911,32 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         res.addAll(getPaymentRecords(paymentId, start, end));
         
         return res;
+    }    
+    
+    public Map<String, List<String>> getOrdersGroupedByExternalReferenceId() {
+        
+        Map<String, List<String>> retMap = new HashMap();
+        
+        for (Order order : orders.values()) {
+            for (CartItem cartItem : order.getCartItems()) {
+                if (cartItem.getProduct() != null && cartItem.getProduct().externalReferenceId != null && !cartItem.getProduct().externalReferenceId.isEmpty()) {
+                    List<String> externalRefIds = retMap.get(order.id);
+                    if (externalRefIds == null) {
+                        externalRefIds = new ArrayList();
+                        retMap.put(order.id, externalRefIds);
+                    }
+                    
+                    externalRefIds.add(cartItem.getProduct().externalReferenceId);
+                }
+            }
+        }
+        
+        return retMap;
+    }
+
+    private void addOrderToBooking(Order order) {
+        List<String> ids = new ArrayList();
+        ids.add(order.id);
+        addOrdersToBookings(ids);
     }
 }

@@ -624,4 +624,7 @@ public interface IPmsManager {
     @Administrator
     public String createOrderFromCheckout(List<PmsOrderCreateRow> row);
     
+    @Administrator
+    public void recheckOrdersAddedToBooking();
+    
 }

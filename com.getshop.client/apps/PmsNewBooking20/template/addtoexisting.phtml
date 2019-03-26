@@ -1,20 +1,17 @@
-<h1>Add to existing</h1>
-<div gstype='form' method='searchBooking' synchron='true' gstoarea='.searchbookingresult'>
-    <input type='text' placeholder='Booking information' gsname='keyword' class='gsniceinput1 searchforbookinginput' gstype='submitenter'>
-    <span class='shop_button' gstype='submit'>Search booking</span>
-</div>
-<div class='searchbookingresult'>
-    <br>
-    <div class="isnotactive" style='text-align: left; max-width: 600px;margin:auto;'>
-        <div class="kaipal infobox">
-            <div class="image happy"></div>
-            <div class="textbox">
-                <div class="header">Add more rooms to an existing booking</div>
-                <div class="text">
-                    Do you need to add more room to an existing booking?<br>
-                    Search for the booking above and proceed.
-                </div>
-            </div>
+<div class='steptitle'>Add to existing</div>
+<div class='gsshadowbox addtoexistingbox'>
+    <div class='stepboxtitle'>Add to existing</div>
+    <div gstype='form' method='searchBooking' synchron='true' gstoarea='.searchbookingresult' class='stepboxbody'>
+        <div style='position: relative; text-align: left; padding-left: 20px;padding-bottom: 20px;'>
+            <i class='fa fa-info-circle' style='position:absolute;left: 0px;top: 5px;'></i>
+            Do you need to add more room to an existing booking?<br>
+            Search for the booking above and proceed.
         </div>
+                    
+        <span style='position:relative'>
+            <i class='fa fa-search' gstype='submit' style='position:absolute; right: 10px; color:#8cd8f6; font-size: 20px; top: -2px;cursor:pointer;'></i>
+            <input type='text' placeholder='Booking information' gsname='keyword' class='gsniceinput1 searchforbookinginput' gstype='submitenter' style='width: 100%; box-sizing: border-box;'>
+            </span>
     </div>
 </div>
+<div class='searchbookingresult'></div>

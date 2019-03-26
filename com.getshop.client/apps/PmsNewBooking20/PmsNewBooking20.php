@@ -24,6 +24,10 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             $this->addToReadyList($type->id, $_POST['data'][$type->id], $_POST['data']['start'], $_POST['data']['end']);
         }
         $this->printRoomsAddedToReadyList();
+        
+        echo "<script>";
+        echo "$('.roomcount').val(0);";
+        echo "</script>";
     }
     public function printRoomsAddedToReadyList() {
         $this->includefile("roomsregisteredfromavailabilitycheck");

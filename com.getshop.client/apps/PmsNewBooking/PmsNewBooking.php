@@ -157,11 +157,12 @@ class PmsNewBooking extends \WebshopApplication implements \Application {
             $hasConferenceClass = "hasconference";
         }
         
-        if($this->getApi()->getStoreManager()->getMyStore()->id == "93fadf31-1039-4196-9e4f-77c3be0ef8d1") {
+//        if($this->getApi()->getStoreManager()->getMyStore()->id == "93fadf31-1039-4196-9e4f-77c3be0ef8d1") {
             echo "<div style='text-align:center; margin-top: 30px; margin-bottom: 30px;'>";
-            echo "<div style='margin:auto; background-color:green; color:#fff; display:inline-block; width: 800px; padding: 10px; font-size:20px;'>A new version of this page is possible to find <a href='/pms.php?page=048e2e10-1be3-4d77-a235-4b47e3ebfaab'>here</a></div>";
+            echo "<div style='margin:auto; background-color:green; color:#fff; display:inline-block; width: 800px; padding: 10px; font-size:20px;'>The next version of this page is possible to find <a href='/pms.php?page=048e2e10-1be3-4d77-a235-4b47e3ebfaab'>here</a><br>";
+            echo "It will replace this page at 19.04.2019, so please make sure you look at it<br>All feedback for of the new page can be sent to post@getshop.com</div>";
             echo "</div>";
-        }
+//        }
         
         echo "<div style='max-width:1500px; margin:auto;' class='dontExpand'>";
         echo "<div class='addnewroom $hasConferenceClass'>";

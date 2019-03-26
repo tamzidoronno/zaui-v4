@@ -1,12 +1,27 @@
 <?php
 /* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
 ?>
-<h1>Check availability</h1>
-<div gstype="form" method="printavailability" gstoarea=".availabilityoverview">
-    <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
-    <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
-    <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
+<div class='steptitle'>Check availability</div>
+<div class='gsshadowbox checkavailabilitybox'>
+    <div gstype="form" method="printavailability" gstoarea=".availabilityoverview">
+        <div class='stepboxtitle'>Check availability</div>
+        <div class='stepboxbody'>
+            <span style='position:relative'>
+                <i class='fa fa-calendar'
+                   onmouseup="$('.startdate').focus();"
+                   style='position:absolute; right:10px; font-size: 16px; top: 3px; color:#8cd8f6;cursor:pointer;'></i>
+                <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
+            </span>
+            <span style='position:relative'>
+                <i class='fa fa-calendar'
+                   onmouseup="$('.enddate').focus();"
+                   style='position:absolute; right:10px; font-size: 16px; top: 3px; color:#8cd8f6;cursor:pointer;'></i>
+                <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
+            </span>
+            <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
+        </div>  
+    </div>
+    <div class='availabilityoverview'></div>
 </div>
 <br><br>
-<div class='availabilityoverview'></div>
-<div class='roomsreadytobeadded'><?php $this->printRoomsAddedToReadyList(); ?></div>
+<div class='roomsreadytobeadded gsshadowbox'><?php $this->printRoomsAddedToReadyList(); ?></div>

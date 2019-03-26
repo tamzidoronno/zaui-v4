@@ -163,7 +163,6 @@
     margin-bottom: 20px;
 }
 .PmsBookingRoomView .checkinheadertext {font-size: 12px; }
-.PmsBookingRoomView .secondarytextcolor { color: #718188; }
 .PmsBookingRoomView .changedatespanel { display:none; }
 .PmsBookingRoomView .datepresentation { border-bottom: solid 1px #e9ebed; padding-bottom: 10px; margin-bottom: 10px; cursor:pointer; }
 .PmsBookingRoomView .checkincheckoutbutton {width: 100%;
@@ -477,7 +476,6 @@
 .PmsBookingRoomView .bookinginformation .guest_col4 { width: 35px; }
 .PmsBookingRoomView .bookinginformation .guest_col5 { width: 225px; }
 
-.PmsBookingRoomView .ellipsis {white-space: nowrap; overflow: hidden;text-overflow: ellipsis; } 
 .PmsBookingRoomView .GetShopQuickUser .booked_for {
     display: inline-block;
     width: 140px;

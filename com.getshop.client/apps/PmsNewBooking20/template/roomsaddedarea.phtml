@@ -40,9 +40,10 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
             $conferenceclass = "conferenceroom";
         }
         ?>
-        <div class='roominformationbox <?php echo $conferenceclass; ?>'>
-            <div class='title'> <?php echo $name; ?>
+        <div class='roominformationbox gsshadowbox <?php echo $conferenceclass; ?>'>
+            <div class='stepboxtitle'> <?php echo $name; ?>
                 <span style='float:right;'>
+                    <i class='fa fa-clock-o' style='color:#8cd8f6;'></i> 
                     <?php
                     echo date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end));
                     ?>
@@ -55,25 +56,25 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
                     ?>
                     <div class='eachguestarea'>
                         <div class='guestinformationrow' guestid='<?php echo $guest->guestId; ?>'>
+                            <input type='txt' class='gsniceinput1 nameinput updateguestinfofield' value='<?php echo $guest->name; ?>' placeholder='Guest name' fortype='name'>
+                            <input type='txt' class='gsniceinput1 emailinput updateguestinfofield' value='<?php echo $guest->email; ?>' placeholder='Guest email' fortype='email'>
+                            <input type='txt' class='gsniceinput1 prefixinput updateguestinfofield' value='<?php echo $guest->prefix; ?>' placeholder='Prefix' fortype='prefix'>
+                            <input type='txt' class='gsniceinput1 phoneinput updateguestinfofield' value='<?php echo $guest->phone; ?>' placeholder='Phone' fortype='phone'>
                             <span class='removeguest' 
                                 gsclick='removeGuestFromRoom'
                                 synchron="true" 
                                 roomid='<?php echo $room->pmsBookingRoomId; ?>' 
                                 gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'
                                 guestid='<?php echo $guest->guestId; ?>'>
-                                <i class='fa fa-trash-o' title='Remove guest'></i>
+                                <i class='fa fa-close' title='Remove guest'></i>
                             </span>
-                            <input type='txt' class='gsniceinput1 nameinput updateguestinfofield' value='<?php echo $guest->name; ?>' placeholder='Guest name' fortype='name'>
-                            <input type='txt' class='gsniceinput1 emailinput updateguestinfofield' value='<?php echo $guest->email; ?>' placeholder='Guest email' fortype='email'>
-                            <input type='txt' class='gsniceinput1 prefixinput updateguestinfofield' value='<?php echo $guest->prefix; ?>' placeholder='Prefix' fortype='prefix'>
-                            <input type='txt' class='gsniceinput1 phoneinput updateguestinfofield' value='<?php echo $guest->phone; ?>' placeholder='Phone' fortype='phone'>
                         </div>
                         <div class='guestionsuggestionarea'><?php if(!$guest->name) { $this->printSuggestions($suggestions); } ?></div>
                     </div>
                     <?php
                 }
                 ?>
-                <span class='addanotherguest'
+                <span class='addanotherguest'  style='color:#8cd8f6;'
                       gsclick='addGuestToRoom'
                       synchron="true" 
                       roomid='<?php echo $room->pmsBookingRoomId; ?>' 
@@ -98,7 +99,7 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
                   echo "<span class='listaddon'><span class='addonscount'>" . $addoncount . "</span> addons</span> added, total: " . $addonsprice;
                   $this->printAddonsAdded($room);
                 }
-                ?>, <span class='addAddonButton' roomid='<?php echo $room->pmsBookingRoomId; ?>'>add addon</span>.
+                ?>, <span class='addAddonButton' roomid='<?php echo $room->pmsBookingRoomId; ?>'>add addon</span>
 
                 <span class='editpriceonroom' gstype="form" method="updateprice" synchron='true'>
                     <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>

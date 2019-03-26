@@ -1,6 +1,6 @@
 .PmsNewBooking20 .newbookingoption { width: 264px; display:inline-block; height: 300px; text-align: center; margin: 20px;  box-sizing: border-box; cursor:pointer; background-color:#fff; }
 .PmsNewBooking20 .steptitle { text-transform: uppercase; font-weight: bold; font-size: 16px; margin-top: 70px; margin-bottom: 70px; }
-.PmsNewBooking20 .stepboxtitle { text-transform: uppercase; font-weight: bold; font-size: 16px; border-bottom: solid 1px #eaecee; text-align: left; padding: 10px; }
+.PmsNewBooking20 .stepboxtitle { text-transform: uppercase; font-weight: bold; font-size: 14px; border-bottom: solid 1px #eaecee; text-align: left; padding: 10px; }
 .PmsNewBooking20 .stepboxbody { padding: 10px; }
 .PmsNewBooking20 .searchcustomerbox { margin: auto; max-width: 500px; }
 
@@ -67,34 +67,36 @@
 
 
 /* Step2 */
-.PmsNewBooking20 .newbookingprocess[for="newbookingstep2"] .startdate { width: 80px; text-align: center; }
-.PmsNewBooking20 .newbookingprocess[for="newbookingstep2"] .enddate { width: 80px; text-align: center; }
+.PmsNewBooking20 .newbookingprocess[for="newbookingstep2"] .startdate { width: 220px; text-align: left; margin-right: 15px; }
+.PmsNewBooking20 .newbookingprocess[for="newbookingstep2"] .enddate { width: 220px; text-align: left; margin-right: 15px;  }
 .PmsNewBooking20 .searchforbooking { padding: 10px; background-color: #fff; }
-.PmsNewBooking20 .roominformationbox { text-align: left; background-color:#fff; border: solid 1px #bbb; max-width: 800px; margin:auto;margin-bottom: 10px; }
+.PmsNewBooking20 .roominformationbox { text-align: left; background-color:#fff;  max-width: 800px; margin:auto;margin-bottom: 10px; }
 .PmsNewBooking20 .roominformationbox .title { font-size: 16px; padding: 10px; border-bottom: solid 1px #bbb; margin-bottom: 10px; }
 .PmsNewBooking20 .roominformationbox .addanotherguest { color: blue; font-size: 12px; cursor:pointer; margin-top: 5px; display:inline-block; }
 .PmsNewBooking20 .roominformationbox .guestinformation { padding: 10px; }
 .PmsNewBooking20 .completeregistrationbutton { max-width: 780px; width:100%; margin-bottom: 100px;}
-.PmsNewBooking20 .addroomssummary {     background-color: #fff; max-width: 780px; margin: auto; padding: 10px; border: solid 1px #bbb;font-size: 20px;margin-top: 20px;margin-bottom: 20px; }
+.PmsNewBooking20 .addroomssummary { max-width: 780px; margin: auto; padding: 10px; font-size: 20px;margin-top: 20px;margin-bottom: 20px; height: 100px; }
 .PmsNewBooking20 .addroomssummary .description { display:none; }
-.PmsNewBooking20 .addroomssummary .addroomscategories {width: 100%;box-sizing: border-box; }
+.PmsNewBooking20 .addroomssummary .addroomscategories { display:block; }
 .PmsNewBooking20 .addroomssummary.disabled .description { display:block; }
-.PmsNewBooking20 .addroomssummary.disabled .addroomscategories { background-color:#efefef; cursor: initial;  }
+.PmsNewBooking20 .addroomssummary.disabled .addroomscategories { display:none;  }
 .PmsNewBooking20 .warnclosedroom { padding: 10px; border: solid 1px #bbb; background-color:red; display:inline-block; width: 800px; color:#fff; line-height: 25px; font-size: 16px; }
 .PmsNewBooking20 .addroomssummary.isclosed { display:none; }
-.PmsNewBooking20 .addAddonButton {color: blue; cursor:pointer; }
+.PmsNewBooking20 .addAddonButton {color: #8cd8f6; cursor:pointer; }
 .PmsNewBooking20 .editroompriceinput { width: 70px; }
 .PmsNewBooking20 .editpriceonroom { display: none; float:right;padding-top: 2px;padding-right: 2px; }
-.PmsNewBooking20 .pricetoroom { padding: 10px; box-sizing: border-box; font-size: 20px; line-height: 20px; cursor:pointer; border-left:  solid 1px #ddd; display:inline-block; float:right;}
+.PmsNewBooking20 .pricetoroom { padding: 10px; box-sizing: border-box; font-size: 14px; line-height: 20px; cursor:pointer; font-weight: bold; border-left:  solid 1px #ddd; display:inline-block; float:right;}
+.PmsNewBooking20 .pricetoroom .fa-edit { color:#8cd8f6; }
 .PmsNewBooking20 .nameinput { width: 200px; margin-right: 10px; }
 .PmsNewBooking20 .emailinput { width: 250px; margin-right: 10px; }
 .PmsNewBooking20 .guestsuggestionrow { position:relative; }
 .PmsNewBooking20 .prefixinput { width: 30; margin-right: 4px; text-align: center; }
 .PmsNewBooking20 .phoneinput { width: 120px; margin-right: 10px; }
-.PmsNewBooking20 .roomfooterarea { font-size: 16px; background-color:#f6f6f6; color:#000; border-top: solid 1px #bbb; }
+.PmsNewBooking20 .roomfooterarea { font-size: 14px; background-color:#fafcfd; color:#000; padding: 5px; }
+.PmsNewBooking20 .addtoexistingbox { margin: auto; width: 500px; }
+.PmsNewBooking20 .checkavailabilitybox { margin: auto; width: 500px; }
 .PmsNewBooking20 .removeguest {     
-        background-color: red;
-        color: #fff;
+        color: #ff6731;
         padding: 5px;
         border-radius: 3px;
         font-size: 16px;
@@ -104,7 +106,7 @@
         width: 18px;
         display: inline-block;
     }
-.PmsNewBooking20 .roomfooterarea .removeroom { padding: 10px; box-sizing: border-box; font-size: 20px; cursor:pointer; border-right:  solid 1px #ddd; display:inline-block; }
+.PmsNewBooking20 .roomfooterarea .removeroom { padding: 10px; box-sizing: border-box; font-size: 14px; cursor:pointer; border-right:  solid 1px #ddd; display:inline-block; }
     
 .PmsNewBooking20 .guestsuggestionname {
         display:inline-block;
@@ -128,14 +130,15 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-.PmsNewBooking20 .guestionsuggestionarea { padding: 10px; padding-left: 40px; }
+.PmsNewBooking20 .guestionsuggestionarea { padding: 10px; padding-left: 22px; }
 .PmsNewBooking20 .guestionsuggestionarea .addsuggestionarrow {
     position: absolute;
     left: -18px;
     top: 4px;
     cursor:pointer;
+    color:#86c330;
 }
-.PmsNewBooking20 .listaddon { color: blue; cursor:pointer; }
+.PmsNewBooking20 .listaddon { color: #8cd8f6; cursor:pointer; }
 .PmsNewBooking20 .addaddonrow:hover { background-color:#efefef; padding-left: 20px; } 
 .PmsNewBooking20 .addaddonrow { padding: 10px; border-bottom: solid 1px #bbb; cursor:pointer;text-align: left; }
 .PmsNewBooking20 .addaddonrow.hideaddonrow { display: none; }
@@ -143,7 +146,7 @@
 .PmsNewBooking20 .addonspanel { border: solid 1px #bbb; background-color:#fff; width: 300px; display:inline-block; border-bottom: solid 0px; display:none; z-index:2;}
 .PmsNewBooking20 .addonspanel .fa { float:right; }
 .freeroomresultbox .counterrow .fa {
-        font-size: 25px;
+        font-size: 20px;
         cursor: pointer;
         position: absolute;
         top: 13px;

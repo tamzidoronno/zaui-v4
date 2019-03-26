@@ -8343,6 +8343,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void addOrderToBooking(PmsBooking booking, String orderId) {
         if (!booking.orderIds.contains(orderId)) {
             booking.orderIds.add(orderId);
+            saveObject(booking);
         }
     }
 

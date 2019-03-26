@@ -48,11 +48,12 @@ public class PmsBookingPaymentDiffer {
         calculateRoomCount(summary);
         setPriceToUseForOrders(summary);
         removeNullRows(summary);
+        invertNegativeCountToCreateOrdersFor(summary);
         return summary;
     }
 
     private List<PmsRoomPaymentSummaryRow> createAddonList() {
-        List<PmsBookingAddonItem> roomsAddon = clone(room.addons); 
+        List<PmsBookingAddonItem> roomsAddon = clone(getAllPmsAddonsFromRoom(room)); 
         List<PmsBookingAddonItem> ordersAddon = clone(getAllPmsAddonsFromOrders());
         List<PmsBookingAddonItem> paidAddon = clone(getAllPmsAddonsFromOrdersPaid());
         
@@ -104,33 +105,29 @@ public class PmsBookingPaymentDiffer {
         for (String date : allDatesToLookAt) {
             PmsRoomPaymentSummaryRow row = new PmsRoomPaymentSummaryRow();
             row.date = date;
-            row.priceInBooking = room.priceMatrix.get(date) != null ? room.priceMatrix.get(date) : 0D;
+            row.priceInBooking = 0;
+            
+            if (!room.isDeleted() || room.nonrefundable) { 
+                row.priceInBooking = room.priceMatrix.get(date) != null ? room.priceMatrix.get(date) : 0D;
+            }
+            
             row.cartItemIds = getCartItemsIds(roomProductIds);
-//            row.productIds = getProductIds(roomProductIds);
             row.isAccomocation = true;
             row.countFromBooking = 1;
             row.countFromOrders = 1;
             row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
             
-            finalizeRow(row, retList);
+            calculateAmountInOrders(row);
+            calculatePaidAmount(row);
+            retList.add(row);
         }
         
         return retList;
     }
 
-    private void finalizeRow(PmsRoomPaymentSummaryRow row, List<PmsRoomPaymentSummaryRow> retList) {
-        calculateAmountInOrders(row);
-        calculatePaidAmount(row);
-        retList.add(row);
-    }
-
     private void setProductIdsForRoom() {
-        roomProductIds = orders.stream()
-                .flatMap(o -> o.getCartItems().stream())
-                .filter(o -> o.isPriceMatrixItem() && o.getProduct().externalReferenceId != null && !o.getProduct().externalReferenceId.isEmpty())
-                .filter(o -> pmsManager.getBookingFromRoom(o.getProduct().externalReferenceId) != null)
-                .map(o -> pmsManager.getBookingFromRoom(o.getProduct().externalReferenceId).getRoom(o.getProduct().externalReferenceId))
-                .map(room -> pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId))
+        roomProductIds = pmsManager.bookingEngine.getBookingItemTypes().stream()
+                .filter(type -> type.productId != null && !type.productId.isEmpty())
                 .map(type -> type.productId)
                 .collect(Collectors.toList());
                 
@@ -262,7 +259,7 @@ public class PmsBookingPaymentDiffer {
                 .forEach(includedInRoomPriceRow -> {
                     PmsRoomPaymentSummaryRow accomodationRow = getAccomodationRow(summary, includedInRoomPriceRow.date);
                     if (accomodationRow != null) {
-                        accomodationRow.priceInBooking -= includedInRoomPriceRow.priceInBooking;
+                        accomodationRow.priceInBooking -= (includedInRoomPriceRow.priceInBooking * includedInRoomPriceRow.countFromBooking);
                     }
                 });
     }
@@ -405,9 +402,10 @@ public class PmsBookingPaymentDiffer {
     private void setPriceToUseForOrders(PmsRoomPaymentSummary summary) {
         summary.rows.stream()
                 .forEach(o -> {
-                    o.priceToCreateOrders = o.priceInBooking - o.createdOrdersFor;
-                    if (o.priceToCreateOrders < 0) {
-                        o.priceToCreateOrders = o.priceToCreateOrders * -1;
+                    o.priceToCreateOrders = (o.priceInBooking * o.countFromBooking) - (o.createdOrdersFor * o.countFromOrders);
+                    
+                    if (o.count != 0) {
+                        o.priceToCreateOrders = o.priceToCreateOrders / o.count;
                     }
                 });
         
@@ -420,5 +418,19 @@ public class PmsBookingPaymentDiffer {
                 addon.count = addon.count * -1;
             }
         });
+    }
+
+    private List<PmsBookingAddonItem> getAllPmsAddonsFromRoom(PmsBookingRooms room) {
+        if (room.isDeleted() && !room.nonrefundable) {
+            return room.addons.stream()
+                .filter(o -> o.noRefundable)
+                .collect(Collectors.toList());
+        } 
+        
+        return room.addons;
+    }
+
+    private void invertNegativeCountToCreateOrdersFor(PmsRoomPaymentSummary summary) {
+
     }
 }

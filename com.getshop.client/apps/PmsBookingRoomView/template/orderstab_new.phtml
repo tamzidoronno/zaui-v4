@@ -46,6 +46,8 @@ foreach ($summary->rows as $row) {
     $totalForRoom += $priceInBooking;
 }
 
+$missingInOrders = round($missingInOrders, 2);
+
 ?>
 
 
@@ -95,9 +97,12 @@ foreach ($summary->rows as $row) {
                     <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
 
                     <div class="ordermenu">
+                        <?
+                        if (!count($order->creditOrderId) && !$order->isCreditNote) {
+                        ?>
                         <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>">
                             <?
-                            if ($order->closed) {
+                            if ($order->closed) {  
                             ?>
                                 <i class="fa fa-history"></i> <? echo $this->__f("Credit order"); ?>
                             <?
@@ -107,6 +112,9 @@ foreach ($summary->rows as $row) {
                             }
                             ?>
                         </div>
+                        <?
+                        }
+                        ?>
 
                         <?
                         if ($order->status != 7) {
@@ -187,16 +195,16 @@ foreach ($summary->rows as $row) {
             <div class="col col_status"><? echo $status; ?></div>
             <div class="col col_date"><? echo $row->date; ?></div>
             <div class="col col_productname"><? echo $product->name; ?></div>
-            <div class="col col_value"><? echo $row->priceInBooking * $row->countFromBooking; ?></div>
-            <div class="col col_paid odd"><? echo ($row->createdOrdersFor * $row->countFromOrders); ?></div>
-            <div class="col col_paid"><? echo $row->actuallyPaidAmount; ?></div>
+            <div class="col col_value"><? echo round(($row->priceInBooking * $row->countFromBooking),2); ?></div>
+            <div class="col col_paid odd"><? echo round(($row->createdOrdersFor * $row->countFromOrders),2); ?></div>
+            <div class="col col_paid"><? echo round($row->actuallyPaidAmount,2); ?></div>
             <div class="col col_paid odd large" style='color: <? echo $orderColor; ?>'>
                 <? 
                 if ($orderColor == '#ff7a00') {
                     echo "<i class='fa fa-warning' title='You need to create order for this payment, click start payment process'></i> ";
                 }
                 
-                echo $missingInOrders; 
+                echo round($missingInOrders,2); 
                 ?>
             </div>
             <div class="col col_remaining large" style='color: <? echo $paymentColor; ?>'>
@@ -206,7 +214,7 @@ foreach ($summary->rows as $row) {
                     echo "<i class='fa fa-warning' title='Make sure all orders are created and marked as paid...'></i> ";
                 }
                 
-                echo $remaining; 
+                echo round($remaining,2); 
                 
                 
                 ?>
@@ -224,8 +232,8 @@ foreach ($summary->rows as $row) {
         <div class="col col_value"></div>
         <div class="col col_paid"></div>
         <div class="col col_paid"><? echo $this->__f("Total"); ?></div>
-        <div class="col col_paid odd  large"><? echo $totalMissing; ?></div>
-        <div class="col col_remaining  large"><? echo $totalPaid; ?></div>
+        <div class="col col_paid odd  large"><? echo round($totalMissing,2); ?></div>
+        <div class="col col_remaining  large"><? echo round($totalPaid,2); ?></div>
     </div>
     <?
 ?>

@@ -72,13 +72,17 @@ public class PmsInvoiceManagerNew {
             prod.discountedPrice = prod.price;
             prod.externalReferenceId = roomData.roomId;
             
+            if (prod.price != 0 && item.getCount() == 0) {
+                item.setCount(1);
+            }
+            
             item.priceMatrix = new HashMap();
             setMetaData(item, roomData);
             setGuestName(item, roomData);
             setDates(item, roomData);
             
             days.stream().forEach(o -> {
-                item.priceMatrix.put(o.date, o.price);
+                item.priceMatrix.put(o.date, (o.price * o.count));
             });
             
             item.getProduct().doFinalize();
@@ -87,10 +91,16 @@ public class PmsInvoiceManagerNew {
 
     private double getAveragePrice(List<PmsOrderCreateRowItemLine> days) {
         double sum = days.stream()
-                .mapToDouble(o -> o.price)
+                .mapToDouble(o -> {
+                    return o.price * o.count;
+                })
                 .sum();
         
         int count = getCount(days);
+        
+        if (count == 0 && sum != 0) {
+            count = 1;
+        }
         
         if (count == 0)
             return 0;

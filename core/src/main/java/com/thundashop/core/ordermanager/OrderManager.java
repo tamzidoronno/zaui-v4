@@ -215,6 +215,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order credited = order.jsonClone();
         for(CartItem item : credited.cart.getItems()) {
             item.setCount(item.getCount() * -1);
+            item.creditPmsAddonsAndPriceMatrix();
         }
         
         credited.incrementOrderId = getNextIncrementalOrderId();
@@ -229,6 +230,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (credited.overrideAccountingDate != null && credited.overrideAccountingDate.before(getOrderManagerSettings().closedTilPeriode)) {
             credited.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
         }
+        
         order.creditOrderId.add(credited.id);
         order.doFinalize();
         

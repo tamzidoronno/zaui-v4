@@ -35,6 +35,9 @@ if(sizeof($user->pmsPageAccess) > 0) {
     if(in_array("a90a9031-b67d-4d98-b034-f8c201a8f496", $user->pmsPageAccess)) {
         $user->pmsPageAccess[] = "groupbooking";
     }
+    if(in_array("4d89b5cf-5a00-46ea-9dcf-46ea0cde32e8", $user->pmsPageAccess)) {
+        $user->pmsPageAccess[] = "048e2e10-1be3-4d77-a235-4b47e3ebfaab";
+    }
     
     if(!in_array($page->getId(), $user->pmsPageAccess)) {
         header('location:/pms.php?page='.$user->pmsPageAccess[0]);

@@ -136,6 +136,17 @@ class PaymentApplication extends ApplicationBase {
         return true;
     }
     
+    public function defaultRender() {
+    }
+    
+    public function renderStandAlone() {
+        if (isset($this->overrideDefault) && $this->overrideDefault) {
+            parent::renderStandAlone();
+        } else {
+            $this->renderDefault();
+        }
+    }
+    
     public function renderPayment($options=false) {
         $this->paymentOptions = $options;
         $classname = get_class($this);
@@ -185,6 +196,31 @@ class PaymentApplication extends ApplicationBase {
     public function getExtraInformation($order) {
         return "";
     }
+    
+    public function getColor() {
+        return "orange";
+    }
+    
+    public function getPaymentDescription() {
+        return "";
+    }
+    
+    public function setCurrentOrder($order) {
+        $this->order = $order;
+    }
+    
+    public function getCurrentOrder() {
+        return $this->order;
+    }
+
+    public function renderDefault() {
+        $app = $this->getApi()->getGetShopApplicationPool()->get("486009b1-3748-4ab6-aa1b-95a4d5e2d228");
+        $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $appInstance->order = $this->order;
+        $appInstance->renderStandAlone();
+    }
+    
+
 }
 
 ?>

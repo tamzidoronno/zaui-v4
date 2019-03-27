@@ -47,7 +47,43 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .markaspaidwindow .innner_area .closebutton', this.hideMarkAsPaidWindow)
         $(document).on('click', '.PmsBookingRoomView .ordermenu .showmarkorderaspaid', this.showPaymentWindow)
         $(document).on('click', '.PmsBookingRoomView .collapsable_shadowbox .colheader', this.toggleCollapse)
+        $(document).on('change', '.PmsBookingRoomView .filterbymonth', this.filterOrdersByMonth)
+        $(document).on('click', '.PmsBookingRoomView .showOrderSummary', this.showOrderSummary);
     },
+        
+    showOrderSummary: function() {
+        thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", {
+            orderId: $(this).attr('orderid'),
+            state: 'paymentoverview'
+        });
+    },
+    
+    filterOrdersByMonth: function() {
+        var date = $(this).val();
+        var roomId = $(this).closest('.app').find('input[gsname="roomId"]').val();;
+        
+        $('.PmsBookingRoomView .row[date]').each(function() {
+            if ($(this).attr('date').indexOf(date) !== -1) {
+                $(this).removeClass('hidden');
+            } else {
+                $(this).addClass('hidden');
+            }
+        });
+        
+        sessionStorage.setItem('last_selected_orders_detailed_'+roomId, date);
+    },
+    
+    selectLastOrdersDetailedMonth: function(roomId) {
+        var lastSelected = sessionStorage.getItem('last_selected_orders_detailed_'+roomId);
+        if (!lastSelected) {
+            $(".PmsBookingRoomView .filterbymonth option:last").attr("selected", "selected");
+        } else {
+            $(".PmsBookingRoomView .filterbymonth option[value='"+lastSelected+"']").attr("selected", "selected");
+        }
+        
+        $(".PmsBookingRoomView .filterbymonth").change();
+    },
+    
     showChangeDatePanel : function(type) {
         $('.changedatesinformation').hide();
         $('.changedatespanel').show();

@@ -622,7 +622,7 @@ public interface IPmsManager {
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId);
     
     @Administrator
-    public String createOrderFromCheckout(List<PmsOrderCreateRow> row);
+    public String createOrderFromCheckout(List<PmsOrderCreateRow> row, String paymentMethodId);
     
     @Administrator
     public void recheckOrdersAddedToBooking();

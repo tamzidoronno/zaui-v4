@@ -67,5 +67,9 @@ class VerifoneTerminal extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("ipaddr3", $_POST['ipaddr3']);
         $this->setConfigurationSetting("ipaddr4", $_POST['ipaddr4']);
     }
+    
+    public function getColor() {
+        return "green";
+    }
 }
 ?>

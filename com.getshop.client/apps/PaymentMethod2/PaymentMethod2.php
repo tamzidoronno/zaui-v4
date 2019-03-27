@@ -24,6 +24,10 @@ class PaymentMethod2 extends \PaymentApplication implements \Application {
     
     public function saveSettings() {
         $this->setConfigurationSetting("name", $_POST['name']);
-    }    
+    }
+    
+    public function getColor() {
+        return "red";
+    }
 }
 ?>

@@ -130,4 +130,6 @@ public interface IStoreApplicationPool {
     public List<Application> getActivatedPaymentApplications();
     
     public List<Application> getActivatedApplications(String systemType);
+    
+    public List<String> getPaymentApplicationsIds();
 }

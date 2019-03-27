@@ -716,11 +716,16 @@
     width: 150px;
 }
 .PmsBookingRoomView .row_payment_status_line .col_date {
+    width: 130px;
+}
+
+.PmsBookingRoomView .row_payment_status_line .col_balance {
     width: 100px;
+    text-align: right;
 }
 
 .PmsBookingRoomView .row_payment_status_line .col_value {
-    width: 100px;
+    width: 125px;
     text-align: right;
 }
 
@@ -744,7 +749,7 @@
 }
 
 .PmsBookingRoomView .row_payment_status_line .col_status {
-    width: 20px;
+    width: 20px !important;
 }
 
 .PmsBookingRoomView .row_payment_status_line .col_orderid {
@@ -795,6 +800,7 @@
     display: none;
     right: 10px;
     box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+    z-index: 1;
 }
 
 .PmsBookingRoomView .ordermenu .entry {
@@ -1011,6 +1017,10 @@
 .PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_addons { width: 60px; }
 .PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 670px); }
 .PmsBookingRoomView .PmsSearchBooking .GetShopModuleTable .secondary_text { color: #888;overflow: hidden;text-transform: none; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+
+.PmsBookingRoomView .row.hidden {
+    display: none;
+}
 
 .PmsBookingRoomView .row_payment_status_line.evenrow {
     background-color: #fbf7f7;

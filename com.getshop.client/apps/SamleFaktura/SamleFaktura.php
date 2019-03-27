@@ -75,5 +75,9 @@ class SamleFaktura extends \PaymentApplication implements \Application {
     public function renderPaymentOption() {
         $this->includefile("paymentoption");
     }
+    
+    public function getColor() {
+        return "darkgreen";
+    }
 }
 ?>

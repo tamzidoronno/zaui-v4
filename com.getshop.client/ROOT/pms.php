@@ -1,10 +1,11 @@
 <?
 include '../loader.php';
 $pageFactory = new \PageFactory("pms");
+$factory = IocContainer::getFactorySingelton();
+
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
-$factory = IocContainer::getFactorySingelton();
 
 $timezone = $factory->getStore()->timeZone;
 if($timezone) {

@@ -169,8 +169,23 @@ a {
 }
 
 .gsoverlay3 {
-    background-color: #eeeeee;
+    background-color: rgba(0,0,0,0.9);
     z-index: 3;
+    padding: 20px;
+}
+
+.gsoverlay3 .closeoverlay {
+    position: absolute;
+    right: 40px;
+    top: 30px;
+    font-size: 30px;
+    cursor: pointer;
+    
+}
+.gsoverlay3 .gsoverlayinner {
+    background-color: #eeeeee;
+    padding: 50px;
+    position: relative;
 }
 
 .gsoverlay3.active,
@@ -387,3 +402,15 @@ a {
 
 .getshop_box_1.orange { background-color: #f09a32; }
 .getshop_box_1.orange { box-shadow: 5px 5px 5px rgba(94,60,20,0.2); }
+
+.getshop_box_1.green { background-color: #088e01; }
+.getshop_box_1.green { box-shadow: 5px 5px 5px rgba(50,100,10,0.2); }
+
+
+.getshop_box_1.darkgreen { background-color: #002635; }
+.getshop_box_1.darkgreen { box-shadow: 5px 5px 5px rgba(0,15,20,0.2); }
+
+.getshop_box_1.yellow { background-color: f0ff4a; color: #333; }
+
+.getshop_box_1.blue { background-color: #0024e2; }
+.getshop_box_1.red{ background-color: #ff3600; }

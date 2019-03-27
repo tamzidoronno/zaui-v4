@@ -34,5 +34,9 @@ class PaymentMethod1 extends \PaymentApplication implements \Application {
             $this->getApi()->getOrderManager()->markAsPaidWithPassword($this->order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($this->order), "fdsvb4354345345");
         }
     }    
+    
+    public function getColor() {
+        return "red";
+    }
 }
 ?>

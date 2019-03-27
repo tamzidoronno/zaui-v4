@@ -57,7 +57,10 @@ class ExpediaPayment extends \PaymentApplication implements \Application  {
     public function saveSettings() {
         $this->setConfigurationSetting("automarkpaid", $_POST['automarkpaid']);
     }
-    
+
+    public function getColor() {
+        return "yellow";
+    }    
 }
 
 ?>

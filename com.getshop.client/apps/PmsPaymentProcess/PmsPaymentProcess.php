@@ -15,15 +15,12 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     public function render() {
         $this->setLoadState();
         
-        if (isset($_POST['data']['pmsBookingRoomId'])) {
-            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'] = $_POST['data']['pmsBookingRoomId'];
-        }
-        
-        
         if (!isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state']) || $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "select_payment") {
             $this->includefile("select_payment");
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "bookings_summary") {
             $this->includefile('selectbookingdata');
+        } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "paymentoverview") {
+            $this->includefile("paymentoverview");
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "select_rooms") {
             $this->includefile("select_rooms");
         }
@@ -105,7 +102,9 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     }
     
     public function createOrder() {
-        $this->getApi()->getPmsManager()->createOrderFromCheckout($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms']);
+        $orderId = $this->getApi()->getPmsManager()->createOrderFromCheckout($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms'], $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod']);
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid'] = $orderId;
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = "paymentoverview";
     }
 
     public function clearState() {
@@ -121,6 +120,15 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
             } else {
                 $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = $_POST['data']['state'];
             }
+        }
+        
+        
+        if (isset($_POST['data']['pmsBookingRoomId'])) {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'] = $_POST['data']['pmsBookingRoomId'];
+        }
+        
+        if (isset($_POST['data']['orderId'])) {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid'] = $_POST['data']['orderId'];
         }
     }
 

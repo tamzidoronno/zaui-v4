@@ -28,10 +28,12 @@ class InvoiceTemplateTranslator {
             $this->language = $language;
         }
         
+        $prefix = strstr(getcwd(), "invoicetemplates") ? "" : "scripts/invoicetemplates/";
+        
         if ($this->language === "nb_NO") {
-            $data = file_get_contents('lang_nb_NO.json');
+            $data = file_get_contents($prefix.'lang_nb_NO.json');
         } else { 
-            $data = file_get_contents('lang_default.json');
+            $data = file_get_contents($prefix.'lang_default.json');
         }
         
         $this->matrix = json_decode($data);

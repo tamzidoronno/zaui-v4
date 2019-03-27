@@ -1,0 +1,10 @@
+<?
+$order = $this->getOrder();
+?>
+
+<div class='buttonarea'>
+    <div class='shop_button' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Complete transaction"); ?></div>
+    <br/>
+    <br/>
+    <div class='shop_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' ><i class='fa fa-trash'></i> <? echo $this->__f("Delete order"); ?></div>
+</div>

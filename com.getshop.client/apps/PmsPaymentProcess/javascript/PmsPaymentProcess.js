@@ -3,7 +3,7 @@ app.PmsPaymentProcess = {
         $(document).on('click', '.PmsPaymentProcess .setrooms', this.setRoomsSelected);
         $(document).on('click', '.PmsPaymentProcess .createorder', this.createOrder);
         $(document).on('change', '.PmsPaymentProcess .item_count', this.updateTotalValue);
-        $(document).on('change', '.PmsPaymentProcess .item_price', this.updateTotalValue);
+        $(document).on('change', '.PmsPaymentProcess .item_price', this.updateTotalValue);  
     },
     
     updateTotalValue: function() {
@@ -22,6 +22,12 @@ app.PmsPaymentProcess = {
             
             $(this).find('.totalval').html(total);
         });
+    },
+    
+    overlayClosed: function() {
+        if (app && app.PmsBookingRoomView) {
+            app.PmsBookingRoomView.refresh();
+        }
     },
     
     setRoomsSelected: function() {
@@ -80,9 +86,7 @@ app.PmsPaymentProcess = {
         };
                 
         var event = thundashop.Ajax.createEvent(null, "createOrder", this, data);
-        thundashop.Ajax.post(event,function() {
-            $('.gsoverlay3').removeClass('active');
-        });
+        thundashop.Ajax.post(event);
     }
 };
 

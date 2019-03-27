@@ -42,7 +42,7 @@ public class PmsInvoiceManagerNew {
         this.sdf = new SimpleDateFormat("dd-MM-yyyy");
     }
     
-    public Order createOrder(List<PmsOrderCreateRow> rows) {
+    public Order createOrder(List<PmsOrderCreateRow> rows, String paymentMethodId) {
         cartManager.clear();
         
         for (PmsOrderCreateRow roomData : rows) {
@@ -50,10 +50,16 @@ public class PmsInvoiceManagerNew {
             addAddonsToCart(roomData);
         }
         
+        if (cartManager.isCartConflictingWithClosedPeriode()) {
+            cartManager.getCart().overrideDate = orderManager.getOrderManagerSettings().closedTilPeriode;
+        }
+        
         Order order = orderManager.createOrder(null);
         order.supportMultipleBookings = true;
         order.createByManager = "PmsDailyOrderGeneration";
+        
         orderManager.saveOrder(order);
+        orderManager.changeOrderType(order.id, paymentMethodId);
         
         return order;
     }

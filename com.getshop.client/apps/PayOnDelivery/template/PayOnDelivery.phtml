@@ -1,4 +1,35 @@
 <?php
-namespace ns_565ea7bd_c56b_41fe_b421_18f873c63a8f;
-
+/* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+$order = $this->getCurrentOrder();
+$total = $this->getApi()->getOrderManager()->getTotalAmount($order);
 ?>
+
+<div class='completepayment cash' total='<? echo $total; ?>'>
+    <div class='total'>
+        <? echo $this->__f("Total")." ".$total; ?>
+        
+    </div>
+    <?
+    echo $this->__f("How much money did you receive from customer?");
+    ?>
+    <br/>
+    <br/>
+    <input readonly='true' class='gsniceinput1' gstype='numpad' value='' id='receivedpayment'/>
+    <br/>
+    <br/>
+    
+    <div class='refund'>
+        <? echo $this->__f("To return"); ?>:
+        <span class='torefund'><? echo "-".$total; ?></span>
+    </div>
+    
+    <br/>
+    <br/>
+    
+    <div class='buttonarea'>
+        <div class='shop_button' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.PayOnDelivery.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Complete transaction"); ?></div>
+        <br/>
+        <br/>
+        <div class='shop_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.PayOnDelivery.markAsPaidCompleted' ><i class='fa fa-trash'></i> <? echo $this->__f("Delete order"); ?></div>
+    </div>
+</div>

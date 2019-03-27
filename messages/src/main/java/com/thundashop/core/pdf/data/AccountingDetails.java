@@ -4,11 +4,13 @@
  */
 package com.thundashop.core.pdf.data;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ktonder
  */
-public class AccountingDetails {
+public class AccountingDetails implements Serializable {
     public String accountNumber = "";
     public String vatNumber = "";
     public String address = "";

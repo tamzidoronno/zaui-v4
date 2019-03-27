@@ -31,6 +31,7 @@ import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.ordermanager.data.PmiResult;
+import com.thundashop.core.pdf.data.AccountingDetails;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -468,4 +469,7 @@ public interface IOrderManager {
     @Administrator
     @ForceAsync
     public List<DayIncome> getDoublePostingDayIncomes(String paymentId, Date start, Date end);
+    
+    @Administrator
+    public AccountingDetails getAccountingDetails();
 }

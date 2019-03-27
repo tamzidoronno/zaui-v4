@@ -2057,5 +2057,34 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $orderList->formatPaymentType($order);
     }
 
+    public function shouldShowPager($distinctDates) {
+        if (count($this->getDistinctMonthsAndYears($distinctDates)) < 2) {
+            return false;
+        }
+        
+        return count($distinctDates) > 30;
+    }
+
+    public function getDistinctMonthsAndYears($distinctDates) {
+        $distinctList = array();
+        foreach ($distinctDates as $date) {
+            $arr = explode("-", $date);
+            $key = $arr[1]."-".$arr[2];
+            if (!in_array($key, $distinctList)) {
+                $distinctList[] = $key;
+            }
+        }
+        
+        return $distinctList;
+    }
+
+    public function translateMonthAndYear($distinct) {
+        $arr = explode("-", $distinct);
+        $dateObj   = \DateTime::createFromFormat('!m', $arr[0]);
+        $monthName = $dateObj->format('F');
+        
+        return $monthName." ".$arr[1];
+    }
+
 }
 ?>

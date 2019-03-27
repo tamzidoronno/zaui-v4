@@ -88,5 +88,9 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         }
         return $expdate;
     }
+    
+    public function getColor() {
+        return "darkgreen";
+    }
 }
 ?>

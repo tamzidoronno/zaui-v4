@@ -1971,7 +1971,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         forceDeleteOrder(object);
     }
 
-    private AccountingDetails getAccountingDetails() throws ErrorException {
+    @Override
+    public AccountingDetails getAccountingDetails() throws ErrorException {
         Application settings = storeApplicationPool.getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
         AccountingDetails details = new AccountingDetails();
         details.accountNumber = settings.getSetting("accountNumber");

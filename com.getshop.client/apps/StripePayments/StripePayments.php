@@ -123,6 +123,9 @@ class StripePayments extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("pkey", $_POST['pkey']);
         $this->setConfigurationSetting("title", $_POST['title']);
     }
-    
+
+    public function getColor() {
+        return "blue";
+    }    
 }
 ?>

@@ -413,6 +413,15 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     }
 
     @Override
+    public List<String> getPaymentApplicationsIds() {
+        return allApplications.stream()
+                .filter(o -> activatedApplications.contains(o))
+                .filter(o -> o.type.equals(Application.Type.Payment))
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
     public List<Application> getActivatedPaymentApplications() {
         return getApplications().stream()
                 .filter(app -> app.type.equals(Application.Type.Payment))

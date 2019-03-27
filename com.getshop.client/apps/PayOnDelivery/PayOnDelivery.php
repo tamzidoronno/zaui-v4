@@ -7,6 +7,7 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
     var $entries;
     var $dept;
     var $currentMenuEntry;
+    public $overrideDefault = true;
 
     function __construct() {
         
@@ -40,7 +41,6 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
             $details = $this->__w("* PayOnDelivery fee").": ".$this->getPaymentFee().", ".$this->__w("will be added to your invoice.");
         return $details;
     }
-
     
     public function renderConfig() {
         $this->includefile('payondeliveryconfig');
@@ -64,11 +64,31 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("PayOnDelivery");
+        if ($this->order && $this->order->closed) {
+            $this->renderDefault();
+        } else {
+            $this->includefile("PayOnDelivery");
+        }
     }
 
     public function saveSettings() {
         $this->setConfigurationSetting("paymentfee", $_POST['fee']);
+    }
+    
+    public function getColor() {
+        return "green";
+    }
+   
+    public function markOrderAsPaid() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        $date = date("c", time());
+        
+        $this->getApi()->getOrderManager()->markAsPaid($order->id, $date, $amount);
+    }
+    
+    public function cancelCurrentOrder() {
+        $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
     }
 }
 ?>

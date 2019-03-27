@@ -135,6 +135,13 @@ class ModulePage {
             $this->doApp($instance->getApplicationSettings()->id);
         }
         
+        $activatedPaymentApps = IocContainer::getFactorySingelton()->getApi()->getStoreApplicationPool()->getPaymentApplicationsIds();
+        $activatedPaymentApps[] = "486009b1_3748_4ab6_aa1b_95a4d5e2d228";
+        
+        foreach($activatedPaymentApps as $appId) {
+           $this->addExtraApplicationsNoneInstance($appId); 
+        }
+        
         foreach ($this->extraAppNoneInstances as $id) {
             $this->doApp($id);
         }
@@ -252,7 +259,15 @@ class ModulePage {
     }
 
     public function addExtraApplications($instanceId) {
-        $this->extraApps[] = $instanceId;
+        if (!in_array($instanceId, $this->extraApps)) {
+            $this->extraApps[] = $instanceId;
+        }
+    }
+    
+    public function addExtraApplicationsNoneInstance($instanceId) {
+        if (!in_array($instanceId, $this->extraAppNoneInstances)) {
+            $this->extraAppNoneInstances[] = $instanceId;
+        }
     }
 
     public function getExtraApplication($appId) {

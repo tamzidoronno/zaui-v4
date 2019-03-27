@@ -35,6 +35,7 @@ foreach ($allOrderIds as $orderId) {
 $totalUnpaid = 0;
 $totalForRoom = 0;
 
+$distinctDates = array();
 foreach ($summary->rows as $row) {
     $priceInOrders = $row->createdOrdersFor * $row->countFromOrders;
     
@@ -44,14 +45,19 @@ foreach ($summary->rows as $row) {
     $totalUnpaid += ($priceInBooking - $priceInOrders);
     $needToCreateOrdersFor += $missingInOrders;
     $totalForRoom += $priceInBooking;
+    
+    if (!in_array($row->date, $distinctDates)) {
+        $distinctDates[] = $row->date;
+    }
 }
 
 $missingInOrders = round($missingInOrders, 2);
+$needToCreateOrdersFor = round($needToCreateOrdersFor, 2);
+$totalForRoom = round($totalForRoom, 2);
 
 ?>
 
-
-<h2>Payment summary <? echo $room->guests[0]->name; ?></h2>
+<div class='insideheader'>Payment summary <? echo $room->guests[0]->name; ?></div>
 <div style='font-size: 16px;'>
     <? 
     echo "<div style='color: #8abf45; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
@@ -65,8 +71,11 @@ $missingInOrders = round($missingInOrders, 2);
     }
     ?>
 </div>
-<div >
-    <h2><? echo $this->__f("Payments")." (".$this->__f("Orders created").")"; ; ?></h2>
+
+<br/>
+<br/>
+<div>
+    <div class='insideheader'><? echo $this->__f("Payments"); ?></div>
     
    <?
    if (!count($orders)) {
@@ -76,11 +85,12 @@ $missingInOrders = round($missingInOrders, 2);
    } else {
    ?>
     <div class="row row_payment_status_line header">
-        <div class="col col_status"> </div>
-        <div class="col col_orderid"> Order id</div>
-        <div class="col col_amount"> Amount </div>
-        <div class="col col_paymenttype"> Payment Type </div>
-        <div class="col col_paymentdate"> Payment Date </div>
+        <div class="col col_date"> Created </div>
+        <div class="col col_productname"> Payment Type </div>
+        <div class="col col_value"> Amount </div>
+        <div class="col col_value odd"> Payment Date </div>
+        <div class="col col_balance"> Balance </div>
+        <div class="col col_orderid odd"> Order id</div>
     </div>
     <?
         foreach ($orders as $order) {
@@ -88,17 +98,30 @@ $missingInOrders = round($missingInOrders, 2);
             $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
             ?>
             <div class="row row_payment_status_line ">
-                <div class="col col_status"> <? echo $order->status == 7 ? "<i class='fa fa-check'></i>" : "<i style='color: red;' class='gsicon-bag-dollar'></i>"; ?> </div>
-                <div class="col col_orderid"> <? echo $order->incrementOrderId; ?> </div>
-                <div class="col col_amount"> <? echo $totalForOrder; ?></div>
-                <div class="col col_paymenttype"> <? echo $this->getPaymentType($order); ?></div>
-                <div class="col col_paymentdate"> <? echo $paymentDate; ?></div>
+                <div class="col col_date"> <? echo date('d.m.Y h:i', strtotime($order->rowCreatedDate)); ?> </div>
+                <div class="col col_productname"> <? echo $this->getPaymentType($order); ?></div>
+                <div class="col col_value"> <? echo $totalForOrder; ?></div>
+                <div class="col col_value odd"> <? echo $paymentDate; ?></div>
+                <div class="col col_balance"> 
+                    <? if ($order->status != 7) {
+                        echo "<div style='color: red;'><i class='fa fa-warning'></i> ".($totalForOrder * -1)."</div>";
+                    } else {
+                        echo "<div style='color: green;'><i class='fa fa-check'></i></div>";
+                    }
+                    ?>
+                </div>
+                <div class="col col_orderid odd"> <? echo $order->incrementOrderId; ?> </div>
                 <div class="col col_action">
                     <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
 
                     <div class="ordermenu">
+                        
+                        <div class='entry showOrderSummary' orderid="<? echo $order->id; ?>">
+                            <? echo $this->__f("Show order"); ?>
+                        </div>
+                        
                         <?
-                        if (!count($order->creditOrderId) && !$order->isCreditNote) {
+                        if ((!count($order->creditOrderId) && !$order->isCreditNote) || !$order->closed ) {
                         ?>
                         <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>">
                             <?
@@ -141,25 +164,44 @@ $missingInOrders = round($missingInOrders, 2);
     ?>
 </div>
 
-
+<br/>
+<br/>
 <div>
-
+    <div class='insideheader'>Detailed order summary for <? echo $room->guests[0]->name; ?></div>
     
-    <h2>Detailed summary for <? echo $room->guests[0]->name; ?></h2>
+    <?
+    if ($this->shouldShowPager($distinctDates)) {
+        $distinctMonthsAndYears = $this->getDistinctMonthsAndYears($distinctDates);
+        sort($distinctMonthsAndYears);
+        
+    ?>
+        <div>
+            <? echo $this->__f("Filter by month").": "; ?>
+            <select class='gsniceselect1 filterbymonth'>
+                <?
+                echo "<option value='$distinct'>".$this->__f("All")."</option>";
+                foreach ($distinctMonthsAndYears as $distinct) {
+                    $name = $this->translateMonthAndYear($distinct);
+                    echo "<option value='$distinct'>$name</option>";
+                }
+                ?>    
+            </select>
+            
+        </div>
+    <?
+    }
+    ?>
     
     <?
     $totalRemainingGuestOwe = 0;
     usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
     ?>
     <div class="row row_payment_status_line header">
-        <div class="col col_status"></div>
         <div class="col col_date"></div>
         <div class="col col_productname"></div>
         <div class="col col_value"><? echo $this->__f("Price"); ?></div>
-        <div class="col col_paid odd"><? echo $this->__f("In orders"); ?></div>
-        <div class="col col_paid"><? echo $this->__f("Paid"); ?></div>
-        <div class="col col_paid odd  large"><? echo $this->__f("Missing Orders"); ?></div>
-        <div class="col col_remaining  large"><? echo $this->__f("Missing Payments"); ?></div>
+        <div class="col col_value odd"><? echo $this->__f("Orders"); ?></div>
+        <div class="col col_balance large"><? echo $this->__f("Balance"); ?></div>
     </div>
 
     <?
@@ -181,7 +223,6 @@ $missingInOrders = round($missingInOrders, 2);
         $balance = 0;
         $remaining = ($row->priceInBooking * $row->countFromBooking) - $row->actuallyPaidAmount;
         $allOk = round($remaining, 0) == 0;
-        $status = "";
         $balance += $remaining;
         $missingInOrders = ($row->priceInBooking * $row->countFromBooking) - ($row->createdOrdersFor * $row->countFromOrders);
         $orderColor = $missingInOrders != 0 ? '#ff7a00' : 'green';
@@ -191,51 +232,38 @@ $missingInOrders = round($missingInOrders, 2);
         $totalPaid += $remaining;
         ?>
     
-        <div class="row row_payment_status_line <? echo $oddrow; ?>">
-            <div class="col col_status"><? echo $status; ?></div>
+        <div class="row row_payment_status_line <? echo $oddrow; ?>" date='<? echo $row->date; ?>'>
             <div class="col col_date"><? echo $row->date; ?></div>
             <div class="col col_productname"><? echo $product->name; ?></div>
             <div class="col col_value"><? echo round(($row->priceInBooking * $row->countFromBooking),2); ?></div>
-            <div class="col col_paid odd"><? echo round(($row->createdOrdersFor * $row->countFromOrders),2); ?></div>
-            <div class="col col_paid"><? echo round($row->actuallyPaidAmount,2); ?></div>
-            <div class="col col_paid odd large" style='color: <? echo $orderColor; ?>'>
+            <div class="col col_value odd"><? echo round(($row->createdOrdersFor * $row->countFromOrders),2); ?></div>
+            <div class="col col_balance large" style='color: <? echo $orderColor; ?>'>
                 <? 
                 if ($orderColor == '#ff7a00') {
                     echo "<i class='fa fa-warning' title='You need to create order for this payment, click start payment process'></i> ";
                 }
-                
-                echo round($missingInOrders,2); 
-                ?>
-            </div>
-            <div class="col col_remaining large" style='color: <? echo $paymentColor; ?>'>
-                <? 
-                
-                if ($paymentColor == 'red') {
-                    echo "<i class='fa fa-warning' title='Make sure all orders are created and marked as paid...'></i> ";
+                $roundedValue = round($missingInOrders,2);
+                if ($roundedValue == 0) {
+                    echo "<i class='fa fa-check'></i>";
+                } else {
+                    echo $roundedValue;
                 }
-                
-                echo round($remaining,2); 
-                
-                
                 ?>
-            
             </div>
         </div>
         <?
         
     }
-    ?>
-    <div class="row row_payment_status_line header" style='border-top: solid 1px #DDD;'>
-        <div class="col col_status"></div>
-        <div class="col col_date"></div>
-        <div class="col col_productname"></div>
-        <div class="col col_value"></div>
-        <div class="col col_paid"></div>
-        <div class="col col_paid"><? echo $this->__f("Total"); ?></div>
-        <div class="col col_paid odd  large"><? echo round($totalMissing,2); ?></div>
-        <div class="col col_remaining  large"><? echo round($totalPaid,2); ?></div>
-    </div>
-    <?
+    
+    if ($this->shouldShowPager($distinctDates)) {
+        ?>
+        <script>   
+            $(document).ready(function() {
+                app.PmsBookingRoomView.selectLastOrdersDetailedMonth('<? echo $room->pmsBookingRoomId; ?>');
+            });
+        </script>
+        <?
+    }
 ?>
 
 </div>

@@ -213,6 +213,9 @@ class Dibs extends \PaymentApplication implements \Application {
     public function renderPaymentOption() {
         $this->includefile("paymentoption");
     }
-    
+
+    public function getColor() {
+        return "blue";
+    }    
 }
 ?>

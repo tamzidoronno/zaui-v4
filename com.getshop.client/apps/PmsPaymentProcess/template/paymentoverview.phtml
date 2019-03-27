@@ -1,0 +1,36 @@
+<?
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+$order = $this->getApi()->getOrderManager()->getOrder($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid']);
+$invoiceData = new \stdClass();
+$invoiceData->order = $order;
+$invoiceData->accountingDetails = $this->getApi()->getOrderManager()->getAccountingDetails();
+$serializedOrder = json_encode($invoiceData);
+?>
+
+<div class="receipt_template">
+    <div class="receipt_template_inner">
+        <?
+        include 'scripts/invoicetemplates/template2.php';
+        ?>
+    </div>
+</div>
+
+<div class="payment_method_options">
+    <?
+    $idArr = explode("\\", $order->payment->paymentType);
+    $id = $idArr[0];
+    $id = str_replace("_", "-", $id);
+    $id = str_replace("ns-", "", $id);
+    $app = $this->getApi()->getStoreApplicationPool()->getApplication($id);
+    $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+    $appInstance->setCurrentOrder($order);
+    ?>
+    
+    <div class="paymenttypeheader">
+        <? echo $appInstance->getName(); ?>
+    </div>
+    
+    <div class="paymentoptions">
+        <? echo $appInstance->renderStandAlone(); ?>
+    </div>
+</div>

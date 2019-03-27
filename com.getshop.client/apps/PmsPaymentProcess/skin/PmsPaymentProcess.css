@@ -1,6 +1,4 @@
 .PmsPaymentProcess {
-    padding-left: 50px;
-    padding-right: 50px;
     margin: 0 auto;
 }
 .PmsPaymentProcess .getshop_box_1 {
@@ -85,8 +83,7 @@
 }
 .PmsPaymentProcess .cart_room_summary .productname {
     width: 200px;
-    margin-left: 20px;
-    
+    margin-left: 20px;   
 }
 
 .PmsPaymentProcess .cart_room_summary .item_price,
@@ -96,4 +93,35 @@
 .PmsPaymentProcess .paymentmethodsselection {
     text-align: center;
     padding-top: 50px;
+}
+
+.PmsPaymentProcess .receipt_template {
+    background-color: #FFF;
+    width: 668px;
+    padding: 40px;
+    border: solid 1px #DDD;
+}
+
+
+.PmsPaymentProcess .payment_method_options, 
+.PmsPaymentProcess .receipt_template {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.PmsPaymentProcess .payment_method_options {
+    width: calc(100% - 805px);
+    margin-left: 50px;
+    font-size: 16px;
+}
+
+.PmsPaymentProcess .payment_method_options .paymenttypeheader {
+    color: green;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.PmsPaymentProcess .receipt_template .receipt_template_inner {
+    zoom: 70%;
 }

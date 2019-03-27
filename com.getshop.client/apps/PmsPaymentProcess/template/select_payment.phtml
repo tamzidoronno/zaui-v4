@@ -10,9 +10,9 @@ $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymen
     <?
     foreach ($paymentMethods as $method) {
         $appInstance = $this->getFactory()->getApplicationPool()->createInstace($method);
-
+        $color = $appInstance->getColor();
         ?>
-        <div class="getshop_box_1 pink" goto="checkavailability" gsclick="selectPaymentMethod" method="<? echo $method->id; ?>">
+        <div class="getshop_box_1 <? echo $color; ?>" goto="checkavailability" gsclick="selectPaymentMethod" method="<? echo $method->id; ?>">
 
             <div class="descriptionimage">
                 <img src="https://cdn1.iconfinder.com/data/icons/navigation-icon/128/check-512.png">

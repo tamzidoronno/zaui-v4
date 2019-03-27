@@ -467,6 +467,9 @@ class Netaxept extends \PaymentApplication implements \Application {
         }
     }
 
+    public function getColor() {
+        return "blue";
+    }
 }
 
 ?>

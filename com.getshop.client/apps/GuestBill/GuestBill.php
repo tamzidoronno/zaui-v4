@@ -13,5 +13,9 @@ class GuestBill extends \PaymentApplication implements \Application {
     public function render() {
         
     }
+    
+    public function getColor() {
+        return "pink";
+    }
 }
 ?>

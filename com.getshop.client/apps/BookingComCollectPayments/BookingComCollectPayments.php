@@ -27,5 +27,9 @@ class BookingComCollectPayments extends \PaymentApplication implements \Applicat
         return "Payments from booking.com";
     }
     
+    public function getColor() {
+        return "yellow";
+    }
+    
 }
 ?>

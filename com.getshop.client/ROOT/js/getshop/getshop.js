@@ -298,6 +298,22 @@ thundashop.Ajax = {
             form.remove();
         });
     },
+    
+    closeOverLay3: function() {
+        $('.gsoverlay3').removeClass('active');
+        var appName = $('.gsoverlay3').find('.app:first').attr('app');
+        
+        if (appName) {
+            var javascriptCallback = "app."+appName+".overlayClosed();";
+            var toExecute = new Function("res", javascriptCallback);
+            try {
+                toExecute();
+            } catch (ex) {
+                // Nothing to do...
+            }
+        }
+        
+    },
 
     
     closeModal: function() {

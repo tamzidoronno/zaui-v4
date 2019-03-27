@@ -1517,10 +1517,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     if(card.savedByVendor.equals("EPAY")) {
                         epayManager.payWithCard(order, card);
                     }
-                    if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                        markOrderForAutoSending(order.id);
-                        break;
-                    }
                     if(order.status == Order.Status.PAYMENT_FAILED) {
                         notifyAboutFailedPaymentOnOrder(order);
                     }

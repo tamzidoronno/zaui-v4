@@ -2329,7 +2329,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         additionalInfo.isClean();
         additionalInfo.inUseByCleaning = false;
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
-
+        additionalInfo.closed = false;
+        additionalInfo.closedByCleaningProgram = false;
         if (additionalInfo.inUse) {
             BookingTimeLineFlatten timeline = bookingEngine.getTimeLinesForItem(start.getTime(), end.getTime(), additionalInfo.itemId);
             for (Booking book : timeline.getBookings()) {

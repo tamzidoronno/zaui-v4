@@ -76,7 +76,9 @@ $ret['content'] = $html;
 $ret['gs_alsoupdate'] = $appInstance->gsAlsoUpdate();
 if (isset($_POST['core']['appid2']) && $_POST['core']['appid2']) {
     $ret['gs_alsoupdate'] = array();
-    $ret['gs_alsoupdate'][] = $_POST['core']['fromappid'];
+    if(isset($_POST['core']['fromappid'])) {
+        $ret['gs_alsoupdate'][] = $_POST['core']['fromappid'];
+    }
 }
 echo json_encode($ret);
 

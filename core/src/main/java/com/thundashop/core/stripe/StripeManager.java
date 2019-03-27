@@ -130,6 +130,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                         order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to charge card: " + card.mask + ", " + card.card + ", " + card.id);
                         if(charge.getPaid()) {
                             orderManager.markAsPaid(orderId, new Date(), amount);
+                            orderManager.markOrderForAutoSending(order.id);
                             return true;
                         } else {
                             order.status = Order.Status.PAYMENT_FAILED;

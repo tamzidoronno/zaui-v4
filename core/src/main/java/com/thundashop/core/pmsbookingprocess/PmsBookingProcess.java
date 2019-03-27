@@ -204,6 +204,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         result.supportPayLaterButton = checkIfSupportPayLater(arg);
         result.supportedPaymentMethods = checkForSupportedPaymentMethods(booking);
         result.prefilledContactUser = "";
+        result.startYesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.start, new Date());
+        
         if(booking.userId != null && !booking.userId.isEmpty()) {
             result.prefilledContactUser = userManager.getUserById(booking.userId).fullName;
         }
@@ -1073,7 +1075,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         retval.childAge = config.childMaxAge;
         retval.phonePrefix = "" + store.configuration.defaultPrefix;
         retval.currencyText = currencycode;
-        retval.startYesterday = isMidleOfNight();
+        retval.startYesterday = false;
         retval.defaultCheckinTime = config.getDefaultStartRaw();
         retval.ignoreGuestInformation = config.ignoreGuestInformation;
         retval.doNotRecommendBestPrice = config.doNotRecommendBestPrice;

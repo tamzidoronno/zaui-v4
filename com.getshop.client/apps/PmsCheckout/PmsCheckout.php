@@ -58,6 +58,7 @@ class PmsCheckout extends \WebshopApplication implements \Application {
     public function updateItem() {
         $cart = $this->getApi()->getCartManager()->getCart();
         foreach ($cart->items as $item) {
+            print_r($item->itemsAdded);
             if ($item->cartItemId == $_POST['data']['itemid']) {
                 if (isset($_POST['data']['matrixPrice'])) {
                     if($_POST['data']['checked'] == "false") {
@@ -69,19 +70,16 @@ class PmsCheckout extends \WebshopApplication implements \Application {
                 $newAddonsMatrix = array();
                 if (isset($_POST['data']['addonid'])) {
                     foreach ((array) $item->itemsAdded as $addonItem) {
-                        if ($addonItem->addonId == $_POST['data']['addonid']) {
-                            if($_POST['data']['checked'] == "false") {
-                                continue;
-                            }
-                            
-                            $addonItem->count = $_POST['data']['addonCount'];
-                            $addonItem->price = $_POST['data']['addonPrice'];
-                            $newAddonsMatrix[] = $addonItem;
+                        if ($addonItem->addonId == $_POST['data']['addonid'] && $_POST['data']['checked'] == "false") {
+                            continue;
                         }
+                        $addonItem->count = $_POST['data']['addonCount'];
+                        $addonItem->price = $_POST['data']['addonPrice'];
+                        $newAddonsMatrix[] = $addonItem;
                     }
                 }
                 $item->itemsAdded = $newAddonsMatrix;
-
+                print_r($newAddonsMatrix);
                 $total = 0;
                 $count = 0;
 

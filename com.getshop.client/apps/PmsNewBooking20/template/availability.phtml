@@ -14,7 +14,7 @@ $end = $this->convertToJavaDate(strtotime($end));
 $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $total = 0;
 ?>
-<div class='datetitle'><?php echo date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end)); ?></div>
+<div class='datetitle'><i class='fa fa-clock-o'></i> <?php echo date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end)); ?></div>
 <div class='avilabilityarea' gstype='form' method='registerRoomsFromAvailabilityCheck' synchron='true' gstoarea='.roomsreadytobeadded'>
     <input type='hidden' gsname='start' value='<?php echo strtotime($start); ?>'>
     <input type='hidden' gsname='end' value='<?php echo strtotime($end); ?>'>
@@ -24,8 +24,8 @@ $total = 0;
         $total += $count;
         ?>
         <div class='searchbookingrow'>
-            <span class='itemtypename'><?php echo $item->name; ?></span>
-            <span class='numberavailable'><?php echo $count; ?></span>
+            <span class='itemtypename secondarytextcolor'><?php echo $item->name; ?></span>
+            <span class='numberavailable secondarytextcolor'><?php echo $count; ?></span>
             <span class='selection counterrow'>
                 <i class='fa fa-minus-circle decreaseroomcounter'></i>
                 <input type='text' value='0' class='gsniceinput1 roomcount' gsname='<?php echo $item->id; ?>' style='width: 20px;text-align: center;'>
@@ -35,7 +35,7 @@ $total = 0;
         <?php
     }
     ?>
-    <div class='searchbookingrow'>
+    <div class='searchbookingrow' style='font-weight: bold;'>
         <span class='itemtypename'>Total</span>
         <span class='numberavailable'><?php echo $total; ?></span>
         <span class='selection'><span class='selectallbutton'>select all</span>
@@ -45,13 +45,14 @@ $total = 0;
 </div>
 <style>
     .avilabilityarea .fa { cursor:pointer; }
-    .selectavailablerooms {max-width: 480px; width: 100%; }
-    .selectallbutton { color: blue; cursor:pointer; }
-    .avilabilityarea { border: solid 1px #bbb; border-bottom: solid 0px;background-color:#fff; max-width: 510px; display:inline-block; margin:auto;}
-    .searchbookingrow { border-bottom: solid 1px #bbb; padding: 5px; margin:auto; text-align: left; font-size: 18px; }
+    .selectavailablerooms {max-width: 480px; width: 100%;box-sizing: border-box; margin-bottom: 5px;}
+    .selectallbutton { color: #8cd8f6; cursor:pointer; font-weight: normal; }
+    .avilabilityarea { border-bottom: solid 0px;background-color:#fff; max-width: 510px; display:inline-block; margin:auto;}
+    .searchbookingrow { border-bottom: solid 1px #e9ebed; padding-left: 20px; margin:auto; text-align: left; font-size: 18px; padding-bottom: 5px; margin-bottom: 5px; }
     .selection .fa { font-size: 18px; }
     .itemtypename { width: 200px; display:inline-block; }
-    .numberavailable { width: 200px; display:inline-block; }
-    .datetitle { font-size: 30px; margin-bottom: 10px; }
+    .numberavailable { width: 160px; display:inline-block; }
+    .datetitle { font-size: 14px; margin-bottom: 10px; text-align: left;padding-left: 20px; font-weight: bold; margin-top: 5px; margin-bottom: 20px;}
+    .datetitle .fa-clock-o { color:#8cd8f6;}
 </style>
 

@@ -1000,7 +1000,7 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty()) && !manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
+            if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty() || book.channel.equals("website")) && !manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
                 if(!book.isOld(30)) {
                     continue;
                 }

@@ -27,6 +27,7 @@ $list = $tmplist;
     <tr bgcolor='#fff' style='font-weight: bold;'>
         <td>Code</td>
         <td>Room</td>
+        <td>GC</td>
         <td>Guest</td>
         <td>Booker</td>
         <td>Room type</td>
@@ -55,6 +56,7 @@ foreach($list as $room) {
     echo "<tr bgcolor='#fff'>";
     echo "<td>" . $room->code . "</td>";
     echo "<td>" . $room->room . "</td>";
+    echo "<td>" . $room->numberOfGuests . "</td>";
     echo "<td>" . join("<br>", $guests) . "</td>";
     echo "<td>" . $room->owner . "</td>";
     echo "<td>" . $room->roomType . "</td>";

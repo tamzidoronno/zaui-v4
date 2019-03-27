@@ -23,17 +23,22 @@ foreach($items as $item) {
         <input type='hidden' gsname='typeid' value='<?php echo $item->id; ?>'>
         <input type='hidden' gsname='start' value='<?php echo strtotime($start); ?>'>
         <input type='hidden' gsname='end' value='<?php echo strtotime($end); ?>'>
-        <div class="roomname" title='<?php echo $item->name; ?>'><?php echo $item->name; ?></div>
-        <div class="availroomstep">Available</div>
-        <div class="numberavailable"><?php echo $count; ?></div>
-        <div class="price">Price <?php echo round($price,2); ?> / day</div>
+        <div class="stepboxtitle" title='<?php echo $item->name; ?>'><?php echo $item->name; ?></div>
+        <div class="availroomstep secondarytextcolor">Available</div>
+        <div class="numberavailable secondarytextcolor"><?php echo $count; ?></div>
+        <div class="price secondarytextcolor">Price <b style='color:#000;'><?php echo round($price,2); ?></b> / day</div>
         <div class="counterrow">
-            <span class='outercountbutton'><i class="fa fa-minus-circle decreaseroomcounter"></i></span>
-            <input type="txt" class="gsniceinput1 roomcount" gsname='count' style="width:20px;text-align: center;" value="0">
-            <span class='outercountbutton'><i class="fa fa-plus-circle increaseroomcounter"></i></span>
+            <span class='outercountbutton'><i class="fa fa-minus decreaseroomcounter"></i></span>
+            <input type="txt" class="roomcount" gsname='count' style="    width: 33px;text-align: center;border: 0px;border-left: solid 1px #dcdcdc;height: 38px;border-right: solid 1px #dcdcdc;" value="0">
+            <span class='outercountbutton'><i class="fa fa-plus increaseroomcounter"></i></span>
         </div>
         <br>
     </div>
+<style>
+    .counterrow { border: solid 1px #dcdcdc;border-radius: 3px;width: 100px;margin: auto;position: relative; }
+    .freeroomresultbox .counterrow .fa { top: -1px;color: #8cd8f6;width: 30px;text-align: center;left: 0px;height: 37px;line-height: 37px; }
+    .PmsNewBooking20 .freeroomresultbox .outercountbutton { height: 23px !important; }
+</style>
     <?php
 }
 
@@ -84,3 +89,7 @@ if($closedtext) {
     <div class='description'>You have not selected any rooms yet.<br>Please choose one or more rooms in the options above.</div>
     <span class='shop_button addroomscategories'>Add <span class='roomselection'>0</span> room(s)</span>
 </div>
+
+<style>
+.roomsaddedarea { display:none; }
+</style>

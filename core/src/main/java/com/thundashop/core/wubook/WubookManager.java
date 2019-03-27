@@ -104,6 +104,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private Date availabiltyyHasBeenChangedStart;
     private Date latestCheckForNewBookings = null;
     private boolean forceUpdate = false;
+    private Date disableWubook = null;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -379,6 +380,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public List<WubookBooking> fetchNewBookings() throws Exception {
+        
+        if(disableWubook != null) {
+            long diff = new Date().getTime() - disableWubook.getTime();
+            if(diff < (60*60*1000)) {
+                return new ArrayList();
+            }
+        }
+        
         PmsConfiguration config = pmsManager.getConfigurationSecure();
         if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
             return new ArrayList();
@@ -2017,8 +2026,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         try {
             Vector res = (Vector) client.execute(apicall, params);
             return res;
-        }catch(ConnectException e) {
-            logPrint("Could not connect to wubook on api call: " + apicall + " message: " + e.getMessage());
+        }catch(Exception d) {
+            logPrint("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+            disableWubook = new Date();
         }
         return null;
 }

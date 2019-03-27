@@ -12,6 +12,7 @@ public class StartBookingResult {
     public Double totalAmount = 0.0;
     public Integer numberOfDays = 0;
     public boolean supportPayLaterButton = false;
+    public boolean startYesterday = false;
     public List<String> supportedPaymentMethods = new ArrayList();
     String prefilledContactUser = "";
 

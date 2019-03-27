@@ -20,14 +20,14 @@ foreach($bookings as $booking) {
         }
     }
     ?>
-    <div class='searchbookingresultentry'>
-        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Booking id</span><span class='searchbookingresultentryrowvalue'><?php echo $booking->incrementBookingId; ?></span></div>
-        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Name</span><span class='searchbookingresultentryrowvalue'><?php echo $user->fullName; ?></span></div>
-        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Number of rooms</span><span class='searchbookingresultentryrowvalue'><?php echo sizeof($booking->rooms); ?></span></div>
-        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>First check in</span><span class='searchbookingresultentryrowvalue'><?php echo date("d.m.Y", $firstCheckIn); ?></span></div>
-        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Last checkout</span><span class='searchbookingresultentryrowvalue'><?php echo date("d.m.Y", $lastCheckout); ?></span></div>
-        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey'>Total price</span><span class='searchbookingresultentryrowvalue'><?php echo $booking->totalPrice; ?></span></div>
-        <div class="searchbookingresultentryrow">
+    <div class='searchbookingresultentry gsshadowbox'>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey secondarytextcolor'>Booking id</span><span class='searchbookingresultentryrowvalue'><?php echo $booking->incrementBookingId; ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey secondarytextcolor'>Name</span><span class='searchbookingresultentryrowvalue ellipsis'><?php echo $user->fullName; ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey secondarytextcolor'>Number of rooms</span><span class='searchbookingresultentryrowvalue'><?php echo sizeof($booking->rooms); ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey secondarytextcolor'>First check in</span><span class='searchbookingresultentryrowvalue'><?php echo date("d.m.Y", $firstCheckIn); ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey secondarytextcolor'>Last checkout</span><span class='searchbookingresultentryrowvalue'><?php echo date("d.m.Y", $lastCheckout); ?></span></div>
+        <div class="searchbookingresultentryrow"><span class='searchbookingresultentryrowkey secondarytextcolor'>Total price</span><span class='searchbookingresultentryrowvalue'><?php echo $booking->totalPrice; ?></span></div>
+        <div class="searchbookingresultentryrow" style='padding: 10px;'>
             <span class="shop_button selectbookingbox" gsclick='selectbooking' bookingid='<?php echo $booking->id; ?>' gs_callback='app.PmsNewBooking20.bookingSelected' synchron='true'>Select booking</span>
         </div>
     </div>
@@ -40,8 +40,9 @@ foreach($bookings as $booking) {
 ?>
 
 <style>
-.searchbookingresultentry { width: 250px; background-color:#fff; text-align: left; display:inline-block; margin: 10px; box-sizing: border-box; border: solid 1px #bbb; border-bottom: solid 0px; }
-.searchbookingresultentryrow { padding: 3px; border-bottom: solid 1px #bbb;}
-.selectbookingbox { width: 100%; box-sizing: border-box; }
+    .searchbookingresultentryrowvalue { display:inline-block; width: 110px; }
+.searchbookingresultentry { width: 250px; background-color:#fff; text-align: left; display:inline-block; margin: 10px; box-sizing: border-box;border-bottom: solid 0px; }
+.searchbookingresultentryrow { padding: 3px; border-bottom: solid 1px #efefef;}
+.selectbookingbox { width: 100%; box-sizing: border-box;  }
 .searchbookingresultentryrowkey { display:inline-block; width: 120px; }
 </style>

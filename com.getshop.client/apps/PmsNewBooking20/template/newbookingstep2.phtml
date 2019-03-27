@@ -15,15 +15,28 @@ foreach ($allRooms as $r) {
         <div class='addroombox addhotelroombox gsshadowbox'>
             <div class='stepboxtitle'>Rooms</div>
             <div gstype="form" method="searchfreerom" gstoarea=".availablerooms" class='stepboxbody'>
-                <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
-                <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
+                <div style='margin-bottom: 5px;'>Select the time periode for the stay</div>
+                <span style='position:relative'>
+                    <i class='fa fa-calendar' 
+                       onmouseup="$('.startdate').focus();"
+                       style='position: absolute;left: 215px;cursor:pointer;font-size: 22px;top: -1px;color: #8cd8f6;'></i>
+                    <input type="text" class="gsniceinput1 startdate" gstype="submitenter" placeholder="Start date" gsname="start">
+                </span>
+                <span style='position:relative'>
+                    <i class='fa fa-calendar'
+                       onmouseup="$('.enddate').focus();"
+                       style='position: absolute;left: 215px;font-size: 22px;cursor:pointer;top: -1px;color: #8cd8f6;'></i>
+                    <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
+                </span>
                 <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
             </div>
         </div>
         <?php if (sizeof($conferenceRooms) > 0) { ?>
-            <div class='addroombox addconferenceroombox'>
-                <h1>Conference room</h1>
-                <div gstype="form" method="addconferenceroom" synchron='true' gscallback='app.PmsNewBooking20.reloadAddedRoomsList'>
+            <div class='addroombox addconferenceroombox gsshadowbox'>
+                <div class='stepboxtitle'>Conference room</div>
+                
+                <div class='stepboxbody' gstype="form" method="addconferenceroom" synchron='true' gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'>
+                    <div style='margin-bottom: 5px;'>Select the time periode for the conference room</div>
                     <select class='gsniceselect1' style='width: 200px;margin-bottom: 3px;padding: 3px;height: 35px;' gsname='item'>
                         <?php
                         foreach ($conferenceRooms as $confroom) {
@@ -35,7 +48,7 @@ foreach ($allRooms as $r) {
                     <input type="text" class="gsniceinput1 startdatetime" gstype="submitenter" gsname="starttime" value='12:00' style='width:40px;'>
                     <input type="text" class="gsniceinput1 endconferencedate" gstype="submitenter" placeholder="End date" gsname="end" style='width:70px;' value='<?php echo $today; ?>'>
                     <input type="text" class="gsniceinput1 enddatetime" gstype="submitenter" gsname="endtime" value='13:00' style='width:40px;'>
-                    <span class="shop_button" gstype="submit">Search</span>
+                    <span class="shop_button" gstype="submit" gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'>Add</span>
                 </div>
             </div>
         <?php } ?>

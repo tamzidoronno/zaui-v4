@@ -11,7 +11,14 @@ body { overflow-y: scroll; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .colcount_0.rowcount_0 { display:none; }
 [gs_page_content_id="0da68de9-da08-4b60-9652-3ac456da2627"] .colcount_1.rowcount_0 { width: 100%; }
 body { background-color:#f4f8fa; }
+.shop_button { color: #f0f1f2 !important;
+-webkit-box-shadow: 0px 0px 1px 0px rgba(0,0,0,1);
+-moz-box-shadow: 0px 0px 1px 0px rgba(0,0,0,1);
+box-shadow: 0px 0px 1px 0px rgba(0,0,0,1);
+}
+.secondarytextcolor { color: #718188; }
 
+.shop_button:hover { background-color: #283f5a; }
 .gss_settings_header {
     background-color: #efefef;
     margin-top: 0px;
@@ -29,6 +36,7 @@ body { background-color:#f4f8fa; }
     color: #3a99d7;
 }
 .gss_settings_content { border: solid 1px #bbb; margin-bottom: 20px; padding: 10px; background-color:#fff;}
+.ellipsis {white-space: nowrap; overflow: hidden;text-overflow: ellipsis; } 
 
 .gss_settings_header .gss_settings_header_title {
     font-size: 16px;

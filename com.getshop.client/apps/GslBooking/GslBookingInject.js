@@ -76,9 +76,6 @@ function getshop_setBookingTranslation() {
             $("[gsname='company_prefix']").val(config.phonePrefix);
             $("[gstranslationfield='currency']").html(config.currencyText);
 
-            if(getshop_bookingconfiguration.startYesterday) {
-                $('#warningstartyesterday').show();
-            }
             var toReplace = translations["paymentexplanation"];
             toReplace = toReplace.replace("{time}", config.defaultCheckinTime);
             $("[gstranslationfield='paymentexplanation']").html(toReplace);
@@ -1904,6 +1901,11 @@ function getshop_searchRooms(e) {
                 $('.paylater_button').show();
             } else {
                 $('.paylater_button').hide();
+            }
+            
+            $('#warningstartyesterday').hide();
+            if(res.startYesterday) {
+                $('#warningstartyesterday').show();
             }
 
             $('.gslbookingBody').show();

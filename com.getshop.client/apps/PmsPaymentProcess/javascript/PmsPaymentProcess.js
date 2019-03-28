@@ -4,23 +4,49 @@ app.PmsPaymentProcess = {
         $(document).on('click', '.PmsPaymentProcess .createorder', this.createOrder);
         $(document).on('change', '.PmsPaymentProcess .item_count', this.updateTotalValue);
         $(document).on('change', '.PmsPaymentProcess .item_price', this.updateTotalValue);  
+        $(document).on('click', '.PmsPaymentProcess .toggleshowdetailedroomview', this.toggleShowDetailedItemLines);  
+        $(document).on('click', '.PmsPaymentProcess .toggledatefilter', this.togleDateFilter);  
+    },
+    
+    togleDateFilter: function() {
+        var div = $(this).closest('.app').find('.datefilter');
+        if (div.is(':visible')) {
+            div.slideUp();
+        } else {
+            div.slideDown();
+        }
+    },
+    
+    toggleShowDetailedItemLines: function() {
+        var div = $(this).closest('.room').find('.detaileditemlines');
+        if (div.is(':visible')) {
+            div.slideUp();
+        } else {
+            div.slideDown();
+        }
     },
     
     updateTotalValue: function() {
         $('.PmsPaymentProcess .cart_room_summary').each(function() {
-            var total = 0;
+            var overallTotal = 0;
             
-            $(this).find('.row.cartitemline').each(function() {
-                var price = $(this).find('.item_price').val();
-                var count = $(this).find('.item_count').val();    
+            $(this).find('.room').each(function() {
+                var totalForRoom = 0;
+                $(this).find('.row.cartitemline').each(function() {
+                    var price = $(this).find('.item_price').val();
+                    var count = $(this).find('.item_count').val();    
 
-                if (price && count) {
-                    total += (price * count);
-                }
+                    if (price && count) {
+                        overallTotal += (price * count);
+                        totalForRoom += (price * count);
+                    }
+                });
+                
+                $(this).find('.totalforroom').html(totalForRoom);
             });
             
             
-            $(this).find('.totalval').html(total);
+            $(this).find('.totalval').html(overallTotal);
         });
     },
     

@@ -25,6 +25,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public static function sortSummaryRowByDate($a, $b) {
         $aDate = strtotime($a->date);
         $bDate = strtotime($b->date);
+        
+        if ($aDate == $bDate) {            
+            return strcmp($a->createOrderOnProductId, $b->createOrderOnProductId);
+        }
+        
         return $aDate > $bDate;
     }
     

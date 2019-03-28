@@ -96,9 +96,14 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         $roomName = $room->bookingItemId ? $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId)->bookingItemName : "Floating";
         return $roomName;
     }
-
+    
     public function gotoroomselection() {
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_rooms';
+    }
+    
+    public function applyDateFilter() {
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate'] = $_POST['data']['startdate'];
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate'] = $_POST['data']['enddate'];
     }
     
     public function createOrder() {
@@ -111,6 +116,8 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state']);
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids']);
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod']);
+        unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate']);
+        unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate']);
     }
 
     public function setLoadState() {
@@ -130,6 +137,25 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         if (isset($_POST['data']['orderId'])) {
             $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid'] = $_POST['data']['orderId'];
         }
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsRoomPaymentSummaryRow $row
+     * @param type $startDate
+     * @param type $endDate
+     */
+    public function removeDueToFilter($row, $startDate, $endDate) {
+        if (!$startDate || !$endDate) {
+            return false;
+        }
+        
+        $rowDate = strtotime($row->date);
+        $sDate = strtotime($startDate);
+        $eDate = strtotime($endDate);
+        $isWithin = $rowDate >= $sDate && $rowDate <= $eDate;
+        
+        return !$isWithin;
     }
 
 }

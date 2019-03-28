@@ -8,19 +8,6 @@ $bookings = $this->getSelectedBookings();
 <div class="header">
     <? echo $this->__f("Step 2 - Please select rooms"); ?>
 </div>
-
-<div class='selectedpaymentmethod'>
-    <?
-    echo $this->__f("Selected payment method").": ".$this->getNameOfSelectedPaymentMethod();
-    ?>
-</div>
-
-<div class='informationbox'>
-    <i class='fa fa-info-circle'></i>
-    <?
-    echo $this->__f("Please select the rooms you want to do a payment for");
-    ?>
-</div>
 <?
 foreach ($bookings as $booking) {
     

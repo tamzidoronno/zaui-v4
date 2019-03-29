@@ -728,6 +728,15 @@ public class PmsBooking extends DataCommon {
         }
     }
 
+    boolean isRecentlyCompleted() {
+        if(completedDate == null) {
+            return true;
+        }
+        
+        long diff = new Date().getTime() - completedDate.getTime();
+        return diff < 60000;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

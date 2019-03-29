@@ -101,6 +101,7 @@ public class PmsConfiguration extends DataCommon {
     public String maintanceinstruction = "";
     
     /* other configurations */
+    public boolean sendToBookerIfGuestIsEmpty = false;
     public boolean needConfirmation = false;
     public boolean needToAgreeOnContract = false;
     public boolean exposeUnsecureBookings = false;

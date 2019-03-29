@@ -36,6 +36,7 @@ $totalUnpaid = 0;
 $totalForRoom = 0;
 
 $distinctDates = array();
+$needToCreateOrdersFor = 0;
 foreach ($summary->rows as $row) {
     $priceInOrders = $row->createdOrdersFor * $row->countFromOrders;
     

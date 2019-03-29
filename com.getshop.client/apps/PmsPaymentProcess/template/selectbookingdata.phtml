@@ -19,7 +19,7 @@ $bookings = $this->getSelectedBookings();
 foreach ($bookings as $booking) {
     ?>
     <div class='sub_header'>
-        <? echo $this->__f("Booking").": ". $booking->incrementBookingId.$extrainforforbooking; ?>
+        <? echo $this->__f("Booking").": ". $booking->incrementBookingId; ?>
     </div>
     
     <div class="cart_room_summary">

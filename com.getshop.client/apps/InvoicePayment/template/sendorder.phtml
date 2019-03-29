@@ -1,0 +1,146 @@
+<?
+/* @var $this \ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment */
+$messages = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
+$emailMessages = array();
+$messageToUse = "";
+
+foreach ($messages as $message) {
+    if ($message->type == "email" && $message->key == "sendinvoice" && $message->isDefault == 1) {
+        $messageToUse = $message;
+    }
+}
+
+$order = $this->getCurrentOrder();
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
+
+$rooms = $this->getRoomsFromOrder();
+$bookings = $this->getRoomsBookingsOrder();
+
+$isCompany = $user->companyObject != null && $user->companyObject->vatNumber;
+$canUseEhf = false;
+//
+if ($isCompany) {
+    $vatnumber = $user->companyObject->vatNumber;
+    $vatnumber = str_replace(' ', '', $vatnumber);
+    $canUseEhf = $this->getApi()->getGetShop()->canInvoiceOverEhf($vatnumber);
+}
+
+if ($canUseEhf) {
+    echo "<div class='sendByEhf'>";
+        echo "<div class='headerbox'>Send by EHF</div>";
+        echo "<div class='innerbox'>";
+            $ehfValitation = $this->getEhfProblems($order, $user);
+            $ehfConfigErrors = $this->getApi()->getOrderManager()->isConfiguredForEhf();
+
+            if (count($ehfConfigErrors)) {
+                echo "<hr>";
+                echo "<b>EHF:</b>";
+                echo "<div>";
+                echo "This ivoice can not be sent by EHF because you have not configured the invoice settings properly.";
+                foreach ($ehfConfigErrors as $error) {
+                    echo "<div>* $error</div>";
+                }
+                echo "</div>";
+
+            } elseif (!$canUseEhf) {
+                echo $this->__f("This company can not receive invoice by EHF.");
+            } elseif (count($ehfValitation)) {
+                echo "<b>EHF Cant be sent due to:</b>";
+                foreach ($ehfValitation as $error) {
+                    echo "<br/>* ".$error;
+                }
+            } else {
+                ?>
+                <span class='sendpaymentlinkbox dosendbox dontExpand sendehfbox' orderid='<? echo $order->id; ?>'>
+                    <div style='padding-bottom: 10px;'>
+                        <input type='txt' class='gsniceinput1' gsname="vatNumber" value="<?php echo $user->companyObject->vatNumber; ?>" placeholder="Vat number">
+                    </div>
+                    <div class='ehfresult'>
+                    </div>
+                    <div class='shop_button dosendehf'>Send EHF </div>
+                    <br/>
+                    <br/>
+
+                    <?
+                    echo $this->__f("* Ehf costs Kr 2.50,- pr invoice and you will be billed monthly.");
+                    ?>
+                </span>
+                <div class="sendingehf" style="display: none;">
+                    Sending EHF, please wait...
+                </div>
+
+                <?
+            }
+        echo "</div>";
+    echo "</div>";
+}
+
+?>
+
+<div class='sendByEhf'>
+    <div class="headerbox">Send by email</div>
+    <div class="innerbox">
+        <?
+        if (count($rooms)) {
+            echo "<span style='display: inline-block; width: 104px;'>Guest:</span>";
+            echo "<select class='gsniceselect1 selectguest' style='width: 199px'>";
+                foreach ($bookings as $pmsBooking) {
+                    $user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
+                    if ($user != null) {
+                        echo "<option value='$user->emailAddress'>".$user->fullName. " / ".$user->emailAddress." / ".$user->cellPhone."</option>";
+                    }
+                }
+
+                foreach ($rooms as $room) {
+                    foreach ($room->guests as $guest) {
+                        echo "<option value='$guest->email'>".$guest->name. " / ".$guest->email." / ".$guest->phone."</option>";
+                    }
+                }
+            echo "</select>";
+            ?>
+            <script>$('.InvoicePayment .gsniceselect1.selectguest').change();</script>
+            <?
+        }
+        ?>
+
+        <div gstype='form' method='sendEmail'>
+            <?
+            if (count($bookings)) {
+                echo "<input type='hidden' value='".$bookings[0]->id."' gsname='bookingid'/>";
+            }
+            ?>
+            <input type='hidden' value='<? echo $order->id; ?>' gsname='orderid'/>
+            <span style='display: inline-block; width: 100px;'>Email:</span> <input class='gsniceinput1' gsname='bookerEmail' value=''/>
+            <br/><span style='display: inline-block; width: 100px;'>Subject:</span> <input class='gsniceinput1' gsname='subject' value='<? echo $messageToUse ? $messageToUse->title : ""; ?>'/>
+            <br/>
+            <br/>Content:
+            <div class='content'>
+                <textarea gsname="emailMessage" style='width: 100%; box-sizing: border-box; height: 173px; border: Solid 1px #DDD;'><? echo $messageToUse ? $messageToUse->content : ""; ?></textarea>
+            </div>
+            <div class='emailSent' style='border: solid 1px  green; margin-top: 50px; margin-bottom: 50px; padding: 20px; text-align: center; color: green; font-size: 20px;'>
+                <i class='fa fa-check-circle'></i> Invoice sent
+            </div>
+            <br/>
+            <br/><div class='shop_button' gstype='submit'>Send invoice</div>
+        </div>
+    </div>
+</div>
+
+<div class="headerbox">Sent log.</div>
+
+<div class="innerbox">
+    <?
+    if (!count($order->shipmentLog)) {
+        echo "<div class='warning_not_sent'>";
+            echo "<i class='fa fa-warning'></i> ".$this->__f("This order has not been sent yet to your customer");
+        echo "</div>";
+    } else {
+        foreach ($order->shipmentLog as $log) {
+            echo "<div class='shipmentlogline'>";
+                echo "<div class='date'>".date('d.m.Y H:i', strtotime($log->date))."</div>";
+                echo "<div class='to'>".$log->address."</div>";
+            echo "</div>";
+        }
+    }
+    ?>
+</div>

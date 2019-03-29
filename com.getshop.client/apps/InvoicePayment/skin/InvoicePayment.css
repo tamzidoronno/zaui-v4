@@ -15,3 +15,56 @@ and open the template in the editor.
     padding: 10px;
     box-sizing: border-box;
 }
+
+.InvoicePayment .sendByEhf h2 {
+    border-bottom: solid 2px #DDD;
+    padding-bottom: 10px;
+}
+
+.InvoicePayment .sendByEhf .emailSent {
+    display: none;
+}
+
+.InvoicePayment .ehfresult {
+    font-size: 16px;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.InvoicePayment .warning_not_sent {
+    font-size: 20px;
+    color: red;
+}
+.InvoicePayment .shipmentlogline {
+    border-bottom: solid 1px #DDD;
+}
+
+.InvoicePayment .shipmentlogline .to,
+.InvoicePayment .shipmentlogline .date {
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.InvoicePayment .headerbox {
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.InvoicePayment .shipmentlogline .date {
+    width: 120px;
+}
+
+.InvoicePayment .shipmentlogline .to {
+    display: inline-block;
+    width: calc(100% - 132px);
+    height: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+.InvoicePayment .innerbox {
+    border: solid 1px #DDD;
+    padding: 10px;
+}

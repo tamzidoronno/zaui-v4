@@ -20,6 +20,9 @@ class PaymentApplication extends ApplicationBase {
      */
     private $paymentMethods = array();
     
+    private $rooms = array();
+    private $bookings = array();
+    
     /**
      * @return core_ordermanager_data_Order
      **/
@@ -209,6 +212,10 @@ class PaymentApplication extends ApplicationBase {
         $this->order = $order;
     }
     
+    /**
+     * 
+     * @return \core_ordermanager_data_Order
+     */
     public function getCurrentOrder() {
         return $this->order;
     }
@@ -220,6 +227,47 @@ class PaymentApplication extends ApplicationBase {
         $appInstance->renderStandAlone();
     }
     
+    /**
+     * 
+     * @return \core_pmsmanager_PmsBookingRooms[]
+     */
+    public function getRoomsFromOrder() {
+        if (count($this->rooms)) {
+            return $this->rooms;
+        }
+        
+        $order = $this->getCurrentOrder();
+        $roomIds = array();
+        $bookingIds = array();
+
+        foreach ($order->cart->items as $item) {
+            if ($item->product != null && $item->product->externalReferenceId) {
+                if (!in_array($roomIds, $item->product->externalReferenceId)) {
+                    $pmsBookingRoomId = $item->product->externalReferenceId;
+                    $roomIds[] = $pmsBookingRoomId;
+                    $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoomId);
+                    
+                    if (!in_array($booking->id, $bookingIds)) {
+                        $bookingIds[] = $booking->id;
+                        $this->bookings[] = $booking;
+                    }
+                    
+                    foreach ($booking->rooms as $room) {
+                        if ($room->pmsBookingRoomId == $pmsBookingRoomId) {
+                            $this->rooms[] = $room;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->rooms;
+    }
+
+    public function getRoomsBookingsOrder() {
+        $this->getRoomsFromOrder();
+        return $this->bookings;
+    }
 
 }
 

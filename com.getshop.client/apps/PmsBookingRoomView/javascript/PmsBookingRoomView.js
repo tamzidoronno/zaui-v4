@@ -534,6 +534,9 @@ app.PmsBookingRoomView = {
             }
         });
         
+        if (!view)
+            return;
+        
         var event = thundashop.Ajax.createEvent('','reloadApp',view, {});
         if(!avoidSpinner) {
 //            view.html('<div style="text-align:center; padding: 20px; font-size: 40px;"><i class="fa fa-spin fa-spinner"></i></div>');

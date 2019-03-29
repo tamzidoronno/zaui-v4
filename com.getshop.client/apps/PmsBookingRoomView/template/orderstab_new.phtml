@@ -236,7 +236,7 @@ $totalForRoom = round($totalForRoom, 2);
         $remaining = ($row->priceInBooking * $row->countFromBooking) - $row->actuallyPaidAmount;
         $allOk = round($remaining, 0) == 0;
         $balance += $remaining;
-        $missingInOrders = ($row->priceInBooking * $row->countFromBooking) - ($row->createdOrdersFor * $row->countFromOrders);
+        $missingInOrders = ($row->createdOrdersFor * $row->countFromOrders) - ($row->priceInBooking * $row->countFromBooking);
         $orderColor = $missingInOrders != 0 ? '#ff7a00' : 'green';
         $paymentColor = $remaining != 0 ? 'red' : 'green';
         

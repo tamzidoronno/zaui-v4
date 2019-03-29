@@ -28,7 +28,7 @@ app.PmsSearchBooking = {
     
     startNewCheckoutProcess: function() {
         var rooms = app.PmsSearchBooking.getAddedToCheckoutList();
-        thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", { pmsBookingRoomId : rooms, state: 'bookings_summary'}); 
+        thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", { pmsBookingRoomId : rooms, state: 'clear', skiproomselection: true}); 
     },
     
     clearCheckoutProcess : function() {

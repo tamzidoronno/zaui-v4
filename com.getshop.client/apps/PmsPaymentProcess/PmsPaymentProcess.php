@@ -28,7 +28,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     
     public function selectPaymentMethod() {
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod'] = $_POST['data']['method'];
-        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_rooms';
+        $this->goToSelectRooms();
     }
 
     public function getNameOfSelectedPaymentMethod() {
@@ -118,6 +118,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod']);
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate']);
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate']);
+        unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']);
     }
 
     public function setLoadState() {
@@ -136,6 +137,10 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         
         if (isset($_POST['data']['orderId'])) {
             $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid'] = $_POST['data']['orderId'];
+        }
+        
+        if (isset($_POST['data']['skiproomselection'])) {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select'] = true;
         }
     }
 
@@ -156,6 +161,27 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         $isWithin = $rowDate >= $sDate && $rowDate <= $eDate;
         
         return !$isWithin;
+    }
+
+    public function goToSelectRooms() {
+        $this->checkIfShouldSkipRoomSelection();
+        if (isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']) && $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']) {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'bookings_summary';
+        } else {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_rooms';
+        }
+    }
+
+    public function checkIfShouldSkipRoomSelection() {
+        $totalRooms = 0;
+        
+        foreach ($this->getSelectedBookings() as $booking) {
+            $totalRooms += count($booking->rooms);
+        }
+        
+        if (!isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select'])) {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select'] = $totalRooms == 1; 
+        }
     }
 
 }

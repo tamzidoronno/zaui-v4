@@ -23,6 +23,13 @@ $allOrderIds = $this->filterOrderIds($allOrderIds);
 $unpaidOrders = false;
 
 foreach ($allOrderIds as $orderId) {
+    
+    $orderIsForRoom = $this->getApi()->getPmsManager()->doesOrderCorrolateToRoom($this->getSelectedMultilevelDomainName(),$room->pmsBookingRoomId, $orderId);
+    
+    if(!$orderIsForRoom) {
+        continue;
+    }
+    
     $order = $this->getApi()->getOrderManager()->getOrder($orderId);
     
     if ($order->status != 7) {

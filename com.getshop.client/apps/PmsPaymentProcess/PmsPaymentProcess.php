@@ -11,7 +11,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     public function getName() {
         return "PmsPaymentProcess";
     }
-
+    
     public function render() {
         $this->setLoadState();
         

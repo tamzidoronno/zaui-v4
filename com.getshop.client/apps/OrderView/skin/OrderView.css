@@ -384,3 +384,14 @@
     padding: 0px;
     line-height: 15px;
 }
+
+.OrderView .specialiteminfobox {
+    position: absolute; 
+    background-color: #FFF; 
+    z-index: 1; 
+    width: 300px; 
+    text-align: left; 
+    right: 108px; 
+    box-shadow: 5px 5px 5px rgba(0,0,0, 0.5);
+    display: none;
+}

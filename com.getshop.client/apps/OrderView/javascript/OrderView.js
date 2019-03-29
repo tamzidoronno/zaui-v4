@@ -13,14 +13,27 @@ app.OrderView = {
         $(document).on('click', '.OrderView .shop_button.sendByEmail', app.OrderView.sendByEmail);
         $(document).on('click', '.OrderView .creditorder', app.OrderView.creditOrder);
         $(document).on('click', '.OrderView .deleteorder', app.OrderView.deleteOrder);
+        $(document).on('click', '.OrderView .togglespecialinfo', app.OrderView.toggleSpecialInfo);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.count', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.price', app.OrderView.cartItemChanged);
         
+        
         // Payment History
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
+    },
+    
+    toggleSpecialInfo: function() {
+        var box = $(this).closest('.gs_shop_small_icon').find('.specialiteminfobox');
+        var isVisible = box.is(':visible');
+        
+        $('.specialiteminfobox').hide();
+        
+        if (!isVisible) {
+            box.show();
+        }
     },
     
     creditOrder: function() {

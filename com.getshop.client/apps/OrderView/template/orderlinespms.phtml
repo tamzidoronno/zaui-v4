@@ -63,6 +63,27 @@ foreach ($cartItems as $item) {
                 echo "<i class='fa fa-edit' itemid='".$item->cartItemId."' orderid='".$order->id."' style='cursor:pointer;'></i>";
             echo "</div>";
         }
+        
+        if ($hasSpecialItems && $closed) {
+            echo "<div class='gs_shop_small_icon togglespecialinfo'>";
+                echo "<i class=' fa fa-info' itemid='".$item->cartItemId."'></i>";
+                echo "<div class='specialiteminfobox'>";
+                    if ($item->itemsAdded) {
+                        foreach ($item->itemsAdded as $addon) {
+                            $date = date('d.m.Y', strtotime($addon->date));
+                            $val= $addon->price;
+                            echo "<div style='padding: 5px; border-bottom: solid 1px #DDD;'>".$date." / price: ".$val."</div>";
+                        }
+                    }
+                    
+                    if ($item->priceMatrix) {
+                        foreach ($item->priceMatrix as $date => $val) {
+                            echo "<div style='padding: 5px; border-bottom: solid 1px #DDD;'>".$date." / price: ".$val."</div>";
+                        }
+                    }
+                echo "</div>";
+            echo "</div>";
+        }
         ?>
             
         <?php if (!$closed) { ?>

@@ -22,6 +22,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public static function sortByIncrementalOrderId($a, $b) {
+        return $b->incrementOrderId > $a->incrementOrderId;
+    }
+    
     public static function sortSummaryRowByDate($a, $b) {
         $aDate = strtotime($a->date);
         $bDate = strtotime($b->date);

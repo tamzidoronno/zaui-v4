@@ -439,7 +439,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     }
 
     public function setPmsBookingIdsFilter() {
-        if ($_GET['groupview'] == "cancel") {
+        if (isset($_GET['groupview']) && $_GET['groupview'] == "cancel") {
             unset($_SESSION['PMS_AVIAILABILITY_BOOKING_IDS_FILTER']);
             return;
         }

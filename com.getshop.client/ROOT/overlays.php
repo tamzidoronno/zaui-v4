@@ -13,9 +13,11 @@
         <div class='gs_loading_spinner'><i class='fa fa-spin'></i></div>
         <div class='content'>
             <?
-            if ($showingModal) {
+            if ($showingModal && $pageFactory) {
                 $modalPage = $pageFactory->getPage($_SESSION['gs_currently_showing_modal']);
-                $modalPage->renderPage();
+                if ($modalPage) {
+                    $modalPage->renderPage();
+                }
             }
             ?>
         </div>

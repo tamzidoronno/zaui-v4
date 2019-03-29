@@ -1,8 +1,11 @@
 <?
 include '../loader.php';
 $pageFactory = new \PageFactory("pms");
-$factory = IocContainer::getFactorySingelton();
 
+// PmsPaymentProcess - Needs to be active on all pages.
+$pageFactory->addExtraApplicationsNoneInstance('af54ced1-4e2d-444f-b733-897c1542b5a8');    
+
+$factory = IocContainer::getFactorySingelton();
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 

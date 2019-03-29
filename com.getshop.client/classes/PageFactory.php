@@ -167,7 +167,6 @@ class PageFactory {
         $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
         $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
         $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
-        $page->addExtraApplications('af54ced1-4e2d-444f-b733-897c1542b5a8');    
         
         // HOME
         $page = new \ModulePage("home", "pms");
@@ -761,4 +760,11 @@ class PageFactory {
         $row->addColumn('339af689-1617-4d67-ade9-ca26cf55bf44', "40357190-7764-42d1-1436-72d34928a718");
         $this->pages['invoicing'] = $page;
     }
+
+    public function addExtraApplicationsNoneInstance($id) {
+        foreach ($this->pages as $page) {
+            $page->addExtraApplicationsNoneInstance($id);
+        }
+    }
+
 }

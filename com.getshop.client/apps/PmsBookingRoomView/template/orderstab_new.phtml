@@ -37,6 +37,7 @@ $totalForRoom = 0;
 
 $distinctDates = array();
 $needToCreateOrdersFor = 0;
+
 foreach ($summary->rows as $row) {
     $priceInOrders = $row->createdOrdersFor * $row->countFromOrders;
     
@@ -98,63 +99,65 @@ $totalForRoom = round($totalForRoom, 2);
             $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y h:i', strtotime($order->paymentDate)) : 'N/A';
             $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
             ?>
-            <div class="row row_payment_status_line ">
-                <div class="col col_date"> <? echo date('d.m.Y h:i', strtotime($order->rowCreatedDate)); ?> </div>
-                <div class="col col_productname"> <? echo $this->getPaymentType($order); ?></div>
-                <div class="col col_value"> <? echo $totalForOrder; ?></div>
-                <div class="col col_value odd"> <? echo $paymentDate; ?></div>
-                <div class="col col_balance"> 
-                    <? if ($order->status != 7) {
-                        echo "<div style='color: red;'><i class='fa fa-warning'></i> ".($totalForOrder * -1)."</div>";
-                    } else {
-                        echo "<div style='color: green;'><i class='fa fa-check'></i></div>";
-                    }
-                    ?>
-                </div>
-                <div class="col col_orderid odd"> <? echo $order->incrementOrderId; ?> </div>
-                <div class="col col_action">
-                    <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
-
-                    <div class="ordermenu">
-                        
-                        <div class='entry showOrderSummary' orderid="<? echo $order->id; ?>">
-                            <? echo $this->__f("Show order"); ?>
-                        </div>
-                        
-                        <?
-                        if ((!count($order->creditOrderId) && !$order->isCreditNote) || !$order->closed ) {
+            <div class=''>
+                <div class="row row_payment_status_line ">
+                    <div class="col col_date"> <? echo date('d.m.Y h:i', strtotime($order->rowCreatedDate)); ?> </div>
+                    <div class="col col_productname"> <? echo $this->getPaymentType($order); ?></div>
+                    <div class="col col_value"> <? echo $totalForOrder; ?></div>
+                    <div class="col col_value odd"> <? echo $paymentDate; ?></div>
+                    <div class="col col_balance"> 
+                        <? if ($order->status != 7) {
+                            echo "<div style='color: red;'><i class='fa fa-warning'></i> ".($totalForOrder * -1)."</div>";
+                        } else {
+                            echo "<div style='color: green;'><i class='fa fa-check'></i></div>";
+                        }
                         ?>
-                        <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>">
+                    </div>
+                    <div class="col col_orderid odd"> <? echo $order->incrementOrderId; ?> </div>
+                    <div class="col col_action">
+                        <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
+
+                        <div class="ordermenu">
+
+                            <div class='entry showOrderSummary' orderid="<? echo $order->id; ?>">
+                                <? echo $this->__f("Show order"); ?>
+                            </div>
+
                             <?
-                            if ($order->closed) {  
+                            if ((!count($order->creditOrderId) && !$order->isCreditNote) || !$order->closed ) {
                             ?>
-                                <i class="fa fa-history"></i> <? echo $this->__f("Credit order"); ?>
-                            <?
-                            } else {?>
-                                <i class="fa fa-trash"></i> <? echo $this->__f("Delete order"); ?>
+                            <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>">
+                                <?
+                                if ($order->closed) {  
+                                ?>
+                                    <i class="fa fa-history"></i> <? echo $this->__f("Credit order"); ?>
+                                <?
+                                } else {?>
+                                    <i class="fa fa-trash"></i> <? echo $this->__f("Delete order"); ?>
+                                <?
+                                }
+                                ?>
+                            </div>
                             <?
                             }
                             ?>
-                        </div>
-                        <?
-                        }
-                        ?>
 
-                        <?
-                        if ($order->status != 7) {
-                            ?>
-                            <div class='entry showmarkorderaspaid' orderid="<? echo $order->id; ?>">
-                                <i class="fa fa-dollar"></i> <? echo $this->__f("Mark order as paid"); ?>
-                            </div>
                             <?
-                        }
-                        ?>
+                            if ($order->status != 7) {
+                                ?>
+                                <div class='entry showmarkorderaspaid' orderid="<? echo $order->id; ?>">
+                                    <i class="fa fa-dollar"></i> <? echo $this->__f("Mark order as paid"); ?>
+                                </div>
+                                <?
+                            }
+                            ?>
 
-                        <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
-                            <div class='entry' orderid="<? echo $order->id; ?>">
-                                <i class="fa fa-arrow-right"></i> <? echo $this->__f("Open"); ?>
-                            </div>
-                        </a>
+                            <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
+                                <div class='entry' orderid="<? echo $order->id; ?>">
+                                    <i class="fa fa-arrow-right"></i> <? echo $this->__f("Open"); ?>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

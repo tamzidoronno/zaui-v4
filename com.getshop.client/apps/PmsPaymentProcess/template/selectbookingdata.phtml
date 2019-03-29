@@ -1,71 +1,100 @@
 <?
 /* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
 $bookings = $this->getSelectedBookings();
+$fstartDate = isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate']) ? $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate'] : "";
+$fendDate = isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate']) ? $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate'] : "";
+$visibilityDate = $fstartDate && $fendDate ? "block" : "none";
 ?>
 <br/>
 <br/>
-<div class='header'>
+<div class='header' style='position: relative; height: 43px;'>
     <? 
     echo $this->__f("Step 3 - Select orderlines");
     ?>
-</div>
-<br/>
-<br/>
-<div class='informationbox'>
-    <i class='fa fa-info-circle'></i> <? echo $this->__f("Please select what you want to create an order for and what you want to take payment for."); ?>
+    
+    <div class='shop_button toggledatefilter' style='position: absolute;right: 0px;'>
+        <i class='fa fa-calendar-plus-o'></i> <? echo $this->__f("Apply filter by dates"); ?>
+    </div> 
 </div>
 
+<div class='datefilter' style='text-align: center; border: solid 1px #DDD; display: <? echo $visibilityDate; ?>' gstype='form' method='applyDateFilter' >
+    <input gsname='startdate' class='gsniceinput1 filter_date_start' style='margin: 10px;' value='<? echo $fstartDate; ?>'/> - <input gsname='enddate' class='gsniceinput1 filter_date_end' style='margin: 10px;' value='<? echo $fendDate; ?>'/>
+    <div gstype='submit' class='shop_button'><? echo $this->__f("Apply"); ?></div>
+</div>
+
+<script>
+    $('.filter_date_start').datepicker({dateFormat: "dd.mm.yy"});
+    $('.filter_date_end').datepicker({dateFormat: "dd.mm.yy"});
+</script>
+    
 <?
 foreach ($bookings as $booking) {
+    $extrainforforbooking = "";
+    if ($booking->userId) {
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        if ($user) {
+            $extrainforforbooking = " - ".$user->fullName;
+        }
+    }
     ?>
     <div class='sub_header'>
         <? echo $this->__f("Booking").": ". $booking->incrementBookingId; ?>
     </div>
-    
+
     <div class="cart_room_summary">
 
         <?
         foreach ($booking->rooms as $room) {
+            $firstDate = date('d.m.Y', strtotime($room->date->start));
+            $endDate = date('d.m.Y', strtotime($room->date->end));
+            $firstGuestName = $room->guests ? $room->guests[0]->name : "";
             if (!$this->isSelectedRoom($room->pmsBookingRoomId)) {
                 continue;
             }
             
             echo "<div class='room' roomid='$room->pmsBookingRoomId'>";
-                echo "<div class='roominformation'>";
-                    echo $this->formatRoomHeader($room);
+                echo "<div class='roominformation row toggleshowdetailedroomview' style='position: relative;'>";
+                    echo "<div class='col' style='margin-left: 10px; width: 200px;'>".$this->formatRoomHeader($room)."</div>";
+                    echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$firstDate."</div>";
+                    echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$endDate."</div>";
+                    echo "<div class='col' style='margin-left: 10px; width: calc(100% - 550px);'>".$firstGuestName."</div>";
+                    echo "<div class='col' style='margin-left: 10px;'><div class='totalforroom'></div></div>";
+                    echo "<div class='col' style='margin-left: 10px;'><i style='position: absolute; right: 10px; top: 5px; font-size: 25px;' class='fa fa-angle-down'></i></div>";
                 echo "</div>";
                 $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
-
+                usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
                 $anyFound = false;
+                echo "<div style='display: none;' class='detaileditemlines'>";
+                    foreach ($summary->rows as $row) {
+                        if ($row->count == 0 || $this->removeDueToFilter($row, $fstartDate, $fendDate)) {
+                            continue;
+                        }
 
-                foreach ($summary->rows as $row) {
-                    if ($row->count == 0)
-                        continue;
+                        $anyFound = true;
+                        $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+                        ?>
+                        <div class='row cartitemline' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
+                            <div class='col date'><? echo $row->date; ?></div>
+                            <div class='col count'><input class='gsniceinput1 item_count' value='<? echo $row->count; ?>'/></div>
+                            <div class='col price'><input class='gsniceinput1 item_price' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
+                            <div class='col productname'><? echo $product->name; ?></div>
+                        </div>
+                        <?
+                    }
 
-                    $anyFound = true;
-                    $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+                    if (!$anyFound) {
                     ?>
-                    <div class='row cartitemline' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
-                        <div class='col date'><? echo $row->date; ?></div>
-                        <div class='col productname'><? echo $product->name; ?></div>
-                        <div class='col count'><input class='gsniceinput1 item_count' value='<? echo $row->count; ?>'/></div>
-                        <div class='col'> x </div>
-                        <div class='col price'><input class='gsniceinput1 item_price' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
-                    </div>
+                        <div class='row cartitemline'>
+                            <div class='col date'>&nbsp;</div>
+                            <div class='col productname'><i class="fa fa-warning"></i><? echo $this->__f("Nothing to do"); ?></div>
+                            <div class='col count'></div>
+                            <div class='col'></div>
+                            <div class='col price'></div>
+                        </div>
                     <?
-                }
+                    }
 
-                if (!$anyFound) {
-                ?>
-                    <div class='row cartitemline'>
-                        <div class='col date'>&nbsp;</div>
-                        <div class='col productname'><i class="fa fa-warning"></i><? echo $this->__f("Nothing to do"); ?></div>
-                        <div class='col count'></div>
-                        <div class='col'></div>
-                        <div class='col price'></div>
-                    </div>
-                <?
-                }
+                echo "</div>";
             echo "</div>";
         }
         ?>

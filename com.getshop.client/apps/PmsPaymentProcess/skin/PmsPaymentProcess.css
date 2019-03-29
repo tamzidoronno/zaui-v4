@@ -1,5 +1,6 @@
 .PmsPaymentProcess {
     margin: 0 auto;
+    width: 1000px;
 }
 .PmsPaymentProcess .getshop_box_1 {
     margin: 10px !important;
@@ -13,10 +14,20 @@
     margin-top: 30px;
 }
 
+.PmsPaymentProcess .toggleshowdetailedroomview {
+    cursor: pointer;
+}
+
 .PmsPaymentProcess .header {
     text-transform: uppercase;
     font-size: 20px;
-    text-align: center;
+    text-align: left;
+    color: #b57b2e;
+    font-weight: bold;
+}
+
+.PmsPaymentProcess .header .shop_button {
+    font-weight: normal;
 }
 
 .PmsPaymentProcess .selectedpaymentmethod {
@@ -61,21 +72,34 @@
     padding-left: 20px;
 }
 
+.PmsPaymentProcess .cart_room_summary .detaileditemlines {
+    background-color: #FFF;
+    display: none;
+}
+
 .PmsPaymentProcess .cart_room_summary .roominformation {
     font-size: 16px;
     padding: 10px;
     border-bottom: solid 1px #DDD;
     margin-top: 10px;
-    font-weight: bold;
 }
 
+.PmsPaymentProcess .cart_room_summary .cartitemline .col.date { width: 200px; }
+.PmsPaymentProcess .cart_room_summary .cartitemline .col.count { width: 100px; }
+.PmsPaymentProcess .cart_room_summary .cartitemline .col.price { width: 100px; }
 .PmsPaymentProcess .cart_room_summary .cartitemline {
     border-bottom: solid 1px #DDD;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-left: 20px;
-    border-left: solid 1px #DDD;
     padding-left: 20px;
+}
+
+.PmsPaymentProcess .cart_room_summary div.cartitemline:nth-child(odd) {
+    background-color: #FAFAFA;
+}
+
+.PmsPaymentProcess .cart_room_summary div.cartitemline:last-child {
+    border-bottom: solid 0px #DDD;
 }
 
 .PmsPaymentProcess .cart_room_summary .date {
@@ -83,7 +107,7 @@
 }
 .PmsPaymentProcess .cart_room_summary .productname {
     width: 200px;
-    margin-left: 20px;   
+    margin-left: 10px;   
 }
 
 .PmsPaymentProcess .cart_room_summary .item_price,

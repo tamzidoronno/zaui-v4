@@ -12,6 +12,8 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.usermanager.data.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class PmsInvoiceManagerNew {
         this.sdf = new SimpleDateFormat("dd-MM-yyyy");
     }
     
-    public Order createOrder(List<PmsOrderCreateRow> rows, String paymentMethodId) {
+    public Order createOrder(List<PmsOrderCreateRow> rows, String paymentMethodId, String userId) {
         cartManager.clear();
         
         for (PmsOrderCreateRow roomData : rows) {
@@ -54,9 +56,13 @@ public class PmsInvoiceManagerNew {
             cartManager.getCart().overrideDate = orderManager.getOrderManagerSettings().closedTilPeriode;
         }
         
-        Order order = orderManager.createOrder(null);
+        User user = pmsManager.userManager.getUserById(userId);
+        Address address = user != null ? user.address : null;
+        
+        Order order = orderManager.createOrder(address);
         order.supportMultipleBookings = true;
         order.createByManager = "PmsDailyOrderGeneration";
+        order.userId = userId;
         
         orderManager.saveOrder(order);
         orderManager.changeOrderType(order.id, paymentMethodId);

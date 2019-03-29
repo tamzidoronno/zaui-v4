@@ -1,0 +1,24 @@
+<?
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+?>
+<div class="header">
+    <? echo $this->__f("Please select customer"); ?>
+</div>
+
+<?
+$i=0;
+foreach ($this->getDistinctUserIds() as $userId) {
+    $i++;
+    $user = $this->getApi()->getUserManager()->getUserById($userId);
+    ?>
+    <div gsclick='selectUser' userid='<? echo $user->id; ?>' style='padding: 5px; border: solid 1px #DDD; cursor: pointer; margin-top: 10px;'>
+        <div><? echo $i." ".$user->fullName; ?></div>
+    </div>
+    <?
+}
+?>
+
+<br/>
+<div class='buttonarea'>
+    <div class='shop_button' gsclick='gotopaymentselection'><i class='fa fa-arrow-left'></i> <? echo $this->__f("Back"); ?></div>
+</div>

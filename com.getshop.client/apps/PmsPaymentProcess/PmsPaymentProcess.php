@@ -20,7 +20,9 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "bookings_summary") {
             $this->includefile('selectbookingdata');
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "paymentoverview") {
-            $this->includefile("paymentoverview");
+            $this->includefile('paymentoverview');
+        } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "select_user") {
+            $this->includefile("select_user");
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "select_rooms") {
             $this->includefile("select_rooms");
         }
@@ -48,7 +50,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         
         return $roomsCount > 1 && $paymentSelected;
     }
-
+    
     /**
      * @return \core_pmsmanager_PmsBooking[]
      */
@@ -97,17 +99,14 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         return $roomName;
     }
     
-    public function gotoroomselection() {
-        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_rooms';
-    }
-    
     public function applyDateFilter() {
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate'] = $_POST['data']['startdate'];
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate'] = $_POST['data']['enddate'];
     }
     
     public function createOrder() {
-        $orderId = $this->getApi()->getPmsManager()->createOrderFromCheckout($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms'], $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod']);
+        $userId = $this->getUserIdToCreateOrderOn();
+        $orderId = $this->getApi()->getPmsManager()->createOrderFromCheckout($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms'], $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod'], $userId);
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid'] = $orderId;
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = "paymentoverview";
     }
@@ -119,6 +118,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate']);
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate']);
         unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']);
+        unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_selected_userid']);
     }
 
     public function setLoadState() {
@@ -129,7 +129,6 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
                 $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = $_POST['data']['state'];
             }
         }
-        
         
         if (isset($_POST['data']['pmsBookingRoomId'])) {
             $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'] = $_POST['data']['pmsBookingRoomId'];
@@ -162,16 +161,56 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         
         return !$isWithin;
     }
-
-    public function goToSelectRooms() {
-        $this->checkIfShouldSkipRoomSelection();
-        if (isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']) && $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']) {
-            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'bookings_summary';
-        } else {
-            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_rooms';
-        }
+    
+    public function selectUser() {
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_selected_userid'] = $_POST['data']['userid'];
+        $this->goToSelectRooms();
     }
 
+    public function goToSelectRooms() {
+        
+        if ($this->checkIfNeedToSelectUser()) {
+            return;
+        }
+        
+        if ($this->checkIfShouldSkipRoomSelection()) {
+            return;
+        }
+        
+      
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_rooms';
+    }
+
+    public function getUserIdToCreateOrderOn() {
+        $distinctUserIds = $this->getDistinctUserIds();
+        
+        if (count($distinctUserIds) == 1) {
+            return $distinctUserIds[0];
+        }
+        
+        if (isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_selected_userid'])) {
+            return $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_selected_userid'];
+        }
+        
+        return false;
+    }
+    
+    public function checkIfNeedToSelectUser() {
+        $distinctUserIds = $this->getDistinctUserIds();
+        
+        if (count($distinctUserIds) < 2) {
+            return false;
+        }
+        
+        if ($this->getUserIdToCreateOrderOn()) {
+            return false;
+        }
+        
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_user';
+        
+        return true;
+    }
+    
     public function checkIfShouldSkipRoomSelection() {
         $totalRooms = 0;
         
@@ -182,7 +221,27 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         if (!isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select'])) {
             $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select'] = $totalRooms == 1; 
         }
+        
+        if (isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']) && $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_skip_room_select']) {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'bookings_summary';
+            return true;
+        } 
+        
+        return false;
     }
 
+    public function getDistinctUserIds() {
+        $distinctUserIds = array();
+        
+        foreach ($this->getSelectedBookings() as $booking) {
+            if (!in_array($booking->userId, $distinctUserIds)) {
+                $distinctUserIds[] = $booking->userId;
+            }
+        }
+        
+        return $distinctUserIds;
+    }
+
+    
 }
-?>
+

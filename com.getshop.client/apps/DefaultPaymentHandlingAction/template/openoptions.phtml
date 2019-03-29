@@ -3,8 +3,15 @@ $order = $this->getOrder();
 ?>
 
 <div class='buttonarea'>
-    <div class='shop_button' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Complete transaction"); ?></div>
+    <br/> Payment date:
+    <br/><input class="gsniceinput1 payment_date" value='<? echo date('d.m.Y H:i'); ?>'/>
+    <br/>
+    <div class='shop_button' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Mark as paid"); ?></div>
     <br/>
     <br/>
-    <div class='shop_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' ><i class='fa fa-trash'></i> <? echo $this->__f("Delete order"); ?></div>
+    <div class='shop_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' ><i class='fa fa-trash'></i> <? echo $this->__f("Delete order"); ?></div>
 </div>
+
+<script>
+    $('.DefaultPaymentHandlingAction .payment_date').datetimepicker({ dateFormat: "dd.mm.yy"});
+</script>

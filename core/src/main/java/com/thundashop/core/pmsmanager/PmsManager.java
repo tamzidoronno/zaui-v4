@@ -9991,9 +9991,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public String createOrderFromCheckout(List<PmsOrderCreateRow> rows, String paymentMethodId) {
+    public String createOrderFromCheckout(List<PmsOrderCreateRow> rows, String paymentMethodId, String userId) {
         PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this);
-        Order order = invoiceManager.createOrder(rows, paymentMethodId);
+        Order order = invoiceManager.createOrder(rows, paymentMethodId, userId);
         
         rows.stream()
             .forEach(o -> {

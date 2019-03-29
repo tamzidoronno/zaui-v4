@@ -104,7 +104,7 @@ $totalForRoom = round($totalForRoom, 2);
     <?
         usort($orders, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortByIncrementalOrderId"));
         foreach ($orders as $order) {
-            $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y h:i', strtotime($order->paymentDate)) : 'N/A';
+            $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y H:i', strtotime($order->paymentDate)) : 'N/A';
             $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
             ?>
             <div class=''>

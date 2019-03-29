@@ -31,10 +31,6 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
         echo '<span class="pmsbutton '.$selected.'" style="margin-right: 5px;" gstype="clicksubmit" method="selectPricePlan" gsname="selectedpriceplan" gsvalue="'.$code.'">'.$code.'</span>';
     }
     ?>
-    <span class="pmsbutton" onclick='$(".createnewplanform").toggle();'>New plan</span>
-    <div style='margin-top: 20px; display:none;' class='createnewplanform' gstype='form' method='creatnewpriceplan'>
-        <input type='text' gsname='newplan'><input type='button' value='Create new plan' gstype='submit'>
-    </div>
 </div>
 
 <input type='button' gstype='clicksubmitforce' gsvalue='<?php echo $priceObject->code; ?>' gsname='code' value='Delete price plan' style='float:right;' method='deletePricePlan'>

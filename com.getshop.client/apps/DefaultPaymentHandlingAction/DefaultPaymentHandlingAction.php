@@ -32,7 +32,7 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     public function markOrderAsPaid() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
-        $date = date("c", time());
+        $date = $this->convertToJavaDate(strtotime($_POST['data']['paymentdate']));
         
         $this->getApi()->getOrderManager()->markAsPaid($order->id, $date, $amount);
         $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);

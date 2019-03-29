@@ -108,6 +108,18 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         }
         $user->enabledPaymentOptions = $enabledMethods;
         
+        $disabledProducts = array();
+        foreach($_POST['data'] as $index => $val) {
+            if(stristr($index, "enabledavoidproduct_")) {
+                if($val != "true") {
+                    continue;
+                }
+                $id = str_replace("enabledavoidproduct_", "", $index);
+                $disabledProducts[] = $id;
+            }
+        }
+        $user->avoidAutoAddingProduct = $disabledProducts;
+   
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($domain, $discount);
         $this->getApi()->getUserManager()->saveUser($user);
         
@@ -192,24 +204,6 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
     
     public function saveCumsterDetails() {
         $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
-        
-        /*
-            [userid] => 2a3edf2e-7811-44a4-8687-58576c09526e
-            [fullName] => ACCON AS
-            [emailAddress] => kristine@accon.no
-            [prefix] => 47
-            [cellPhone] => 97141516
-            [emailAddressToInvoice] => 
-            [address_fullname] => ACCON AS
-            [address_address] => Bjørnsons vei 6A
-            [address_postcode] => 3117
-            [address_city] => TØNSBERG
-            [vatNumber] => 915136613
-            [invoiceReference] => 
-            [invoice_address] => 
-            [invoice_postcode] => 
-            [invoice_city] => 
-         */
         
         $user->fullName = $_POST['data']['fullName'];
         $user->emailAddress = $_POST['data']['emailAddress'];

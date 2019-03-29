@@ -106,7 +106,7 @@ public class EpayManager extends ManagerBase implements IEpayManager {
                         valid = false;
                     }
                     if(valid) {
-                        order.payment.transactionLog.put(System.currentTimeMillis(), "Payment completion (EPAY) : " + resp.txnid);
+                        order.payment.transactionLog.put(System.currentTimeMillis(), "Payment completion (EPAY) : " + resp.txnid + " get variables: " + msg.getVariables);
                         order.captured = true;
                         orderManager.markAsPaid(order.id, new Date(), amount);
                     }

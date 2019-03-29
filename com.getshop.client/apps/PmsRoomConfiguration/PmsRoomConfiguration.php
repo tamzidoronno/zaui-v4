@@ -244,6 +244,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         
         $product = $this->getApi()->getProductManager()->getProduct($type->productId);
         $product->taxgroup = $_POST['data']['tax'];
+        $product->name = $type->name;
         $this->getApi()->getProductManager()->saveProduct($product);
         
         $this->getApi()->getBookingEngine()->changeDepartmentOnType($this->getSelectedMultilevelDomainName(), $type->id, $_POST['data']['department']);

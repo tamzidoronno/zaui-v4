@@ -57,6 +57,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public List<String> userRoleIds = new ArrayList();
     
+    public List<String> avoidAutoAddingProduct = new ArrayList();
+    
     /**
      * If user is connected to multiple companies 
      * but it still has a main company, this would be the id of
@@ -293,6 +295,10 @@ public class User extends DataCommon implements Comparable<User> {
         }
 
         return false;
+    }
+
+    public boolean denyDefaultAddedProduct(String productId) {
+        return avoidAutoAddingProduct.contains(productId);
     }
 
  

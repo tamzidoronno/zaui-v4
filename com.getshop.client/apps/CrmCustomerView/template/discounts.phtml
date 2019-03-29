@@ -4,6 +4,9 @@
 $domains = $this->getDomains();
 $user = $this->getUser();
 $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedMultilevelDomainName());
+$products = $this->getApi()->getProductManager()->getAllProducts();
+$products = $this->indexList($products);
 
 $storeId = $this->getFactory()->getStore()->id;
 if($storeId == "a152b5bd-80b6-417b-b661-c7c522ccf305" || $storeId == "3b647c76-9b41-4c2a-80db-d96212af0789" || $storeId == "e625c003-9754-4d66-8bab-d1452f4d5562") {
@@ -79,6 +82,29 @@ foreach ($domains as $domain) {
                             if (method_exists($instance, "getName")) {
                                 echo "<span method='" . $type->id . "' class='paymentmethodbtn $selected' gsname='enabledpmethod_".$type->id."' gsvalue='$gsvalue'>" . $instance->getName() . "</span>";
                             }
+                        }
+                        ?>                                    
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Deny default addon</b><br>
+                        When this is active the customer will not have the selected addons included when booking automatically<br>
+                    <td  class='rowinput'>
+                        <?php
+                        foreach ($addons as $addon) {
+                            if(!$addon->isIncludedInRoomPrice) {
+                                continue;
+                            }
+                            
+                            $prod = $products[$addon->productId];
+                            $selected = "";
+                            $gsvalue = "false";
+                            
+                            if(in_array($prod->id, $user->avoidAutoAddingProduct)) {
+                                $selected = "selected";
+                                $gsvalue = "true";
+                            }
+                            echo "<span method='" . $prod->id . "' class='paymentmethodbtn $selected' gsname='enabledavoidproduct_".$prod->id."' gsvalue='$gsvalue'>" . $prod->name . "</span>";
                         }
                         ?>                                    
                     </td>

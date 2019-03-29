@@ -6220,6 +6220,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addDefaultAddonsToRooms(booking.getAllRooms());
     }
     
+    @Override
     public void setDefaultAddons(String bookingId) {
         addDefaultAddons(getBooking(bookingId));
     }
@@ -8581,6 +8582,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(!item.isValidForPeriode(room.date.start, room.date.end, new Date())) {
                     continue;
                 }
+                if(!canAddDefaultAddon(item, room)) {
+                    continue;
+                }
                 if (room.bookingItemTypeId != null) {
                     if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon) {
                         int size = 1;
@@ -9987,6 +9991,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         currentBooking.confirmed = true;
         currentBooking.markAsCompleted();
+        addDefaultAddons(currentBooking);
         saveBooking(currentBooking);
     }
 
@@ -10018,5 +10023,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    private boolean canAddDefaultAddon(PmsBookingAddonItem item, PmsBookingRooms room) {
+        PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
+        User usr = userManager.getUserByIdUnfinalized(booking.userId);
+        
+        if(usr != null && (usr.denyDefaultAddedProduct(item.productId) && booking.isRecentlyCompleted())) {
+            //The user booking has no access to this addon.
+            return false;
+        }
+        
+        if(booking.isRecentlyCompleted()) {
+            //great, booking is just being created, add default addon.
+            return true;
+        } else {
+            //Check if the default addon is already added.
+            for(PmsBookingAddonItem roomitem : room.addons) {
+                if(roomitem.productId.equals(item.productId)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 }

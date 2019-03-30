@@ -13,7 +13,7 @@
     display: block;
     text-align: center;
     width: 100%;
-    line-height: 67px;
+    line-height: 60px;
     font-size: 30px;
     
 }
@@ -31,8 +31,6 @@
 
 .DefaultPaymentHandlingAction {
     background-color: #DDD;
-    padding-left: 20px;
-    padding-top: 20px;
     margin-bottom: 20px;
     text-align: center;
     border: solid 1px #DDD;    

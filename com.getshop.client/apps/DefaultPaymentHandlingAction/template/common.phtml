@@ -3,8 +3,21 @@
 $order = $this->getOrder();
 $cashpoints = $this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
-?>
 
+if ($order->status == 7) {
+    ?>
+    <div style='background-color: #3a9142; font-weight: bold; font-size: 20px; color: #FFF; padding: 5px;'>
+        <i class='fa fa-check' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order has been paid"); ?>
+    </div>
+    <?
+} else {
+    ?>
+    <div style='background-color: #ff3535; font-weight: bold; font-size: 20px; color: #FFF; padding: 5px;'>
+        <i class='fa fa-warning' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order is not paid"); ?>
+    </div>
+    <?
+}
+?>
 <div class='commonbox' style='font-size: 17px;'> 
     <i class='fa fa-paperclip' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $order->incrementOrderId; ?>
     <br/>
@@ -24,13 +37,6 @@ $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
         <i class='fa fa-unlock' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Open for modification"); ?>
     <?    
     }
-    
-    if ($order->status == 7) {
-        ?>
-        <br/><i class='fa fa-money' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order has been paid"); ?>
-        <?
-    } 
-
     ?>
 
 </div>

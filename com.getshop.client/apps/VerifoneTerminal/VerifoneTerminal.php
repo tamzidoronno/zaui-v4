@@ -10,6 +10,10 @@ class VerifoneTerminal extends \PaymentApplication implements \Application {
         return "Verifone terminal";
     }
 
+    public function hasPaymentProcess() {
+        return $this->order != null && $this->order->status != 7;
+    }
+    
     /**
      * Should display you configuration page.
      */
@@ -18,7 +22,22 @@ class VerifoneTerminal extends \PaymentApplication implements \Application {
     }
     
     public function render() {
+        $this->getLastMessage();
         
+        if (isset($_POST['data']['orderid'])) {
+            $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        }
+        
+        echo "<input type='hidden' id='orderid' value='".$this->order->id."'/>";
+        if ($this->getApi()->getVerifoneManager()->getCurrentPaymentOrderId() != null) {
+            $this->includefile("inprogress");
+        } else if (isset($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state']) && $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] == "failed") {
+            $this->includefile("failed");
+        } else if (isset($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state']) && $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] == "completed") {
+            $this->includefile("completed");
+        } else {
+            $this->includefile("paymentprocess");
+        }
     }
     
     public function getIds() {
@@ -70,6 +89,42 @@ class VerifoneTerminal extends \PaymentApplication implements \Application {
     
     public function getColor() {
         return "green";
+    }
+    
+    public function sendToVerifone() {
+        $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_verifoneid'] = $_POST['data']['verifonid'];
+        $this->getApi()->getVerifoneManager()->chargeOrder($_POST['data']['orderid'], $_POST['data']['verifonid'], false);
+    }
+
+    public function getLastMessage() {
+        $messages = $this->getApi()->getVerifoneManager()->getTerminalMessages();
+        
+        $message = "";
+        
+        foreach ($messages as $message) {
+            $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_lastmsg'] = $message;
+        }
+        
+        $this->getApi()->getVerifoneManager()->clearMessages();
+        
+        if (!isset($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_lastmsg'])) {
+            return "Wainting for terminal...";
+        }
+        
+        if ($message == "payment failed") {
+            $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] = "failed";
+        }
+        
+        if ($message == "completed") {
+            $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] = "completed";
+        }
+        
+        return $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_lastmsg'];
+    }
+
+    
+    public function cancelPayment() {
+        $this->getApi()->getVerifoneManager()->cancelPaymentProcess($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_verifoneid']);
     }
 }
 ?>

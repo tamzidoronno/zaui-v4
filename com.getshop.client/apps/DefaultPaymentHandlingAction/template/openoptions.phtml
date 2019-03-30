@@ -4,7 +4,7 @@ $order = $this->getOrder();
 <div class='commonbox'>
     <div style='display:inline-block; vertical-align: top;'>
         <? echo $this->__f("Payment date").":"; ?>
-        <br/><input class="gsniceinput1 payment_date" gsname='paymentdate' value='<? echo date('d.m.Y H:i'); ?>'/>    
+        <br/><input class="gsniceinput1 payment_date" style='width: 110px;' gsname='paymentdate' value='<? echo date('d.m.Y H:i'); ?>'/>    
     </div>
     <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Mark as paid"); ?>
     </div>
@@ -17,7 +17,11 @@ $order = $this->getOrder();
     </div>
     <div class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
         <i class='fa fa-download'></i> 
-        <? echo $this->__f("Download"); ?>
+        <? echo $this->__f("Download preview"); ?>
+    </div>
+    <div class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
+        <i class='fa fa-chain-broken'></i> 
+        <? echo $this->__f("Change payment type"); ?>
     </div>
 </div>
 

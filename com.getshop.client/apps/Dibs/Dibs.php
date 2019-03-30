@@ -10,7 +10,7 @@ class Dibs extends \PaymentApplication implements \Application {
     }
 
     public function hasPaymentProcess() {
-         return true;
+         return ($this->order != null && $this->order->status != 7);
     }
     
     public function getName() {

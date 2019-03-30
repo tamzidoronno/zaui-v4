@@ -4,6 +4,9 @@ $pageFactory = new \PageFactory("pms");
 
 // PmsPaymentProcess - Needs to be active on all pages.
 $pageFactory->addExtraApplicationsNoneInstance('af54ced1-4e2d-444f-b733-897c1542b5a8');    
+// OnlinePaymethod Application, a subapplication for all payments apps
+$pageFactory->addExtraApplicationsNoneInstance('d96f955a-0c21-4b1c-97dc-295008ae6e5a');    
+$pageFactory->addExtraApplicationsNoneInstance('486009b1-3748-4ab6-aa1b-95a4d5e2d228');    
 
 $factory = IocContainer::getFactorySingelton();
 $page = $pageFactory->getPage(@$_GET['page']);

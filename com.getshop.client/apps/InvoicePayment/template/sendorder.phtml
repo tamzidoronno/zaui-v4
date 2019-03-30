@@ -121,7 +121,10 @@ if ($canUseEhf) {
                 <i class='fa fa-check-circle'></i> Invoice sent
             </div>
             <br/>
-            <br/><div class='shop_button' gstype='submit'>Send invoice</div>
+            <div class='invoicesent' style='display: none'>
+                <i class='fa fa-check'></i> <? echo $this->__f("Invoice sent"); ?>
+            </div>
+            <br/><div class='shop_button' gstype='submit' gs_callback='app.InvoicePayment.invoiceSent'>Send invoice</div>
         </div>
     </div>
 </div>

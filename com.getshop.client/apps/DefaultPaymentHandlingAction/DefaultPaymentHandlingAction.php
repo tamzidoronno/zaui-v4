@@ -3,6 +3,7 @@ namespace ns_486009b1_3748_4ab6_aa1b_95a4d5e2d228;
 
 class DefaultPaymentHandlingAction extends \PaymentApplication implements \Application {
     public $overrideDefault = true;
+    public $header = false;
     
     public function getDescription() {
         
@@ -13,6 +14,8 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     }
 
     public function render() {
+        $this->includefile("common");
+        
         if ($this->order->status == 7) {
             $this->includefile("closedoptions");
         } else {

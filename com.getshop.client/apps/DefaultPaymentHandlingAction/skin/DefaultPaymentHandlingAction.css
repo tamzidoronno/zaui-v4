@@ -1,0 +1,39 @@
+.DefaultPaymentHandlingAction .order_action_button {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    color: #FFF;
+    background-color: #29354e;
+    text-align: center;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.DefaultPaymentHandlingAction .order_action_button i {
+    display: block;
+    text-align: center;
+    width: 100%;
+    line-height: 67px;
+    font-size: 30px;
+    
+}
+
+.DefaultPaymentHandlingAction .commonbox {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 20px;
+    height: 100px;
+    background-color: #DDD;
+    padding: 20px;
+    margin-right: 20px;
+    text-align: left;
+}
+
+.DefaultPaymentHandlingAction {
+    background-color: #DDD;
+    padding-left: 20px;
+    padding-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: solid 1px #DDD;    
+}

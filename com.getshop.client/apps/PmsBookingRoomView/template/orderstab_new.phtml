@@ -124,12 +124,8 @@ $totalForRoom = round($totalForRoom, 2);
                     <div class="col col_orderid odd"> <? echo $order->incrementOrderId; ?> </div>
                     <div class="col col_action">
                         <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
-
+                        <div class="gs_shop_small_icon fa fa-search-plus showOrderSummary" orderid="<? echo $order->id; ?>" title='<? echo $this->__f("Show order"); ?>'></div>
                         <div class="ordermenu">
-
-                            <div class='entry showOrderSummary' orderid="<? echo $order->id; ?>">
-                                <? echo $this->__f("Show order"); ?>
-                            </div>
 
                             <?
                             if ((!count($order->creditOrderId) && !$order->isCreditNote) || !$order->closed ) {

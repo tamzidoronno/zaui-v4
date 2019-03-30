@@ -1,0 +1,23 @@
+
+.OnlinePaymentMethod .shipmentlogline .date {
+    display: inline-block;
+    width: 120px;
+    vertical-align: top;
+    border-top: solid 1px #DDD;
+}
+
+.OnlinePaymentMethod .shipmentlogline .to {
+    display: inline-block;
+    width: calc(100% - 132px);
+    height: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: top;
+    border-top: solid 1px #DDD;
+}
+
+.OnlinePaymentMethod .headerbox {
+    font-weight: bold;
+    margin-top: 30px;
+}
+

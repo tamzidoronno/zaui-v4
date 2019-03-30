@@ -7,10 +7,14 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
     var $entries;
     var $dept;
     var $currentMenuEntry;
-    public $overrideDefault = true;
+    
 
     function __construct() {
         
+    }
+    
+    public function hasPaymentProcess() {
+        return ($this->order != null && $this->order->status != 7);
     }
 
     public function getDescription() {
@@ -65,7 +69,7 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
 
     public function render() {
         if ($this->order && $this->order->closed) {
-            $this->renderDefault();
+            $this->hasPaymentProcess = false;
         } else {
             $this->includefile("PayOnDelivery");
         }

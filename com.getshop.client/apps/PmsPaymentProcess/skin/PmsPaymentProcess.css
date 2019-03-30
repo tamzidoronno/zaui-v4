@@ -146,6 +146,19 @@
     margin-bottom: 30px;
 }
 
+.PmsPaymentProcess .payment_method_options.fullsize {
+    display: none;
+}
+
 .PmsPaymentProcess .receipt_template .receipt_template_inner {
     zoom: 60%;
+}
+
+.PmsPaymentProcess .receipt_template.fullsize {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.PmsPaymentProcess .receipt_template.fullsize .receipt_template_inner {
+    zoom: 95%;
 }

@@ -1,0 +1,97 @@
+<?
+/* @var $this ns_d96f955a_0c21_4b1c_97dc_295008ae6e5a\OnlinePaymentMethod */
+$order = $this->getCurrentOrder();
+$rooms = $this->getRoomsFromOrder();
+$bookings = $this->getRoomsBookingsOrder();
+
+/* @var $this \ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\OnlinePaymentMethod */
+$messages = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
+$emailMessages = array();
+$messageToUse = "";
+
+foreach ($messages as $message) {
+    if ($message->type == "email" && $message->key == "booking_sendpaymentlink" && $message->isDefault == 1) {
+        $messageToUse = $message;
+    }
+}
+
+
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
+
+?>
+
+<div class="headerbox"><? echo $this->__f("Send payment request"); ?></div>
+
+<div class="innerbox">
+    <?
+    if (count($rooms)) {
+        echo "<span style='display: inline-block; width: 116px;'>Guest:</span>";
+        echo "<select class='gsniceselect1 selectguest' style='width: 199px'>";
+            foreach ($bookings as $pmsBooking) {
+                $user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
+                if ($user != null) {
+                    echo "<option name='$user->fullName' prefix='$user->prefix' phone='$user->cellPhone' value='$user->emailAddress'>".$user->fullName. " / ".$user->emailAddress." / ".$user->cellPhone."</option>";
+                }
+            }
+
+            $guestCount = 0;
+            foreach ($rooms as $room) {
+                $guestCount++;
+                foreach ($room->guests as $guest) {
+                    echo "<option name='$guest->name'  prefix='$guest->prefix' phone='$guest->phone' value='$guest->email'>Guest $guestCount: ".$guest->name. " / ".$guest->email." / ".$guest->phone."</option>";
+                }
+            }
+        echo "</select>";
+        ?>
+        <script>$('.OnlinePaymentMethod .gsniceselect1.selectguest').change();</script>
+        <?
+    }
+    ?>
+
+    <div gstype='form' method='sendPaymentLink'>
+        <?
+        if (count($bookings)) {
+            echo "<input type='hidden' value='".$bookings[0]->id."' gsname='bookingid'/>";
+        }
+        ?>
+        <input type='hidden' value='<? echo $order->id; ?>' gsname='orderid'/>
+        
+        <span style='display: inline-block; width: 98px;'>Phone:</span> + <input class='gsniceinput1' style='width: 28px' gsname='prefix' value=''/> - <input class='gsniceinput1' style='width: 114px' gsname='phone' value=''/>
+        
+        <span style='display: inline-block; width: 111px;'>Email:</span> <input class='gsniceinput1' gsname='bookerEmail' value=''/>
+        <br/><span style='display: inline-block; width: 111px;'>Subject:</span> <input class='gsniceinput1' gsname='subject' value='<? echo $messageToUse ? $messageToUse->title : ""; ?>'/>
+        <div class='content'>
+            <textarea gsname="emailMessage" style='width: 100%; box-sizing: border-box; height: 173px; border: Solid 1px #DDD;'><? echo $messageToUse ? $messageToUse->content : ""; ?></textarea>
+        </div>
+        <br/>
+        <?
+        if (isset($_POST['event']) && $_POST['event'] == "sendPaymentLink") {
+            ?>
+            <div style='padding-bottom: 20px; color: green;'>
+                <i class='fa fa-check'></i> <? echo $this->__f("Payment link sent"); ?>
+            </div>
+            <?
+        }
+        ?>
+        <br/><div class='shop_button' gstype='submit' gs_callback='app.OnlinePaymentMethod.linkSent'><? echo $this->__f("Send link"); ?></div>
+    </div>
+</div>
+
+<div class="headerbox">Sent log.</div>
+
+<div class="innerbox">
+    <?
+    if (!count($order->shipmentLog)) {
+        echo "<div class='warning_not_sent'>";
+            echo "<i class='fa fa-warning'></i> ".$this->__f("This order has not been sent yet to your customer");
+        echo "</div>";
+    } else {
+        foreach ($order->shipmentLog as $log) {
+            echo "<div class='shipmentlogline'>";
+                echo "<div class='date'>".date('d.m.Y H:i', strtotime($log->date))."</div>";
+                echo "<div class='to'>".$log->address."</div>";
+            echo "</div>";
+        }
+    }
+    ?>
+</div>

@@ -11,7 +11,15 @@ class StripePayments extends \PaymentApplication implements \Application {
     }
 
     public function render() {
-        
+        if ($this->getCurrentOrder()->status != 7) {
+            $this->renderOnlinePaymentMethod();
+        } else {
+            $this->renderDefault();
+        }
+    }
+    
+    public function hasPaymentProcess() {
+         return ($this->order != null && $this->order->status != 7);
     }
     
     public function addPaymentMethods() {

@@ -11,7 +11,7 @@ class VerifoneTerminal extends \PaymentApplication implements \Application {
     }
 
     public function hasPaymentProcess() {
-        return $this->order != null && $this->order->status != 7;
+        return $this->order != null && $this->order->status != 7 && !$this->getCurrentOrder()->isCreditNote;
     }
     
     /**

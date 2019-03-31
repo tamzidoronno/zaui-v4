@@ -16,7 +16,7 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     public function render() {
         $this->includefile("common");
         
-        if ($this->order->status == 7) {
+        if ($this->order->status == 7 || $this->order->closed) {
             $this->includefile("closedoptions");
         } else {
             $this->includefile("openoptions");
@@ -43,6 +43,10 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     
     public function cancelCurrentOrder() {
         $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
+    }
+    
+    public function changeMethod() {
+        $this->getApi()->getOrderManager()->changeOrderType($_POST['data']['orderid'], $_POST['data']['paymentid']);
     }
 }
 ?>

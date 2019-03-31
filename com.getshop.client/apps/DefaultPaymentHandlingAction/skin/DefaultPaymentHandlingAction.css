@@ -29,6 +29,12 @@
     text-align: left;
 }
 
+.DefaultPaymentHandlingAction .paymentmethodname {
+    background-color: #6cdcff;
+    padding: 5px;
+    font-size: 18px;
+}
+
 .DefaultPaymentHandlingAction {
     background-color: #DDD;
     margin-bottom: 20px;

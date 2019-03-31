@@ -30,6 +30,10 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function getName() {
         return "Netaxept";
     }
+    
+    public function hasPaymentProcess() {
+         return ($this->order != null && $this->order->status != 7);
+    }    
 
     public function postProcess() {
         
@@ -258,7 +262,11 @@ class Netaxept extends \PaymentApplication implements \Application {
     }
 
     public function render() {
-        
+        if ($this->getCurrentOrder()->status != 7) {
+            $this->renderOnlinePaymentMethod();
+        } else {
+            $this->renderDefault();
+        }
     }
 
     public function createOrder() {

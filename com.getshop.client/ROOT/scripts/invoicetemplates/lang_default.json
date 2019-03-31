@@ -21,5 +21,10 @@
     "Currency": "Currency",
     "Note": "Note",
     "Sub total": "Sub total",
-    "Invoice number": "Invoice number"
+    "Invoice number": "Invoice number",
+    "Receipt": "Receipt",
+    "Preview": "Preview",
+    "Proforma Invoice": "Proforma Invoice",
+    "Room" : "Room",
+    "Date" : "Date"
 }

@@ -21,5 +21,11 @@
     "Sub total": "Sum total",
     "Note": "Notat",
     "Currency": "Valutta",
-    "Invoice number": "Fakturanr"
+    "Invoice number": "Fakturanr",
+    "Receipt": "Kvittering for salg",
+    "Preview": "Forhåndsvisning",
+    "Proforma Invoice": "Forhåndsvisning",
+    "Room" : "Rom",
+    "Date" : "Dato"
+    
 }

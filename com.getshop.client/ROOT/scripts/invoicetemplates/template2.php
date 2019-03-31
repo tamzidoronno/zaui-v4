@@ -91,6 +91,11 @@ $calculatedTaxes = array();
     .invoice_template .outerproductrow .col.col4,
     .invoice_template .productrow .col.col4 { width: 150px; text-align: right;}
     
+    .invoice_template .metadata {
+        font-size: 15px;
+        padding: 3px;
+    }
+    
     .invoice_template .productrowheader {
         border-top: solid 1px #DDD;
         padding-top: 20px;
@@ -116,8 +121,25 @@ $calculatedTaxes = array();
         </div>
     </div>
 
+    <?
+    $text = "";
+    if ($order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment") {
+        if ($order->closed) {
+            $text = "Invoice";
+        } else {
+            $text = "Proforma Invoice";
+        }
+    } else {
+        if ($order->closed) {
+            $text = "Receipt";
+        } else {
+            $text = "Preview";
+        }
+        
+    }
+    ?>
     <div class='page' style='margin: 20px;' >
-        <div style='border-bottom: solid 1px #DDD; padding: 5px;  padding-left: 10px; text-transform: uppercase; color: #3b7fb1; font-size: 22px;'><? echo $translator->translate("Invoice"); ?></div>
+        <div style='border-bottom: solid 1px #DDD; padding: 5px;  padding-left: 10px; text-transform: uppercase; color: #3b7fb1; font-size: 22px;'><? echo $translator->translate($text); ?></div>
 
         <div class='row'>
             <div class='col col1'><? echo $translator->translate("Invoice number"); ?></div>
@@ -174,9 +196,32 @@ $calculatedTaxes = array();
         }
 
         $calculatedTaxes[$item->product->taxGroupObject->taxRate] += $taxes;
+        $metadata = "";
+        
+        if ($item->product->additionalMetaData) {
+            $metadata .= $translator->translate("Room").": ".$item->product->additionalMetaData;
+        }
+        
+        if ($item->product->metaData) {
+            $metadata .= $metadata ? ", " : "";
+            $metadata .= $item->product->metaData;
+        }
+        
+        if ($item->startDate) {
+            $metadata .= $metadata ? ", " : "";
+            $metadata .= $translator->translate("Date").": ".date('d.m.Y', strtotime($item->startDate));
+            if ($item->endDate) {
+                $metadata .= " - ".date('d.m.Y', strtotime($item->endDate));
+            }
+        }
         ?>
         <div class='productrow '>
-            <div class='col col1'><? echo $item->product->name; ?></div>
+            <div class='col col1'><? echo $item->product->name; 
+            
+                if ($metadata) {
+                    echo "<div class='metadata'>".$metadata."</div>";
+                }
+            ?></div>
             <div class='col col2'><? echo $item->product->price; ?></div>
             <div class='col col3'><? echo $item->count; ?></div>
             <div class='col col4'><? echo $translator->formatPrice($lineTotal); ?></div>
@@ -217,6 +262,8 @@ $calculatedTaxes = array();
         </div>
     <?
     }
+    
+    if ($order->status != 7) {
     ?>
 
     <div style='margin: 20px; border: solid 1px #DDD; padding: 20px; '>
@@ -233,4 +280,7 @@ $calculatedTaxes = array();
         ?>
 
     </div>
+    <?
+    }
+    ?>
 </div>

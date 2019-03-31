@@ -12,7 +12,7 @@ $order = $this->getOrder();
 </div>
 
 <div class='commonbox'>
-    <div gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
+    <div  synchron='true' gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
         <i class='fa fa-trash'></i> 
         <? echo $this->__f("Delete order"); ?>
     </div>

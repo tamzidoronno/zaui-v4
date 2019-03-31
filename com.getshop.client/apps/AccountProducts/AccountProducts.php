@@ -15,10 +15,11 @@ class AccountProducts extends \MarketingApplication implements \Application {
     public function render() {
         if ($this->getApi()->getGetShopAccountingManager()->isCurrentSelectedAccountingSystemPrimitive()) {
             $this->includefile("primitivproductconfig");
+            $this->includefile("primitivaccountingcodes");
         } else {
             $this->includefile("productsview");
+            $this->includefile("accountingcodes");
         }
-        $this->includefile("accountingcodes");
     }
     
     public function saveTaxGroups() {

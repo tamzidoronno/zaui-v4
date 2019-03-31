@@ -33,12 +33,27 @@ class ProductList extends \MarketingApplication implements \Application {
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
             array('name', 'NAME', 'name'),
+            array('listText', 'LIST', 'listText'),
             array('price', 'PRICE', 'price'),
             array('tax', 'TAX', '', 'formatTaxGroup')
             
         );
         
+        $products = $this->getApi()->getProductManager()->findProducts($filterOptions);
+        $lists = $this->getApi()->getProductManager()->getProductLists();
+        
+        foreach($products->datas as $idx => $prod) {
+            $names = array();
+            foreach($lists as $list) {
+                if(in_array($prod->id, $list->productIds)) {
+                    $names[] = $list->listName;
+                }
+            }
+            $products->datas[$idx]->listText = join(",", $names);
+        }
+        
         $table = new \GetShopModuleTable($this, 'ProductManager', 'findProducts', $args, $attributes);
+        $table->setData($products);
         $table->loadContentInOverlay = true;
         $table->renderPagedTable();
     }

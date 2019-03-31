@@ -7,20 +7,11 @@
     </div>
 </div>
 
-<div class="gsoverlay1 <? echo $showingModal; ?>">
+<div class="gsoverlay1">
 
-    <div class="gsoverlayinner">
+    <div class="gsoverlayinner" style='display: '>
         <div class='gs_loading_spinner'><i class='fa fa-spin'></i></div>
-        <div class='content'>
-            <?
-            if ($showingModal && $pageFactory) {
-                $modalPage = $pageFactory->getPage($_SESSION['gs_currently_showing_modal']);
-                if ($modalPage) {
-                    $modalPage->renderPage();
-                }
-            }
-            ?>
-        </div>
+        <div class='content'></div>
     </div>
 </div>
 

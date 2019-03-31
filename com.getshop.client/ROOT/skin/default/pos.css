@@ -261,6 +261,10 @@ body { background-color:#efefef; }
     left: -15px !important;
 }
 
+.modulechangericoncontainer {
+    border-right: solid 0px !important;
+}
+
 .gs_framework_module {
     width: 72px !important;
     margin-top: 4px;

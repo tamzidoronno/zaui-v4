@@ -13,6 +13,8 @@ $end = $_POST['data']['end'] . " " . $config->defaultEnd;
 $end = $this->convertToJavaDate(strtotime($end));
 $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $total = 0;
+$items = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedMultilevelDomainName(), $start, $end);
+$current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 ?>
 <div class='datetitle'><i class='fa fa-clock-o'></i> <?php echo date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end)); ?></div>
 <div class='avilabilityarea' gstype='form' method='registerRoomsFromAvailabilityCheck' synchron='true' gstoarea='.roomsreadytobeadded'>
@@ -20,15 +22,16 @@ $total = 0;
     <input type='hidden' gsname='end' value='<?php echo strtotime($end); ?>'>
     <?php
     foreach ($items as $item) {
-        $count = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $item->id, $start, $end);
+        $count = $size = $this->getNumberOfAvailableForType($item->type, $current, $start, $end);
         $total += $count;
         ?>
         <div class='searchbookingrow'>
-            <span class='itemtypename secondarytextcolor'><?php echo $item->name; ?></span>
+            <span class='itemtypename ellipsis secondarytextcolor'><?php echo $item->type->name; ?></span>
             <span class='numberavailable secondarytextcolor'><?php echo $count; ?></span>
+            <span class='price secondarytextcolor'><?php echo $item->price; ?></span>
             <span class='selection counterrow'>
                 <i class='fa fa-minus-circle decreaseroomcounter'></i>
-                <input type='text' value='0' class='gsniceinput1 roomcount' gsname='<?php echo $item->id; ?>' style='width: 20px;text-align: center;'>
+                <input type='text' value='0' class='gsniceinput1 roomcount' gsname='<?php echo $item->type->id; ?>' style='width: 20px;text-align: center;'>
                 <i class='fa fa-plus-circle increaseroomcounter'></i>
             </span>
         </div>
@@ -38,6 +41,7 @@ $total = 0;
     <div class='searchbookingrow' style='font-weight: bold;'>
         <span class='itemtypename'>Total</span>
         <span class='numberavailable'><?php echo $total; ?></span>
+            <span class='price secondarytextcolor'></span>
         <span class='selection'><span class='selectallbutton'>select all</span>
         </span>
     </div>
@@ -50,8 +54,9 @@ $total = 0;
     .avilabilityarea { border-bottom: solid 0px;background-color:#fff; max-width: 510px; display:inline-block; margin:auto;}
     .searchbookingrow { border-bottom: solid 1px #e9ebed; padding-left: 20px; margin:auto; text-align: left; font-size: 18px; padding-bottom: 5px; margin-bottom: 5px; }
     .selection .fa { font-size: 18px; }
-    .itemtypename { width: 200px; display:inline-block; }
-    .numberavailable { width: 160px; display:inline-block; }
+    .itemtypename { width: 260px; display:inline-block; }
+    .numberavailable { width: 45px; display:inline-block; text-align: center;}
+    .price { width: 65px; display:inline-block; }
     .datetitle { font-size: 14px; margin-bottom: 10px; text-align: left;padding-left: 20px; font-weight: bold; margin-top: 5px; margin-bottom: 20px;}
     .datetitle .fa-clock-o { color:#8cd8f6;}
 </style>

@@ -18,6 +18,17 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("availability");
     }
     
+     public function getNumberOfAvailableForType($type,$current,$start,$end) {
+        $size = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $type->id, $start, $end, false);
+
+        foreach($current->rooms as $room) {
+            if($room->bookingItemTypeId == $type->id) {
+                $size--;
+            }
+        }
+        return $size;
+    }
+    
     public function registerRoomsFromAvailabilityCheck() {
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         foreach($types as $type) {
@@ -96,7 +107,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "</div>";
         
         echo "<script>";
-//        echo "app.PmsNewBooking20.setLastPage();";
+        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
     }
     

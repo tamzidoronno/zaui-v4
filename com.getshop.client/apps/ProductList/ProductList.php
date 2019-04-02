@@ -39,23 +39,23 @@ class ProductList extends \MarketingApplication implements \Application {
             
         );
         
-        $products = $this->getApi()->getProductManager()->findProducts($filterOptions);
+        $products = $this->getApi()->getProductManager()->getAllProducts();
         $lists = $this->getApi()->getProductManager()->getProductLists();
         
-        foreach($products->datas as $idx => $prod) {
+        foreach($products as $idx => $prod) {
             $names = array();
             foreach($lists as $list) {
                 if(in_array($prod->id, $list->productIds)) {
                     $names[] = $list->listName;
                 }
             }
-            $products->datas[$idx]->listText = join(",", $names);
+            $products[$idx]->listText = join(",", $names);
         }
         
         $table = new \GetShopModuleTable($this, 'ProductManager', 'findProducts', $args, $attributes);
         $table->setData($products);
         $table->loadContentInOverlay = true;
-        $table->renderPagedTable();
+        $table->render();
     }
 
     public function getSearchWord() {

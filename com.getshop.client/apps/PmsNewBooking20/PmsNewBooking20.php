@@ -230,10 +230,12 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         foreach($booking->rooms as $r) {
             if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
-                $r->numberOfGuests++;
-                $guest = new \core_pmsmanager_PmsGuests();
-                $guest->guestId = uniqid();
-                $r->guests[] = $guest;
+                for($i = 0; $i < $_POST['data']['gscount'];$i++) {
+                    $r->numberOfGuests++;
+                    $guest = new \core_pmsmanager_PmsGuests();
+                    $guest->guestId = uniqid();
+                    $r->guests[] = $guest;
+                }
             }
         }
         

@@ -2095,5 +2095,17 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $monthName." ".$arr[1];
     }
 
+    public function canTestNewRoutine() {
+        
+        if (!$this->getApi()->getStoreManager()->isProductMode()) {
+            return true;
+        }
+        
+        
+        $allowedStores = array();
+        $allowedStores[] = "93fadf31-1039-4196-9e4f-77c3be0ef8d1";
+        return in_array($this->getFactory()->getStore()->id, $allowedStores);
+    }
+
 }
 ?>

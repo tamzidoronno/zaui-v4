@@ -142,14 +142,6 @@ class PaymentApplication extends ApplicationBase {
     public function defaultRender() {
     }
     
-    public function renderStandAlone() {
-        if (isset($this->overrideDefault) && $this->overrideDefault) {
-            parent::renderStandAlone();
-        } else {
-            $this->renderDefault();
-        }
-    }
-    
     public function renderPayment($options=false) {
         $this->paymentOptions = $options;
         $classname = get_class($this);
@@ -220,12 +212,6 @@ class PaymentApplication extends ApplicationBase {
         return $this->order;
     }
 
-    public function renderDefault() {
-        $app = $this->getApi()->getGetShopApplicationPool()->get("486009b1-3748-4ab6-aa1b-95a4d5e2d228");
-        $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
-        $appInstance->order = $this->order;
-        $appInstance->renderStandAlone();
-    }
     
     /**
      * 
@@ -269,6 +255,16 @@ class PaymentApplication extends ApplicationBase {
         return $this->bookings;
     }
 
+    public function renderOnlinePaymentMethod() {
+        $app = $this->getApi()->getGetShopApplicationPool()->get("d96f955a-0c21-4b1c-97dc-295008ae6e5a");
+        $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $appInstance->order = $this->order;
+        $appInstance->renderStandAlone();
+    }
+    
+    public function hasPaymentProcess() {
+        return false;
+    }
 }
 
 ?>

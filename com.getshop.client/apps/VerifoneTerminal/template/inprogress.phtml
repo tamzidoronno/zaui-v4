@@ -1,0 +1,19 @@
+<?
+/* @var $this \ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal */
+$msg = $this->getLastMessage();
+?>
+
+<div>
+    <? echo $msg; ?>
+</div>
+
+<br/>
+<div class='shop_button' gsclick='cancelPayment' orderid='<? echo $this->getCurrentOrder()->id; ?>'><? echo $this->__f("Cancel"); ?></div>
+<div class='shop_button refresh' style='display: none;'><? echo $this->__f("Refresh"); ?></div>
+
+<script>
+    setTimeout(function() {
+        $('.VerifoneTerminal .refresh').click();
+    }, 1000);
+    
+</script>

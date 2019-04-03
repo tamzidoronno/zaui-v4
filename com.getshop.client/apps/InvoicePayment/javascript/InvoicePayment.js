@@ -39,6 +39,10 @@ app.InvoicePayment = {
         });
     },
     
+    invoiceSent: function(res) {
+        $('.InvoicePayment .invoicesent').show();
+    },
+    
     sendEhf: function() {
         var data = {};
         data.vatNumber = $(this).closest('.sendehfbox').find('[gsname="vatNumber"]').val();

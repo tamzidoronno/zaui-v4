@@ -13,7 +13,6 @@
 namespace ns_70ace3f0_3981_11e3_aa6e_0800200c9a66;
 
 class InvoicePayment extends \PaymentApplication implements \Application{
-    public $overrideDefault = true;
     
     public function getDescription() {
         return $this->__f("Allows customers to pay by invoice.");
@@ -21,6 +20,10 @@ class InvoicePayment extends \PaymentApplication implements \Application{
 
     public function render() {
         $this->includefile("sendorder");
+    }
+    
+    public function hasPaymentProcess() {
+        return true;
     }
     
     public function hasAttachment() {

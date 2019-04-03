@@ -9,6 +9,10 @@ class Dibs extends \PaymentApplication implements \Application {
         return $this->__("dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.");
     }
 
+    public function hasPaymentProcess() {
+         return ($this->order != null && $this->order->status != 7);
+    }
+    
     public function getName() {
         return "DIBS";
     }
@@ -177,7 +181,11 @@ class Dibs extends \PaymentApplication implements \Application {
     }
 
     public function render() {
-        
+        if ($this->getCurrentOrder()->status != 7) {
+            $this->renderOnlinePaymentMethod();
+        } else {
+            $this->renderDefault();
+        }
     }
     
     public function isAvailable() {
@@ -216,6 +224,7 @@ class Dibs extends \PaymentApplication implements \Application {
 
     public function getColor() {
         return "blue";
-    }    
+    }
+
 }
 ?>

@@ -239,12 +239,16 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         
         for (String msg : terminalMessages) {
             if (msg != null && msg.equals("completed") && orderToPay != null && orderToPay.status != Order.Status.PAYMENT_COMPLETED) {
-                double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
-                orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+                markOrderInProgressAsPaid();
             }
         }
         
         return terminalMessages;
+    }
+
+    public void markOrderInProgressAsPaid() {
+        double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
+        orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
     }
 
     @Override

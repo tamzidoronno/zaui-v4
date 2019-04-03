@@ -1088,9 +1088,7 @@ class ApplicationManager extends FactoryBase {
     
     public function showModal() {
         $areaname = $_POST['data']['modalName'];
-//        This causes problems as modals are not handled properly to only show on the page id that
-//        you currently are opening the modal from.
-//        $_SESSION['gs_currently_showing_modal'] = $areaname;
+        $_SESSION['gs_currently_showing_modal'] = $areaname;
         $_SESSION['modal_variable_'.$areaname] = $_POST['data'];
         
         $this->getPage()->renderModal($areaname);

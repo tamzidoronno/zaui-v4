@@ -20,9 +20,7 @@ if (isset($_POST['data']['gs_getvariables']) && $_POST['data']['gs_getvariables'
 // UPDATE MODAL VARIABLES
 if (isset($_POST['data']['gs_show_modal'])) {
 
-//        This causes problems as modals are not handled properly to only show on the page id that
-//        you currently are opening the modal from.
-//    $_SESSION['gs_currently_showing_modal'] = $_POST['data']['gs_show_modal'];
+    $_SESSION['gs_currently_showing_modal'] = $_POST['data']['gs_show_modal'];
 
     foreach ($_POST['data'] as $variableName => $value) {
         @$_SESSION['modal_variable_'.$_SESSION['gs_currently_showing_modal']][$variableName] = $value;

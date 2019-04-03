@@ -8,6 +8,17 @@ app.PmsPaymentProcess = {
         $(document).on('click', '.PmsPaymentProcess .toggledatefilter', this.togleDateFilter);  
     },
     
+    refresh: function() {
+        var me = $('.PmsPaymentProcess.app');
+        
+        var event = thundashop.Ajax.createEvent(null, "render", me, {});
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $(me).html(res);
+        })
+    },
+    
     togleDateFilter: function() {
         var div = $(this).closest('.app').find('.datefilter');
         if (div.is(':visible')) {

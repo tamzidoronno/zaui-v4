@@ -93,7 +93,7 @@ if ($verifonePaymentInProgress) {
 </style>
 
 <?
-if (!$this->getApi()->getStoreManager()->isProductMode()) {
+if ($this->canTestNewRoutine()) {
 ?>
     <div class="information" style="border: solid 1px #DDD; padding: 10px; background-color: #feffc1; text-align: center">
         A new version of this process is under development (beta version), you can test it if you wish.

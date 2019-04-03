@@ -1312,6 +1312,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         verifoneManager.getTerminalMessages().add(message);
         if (message.equals("payment failed") || message.equals("completed")) {
+            
+            if (message.equals("completed"))
+                verifoneManager.markOrderInProgressAsPaid();
+            
             verifoneManager.removeOrderToPay();
         }
     }

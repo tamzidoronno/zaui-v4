@@ -5,9 +5,27 @@ $invoiceData = new \stdClass();
 $invoiceData->order = $order;
 $invoiceData->accountingDetails = $this->getApi()->getOrderManager()->getAccountingDetails();
 $serializedOrder = json_encode($invoiceData);
+
+$app = $this->getApi()->getGetShopApplicationPool()->get("486009b1-3748-4ab6-aa1b-95a4d5e2d228");
+$defaultAction = $this->getFactory()->getApplicationPool()->createInstace($app);
+$defaultAction->order = $order;
+
+$idArr = explode("\\", $order->payment->paymentType);
+$id = $idArr[0];
+$id = str_replace("_", "-", $id);
+$id = str_replace("ns-", "", $id);
+$app = $this->getApi()->getStoreApplicationPool()->getApplication($id);
+$paymentApp = $this->getFactory()->getApplicationPool()->createInstace($app);
+$paymentApp->setCurrentOrder($order);
+
+$fullsize = $paymentApp->hasPaymentProcess() ? "" : "fullsize";
+
+echo "<div class='paymentheaderoptions'>";
+    $defaultAction->renderStandAlone();
+echo "</div>";
 ?>
 
-<div class="receipt_template">
+<div class="receipt_template <? echo $fullsize; ?>">
     <div class="receipt_template_inner">
         <?
         include 'scripts/invoicetemplates/template2.php';
@@ -15,22 +33,13 @@ $serializedOrder = json_encode($invoiceData);
     </div>
 </div>
 
-<div class="payment_method_options">
-    <?
-    $idArr = explode("\\", $order->payment->paymentType);
-    $id = $idArr[0];
-    $id = str_replace("_", "-", $id);
-    $id = str_replace("ns-", "", $id);
-    $app = $this->getApi()->getStoreApplicationPool()->getApplication($id);
-    $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
-    $appInstance->setCurrentOrder($order);
-    ?>
+<div class="payment_method_options <? echo $fullsize; ?>">
     
     <div class="paymenttypeheader">
-        <? echo $appInstance->getName(); ?>
+        <? echo $paymentApp->getName(); ?>
     </div>
     
     <div class="paymentoptions">
-        <? echo $appInstance->renderStandAlone(); ?>
+        <? echo $paymentApp->renderStandAlone(); ?>
     </div>
 </div>

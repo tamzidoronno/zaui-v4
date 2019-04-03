@@ -1,0 +1,55 @@
+<?
+/* @var $this \ns_486009b1_3748_4ab6_aa1b_95a4d5e2d228\DefaultPaymentHandlingAction */
+$order = $this->getOrder();
+$cashpoints = $this->getApi()->getGdsManager()->getDevices();
+$canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
+
+$idArr = explode("\\", $order->payment->paymentType);
+$id = $idArr[0];
+$id = str_replace("_", "-", $id);
+$id = str_replace("ns-", "", $id);
+$app = $this->getApi()->getStoreApplicationPool()->getApplication($id);
+$paymentApp = $this->getFactory()->getApplicationPool()->createInstace($app);
+$paymentApp->setCurrentOrder($order);
+
+echo "<div class='paymentmethodname'>";
+    echo $this->__f("Payment type").": ".$paymentApp->getName();
+echo "</div>";
+
+if (!$order->isCreditNote && count($order->creditOrderId)) {
+    ?>
+    <div style='background-color: #ff7948; font-weight: bold; font-size: 18px; color: #FFF; padding: 5px;'>
+        <i class='fa fa-info-circle' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order has been credited"); ?>
+    </div>
+    <?
+} else if ($order->status == 7) {
+    ?>
+    <div style='background-color: #3a9142; font-weight: bold; font-size: 18px; color: #FFF; padding: 5px;'>
+        <i class='fa fa-check' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order has been paid"); ?>
+    </div>
+    <?
+} else {
+    ?>
+    <div style='background-color: #ff3535; font-weight: bold; font-size: 18px; color: #FFF; padding: 5px;'>
+        <i class='fa fa-warning' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order is not paid"); ?>
+    </div>
+    <?
+}
+?>
+<div class='commonbox' style='font-size: 17px;'> 
+    <i class='fa fa-paperclip' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $order->incrementOrderId; ?>
+    <br/>
+    <?
+    
+    if ($order->closed) {
+    ?>
+        <i class='fa fa-lock' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Closed for modifications"); ?>
+    <?
+    } else {
+    ?>
+        <i class='fa fa-unlock' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Open for modification"); ?>
+    <?    
+    }
+    ?>
+
+</div>

@@ -115,7 +115,7 @@ class SalesPointCommon extends \MarketingApplication {
         
         foreach ($cashPoints as $cashPoint) {
             if ($selectedCashPointId == $cashPoint->id) {
-                $userPointViewId = $cashPoint->selectedUserView->{$userId};
+                $userPointViewId = isset($cashPoint->selectedUserView->{$userId}) ? $cashPoint->selectedUserView->{$userId} : false;
                 if ($currentSelectedViewId != $userPointViewId) {
                     $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_view_id'] = $userPointViewId;
                 }

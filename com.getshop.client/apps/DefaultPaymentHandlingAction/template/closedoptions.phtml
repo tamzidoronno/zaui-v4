@@ -3,51 +3,36 @@
 $order = $this->getOrder();
 $cashpoints = $this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
-
 ?>
-<i class='fa fa-check'></i> <? echo $this->__f("Closed"); ?>
-<br/><i class='fa fa-paperclip'></i> <? echo $order->incrementOrderId; ?>
-<br/>
-<?
-if ($order->isCreditNote) {
-    ?>
-    <br/><i class='fa fa-info-circle'></i> <? echo $this->__f("This is a credit note"); ?>
-    <?
-} 
-
-if (!$order->isCreditNote && count($order->creditOrderId)) {
-    ?>
-    <br/><i class='fa fa-info-circle'></i> <? echo $this->__f("This order has been creditted"); ?>
-    <?
-} 
-?>
-<br/>
-
-<?
-if (count($cashpoints)) {
-    echo "<h2>".$this->__f("Print")."</h2>";
-    foreach ($cashpoints as $cashpoint) {
-        if ($cashpoint->type == "cashap") {
-            $orderId = isset($order->id) ? $order->id : $order->orderId;
-            echo "<div style='cursor:pointer;' gsclick='sendReceipt' deviceid='$cashpoint->id' orderid='".$orderId."' title='Print receipt on $cashpoint->name'><i class='fa fa-print' ></i> $cashpoint->name </div>";
-        }
-    }
-}
-
-if ($canCreditOrder) {
-?>
-
-    <br/>
-    <h2><? echo $this->__f("Your options"); ?></h2>
-    <div class=''>
-        <?
-        if ($canCreditOrder) {
-        ?>
-            <div class='shop_button' gs_callback='app.DefaultPaymentHandlingAction.refresh' gsclick='creditOrder' orderid='<? echo $order->id; ?>'><? echo $this->__f("Credit order"); ?></div>
-        <? } ?>
+<div class='commonbox'>
+    
+    <div class='order_action_button' onclick='window.open("/scripts/downloadInvoice.php?orderId=<? echo $order->id; ?>&incrementalOrderId=<? echo $order->incrementOrderId; ?>");'>
+        <i class='fa fa-download'></i>
+        <? echo $this->__f("Download"); ?>
     </div>
 
-<?
-}
-?>
-    
+    <?
+    if (count($cashpoints)) {
+        foreach ($cashpoints as $cashpoint) {
+            if ($cashpoint->type == "cashap") {
+                $orderId = isset($order->id) ? $order->id : $order->orderId;
+                ?>
+                <div class='order_action_button' gsclick='sendReceipt' deviceid='<? echo $cashpoint->id; ?>' orderid='<? echo $orderId; ?>' title='Print receipt on <? echo $cashpoint->name; ?>'><i class='fa fa-print' ></i> <? echo $cashpoint->name; ?> </div>
+                <?
+                
+            }
+        }
+    }
+
+    if ($canCreditOrder) {
+    ?>
+
+        <div class='order_action_button' gs_confirm="Are you sure?" gs_callback='app.DefaultPaymentHandlingAction.refresh' gsclick='creditOrder' orderid='<? echo $order->id; ?>'>
+            <i class='fa fa-history'></i>
+            <? echo $this->__f("Credit order"); ?>
+        </div>
+    <?
+    }
+    ?>
+
+</div>

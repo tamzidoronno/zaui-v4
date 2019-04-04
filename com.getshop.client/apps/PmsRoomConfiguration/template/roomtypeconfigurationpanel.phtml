@@ -22,6 +22,7 @@ $departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
         if(isset($type->translationStrings->{$lang."_name"})) {
             $text = json_decode($type->translationStrings->{$lang."_name"});
         }
+        if(isset($type->nameTranslations->{$lang})) { $text = $type->nameTranslations->{$lang}; }
         echo "<b>" . $readable[$lang] . " title</b><br>";
     ?>
         <input type='txt' value='<?php echo $text; ?>' class='gsniceinput1' style='width:100%;box-sizing:border-box;' gsname='<?php echo $lang; ?>_name'><br><br>
@@ -33,6 +34,7 @@ $departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
         if(isset($type->translationStrings->{$lang."_description"})) {
             $text = json_decode($type->translationStrings->{$lang."_description"});
         }
+        if(isset($type->descriptionTranslations->{$lang})) { $text = $type->descriptionTranslations->{$lang}; }
         ?>
         <b>Description <?php echo $readable[$lang]; ?>:</b><br>
         <textarea style='width: 100%; height: 90px;border:solid 1px #dcdcdc;box-sizing:border-box; padding: 10px;' gsname='<?php echo $lang; ?>_description'><?php echo $text; ?></textarea>

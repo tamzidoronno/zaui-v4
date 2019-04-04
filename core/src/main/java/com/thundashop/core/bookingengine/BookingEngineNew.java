@@ -411,6 +411,8 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         savedItem.rules = type.rules;
         savedItem.order = type.order;
         savedItem.capacity = type.capacity;
+        savedItem.nameTranslations = type.nameTranslations;
+        savedItem.descriptionTranslations = type.descriptionTranslations;
         savedItem.description = type.description;
         savedItem.eventItemGroup = type.eventItemGroup;
         savedItem.minStay = type.minStay;

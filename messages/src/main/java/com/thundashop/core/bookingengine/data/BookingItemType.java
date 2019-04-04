@@ -18,6 +18,21 @@ import java.util.List;
  * @author ktonder
  */
 public class BookingItemType extends DataCommon {
+
+    public String getTranslatedName(String language) {
+        String desc = getTranslationsByKey("name", language);
+        if(desc == null || desc.isEmpty()) { desc = name; }
+        if(nameTranslations.containsKey(language)) { desc = nameTranslations.get(language); }
+        return desc;
+    }
+
+    public String getTranslatedDescription(String language) {
+        String desc = getTranslationsByKey("description", language);
+        if(desc == null || desc.isEmpty()) { desc = description; }
+        if(descriptionTranslations.containsKey(language)) { desc = descriptionTranslations.get(language); }
+        return desc;
+    }
+    
     public static class BookingItemAddonTypes {
         public static Integer NONE = 0;
         public static Integer ONETIME = 1;
@@ -48,6 +63,8 @@ public class BookingItemType extends DataCommon {
     public Integer order = 0;
     @Translation
     public String description = "";
+    public HashMap<String, String> descriptionTranslations = new HashMap();
+    public HashMap<String, String> nameTranslations = new HashMap();
     public String group = "";
     public Integer capacity = 0;
     public Integer minStay = 0;

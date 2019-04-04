@@ -85,6 +85,7 @@ if ($tab->name) {
 
 <div class='header2'> 
     <? echo $this->__f("Added to tab"); ?>
+    <i class="fa fa-forward" style='float:right; cursor:pointer;' onclick="window.open('/posviewer.php');"></i>
 </div>
 <?
 $cartItems = $tab->cartItems;
@@ -178,5 +179,4 @@ foreach ($cartItems as $item) {
         <?
     }
     ?>
-    
 </div>

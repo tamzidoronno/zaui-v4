@@ -250,7 +250,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<String> credittedOrders = new ArrayList();
         credittedOrders.add(credited.id);
-        addOrdersToBookings(credittedOrders);
+        try {
+            addOrdersToBookings(credittedOrders);
+        }catch(GetShopBeanException ex) {
+            logPrintException(ex);
+        }
         
         return credited;
     }

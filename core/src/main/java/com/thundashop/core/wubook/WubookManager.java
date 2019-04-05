@@ -404,6 +404,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 WubookBooking wubooking = buildBookingResult(reservation);
+                logText("Adding reservation: " + wubooking.reservationCode);
                 if(wubooking.status == 5) {
                     if(wubooking.wasModified > 0) {
                         //This is a modified reservation. its not a new booking.

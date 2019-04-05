@@ -34,14 +34,8 @@ public class WubookThreadRipper extends Thread {
     
     @Override
     public void run() {
-        try {
-            if(type == 1) { fetchNewBookings(); }
-            if(type == 2) { updateShortAvailability(); }
-        } catch (XmlRpcException ex) {
-            manager.logPrintException(ex);
-        } catch (IOException ex) {
-            manager.logPrintException(ex);
-        }
+        if(type == 1) { fetchNewBookings(); }
+        if(type == 2) { updateShortAvailability(); }
     }
     
     
@@ -67,36 +61,41 @@ public class WubookThreadRipper extends Thread {
         return null;
     }
     
-    public void fetchNewBookings() throws XmlRpcException, IOException {
+    public void fetchNewBookings() {
         if(manager.fetchBookingThreadIsRunning) {
             return;
         }
         manager.fetchBookingThreadIsRunning = true;
-        markBookingsFetched();
-        manager.bookingsToAdd = null;
-        
-        Vector params = new Vector();
-        params.addElement(token);
-        params.addElement(lcode);
-        params.addElement(1);
-        if(storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
-            params.addElement(0);
-        } else {
+        try {
+            markBookingsFetched();
+            manager.bookingsToAdd = null;
+
+            Vector params = new Vector();
+            params.addElement(token);
+            params.addElement(lcode);
             params.addElement(1);
-        }
-        
-        Vector result = executeClient("fetch_new_bookings", params);
-        if(result == null) {
-            return;
-        }
-        
-        if (!result.get(0).equals(0)) {
-            manager.logText("0:" + result.get(0));
-            manager.logText("1:" + result.get(1));
-        } else {
-            manager.bookingsToAdd = (Vector) result.get(1);
+            if(storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
+                params.addElement(0);
+            } else {
+                params.addElement(1);
+            }
+
+            Vector result = executeClient("fetch_new_bookings", params);
+            if(result == null) {
+                return;
+            }
+
+            if (!result.get(0).equals(0)) {
+                manager.logText("0:" + result.get(0));
+                manager.logText("1:" + result.get(1));
+            } else {
+                manager.bookingsToAdd = (Vector) result.get(1);
+            }
+        }catch(Exception d) {
+            manager.logPrintException(d);
         }
         manager.fetchBookingThreadIsRunning = false;
+        
     }
 
     private void updateShortAvailability() {

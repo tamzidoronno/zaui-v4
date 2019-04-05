@@ -386,11 +386,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(disableWubook != null) {
             long diff = new Date().getTime() - disableWubook.getTime();
             if(diff < (60*60*1000)) {
-                logText("Fetch new booking disabled from : " + disableWubook.getTime());
+                logText("Fetch new booking disabled from : " + disableWubook);
                 return new ArrayList();
             }
         }
-        
+        connectToApi();
         PmsConfiguration config = pmsManager.getConfigurationSecure();
         if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
             return new ArrayList();

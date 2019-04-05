@@ -64,6 +64,7 @@ public class WubookThreadRipper extends Thread {
     
     public void fetchNewBookings() {
         if(manager.fetchBookingThreadIsRunning) {
+            manager.logText("A thread already running for fetchnewbooking");
             return;
         }
         manager.fetchBookingThreadIsRunning = true;
@@ -93,6 +94,7 @@ public class WubookThreadRipper extends Thread {
                 manager.bookingsToAdd = (Vector) result.get(1);
             }
         }catch(Exception d) {
+            manager.logText("Failed in fetch new booking " + d.getMessage());
             manager.logPrintException(d);
         }
         manager.fetchBookingThreadIsRunning = false;

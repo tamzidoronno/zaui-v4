@@ -57,6 +57,7 @@ public class WubookThreadRipper extends Thread {
         }catch(Exception d) {
             manager.logPrint("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
             manager.disableWubook = new Date();
+            d.printStackTrace();
         }
         return null;
     }
@@ -112,7 +113,8 @@ public class WubookThreadRipper extends Thread {
         
         Vector bookings = manager.bookingsToAdd;
         if(bookings.size() > 0) {
-            List<Integer> reservationCodes = new ArrayList();
+//            List<Integer> reservationCodes = new ArrayList();
+            Vector reservationCodes = new Vector(); 
             for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 Integer reservationCode = (Integer) reservation.get("reservation_code");
@@ -123,7 +125,8 @@ public class WubookThreadRipper extends Thread {
             params.addElement(token);
             params.addElement(lcode);
             params.addElement(reservationCodes);
-            executeClient("mark_bookings", params);       
+            Vector marked = executeClient("mark_bookings", params);       
+            System.out.println("Marked");
         }
 
     }

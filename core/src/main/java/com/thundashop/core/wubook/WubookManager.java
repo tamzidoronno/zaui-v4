@@ -104,7 +104,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private Date availabiltyyHasBeenChangedStart;
     private Date latestCheckForNewBookings = null;
     private boolean forceUpdate = false;
-    private Date disableWubook = null;
+    public Date disableWubook = null;
+    public Vector bookingsToAdd = null;
+    boolean fetchBookingThreadIsRunning = false;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -392,28 +394,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
             return new ArrayList();
         }
-        
-        if(config.wubookcallbackactivated && doNotCheckBookings()) {
-//            return new ArrayList();
-        }
-        
-        connectToApi();
-        Vector params = new Vector();
-        params.addElement(token);
-        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
-        params.addElement(1);
-        params.addElement(1);
-        
-        Vector result = executeClient("fetch_new_bookings", params);
-        if(result == null) {
-            return new ArrayList();
-        }
         List<WubookBooking> toReturn = new ArrayList();
-        if (!result.get(0).equals(0)) {
-            logText("0:" + result.get(0));
-            logText("1:" + result.get(1));
-        } else {
-            Vector bookings = (Vector) result.get(1);
+        if(bookingsToAdd != null) {
+            Vector bookings = bookingsToAdd;
+            if(bookings.size() > 0 && storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "New booking registered in wubook", null);
+            }
             for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 WubookBooking wubooking = buildBookingResult(reservation);
@@ -443,6 +429,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
         }
+        
+        WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
+        checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
+        checkNewBookingsThread.setStoreId(storeId);
+        checkNewBookingsThread.start();
         
         return toReturn;
     }
@@ -2031,7 +2022,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             disableWubook = new Date();
         }
         return null;
-}
+    }
 
     private Double getMinStay(Date time, String bookingEngineTypeId) {
         List<TimeRepeaterData> minstayours = bookingEngine.getOpeningHoursWithType(bookingEngineTypeId, TimeRepeaterData.TimePeriodeType.min_stay);

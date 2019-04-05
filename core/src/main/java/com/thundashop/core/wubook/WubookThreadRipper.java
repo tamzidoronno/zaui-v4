@@ -55,7 +55,7 @@ public class WubookThreadRipper extends Thread {
             Vector res = (Vector) client.execute(apicall, params);
             return res;
         }catch(Exception d) {
-            manager.logPrint("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+            manager.logText("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
             manager.disableWubook = new Date();
             d.printStackTrace();
         }

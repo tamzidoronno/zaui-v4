@@ -209,17 +209,15 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $languages = $this->getFactory()->getLanguageCodes();
         $languages[] = $this->getFactory()->getCurrentLanguage();
         $current = $this->getFactory()->getCurrentLanguage();
-        
         $type->size = $_POST['data']['size'];
         $type->name = $_POST['data'][$current.'_name'];
         $type->description = $_POST['data'][$current.'_description'];
         $type->systemCategory = $_POST['data']['systemCategory'];
         
         foreach($languages as $key) {
-            $type->translationStrings->{$key. "_name"} = json_encode($_POST['data'][$key.'_name']);
-            $type->translationStrings->{$key. "_description"} = json_encode($_POST['data'][$key.'_description']);
+            $type->nameTranslations->{$key} = $_POST['data'][$key.'_name'];
+            $type->descriptionTranslations->{$key} = $_POST['data'][$key.'_description'];
         }
-        
         
         $additional->numberOfChildren = $_POST['data']['numberOfChildren'];
         $additional->numberOfAdults = $_POST['data']['numberOfAdults'];

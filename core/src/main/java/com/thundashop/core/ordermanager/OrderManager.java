@@ -250,7 +250,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<String> credittedOrders = new ArrayList();
         credittedOrders.add(credited.id);
-        addOrdersToBookings(credittedOrders);
+        try {
+            addOrdersToBookings(credittedOrders);
+        }catch(GetShopBeanException ex) {
+            logPrintException(ex);
+        }
         
         return credited;
     }
@@ -3633,7 +3637,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
      * @param id
      * @return 
      */
-    public List<Order> getMainInvoices(String id) {
+    public List<Order> getMainInvoices(String id) { 
         Order order = getOrder(id);
         
         if (order == null) {
@@ -3645,7 +3649,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> o.createdBasedOnOrderIds.contains(id) && !o.isCreditNote)
                 .collect(Collectors.toList());
     }
-
+    
     @Override
     public void readdTaxGroupToNullItems(String password) {
         if(!password.equals("!gfdsgdsf456&%__")) {

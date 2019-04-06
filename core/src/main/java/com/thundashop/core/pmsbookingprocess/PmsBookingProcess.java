@@ -155,14 +155,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 continue;
             }
             BookingProcessRooms room = new BookingProcessRooms();
-            room.description = type.description;
             room.userId = booking.userId;
-            String translatedName = type.getTranslationsByKey("description", getSession().language);
-            if(translatedName != null && !translatedName.isEmpty()) {
-                room.description = translatedName;
-            }
-
-            
+            room.description = type.getTranslatedDescription(getSession().language);
             room.availableRooms = pmsManager.getNumberOfAvailable(type.id, arg.start, arg.end, true, true);
             room.id = type.id;
             room.systemCategory = type.systemCategory;
@@ -171,11 +165,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             try {
                 PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
                 room.images.addAll(typeInfo.images);
-                room.name = type.name;
-                translatedName = type.getTranslationsByKey("name", getSession().language);
-                if(translatedName != null && !translatedName.isEmpty()) {
-                    room.name = translatedName;
-                }
+                room.name = type.getTranslatedName(getSession().language);
                 room.maxGuests = type.size;
                 
                 for(int i = 1; i <= type.size;i++) {

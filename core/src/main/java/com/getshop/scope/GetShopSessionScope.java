@@ -5,6 +5,7 @@
 package com.getshop.scope;
 
 import com.thundashop.core.common.AppContext;
+import com.thundashop.core.common.GetShopBeanException;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Session;
@@ -50,7 +51,7 @@ public class GetShopSessionScope implements Scope {
         String oldMultiLevelName = threadSessionBeanNames.get(threadId);
         
         if (oldMultiLevelName != null && !oldMultiLevelName.isEmpty() && !oldMultiLevelName.equals(multiLevelName) && originalSessionBeanName.get(threadId) != null) {
-            throw new RuntimeException("Its not possible to get multilevel names beans when you are already executing from one");
+            throw new GetShopBeanException("Its not possible to get multilevel names beans when you are already executing from one");
         }
         
         threadSessionBeanNames.put(threadId, multiLevelName);

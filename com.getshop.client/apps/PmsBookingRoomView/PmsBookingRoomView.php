@@ -2104,6 +2104,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         $allowedStores = array();
         $allowedStores[] = "93fadf31-1039-4196-9e4f-77c3be0ef8d1";
+        $allowedStores[] = "b6949f70-5e41-4c5e-abcf-d595450f8048";
         return in_array($this->getFactory()->getStore()->id, $allowedStores);
     }
 

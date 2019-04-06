@@ -67,8 +67,10 @@ $colors["Janitor"] = "green";
         </div>
     </div>
     <script>
-        app.PmsChartOverview.loadview('<?php echo $field; ?>');
-        viewloaded = {};
+        setTimeout(function() {
+            app.PmsChartOverview.loadview('<?php echo $field; ?>');
+            viewloaded = {};
+        }, 4000);
     </script>
 <?php } ?>
 </div>

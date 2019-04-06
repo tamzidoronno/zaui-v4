@@ -1,0 +1,78 @@
+<?php
+/* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$conferenceId = $this->getSelectedConference();
+$conference = $this->getApi()->getPmsConferenceManager()->getConference($conferenceId);
+$conferenceuser = $this->getApi()->getUserManager()->getUserById($conference->forUser);
+$events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEvents($conferenceId);
+$allItems = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+$allItems = $this->indexList($allItems);
+$today = date("d.m.Y");
+?>
+
+<div>
+    <b>Conference details</b>
+    <i class='fa fa-close' style='cursor:pointer; float:right;' onclick='window.location.reload();'></i>
+    <table width='100%'>
+        <tr>
+            <td valign='top' width='50%'>
+                <div>Customer : <?php echo $conferenceuser->fullName ?></div>
+                <div style='margin-bottom: 5px;' gstype='form' method='updateConferenceTitle' gstoarea='.fdsafsa'>
+                    <input type='text' class='gsniceinput1' value='<?php echo $conference->meetingTitle;?>' gsname='value'>
+                    <span class='shop_button' style='width:170px;' gstype='submit'>Change meeting title</span>
+                </div>
+                <div style='margin-bottom: 5px;' gstype='form' method='updateConferenceSource' gstoarea='.fdsafsa'>
+                    <input type='text' class='gsniceinput1' value='<?php echo $conference->source;?>' gsname='value'>
+                    <span class='shop_button' style='width:170px;' gstype='submit'>Update source</span>
+                </div>
+                <div style='margin-bottom: 5px;' gstype='form' method='updateConferenceContact' gstoarea='.fdsafsa'>
+                    <input type='text' class='gsniceinput1' value='<?php echo $conference->contact;?>' gsname='value'>
+                    <span class='shop_button' style='width:170px;' gstype='submit'>Update contact</span>
+                </div>
+            </td>
+            <td valign='top' width='50%'>
+                <span class='shop_button' onclick='alert("Not implemented yet.")'>Report</span>
+                <span class='shop_button' onclick='$(".addEventPanel").css("display", "inline-block");'>Add event</span>
+                <span class='shop_button' style='float:right;' gsclick='deleteCurrentConference' gs_confirm='Are you sure?'>Delete conference</span>
+                
+                <div gstype='form' method='updateMemo' gstoarea='.1231' synchron='true'>
+                    <textarea style='margin-top: 5px; margin-bottom: 10px; width:100%;height: 100px;' gsname='memo'><?php echo $conference->memo; ?></textarea>
+                    <div style='text-align: right;'>
+                        <span class='shop_button' gstype='submit'>Update memo</span>
+                    </div>
+                </div>
+                
+                
+                <span class='addEventPanel' gstype='form'
+                      method='addEvent' synchron='true' gstoarea='.eventsarea'
+                      style='width:255px; display:inline-block; border: solid 1px; top:0px; background-color:#fff; margin: 10px; padding: 10px; box-sizing: border-box;display:none;position:Absolute;z-index:2;'>
+                    <div>
+                        <input type='text' class='gsniceinput1 startdate' value='<?php echo $today; ?>' style='width:80px; text-align: center' gsname='date'>
+                        <input type='text' class='gsniceinput1' value='12:00' style='width:40px; text-align: center' gsname='starttime'>
+                        <input type='text' class='gsniceinput1' value='13:00' style='width:40px; text-align: center' gsname='endtime'>
+                        <select class='gsniceselect1' style='width:100%; margin-top: 5px;margin-bottom: 5px;' gsname='itemid'>
+                            <?
+                            foreach($allItems as $itm) {
+                                $text = $itm->name;
+                                if($itm->toItemId) {
+                                    $text .= " (" . $allItems[$itm->toItemId]->name . ")";
+                                }
+                                echo "<option value='".$itm->id."'>" . $text . "</option>";
+                            }
+                            ?>
+                        </select>
+                        <span class='shop_button' style='width:100%; box-sizing: border-box;' gstype='submit'>Add event</span>
+                    </div>
+                </span>
+                
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    <br>
+    <div class='eventsarea'><?php $this->includefile("eventsaddedtoconference"); ?>
+    </div>
+</div>
+
+<script>
+    $('.startdate').datepicker({ dateFormat: "dd.mm.yy",firstDay: 1});
+</script>

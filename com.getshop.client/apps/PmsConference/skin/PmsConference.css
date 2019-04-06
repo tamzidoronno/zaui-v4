@@ -1,0 +1,27 @@
+.PmsConference .conferencesystem { font-size: 14px;}
+.PmsConference .dayentryheader { display: inline-block;height: 20px; width: 46px; padding:2px;text-align: center; border: solid 1px #efefef; background-color:#fff;}
+.PmsConference .dayentrymonthheader { display: inline-block;height: 20px; width: 22px; padding:2px;text-align: center;}
+.PmsConference .conferencetimelines { border-bottom: solid 1px #efefef;display:inline-block; }
+.PmsConference .itemname,
+.PmsConference .dayentry { display:inline-block;  font-size: 14px; border: solid 1px #efefef; background-color:#fff; border-bottom: solid 0px; height: 20px; width: 20px; padding:2px; text-align: center; cursor:pointer;}
+.PmsConference .emptyitemname { width: 202px; display:inline-block;  float:left; text-align: left; padding : 2px; }
+.PmsConference .itemname { width: 200px; float:left; text-align: left; }
+.PmsConference .edititembox { position: absolute; width: 500px; background-color: #fff; border: solid 1px #bbb; padding: 10px; display:none;}
+.PmsConference .itemname .fa-edit { display:none; }
+.PmsConference .itemname:hover .fa-edit { display:inline-block; }
+.PmsConference .conferencesystem { max-width: 1600px; margin: auto; overflow: auto; }
+.PmsConference .conferenceoverview { border: solid 1px #bbb; background-color:#fff; padding: 10px; width: 800px; display:inline-block; display:none; position:absolute; top: 150px;}
+.PmsConference .addconferencepanel { border: solid 1px #bbb; display:inline-block; background-color:#fff; position:absolute; padding: 10px; display:none; right:0px; }
+.PmsConference .GetShopQuickUser .booked_for,
+.PmsConference .edit_user_btn { display:none; }
+.PmsConference .GetShopQuickUser .change_user_form, .PmsConference .GetShopQuickUser .edit_details_of_user,
+.PmsConference .GetShopQuickUser .change_user_form, .PmsConference .GetShopQuickUser .edit_details_of_user { position: initial;box-shadow:none; }
+.PmsConference .loadcalendar {
+    position: absolute;
+    background-color: #fff;
+    border: solid 1px #bbb;
+    padding: 10px;
+}
+.PmsConference .loadcalendar input { width: 90px; }
+.PmsConference .header { margin-top: 0px; margin-bottom: 20px; text-align: right; }
+.PmsConference .openconference { color: blue; cursor: pointer; }

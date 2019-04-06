@@ -398,7 +398,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         List<WubookBooking> toReturn = new ArrayList();
         if(bookingsToAdd != null) {
             Vector bookings = bookingsToAdd;
-            messageManager.sendErrorNotificationToEmail("pal@getshop.com", "New booking registered in wubook", null);
+            if(bookings.size() > 0) {
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "New booking registered in wubook", null);
+            }
             for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 WubookBooking wubooking = buildBookingResult(reservation);

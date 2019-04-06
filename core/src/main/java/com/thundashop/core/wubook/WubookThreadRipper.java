@@ -76,11 +76,7 @@ public class WubookThreadRipper extends Thread {
             params.addElement(token);
             params.addElement(lcode);
             params.addElement(1);
-            if(storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
-                params.addElement(0);
-            } else {
-                params.addElement(1);
-            }
+            params.addElement(0);
 
             Vector result = executeClient("fetch_new_bookings", params);
             if(result == null) {
@@ -107,9 +103,6 @@ public class WubookThreadRipper extends Thread {
 
     private void markBookingsFetched() throws XmlRpcException, IOException {
         if(manager.bookingsToAdd== null) {
-            return;
-        }
-        if(!storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
             return;
         }
         

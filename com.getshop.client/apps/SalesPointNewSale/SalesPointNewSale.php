@@ -109,7 +109,6 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     public function addProductToCurrentTab() {
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
-        
         if (is_array($product->extras) && count($product->extras) && !isset($_POST['data']['extras'])) {
             echo "productconfig";
             die();

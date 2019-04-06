@@ -263,6 +263,7 @@ app.SalesPointNewSale = {
         var me = this;
         
         thundashop.Ajax.post(event, function(res) {
+            res = res.trim();
             if (res === "multitaxessupport") {
                 app.SalesPointNewSale.showMultiTaxesSelection(me, data, "showMultiTaxes");
             } else if( res === "productconfig") {

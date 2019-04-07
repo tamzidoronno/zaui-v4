@@ -20,4 +20,14 @@ public class PmsConferenceEvent extends DataCommon {
     public Date to = null;
     public String userId = "";
     public Integer status = 0;
+
+    boolean betweenTime(Date start, Date end) {
+        if(from.after(start) && from.before(end)) {
+            return true;
+        }
+        if(to.after(start) && to.before(end)) {
+            return true;
+        }
+        return false;
+    }
 }

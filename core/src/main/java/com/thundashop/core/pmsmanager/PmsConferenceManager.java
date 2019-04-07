@@ -6,6 +6,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     HashMap<String, PmsConferenceItem> items = new HashMap();
     HashMap<String, PmsConference> conferences = new HashMap();
     HashMap<String, PmsConferenceEvent> conferenceEvents = new HashMap();
+    HashMap<String, PmsConferenceEventEntry> conferenceEventEntries = new HashMap();
 
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -33,7 +35,13 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         } else {
             for(PmsConferenceItem item : items.values()) {
                 if(item.toItemId.equals(toItem)) {
-                    item.hasSubItems = getAllItem(item.id).size() > 0;
+                    List<PmsConferenceItem> subitems = getAllItem(item.id);
+                    item.hasSubItems =  subitems.size() > 0;
+                    if(item.hasSubItems) {
+                        for(PmsConferenceItem tmp : subitems) {
+                            item.subItems.add(tmp.id);
+                        }
+                    }
                     result.add(item);
                 }
             }
@@ -98,8 +106,11 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         PmsConferenceEvent conferenceevent = conferenceEvents.get(id);
         deleteObject(conferenceevent);
         conferenceEvents.remove(id);
+        HashMap<String, PmsConferenceEventEntry> eventlog = new HashMap(conferenceEventEntries);
         
-        throw new RuntimeException("Please don't forget to delete all event entries as well");
+        for(PmsConferenceEventEntry evntlog : eventlog.values()) {
+            deleteEventEntry(evntlog.id);
+        }
     }
 
     @Override
@@ -126,6 +137,46 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     @Override
     public PmsConferenceEvent getConferenceEvent(String eventId) {
         return conferenceEvents.get(eventId);
+    }
+
+    @Override
+    public List<PmsConferenceEventEntry> getEventEntries(String eventId) {
+        List<PmsConferenceEventEntry> result = new ArrayList();
+        for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
+            if(entry.pmsEventId.equals(eventId)) {
+                result.add(entry);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void deleteEventEntry(String eventEntryId) {
+        PmsConferenceEventEntry event = getEventEntry(eventEntryId);
+        deleteObject(event);
+        conferenceEventEntries.remove(event.id);
+    }
+
+    @Override
+    public PmsConferenceEventEntry getEventEntry(String eventEntryId) {
+        return conferenceEventEntries.get(eventEntryId);
+    }
+
+    @Override
+    public void saveEventEntry(PmsConferenceEventEntry entry) {
+        saveObject(entry);
+        conferenceEventEntries.put(entry.id, entry);
+    }
+
+    @Override
+    public List<PmsConferenceEvent> getConferenceEventsBetweenTime(Date start, Date end) {
+        List<PmsConferenceEvent> result = new ArrayList();
+        for(PmsConferenceEvent evnt : conferenceEvents.values()) {
+            if(evnt.betweenTime(start, end)) {
+                result.add(evnt);
+            }
+        }
+        return result;
     }
     
 }

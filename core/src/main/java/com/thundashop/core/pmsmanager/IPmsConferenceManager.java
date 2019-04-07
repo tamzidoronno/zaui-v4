@@ -6,6 +6,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ public interface IPmsConferenceManager {
     public PmsConferenceItem saveItem(PmsConferenceItem item);
     public PmsConferenceItem getItem(String id);
     
+    
     public PmsConference saveConference(PmsConference conference);
     public PmsConference getConference(String conferenceId);
     public void deleteConference(String conferenceId);
@@ -28,6 +30,11 @@ public interface IPmsConferenceManager {
     public void saveConferenceEvent(PmsConferenceEvent event);
     public void deleteConferenceEvent(String id);
     public List<PmsConferenceEvent> getConferenceEvents(String confernceId);
+    public List<PmsConferenceEvent> getConferenceEventsBetweenTime(Date start, Date end);
     public PmsConferenceEvent getConferenceEvent(String eventId);
     
+    public List<PmsConferenceEventEntry> getEventEntries(String eventId);
+    public void deleteEventEntry(String eventEntryId);
+    public PmsConferenceEventEntry getEventEntry(String eventEntryId);
+    public void saveEventEntry(PmsConferenceEventEntry entry);
 }

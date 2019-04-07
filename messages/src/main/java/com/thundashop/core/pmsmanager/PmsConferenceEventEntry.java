@@ -5,13 +5,14 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.common.DataCommon;
 import java.util.Date;
 
 /**
  *
  * @author boggi
  */
-public class PmsEventEntry {
+public class PmsConferenceEventEntry extends DataCommon {
     public Date from;
     public Date to;
     public String text;

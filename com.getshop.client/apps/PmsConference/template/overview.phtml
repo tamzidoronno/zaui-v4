@@ -3,7 +3,6 @@
 /* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
 $subitem = $this->getCurrentSubitem();
 $entries = (array)$this->getApi()->getPmsConferenceManager()->getAllItem($subitem);
-
 if(sizeof($entries) == 0) {
     $this->includefile("noentriescreatedyet");
 } else {
@@ -20,15 +19,15 @@ if(sizeof($entries) == 0) {
         $view = "month";
     }
     
+    $events = $this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($this->convertToJavaDate($fromTime), $this->convertToJavaDate($toTime));
+    $eventsByItem = $this->convertEventsByItem($events);
     ?>
-<span class='loadcalendar' gstype='form' method='updateDateRange' style='display:none;'>
-    <input type='text' class='gsniceinput1 calendarstartdate' value='<?php echo $from; ?>' gsname='start'>
-    <input type='text' class='gsniceinput1 calendarenddate' value='<?php echo $end; ?>' gsname='end'>
-    <span class='shop_button' gstype='submit'>Update date range</span>
-</span>
-
+    <span class='loadcalendar' gstype='form' method='updateDateRange' style='display:none;'>
+        <input type='text' class='gsniceinput1 calendarstartdate' value='<?php echo $from; ?>' gsname='start'>
+        <input type='text' class='gsniceinput1 calendarenddate' value='<?php echo $end; ?>' gsname='end'>
+        <span class='shop_button' gstype='submit'>Update date range</span>
+    </span>
     <?php
-    
     echo "<div class='conferencetimelines'>";
     
     echo "<div>";
@@ -77,14 +76,27 @@ if(sizeof($entries) == 0) {
                 <?php if ($entry->hasSubItems) { echo " <i class='fa fa-circle' style='color:blue;float:right;' gsclick='loadSubitems' itemid='".$entry->id."'></i>"; } ?>
             </span>
             <?php
+            $entryids = $entry->subItems;
+            $entryids[] = $entry->id;
+            
             if($view == "month") {
                 for($i = $fromTime; $i <= $toTime; $i = $i +(60*60*24)) {
-                    echo "<span class='dayentry'></span>";
+                    
+                    $hasEventId = $this->hasEventOnTime($i,$i +(60*60*24), $eventsByItem, $entryids);
+                    $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
+                    $confid = $hasEventId['id'];
+                    echo "<span class='dayentry $hasEvent'conferenceid='$confid' ".$hasEventId['check']."></span>";
                 }
             } else {
                 for($i = $fromTime; $i < $toTime; $i = $i +(60*60)) {
-                    echo "<span class='dayentry'></span>";
-                    echo "<span class='dayentry'></span>";
+                    $hasEventId = $this->hasEventOnTime($i,$i +(60*30), $eventsByItem, $entryids);
+                    $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
+                    $confid = $hasEventId['id'];
+                    echo "<span class='dayentry $hasEvent' conferenceid='$confid' ".$hasEventId['check']."></span>";
+                    $hasEventId = $this->hasEventOnTime($i +(60*30),$i +(60*60), $eventsByItem, $entryids);
+                    $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
+                    $confid = $hasEventId['id'];
+                    echo "<span class='dayentry $hasEvent' conferenceid='$confid' ".$hasEventId['check']."></span>";
                 }
             }
             ?>

@@ -233,5 +233,54 @@ class PmsConference extends \WebshopApplication implements \Application {
         $conference = $this->getApi()->getPmsConferenceManager()->saveEventEntry($evententry);
     }
 
+    /**
+     * @param \core_pmsmanager_PmsConferenceEvent $events
+     */
+    public function convertEventsByItem($events) {
+        $result = array();
+        foreach($events as $evnt) {
+            if(!isset($result[$evnt->pmsConferenceItemId])) {
+                $result[$evnt->pmsConferenceItemId] = array();
+            }
+            $evnt->fromLong = strtotime($evnt->from);
+            $evnt->toLong = strtotime($evnt->to);
+            $result[$evnt->pmsConferenceItemId][] = $evnt;
+        }
+        return $result;
+    }
+
+    public function hasEventOnTime($start, $end, $events, $itemIds) {
+        $result = array();
+        $result['id'] = "";
+        $result['state'] = "";
+        $result['check'] = "";
+        
+        foreach($itemIds as $itemId) {
+            if(isset($events[$itemId])) {
+                foreach($events[$itemId] as $check) {
+                    $result['id'] = $check->pmsConferenceId;
+                    /* @var $check \core_pmsmanager_PmsConferenceEvent */
+                    $result['check'] = "start='$start' end='$end' fromLong='".$check->fromLong."' toLong='".$check->toLong."' starttime='".date("H:i", $start)."' endtime='".date("H:i", $end)."'";
+                    if($check->fromLong < $start && $check->toLong > $end) {
+                        $result['state'] = "middle";
+                        return $result;
+                    }
+                    if($check->toLong > $start && $check->toLong <= $end && $check->fromLong >= $start && $check->fromLong < $end) {
+                        $result['state'] = "both";
+                        return $result;
+                    }
+                    if($check->toLong > $start && $check->toLong <= $end) {
+                        $result['state'] = "end";
+                        return $result;
+                    }
+                    if($check->fromLong >= $start && $check->fromLong < $end) {
+                        $result['state'] = "start";
+                        return $result;
+                    }
+                }
+            }
+        }
+        return $result;
+    }
 }
 ?>

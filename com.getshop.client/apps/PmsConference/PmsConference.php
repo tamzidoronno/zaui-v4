@@ -10,6 +10,12 @@ class PmsConference extends \WebshopApplication implements \Application {
         return "PmsConference";
     }
     
+    public function deleteEventEntry() {
+        $id = $_POST['data']['entryid'];
+        $this->getApi()->getPmsConferenceManager()->deleteEventEntry($id);
+        echo $id;
+    }
+    
     public function loadSubitems() {
         $_SESSION['pmsconferencecurrentitem'] = $_POST['data']['itemid'];
     }
@@ -25,12 +31,32 @@ class PmsConference extends \WebshopApplication implements \Application {
         $this->includefile("edititem");
     }
 
-    public function displayconference() {
+    public function openConference() {
         $this->includefile("conferenceoverview");
+    }
+    
+    public function createEventEntry() {
+        $event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($this->getCurrentEvent());
+        $evententry = new \core_pmsmanager_PmsConferenceEventEntry();
+        $this->saveEventEntry($evententry, $event);
+        $this->includefile("evententries");
+    }
+    
+    public function updateEventEntry() {
+        $evententry = $this->getApi()->getPmsConferenceManager()->getEventEntry($_POST['data']['eventid']);
+        $event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($evententry->pmsEventId);
+        $this->saveEventEntry($evententry, $event);
+        $this->includefile("evententries");
+    }
+    
+    public function openEvent() {
+        $this->setCurrentEvent($_POST['data']['eventid']);
+        $this->includefile("eventoverview");
     }
     
     public function render() {
         echo "<div class='conferenceoverview'></div>";
+        echo "<div class='eventoverview'></div>";
         echo "<div class='conferencesystem'>";
         $this->includefile("header");
         $this->includefile("overview");
@@ -179,8 +205,33 @@ class PmsConference extends \WebshopApplication implements \Application {
     public function setCurrentConference($id) {
         $_SESSION['pmscurrentconference'] = $id;
     }
+
+    public function getCurrentEvent() {
+        if(isset($_SESSION['pmsconferencepmseventid'])) {
+            return $_SESSION['pmsconferencepmseventid'];
+        }
+        return "";
+    }
     
-    
+    public function setCurrentEvent($eventid) {
+        $_SESSION['pmsconferencepmseventid'] = $eventid;
+    }
+
+    public function saveEventEntry($evententry, $event) {
+        $evententry->text = $_POST['data']['text'];
+        $evententry->from=null;
+        $evententry->pmsEventId = $event->id;
+        if($_POST['data']['starttime']) {
+            $evententry->from = $this->convertToJavaDate(strtotime(date("d.m.Y", strtotime($event->from)) . " " . $_POST['data']['starttime']));
+        }
+        $evententry->to=null;
+        if($_POST['data']['endtime']) {
+            $evententry->to = $this->convertToJavaDate(strtotime(date("d.m.Y", strtotime($event->from)) . " " . $_POST['data']['endtime']));
+        }
+        $evententry->count = $_POST['data']['count'];
+        $evententry->extendedText = $_POST['data']['extendedText'];
+        $conference = $this->getApi()->getPmsConferenceManager()->saveEventEntry($evententry);
+    }
 
 }
 ?>

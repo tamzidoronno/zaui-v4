@@ -3,7 +3,7 @@ $currentConference = $this->getSelectedConference();
 if($currentConference) {
     $conference = $this->getApi()->getPmsConferenceManager()->getConference($currentConference);
     echo "You are currently operating under: " . $conference->meetingTitle . ", ";
-    echo "<span onclick='$(\".PmsConference .conferenceoverview\").show();' class='openconference' gstype='clicksubmit' method='displayconference' gssilent='true' gsname='id' gsvalue='".$currentConference."' synchron='true' gstoarea='.conferenceoverview'>open</span>.";
+    echo "<span onclick='$(\".PmsConference .conferenceoverview\").show();' class='openconference' conferenceid='".$currentConference."'>open</span>.";
 }
 ?>
 <div class='header'>

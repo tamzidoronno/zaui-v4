@@ -25,6 +25,7 @@ public interface IPmsConferenceManager {
     
     public PmsConference saveConference(PmsConference conference);
     public PmsConference getConference(String conferenceId);
+    public List<PmsConference> getAllConferences(PmsConferenceFilter filter);
     public void deleteConference(String conferenceId);
     
     public void saveConferenceEvent(PmsConferenceEvent event);

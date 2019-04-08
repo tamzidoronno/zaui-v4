@@ -27,25 +27,48 @@ if(sizeof($entries) == 0) {
         <input type='text' class='gsniceinput1 calendarenddate' value='<?php echo $end; ?>' gsname='end'>
         <span class='shop_button' gstype='submit'>Update date range</span>
     </span>
+
+    <div class='addeventbox' gstype='form' method='quickAddEventToConference'>
+        <div style='text-align:right;cursor:pointer;padding: 5px;' onclick='$(".addeventbox").hide();'>
+            <i class='fa fa-close'></i>
+        </div>
+        <input type='text' class='gsniceinput1' gsname='date' style='width:100%;text-align: center;box-sizing: border-box;' gstype='submitenter'><br>
+        <input type='text' class='gsniceinput1' gsname='starttime' style='width:40px;text-align: center;' gstype='submitenter'>
+        <input type='text' class='gsniceinput1' gsname='endtime' style='width:40px;text-align: center;float:right;' gstype='submitenter'><bR>
+        <select class='gsniceselect1' style='width:100%;' gsname='itemid'>
+            <?php
+            foreach($entries as $entr) {
+                echo "<option value='" . $entr->id . "'>" . $entr->name . "</option>";
+            }
+            ?>
+        </select>
+        <span class='shop_button' style='width:100%;box-sizing: border-box;margin-top:5px;' gstype='submit'>Create event</span>
+    </div>
     <?php
     echo "<div class='conferencetimelines'>";
     
     echo "<div>";
-     if($view != "month") {
-        echo "<span class='emptyitemname'>&nbsp;</span>";
-   
+    echo "<span class='emptyitemname'>";
+    echo "<select style='width:100%;' class='choosemonthdropdown'>";
+    $time = time();
+    echo "<option>Choose a month</option>";
+    for($i = 0; $i < 24; $i++) {
+        echo "<option value='$time'>".date("Y F", $time)."</option>";
+        $time = strtotime(date("Y-m-d", $time) . " +1 month");
+    }
+    echo "</select>";
+    echo "</span>";
+    if($view != "month") {
         for($i = $fromTime; $i < $toTime; $i = $i +(60*60)) {
             echo "<span class='dayentryheader'>" . date("H", $i) . "</span>";
         }
     } else {
-        echo "<span class='emptyitemname'>&nbsp;</span>";
-   
         for($i = $fromTime; $i <= $toTime; $i = $i +(60*60*24)) {
             $text = "";
             if(date("d", $i) == 1) {
-                $text = date("F", $i);
+                $text = date("F Y", $i);
             }
-            echo "<span class='dayentrymonthheader'>$text</span>";
+            echo "<span class='dayentrymonthheader'><span style='position:absolute;'>$text</span></span>";
         }
     }
     echo "</div>";
@@ -81,22 +104,28 @@ if(sizeof($entries) == 0) {
             
             if($view == "month") {
                 for($i = $fromTime; $i <= $toTime; $i = $i +(60*60*24)) {
-                    
+                    $from = date("h:i", $i); $to = date("h:i", $i +(60*60*24));
+                    $day = date("d.m.Y", $i);
                     $hasEventId = $this->hasEventOnTime($i,$i +(60*60*24), $eventsByItem, $entryids);
                     $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
                     $confid = $hasEventId['id'];
-                    echo "<span class='dayentry $hasEvent'conferenceid='$confid' ".$hasEventId['check']."></span>";
+                    if(!$hasEvent) { $hasEvent = "canaddevent"; }
+                    echo "<span class='dayentry $hasEvent'conferenceid='$confid' ".$hasEventId['check']." itemid='".$entry->id."' from='$from' to='$to' date='$day'>";
+                     if($hasEventId['state'] == "start" || $hasEventId['state'] == "both") { echo $text; } else { echo "&nbsp;"; }
+                   echo "</span>";
                 }
             } else {
-                for($i = $fromTime; $i < $toTime; $i = $i +(60*60)) {
+                for($i = $fromTime; $i < $toTime; $i = $i +(60*30)) {
+                    $from = date("h:i", $i); $to = date("h:i", $i+(60*30));
+                    $day = date("d.m.Y", $i);
                     $hasEventId = $this->hasEventOnTime($i,$i +(60*30), $eventsByItem, $entryids);
                     $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
                     $confid = $hasEventId['id'];
-                    echo "<span class='dayentry $hasEvent' conferenceid='$confid' ".$hasEventId['check']."></span>";
-                    $hasEventId = $this->hasEventOnTime($i +(60*30),$i +(60*60), $eventsByItem, $entryids);
-                    $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
-                    $confid = $hasEventId['id'];
-                    echo "<span class='dayentry $hasEvent' conferenceid='$confid' ".$hasEventId['check']."></span>";
+                    $text = substr($hasEventId['title'],0,3);
+                    if(!$hasEvent) { $hasEvent = "canaddevent"; }
+                    echo "<span class='dayentry $hasEvent' conferenceid='$confid' ".$hasEventId['check']." title='".$hasEventId['title']."' itemid='".$entry->id."' from='$from' to='$to' date='$day'>";
+                    if($hasEventId['state'] == "start" || $hasEventId['state'] == "both") { echo $text; } else { echo "&nbsp;"; }
+                    echo "</span>";
                 }
             }
             ?>

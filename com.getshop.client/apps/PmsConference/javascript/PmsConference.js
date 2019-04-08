@@ -4,10 +4,33 @@ app.PmsConference = {
         $(document).on('change','.PmsConference .updaterowselect', app.PmsConference.updateEventRow);
         $(document).on('click','.PmsConference .openevent', app.PmsConference.openEvent);
         $(document).on('click','.PmsConference .openconference', app.PmsConference.openConference);
+        $(document).on('click','.PmsConference .canaddevent', app.PmsConference.loadQuickAddToConference);
         $(document).on('keyup','.PmsConference .updatevententryrow', app.PmsConference.updateEventEntryRow);
+        $(document).on('change','.PmsConference .choosemonthdropdown', app.PmsConference.changeTimePeriode);
+    },
+    loadQuickAddToConference : function(e) {
+        var box = $('.PmsConference .addeventbox');
+        box.show();
+        box.css('left', e.clientX);
+        box.css('top', e.clientY);
+        box.find('[gsname="starttime"]').val($(this).attr('from'));
+        box.find('[gsname="endtime"]').val($(this).attr('to'));
+        box.find('[gsname="date"]').val($(this).attr('date'));
+        box.find('[gsname="itemid"]').val($(this).attr('itemid'));
+    },
+    changeTimePeriode : function() {
+        var event = thundashop.Ajax.createEvent('','changeToMonth',$(this), {
+            "time" : $(this).val()
+        });
+        thundashop.Ajax.post(event);
     },
     entryDeleted : function(id) {
         $('.evententryrow[entryid="'+id+'"]').remove();
+    },
+    allConferencesLoaded : function(res) {
+        var view = $('.conferencelist');
+        view.show();
+        view.html(res);
     },
     openEvent : function() {
         var eventid = $(this).attr('eventid');

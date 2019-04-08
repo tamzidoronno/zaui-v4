@@ -302,7 +302,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
         
         if (provider.equals("sveve")) {
-            handler = new SveveSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+            if(storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) { //Rena
+                handler = new TeleTopiaSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+            } else {
+                handler = new SveveSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+            }
         }
         
         if (provider.equals("nexmo")) {

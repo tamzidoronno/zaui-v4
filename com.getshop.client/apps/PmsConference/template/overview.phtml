@@ -19,7 +19,7 @@ if(sizeof($entries) == 0) {
         $view = "month";
     }
     
-    $events = $this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($this->convertToJavaDate($fromTime), $this->convertToJavaDate($toTime));
+    $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($this->convertToJavaDate($fromTime), $this->convertToJavaDate($toTime));
     $eventsByItem = $this->convertEventsByItem($events);
     ?>
     <span class='loadcalendar' gstype='form' method='updateDateRange' style='display:none;'>
@@ -58,7 +58,7 @@ if(sizeof($entries) == 0) {
    
     if($view == "month") {
         for($i = $fromTime; $i <= $toTime; $i = $i +(60*60*24)) {
-            echo "<span class='dayentry'>" . date("d", $i) ."</span>";
+            echo "<span class='dayentry loadday' gsclick='loadday' day='$i'>" . date("d", $i) ."</span>";
         }
     } else {
         for($i = $fromTime; $i < $toTime; $i = $i +(60*60)) {

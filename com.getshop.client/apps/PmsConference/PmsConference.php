@@ -35,6 +35,12 @@ class PmsConference extends \WebshopApplication implements \Application {
         $this->includefile("conferenceoverview");
     }
     
+    public function loadday() {
+        $day = $_POST['data']['day'];
+        $_SESSION['pmsconferencecurrentstart'] = date("d.m.Y", $day);
+        $_SESSION['pmsconferencecurrentend'] = date("d.m.Y", $day+(60*60*24));
+    }
+    
     public function createEventEntry() {
         $event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($this->getCurrentEvent());
         $evententry = new \core_pmsmanager_PmsConferenceEventEntry();
@@ -109,6 +115,7 @@ class PmsConference extends \WebshopApplication implements \Application {
         $conference->meetingTitle = "Unkown meeting";
         $conference = $this->getApi()->getPmsConferenceManager()->saveConference($conference);
         $this->setCurrentConference($conference->id);
+        echo $conference->id;
         die();
     }
     

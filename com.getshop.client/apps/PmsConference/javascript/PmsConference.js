@@ -11,21 +11,24 @@ app.PmsConference = {
     },
     openEvent : function() {
         var eventid = $(this).attr('eventid');
-        var event = thundashop.Ajax.createEvent('','openEvent',$(this), { "eventid" : eventid});
+        var event = thundashop.Ajax.createEvent('','openEvent',$('.PmsConference'), { "eventid" : eventid});
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.conferenceoverview').hide();
             $('.eventoverview').show();
             $('.eventoverview').html(res);
         });
     },
-    openConference : function() {
-        var conferenceid = $(this).attr('conferenceid');
-        var event = thundashop.Ajax.createEvent('','openConference',$(this), { "conferenceid" : conferenceid});
+    openConferenceById : function(conferenceid) {
+        var event = thundashop.Ajax.createEvent('','openConference',$('.PmsConference'), { "conferenceid" : conferenceid});
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.conferenceoverview').show();
             $('.eventoverview').hide();
             $('.conferenceoverview').html(res);
         });
+    },
+    openConference : function() {
+        var conferenceid = $(this).attr('conferenceid');
+        app.PmsConference.openConferenceById(conferenceid);
     },
     loadEditItem : function(res) {
         $('.edititembox').html(res);
@@ -38,6 +41,8 @@ app.PmsConference = {
         $('.PmsConference .GetShopQuickUser .change_user_form, .PmsConference .GetShopQuickUser .edit_details_of_user').show();
     },
     continueToConferenceView : function(res) {
+        $('.addconferencepanel').hide();
+        app.PmsConference.openConferenceById(res);
     },
     updateEventRow : function() {
         var row = $(this).closest('.eventrow');

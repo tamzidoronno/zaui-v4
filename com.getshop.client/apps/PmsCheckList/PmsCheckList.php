@@ -31,7 +31,7 @@ class PmsCheckList extends \MarketingApplication implements \Application {
         $this->getCurrentMonth();
         echo "<div style='text-align: center' gstype='form' method='dateChanged'>";
             echo "Select month<br/> <select gsname='date' class='gsniceselect1'>";
-            for ($i=0;$i<10;$i++) {
+            for ($i=0;$i<24;$i++) {
                 $year = date('Y', strtotime('-'.$i.' month'));
                 $month = date('m', strtotime('-'.$i.' month'));
                 $selected = $this->getCurrentMonth() == $year."_".$month ? "selected='true'" : "";

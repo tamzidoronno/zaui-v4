@@ -127,8 +127,13 @@ class VismaNetPostBuilder {
             return "Lost access, please login to Visma again.";
         }
         
+        $i = 0;
         foreach ($vismaDays as $day) {
+            $i++;
+            
             $jsonData = json_encode($day);
+            
+            file_put_contents("/tmp/vismanet_json_debug".$i.".txt", $jsonData);
             
             $ch = curl_init();
             curl_setopt($ch, constant("CURLOPT_" . 'URL'), "https://integration.visma.net/API/controller/api/v1/journaltransaction");

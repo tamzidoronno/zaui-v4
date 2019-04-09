@@ -65,6 +65,7 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
         $system->activeTo = $_POST['data']['activeTo'] ? $this->convertToJavaDate(strtotime($_POST['data']['activeTo'])) : null;
         $system->numberOfMonthsToInvoice = $_POST['data']['numberOfMonthsToInvoice'];
         $system->productId = $_POST['data']['productid'];
+        $system->note = $_POST['data']['note'];
         $this->getApi()->getSystemManager()->saveSystem($system);
     }
     

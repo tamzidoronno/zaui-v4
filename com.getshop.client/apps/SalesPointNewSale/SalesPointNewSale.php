@@ -109,7 +109,6 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     
     public function addProductToCurrentTab() {
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
-        
         if (is_array($product->extras) && count($product->extras) && !isset($_POST['data']['extras'])) {
             echo "productconfig";
             die();
@@ -139,6 +138,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         
         $this->getApi()->getPosManager()->addToTab($tab->id, $cartItem);
         $this->includefile("tab");
+        $this->reloadPosViewer();
         die();
     }
     
@@ -154,6 +154,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
                 $item->count = $_POST['data']['count'];
                 $this->getApi()->getPosManager()->addToTab($tab->id, $item);
                 echo $_POST['data']['count'].";".$this->getApi()->getPosManager()->getTotal($tab->id);
+                $this->reloadPosViewer();
                 die();
             }
         }
@@ -163,6 +164,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $tab = $this->getCurrentTab();
         $item = $this->getApi()->getPosManager()->setNewProductPrice($tab->id, $_POST['data']['cartitemid'], $_POST['data']['price']);
         echo $this->getPriceHtml($item).";".$this->getApi()->getPosManager()->getTotal($tab->id);
+        $this->reloadPosViewer();
         die();
     }
     
@@ -171,6 +173,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $item = $this->getApi()->getPosManager()->setDiscountToCartItem($tab->id, $_POST['data']['cartitemid'], $_POST['data']['discountValue']);
         $priceToUse = $item->overridePriceIncTaxes ? $item->overridePriceIncTaxes : $item->product->price;
         echo $this->getPriceHtml($item).";".$this->getApi()->getPosManager()->getTotal($tab->id).";".$priceToUse;
+        $this->reloadPosViewer();
         die();
     }
     
@@ -178,6 +181,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $tab = $this->getCurrentTab();
         $this->getApi()->getPosManager()->removeFromTab($_POST['data']['cartitemid'], $tab->id);
         echo $this->getApi()->getPosManager()->getTotal($tab->id);
+        $this->reloadPosViewer();
         die();
     }
     
@@ -187,12 +191,14 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             $this->getApi()->getPosManager()->deleteTab($tab->id);
             unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_tabid']);
         }
+        $this->reloadPosViewer();
     }
     
     public function printCurrentTab() {
         $tab = $this->getCurrentTab();
         $receiptPrinterId = $this->getSelectedReceiptPrinter();
         $this->getApi()->getPosManager()->printOverview($tab->id, $receiptPrinterId);
+        $this->reloadPosViewer();
     }
     
     
@@ -275,6 +281,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             return;
         
         $this->getApi()->getPosManager()->changeTaxRate($tab->id, $_POST['data']['taxgroupnumber']);
+        $this->reloadPosViewer();
     }
     
     public function cancelCurrentTaxSelection() {
@@ -283,6 +290,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             return;
         
         $this->getApi()->getPosManager()->changeTaxRate($tab->id, "");
+        $this->reloadPosViewer();
     }
 
     public function getPriceHtml($item) {
@@ -300,6 +308,7 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     public function setTabDiscount() {
         $tab = $this->getCurrentTab();
         $this->getApi()->getPosManager()->setTabDiscount($tab->id, $_POST['data']['discount']);
+        $this->reloadPosViewer();
     }
     
     public function changeUser() {
@@ -372,6 +381,10 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         }
         
 //        return false;
+    }
+
+    public function reloadPosViewer() {
+        $_SESSION['refreshposviewer']= 1;
     }
 
 }

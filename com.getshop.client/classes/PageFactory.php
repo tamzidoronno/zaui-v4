@@ -312,6 +312,12 @@ class PageFactory {
         $page->createRow()->addColumn("624fa4ac-9b27-4166-9fc3-5c1d1831b56b", "d8310a2e-bf2e-4088-b25e-fea708babf33");
         $this->pages['messages'] = $page;   
         
+        // Conference
+        $page = new \ModulePage("conference", "pms");
+        $page->createRow()->addColumn("02b94bcd-39b9-41aa-b40c-348a27ca5d9d", "63c60be1-3d89-4a33-bbdd-8146af81b5f7");
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $this->pages['conference'] = $page;   
+        
         $page = new \ModulePage("paymentmethods", "pms");
         $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
         $page->createRow()->addColumn("d0c34aa6-36c7-40dd-9ef2-4fa8844f442d", "8d6b91c8-50bf-4aa1-9cef-2bc0940a93b8");

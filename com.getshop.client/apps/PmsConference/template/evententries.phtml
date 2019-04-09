@@ -1,0 +1,44 @@
+<?php
+/* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$confmanager =  $this->getApi()->getPmsConferenceManager();
+$cureventid = $this->getCurrentEvent();
+$entries = (array)$confmanager->getEventEntries($cureventid);
+if(sizeof($entries) == 0) {
+    echo "No activites created yet";
+} else {
+    ?>
+<span class='activityheadings' style='width:63px;'>From</span>
+<span class='activityheadings' style='width:61px;'>To</span>
+<span class='activityheadings' style='width:192px;'>Text</span>
+<span class='activityheadings' style='width:63px;'>Count</span>
+<span class='activityheadings'>Extended text</span>
+    <?php
+    foreach($entries as $evententry) {
+        $fromtime = "";
+        $totime = "";
+        if($evententry->from) { $fromtime = date("H:i", strtotime($evententry->from)); }
+        if($evententry->to) { $totime = date("H:i", strtotime($evententry->to)); }
+        ?>
+        <div class='evententryrow' entryid='<?php echo $evententry->id; ?>'>
+            <input type='hidden' gsname='eventid' gsname='id' value='<?php echo $evententry->id; ?>'>
+            <input type='text' class='gsniceinput1 updatevententryrow' style='width:40px;text-align: center;' gsname='starttime' value='<?php echo $fromtime; ?>'>
+            <input type='text' class='gsniceinput1 updatevententryrow' style='width:40px;text-align: center;' gsname='endtime' value='<?php echo $totime; ?>'>
+            <input type='text' class='gsniceinput1 updatevententryrow' gsname='text' placeholder='Description' value='<?php echo $evententry->text; ?>'>
+            <input type='text' class='gsniceinput1 updatevententryrow' style='width:40px;text-align: center;' gsname='count' value='<?php echo $evententry->count; ?>'>
+            <input type='text' class='gsniceinput1 updatevententryrow' style='width:400px;'gsname='extendedText' value='<?php echo $evententry->extendedText; ?>'>
+            <i class='fa fa-trash-o' style='cursor:pointer;' entryid='<?php echo $evententry->id; ?>' gsclick='deleteEventEntry' synchron='true' gs_callback='app.PmsConference.entryDeleted'></i>
+            </div>
+        <?php
+    }
+}
+?>
+<br>
+Add another activity:<br>
+<div class='addactivitypanel' gstype='form' method='createEventEntry' gstoarea='.activitiesarea'>
+    <input type='text' class='gsniceinput1' style='width:40px;text-align: center;' gstype='submitenter' value='12:00' gsname='starttime'>
+    <input type='text' class='gsniceinput1' style='width:40px;text-align: center;' gstype='submitenter' value='' gsname='endtime'>
+    <input type='text' class='gsniceinput1' gsname='text' placeholder='Description' gstype='submitenter' >
+    <input type='text' class='gsniceinput1' style='width:40px;text-align: center;' gstype='submitenter' value='0' gsname='count' value='0'>
+    <input type='text' class='gsniceinput1' style='width:400px;'gsname='extendedText' placeholder='Extended text'>
+    <span class='shop_button' gstype='submit'>Create activity</span>
+</div>

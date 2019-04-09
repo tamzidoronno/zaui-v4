@@ -1,0 +1,36 @@
+<?php
+$currentConference = $this->getSelectedConference();
+if($currentConference) {
+    $conference = $this->getApi()->getPmsConferenceManager()->getConference($currentConference);
+    echo "You are currently operating under: " . $conference->meetingTitle . ", ";
+    echo "<span onclick='$(\".PmsConference .conferenceoverview\").show();' class='openconference' conferenceid='".$currentConference."'>open</span>.";
+}
+?>
+<div class='header'>
+    <span class='shop_button' onclick='$(".addconferencepanel").toggle();'>Create a new conference</span>
+<?php
+/* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+
+$subitem = $this->getCurrentSubitem();
+$entries = (array)$this->getApi()->getPmsConferenceManager()->getAllItem($subitem);
+if($subitem) {
+    echo "<span class='shop_button' gsclick='loadSubitems' itemid='' style='float:left;'>Go back to overview</span>"; 
+}
+?>
+</div>
+
+<div class='addconferencepanel'>
+    <h1>For what customer should this conference be attached to?</h1>
+        
+    <?php
+    $extraArgs = array();
+    $extraArgs['avoidCloseButton'] = "true";
+    $extraArgs['hideWarning'] = "true";
+    $extraArgs['overridesavebutton'] = "<span class='shop_button' gstype='submit' gs_callback='app.PmsConference.continueToConferenceView'>Continue <i class='fa fa-arrow-right' gs_callback='app.'></i></span>";
+
+    $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+    $quser->extraArgs = $extraArgs;
+    $quser->invokeJavascriptFunctionAfterActions = 'app.PmsConference.userSavedUpdated';
+    $quser->renderApplication(true, $this);
+    ?>
+</div>

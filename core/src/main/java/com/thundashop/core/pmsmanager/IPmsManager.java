@@ -8,6 +8,7 @@ import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.pmseventmanager.PmsEventFilter;
@@ -82,6 +83,7 @@ public interface IPmsManager {
     public List<CleaningStatistics> getCleaningStatistics(Date start, Date end);
     
     @Administrator
+    @ForceAsync
     public List<SimpleCleaningOverview> getSimpleCleaningOverview(Date start, Date end);
     
     @Administrator
@@ -299,6 +301,7 @@ public interface IPmsManager {
     public void unConfirmBooking(String bookingId, String message);
     
     @Administrator
+    @ForceAsync
     public PmsStatistics getStatistics(PmsBookingFilter filter);
     
     public Date convertTextDate(String text);
@@ -338,6 +341,7 @@ public interface IPmsManager {
     public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
     
     @Editor
+    @ForceAsync
     public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day);
     
     @Administrator

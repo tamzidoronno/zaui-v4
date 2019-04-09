@@ -529,6 +529,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
         savedItem.visibleForBooking = type.visibleForBooking;
         savedItem.autoConfirm = type.autoConfirm;
         savedItem.addon = type.addon;
+        savedItem.nameTranslations = type.nameTranslations;
+        savedItem.descriptionTranslations = type.descriptionTranslations;
         savedItem.group = type.group;
         savedItem.rules = type.rules;
         savedItem.order = type.order;

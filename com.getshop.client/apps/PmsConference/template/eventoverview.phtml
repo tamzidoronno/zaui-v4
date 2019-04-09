@@ -1,0 +1,26 @@
+<?php
+/* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$confmanager =  $this->getApi()->getPmsConferenceManager();
+$cureventid = $this->getCurrentEvent();
+$event = $confmanager->getConferenceEvent($cureventid);
+$conference = $confmanager->getConference($event->pmsConferenceId);
+$user = $this->getApi()->getUserManager()->getUserById($conference->forUser);
+$item = $confmanager->getItem($event->pmsConferenceItemId);
+?>
+<span class='shop_button openevent' eventid='<?php echo $cureventid; ?>'>Reload</span>
+<i class='fa fa-close' style='cursor:pointer; float:right;' onclick='window.location.reload();'></i>
+<?php
+echo "<div>" . $item->name . " - " . date("d.m.Y H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to)) . "</div>";
+echo "<div>" . "Registered to: " . $user->fullName . "</div>";
+echo "<div>" . "Registered to conference: " . $conference->meetingTitle . ", <span class='openconference' conferenceid='".$conference->id."'>open</span></div>";
+
+echo "<h3>Activities</h3>";
+echo "<div class='activitiesarea'>";
+$this->includefile("evententries");
+echo "</div>";
+?>
+
+<style>
+    .PmsConference .eventoverview { background-color:#fff; font-size: 14px; padding: 10px; position:absolute; border: solid 1px #bbb; z-index: 3; }
+    .PmsConference .activityheadings { font-weight: bold; display:inline-block; }
+</style>

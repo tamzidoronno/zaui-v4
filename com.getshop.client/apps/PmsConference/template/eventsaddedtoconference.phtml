@@ -1,0 +1,59 @@
+<?php
+/* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$conferenceId = $this->getSelectedConference();
+$events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEvents($conferenceId);
+
+$allItems = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+$allItems = $this->indexList($allItems);
+
+
+$status = array();
+$status[0] = "Unkown";
+$status[1] = "Confirmed";
+$status[2] = "Not confirmed";
+$status[3] = "Rejected";
+?>
+<b>Events</b>
+
+<?php
+if(sizeof($events) == 0) {
+    echo "<div>No events added to this conference yet.</div>";
+} else {
+    foreach($events as $event) {
+        ?>
+        <div class='eventrow' eventid='<?php echo $event->id; ?>'>
+            <input type='hidden' gsname='eventid' value='<?php echo $event->id; ?>'>
+            <span class='shop_button'  gsclick='deleteEvent' gs_confirm='Are you sure?' style='background-color:red;' synchron='true' gs_callback='app.PmsConference.eventDeleted' eventid='<?php echo $event->id; ?>'>&nbsp;<i class='fa fa-trash-o'></i></span>
+            <select class='gsniceselect1 updaterowselect' gsname='itemid'>
+                 <?
+                foreach($allItems as $itm) {
+                    $text = $itm->name;
+                    $selected = $event->pmsConferenceItemId == $itm->id ? "SELECTED" : ""; 
+                    if($itm->toItemId) {
+                        $text .= " (" . $allItems[$itm->toItemId]->name . ")";
+                    }
+                    echo "<option value='".$itm->id."' $selected>" . $text . "</option>";
+                }
+                ?>
+            </select>
+            <input type='text' class='gsniceinput1 updaterowkeyup' gsname='date' value='<?php echo date("d.m.Y", strtotime($event->from)); ?>' style='width:80px;text-align: center;'>
+            <input type='text' class='gsniceinput1 updaterowkeyup' gsname='startime' value='<?php echo date("H:i", strtotime($event->from)); ?>' style='width:40px;text-align: center;'>
+            <input type='text' class='gsniceinput1 updaterowkeyup' gsname='endtime' value='<?php echo date("H:i", strtotime($event->to)); ?>' style='width:40px;text-align: center;'>
+            
+            <select class='gsniceselect1 updaterowselect' gsname='status'>
+                <?
+                foreach($status as $idx => $text) {
+                    $selected = $idx == $event->status ? "SELECTED" : "";
+                    echo "<option value='".$idx."' $selected>" . $text . "</option>";
+                }
+                ?>
+            </select>
+            <span class='shop_button openevent' eventid='<?php echo $event->id; ?>'>&nbsp;<i class='fa fa-arrow-right'></i></span>
+        </div>
+        <?php
+    }
+}
+?>
+<script>
+    $('.addEventPanel').hide();
+</script>

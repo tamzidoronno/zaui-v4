@@ -269,7 +269,7 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
         $builder = new VismaNetPostBuilder($this->getApi(), $this);
         $vismaDays = $builder->getResult($start, $end);
-        $this->extramessage = $builder->sendData($vismaDays);
+        $this->extramessage = $builder->sendData($vismaDays, $this->getFactory()->getStore()->id);
     }
 
     public function isShowingIncTaxes() {

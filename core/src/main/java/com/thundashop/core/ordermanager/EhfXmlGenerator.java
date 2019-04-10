@@ -22,8 +22,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -418,6 +420,11 @@ public class EhfXmlGenerator {
 
     private String generateSubTaxes() {
         Map<TaxGroup, BigDecimal> taxes = order.getTaxesRoundedWithTwoDecimals(calculatePresision);
+        
+        Map<TaxGroup, BigDecimal> totals = mergeByPercentToGetTotal(taxes);
+        taxes = mergeByPercent(taxes);
+        
+        
         String xml = "";
         for (TaxGroup group : taxes.keySet()) {
             String taxCode = group.taxRate < 25.0 ? "AA" : "S";
@@ -425,7 +432,7 @@ public class EhfXmlGenerator {
                 taxCode = "Z";
             }
             xml += "                <cac:TaxSubtotal>\n"
-                    + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountForTaxGroupRoundedWithTwoDecimals(group, 2)) + "</cbc:TaxableAmount>\n"
+                    + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(totals.get(group)) + "</cbc:TaxableAmount>\n"
                     + "                        <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(taxes.get(group)) + "</cbc:TaxAmount>\n"
                     + "                        <cac:TaxCategory>\n"
                     + "                                <cbc:ID schemeID=\"UNCL5305\">" + taxCode + "</cbc:ID>\n"
@@ -504,5 +511,57 @@ public class EhfXmlGenerator {
             return number * -1;
         
         return TwoDecimalRounder.roundTwoDecimals(number, printPreceision).doubleValue();
+    }
+
+    private Map<TaxGroup, BigDecimal> mergeByPercent(Map<TaxGroup, BigDecimal> taxes) {
+        Map<TaxGroup, BigDecimal> retSet = new HashMap();
+        
+        Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap();
+        for (TaxGroup group : taxes.keySet()) {
+            Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
+            if (rets == null) {
+                rets = new HashMap<TaxGroup, BigDecimal>();
+                grouped.put(group.taxRate, taxes);
+            }
+            rets.put(group, taxes.get(group));
+        }
+        
+        for (Double taxRate : grouped.keySet()) {
+            Map<TaxGroup, BigDecimal> res = grouped.get(taxRate);
+            BigDecimal total = new BigDecimal(BigInteger.ZERO);
+            for (BigDecimal o : res.values()) {
+                total = total.add(o);
+            }
+            
+            retSet.put(res.keySet().iterator().next(), total);
+        }
+        
+        return retSet;
+    }
+    
+    private Map<TaxGroup, BigDecimal> mergeByPercentToGetTotal(Map<TaxGroup, BigDecimal> taxes) {
+        Map<TaxGroup, BigDecimal> retSet = new HashMap();
+        
+        Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap();
+        for (TaxGroup group : taxes.keySet()) {
+            Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
+            if (rets == null) {
+                rets = new HashMap<TaxGroup, BigDecimal>();
+                grouped.put(group.taxRate, taxes);
+            }
+            rets.put(group, taxes.get(group));
+        }
+        
+        for (Double taxRate : grouped.keySet()) {
+            Map<TaxGroup, BigDecimal> res = grouped.get(taxRate);
+            BigDecimal total = new BigDecimal(BigInteger.ZERO);
+            for (TaxGroup o : res.keySet()) {
+                total = total.add(order.getTotalAmountForTaxGroupRoundedWithTwoDecimals(o, 2));
+            }
+            
+            retSet.put(res.keySet().iterator().next(), total);
+        }
+        
+        return retSet;
     }
 }

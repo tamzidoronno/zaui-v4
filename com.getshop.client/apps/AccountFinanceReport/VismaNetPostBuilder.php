@@ -111,7 +111,7 @@ class VismaNetPostBuilder {
         return $result;
     }
 
-    public function sendData($vismaDays) {
+    public function sendData($vismaDays, $storeId) {
         $oauthSessionId = isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_VISMA_NET_OAUTHSESSION']) ? $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_VISMA_NET_OAUTHSESSION'] : false;
         $result = $this->api->getOAuthManager()->getCurrentOAuthSession($oauthSessionId);
         $extramessage = "";
@@ -127,8 +127,13 @@ class VismaNetPostBuilder {
             return "Lost access, please login to Visma again.";
         }
         
+        $i = 0;
         foreach ($vismaDays as $day) {
+            $i++;
+            
             $jsonData = json_encode($day);
+            
+            file_put_contents("/tmp/vismanet_json_debug_".$storeId."_".$i.".txt", $jsonData);
             
             $ch = curl_init();
             curl_setopt($ch, constant("CURLOPT_" . 'URL'), "https://integration.visma.net/API/controller/api/v1/journaltransaction");
@@ -170,7 +175,6 @@ class VismaValueObject {
 }
 
 class VismaJournalTransaction {
-    public $batchNumber;
     public $hold;
     public $transactionDate;
     public $postPeriod;

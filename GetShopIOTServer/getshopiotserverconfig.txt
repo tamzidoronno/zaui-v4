@@ -1,0 +1,1 @@
+{"token":"438d7f85-d6ee-4429-ae69-ec399a17adcb","address":"http://corner.3.0.local.getshop.com/"}

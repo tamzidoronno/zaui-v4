@@ -47,4 +47,14 @@ public interface IGdsManager {
     
     @Administrator
     public List<GetShopDeviceUnit> getAllUnits(GetShopDeviceUnitFilter filter);
+    
+        
+    public IotDeviceInformation getIotDeviceInformation(IotDeviceInformation information);
+    
+    @Administrator
+    public List<IotDeviceInformation> getAllNewIotDevices();
+    
+    @Administrator
+    public void updateIotDevice(IotDeviceInformation device);
+
 }

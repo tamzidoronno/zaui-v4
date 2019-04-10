@@ -1,0 +1,22 @@
+<br>
+<br>
+<br>
+<br>
+<br>
+<div style="width:600px; margin:auto;">
+    <?php
+    /* @var $this ns_ca4162a4_b26b_4920_8d51_80b809546167\GetShopIoT */
+
+    $devices = $this->getApi()->getGdsManager()->getAllNewIotDevices();
+    foreach($devices as $dev) {
+        ?>
+        <div class="" style="margin-bottom: 5px;" gstype="form" method="updateIotDevice">
+            <?php echo date("d.m.y H:i", strtotime($dev->rowCreatedDate)); ?>
+            <input type="text" class="gsniceinput1" value="<?php echo $dev->identification; ?>" gsname="identification" DISABLED> 
+            <input type="text" class="gsniceinput1" placeholder="Adress" gsname="address"> 
+            <span class="shop_button" gstype="submit">Save</span>
+        </div>
+        <?php
+    }
+    ?>
+</div>

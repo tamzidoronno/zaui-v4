@@ -36,6 +36,7 @@ public class GdsManager extends ManagerBase implements IGdsManager {
     public HashMap<String, GetShopDevice> devices = new HashMap();
     public ConcurrentHashMap<String, DeviceMessageQueue> messages = new ConcurrentHashMap();
     public ConcurrentHashMap<String, UserMessageQueue> userMessageQueue = new ConcurrentHashMap();
+    public ConcurrentHashMap<String, IotDeviceInformation> iotDevices = new ConcurrentHashMap();
     
     @Override
     public void saveDevice(GetShopDevice device) {
@@ -277,5 +278,35 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         }
         
         return units;
+    }
+
+    @Override
+    public IotDeviceInformation getIotDeviceInformation(IotDeviceInformation information) {
+        for(IotDeviceInformation device : iotDevices.values()) {
+            if(device.identification.equals(information.identification)) {
+                information = device;
+            }
+        }
+        
+        if(!information.address.isEmpty()) {
+            information.token = UUID.randomUUID().toString();
+            deleteObject(information);
+            iotDevices.remove(information.id);
+        } else {
+            saveObject(information);
+            iotDevices.put(information.id, information);
+        }
+        
+        return information;
+    }
+
+    @Override
+    public List<IotDeviceInformation> getAllNewIotDevices() {
+        return new ArrayList(iotDevices.values());
+    }
+
+    @Override
+    public void updateIotDevice(IotDeviceInformation device) {
+        iotDevices.put(device.id, device);
     }
 }

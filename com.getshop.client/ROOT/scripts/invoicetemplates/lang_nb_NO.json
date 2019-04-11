@@ -26,6 +26,8 @@
     "Preview": "Forhåndsvisning",
     "Proforma Invoice": "Forhåndsvisning",
     "Room" : "Rom",
-    "Date" : "Dato"
+    "Date" : "Dato",
+    "Order number" : "Ordre nummer",
+    "Order date" : "Ordre dato"
     
 }

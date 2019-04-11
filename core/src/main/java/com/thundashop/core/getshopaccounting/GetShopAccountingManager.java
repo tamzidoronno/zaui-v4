@@ -333,4 +333,17 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         orderManager.markAsTransferredToAccount(incomes);
     }
 
+    @Override
+    public List<String> getTransferData(Date start, Date end) {
+        List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
+        
+        for (DayIncome income : incomes) {
+            if (!income.isFinal) {
+                throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
+            }
+        }
+        
+        return getActivatedAccountingSystemOther().getTransferData(incomes);
+    }
+
 }

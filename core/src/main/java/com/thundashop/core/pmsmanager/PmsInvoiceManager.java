@@ -1299,8 +1299,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price = addDerivedPrices(booking, room, price);
         }
         price = calculateLongTermDiscount(booking, price, room);
+        double oldprice = price;
         price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
-        price = getUserPrice(bookingEngineTypeId, price, count, booking);
+        if(oldprice == price) {
+            price = getUserPrice(bookingEngineTypeId, price, count, booking);
+        }
 
         return price;
     }
@@ -2735,7 +2738,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             for(CartItem item : cartManager.getCart().getItems()) {
                 if(item.addedBy != null && item.addedBy.equals("pmsquickproduct")) {
                     continue;
-                }
+                } 
                 toRemove.add(item);
             }
             for(CartItem remove : toRemove) {

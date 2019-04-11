@@ -81,4 +81,7 @@ public interface IGetShopAccountingManager {
     
     @Administrator
     public void transferData(Date start, Date end);
+    
+    @Administrator
+    public List<String> getTransferData(Date start, Date end);
 }

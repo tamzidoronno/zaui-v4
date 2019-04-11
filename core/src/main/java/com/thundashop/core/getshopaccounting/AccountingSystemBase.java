@@ -584,4 +584,8 @@ public abstract class AccountingSystemBase extends ManagerBase {
     public void transfer(List<DayIncome> incomes) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public List<String> getTransferData(List<DayIncome> incomes) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

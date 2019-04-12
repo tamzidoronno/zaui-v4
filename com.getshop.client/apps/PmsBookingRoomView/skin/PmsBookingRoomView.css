@@ -493,6 +493,7 @@
     font-size: 20px;
     font-weight: bold;
     position: relative;
+    text-transform: uppercase;
 }
 
 .PmsBookingRoomView .insideheader .gs_shop_small_icon {
@@ -707,6 +708,9 @@
 .PmsBookingRoomView .row_payment_status_line .col_productname {
     width: calc(100% - 670px);
 }
+.PmsBookingRoomView .row_payment_status_line .col_productname.longwidth {
+    width: calc(100% - 500px);
+}
 .PmsBookingRoomView .row_payment_status_line .col_paymenttype {
     width: 150px;
 }
@@ -719,12 +723,10 @@
 
 .PmsBookingRoomView .row_payment_status_line .col_balance {
     width: 100px;
-    text-align: right;
 }
 
 .PmsBookingRoomView .row_payment_status_line .col_value {
     width: 125px;
-    text-align: right;
 }
 
 .PmsBookingRoomView .row_payment_status_line .col_product {
@@ -765,28 +767,28 @@
     box-sizing: border-box;
 }
 
-.PmsBookingRoomView .row_payment_status_line .col.odd {
-    border-left: solid 1px #DDD;
-    border-right: solid 1px #DDD;
-
-}
-
 .PmsBookingRoomView .row_payment_status_line.header .col {
     vertical-align: bottom;
-    font-weight: bold;
 }
 
 .PmsBookingRoomView .room_view_outer {
     position: relative;
 }
 
+.PmsBookingRoomView .row_payment_status_line.oddrow {
+    background-color: #fafcfd;
+}
+
 .PmsBookingRoomView .row_payment_status_line {
     border-top: solid 1px #DDD;
     font-size: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .PmsBookingRoomView .row_payment_status_line.header {
     border-top: solid 0px;
+    border-bottom: solid 2px #333;
 }
 
 .PmsBookingRoomView .ordermenu {
@@ -1018,10 +1020,6 @@
 
 .PmsBookingRoomView .row.hidden {
     display: none;
-}
-
-.PmsBookingRoomView .row_payment_status_line.evenrow {
-    background-color: #fbf7f7;
 }
 
 @media screen and (max-width: 1300px) {

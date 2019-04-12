@@ -55,9 +55,33 @@ class PmsConference extends \WebshopApplication implements \Application {
         $this->includefile("evententries");
     }
     
+    public function loadConferences() {
+        $this->includefile("conferencelist");
+    }
+    
+    public function setconference() {
+        $this->setCurrentConference($_POST['data']['conferenceid']);
+    }
+    
+    public function changeToMonth() {
+        $_POST['data']['start'] = date("01.m.Y", $_POST['data']['time']);
+        $_POST['data']['end'] = date("t.m.Y", $_POST['data']['time']);
+        $this->updateDateRange();
+    }
+    
     public function openEvent() {
         $this->setCurrentEvent($_POST['data']['eventid']);
         $this->includefile("eventoverview");
+    }
+    
+    public function quickAddEventToConference() {
+        $event = new \core_pmsmanager_PmsConferenceEvent();
+        $event->pmsConferenceId = $this->getSelectedConference();
+        $event->pmsConferenceItemId = $_POST['data']['itemid'];
+        $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['starttime']));
+        $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['endtime']));
+        $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
+
     }
     
     public function render() {
@@ -163,12 +187,7 @@ class PmsConference extends \WebshopApplication implements \Application {
     }
     
     public function addEvent() {
-        $event = new \core_pmsmanager_PmsConferenceEvent();
-        $event->pmsConferenceId = $this->getSelectedConference();
-        $event->pmsConferenceItemId = $_POST['data']['itemid'];
-        $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['starttime']));
-        $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['endtime']));
-        $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
+        $this->quickAddEventToConference();
         $this->includefile("eventsaddedtoconference");
     }
     
@@ -261,11 +280,13 @@ class PmsConference extends \WebshopApplication implements \Application {
         $result['id'] = "";
         $result['state'] = "";
         $result['check'] = "";
+        $result['title'] = "";
         
         foreach($itemIds as $itemId) {
             if(isset($events[$itemId])) {
                 foreach($events[$itemId] as $check) {
                     $result['id'] = $check->pmsConferenceId;
+                    $result['title'] = $check->title;
                     /* @var $check \core_pmsmanager_PmsConferenceEvent */
                     $result['check'] = "start='$start' end='$end' fromLong='".$check->fromLong."' toLong='".$check->toLong."' starttime='".date("H:i", $start)."' endtime='".date("H:i", $end)."'";
                     if($check->fromLong < $start && $check->toLong > $end) {

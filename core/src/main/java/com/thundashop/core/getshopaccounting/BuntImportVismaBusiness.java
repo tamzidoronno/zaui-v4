@@ -78,7 +78,7 @@ public class BuntImportVismaBusiness extends AccountingSystemBase {
     }
 
     @Override
-    public void transfer(List<DayIncome> incomes) {
+    public List<String> getTransferData(List<DayIncome> incomes) {
  
         int i = 0;
         List<VismaBunt> allLines = new ArrayList();
@@ -92,17 +92,19 @@ public class BuntImportVismaBusiness extends AccountingSystemBase {
         
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String today = format.format(new Date());
+        List<String> resultLines = new ArrayList();
         
-        String lines = "@IMPORT_METHOD(3)\r\n";
-        lines += "\r\n";
-        lines += "@WaBnd (SrNo, ValDt, SrcTp)\r\n";
-        lines += "\"4\" \""+today+"\" \"12\"\r\n";
-        lines += "\r\n";
-        lines += bnt.getHeader() + "\r\n";
+        resultLines.add("@IMPORT_METHOD(3)");
+        resultLines.add("");
+        resultLines.add("@WaBnd (SrNo, ValDt, SrcTp)");
+        resultLines.add("\"4\" \""+today+"\" \"12\"");
+        resultLines.add("");
+        resultLines.add(bnt.getHeader());
         for(VismaBunt line : allLines) {
-            lines += line + "\r\n";
+            resultLines.add(line.toString());
         }
-        System.out.println(lines);
+        
+        return resultLines;
     }
     
     private List<VismaBunt> transferIncomeData(DayIncome income, int number) {
@@ -168,7 +170,11 @@ public class BuntImportVismaBusiness extends AccountingSystemBase {
             }
             
             DecimalFormat df2 = new DecimalFormat("#.00");
-            buntLine.Am = df2.format(total.doubleValue()) + "";
+            if(total.doubleValue() == 0.0) {
+                buntLine.Am = "0.00";
+            } else {
+                buntLine.Am = df2.format(total.doubleValue()) + "";
+            }
             
             result.add(buntLine);
             j++;

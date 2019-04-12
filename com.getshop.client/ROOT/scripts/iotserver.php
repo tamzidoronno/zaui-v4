@@ -1,8 +1,16 @@
 <?php
+chdir("../");
+include '../loader.php';
+$factory = IocContainer::getFactorySingelton();
 
-$result = array();
-$result['token'] = "c16e5c6d-2352-4169-b52d-1bfb583a0edb";
-$result['address'] = "https://corner.3.0.local.getshop.com/";
-echo json_encode($result);
+$object = new core_gsd_IotDeviceInformation();
+$object->identification = $_GET['identification'];
 
+$object = $factory->getApi()->getGdsManager()->getIotDeviceInformation($object);
+if($object->address) {
+    $result = array();
+    $result['token'] = $object->token;
+    $result['address'] = $object->address;
+    echo json_encode($result);
+}
 ?>

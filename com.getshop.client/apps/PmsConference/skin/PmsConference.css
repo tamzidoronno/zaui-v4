@@ -14,10 +14,10 @@
 .PmsConference .addconferencepanel { border: solid 1px #bbb; display:inline-block; background-color:#fff; position:absolute; padding: 10px; display:none; right:0px; }
 .PmsConference .GetShopQuickUser .booked_for,
 .PmsConference .edit_user_btn { display:none; }
-.PmsConference .hasactiveventstart { background-color:green; border-color:green;border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+.PmsConference .hasactiveventstart { background-color:green; border-color:green;border-top-left-radius: 4px; border-bottom-left-radius: 4px;color:#fff !important;}
 .PmsConference .hasactiveventmiddle { background-color:green; border-color:green; }
 .PmsConference .hasactiveventend { background-color:green; border-color:green;border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
-.PmsConference .hasactiveventboth { background-color:green; border-color:green;border-radius: 4px; }
+.PmsConference .hasactiveventboth { background-color:green; border-color:green;border-radius: 4px; color:#fff !important;}
 .PmsConference .GetShopQuickUser .change_user_form, .PmsConference .GetShopQuickUser .edit_details_of_user,
 .PmsConference .GetShopQuickUser .change_user_form, .PmsConference .GetShopQuickUser .edit_details_of_user { position: initial;box-shadow:none; }
 .PmsConference .loadcalendar {
@@ -26,6 +26,20 @@
     border: solid 1px #bbb;
     padding: 10px;
 }
+.PmsConference .addeventbox { width: 50px; border: solid 1px; display:inline-block; padding: 3px;background-color:#ddd; border: #bbb; position:absolute; z-index: 2; display:none;  }
 .PmsConference .loadcalendar input { width: 90px; }
 .PmsConference .header { margin-top: 0px; margin-bottom: 20px; text-align: right; }
 .PmsConference .openconference { color: blue; cursor: pointer; }
+.PmsConference .conferencelist {
+    position: absolute;
+    background-color: #fff;
+    padding: 10px;
+    border: solid 1px #bbb;
+    z-index: 2;
+    font-size: 14px;
+    display:none;
+    right: 0px;
+    width: 400px;
+    color: #000;
+    text-align: left;
+}

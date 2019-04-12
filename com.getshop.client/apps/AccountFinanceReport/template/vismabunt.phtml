@@ -1,0 +1,11 @@
+<?
+/* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$start = $this->getStart();
+$end = $this->getEnd();
+
+
+$lines = $this->getApi()->getGetShopAccountingManager()->getTransferData($start, $end);
+foreach($lines as $line) {
+    echo $line . "\r\n";
+}
+?>

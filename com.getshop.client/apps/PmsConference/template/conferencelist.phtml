@@ -1,0 +1,11 @@
+<?php
+/* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$conferences = $this->getApi()->getPmsConferenceManager()->getAllConferences(null);
+foreach($conferences as $conference) {
+    echo "<div>";
+    echo date("d.m.Y H:i", strtotime($conference->rowCreatedDate));
+    echo " - <span class='ellipsis'>" . $conference->meetingTitle . "</span>";
+    echo "<span gsclick='setconference' conferenceid='".$conference->id."' style='float:right;margin-left: 30px; color:blue; cursor:pointer;'>choose</span>";
+    echo "</div>";
+}
+?>

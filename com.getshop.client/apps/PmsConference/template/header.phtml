@@ -7,6 +7,10 @@ if($currentConference) {
 }
 ?>
 <div class='header'>
+    <span style='position:relative'>
+        <span class='shop_button' gsclick="loadConferences" gs_callback='app.PmsConference.allConferencesLoaded' synchron='true'>List all conferences</span>
+        <div class='conferencelist'></div>
+    </span>
     <span class='shop_button' onclick='$(".addconferencepanel").toggle();'>Create a new conference</span>
 <?php
 /* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
@@ -21,7 +25,6 @@ if($subitem) {
 
 <div class='addconferencepanel'>
     <h1>For what customer should this conference be attached to?</h1>
-        
     <?php
     $extraArgs = array();
     $extraArgs['avoidCloseButton'] = "true";

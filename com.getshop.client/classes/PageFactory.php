@@ -765,6 +765,12 @@ class PageFactory {
         $row->ignoreTopRow = true;
         $row->addColumn('339af689-1617-4d67-ade9-ca26cf55bf44', "40357190-7764-42d1-1436-72d34928a718");
         $this->pages['invoicing'] = $page;
+        
+        $page = new \ModulePage("iotdevices", "getshop");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn('ca4162a4-b26b-4920-8d51-80b809546167', "c2189ee9-ae84-473a-8df5-32534f74d0bc");
+        $this->pages['iotdevices'] = $page;
     }
 
     public function addExtraApplicationsNoneInstance($id) {

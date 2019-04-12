@@ -9473,6 +9473,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
             return true;
         }
+        if(storeId.equals("0a501e98-08d7-411d-8fb9-909d81dfb7e9")) {
+            return true;
+        }
         return false;
     }
 

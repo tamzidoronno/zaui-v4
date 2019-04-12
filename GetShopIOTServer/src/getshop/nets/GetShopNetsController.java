@@ -121,7 +121,7 @@ public class GetShopNetsController implements Initializable {
      */
     private boolean isItuHandshaking = false;
     
-    private final GetShopNetsApp sampleApp;
+    private final GetShopNetsApp netsApp;
 
     BaxiEFEventListener efListener = new BaxiEFEventListener() {
         /**
@@ -216,7 +216,7 @@ public class GetShopNetsController implements Initializable {
         @Override
         public void OnDisplayText(final DisplayTextEventArgs e) {
 //            System.out.println("On display text: " + e.getDisplayText() + " - " + e.getDisplaytextID() + " - " + e.getDisplaytextSourceID());
-            sampleApp.printToScreen(e.getDisplayText());
+            netsApp.printToScreen(e.getDisplayText());
         }
 
         /**
@@ -270,7 +270,7 @@ public class GetShopNetsController implements Initializable {
         @Override
         public void OnLocalMode(final LocalModeEventArgs args) {
 //            System.out.println("transaction completed: " + args.getResultData() + " : " + args.getResult());
-            sampleApp.transanctionCompletedStatus(args);
+            netsApp.transanctionCompletedStatus(args);
         }
 
         /**
@@ -340,7 +340,7 @@ public class GetShopNetsController implements Initializable {
     };
 
     public GetShopNetsController(GetShopNetsApp aThis) {
-        this.sampleApp = aThis;
+        this.netsApp = aThis;
     }
 
     /**
@@ -433,9 +433,7 @@ public class GetShopNetsController implements Initializable {
         administrationArgs.OperID = OPERATOR_ID;
         administrationArgs.OptionalData = "";
 
-        if (baxi != null) {
-            result = baxi.administration(administrationArgs);
-        }
+        if (baxi != null) { result = baxi.administration(administrationArgs); }
 
         if (result == 0) {
             LOG.severe("Administration operation failed with methodRejectCode = " + baxi.getMethodRejectCode());

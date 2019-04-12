@@ -85,6 +85,12 @@ if ($verifonePaymentInProgress) {
     $this->includefile("verifonepaymentprocess");
     echo '</div>';
 }
+$paymentCardInProgress = $this->getApi()->getOrderManager()->isPaymentInProgress();
+if ($paymentCardInProgress) {
+    echo '<div class="verifonestatus">';
+    $this->includefile("integratedpaymentprocess");
+    echo '</div>';
+}
 ?>
     
 <style>

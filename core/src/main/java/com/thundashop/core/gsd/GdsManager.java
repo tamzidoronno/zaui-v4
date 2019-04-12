@@ -161,7 +161,7 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         return queue;
     }
 
-    private GetShopDevice getDeviceByToken(String tokenId) {
+    public GetShopDevice getDeviceByToken(String tokenId) {
         GetShopDevice device = devices.values().stream()
                 .filter(d -> d.token.equals(tokenId))
                 .findFirst()

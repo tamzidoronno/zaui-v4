@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.powerofficego.data.AccessToken;
+import com.powerofficego.data.Address;
 import com.powerofficego.data.ApiCustomerResponse;
 import com.powerofficego.data.ApiOrderTransferResponse;
 import com.powerofficego.data.Customer;
@@ -163,8 +164,12 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         if((user.accountingId != null || user.accountingId.isEmpty()) && user.externalAccountingId == null || user.externalAccountingId.isEmpty()) {
             //Something is wrong here. There should be an externa account id connected to it.
 //            user.externalAccountingId = findExternalAccountId(user.accountingId);
-            
         }
+        
+        if(user.address == null) {
+            user.address = new com.thundashop.core.usermanager.data.Address();
+        }
+        
         customer.setUser(user);
         customer.code = getAccountingAccountId(user.id) + "";
         Gson gson = new Gson();

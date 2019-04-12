@@ -20,18 +20,22 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
 
     @Override
     public void processMessage(GetShopDeviceMessage msg) {
+        logPrint("Processing payment message");
         try {
             if(msg instanceof GdsPaymentAction) {
                 if(getOperator().nets == null) {
-                    getOperator().nets = new GetShopNetsApp();
+                    logPrint("Initializing message");
+                    getOperator().nets = new GetShopNetsApp(getOperator());
                     getOperator().nets.initialize();
                 }
                 GdsPaymentAction paymentAction = (GdsPaymentAction) msg;
                 switch(paymentAction.action) {
                     case 1:
+                        logPrint("Starting payment");
                         getOperator().nets.startTransaction(paymentAction.amount);
                     break;
                     case 2:
+                        logPrint("Cancelling payment");
                         getOperator().nets.cancelTransaction();
                         break;
                     default:

@@ -2287,15 +2287,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(Order order : orders.values()) {
             if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null && !order.warnedNotAbleToCapture && order.incrementOrderId > 0) {
                 if(past.after(order.needCollectingDate)) {
-                    if(order.isDibs()) {
-                        int amount = (int)(getTotalAmount(order)*100);
-                        try {
-                            dibsManager.captureOrder(order, amount);
-                        }catch(Exception e) {
-                            //Autocaptuire failed
-                            e.printStackTrace();
-                        }
-                    }
                     messageManager.sendMessageToStoreOwner("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, "Payment warning");
                     messageManager.sendErrorNotificationToEmail("pal@getshop.com","Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, null);
                     order.warnedNotAbleToCapture = true;
@@ -2735,10 +2726,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
                 saveOrder(order);
-            } else {
-                messageManager.sendErrorNotification("Not fully paid order detected: " + order.incrementOrderId + " Amount: " + order.getPaidRest(), null);
             }
-
         } else {
             markAsPaidInternal(order, date,amount);
             saveOrder(order);

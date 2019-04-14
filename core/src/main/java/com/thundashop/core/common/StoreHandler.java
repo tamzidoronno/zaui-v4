@@ -47,7 +47,6 @@ public class StoreHandler {
     private HashMap<String, Session> sessions = new HashMap();
     private GetShopSessionScope scope;
     private ArrayList<GetShopSessionObject> sessionScopedBeans;
-    private GetShopProfiler profiler = new GetShopProfiler();
 
     public StoreHandler(String storeId) {
         this.storeId = storeId;
@@ -646,6 +645,6 @@ public class StoreHandler {
 
     private void logCpuUsageForThread(JsonObject2 inObject) {
         long timeUsed = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
-        profiler.addToProfiler(storeId, inObject.interfaceName, inObject.method, timeUsed);
+        GetShopProfiler.getProfiler().addToProfiler(storeId, inObject.interfaceName, inObject.method, timeUsed);
     }
 }

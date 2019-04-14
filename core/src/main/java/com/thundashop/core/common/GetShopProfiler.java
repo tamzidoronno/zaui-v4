@@ -26,7 +26,17 @@ import java.util.logging.Logger;
 public class GetShopProfiler implements Runnable {
     private final BlockingQueue<String> toLog;
     private String fileName;
-
+    
+    static GetShopProfiler profiler = null;
+    
+    public static GetShopProfiler getProfiler() {
+        if (profiler == null) {
+            profiler = new GetShopProfiler();
+        }
+        
+        return profiler;
+    }
+    
     public GetShopProfiler() {
         this.toLog = new LinkedBlockingQueue();
         

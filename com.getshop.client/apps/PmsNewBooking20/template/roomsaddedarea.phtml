@@ -53,6 +53,10 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
                 <?php
                 for($i = 0; $i < $room->numberOfGuests; $i++) {
                     $guest = $room->guests[$i];
+                    $addedToConference = "";
+                    if($guest->pmsConferenceEventId) {
+                        $addedToConference = "eventaddedtoguest";
+                    }
                     ?>
                     <div class='eachguestarea'>
                         <div class='guestinformationrow' guestid='<?php echo $guest->guestId; ?>'>
@@ -60,6 +64,10 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
                             <input type='txt' class='gsniceinput1 emailinput updateguestinfofield' value='<?php echo $guest->email; ?>' placeholder='Guest email' fortype='email'>
                             <input type='txt' class='gsniceinput1 prefixinput updateguestinfofield' value='<?php echo $guest->prefix; ?>' placeholder='Prefix' fortype='prefix'>
                             <input type='txt' class='gsniceinput1 phoneinput updateguestinfofield' value='<?php echo $guest->phone; ?>' placeholder='Phone' fortype='phone'>
+                            <span class='addconferencearea'>
+                                <i class="fa fa-group addconference <?php echo $addedToConference; ?>"></i>
+                                <div class='addguesttoconferencepanel'></div>
+                            </span>
                             <span class='removeguest' 
                                 gsclick='removeGuestFromRoom'
                                 synchron="true" 

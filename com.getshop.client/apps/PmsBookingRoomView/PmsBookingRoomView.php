@@ -37,6 +37,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $aDate > $bDate;
     }
     
+    public function confirmbooking() {
+        $booking = $this->getPmsBooking();
+        $booking->confirmed = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "booking confirmed", $booking->id,null);
+    }
+    
     public function splitStay() {
         $roomId = $_POST['data']['roomid'];
         $splitTime = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['time']));

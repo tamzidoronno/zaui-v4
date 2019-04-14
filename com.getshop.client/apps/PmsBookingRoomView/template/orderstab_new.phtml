@@ -117,7 +117,7 @@ $totalForRoom = round($totalForRoom, 2);
                         <? if ($order->status != 7) {
                             echo "<div style='color: red;'><i class='fa fa-warning'></i> ".($totalForOrder * -1)."</div>";
                         } else {
-                            echo "<div style='color: green;'><i class='fa fa-check'></i></div>";
+                            echo "<div style='color: #86c50d;'><i class='fa fa-check-circle'></i></div>";
                         }
                         ?>
                     </div>
@@ -206,7 +206,7 @@ $totalForRoom = round($totalForRoom, 2);
     ?>
     <div class="row row_payment_status_line header">
         <div class="col col_date"></div>
-        <div class="col col_productname"></div>
+        <div class="col col_productname longwidth"></div>
         <div class="col col_value"><? echo $this->__f("Price"); ?></div>
         <div class="col col_value odd"><? echo $this->__f("Orders"); ?></div>
         <div class="col col_balance large"><? echo $this->__f("Balance"); ?></div>
@@ -220,12 +220,13 @@ $totalForRoom = round($totalForRoom, 2);
     $i = 0;
     
     foreach ($summary->rows as $row) {
+        $i++;
+        
         if ($row->date != $prevDate ) {
-            $i++;
             $prevDate = $row->date;
         }
         
-        $oddrow = $i%2 ? "oddrow" : "evenrow";
+        $oddrow = $i%2 != 0 ? "oddrow" : "evenrow";
         $product = $this->getProduct($row->createOrderOnProductId);
        
         $balance = 0;
@@ -233,8 +234,8 @@ $totalForRoom = round($totalForRoom, 2);
         $allOk = round($remaining, 0) == 0;
         $balance += $remaining;
         $missingInOrders = ($row->createdOrdersFor * $row->countFromOrders) - ($row->priceInBooking * $row->countFromBooking);
-        $orderColor = $missingInOrders != 0 ? '#ff7a00' : 'green';
-        $paymentColor = $remaining != 0 ? 'red' : 'green';
+        $orderColor = $missingInOrders != 0 ? '#ff7a00' : '#86c50d';
+        $paymentColor = $remaining != 0 ? 'red' : '#86c50d';
         
         $totalMissing += $missingInOrders;
         $totalPaid += $remaining;
@@ -242,7 +243,7 @@ $totalForRoom = round($totalForRoom, 2);
     
         <div class="row row_payment_status_line <? echo $oddrow; ?>" date='<? echo $row->date; ?>'>
             <div class="col col_date"><? echo $row->date; ?></div>
-            <div class="col col_productname"><? echo $product->name; ?></div>
+            <div class="col col_productname  longwidth"><? echo $product->name; ?></div>
             <div class="col col_value"><? echo round(($row->priceInBooking * $row->countFromBooking),2); ?></div>
             <div class="col col_value odd"><? echo round(($row->createdOrdersFor * $row->countFromOrders),2); ?></div>
             <div class="col col_balance large" style='color: <? echo $orderColor; ?>'>
@@ -252,7 +253,7 @@ $totalForRoom = round($totalForRoom, 2);
                 }
                 $roundedValue = round($missingInOrders,2);
                 if ($roundedValue == 0) {
-                    echo "<i class='fa fa-check'></i>";
+                    echo "<i class='fa fa-check-circle'></i>";
                 } else {
                     echo $roundedValue;
                 }

@@ -28,6 +28,7 @@ $total = 0;
 
 $translator = new InvoiceTemplateTranslator($order->language, $order->currency);
 $calculatedTaxes = array();
+$isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
 
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -123,7 +124,7 @@ $calculatedTaxes = array();
 
     <?
     $text = "";
-    if ($order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment") {
+    if ($isInvoice) {
         if ($order->closed) {
             $text = "Invoice";
         } else {
@@ -142,22 +143,26 @@ $calculatedTaxes = array();
         <div style='border-bottom: solid 1px #DDD; padding: 5px;  padding-left: 10px; text-transform: uppercase; color: #3b7fb1; font-size: 22px;'><? echo $translator->translate($text); ?></div>
 
         <div class='row'>
-            <div class='col col1'><? echo $translator->translate("Invoice number"); ?></div>
+            <div class='col col1'><? echo !$isInvoice ? $translator->translate("Order number") : $translator->translate("Invoice number"); ?></div>
             <div class='col col2 bold'><? echo $order->incrementOrderId; ?></div>
             <div class='col col3 bold'><? echo $order->cart->address->fullName; ?></div>
         </div>
 
         <div class='row'>
-            <div class='col col1'><? echo $translator->translate("Invoice date"); ?></div>
+            <div class='col col1'><? echo !$isInvoice ? $translator->translate("Order date") : $translator->translate("Invoice date"); ?></div>
             <div class='col col2'><? echo date('d.m.Y', strtotime($order->rowCreatedDate)); ?></div>
             <div class='col col3'><? echo $order->cart->address->address; ?></div>
         </div>
 
-        <div class='row'>
-            <div class='col col1'><? echo $translator->translate("Due date"); ?></div>
-            <div class='col col2 bold' style='color: red;'><? echo date('d.m.Y', strtotime($order->dueDate)); ?></div>
-            <div class='col col3'><? echo $order->cart->address->postCode." ".$order->cart->address->city; ?></div>
-        </div>
+        <? if ($order->status != 7) { ?>
+            <div class='row'>
+                <div class='col col1'><? echo $translator->translate("Due date"); ?></div>
+                <div class='col col2 bold' style='color: red;'><? echo date('d.m.Y', strtotime($order->dueDate)); ?></div>
+                <div class='col col3'><? echo $order->cart->address->postCode." ".$order->cart->address->city; ?></div>
+            </div>
+        <?
+        }
+        ?>
 
         <div class='row'>
             <div class='col col1'><? echo $translator->translate("Currency"); ?></div>

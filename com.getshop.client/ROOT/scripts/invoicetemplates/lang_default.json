@@ -26,5 +26,7 @@
     "Preview": "Preview",
     "Proforma Invoice": "Proforma Invoice",
     "Room" : "Room",
-    "Date" : "Date"
+    "Date" : "Date",
+    "Order number" : "Order number",
+    "Order date" : "Order date"
 }

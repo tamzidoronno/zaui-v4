@@ -14,7 +14,6 @@ import com.google.gson.GsonBuilder;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.socket.GsonUTCDateAdapter;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -23,16 +22,14 @@ import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
-import org.apache.commons.discovery.tools.ClassUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -50,6 +47,7 @@ public class StoreHandler {
     private HashMap<String, Session> sessions = new HashMap();
     private GetShopSessionScope scope;
     private ArrayList<GetShopSessionObject> sessionScopedBeans;
+    private GetShopProfiler profiler = new GetShopProfiler();
 
     public StoreHandler(String storeId) {
         this.storeId = storeId;
@@ -162,6 +160,7 @@ public class StoreHandler {
             throw ex;
         } finally {
             clearSessionObject();
+            logCpuUsageForThread(inObject);
         }
     }
 
@@ -645,4 +644,8 @@ public class StoreHandler {
        return null;
     }
 
+    private void logCpuUsageForThread(JsonObject2 inObject) {
+        long timeUsed = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
+        profiler.addToProfiler(storeId, inObject.interfaceName, inObject.method, timeUsed);
+    }
 }

@@ -468,17 +468,27 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
      * @param \core_ordermanager_data_Order $order
      */
     public function getVerifoneTerminalPrinter($order) {
-        $app = $this->getApi()->getStoreApplicationPool()->getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
-        if (!$app)
-            return;
-        
         $text = "";
         if($order->status != 7 && !$order->closed) {
+            
             $offset = 0;
             for ($offset=0; $offset<5; $offset++) {
-                $ip = $app->settings->{"ipaddr$offset"}->value;
-                if ($ip) {
-                    $text .= "<i class='fa fa-credit-card dontExpand' gsclick='sendToVerifone' verifonid='$offset' orderid='".$order->id."' title='Send to verifone terminal $offset'></i>";
+                $isVerifone = stristr($order->payment->paymentType, "6dfcf735");
+                if($isVerifone) {
+                    $app = $this->getApi()->getStoreApplicationPool()->getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
+                    $ip = $app->settings->{"ipaddr$offset"}->value;
+                    if ($ip) {
+                        $text .= "<i class='fa fa-credit-card dontExpand' gsclick='sendToVerifone' verifonid='$offset' orderid='".$order->id."' title='Send to verifone terminal $offset'></i>";
+                    }
+                }
+                
+                $isIntegratedPaymentTerminal = stristr($order->payment->paymentType, "c61967a734b1");
+                if($isIntegratedPaymentTerminal) {
+                    $app = $this->getApi()->getStoreApplicationPool()->getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
+                    $ip = $app->settings->{"token$offset"}->value;
+                    if ($ip) {
+                        $text .= "<i class='fa fa-credit-card dontExpand' gsclick='sendToIntegratedTerminal' tokenid='$ip' orderid='".$order->id."' title='Send to terminal $offset'></i>";
+                    }
                 }
             }
             
@@ -491,6 +501,13 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_order_id'] = $_POST['data']['orderid'];
         $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_id'] = $_POST['data']['verifonid'];
         $this->getApi()->getVerifoneManager()->chargeOrder($_POST['data']['orderid'], $_POST['data']['verifonid'], false);
+    }
+    
+    public function sendToIntegratedTerminal() {
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "in_progress";
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_order_id'] = $_POST['data']['orderid'];
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_id'] = $_POST['data']['tokenid'];
+        $this->getApi()->getOrderManager()->chargeOrder($_POST['data']['orderid'], $_POST['data']['tokenid'], false);
     }
     
     public function getCashPointPrinters($order) {

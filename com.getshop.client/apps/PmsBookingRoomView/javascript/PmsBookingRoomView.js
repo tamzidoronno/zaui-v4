@@ -154,8 +154,17 @@ app.PmsBookingRoomView = {
         
     },
     
-    fetchTerminalMessages: function() {
+    fetchVerifoneTerminalMessages: function() {
         var event = thundashop.Ajax.createEvent(null, "getPaymentProcessMessage", $('.PmsBookingRoomView'), {});
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.PmsBookingRoomView .verifonestatus').html(res);
+        }, null, true, true);
+    },
+    
+    fetchTerminalMessages: function() {
+        var event = thundashop.Ajax.createEvent(null, "getPaymentOrderProcessMessage", $('.PmsBookingRoomView'), {});
         event['synchron'] = true;
         
         thundashop.Ajax.post(event, function(res) {

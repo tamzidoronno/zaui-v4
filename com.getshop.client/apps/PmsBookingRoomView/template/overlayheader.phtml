@@ -8,6 +8,10 @@ if (sizeof($pmsBooking->rooms) > 1) {
     $isgroup = "yes";
 }
 
+if(!$pmsBooking->confirmed) {
+    echo "<div style='text-align:center; color:#fff; background-color:red;padding: 10px;'>This booking has not been confirmed, <span gsclick='confirmbooking' style='cursor:pointer;'>confirm.</span></div>";
+}
+
 ?>
 
 <div class='headerboxes'>

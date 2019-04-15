@@ -3,6 +3,7 @@ package com.thundashop.core.ordermanager;
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.applications.GetShopApplicationPool;
@@ -31,6 +32,10 @@ import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.giftcard.GiftCardManager;
+import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.gsd.GdsPaymentAction;
+import com.thundashop.core.gsd.GetShopDevice;
+import com.thundashop.core.gsd.TerminalResponse;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -75,13 +80,17 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
+import com.thundashop.core.verifonemanager.VerifoneFeedback;
+import com.thundashop.core.verifonemanager.VerifonePaymentApp;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.jsoup.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -178,6 +187,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Autowired
     private GetShopSessionScope getShopSpringScope; 
+    
+    @Autowired
+    private GdsManager gdsManager;
+    
+    private List<String> terminalMessages = new ArrayList();
+    private Order orderToPay;
+    private String tokenInUse;
     
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -433,6 +449,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //                productManager.changeStockQuantity(product.id, change);
 //            }
         }
+    }
+    
+    @Override
+    public void cancelPaymentProcess(String tokenId) {
+        printFeedBack("payment failed");
+        orderToPay = null;
+        
+        GdsPaymentAction paymentAction = new GdsPaymentAction();
+        paymentAction.action = GdsPaymentAction.Actions.CANCELPAYMENT;
+        
+        GetShopDevice device = gdsManager.getDeviceByToken(tokenId);
+        gdsManager.sendMessageToDevice(device.id, paymentAction);
     }
     
     @Override
@@ -2259,15 +2287,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(Order order : orders.values()) {
             if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null && !order.warnedNotAbleToCapture && order.incrementOrderId > 0) {
                 if(past.after(order.needCollectingDate)) {
-                    if(order.isDibs()) {
-                        int amount = (int)(getTotalAmount(order)*100);
-                        try {
-                            dibsManager.captureOrder(order, amount);
-                        }catch(Exception e) {
-                            //Autocaptuire failed
-                            e.printStackTrace();
-                        }
-                    }
                     messageManager.sendMessageToStoreOwner("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, "Payment warning");
                     messageManager.sendErrorNotificationToEmail("pal@getshop.com","Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, null);
                     order.warnedNotAbleToCapture = true;
@@ -2707,10 +2726,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
                 saveOrder(order);
-            } else {
-                messageManager.sendErrorNotification("Not fully paid order detected: " + order.incrementOrderId + " Amount: " + order.getPaidRest(), null);
             }
-
         } else {
             markAsPaidInternal(order, date,amount);
             saveOrder(order);
@@ -3941,5 +3957,84 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<String> ids = new ArrayList();
         ids.add(order.id);
         addOrdersToBookings(ids);
+    }
+
+    @Override
+    public void chargeOrder(String orderId, String tokenId) {
+        System.out.println("Charging order: " + orderId  + " token: " + tokenId);
+        
+        Double amount = getTotalForOrderById(orderId);
+        orderToPay = getOrder(orderId);
+        tokenInUse = tokenId;
+        GdsPaymentAction paymentAction = new GdsPaymentAction();
+        paymentAction.amount = (int)(amount * 100);
+        paymentAction.action = GdsPaymentAction.Actions.STARTPAYMENT;
+        GetShopDevice device = gdsManager.getDeviceByToken(tokenId);
+        gdsManager.sendMessageToDevice(device.id, paymentAction);
+        printFeedBack("Starting payment process");
+    }
+    
+    @Override
+    public List<String> getTerminalMessages() {
+        
+        for (String msg : terminalMessages) {
+            if (msg != null && msg.equals("completed") && orderToPay != null && orderToPay.status != Order.Status.PAYMENT_COMPLETED) {
+                markOrderInProgressAsPaid();
+            }
+        }
+        
+        return terminalMessages;
+    }
+    
+    public void markOrderInProgressAsPaid() {
+        double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
+        markAsPaid(orderToPay.id, new Date(), paidAmount);
+    }
+
+    @Override
+    public Boolean isPaymentInProgress() {
+        return orderToPay != null;
+    }
+    
+    private void printFeedBack(String string) {
+        VerifoneFeedback feedBack = new VerifoneFeedback();
+        feedBack.msg = string;
+        terminalMessages.add(string);
+        if(orderToPay != null && orderToPay.payment != null) {
+            orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);
+        }
+        logPrint("\t" + string);
+    }
+
+    @Override
+    public void paymentResponse(String tokenId, TerminalResponse response) {
+        if(tokenInUse == null || !tokenId.equals(tokenInUse)) {
+            return;
+        }
+        Gson gson = new Gson();
+        
+        if(response.paymentSuccess()) {
+            terminalMessages.add("OK");
+            markOrderInProgressAsPaid();
+        } else {
+            terminalMessages.add("payment failed");
+        }
+        
+        orderToPay.terminalResponses.put(new Date().getTime(), response);
+        saveOrder(orderToPay);
+    }
+
+    @Override
+    public void paymentText(String tokenId, String text) {
+        if(tokenInUse == null || !tokenId.equals(tokenInUse)) {
+            return;
+        }
+        
+        terminalMessages.add(text);
+    }
+
+    @Override
+    public void clearMessages() {
+        terminalMessages.clear();
     }
 }

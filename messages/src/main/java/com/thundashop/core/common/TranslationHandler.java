@@ -39,7 +39,11 @@ public class TranslationHandler implements Serializable {
             String translation = translations.get(lang + "_" + key);
             if(translation != null && !translation.isEmpty()) {
                 Gson gson = new Gson();
-                text = gson.fromJson(translation, String.class);
+                try {
+                    text = gson.fromJson(translation, String.class);
+                }catch(Exception e) {
+                    GetShopLogHandler.logStack(e, "translationhandler");
+                }
             }
         }
         return text;

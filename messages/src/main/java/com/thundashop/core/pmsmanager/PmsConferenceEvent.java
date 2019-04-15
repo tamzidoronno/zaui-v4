@@ -6,7 +6,9 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -21,6 +23,8 @@ public class PmsConferenceEvent extends DataCommon {
     public String userId = "";
     public Integer status = 0;
     String title = "";
+    
+    public List<PmsGuests> additionalGuests = new ArrayList();
 
     boolean betweenTime(Date start, Date end) {
         if(from.after(start) && from.before(end)) {

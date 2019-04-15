@@ -11,6 +11,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.TwoDecimalRounder;
+import com.thundashop.core.gsd.TerminalResponse;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.Product;
@@ -43,6 +44,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Boolean triedTransferredToAccountingSystem = false;
     public Boolean transferredToAccountingSystem = false;
     public Date transferredToCreditor = null;
+    
+    public HashMap<Long, TerminalResponse> terminalResponses = new HashMap();
     
     /**
      * Used if this order also has money that should be 

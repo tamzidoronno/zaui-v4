@@ -14,6 +14,10 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("searchcustomerresult");
     }
     
+    public function loadConferenceEvents() {
+        $this->includefile("addguesttoconference");
+    }
+    
     public function printavailability() {
         $this->includefile("availability");
     }
@@ -107,7 +111,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "</div>";
         
         echo "<script>";
-//        echo "app.PmsNewBooking20.setLastPage();";
+        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
     }
     
@@ -413,6 +417,13 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         unset($_SESSION['pmsnewbooking20_readylist']);
     }
     
+    public function searchForEvent() {
+        $filter = new \core_pmsmanager_PmsConferenceEventFilter();
+        $filter->keyword = $_POST['data']['keyword'];
+        $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
+        $this->printEvents($events);
+    }
+    
     public function getReadyToAddList() {
          if(!isset($_SESSION['pmsnewbooking20_readylist'])) {
             $_SESSION['pmsnewbooking20_readylist'] = array();
@@ -439,6 +450,49 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         for($i = 0; $i < $count; $i++) {
             $this->getApi()->getPmsManager()->addBookingItemType($bookingengine, $bookingId, $typeId, $start, $end, "");
         }
+    }
+
+    public function printEvents($events, $currentPmsEventId = "") {
+        $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+        $items = $this->indexList($items);
+        if(sizeof($events) == 0) {
+            echo "<div style='padding: 5px;'>";
+            echo "* No events found, please search for one in the input field above.";
+            echo "</div>";
+        }
+        echo "<table width='100%'>";
+        foreach($events as $event) {
+            $eventAdded = "";
+            if($event->id == $currentPmsEventId) {
+                $eventAdded = "eventaddedtoguest";
+            }
+            $confernce = $this->getApi()->getPmsConferenceManager()->getConference($event->pmsConferenceId);
+            echo "<tr class='$eventAdded'>";
+            echo "<td>" . $confernce->meetingTitle . "</td>";
+            echo "<td>" . $items[$event->pmsConferenceItemId]->name . "</td>";
+            echo "<td>" . date("d.m.Y H:i", strtotime($event->from)) . "</td>";
+            echo "<td>" . date("d.m.Y H:i", strtotime($event->to)) . "</td>";
+            if(!$eventAdded) {
+                echo "<td><span style='cursor:pointer;' class='attachguesttoevent' eventid='".$event->id."'>Select</span></td>";
+            } else {
+                echo "<td><span style='cursor:pointer;' class='attachguesttoevent' eventid=''>Remove</span></td>";
+            }
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+    
+    public function attachGuestToEvent() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $room) {
+            foreach($room->guests as $guest) {
+                if($guest->guestId == $_POST['data']['guestid']) {
+                    $guest->pmsConferenceEventId = $_POST['data']['eventid'];
+                    if($_POST['data']['eventid']) { echo "added"; } else { echo "removed"; }
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
     }
 
 }

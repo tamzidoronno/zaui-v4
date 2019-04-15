@@ -1,15 +1,10 @@
 package getshop.nets;
 
+import com.google.gson.Gson;
 import eu.nets.baxi.client.LocalModeEventArgs;
-import java.io.File;
 import java.util.Scanner;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import getshop.nets.GetShopNetsController;
-import getshop.nets.TerminalResponse;
+import com.thundashop.core.gsd.TerminalResponse;
+import getshopiotserver.GetShopIOTOperator;
 
 /**
  * Created by mcamp on 14.03.2017.
@@ -19,6 +14,7 @@ import getshop.nets.TerminalResponse;
  */
 public class GetShopNetsApp {
     private GetShopNetsController controller;
+    private final GetShopIOTOperator operator;
 
     public static final int RESULT_FINANCIAL_TRANSACTION_OK = 0;        // : Financial transaction OK, accumulator updated
     public static final int RESULT_ADMINISTRATIVE_TRANSACTION_OK = 1;   // : Administrative transaction OK, no update of accumulator
@@ -31,6 +27,10 @@ public class GetShopNetsApp {
 //        GetShopNetsApp app = new GetShopNetsApp();
 //        app.start();
         
+    }
+
+    public GetShopNetsApp(GetShopIOTOperator operator) {
+        this.operator = operator;
     }
 
     public void initialize() {
@@ -81,22 +81,10 @@ public class GetShopNetsApp {
     }
     
     public void printToScreen(String text) {
-        System.out.println(text);
+         operator.sendMessage("OrderManager", "paymentText", operator.getToken(), text, null,null, null);
     }
 
     public void transanctionCompletedStatus(LocalModeEventArgs args) {
-        
-         switch(args.getResult()) {
-            case RESULT_FINANCIAL_TRANSACTION_OK:
-            case RESULT_ADMINISTRATIVE_TRANSACTION_OK:
-            case RESULT_TRANSACTION_IS_LOYALTY:
-                System.out.println("transaction ok");
-                break;
-            default:
-                System.out.println("Transaction failed");
-         }
-        
-        
          TerminalResponse response = new TerminalResponse()
             .setAccountType(args.getAccountType())
             .setAcquirerMerchantID(args.getAcquirerMerchantID())
@@ -127,6 +115,18 @@ public class GetShopNetsApp {
             .setTerminalVerificationResult(args.getTVR())
             .setVerificationMethod(args.getVerificationMethod());
          System.out.println(response.toString());
+         
+            switch(args.getResult()) {
+            case RESULT_FINANCIAL_TRANSACTION_OK:
+            case RESULT_ADMINISTRATIVE_TRANSACTION_OK:
+            case RESULT_TRANSACTION_IS_LOYALTY:
+                response.setPaymentResult(1);
+                break;
+            default:
+                response.setPaymentResult(0);
+         }
+        
+         operator.sendMessage("OrderManager", "paymentResponse", operator.getToken(), response, null,null, null);
     }
 
     public void startTransaction(Integer amount) {

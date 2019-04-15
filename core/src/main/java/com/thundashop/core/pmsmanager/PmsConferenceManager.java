@@ -186,5 +186,33 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         result.sort(Comparator.comparing(a -> a.meetingTitle));
         return result;
     }
+
+    @Override
+    public List<PmsConferenceEvent> getConferenceEventsByFilter(PmsConferenceEventFilter filter) {
+        List<PmsConferenceEvent> result = new ArrayList();
+        if(filter.start != null && filter.end != null) {
+            List<PmsConferenceEvent> eventsToAdd = getConferenceEventsBetweenTime(filter.start, filter.end);
+            result.addAll(eventsToAdd);
+        }
+        
+        if(filter.userId != null && !filter.userId.isEmpty()) {
+            for(PmsConferenceEvent event : conferenceEvents.values()) {
+                if(event.userId.equals(filter.userId) && result.contains(event)) {
+                    result.add(event);
+                }
+            }
+        }
+        
+        if(filter.keyword != null && !filter.keyword.isEmpty()) {
+            for(PmsConferenceEvent event : conferenceEvents.values()) {
+                PmsConference conference = getConference(event.pmsConferenceId);
+                if(conference.meetingTitle != null && conference.meetingTitle.toLowerCase().contains(filter.keyword.toLowerCase())) {
+                    result.add(event);
+                }
+            }
+        }
+        
+        return result;
+    }
     
 }

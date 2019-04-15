@@ -25,14 +25,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GetShopIOTOperator extends GetShopIOTCommon {
-    private String address = "";
-    private String token = "";
     private String configFile = "getshopiotserverconfig.txt";
     
     public GetShopNetsApp nets = null;
     
     private boolean isProductionMode = false;
-    private String debugConnectionAddr ="http://corner.3.0.local.getshop.com/";
+    private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
     private String debugLongPullAddr ="http://corner.3.0.local.getshop.com/";
     
     public void run() {
@@ -41,7 +39,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
             doLongPull();
         }
     }
-
+    
     private void doLongPull() {
         Gson gson = new Gson();
         try {
@@ -95,13 +93,9 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         }
         Gson gson = new Gson();
         SetupMessage msg = gson.fromJson(result, SetupMessage.class);
+        this.setConfiguration(msg);
         
-        if(msg != null) {
-            address = msg.address;
-            token = msg.token;
-        }
-        
-        return (!address.isEmpty() && !token.isEmpty());
+        return (!getAddress().isEmpty() && !getToken().isEmpty());
     }
 
     void readConfiguration() {
@@ -169,13 +163,13 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
     }
 
     private String readFromPullService() throws MalformedURLException, IOException {
-        String addr = address;
+        String addr = getAddress();
         if(!isProductionMode) {
             addr = debugLongPullAddr;
         }
         
         addr += "/scripts/longpullgsd.php";
-        URL url = new URL(addr+"?token=" + token);
+        URL url = new URL(addr+"?token=" + getToken());
         URLConnection connection = url.openConnection();
         connection.setConnectTimeout(2000);
         connection.setReadTimeout(20000);
@@ -196,7 +190,9 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         MessageProcessorInterface processor = null;        
         if(res instanceof DevicePrintMessage) { processor = new ProcessPrinterMessage(); }
         if(res instanceof GdsPaymentAction) { processor = new ProcessPaymentMessage(); }
-        
+        if(processor == null) {
+            return;
+        }
         processor.setIOTOperator(this);
         
         if(processor == null) { 
@@ -206,4 +202,5 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         }
         
     }
+
 }

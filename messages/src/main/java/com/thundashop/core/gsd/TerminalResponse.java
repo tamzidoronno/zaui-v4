@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package getshop.nets;
+package com.thundashop.core.gsd;
 
 /**
  *
@@ -153,6 +153,11 @@ public class TerminalResponse {
     private String bankAgent = "";
     private String accountType = "";
     private String optionalData = "";
+    
+    /**
+     * 0 == Payment failed, 1 == Payment OK
+     */
+    private int paymentStatus = 0;
 
     // region boilerplate
 
@@ -452,5 +457,13 @@ public class TerminalResponse {
         sb.append(", optionalData='").append(optionalData).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public void setPaymentResult(int status) {
+        paymentStatus = status;
+    }
+
+    public boolean paymentSuccess() {
+        return paymentStatus == 1;
     }
 }

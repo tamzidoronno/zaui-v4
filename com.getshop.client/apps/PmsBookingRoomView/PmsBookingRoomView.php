@@ -37,6 +37,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $aDate > $bDate;
     }
     
+    public function confirmbooking() {
+        $booking = $this->getPmsBooking();
+        $booking->confirmed = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "booking confirmed", $booking->id,null);
+    }
+    
     public function splitStay() {
         $roomId = $_POST['data']['roomid'];
         $splitTime = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['time']));
@@ -1955,10 +1962,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $orderIds;
     }
 
-    public function getLastTerminalMessage() {
-        $messages = $this->getApi()->getVerifoneManager()->getTerminalMessages();
-        $this->getApi()->getVerifoneManager()->clearMessages();
-        
+    public function getLastTerminalMessage($isVerifone = true) {
+       if($isVerifone) {
+            $messages = $this->getApi()->getVerifoneManager()->getTerminalMessages();
+            $this->getApi()->getVerifoneManager()->clearMessages();
+        } else {
+            $messages = $this->getApi()->getOrderManager()->getTerminalMessages();
+            $this->getApi()->getOrderManager()->clearMessages();
+        }        
         if ($messages && count($messages)) {
             $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_last_terminal_message'] = end($messages);
         }
@@ -1983,9 +1994,20 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         die();
     }
     
+    public function getPaymentOrderProcessMessage() {
+        $this->includefile("integratedpaymentprocess");
+        die();
+    }
+    
     public function cancelVerifonePayment() {
         $deviceId = $this->getCurrentTerminalId();
         $this->getApi()->getVerifoneManager()->cancelPaymentProcess($deviceId);
+        die();
+    }
+    
+    public function cancelPaymentPayment() {
+        $deviceId = $_POST['data']['tokenid'];
+        $this->getApi()->getOrderManager()->cancelPaymentProcess($deviceId);
         die();
     }
     
@@ -2024,6 +2046,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $deviceId = $this->getCurrentTerminalId();
         $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "in_progress";
         $this->getApi()->getVerifoneManager()->chargeOrder($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_order_id'], $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_id'], false);
+    }
+
+    public function restartPayment() {
+        $deviceId = $this->getCurrentTerminalId();
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_complete_payment_state'] = "in_progress";
+        $this->getApi()->getOrderManager()->chargeOrder($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_order_id'], $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_current_verifone_id'], false);
     }
     
     public function showMarkAsPaidWindow() {

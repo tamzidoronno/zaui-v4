@@ -89,7 +89,11 @@
 .PmsNewBooking20 .pricetoroom { padding: 10px; box-sizing: border-box; font-size: 14px; line-height: 20px; cursor:pointer; font-weight: bold; border-left:  solid 1px #ddd; display:inline-block; float:right;}
 .PmsNewBooking20 .pricetoroom .fa-edit { color:#8cd8f6; }
 .PmsNewBooking20 .nameinput { width: 200px; margin-right: 10px; }
-.PmsNewBooking20 .emailinput { width: 250px; margin-right: 10px; }
+.PmsNewBooking20 .emailinput { width: 240px; margin-right: 10px; }
+.PmsNewBooking20 .addconference { cursor:pointer; }
+.PmsNewBooking20 .addconferencearea { position:relative; }
+.PmsNewBooking20 .eventaddedtoguest { color:green; }
+.PmsNewBooking20 .addguesttoconferencepanel { position:absolute; right:0px; border: solid 1px; display:none; background-color:#fff; width: 600px; z-index:3; }
 .PmsNewBooking20 .guestsuggestionrow { position:relative; }
 .PmsNewBooking20 .prefixinput { width: 30; margin-right: 4px; text-align: center; }
 .PmsNewBooking20 .phoneinput { width: 120px; margin-right: 10px; }

@@ -521,7 +521,7 @@ public class EhfXmlGenerator {
             Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
             if (rets == null) {
                 rets = new HashMap<TaxGroup, BigDecimal>();
-                grouped.put(group.taxRate, taxes);
+                grouped.put(group.taxRate, rets);
             }
             rets.put(group, taxes.get(group));
         }
@@ -543,11 +543,12 @@ public class EhfXmlGenerator {
         Map<TaxGroup, BigDecimal> retSet = new HashMap();
         
         Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap();
+        
         for (TaxGroup group : taxes.keySet()) {
             Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
             if (rets == null) {
                 rets = new HashMap<TaxGroup, BigDecimal>();
-                grouped.put(group.taxRate, taxes);
+                grouped.put(group.taxRate, rets);
             }
             rets.put(group, taxes.get(group));
         }

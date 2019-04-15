@@ -9994,6 +9994,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         currentBooking.confirmed = true;
         currentBooking.markAsCompleted();
+        currentBooking.avoidAutoDelete = true;
         addDefaultAddons(currentBooking);
         saveBooking(currentBooking);
     }

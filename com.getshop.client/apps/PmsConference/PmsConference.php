@@ -16,6 +16,13 @@ class PmsConference extends \WebshopApplication implements \Application {
         echo $id;
     }
     
+    public function removeGuestFromEvent() {
+        $guestId = $_POST['data']['guestId'];
+        $eventId = $_POST['data']['eventId'];
+        
+        $this->getApi()->getPmsConferenceManager()->removeGuestFromEvent($guestId, $eventId);
+    }
+    
     public function loadSubitems() {
         $_SESSION['pmsconferencecurrentitem'] = $_POST['data']['itemid'];
     }

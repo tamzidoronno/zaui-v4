@@ -452,7 +452,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         }
     }
 
-    public function printEvents($events, $currentPmsEventId = "") {
+    public function printEvents($events, $currentPmsEventIds = array()) {
         $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
         $items = $this->indexList($items);
         if(sizeof($events) == 0) {
@@ -463,7 +463,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "<table width='100%'>";
         foreach($events as $event) {
             $eventAdded = "";
-            if($event->id == $currentPmsEventId) {
+            if(in_array($event->id, $currentPmsEventIds)) {
                 $eventAdded = "eventaddedtoguest";
             }
             $confernce = $this->getApi()->getPmsConferenceManager()->getConference($event->pmsConferenceId);
@@ -475,7 +475,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             if(!$eventAdded) {
                 echo "<td><span style='cursor:pointer;' class='attachguesttoevent' eventid='".$event->id."'>Select</span></td>";
             } else {
-                echo "<td><span style='cursor:pointer;' class='attachguesttoevent' eventid=''>Remove</span></td>";
+                echo "<td><span style='cursor:pointer;' class='attachguesttoevent' eventid='".$event->id."'>Remove</span></td>";
             }
             echo "</tr>";
         }
@@ -484,14 +484,31 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     
     public function attachGuestToEvent() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $guestInvolved = null;
         foreach($booking->rooms as $room) {
             foreach($room->guests as $guest) {
                 if($guest->guestId == $_POST['data']['guestid']) {
-                    $guest->pmsConferenceEventId = $_POST['data']['eventid'];
-                    if($_POST['data']['eventid']) { echo "added"; } else { echo "removed"; }
+                    $guestInvolved = $guest;
+                    $array = (array)$guest->pmsConferenceEventIds;
+                    if(!in_array($_POST['data']['eventid'], $array)) {
+                        $array[] = $_POST['data']['eventid'];
+                        $guest->pmsConferenceEventIds = $array;
+                    } else {
+                        $del_val = $_POST['data']['eventid'];
+                        $newArray = array();
+                        foreach($array as $val) {
+                            if($val == $_POST['data']['eventid']) {
+                                continue;
+                            }
+                            $newArray[] = $val;
+                        }
+                        $guest->pmsConferenceEventIds = $newArray;
+                    }
+                    
                 }
             }
         }
+        if(sizeof($guestInvolved->pmsConferenceEventIds) > 0) { echo sizeof($guestInvolved->pmsConferenceEventIds); }
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
     }
 

@@ -2,6 +2,7 @@
 .PmsConference .dayentryheader { display: inline-block;height: 20px; width: 46px; padding:2px;text-align: center; border: solid 1px #efefef; background-color:#fff;}
 .PmsConference .dayentrymonthheader { display: inline-block;height: 20px; width: 22px; padding:2px;text-align: center;}
 .PmsConference .conferencetimelines { border-bottom: solid 1px #efefef;display:inline-block; }
+.PmsConference .removeguest { cursor:pointer; }
 .PmsConference .itemname,
 .PmsConference .dayentry { display:inline-block;  font-size: 14px; border: solid 1px #efefef; background-color:#fff; border-bottom: solid 0px; height: 20px; width: 20px; padding:2px; text-align: center; cursor:pointer;}
 .PmsConference .emptyitemname { width: 202px; display:inline-block;  float:left; text-align: left; padding : 2px; }

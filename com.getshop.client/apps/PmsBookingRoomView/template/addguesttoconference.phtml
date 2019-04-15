@@ -16,7 +16,7 @@
                 $filter->userId = $booking->userId;
 
                 $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
-                $this->printEvents($events, $guest->pmsConferenceEventIds);
+                $this->printEvents($events, $guest->pmsConferenceEventId);
             }
         }
     }

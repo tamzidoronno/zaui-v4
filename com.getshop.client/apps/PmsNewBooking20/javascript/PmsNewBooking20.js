@@ -30,11 +30,13 @@ app.PmsNewBooking20 = {
             "guestid" : guestid
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            if(res === "added") {
+            var res = parseInt(res);
+            if(res > 0) {
                 btn.addClass('eventaddedtoguest');
             } else {
                 btn.removeClass('eventaddedtoguest');
             }
+            btn.html(res);
             $('.addguesttoconferencepanel').fadeOut();
         });
     },

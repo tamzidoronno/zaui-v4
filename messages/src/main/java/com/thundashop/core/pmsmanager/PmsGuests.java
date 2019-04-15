@@ -1,6 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class PmsGuests implements Serializable {
     public String prefix = "47";
     public String guestId = UUID.randomUUID().toString();
     public boolean isChild = false;
-    public String pmsConferenceEventId = "";
+    public List<String> pmsConferenceEventIds = new ArrayList();
     
     
     /**

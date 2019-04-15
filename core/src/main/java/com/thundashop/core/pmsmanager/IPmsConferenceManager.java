@@ -57,4 +57,10 @@ public interface IPmsConferenceManager {
     public PmsConferenceEventEntry getEventEntry(String eventEntryId);
     @Administrator
     public void saveEventEntry(PmsConferenceEventEntry entry);
+    
+    @Administrator
+    public List<PmsConferenceGuests> getAllGuestsForEvent(String eventId);
+    
+    @Administrator
+    public void removeGuestFromEvent(String guestId, String eventId);
 }

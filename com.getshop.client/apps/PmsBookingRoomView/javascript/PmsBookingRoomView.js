@@ -49,8 +49,46 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .collapsable_shadowbox .colheader', this.toggleCollapse)
         $(document).on('change', '.PmsBookingRoomView .filterbymonth', this.filterOrdersByMonth)
         $(document).on('click', '.PmsBookingRoomView .showOrderSummary', this.showOrderSummary);
+        $(document).on('click', '.PmsBookingRoomView .connectGuestToConference', this.showAddConferencePanel);
+        $(document).on('click','.PmsBookingRoomView .attachguesttoevent', app.PmsBookingRoomView.attachGuestToConference);
+        $(document).on('click','.PmsBookingRoomView .removeConferenceFromGuest', app.PmsBookingRoomView.removeGuestToConference);
     },
-        
+    removeGuestToConference : function(res) {
+        var guestid = $(this).closest('.guest_row').attr('guestid');
+        var area = $(this).closest('.guestconferenceinformation');
+        var eventid = $(this).attr('eventid')
+        var event = thundashop.Ajax.createEvent('','removeConferenceFromGuest',$(this), {
+            "guestid" : guestid,
+            "eventid" : eventid
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            console.log(res);
+            area.html(res);
+        });
+    },
+    attachGuestToConference : function() {
+        var eventid = $(this).attr('eventid');
+        var guestid = $(this).closest('.guest_row').attr('guestid');
+        var area = $(this).closest('.guest_row').find('.guestconferenceinformation');
+        var event = thundashop.Ajax.createEvent('','attachGuestToEvent',$(this), {
+            "eventid" : eventid,
+            "guestid" : guestid
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            area.html(res);
+            $('.addguesttoconferencepanel').hide();
+        });
+    },
+    showAddConferencePanel : function() {
+        var panel = $(this).closest('.guest_row').find('.addguesttoconferencepanel');
+        var event = thundashop.Ajax.createEvent('','loadConferenceEvents',$(this), {
+            "guestid" : $(this).closest('.guest_row').attr('guestid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.html(res);
+            panel.show();
+        });
+    },
     showOrderSummary: function() {
         thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", {
             orderId: $(this).attr('orderid'),
@@ -643,7 +681,6 @@ app.PmsBookingRoomView = {
         app.PmsSearchPaymentProcess.updatePaymentProcess();
         return false;
     },
-        
     addGuest: function() {
         var cloned = $(this).closest('.bookinginformation').find('.guest_row.row_template').clone();
         
@@ -665,6 +702,12 @@ app.PmsBookingRoomView = {
         var found = cloned.find('[temp_gsname="guestinfo_prefix"]'); found.removeAttr('temp_gsname'); found.attr('gsname', 'guestinfo_'+highest+'_prefix');
         var found = cloned.find('[temp_gsname="guestinfo_phone"]'); found.removeAttr('temp_gsname'); found.attr('gsname', 'guestinfo_'+highest+'_phone');
         var found = cloned.find('[temp_gsname="guestinfo_guestid"]'); found.removeAttr('temp_gsname'); found.attr('gsname', 'guestinfo_'+highest+'_guestid');
+        
+        var event = thundashop.Ajax.createEvent('','createGuest',$(this), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            cloned.attr('guestid', res);
+            cloned.find('.guestidfield').val(res);
+        });
         
         $('.guestinforows').append(cloned);
     },

@@ -5,8 +5,19 @@ app.PmsConference = {
         $(document).on('click','.PmsConference .openevent', app.PmsConference.openEvent);
         $(document).on('click','.PmsConference .openconference', app.PmsConference.openConference);
         $(document).on('click','.PmsConference .canaddevent', app.PmsConference.loadQuickAddToConference);
+        $(document).on('click','.PmsConference .removeguest', app.PmsConference.removeGuestFromEvent);
         $(document).on('keyup','.PmsConference .updatevententryrow', app.PmsConference.updateEventEntryRow);
         $(document).on('change','.PmsConference .choosemonthdropdown', app.PmsConference.changeTimePeriode);
+    },
+    removeGuestFromEvent : function() {
+        var row = $(this).closest('tr');
+        var event = thundashop.Ajax.createEvent('','removeGuestFromEvent',$(this), {
+            guestId : $(this).attr('guestid'),
+            eventId : $(this).attr('eventid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            row.remove();
+        });
     },
     loadQuickAddToConference : function(e) {
         var box = $('.PmsConference .addeventbox');

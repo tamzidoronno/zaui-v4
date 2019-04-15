@@ -4,6 +4,7 @@ $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $sendmsgconfig = new ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration();
 $langs = $sendmsgconfig->getLanguageCodes();
+$hasConferences = sizeof($this->getApi()->getPmsConferenceManager()->getAllItem("-1")) > 0;
 
 $guestcount = (int)$pmsSelectedRoom->numberOfGuests;
 $numberofguests = (int)sizeof($pmsSelectedRoom->guests);
@@ -65,9 +66,9 @@ if($guestcount > $numberofguests) {
         <div class="guest_col guest_col4"></div>
     </div>
 
-    <div  class="guest_row row_template" style='display: none'>
+    <div  class="guest_row row_template" style='display: none' guestid=''>
         <div class="guest_col guest_col1">
-            <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1" value=""/>
+            <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1 guestidfield" value=""/>
             <input temp_gsname="guestinfo_name" class="gsniceinput1" value="" placeholder='<? echo $this->__f("Name"); ?>'/>
         </div>
 
@@ -82,6 +83,14 @@ if($guestcount > $numberofguests) {
         <div class="guest_col guest_col4">
             <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
         </div>
+        <?
+        if($hasConferences) {
+            echo "<div class='guestconferenceinformation'>";
+            $this->printConnectedConferenceEventToGuest(null);
+            echo "</div>";
+            echo "<div class='addguesttoconferencepanel'></div>";
+        }
+        ?>
     </div>
 
     <?
@@ -95,9 +104,8 @@ if($guestcount > $numberofguests) {
     foreach ($room->guests as $guest) {
         $i++;
         ?>
-        <div class="guest_row" counter='<? echo $i; ?>'>
-
-
+        <div class="guest_row" counter='<? echo $i; ?>' guestid='<?php echo $guest->guestId; ?>'>
+            
             <div class="guest_col guest_col1">
                 <input type="hidden" gsname="guestinfo_<? echo $i; ?>_guestid" class="gsniceinput1 prefix" value="<? echo $guest->guestId; ?>"/>
                 <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" value="<? echo $guest->name; ?>"/>
@@ -120,8 +128,16 @@ if($guestcount > $numberofguests) {
             <div class="guest_col guest_col4">      
                 <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
             </div>
+            <?
+            if($hasConferences) {
+                echo "<div class='guestconferenceinformation'>";
+                $this->printConnectedConferenceEventToGuest($guest);
+                echo "</div>";
+                echo "<div class='addguesttoconferencepanel'></div>";
+            }
+            ?>
         </div>
-        <?
+        <?php
     }
     echo "</div>";
     ?>

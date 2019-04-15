@@ -1,19 +1,39 @@
 package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionScope;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
 public class PmsConferenceManager extends ManagerBase implements IPmsConferenceManager {
+    
+    @Autowired
+    StoreManager storeManager;
+    
+    @Autowired
+    UserManager userManager;
+    
+    @Autowired
+    BookingEngine engine;
+    
+   @Autowired
+    private GetShopSessionScope getShopSpringScope; 
+    
     HashMap<String, PmsConferenceItem> items = new HashMap();
     HashMap<String, PmsConference> conferences = new HashMap();
     HashMap<String, PmsConferenceEvent> conferenceEvents = new HashMap();
@@ -213,6 +233,62 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         }
         
         return result;
+    }
+
+    @Override
+    public List<PmsConferenceGuests> getAllGuestsForEvent(String eventId) {
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        List<PmsConferenceGuests> result = new ArrayList();
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            BookingEngine engine = getShopSpringScope.getNamedSessionBean(multilevelName, BookingEngine.class);
+            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+            allbookings.stream().forEach(booking -> {
+                booking.rooms.stream().forEach(room -> {
+                    room.guests.stream().forEach(guest -> {
+                        if(guest.pmsConferenceEventIds != null && guest.pmsConferenceEventIds.contains(eventId)) {
+                            PmsConferenceGuests toAdd = new PmsConferenceGuests();
+                            toAdd.guest = guest;
+                            toAdd.bookerName = userManager.getUserByIdUnfinalized(booking.userId).fullName;
+                            if(room.bookingItemTypeId != null) {
+                                BookingItemType type = engine.getBookingItemType(room.bookingItemTypeId);
+                                if(type != null) { toAdd.bookingItemTypeName = type.name; }
+                            }
+                            if(room.bookingItemId != null) {
+                                BookingItem item = engine.getBookingItem(room.bookingItemId);
+                                if(item != null) { toAdd.bookingItem = item.bookingItemName; }
+                            }
+                            toAdd.start = room.date.start;
+                            toAdd.end = room.date.end;
+                            
+                            result.add(toAdd);
+                        }
+                    });
+                });
+            });
+        }
+        return result;
+    }
+
+    @Override
+    public void removeGuestFromEvent(String guestId, String eventId) {
+      List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            BookingEngine engine = getShopSpringScope.getNamedSessionBean(multilevelName, BookingEngine.class);
+            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+            allbookings.stream().forEach(booking -> {
+                booking.rooms.stream().forEach(room -> {
+                    room.guests.stream().forEach(guest -> {
+                        if(guest.guestId != null && guest.guestId.equals(guestId)) {
+                            guest.pmsConferenceEventIds.remove(eventId);
+                            pmsManager.saveBooking(booking);
+                            return;
+                        }
+                    });
+                });
+            });
+        }
     }
     
 }

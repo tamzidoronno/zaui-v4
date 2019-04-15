@@ -1,0 +1,180 @@
+<div class="contentrow firstrow"> 
+    <div class='introbox'>
+        <?php
+        ContentManager::render("small_intro");
+        ?>
+    </div>
+
+    <div class="actionbutton bookademo">
+        <?php
+        ContentManager::render("book_demo_button");
+        ?>
+    </div>    
+</div>
+
+<div class="contentrow sized_and_centered_row"> 
+    <div class="boxes boxes_3">
+        <div class="box underbox">
+            <?php
+            ContentManager::render("row_2_box_content_1");
+            ?>
+        </div>
+        <div class="box underbox">
+            <?php
+            ContentManager::render("row_2_box_content_2");
+            ?>
+        </div>
+        <div class="box underbox">
+            <?php
+            ContentManager::render("row_2_box_content_3");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow slider_row_header"> 
+    <div class="center_content">
+        <?php
+            ContentManager::render("row_3_box_content_1");
+        ?>    
+    </div>
+</div>
+
+
+<div class="contentrow sliderrow ">
+    <div class="slider_row_inner">
+
+        <div class="slider_button slider_button_1 active" group="1"><?php ContentManager::render("slider_button_1"); ?></div>
+        <div class="slider_button slider_button_2" group="2"><?php ContentManager::render("slider_button_2"); ?></div>
+        <div class="slider_button slider_button_3" group="3"><?php ContentManager::render("slider_button_3"); ?></div>
+        <div class="slider_button slider_button_4" group="4"><?php ContentManager::render("slider_button_4"); ?></div>
+        <div class="slider_button slider_button_4" group="5"><?php ContentManager::render("slider_button_5"); ?></div>
+        <div class="slider_button slider_button_4" group="6"><?php ContentManager::render("slider_button_6"); ?></div>
+        <div class="slider_button slider_button_4" group="7"><?php ContentManager::render("slider_button_7"); ?></div>
+
+        <div class="sliders">
+            <div class="slider slider_1" style="display: block;" group="1">
+                <div class="content">
+                    <?php
+                    ContentManager::render("slider_content_1");
+                    ?>
+                </div>
+            </div>
+            <div class="slider slider_2" group="2">
+                    <?php
+                    ContentManager::render("slider_content_2");
+                    ?>
+            </div>
+            <div class="slider slider_3" group="3">
+                    <?php
+                    ContentManager::render("slider_content_3");
+                    ?>
+            </div>
+            <div class="slider slider_4" group="4">
+                    <?php
+                    ContentManager::render("slider_content_4");
+                    ?>
+            </div>
+            <div class="slider slider_5" group="5">
+                    <?php
+                    ContentManager::render("slider_content_5");
+                    ?>
+            </div>
+            <div class="slider slider_6" group="6">
+                    <?php
+                    ContentManager::render("slider_content_6");
+                    ?>
+            </div>
+            <div class="slider slider_7" group="7">
+                    <?php
+                    ContentManager::render("slider_content_7");
+                    ?>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="contentrow sized_and_centered_row center_content productsheaderrow"> 
+    <?php ContentManager::render("product_header"); ?>
+</div>
+
+<div class="contentrow sized_and_centered_row"> 
+    <a href='/?page=pms'>
+        <div class="productbox">
+            <div class="title"><?php ContentManager::render("product_box_1_title"); ?></div>
+            <div class="image">
+                <img src="getshop/images/pms_mac.png"/>
+            </div>
+            <div class="description">
+                <?php ContentManager::render("product_box_1_desc"); ?>
+            </div>
+        </div>
+    </a>
+    
+    <a href='/?page=apac'>
+        <div class="productbox">
+            <div class="title"><?php ContentManager::render("product_box_2_title"); ?></div>
+            <div class="image">
+                <img src="getshop/images/codelock.png"/>
+            </div>
+            <div class="description">
+                <?php ContentManager::render("product_box_2_desc"); ?>
+            </div>
+        </div>
+    </a>
+    
+    <a href='/?page=pga'>
+        <div class="productbox small">
+            <div class="title"><?php ContentManager::render("product_box_3_title"); ?></div>
+            <div class="image">
+                <img src="getshop/images/pga2.png"/>
+            </div>
+            <div class="description">
+                <?php ContentManager::render("product_box_3_desc"); ?>
+            </div>
+        </div>
+    </a>
+    
+    <a href='/?page=onlinebooking'>
+        <div class="productbox small">
+            <div class="title"><?php ContentManager::render("product_box_4_title"); ?></div>
+            <div class="image">
+                <img src="getshop/images/onlinebooking_2.png"/>
+            </div>
+            <div class="description">
+                <?php ContentManager::render("product_box_4_desc"); ?>
+            </div>
+        </div>
+    </a>
+    
+    <a href='/?page=pos'>
+        <div class="productbox small">
+            <div class="title"><?php ContentManager::render("product_box_5_title"); ?></div>
+            <div class="image">
+                <img src="getshop/images/pos.png"/>
+            </div>
+            <div class="description">
+                <?php ContentManager::render("product_box_5_desc"); ?>
+            </div>
+        </div>
+    </a>
+</div>
+
+<a href='/?page=contactus'>
+    <div class="contentrow"  style="text-align: center">
+        <?php
+            ContentManager::render("full_product_list_desc");
+        ?>
+        <div class="actionbutton">
+            <?php
+            ContentManager::render("full_product_list");
+            ?>
+        </div>    
+
+    </div>
+</a>
+
+<br/>
+<br/>
+<br/>

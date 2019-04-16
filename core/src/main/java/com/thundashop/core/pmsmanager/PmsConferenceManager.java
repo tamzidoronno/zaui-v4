@@ -44,6 +44,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             if(dataCommon instanceof PmsConferenceItem) { items.put(dataCommon.id, (PmsConferenceItem) dataCommon); }
             if(dataCommon instanceof PmsConference) { conferences.put(dataCommon.id, (PmsConference) dataCommon); }
             if(dataCommon instanceof PmsConferenceEvent) { conferenceEvents.put(dataCommon.id, (PmsConferenceEvent) dataCommon); }
+            if(dataCommon instanceof PmsConferenceEventEntry) { conferenceEventEntries.put(dataCommon.id, (PmsConferenceEventEntry) dataCommon); }
         }
     }
     
@@ -151,6 +152,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 result.add(evnt);
             }
         }
+        result.sort(Comparator.comparing(a -> a.from));
         return result;
     }
 
@@ -167,6 +169,8 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 result.add(entry);
             }
         }
+        
+        result.sort(Comparator.comparing(a -> a.from));
         return result;
     }
 
@@ -282,6 +286,27 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                     room.guests.stream().forEach(guest -> {
                         if(guest.guestId != null && guest.guestId.equals(guestId)) {
                             guest.pmsConferenceEventIds.remove(eventId);
+                            pmsManager.saveBooking(booking);
+                            return;
+                        }
+                    });
+                });
+            });
+        }
+    }
+
+    @Override
+    public void addGuestToEvent(String guestId, String eventId) {
+List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            BookingEngine engine = getShopSpringScope.getNamedSessionBean(multilevelName, BookingEngine.class);
+            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+            allbookings.stream().forEach(booking -> {
+                booking.rooms.stream().forEach(room -> {
+                    room.guests.stream().forEach(guest -> {
+                        if(guest.guestId != null && guest.guestId.equals(guestId)) {
+                            guest.pmsConferenceEventIds.add(eventId);
                             pmsManager.saveBooking(booking);
                             return;
                         }

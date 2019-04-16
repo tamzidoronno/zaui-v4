@@ -63,4 +63,7 @@ public interface IPmsConferenceManager {
     
     @Administrator
     public void removeGuestFromEvent(String guestId, String eventId);
+    
+    @Administrator
+    public void addGuestToEvent(String guestId, String eventId);
 }

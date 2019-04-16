@@ -1,0 +1,48 @@
+<?php
+/* @var $this ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$confId = $_GET['conferenceid'];
+$confManager = $this->getApi()->getPmsConferenceManager();
+$loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
+$conference = $confManager->getConference($confId);
+$events = $confManager->getConferenceEvents($confId);
+$status = $this->getStatuses();
+
+//echo "<pre>"; print_r($events); echo "</pre>";
+$items = $confManager->getAllItem("-1");
+$items = $this->indexList($items);
+?>
+<div class='header'>
+    Printed <?php echo date("d.m.Y H:i", time()); ?> by <?php echo $loggedOnUser->fullName; ?> for conference : <?php echo $conference->meetingTitle; ?>
+</div>
+
+<?php
+foreach($events as $event) {
+    echo "<div class='eventtitle'>" . $items[$event->pmsConferenceItemId]->name;
+    echo "<span style='float:right;'>" . date("D d.m.Y H:i", strtotime($event->from)) . "</span>";
+    echo "</div>";
+    $eventEntries = (array)$confManager->getEventEntries($event->id);
+    foreach($eventEntries as $eventEntry) {
+        $from = "";
+        if($eventEntry->from) { $from = date("H:i", strtotime($eventEntry->from)); }
+        $to = "";
+        if($eventEntry->to) { $to = date("H:i", strtotime($eventEntry->to)); }
+        $text = $eventEntry->text;
+        $count = $eventEntry->count;
+        echo "<div><span class='from'>$from</span> <span class='to'>$to</span><span class='count'>$count</span><span class='text'>$text</span></div>";
+        echo "<span class='extendedtext'>" . nl2br($eventEntry->extendedText) . "</span>";
+    }
+    echo "<div class='eventfooter'>";
+    echo "Status " . $status[$event->status];
+    echo "</div>";
+}
+?>
+
+<style>
+    .header { text-align: center; border-bottom: solid 2px; padding-bottom: 10px; margin-bottom: 10px;}
+    .from { display: inline-block; width: 70px; }
+    .count { display: inline-block; width: 30px; }
+    .to { display: inline-block; width: 70px; }
+    .extendedtext { display: inline-block; padding-left: 173px; }
+    .eventtitle { font-weight: bold; border-bottom: solid 1px; padding: 10px; margin-bottom: 10px;}
+    .eventfooter { border-top: solid 1px; font-weight: bold; border-bottom: solid 1px; text-transform: lowercase; padding: 5px; margin-bottom: 50px;}
+</style>

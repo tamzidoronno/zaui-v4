@@ -30,7 +30,7 @@ $today = date("d.m.Y");
                 </div>
             </td>
             <td valign='top' width='50%'>
-                <span class='shop_button' onclick='alert("Not implemented yet.")'>Report</span>
+                <a href='/scripts/pmsconferencereport.php?conferenceid=<?php echo $conferenceId; ?>' target='_new'><span class='shop_button'>Report</span></a>
                 <span class='shop_button' onclick='$(".addEventPanel").css("display", "inline-block");'>Add event</span>
                 <span class='shop_button' style='float:right;' gsclick='deleteCurrentConference' gs_confirm='Are you sure?'>Delete conference</span>
                 

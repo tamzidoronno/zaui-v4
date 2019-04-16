@@ -1,4 +1,6 @@
 app.PmsConference = {
+    currentInput : null,
+    
     init : function() {
         $(document).on('keyup','.PmsConference .updaterowkeyup', app.PmsConference.updateEventRow);
         $(document).on('change','.PmsConference .updaterowselect', app.PmsConference.updateEventRow);
@@ -6,17 +8,35 @@ app.PmsConference = {
         $(document).on('click','.PmsConference .openconference', app.PmsConference.openConference);
         $(document).on('click','.PmsConference .canaddevent', app.PmsConference.loadQuickAddToConference);
         $(document).on('click','.PmsConference .removeguest', app.PmsConference.removeGuestFromEvent);
+        $(document).on('click','.PmsConference .extendedtextinput', app.PmsConference.showExtendedTextOverlay);
+        $(document).on('click','.PmsConference .updateextendedtext', app.PmsConference.updateExtendedText);
         $(document).on('keyup','.PmsConference .updatevententryrow', app.PmsConference.updateEventEntryRow);
         $(document).on('change','.PmsConference .choosemonthdropdown', app.PmsConference.changeTimePeriode);
     },
+    guestAdded : function(res) {
+        $('.guestlistarea').html(res);
+    },
+    updateExtendedText : function() {
+        var text = $('.extendedtextoverlay .extendextarea').val();
+        app.PmsConference.currentInput.val(text);
+        $('.extendedtextoverlay').hide();
+        console.log(app.PmsConference.currentInput.closest('.evententryrow'));
+        app.PmsConference.updateSpecifiedEventRow(app.PmsConference.currentInput.closest('.evententryrow'));
+    },
+    showExtendedTextOverlay : function() {
+       app.PmsConference.currentInput = $(this);
+       $('.extendedtextoverlay .extendextarea').val($(this).val());
+       $('.extendedtextoverlay').show();
+       $('.extendedtextoverlay .extendextarea').focus();
+    },
     removeGuestFromEvent : function() {
-        var row = $(this).closest('tr');
+        var area = $(this).closest('.guestlistarea');
         var event = thundashop.Ajax.createEvent('','removeGuestFromEvent',$(this), {
             guestId : $(this).attr('guestid'),
             eventId : $(this).attr('eventid')
         });
-        thundashop.Ajax.postWithCallBack(event, function() {
-            row.remove();
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            area.html(res);
         });
     },
     loadQuickAddToConference : function(e) {
@@ -84,13 +104,16 @@ app.PmsConference = {
         var event = thundashop.Ajax.createEvent('','updateEventRow',$('.PmsConference'),data);
         thundashop.Ajax.postWithCallBack(event, function() {});
     },
-    updateEventEntryRow : function() {
-        var row = $(this).closest('.evententryrow');
+    updateSpecifiedEventRow : function(row) {
         var data = thundashop.framework.createGsArgs(row);
-        var event = thundashop.Ajax.createEvent('','updateEventEntry', $(this), data);
+        var event = thundashop.Ajax.createEvent('','updateEventEntry', row, data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
             
         });
+    },
+    updateEventEntryRow : function() {
+        var row = $(this).closest('.evententryrow');
+        app.PmsConference.updateSpecifiedEventRow(row);
     }
 };
 app.PmsConference.init();

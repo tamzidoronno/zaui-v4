@@ -44,3 +44,6 @@
     color: #000;
     text-align: left;
 }
+
+.PmsConference .extendedtextoverlay {z-index:5; position:absolute; padding: 10px; border: solid 1px; background-color:#efefef; width:100%; box-sizing: border-box; display:none; }
+.PmsConference .extendedtextoverlay .extendextarea { width: 100%; box-sizing: border-box; height: 500px; margin-bottom: 5px; }

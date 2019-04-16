@@ -19,8 +19,8 @@ class PmsConference extends \WebshopApplication implements \Application {
     public function removeGuestFromEvent() {
         $guestId = $_POST['data']['guestId'];
         $eventId = $_POST['data']['eventId'];
-        
         $this->getApi()->getPmsConferenceManager()->removeGuestFromEvent($guestId, $eventId);
+        $this->includefile("guestlist");
     }
     
     public function loadSubitems() {
@@ -317,5 +317,32 @@ class PmsConference extends \WebshopApplication implements \Application {
         }
         return $result;
     }
+    
+    public function loadPmsGuestList() {
+        $this->includefile("pmsguestlist");
+    }
+    
+    public function addGuestToEvent() {
+        $guestId = $_POST['data']['guestid'];
+        $eventId = $_POST['data']['eventid'];
+        $this->getApi()->getPmsConferenceManager()->addGuestToEvent($guestId, $eventId);
+        $this->includefile("guestlist");
+    }
+
+    public function printReport() {
+        if(isset($_GET['conferenceid'])) {
+            $this->includefile("conferencereport");
+        }
+    }
+
+    public function getStatuses() {
+        $status = array();
+        $status[0] = "Unkown";
+        $status[1] = "Confirmed";
+        $status[2] = "Not confirmed";
+        $status[3] = "Rejected";
+        return $status;
+    }
+
 }
 ?>

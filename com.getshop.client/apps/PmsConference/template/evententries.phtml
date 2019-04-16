@@ -1,3 +1,9 @@
+<div class='extendedtextoverlay'>
+    <textarea class='extendextarea'></textarea>
+    <div style='text-align: right'>
+        <span class='shop_button updateextendedtext'>Update text</span>
+    </div>
+</div>
 <?php
 /* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
 $confmanager =  $this->getApi()->getPmsConferenceManager();
@@ -25,7 +31,9 @@ if(sizeof($entries) == 0) {
             <input type='text' class='gsniceinput1 updatevententryrow' style='width:40px;text-align: center;' gsname='endtime' value='<?php echo $totime; ?>'>
             <input type='text' class='gsniceinput1 updatevententryrow' gsname='text' placeholder='Description' value='<?php echo $evententry->text; ?>'>
             <input type='text' class='gsniceinput1 updatevententryrow' style='width:40px;text-align: center;' gsname='count' value='<?php echo $evententry->count; ?>'>
-            <input type='text' class='gsniceinput1 updatevententryrow' style='width:400px;'gsname='extendedText' value='<?php echo $evententry->extendedText; ?>'>
+            <span style='position:relative;'>
+                <textarea class='updatevententryrow extendedtextinput' gsname='extendedText' style='position:absolute; width:500px;border:solid 1px #dcdcdc;margin-top:2px;'><?php echo $evententry->extendedText; ?></textarea>
+            </span>
             <i class='fa fa-trash-o' style='cursor:pointer;' entryid='<?php echo $evententry->id; ?>' gsclick='deleteEventEntry' synchron='true' gs_callback='app.PmsConference.entryDeleted'></i>
             </div>
         <?php

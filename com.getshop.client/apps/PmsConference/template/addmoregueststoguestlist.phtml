@@ -1,0 +1,11 @@
+<h3>Add more guests</h3>
+<div gstype='form' method='loadPmsGuestList' gstoarea='.pmsguestlist'>
+<input type='text' class='gsniceinput1 calendardatepicker' gstype='entersubmit' placeholder='startdate' gsname='start'>
+<input type='text' class='gsniceinput1 calendardatepicker' gstype='entersubmit' placeholder='enddate' gsname='end'>
+<span class='shop_button' gstype='submit'>Find guests</span>
+
+<div class='pmsguestlist'></div>
+
+<script>
+    $('.calendardatepicker').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay: 1});
+</script>

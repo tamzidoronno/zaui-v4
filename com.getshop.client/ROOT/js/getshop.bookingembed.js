@@ -25,7 +25,7 @@
             sessionStorage.setItem('getshop_language',options.language);
         }
         console.log(options);
-        var jsendpoint = "https://www.getshop.com/";
+        var jsendpoint = "https://system.getshop.com/";
         if(options.jsendpoint) {
             jsendpoint = options.jsendpoint;
         }
@@ -39,7 +39,7 @@
         $.ajax({
             "type": "get",
             async: false,
-            "url": jsendpoint+'/scripts/booking/bookingcontent.php',
+            "url": jsendpoint+'scripts/booking/bookingcontent.php',
             success: function (form) {
                 box.html("<span class='GslBooking'>" + form + "</span>");
             }

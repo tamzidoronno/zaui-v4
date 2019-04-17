@@ -1,0 +1,51 @@
+[
+    {
+        "name": "rakibtg/sleekdb",
+        "version": "1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/rakibtg/SleekDB.git",
+            "reference": "f81551f2d3e49bca66096bbf9c2918ee86c50779"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/rakibtg/SleekDB/zipball/f81551f2d3e49bca66096bbf9c2918ee86c50779",
+            "reference": "f81551f2d3e49bca66096bbf9c2918ee86c50779",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4"
+        },
+        "time": "2019-03-21T15:16:09+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "SleekDB\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "rakibtg",
+                "email": "rakibtg@gmail.com"
+            }
+        ],
+        "description": "SleekDB - A 30Kb NoSQL Database made using PHP",
+        "keywords": [
+            "SleekDB",
+            "api",
+            "database",
+            "flatfile",
+            "framework",
+            "micro",
+            "nosql",
+            "php",
+            "rest"
+        ]
+    }
+]

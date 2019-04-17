@@ -2541,7 +2541,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         String xml = "";
         
         try {
-            xml = generator.generateXml();
+            xml = generator.generateXml(storeManager.isProductMode());
         } catch (ErrorException ex) {
             messageManager.sendErrorNotification("There was an error while validating the EHF, please investigate. <br/>OrderId: " + orderId, ex);
             return "failed";

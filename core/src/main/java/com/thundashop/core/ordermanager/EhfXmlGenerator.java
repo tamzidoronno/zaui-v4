@@ -53,23 +53,16 @@ public class EhfXmlGenerator {
         createSimpleDateFormatter();
     }
 
-    public String generateXml() {
+    public String generateXml(boolean productionMode) {
         String xml = generateXmlInternal();
         
         if (!validateXml(xml)) {
-            PrintWriter writer = null;
-            try {
-                writer = new PrintWriter("/tmp/debugehf.xml", "UTF-8");
-                writer.println(xml);
-                writer.close();
-                throw new ErrorException(1050);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(EhfXmlGenerator.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(EhfXmlGenerator.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                writer.close();
-            }
+            writeDebugFile(xml);
+            throw new ErrorException(1050);
+        }
+        
+        if (!productionMode) {
+            writeDebugFile(xml);
         }
         
         return xml;
@@ -521,7 +514,7 @@ public class EhfXmlGenerator {
             Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
             if (rets == null) {
                 rets = new HashMap<TaxGroup, BigDecimal>();
-                grouped.put(group.taxRate, taxes);
+                grouped.put(group.taxRate, rets);
             }
             rets.put(group, taxes.get(group));
         }
@@ -543,11 +536,12 @@ public class EhfXmlGenerator {
         Map<TaxGroup, BigDecimal> retSet = new HashMap();
         
         Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap();
+        
         for (TaxGroup group : taxes.keySet()) {
             Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
             if (rets == null) {
                 rets = new HashMap<TaxGroup, BigDecimal>();
-                grouped.put(group.taxRate, taxes);
+                grouped.put(group.taxRate, rets);
             }
             rets.put(group, taxes.get(group));
         }
@@ -563,5 +557,20 @@ public class EhfXmlGenerator {
         }
         
         return retSet;
+    }
+
+    private void writeDebugFile(String xml) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("/tmp/debugehf.xml", "UTF-8");
+            writer.println(xml);
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EhfXmlGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(EhfXmlGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            writer.close();
+        }    
     }
 }

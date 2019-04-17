@@ -197,10 +197,14 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         List<PmsConferenceEvent> result = new ArrayList();
         for(PmsConferenceEvent evnt : conferenceEvents.values()) {
             if(evnt.betweenTime(start, end)) {
-                evnt.title = getConference(evnt.pmsConferenceId).meetingTitle;
-                result.add(evnt);
+                PmsConference conference = getConference(evnt.pmsConferenceId);
+                if(conference != null) {
+                    evnt.title = conference.meetingTitle;
+                    result.add(evnt);
+                }
             }
         }
+        result.sort(Comparator.comparing(a -> a.from));
         return result;
     }
 
@@ -297,7 +301,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public void addGuestToEvent(String guestId, String eventId) {
-List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+    List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
             BookingEngine engine = getShopSpringScope.getNamedSessionBean(multilevelName, BookingEngine.class);
@@ -314,6 +318,21 @@ List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId
                 });
             });
         }
+    }
+
+    @Override
+    public List<PmsConferenceEventEntry> getEventEntriesByFilter(PmsConferenceEventFilter filter) {
+        List<PmsConferenceEventEntry> result = new ArrayList();
+        for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
+            if(entry.inTime(filter)) {
+                result.add(entry);
+                PmsConferenceEvent event = getConferenceEvent(entry.pmsEventId);
+                entry.conferenceItem = getItem(event.pmsConferenceItemId).name;
+                entry.meetingTitle = getConference(event.pmsConferenceId).meetingTitle;
+            }
+        }
+        result.sort(Comparator.comparing(a -> a.from));
+        return result;
     }
     
 }

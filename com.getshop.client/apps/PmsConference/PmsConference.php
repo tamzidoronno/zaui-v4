@@ -333,6 +333,12 @@ class PmsConference extends \WebshopApplication implements \Application {
         if(isset($_GET['conferenceid'])) {
             $this->includefile("conferencereport");
         }
+        if(isset($_GET['type']) && $_GET['type'] == "event") {
+            $this->includefile("eventreport");
+        }
+        if(isset($_GET['type']) && $_GET['type'] == "all") {
+            $this->includefile("allreport");
+        }
     }
 
     public function getStatuses() {

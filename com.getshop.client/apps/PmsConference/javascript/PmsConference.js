@@ -10,8 +10,15 @@ app.PmsConference = {
         $(document).on('click','.PmsConference .removeguest', app.PmsConference.removeGuestFromEvent);
         $(document).on('click','.PmsConference .extendedtextinput', app.PmsConference.showExtendedTextOverlay);
         $(document).on('click','.PmsConference .updateextendedtext', app.PmsConference.updateExtendedText);
+        $(document).on('click','.PmsConference .downloadreport', app.PmsConference.downloadReport);
         $(document).on('keyup','.PmsConference .updatevententryrow', app.PmsConference.updateEventEntryRow);
         $(document).on('change','.PmsConference .choosemonthdropdown', app.PmsConference.changeTimePeriode);
+    },
+    downloadReport : function(res) {
+        var type = $(this).attr('type');
+        var start = $('.startdate').val();
+        var end = $('.enddate').val();
+        window.open("/scripts/pmsconferencereport.php?type="+type+"&start="+start+"&end="+end);
     },
     guestAdded : function(res) {
         $('.guestlistarea').html(res);

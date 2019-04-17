@@ -5,10 +5,15 @@ if($currentConference) {
     echo "You are currently operating under: " . $conference->meetingTitle . ", ";
     echo "<span onclick='$(\".PmsConference .conferenceoverview\").show();' class='openconference' conferenceid='".$currentConference."'>open</span>.";
 }
+$start = date("d.m.Y");
+$end = date("d.m.Y", time()+86400);
 ?>
 <div class='header'>
     <span style='position:relative'>
-        <span class='shop_button'>Reports</span>
+        <input type='text' class='gsniceinput1 startdate' style='width:90px' value='<?php echo $start; ?>'>
+        <input type='text' class='gsniceinput1 enddate' style='width:90px' value='<?php echo $end; ?>'>
+        <span class='shop_button  downloadreport' type='event'>Download event report</span>
+        <span class='shop_button  downloadreport' type='all'>Download report</span>
         <span class='shop_button' gsclick="loadConferences" gs_callback='app.PmsConference.allConferencesLoaded' synchron='true'>List all conferences</span>
         <div class='conferencelist'></div>
     </span>
@@ -38,3 +43,8 @@ if($subitem) {
     $quser->renderApplication(true, $this);
     ?>
 </div>
+
+<script>
+    $('.startdate').datepicker({ dateFormat: "dd.mm.yy",firstDay: 1});
+    $('.enddate').datepicker({ dateFormat: "dd.mm.yy",firstDay: 1});
+</script>

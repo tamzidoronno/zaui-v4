@@ -1,0 +1,82 @@
+<?php
+/* @var $this ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
+$start = $this->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
+$end = $this->convertToJavaDate(strtotime($_GET['end'] . " 23:59"));
+
+$filter = new core_pmsmanager_PmsConferenceEventFilter();
+$filter->start = $start;
+$filter->end = $end;
+$statuses = $this->getStatuses();
+$events = $this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($start, $end);
+$items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+$items = $this->indexList($items);
+$currentDate= null;
+
+?>
+<div class='header'>
+    Printed <?php echo date("d.m.Y H:i", time()); ?> by <?php echo $loggedOnUser->fullName; ?> for by events date : <?php echo $_GET['start'] . " 00:00" . " - " . $_GET['end'] . " 23:59"; ?>
+</div>
+
+<?php
+foreach($events as $event) {
+    $from = "";
+    if($event->from) { $from = date("H:i", strtotime($event->from)); }
+    $to = "";
+    if($event->to) { $to = date("H:i", strtotime($event->to)); }
+    $status = $statuses[$event->status];
+    $item = $items[$event->pmsConferenceItemId]->name;
+    $title = $event->title;
+    $date = date("d.m.Y", strtotime($event->from));
+    if($date != $currentDate) {
+        $currentDate = $date;
+        echo "<div class='dateheader'>$currentDate</div>";
+    }
+    
+    echo "<div class='eventheader'>";
+    echo "<span class='from'>$from</span>";
+    echo "<span class='to'>$to</span>";
+    echo "<span class='roomname'>$item</span>";
+    echo "<span class='conference'>$title</span>";
+    echo "<span class='status'>$status</span>";
+    echo "</div>";
+    echo "<div class='eventdetails'>";
+    $eventEntries = (array)$this->getApi()->getPmsConferenceManager()->getEventEntries($event->id);
+    echo "<table cellspacing='0' cellpadding='0' class='evententries'>";
+    foreach($eventEntries as $eventEntry) {
+        $from = "";
+        if($eventEntry->from) { $from = date("H:i", strtotime($eventEntry->from)); }
+        $to = "";
+        if($eventEntry->to) { $to = date("H:i", strtotime($eventEntry->to)); }
+        $text = $eventEntry->text;
+        $count = $eventEntry->count;
+        $extendedText = $eventEntry->extendedText;
+        echo "<tr class='evententry'>";
+
+        echo "<td class='from' valign='top'>$from</td>";
+        echo "<td class='to' valign='top'>$to</td>";
+        echo "<td class='text' valign='top'>$count x $text</td>";
+        echo "<td class='extendedtext' valign='top'>";
+        echo nl2br($extendedText);
+        echo "</td>";
+
+        echo "</tr>";
+    }
+    echo "</div>";
+}
+
+?>
+
+<style>
+    .header { text-align: center; border-bottom: solid 2px; padding-bottom: 10px; margin-bottom: 10px;}
+    .eventheader { margin-top: 10px; font-weight: bold; padding-bottom: 10px; }
+    .eventdetails { border-bottom: dashed 1px; }
+    .evententry { padding-left: 140px; }
+    .from { display:inline-block; width: 70px; }
+    .to { display:inline-block; width: 70px; }
+    .text { display:inline-block; width: 240px; }
+    .roomname { display:inline-block; width: 240px; }
+    .conference { display:inline-block; width: 238px; }
+    .dateheader { border: solid 1px #bbb; text-align: center; font-weight: bold; background-color:#efefef; margin: 10px; padding: 10px; }
+    .extendedtext { display:inline-block; }
+</style>

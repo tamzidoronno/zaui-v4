@@ -7,6 +7,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.Date;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -19,4 +20,17 @@ public class PmsConferenceEventEntry extends DataCommon {
     public Integer count = 0;
     public String extendedText = "";
     public String pmsEventId = "";
+    
+    @Transient
+    public String meetingTitle = "";
+    
+    @Transient
+    public String conferenceItem = "";
+
+    boolean inTime(PmsConferenceEventFilter filter) {
+        if(filter.start.before(from) && filter.end.after(from)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -27,6 +27,12 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
                     logPrint("Initializing message");
                     getOperator().nets = new GetShopNetsApp(getOperator());
                     getOperator().nets.initialize();
+                    while(true) {
+                        if(getOperator().nets.isInitialized()) {
+                            break;
+                        }
+                        Thread.sleep(1000);
+                    }
                 }
                 GdsPaymentAction paymentAction = (GdsPaymentAction) msg;
                 switch(paymentAction.action) {

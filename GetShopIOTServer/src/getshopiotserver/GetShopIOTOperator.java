@@ -31,10 +31,10 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
     
     private boolean isProductionMode = false;
     private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
-    private String debugLongPullAddr ="http://corner.3.0.local.getshop.com/";
+    private String debugLongPullAddr ="http://lomcamping.3.0.local.getshop.com/";
     
     public void run() {
-        logPrint("Ready to recieve instructions..");
+        logPrint("Ready to recieve instructions");
         while(true) {
             doLongPull();
         }

@@ -4,9 +4,11 @@ import getshopiotserver.processors.ProcessPrinterMessage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.gsd.DevicePrintMessage;
+import com.thundashop.core.gsd.GdsAccessDenied;
 import com.thundashop.core.gsd.GdsPaymentAction;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshop.nets.GetShopNetsApp;
+import getshopiotserver.processors.ProcessAccessDenied;
 import getshopiotserver.processors.ProcessPaymentMessage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +31,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
     
     public GetShopNetsApp nets = null;
     
-    private boolean isProductionMode = false;
+    private boolean isProductionMode = true;
     private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
     private String debugLongPullAddr ="http://lomcamping.3.0.local.getshop.com/";
     
@@ -190,17 +192,13 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         MessageProcessorInterface processor = null;        
         if(res instanceof DevicePrintMessage) { processor = new ProcessPrinterMessage(); }
         if(res instanceof GdsPaymentAction) { processor = new ProcessPaymentMessage(); }
+        if(res instanceof GdsAccessDenied) { processor = new ProcessAccessDenied(); }
         if(processor == null) {
+            logPrint("message not implemented: " + res.getClass().toString()); 
             return;
         }
         processor.setIOTOperator(this);
-        
-        if(processor == null) { 
-            logPrint("message not implemented: " + res.getClass().toString()); 
-        } else {
-            processor.processMessage((GetShopDeviceMessage) res);
-        }
-        
+        processor.processMessage((GetShopDeviceMessage) res);
     }
 
 }

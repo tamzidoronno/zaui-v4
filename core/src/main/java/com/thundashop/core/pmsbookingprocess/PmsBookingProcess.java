@@ -738,11 +738,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void printReciept(BookingPrintRecieptData data) {
+        logPrint("Starting printing service for " + data.terminalId + " - " + data.orderId);
+        
         if (storeId.equals("ac8bff70-a8b9-4fa1-8281-a12e24866bdb")) {
             printReceiptLomCampingTerminal(data.orderId);
             return;
         }
-        logPrint("Starting printing service for " + data.terminalId + " - " + data.orderId);
+        
         pmsManager.processor();
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
         Order order = orderManager.getOrderSecure(data.orderId);
@@ -1511,7 +1513,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         String lomKioskGsdId = "e04469a5-eff3-46fc-9e9c-d567fd2f107f";
         invoiceManager.sendReceiptToCashRegisterPoint(lomKioskGsdId, orderId);
         
-        Order order = orderManager.getOrder(orderId);
+        Order order = orderManager.getOrderSecure(orderId);
         PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             if(!order.containsRoom(room.pmsBookingRoomId)) {

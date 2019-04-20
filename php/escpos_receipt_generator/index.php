@@ -8,6 +8,8 @@
 //$STDERR = fopen('/tmp/error.log', 'wb');
 
 $jsonData = file_get_contents('/tmp/'.$argv[1].'.txt');
+$storeId = $argv[2];
+
 $printMessage = json_decode($jsonData);
 require __DIR__ . '/vendor/autoload.php';
 
@@ -15,6 +17,16 @@ use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 
+$padLeft = "";
+
+// // Just a hack during installation, please rewrite to send printertype.
+// Just a hack during installation, please rewrite to send printertype.
+$printerType = $storeId == "ac8bff70-a8b9-4fa1-8281-a12e24866bdb" ? "customK80" : "firstone";
+
+if ($printerType == "customK80") {
+    $padLeft = "  ";
+    item::$leftColSize = 38;
+}
 /* Fill in your own connector here */
 $connector = new FilePrintConnector("/tmp/".$argv[1].".prn");
 
@@ -28,27 +40,26 @@ foreach ($printMessage->itemLines as $itemLine) {
         foreach ($multiplines as $line) {
             $i++;
             if (count($multiplines) == $i) {
-                $items[] = new item($line, $itemLine->price);
+                $items[] = new item($line, $itemLine->price, false, $padLeft);
             } else {
-                $items[] = new item($line, "");
+                $items[] = new item($line, "", false, $padLeft);
             }
         }
     } else {
-        $items[] = new item($itemLine->description, $itemLine->price);
+        $items[] = new item($itemLine->description, $itemLine->price, false, $padLeft);
     }
     
 }
 
-$items[] = new item('', "");
-$items[] = new item('Subtotal', $printMessage->totalIncVat);
-
-$items[] = new item("", "");
-$items[] = new item("Hvorav MVA", "");
+$items[] = new item('', "", false, $padLeft);
+$items[] = new item('Subtotal', $printMessage->totalIncVat, false, $padLeft);
+$items[] = new item("", "", false, $padLeft);
+$items[] = new item("Hvorav MVA", "", false, $padLeft);
 foreach ($printMessage->vatLines as $vatline) {
-    $items[] = new item("Mva ".$vatline->percent."%", $vatline->total);
+    $items[] = new item("Mva ".$vatline->percent."%", $vatline->total, false, $padLeft);
 }
 
-$total = new item('Total', $printMessage->totalIncVat, true);
+$total = new item('Total', $printMessage->totalIncVat, true, $padLeft);
 
 /* Start the printer */
 $printer = new Printer($connector);
@@ -56,7 +67,7 @@ $printer = new Printer($connector);
 /* Print top logo */
 $printer -> setJustification(Printer::JUSTIFY_CENTER);
 
-$receiptText = $printMessage->paymentDate ? "SALGSKVITTERING" : "IKKE KVITTERING FOR SALG";
+$receiptText = $printMessage->paymentDate ? "SALGSKVITTERING" : "IKKE KVITTERING\n".$padLeft."FOR SALG";
 
 $logoFileName = "/storage/logo/".$argv[2].".png";
 if (file_exists($logoFileName)) {
@@ -73,19 +84,17 @@ $printer -> feed(2);
 
 
 /* Name of shop */
-$printer -> selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-$printer -> text($printMessage->accountDetails->companyName."\n");
+//$printer -> selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
 $printer -> selectPrintMode();
-$printer -> text($printMessage->accountDetails->address."\n");
-$printer -> text($printMessage->accountDetails->postCode."\n");
-$printer -> text("Orgnr: ".$printMessage->accountDetails->vatNumber."\n");
-$printer -> text("Epost: ".$printMessage->accountDetails->contactEmail."\n");
+$printer -> text($padLeft.$printMessage->accountDetails->companyName."\n");
+$printer -> text($padLeft.$printMessage->accountDetails->address."\n");
+$printer -> text($padLeft.$printMessage->accountDetails->postCode."\n");
+$printer -> text($padLeft."Orgnr: ".$printMessage->accountDetails->vatNumber."\n");
+$printer -> text($padLeft."Epost: ".$printMessage->accountDetails->contactEmail."\n");
 if (isset($printMessage->accountDetails->phoneNumber)) {
-    $printer -> text("Telefon: ".$printMessage->accountDetails->phoneNumber."\n");
+    $printer -> text($padLeft."Telefon: ".$printMessage->accountDetails->phoneNumber."\n");
 }
 $printer -> feed();
-
-
 
 /* Items */
 $printer -> setJustification(Printer::JUSTIFY_LEFT);
@@ -109,7 +118,7 @@ if ($printMessage->paymentDate) {
     $printer -> feed(2);
     $printer -> setJustification(Printer::JUSTIFY_CENTER);
     $printer -> text("Dato: ".date('d.m.Y H:i:s', strtotime($printMessage->paymentDate)) . "\n");
-    $printer -> text("Betalingsmåte: ".$printMessage->paymentMethod . "\n");
+    $printer -> text("Betalingsmetode: ".$printMessage->paymentMethod . "\n");
 }
 
 /* Cut the receipt and open the cash drawer */
@@ -124,11 +133,15 @@ class item
 {
     private $name;
     private $price;
-    private $dollarSign;
+    private $dollarSign; 
+    private $padLeft;
+    public static $leftColSize = 32;
 
-    public function __construct($name = '', $price = '', $dollarSign = false)
+    public function __construct($name = '', $price = '', $dollarSign = false, $padLeft = "")
     {
         $this -> name = $name;
+	$this -> padLeft = $padLeft;
+
         if ($price != "") {
             $this -> price = number_format($price, 2);
         }
@@ -139,7 +152,7 @@ class item
     public function __toString()
     {
         $rightCols = 10;
-        $leftCols = 32;
+        $leftCols = item::$leftColSize - strlen($this->padLeft);
         if ($this -> dollarSign) {
             $leftCols = $leftCols/2  - $rightCols/2 - 1 ;
         }
@@ -147,6 +160,6 @@ class item
         
         $sign = ($this -> dollarSign ? 'Kr ' : '');
         $right = str_pad($sign . $this -> price, $rightCols, ' ', STR_PAD_LEFT);
-        return "$left$right\n";
+        return $this->padLeft.$left.$right."\n";
     }
 }

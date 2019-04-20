@@ -114,7 +114,7 @@ if ($printMessage->paymentDate) {
 
 /* Cut the receipt and open the cash drawer */
 $printer -> feed(2);
-$printer -> cut();
+$printer -> cut(Printer::CUT_PARTIAL);
 $printer -> pulse();
 
 $printer -> close();

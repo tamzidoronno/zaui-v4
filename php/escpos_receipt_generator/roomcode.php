@@ -15,6 +15,15 @@ use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 
+// // Just a hack during installation, please rewrite to send printertype.
+// Just a hack during installation, please rewrite to send printertype.
+$storeId = $argv[2];
+$printerType = $storeId == "ac8bff70-a8b9-4fa1-8281-a12e24866bdb" ? "customK80" : "firstone";
+
+$leftPad = "";
+if ($printerType == "customK80") {
+   $leftPad = "  ";
+}
 /* Fill in your own connector here */
 $connector = new FilePrintConnector("/tmp/".$argv[1].".prn");
 
@@ -39,13 +48,17 @@ $printer -> feed();
 
 $printer -> setEmphasis(true);
 $printer -> setTextSize(2, 3);
-$printer -> text("Code: ".$printMessage->code."\n");
+$printer -> text($leftPad."Code: ".$printMessage->code."\n");
 $printer -> setEmphasis(false);
 $printer -> feed(2);
 
+if ($printer == "customK80") {
+      $printer -> feed(10);
+}
+
 /* Tax and total */
 $printer -> selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-$printer -> cut();
+$printer -> cut(Printer::CUT_PARTIAL);
 $printer -> pulse();
 $printer -> close();
 

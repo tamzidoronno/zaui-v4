@@ -739,7 +739,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public void printReciept(BookingPrintRecieptData data) {
         logPrint("Starting printing service for " + data.terminalId + " - " + data.orderId);
-        pmsManager.processor();        
+        pmsManager.processor();       
+        pmsManager.processor();
+        
         if (storeId.equals("ac8bff70-a8b9-4fa1-8281-a12e24866bdb")) {
             printReceiptLomCampingTerminal(data.orderId);
             return;
@@ -753,7 +755,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         User user = userManager.getUserById(order.userId);
         String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
-        pmsManager.processor();
+
         String url = "http://" + settings.ip + ":8080/print.php";
         try {
             
@@ -1513,6 +1515,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         String lomKioskGsdId = "e04469a5-eff3-46fc-9e9c-d567fd2f107f";
         invoiceManager.sendReceiptToCashRegisterPoint(lomKioskGsdId, orderId);
         
+        pmsManager.processor();
         Order order = orderManager.getOrderSecure(orderId);
         PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
         for(PmsBookingRooms room : booking.getActiveRooms()) {

@@ -6,6 +6,7 @@
 package getshopiotserver.processors;
 
 import com.thundashop.core.gsd.DevicePrintMessage;
+import com.thundashop.core.gsd.GdsAccessDenied;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshopiotserver.GetShopIOTCommon;
 import getshopiotserver.MessageProcessorInterface;
@@ -18,6 +19,9 @@ public class ProcessAccessDenied extends GetShopIOTCommon implements MessageProc
     
     @Override
     public void processMessage(GetShopDeviceMessage msg) {
+        if (!(msg instanceof GdsAccessDenied))
+            return;
+        
         logPrint("Access denied");
         try { Thread.sleep(120000); }catch(Exception e) {
             e.printStackTrace();

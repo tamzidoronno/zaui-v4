@@ -6,9 +6,17 @@
 package getshopiotserver.processors;
 
 import com.thundashop.core.gsd.DevicePrintMessage;
+import com.thundashop.core.gsd.DirectPrintMessage;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshopiotserver.GetShopIOTCommon;
 import getshopiotserver.MessageProcessorInterface;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,8 +26,22 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
     
     @Override
     public void processMessage(GetShopDeviceMessage msg) {
-        DevicePrintMessage printmsg = (DevicePrintMessage) msg;
-        logPrint("Printing reciept" + printmsg.paymentMethod);
+        if (msg instanceof DirectPrintMessage) {
+            try {
+                printMessage((DirectPrintMessage)msg);
+            } catch (IOException ex) {
+                logPrintException(ex);
+            }
+        }
+    }
+
+    private void printMessage(DirectPrintMessage directPrintMessage) throws IOException {
+        logPrint("Printing receipt...");
+        
+        Files.write(
+            Paths.get("/dev/usb/lp0"), 
+            Base64.getDecoder().decode(directPrintMessage.content), 
+            StandardOpenOption.APPEND);
     }
     
 }

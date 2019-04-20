@@ -20,6 +20,9 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
 
     @Override
     public void processMessage(GetShopDeviceMessage msg) {
+        if (!(msg instanceof GdsPaymentAction))
+            return;
+        
         logPrint("Processing payment message");
         try {
             if(msg instanceof GdsPaymentAction) {

@@ -739,13 +739,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public void printReciept(BookingPrintRecieptData data) {
         logPrint("Starting printing service for " + data.terminalId + " - " + data.orderId);
-        
+        pmsManager.processor();        
         if (storeId.equals("ac8bff70-a8b9-4fa1-8281-a12e24866bdb")) {
             printReceiptLomCampingTerminal(data.orderId);
             return;
         }
         
-        pmsManager.processor();
+        
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
         Order order = orderManager.getOrderSecure(data.orderId);
         if(order.status != Order.Status.PAYMENT_COMPLETED) {

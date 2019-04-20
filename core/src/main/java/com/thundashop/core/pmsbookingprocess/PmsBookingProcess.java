@@ -14,10 +14,12 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.gsd.RoomReceipt;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.paymentterminalmanager.PaymentTerminalManager;
 import com.thundashop.core.paymentterminalmanager.PaymentTerminalSettings;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
 import com.thundashop.core.pmsmanager.PmsBooking;
@@ -91,6 +93,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     WebManager webManager;
+    
+    @Autowired
+    private InvoiceManager invoiceManager;
     
     public boolean testTerminalPrinter = false;
     public boolean testTerminalPaymentTerminal = false;
@@ -733,6 +738,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void printReciept(BookingPrintRecieptData data) {
+        if (storeId.equals("ac8bff70-a8b9-4fa1-8281-a12e24866bdb")) {
+            printReceiptLomCampingTerminal(data.orderId);
+            return;
+        }
         logPrint("Starting printing service for " + data.terminalId + " - " + data.orderId);
         pmsManager.processor();
         PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
@@ -1495,6 +1504,22 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             chargeOrderWithVerifoneTerminal(orderId, terminalid);
         } else {
             chargeIntegratedTerminal(orderId, terminalid);
+        }
+    }
+
+    private void printReceiptLomCampingTerminal(String orderId) {
+        String lomKioskGsdId = "e04469a5-eff3-46fc-9e9c-d567fd2f107f";
+        invoiceManager.sendReceiptToCashRegisterPoint(lomKioskGsdId, orderId);
+        
+        Order order = orderManager.getOrder(orderId);
+        PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(!order.containsRoom(room.pmsBookingRoomId)) {
+                continue;
+            }
+            if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                pmsManager.printCode(lomKioskGsdId, room.pmsBookingRoomId);
+            }
         }
     }
 }

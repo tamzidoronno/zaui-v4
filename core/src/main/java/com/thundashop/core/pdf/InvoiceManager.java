@@ -279,7 +279,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Override
     public void sendReceiptToCashRegisterPoint(String deviceId, String orderId) {
-        Order order = orderManager.getOrder(orderId);
+        Order order = orderManager.getOrderSecure(orderId);
         if (order == null) {
             return;
         }

@@ -1231,11 +1231,7 @@ public class PmsManagerProcessor {
     }
 
     private void checkTimer(String text) {
-        long diff = System.currentTimeMillis() - start;
-        if(diff > 50) {
-//            manager.logPrint("Processor:" + diff + " : " + text);
-        }
-        start = System.currentTimeMillis();
+        manager.gsTiming(text);
     }
     
     private void checkTimerInner(String text) { 

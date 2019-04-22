@@ -28,6 +28,8 @@ public class GetShopNetsApp {
 //        app.start();
         
     }
+    
+    private boolean isStarted = false;
 
     public GetShopNetsApp(GetShopIOTOperator operator) {
         this.operator = operator;
@@ -85,6 +87,8 @@ public class GetShopNetsApp {
     }
 
     public void transanctionCompletedStatus(LocalModeEventArgs args) {
+        
+        
          TerminalResponse response = new TerminalResponse()
             .setAccountType(args.getAccountType())
             .setAcquirerMerchantID(args.getAcquirerMerchantID())
@@ -125,6 +129,11 @@ public class GetShopNetsApp {
             default:
                 response.setPaymentResult(0);
          }
+            
+        if(!isStarted && response.paymentSuccess()) {
+            isStarted = true;
+            return;
+        }
         
          operator.sendMessage("OrderManager", "paymentResponse", operator.getToken(), response, null,null, null);
     }
@@ -136,6 +145,10 @@ public class GetShopNetsApp {
 
     public void cancelTransaction() {
         controller.doAdministration(0x3132);
+    }
+
+    public boolean isInitialized() {
+        return isStarted;
     }
     
 }

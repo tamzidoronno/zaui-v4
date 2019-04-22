@@ -4,9 +4,12 @@ import getshopiotserver.processors.ProcessPrinterMessage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.gsd.DevicePrintMessage;
+import com.thundashop.core.gsd.DirectPrintMessage;
+import com.thundashop.core.gsd.GdsAccessDenied;
 import com.thundashop.core.gsd.GdsPaymentAction;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshop.nets.GetShopNetsApp;
+import getshopiotserver.processors.ProcessAccessDenied;
 import getshopiotserver.processors.ProcessPaymentMessage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,26 +24,32 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GetShopIOTOperator extends GetShopIOTCommon {
     private String configFile = "getshopiotserverconfig.txt";
-    
+
+    private List<String> configsSent = new ArrayList();
+            
     public GetShopNetsApp nets = null;
     
-    private boolean isProductionMode = false;
+    private boolean isProductionMode = true;
     private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
-    private String debugLongPullAddr ="http://corner.3.0.local.getshop.com/";
+    private String debugLongPullAddr ="http://lomcamping.3.0.local.getshop.com/";
     
     public void run() {
-        logPrint("Ready to recieve instructions..");
+        logPrint("Ready to recieve instructions from " +getAddress() +  ", with token: " + getToken());
         while(true) {
             doLongPull();
         }
     }
     
     private void doLongPull() {
+        setStartupConfigs();
+        
         Gson gson = new Gson();
         try {
             String msg = readFromPullService();
@@ -162,6 +171,10 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         }
     }
 
+    private void setStartupConfigs() {
+        sendConfig("supportDirectPrint", "true");
+    }
+    
     private String readFromPullService() throws MalformedURLException, IOException {
         String addr = getAddress();
         if(!isProductionMode) {
@@ -187,20 +200,52 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
     }
 
     private void processMessage(Object res) {
-        MessageProcessorInterface processor = null;        
-        if(res instanceof DevicePrintMessage) { processor = new ProcessPrinterMessage(); }
-        if(res instanceof GdsPaymentAction) { processor = new ProcessPaymentMessage(); }
-        if(processor == null) {
+        boolean isInstanceOfMessage = (res instanceof  GetShopDeviceMessage);
+        
+        if (res == null || !isInstanceOfMessage) {
             return;
         }
-        processor.setIOTOperator(this);
         
-        if(processor == null) { 
-            logPrint("message not implemented: " + res.getClass().toString()); 
-        } else {
-            processor.processMessage((GetShopDeviceMessage) res);
+        List<MessageProcessorInterface> processors = new ArrayList();
+        processors.add(new ProcessPrinterMessage());
+        processors.add(new ProcessPaymentMessage());
+        processors.add(new ProcessAccessDenied());
+        
+        processors.stream().forEach(o -> {
+            
+            try {
+                o.setIOTOperator(this);
+                o.processMessage((GetShopDeviceMessage)res);
+            } catch (Exception ex) {
+                logPrintException(ex);
+            }
+        });
+    }
+
+    private void sendConfig(String key, String value) {
+        if (configsSent.contains(key))
+            return;
+        
+        try {
+            String addr = getAddress() + "/scripts/setGdsConfig.php?token=" + getToken() + "&key="+key+"&value="+value;
+            URL url = new URL(addr);
+            URLConnection connection = url.openConnection();
+            connection.setConnectTimeout(2000);
+            connection.setReadTimeout(20000);
+            
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            
+            String result = "";
+            String inputLine = "";
+            while ((inputLine = in.readLine()) != null) {
+                result += inputLine + "\r\n";
+            }
+            in.close();
+            configsSent.add(key);
+        } catch (IOException ex) {
+            logPrintException(ex);
         }
-        
     }
 
 }

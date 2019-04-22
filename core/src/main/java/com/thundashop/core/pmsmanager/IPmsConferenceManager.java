@@ -51,10 +51,23 @@ public interface IPmsConferenceManager {
     
     @Administrator
     public List<PmsConferenceEventEntry> getEventEntries(String eventId);
+    
+    @Administrator
+    public List<PmsConferenceEventEntry> getEventEntriesByFilter(PmsConferenceEventFilter filter);
+    
     @Administrator
     public void deleteEventEntry(String eventEntryId);
     @Administrator
     public PmsConferenceEventEntry getEventEntry(String eventEntryId);
     @Administrator
     public void saveEventEntry(PmsConferenceEventEntry entry);
+    
+    @Administrator
+    public List<PmsConferenceGuests> getAllGuestsForEvent(String eventId);
+    
+    @Administrator
+    public void removeGuestFromEvent(String guestId, String eventId);
+    
+    @Administrator
+    public void addGuestToEvent(String guestId, String eventId);
 }

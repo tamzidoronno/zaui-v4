@@ -20,6 +20,9 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
 
     @Override
     public void processMessage(GetShopDeviceMessage msg) {
+        if (!(msg instanceof GdsPaymentAction))
+            return;
+        
         logPrint("Processing payment message");
         try {
             if(msg instanceof GdsPaymentAction) {
@@ -27,6 +30,12 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
                     logPrint("Initializing message");
                     getOperator().nets = new GetShopNetsApp(getOperator());
                     getOperator().nets.initialize();
+                    while(true) {
+                        if(getOperator().nets.isInitialized()) {
+                            break;
+                        }
+                        Thread.sleep(1000);
+                    }
                 }
                 GdsPaymentAction paymentAction = (GdsPaymentAction) msg;
                 switch(paymentAction.action) {

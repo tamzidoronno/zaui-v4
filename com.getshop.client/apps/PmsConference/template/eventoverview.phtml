@@ -7,8 +7,8 @@ $conference = $confmanager->getConference($event->pmsConferenceId);
 $user = $this->getApi()->getUserManager()->getUserById($conference->forUser);
 $item = $confmanager->getItem($event->pmsConferenceItemId);
 ?>
-<span class='shop_button openevent' eventid='<?php echo $cureventid; ?>'>Reload</span>
 <i class='fa fa-close' style='cursor:pointer; float:right;' onclick='window.location.reload();'></i>
+<span class='shop_button openevent' eventid='<?php echo $cureventid; ?>'>Reload</span>
 <?php
 echo "<div>" . $item->name . " - " . date("d.m.Y H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to)) . "</div>";
 echo "<div>" . "Registered to: " . $user->fullName . "</div>";
@@ -18,6 +18,12 @@ echo "<h3>Activities</h3>";
 echo "<div class='activitiesarea'>";
 $this->includefile("evententries");
 echo "</div>";
+
+echo "<h3>Guest list</h3>";
+echo "<div class='guestlistarea'>";
+$this->includefile("guestlist");
+echo "</div>";
+$this->includefile("addmoregueststoguestlist");
 ?>
 
 <style>

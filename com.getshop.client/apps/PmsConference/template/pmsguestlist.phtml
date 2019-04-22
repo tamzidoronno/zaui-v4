@@ -1,0 +1,58 @@
+<br>
+<br>
+<br>
+<?php
+/* @var $this ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+$filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+$filter->filterType = "active";
+$eventId = $this->getCurrentEvent();
+$rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+
+?>
+<table width='100%'>
+    <tr>
+        <th align='left'>Owner</th>
+        <th align='left'>Check-in</th>
+        <th align='left'>Check-out</th>
+        <th align='left'>Guest name</th>
+        <th align='left'>Guest phone</th>
+        <th align='left'>Guest email</th>
+        <th align='left'>Room type</th>
+        <th align='left'>Room</th>
+        <th align='left'>Action</th>
+    </tr>
+<?php
+foreach($rooms as $room) {
+    foreach($room->guest as $guest) {
+    ?>
+        <tr class='addpmsguest' guestid='<?php echo $guest->guestId; ?>'>
+            <td><?php echo $room->owner; ?></td>
+            <td><?php echo date("d.m.Y H:i", $room->start/1000); ?></td>
+            <td><?php echo date("d.m.Y H:i", $room->end/1000); ?></td>
+            <td><?php echo $guest->name; ?></td>
+            <td><?php echo $guest->prefix . " " . $guest->phone; ?></td>
+            <td><?php echo $guest->email; ?></td>
+            <td><?php echo $room->roomType; ?></td>
+            <td><?php echo $room->room ? $room->room : "N/A"; ?></td>
+            <td>
+                <span class='bookinghighlightcolor' style='cursor:pointer'
+                      gsclick='addGuestToEvent'
+                      synchron='true'
+                      gs_callback='app.PmsConference.guestAdded'
+                      onclick='$(this).closest(".addpmsguest").hide()'
+                      eventid='<?php echo $eventId; ?>'
+                      guestid='<?php echo $guest->guestId; ?>'
+                      >
+                    Add guest
+                </span>
+            </td>
+        </tr>
+    <?php
+    }
+}
+?>
+</table>
+<?php
+?>

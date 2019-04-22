@@ -4014,7 +4014,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Gson gson = new Gson();
         
         if(response.paymentSuccess()) {
-            terminalMessages.add("OK");
+            terminalMessages.add("completed");
             markOrderInProgressAsPaid();
         } else {
             terminalMessages.add("payment failed");
@@ -4036,5 +4036,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void clearMessages() {
         terminalMessages.clear();
+    }
+
+    public void removeOrderToPay() {
+        orderToPay = null;
     }
 }

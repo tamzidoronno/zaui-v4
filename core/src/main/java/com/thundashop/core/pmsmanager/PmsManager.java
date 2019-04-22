@@ -9378,7 +9378,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void printCode(String gdsDeviceId, String pmsBookingRoomId) {
-        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         
         if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
@@ -9994,6 +9994,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         currentBooking.confirmed = true;
         currentBooking.markAsCompleted();
+        currentBooking.avoidAutoDelete = true;
         addDefaultAddons(currentBooking);
         saveBooking(currentBooking);
     }

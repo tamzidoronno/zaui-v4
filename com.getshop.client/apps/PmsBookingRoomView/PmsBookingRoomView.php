@@ -21,7 +21,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
-    
+ 
     public static function sortByIncrementalOrderId($a, $b) {
         return $b->incrementOrderId > $a->incrementOrderId;
     }
@@ -878,7 +878,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         $guests = array();
         for($i = 1; $i <= 100; $i++) {
-            $guest = new \core_pmsmanager_PmsGuests();
+            $guest = $this->findGuest($_POST['data']['guestinfo_'.$i.'_guestid']);
             if(isset($_POST['data']['guestinfo_'.$i.'_name'])) {
                 $guest->name = $_POST['data']['guestinfo_'.$i.'_name'];
                 $guest->email = $_POST['data']['guestinfo_'.$i.'_email'];
@@ -2123,6 +2123,45 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $monthName." ".$arr[1];
     }
 
+    public function removeConferenceFromGuest() {
+        $booking = $this->getPmsBooking();
+        $guestInvolved = null;
+        foreach($booking->rooms as $room) {
+            foreach($room->guests as $guest) {
+                if($guest->guestId == $_POST['data']['guestid']) {
+                    $array = (array)$guest->pmsConferenceEventIds;
+                    $del_val = $_POST['data']['eventid'];
+                    if (($key = array_search($del_val, $array)) !== false) {
+                        unset($array[$key]);
+                    }
+                    $guest->pmsConferenceEventIds = $array;
+                    
+                    $guestInvolved = $guest;
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
+        $this->printConnectedConferenceEventToGuest($guestInvolved);
+    }
+    
+    public function createGuest() {
+        $room = $this->getSelectedRoom();
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId != $room->pmsBookingRoomId) {
+                continue;
+            }
+            $guest = new \core_pmsmanager_PmsGuests();
+            $room->guests[] = $guest;
+            $room->numberOfGuests = sizeof($room->guests);
+            $guest->guestId = uniqid();
+            echo $guest->guestId;
+            break;
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->clearCache();
+    }
+    
     public function canTestNewRoutine() {
         
         if (!$this->getApi()->getStoreManager()->isProductMode()) {
@@ -2136,5 +2175,95 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return in_array($this->getFactory()->getStore()->id, $allowedStores);
     }
 
+    public function printConnectedConferenceEventToGuest($guest) {
+        echo "<div style='padding: 10px; font-size:12px;'>";
+        $guestId ="";
+        if($guest) {
+            $guestId = $guest->guestId;
+        }
+        if($guest && @$guest->pmsConferenceEventIds) {
+            foreach($guest->pmsConferenceEventIds as $eventId) {
+                $event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($eventId);
+                $item = $this->getApi()->getPmsConferenceManager()->getItem($event->pmsConferenceItemId);
+                $conference = $this->getApi()->getPmsConferenceManager()->getConference($event->pmsConferenceId);
+                echo "<div>";
+                echo "<i class='fa fa-arrow-right'></i> Connected to conference " . $conference->meetingTitle . " - " . $item->name . " - " . date("d.m.Y", strtotime($event->from)) . " - " . date("d.m.Y", strtotime($event->to));
+                echo " <span class='removeConferenceFromGuest bookinghighlightcolor' guestid='".$guest->guestId."' eventid='".$event->id."' style='cursor:pointer;'>remove</span>,";
+                echo " <span class='connectGuestToConference bookinghighlightcolor' style='cursor:pointer'>add another</span>";
+                echo "</div>";
+            }
+        } else {
+            echo "Not connected to a conference, <span class='connectGuestToConference bookinghighlightcolor' style='cursor:pointer'>connect to a conference</span>.";
+        }
+        echo "</div>";
+    }
+
+    public function findGuest($guestId) {
+        $room = $this->getPmsRoom();
+        foreach($room->guests as $guest) {
+            if($guest->guestId == $guestId) {
+                return $guest;
+            }
+        }
+        return new \core_pmsmanager_PmsGuests();
+    }
+    
+    
+    public function searchForEvent() {
+        $filter = new \core_pmsmanager_PmsConferenceEventFilter();
+        $filter->keyword = $_POST['data']['keyword'];
+        $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
+        $this->printEvents($events);
+    }
+    
+    public function printEvents($events, $currentPmsEventId = "") {
+        $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+        $items = $this->indexList($items);
+        if(sizeof($events) == 0) {
+            echo "<div style='padding: 5px;'>";
+            echo "* No events found, please search for one in the input field above.";
+            echo "</div>";
+        }
+        echo "<table width='100%'>";
+        foreach($events as $event) {
+            $eventAdded = "";
+            if($event->id == $currentPmsEventId) {
+                $eventAdded = "eventaddedtoguest";
+            }
+            $confernce = $this->getApi()->getPmsConferenceManager()->getConference($event->pmsConferenceId);
+            echo "<tr class='$eventAdded'>";
+            echo "<td>" . $confernce->meetingTitle . "</td>";
+            echo "<td>" . $items[$event->pmsConferenceItemId]->name . "</td>";
+            echo "<td>" . date("d.m.Y H:i", strtotime($event->from)) . "</td>";
+            echo "<td>" . date("d.m.Y H:i", strtotime($event->to)) . "</td>";
+            if(!$eventAdded) {
+                echo "<td><span style='cursor:pointer;' class='attachguesttoevent' eventid='".$event->id."'>Select</span></td>";
+            } else {
+                echo "<td><span style='cursor:pointer;' class='attachguesttoevent' eventid=''>Remove</span></td>";
+            }
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+    
+    public function loadConferenceEvents() {
+        $this->includefile("addguesttoconference");
+    }
+    
+    public function attachGuestToEvent() {
+        $booking = $this->getPmsBooking();
+        $guestInvolved = null;
+        foreach($booking->rooms as $room) {
+            foreach($room->guests as $guest) {
+                if($guest->guestId == $_POST['data']['guestid']) {
+                    $guest->pmsConferenceEventIds[] = $_POST['data']['eventid'];
+                    $guestInvolved = $guest;
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->printConnectedConferenceEventToGuest($guestInvolved);
+        $this->clearCache();
+    }
 }
 ?>

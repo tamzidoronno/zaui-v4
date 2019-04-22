@@ -139,6 +139,7 @@ public class StoreHandler {
 //            } else {
                 GetShopTimer.timeEntry("Ready to invoke method for manager...", "StoreHandler");
                 result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject, isFromSynchronizedCall);
+                GetShopTimer.timeEntry("Invoke completed...", "StoreHandler");
 //            }
             
             clearSessionObject();

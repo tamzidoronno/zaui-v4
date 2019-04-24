@@ -900,13 +900,20 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 } else {
                     pmsManager.deleteBooking(newbooking.id);
                 }
-
-                NewOrderFilter filter = new NewOrderFilter();
-                filter.avoidOrderCreation = false;
-                filter.createNewOrder = false;
-                filter.prepayment = true;
-                filter.endInvoiceAt = newbooking.getEndDate();
-                pmsInvoiceManager.createOrder(newbooking.id,filter);
+                
+                newbooking = pmsManager.getBooking(newbooking.id);
+                
+                for(String orderId : newbooking.orderIds) {
+                    Order order = orderManager.getOrderSecure(orderId);
+                    if(order.isCreditNote || !order.creditOrderId.isEmpty()) {
+                        continue;
+                    }
+                    List<PmsBooking> bookings = pmsManager.getBookingsFromOrderId(orderId);
+                    if(bookings.size() > 1) {
+                        continue;
+                    }
+                    pmsInvoiceManager.creditOrder(newbooking.id, orderId);
+                }
 
                 return "";
             }

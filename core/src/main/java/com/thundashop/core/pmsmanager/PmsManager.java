@@ -10052,4 +10052,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return false;
     }
+
+    public List<PmsBooking> getBookingsFromOrderId(String orderId) {
+        List<PmsBooking> result = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.orderIds != null && booking.orderIds.contains(orderId)) {
+                result.add(booking);
+            }
+        }
+        return result;
+    }
 }

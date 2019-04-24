@@ -856,7 +856,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         booking.channel = "website";
-        
+        booking.payLater = input.payLater;
         if(input.payLater) {
             booking.avoidAutoDelete = true;
             pmsManager.logEntry("Pay later button pressed", booking.id, null);

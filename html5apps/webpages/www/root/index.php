@@ -32,6 +32,14 @@ and open the template in the editor.
         <script src="javascript.js"></script>
         <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
         
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-31092051-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-31092051-1');
+        </script>
         
         <?php
             $router->renderCurrentPageCss(); 

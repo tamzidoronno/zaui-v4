@@ -303,13 +303,7 @@ public class Cart extends DataCommon {
     }
 
     public boolean isNullCart() {
-        double value = getItems().stream()
-                .filter(item -> item != null)
-                .mapToDouble(item -> item.getTotalAmount())
-                .sum();
-        
-        return value == 0D;
-                
+        return getItems().isEmpty();        
     }
 
     public void replaceItem(CartItem item) {

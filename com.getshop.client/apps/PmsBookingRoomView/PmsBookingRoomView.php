@@ -2163,16 +2163,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function canTestNewRoutine() {
-        
-        if (!$this->getApi()->getStoreManager()->isProductMode()) {
-            return true;
-        }
-        
-        
-        $allowedStores = array();
-        $allowedStores[] = "93fadf31-1039-4196-9e4f-77c3be0ef8d1";
-        $allowedStores[] = "b6949f70-5e41-4c5e-abcf-d595450f8048";
-        return in_array($this->getFactory()->getStore()->id, $allowedStores);
+        return true;
     }
 
     public function printConnectedConferenceEventToGuest($guest) {

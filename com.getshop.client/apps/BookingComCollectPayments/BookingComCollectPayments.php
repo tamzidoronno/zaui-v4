@@ -18,6 +18,9 @@ class BookingComCollectPayments extends \PaymentApplication implements \Applicat
         
     }
     
+    public function getIcon() {
+        return "room.svg";
+    }
     
     public function saveSettings() {
         $this->setConfigurationSetting("automarkpaid", $_POST['automarkpaid']);

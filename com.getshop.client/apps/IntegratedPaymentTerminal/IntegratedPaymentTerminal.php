@@ -4,7 +4,7 @@ namespace ns_8edb700e_b486_47ac_a05f_c61967a734b1;
 class IntegratedPaymentTerminal extends \PaymentApplication implements \Application {
 
     public function getName() {
-        return "IntegratedPaymentTerminal";
+        return "Integrated payment terminal";
     }
 
     public function getDescription() {
@@ -13,6 +13,10 @@ class IntegratedPaymentTerminal extends \PaymentApplication implements \Applicat
     
     public function render() {
         
+    }
+    
+    public function getIcon() {
+        return "terminal.svg";
     }
     
     public function getIds() {

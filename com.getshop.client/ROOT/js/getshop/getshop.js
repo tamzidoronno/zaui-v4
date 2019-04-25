@@ -299,7 +299,14 @@ thundashop.Ajax = {
         });
     },
     
-    closeOverLay3: function() {
+    closeOverLay3: function(e) {
+        if(e) {
+            var target = $(e.target);
+            console.log(target.attr('class'));
+            if(!target.hasClass('gsoverlay3') && !target.hasClass('closeoverlay')) {
+                return;
+            }
+        }
         $('.gsoverlay3').removeClass('active');
         var appName = $('.gsoverlay3').find('.app:first').attr('app');
         

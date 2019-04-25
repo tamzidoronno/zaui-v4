@@ -13,7 +13,10 @@ class VerifoneTerminal extends \PaymentApplication implements \Application {
     public function hasPaymentProcess() {
         return $this->order != null && $this->order->status != 7 && !$this->getCurrentOrder()->isCreditNote;
     }
-    
+    public function getIcon() {
+        return "terminal.svg";
+    }
+
     /**
      * Should display you configuration page.
      */

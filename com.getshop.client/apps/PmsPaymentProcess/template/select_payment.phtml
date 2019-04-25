@@ -13,11 +13,12 @@ unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_selected_userid'] );
     foreach ($paymentMethods as $method) {
         $appInstance = $this->getFactory()->getApplicationPool()->createInstace($method);
         $color = $appInstance->getColor();
+        $icon = $appInstance->getIcon();
         ?>
         <div class="getshop_box_1 <? echo $color; ?>" goto="checkavailability" gsclick="selectPaymentMethod" method="<? echo $method->id; ?>">
 
             <div class="descriptionimage">
-                <img src="https://cdn1.iconfinder.com/data/icons/navigation-icon/128/check-512.png">
+                <img src="/skin/paymenticons/<?php echo $icon; ?>">
             </div>
 
             <div class="title"><? echo $appInstance->getName(); ?></div>

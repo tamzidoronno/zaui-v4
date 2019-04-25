@@ -16,6 +16,9 @@ class Dibs extends \PaymentApplication implements \Application {
     public function getName() {
         return "DIBS";
     }
+    public function getIcon() {
+        return "card.png";
+    }
     
     public function addPaymentMethods() {
         $namespace = __NAMESPACE__;

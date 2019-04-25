@@ -5,6 +5,10 @@ class GuestBill extends \PaymentApplication implements \Application {
     public function getDescription() {
         return $this->__f("If you are uncertain of what payment method the guest will chose, you can use this method to complete the day income");
     }
+    public function getIcon() {
+        return "invoice.svg";
+    }
+
 
     public function getName() {
         return "GuestBill";

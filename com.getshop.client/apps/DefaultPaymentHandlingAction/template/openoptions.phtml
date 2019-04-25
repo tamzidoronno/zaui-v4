@@ -7,11 +7,12 @@ $order = $this->getOrder();
         <? echo $this->__f("Payment date").":"; ?>
         <br/><input class="gsniceinput1 payment_date" style='width: 110px;' gsname='paymentdate' value='<? echo date('d.m.Y H:i'); ?>'/>    
     </div>
-    <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Mark as paid"); ?>
-    </div>
 </div>
 
 <div class='commonbox'>
+    <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Mark as paid"); ?>
+    </div>
+    
     <div  synchron='true' gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
         <i class='fa fa-trash'></i> 
         <? echo $this->__f("Delete order"); ?>
@@ -23,27 +24,23 @@ $order = $this->getOrder();
     <div class='order_action_button showChangePaymentMenu' orderid='<? echo $order->id; ?>' style='position: relative;' >
         <i class='fa fa-chain-broken'></i> 
         <? echo $this->__f("Change payment type"); ?>
-        
-        <div class='changePaymentMenu' style='z-index: 1; position: absolute; right: 0px; display: none;'> 
-            <?
-            $methods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-            foreach ($methods as $id => $type) {
-                $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
-                if (method_exists($instance, "getName")) {
-                    ?>
-                    <div gsclick='changeMethod' synchron='true' gs_callback='app.PmsPaymentProcess.refresh' orderid='<? echo $order->id; ?>' paymentid='<? echo $type->id; ?>' class='entry' style='width: 200px; padding: 5px; background-color: #FFF; border-bottom: solid 1px #DDD; color: #333;'><? echo $instance->getName(); ?></div>
-                    <?
-                }
-            }
-            ?>
-        </div>
-        <div>
-            
-        </div>
     </div>
 </div>
 
 
+<div class='changePaymentMenu' style='z-index: 1; position: absolute; right: 20px; display: none; top: 250px; border: solid 1px #bbb; '> 
+    <?
+    $methods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    foreach ($methods as $id => $type) {
+        $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+        if (method_exists($instance, "getName")) {
+            ?>
+            <div gsclick='changeMethod' synchron='true' gs_callback='app.PmsPaymentProcess.refresh' orderid='<? echo $order->id; ?>' paymentid='<? echo $type->id; ?>' class='entry' style='width: 200px; padding: 5px; background-color: #FFF; border-bottom: solid 1px #DDD; color: #333; cursor:pointer;'><? echo $instance->getName(); ?></div>
+            <?
+        }
+    }
+    ?>
+</div>
 
 
 <script>

@@ -18,19 +18,19 @@ echo "</div>";
 
 if (!$order->isCreditNote && count($order->creditOrderId)) {
     ?>
-    <div style='background-color: #ff7948; font-weight: bold; font-size: 18px; color: #FFF; padding: 5px;'>
+    <div class='paymentstatusbox' style='background-color: #ff7948;'>
         <i class='fa fa-info-circle' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order has been credited"); ?>
     </div>
     <?
 } else if ($order->status == 7) {
     ?>
-    <div style='background-color: #3a9142; font-weight: bold; font-size: 18px; color: #FFF; padding: 5px;'>
+    <div class='paymentstatusbox' style='background-color: #3a9142;'>
         <i class='fa fa-check' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order has been paid"); ?>
     </div>
     <?
 } else {
     ?>
-    <div style='background-color: #ff3535; font-weight: bold; font-size: 18px; color: #FFF; padding: 5px;'>
+    <div class='paymentstatusbox' style='background-color: #ff3535;'>
         <i class='fa fa-warning' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Order is not paid"); ?>
     </div>
     <?

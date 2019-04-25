@@ -33,3 +33,7 @@
         <i class='fa fa-close'></i>
     </div>
 </div>
+
+<script>
+    $(document).on('click','.gsoverlay3', thundashop.Ajax.closeOverLay3);
+</script>

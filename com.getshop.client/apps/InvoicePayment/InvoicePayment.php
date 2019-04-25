@@ -95,7 +95,11 @@ class InvoicePayment extends \PaymentApplication implements \Application{
     }
     
     public function getColor() {
-        return "darkgreen";
+        return "pink";
+    }
+    
+    public function getIcon() {
+        return "invoice.svg";
     }
     
     public function sendEmail() {

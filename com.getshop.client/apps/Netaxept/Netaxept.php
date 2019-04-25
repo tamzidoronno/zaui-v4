@@ -26,6 +26,10 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function hasPaymentLink() {
         return true;
     }
+    
+    public function getIcon() {
+        return "card.png";
+    }
 
     public function getName() {
         return "Netaxept";

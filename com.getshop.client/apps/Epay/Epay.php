@@ -12,7 +12,10 @@ class Epay extends \PaymentApplication implements \Application {
         return "Epay";
     }
     
-    
+    public function getIcon() {
+        return "card.png";
+    }
+
     public function getSavedCards($userId) {
         $user = $this->getApi()->getUserManager()->getUserById($userId);
         $cards = $user->savedCards;

@@ -349,7 +349,7 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Cleaning", "e03b19de-d1bf-4d1c-ac40-8c100ef53366", "gsicon-gs-cleaning");
         $menu->entries[] = new ModulePageMenuItem("CRM", "4f66aad0-08a0-466c-9b4c-71337c1e00b7", "gsicon-users");
         $menu->entries[] = new ModulePageMenuItem("Checklist", "checklist", "gsicon-list");
-//        $menu->entries[] = new ModulePageMenuItem("Conference", "conference", "fa-group");
+        $menu->entries[] = new ModulePageMenuItem("Conference", "conference", "fa-group");
         $menu->entries[] = new ModulePageMenuItem("Settings", "messages", "gsicon-gs-gears");
         $menu->entries[] = new ModulePageMenuItem("Support", "getshopsupport", "fa-support");
         return $menu;
@@ -385,7 +385,7 @@ class ModulePage {
     }
 
     public function getTopMenuApac() {
-       $menu = new \ModulePageMenu("apac");
+        $menu = new \ModulePageMenu("apac");
         $menu->entries[] = new ModulePageMenuItem("Access List", "home", "gsicon-gs-user");
         $menu->entries[] = new ModulePageMenuItem("New Access", "newaccess", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Doors", "doors", "fa fa-history");
@@ -417,6 +417,7 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Customers", "customers", "gsicon-factory");
         $menu->entries[] = new ModulePageMenuItem("Inbox", "inbox", "fa-inbox");
         $menu->entries[] = new ModulePageMenuItem("Suppliers", "suppliers", "fa-truck");
+        $menu->entries[] = new ModulePageMenuItem("IotDevices", "iotdevices", "fa-server");
         $menu->entries[] = new ModulePageMenuItem("Inventory", "inventory", "gsicon-calculator");
         $menu->entries[] = new ModulePageMenuItem("Support", "inventory", "fa-support");
         $menu->entries[] = new ModulePageMenuItem("Invoicing", "invoicing", "fa-dollar");

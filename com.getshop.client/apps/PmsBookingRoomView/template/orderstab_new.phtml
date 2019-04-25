@@ -66,17 +66,17 @@ $totalForRoom = round($totalForRoom, 2);
 
 ?>
 
-<div class='insideheader'>Payment summary <? echo $room->guests[0]->name; ?></div>
+<div class='insideheader'>SUMMARY <? echo $room->guests[0]->name; ?></div>
 <div style='font-size: 16px;'>
     <? 
-    echo "<div style='color: #8abf45; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
+    echo "<div style='color: #8ac136; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
     
     if ($needToCreateOrdersFor) {
-        echo "<div style='color: #ff9856; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("You need to create orders for")." ".$needToCreateOrdersFor."</div>";
+        echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("You need to create a payment of total")." ".$needToCreateOrdersFor."</div>";
     }
     
     if ($orders && $unpaidOrders) {
-        echo "<div style='color: #ff5656; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("Note, you have unpaid orders... Please make sure that all orders are paid.")."</div>";
+        echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("Note, you have unpaid orders... Please make sure that all orders are paid.")."</div>";
     }
     ?>
 </div>
@@ -98,7 +98,6 @@ $totalForRoom = round($totalForRoom, 2);
         <div class="col col_productname"> Payment Type </div>
         <div class="col col_value"> Amount </div>
         <div class="col col_value odd"> Payment Date </div>
-        <div class="col col_balance"> Balance </div>
         <div class="col col_orderid odd"> Order id</div>
     </div>
     <?
@@ -113,18 +112,10 @@ $totalForRoom = round($totalForRoom, 2);
                     <div class="col col_productname"> <? echo $this->getPaymentType($order); ?></div>
                     <div class="col col_value"> <? echo $totalForOrder; ?></div>
                     <div class="col col_value odd"> <? echo $paymentDate; ?></div>
-                    <div class="col col_balance"> 
-                        <? if ($order->status != 7) {
-                            echo "<div style='color: red;'><i class='fa fa-warning'></i> ".($totalForOrder * -1)."</div>";
-                        } else {
-                            echo "<div style='color: #86c50d;'><i class='fa fa-check-circle'></i></div>";
-                        }
-                        ?>
-                    </div>
                     <div class="col col_orderid odd"> <? echo $order->incrementOrderId; ?> </div>
                     <div class="col col_action">
-                        <div class="gs_shop_small_icon fa fa-gear toggle_action_menu"></div>
-                        <div class="gs_shop_small_icon fa fa-search-plus showOrderSummary" orderid="<? echo $order->id; ?>" title='<? echo $this->__f("Show order"); ?>'></div>
+                        <div class="fa fa-gear toggle_action_menu bookinghighlightcolor" style="cursor:pointer;margin-right: 5px;"></div>
+                        <div class="fa fa-search-plus showOrderSummary bookinghighlightcolor" style='cursor:pointer;' orderid="<? echo $order->id; ?>" title='<? echo $this->__f("Show order"); ?>'></div>
                         <div class="ordermenu">
 
                             <?

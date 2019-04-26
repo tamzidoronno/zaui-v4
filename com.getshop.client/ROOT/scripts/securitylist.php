@@ -10,10 +10,10 @@ function convertToJavaDate($time) {
 }        
     
 $bookingfilter = new core_pmsmanager_PmsBookingFilter();
-$bookingfilter->startDate = convertToJavaDate(date("d.m.Y 00:00", time()));
-$bookingfilter->endDate = convertToJavaDate(date("d.m.Y 23:59", time()));
+$bookingfilter->startDate = convertToJavaDate(date("d.m.Y", time()));
+$bookingfilter->endDate = convertToJavaDate(date("d.m.Y", time()+1000));
 $bookingfilter->filterType = "active";
-$bookingfilter->includeDeleted = true;
+$bookingfilter->includeDeleted = false;
 
 $list = $factory->getApi()->getPmsManager()->getSimpleRooms($_GET['engine'], $bookingfilter);
 $tmplist = array();
@@ -45,11 +45,11 @@ foreach($list as $room) {
     }
     if($_GET['useCheckinInstead']) {
         if(!$room->checkedIn || $room->checkedOut) {
-            continue;
+//            continue;
         } 
     } else {
         if(!$room->transferredToArx) {
-            continue;
+//            continue;
         }
     }
     

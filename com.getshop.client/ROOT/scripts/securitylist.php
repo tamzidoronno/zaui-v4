@@ -1,3 +1,5 @@
+<h1>Firelist <?php echo date("d.m.Y H:i"); ?></h1>
+    
 <?php
 
 chdir("../");
@@ -23,7 +25,7 @@ foreach($list as $r) {
 ksort($tmplist);
 $list = $tmplist;
 ?>
-<table cellspacing='1' cellpadding='1' bgcolor='#bbb'>
+<table cellspacing='1' cellpadding='1'>
     <tr bgcolor='#fff' style='font-weight: bold;'>
         <td>Code</td>
         <td>Room</td>
@@ -37,7 +39,8 @@ $list = $tmplist;
         <td>Unpaid</td>
     </tr>
 <?php
-
+$guestCount = 0;
+$roomCount = 0;
 foreach($list as $room) {
     $guests = array();
     foreach((array)$room->guest as $g) {
@@ -45,13 +48,16 @@ foreach($list as $room) {
     }
     if($_GET['useCheckinInstead']) {
         if(!$room->checkedIn || $room->checkedOut) {
-//            continue;
+            continue;
         } 
     } else {
         if(!$room->transferredToArx) {
-//            continue;
+            continue;
         }
     }
+    
+    $guestCount += $room->numberOfGuests;
+    $roomCount++;
     
     echo "<tr bgcolor='#fff'>";
     echo "<td>" . $room->code . "</td>";
@@ -68,6 +74,7 @@ foreach($list as $room) {
     $addons = (array)$room->addons;
     if(count($addons) > 0) {
         echo "<tr>";
+        echo "<td></td>";
         echo "<td colspan='99' bgcolor='#efefef'>";
         foreach($room->addons as $addon) {
             echo "<div>" . date("d.m.Y", strtotime($addon->date)) . " : " . $addon->count . " x " . $addon->name . "</div>";
@@ -75,9 +82,19 @@ foreach($list as $room) {
         echo "</td>";
         echo "</tr>";
     }
+    echo "<tr>";
+    echo "<td></td>";
+    echo "<td colspan='99' style='height:10px;background-color:#fff;border-bottom: solid 1px #efefef;'>";
+    foreach($room->addons as $addon) {
+        echo "<div>" . date("d.m.Y", strtotime($addon->date)) . " : " . $addon->count . " x " . $addon->name . "</div>";
+    }
+    echo "</td>";
+    echo "</tr>";
 }
 echo "</table>";
 ?>
+<br>
+Total number of guests <?php echo $guestCount; ?>, number of rooms: <?php echo $roomCount; ?>
 <style>
     td { font-size: 12px; }
 </style>

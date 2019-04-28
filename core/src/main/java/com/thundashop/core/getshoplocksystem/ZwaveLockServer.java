@@ -199,7 +199,9 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                 ZwaveThread nextThread = createJob(lockToWorkWith);
                 if (nextThread != null) {
                     currentThread = nextThread; 
-                    new Thread(nextThread).start();
+                    Thread td = new Thread(nextThread);
+                    td.setName("Starting zwave thread: " + nextThread );
+                    td.start();
                 }            
             } else {
                 GetShopLogHandler.logPrintStatic("No more jobs to do, or waiting because of failed locks.", storeId);

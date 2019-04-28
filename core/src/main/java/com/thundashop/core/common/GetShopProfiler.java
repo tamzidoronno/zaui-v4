@@ -46,7 +46,9 @@ public class GetShopProfiler implements Runnable {
             Logger.getLogger(GetShopProfiler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        new Thread(this).start();
+        Thread td = new Thread(this);
+        td.setName("GetShop Profiler");
+        td.start();
     }
     
     public void addToProfiler(String storeId, String className, String methodName, long nanosecondsUsed) {

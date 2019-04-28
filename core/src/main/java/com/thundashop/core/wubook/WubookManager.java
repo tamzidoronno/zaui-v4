@@ -432,6 +432,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
         checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
         checkNewBookingsThread.setStoreId(storeId);
+        checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
         checkNewBookingsThread.start();
         
         return toReturn;
@@ -1669,7 +1670,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(tosend);
         logText("Doing update of " + numberOfDays + " days");
         WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
+        updateThread.setName("Wubook update thread, storeid: " + storeId);
         updateThread.start();
+        updateThread.setName("Updating WuBookThread for store: " + storeId);
         availabilityHasBeenChanged = null;
         lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
         

@@ -27,7 +27,9 @@ public abstract class GetShopThread implements Runnable {
     }
 
     public void start() {
-        new Thread(this).start(); 
+        Thread td = new Thread(this);
+        td.setName("GetShopThread: " + this + " | storeid: " + storeId);
+        td.start(); 
     }
     
     @Override

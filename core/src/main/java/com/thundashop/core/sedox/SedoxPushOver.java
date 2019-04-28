@@ -45,7 +45,9 @@ public class SedoxPushOver implements Runnable {
             return;
         }
         
-        new Thread(new SedoxPushOver(frameworkConfig, message, pushoverUserId)).start();
+        Thread td = new Thread(new SedoxPushOver(frameworkConfig, message, pushoverUserId));
+        td.setName("Pushover message for sedox performance");
+        td.start();
     }
     
     private void sendPushoverNotification() throws ErrorException {

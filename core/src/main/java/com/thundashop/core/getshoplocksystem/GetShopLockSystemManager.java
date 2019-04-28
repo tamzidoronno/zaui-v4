@@ -837,6 +837,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         for(LockServer server : lockServers.values()) {
             getShop.updateServerStatus(server, storeId);
             PingThread thrad = new PingThread(server);
+            thrad.setName("Pingthread for store: " + storeId + ", server: "  + server.getGivenName());
             thrad.start();
         }
     }

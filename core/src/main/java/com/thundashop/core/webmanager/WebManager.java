@@ -68,7 +68,9 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     public void htmlPostThreaded(String url, String data, boolean jsonPost, String encoding) throws Exception {
         WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap());
-        new Thread(thread).start();
+        Thread td = new Thread(thread);
+        td.setName("Posting data to " + url);
+        td.start();
     }       
     
     @Override

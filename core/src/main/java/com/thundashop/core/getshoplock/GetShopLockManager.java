@@ -1004,6 +1004,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 boolean useNewQueueCheck = pmsManager.getConfigurationSecure() != null ? pmsManager.getConfigurationSecure().useNewQueueCheck : false;
                 
                 GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck, storeId);
+                mgr.setName("Checking if all locks are ok for store: " + storeId);
                 mgr.start();
             }
         }

@@ -94,6 +94,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     
     public String htmlPost(String url, String data)  throws Exception {
         RateManagerPushBookingThread pusher = new RateManagerPushBookingThread(url, data);
+        pusher.setName("Thread for pushing data to wubook, storeId: " + storeId);
         pusher.start();
         return "";
     }

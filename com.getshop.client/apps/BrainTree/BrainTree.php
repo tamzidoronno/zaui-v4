@@ -22,6 +22,10 @@ class BrainTree extends \PaymentApplication implements \Application {
         $this->includefile("paymentformsimple");
     }
     
+    public function getIcon() {
+        return "card.png";
+    }
+    
     public function render() {
         if (isset($_GET['gsPaymentOrderId'])) {
             $_SESSION['gsPaymentOrderId'] = $_GET['gsPaymentOrderId'];

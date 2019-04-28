@@ -4,7 +4,7 @@ app.DefaultPaymentHandlingAction = {
     },
     
     showChangePaymentMenu: function(e) {
-        var menu = $(this).find('.changePaymentMenu');
+        var menu = $('.changePaymentMenu');
         if (menu.is(':visible')) {
             menu.hide();
         } else {

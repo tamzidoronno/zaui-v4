@@ -9,6 +9,10 @@ class SamleFaktura extends \PaymentApplication implements \Application {
     public function getName() {
         return "SamleFaktura";
     }
+    
+    public function getIcon() {
+        return "invoice.svg";
+    }
 
     public function render() {
         if (isset($_SESSION['samlefaktura_order_id'])) {

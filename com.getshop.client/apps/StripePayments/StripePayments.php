@@ -9,6 +9,9 @@ class StripePayments extends \PaymentApplication implements \Application {
     public function getName() {
         return "StripePayments";
     }
+    public function getIcon() {
+        return "card.png";
+    }
 
     public function render() {
         if ($this->getCurrentOrder()->status != 7) {

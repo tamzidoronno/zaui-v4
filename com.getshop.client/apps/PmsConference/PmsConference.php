@@ -39,6 +39,7 @@ class PmsConference extends \WebshopApplication implements \Application {
     }
 
     public function openConference() {
+        $this->setCurrentConference($_POST['data']['conferenceid']);
         $this->includefile("conferenceoverview");
     }
     
@@ -92,6 +93,11 @@ class PmsConference extends \WebshopApplication implements \Application {
     }
     
     public function render() {
+        if($this->getApi()->getStoreManager()->getMyStore()->id != "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+            echo "The pms conference module is in a testing stage.<br>";
+            echo "We are not sure at what point we will open this feature publically.<br>";
+            return;
+        }
         echo "<div class='conferenceoverview'></div>";
         echo "<div class='eventoverview'></div>";
         echo "<div class='conferencesystem'>";

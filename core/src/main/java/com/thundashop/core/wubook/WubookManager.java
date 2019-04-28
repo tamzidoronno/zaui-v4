@@ -903,8 +903,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
                 
                 newbooking = pmsManager.getBooking(newbooking.id);
-                
-                for(String orderId : newbooking.orderIds) {
+                List<String> orderIds = new ArrayList(newbooking.orderIds);
+                for(String orderId : orderIds) {
                     Order order = orderManager.getOrderSecure(orderId);
                     if(order.isCreditNote || !order.creditOrderId.isEmpty()) {
                         continue;

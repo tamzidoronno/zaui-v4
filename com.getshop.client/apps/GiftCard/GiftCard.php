@@ -11,6 +11,10 @@ class GiftCard extends \PaymentApplication implements \Application {
         $this->addPaymentMethod($this->getName(), "/showApplicationImages.php?appNamespace=$namespace&image=skin/images/invoice.png", "Invoice");
     }
     
+    public function getIcon() {
+        return "invoice.svg";
+    }
+
     
     public function getName() {
         return "GiftCard";

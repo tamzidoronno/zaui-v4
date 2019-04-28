@@ -70,6 +70,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         if ($system == "GENERELL_NORWEGIAN") {
             $this->includefile("gbat10");
         }
+        if ($system == "BUNTIMPORT_VISMA_BUSINESS") {
+            $this->includefile("vismabunt");
+        }
     }
     
     public function downloadAllTransactionsToExcel() {

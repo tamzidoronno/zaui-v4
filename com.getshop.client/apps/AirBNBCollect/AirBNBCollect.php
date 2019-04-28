@@ -20,6 +20,10 @@ class AirBNBCollect extends \PaymentApplication implements \Application {
     public function paymentCallback() {
     }
 
+    public function getIcon() {
+        return "room.svg";
+    }
+    
     /**
      * Will only be executed if
      * this payment has been selected

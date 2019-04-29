@@ -111,7 +111,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "</div>";
         
         echo "<script>";
-        echo "app.PmsNewBooking20.setLastPage();";
+//        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
     }
     

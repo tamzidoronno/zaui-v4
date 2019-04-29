@@ -1,7 +1,7 @@
 <?
 /* @var $this ns_4b10210b_5da3_4b01_9bd9_1e6f0a2c7cfc\GetShopPmsLockSetup */
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $groups = $this->getApi()->getGetShopLockSystemManager()->getAllGroups();
 echo "<div gstype='form' method='saveGroupConnection'>";
     ?>

@@ -89,7 +89,11 @@ class VismaNetPostBuilder {
             if (in_array($accountNumber, $taxAccounts)) {
                 $line->vatId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
             } else {
-                $line->vatCodeId = new VismaValueObject($this->parent->getTaxCodeForAccount($accountNumber));
+                $vatCodeId = $this->parent->getTaxCodeForAccount($accountNumber);
+                if ($vatCodeId) {
+                    $line->vatCodeId = new VismaValueObject($vatCodeId);
+                }
+                
             }
 
             $data->journalTransactionLines[] = $line;

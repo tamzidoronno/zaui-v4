@@ -8,6 +8,7 @@ $paymentcancelled = $this->getConfigurationSetting("paymentcancelled");
 $hmac = $this->getConfigurationSetting("hmac");
 $md5k1 = $this->getConfigurationSetting("md5k1");
 $md5k2 = $this->getConfigurationSetting("md5k2");
+$redirectsuccesstopage = $this->getConfigurationSetting("redirectsuccesstopage");
 ?>
 
 <div class='gss_settings_header'>
@@ -38,6 +39,14 @@ $md5k2 = $this->getConfigurationSetting("md5k2");
             <input type="textfield" gs_model='dibsmodel' gs_model_attr='hmac' value="<? echo $hmac; ?>">
             <div class="description">
                 <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
+            </div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="redirectsuccesstopage">
+            <span class="title"><?php echo $this->__f("Redirect success to page"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='redirectsuccesstopage' value="<? echo $redirectsuccesstopage; ?>">
+            <div class="description">
+                <?php  echo $this->__f("Type in a specific page you would like to redirect to when completed, if not set its transferred to a default success page"); ?>
             </div>
         </div>
         

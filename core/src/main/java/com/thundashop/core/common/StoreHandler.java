@@ -87,6 +87,7 @@ public class StoreHandler {
         long currentThreadId = Thread.currentThread().getId();
         
         SyncronizedMethodCountDownThread timerThread = new SyncronizedMethodCountDownThread(inObject.interfaceName, inObject.method, storeId, currentThreadId);
+        timerThread.setName("Timing thread for sync api call.");
         timerThread.start();
         
         try {

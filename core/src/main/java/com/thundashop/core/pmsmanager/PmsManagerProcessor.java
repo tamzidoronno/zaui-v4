@@ -1164,6 +1164,7 @@ public class PmsManagerProcessor {
             PmsLockServer server = config.lockServerConfigs.get(name);
             if(server.isGetShopHotelLock() || server.isGetShopLockBox()) {
                 PingServerThread pthread = new PingServerThread(server);
+                pthread.setName("Ping server for server: " + server.arxHostname);
                 pthread.start();
             } else {
                 server.lastPing = new Date();

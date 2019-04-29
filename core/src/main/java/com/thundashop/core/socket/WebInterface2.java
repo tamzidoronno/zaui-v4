@@ -26,7 +26,9 @@ public class WebInterface2 implements Runnable {
         this.log = log;
         this.storePool = storePool;
         this.port = port;
-        new Thread(this).start();
+        Thread td = new Thread(this);
+        td.setName("Web interface thread");
+        td.start();
     }
 
     @Override
@@ -48,6 +50,7 @@ public class WebInterface2 implements Runnable {
             try {
                 Socket socket = serverSocket.accept();
                 Thread thread = new Thread(new WebInterfaceSocketThread2(socket, storePool));
+                thread.setName("WebSocket client thread");
                 thread.start();
             } catch (IOException ex) {
                 ex.printStackTrace();

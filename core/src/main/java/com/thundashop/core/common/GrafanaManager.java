@@ -30,7 +30,9 @@ public class GrafanaManager extends ManagerBase{
         values.put("storeId", storeId);
 
         if(frameworkConfig.productionMode) {
-            new Thread(feeder).start();
+            Thread td = new Thread(feeder);
+            td.setName("Feeding graphana for store " + storeId);
+            td.start();
         }
     }
     

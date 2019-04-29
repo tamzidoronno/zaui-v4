@@ -98,6 +98,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
         
         increaseBadge(tokenId);
         Thread thread = new Thread(new AppleNotificationThread(message, tokenId, getBadgeNumber(tokenId), frameworkConfig, mobileApp));
+        thread.setName("IOS Android push message");
         thread.start();
     }
     

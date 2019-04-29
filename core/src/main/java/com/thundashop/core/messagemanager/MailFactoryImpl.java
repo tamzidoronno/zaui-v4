@@ -135,11 +135,15 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     message = createMailMessage(email, from, title, content);
                     String useFrom = from.contains(";") ? email : from;
                     MailFactoryImpl mfi = createMailFactory(useFrom, email, title, content, message);
-                    new Thread(mfi).start();    
+                    Thread td = new Thread(mfi);
+                    td.setName("Send email thread for store: " + storeId);
+                    td.start();
                 }
             } else {
                 MailFactoryImpl mfi = createMailFactory(from, to, title, content, message);
-                new Thread(mfi).start();
+                Thread td = new Thread(mfi);
+                td.setName("Send email thread for store: " + storeId);
+                td.start();
             }
         }
         
@@ -175,13 +179,17 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     MailFactoryImpl mfi = createMailFactory(from, email, title, content, mailMessage);
                     mfi.files = files;
                     mfi.delete = delete;
-                    new Thread(mfi).start();
+                    Thread td = new Thread(mfi);
+                    td.setName("Send email with attachment for store: " + storeId);
+                    td.start();
                 }
             } else {
                 MailFactoryImpl mfi = createMailFactory(from, to, title, content, mailMessage);
                 mfi.files = files;
                 mfi.delete = delete;
-                new Thread(mfi).start();
+                Thread td = new Thread(mfi);
+                td.setName("Send email with attachment for store: " + storeId);
+                td.start();
             }
         }
         

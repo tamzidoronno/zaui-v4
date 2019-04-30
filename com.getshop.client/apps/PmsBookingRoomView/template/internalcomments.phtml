@@ -1,16 +1,23 @@
 <?php
+/* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getSelectedRoom();
 $user = $this->getUserForBooking();
-
+$pinnedComment = $this->getPinnedComment();
 $comments = (array) $pmsBooking->comments;
 ksort($comments);
 
 ?>
 
 <div class="column1" style="width: 300px; border-right: solid 1px #DDD; padding: 20px; box-sizing: border-box; display: inline-block;">
-    <div class="shop_button adduserdescription" style="width: 100%; box-sizing: border-box;"><span title='A comment pinned to all bookings for this customer'>Set pinned comment </span> 
+    <div class="shop_button adduserdescription" style="width: 100%; box-sizing: border-box;">
+        <span title='A comment pinned to all bookings for this customer'>Set pinned comment</span> 
     </div>
+    <?php if($pinnedComment) { ?>
+        <div class="shop_button" gsclick='deletePinnedComment' style="width: 100%; box-sizing: border-box; background-color:red;">
+            <span title='A comment pinned to all bookings for this customer'>Delete pinned comment</span> 
+        </div>
+    <?php } ?>
     <br/>
     <br/>
     <div class="shop_button addordernote"  style="width: 100%; box-sizing: border-box;"><span title='A comment to attach to the orders'>Set Order Note</span> 

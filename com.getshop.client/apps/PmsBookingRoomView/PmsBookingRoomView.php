@@ -2074,6 +2074,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $user->description;
     }
 
+    public function deletePinnedComment() {
+        $this->getPmsBooking();
+        $user = $this->getUserForBooking();
+        $user->description = "";
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     /**
      * 
      * @param type $productId

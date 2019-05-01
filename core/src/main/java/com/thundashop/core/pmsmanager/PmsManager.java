@@ -12,6 +12,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
@@ -40,6 +41,7 @@ import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
@@ -118,7 +120,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList();
     private String specifiedMessage = "";
     Date lastOrderProcessed;
-    private List<PmsLog> logentries = new ArrayList();
     private boolean initFinalized = false;
     private String orderIdToSend;
     private Date lastCheckForIncosistent;
@@ -324,8 +325,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 PmsLog entry = (PmsLog) dataCommon;
                 if (entry.logText.contains("Automarking booking as paid for, since no orders has been added") || entry.logText.equals("Booking saved / updated") || entry.logText.contains("booking has been deleted")) {
                     deleteObject(entry);
-                } else {
-                    logentries.add(entry);
                 }
             }
             if (dataCommon instanceof PmsAdditionalItemInformation) {
@@ -338,9 +337,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
-        
-        // Added 26.03.2019 - Save to remove after a few days and should be removed.
-        recheckOrdersAddedToBooking();
     }
 
     @Override
@@ -3062,7 +3058,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
-
+        List<PmsLog> logentries = queryLogEntries(filter);
+        
         List<PmsLog> res = new ArrayList();
         if (filter != null) {
             for (PmsLog log : logentries) {
@@ -4352,6 +4349,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.setTranslationStrings(addonConfig.getTranslations());
         toReturn.onlyForBookingItems = addonConfig.onlyForBookingItems;
         toReturn.alwaysAddAddon = addonConfig.alwaysAddAddon;
+        toReturn.percentagePrice = addonConfig.percentagePrice;
         toReturn.groupAddonType = addonConfig.groupAddonType;
         toReturn.groupAddonSettings = addonConfig.groupAddonSettings;
 
@@ -5296,7 +5294,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         log.userId = userId;
-        logentries.add(log);
         saveObject(log);
 
         if (log.tag != null && log.tag.equals("mobileapp")) {
@@ -10065,6 +10062,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 result.add(booking);
             }
         }
+        return result;
+    }
+
+    private List<PmsLog> queryLogEntries(PmsLog filter) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", PmsLog.class.getCanonicalName());
+        query.put("bookingId", filter.bookingId);
+
+        List<PmsLog> result = database.query("PmsManager_default", storeId, query).stream()
+                .map(o -> (PmsLog)o)
+                .collect(Collectors.toList());
         return result;
     }
 }

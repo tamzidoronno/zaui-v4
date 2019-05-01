@@ -185,9 +185,9 @@ public class ManagerSubBase {
         
         this.ready = true;
         if (GetShopLogHandler.isDeveloper) {
-            System.out.println("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
+                System.out.println("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
+            }
         }
-    }
 
     private boolean isDatabaseMethodInUse() throws SecurityException {
         boolean dataFromDatabaseOverridden = false;

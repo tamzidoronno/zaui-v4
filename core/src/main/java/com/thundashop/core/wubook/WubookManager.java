@@ -333,8 +333,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Integer roomId = (Integer) roomtable.get("room_id");
             
             try {
-                if(table.containsKey("men") && (int)table.get("id_channel") == 37) {
+                if(table.containsKey("men")) {
                     guest = (int) table.get("men");
+                }
+                if(table.containsKey("children")) {
+                    guest += (int) table.get("children");
                 }
             }catch(Exception e) {
                 

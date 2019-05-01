@@ -30,7 +30,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private String multiLevelName;
     private String webAddress;
     private String storeId;
-    private String schedulerInterval = ""; 
+    private String schedulerInterval = "";
     
     public String getUsername() {
         return username;
@@ -96,6 +96,10 @@ public abstract class GetShopSchedulerBase implements Runnable {
     }
     
     private synchronized void runConnection() throws Exception {
+        if (!GetShopSchedulerOnOffHandler.getOnOffHandler().isActive(this)) {
+            return;
+        }
+        
         sleepRandomTime();
         execute();
         closeConnection();

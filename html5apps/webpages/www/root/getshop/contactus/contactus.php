@@ -17,6 +17,7 @@ require_once "Mail.php";
 class contactus extends PageCommon {
     public $title = "GetShop - Contact us";
     public $title_rewrite = "pms";
+    public $description = array("en" => "If you have questions about hotel automation, we will be happy to answer all your questions.");
     public $subpageof = "";
     
     public $menuSequence = 3;

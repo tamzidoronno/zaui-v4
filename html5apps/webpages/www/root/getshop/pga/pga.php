@@ -16,6 +16,7 @@ class pga extends PageCommon {
     public $title_rewrite = "pms";
     public $subpageof = "products";
     public $menuSequence = 4;
+    public $description = array("en" => "A personal guest assistant helps you automate communication with your guests without you being involved, weather that is buying additional features, late check out, extra cleaning, etc.");
     
     /** Menu settings */
     public $menuEntries = array('en' => "Personal Guest Assistant", "no" => "Gjestehjelperen");

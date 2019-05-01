@@ -16,6 +16,7 @@ class onlinebooking extends PageCommon {
     public $title_rewrite = "pms";
     public $subpageof = "products";
     public $menuSequence = 2;
+    public $description = array("en" => "GetShop comes with a simple to use but yet powerful booking engine that can be embed into any website with less than 10 lines of code.");
     
     /** Menu settings */
     public $menuEntries = array('en' => "Online Booking", "no" => "Online booking");

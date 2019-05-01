@@ -25,6 +25,7 @@ and open the template in the editor.
         </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="<?php echo $router->getCurrentPage()->getDescription(); ?>">
         
         <link rel="stylesheet" href="css.css">
         <script src="javascript/jquery.js"></script>

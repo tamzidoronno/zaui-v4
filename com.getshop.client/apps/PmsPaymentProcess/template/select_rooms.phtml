@@ -74,7 +74,26 @@ foreach ($bookings as $booking) {
 }
 ?>
 <br/>
+<div class='bookinghighlightcolor selectallroomtoggle' style='margin-bottom: 10px; cursor:pointer;'>Select all rooms</div>
 <div class='buttonarea'>
-    <div class='shop_button' gsclick='gotopaymentselection'><i class='fa fa-arrow-left'></i> <? echo $this->__f("Back"); ?></div>
-    <div class='shop_button setrooms' style='float: right;'><? echo $this->__f("Next"); ?> <i class='fa fa-arrow-right'></i></div>
+    <div class='shop_button' gsclick='gotopaymentselection'
+         style='    background-color: #81cff3;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #000 !important;'
+         ><i class='fa fa-caret-left'></i> <? echo $this->__f("Back"); ?></div>
+    <div class='shop_button setrooms' style='float: right;'><? echo $this->__f("Next"); ?> <i class='fa fa-caret-right'></i></div>
 </div>
+
+<script>
+    allroomchecked=false;
+    $('.selectallroomtoggle').on('click', function() {
+        if(!allroomchecked) {
+            $('.roomcheckbox').attr('checked','checked');
+            allroomchecked = true;
+        } else {
+            $('.roomcheckbox').attr('checked',null);
+            allroomchecked = false;
+        }
+    });
+</script>

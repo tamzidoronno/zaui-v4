@@ -229,7 +229,7 @@ public class Database extends StoreComponent {
 
             try {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
-                if (dataCommon.deleted == null) {
+                if (dataCommon.deleted == null && !(dataCommon instanceof PmsLog)) {
                     dataCommon.colection = collection.getName();
                     dataCommon.gs_manager = collection.getDB().getName();
                     all.add(dataCommon);
@@ -256,6 +256,8 @@ public class Database extends StoreComponent {
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
         obj.add(addBannedClass("com.thundashop.core.ordermanager.data.VirtualOrder"));
         obj.add(addBannedClass("com.thundashop.core.ordermanager.data.EhfSentLog"));
+        obj.add(addBannedClass("com.thundashop.core.pmsmanager.PmsLog"));
+        obj.add(addBannedClass("com.thundashop.core.wubook.WubookLog"));
         andQuery.put("$and", obj);
         
         return andQuery;

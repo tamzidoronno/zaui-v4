@@ -336,7 +336,11 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             echo "<div class='addedaddonsrow' addonid='".$addon->addonId."'>";
             $product = $this->getApi()->getProductManager()->getProduct($addon->productId);
             $name = $addon->name ? $addon->name : $product->name;
-            echo "<i class='fa fa-trash-o removeaddon' addonid='".$addon->addonId."' gsclick='removeAddon' synchron='true' roomid='".$room->pmsBookingRoomId."' gs_callback='app.PmsNewBooking20.addonRemove'></i> " . date("d.m.Y", strtotime($addon->date)) . " - " . $name . " - " . $addon->count . " - " . $addon->price;
+            $price = $addon->price;
+            if($addon->percentagePrice > 0) {
+                $price = $addon->percentagePrice . "%";
+            }
+            echo "<i class='fa fa-trash-o removeaddon' addonid='".$addon->addonId."' gsclick='removeAddon' synchron='true' roomid='".$room->pmsBookingRoomId."' gs_callback='app.PmsNewBooking20.addonRemove'></i> " . date("d.m.Y", strtotime($addon->date)) . " - " . $name . " - " . $addon->count . " - " . $price;
             echo "</div>";
         }
         echo "<div class='closeaddedaddonspanel'>Close</div>";

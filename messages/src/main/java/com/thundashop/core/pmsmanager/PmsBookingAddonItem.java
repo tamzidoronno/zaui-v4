@@ -49,6 +49,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     private String overrideName = "";
     public Double price;
     public Double priceExTaxes;
+    public Integer percentagePrice = 0;
     public String productId;
     public Integer addonType;
     public String addonSubType = "";

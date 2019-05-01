@@ -117,7 +117,14 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
                 if ($addon->productId == $productId) {
                     $found = true;
                     $addon->isSingle = $res['daily'] != "true";
-                    $addon->price = $res['price'];
+                    if(stristr($res['price'], "%")) {
+                        $addon->percentagePrice = str_replace("%", "",$res['price']);
+                        $addon->price = 0.0;
+                    } else {
+                        $addon->price = $res['price'];
+                        $addon->percentagePrice = 0;
+                   }
+                        
                     $addon->dependsOnGuestCount = $res['perguest'] == "true";
                     $addon->noRefundable = $res['nonrefundable'] == "true";
                     $addon->isIncludedInRoomPrice = $res['isIncludedInRoomPrice'] == "true";
@@ -144,7 +151,13 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             }
 
             $product = $this->getApi()->getProductManager()->getProduct($productId);
-            $product->price = $res['price'];
+            if(stristr($res['price'], "%")) {
+                $product->price = 0.0;
+                $product->percentagePrice = str_replace("%", "",$res['price']);
+            } else {
+                $product->price = $res['price'];
+                $product->percentagePrice = 0;
+            }
             $product->taxgroup = $res['taxgroup'];
             $this->getApi()->getProductManager()->saveProduct($product);
         }

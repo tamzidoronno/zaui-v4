@@ -38,6 +38,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String shortDescription;
     public String mainImage = "";
     public double price;
+    public Integer percentagePrice = 0;
     public Double priceBeforeTaxChange;
     public TaxGroup taxGroupBeforeTaxChange;
     

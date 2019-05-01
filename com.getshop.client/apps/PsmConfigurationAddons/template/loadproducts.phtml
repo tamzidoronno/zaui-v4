@@ -128,9 +128,17 @@ foreach($config->addonConfiguration as $item) {
             <span class="extendedinformation"></span>
             
         </td>
+        <?php
+        $productPrice = round($product->price);
+        if($product->percentagePrice > 0) { $productPrice = $product->percentagePrice."%"; }
+        ?>
         <td><input type="checkbox" <?php echo $selectedDaily; ?> gsname='daily'></td>
-        <td><input type="txt" style="width:30px" value='<?php echo $product->price; ?>' gsname='price'></td>
-        <td><?php echo round($product->priceExTaxes); ?></td>
+        <td><input type="txt" style="width:50px" value='<?php echo $productPrice; ?>' gsname='price'></td>
+        <?php
+        $productPrice = round($product->priceExTaxes);
+        if($product->percentagePrice > 0) { $productPrice = "N/A"; }
+        ?>
+        <td><?php echo $productPrice; ?></td>
         <td style="text-align: left;">
             <select gsname='taxgroup'>
             <?php

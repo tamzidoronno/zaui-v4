@@ -47,6 +47,7 @@ body {
     background-color: #FFF;
     padding:  30px;
     border: solid 1px #DDD;
+    z-index: 2;
 }
 
 .menu {
@@ -184,8 +185,16 @@ a {
     z-index: 1;
 }
 
+.mobilemenu {
+    display: none;
+}
+
+
 @media only screen and (max-width: 800px) {
     #menuToggle {
         display: block;
     }
+    
+    
+    .menu { display: none; }
 }

@@ -100,9 +100,6 @@ body {
     padding-top: 100px;
 }
 
-.mobilemenu {
-    display: none;
-}
 
 @media only screen and (max-width: 800px) {
     .boxes_3 .box {
@@ -116,5 +113,4 @@ body {
         margin-bottom:50px;
     }
     
-    .menu { display: none; }
 }

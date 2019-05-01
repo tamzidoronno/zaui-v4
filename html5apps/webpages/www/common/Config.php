@@ -12,5 +12,5 @@
  * @author ktonder
  */
 class Config {
-    public static $domain = "getshop";
+    public static $domain = "gkroen";
 }

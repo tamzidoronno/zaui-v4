@@ -1,0 +1,94 @@
+<div class="contentrow "> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img onclick='showGallary()' src="gkroen/images/hotelroomdemo.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_1_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_width_degreed"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary()' src="gkroen/images/hotelroomdemo.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_2_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow "> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary()' src="gkroen/images/hotelroomdemo.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_3_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_width_degreed"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary()' src="gkroen/images/hotelroomdemo.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_4_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary()' src="gkroen/images/hotelroomdemo.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_5_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+<script>
+    function showGallary() {
+        var pswpElement = document.querySelectorAll('.pswp')[0];
+
+        // build items array
+        var items = [
+            {
+                src: 'https://placekitten.com/600/400',
+                w: 600,
+                h: 400
+            },
+            {
+                src: 'https://placekitten.com/1200/900',
+                w: 1200,
+                h: 900
+            }
+        ];
+
+        // define options (if needed)
+        var options = {
+            // optionName: 'option value'
+            // for example:
+            index: 0 // start at first slide
+        };
+
+        // Initializes and opens PhotoSwipe
+        var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+        gallery.init();
+    }
+</script>

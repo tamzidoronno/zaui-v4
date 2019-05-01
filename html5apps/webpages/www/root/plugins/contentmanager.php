@@ -19,14 +19,7 @@ if ($_GET['event'] == 'load' || $_GET['event'] == "save") {
     ?>
     <textarea name="content" id="editor"><?php echo $contentManager->getData($_GET['id']); ?></textarea>
     <script>
-        ClassicEditor
-            .create( document.querySelector( '#editor' ) )
-            .then( newEditor => {
-                editor = newEditor;
-            })
-            .catch( error => {
-                console.error( error );
-            });
+        editor = CKEDITOR.replace( document.querySelector( '#editor' ) );
     </script>
     
     <?php

@@ -229,7 +229,7 @@ public class Database extends StoreComponent {
 
             try {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
-                if (dataCommon.deleted == null && !(dataCommon instanceof PmsLog)) {
+                if (dataCommon.deleted == null) {
                     dataCommon.colection = collection.getName();
                     dataCommon.gs_manager = collection.getDB().getName();
                     all.add(dataCommon);

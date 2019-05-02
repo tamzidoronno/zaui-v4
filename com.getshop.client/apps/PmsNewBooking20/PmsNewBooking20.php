@@ -83,6 +83,12 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("roomsaddedarea");
     }
     
+    public function setCouponCode() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking->couponCode = $_POST['data']['code'];
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
+    }
+    
     public function selectbooking() {
         $this->getApi()->getPmsManager()->setCurrentBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
     }

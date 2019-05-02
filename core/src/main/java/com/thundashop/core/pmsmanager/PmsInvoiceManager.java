@@ -1294,7 +1294,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
-    private Double calculateDiscounts(PmsBooking booking, Double price, String bookingEngineTypeId, int count, PmsBookingRooms room, Date start, Date end) {
+    public Double calculateDiscounts(PmsBooking booking, Double price, String bookingEngineTypeId, int count, PmsBookingRooms room, Date start, Date end) {
         if(room != null) { 
             price = addDerivedPrices(booking, room, price);
         }

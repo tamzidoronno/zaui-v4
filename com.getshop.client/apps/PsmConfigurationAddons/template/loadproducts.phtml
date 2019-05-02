@@ -1,7 +1,7 @@
 <?php
  /* @var $this \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons */
 $products = $this->getApi()->getProductManager()->getAllProducts();
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 $allItems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 $sortedList = array();

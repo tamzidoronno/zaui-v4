@@ -20,6 +20,16 @@ app.PmsNewBooking20 = {
         $(document).on('keyup','.PmsNewBooking20 .roomcount', app.PmsNewBooking20.updateTotalRoomSelectCount);
         $(document).on('click','.PmsNewBooking20 .addconference', app.PmsNewBooking20.showAddConferencePanel);
         $(document).on('click','.PmsNewBooking20 .attachguesttoevent', app.PmsNewBooking20.attachGuestToConference);
+        $(document).on('change','.PmsNewBooking20 .addcouponcode', app.PmsNewBooking20.addCouponCode);
+    },
+    addCouponCode : function() {
+        var event = thundashop.Ajax.createEvent('','setCouponCode',$(this), {
+            "code" : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsNewBooking20.reloadAddedRoomsList();
+        });
     },
     attachGuestToConference : function() {
         var btn = $(this).closest('.addconferencearea').find('.addconference');

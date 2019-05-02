@@ -463,7 +463,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     public function saveCouponPrices() {
         $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
         if($coupon->type == "FIXEDPRICE") {
-            $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+            $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
             $maxcount = 0;
             foreach($types as $type) {
                 if($type->size > $maxcount) {

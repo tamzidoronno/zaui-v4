@@ -8,6 +8,8 @@ foreach ($allRooms as $r) {
         $conferenceRooms[] = $r;
     }
 }
+$couponcodes = $this->getApi()->getCartManager()->getCoupons();
+$booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 ?>
 <div class='newbookingprocess' for='newbookingstep2'>
     <div class='steptitle'>Step 2 / 3 adding rooms</div>
@@ -30,6 +32,17 @@ foreach ($allRooms as $r) {
                 </span>
                 <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
             </div>
+            <div style='text-align: left;padding:10px;padding-left:20px;height:200px;'>
+                <select class='gsniceselect1 addcouponcode' style='width:240px;'>
+                    <?php
+                    echo "<option value=''>Choose a discount code</option>";
+                    foreach($couponcodes as $code) {
+                        $selected = $code->code == $booking->couponCode ? "SELECTED" : "";
+                        echo "<option value='".$code->code."' $selected>" .$code->code . "</option>";
+                    }
+                    ?>
+                </select>
+            </div>
         </div>
         <?php if (sizeof($conferenceRooms) > 0) { ?>
             <div class='addroombox addconferenceroombox gsshadowbox'>
@@ -50,6 +63,12 @@ foreach ($allRooms as $r) {
                     <input type="text" class="gsniceinput1 enddatetime" gstype="submitenter" gsname="endtime" value='13:00' style='width:40px;'>
                     <span class="shop_button" gstype="submit" gs_callback='app.PmsNewBooking20.reloadAddedRoomsList'>Add</span>
                 </div>
+                <div style='text-align: left;padding:10px;padding-left:20px;'>
+                
+                <select class='gsniceselect1' style='visibility: hidden;'>
+                </select>
+                </div>
+
             </div>
         <?php } ?>
     </div>

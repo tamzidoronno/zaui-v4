@@ -2,7 +2,7 @@
 /* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
 $code = $this->getApi()->getCartManager()->getCoupon($_POST['data']['code']);
 $coupon = $code;
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 
 $discountTypes = array();
 $discountTypes["FIXED"] = "Fixed discount";

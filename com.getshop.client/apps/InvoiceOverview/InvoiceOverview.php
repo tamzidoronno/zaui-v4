@@ -260,6 +260,7 @@ class InvoiceOverview extends \WebshopApplication implements \Application,\ns_b5
         $filter->start = $this->convertToJavaDate(time()-86400);
         $filter->end = $this->convertToJavaDate(time());
         $filter->state = 1;
+        $filter->type = "createddate";
         return $filter;
     }
     

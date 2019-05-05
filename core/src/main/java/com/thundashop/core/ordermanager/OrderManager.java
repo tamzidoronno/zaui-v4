@@ -4077,6 +4077,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (item.getProduct().priceLocalCurrency == null || !samePriceInTaxAsOldOrder) {
                 item.getProduct().priceLocalCurrency = convertCurrency(order, item.getProduct().price);
+                logPrint("Calculating the order prices to: " + item.getProduct().priceLocalCurrency);
+            } else {
+                logPrint("Skipping calcualation, already set " + item.getProduct().priceLocalCurrency + " and same price as before");
             }
             
             

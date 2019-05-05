@@ -48,11 +48,24 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .ordermenu .showmarkorderaspaid', this.showPaymentWindow)
         $(document).on('click', '.PmsBookingRoomView .collapsable_shadowbox .colheader', this.toggleCollapse)
         $(document).on('change', '.PmsBookingRoomView .filterbymonth', this.filterOrdersByMonth)
+        $(document).on('change', '.PmsBookingRoomView .changechannel', this.changeChannel)
         $(document).on('click', '.PmsBookingRoomView .showOrderSummary', this.showOrderSummary);
         $(document).on('click', '.PmsBookingRoomView .connectGuestToConference', this.showAddConferencePanel);
         $(document).on('click','.PmsBookingRoomView .attachguesttoevent', app.PmsBookingRoomView.attachGuestToConference);
         $(document).on('click','.PmsBookingRoomView .removeConferenceFromGuest', app.PmsBookingRoomView.removeGuestToConference);
     },
+    
+    changeChannel : function() {
+        var val = $(this).val();
+        if(val === "getshop_new_source") {
+            val = prompt("Name of source");
+        }
+        var event = thundashop.Ajax.createEvent('','changeChannel',$(this), {
+            "channel" : val
+        });
+        thundashop.Ajax.post(event);
+    },
+    
     removeGuestToConference : function(res) {
         var guestid = $(this).closest('.guest_row').attr('guestid');
         var area = $(this).closest('.guestconferenceinformation');

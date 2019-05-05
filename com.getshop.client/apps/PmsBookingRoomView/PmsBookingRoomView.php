@@ -21,6 +21,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function changeChannel() {
+        $booking = $this->getPmsBooking();
+        $booking->channel = $_POST['data']['channel'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->clearCache();
+    }
  
     public static function sortByIncrementalOrderId($a, $b) {
         return $b->incrementOrderId > $a->incrementOrderId;

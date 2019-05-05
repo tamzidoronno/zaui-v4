@@ -4105,14 +4105,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         JsonObject res;
         
         try {
-            res = webManager.htmlGetJson("https://free.currconv.com/api/v7/convert?q="+covertString+"&compact=ultra&apiKey=a937737cc8a3af4b1766");
+            String url = "https://free.currconv.com/api/v7/convert?q="+covertString+"&compact=ultra&apiKey=a937737cc8a3af4b1766";
+            logPrint("Using url to fetch currency convertion: " + url);
+            res = webManager.htmlGetJson(url);
         } catch (Exception ex) {
+            logPrintException(ex);
             return null;
         }
         
         if (res != null) {
             double convertNumber = res.get(covertString).getAsDouble();
             return price * convertNumber;
+        } else {
+            logPrint("Warning, the currency converter returned a null response");
         }
         
         return null;

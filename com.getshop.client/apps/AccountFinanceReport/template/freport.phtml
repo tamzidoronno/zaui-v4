@@ -37,7 +37,15 @@ foreach ($dayIncomes as $dayIncome) {
 if (count($errors)) {
     echo "<h1>".$this->__f("There are a few errors you have to sort out first.")."</h1>";
     foreach ($errors as $error) {
-        echo "<div style='color: red; margin-left: 50px;'>- ".$error."</div>";
+        if ($this->isJson($error)) {
+            $json = json_decode($error);
+             
+            $correctbutton = $json->errorType == "MISSING_ACCOUNT_NUMBER" ? "<div class='gs_shop_small_icon' gs_show_modal='productview' selectedtab='accounting' productid='$json->productId'>Click to fix</div>" : "";;
+            echo "<div style='color: red; margin-left: 50px;'>$correctbutton ".$json->msg."</div>";
+        } else {
+            echo "<div style='color: red; margin-left: 50px;'>- ".$error."</div>";
+        }
+        
     }
     return;
 }

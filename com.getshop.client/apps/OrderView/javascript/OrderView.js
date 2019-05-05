@@ -19,10 +19,17 @@ app.OrderView = {
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.count', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.price', app.OrderView.cartItemChanged);
+        $(document).on('change', '.OrderView .localcurrencyvalue', app.OrderView.localCurrencyValueChanged);
         
         
         // Payment History
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
+    },
+    
+    localCurrencyValueChanged: function() {
+        var totalAmountInLocalCurrency = $('.OrderView .disaglo').attr('inlocalcurrency');
+        var rest = $(this).val() - totalAmountInLocalCurrency;
+        $('.OrderView .disaglo').val(rest);
     },
     
     toggleSpecialInfo: function() {
@@ -127,6 +134,8 @@ app.OrderView = {
         data.date = $(tab).find('.manualregisterpaymentdate').val();
         data.amount = $(tab).find('.manualregisterpaymentamount').val();
         data.comment = $(tab).find('.manualregisterpaymentcomment').val();
+        data.localCurrency = $(tab).find('.localcurrencyvalue').val();
+        data.agio = $(tab).find('.disaglo').val();
         
         var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(this), data);
         event['synchron'] = true;

@@ -4,6 +4,7 @@ import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.applications.GetShopApplicationPool;
@@ -40,7 +41,6 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
-import com.thundashop.core.messagemanager.SmsMessage;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
@@ -81,16 +81,13 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
-import com.thundashop.core.verifonemanager.VerifonePaymentApp;
+import com.thundashop.core.webmanager.WebManager;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.jsoup.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -190,6 +187,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private GdsManager gdsManager;
+    
+    @Autowired
+    private WebManager webManager;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -371,8 +371,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (newOrder) {
             ordersCreated.add(order.id);
         } else {
-            ordersChanged.add(order.id);
-            
+            ordersChanged.add(order.id);   
         }
     }
 
@@ -1498,6 +1497,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrderSecure(orderId);
         return getTotalAmount(order);
     }
+    
+    @Override
+    public Double getTotalForOrderInLocalCurrencyById(String orderId) {
+        Order order = getOrderSecure(orderId);
+        return order.getTotalAmountLocalCurrency();
+    }
 
     public void orderPaid(String orderId) {
         Application orderManagerApplication = storeApplicationPool.getApplication("27716a58-0749-4601-a1bc-051a43a16d14");
@@ -1711,6 +1716,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(Order order : result) {
             order.doFinalize();
             generateKid(order);
+            String localCurrency = getLocalCurrencyCode();
+            
+            if (localCurrency.equalsIgnoreCase(order.currency)) {
+                order.currency = null;
+            }
         }
     }
 
@@ -2721,7 +2731,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId, "");
+            order.registerTransaction(date, amount, userId, transactiontype, refId, "", null, null);
             feedGrafanaPaymentAmount(amount);
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
@@ -3041,6 +3051,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
+        if (data instanceof Order) {
+            updateCurrencyForItems((Order)data);
+        }
+        
         checkAndResetOrderByClosedPeriodeDate(data);
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
     }
@@ -3393,11 +3407,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate) {
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio) {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment);
+            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio);
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }
@@ -4046,4 +4060,67 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public boolean hasNoOrders() {
         return orders.keySet().isEmpty();
     }
+
+    private void updateCurrencyForItems(Order order) {
+        if (order.currency == null || order.currency.isEmpty()) {
+            return;
+        }
+        
+        Order oldOrder = null;
+        
+        if (order.id != null && !order.id.isEmpty()) {
+            oldOrder = (Order)database.getObject(getCredentials(), order.id);
+        }
+        
+        for (CartItem item : order.getCartItems()) {
+            boolean samePriceInTaxAsOldOrder = oldOrder != null && oldOrder.cart.getCartItem(item.getCartItemId()).getProductPrice() == item.getProductPrice();
+            
+            if (item.getProduct().priceLocalCurrency == null || !samePriceInTaxAsOldOrder) {
+                item.getProduct().priceLocalCurrency = convertCurrency(order, item.getProduct().price);
+                logPrint("Calculating the order prices to: " + item.getProduct().priceLocalCurrency);
+            } else {
+                logPrint("Skipping calcualation, already set " + item.getProduct().priceLocalCurrency + " and same price as before");
+            }
+            
+            
+        }
+    }
+
+    private String getLocalCurrencyCode() {
+        String localCurrency = getStoreSettingsApplication().getSetting("currencycode");
+        
+        if (localCurrency == null || localCurrency.isEmpty()) {
+            localCurrency = "NOK";
+        }
+        
+        return localCurrency;
+    }
+    
+    private Double convertCurrency(Order order, double price) {
+        String localCurrency = getLocalCurrencyCode();
+        
+        String covertString = order.currency+"_"+localCurrency;
+        covertString = covertString.toUpperCase();
+        
+        JsonObject res;
+        
+        try {
+            String url = "https://free.currconv.com/api/v7/convert?q="+covertString+"&compact=ultra&apiKey=a937737cc8a3af4b1766";
+            logPrint("Using url to fetch currency convertion: " + url);
+            res = webManager.htmlGetJson(url);
+        } catch (Exception ex) {
+            logPrintException(ex);
+            return null;
+        }
+        
+        if (res != null) {
+            double convertNumber = res.get(covertString).getAsDouble();
+            return price * convertNumber;
+        } else {
+            logPrint("Warning, the currency converter returned a null response");
+        }
+        
+        return null;
+    }
+
 }

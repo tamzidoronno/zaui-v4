@@ -9,6 +9,15 @@ import org.mongodb.morphia.annotations.Transient;
 public class OrderTransaction implements Serializable {
     public Date date;
     public Double amount;
+    public Double amountInLocalCurrency;
+    
+    /**
+     * Is the difference in calculated currency and what has actually 
+     * been paid.
+     * 
+     * Used for currency losses / gains ( negative value indicate a loss)
+     */
+    public Double agio;
     public String userId;
     public String transactionId = UUID.randomUUID().toString();
     public Integer transactionType = 1;
@@ -19,6 +28,7 @@ public class OrderTransaction implements Serializable {
     
     @Transient
     public String orderId = "";
+    
 
     @Override
     public boolean equals(Object obj) {

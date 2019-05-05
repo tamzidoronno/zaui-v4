@@ -59,7 +59,6 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         ocrManager.scanOcrFiles();
         List<OcrFileLines> newlines = ocrManager.getNewOcrLines(account.accountId);
         for(OcrFileLines line : newlines) {
-            System.out.println("Need to mark payment for kid: " + line.getKid() + " amount: " + line.getAmountInDouble());
             Order toMatch = orderManager.getOrderByKid(line.getKid());
             if(toMatch != null) {
                 Date paymentDate = line.getPaymentDate();

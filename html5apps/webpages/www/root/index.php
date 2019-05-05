@@ -8,7 +8,6 @@ $menuHelper = new MenuHelper();
 if (isset($_GET['tokenpass'])) {
     $_SESSION['tokenpass'] = $_GET['tokenpass'];
 }
-
 ?>  
 <!DOCTYPE html>
 <!--
@@ -20,71 +19,81 @@ and open the template in the editor.
     <head>
         <title>
             <?php
-                echo $router->getCurrentPage()->title; 
+            echo $router->getCurrentPage()->title;
             ?>
         </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="<?php echo $router->getCurrentPage()->getDescription(); ?>">
-        
         <link rel="stylesheet" href="css.css">
         <script src="javascript/jquery.js"></script>
         <script src="javascript/ContentManager.js"></script>
         <script src="javascript.js"></script>
-        <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
-        
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-31092051-1"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+        <script src="javascript/ckeditor/ckeditor.js"></script>
 
-          gtag('config', 'UA-31092051-1');
-        </script>
-        
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="photoswipe/photoswipe.css"> 
+        <link rel="stylesheet" href="photoswipe/default-skin/default-skin.css"> 
+        <script src="photoswipe/photoswipe.min.js"></script> 
+        <script src="photoswipe/photoswipe-ui-default.min.js"></script> 
+
         <?php
-            $router->renderCurrentPageCss(); 
+        $googleincludefile = Config::$domain . '/google.phtml';
+        if (file_exists($googleincludefile)) {
+            include $googleincludefile;
+        }
+
+        $router->renderCurrentPageCss();
         ?>
     </head>
-    
+
     <body pageid="<?php echo $router->getCurrentPageName(); ?>">
+
+        <?php
+        include 'photoswipetemplate.phtml';
+        ?>
+
         <div class="header">
-            <div class="logo">
-                <a href="/"><img src="<?php echo Config::$domain; ?>/logo.png"/></a>
-            </div>
-            
-            <div id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            
-            <div class="menu">
-                <?php
+            <div class="header_inner">
+                <div class="logo">
+                    <a href="/"><img src="<?php echo Config::$domain; ?>/logo.png"/></a>
+                </div>
+
+                <div id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <div class="menu">
+                    <?php
                     $pages = $router->getAllPages();
                     $menuHelper->buildMenu($pages);
-                ?>
+                    ?>
+                </div>
             </div>
         </div>
-        
+
         <div class="mobilemenu">
             <?php
-                $pages = $router->getAllPages();
-                $menuHelper->buildMenu($pages);
+            $pages = $router->getAllPages();
+            $menuHelper->buildMenu($pages);
             ?>
         </div>
-        
+
         <div class="body">
             <?php
-            $router->renderCurrentPage(); 
+            $router->renderCurrentPage();
             ?>
         </div>
-        
+
         <?php
-            include  Config::$domain.'/footer.phtml';
+        include Config::$domain . '/footer.phtml';
         ?>
-        
-        
+
+
         <?php
         include 'translation.php';
         ?>

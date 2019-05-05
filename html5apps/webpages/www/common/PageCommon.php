@@ -14,7 +14,7 @@
 class PageCommon {
     public $hiddenFromMenu = false;
     
-    private $currentLanguage = "en";
+    private $currentLanguage = "no";
     
     public $canNavigateTo = true;
     

@@ -1,0 +1,24 @@
+<div class="contentrow firstrow"> 
+    <div class="row_inner">
+        <div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
+
+<script>
+    gsisdevmode = false;
+    
+    $ = jQuery;
+    jQuery(function ($) {
+        $.getScript("https://gkroen.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+            $("#bookingprocess").getshopbooking(
+                {
+                    "endpoint": "https://gkroen.getshop.com/",
+                    "jsendpoint": "https://gkroen.getshop.com/",
+                    "domain" : "default",
+                    "language" : "en" 
+                }
+            );
+        });
+    });
+</script>
+    </div>
+</div>
+

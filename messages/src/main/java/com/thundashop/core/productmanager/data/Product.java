@@ -38,6 +38,13 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String shortDescription;
     public String mainImage = "";
     public double price;
+    
+    /**
+     * This price is in taxes and used when the 
+     * order is sold in a foreign currency
+     */
+    public Double priceLocalCurrency;
+    
     public Integer percentagePrice = 0;
     public Double priceBeforeTaxChange;
     public TaxGroup taxGroupBeforeTaxChange;
@@ -153,6 +160,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     @Transient
     public double priceExTaxes;
+    
+    @Transient
+    public double priceExTaxesLocalCurrency;
     
     public Map<String, String> variationCombinations;
 
@@ -276,11 +286,18 @@ public class Product extends DataCommon implements Comparable<Product>  {
         }
         if(taxGroupObject != null && taxGroupObject.taxRate != null && divident != 0.0 && price != 0.0) {
             priceExTaxes = price / divident;
+            if (priceLocalCurrency != null) {
+                priceExTaxesLocalCurrency = priceLocalCurrency / divident;
+            }
         } else {
             priceExTaxes = price;
+            if (priceLocalCurrency != null) {
+                priceExTaxesLocalCurrency = priceLocalCurrency;
+            }
         }
         if(Double.isNaN(priceExTaxes)) {
             priceExTaxes = 0.0;
+            priceExTaxesLocalCurrency = 0.0;
         }
         
         createEmptyAccountingInformationObjects();

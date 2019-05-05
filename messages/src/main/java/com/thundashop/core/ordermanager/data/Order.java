@@ -689,6 +689,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         return amount;
     }
     
+    public double getTotalAmountLocalCurrency() {
+        double amount = 0.0;
+        for(CartItem item : cart.getItems()) {
+            amount += item.getTotalAmountInLocalCurrency();
+        }
+        return amount;
+    }
+    
     public BigDecimal getTotalAmountRoundedTwoDecimals(int precision) {
         BigDecimal amount = new BigDecimal(0D);
         
@@ -1018,10 +1026,12 @@ public class Order extends DataCommon implements Comparable<Order> {
         return cal.getTime();
     }
 
-    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment) {
+    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment, Double amountInLocalCurrency, Double agio) {
         OrderTransaction transaction = new OrderTransaction();
         transaction.date = date;
         transaction.amount = amount;
+        transaction.amountInLocalCurrency = amountInLocalCurrency;
+        transaction.agio = agio;
         transaction.userId = userId;
         transaction.refId = refId;
         transaction.transactionType = transactionType;

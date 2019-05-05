@@ -268,4 +268,7 @@ public interface IProductManager {
     
     @Editor
     public void saveAccountingInformation(String productId, List<ProductAccountingInformation> infos);
+    
+    @Editor
+    public List<AccountingDetail> getAccountingAccounts();
 }

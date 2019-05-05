@@ -368,6 +368,10 @@ public abstract class AProductManager extends ManagerBase {
         return accountingAccountDetails.get(accountNumber);
     }
     
+    public List<AccountingDetail> getAccountingAccounts() {
+        return new ArrayList(accountingAccountDetails.values());
+    }
+    
     public void saveAccountingDetail(AccountingDetail detail) {
         AccountingDetail alreadyExists = getAccountingDetail(detail.accountNumber);
         if (alreadyExists != null) {

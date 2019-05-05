@@ -4,7 +4,7 @@
 }
 .AccountProducts .product_row div {
     display: inline-block;
-    width: 16%;
+    width: 30%;
     font-size: 15px;
 }
 
@@ -50,4 +50,39 @@
 
 .AccountProducts .distinctAccounts .col.subaccountid {
     width: 150px;
+}
+
+.AccountProducts .primitiveaccountingconfig .accointingtax {
+    padding-left: 5px;
+}
+
+.AccountProducts .primitiveaccountingconfig .taxes, 
+.AccountProducts .primitiveaccountingconfig .accointingtax, 
+.AccountProducts .primitiveaccountingconfig input {
+    width: 100px;
+    box-sizing: border-box;
+    margin-right: 10px;
+    text-align: center;
+   
+}
+
+.AccountProducts .primitiveaccountingconfig input {
+    width: 90px;
+}
+
+.AccountProducts .primitiveaccountingconfig .taxes {
+    text-align: center;
+}
+
+.AccountProducts .primitiveaccountingconfig .product_row div.taxes:nth-child(odd),
+.AccountProducts .primitiveaccountingconfig .product_row div.accointingtax:nth-child(odd) {
+    background-color: #EEE;
+}
+
+.AccountProducts .primitiveaccountingconfig .product_row:hover {
+    background-color: #EEE;
+}
+
+.AccountProducts .primitiveaccountingconfig .product_row {
+    cursor: pointer;
 }

@@ -59,6 +59,14 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         return strcmp($a->listName, $b->listName);
     }
     
+    public static function sortByAccountingDescription($a, $b) {
+        return strcmp($a->description, $b->description);
+    }
+    
+    public static function sortProductByName($a, $b) {
+        return strcmp($a->name, $b->name);
+    }
+    
     public function saveList() {
         $list = $this->getApi()->getProductManager()->getProductList($_POST['data']['listid']);
         $list->listName  = $_POST['data']['name'];
@@ -77,6 +85,14 @@ class EcommerceProductView extends \MarketingApplication implements \Application
     }
 
     public function setProduct() {
+        if (isset($_POST['event']) && $_POST['event'] == "showModal" && $this->getModalVariable("productid")) {
+            $_SESSION['ns_4404dc7d_e68a_4fd5_bd98_39813974a606_productid'] = $this->getModalVariable("productid");
+            
+            if ($this->getModalVariable("selectedtab")) {
+                $_SESSION['ns_4404dc7d_e68a_4fd5_bd98_39813974a606_selectedTab'] = $this->getModalVariable("selectedtab");
+            }
+        }
+        
         $this->product = $this->getApi()->getProductManager()->getProduct($_SESSION['ns_4404dc7d_e68a_4fd5_bd98_39813974a606_productid']);
     }
     
@@ -104,6 +120,10 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         
         if ($tab == "taxes") {
             $this->includefile ("taxes");
+        }
+        
+        if ($tab == "accounting") {
+            $this->includefile ("accounting");
         }
     }
     
@@ -233,5 +253,42 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         }
         $this->getApi()->getProductManager()->saveProduct($product);
     }
+
+    /**
+     * 
+     * @param \core_productmanager_data_TaxGroup[] $taxes
+     * @param int $taxGroupNumber
+     * @return \core_productmanager_data_TaxGroup
+     */
+    public function getTaxGroupObject($taxes, $param1) {
+        foreach ($taxes as $tax) {
+            if ($tax->groupNumber == $param1) {
+                return $tax;
+            }
+        }
+        
+        return null;
+    }
+    
+    public function saveAccountingCodesForProduct() {
+        foreach ($_POST['data'] as $key => $value) {
+            if (strstr($key, "accountingcode")) {
+                
+                $ex = explode("_", $key);
+                $taxRate = $ex[1];
+                
+                $product = $this->getProduct();
+                
+                foreach ($product->accountingConfig as $accountingData) {
+                    if ($accountingData->taxGroupNumber == $taxRate) {
+                        $accountingData->accountingNumber = $value;
+                    }
+                }
+                
+                $this->getApi()->getProductManager()->saveProduct($product);
+            }
+        }
+    }
+
 }
 ?>

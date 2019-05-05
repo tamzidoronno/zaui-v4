@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshopaccounting;
 
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.TwoDecimalRounder;
@@ -84,6 +85,8 @@ public class OrderDailyBreaker {
     }
 
     public void breakOrders() {
+        Gson gson = new Gson();
+        
         this.ordersToBreak.stream().forEach(order -> {
             try {
                 if (order.isNullOrder() || order.isVirtual)
@@ -98,6 +101,8 @@ public class OrderDailyBreaker {
                 }
                 
                 proccessOrder(order);
+            } catch (DailyIncomeException ex) {
+                errors.add(gson.toJson(ex));
             } catch (Exception ex) {
                 errors.add(ex.getMessage());
             }
@@ -428,7 +433,12 @@ public class OrderDailyBreaker {
         if (result == null || result.isEmpty()) {
             result = getAccountingNumberForProduct(item.getProduct(), item.getProduct().id);
             String taxGroupPercent = item.getProduct().taxGroupObject != null ? ""+item.getProduct().taxGroupObject.taxRate : "0";
-            throw new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+taxGroupPercent+"% )");
+            Integer taxGroupNumber = item.getProduct().taxGroupObject != null ? item.getProduct().taxGroupObject.groupNumber : null;
+            DailyIncomeException ex = new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+taxGroupPercent+"% )");
+            ex.errorType = "MISSING_ACCOUNT_NUMBER";
+            ex.productId = item.getProductId();
+            ex.taxGroupNumber = taxGroupNumber;
+            throw ex;
         }
         
         return result;

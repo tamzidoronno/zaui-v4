@@ -7,7 +7,7 @@
     <div class="menuentry <? echo $this->isTabActive('details'); ?>" tab='details'><i class="fa fa-info"></i> <span><? echo $this->__f("Details"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('prices'); ?>" tab='prices'><i class="fa fa-info"></i> <span><? echo $this->__f("Prices"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('taxes'); ?>" tab='taxes'><i class="fa fa-info"></i> <span><? echo $this->__f("Taxes"); ?></span></div>
-    <div class="menuentry <? echo $this->isTabActive('categories'); ?>" tab='categories'><i class="fa fa-info"></i> <span><? echo $this->__f("Categories"); ?></span></div>
+    <div class="menuentry <? echo $this->isTabActive('accounting'); ?>" tab='accounting'><i class="fa fa-info"></i> <span><? echo $this->__f("Accounting"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('lists'); ?>" tab='lists'><i class="fa fa-info"></i> <span><? echo $this->__f("Lists"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('pictures'); ?>" tab='pictures'><i class="fa fa-info"></i> <span><? echo $this->__f("Pictures"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('variations'); ?>" tab='variations'><i class="fa fa-info"></i> <span><? echo $this->__f("variations"); ?></span></div>
@@ -37,6 +37,11 @@
     <div class="producttab <? echo $this->isTabActive('variations'); ?>" tab='variations'>
         <?
         $this->includefile("variations");
+        ?>
+    </div>
+    <div class="producttab <? echo $this->isTabActive('accounting'); ?>" tab='accounting'>
+        <?
+        $this->includefile("accounting");
         ?>
     </div>
 </div>

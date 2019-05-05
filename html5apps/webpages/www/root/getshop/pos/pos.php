@@ -16,6 +16,7 @@ class pos extends PageCommon {
     public $title_rewrite = "pms";
     public $subpageof = "products";
     public $menuSequence = 4;
+    public $description = array("en" => "GetShop pos extends your possibilites by adding a salepoint to your product, if you want to sell extras, this is a perfect tool for you.");
     
     /** Menu settings */
     public $menuEntries = array('en' => "Point of sales", "no" => "Kassesystem");

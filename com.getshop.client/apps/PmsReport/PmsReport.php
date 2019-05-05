@@ -66,7 +66,7 @@ class PmsReport extends \MarketingApplication implements \Application {
     }
     
     public function render() {
-        if($this->getApi()->getPmsManager()->hasNoBookings($this->getSelectedMultilevelDomainName())) {
+        if($this->getApi()->getOrderManager()->hasNoOrders($this->getSelectedMultilevelDomainName())) {
             $this->includefile("nobookingsyet");
             return;
         }

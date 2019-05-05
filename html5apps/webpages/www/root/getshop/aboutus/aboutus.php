@@ -13,6 +13,7 @@
  */
 class aboutus extends PageCommon {
     public $title = "GetShop - Property Management System";
+    public $description = array("en" => "GetShop started in 2013 and specializing in hotel automation and keyless check in.");
     public $title_rewrite = "pms";
     public $subpageof = "";
     

@@ -16,6 +16,7 @@ class home extends PageCommon {
     public $title_rewrite = "homepage";
     public $subpageof = "";
     public $hiddenFromMenu = true;
+    public $description = array("en" => "Over the years GetShop has become a leader in hotel automation, automated check in, automated payment handling, message automation to your guests, and much more.");
     
     public $menuEntries = array('en' => "Home", "no" => "Hjem");
 }

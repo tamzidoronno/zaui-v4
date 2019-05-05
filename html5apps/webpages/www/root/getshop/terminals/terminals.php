@@ -16,6 +16,7 @@ class terminals extends PageCommon {
     public $title_rewrite = "pms";
     public $subpageof = "products";
     public $menuSequence = 4;
+    public $description = array("en" => "A self check in terminal can be set up in your lobby to give the guests a possibility to book and check in automatically without you bein involved.");
     
     /** Menu settings */
     public $menuEntries = array('en' => "Self Check-in Terminals", "no" => "Gjestehjelperen");

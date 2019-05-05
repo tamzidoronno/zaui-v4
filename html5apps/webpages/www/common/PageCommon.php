@@ -31,4 +31,11 @@ class PageCommon {
         
         return "";
     }
+    
+    public function getDescription() {
+        if (isset($this->description)) {
+            return $this->description[$this->currentLanguage];
+        } 
+        return "";
+    }
 }

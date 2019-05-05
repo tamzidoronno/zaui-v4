@@ -4041,4 +4041,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void removeOrderToPay() {
         orderToPay = null;
     }
+
+    @Override
+    public boolean hasNoOrders() {
+        return orders.keySet().isEmpty();
+    }
 }

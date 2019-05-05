@@ -174,6 +174,9 @@ public interface IOrderManager {
     @Administrator
     public void checkForOrdersToAutoPay(int daysToTryAfterOrderHasStarted) throws ErrorException;
     
+    @Administrator
+    public boolean hasNoOrders();
+    
     /**
      * Fetch all orders for a user.
      * @param userId

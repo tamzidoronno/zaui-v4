@@ -86,9 +86,6 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     @Override
     public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType) {
         List<BookingItemType> result = new ArrayList(types.values());
-        if(systemType == null) {
-            return result;
-        }
 
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
             public int compare(BookingItemType c1, BookingItemType c2) {
@@ -100,6 +97,10 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         };
         Collections.sort(result, comparator);
         result.stream().forEach(o -> finalize(o));
+
+        if(systemType == null) {
+            return result;
+        }
         
         List<BookingItemType> allItems = new ArrayList();
         for(BookingItemType type : result) {

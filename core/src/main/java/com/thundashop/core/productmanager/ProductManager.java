@@ -553,5 +553,13 @@ public class ProductManager extends AProductManager implements IProductManager {
         saveProduct(product);
     }
 
+    public String getAgioAccountNumber(boolean loss) {
+        if (loss) {
+            return "8160";
+        }
+        
+        return "8060";
+    }
+
     
 }

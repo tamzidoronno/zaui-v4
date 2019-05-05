@@ -104,6 +104,9 @@ public class OrderDailyBreaker {
             } catch (DailyIncomeException ex) {
                 errors.add(gson.toJson(ex));
             } catch (Exception ex) {
+                if (ex instanceof  NullPointerException) {
+                    ex.printStackTrace();
+                }
                 errors.add(ex.getMessage());
             }
         });
@@ -204,8 +207,15 @@ public class OrderDailyBreaker {
         }
         
         DayEntry dayEntry = new DayEntry();
-        dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision);
-        dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
+        
+        if (order.currency != null && !order.currency.isEmpty()) {
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmountLocalCurrency(), precision);
+            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmountLocalCurrency(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
+        } else {
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision);
+            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
+        }
+        
         dayEntry.isIncome = true;
         dayEntry.orderId = order.id;
         dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -278,8 +288,15 @@ public class OrderDailyBreaker {
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
         entry.isActualIncome = item.getProduct().isActuallyIncome();
-        entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmount(), precision);
-        entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalEx(), precision);
+        
+        if (order.currency != null && !order.currency.isEmpty()) {
+            entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmountInLocalCurrency(), precision);
+            entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalExLocalCurrency(), precision);
+        } else {
+            entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmount(), precision);
+            entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalEx(), precision);
+        }
+        
         entry.date = order.rowCreatedDate;
         
         if (order.overrideAccountingDate != null)
@@ -659,8 +676,19 @@ public class OrderDailyBreaker {
         
         for (OrderTransaction orderTransaction : order.orderTransactions) {
             DayEntry dayEntry = new DayEntry();
-            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
-            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
+            if (order.currency != null && !order.currency.isEmpty()) {
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amountInLocalCurrency, precision).multiply(new BigDecimal(-1));
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amountInLocalCurrency, precision).multiply(new BigDecimal(-1));
+            } else {
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
+            }
+            
+            if (orderTransaction.agio != null) {
+                dayEntry.amount = dayEntry.amount.add(new BigDecimal(orderTransaction.agio));
+                dayEntry.amountExTax = dayEntry.amountExTax.add(new BigDecimal(orderTransaction.agio));
+            }
+
             dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -672,11 +700,30 @@ public class OrderDailyBreaker {
             try {
                 dayEntry = dayEntry.clone();
                 dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId_paid(order.getPaymentApplicationId());
+                if (orderTransaction.agio != null) {
+                    dayEntry.amount = dayEntry.amount.subtract(new BigDecimal(orderTransaction.agio));
+                    dayEntry.amountExTax = dayEntry.amountExTax.subtract(new BigDecimal(orderTransaction.agio));
+                }
                 dayEntry.amount = dayEntry.amount.multiply(new BigDecimal(-1));
                 dayEntry.amountExTax = dayEntry.amountExTax.multiply(new BigDecimal(-1));
                 orderDayEntries.add(dayEntry);
             } catch (CloneNotSupportedException ex) {
                 ex.printStackTrace();
+            }
+            
+            if (orderTransaction.agio != null) {
+                try {
+                    dayEntry = dayEntry.clone();
+                    dayEntry.accountingNumber = productManager.getAgioAccountNumber(orderTransaction.agio < 0);
+                    dayEntry.amount = new BigDecimal(orderTransaction.agio);
+                    dayEntry.amountExTax = new BigDecimal(orderTransaction.agio);
+                    dayEntry.amount = dayEntry.amount.multiply(new BigDecimal(-1));
+                    dayEntry.amountExTax = dayEntry.amountExTax.multiply(new BigDecimal(-1));
+                    orderDayEntries.add(dayEntry);
+                } catch (CloneNotSupportedException ex) {
+                    ex.printStackTrace();
+                }
+                
             }
         }
     }

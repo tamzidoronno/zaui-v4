@@ -196,7 +196,7 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
             if (!virtual) {
                 order.currency = company.currency;
                 order.language = company.language;
-                saveObject(order);
+                orderManager.saveOrder(order);
                 systems.stream().forEach(o -> setInvoicedToDate(o));
                 orderManager.getOrder(order.id);
             }

@@ -142,6 +142,10 @@
     width: calc(100% - 430px);
 }
 
+.OrderView .orderlinesarea.other .foreigncurrency.cartitem .col.product_desc {
+    width: calc(100% - 530px);
+}
+
 .OrderView .orderlinesarea.other .cartitem .col.product_desc input,
 .OrderView .orderlinesarea.other .cartitem .col.product input {
     width: 100%;
@@ -243,7 +247,7 @@
     width: 200px;
 }
 .orderviewtab .shipmentlogline .amount {
-    width: 100px;
+    width: 150px;
 }
 
 .orderviewtab .shipmentlogline .comment {

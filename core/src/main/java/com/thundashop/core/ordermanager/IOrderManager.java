@@ -441,7 +441,7 @@ public interface IOrderManager {
     public void updateCartItemOnOrder(String orderId, CartItem cartItem);
     
     @Editor
-    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate);
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio);
     
     @Editor
     public List<OrderTransactionDTO> getAllTransactionsForInvoices(Date start, Date end);
@@ -496,4 +496,7 @@ public interface IOrderManager {
     
     @Administrator
     public AccountingDetails getAccountingDetails();
+    
+    @Editor
+    public Double getTotalForOrderInLocalCurrencyById(String orderId);
 }

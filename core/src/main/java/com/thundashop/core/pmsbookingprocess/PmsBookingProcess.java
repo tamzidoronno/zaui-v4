@@ -1158,7 +1158,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             res.amount = orderManager.getTotalAmount(order);
             chargeOrder(res.orderid, input.terminalId + "");
         }
-        res.goToCompleted = !storeManager.isProductMode() && !testTerminalPaymentTerminal;
+        res.goToCompleted = !storeManager.isProductMode();
         
         return res;
     }
@@ -1223,13 +1223,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     amount = orderManager.getTotalAmount(order);
                     if(amount > 0) {
                         orderIdToReturn = order.id;
-                        if(!storeManager.isProductMode() && !testTerminalPaymentTerminal) {
-                            orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order));
-                            break;
-                        } else {
-                            chargeOrder(order.id, data.terminalid);
-                            break;
-                        }
+                        chargeOrder(order.id, data.terminalid);
                     }
                 }
                 
@@ -1240,7 +1234,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 result.name = user.fullName;
                 result.amount = amount;
                 result.orderId = orderIdToReturn;
-                result.goToCompleted = !storeManager.isProductMode() && !testTerminalPaymentTerminal;
                 return result;
             }
         }
@@ -1250,7 +1243,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void cancelPaymentProcess(StartPaymentProcess data) {
-        if(!storeManager.isProductMode() && !testTerminalPaymentTerminal) {
+        if(!storeManager.isProductMode()) {
             if(isVerifone) {
                 verifoneManager.getTerminalMessages().add("payment failed");
                 verifoneManager.removeOrderToPay();
@@ -1323,10 +1316,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public List<String> getTerminalMessages() {
-        ArrayList retList = new ArrayList<String>(orderManager.getTerminalMessages());
+        ArrayList retList = null;
         if(isVerifone) {
+            retList = new ArrayList<String>(verifoneManager.getTerminalMessages());
             verifoneManager.getTerminalMessages().clear();
         } else {
+            retList = new ArrayList<String>(orderManager.getTerminalMessages());
             orderManager.getTerminalMessages().clear();
         }
         return retList;

@@ -746,7 +746,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         
-        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(data.terminalId);
+        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(1);
         Order order = orderManager.getOrderSecure(data.orderId);
         if(order.status != Order.Status.PAYMENT_COMPLETED) {
             return;
@@ -1260,11 +1260,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             return;
         }
-        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(data.terminalid));
+        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(1);
         if(isVerifone) {
             verifoneManager.cancelPaymentProcess(settings.verifoneTerminalId);
         } else {
-            orderManager.cancelPaymentProcess(settings.verifoneTerminalId);
+            Application app = applicationPool.getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
+            String tokenId = app.getSetting("token0");
+            orderManager.cancelPaymentProcess(tokenId);
         }
     }
 
@@ -1307,7 +1309,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public void chargeOrderWithVerifoneTerminal(String orderId, String terminalId) {
         isVerifone = true;
-        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(terminalId));
+        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(1);
         verifoneManager.chargeOrder(orderId, settings.verifoneTerminalId, testTerminalPaymentTerminal);
     }
     
@@ -1501,8 +1503,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void chargeOrder(String orderId, String terminalid) {
-        PaymentTerminalSettings settings = paymentTerminalManager.getSetings(new Integer(terminalid));
-        if(settings != null) {
+        Application app = applicationPool.getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
+        String ipaddr = "";
+        if(app != null) {
+            ipaddr = app.getSetting("ipaddr" + terminalid);
+        }
+        
+        if(ipaddr != null && !ipaddr.isEmpty()) {
             chargeOrderWithVerifoneTerminal(orderId, terminalid);
         } else {
             chargeIntegratedTerminal(orderId, terminalid);

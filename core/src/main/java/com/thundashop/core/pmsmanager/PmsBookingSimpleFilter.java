@@ -46,6 +46,7 @@ public class PmsBookingSimpleFilter {
         }
         if(result.size() > 200) {
             //This might cause slow systems.
+            System.out.println("max limit of 200 increased.");
         }
         
         this.manager.gsTiming("before sorting list");

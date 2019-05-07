@@ -5,8 +5,10 @@
  */
 package com.thundashop.core.pmsbookingprocess;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,4 +43,6 @@ public interface IPmsBookingProcess {
     public void addTestMessagesToQueue(String message);
     public List<BookingProcessRoomStatus> getBooking(String pmsBookingId);
     public void setBookingItemToCurrentBooking(String roomId, String itemId);
+    @Administrator
+    public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom);
 }

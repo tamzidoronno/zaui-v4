@@ -215,12 +215,6 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     @Override
     public void cancelPaymentProcess(String terminalId) {
-        if(!storeManager.isProductMode()) {
-            printFeedBack("payment failed");
-            orderToPay = null;
-            return;
-        }
-        
         printFeedBack("payment failed");
         VerifonePaymentApp app = activePaymentApps.get(terminalId);
         app.closeCom();

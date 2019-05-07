@@ -1527,4 +1527,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
     }
+
+    @Override
+    public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
+        return pmsManager.addBookingItemType(bookingId, type, start, end, guestInfoFromRoom, false);
+        
+    }
 }

@@ -20,7 +20,6 @@ $_SESSION['firstloadpage'] = true;
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">
         <link rel="stylesheet" href="/skin/default/getshopmodules.css">
-        <link rel="stylesheet" href="/skin/default/apac.css">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
 
         <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">

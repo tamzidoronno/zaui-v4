@@ -2902,6 +2902,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
+        return addBookingItemType(bookingId, type, start, end, guestInfoFromRoom, true);
+    }
+    
+    public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom, boolean addToBookingEngine) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms room = new PmsBookingRooms();
         booking.rooms.add(room);
@@ -2925,10 +2929,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.guests = copiedRoom.guests;
         }
 
-        String res = addBookingToBookingEngine(booking, room);
-        if (!res.isEmpty()) {
-            room.addedToWaitingList = true;
-            room.markAsOverbooking();
+        if(addToBookingEngine) {
+            String res = addBookingToBookingEngine(booking, room);
+            if (!res.isEmpty()) {
+                room.addedToWaitingList = true;
+                room.markAsOverbooking();
+            }
         }
 
         addDefaultAddonsToRooms(toAdd);
@@ -10043,8 +10049,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         
-        if(booking.isRecentlyCompleted()) {
-            //great, booking is just being created, add default addon.
+        if(booking.isRecentlyCompleted() || room.isRecentlyCreated()) {
+            //great, room or booking is just being created, add default addon.
             return true;
         } else {
             //Check if the default addon is already added.
@@ -10071,7 +10077,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsLog> queryLogEntries(PmsLog filter) {
         BasicDBObject query = new BasicDBObject();
         query.put("className", PmsLog.class.getCanonicalName());
-        query.put("bookingId", filter.bookingId);
+        if(filter.bookingId != null && !filter.bookingId.isEmpty()) {
+            query.put("bookingId", filter.bookingId);
+        }
+        if(filter.logType != null && !filter.logType.isEmpty()) {
+            query.put("logType", filter.logType);
+        }
 
         List<PmsLog> result = database.query("PmsManager_default", storeId, query).stream()
                 .map(o -> (PmsLog)o)

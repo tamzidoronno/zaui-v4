@@ -72,13 +72,6 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         logPrint("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
 
-        if(!storeManager.isProductMode() && !overrideDevMode) {
-//            order.status = Order.Status.PAYMENT_COMPLETED;
-//            saveOrderSomeHow(orderToPay);
-//            orderToPay = null;
-            return;
-        }
-
         Double total = orderManager.getTotalAmount(order) * 100;
         Integer amount = total.intValue();
         

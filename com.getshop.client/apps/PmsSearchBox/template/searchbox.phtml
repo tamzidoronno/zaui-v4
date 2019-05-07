@@ -82,7 +82,8 @@ if($filter->groupByBooking) {
                     if($filter->channel == $idx) {
                         $selected = "SELECTED";
                     }
-                    echo "<option value='$idx' $selected>".$chnls[$idx]."</option>";
+                    $name = $chnls[$idx] ? $chnls[$idx] : $idx;
+                    echo "<option value='$idx' $selected>".$name."</option>";
                 }
                 ?>
             </select>

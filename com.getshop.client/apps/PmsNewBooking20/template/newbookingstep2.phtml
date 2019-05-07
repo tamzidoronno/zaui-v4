@@ -10,6 +10,11 @@ foreach ($allRooms as $r) {
 }
 $couponcodes = $this->getApi()->getCartManager()->getCoupons();
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+
+$channelList = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
+$formater = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
+$channelNames = $formater->getChannels();
+
 ?>
 <div class='newbookingprocess' for='newbookingstep2'>
     <div class='steptitle'>Step 2 / 3 adding rooms</div>
@@ -39,6 +44,17 @@ $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelecte
                     foreach($couponcodes as $code) {
                         $selected = $code->code == $booking->couponCode ? "SELECTED" : "";
                         echo "<option value='".$code->code."' $selected>" .$code->code . "</option>";
+                    }
+                    ?>
+                </select>
+                <select class='gsniceselect1 addsource' style='width:240px;margin-left: 20px;'>
+                    <?php
+                    echo "<option value=''>Choose a source</option>";
+                    foreach($channelList as $idx => $channel) {
+                        $name = $channelNames[$idx] ? $channelNames[$idx] : $channel;
+                        $selected = $idx == "web" ? "SELECTED" : "";
+                        if(stristr($idx, "wubook_")) { continue; }
+                        echo "<option value='$idx' $selected>$name</option>";
                     }
                     ?>
                 </select>

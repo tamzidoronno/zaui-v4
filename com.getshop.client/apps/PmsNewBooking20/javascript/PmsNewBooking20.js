@@ -21,6 +21,7 @@ app.PmsNewBooking20 = {
         $(document).on('click','.PmsNewBooking20 .addconference', app.PmsNewBooking20.showAddConferencePanel);
         $(document).on('click','.PmsNewBooking20 .attachguesttoevent', app.PmsNewBooking20.attachGuestToConference);
         $(document).on('change','.PmsNewBooking20 .addcouponcode', app.PmsNewBooking20.addCouponCode);
+        $(document).on('change','.PmsNewBooking20 .addsource', app.PmsNewBooking20.addSource);
     },
     addCouponCode : function() {
         var event = thundashop.Ajax.createEvent('','setCouponCode',$(this), {
@@ -30,6 +31,13 @@ app.PmsNewBooking20 = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.PmsNewBooking20.reloadAddedRoomsList();
         });
+    },
+    addSource : function() {
+        var event = thundashop.Ajax.createEvent('','setSource',$(this), {
+            "source" : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {});
     },
     attachGuestToConference : function() {
         var btn = $(this).closest('.addconferencearea').find('.addconference');

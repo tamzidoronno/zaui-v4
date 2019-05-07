@@ -89,6 +89,12 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
     }
     
+    public function setSource() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking->channel = $_POST['data']['source'];
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
+    }
+    
     public function selectbooking() {
         $this->getApi()->getPmsManager()->setCurrentBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
     }

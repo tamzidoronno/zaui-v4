@@ -150,6 +150,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
             toAdd.postingDate = income.start;
             toAdd.amount = total.doubleValue();
             toAdd.documentNumber = number;
+            toAdd.description = "getshop file for: " +income.start + " - " + income.end;
             
             DayEntry dayEntry = groupedIncomes.get(accountingNumber).get(0);
 

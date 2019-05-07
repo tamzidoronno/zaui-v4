@@ -10071,7 +10071,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsLog> queryLogEntries(PmsLog filter) {
         BasicDBObject query = new BasicDBObject();
         query.put("className", PmsLog.class.getCanonicalName());
-        query.put("bookingId", filter.bookingId);
+        if(filter.bookingId != null && !filter.bookingId.isEmpty()) {
+            query.put("bookingId", filter.bookingId);
+        }
+        if(filter.logType != null && !filter.logType.isEmpty()) {
+            query.put("logType", filter.logType);
+        }
 
         List<PmsLog> result = database.query("PmsManager_default", storeId, query).stream()
                 .map(o -> (PmsLog)o)

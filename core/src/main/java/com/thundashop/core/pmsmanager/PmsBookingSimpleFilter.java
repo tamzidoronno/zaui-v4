@@ -43,12 +43,11 @@ public class PmsBookingSimpleFilter {
                     }
                 }
             }
-            if(filter.codes == null || filter.codes.isEmpty()) {
-                if(i >= 200) {
-                    break;
-                }
-            }
         }
+        if(result.size() > 200) {
+            //This might cause slow systems.
+        }
+        
         this.manager.gsTiming("before sorting list");
         sortList(result, filter.sorting);
         if(filter.groupByBooking) {

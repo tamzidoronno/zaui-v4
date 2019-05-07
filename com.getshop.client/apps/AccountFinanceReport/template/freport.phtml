@@ -208,8 +208,9 @@ echo "<div class='outer'>";
             
             if ($isSuportingDirectTransfer && $dayIncome->isFinal) {
                 $checked = count($dayIncome->accountingTransfer) ? " <i class='fa fa-check' title='This day has already been transferred'></i>" : "";
-                $askForPassword = count($dayIncome->accountingTransfer) ? " gs_precheck='app.AccountFinanceReport.askForPassword'" : "";
-                echo "<div class='col' gsclick='startUploadOfData' $askForPassword start='$dayIncome->start' end='$dayIncome->end' >".'<i class="gs_shop_small_icon fa fa-upload"></i>'.$checked."</div>";
+//                $askForPassword = count($dayIncome->accountingTransfer) ? " gs_precheck='app.AccountFinanceReport.askForPassword'" : "";
+                $askForPassword = "";
+                echo "<div class='col' gsclick='startUploadOfData' $askForPassword start='$dayIncome->start' end='$dayIncome->end' synchron='true' gs_callback='app.AccountFinanceReport.transferredToAccounting'>".'<i class="gs_shop_small_icon fa fa-upload"></i>'.$checked."</div>";
                 
             }
 

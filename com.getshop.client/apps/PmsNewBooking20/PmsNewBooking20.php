@@ -464,7 +464,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $bookingengine = $this->getSelectedMultilevelDomainName();
         $bookingId = $this->getApi()->getPmsManager()->getCurrentBooking($bookingengine)->id;
         for($i = 0; $i < $count; $i++) {
-            $this->getApi()->getPmsManager()->addBookingItemType($bookingengine, $bookingId, $typeId, $start, $end, "");
+            $this->getApi()->getPmsBookingProcess()->addBookingItemType($bookingengine, $bookingId, $typeId, $start, $end, "");
         }
     }
 

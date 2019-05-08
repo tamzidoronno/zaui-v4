@@ -76,6 +76,13 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     }
     
     @Override
+    public List<String> getBookingItemTypesIds() {
+        return types.values().stream()
+                .map(type -> type.id)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
     public List<BookingItemType> getBookingItemTypes() {
         List<BookingItemType> normalBookingTypes = new ArrayList();
         normalBookingTypes.addAll(getBookingItemTypesWithSystemType(0));

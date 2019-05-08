@@ -162,6 +162,7 @@
 "1057","There already exists a user with maincompany and has connection to the newly created company."
 "1058","Its not allowed to change the segment on bookings that has started."
 "1059","Could not complete action, have you setup your authentication?"
+"1060","The Accrued Payment application is not activated, please activate it and configure it under accounting -> payments."
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

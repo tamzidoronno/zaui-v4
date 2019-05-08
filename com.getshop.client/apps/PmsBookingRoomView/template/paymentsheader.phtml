@@ -1,5 +1,7 @@
 <?php
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$autoCloseActivated = $this->getApi()->getOrderManager()->getOrderManagerSettings()->autoCloseFinancialDataWhenCreatingZReport;
+
 $methods = (array) $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 $hasPaymentMethods = false;
 if (sizeof($methods) > 0) {
@@ -53,24 +55,45 @@ $totalOrdersOnGroup = round($totalOrdersOnGroup);
         </tr>
     </table>
 </div>
-<?php
-if (!$pmsBooking->createOrderAfterStay) {
-    if ($hasPaymentMethods) {
-        ?>
-        <span>
-            <span class="shop_button listpaymentbutton"><i class=""></i> <? echo $this->__f("List payments"); ?></span>
-            <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Pay after stay"); ?></span>
-            <span class="shop_button addselecteditemstocart" style='margin-top:2px; float:right;' isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create payment"); ?></span>
-        </span>
-        <?php
-    }
-} else {
-    echo "<div>An order of " . $pmsBooking->unsettled . " will be created at " . date("d.m.Y", $endDate) . "</div>";
-    ?>
-    <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;width:100%; box-sizing:border-box;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
+<span>
+    <span class="shop_button listpaymentbutton"><i class=""></i> <? echo $this->__f("List payments"); ?></span>
     <?php
-}
-?>
+
+    if ($autoCloseActivated) {
+
+        
+        if ($pmsSelectedRoom->createOrdersOnZReport) {
+            ?>
+            <div style="border: solid 1px #DDD; margin-top: 30px; padding: 30px; text-align: center; font-size: 16px; background-color: #fff898;">
+                <?
+                echo $this->__f("The auto order creation has been activated for this room, intermidiate orders will be created when you do a zreport. Upon checkout you can create one final order for the stay.");
+                ?>
+                <br/>
+                <span class="shop_button autocreateonzreport" style="margin-top: 10px;" roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class="fa fa-magic"></i> <? echo $this->__f("Deactivate"); ?></span>
+            </div>
+            <?
+        } else {
+        ?>
+            <span class="shop_button autocreateonzreport" roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class="fa fa-magic"></i> <? echo $this->__f("Pay after stay"); ?></span>
+        <?
+        }
+    } else {
+        if (!$pmsBooking->createOrderAfterStay) {
+            if ($hasPaymentMethods) {
+                ?>
+                    <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Pay after stay"); ?></span>
+                    <span class="shop_button addselecteditemstocart" style='margin-top:2px; float:right;' isgroup='<?php echo $isgroup; ?>' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Create payment"); ?></span>
+                <?php
+            }
+        } else {
+            echo "<div>An order of " . $pmsBooking->unsettled . " will be created at " . date("d.m.Y", $endDate) . "</div>";
+            ?>
+            <span class="shop_button createafterstaybtn" isgroup='<?php echo $isgroup; ?>' style='background-color:#a9a535;width:100%; box-sizing:border-box;' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'><i class=""></i> <? echo $this->__f("Do not create order after stay"); ?></span>
+            <?php
+        }
+    }
+    ?>
+</span>
 <style>
     .pricetext { display:inline-block; width: 130px; }
     .pricetag { display:inline-block; width: 80px; }

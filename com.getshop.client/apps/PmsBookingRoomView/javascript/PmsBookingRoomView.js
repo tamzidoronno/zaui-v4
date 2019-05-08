@@ -53,8 +53,10 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .connectGuestToConference', this.showAddConferencePanel);
         $(document).on('click','.PmsBookingRoomView .attachguesttoevent', app.PmsBookingRoomView.attachGuestToConference);
         $(document).on('click','.PmsBookingRoomView .removeConferenceFromGuest', app.PmsBookingRoomView.removeGuestToConference);
+        $(document).on('click','.PmsBookingRoomView .autocreateonzreport', app.PmsBookingRoomView.autoCreateOnZReport);
     },
     
+
     changeChannel : function() {
         var val = $(this).val();
         if(val === "getshop_new_source") {
@@ -64,6 +66,13 @@ app.PmsBookingRoomView = {
             "channel" : val
         });
         thundashop.Ajax.post(event);
+    },
+
+    autoCreateOnZReport: function() {
+        var event = thundashop.Ajax.createEvent('','toggleAutoCreateOrders',$(this), {});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsBookingRoomView.refresh(true);
+        });
     },
     
     removeGuestToConference : function(res) {

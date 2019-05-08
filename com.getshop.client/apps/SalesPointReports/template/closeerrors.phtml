@@ -9,6 +9,10 @@ if ($closeResult->canClose) {
 
 <div class="closewarnings">
     <?
+    if ($closeResult->accuredPaymentMethodNotActivatedOrConfiguredImproperly) {
+        echo "You have not activated the accrude payment method, please activate it and make sure its correctly configured before continueing";
+    }
+    
     if (count($closeResult->bookingsWithProblems)) {
     ?>
         <h2><? echo $this->__("Can not close due to the following problem(s)"); ?></h2>

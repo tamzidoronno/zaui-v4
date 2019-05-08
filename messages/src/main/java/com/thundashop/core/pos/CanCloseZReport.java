@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class CanCloseZReport {
     public boolean canClose = true;
+    public boolean accuredPaymentMethodNotActivatedOrConfiguredImproperly = false;
     
     public List<PmsBookingRooms> roomsWithProblems = new ArrayList();
     public long fReportErrorCount = 0;

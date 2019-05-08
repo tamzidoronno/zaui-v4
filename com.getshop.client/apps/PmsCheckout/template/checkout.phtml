@@ -147,6 +147,10 @@ $paymentApps = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentAp
             <select class='gsniceselect1 paymentmethodselection' gsname='payment'>
                 <?
                 foreach ($paymentApps as $app) {
+                    if ($app->id == "60f2f24e-ad41-4054-ba65-3a8a02ce0190") {
+                        continue;
+                    }
+                    
                     $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
                     $selected = $ecomsettings->getConfigurationSetting("defaultPaymentMethod") == $app->id ? "SELECTED" : "";
                     $name = $appInstance->getName();

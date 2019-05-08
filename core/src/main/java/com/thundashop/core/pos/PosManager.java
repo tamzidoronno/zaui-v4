@@ -28,11 +28,14 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTag;
+import com.thundashop.core.paymentmanager.PaymentManager;
+import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
 import com.thundashop.core.pmsmanager.PmsRoomPaymentSummary;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -87,6 +90,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     
     @Autowired
     private GetShopSessionScope scope;
+    
+    @Autowired
+    private PaymentManager paymentManager;
     
     /**
      * Never access this variable directly! Always 
@@ -351,6 +357,8 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public void createZReport(String cashPointId) {
+        autoCreateOrders(cashPointId);
+        
         ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
         report.totalAmount = getTotalAmountForZReport(report);
@@ -858,13 +866,27 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         PmsManager pmsManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsManager.class);
         
-        canClose.roomsWithProblems = pmsManager.getBookingsWithUnsettledAmountBetween(start, end)
+        List<PmsBookingRooms> bookingsInPeriode = pmsManager.getBookingsWithUnsettledAmountBetween(start, end)
                 .stream()
                 .flatMap(o -> o.rooms.stream())
                 .filter(o -> o.date.within(start, end))
                 .filter(o -> hasUnsettledAmount(o, pmsBookingMultilevelName))
                 .collect(Collectors.toList());
         
+        canClose.roomsWithProblems = bookingsInPeriode.stream()
+                .filter(o -> !o.createOrdersOnZReport)
+                .collect(Collectors.toList());
+        
+        
+        boolean anyRoomsNeedAutoCreationOfOrders = bookingsInPeriode.stream()
+                .filter(o -> o.createOrdersOnZReport)
+                .count() != 0;
+        
+        if (anyRoomsNeedAutoCreationOfOrders && !checkIfAccruedPaymentActivatedAndConfigured()) {
+            canClose.canClose = false;
+            canClose.accuredPaymentMethodNotActivatedOrConfiguredImproperly = true;
+        }
+                
         canClose.roomsWithProblems.removeIf(room -> noUnsettledAmountInPast(room, pmsManager));
         
         canClose.finalize();
@@ -977,5 +999,70 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .map(orderId -> orderManager.getOrder(orderId))
                 .mapToDouble(order -> orderManager.getTotalAmount(order))
                 .sum();
+    }
+
+    private void autoCreateOrders(String cashPointId) {
+        Date start = getDateWithOffset(getPreviouseZReportDate(cashPointId), -1);
+        Date end = getDateWithOffset(new Date(), 0);
+        
+        PmsManager pmsManager = scope.getNamedSessionBean("default", PmsManager.class);
+        
+        long startTiming = System.currentTimeMillis();
+        
+        List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
+                .stream()
+                .flatMap(o -> o.rooms.stream())
+                .filter(o -> o.createOrdersOnZReport)
+                .filter(o -> o.date.within(start, end))
+                .collect(Collectors.toList());
+        
+        roomsNeedToCreateOrdersFor.stream().forEach(o -> createOrder(o));
+        
+    }
+
+    private void createOrder(PmsBookingRooms room) {
+        PmsManager pmsManager = scope.getNamedSessionBean("default", PmsManager.class);
+        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+        PmsRoomPaymentSummary summary = pmsManager.getSummary(booking.id, room.pmsBookingRoomId);
+        
+        if (summary.rows == null || summary.rows.isEmpty() || summary.getCheckoutRows().isEmpty()) {
+            return;
+        }
+        
+        PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
+        createOrderForRoom.roomId = room.pmsBookingRoomId;
+        createOrderForRoom.items = summary.getCheckoutRows();
+        
+        List<PmsOrderCreateRow> createOrder = new ArrayList();
+        createOrder.add(createOrderForRoom);
+        
+        String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
+        
+        pmsManager.createOrderFromCheckout(createOrder, "60f2f24e-ad41-4054-ba65-3a8a02ce0190", userId);
+    }
+    
+    private boolean checkIfAccruedPaymentActivatedAndConfigured() {
+        Application activatedApp = storeApplicationPool.getApplication("60f2f24e-ad41-4054-ba65-3a8a02ce0190");
+        
+        if (activatedApp == null) {
+            return false;
+        }
+        
+        StorePaymentConfig config = paymentManager.getStorePaymentConfiguration("60f2f24e-ad41-4054-ba65-3a8a02ce0190");
+        
+        if (config == null) {
+            return false;
+        }
+        
+        if (config.offsetAccountingId_accrude == null || config.offsetAccountingId_accrude.isEmpty())
+            return false;
+        
+        if (config.offsetAccountingId_prepayment == null || config.offsetAccountingId_prepayment.isEmpty())
+            return false;
+        
+        if (config.userCustomerNumber == null || config.userCustomerNumber.isEmpty())
+            return false;
+        
+        return true;
     }
 }

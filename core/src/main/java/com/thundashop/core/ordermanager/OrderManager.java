@@ -269,7 +269,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         try {
             addOrdersToBookings(credittedOrders);
         }catch(GetShopBeanException ex) {
-            logPrintException(ex);
+            // This will happen if the credit order is invoked within a named bean, 
+            // normally it then comes from the pms manager itself and then the manager
+            // should handle the adding to booking properly itself.
+            return credited;
         }
         
         return credited;
@@ -2415,7 +2418,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.cart.clear();
         saveObject(order);
         
-        removeOrderFromBooking(order.id);
+        try {
+            removeOrderFromBooking(order.id);
+        } catch (GetShopBeanException ex) {
+            // Nothing to do, this happens when the order are removed by a named bean manager.
+            // In that case the manager should handle the order itself.
+        }
     }
     
     private void removeOrderFromBooking(String orderId) {
@@ -2660,6 +2668,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             String orderId = (String)argObjects[0];
             Order order = getOrder(orderId);
             if (order.payment == null) {
+                throw new ErrorException(1052);
+            }
+            
+            // AccruedPayment
+            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190") && order.getTotalAmount() > 0) {
                 throw new ErrorException(1052);
             }
             

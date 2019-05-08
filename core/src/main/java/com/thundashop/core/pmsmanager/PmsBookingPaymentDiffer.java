@@ -126,7 +126,9 @@ public class PmsBookingPaymentDiffer {
     }
 
     private void setProductIdsForRoom() {
-        roomProductIds = pmsManager.bookingEngine.getBookingItemTypes().stream()
+        roomProductIds = pmsManager.bookingEngine.getBookingItemTypesIds()
+                .stream()
+                .map(id -> pmsManager.bookingEngine.getBookingItemType(id))
                 .filter(type -> type.productId != null && !type.productId.isEmpty())
                 .map(type -> type.productId)
                 .collect(Collectors.toList());

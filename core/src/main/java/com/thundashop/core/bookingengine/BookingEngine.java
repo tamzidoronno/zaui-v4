@@ -88,6 +88,10 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public List<BookingItemType> getBookingItemTypes() {
         return deepClone(getBookingEngine().getBookingItemTypes());
     }
+    
+    public List<String> getBookingItemTypesIds() {
+        return deepClone(getBookingEngine().getBookingItemTypesIds());
+    }
 
     @Override
     public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType) {

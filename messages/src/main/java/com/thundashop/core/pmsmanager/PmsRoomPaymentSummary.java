@@ -8,6 +8,8 @@ package com.thundashop.core.pmsmanager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -18,5 +20,23 @@ public class PmsRoomPaymentSummary {
     public String pmsBookingRoomId;
     public List<PmsRoomPaymentSummaryRow> rows = new ArrayList();
     public List<String> orderIds = new ArrayList();
+
+    public List<PmsOrderCreateRowItemLine> getCheckoutRows() {
+        return rows.stream()
+                .filter(o -> o.count != 0)
+                .map(o -> createPmsOrderCreateRow(o))
+                .collect(Collectors.toList());
+    }
+
+    private PmsOrderCreateRowItemLine createPmsOrderCreateRow(PmsRoomPaymentSummaryRow o) {
+        PmsOrderCreateRowItemLine ret = new PmsOrderCreateRowItemLine();
+        ret.createOrderOnProductId = o.createOrderOnProductId;
+        ret.isAccomocation = o.isAccomocation;
+        ret.includedInRoomPrice = o.includedInRoomPrice;
+        ret.count = o.count;
+        ret.price = o.priceToCreateOrders;
+        ret.date = o.date;
+        return ret;
+    }
  
 }

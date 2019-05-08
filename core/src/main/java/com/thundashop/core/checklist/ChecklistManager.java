@@ -81,6 +81,7 @@ public class ChecklistManager extends GetShopSessionBeanNamed implements ICheckl
         retList.add(new UnpaidPaymentLinksProcessor(ordreManager, pmsManager));
         retList.add(new UnsettledAmountProcessor(ordreManager, pmsManager));
         retList.add(new DiffByPaidAmountToTotal(ordreManager, pmsManager, pmsInvoiceManager));
+        retList.add(new AccruedPaymentChecklist(ordreManager, pmsManager));
         return retList;
     }
     

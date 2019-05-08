@@ -7,5 +7,5 @@
  */
 
 class DomainConfig {
-    static $password = "2349uasdfhj923y4iqyh87h41uh234";
+    static $password = "31321rfdsafsadf234243";
 }

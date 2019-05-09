@@ -1549,4 +1549,11 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
         }
         return higest;
     }
+    
+    @Override
+    public List<String> getBookingItemTypesIds() {
+        return types.values().stream()
+                .map(type -> type.id)
+                .collect(Collectors.toList());
+    }
 }

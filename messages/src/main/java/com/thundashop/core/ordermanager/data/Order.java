@@ -1345,6 +1345,13 @@ public class Order extends DataCommon implements Comparable<Order> {
         cart.getItems().stream().forEach(item -> item.changeAllTaxes(taxGroupNumber));
     }
 
+    public boolean isAccruedPayment() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("accruedpayment")) {
+            return true;
+        }
+        return false;
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

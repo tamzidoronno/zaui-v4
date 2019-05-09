@@ -79,4 +79,5 @@ public interface IBookingEngineAbstract {
     public void changeDepartmentOnType(String bookingItemTypeId, String departmentId);
 
     public Integer getNumberOfAvailableExcludeClose(String itemType, Date start, Date end);
+    public List<String> getBookingItemTypesIds();
 }

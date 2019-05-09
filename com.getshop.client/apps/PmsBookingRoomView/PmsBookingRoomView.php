@@ -107,6 +107,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $booking->createOrderAfterStay = !$booking->createOrderAfterStay;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
+    
+    public function toggleAutoCreateOrders() {
+        $this->setData();
+        $this->getApi()->getPmsManager()->toggleAutoCreateOrders($this->getSelectedMultilevelDomainName(), $this->pmsBooking->id, $this->selectedRoom->pmsBookingRoomId);
+    }
 
     public function toggleautocharging() {
         $this->setData();

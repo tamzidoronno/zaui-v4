@@ -54,7 +54,17 @@ if(!$pmsBooking->confirmed) {
             Payments
             
             <div class='extraheaderstuff'>
-                <div class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<? echo $pmsBookingRoom->pmsBookingRoomId; ?>' style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Start payment process"); ?></div>
+                <?
+                if ($pmsBookingRoom->createOrdersOnZReport) {
+                ?>
+                        <div class="shop_button autocreateonzreport" isgroup='<?php echo $isgroup; ?>' roomid='<? echo $pmsBookingRoom->pmsBookingRoomId; ?>' style="background-color: #29354e; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Deactivate pay after stay"); ?></div>
+                <?
+                } else {
+                ?>
+                    <div class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<? echo $pmsBookingRoom->pmsBookingRoomId; ?>' style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Start payment process"); ?></div>
+                <?
+                }
+                ?>
                 <span class='missingonroomgroup'>
                     <?php 
                     $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoom->pmsBookingRoomId, true);

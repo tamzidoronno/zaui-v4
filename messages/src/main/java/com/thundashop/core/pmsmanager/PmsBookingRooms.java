@@ -114,6 +114,12 @@ public class PmsBookingRooms implements Serializable {
     public boolean forceAccess = false;
     Double printablePrice = 0.0;
     
+    /**
+     * If this is set to true the system will automatically
+     * create orders for the room when before the zreport is saved.
+     */
+    public boolean createOrdersOnZReport = false;
+    
     public String pgaAccessToken;
     public boolean loggedGetCode = false;
     public boolean loggedDeletedCode = false;

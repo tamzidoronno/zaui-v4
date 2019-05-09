@@ -10091,4 +10091,52 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .collect(Collectors.toList());
         return result;
     }
+
+    @Override
+    public void toggleAutoCreateOrders(String bookingId, String roomId) {
+        PmsBooking booking = getBooking(bookingId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.createOrdersOnZReport = !room.createOrdersOnZReport;
+        room.forceAccess = room.createOrdersOnZReport;
+        saveBooking(booking);
+        
+        if (!room.createOrdersOnZReport) {
+            removeAccrudePayments(booking, room.pmsBookingRoomId);
+        }
+        
+        PmsLog log = new PmsLog();
+        log.roomId = roomId;
+        log.bookingId = bookingId;
+        log.logText = "Changed status of autocreate order to "+room.createOrdersOnZReport;
+        logEntryObject(log);
+        
+        processor();
+    }
+
+    private void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
+        List<Order> accrudeOrdres = getAllOrderIds(booking.id)
+                    .stream()
+                    .map(id -> orderManager.getOrderSecure(id))
+                    .filter(o -> o.isAccruedPayment())
+                    .collect(Collectors.toList());
+        
+        for (Order order : accrudeOrdres) {
+            boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
+                    .filter(o -> !o.getProduct().externalReferenceId.equals(pmsBookingRoomId))
+                    .count() > 0;
+            
+            if (orderHasOrderLinesNotConnectedToBooking) {
+                continue;
+            }
+            
+            if (order.closed) {
+                Order credittedOrder = orderManager.creditOrder(order.id);
+                addOrderToBooking(booking, credittedOrder.id);
+            } else {
+                orderManager.deleteOrder(order.id);
+                booking.orderIds.remove(order.id);
+                saveBooking(booking);
+            }
+        }
+    }
 }

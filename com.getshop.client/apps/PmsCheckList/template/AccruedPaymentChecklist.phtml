@@ -1,0 +1,27 @@
+<?
+/* @var $this \ns_24206ea4_45f2_4a08_ac57_ed2c6c8b22f5\PmsCheckList */
+$error = $this->getCurrentError();
+$booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $error->metaData->pmsbookingid);
+$room = null;
+foreach ($booking->rooms as $iroom) {
+    if ($iroom->pmsBookingRoomId == $error->metaData->pmsbookingroomid) {
+        $room = $iroom;
+    }
+}
+?>
+
+<div class='col type'>
+    <? echo "Booking: ".$booking->incrementBookingId; ?>
+</div>
+<div class='col type'>
+    <? echo "Room has been set to have pay after stay."; ?>
+</div>
+<div class='col orderId'>
+    
+</div>
+<div class='col total'>
+    
+</div>
+<div class='col button'>
+    <div class='gs_shop_small_icon' gs_show_modal='booking_room_view' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Open booking"); ?></div>
+</div>

@@ -631,4 +631,7 @@ public interface IPmsManager {
     @Administrator
     public void recheckOrdersAddedToBooking();
     
+    @Administrator
+    public void toggleAutoCreateOrders(String bookingId, String roomId);
+    
 }

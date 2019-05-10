@@ -9,29 +9,46 @@ $grandTotal = 0;
 foreach ($orders as $order) {
     $grandTotal += $this->getApi()->getOrderManager()->getTotalAmount($order);
 }
-?>
 
-<h2>Summary</h2>
-Orders: <? echo count($orders); ?>
-<br/>Grand total: <? echo $grandTotal; ?>
+$segmentIds = array();
+foreach ($orders as $order) {
+    $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $order->id);
+    if ($booking != null) {
+        $segmentIds[] = $booking->segmentId;
+    }
+}
 
-<h2>Invoice note?</h2>
-<textarea class='invoicenote' gsname='invoicenote'></textarea>
-<h2>Please select what account/user you want to create this invoice on.</h2>
-<?
-foreach ($groupedByUserid as $userId => $order) {
-    $user = $this->getApi()->getUserManager()->getUserById($userId);
+$segmentIds = array_unique($segmentIds);
+
+if (count($segmentIds) > 1) {
+    echo "Please make sure that all rooms connected to the orders selected in previouse step are registered to the same segment";
+    echo "<br/>";
+    echo "<br/>";
+} else {
     ?>
-    <div class='selectUser'>
-        Name: <? echo $user->fullName; ?>
-        <br/>Email: <? echo $user->emailAddress; ?>
-        <br/>Cellphone: <? echo $user->cellPhone; ?>
-        <br/>
-        <br/>
-        <div class='shop_button' gs_also='invoicenote' gsclick='createInvoice' userid='<? echo $user->id; ?>'>Create on this user</div>
-    </div>
-    
+
+    <h2>Summary</h2>
+    Orders: <? echo count($orders); ?>
+    <br/>Grand total: <? echo $grandTotal; ?>
+
+    <h2>Invoice note?</h2>
+    <textarea class='invoicenote' gsname='invoicenote'></textarea>
+    <h2>Please select what account/user you want to create this invoice on.</h2>
     <?
+    foreach ($groupedByUserid as $userId => $order) {
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        ?>
+        <div class='selectUser'>
+            Name: <? echo $user->fullName; ?>
+            <br/>Email: <? echo $user->emailAddress; ?>
+            <br/>Cellphone: <? echo $user->cellPhone; ?>
+            <br/>
+            <br/>
+            <div class='shop_button' gs_also='invoicenote' gsclick='createInvoice' userid='<? echo $user->id; ?>'>Create on this user</div>
+        </div>
+
+        <?
+    }
 }
 ?>
 

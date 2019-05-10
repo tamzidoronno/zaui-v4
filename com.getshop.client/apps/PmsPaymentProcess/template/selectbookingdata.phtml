@@ -4,6 +4,12 @@ $bookings = $this->getSelectedBookings();
 $fstartDate = isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate']) ? $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_startdate'] : "";
 $fendDate = isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate']) ? $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_enddate'] : "";
 $visibilityDate = $fstartDate && $fendDate ? "block" : "none";
+$uniqueSegmentIds = array();
+foreach ($bookings as $booking) {
+    $uniqueSegmentIds[] = $booking->segmentId;
+}
+$uniqueSegmentIds = array_unique($uniqueSegmentIds);
+
 ?>
 <br/>
 <br/>
@@ -27,96 +33,107 @@ $visibilityDate = $fstartDate && $fendDate ? "block" : "none";
 </script>
     
 <?
-foreach ($bookings as $booking) {
-    $extrainforforbooking = "";
-    if ($booking->userId) {
-        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
-        if ($user) {
-            $extrainforforbooking = " - ".$user->fullName;
-        }
-    }
-    ?>
-    <div class='sub_header'>
-        <? echo $this->__f("Booking").": ". $booking->incrementBookingId; ?>
-    </div>
+if (count($uniqueSegmentIds) > 1) {
+    echo "<div style='font-size: 16px; padding-top: 30px; padding-bottom: 30px;'>".$this->__f("Not possible. Make sure that all rooms you have selected are on the same segment before continuing..")."</div>";
+} else {
 
-    <div class="cart_room_summary">
-
-        <?
-        foreach ($booking->rooms as $room) {
-            $firstDate = date('d.m.Y', strtotime($room->date->start));
-            $endDate = date('d.m.Y', strtotime($room->date->end));
-            $firstGuestName = $room->guests ? $room->guests[0]->name : "";
-            if (!$this->isSelectedRoom($room->pmsBookingRoomId)) {
-                continue;
+    foreach ($bookings as $booking) {
+        $extrainforforbooking = "";
+        if ($booking->userId) {
+            $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+            if ($user) {
+                $extrainforforbooking = " - ".$user->fullName;
             }
-            
-            echo "<div class='room' roomid='$room->pmsBookingRoomId'>";
-                echo "<div class='roominformation row toggleshowdetailedroomview' style='position: relative;'>";
-                    echo "<div class='col' style='margin-left: 10px; width: 200px;'>".$this->formatRoomHeader($room)."</div>";
-                    echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$firstDate."</div>";
-                    echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$endDate."</div>";
-                    echo "<div class='col' style='margin-left: 10px; width: calc(100% - 550px);'>".$firstGuestName."</div>";
-                    echo "<div class='col' style='margin-left: 10px;'><div class='totalforroom'></div></div>";
-                    echo "<div class='col' style='margin-left: 10px;'><i style='position: absolute; right: 10px; top: 5px; font-size: 25px;' class='fa fa-angle-down'></i></div>";
-                echo "</div>";
-                $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
-                usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
-                $anyFound = false;
-                echo "<div style='display: none;' class='detaileditemlines'>";
-                    foreach ($summary->rows as $row) {
-                        if ($row->count == 0 || $this->removeDueToFilter($row, $fstartDate, $fendDate)) {
-                            continue;
-                        }
-
-                        $anyFound = true;
-                        $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
-                        ?>
-                        <div class='row cartitemline' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
-                            <div class='col date'><? echo $row->date; ?></div>
-                            <div class='col count'><input class='gsniceinput1 item_count' value='<? echo $row->count; ?>'/></div>
-                            <div class='col price'><input class='gsniceinput1 item_price' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
-                            <div class='col productname'><? echo $product->name; ?></div>
-                        </div>
-                        <?
-                    }
-
-                    if (!$anyFound) {
-                    ?>
-                        <div class='row cartitemline'>
-                            <div class='col date'>&nbsp;</div>
-                            <div class='col productname'><i class="fa fa-warning"></i><? echo $this->__f("Nothing to do"); ?></div>
-                            <div class='col count'></div>
-                            <div class='col'></div>
-                            <div class='col price'></div>
-                        </div>
-                    <?
-                    }
-
-                echo "</div>";
-            echo "</div>";
         }
         ?>
-        
-        <div class="row totalrow" style='font-weight:bold;'>
-            <div class="col totaltext">
-                <?
-                echo $this->__f("Total to be charged").": ";
-                ?>
-            </div>
-            <div class="col totalval">
-                -
+        <div class='sub_header'>
+            <? echo $this->__f("Booking").": ". $booking->incrementBookingId; ?>
+        </div>
+
+        <div class="cart_room_summary">
+
+            <?
+            foreach ($booking->rooms as $room) {
+                $firstDate = date('d.m.Y', strtotime($room->date->start));
+                $endDate = date('d.m.Y', strtotime($room->date->end));
+                $firstGuestName = $room->guests ? $room->guests[0]->name : "";
+                if (!$this->isSelectedRoom($room->pmsBookingRoomId)) {
+                    continue;
+                }
+
+                echo "<div class='room' roomid='$room->pmsBookingRoomId'>";
+                    echo "<div class='roominformation row toggleshowdetailedroomview' style='position: relative;'>";
+                        echo "<div class='col' style='margin-left: 10px; width: 200px;'>".$this->formatRoomHeader($room)."</div>";
+                        echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$firstDate."</div>";
+                        echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$endDate."</div>";
+                        echo "<div class='col' style='margin-left: 10px; width: calc(100% - 550px);'>".$firstGuestName."</div>";
+                        echo "<div class='col' style='margin-left: 10px;'><div class='totalforroom'></div></div>";
+                        echo "<div class='col' style='margin-left: 10px;'><i style='position: absolute; right: 10px; top: 5px; font-size: 25px;' class='fa fa-angle-down'></i></div>";
+                    echo "</div>";
+                    $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
+                    usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
+                    $anyFound = false;
+                    echo "<div style='display: none;' class='detaileditemlines'>";
+                        foreach ($summary->rows as $row) {
+                            if ($row->count == 0 || $this->removeDueToFilter($row, $fstartDate, $fendDate)) {
+                                continue;
+                            }
+
+                            $anyFound = true;
+                            $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+                            ?>
+                            <div class='row cartitemline' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
+                                <div class='col date'><? echo $row->date; ?></div>
+                                <div class='col count'><input class='gsniceinput1 item_count' value='<? echo $row->count; ?>'/></div>
+                                <div class='col price'><input class='gsniceinput1 item_price' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
+                                <div class='col productname'><? echo $product->name; ?></div>
+                            </div>
+                            <?
+                        }
+
+                        if (!$anyFound) {
+                        ?>
+                            <div class='row cartitemline'>
+                                <div class='col date'>&nbsp;</div>
+                                <div class='col productname'><i class="fa fa-warning"></i><? echo $this->__f("Nothing to do"); ?></div>
+                                <div class='col count'></div>
+                                <div class='col'></div>
+                                <div class='col price'></div>
+                            </div>
+                        <?
+                        }
+
+                    echo "</div>";
+                echo "</div>";
+            }
+            ?>
+
+            <div class="row totalrow" style='font-weight:bold;'>
+                <div class="col totaltext">
+                    <?
+                    echo $this->__f("Total to be charged").": ";
+                    ?>
+                </div>
+                <div class="col totalval">
+                    -
+                </div>
             </div>
         </div>
-    </div>
-    <?
+        <?
+    }
 }
 ?>
 
 <br/>
 <div class='buttonarea'>
     <div class='shop_button' gsclick='gotopaymentselection' style='background-color:#81cff3;-webkit-box-shadow:none; box-shadow:none; color:#000 !important;'><i class='fa fa-caret-left'></i> <? echo $this->__f("Back"); ?></div>
-    <div class='shop_button createorder'  style='float: right;'><? echo $this->__f("Complete payment creation"); ?> <i class='fa fa-caret-right'></i></div>
+    <?
+    if (count($uniqueSegmentIds) < 2) {
+    ?>
+        <div class='shop_button createorder'  style='float: right;'><? echo $this->__f("Complete payment creation"); ?> <i class='fa fa-caret-right'></i></div>
+    <?
+    }
+    ?>
 </div>
 
 <script>

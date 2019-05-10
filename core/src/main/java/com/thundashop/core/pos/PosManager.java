@@ -866,19 +866,20 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         PmsManager pmsManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsManager.class);
         
-        List<PmsBookingRooms> bookingsInPeriode = pmsManager.getBookingsWithUnsettledAmountBetween(start, end)
+        List<PmsBooking> bookingsInPeriode = pmsManager.getBookingsWithUnsettledAmountBetween(start, end);
+        List<PmsBookingRooms> roomsInPeriode = bookingsInPeriode
                 .stream()
                 .flatMap(o -> o.rooms.stream())
                 .filter(o -> o.date.within(start, end))
                 .filter(o -> hasUnsettledAmount(o, pmsBookingMultilevelName))
                 .collect(Collectors.toList());
         
-        canClose.roomsWithProblems = bookingsInPeriode.stream()
+        canClose.roomsWithProblems = roomsInPeriode.stream()
                 .filter(o -> !o.createOrdersOnZReport)
                 .collect(Collectors.toList());
         
         
-        boolean anyRoomsNeedAutoCreationOfOrders = bookingsInPeriode.stream()
+        boolean anyRoomsNeedAutoCreationOfOrders = roomsInPeriode.stream()
                 .filter(o -> o.createOrdersOnZReport)
                 .count() != 0;
         
@@ -886,6 +887,8 @@ public class PosManager extends ManagerBase implements IPosManager {
             canClose.canClose = false;
             canClose.accuredPaymentMethodNotActivatedOrConfiguredImproperly = true;
         }
+
+        checkIfBookingsWithNoneSegments(canClose, pmsManager.getAllBookingsFlat());
                 
         canClose.roomsWithProblems.removeIf(room -> noUnsettledAmountInPast(room, pmsManager));
         
@@ -1064,5 +1067,17 @@ public class PosManager extends ManagerBase implements IPosManager {
             return false;
         
         return true;
+    }
+
+    private void checkIfBookingsWithNoneSegments(CanCloseZReport canClose, List<PmsBooking> bookingsInPeriode) {
+        List<String> bookingsWithNoneSegments = bookingsInPeriode.stream()
+                .filter(o -> o.segmentId == null || o.segmentId.isEmpty())
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+        
+        if (!bookingsWithNoneSegments.isEmpty()) {
+            canClose.canClose = false;
+            canClose.bookingsWithNoneSegments = bookingsWithNoneSegments;
+        }
     }
 }

@@ -1030,15 +1030,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
         
-        PmsBooking oldBooking = bookings.get(booking.id);
-        if(oldBooking != null) {
-            if(!oldBooking.segmentId.isEmpty() && !booking.segmentId.isEmpty() && !booking.segmentId.equals(oldBooking.segmentId)) {
-                if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
-                    //Do no allow changing segment on booking day after it has started.
-                    throw new ErrorException(1058);
-                }
-            }
-        }
+        checkIfSegmentIsClosed(booking);
         
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
@@ -5063,6 +5055,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+    
+    public List<PmsBooking> getBookingsWithOrderId(String orderId) {
+        return bookings.values()
+                .stream()
+                .filter(o -> o.orderIds.contains(orderId))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -10136,5 +10135,60 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 saveBooking(booking);
             }
         }
+    }
+
+    private void checkIfSegmentIsClosed(PmsBooking booking) {
+        PmsBooking oldBooking = bookings.get(booking.id);
+        if(oldBooking != null) {
+            // We dont care if the segment is the same as old
+            if (booking.segmentId.equals(oldBooking.segmentId))
+                return;
+            
+            // Always make sure that its possible to set segment if its not set before.
+            if (oldBooking.segmentId == null || oldBooking.segmentId.isEmpty())
+                return;
+            
+            if (oldBooking.segmentClosed) {
+                //Do no allow changing segment that has been marked as closed.
+                throw new ErrorException(1058);
+            }
+            
+            if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
+                //Do no allow changing segment on booking day after it has started.
+                throw new ErrorException(1058);
+            }
+        }   
+    }
+    
+    public void closeSegmentsForBookings() {
+        bookings.values().stream()
+                .filter(booking -> {
+                    boolean hasStarted = booking.isStartingToday() || booking.isStarted();
+                    return hasStarted && !booking.segmentClosed;
+                })
+                .forEach(o -> closeSegment(o, o.segmentId));
+    }
+    
+    private void closeSegment(PmsBooking booking, String segmentId) {
+        if (booking.segmentClosed) {
+            return;
+        }
+        
+        booking.segmentClosed = true;
+        booking.segmentId = segmentId;
+        saveBooking(booking);
+        
+        List<PmsBooking> releatedBookings = getReleatedBookingsBasedOnOrders(booking);
+        releatedBookings.stream().forEach(o -> closeSegment(o, segmentId));
+    }
+
+    private List<PmsBooking> getReleatedBookingsBasedOnOrders(PmsBooking booking) {
+        List<PmsBooking> relatedBookings = booking.orderIds.stream()
+                .flatMap(orderId -> getBookingsWithOrderId(orderId).stream())
+                .filter(b -> b != null && !b.equals(booking))
+                .distinct()
+                .collect(Collectors.toList());
+        
+        return relatedBookings;
     }
 }

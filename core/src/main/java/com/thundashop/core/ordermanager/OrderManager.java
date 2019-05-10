@@ -3004,6 +3004,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
+        closeSegmentsInBookingManager();
+        
         settings.closedTilPeriode = closePeriodeToDate;
         saveObject(settings);
     }   
@@ -4134,6 +4136,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return null;
+    }
+
+    private void closeSegmentsInBookingManager() {
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            pmsManager.closeSegmentsForBookings();
+        }
+                    
     }
 
 }

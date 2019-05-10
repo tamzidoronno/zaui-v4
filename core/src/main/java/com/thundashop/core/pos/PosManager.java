@@ -888,7 +888,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             canClose.accuredPaymentMethodNotActivatedOrConfiguredImproperly = true;
         }
 
-        checkIfBookingsWithNoneSegments(canClose, pmsManager.getAllBookingsFlat());
+        checkIfBookingsWithNoneSegments(canClose, pmsManager.getAllBookings(null));
                 
         canClose.roomsWithProblems.removeIf(room -> noUnsettledAmountInPast(room, pmsManager));
         
@@ -1072,6 +1072,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     private void checkIfBookingsWithNoneSegments(CanCloseZReport canClose, List<PmsBooking> bookingsInPeriode) {
         List<String> bookingsWithNoneSegments = bookingsInPeriode.stream()
                 .filter(o -> o.segmentId == null || o.segmentId.isEmpty())
+                .filter(o -> o.isDeleted)
                 .map(o -> o.id)
                 .collect(Collectors.toList());
         

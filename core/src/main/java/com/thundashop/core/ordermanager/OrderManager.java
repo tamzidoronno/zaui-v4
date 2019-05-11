@@ -3592,14 +3592,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getPaymentRecords(String paymentId, Date from, Date to) {
- 
+        return getPaymentRecordsInternal(paymentId, from, to, true);
+    }
+    
+    public List<DayIncome> getPaymentRecordsInternal(String paymentId, Date from, Date to, boolean doublePostingRecords) {
         List<Order> orders = this.orders.values()
                 .stream()
                 .filter(o -> o.payment != null && o.payment.getPaymentTypeId().equals(paymentId))
                 .collect(Collectors.toList());
         
         DayIncomeFilter filter = new DayIncomeFilter();
-        filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        if (doublePostingRecords) {
+            filter.doublePostingRecords = true;
+        } else {
+            filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        }
+        
         filter.includePaymentTransaction = false;
         filter.start = from;
         filter.end = to;
@@ -3612,10 +3620,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void createNewDoubleTransferFile(String paymentId, Date from, Date to) {
-        List<DayIncome> incomes = getPaymentRecords(paymentId, from, to);
+        List<DayIncome> incomes = getPaymentRecordsInternal(paymentId, from, to, false);
         
         for (DayIncome inc : incomes) {
             inc.dayEntries.removeIf(o -> transactionIsTransferredToAccount(o.orderId, o.orderTransactionId));
+            inc.dayEntries.removeIf(o -> o.accountingNumber == null || o.accountingNumber.equals("0000"));
         }
         
         incomes.removeIf(o -> o.dayEntries.isEmpty());

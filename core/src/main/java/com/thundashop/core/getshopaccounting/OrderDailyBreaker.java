@@ -113,10 +113,13 @@ public class OrderDailyBreaker {
     }
 
     private void proccessOrder(Order order) {
-        if (filter.onlyPaymentTransactionWhereDoubledPosting) {
+        if (filter.onlyPaymentTransactionWhereDoubledPosting || filter.doublePostingRecords) {
             List<DayEntry> orderDayEntries = new ArrayList();
             createPaymentRecords(orderDayEntries, order);
             addToDayIncome(orderDayEntries);
+            if (filter.onlyPaymentTransactionWhereDoubledPosting) {
+                return;
+            }
         }
         
         orderDayEntries = getDayEntriesForOrder(order);
@@ -137,7 +140,7 @@ public class OrderDailyBreaker {
         
         createVatLines(order, orderDayEntries);
         
-        if (filter.onlyPaymentTransactionWhereDoubledPosting) {
+        if (filter.doublePostingRecords) {
             orderDayEntries.stream()
                     .filter(o -> !o.accountingNumber.equals(getAccountingNumberForPaymentApplicationId(order.payment.getPaymentTypeId())))
                     .filter(o -> !o.accountingNumber.equals(getAccountingNumberForPaymentApplicationId_paid(order.payment.getPaymentTypeId())))

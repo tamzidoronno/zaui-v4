@@ -5,7 +5,7 @@ $states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuse
 
 $transfertypes = $this->getTransferTypes();
 
-$files = $this->getApi()->getAccountingManager()->getAllFiles();
+$files = $this->getApi()->getAccountingManager()->getAllFiles(false);
 $newfile = array();
 foreach($files as $file) {
     $newfile[strtotime($file->rowCreatedDate)] = $file;

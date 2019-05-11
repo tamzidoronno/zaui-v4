@@ -5,6 +5,7 @@ package com.thundashop.core.accountingmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
+import com.google.common.collect.Lists;
 import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
@@ -41,6 +42,8 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -254,11 +257,15 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     @Override
-    public List<SavedOrderFile> getAllFiles() {
+    public List<SavedOrderFile> getAllFiles(boolean showAllFiles) {
         List<SavedOrderFile> result = new ArrayList();
         result.addAll(files.values());
         result.addAll(otherFiles.values());
         
+        result.sort(Comparator.comparing(a -> a.rowCreatedDate));
+        result = new ArrayList<>(Lists.reverse(result));
+        List<SavedOrderFile> returnResult = new ArrayList();
+        int i = 0;
         for(SavedOrderFile saved : result) {
             try {
                 if(saved.needFinalize()) {
@@ -266,12 +273,17 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                         saveObject(saved);
                     }
                 }
+                if(i > 3 && !showAllFiles) {
+                    break;
+                }
+                returnResult.add(saved);
             }catch(Exception e) {
                 e.printStackTrace();
             }
+            i++;
         }
         
-        return result;
+        return returnResult;
     }
     
     @Override
@@ -412,7 +424,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
     private List<SavedOrderFile> getFilesNotTransferredYet(String type) {
         List<SavedOrderFile> res = new ArrayList();
-        for(SavedOrderFile file : getAllFiles()) {
+        for(SavedOrderFile file : getAllFiles(true)) {
             if(!file.transferred && file.type.equals(type)) {
                 res.add(file);
             }
@@ -807,6 +819,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         saved.lastFinalized = new Date();
         boolean needSaving = false;
         saved.tamperedOrders.clear();
+        
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order == null || order.cart == null) {
@@ -915,7 +928,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             return null;
         }
         if(fileToUse == null) {
-            List<SavedOrderFile> firstCheckFiles = getAllFiles();
+            List<SavedOrderFile> firstCheckFiles = getAllFiles(true);
             for(SavedOrderFile f : firstCheckFiles) {
                 if(!configToUse.subType.equals(f.subtype)) {
                     continue;
@@ -985,7 +998,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public PmsOrderStatistics getStats(String configId) {
         List<Order> ordersToUse = new ArrayList();
-        List<SavedOrderFile> filesToUse = getAllFiles();
+        List<SavedOrderFile> filesToUse = getAllFiles(true);
         Date start = new Date();
         Calendar end = Calendar.getInstance();
         end.add(Calendar.YEAR, 2);

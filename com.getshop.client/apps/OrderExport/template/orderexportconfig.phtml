@@ -9,7 +9,7 @@ $newArray[-1] = "Credit notes";
 $newArray[0] = "All states";
 $states = $newArray + $states;
 
-$files = $this->getApi()->getAccountingManager()->getAllFiles();
+$files = $this->getApi()->getAccountingManager()->getAllFiles(false);
 $newfile = array();
 foreach($files as $file) {
     $newfile[strtotime($file->rowCreatedDate)] = $file;

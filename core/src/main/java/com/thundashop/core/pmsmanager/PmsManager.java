@@ -1079,8 +1079,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
             
-            if (!room.deleted && bookingEngine.getBooking(room.bookingId) == null) {
-                room.deleted = true;
+            if(booking.isCompletedBooking()) {
+                if (!room.deleted && bookingEngine.getBooking(room.bookingId) == null) {
+                    room.deleted = true;
+                }
             }
             
             if (room == null) {

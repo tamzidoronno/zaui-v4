@@ -148,6 +148,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     }
 
     public function getAccountDescription($account) {
+        if ($account == "0000") {
+            return "f-report";
+        }
         foreach ($this->paymentConfigs as $config) {
             if (!$config)
                 continue;
@@ -355,7 +358,8 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function downloadUnsettledAmountExcel() {
         $start = $this->getStart();
         $end = $this->getEnd();
-        $unsettledAmounts = $this->getApi()->getOrderManager()->getOrdersUnsettledAmount($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'], $end);
+        $paymentId = isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']) ? $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']  : null;
+        $unsettledAmounts = $this->getApi()->getOrderManager()->getOrdersUnsettledAmount($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'], $end, $paymentId);
         
         $rows = array();
         

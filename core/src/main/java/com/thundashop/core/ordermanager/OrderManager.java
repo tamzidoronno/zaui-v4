@@ -3484,9 +3484,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate) {
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate, String paymentId) {
         Date startDate = getStore().rowCreatedDate;
-        List<DayIncome> dayEntries = getDayIncomes(startDate, endDate);
+        List<DayIncome> dayEntries = new ArrayList();
+        if (paymentId != null && !paymentId.isEmpty()) {
+            dayEntries = getPaymentRecords(paymentId, startDate, endDate);
+        } else {
+            dayEntries = getDayIncomes(startDate, endDate);;
+        }
         
         Map<String, List<DayEntry>> groupedEntries = dayEntries.stream()
                 .flatMap(dayEntry -> dayEntry.dayEntries.stream())
@@ -3591,11 +3596,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> orders = this.orders.values()
                 .stream()
                 .filter(o -> o.payment != null && o.payment.getPaymentTypeId().equals(paymentId))
-                .filter(o -> o.hasTranscationBetween(from, to))
                 .collect(Collectors.toList());
         
         DayIncomeFilter filter = new DayIncomeFilter();
         filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        filter.includePaymentTransaction = false;
         filter.start = from;
         filter.end = to;
         
@@ -3887,12 +3892,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public AccountingBalance getBalance(Date date) {
+    public AccountingBalance getBalance(Date date, String paymentId) {
         AccountingBalance balance = new AccountingBalance();
         balance.balanceToDate = date;
         
+        List<DayIncome> res = new ArrayList();
         
-        List<DayIncome> res = getDayIncomes(getStore().rowCreatedDate, date);
+        if (paymentId == null || paymentId.isEmpty()) {
+            res = getDayIncomes(getStore().rowCreatedDate, date);
+        } else {
+            res = getPaymentRecords(paymentId, getStore().rowCreatedDate, date);
+        }
         
         addBalance(res, balance);
         

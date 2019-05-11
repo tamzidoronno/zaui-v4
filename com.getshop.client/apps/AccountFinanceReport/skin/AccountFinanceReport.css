@@ -16,7 +16,7 @@
     display: table-row;
 }
 
-.AccountFinanceReport div.row:nth-child(odd) {
+.AccountFinanceReport div.row:nth-child(even) {
     background-color: #EEE;
 }
 
@@ -192,4 +192,11 @@
     border: solid 1px #DDD;
     display: none;
     
+}
+.AccountFinanceReport .top_row_header {
+    text-align: center;
+    padding: 10px;
+    font-size: 20px;
+    background-color: #222;
+    color: #FFF;
 }

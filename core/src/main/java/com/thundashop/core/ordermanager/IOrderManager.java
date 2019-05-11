@@ -456,7 +456,7 @@ public interface IOrderManager {
     public void closeBankAccount(Date endDate);
     
     @Administrator
-    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date date);
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date date, String paymentId);
     
     @Editor
     public List<PmiResult> getPmiResult(Date start, Date end);
@@ -488,7 +488,7 @@ public interface IOrderManager {
     
     @Administrator
     @ForceAsync
-    public AccountingBalance getBalance(Date date);
+    public AccountingBalance getBalance(Date date, String paymentId);
     
     @Administrator
     @ForceAsync

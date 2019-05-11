@@ -117,7 +117,6 @@ public class OrderDailyBreaker {
             List<DayEntry> orderDayEntries = new ArrayList();
             createPaymentRecords(orderDayEntries, order);
             addToDayIncome(orderDayEntries);
-            return;
         }
         
         orderDayEntries = getDayEntriesForOrder(order);
@@ -137,6 +136,13 @@ public class OrderDailyBreaker {
         }
         
         createVatLines(order, orderDayEntries);
+        
+        if (filter.onlyPaymentTransactionWhereDoubledPosting) {
+            orderDayEntries.stream()
+                    .filter(o -> !o.accountingNumber.equals(getAccountingNumberForPaymentApplicationId(order.payment.getPaymentTypeId())))
+                    .filter(o -> !o.accountingNumber.equals(getAccountingNumberForPaymentApplicationId_paid(order.payment.getPaymentTypeId())))
+                    .forEach(o -> o.accountingNumber = "0000");
+        }
         
         addToDayIncome(orderDayEntries);
     }

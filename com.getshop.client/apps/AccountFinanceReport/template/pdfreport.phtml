@@ -1,5 +1,7 @@
 <?
 /* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$isLocked = $this->getApi()->getOrderManager()->isLocked($this->getEnd());
+
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
@@ -121,8 +123,16 @@ $end = date('d.m.Y', strtotime($end));
 
 <div class="heading">
     <h2>Regnskapsbilag</h2>
+    <?
+    if (!$isLocked) {
+        echo "<div style='font-weight: bold; text-align: center: padding: 10px; color: red; width: 100%; font-size: 20px;'>Foreløpig rapport, ikke ferdigstilt periode!</div>";
+    } 
+    ?>
     Opprettet dato: <? echo date('d/m-Y H:i:s', strtotime('now')); ?>
+    <br/> Fima: <? echo $this->getApi()->getOrderManager()->getAccountingDetails()->companyName; ?>
+    <br/> Org nr: <? echo $this->getApi()->getOrderManager()->getAccountingDetails()->vatNumber; ?>
     <br/> Eiendelsperiode: <? echo $start. " - ".$end; ?>
+    
 </div>
 
 <?

@@ -119,6 +119,7 @@ echo "</script>";
         </select>
 
         <div gstype='submit' class='shop_button showresultbutton'><? echo $this->__f("Show"); ?></div>
+        <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
         
         <?
         $closeClass = $monthHasPassed ? 'closeperiode' : 'deactivated';
@@ -129,9 +130,6 @@ echo "</script>";
         <?
             }
         } else {
-        ?>
-            <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
-            <?
             $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
             $appTemplateFile = '../app/'.$appname.'/template/' . $system . "_BUTTON.phtml";
             

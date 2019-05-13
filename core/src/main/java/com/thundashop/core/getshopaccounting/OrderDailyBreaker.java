@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.TwoDecimalRounder;
+import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.paymentmanager.PaymentManager;
@@ -42,14 +43,16 @@ public class OrderDailyBreaker {
     private final List<String> errors = new ArrayList();
     private final int precision = 10;
     private final DayIncomeFilter filter;
+    private List<AccountingFreePost> freePosts = new ArrayList();
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager, List<AccountingFreePost> freePosts) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
         this.filter = filter;        
         this.paymentManager = paymentManager;
         this.productManager = productManager;
         this.whatHourOfDayStartADay = whatHourOfDayStartADayorderManager;
+        this.freePosts = freePosts;
         correctStartAndEndTime();
         createEmptyDays();
     }
@@ -110,6 +113,10 @@ public class OrderDailyBreaker {
                 errors.add(ex.getMessage());
             }
         });
+        
+        freePosts.stream()
+                .filter(o -> o.isBetween(filter.start, filter.end))
+                .forEach(o -> addFreePost(o));
     }
 
     private void proccessOrder(Order order) {
@@ -815,6 +822,27 @@ public class OrderDailyBreaker {
             return overrideAccountingDate;
         
         return entry.date;
+    }
+
+    private void addFreePost(AccountingFreePost o) {
+        DayIncome income = getDayIncome(o.date);
+        DayEntry entry = new DayEntry();
+        
+        entry.amount = TwoDecimalRounder.roundTwoDecimals(o.amount, precision);
+        entry.freePostId = o.id;
+        entry.accountingNumber = o.debitAccountNumber;
+        income.dayEntries.add(entry);
+        
+        try {
+            DayEntry credit = entry.clone();
+            credit.accountingNumber = o.creditAccountNumber;
+            credit.amount = credit.amount.multiply(new BigDecimal(-1));
+            income.dayEntries.add(credit);
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
 
 }

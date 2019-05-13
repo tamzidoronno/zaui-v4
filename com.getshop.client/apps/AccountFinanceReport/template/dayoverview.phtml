@@ -21,10 +21,18 @@ foreach ($dayIncomes as $dayIncome) {
         if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
             continue;
         }
-        if (!isset($orders[$entry->orderId])) {
-            $orders[$entry->orderId] = array();
+        
+        $orderId = $entry->orderId;
+        
+        if ($entry->freePostId) {
+            $orderId = $entry->freePostId;
+        } 
+        
+        if (!isset($orders[$orderId])) {
+            $orders[$orderId] = array();
         }
-        $orders[$entry->orderId][] = $entry;
+        
+        $orders[$orderId][] = $entry;
         $allAccountNumbers[] = $entry->accountingNumber;
     }
 }

@@ -334,12 +334,20 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     }
 
     @Override
-    public List<String> getTransferData(Date start, Date end) {
+    public List<String> getTransferData(Date start, Date end, String doublePostingFileId) {
         List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
         
-        for (DayIncome income : incomes) {
-            if (!income.isFinal) {
-                throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
+        if (doublePostingFileId != null && !doublePostingFileId.isEmpty()) {
+            DoublePostAccountingTransfer transferFile = orderManager.getDoublePostAccountingTransfer(doublePostingFileId);
+            if (transferFile == null) {
+                throw new NullPointerException("Did not find the given file.");
+            }
+            incomes = transferFile.incomes;
+        } else {
+            for (DayIncome income : incomes) {
+                if (!income.isFinal) {
+                    throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
+                }
             }
         }
         

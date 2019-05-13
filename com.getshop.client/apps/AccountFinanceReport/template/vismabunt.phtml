@@ -3,8 +3,9 @@
 $start = $this->getStart();
 $end = $this->getEnd();
 
+$doublePostId = isset($_POST['data']['doublepostid']) && $_POST['data']['doublepostid'] ? $_POST['data']['doublepostid'] : null;
 
-$lines = $this->getApi()->getGetShopAccountingManager()->getTransferData($start, $end);
+$lines = $this->getApi()->getGetShopAccountingManager()->getTransferData($start, $end, $doublePostId);
 foreach($lines as $line) {
     echo $line . "\r\n";
 }

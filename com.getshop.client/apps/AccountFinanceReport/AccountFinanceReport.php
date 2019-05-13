@@ -4,6 +4,7 @@ namespace ns_e6570c0a_8240_4971_be34_2e67f0253fd3;
 class AccountFinanceReport extends \MarketingApplication implements \Application {
     private $paymentConfigs = array();
     public $extramessage = "";
+    public $savedFreePost = false;
     
     public function getDescription() {
         
@@ -325,6 +326,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
             return "doublepost";
         }
         
+        if ($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'] == "freeposting") {
+            return "freeposting";
+        }
+        
         return "freport";
     }
 
@@ -391,5 +396,19 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         return (json_last_error() == JSON_ERROR_NONE);
     }
 
+    public function createFreePosting() {
+        $freePost = new \core_ordermanager_data_AccountingFreePost();
+        $freePost->amount = $_POST['data']['amount'];
+        $freePost->date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $freePost->creditAccountNumber = $_POST['data']['creditaccount'];
+        $freePost->debitAccountNumber = $_POST['data']['debitaccount'];
+        $freePost->comment = $_POST['data']['comment'];
+        $this->savedFreePost = $this->getApi()->getOrderManager()->saveFreePost($freePost);
+    }
+    
+    public function deleteRecord() {
+        $this->getApi()->getOrderManager()->deleteFreePost($_POST['data']['freepostid']);
+        $this->cancelOrderView();
+    }
 }
 ?>

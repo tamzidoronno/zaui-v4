@@ -22,6 +22,7 @@ public class CanCloseZReport {
     public List<PmsBookingRooms> roomsWithProblems = new ArrayList();
     public long fReportErrorCount = 0;
     public List<Order> uncompletedOrders = new ArrayList();
+    public List<String> bookingsWithNoneSegments;
     
     public void finalize() {
         if (!roomsWithProblems.isEmpty()) {

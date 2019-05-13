@@ -4,6 +4,9 @@ if (isset($_POST['data']['value']) && $_POST['data']['value']) {
     $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'] = $_POST['data']['value'];
 }
 
+if ($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'] == null || !isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'])) {
+    return;
+}
 $name = $this->getNameOfPaymentMethod($this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']));
 
 $start = $this->getStart();
@@ -176,72 +179,13 @@ if ($this->extramessage) {
 <?
 }
 
-echo "<div class='outer'>";
-
-    echo "<div class='row header'>";
-        echo "<div class='col orderid header'>Date</div>";
-        foreach ($accounts as $account) {
-            echo "<div class='col $account header'>".$account;
-                echo "<div class='accountdesc'>".$this->getAccountDescription($account)."</div>";;
-            echo "</div>";
-        }
-        echo "<div class='col controlsum'>Zero Check</div>";
+echo "<div class='outer' style='display: inline-block; vertical-align: top;'>";
+    echo "<div class='top_row_header'>";
+        echo "<div>".$this->__f("Balance report ( f-report + payment transactions )")."</div>";
     echo "</div>";
     
-    foreach ($dayIncomes as $dayIncome) {
-         echo "<div class='row' >";
-            echo "<div class='inner_row' gsclick='showDetailedReport'  start='$dayIncome->start' end='$dayIncome->end' >";
-                $isLocked = $dayIncome->isFinal ? "<i class='fa fa-lock'></i>" : "";
-                $grouped = $this->groupOnAccounting($dayIncome->dayEntries);
-                echo "<div class='col orderid'>$isLocked ".date('d.m.Y H:i', strtotime($dayIncome->start))." - ".date('H:i', strtotime($dayIncome->end))."</div>";
-                $controlSum = 0;
-                foreach ($accounts as $account) {
-                    if (!isset($sum[$account])) {
-                        $sum[$account] = 0;
-                    }
-                    
-                    if (isset($grouped[$account]) && $grouped[$account]) {
-                        $sum[$account] = $sum[$account] + $grouped[$account];
-                    }
-
-                    if (isset($grouped[$account]) && $grouped[$account]) {
-                        $controlSum += ($grouped[$account]);
-                    }
-
-                    $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : "&nbsp;";
-                    echo "<div class='col $account'>".round($val,2)."</div>";
-                }
-
-                if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
-                    $controlSum = 0;
-                }
-                echo "<div class='col controlsum'>".$controlSum."</div>";
-            echo "</div>";
-            
-            if ($isSuportingDirectTransfer && $dayIncome->isFinal) {
-                $checked = count($dayIncome->accountingTransfer) ? " <i class='fa fa-check' title='This day has already been transferred'></i>" : "";
-                $askForPassword = count($dayIncome->accountingTransfer) ? " gs_precheck='app.AccountFinanceReport.askForPassword'" : "";
-                echo "<div class='col' gsclick='startUploadOfData' $askForPassword start='$dayIncome->start' end='$dayIncome->end' >".'<i class="gs_shop_small_icon fa fa-upload"></i>'.$checked."</div>";
-                
-            }
-
-        echo "</div>";
-    }
-    
-    echo "<div class='row summaryrow'>";
-
-        echo "<div class='col orderid'>Total</div>";
-
-        foreach ($accounts as $account) {
-            $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
-            echo "<div gsclick='showSummaryForAccount' account='$account' class='col $account'>".round($val,2)."</div>";
-        }
-
-    echo "</div>";
-
-    
+    $this->includefile("doublepostbalancereport");
 echo "</div>";
-
 ?>
 <script>
     $(document).ready(function() {

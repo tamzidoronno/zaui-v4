@@ -3004,6 +3004,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
+        closeSegmentsInBookingManager();
+        
         settings.closedTilPeriode = closePeriodeToDate;
         saveObject(settings);
     }   
@@ -3482,9 +3484,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate) {
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate, String paymentId) {
         Date startDate = getStore().rowCreatedDate;
-        List<DayIncome> dayEntries = getDayIncomes(startDate, endDate);
+        List<DayIncome> dayEntries = new ArrayList();
+        if (paymentId != null && !paymentId.isEmpty()) {
+            dayEntries = getPaymentRecords(paymentId, startDate, endDate);
+        } else {
+            dayEntries = getDayIncomes(startDate, endDate);;
+        }
         
         Map<String, List<DayEntry>> groupedEntries = dayEntries.stream()
                 .flatMap(dayEntry -> dayEntry.dayEntries.stream())
@@ -3585,15 +3592,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getPaymentRecords(String paymentId, Date from, Date to) {
- 
+        return getPaymentRecordsInternal(paymentId, from, to, true);
+    }
+    
+    public List<DayIncome> getPaymentRecordsInternal(String paymentId, Date from, Date to, boolean doublePostingRecords) {
         List<Order> orders = this.orders.values()
                 .stream()
                 .filter(o -> o.payment != null && o.payment.getPaymentTypeId().equals(paymentId))
-                .filter(o -> o.hasTranscationBetween(from, to))
                 .collect(Collectors.toList());
         
         DayIncomeFilter filter = new DayIncomeFilter();
-        filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        if (doublePostingRecords) {
+            filter.doublePostingRecords = true;
+        } else {
+            filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        }
+        
+        filter.includePaymentTransaction = false;
         filter.start = from;
         filter.end = to;
         
@@ -3605,10 +3620,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void createNewDoubleTransferFile(String paymentId, Date from, Date to) {
-        List<DayIncome> incomes = getPaymentRecords(paymentId, from, to);
+        List<DayIncome> incomes = getPaymentRecordsInternal(paymentId, from, to, false);
         
         for (DayIncome inc : incomes) {
             inc.dayEntries.removeIf(o -> transactionIsTransferredToAccount(o.orderId, o.orderTransactionId));
+            inc.dayEntries.removeIf(o -> o.accountingNumber == null || o.accountingNumber.equals("0000"));
         }
         
         incomes.removeIf(o -> o.dayEntries.isEmpty());
@@ -3885,12 +3901,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public AccountingBalance getBalance(Date date) {
+    public AccountingBalance getBalance(Date date, String paymentId) {
         AccountingBalance balance = new AccountingBalance();
         balance.balanceToDate = date;
         
+        List<DayIncome> res = new ArrayList();
         
-        List<DayIncome> res = getDayIncomes(getStore().rowCreatedDate, date);
+        if (paymentId == null || paymentId.isEmpty()) {
+            res = getDayIncomes(getStore().rowCreatedDate, date);
+        } else {
+            res = getPaymentRecords(paymentId, getStore().rowCreatedDate, date);
+        }
         
         addBalance(res, balance);
         
@@ -4134,6 +4155,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return null;
+    }
+
+    private void closeSegmentsInBookingManager() {
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            pmsManager.closeSegmentsForBookings();
+        }
+                    
     }
 
 }

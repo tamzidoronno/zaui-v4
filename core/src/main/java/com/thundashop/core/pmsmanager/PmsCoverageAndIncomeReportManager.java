@@ -376,7 +376,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     @Override
     public void recalculateSegments(String segmentId) {
-        List<PmsBooking> bookings = pmsManager.getAllBookings(null);
+        List<PmsBooking> bookings = pmsManager.getAllBookingsFlat();
         for(PmsBooking booking : bookings) {
             if(booking.segmentId != null && !booking.segmentId.isEmpty()) {
                 continue;

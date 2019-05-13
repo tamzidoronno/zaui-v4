@@ -19,6 +19,33 @@ if ($closeResult->canClose) {
     <?
     }
     
+    if (count($closeResult->bookingsWithNoneSegments)) {
+    ?>
+        <h2><? echo $this->__("You have bookings that are not segmented, please make sure that there are a segment selected on the bookings."); ?></h2>
+        <div>
+            <div>
+                <?
+                echo $this->__f("If you want to make the system do the segmentation for you, you can click on this button and it will try to recalculate the segments for you."); 
+                ?>
+                <br/>
+                <div class="shop_button" gsclick="recalculateSegments"><? echo $this->__f("Autocalculate segments"); ?></div>
+                <br/>
+                <br/>
+            </div>
+            <?
+            foreach ($closeResult->bookingsWithNoneSegments as $bookingId) {
+                $pmsBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId);
+                echo "<div>".$pmsBooking->incrementBookingId ." - ";
+                ?>
+                <div gs_show_modal="booking_room_view" onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid="<? echo $bookingId; ?>" roomid="<? echo $pmsBooking->rooms[0]->pmsBookingRoomId; ?>" class="gs_shop_small_icon"><? echo $this->__f("Open"); ?></div>
+                <?
+                echo "</div>";
+            }
+            ?>
+        </div>
+    <?
+    }
+    
     if ($closeResult->fReportErrorCount > 0) {
         ?>
         <div class="row error_row">

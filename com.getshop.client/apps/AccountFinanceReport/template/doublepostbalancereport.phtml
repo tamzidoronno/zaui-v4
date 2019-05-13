@@ -1,13 +1,19 @@
 <?
-/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+if (isset($_POST['data']['value']) && $_POST['data']['value']) {
+    $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'] = $_POST['data']['value'];
+}
+
+$name = $this->getNameOfPaymentMethod($this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']));
+
 $start = $this->getStart();
 $end = $this->getEnd();
-$dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
+$dayIncomes = $this->getApi()->getOrderManager()->getPaymentRecords($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'], $start, $end);
+
 $isLocked = $this->getApi()->getOrderManager()->isLocked($end);
 $bankAccountClosed = $this->getApi()->getOrderManager()->isBankAccountClosed($end);
 $isShowingExTaxes = $this->isShowingIncTaxes();
 $autoCloseActivated = $this->getApi()->getOrderManager()->getOrderManagerSettings()->autoCloseFinancialDataWhenCreatingZReport;
-$incomeBalance = $this->getApi()->getOrderManager()->getBalance($start, null);
+$incomeBalance = $this->getApi()->getOrderManager()->getBalance($start, $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']);
 
 $this->getApi()->getPmsManager()->markOtaPaymentsAutomaticallyPaidOnCheckin($this->getSelectedMultilevelDomainName(), $start, $end);
 
@@ -18,7 +24,6 @@ $selectedMonth = date('m', strtotime($start));
 
 $isSuportingDirectTransfer = $this->getApi()->getGetShopAccountingManager()->isCurrentSelectedSupportingDirectTransfer();
 
-unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']);
 
 $errors  = array();
 foreach ($dayIncomes as $dayIncome) {
@@ -73,84 +78,7 @@ echo "<script>";
     echo "storeCreatedYear = ".$storeYear.";";
     echo "storeCreatedMonth = ".date('m', strtotime($store->rowCreatedDate)).";";
 echo "</script>";
-?>
-<div class="infoheader">
-    <?
-    echo "<div class='head'>".$this->__f("Financial Report")."</div>";
-    echo $this->__f("Periode").": ".date('d.m.Y', strtotime($start))." - ".date('d.m.Y', strtotime($end));
-    ?>
-    <div>
-        <? echo $this->__f("You can click on each row to inspect each day and see how the amounts are for each account."); ?>
-    </div>
-    
-    <br/><b>Please select: </b>
-    <br/>
-    <div gstype='form' method='showMonth'>
-        <select  gsname='month' class='gsniceselect1 timeperiode'>
-            <option value="1" <? echo $selectedMonth == 1 ? 'selected="true"' :""; ?>>Jan</option>
-            <option value="2" <? echo $selectedMonth == 2 ? 'selected="true"' :""; ?>>Feb</option>
-            <option value="3" <? echo $selectedMonth == 3 ? 'selected="true"' :""; ?>>Mar</option>
-            <option value="4" <? echo $selectedMonth == 4 ? 'selected="true"' :""; ?>>Apr</option>
-            <option value="5" <? echo $selectedMonth == 5 ? 'selected="true"' :""; ?>>May</option>
-            <option value="6" <? echo $selectedMonth == 6 ? 'selected="true"' :""; ?>>June</option>
-            <option value="7" <? echo $selectedMonth == 7 ? 'selected="true"' :""; ?>>July</option>
-            <option value="8" <? echo $selectedMonth == 8 ? 'selected="true"' :""; ?>>Aug</option>
-            <option value="9" <? echo $selectedMonth == 9 ? 'selected="true"' :""; ?>>Sep</option>
-            <option value="10" <? echo $selectedMonth == 10 ? 'selected="true"' :""; ?>>Oct</option>
-            <option value="11" <? echo $selectedMonth == 11 ? 'selected="true"' :""; ?>>Nov</option>
-            <option value="12" <? echo $selectedMonth == 12 ? 'selected="true"' :""; ?>>Dec</option>
-        </select>
-        -
-        <select gsname='year' class='gsniceselect1 timeperiode'>
-            <?
-            $nextYear = date('Y') + 1;
-            for ($i=$storeYear; $i<=$nextYear; $i++) {
-                $year = $i;
-                $selected = $year == $selectedYear ? 'selected="true"' :""; 
-                echo "<option $selected year='$year'>$year</option>";
-            }
-            ?>
-        </select>
-        -
-        <select gsname='tax' class='gsniceselect1 timeperiode'> 
-            
-            <option class="gsniceselect1" <? echo $this->isShowingIncTaxes() ? "selected='true'" : ""; ?> value="yes"><? echo $this->__f("Inc taxes"); ?></option>
-            <option class="gsniceselect1" <? echo !$this->isShowingIncTaxes() ? "selected='true'" : ""; ?> value="no"><? echo $this->__f("Ex taxes"); ?></option>
-        </select>
 
-        <div gstype='submit' class='shop_button showresultbutton'><? echo $this->__f("Show"); ?></div>
-        
-        <?
-        $closeClass = $monthHasPassed ? 'closeperiode' : 'deactivated';
-        if (!$isLocked) {
-            if (!$autoCloseActivated) {
-        ?>
-                <div class="shop_button showresultbutton <? echo $closeClass; ?>"><i class='fa fa-lock'></i> <? echo $this->__f("Lock periode"); ?></div>
-        <?
-            }
-        } else {
-        ?>
-            <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
-            <?
-            $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
-            $appTemplateFile = '../app/'.$appname.'/template/' . $system . "_BUTTON.phtml";
-            
-            if (file_exists($appTemplateFile)) {
-                $this->includefile($system."_BUTTON");
-            }
-        }
-        
-        if ($selectedMonth == 12) {
-            ?>
-            <div class="shop_button showresultbutton" gs_fileName='year.xls' gs_downloadExcelReport="downloadYearReport"> <? echo $this->__f("Download year excel"); ?></div>
-            <?
-        }
-        ?>
-    </div>
-    
-</div>
-
-<?
 if ($this->extramessage) {
 ?>
     <div>
@@ -244,8 +172,3 @@ echo "<div class='outer'>";
 echo "</div>";
 
 ?>
-<script>
-    $(document).ready(function() {
-        app.AccountFinanceReport.changePeriodeOptions();
-    })
-</script>

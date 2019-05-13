@@ -182,6 +182,13 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         
     }
     
+    public function recalculateSegments() {
+        $segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+        foreach ($segments as $segment) {
+            $this->getApi()->getPmsCoverageAndIncomeReportManager()->recalculateSegments($this->getSelectedMultilevelDomainName(), $segment->id);
+        }
+    }
+    
     public function deleteOrder() {
         $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
     }

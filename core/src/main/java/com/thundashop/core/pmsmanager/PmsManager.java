@@ -10076,6 +10076,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private List<PmsLog> queryLogEntries(PmsLog filter) {
+        String manager = "PmsManager_default";
+        if(storeId.equals("a152b5bd-80b6-417b-b661-c7c522ccf305")) { manager = "PmsManager_demo"; }
+        if(storeId.equals("3b647c76-9b41-4c2a-80db-d96212af0789")) { manager = "PmsManager_demo"; }
+        if(storeId.equals("e625c003-9754-4d66-8bab-d1452f4d5562")) { manager = "PmsManager_demo"; }
+        
         BasicDBObject query = new BasicDBObject();
         query.put("className", PmsLog.class.getCanonicalName());
         if(filter.bookingId != null && !filter.bookingId.isEmpty()) {
@@ -10085,7 +10090,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             query.put("logType", filter.logType);
         }
 
-        List<PmsLog> result = database.query("PmsManager_default", storeId, query).stream()
+        List<PmsLog> result = database.query(manager, storeId, query).stream()
                 .map(o -> (PmsLog)o)
                 .collect(Collectors.toList());
         return result;

@@ -1,0 +1,26 @@
+<?
+/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$freePost = $this->getApi()->getOrderManager()->getAccountFreePost($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid']);
+
+?>
+<div class="infoheader">
+    <?
+    echo "<div class='head'>".$this->__f("Manually added post")."</div>";
+    ?>
+</div>
+
+<div style="margin: 50px;">
+    Added: <? echo $freePost->rowCreatedDate; ?>
+    <br/> Added by: <? 
+        $user = $this->getApi()->getUserManager()->getUserById($freePost->createdByUserId); 
+        echo $user ? $user->fullName : "N/A";
+    ?>
+    <br/> Credit accounting number: <? echo $freePost->creditAccountNumber; ?>
+    <br/> Debit accounting number: <? echo $freePost->debitAccountNumber; ?>
+    <br/> Amount: <? echo $freePost->amount; ?>
+</div>
+
+<div class='buttonarea'>
+    <div gsclick='cancelOrderView' class='shop_button'>Back</div>
+    <div gsclick='deleteRecord' gs_confirm='Are you sure you want to delete this record?' class='shop_button' freepostid="<? echo $freePost->id; ?>">Delete record</div>
+</div>

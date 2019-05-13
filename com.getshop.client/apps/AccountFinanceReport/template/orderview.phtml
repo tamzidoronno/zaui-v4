@@ -1,5 +1,11 @@
 <?
 /* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$freePost = $this->getApi()->getOrderManager()->getAccountFreePost($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_orderid']);
+
+if ($freePost) {
+    $this->includefile("freepostview");
+    return;
+}
 
 if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'])) {
     $dayIncomes = $this->getApi()->getOrderManager()->getPaymentRecords($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'], $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_start'], $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_end']);

@@ -117,7 +117,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter, LinkedHashMap<String, BigDecimal> toadd, LinkedHashMap<String, BigDecimal> products) {
         BigDecimal result = new BigDecimal(0);
         for(DayEntry entry : income.dayEntries) {
-            if(!entry.isActualIncome || entry.isOffsetRecord) {
+            if(!entry.isActualIncome || entry.isOffsetRecord  || entry.orderId == null) {
                 continue;
             }
             if(!filter.orderIds.isEmpty() && !filter.orderIds.contains(entry.orderId)) {

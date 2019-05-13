@@ -41,6 +41,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
@@ -103,6 +104,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
+    
+    public HashMap<String, AccountingFreePost> accountingFreePosts = new HashMap();
     
     private Set<String> ordersChanged = new TreeSet();
     
@@ -299,6 +302,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
+            }
+            
+            if (dataFromDatabase instanceof AccountingFreePost) {
+                AccountingFreePost freePost = (AccountingFreePost)dataFromDatabase;
+                accountingFreePosts.put(freePost.id, freePost);
             }
             
             if (dataFromDatabase instanceof Order) {
@@ -2818,7 +2826,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> dayIncomes = getDayIncomesFromDatabase(filter.start, filter.end);
         dayIncomes.stream().forEach(o -> o.isFinal = true);
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2918,7 +2926,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -2932,8 +2940,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             for (DayIncome income : dayIncomes) {
                 BasicDBObject query = new BasicDBObject();
                 query.put("incomes.id", income.id);
+                
                 List<DataCommon> datas = database.query("OrderManager", storeId, query);
                 datas.stream().forEach(o -> {
+                    resetFreePostsEntries(o);
                     System.out.println("Deleted report");
                     deleteObject(o);
                 });
@@ -2993,14 +3003,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new RuntimeException("We can not close down for the future");
         }
         
-        
         List<DayIncome> days = getDayIncomes(settings.closedTilPeriode, closeDate);
         
         createAndSaveIncomeReport(settings.closedTilPeriode, closePeriodeToDate, days);
         
         for (DayIncome day : days) {
             for (DayEntry entry : day.dayEntries) {
-                markOrderAsTransferredToAccounting(entry.orderId);
+                if (entry.freePostId != null && !entry.freePostId.isEmpty()) {
+                    markFreePostingAsClosed(entry.freePostId);
+                } else {
+                    markOrderAsTransferredToAccounting(entry.orderId);
+                }
             }
         }
         
@@ -3534,6 +3547,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
                 .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
+                .filter(o -> o.orderId != null)
                 .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).departmentId));
 
 
@@ -3544,6 +3558,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 
                 Map<String, List<DayEntry>> groupedByProductId = itemsWithDepartment
                         .stream()
+                        .filter(o -> o.orderId != null)
                         .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).getProductId()));
 
                 for (String productId : groupedByProductId.keySet()) {
@@ -3612,7 +3627,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         filter.start = from;
         filter.end = to;
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
         breaker.breakOrders();
         
         return breaker.getDayIncomes();
@@ -3667,6 +3682,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean transactionIsTransferredToAccount(String orderId, String orderTransactionId) {
+        if (orderId == null)
+            return true;
+        
         for (OrderTransaction transaction : getOrder(orderId).orderTransactions) {
             if (transaction.transactionId.equals(orderTransactionId) && transaction.transferredToAccounting) {
                 return true;
@@ -3938,6 +3956,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         incomes.stream()
                 .flatMap(o -> o.dayEntries.stream())
+                .filter(o -> o.orderId != null)
                 .forEach(dayIncome -> {
                     addMetaDataToDayIncome(dayIncome);
                 });
@@ -4165,6 +4184,90 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             pmsManager.closeSegmentsForBookings();
         }
                     
+    }
+
+    @Override
+    public AccountingFreePost saveFreePost(AccountingFreePost freePost) {
+        validateFreePost(freePost);
+        
+        if (freePost.createdByUserId == null) {
+            freePost.createdByUserId = getSession().currentUser.id;
+        }
+        
+        saveObject(freePost);
+        accountingFreePosts.put(freePost.id, freePost);
+        return freePost;
+    }
+
+    @Override
+    public AccountingFreePost getAccountFreePost(String id) {
+        return accountingFreePosts.get(id);
+    }
+
+    @Override
+    public void deleteFreePost(String id) {
+        AccountingFreePost freePost = accountingFreePosts.get(id);
+        if (freePost == null)
+            return;
+        
+        if (freePost.closed) {
+            throw new ErrorException(1061);
+        }
+        
+        accountingFreePosts.remove(id);
+        deleteObject(freePost);
+    }
+
+    private void validateFreePost(AccountingFreePost freePost) {
+        if (freePost.closed) {
+            throw new ErrorException(1061);
+        }
+        
+        if (freePost.id != null && !freePost.id.isEmpty()) {
+            AccountingFreePost oldPost = (AccountingFreePost) database.findObject(freePost.id, "OrderManager");
+            
+            if (oldPost != null && oldPost.closed) {
+                throw new ErrorException(1062);
+            }
+            
+        }
+        
+        if (freePost.date == null) {
+            throw new ErrorException(1062);
+        }
+        
+        if (freePost.date.before(getOrderManagerSettings().closedTilPeriode)) {
+            throw new ErrorException(1062);
+        }
+    }
+
+    private List<AccountingFreePost> getAllFreePosts() {
+        return new ArrayList(accountingFreePosts.values());
+    }
+
+    private void markFreePostingAsClosed(String freePostId) {
+        AccountingFreePost freePost = getAccountFreePost(freePostId);
+        if (freePost != null) {
+            freePost.closed = true;
+            saveObject(freePost);
+        }
+    }
+
+
+    private void resetFreePostsEntries(DataCommon dataObject) {
+        DayIncomeReport income = (DayIncomeReport)dataObject;
+        
+        income.incomes.stream()
+                .flatMap(o -> o.dayEntries.stream())
+                .filter(o -> o.freePostId != null && !o.freePostId.isEmpty())
+                .map(o -> getAccountFreePost(o.freePostId))
+                .filter(o -> o != null)
+                .forEach(o -> {
+                    o.closed = false;
+                    saveObject(o);
+                });
+            
+
     }
 
 }

@@ -200,3 +200,15 @@
     background-color: #222;
     color: #FFF;
 }
+
+.AccountFinanceReport .freeposting {
+    margin: 50px;
+}
+
+.AccountFinanceReport .freeposting .info {
+    background-color: #d3e79f;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+}

@@ -31,6 +31,7 @@ import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.gsd.TerminalResponse;
+import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import java.util.ArrayList;
@@ -499,4 +500,13 @@ public interface IOrderManager {
     
     @Editor
     public Double getTotalForOrderInLocalCurrencyById(String orderId);
+    
+    @Editor
+    public AccountingFreePost saveFreePost(AccountingFreePost freePost);
+    
+    @Editor
+    public void deleteFreePost(String id);
+    
+    @Editor
+    public AccountingFreePost getAccountFreePost(String id);
 }

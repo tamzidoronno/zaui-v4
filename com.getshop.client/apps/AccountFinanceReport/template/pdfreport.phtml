@@ -156,7 +156,7 @@ function printLines($monthLines, $sumtext, $api, $me) {
         $sum = 0;
       
         foreach ($lines as $line) {
-            $sum += $me->isShowingIncTaxes() || $line->isIncome ? $line->amount : $line->amountExTax;
+            $sum += $me->isShowingIncTaxes() || $line->isIncome || $line->freePostId ? $line->amount : $line->amountExTax;
         }
 
         if (!$sum)

@@ -362,7 +362,7 @@ class Factory extends FactoryBase {
 
     function __construct() {
         @session_start();
-        header('Content-Type: text/html; charset=UTF-8');
+        @header('Content-Type: text/html; charset=UTF-8');
         $this->setCurrentModuleId();
         $this->initialize();
         $this->applicationPool = new ApplicationPool($this);

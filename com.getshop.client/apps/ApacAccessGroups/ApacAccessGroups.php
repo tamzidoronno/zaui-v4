@@ -43,6 +43,14 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
         return $ret;
     }
     
+    public function formatLocksSetup($data) {
+        $counter = 0;
+        foreach($data->connectedToLocks as $lockserverId => $lockArray) {
+            $counter += sizeof($lockArray);
+        }
+        return $counter;
+    }
+    
     public function showList() {
         $args = array();
         
@@ -52,9 +60,11 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
             array('numberOfSlotsInGroup', 'Slotsize', 'numberOfSlotsInGroup'),
             array(null, 'Status', null, 'formatStatus'),
             array(null, 'Slots in use', null, 'formatInUse'),
+            array(null, 'Locks in group', null, 'formatLocksSetup')
         );
         
         $table = new \GetShopModuleTable($this, 'GetShopLockSystemManager', 'getAllGroups', $args, $attributes);
+        $table->loadContentInOverlay = true;
         $table->render();
     }
     
@@ -92,6 +102,7 @@ class ApacAccessGroups extends \MarketingApplication implements \Application {
     }
     
     public function saveGroup() {
+        echo "saving";
         $this->getApi()->getGetShopLockSystemManager()->setLocksToGroup($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'], $_POST['data']['servers']);
         $this->getApi()->getGetShopLockSystemManager()->setGroupVirtual($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'], isset($_POST['data']['isvirtual']));
     }

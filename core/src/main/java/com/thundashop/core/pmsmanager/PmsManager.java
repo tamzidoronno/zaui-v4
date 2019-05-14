@@ -10045,7 +10045,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
         User usr = userManager.getUserByIdUnfinalized(booking.userId);
         
-        if(usr != null && (usr.denyDefaultAddedProduct(item.productId) && booking.isRecentlyCompleted())) {
+        if(usr != null && (usr.denyDefaultAddedProduct(item.productId) && (booking.isRecentlyCompleted() || room.isRecentlyCreated()))) {
             //The user booking has no access to this addon.
             return false;
         }

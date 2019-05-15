@@ -104,6 +104,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
 
+        if(storeId.equals("7bb18e4a-7a5c-4a0a-9a59-7e7705f0f004") || storeId.equals("7a43e275-ab6e-47a2-a5f4-9bfac2514f4c")
+                 || storeId.equals("a4548012-433e-47a4-b154-ac47c4b7b0ed")) {
+            logPrint(arg.start);
+            logPrint(arg.end);
+            logPrint(arg.adults);
+            logPrint(arg.children);
+            return null;
+        }
+        
         Gson gson = new Gson();
         logPrint(gson.toJson(arg));
         if(arg.getGuests() < arg.rooms) {
@@ -113,6 +122,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         if(arg.language != null && !arg.language.isEmpty()) {
             setSessionLanguage(arg.language);
         }
+        
         if(booking.language == null || booking.language.isEmpty()) {
             booking.language = getSession().language;
         }

@@ -1,18 +1,27 @@
 <?
 /* @var $this ns_3e89173c_42e2_493f_97bb_2261c0418bfe\GetShopLockSystem */
+$numberofslots = "";
+if(isset($_POST['data']['numberofslots'])) {
+    $numberofslots = $_POST['data']['numberofslots'];
+}
+$codesize = $this->getApi()->getGetShopLockSystemManager()->getCodeSize();
 ?>
 
 <div gstype="form" method="createNewLockGroup" class="createnewlockgroup">
     Name of group:
-    <br/><input class="gsniceinput1" value="" placeholder="Name of group" gsname="name"/>
+    <br/><input class="gsniceinput1" value="" placeholder="Name of group" gsname="name" id="nameofgroup"/>
     
     <br/><br/>Maximum number of slots:
-    <br/><input class="gsniceinput1" value="" placeholder="ex: 10" gsname="numberofslots"/>
+    <br/><input class="gsniceinput1" placeholder="ex: 10" gsname="numberofslots" value="<?php echo $numberofslots; ?>"/>
     
-    <br/><br/>Codesize (blank is using system settings):
-    <br/><input class="gsniceinput1" value="" placeholder="ex: 6" gsname="codesize"/>
+    <br/><br/>Codesize:
+    <br/><input class="gsniceinput1" value="<?php echo $codesize; ?>" placeholder="ex: 6" gsname="codesize"/>
     
     
     <br/>
     <br/><div class="shop_button" gstype="submit"> Create lock group</div>
 </div>
+
+<script>
+    $('#nameofgroup').focus();
+</script>

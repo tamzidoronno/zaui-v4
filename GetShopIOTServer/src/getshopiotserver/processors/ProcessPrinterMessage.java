@@ -10,6 +10,7 @@ import com.thundashop.core.gsd.DirectPrintMessage;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshopiotserver.GetShopIOTCommon;
 import getshopiotserver.MessageProcessorInterface;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,10 +39,20 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
     private void printMessage(DirectPrintMessage directPrintMessage) throws IOException {
         logPrint("Printing receipt...");
         
-        Files.write(
-            Paths.get("/dev/usb/lp0"), 
-            Base64.getDecoder().decode(directPrintMessage.content), 
-            StandardOpenOption.APPEND);
+        File dir = new File("/dev/usb");
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+          for (File child : directoryListing) {
+            // Do something with child
+            if (child.getName().contains("lp")) {
+                Files.write(
+                child.toPath(), 
+                Base64.getDecoder().decode(directPrintMessage.content), 
+                StandardOpenOption.APPEND);    
+            }
+          }
+        }
+        
     }
     
 }

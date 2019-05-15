@@ -27,13 +27,14 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
         try {
             if(msg instanceof GdsPaymentAction) {
                 if(getOperator().nets == null) {
-                    logPrint("Initializing message");
+                    logPrint("Initializing payment terminal");
                     getOperator().nets = new GetShopNetsApp(getOperator());
                     getOperator().nets.initialize();
                     while(true) {
                         if(getOperator().nets.isInitialized()) {
                             break;
                         }
+                        logPrint("Waiting for terminal to get ready");
                         Thread.sleep(1000);
                     }
                 }

@@ -1532,7 +1532,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             if(!order.containsRoom(room.pmsBookingRoomId)) {
                 continue;
             }
-            if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+            if(room.bookingItemId != null && !room.bookingItemId.isEmpty() && room.addedToArx) {
                 pmsManager.printCode(lomKioskGsdId, room.pmsBookingRoomId);
             }
         }

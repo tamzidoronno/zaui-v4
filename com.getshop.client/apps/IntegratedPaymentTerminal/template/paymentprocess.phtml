@@ -1,0 +1,16 @@
+<?
+/* @var $this \ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal */
+$app = $this->getApi()->getStoreApplicationPool()->getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
+$order = $this->getCurrentOrder();
+
+$text = isset($paymentFailed) && $paymentFailed ? $this->__f("Retry") : $this->__f("Send to terminal");
+$offset = 0;
+for ($offset=0; $offset<5; $offset++) {
+    $ip = $app->settings->{"token$offset"}->value;
+    if ($ip) {
+        ?>
+        <div class='shop_button' gs_callback='app.IntegratedPaymentTerminal.refresh' gsclick='sendToIntegratedPaymentTerminal' token='<? echo $ip; ?>' orderid='<? echo $order->id; ?>'><? echo $text; ?></div>
+        <?
+    }
+}
+?>

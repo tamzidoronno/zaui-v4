@@ -84,6 +84,9 @@ public interface IOrderManager {
     public void forceSetNewPaymentDate(String orderId, Date date, String password);
     
     @Administrator
+    public String getCurrentPaymentOrderId();
+    
+    @Administrator
     public Boolean isPaymentInProgress();
     
     @Administrator

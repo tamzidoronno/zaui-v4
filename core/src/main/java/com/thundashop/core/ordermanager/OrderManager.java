@@ -218,6 +218,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return order.id;
     }    
     
+    
+    @Override
+    public String getCurrentPaymentOrderId() {
+        if (orderToPay != null) {
+            return orderToPay.id;
+        }
+        
+        return null;
+    }
+    
     @Override
     public Order creditOrder(String orderId) {
         Order credited = createCreatditOrder(orderId, "");
@@ -4031,7 +4041,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         System.out.println("Charging order: " + orderId  + " token: " + tokenId);
         
         Double amount = getTotalForOrderById(orderId);
-        orderToPay = getOrder(orderId);
+        orderToPay = getOrderSecure(orderId);
         tokenInUse = tokenId;
         GdsPaymentAction paymentAction = new GdsPaymentAction();
         paymentAction.amount = (int)(amount * 100);
@@ -4089,6 +4099,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         orderToPay.terminalResponses.put(new Date().getTime(), response);
         saveOrder(orderToPay);
+        orderToPay = null;
     }
 
     @Override

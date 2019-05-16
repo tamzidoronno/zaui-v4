@@ -29,7 +29,26 @@ if (!($closed && !count($cartItemsNormal))) {
 ?>
 
 <div class="orderlinesarea other">
-    <div class='summaryheader'><? echo $this->__f("Orderlines"); ?></div>
+    <div class='summaryheader'><? echo $this->__f("Orderlines"); ?>
+    <?php
+    if(!$closed) {
+        $ecomsettings = new ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings();
+        $currencies = $ecomsettings->getCurrencies();
+        ?>
+        <select class='gsniceselect1 updatecurrencyonorder' style='float:right;'>
+            <?php
+            echo "<option value=''>Default currency</option>";
+            foreach($currencies as $currencyCode => $currencyName) {
+                $selected = $currencyCode == $order->currency ? "SELECTED" : "";
+                echo "<option value='$currencyCode' $selected>$currencyCode : $currencyName</option>";
+            }
+            ?>
+        </select>
+        <?php
+    }
+    ?>
+    
+    </div>
     <?
     $this->includefile('orderlinesother');
     ?>

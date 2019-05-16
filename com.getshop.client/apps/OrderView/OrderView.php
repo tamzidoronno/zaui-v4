@@ -13,6 +13,13 @@ class OrderView extends \MarketingApplication implements \Application {
         
     }
 
+    public function updateCurrencyOnOrder() {
+        $order = $this->getOrder();
+        $order->currency = $_POST['data']['currency'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->rePrintTab('orderlines');
+    }
+    
     public function getName() {
         return "OrderView";
     }
@@ -289,6 +296,7 @@ class OrderView extends \MarketingApplication implements \Application {
         $itemFound->product->price = $_POST['data']['price'];
         $itemFound->product->name = $_POST['data']['productDescription'];
         $itemFound->product->description  = $_POST['data']['productDescription'];
+        $itemFound->product->taxgroup = $_POST['data']['taxGroup'];
         
         $this->getApi()->getOrderManager()->updateCartItemOnOrder($order->id, $itemFound);
         

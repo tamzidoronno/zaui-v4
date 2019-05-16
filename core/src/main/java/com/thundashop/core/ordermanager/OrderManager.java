@@ -3421,6 +3421,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         oldCartItem.getProduct().name = cartItem.getProduct().name;
         oldCartItem.getProduct().description = cartItem.getProduct().description;
         
+        if(oldCartItem.getProduct().taxgroup != cartItem.getProduct().taxgroup) {
+            List<TaxGroup> taxgroups = productManager.getTaxes();
+            for(TaxGroup grp : taxgroups) {
+                if(grp.groupNumber == cartItem.getProduct().taxgroup) {
+                    oldCartItem.getProduct().changeToTaxGroup(grp);
+                }
+            }
+        }
+        
         if (!oldCartItem.isPmsAddons() && !oldCartItem.isPriceMatrixItem()) {
             oldCartItem.setCount(cartItem.getCount());
             oldCartItem.getProduct().price = cartItem.getProduct().price;
@@ -4138,8 +4147,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         for (CartItem item : order.getCartItems()) {
             boolean samePriceInTaxAsOldOrder = oldOrder != null && oldOrder.cart.getCartItem(item.getCartItemId()).getProductPrice() == item.getProductPrice();
+            boolean currencySame = oldOrder != null && order.currency.equals(oldOrder.currency);
+            boolean hasOldOrder = oldOrder != null;
             
-            if (item.getProduct().priceLocalCurrency == null || !samePriceInTaxAsOldOrder) {
+            if (item.getProduct().priceLocalCurrency == null || !samePriceInTaxAsOldOrder || !currencySame || !hasOldOrder) {
                 item.getProduct().priceLocalCurrency = convertCurrency(order, item.getProduct().price);
                 logPrint("Calculating the order prices to: " + item.getProduct().priceLocalCurrency);
             } else {

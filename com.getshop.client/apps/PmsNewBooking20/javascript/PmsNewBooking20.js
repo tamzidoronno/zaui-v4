@@ -60,6 +60,10 @@ app.PmsNewBooking20 = {
     },
     showAddConferencePanel : function() {
         var panel = $(this).closest('.addconferencearea').find('.addguesttoconferencepanel');
+        if(panel.is(':visible')) {
+            panel.hide();
+            return;
+        }
         var event = thundashop.Ajax.createEvent('','loadConferenceEvents',$(this), {
             "guestid" : $(this).closest('.guestinformationrow').attr('guestid')
         });

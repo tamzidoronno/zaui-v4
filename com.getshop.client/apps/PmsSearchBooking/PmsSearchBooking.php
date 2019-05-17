@@ -31,6 +31,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     
     public function toggleQuickAddAddons() {
         $_SESSION['quickaddaddons'] = true;
+        $pmsbookingroomview = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $pmsbookingroomview->printAddAddonsArea();
     }
     
     public function getName() {

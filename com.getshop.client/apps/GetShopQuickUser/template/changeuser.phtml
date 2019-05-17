@@ -31,7 +31,7 @@ foreach ($extraArgs as $key => $value) {
             
             echo $this->__f("Name").":"
             ?>
-            <input gsname="name" class="gsniceinput1">
+            <input gsname="name" class="gsniceinput1" gstype="submitenter" gs_callback="app.GetShopQuickUser.userCreated">
             <input type="hidden" gsname="gs_extras" value="<? echo $extra; ?>"/>
             <br/>
             <br/>

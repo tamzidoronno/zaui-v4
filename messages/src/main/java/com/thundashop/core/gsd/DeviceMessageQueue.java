@@ -6,8 +6,9 @@
 package com.thundashop.core.gsd;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 
 /**
  *
@@ -16,17 +17,25 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class DeviceMessageQueue extends DataCommon {
     public Date lastPulled;
     public String deviceId = "";
-    public ConcurrentLinkedQueue<GetShopDeviceMessage> messages = new ConcurrentLinkedQueue();
+    private List<GetShopDeviceMessage> messages = new ArrayList();
 
-    void clear() {
+    synchronized void clear() {
         messages.clear();
     }
 
-    boolean isEmpty() {
+    synchronized boolean isEmpty() {
         return messages.isEmpty();
     }
 
-    void markMessagesPulled() {
+    synchronized void markMessagesPulled() {
         lastPulled = new Date();
+    }
+
+    synchronized void addMessage(GetShopDeviceMessage messageToUse) {
+        messages.add(messageToUse);
+    }
+
+    synchronized List<GetShopDeviceMessage> getMessages() {
+        return new ArrayList(messages);
     }
 }

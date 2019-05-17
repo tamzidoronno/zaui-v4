@@ -181,4 +181,8 @@ function __autoload($class_name) {
     
 }
 
+// TODO - Find a way to set this to a release version.
+function calculateCacheName() {
+    return time();
+}
 ?>

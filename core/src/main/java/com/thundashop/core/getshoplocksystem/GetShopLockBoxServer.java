@@ -184,4 +184,26 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
     public Date getLastPing() {
         return lastPing;
     }
+
+    boolean loaded() {
+        boolean foundAny = false;
+        int i = 1;
+        
+        for (Lock o : locks.values()) {
+            if (o.lockIncrementalId == null) {
+                if (o.name.equals("Lock 1")) {
+                    o.lockIncrementalId = 1;
+                } else if (o.name.equals("Lock 2")) {
+                    o.lockIncrementalId = 2;
+                } else {
+                    o.lockIncrementalId = i;
+                }
+                
+                i++;
+                foundAny = true;
+            }
+        }
+        
+        return foundAny;
+    }
 }

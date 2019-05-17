@@ -164,7 +164,7 @@ class StyleSheet {
                         }
                     }
                     
-                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="'."cssfolder/$appId/$file".'">' . "\n";
+                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="'."cssfolder/$appId/$file".'?'.calculateCacheName().'">' . "\n";
                 }
             }
         }

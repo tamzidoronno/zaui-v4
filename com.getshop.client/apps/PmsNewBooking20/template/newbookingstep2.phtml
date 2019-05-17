@@ -49,7 +49,6 @@ $channelNames = $formater->getChannels();
                 </select>
                 <select class='gsniceselect1 addsource' style='width:240px;margin-left: 20px;'>
                     <?php
-                    echo "<option value=''>Choose a source</option>";
                     foreach($channelList as $idx => $channel) {
                         $name = $channelNames[$idx] ? $channelNames[$idx] : $channel;
                         $selected = $idx == "web" ? "SELECTED" : "";

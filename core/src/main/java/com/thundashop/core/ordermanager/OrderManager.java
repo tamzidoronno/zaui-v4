@@ -4047,11 +4047,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void chargeOrder(String orderId, String tokenId) {
-        System.out.println("Charging order: " + orderId  + " token: " + tokenId);
-        
         Double amount = getTotalForOrderById(orderId);
         orderToPay = getOrderSecure(orderId);
         tokenInUse = tokenId;
+        
+        orderToPay.payment.paymentType = "ns_8edb700e_b486_47ac_a05f_c61967a734b1\\IntegratedPaymentTerminal";
+        saveOrder(orderToPay);
+        
         GdsPaymentAction paymentAction = new GdsPaymentAction();
         paymentAction.amount = (int)(amount * 100);
         paymentAction.action = GdsPaymentAction.Actions.STARTPAYMENT;

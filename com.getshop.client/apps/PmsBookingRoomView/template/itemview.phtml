@@ -96,7 +96,7 @@ if(stristr($booking->channel, "wubook_")) {
             echo $this->__f("Floating");
         }
         echo "</div>";
-        $isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $selectedItem->id);
+        $isClean = $selectedItem && $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $selectedItem->id);
         if($isClean) {
             echo "<div style='color:green'><i class='fa fa-check'></i> Room is clean</div>";
         } else {

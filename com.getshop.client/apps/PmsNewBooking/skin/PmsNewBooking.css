@@ -69,7 +69,6 @@
 .PmsNewBooking .guestrowhint .guestrowhintentry:hover { background-color:#fff; cursor:pointer; }
 .PmsNewBooking .selectedbutton { background-color:green; }
 .PmsNewBooking .searchbrregbutton { color: blue; cursor:pointer; }
-.PmsNewBooking .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}
 .PmsNewBooking .searchbrregarea {
     position: absolute;
     z-index: 1;

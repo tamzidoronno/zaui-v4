@@ -16,6 +16,15 @@ if(isset($_SESSION['quickaddaddons'])) {
     foreach($types as $type) {
         $productsToExclude[] = $type->productId;
     }
+    
+    $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+    $addonsConfigList = array();
+    foreach($config->addonConfiguration as $id => $item) {
+        $addonsConfigList[$item->productId] = "";
+    }
+    $addonsConfigList = array_keys($addonsConfigList);
+    
+    
     $found = false;
     $products = $this->getApi()->getProductManager()->getAllProducts();
     $newproducts = array();
@@ -26,6 +35,9 @@ if(isset($_SESSION['quickaddaddons'])) {
     
     foreach($newproducts as $product) {
         if(in_array($product->id, $productsToExclude)) {
+            continue;
+        }
+        if(!in_array($product->id, $addonsConfigList)) {
             continue;
         }
         $found = true;

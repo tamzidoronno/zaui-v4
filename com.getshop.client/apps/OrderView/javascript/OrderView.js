@@ -5,6 +5,7 @@ app.OrderView = {
         $(document).on('click', '.OrderView .removecartitemtfromorder', app.OrderView.removeCartItemLine);
         $(document).on('click', '.OrderView .gsniceinput1.product', app.OrderView.showSearchProduct);
         $(document).on('change', '.OrderView .gsniceinput1.searchword', app.OrderView.searchForProduct);
+        $(document).on('change', '.OrderView .updatecurrencyonorder', app.OrderView.updateCurrency);
         $(document).on('click', '.OrderView .searchForProductBox .searchForProductBoxInner .closebutton', app.OrderView.closeSearchBox);
         $(document).on('click', '.OrderView .searchForProductBox .selectproductid', app.OrderView.selectProduct);
         $(document).on('click', '.OrderView .changeoverridedatebox .shop_button', app.OrderView.submitNewOverrideDate);
@@ -17,6 +18,7 @@ app.OrderView = {
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
+        $(document).on('change', '.OrderView .changeTaxGroupObject', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.count', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.price', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .localcurrencyvalue', app.OrderView.localCurrencyValueChanged);
@@ -174,6 +176,7 @@ app.OrderView = {
         data.count = cartItemDivRow.find('input.count').val();
         data.price = cartItemDivRow.find('input.price').val();
         data.name = cartItemDivRow.find('input.product').val();
+        data.taxGroup = cartItemDivRow.find('select.changeTaxGroupObject').val();
         
         var event = thundashop.Ajax.createEvent(null, "updateCartItem", $(this), data);
         event['synchron'] = true;
@@ -234,6 +237,16 @@ app.OrderView = {
         });
     },
     
+    updateCurrency : function() {
+        var data = app.OrderView.getData(this);
+        data.currency = $(this).val();
+        
+        var event = thundashop.Ajax.createEvent(null, "updateCurrencyOnOrder", $(this), data);
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'orderlines', data);
+        });
+    },
     getData: function(innerFormElement) {
         var data = {
             orderid : $(innerFormElement).closest('.orderview').attr('orderid')

@@ -11,7 +11,10 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        echo "<div>";
+        echo "<i class='fa fa-close hideaddaddonsarea' style='position:absolute; right: 10px; top: 10px; cursor:pointer;'></i>";
         $this->includefile("addaddonslist");
+        echo "</div>";
     }
     
     public function loadAddonsToBeAddedPreview() {
@@ -52,7 +55,6 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
                 $newAddons[] = $addon;
             }
         }
-
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $selectedRoom->pmsBookingRoomId) {
                 foreach($newAddons as $tmp) {

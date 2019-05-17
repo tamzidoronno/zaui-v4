@@ -10,9 +10,6 @@
             $addonItem = $item;
         }
     }
-//    echo "<pre>";
-//    print_r($addonItem);
-//    echo "</pre>";
     
     $addonProduct = $this->getApi()->getProductManager()->getProduct($addonItem->productId);
     $perGuest = "";

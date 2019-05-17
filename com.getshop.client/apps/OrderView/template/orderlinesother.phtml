@@ -3,6 +3,7 @@
 $order = $this->getOrder();
 $cartItems = $this->getNormalCartItems();
 
+$taxgroups = $this->getApi()->getProductManager()->getTaxes();
 $closed = $order->closed;
 $disabled = "";
 if ($closed) {
@@ -19,6 +20,7 @@ if (count($cartItems)) {
     <div class="cartitem header <? echo $foreignCurrency; ?>">
         <div class="col product"><? echo $this->__f("Product"); ?></div>
         <div class="col product_desc"><? echo $this->__f("Receipt/Invoice Description"); ?></div>
+        <div class="col tax" style='text-align: center; padding-left: 0px;'><? echo $this->__f("Tax"); ?></div>
         <div class="col count" style='text-align: center; padding-left: 0px;'><? echo $this->__f("Count"); ?></div>
         <div class="col price"><? echo $this->__f("Price"); ?></div>
         <?
@@ -34,6 +36,7 @@ if (count($cartItems)) {
 
 foreach ($cartItems as $item) {
     $originalProduct = $this->getApi()->getProductManager()->getProduct($item->product->id);
+    /* @var $product core_productmanager_data_Product */
     $product = $item->product;
     $start = "";
     $end = "";
@@ -65,6 +68,17 @@ foreach ($cartItems as $item) {
     
         <div class="col product"><input readonly class="gsniceinput1 product" value="<? echo $originalProduct->name; ?>" <?php echo $disabled; ?>/></div>
         <div class="col product_desc"><input class="gsniceinput1 product_desc" value="<? echo $product->name; ?>" <?php echo $disabled; ?>/></div>
+        <div class="col tax">
+            <select class='tax gsniceselect1 changeTaxGroupObject' <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>>
+                <?php
+                foreach($taxgroups as $grp) {
+                    echo $product->taxes;
+                    $selected = $product->taxgroup == ($grp->groupNumber) ? "SELECTED" : "";
+                    echo "<option value='".$grp->groupNumber."' $selected>" . $grp->taxRate . "%</option>";
+                }
+                ?>
+            </select>
+        </div>
         <div class="col count"><input class="gsniceinput1 count" value="<? echo $item->count; ?>" <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>/></div>
         x <div class="col price"><input class="gsniceinput1 price" value="<? echo $product->price; ?>" <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>/></div>
  

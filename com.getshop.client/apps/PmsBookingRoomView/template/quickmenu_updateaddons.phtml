@@ -27,9 +27,8 @@ if(sizeof($products) > 0) {
 <script>
 $('.doquickaddaddons').on('click',  function() {
     var event = thundashop.Ajax.createEvent('','toggleQuickAddAddons',$(this), {});
-    thundashop.Ajax.postWithCallBack(event, function() {
-        thundashop.framework.toggleRightWidgetPanel('addaddons');
-        $('.quickmenuoption').hide();
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.quickmenuoption').html(res);
     });
 });
 </script>

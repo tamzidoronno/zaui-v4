@@ -2,7 +2,7 @@
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $this->setData();
 $addons = $this->getSelectedRoom()->addons;
-
+unset($_SESSION['quickaddaddons']);
 $pickerOpen = false;
 if(isset($_SESSION['gs_currently_showing_rightWidget'])) { 
     $pickerOpen = true;             

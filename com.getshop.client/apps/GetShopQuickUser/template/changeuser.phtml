@@ -31,7 +31,7 @@ foreach ($extraArgs as $key => $value) {
             
             echo $this->__f("Name").":"
             ?>
-            <input gsname="name" class="gsniceinput1">
+            <input gsname="name" class="gsniceinput1 newuserinputfield" gstype="submitenter" gs_callback="app.GetShopQuickUser.userCreated">
             <input type="hidden" gsname="gs_extras" value="<? echo $extra; ?>"/>
             <br/>
             <br/>
@@ -54,7 +54,7 @@ foreach ($extraArgs as $key => $value) {
                 }
                 ?>
                 <input type="hidden" gsname="gs_extras" value="<? echo $extra; ?>"/>
-                <input gs_callback="app.GetShopQuickUser.userSearchResult" gsname='searchvalue' gstype="submitenter" class="gsniceinput1" value="" placeholder="<? echo $this->__f("Name / Phone / Email / etc"); ?>"/> 
+                <input gs_callback="app.GetShopQuickUser.userSearchResult" gsname='searchvalue' gstype="submitenter" class="gsniceinput1 searchguestsfield" value="" placeholder="<? echo $this->__f("Name / Phone / Email / etc"); ?>"/> 
                 <div gs_callback="app.GetShopQuickUser.userSearchResult" gstype="submit" class="shop_button"><i class="fa fa-search"></i> <? echo $this->__f("Search"); ?></div>
             </div>
             
@@ -77,7 +77,7 @@ foreach ($extraArgs as $key => $value) {
                     <span class='searchbrregbutton'>(search brreg)</span>
                 </div>
                 <span class='searchbrregarea' gstype='form' method='searchbrreg'>
-                    <input type='text' class='gsniceinput1' gsname='name'>
+                    <input type='text' class='gsniceinput1 searchcompanyfield' gsname='name' gstype='submitenter' gs_callback='app.GetShopQuickUser.searchResult'>
                     <span class='shop_button' gstype='submit' gs_callback='app.GetShopQuickUser.searchResult'>Search</span>
                     <div class='brregsearchresult' style='max-height: 100px; overflow-y: auto;'></div>
                 </span>

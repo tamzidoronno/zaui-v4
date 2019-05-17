@@ -1,6 +1,7 @@
 app.PmsAddAddonsList = {
     init : function() {
         $(document).on('click', '.PmsAddAddonsList .addAddonsToRoom', app.PmsAddAddonsList.addAddonsToRoom);
+        $(document).on('click', '.PmsAddAddonsList .hideaddaddonsarea', app.PmsAddAddonsList.hideAddAddonsArea);
         $(document).on('click', '.PmsAddAddonsList .goBackToStart', app.PmsAddAddonsList.showFirstStep);
         $(document).on('click', '.PmsAddAddonsList .completeAddAddon', app.PmsAddAddonsList.completeAddAddon);
         $(document).on('keyup', '.PmsAddAddonsList .searchaddaddonslist', app.PmsAddAddonsList.searchAddAddonsList);
@@ -15,14 +16,19 @@ app.PmsAddAddonsList = {
             }
         });
     },
+    hideAddAddonsArea : function() {
+        $('.addAddonsArea').hide();
+        $('.quickmenuoption').hide();
+    },
+    
     completeAddAddon : function() {
-        var panel = $(this).closest('[gstype="form"]');
+        var panel = $(this).closest('.addaddonrows');
         var args = thundashop.framework.createGsArgs(panel);
         
         var event = thundashop.Ajax.createEvent('','addAdvancedAddons', $(this), args);
         if(args.quickadd === "true") {
             thundashop.Ajax.postWithCallBack(event, function() {
-                thundashop.framework.reprintPage();
+                thundashop.Ajax.reloadApp('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');
             });
         } else {
             thundashop.Ajax.postWithCallBack(event, function(res){

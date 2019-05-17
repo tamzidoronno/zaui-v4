@@ -1,6 +1,11 @@
 html {
     border: 20px;
 }
+
+.GetShopQuickUser .brregsearchresultrow { padding: 3px; }
+
+.GetShopQuickUser .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}
+
 .GetShopQuickUser .change_user_form, 
 .GetShopQuickUser .edit_details_of_user {
     position: absolute;

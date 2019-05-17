@@ -47,6 +47,12 @@ public class Lock {
     public int maxnumberOfCodes = 20;
     public String name;
     
+    /**
+     * Used to identify what lock should be used for 
+     * each store.
+     */
+    public Integer lockIncrementalId;
+    
     public List<UserSlot> getUserSlots() {
         finalize();
         return new ArrayList(userSlots.values());

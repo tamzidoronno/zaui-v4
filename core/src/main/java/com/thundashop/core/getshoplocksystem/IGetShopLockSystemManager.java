@@ -152,12 +152,17 @@ public interface IGetShopLockSystemManager {
     
     public void addTransactionEntranceDoor(String serverId, String lockId, int code);
     
+    public void addTransactionEntranceDoorByToken(String tokenId, int lockIncrementalId, int code);
+    
     @Administrator
     public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId);
     
     @Administrator
     @ForceAsync
     public List<UserSlot> getCodesInUse(String serverId, String lockId);
+    
+    @ForceAsync
+    public Map<Integer, List<UserSlot>> getCodesByToken(String tokenId);
     
     @Administrator
     public void setCodeSize(int codeSize);

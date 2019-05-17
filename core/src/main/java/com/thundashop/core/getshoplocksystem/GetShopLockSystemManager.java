@@ -43,11 +43,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     private HashMap<String, AccessGroupUserAccess> users = new HashMap();
     private HashMap<String, SmsMessage> smsMessage = new HashMap();
     private HashMap<String, MailMessage> mailMessage = new HashMap();
+    private HashMap<String, List<UserSlot>> cacheSlotsInUse = new HashMap();
     private GetShopLockSystemSettings settings = new GetShopLockSystemSettings();
     
     @Autowired
     private MessageManager messageManager;
-    
+     
     @Autowired
     private WebManager webManager;
     private int lastsavedcounter = 0;
@@ -65,6 +66,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 GetShopLockBoxServer server = (GetShopLockBoxServer)iData;                
                 server.setManger(this);
                 lockServers.put(iData.id, server);
+                if (server.loaded()) {
+                    saveObject(server);
+                }
             }
             if (iData instanceof ZwaveLockServer) {
                 ZwaveLockServer server = (ZwaveLockServer)iData;                
@@ -721,6 +725,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public List<UserSlot> getCodesInUse(String serverId, String lockId) {
+        if (cacheSlotsInUse.get(serverId+"_"+lockId) != null) {
+            return cacheSlotsInUse.get(serverId+"_"+lockId);
+        }
+        
         List<UserSlot> slotsToReturn = new ArrayList();
         
         for (LockGroup group : groups.values()) {
@@ -737,6 +745,8 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             
             slotsToReturn.addAll(add);
         };
+        
+        cacheSlotsInUse.put(serverId+"_"+lockId, slotsToReturn);
         
         return slotsToReturn;
     }
@@ -894,6 +904,54 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         });
         
         return accessUsers.get(0).fullName;
+    }
+
+    @Override
+    public Map<Integer, List<UserSlot>> getCodesByToken(String tokenId) {
+        if (tokenId == null || tokenId.isEmpty())
+            return new HashMap();
+        
+        LockServer server = getServerByToken(tokenId);
+        
+        if (server == null) {
+            return new HashMap();
+        }
+        
+        
+        HashMap<Integer, List<UserSlot>> retMap = new HashMap();
+        
+        for (Lock lock : server.getLocks()) {
+            retMap.put(lock.lockIncrementalId, getCodesInUse(server.getId(), lock.id));
+        }
+        
+        return retMap;
+    }
+
+    private LockServer getServerByToken(String tokenId) {
+        LockServer server = lockServers.values().stream()
+                .filter(o -> o.getAccessToken() != null && o.getAccessToken().equals(tokenId))
+                .findFirst()
+                .orElse(null);
+        return server;
+    }
+
+    void clearCache(LockServerBase server) {
+        cacheSlotsInUse.clear();
+    }
+
+    @Override
+    public void addTransactionEntranceDoorByToken(String tokenId, int lockIncrementalId, int code) {
+        LockServer server = getServerByToken(tokenId);
+        if (server != null) {
+            Lock lock = server.getLocks().stream()
+                    .filter(o -> o.lockIncrementalId != null && o.lockIncrementalId.equals(lockIncrementalId))
+                    .findFirst()
+                    .orElse(null);
+            
+            if (lock != null) {
+                addTransactionEntranceDoor(server.getId(), lock.id, code);
+            }
+        }
     }
 
     

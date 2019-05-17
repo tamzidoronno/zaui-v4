@@ -162,6 +162,7 @@ public abstract class LockServerBase extends DataCommon {
         }
         
         startUpdatingOfLocks();
+        getShopLockSystemManager.clearCache(this);
     }
     
     public void setDetails(String hostname, String userName, String password, String givenName, String token) {
@@ -329,5 +330,9 @@ public abstract class LockServerBase extends DataCommon {
 
     public Date getLastPing() {
         return lastPing;
+    }
+    
+    public String getAccessToken() {
+        return token;
     }
 }

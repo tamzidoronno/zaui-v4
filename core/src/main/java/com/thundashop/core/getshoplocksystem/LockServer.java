@@ -69,5 +69,7 @@ public interface LockServer {
 
     public String getGivenName();
     
+    public String getAccessToken();
+    
     public boolean hasAccessLogFeature();
 }

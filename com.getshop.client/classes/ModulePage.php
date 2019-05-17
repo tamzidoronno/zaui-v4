@@ -175,7 +175,7 @@ class ModulePage {
                     $cssFile = str_replace("{IMAGEFOLDER}", "/showApplicationImages.php?appNamespace=" . urlencode($appId) . "&image=skin/images/", $cssFile);
                     file_put_contents("cssfolder/$appId/$file", $cssFile);
 
-                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="' . "cssfolder/$appId/$file" . '">' . "\n";
+                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="' . "cssfolder/$appId/$file?". calculateCacheName() . '">' . "\n";
                 }
             }
         }
@@ -227,7 +227,7 @@ class ModulePage {
                         $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
                         $fileName = "javascripts/" . $namespace . "_" . $startupCount . "_" . $entry;
                         @file_put_contents($fileName, $filecontent);
-                        echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
+                        echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '?'. calculateCacheName().'"></script>';
                         echo "<script>";
                         echo 'if (typeof(getshop) === "undefined") { getshop = {}; }';
                         echo 'if (typeof(getshop.gs_loaded_javascripts) === "undefined") { getshop.gs_loaded_javascripts = []; }';

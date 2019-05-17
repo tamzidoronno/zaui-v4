@@ -11,7 +11,6 @@ $pageFactory->addExtraApplicationsNoneInstance('486009b1-3748-4ab6-aa1b-95a4d5e2
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 $printPageMenuInModulesMenu=true;
-$versionnumber = "1.0";
 
 $factory = IocContainer::getFactorySingelton();
 if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
@@ -31,23 +30,23 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule("salespoint")) {
 <html pageid="<? echo $page->getId(); ?>" module="salespoint">
     <head>
         <title><? echo $page->getTitle(); ?></title>
-        <link rel="stylesheet" href="/icomoon/style.css?version=<? echo $versionnumber; ?>">
-        <link rel="stylesheet" href="/skin/default/getshop.css?version=<? echo $versionnumber; ?>">
-        <link rel="stylesheet" href="/skin/default/getshopmodules.css?version=<? echo $versionnumber; ?>">
-        <link rel="stylesheet" href="/skin/default/pos.css?version=1.0">
-        <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/icomoon/style.css?<? echo calculateCacheName(); ?>">
+        <link rel="stylesheet" href="/skin/default/getshop.css?<? echo calculateCacheName(); ?>">
+        <link rel="stylesheet" href="/skin/default/getshopmodules.css?<? echo calculateCacheName(); ?>">
+        <link rel="stylesheet" href="/skin/default/pos.css?<? echo calculateCacheName(); ?>">
+        <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css?<? echo calculateCacheName(); ?>">
 
-        <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">
+        <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css?<? echo calculateCacheName(); ?>">
         
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         
         <? $page->loadAppsCss(); ?>
-        <script type="text/javascript" src="js/jquery-1.9.0.js"></script>
-        <script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>
-        <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
-        <script type="text/javascript" src="js/moments.js"></script>
-        <script type="text/javascript" src="js/getshop/getshop.js?version=<? echo $versionnumber; ?>"></script>
-        <script src="js/ckeditor/ckeditor.js"></script>
+        <script type="text/javascript" src="js/jquery-1.9.0.js?<? echo calculateCacheName(); ?>""></script>
+        <script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js?<? echo calculateCacheName(); ?>""></script>
+        <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js?<? echo calculateCacheName(); ?>""></script>
+        <script type="text/javascript" src="js/moments.js?<? echo calculateCacheName(); ?>""></script>
+        <script type="text/javascript" src="js/getshop/getshop.js?<? echo $versionnumber; ?>"></script>
+        <script src="js/ckeditor/ckeditor.js?<? echo calculateCacheName(); ?>""></script>
         <? $page->loadAppsJavascripts(); ?>
         
         <meta name="apple-mobile-web-app-capable" content="yes">

@@ -73,7 +73,7 @@ foreach ($apps as $app) {
                     $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
                     $fileName = "javascripts/" . $namespace . "_" .$startupCount ."_" . $entry;
                     @file_put_contents($fileName, $filecontent);
-                    echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
+                    echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '?'.calculateCacheName(). '"></script>';
                     echo "<script>";
                         echo 'if (typeof(getshop) === "undefined") { getshop = {}; }';
                         echo 'if (typeof(getshop.gs_loaded_javascripts) === "undefined") { getshop.gs_loaded_javascripts = []; }';
@@ -89,7 +89,7 @@ if ($allInOne) {
     $fileName = "javascripts/".$factory->getStore()->id."_get_shop_all_$startupCount.js";
     $fileContentAllInOne = $factory->minify($fileContentAllInOne);
     file_put_contents($fileName, $fileContentAllInOne);
-    echo '<script '. $factory->includeSeo() .' type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
+    echo '<script '. $factory->includeSeo() .' type="text/javascript" class="javascript_app_file" src="' . $fileName .'?' . calculateCacheName(). '"></script>';
 }
 ?>
  

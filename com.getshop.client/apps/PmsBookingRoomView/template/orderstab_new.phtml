@@ -71,12 +71,18 @@ $totalForRoom = round($totalForRoom, 2);
     <? 
     echo "<div style='color: #8ac136; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
     
-    if ($needToCreateOrdersFor) {
+    if ($needToCreateOrdersFor && !$room->createOrdersOnZReport) {
         echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("You need to create a payment of total")." ".$needToCreateOrdersFor."</div>";
     }
     
-    if ($orders && $unpaidOrders) {
+    if ($orders && $unpaidOrders && !$room->createOrdersOnZReport) {
         echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("Note, you have unpaid orders... Please make sure that all orders are paid.")."</div>";
+    }
+    
+    if ($room->createOrdersOnZReport) {
+        echo "<div style='border: solid 1px red; padding: 20px; color: red; margin-top: 20px;'>";
+            echo "<i class='fa fa-warning'></i> ".$this->__f("This room has not yet been paid as pay after stay has been activated, deactivate it to finalize the payments.");
+        echo "</div>";
     }
     ?>
 </div>
@@ -84,7 +90,10 @@ $totalForRoom = round($totalForRoom, 2);
 <br/>
 <br/>
 <div>
-    <div class='insideheader'><? echo $this->__f("Payments"); ?></div>
+    <div class='insideheader'>
+        <? echo $this->__f("Payments"); ?>
+        <div class="gs_shop_small_icon" style='font-size: 13px;' gsclick="toggleCreditHistory"><? echo $this->__f("Toggle credit history"); ?></div>
+    </div>
     
    <?
    if (!count($orders)) {
@@ -112,7 +121,18 @@ $totalForRoom = round($totalForRoom, 2);
                     <div class="col col_productname"> <? echo $this->getPaymentType($order); ?></div>
                     <div class="col col_value"> <? echo $totalForOrder; ?></div>
                     <div class="col col_value odd"> <? echo $paymentDate; ?></div>
-                    <div class="col col_orderid odd"> <? echo $order->incrementOrderId; ?> </div>
+                    <div class="col col_orderid odd"> 
+                        <? 
+                        if ($order->closed) {
+                            ?>
+                            <i class='fa fa-lock'></i>
+                            <?
+                        }
+                        echo $order->incrementOrderId; 
+                        
+                        ?> 
+                    
+                    </div>
                     <div class="col col_action">
                         <div class="fa fa-gear toggle_action_menu bookinghighlightcolor" style="cursor:pointer;margin-right: 5px;"></div>
                         <div class="fa fa-search-plus showOrderSummary bookinghighlightcolor" style='cursor:pointer;' orderid="<? echo $order->id; ?>" title='<? echo $this->__f("Show order"); ?>'></div>
@@ -200,7 +220,7 @@ $totalForRoom = round($totalForRoom, 2);
         <div class="col col_productname longwidth"></div>
         <div class="col col_value"><? echo $this->__f("Price"); ?></div>
         <div class="col col_value odd"><? echo $this->__f("Orders"); ?></div>
-        <div class="col col_balance large"><? echo $this->__f("Balance"); ?></div>
+        <div class="col col_balance large"><? echo $this->__f("Diff"); ?></div>
     </div>
 
     <?

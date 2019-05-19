@@ -36,12 +36,33 @@ thundashop.Namespace.Register('thundashop.common');
 thundashop.common = {
     
     init: function() {
-        $(document).on('click', '#messagebox .okbutton', thundashop.common.closeAlert)
+        $(document).on('click', '#messagebox .okbutton', thundashop.common.closeAlert);
+        $(document).on('click', '.gsoverlayinner .closemodal', thundashop.common.closeOverLaysMouse);
+        $(document).on('keydown', thundashop.common.closeOverLays);
     },
     
     closeModal: function() {
 //        getshop.hideOverlay();
     },
+    
+    closeOverLaysMouse : function(e) {
+        if($('.gsoverlay1').is(":visible")) {
+            $('.gsoverlay1').click();
+        }
+        if($('.gsoverlay2').is(":visible")) {
+            $('.gsoverlay2').click();
+        }
+   },
+   closeOverLays : function(e) {
+       if(e.keyCode === 27) {
+           if($('.gsoverlay1').is(":visible")) {
+               $('.gsoverlay1').click();
+           }
+           if($('.gsoverlay2').is(":visible")) {
+               $('.gsoverlay2').click();
+           }
+       }
+   },
     
     Alert: function(title, message, error, autoHide) {
         $("#messagebox").find('.title').html(title);

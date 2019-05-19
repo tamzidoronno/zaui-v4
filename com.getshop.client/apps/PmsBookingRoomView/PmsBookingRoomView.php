@@ -333,11 +333,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function shouldUseNewPaymentWindow() {
-        return isset($_SESSION['use_new_payment_view']);
+        if ($this->getFactory()->getStore()->id == "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+            return !isset($_SESSION['use_new_payment_view']) || $_SESSION['use_new_payment_view'];
+        }
+        
+        return isset($_SESSION['use_new_payment_view']) && $_SESSION['use_new_payment_view'];
     }
 
     public function switchToOldVersion() {
-        unset($_SESSION['use_new_payment_view']);
+        $_SESSION['use_new_payment_view'] = false;
     }
     public function loadChangesPanel() {
         $this->includefile("differenceinroom");

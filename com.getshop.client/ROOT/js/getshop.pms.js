@@ -14,8 +14,6 @@ getshop.pms = {
         $(document).on('click', '[gs_model].gss_onoff', getshop.pms.toggleOnOff);
         $(document).on('click', '[gss_method="saveSettings"]', getshop.pms.saveSettings);
         $(document).on('click', '[gss_method="submitToInfoBox"]', getshop.pms.postToInformationBox);
-        $(document).on('click', '.gsoverlayinner .closemodal', getshop.pms.closeOverLaysMouse);
-        $(document).on('keydown', getshop.pms.closeOverLays);
    },
    hideInformationBox : function() {
        $('.gsoverlay1').removeClass('active');
@@ -43,24 +41,7 @@ getshop.pms = {
         var title = $('#informationboxtitle').text();
         getshop.pms.showInformationBox(event, title, true);
     },
-   closeOverLaysMouse : function(e) {
-        if($('.gsoverlay1').is(":visible")) {
-            $('.gsoverlay1').click();
-        }
-        if($('.gsoverlay2').is(":visible")) {
-            $('.gsoverlay2').click();
-        }
-   },
-   closeOverLays : function(e) {
-       if(e.keyCode === 27) {
-           if($('.gsoverlay1').is(":visible")) {
-               $('.gsoverlay1').click();
-           }
-           if($('.gsoverlay2').is(":visible")) {
-               $('.gsoverlay2').click();
-           }
-       }
-   },
+   
    showInformationBox : function(event, title) {
        getshop.showOverlay("1");
        $('.gsoverlay1 .gsoverlayinner').html("");

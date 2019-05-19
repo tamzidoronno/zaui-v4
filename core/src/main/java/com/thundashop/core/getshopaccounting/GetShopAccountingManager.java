@@ -337,6 +337,9 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
     
     @Override
     public void transferAllDaysThatCanBeTransferred() {
+        if(!isCurrentSelectedSupportingDirectTransfer()) {
+            return;
+        }
         Calendar time = Calendar.getInstance();
         time.add(Calendar.DAY_OF_YEAR, -30);
         Date start = time.getTime();

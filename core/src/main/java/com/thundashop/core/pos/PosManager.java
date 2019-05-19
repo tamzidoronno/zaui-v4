@@ -18,6 +18,7 @@ import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshopaccounting.DayIncome;
+import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
 import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.KitchenPrintMessage;
@@ -93,6 +94,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     
     @Autowired
     private PaymentManager paymentManager;
+    
+    @Autowired
+    private GetShopAccountingManager getShopAccountingManager;
     
     /**
      * Never access this variable directly! Always 
@@ -369,6 +373,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport && isMasterCashPoint(cashPointId)) {
             closeFinancialPeriode();
         }
+        getShopAccountingManager.transferAllDaysThatCanBeTransferred();
     }
     
     /**

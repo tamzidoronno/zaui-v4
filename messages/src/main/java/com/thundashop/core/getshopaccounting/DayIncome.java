@@ -56,4 +56,8 @@ public class DayIncome {
                 .filter(o -> !o.isTaxTransaction)
                 .collect(Collectors.groupingBy(DayEntry::getAccountingNumber));
     }
+
+    public boolean transferredToAccounting() {
+        return accountingTransfer.size() > 0;
+    }
 }

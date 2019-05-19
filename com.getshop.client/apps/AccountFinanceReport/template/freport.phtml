@@ -121,7 +121,11 @@ echo "</script>";
         <div gstype='submit' class='shop_button showresultbutton'><? echo $this->__f("Show"); ?></div>
         <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
         
+        <?php if($isSuportingDirectTransfer) { ?>
+            <div class="shop_button transferalldays showresultbutton"> <? echo $this->__f("Transfer all days not transferred yet"); ?></div>
+            <div class="transferring">Tranferring data.<br><br>Please be patient<br><br>This might take some time depending on how may days that needs transferring.<br><br><i class='fa fa-spin fa-spinner'></i></div>
         <?
+        }
         $closeClass = $monthHasPassed ? 'closeperiode' : 'deactivated';
         if (!$isLocked) {
             if (!$autoCloseActivated) {

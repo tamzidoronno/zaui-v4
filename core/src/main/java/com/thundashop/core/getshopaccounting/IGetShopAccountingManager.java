@@ -29,6 +29,9 @@ public interface IGetShopAccountingManager {
     public SavedOrderFile getOrderFile(String fileId);
     
     @Administrator
+    public void transferAllDaysThatCanBeTransferred();
+    
+    @Administrator
     public Date getPreviouseEndDate();
     
     @Administrator

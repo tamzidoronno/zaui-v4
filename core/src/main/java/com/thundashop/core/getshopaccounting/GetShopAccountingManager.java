@@ -13,6 +13,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -333,6 +334,25 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         orderManager.markAsTransferredToAccount(incomes);
     }
 
+    
+    @Override
+    public void transferAllDaysThatCanBeTransferred() {
+        Calendar time = Calendar.getInstance();
+        time.add(Calendar.DAY_OF_YEAR, -30);
+        Date start = time.getTime();
+        Date end = new Date();
+        List<DayIncome> dayincomes = orderManager.getDayIncomes(start, end);
+        List<DayIncome> incomes = new ArrayList();
+        for(DayIncome income : dayincomes) {
+            if(!income.isFinal) { continue; }
+            if(income.transferredToAccounting()) { continue; }
+            incomes.add(income);
+        }
+        getActivatedAccountingSystemOther().transfer(incomes);
+        orderManager.markAsTransferredToAccount(incomes);
+    }
+    
+    
     @Override
     public List<String> getTransferData(Date start, Date end, String doublePostingFileId) {
         List<DayIncome> incomes = orderManager.getDayIncomes(start, end);

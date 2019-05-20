@@ -116,6 +116,11 @@ foreach ($resData->datas as $order) {
                 $amount = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
                 $totalOrderAmount += $amount;
                 echo round($amount, 2);
+                if ($order->currency) {
+                    echo " <span style='color: red; font-weight: bold;'>(".$order->currency.") </span><br/>";
+                    echo round($this->getApi()->getOrderManager()->getTotalForOrderInLocalCurrencyById($order->id),2);
+                    echo " ".\ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
+                }
                 ?>
             </div>
             <div class="col totalpaid">

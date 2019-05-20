@@ -83,6 +83,18 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("roomsaddedarea");
     }
     
+    public function setCouponCode() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking->couponCode = $_POST['data']['code'];
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
+    }
+    
+    public function setSource() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking->channel = $_POST['data']['source'];
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
+    }
+    
     public function selectbooking() {
         $this->getApi()->getPmsManager()->setCurrentBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
     }
@@ -111,7 +123,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "</div>";
         
         echo "<script>";
-        echo "app.PmsNewBooking20.setLastPage();";
+//        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
     }
     
@@ -336,7 +348,11 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             echo "<div class='addedaddonsrow' addonid='".$addon->addonId."'>";
             $product = $this->getApi()->getProductManager()->getProduct($addon->productId);
             $name = $addon->name ? $addon->name : $product->name;
-            echo "<i class='fa fa-trash-o removeaddon' addonid='".$addon->addonId."' gsclick='removeAddon' synchron='true' roomid='".$room->pmsBookingRoomId."' gs_callback='app.PmsNewBooking20.addonRemove'></i> " . date("d.m.Y", strtotime($addon->date)) . " - " . $name . " - " . $addon->count . " - " . $addon->price;
+            $price = $addon->price;
+            if($addon->percentagePrice > 0) {
+                $price = $addon->percentagePrice . "%";
+            }
+            echo "<i class='fa fa-trash-o removeaddon' addonid='".$addon->addonId."' gsclick='removeAddon' synchron='true' roomid='".$room->pmsBookingRoomId."' gs_callback='app.PmsNewBooking20.addonRemove'></i> " . date("d.m.Y", strtotime($addon->date)) . " - " . $name . " - " . $addon->count . " - " . $price;
             echo "</div>";
         }
         echo "<div class='closeaddedaddonspanel'>Close</div>";
@@ -448,7 +464,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $bookingengine = $this->getSelectedMultilevelDomainName();
         $bookingId = $this->getApi()->getPmsManager()->getCurrentBooking($bookingengine)->id;
         for($i = 0; $i < $count; $i++) {
-            $this->getApi()->getPmsManager()->addBookingItemType($bookingengine, $bookingId, $typeId, $start, $end, "");
+            $this->getApi()->getPmsBookingProcess()->addBookingItemType($bookingengine, $bookingId, $typeId, $start, $end, "");
         }
     }
 

@@ -402,6 +402,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             };
 
             Thread thread = new Thread(task);
+            thread.setName("Synchonize data thread started");
             thread.start();     
             
         } catch (Exception ex) {

@@ -66,6 +66,10 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
     public function getStarted() {
         
     }
+    
+    public function getIcon() {
+        return "cash.svg";
+    }
 
     public function render() {
         if ($this->order && $this->order->closed) {

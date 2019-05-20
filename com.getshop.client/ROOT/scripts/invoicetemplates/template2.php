@@ -5,6 +5,8 @@ include 'InvoiceTemplateTranslator.php';
 
 function file_get_contents_utf8($fn) {
      $content = file_get_contents($fn);
+     $content = base64_decode($content);
+    
       return mb_convert_encoding($content, 'UTF-8',
           mb_detect_encoding($content, 'UTF-8, ISO-8859-1', true));
 }
@@ -212,10 +214,10 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             $metadata .= $item->product->metaData;
         }
         
-        if ($item->startDate) {
+        if (@$item->startDate) {
             $metadata .= $metadata ? ", " : "";
             $metadata .= $translator->translate("Date").": ".date('d.m.Y', strtotime($item->startDate));
-            if ($item->endDate) {
+            if (@$item->endDate) {
                 $metadata .= " - ".date('d.m.Y', strtotime($item->endDate));
             }
         }

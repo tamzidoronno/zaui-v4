@@ -31,6 +31,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     
     public function toggleQuickAddAddons() {
         $_SESSION['quickaddaddons'] = true;
+        $pmsbookingroomview = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $pmsbookingroomview->printAddAddonsArea();
     }
     
     public function getName() {
@@ -115,7 +117,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $this->includefile("nobookingsyet");
             return;
         }
-        $this->getApi()->getPmsManager()->getCardsToSave($this->getSelectedMultilevelDomainName());
         return $this->renderDataTable();
     }
     
@@ -149,19 +150,24 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     public function startPaymentProcessForSelectedRooms() {
         
         $foundBookings = array();
+        $uniqueSegmentIds = array();
         foreach($_POST['data']['rooms'] as $room) {
             if(in_array($room, array_keys($foundBookings))) {
                 continue;
             }
             $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $room);
+            $uniqueSegmentIds[] = $booking->segmentId;
             foreach($booking->rooms as $r) {
                 $foundBookings[$r->pmsBookingRoomId] = $booking->id;
             }
         }
         
+        $uniqueSegmentIds = array_unique($uniqueSegmentIds);
+        
         $bookingIds = array_unique($foundBookings);
         $this->getApi()->getCartManager()->clear();
         $bookings = array_values($bookingIds);
+        
         foreach($bookings as $bookingId) {
             $pmsRooms = array();
             foreach($_POST['data']['rooms'] as $room) {
@@ -176,7 +182,14 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $filter->pmsRoomIds = $pmsRooms;
             $filter->avoidOrderCreation = true;
             $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);
+            $uniqueSegmentIds[] = $this->getApi()->getPmsBookingProcess()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId)->segmentId;
         }
+        
+        if (count($uniqueSegmentIds) > 1) {
+            echo "Please make sure that all selected rooms are connected to the same segment";
+            return;
+        }
+        
         $app = new \ns_2e51d163_8ed2_4c9a_a420_02c47b1f7d67\PmsCheckout();
         $app->renderApplication(true);
     }
@@ -252,7 +265,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         echo "</div>";
         
         $table = new \GetShopModuleTable($this, 'PmsManager', $functionToUse, $args, $attributes);
-        $table->setSorting(array("reg","checkin","guest","checkout","visitor","bookedfor","room","price","totalprice"));
+        $table->setSorting(array("state","reg","checkin","guest","checkout","visitor","bookedfor","room","price","totalprice"));
         $table->loadContentInOverlay = true;
         $table->setData($data);
         if(isset($_SESSION['pmsroomviewlistgrouproom']) && $_SESSION['pmsroomviewlistgrouproom']) {

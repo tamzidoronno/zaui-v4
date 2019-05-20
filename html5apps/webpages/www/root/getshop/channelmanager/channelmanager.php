@@ -15,6 +15,7 @@ class channelmanager extends PageCommon {
     public $title = "GetShop - Channel Manager";
     public $title_rewrite = "pms";
     public $subpageof = "products";
+    public $description = array("en" => "By automating communication with the OTA's using a channel manager, GetShop enables you to control everything from one place, pricing, occupancy, resctring, for 100+ otas.");
     public $menuSequence = 3;
     
     /** Menu settings */

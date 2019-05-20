@@ -7,7 +7,7 @@ $isLocked = $this->getApi()->getOrderManager()->isLocked($end);
 $bankAccountClosed = $this->getApi()->getOrderManager()->isBankAccountClosed($end);
 $isShowingExTaxes = $this->isShowingIncTaxes();
 $autoCloseActivated = $this->getApi()->getOrderManager()->getOrderManagerSettings()->autoCloseFinancialDataWhenCreatingZReport;
-$incomeBalance = $this->getApi()->getOrderManager()->getBalance($start);
+$incomeBalance = $this->getApi()->getOrderManager()->getBalance($start, null);
 
 $this->getApi()->getPmsManager()->markOtaPaymentsAutomaticallyPaidOnCheckin($this->getSelectedMultilevelDomainName(), $start, $end);
 
@@ -37,7 +37,15 @@ foreach ($dayIncomes as $dayIncome) {
 if (count($errors)) {
     echo "<h1>".$this->__f("There are a few errors you have to sort out first.")."</h1>";
     foreach ($errors as $error) {
-        echo "<div style='color: red; margin-left: 50px;'>- ".$error."</div>";
+        if ($this->isJson($error)) {
+            $json = json_decode($error);
+             
+            $correctbutton = $json->errorType == "MISSING_ACCOUNT_NUMBER" ? "<div class='gs_shop_small_icon' gs_show_modal='productview' selectedtab='accounting' productid='$json->productId'>Click to fix</div>" : "";;
+            echo "<div style='color: red; margin-left: 50px;'>$correctbutton ".$json->msg."</div>";
+        } else {
+            echo "<div style='color: red; margin-left: 50px;'>- ".$error."</div>";
+        }
+        
     }
     return;
 }
@@ -111,8 +119,13 @@ echo "</script>";
         </select>
 
         <div gstype='submit' class='shop_button showresultbutton'><? echo $this->__f("Show"); ?></div>
+        <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
         
+        <?php if($isSuportingDirectTransfer) { ?>
+            <div class="shop_button transferalldays showresultbutton"> <? echo $this->__f("Transfer all days not transferred yet"); ?></div>
+            <div class="transferring">Tranferring data.<br><br>Please be patient<br><br>This might take some time depending on how may days that needs transferring.<br><br><i class='fa fa-spin fa-spinner'></i></div>
         <?
+        }
         $closeClass = $monthHasPassed ? 'closeperiode' : 'deactivated';
         if (!$isLocked) {
             if (!$autoCloseActivated) {
@@ -121,9 +134,6 @@ echo "</script>";
         <?
             }
         } else {
-        ?>
-            <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
-            <?
             $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
             $appTemplateFile = '../app/'.$appname.'/template/' . $system . "_BUTTON.phtml";
             
@@ -200,8 +210,9 @@ echo "<div class='outer'>";
             
             if ($isSuportingDirectTransfer && $dayIncome->isFinal) {
                 $checked = count($dayIncome->accountingTransfer) ? " <i class='fa fa-check' title='This day has already been transferred'></i>" : "";
-                $askForPassword = count($dayIncome->accountingTransfer) ? " gs_precheck='app.AccountFinanceReport.askForPassword'" : "";
-                echo "<div class='col' gsclick='startUploadOfData' $askForPassword start='$dayIncome->start' end='$dayIncome->end' >".'<i class="gs_shop_small_icon fa fa-upload"></i>'.$checked."</div>";
+//                $askForPassword = count($dayIncome->accountingTransfer) ? " gs_precheck='app.AccountFinanceReport.askForPassword'" : "";
+                $askForPassword = "";
+                echo "<div class='col' gsclick='startUploadOfData' $askForPassword start='$dayIncome->start' end='$dayIncome->end' synchron='true' gs_callback='app.AccountFinanceReport.transferredToAccounting'>".'<i class="gs_shop_small_icon fa fa-upload"></i>'.$checked."</div>";
                 
             }
 

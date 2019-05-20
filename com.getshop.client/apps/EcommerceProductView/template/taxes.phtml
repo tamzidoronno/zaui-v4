@@ -4,47 +4,54 @@ $product = $this->getProduct();
 $taxes = $this->getApi()->getProductManager()->getTaxes();
 ?>
 
+<div style="border-bottom: solid 1px #DDD; padding-bottom: 20px;">
+    <div style="display: inline-block; width: 250px; border-right: solid 1px #DDD; vertical-align: top;">
+        <span style="font-size: 20px;">
+            Select default tax
+        </span>
+        <br/>
+        <select class="gsniceselect1 defaulttax" gschange='setDefaultTaxRate'>
+        <?
+            foreach ($taxes as $tax) {
+                $selected = $product->taxGroupObject && $product->taxGroupObject->id == $tax->id ? "selected='true'" : "";
+                echo " <option $selected value='$tax->id'>$tax->taxRate </option>";
+            }
+        ?>    
+        </select>
+    </div>
 
-Default tax:
-<div>
-    <select class="gsniceselect1 defaulttax" gschange='setDefaultTaxRate'>
-    <?
-        foreach ($taxes as $tax) {
-            $selected = $product->taxGroupObject && $product->taxGroupObject->id == $tax->id ? "selected='true'" : "";
-            echo " <option $selected value='$tax->id'>$tax->taxRate </option>";
+    <div style="display: inline-block; width: 250px; vertical-align: top; padding-left: 40px; border-right: solid 1px #DDD; border-left: solid 1px #DDD; margin-left: -5px;"">    
+        <span style="font-size: 20px;">
+            Additional taxes
+        </span>
+        <br/>
+        <?
+        if (!$product->additionalTaxGroupObjects || !count($product->additionalTaxGroupObjects)) {
+            echo $this->__f("No extra taxes added");
+        } else {
+            foreach ($product->additionalTaxGroupObjects as $taxGroup) {
+                echo "<div><i class='gs_shop_small_icon fa fa-trash' gsclick='removeTax' productid='$product->id' taxgroupid='$taxGroup->id'></i> ".$taxGroup->taxRate."%</div>";
+            }
         }
-    ?>    
-    </select>
-    
-    <br/>
-    <br/>
-    Additional taxes:
-    
-    <?
-    if (!$product->additionalTaxGroupObjects || !count($product->additionalTaxGroupObjects)) {
-        echo $this->__f("No extra taxes added");
-    } else {
-        foreach ($product->additionalTaxGroupObjects as $taxGroup) {
-            echo "<div><i class='gs_shop_small_icon fa fa-trash' gsclick='removeTax' productid='$product->id' taxgroupid='$taxGroup->id'></i> ".$taxGroup->taxRate."%</div>";
-        }
-    }
-    ?>
-</div>
+        ?>
+    </div>
 
+    <div style="display: inline-block; width: 250px; vertical-align: top; padding-left: 40px; border-left: solid 1px #DDD; margin-left: -4px;">    
+        <div gstype="form" method="addExtraTax"  style="display: inline-block; vertical-align: top; width: 300px;">
+            <input type="hidden" gsname="productid" value="<? echo $product->id; ?>"/>
+            <span style="font-size: 20px;">
+                Add additional taxes
+            </span>
+            <br/>
+            <select class="gsniceselect1" gsname='taxgroup'>
+            <?
+                foreach ($taxes as $tax) {
+                    echo " <option value='$tax->id'>$tax->taxRate </option>";
+                }
+            ?>    
+            </select>
+            <div class="shop_button" gstype="submit"><? echo $this->__f("Add"); ?></div>
+        </div>
+    </div>
 
-<div class="addextratax" gstype="form" method="addExtraTax">
-    
-    <input type="hidden" gsname="productid" value="<? echo $product->id; ?>"/>
-    Add extra tax:
-    <br/>
-    <select class="gsniceselect1" gsname='taxgroup'>
-    <?
-        foreach ($taxes as $tax) {
-            echo " <option value='$tax->id'>$tax->taxRate </option>";
-        }
-    ?>    
-    </select>
-    <br/>
-    <br/>
-    <div class="shop_button" gstype="submit"><? echo $this->__f("Add"); ?></div>
 </div>

@@ -31,6 +31,7 @@ import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.gsd.TerminalResponse;
+import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import java.util.ArrayList;
@@ -81,6 +82,9 @@ public interface IOrderManager {
     
     @Administrator
     public void forceSetNewPaymentDate(String orderId, Date date, String password);
+    
+    @Administrator
+    public String getCurrentPaymentOrderId();
     
     @Administrator
     public Boolean isPaymentInProgress();
@@ -173,6 +177,9 @@ public interface IOrderManager {
     
     @Administrator
     public void checkForOrdersToAutoPay(int daysToTryAfterOrderHasStarted) throws ErrorException;
+    
+    @Administrator
+    public boolean hasNoOrders();
     
     /**
      * Fetch all orders for a user.
@@ -438,7 +445,7 @@ public interface IOrderManager {
     public void updateCartItemOnOrder(String orderId, CartItem cartItem);
     
     @Editor
-    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate);
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio);
     
     @Editor
     public List<OrderTransactionDTO> getAllTransactionsForInvoices(Date start, Date end);
@@ -453,7 +460,7 @@ public interface IOrderManager {
     public void closeBankAccount(Date endDate);
     
     @Administrator
-    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date date);
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date date, String paymentId);
     
     @Editor
     public List<PmiResult> getPmiResult(Date start, Date end);
@@ -485,7 +492,7 @@ public interface IOrderManager {
     
     @Administrator
     @ForceAsync
-    public AccountingBalance getBalance(Date date);
+    public AccountingBalance getBalance(Date date, String paymentId);
     
     @Administrator
     @ForceAsync
@@ -493,4 +500,16 @@ public interface IOrderManager {
     
     @Administrator
     public AccountingDetails getAccountingDetails();
+    
+    @Editor
+    public Double getTotalForOrderInLocalCurrencyById(String orderId);
+    
+    @Editor
+    public AccountingFreePost saveFreePost(AccountingFreePost freePost);
+    
+    @Editor
+    public void deleteFreePost(String id);
+    
+    @Editor
+    public AccountingFreePost getAccountFreePost(String id);
 }

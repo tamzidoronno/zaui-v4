@@ -21,6 +21,12 @@ class NetsPaymentTerminal extends \PaymentApplication implements \Application {
         return "Payment terminal";
     }
 
+    public function getIcon() {
+        return "terminal.svg";
+    }
+
+    
+    
     public function render() {
         
     }

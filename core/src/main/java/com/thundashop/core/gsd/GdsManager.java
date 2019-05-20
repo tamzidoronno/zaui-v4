@@ -11,6 +11,8 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.UserQueueMessage;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
+import com.thundashop.core.getshoplocksystem.LockServer;
 import com.thundashop.core.pos.PrinterMessageGenerator;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -58,7 +62,7 @@ public class GdsManager extends ManagerBase implements IGdsManager {
             }
         }
     }
-
+    
     
     @Override
     public void deleteDevice(String deviceId) {
@@ -91,7 +95,7 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         if (queue.isEmpty()) {
             for (int i=0; i<180; i++) {
                 try { Thread.sleep(100); } catch (Exception ex) {};
-                if (!queue.messages.isEmpty()) {
+                if (!queue.isEmpty()) {
                     break;
                 }
             }
@@ -101,7 +105,7 @@ public class GdsManager extends ManagerBase implements IGdsManager {
             return new ArrayList();
         }
         
-        List<GetShopDeviceMessage> retMessages= new ArrayList(queue.messages);
+        List<GetShopDeviceMessage> retMessages= new ArrayList(queue.getMessages());
         queue.clear();
         
         saveObject(queue);
@@ -120,7 +124,7 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         }
         
         DeviceMessageQueue queue = getQueue(deviceId);
-        queue.messages.add(messageToUse);
+        queue.addMessage(messageToUse); 
         saveObject(queue);
     }
     

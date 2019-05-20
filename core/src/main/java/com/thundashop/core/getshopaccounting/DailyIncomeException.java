@@ -11,6 +11,9 @@ package com.thundashop.core.getshopaccounting;
  */
 public class DailyIncomeException extends RuntimeException {
     private String msg = "";
+    public String productId = "";
+    public Integer taxGroupNumber;
+    public String errorType = "";
     
     public DailyIncomeException(String message) {
         super(message);

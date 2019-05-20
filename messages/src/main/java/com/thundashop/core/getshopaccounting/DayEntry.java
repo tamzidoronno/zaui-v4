@@ -33,6 +33,12 @@ public class DayEntry implements Serializable, Cloneable {
     public Date date;
     public String accountingNumber;
     
+    /**
+     * Reference to the freepost that is used for this. If null its not created
+     * if a freepost.
+     */
+    public String freePostId = null;
+    
     public boolean isOffsetRecord = false;
     
     /**

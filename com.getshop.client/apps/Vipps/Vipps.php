@@ -9,6 +9,10 @@ class Vipps extends \PaymentApplication implements \Application {
     public function getSavedCards($userId) {
     }
     
+    public function getIcon() {
+        return "invoice.svg";
+    }
+    
     public function getName() {
         return "Vipps";
     }

@@ -2,7 +2,7 @@
 /* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 $this->setData();
 $addons = $this->getSelectedRoom()->addons;
-
+unset($_SESSION['quickaddaddons']);
 $pickerOpen = false;
 if(isset($_SESSION['gs_currently_showing_rightWidget'])) { 
     $pickerOpen = true;             
@@ -97,17 +97,20 @@ if(sizeof($addons) > 0) {
             if($addon->productId != $addonRow->productId) {
                 continue;
             }
+            $percentagePrice = $addon->percentagePrice > 0 ? "(" . $addon->percentagePrice . "%)" : "";
+            $disabledPricing = $addon->percentagePrice > 0 ? "DISABLED" : "";
             echo "<div style='font-size:20px;' class='addonitemrow' addonid='".$addonRow->addonId."'>";
             echo "<div class='col col-1'><i class='fa fa-square-o toggleRemoveAddonCheckBox' style='margin-top:5px;' productId='".$addon->productId."' addonid='".$addonRow->addonId."'></i></div>";
-            echo "<div class='col col-2'><input type='text' class='gsniceinput1' gsname='date' value='".date("d.m.Y", strtotime($addonRow->date))."'></div>";
-            echo "<div class='col col-3'><input type='text' class='gsniceinput1' gsname='count' value='".$addonRow->count."' style='width:20px;'></div>";
-            echo "<div class='col col-4'><input type='text' class='gsniceinput1' gsname='price' value='".$addonRow->price."' style='width:40px;'></div>";
+            echo "<div class='col col-2'><input type='text' class='gsniceinput1' gsname='date' value='".date("d.m.Y", strtotime($addonRow->date))."' $disabledPricing></div>";
+            echo "<div class='col col-3'><input type='text' class='gsniceinput1' gsname='count' value='".$addonRow->count."' style='width:20px;' $disabledPricing></div>";
+            echo "<div class='col col-4'><input type='text' class='gsniceinput1' gsname='price' value='".$addonRow->price."' style='width:40px;' $disabledPricing></div>";
             echo "<div class='col col-4'>";
             $checked = "";
             if($addonRow->isIncludedInRoomPrice) {
                 $checked = "CHECKED";
             }
-            echo "<input type='checkbox' gsname='includedinroomprice' $checked>";
+            echo "<input type='checkbox' gsname='includedinroomprice' $checked $disabledPricing>";
+            echo $percentagePrice;
             echo "</div>";
             
             echo "</div>";

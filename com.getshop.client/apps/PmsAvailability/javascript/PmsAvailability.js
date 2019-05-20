@@ -80,7 +80,6 @@ app.PmsAvailability = {
         var bookingItemId = "";
         var start = null;
         var end = null;
-        console.log(app.PmsAvailability.startMarkingElement.closest('.col_data'));
         var roomId = app.PmsAvailability.startMarkingElement.closest('.col_data').attr('roomid');
         var bookingid = app.PmsAvailability.startMarkingElement.closest('.col_data').attr('bookingid');
         var isclosed = app.PmsAvailability.startMarkingElement.closest('.col_data').hasClass('closed');
@@ -96,7 +95,7 @@ app.PmsAvailability = {
             end = $(this).attr('date');
             bookingItemId = $(this).attr('bookingitemid');
         });
-        var event = thundashop.Ajax.createEvent('','loadMarkedAreaBox', $('.PmsAvailability'), {
+        var event = thundashop.Ajax.createEvent('','loadMarkedAreaBox', $(event.target), {
             "start" : start,
             "end" : end,
             "bookingitemid" : bookingItemId,

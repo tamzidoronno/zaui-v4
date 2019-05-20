@@ -135,8 +135,9 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
                 }
             };
 
-            new Thread(runThread).start();
-
+            Thread td = new Thread(runThread);
+            td.setName("Check for pull message");
+            td.start();
         }
     }
 

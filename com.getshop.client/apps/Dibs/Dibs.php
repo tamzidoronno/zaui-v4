@@ -16,6 +16,9 @@ class Dibs extends \PaymentApplication implements \Application {
     public function getName() {
         return "DIBS";
     }
+    public function getIcon() {
+        return "card.png";
+    }
     
     public function addPaymentMethods() {
         $namespace = __NAMESPACE__;
@@ -57,8 +60,8 @@ class Dibs extends \PaymentApplication implements \Application {
         }
         $nextPage = $_GET['nextpage'];
         
-        $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
         $paymentfailed = $this->getConfigurationSetting("paymentfailed");
+        $paymentcallbackpage = $this->getConfigurationSetting("redirectsuccesstopage");
         
         if ($orderId) {
             if($nextPage == "payment_success") {
@@ -66,7 +69,11 @@ class Dibs extends \PaymentApplication implements \Application {
                 $order->status = 9;
                 $order->payment->transactionLog->{time()*1000} = "Payment completed, capturing needed.";
                 $this->getApi()->getOrderManager()->saveOrder($order);
-                header('Location: ' . "/?page=payment_success");
+                if($paymentcallbackpage) {
+                    header('Location: ' .$paymentcallbackpage);
+                } else {
+                    header('Location: ' . "/?page=payment_success");
+                }
             } else {
                 $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
                 $order->status = 5;
@@ -204,6 +211,7 @@ class Dibs extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("useflexwin", $_POST['useflexwin']);
         $this->setConfigurationSetting("md5k1", $_POST['md5k1']);
         $this->setConfigurationSetting("md5k2", $_POST['md5k2']);
+        $this->setConfigurationSetting("redirectsuccesstopage", $_POST['redirectsuccesstopage']);
     }
     
     public function saveCard() {

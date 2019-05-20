@@ -1,0 +1,34 @@
+.AccountingAccounts .createAccountBox {
+    border-top: solid 1px #DDD;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-top: 50px;
+}
+
+.AccountingAccounts .createAccountBox span {
+    width: 200px;
+    display: inline-block;
+}
+
+.AccountingAccounts .col {
+    display: inline-block;
+    width: 220px;
+}
+
+.AccountingAccounts {
+    margin: 50px;
+}
+
+.AccountingAccounts .accountingid {
+    width: 100px;
+}
+
+
+.AccountingAccounts .col.accountindesc {
+    width: calc(100% - 800px);
+}
+
+.AccountingAccounts .col.accountindesc input {
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+}

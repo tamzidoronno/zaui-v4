@@ -10,6 +10,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.usermanager.data.User;
 import it.sauronsoftware.cron4j.Scheduler;
+import java.lang.reflect.Field;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -29,6 +30,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private String multiLevelName;
     private String webAddress;
     private String storeId;
+    private String schedulerInterval = "";
     
     public String getUsername() {
         return username;
@@ -42,6 +44,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
         this.password = password;
         this.webAddress = webAddress;
         this.multiLevelName = multiLevelName;
+        this.schedulerInterval = scheduler;
         
         if(scheduler != null) {
             createScheduler(scheduler);
@@ -57,6 +60,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     
     public void setStoreId(String storeId) {
         this.storeId = storeId;
+        setThreadName();
     }
 
     public void setUsername(String username) {
@@ -87,9 +91,15 @@ public abstract class GetShopSchedulerBase implements Runnable {
         this.scheduler = new Scheduler();
         this.scheduler.schedule(scheduler, this);
         this.scheduler.start();
+        
+        setThreadName();
     }
     
     private synchronized void runConnection() throws Exception {
+        if (!GetShopSchedulerOnOffHandler.getOnOffHandler().isActive(this)) {
+            return;
+        }
+        
         sleepRandomTime();
         execute();
         closeConnection();
@@ -142,5 +152,20 @@ public abstract class GetShopSchedulerBase implements Runnable {
     
     public String getStoreId() {
         return storeId;
+    }
+
+    private void setThreadName() {
+        if (this.scheduler == null) {
+            return;
+        }
+        
+        try {
+            Field field = this.scheduler.getClass().getDeclaredField("timer");
+            field.setAccessible(true);
+            Thread value = (Thread) field.get(this.scheduler);
+            value.setName("cron4j::" + this.getClass().getCanonicalName()  + "::" + schedulerInterval + "::" + storeId + "::" + this.scheduler.getGuid() );
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } 
     }
 }

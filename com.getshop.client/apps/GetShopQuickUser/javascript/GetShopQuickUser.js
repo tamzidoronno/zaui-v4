@@ -33,6 +33,10 @@ app.GetShopQuickUser = {
         var tab = $(this).attr('tab');
         $('.GetShopQuickUser .tab_contents .tab_content').hide();
         $('.GetShopQuickUser .tab_contents .tab_content[tab_content="'+tab+'"]').show();
+        
+        if(tab === "newuser") { $('.newuserinputfield').focus(); }
+        if(tab === "existinguser") { $('.searchguestsfield').focus(); }
+        if(tab === "company") { $('.searchcompanyfield').focus(); }
     },
     
     toggleEditUser: function() {

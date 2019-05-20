@@ -5,9 +5,11 @@
  */
 package com.thundashop.core.getshopaccounting;
 
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.TwoDecimalRounder;
+import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.paymentmanager.PaymentManager;
@@ -41,14 +43,16 @@ public class OrderDailyBreaker {
     private final List<String> errors = new ArrayList();
     private final int precision = 10;
     private final DayIncomeFilter filter;
+    private List<AccountingFreePost> freePosts = new ArrayList();
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager, List<AccountingFreePost> freePosts) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
         this.filter = filter;        
         this.paymentManager = paymentManager;
         this.productManager = productManager;
         this.whatHourOfDayStartADay = whatHourOfDayStartADayorderManager;
+        this.freePosts = freePosts;
         correctStartAndEndTime();
         createEmptyDays();
     }
@@ -84,6 +88,8 @@ public class OrderDailyBreaker {
     }
 
     public void breakOrders() {
+        Gson gson = new Gson();
+        
         this.ordersToBreak.stream().forEach(order -> {
             try {
                 if (order.isNullOrder() || order.isVirtual)
@@ -98,18 +104,29 @@ public class OrderDailyBreaker {
                 }
                 
                 proccessOrder(order);
+            } catch (DailyIncomeException ex) {
+                errors.add(gson.toJson(ex));
             } catch (Exception ex) {
+                if (ex instanceof  NullPointerException) {
+                    ex.printStackTrace();
+                }
                 errors.add(ex.getMessage());
             }
         });
+        
+        freePosts.stream()
+                .filter(o -> o.isBetween(filter.start, filter.end))
+                .forEach(o -> addFreePost(o));
     }
 
     private void proccessOrder(Order order) {
-        if (filter.onlyPaymentTransactionWhereDoubledPosting) {
+        if (filter.onlyPaymentTransactionWhereDoubledPosting || filter.doublePostingRecords) {
             List<DayEntry> orderDayEntries = new ArrayList();
             createPaymentRecords(orderDayEntries, order);
             addToDayIncome(orderDayEntries);
-            return;
+            if (filter.onlyPaymentTransactionWhereDoubledPosting) {
+                return;
+            }
         }
         
         orderDayEntries = getDayEntriesForOrder(order);
@@ -129,6 +146,13 @@ public class OrderDailyBreaker {
         }
         
         createVatLines(order, orderDayEntries);
+        
+        if (filter.doublePostingRecords) {
+            orderDayEntries.stream()
+                    .filter(o -> !o.accountingNumber.equals(getAccountingNumberForPaymentApplicationId(order.payment.getPaymentTypeId())))
+                    .filter(o -> !o.accountingNumber.equals(getAccountingNumberForPaymentApplicationId_paid(order.payment.getPaymentTypeId())))
+                    .forEach(o -> o.accountingNumber = "0000");
+        }
         
         addToDayIncome(orderDayEntries);
     }
@@ -199,8 +223,15 @@ public class OrderDailyBreaker {
         }
         
         DayEntry dayEntry = new DayEntry();
-        dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision);
-        dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
+        
+        if (order.currency != null && !order.currency.isEmpty()) {
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmountLocalCurrency(), precision);
+            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmountLocalCurrency(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
+        } else {
+            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision);
+            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount(), precision); //TwoDecimalRounder.roundTwoDecimals(order.getTotalAmount() - order.getTotalAmountVat());
+        }
+        
         dayEntry.isIncome = true;
         dayEntry.orderId = order.id;
         dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -273,8 +304,15 @@ public class OrderDailyBreaker {
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
         entry.isActualIncome = item.getProduct().isActuallyIncome();
-        entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmount(), precision);
-        entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalEx(), precision);
+        
+        if (order.currency != null && !order.currency.isEmpty()) {
+            entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmountInLocalCurrency(), precision);
+            entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalExLocalCurrency(), precision);
+        } else {
+            entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmount(), precision);
+            entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalEx(), precision);
+        }
+        
         entry.date = order.rowCreatedDate;
         
         if (order.overrideAccountingDate != null)
@@ -428,7 +466,12 @@ public class OrderDailyBreaker {
         if (result == null || result.isEmpty()) {
             result = getAccountingNumberForProduct(item.getProduct(), item.getProduct().id);
             String taxGroupPercent = item.getProduct().taxGroupObject != null ? ""+item.getProduct().taxGroupObject.taxRate : "0";
-            throw new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+taxGroupPercent+"% )");
+            Integer taxGroupNumber = item.getProduct().taxGroupObject != null ? item.getProduct().taxGroupObject.groupNumber : null;
+            DailyIncomeException ex = new DailyIncomeException("Could not find accounting number for product: " + item.getProduct().name + " ( orderid: " + order.incrementOrderId + ", tax: "+taxGroupPercent+"% )");
+            ex.errorType = "MISSING_ACCOUNT_NUMBER";
+            ex.productId = item.getProductId();
+            ex.taxGroupNumber = taxGroupNumber;
+            throw ex;
         }
         
         return result;
@@ -649,8 +692,19 @@ public class OrderDailyBreaker {
         
         for (OrderTransaction orderTransaction : order.orderTransactions) {
             DayEntry dayEntry = new DayEntry();
-            dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
-            dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
+            if (order.currency != null && !order.currency.isEmpty()) {
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amountInLocalCurrency, precision).multiply(new BigDecimal(-1));
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amountInLocalCurrency, precision).multiply(new BigDecimal(-1));
+            } else {
+                dayEntry.amount = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
+                dayEntry.amountExTax = TwoDecimalRounder.roundTwoDecimals(orderTransaction.amount, precision).multiply(new BigDecimal(-1));
+            }
+            
+            if (orderTransaction.agio != null) {
+                dayEntry.amount = dayEntry.amount.add(new BigDecimal(orderTransaction.agio));
+                dayEntry.amountExTax = dayEntry.amountExTax.add(new BigDecimal(orderTransaction.agio));
+            }
+
             dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;
@@ -662,11 +716,30 @@ public class OrderDailyBreaker {
             try {
                 dayEntry = dayEntry.clone();
                 dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId_paid(order.getPaymentApplicationId());
+                if (orderTransaction.agio != null) {
+                    dayEntry.amount = dayEntry.amount.subtract(new BigDecimal(orderTransaction.agio));
+                    dayEntry.amountExTax = dayEntry.amountExTax.subtract(new BigDecimal(orderTransaction.agio));
+                }
                 dayEntry.amount = dayEntry.amount.multiply(new BigDecimal(-1));
                 dayEntry.amountExTax = dayEntry.amountExTax.multiply(new BigDecimal(-1));
                 orderDayEntries.add(dayEntry);
             } catch (CloneNotSupportedException ex) {
                 ex.printStackTrace();
+            }
+            
+            if (orderTransaction.agio != null) {
+                try {
+                    dayEntry = dayEntry.clone();
+                    dayEntry.accountingNumber = productManager.getAgioAccountNumber(orderTransaction.agio < 0);
+                    dayEntry.amount = new BigDecimal(orderTransaction.agio);
+                    dayEntry.amountExTax = new BigDecimal(orderTransaction.agio);
+                    dayEntry.amount = dayEntry.amount.multiply(new BigDecimal(-1));
+                    dayEntry.amountExTax = dayEntry.amountExTax.multiply(new BigDecimal(-1));
+                    orderDayEntries.add(dayEntry);
+                } catch (CloneNotSupportedException ex) {
+                    ex.printStackTrace();
+                }
+                
             }
         }
     }
@@ -749,6 +822,27 @@ public class OrderDailyBreaker {
             return overrideAccountingDate;
         
         return entry.date;
+    }
+
+    private void addFreePost(AccountingFreePost o) {
+        DayIncome income = getDayIncome(o.date);
+        DayEntry entry = new DayEntry();
+        
+        entry.amount = TwoDecimalRounder.roundTwoDecimals(o.amount, precision);
+        entry.freePostId = o.id;
+        entry.accountingNumber = o.debitAccountNumber;
+        income.dayEntries.add(entry);
+        
+        try {
+            DayEntry credit = entry.clone();
+            credit.accountingNumber = o.creditAccountNumber;
+            credit.amount = credit.amount.multiply(new BigDecimal(-1));
+            income.dayEntries.add(credit);
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
 
 }

@@ -27,8 +27,8 @@ public class GetshopLockCom {
         String loginToken = null;
         String loginUrl = address;
         HttpParams my_httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);
-        HttpConnectionParams.setSoTimeout(my_httpParams, 6000);
+        HttpConnectionParams.setConnectionTimeout(my_httpParams, 20000);
+        HttpConnectionParams.setSoTimeout(my_httpParams, 20000);
         
         DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
         try {

@@ -302,19 +302,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
         
         if (provider.equals("sveve")) {
-            if(storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") || //Rena
-                storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048") || //Trysil
-                storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6") || //Wh
-                storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") //Haugesund
-                    ) { //Rena
-                handler = new TeleTopiaSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
-            } else {
-                handler = new SveveSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
-            }
+            handler = new TeleTopiaSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
         }
         
         if (provider.equals("nexmo")) {
-            handler = new NexmoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+            handler = new TeleTopiaSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
         }
         
         if (provider.equals("clickatelltuningfiles")) {

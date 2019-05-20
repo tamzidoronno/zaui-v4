@@ -1,6 +1,11 @@
 <?php
 header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="'.$_POST['filename'].'"');
+header('Content-Disposition: attachment; filename="'.$_POST['filename'].'"');
+header('Content-Transfer-Encoding: binary');
+header('Cache-Control: must-revalidate');
+header('Pragma: public');
+
+
 chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();

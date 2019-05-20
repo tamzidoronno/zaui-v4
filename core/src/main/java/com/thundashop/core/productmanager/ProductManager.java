@@ -9,7 +9,6 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductAccountingInformation;
@@ -455,6 +454,11 @@ public class ProductManager extends AProductManager implements IProductManager {
     public AccountingDetail getAccountingDetail(int accountNumber) {
         return super.getAccountingDetail(accountNumber); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public List<AccountingDetail> getAccountingAccounts() {
+        return super.getAccountingAccounts();
+    }
 
     @Override
     public void saveAccountingDetail(AccountingDetail detail) {
@@ -547,6 +551,14 @@ public class ProductManager extends AProductManager implements IProductManager {
         
         product.accountingConfig = infos;
         saveProduct(product);
+    }
+
+    public String getAgioAccountNumber(boolean loss) {
+        if (loss) {
+            return "8160";
+        }
+        
+        return "8060";
     }
 
     

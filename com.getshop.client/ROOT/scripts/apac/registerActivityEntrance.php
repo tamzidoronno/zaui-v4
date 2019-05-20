@@ -14,6 +14,11 @@ session_start();
 chdir("../../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
-$factory->getApi()->getGetShopLockSystemManager()->addTransactionEntranceDoor($_GET['serverId'], $_GET['lockId'], $_GET['code']);
+if (isset($_GET['token'])) {
+    $factory->getApi()->getGetShopLockSystemManager()->addTransactionEntranceDoorByToken($_GET['token'], $_GET['deviceid'], $_GET['code']);
+} else {
+    $factory->getApi()->getGetShopLockSystemManager()->addTransactionEntranceDoor($_GET['serverId'], $_GET['lockId'], $_GET['code']);
+}
+
 echo "OK";
 ?>

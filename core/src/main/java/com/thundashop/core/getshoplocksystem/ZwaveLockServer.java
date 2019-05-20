@@ -199,7 +199,9 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                 ZwaveThread nextThread = createJob(lockToWorkWith);
                 if (nextThread != null) {
                     currentThread = nextThread; 
-                    new Thread(nextThread).start();
+                    Thread td = new Thread(nextThread);
+                    td.setName("Starting zwave thread: " + nextThread );
+                    td.start();
                 }            
             } else {
                 GetShopLogHandler.logPrintStatic("No more jobs to do, or waiting because of failed locks.", storeId);
@@ -358,7 +360,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     @Override
     public void openLock(String lockId) {
         Lock lock = getLock(lockId);
-        if (lock != null) {
+        if (lock != null && lock instanceof LocstarLock) {
+            LocstarLock locstarlock = (LocstarLock) lock;
+            String address = "ZWave.zway/Run/devices["+locstarlock.zwaveDeviceId+"].instances[0].commandClasses[98].Set(1,0,0,1,1)";
+            httpLoginRequestZwaveServer(address);
+        } else if (lock != null) {
             String address = "ZWave.zway/Run/devices["+lock.id+"].instances[0].commandClasses[98].Set(1,0,0,1,1)";
             httpLoginRequestZwaveServer(address);
         }
@@ -367,7 +373,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     @Override
     public void pulseOpenLock(String lockId) {
         Lock lock = getLock(lockId);
-        if (lock != null) {
+        if (lock != null && lock instanceof LocstarLock) {
+            LocstarLock locstarlock = (LocstarLock) lock;
+            String address = "ZWave.zway/Run/devices["+locstarlock.zwaveDeviceId+"].instances[0].commandClasses[98].Set(0)";
+            httpLoginRequestZwaveServer(address);
+        } else if (lock != null) {
             String address = "ZWave.zway/Run/devices["+lock.id+"].instances[0].commandClasses[98].Set(0)";
             httpLoginRequestZwaveServer(address);
         }
@@ -376,7 +386,11 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     @Override
     public void closeLock(String lockId) {
         Lock lock = getLock(lockId);
-        if (lock != null) {
+        if (lock != null && lock instanceof LocstarLock) {
+            LocstarLock locstarlock = (LocstarLock) lock;
+            String address = "ZWave.zway/Run/devices["+locstarlock.zwaveDeviceId+"].instances[0].commandClasses[98].Set(1,255,255,1,1)";
+            httpLoginRequestZwaveServer(address);
+        } else if (lock != null) {
             String address = "ZWave.zway/Run/devices["+lock.id+"].instances[0].commandClasses[98].Set(1,255,255,1,1)";
             httpLoginRequestZwaveServer(address);
         }

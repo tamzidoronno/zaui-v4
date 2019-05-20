@@ -19,6 +19,10 @@ class ExpediaPayment extends \PaymentApplication implements \Application  {
 
     public function paymentCallback() {
     }
+    
+    public function getIcon() {
+        return "room.svg";
+    }
 
     /**
      * Will only be executed if

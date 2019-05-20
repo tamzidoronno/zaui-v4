@@ -252,8 +252,16 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             invoiceData.order = order;
             invoiceData.accountingDetails = getAccountingDetails();
             
-            Gson gson = new Gson();
-            String orderInJson = gson.toJson(invoiceData);
+            Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .serializeSpecialFloatingPointValues()
+                .registerTypeAdapter(Date.class, new GsonUTCDateAdapter())
+                .disableInnerClassSerialization()
+                .setExclusionStrategies(new AnnotationExclusionStrategy(getSession().currentUser))
+                .create();
+            
+            
+            String orderInJson = base64Encode(gson.toJson(invoiceData));
             
             String base = webManager.htmlPost(addr, orderInJson, true, "UTF-8");
             InvoiceFormatter formatter = new InvoiceFormatter(base);
@@ -279,7 +287,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Override
     public void sendReceiptToCashRegisterPoint(String deviceId, String orderId) {
-        Order order = orderManager.getOrder(orderId);
+        Order order = orderManager.getOrderSecure(orderId);
         if (order == null) {
             return;
         }

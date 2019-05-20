@@ -7,7 +7,7 @@
 
 .ApacAccessGroups .locks {
     display: inline-block;
-    width: 200px;
+    width: 50%;
     background-color: #EEE;
     border: solid 1px #DDD;
     padding: 50px;
@@ -16,7 +16,7 @@
 
 .ApacAccessGroups .codes {
     display: inline-block;
-    width: calc(100% - 400px);
+    width: 25%;
     vertical-align: top;
     margin-left: 50px;
 }

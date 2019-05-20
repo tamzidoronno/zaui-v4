@@ -196,6 +196,10 @@ class PaymentApplication extends ApplicationBase {
         return "orange";
     }
     
+    public function getIcon() {
+        return "unavailable.svg";
+    }
+    
     public function getPaymentDescription() {
         return "";
     }
@@ -228,7 +232,7 @@ class PaymentApplication extends ApplicationBase {
 
         foreach ($order->cart->items as $item) {
             if ($item->product != null && $item->product->externalReferenceId) {
-                if (!in_array($roomIds, $item->product->externalReferenceId)) {
+                if (!in_array($item->product->externalReferenceId, $roomIds)) {
                     $pmsBookingRoomId = $item->product->externalReferenceId;
                     $roomIds[] = $pmsBookingRoomId;
                     $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoomId);

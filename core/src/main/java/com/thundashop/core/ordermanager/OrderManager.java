@@ -4,6 +4,7 @@ import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.applications.GetShopApplicationPool;
@@ -40,7 +41,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
-import com.thundashop.core.messagemanager.SmsMessage;
+import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
@@ -81,16 +82,13 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
-import com.thundashop.core.verifonemanager.VerifonePaymentApp;
+import com.thundashop.core.webmanager.WebManager;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.jsoup.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -106,6 +104,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
     
     public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
+    
+    public HashMap<String, AccountingFreePost> accountingFreePosts = new HashMap();
     
     private Set<String> ordersChanged = new TreeSet();
     
@@ -191,6 +191,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private GdsManager gdsManager;
     
+    @Autowired
+    private WebManager webManager;
+    
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
     private String tokenInUse;
@@ -214,6 +217,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = createOrderForUser(getSession().currentUser.id);
         return order.id;
     }    
+    
+    
+    @Override
+    public String getCurrentPaymentOrderId() {
+        if (orderToPay != null) {
+            return orderToPay.id;
+        }
+        
+        return null;
+    }
     
     @Override
     public Order creditOrder(String orderId) {
@@ -269,7 +282,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         try {
             addOrdersToBookings(credittedOrders);
         }catch(GetShopBeanException ex) {
-            logPrintException(ex);
+            // This will happen if the credit order is invoked within a named bean, 
+            // normally it then comes from the pms manager itself and then the manager
+            // should handle the adding to booking properly itself.
+            return credited;
         }
         
         return credited;
@@ -296,6 +312,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
+            }
+            
+            if (dataFromDatabase instanceof AccountingFreePost) {
+                AccountingFreePost freePost = (AccountingFreePost)dataFromDatabase;
+                accountingFreePosts.put(freePost.id, freePost);
             }
             
             if (dataFromDatabase instanceof Order) {
@@ -371,8 +392,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (newOrder) {
             ordersCreated.add(order.id);
         } else {
-            ordersChanged.add(order.id);
-            
+            ordersChanged.add(order.id);   
         }
     }
 
@@ -1498,6 +1518,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrderSecure(orderId);
         return getTotalAmount(order);
     }
+    
+    @Override
+    public Double getTotalForOrderInLocalCurrencyById(String orderId) {
+        Order order = getOrderSecure(orderId);
+        return order.getTotalAmountLocalCurrency();
+    }
 
     public void orderPaid(String orderId) {
         Application orderManagerApplication = storeApplicationPool.getApplication("27716a58-0749-4601-a1bc-051a43a16d14");
@@ -1711,6 +1737,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(Order order : result) {
             order.doFinalize();
             generateKid(order);
+            String localCurrency = getLocalCurrencyCode();
+            
+            if (localCurrency.equalsIgnoreCase(order.currency)) {
+                order.currency = null;
+            }
         }
     }
 
@@ -2405,7 +2436,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.cart.clear();
         saveObject(order);
         
-        removeOrderFromBooking(order.id);
+        try {
+            removeOrderFromBooking(order.id);
+        } catch (GetShopBeanException ex) {
+            // Nothing to do, this happens when the order are removed by a named bean manager.
+            // In that case the manager should handle the order itself.
+        }
     }
     
     private void removeOrderFromBooking(String orderId) {
@@ -2653,6 +2689,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 throw new ErrorException(1052);
             }
             
+            // AccruedPayment
+            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190") && order.getTotalAmount() > 0) {
+                throw new ErrorException(1052);
+            }
+            
             // Samlefaktura
             if (order.getPaymentApplicationId().equals("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba") && order.getTotalAmount() > 0) {
                 throw new ErrorException(1052);
@@ -2721,7 +2762,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId, "");
+            order.registerTransaction(date, amount, userId, transactiontype, refId, "", null, null);
             feedGrafanaPaymentAmount(amount);
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
@@ -2795,7 +2836,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> dayIncomes = getDayIncomesFromDatabase(filter.start, filter.end);
         dayIncomes.stream().forEach(o -> o.isFinal = true);
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2895,7 +2936,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -2909,8 +2950,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             for (DayIncome income : dayIncomes) {
                 BasicDBObject query = new BasicDBObject();
                 query.put("incomes.id", income.id);
+                
                 List<DataCommon> datas = database.query("OrderManager", storeId, query);
                 datas.stream().forEach(o -> {
+                    resetFreePostsEntries(o);
                     System.out.println("Deleted report");
                     deleteObject(o);
                 });
@@ -2970,16 +3013,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new RuntimeException("We can not close down for the future");
         }
         
-        
         List<DayIncome> days = getDayIncomes(settings.closedTilPeriode, closeDate);
         
         createAndSaveIncomeReport(settings.closedTilPeriode, closePeriodeToDate, days);
         
         for (DayIncome day : days) {
             for (DayEntry entry : day.dayEntries) {
-                markOrderAsTransferredToAccounting(entry.orderId);
+                if (entry.freePostId != null && !entry.freePostId.isEmpty()) {
+                    markFreePostingAsClosed(entry.freePostId);
+                } else {
+                    markOrderAsTransferredToAccounting(entry.orderId);
+                }
             }
         }
+        
+        closeSegmentsInBookingManager();
         
         settings.closedTilPeriode = closePeriodeToDate;
         saveObject(settings);
@@ -3041,6 +3089,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
+        if (data instanceof Order) {
+            updateCurrencyForItems((Order)data);
+        }
+        
         checkAndResetOrderByClosedPeriodeDate(data);
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
     }
@@ -3369,6 +3421,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         oldCartItem.getProduct().name = cartItem.getProduct().name;
         oldCartItem.getProduct().description = cartItem.getProduct().description;
         
+        if(oldCartItem.getProduct().taxgroup != cartItem.getProduct().taxgroup) {
+            List<TaxGroup> taxgroups = productManager.getTaxes();
+            for(TaxGroup grp : taxgroups) {
+                if(grp.groupNumber == cartItem.getProduct().taxgroup) {
+                    oldCartItem.getProduct().changeToTaxGroup(grp);
+                }
+            }
+        }
+        
         if (!oldCartItem.isPmsAddons() && !oldCartItem.isPriceMatrixItem()) {
             oldCartItem.setCount(cartItem.getCount());
             oldCartItem.getProduct().price = cartItem.getProduct().price;
@@ -3393,11 +3454,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate) {
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio) {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment);
+            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio);
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }
@@ -3455,9 +3516,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate) {
+    public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate, String paymentId) {
         Date startDate = getStore().rowCreatedDate;
-        List<DayIncome> dayEntries = getDayIncomes(startDate, endDate);
+        List<DayIncome> dayEntries = new ArrayList();
+        if (paymentId != null && !paymentId.isEmpty()) {
+            dayEntries = getPaymentRecords(paymentId, startDate, endDate);
+        } else {
+            dayEntries = getDayIncomes(startDate, endDate);;
+        }
         
         Map<String, List<DayEntry>> groupedEntries = dayEntries.stream()
                 .flatMap(dayEntry -> dayEntry.dayEntries.stream())
@@ -3500,6 +3566,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
                 .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
+                .filter(o -> o.orderId != null)
                 .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).departmentId));
 
 
@@ -3510,6 +3577,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 
                 Map<String, List<DayEntry>> groupedByProductId = itemsWithDepartment
                         .stream()
+                        .filter(o -> o.orderId != null)
                         .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).getProductId()));
 
                 for (String productId : groupedByProductId.keySet()) {
@@ -3558,19 +3626,27 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DayIncome> getPaymentRecords(String paymentId, Date from, Date to) {
- 
+        return getPaymentRecordsInternal(paymentId, from, to, true);
+    }
+    
+    public List<DayIncome> getPaymentRecordsInternal(String paymentId, Date from, Date to, boolean doublePostingRecords) {
         List<Order> orders = this.orders.values()
                 .stream()
                 .filter(o -> o.payment != null && o.payment.getPaymentTypeId().equals(paymentId))
-                .filter(o -> o.hasTranscationBetween(from, to))
                 .collect(Collectors.toList());
         
         DayIncomeFilter filter = new DayIncomeFilter();
-        filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        if (doublePostingRecords) {
+            filter.doublePostingRecords = true;
+        } else {
+            filter.onlyPaymentTransactionWhereDoubledPosting = true;
+        }
+        
+        filter.includePaymentTransaction = false;
         filter.start = from;
         filter.end = to;
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay);
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
         breaker.breakOrders();
         
         return breaker.getDayIncomes();
@@ -3578,10 +3654,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void createNewDoubleTransferFile(String paymentId, Date from, Date to) {
-        List<DayIncome> incomes = getPaymentRecords(paymentId, from, to);
+        List<DayIncome> incomes = getPaymentRecordsInternal(paymentId, from, to, false);
         
         for (DayIncome inc : incomes) {
             inc.dayEntries.removeIf(o -> transactionIsTransferredToAccount(o.orderId, o.orderTransactionId));
+            inc.dayEntries.removeIf(o -> o.accountingNumber == null || o.accountingNumber.equals("0000"));
         }
         
         incomes.removeIf(o -> o.dayEntries.isEmpty());
@@ -3624,6 +3701,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean transactionIsTransferredToAccount(String orderId, String orderTransactionId) {
+        if (orderId == null)
+            return true;
+        
         for (OrderTransaction transaction : getOrder(orderId).orderTransactions) {
             if (transaction.transactionId.equals(orderTransactionId) && transaction.transferredToAccounting) {
                 return true;
@@ -3858,12 +3938,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public AccountingBalance getBalance(Date date) {
+    public AccountingBalance getBalance(Date date, String paymentId) {
         AccountingBalance balance = new AccountingBalance();
         balance.balanceToDate = date;
         
+        List<DayIncome> res = new ArrayList();
         
-        List<DayIncome> res = getDayIncomes(getStore().rowCreatedDate, date);
+        if (paymentId == null || paymentId.isEmpty()) {
+            res = getDayIncomes(getStore().rowCreatedDate, date);
+        } else {
+            res = getPaymentRecords(paymentId, getStore().rowCreatedDate, date);
+        }
         
         addBalance(res, balance);
         
@@ -3890,6 +3975,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         incomes.stream()
                 .flatMap(o -> o.dayEntries.stream())
+                .filter(o -> o.orderId != null)
                 .forEach(dayIncome -> {
                     addMetaDataToDayIncome(dayIncome);
                 });
@@ -3961,11 +4047,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void chargeOrder(String orderId, String tokenId) {
-        System.out.println("Charging order: " + orderId  + " token: " + tokenId);
-        
         Double amount = getTotalForOrderById(orderId);
-        orderToPay = getOrder(orderId);
+        orderToPay = getOrderSecure(orderId);
         tokenInUse = tokenId;
+        
+        orderToPay.payment.paymentType = "ns_8edb700e_b486_47ac_a05f_c61967a734b1\\IntegratedPaymentTerminal";
+        saveOrder(orderToPay);
+        
         GdsPaymentAction paymentAction = new GdsPaymentAction();
         paymentAction.amount = (int)(amount * 100);
         paymentAction.action = GdsPaymentAction.Actions.STARTPAYMENT;
@@ -4022,6 +4110,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         orderToPay.terminalResponses.put(new Date().getTime(), response);
         saveOrder(orderToPay);
+        orderToPay = null;
     }
 
     @Override
@@ -4041,4 +4130,168 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void removeOrderToPay() {
         orderToPay = null;
     }
+
+    @Override
+    public boolean hasNoOrders() {
+        return orders.keySet().isEmpty();
+    }
+
+    private void updateCurrencyForItems(Order order) {
+        if (order.currency == null || order.currency.isEmpty()) {
+            return;
+        }
+        
+        Order oldOrder = null;
+        
+        if (order.id != null && !order.id.isEmpty()) {
+            oldOrder = (Order)database.getObject(getCredentials(), order.id);
+        }
+        
+        for (CartItem item : order.getCartItems()) {
+            boolean samePriceInTaxAsOldOrder = oldOrder != null && oldOrder.cart.getCartItem(item.getCartItemId()).getProductPrice() == item.getProductPrice();
+            boolean currencySame = oldOrder != null && order.currency.equals(oldOrder.currency);
+            boolean hasOldOrder = oldOrder != null;
+            
+            if (item.getProduct().priceLocalCurrency == null || !samePriceInTaxAsOldOrder || !currencySame || !hasOldOrder) {
+                item.getProduct().priceLocalCurrency = convertCurrency(order, item.getProduct().price);
+                logPrint("Calculating the order prices to: " + item.getProduct().priceLocalCurrency);
+            } else {
+                logPrint("Skipping calcualation, already set " + item.getProduct().priceLocalCurrency + " and same price as before");
+            }
+            
+            
+        }
+    }
+
+    private String getLocalCurrencyCode() {
+        String localCurrency = getStoreSettingsApplication().getSetting("currencycode");
+        
+        if (localCurrency == null || localCurrency.isEmpty()) {
+            localCurrency = "NOK";
+        }
+        
+        return localCurrency;
+    }
+    
+    private Double convertCurrency(Order order, double price) {
+        String localCurrency = getLocalCurrencyCode();
+        
+        String covertString = order.currency+"_"+localCurrency;
+        covertString = covertString.toUpperCase();
+        
+        JsonObject res;
+        
+        try {
+            String url = "https://free.currconv.com/api/v7/convert?q="+covertString+"&compact=ultra&apiKey=a937737cc8a3af4b1766";
+            logPrint("Using url to fetch currency convertion: " + url);
+            res = webManager.htmlGetJson(url);
+        } catch (Exception ex) {
+            logPrintException(ex);
+            return null;
+        }
+        
+        if (res != null) {
+            double convertNumber = res.get(covertString).getAsDouble();
+            return price * convertNumber;
+        } else {
+            logPrint("Warning, the currency converter returned a null response");
+        }
+        
+        return null;
+    }
+
+    private void closeSegmentsInBookingManager() {
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            pmsManager.closeSegmentsForBookings();
+        }
+                    
+    }
+
+    @Override
+    public AccountingFreePost saveFreePost(AccountingFreePost freePost) {
+        validateFreePost(freePost);
+        
+        if (freePost.createdByUserId == null) {
+            freePost.createdByUserId = getSession().currentUser.id;
+        }
+        
+        saveObject(freePost);
+        accountingFreePosts.put(freePost.id, freePost);
+        return freePost;
+    }
+
+    @Override
+    public AccountingFreePost getAccountFreePost(String id) {
+        return accountingFreePosts.get(id);
+    }
+
+    @Override
+    public void deleteFreePost(String id) {
+        AccountingFreePost freePost = accountingFreePosts.get(id);
+        if (freePost == null)
+            return;
+        
+        if (freePost.closed) {
+            throw new ErrorException(1061);
+        }
+        
+        accountingFreePosts.remove(id);
+        deleteObject(freePost);
+    }
+
+    private void validateFreePost(AccountingFreePost freePost) {
+        if (freePost.closed) {
+            throw new ErrorException(1061);
+        }
+        
+        if (freePost.id != null && !freePost.id.isEmpty()) {
+            AccountingFreePost oldPost = (AccountingFreePost) database.findObject(freePost.id, "OrderManager");
+            
+            if (oldPost != null && oldPost.closed) {
+                throw new ErrorException(1062);
+            }
+            
+        }
+        
+        if (freePost.date == null) {
+            throw new ErrorException(1062);
+        }
+        
+        if (freePost.date.before(getOrderManagerSettings().closedTilPeriode)) {
+            throw new ErrorException(1062);
+        }
+    }
+
+    private List<AccountingFreePost> getAllFreePosts() {
+        return new ArrayList(accountingFreePosts.values());
+    }
+
+    private void markFreePostingAsClosed(String freePostId) {
+        AccountingFreePost freePost = getAccountFreePost(freePostId);
+        if (freePost != null) {
+            freePost.closed = true;
+            saveObject(freePost);
+        }
+    }
+
+
+    private void resetFreePostsEntries(DataCommon dataObject) {
+        DayIncomeReport income = (DayIncomeReport)dataObject;
+        
+        income.incomes.stream()
+                .flatMap(o -> o.dayEntries.stream())
+                .filter(o -> o.freePostId != null && !o.freePostId.isEmpty())
+                .map(o -> getAccountFreePost(o.freePostId))
+                .filter(o -> o != null)
+                .forEach(o -> {
+                    o.closed = false;
+                    saveObject(o);
+                });
+            
+
+    }
+
 }

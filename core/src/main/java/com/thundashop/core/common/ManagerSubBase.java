@@ -185,9 +185,9 @@ public class ManagerSubBase {
         
         this.ready = true;
         if (GetShopLogHandler.isDeveloper) {
-            System.out.println("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
+                System.out.println("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
+            }
         }
-    }
 
     private boolean isDatabaseMethodInUse() throws SecurityException {
         boolean dataFromDatabaseOverridden = false;
@@ -419,7 +419,9 @@ public class ManagerSubBase {
                 base.setPassword(user.internalPassword);
                 base.setMultiLevelName(gsscheduler.multilevelName);
                 base.setStoreId(storeId);
-                new Thread(base).start();
+                Thread td = new Thread(base);
+                td.setName("Direct Scheduler Thread: " + storeId + ", scheduler: " + base);
+                td.start();
             } else {
                 Class<?> clazz = Class.forName(gsscheduler.schedulerClassName.getCanonicalName());
                 Constructor<?> ctor = clazz.getConstructor(String.class,String.class,String.class,String.class, String.class);

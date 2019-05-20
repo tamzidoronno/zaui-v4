@@ -720,7 +720,9 @@ public class GetShop extends ManagerBase implements IGetShop {
             }
         };
                 
-        new Thread(thread).start();      
+        Thread td = new Thread(thread);
+        td.setName("Trigger pull request for: " + storeId);
+        td.start();
         
     }
 

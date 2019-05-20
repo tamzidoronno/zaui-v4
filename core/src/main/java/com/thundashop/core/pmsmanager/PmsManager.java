@@ -12,6 +12,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
@@ -40,6 +41,7 @@ import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
@@ -118,7 +120,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList();
     private String specifiedMessage = "";
     Date lastOrderProcessed;
-    private List<PmsLog> logentries = new ArrayList();
     private boolean initFinalized = false;
     private String orderIdToSend;
     private Date lastCheckForIncosistent;
@@ -324,8 +325,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 PmsLog entry = (PmsLog) dataCommon;
                 if (entry.logText.contains("Automarking booking as paid for, since no orders has been added") || entry.logText.equals("Booking saved / updated") || entry.logText.contains("booking has been deleted")) {
                     deleteObject(entry);
-                } else {
-                    logentries.add(entry);
                 }
             }
             if (dataCommon instanceof PmsAdditionalItemInformation) {
@@ -338,9 +337,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
-        
-        // Added 26.03.2019 - Save to remove after a few days and should be removed.
-        recheckOrdersAddedToBooking();
     }
 
     @Override
@@ -1034,15 +1030,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
         
-        PmsBooking oldBooking = bookings.get(booking.id);
-        if(oldBooking != null) {
-            if(!oldBooking.segmentId.isEmpty() && !booking.segmentId.isEmpty() && !booking.segmentId.equals(oldBooking.segmentId)) {
-                if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
-                    //Do no allow changing segment on booking day after it has started.
-                    throw new ErrorException(1058);
-                }
-            }
-        }
+        checkIfSegmentIsClosed(booking);
         
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
@@ -1090,6 +1078,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
+            
+            if(booking.isCompletedBooking()) {
+                if (!room.deleted && bookingEngine.getBooking(room.bookingId) == null) {
+                    room.deleted = true;
+                }
+            }
+            
             if (room == null) {
                 return "Room does not exists";
             }
@@ -2901,6 +2896,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
+        return addBookingItemType(bookingId, type, start, end, guestInfoFromRoom, true);
+    }
+    
+    public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom, boolean addToBookingEngine) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms room = new PmsBookingRooms();
         booking.rooms.add(room);
@@ -2924,10 +2923,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.guests = copiedRoom.guests;
         }
 
-        String res = addBookingToBookingEngine(booking, room);
-        if (!res.isEmpty()) {
-            room.addedToWaitingList = true;
-            room.markAsOverbooking();
+        if(addToBookingEngine) {
+            String res = addBookingToBookingEngine(booking, room);
+            if (!res.isEmpty()) {
+                room.addedToWaitingList = true;
+                room.markAsOverbooking();
+            }
         }
 
         addDefaultAddonsToRooms(toAdd);
@@ -3002,7 +3003,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             if (items.isEmpty()) {
                 if (!warnedAboutAutoassigning) {
-                    messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now, roomid : " + room.pmsBookingRoomId, null);
+//                    messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now, roomid : " + room.pmsBookingRoomId, null);
                     warnedAboutAutoassigning = true;
                 }
                 logPrint("....");
@@ -3057,7 +3058,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
-
+        List<PmsLog> logentries = queryLogEntries(filter);
+        
         List<PmsLog> res = new ArrayList();
         if (filter != null) {
             for (PmsLog log : logentries) {
@@ -4347,6 +4349,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.setTranslationStrings(addonConfig.getTranslations());
         toReturn.onlyForBookingItems = addonConfig.onlyForBookingItems;
         toReturn.alwaysAddAddon = addonConfig.alwaysAddAddon;
+        toReturn.percentagePrice = addonConfig.percentagePrice;
         toReturn.groupAddonType = addonConfig.groupAddonType;
         toReturn.groupAddonSettings = addonConfig.groupAddonSettings;
 
@@ -5055,6 +5058,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return null;
     }
+    
+    public List<PmsBooking> getBookingsWithOrderId(String orderId) {
+        return bookings.values()
+                .stream()
+                .filter(o -> o.orderIds.contains(orderId))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void mergeBookingsOnOrders() {
@@ -5291,7 +5301,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         log.userId = userId;
-        logentries.add(log);
         saveObject(log);
 
         if (log.tag != null && log.tag.equals("mobileapp")) {
@@ -9378,7 +9387,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void printCode(String gdsDeviceId, String pmsBookingRoomId) {
-        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         
         if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
@@ -9995,6 +10004,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         currentBooking.confirmed = true;
         currentBooking.markAsCompleted();
         currentBooking.avoidAutoDelete = true;
+        if (getSession() != null && getSession().currentUser != null) {
+            currentBooking.bookedByUserId = getSession().currentUser.id;
+        }
         addDefaultAddons(currentBooking);
         saveBooking(currentBooking);
     }
@@ -10033,13 +10045,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
         User usr = userManager.getUserByIdUnfinalized(booking.userId);
         
-        if(usr != null && (usr.denyDefaultAddedProduct(item.productId) && booking.isRecentlyCompleted())) {
+        if(usr != null && (usr.denyDefaultAddedProduct(item.productId) && (booking.isRecentlyCompleted() || room.isRecentlyCreated()))) {
             //The user booking has no access to this addon.
             return false;
         }
         
-        if(booking.isRecentlyCompleted()) {
-            //great, booking is just being created, add default addon.
+        if(booking.isRecentlyCompleted() || room.isRecentlyCreated()) {
+            //great, room or booking is just being created, add default addon.
             return true;
         } else {
             //Check if the default addon is already added.
@@ -10051,5 +10063,139 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return false;
+    }
+
+    public List<PmsBooking> getBookingsFromOrderId(String orderId) {
+        List<PmsBooking> result = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.orderIds != null && booking.orderIds.contains(orderId)) {
+                result.add(booking);
+            }
+        }
+        return result;
+    }
+
+    private List<PmsLog> queryLogEntries(PmsLog filter) {
+        String manager = "PmsManager_default";
+        if(storeId.equals("a152b5bd-80b6-417b-b661-c7c522ccf305")) { manager = "PmsManager_demo"; }
+        if(storeId.equals("3b647c76-9b41-4c2a-80db-d96212af0789")) { manager = "PmsManager_demo"; }
+        if(storeId.equals("e625c003-9754-4d66-8bab-d1452f4d5562")) { manager = "PmsManager_demo"; }
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", PmsLog.class.getCanonicalName());
+        if(filter.bookingId != null && !filter.bookingId.isEmpty()) {
+            query.put("bookingId", filter.bookingId);
+        }
+        if(filter.logType != null && !filter.logType.isEmpty()) {
+            query.put("logType", filter.logType);
+        }
+
+        List<PmsLog> result = database.query(manager, storeId, query).stream()
+                .map(o -> (PmsLog)o)
+                .collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
+    public void toggleAutoCreateOrders(String bookingId, String roomId) {
+        PmsBooking booking = getBooking(bookingId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.createOrdersOnZReport = !room.createOrdersOnZReport;
+        room.forceAccess = room.createOrdersOnZReport;
+        saveBooking(booking);
+        
+        if (!room.createOrdersOnZReport) {
+            removeAccrudePayments(booking, room.pmsBookingRoomId);
+        }
+        
+        PmsLog log = new PmsLog();
+        log.roomId = roomId;
+        log.bookingId = bookingId;
+        log.logText = "Changed status of autocreate order to "+room.createOrdersOnZReport;
+        logEntryObject(log);
+        
+        processor();
+    }
+
+    private void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
+        List<Order> accrudeOrdres = getAllOrderIds(booking.id)
+                    .stream()
+                    .map(id -> orderManager.getOrderSecure(id))
+                    .filter(o -> o.isAccruedPayment())
+                    .collect(Collectors.toList());
+        
+        for (Order order : accrudeOrdres) {
+            boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
+                    .filter(o -> !o.getProduct().externalReferenceId.equals(pmsBookingRoomId))
+                    .count() > 0;
+            
+            if (orderHasOrderLinesNotConnectedToBooking) {
+                continue;
+            }
+            
+            if (order.closed) {
+                Order credittedOrder = orderManager.creditOrder(order.id);
+                addOrderToBooking(booking, credittedOrder.id);
+            } else {
+                orderManager.deleteOrder(order.id);
+                booking.orderIds.remove(order.id);
+                saveBooking(booking);
+            }
+        }
+    }
+
+    private void checkIfSegmentIsClosed(PmsBooking booking) {
+        PmsBooking oldBooking = bookings.get(booking.id);
+        if(oldBooking != null) {
+            // We dont care if the segment is the same as old
+            if (booking.segmentId.equals(oldBooking.segmentId))
+                return;
+            
+            // Always make sure that its possible to set segment if its not set before.
+            if (oldBooking.segmentId == null || oldBooking.segmentId.isEmpty())
+                return;
+            
+            if (oldBooking.segmentClosed) {
+                //Do no allow changing segment that has been marked as closed.
+                throw new ErrorException(1058);
+            }
+            
+            if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
+                //Do no allow changing segment on booking day after it has started.
+                throw new ErrorException(1058);
+            }
+        }   
+    }
+    
+    public void closeSegmentsForBookings() {
+        bookings.values().stream()
+                .filter(booking -> {
+                    boolean hasStarted = booking.isStartingToday() || booking.isStarted();
+                    return hasStarted && !booking.segmentClosed;
+                })
+                .forEach(o -> closeSegment(o, o.segmentId));
+    }
+    
+    private void closeSegment(PmsBooking booking, String segmentId) {
+        if (booking.segmentClosed) {
+            return;
+        }
+        
+        booking.segmentClosed = true;
+        booking.segmentId = segmentId;
+        saveBooking(booking);
+        
+        List<PmsBooking> releatedBookings = getReleatedBookingsBasedOnOrders(booking);
+        releatedBookings.stream().forEach(o -> closeSegment(o, segmentId));
+    }
+
+    private List<PmsBooking> getReleatedBookingsBasedOnOrders(PmsBooking booking) {
+        List<PmsBooking> relatedBookings = booking.orderIds.stream()
+                .flatMap(orderId -> getBookingsWithOrderId(orderId).stream())
+                .filter(b -> b != null && !b.equals(booking))
+                .distinct()
+                .collect(Collectors.toList());
+        
+        return relatedBookings;
     }
 }

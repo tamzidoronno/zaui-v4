@@ -5,10 +5,11 @@ $servers = $this->getServers();
 
 //echo "<pre>";
 //print_r($group);
+//91533517
 //echo "</pre>";
 ?>
 
-
+<div appid="a6472054-66eb-46e2-90fb-ea34783ea001" hasinstance="yes" app="ApacAccessGroups" class="app  ApacAccessGroups" appsettingsid="25c15968-4b9b-4c23-9e44-dc5cdb83244c">
     
     <div class='menuarea'>
         <div class='shop_button' gs_confirm="Are you sure you want to delete this?" gsclick='deleteGroup'><i class='fa fa-trash'></i> Delete group</div>
@@ -24,34 +25,41 @@ $servers = $this->getServers();
         <br/>
 
         <div>
-
+            <table width='100%'>
+                <tr>
             <?
             foreach ($servers as $server) {
                 $lockIdsAlreadyAdded = array();
-
+                echo "<td valign='top'>";
                 if (isset($group->connectedToLocks->{$server->id})) {
                     $lockIdsAlreadyAdded = $group->connectedToLocks->{$server->id};
-                } 
-
-                echo "<div class='servergroup' serverid='$server->id'>";
-                    echo "<br/><b>".$server->givenName."</b>";
-                    foreach ($server->locks as $lock) {
-                        $checked = in_array($lock->id, $lockIdsAlreadyAdded) ? "checked='checked'" : "";
-                        $name = "";
-                        $name .= $lock->name;
-                        if (isset($lock->zwaveDeviceId)) {
-                            $name .= " (ZID: $lock->zwaveDeviceId)";
-                        }
-                        
-                        ?>
-                        <div><input <? echo $checked; ?> class='lockingroup' type="checkbox" value="<? echo $lock->id; ?>"/> <? echo $name; ?></div>
-                        <?
-                    }   
+                }
+                echo "<div class='servergroup' serverid='".$server->id."'>";
+                echo "<br/><b>".$server->givenName."</b>";
+                $lines = array();
+                foreach ($server->locks as $lock) {
+                    $checked = in_array($lock->id, $lockIdsAlreadyAdded) ? "checked='checked'" : "";
+                    $name = "";
+                    $name .= $lock->name;
+                    if (isset($lock->zwaveDeviceId)) {
+                        $name .= " (ZID: $lock->zwaveDeviceId)";
+                    }
+                    $lines[$name] = "<div><input $checked class='lockingroup' type='checkbox' value='".$lock->id."'/>$name</div>";
+                }
+                ksort($lines);
+                
+                foreach($lines as $line) {
+                    echo $line;
+                }
+                
                 echo "</div>";
+                echo "</td>";
             }
             
             $checkedForVirtual = $group->isVirtual ? "checked='true'" : "";
             ?>
+                </tr>
+            </table>
             <br/>
             <input class="isvirtual" type="checkbox" <? echo $checkedForVirtual; ?> value="true"/> <? echo $this->__f("Is this a virtual group?"); ?>
             <br/>
@@ -78,3 +86,4 @@ if (count($group->groupLockCodes)) {
 <?
 }
 ?>
+</div>

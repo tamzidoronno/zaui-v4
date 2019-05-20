@@ -3,6 +3,21 @@
 chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
+
+if (isset($_GET['token'])) {
+    $res = $factory->getApi()->getGetShopLockSystemManager()->getCodesByToken($_GET['token']);
+    
+    $toDump = array();
+    foreach ($res as $deviceId => $slots) {
+        foreach ($res->{$deviceId} as $slot) {
+            $toDump[$deviceId][] = $slot->code->pinCode;
+        }
+    }
+    
+    echo json_encode($toDump);
+    return;
+}
+
 $loggedIn = $factory->getApi()->getUserManager()->logOn($_GET['username'], $_GET['password']);
 
 if (!$loggedIn || $loggedIn->type < 50) {

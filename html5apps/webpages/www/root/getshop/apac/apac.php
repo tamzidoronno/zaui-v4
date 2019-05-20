@@ -14,6 +14,7 @@
 class apac extends PageCommon {
     public $title = "GetShop - Automated Property Access Control";
     public $title_rewrite = "pms";
+    public $description = array("en" => "Automated property access control enables keyless check in by automatically generating a pin code for the code using a wireless door lock system.");
     public $subpageof = "products";
     
     /** Menu settings */

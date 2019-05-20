@@ -432,6 +432,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
         checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
         checkNewBookingsThread.setStoreId(storeId);
+        checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
         checkNewBookingsThread.start();
         
         return toReturn;
@@ -900,13 +901,20 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 } else {
                     pmsManager.deleteBooking(newbooking.id);
                 }
-
-                NewOrderFilter filter = new NewOrderFilter();
-                filter.avoidOrderCreation = false;
-                filter.createNewOrder = false;
-                filter.prepayment = true;
-                filter.endInvoiceAt = newbooking.getEndDate();
-                pmsInvoiceManager.createOrder(newbooking.id,filter);
+                
+                newbooking = pmsManager.getBooking(newbooking.id);
+                List<String> orderIds = new ArrayList(newbooking.orderIds);
+                for(String orderId : orderIds) {
+                    Order order = orderManager.getOrderSecure(orderId);
+                    if(order.isCreditNote || !order.creditOrderId.isEmpty()) {
+                        continue;
+                    }
+                    List<PmsBooking> bookings = pmsManager.getBookingsFromOrderId(orderId);
+                    if(bookings.size() > 1) {
+                        continue;
+                    }
+                    pmsInvoiceManager.creditOrder(newbooking.id, orderId);
+                }
 
                 return "";
             }
@@ -1662,7 +1670,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(tosend);
         logText("Doing update of " + numberOfDays + " days");
         WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
+        updateThread.setName("Wubook update thread, storeid: " + storeId);
         updateThread.start();
+        updateThread.setName("Updating WuBookThread for store: " + storeId);
         availabilityHasBeenChanged = null;
         lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
         

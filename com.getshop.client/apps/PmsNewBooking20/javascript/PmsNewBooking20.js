@@ -20,6 +20,24 @@ app.PmsNewBooking20 = {
         $(document).on('keyup','.PmsNewBooking20 .roomcount', app.PmsNewBooking20.updateTotalRoomSelectCount);
         $(document).on('click','.PmsNewBooking20 .addconference', app.PmsNewBooking20.showAddConferencePanel);
         $(document).on('click','.PmsNewBooking20 .attachguesttoevent', app.PmsNewBooking20.attachGuestToConference);
+        $(document).on('change','.PmsNewBooking20 .addcouponcode', app.PmsNewBooking20.addCouponCode);
+        $(document).on('change','.PmsNewBooking20 .addsource', app.PmsNewBooking20.addSource);
+    },
+    addCouponCode : function() {
+        var event = thundashop.Ajax.createEvent('','setCouponCode',$(this), {
+            "code" : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsNewBooking20.reloadAddedRoomsList();
+        });
+    },
+    addSource : function() {
+        var event = thundashop.Ajax.createEvent('','setSource',$(this), {
+            "source" : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {});
     },
     attachGuestToConference : function() {
         var btn = $(this).closest('.addconferencearea').find('.addconference');
@@ -42,6 +60,10 @@ app.PmsNewBooking20 = {
     },
     showAddConferencePanel : function() {
         var panel = $(this).closest('.addconferencearea').find('.addguesttoconferencepanel');
+        if(panel.is(':visible')) {
+            panel.hide();
+            return;
+        }
         var event = thundashop.Ajax.createEvent('','loadConferenceEvents',$(this), {
             "guestid" : $(this).closest('.guestinformationrow').attr('guestid')
         });

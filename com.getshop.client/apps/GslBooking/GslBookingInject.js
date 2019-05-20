@@ -1796,6 +1796,13 @@ function getshop_goToNextPage(page) {
     var adults = $('#count_adult').val();
     var children = $('#count_child').val();
     var discountCode = $('#coupon_input').val();
+    
+    startDate = startDate.split(".");
+    endDate = endDate.split(".");
+    
+    startDate = startDate[2] + "-" + startDate[1] + "-" + startDate[0];
+    endDate = endDate[2] + "-" + endDate[1] + "-" + endDate[0];
+    
     var link = page + "#start=" + startDate + "&end=" + endDate + "&rooms=" + rooms + "&adults=" + adults + "&children=" + children + "&discount=" + discountCode;
     window.location.href = link;
 }

@@ -1,22 +1,30 @@
 <?
 /* @var $this \ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
-
-if ($this->getOrder()->creditOrderId) {
+$creditNoteOrderIds = $this->getOrder()->creditOrderId;
+if ($creditNoteOrderIds) {
     ?>
     <div class='workareaheader warning'>
         <div class="headertitle">
-            <? echo $this->__f("This order has been creditted"); ?>
+            <? echo $this->__f("This order has been creditted"); 
+            
+            foreach ($creditNoteOrderIds as $creditNoteOrderId) {
+            ?>
+            &nbsp;<a href="/invoicing.php?page=orderviewpage&orderid=<? echo $creditNoteOrderId; ?>"><div class="shop_button"><? echo $this->__f("Open creditnote"); ?></div></a>
+            <?
+            }
+            ?>
         </div>
-
     </div>    
     <?
 }
 
 if ($this->getOrder()->isCreditNote) {
+    
     ?>
     <div class='workareaheader warning'>
         <div class="headertitle">
             <? echo $this->__f("This is a credit note"); ?>
+            &nbsp; <a href="/invoicing.php?page=orderviewpage&orderid=<? echo $this->getOrder()->parentOrder; ?>"><div class='shop_button'><? echo $this->__f("Open parent order"); ?></div></a>
         </div>
 
     </div>    

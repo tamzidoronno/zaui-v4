@@ -13,6 +13,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -333,13 +334,43 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         orderManager.markAsTransferredToAccount(incomes);
     }
 
+    
     @Override
-    public List<String> getTransferData(Date start, Date end) {
+    public void transferAllDaysThatCanBeTransferred() {
+        if(!isCurrentSelectedSupportingDirectTransfer()) {
+            return;
+        }
+        Calendar time = Calendar.getInstance();
+        time.add(Calendar.DAY_OF_YEAR, -30);
+        Date start = time.getTime();
+        Date end = new Date();
+        List<DayIncome> dayincomes = orderManager.getDayIncomes(start, end);
+        List<DayIncome> incomes = new ArrayList();
+        for(DayIncome income : dayincomes) {
+            if(!income.isFinal) { continue; }
+            if(income.transferredToAccounting()) { continue; }
+            incomes.add(income);
+        }
+        getActivatedAccountingSystemOther().transfer(incomes);
+        orderManager.markAsTransferredToAccount(incomes);
+    }
+    
+    
+    @Override
+    public List<String> getTransferData(Date start, Date end, String doublePostingFileId) {
         List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
         
-        for (DayIncome income : incomes) {
-            if (!income.isFinal) {
-                throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
+        if (doublePostingFileId != null && !doublePostingFileId.isEmpty()) {
+            DoublePostAccountingTransfer transferFile = orderManager.getDoublePostAccountingTransfer(doublePostingFileId);
+            if (transferFile == null) {
+                throw new NullPointerException("Did not find the given file.");
+            }
+            incomes = transferFile.incomes;
+        } else {
+            for (DayIncome income : incomes) {
+                if (!income.isFinal) {
+                    throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
+                }
             }
         }
         

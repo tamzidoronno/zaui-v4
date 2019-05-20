@@ -42,6 +42,7 @@ public class PmsBookingRooms implements Serializable {
     public double count = 1;
     public Double price = 0.0;
     Double priceWithoutDiscount = 0.0;
+    public Date roomCreatedDate = new Date();
     public LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap();
     public double taxes = 8;
     public String bookingId;
@@ -112,6 +113,12 @@ public class PmsBookingRooms implements Serializable {
     boolean paidFor = false;
     public boolean forceAccess = false;
     Double printablePrice = 0.0;
+    
+    /**
+     * If this is set to true the system will automatically
+     * create orders for the room when before the zreport is saved.
+     */
+    public boolean createOrdersOnZReport = false;
     
     public String pgaAccessToken;
     public boolean loggedGetCode = false;
@@ -856,6 +863,7 @@ public class PmsBookingRooms implements Serializable {
     }
     
     void checkAddons() {
+        Calendar cal = Calendar.getInstance();
         for(PmsBookingAddonItem item : addons) {
             if (item.count == null) {
                 item.count = 0;
@@ -863,6 +871,13 @@ public class PmsBookingRooms implements Serializable {
             
             if (item.price == null || item.price.isNaN() || item.price.isInfinite()) {
                 item.price = 0D;
+            }
+            if(item.percentagePrice > 0) {
+                cal.setTime(item.date);
+                System.out.println("Is percentage price: " + item.percentagePrice);
+                Double dailyPrice = getDailyPrice(numberOfGuests, cal);
+                double dayprice = dailyPrice * ((double)item.percentagePrice / 100);
+                item.price = dayprice;
             }
         }
     }
@@ -986,4 +1001,8 @@ public class PmsBookingRooms implements Serializable {
         return date.start.before(cal.getTime());
     }
 
+    boolean isRecentlyCreated() {
+        long diff = new Date().getTime() - roomCreatedDate.getTime();
+        return diff < 60000;
+    }
 }

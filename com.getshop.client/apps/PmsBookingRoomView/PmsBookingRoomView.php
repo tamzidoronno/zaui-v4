@@ -21,6 +21,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function changeChannel() {
+        $booking = $this->getPmsBooking();
+        $booking->channel = $_POST['data']['channel'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->clearCache();
+    }
  
     public static function sortByIncrementalOrderId($a, $b) {
         return $b->incrementOrderId > $a->incrementOrderId;
@@ -99,6 +106,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $booking = $this->getPmsBooking();
         $booking->createOrderAfterStay = !$booking->createOrderAfterStay;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
+    public function toggleAutoCreateOrders() {
+        $this->setData();
+        $this->getApi()->getPmsManager()->toggleAutoCreateOrders($this->getSelectedMultilevelDomainName(), $this->pmsBooking->id, $this->selectedRoom->pmsBookingRoomId);
     }
 
     public function toggleautocharging() {
@@ -321,11 +333,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function shouldUseNewPaymentWindow() {
-        return isset($_SESSION['use_new_payment_view']);
+        if ($this->getFactory()->getStore()->id == "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+            return !isset($_SESSION['use_new_payment_view']) || $_SESSION['use_new_payment_view'];
+        }
+        
+        return isset($_SESSION['use_new_payment_view']) && $_SESSION['use_new_payment_view'];
     }
 
     public function switchToOldVersion() {
-        unset($_SESSION['use_new_payment_view']);
+        $_SESSION['use_new_payment_view'] = false;
     }
     public function loadChangesPanel() {
         $this->includefile("differenceinroom");
@@ -2074,6 +2090,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $user->description;
     }
 
+    public function deletePinnedComment() {
+        $this->getPmsBooking();
+        $user = $this->getUserForBooking();
+        $user->description = "";
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     /**
      * 
      * @param type $productId
@@ -2163,16 +2186,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function canTestNewRoutine() {
-        
-        if (!$this->getApi()->getStoreManager()->isProductMode()) {
-            return true;
-        }
-        
-        
-        $allowedStores = array();
-        $allowedStores[] = "93fadf31-1039-4196-9e4f-77c3be0ef8d1";
-        $allowedStores[] = "b6949f70-5e41-4c5e-abcf-d595450f8048";
-        return in_array($this->getFactory()->getStore()->id, $allowedStores);
+        return true;
     }
 
     public function printConnectedConferenceEventToGuest($guest) {

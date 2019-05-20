@@ -6,14 +6,6 @@ import eu.nets.baxi.ef.BaxiEFEventListener;
 import eu.nets.baxi.ef.CardEventArgs;
 import eu.nets.baxi.ef.CardInfoAllArgs;
 import eu.nets.baxi.log.FileAccess;
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
@@ -27,7 +19,7 @@ import java.util.logging.Logger;
  *
  * Created by mcamp on 14.03.2017.
  */
-public class GetShopNetsController implements Initializable {
+public class GetShopNetsController {
     /**
      * Some logging abilities for debugging purposes.
      */
@@ -63,46 +55,6 @@ public class GetShopNetsController implements Initializable {
      */
     private BaxiCtrl baxi;
 
-    /**
-     * The JavaFX stage we're working with.
-     */
-    private Stage stage;
-
-    /**
-     * The connection status label.
-     */
-    @FXML
-    private Label connStatus;
-
-    /**
-     * The items total text field.
-     */
-    @FXML
-    private TextField itemTotalText;
-
-    /**
-     * The text area where we display the bought items when clicking the item buttons.
-     */
-    @FXML
-    private TextArea itemArea;
-
-    /**
-     * The text area where we display text events.
-     */
-    @FXML
-    private TextArea displayEventsArea;
-
-    /**
-     * The text area where we display receipt events.
-     */
-    @FXML
-    private TextArea receiptEventsArea;
-
-    /**
-     * The text area where we display the terminal and local results.
-     */
-    @FXML
-    private TextArea terminalResultArea;
 
     /**
      * The current total amount for the items chosen by the cashier.
@@ -135,34 +87,7 @@ public class GetShopNetsController implements Initializable {
          */
         @Override
         public void OnCardInfoAll(final CardInfoAllArgs args) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    String str = "";
-
-                    str += "CardInfoAll " + NEW_LINE;
-                    str += "  VAS: " + args.getVAS() + NEW_LINE;
-                    str += "  Customer id: " + args.getCustomerId() + NEW_LINE;
-                    str += "  Psp Command: " + args.getPspCommand() + NEW_LINE;
-                    str += "  Status Code: " + args.getStatusCode() + NEW_LINE;
-                    str += "  Information Field 1: " + args.getInformationField1() + NEW_LINE;
-                    str += "  Information Field 2: " + args.getInformationField2() + NEW_LINE;
-                    str += "  Psp Vas ID: " + args.getPspVasId() + NEW_LINE;
-                    str += "  Card Validation: " + args.getCardValidation() + NEW_LINE;
-                    str += "  ICC: " + args.getICCGroupId() + NEW_LINE;
-                    str += "  PAN: " + args.getPAN() + NEW_LINE;
-                    str += "  Issuer ID: " + args.getIssuerId() + NEW_LINE;
-                    str += "  Country Code: " + args.getCountryCode() + NEW_LINE;
-                    str += "  Card Restrictions: " + args.getCardRestrictions() + NEW_LINE;
-                    str += "  Card Fee: " + args.getCardFee() + NEW_LINE;
-                    str += "  Track2: " + args.getTrack2() + NEW_LINE;
-                    str += "  TCC: " + args.getTCC() + NEW_LINE;
-                    str += "  Bank Agent: " + args.getBankAgent() + NEW_LINE + RESULT_SEPARATOR;
-
-                    terminalResultArea.appendText(str);
-                    LOG.info(str);
-                }
-            });
+           
         }
 
         /**
@@ -172,19 +97,6 @@ public class GetShopNetsController implements Initializable {
          */
         @Override
         public void OnCard(final CardEventArgs e) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    String eventText = "";
-
-                    eventText += "  Issuer ID: " + e.getIssuerID() + NEW_LINE;
-                    eventText += "  Card Status: " + e.getCardStatus() + "(" + e.getCardStatus().getValue() + ")"
-                            + NEW_LINE + RESULT_SEPARATOR;
-
-                    terminalResultArea.appendText(eventText);
-                    LOG.info("OnCard is fired: " + eventText);
-                }
-            });
         }
 
         /**
@@ -316,7 +228,6 @@ public class GetShopNetsController implements Initializable {
         @Override
         public void OnBaxiError(final BaxiErrorEventArgs args) {
             String text = "Error: " + args.getErrorCode() + " " + args.getErrorString();
-            displayEventsArea.setText(text);
         }
 
         @Override
@@ -326,7 +237,6 @@ public class GetShopNetsController implements Initializable {
 
         @Override
         public void OnDisconnected() {
-            connStatus.setText(STATUS_DISCONNECTED);
             isConnected = false;
         }
 
@@ -375,19 +285,6 @@ public class GetShopNetsController implements Initializable {
         return retVal==1;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        itemTotalText.setText("" + totalAmount);
-    }
-
-    /**
-     * Set the JavaFX stage as a global variable. We're gonna need it around.
-     *
-     * @param stage the JavaFX stage window.
-     */
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 
     /**
      * Close the Baxi connection.
@@ -404,15 +301,11 @@ public class GetShopNetsController implements Initializable {
      * Initializes the BAXI Java library controller. This is the API interface with the JBaxi library.
      */
     public void openBaxi() {
-        if (isCardInfoAll()) {
-            isItuHandshaking = true;
-            baxi = new BaxiEF();
-            ((BaxiEF) baxi).addBaxiEFListener(efListener);
-            int result = baxi.open();
-            LOG.info("Open BAXI status: " + result);
-        } else {
-            throw new IllegalStateException("Only EF Baxi supported in sample app. Please set CardInfoAll property to 1 in baxi.ini");
-        }
+        isItuHandshaking = true;
+        baxi = new BaxiEF();
+        ((BaxiEF) baxi).addBaxiEFListener(efListener);
+        int result = baxi.open();
+        LOG.info("Open BAXI status: " + result);
     }
 
 
@@ -454,9 +347,6 @@ public class GetShopNetsController implements Initializable {
         doAdministration(0x313C);
     }
 
-    public void close() {
-        stage.close();
-    }
 
     public void transferAmount() {
         if (totalAmount != 0) {
@@ -533,11 +423,8 @@ public class GetShopNetsController implements Initializable {
             LOG.info("The transfer amount operation result: " + result);
 
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Amount is 0!");
-            alert.setHeaderText(null);
-            alert.setContentText("Total amount cannot be 0, please add some items!");
-            alert.showAndWait();
+            //Something wrong happends here.
+            
         }
     }
 

@@ -4,6 +4,7 @@ namespace ns_e6570c0a_8240_4971_be34_2e67f0253fd3;
 class AccountFinanceReport extends \MarketingApplication implements \Application {
     private $paymentConfigs = array();
     public $extramessage = "";
+    public $savedFreePost = false;
     
     public function getDescription() {
         
@@ -69,6 +70,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $system = $this->getApi()->getGetShopAccountingManager()->getCurrentSystemOther();
         if ($system == "GENERELL_NORWEGIAN") {
             $this->includefile("gbat10");
+        }
+        if ($system == "BUNTIMPORT_VISMA_BUSINESS") {
+            $this->includefile("vismabunt");
         }
     }
     
@@ -145,6 +149,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     }
 
     public function getAccountDescription($account) {
+        if ($account == "0000") {
+            return "f-report";
+        }
         foreach ($this->paymentConfigs as $config) {
             if (!$config)
                 continue;
@@ -205,6 +212,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     
     public function closeBankAccount() {
         $this->getApi()->getOrderManager()->closeBankAccount($this->getEnd());
+    }
+    
+    public function transferAllDays() {
+        $this->getApi()->getGetShopAccountingManager()->transferAllDaysThatCanBeTransferred();
     }
     
     public function downloadReport() {
@@ -319,6 +330,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
             return "doublepost";
         }
         
+        if ($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'] == "freeposting") {
+            return "freeposting";
+        }
+        
         return "freport";
     }
 
@@ -352,7 +367,8 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function downloadUnsettledAmountExcel() {
         $start = $this->getStart();
         $end = $this->getEnd();
-        $unsettledAmounts = $this->getApi()->getOrderManager()->getOrdersUnsettledAmount($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'], $end);
+        $paymentId = isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']) ? $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']  : null;
+        $unsettledAmounts = $this->getApi()->getOrderManager()->getOrdersUnsettledAmount($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_summary'], $end, $paymentId);
         
         $rows = array();
         
@@ -378,6 +394,25 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
         echo json_encode($rows);
     }
+
+    public function isJson($string) {
+         json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
+    public function createFreePosting() {
+        $freePost = new \core_ordermanager_data_AccountingFreePost();
+        $freePost->amount = $_POST['data']['amount'];
+        $freePost->date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $freePost->creditAccountNumber = $_POST['data']['creditaccount'];
+        $freePost->debitAccountNumber = $_POST['data']['debitaccount'];
+        $freePost->comment = $_POST['data']['comment'];
+        $this->savedFreePost = $this->getApi()->getOrderManager()->saveFreePost($freePost);
+    }
     
+    public function deleteRecord() {
+        $this->getApi()->getOrderManager()->deleteFreePost($_POST['data']['freepostid']);
+        $this->cancelOrderView();
+    }
 }
 ?>

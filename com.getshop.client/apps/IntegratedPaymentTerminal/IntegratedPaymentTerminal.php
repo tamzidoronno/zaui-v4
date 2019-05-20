@@ -2,17 +2,45 @@
 namespace ns_8edb700e_b486_47ac_a05f_c61967a734b1;
 
 class IntegratedPaymentTerminal extends \PaymentApplication implements \Application {
-
-    public function getName() {
-        return "IntegratedPaymentTerminal";
+    public function getDescription() {
+        return "We have a terminal connected directly to our booking system. Whenever paying with a verifone payment terminal you will automatically mark payments and completed. This integration is complex and needs a getshop expert to complete.";
     }
 
-    public function getDescription() {
-        return "Connected an integrated nets payment terminal.";
+    public function getName() {
+        return "Integrated payment terminal";
+    }
+
+    public function hasPaymentProcess() {
+        return $this->order != null && $this->order->status != 7 && !$this->getCurrentOrder()->isCreditNote;
+    }
+    public function getIcon() {
+        return "terminal.svg";
+    }
+
+    /**
+     * Should display you configuration page.
+     */
+    public function renderConfig() {
+        $this->includefile("terminalconfig");
     }
     
     public function render() {
+        $this->getLastMessage();
         
+        if (isset($_POST['data']['orderid'])) {
+            $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        }
+        
+        echo "<input type='hidden' id='orderid' value='".$this->order->id."'/>";
+        if ($this->getApi()->getOrderManager()->getCurrentPaymentOrderId() != null) {
+            $this->includefile("inprogress");
+        } else if (isset($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state']) && $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] == "failed") {
+            $this->includefile("failed");
+        } else if (isset($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state']) && $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] == "completed") {
+            $this->includefile("completed");
+        } else {
+            $this->includefile("paymentprocess");
+        }
     }
     
     public function getIds() {
@@ -54,7 +82,6 @@ class IntegratedPaymentTerminal extends \PaymentApplication implements \Applicat
     
     
     
-    
     public function saveSettings() {
         $this->setConfigurationSetting("token0", $_POST['token0']);
         $this->setConfigurationSetting("token1", $_POST['token1']);
@@ -63,12 +90,43 @@ class IntegratedPaymentTerminal extends \PaymentApplication implements \Applicat
         $this->setConfigurationSetting("token4", $_POST['token4']);
     }
     
+    public function getColor() {
+        return "green";
+    }
+    
+    public function sendToIntegratedPaymentTerminal() {
+        $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_verifoneid'] = $_POST['data']['token'];
+        $this->getApi()->getOrderManager()->chargeOrder($_POST['data']['orderid'], $_POST['data']['token']);
+    }
+
+    public function getLastMessage() {
+        $messages = (array)$this->getApi()->getOrderManager()->getTerminalMessages();
         
-    /**
-     * Should display you configuration page.
-     */
-    public function renderConfig() {
-        $this->includefile("terminalconfig");
+        $message = "";
+        foreach ($messages as $message) {
+            $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_lastmsg'] = $message;
+        }
+        
+        $this->getApi()->getOrderManager()->clearMessages();
+        
+        if (!isset($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_lastmsg'])) {
+            return "Wainting for terminal...";
+        }
+        
+        if ($message == "payment failed") {
+            $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] = "failed";
+        }
+        
+        if ($message == "completed") {
+            $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_state'] = "completed";
+        }
+        
+        return $_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_lastmsg'];
+    }
+
+    
+    public function cancelPayment() {
+        $this->getApi()->getOrderManager()->cancelPaymentProcess($_SESSION['ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2_verifoneid']);
     }
     
     

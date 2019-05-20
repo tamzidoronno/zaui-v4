@@ -182,7 +182,7 @@ class Factory extends FactoryBase {
             $fileContent = $this->minify($fileContent);
             file_put_contents($fileName, $fileContent, FILE_APPEND);
         } else {
-            echo "\n" . '<script type="text/javascript" src="'.$file.'"></script>';
+            echo "\n" . '<script type="text/javascript" src="'.$file.'?'.calculateCacheName().'"></script>';
         }
     }
     
@@ -362,7 +362,7 @@ class Factory extends FactoryBase {
 
     function __construct() {
         @session_start();
-        header('Content-Type: text/html; charset=UTF-8');
+        @header('Content-Type: text/html; charset=UTF-8');
         $this->setCurrentModuleId();
         $this->initialize();
         $this->applicationPool = new ApplicationPool($this);
@@ -1081,7 +1081,7 @@ class Factory extends FactoryBase {
         if($this->includeSeo()) {
             echo "<script>loadCSS('$file');</script>\n";
         } else {
-            echo '<link rel="stylesheet" type="text/css" href="'.$file.'" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$file.'?'.calculateCacheName().'" />';
         }
 
     }

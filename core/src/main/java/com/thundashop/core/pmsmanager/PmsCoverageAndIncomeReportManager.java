@@ -117,7 +117,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter, LinkedHashMap<String, BigDecimal> toadd, LinkedHashMap<String, BigDecimal> products) {
         BigDecimal result = new BigDecimal(0);
         for(DayEntry entry : income.dayEntries) {
-            if(!entry.isActualIncome || entry.isOffsetRecord) {
+            if(!entry.isActualIncome || entry.isOffsetRecord  || entry.orderId == null) {
                 continue;
             }
             if(!filter.orderIds.isEmpty() && !filter.orderIds.contains(entry.orderId)) {
@@ -376,7 +376,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     @Override
     public void recalculateSegments(String segmentId) {
-        List<PmsBooking> bookings = pmsManager.getAllBookings(null);
+        List<PmsBooking> bookings = pmsManager.getAllBookingsFlat();
         for(PmsBooking booking : bookings) {
             if(booking.segmentId != null && !booking.segmentId.isEmpty()) {
                 continue;

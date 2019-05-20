@@ -689,6 +689,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         return amount;
     }
     
+    public double getTotalAmountLocalCurrency() {
+        double amount = 0.0;
+        for(CartItem item : cart.getItems()) {
+            amount += item.getTotalAmountInLocalCurrency();
+        }
+        return amount;
+    }
+    
     public BigDecimal getTotalAmountRoundedTwoDecimals(int precision) {
         BigDecimal amount = new BigDecimal(0D);
         
@@ -1018,10 +1026,12 @@ public class Order extends DataCommon implements Comparable<Order> {
         return cal.getTime();
     }
 
-    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment) {
+    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment, Double amountInLocalCurrency, Double agio) {
         OrderTransaction transaction = new OrderTransaction();
         transaction.date = date;
         transaction.amount = amount;
+        transaction.amountInLocalCurrency = amountInLocalCurrency;
+        transaction.agio = agio;
         transaction.userId = userId;
         transaction.refId = refId;
         transaction.transactionType = transactionType;
@@ -1333,6 +1343,13 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public void changeAllTaxes(TaxGroup taxGroupNumber) {
         cart.getItems().stream().forEach(item -> item.changeAllTaxes(taxGroupNumber));
+    }
+
+    public boolean isAccruedPayment() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("accruedpayment")) {
+            return true;
+        }
+        return false;
     }
 
     public static class Status  {

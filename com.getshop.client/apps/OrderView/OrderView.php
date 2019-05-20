@@ -13,6 +13,13 @@ class OrderView extends \MarketingApplication implements \Application {
         
     }
 
+    public function updateCurrencyOnOrder() {
+        $order = $this->getOrder();
+        $order->currency = $_POST['data']['currency'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->rePrintTab('orderlines');
+    }
+    
     public function getName() {
         return "OrderView";
     }
@@ -112,7 +119,10 @@ class OrderView extends \MarketingApplication implements \Application {
     public function addTransactionRecord() {
         $order = $this->getOrder();
         $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
-        $this->getApi()->getOrderManager()->addOrderTransaction($order->id, $_POST['data']['amount'], $_POST['data']['comment'], $date);
+        $amountInLocalCurrency = isset($_POST['data']['localCurrency']) ? $_POST['data']['localCurrency'] : null;
+        $agio = isset($_POST['data']['agio']) ? $_POST['data']['agio'] : null;
+        
+        $this->getApi()->getOrderManager()->addOrderTransaction($order->id, $_POST['data']['amount'], $_POST['data']['comment'], $date, $amountInLocalCurrency, $agio);
         $this->rePrintTab("paymenthistory");
     }
     
@@ -286,6 +296,7 @@ class OrderView extends \MarketingApplication implements \Application {
         $itemFound->product->price = $_POST['data']['price'];
         $itemFound->product->name = $_POST['data']['productDescription'];
         $itemFound->product->description  = $_POST['data']['productDescription'];
+        $itemFound->product->taxgroup = $_POST['data']['taxGroup'];
         
         $this->getApi()->getOrderManager()->updateCartItemOnOrder($order->id, $itemFound);
         

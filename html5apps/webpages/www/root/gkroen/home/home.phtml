@@ -1,0 +1,95 @@
+<div class="contentrow firstrow"> 
+    <div class="row_inner">
+        
+        <div>
+            <?php
+            ContentManager::render("top_content");
+            ?>
+        </div>
+        <div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
+    </div>
+</div>
+
+<div class="contentrow row_2"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_3">
+            <?php
+                ContentManager::render("row2_col_1");
+            ?>
+        </div>
+        <div class="col col_2 col_size_3">
+            <?php
+                ContentManager::render("row2_col_2");
+            ?>
+        </div>
+        <div class="col col_3 col_size_3">
+            <?php
+                ContentManager::render("row2_col_3");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_2"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_3">
+            <?php
+                ContentManager::render("row30_col_1");
+            ?>
+        </div>
+        <div class="col col_2 col_size_3">
+            <?php
+                ContentManager::render("row30_col_2");
+            ?>
+        </div>
+        <div class="col col_3 col_size_3">
+            <?php
+                ContentManager::render("row30_col_3");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_width_degreed"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img src="gkroen/images/dinner_frontpage.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row3_col_2");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_4"> 
+    <div class="row_inner">
+        <?php
+            ContentManager::render("row_4");
+        ?>
+        
+    </div>
+    
+    <iframe width="100%" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=12.229403257369997%2C59.930011633734686%2C12.2417950630188%2C59.933322938944315&amp;layer=mapnik&amp;marker=59.93166732765862%2C12.235599160194397" ></iframe>
+</div>
+
+
+<script>
+    gsisdevmode = false;
+    
+    $ = jQuery;
+    jQuery(function ($) {
+        $.getScript("https://gkroen.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+            $("#bookingprocess").getshopbooking(
+                {
+                    "endpoint": "https://gkroen.getshop.com/",
+                    "jsendpoint": "https://gkroen.getshop.com/",
+                    "domain" : "default",
+                    "nextPage" : "/index.php?page=booking",
+                    "language" : "en" 
+                }
+            );
+        });
+    });
+</script>

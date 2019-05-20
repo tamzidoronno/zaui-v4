@@ -103,19 +103,7 @@ public class PmsBookingPaymentDiffer {
         allDatesToLookAt.addAll(getAllDatesFromOrders(allDatesToLookAt));
         
         for (String date : allDatesToLookAt) {
-            PmsRoomPaymentSummaryRow row = new PmsRoomPaymentSummaryRow();
-            row.date = date;
-            row.priceInBooking = 0;
-            
-            if (!room.isDeleted() || room.nonrefundable) { 
-                row.priceInBooking = room.priceMatrix.get(date) != null ? room.priceMatrix.get(date) : 0D;
-            }
-            
-            row.cartItemIds = getCartItemsIds(roomProductIds);
-            row.isAccomocation = true;
-            row.countFromBooking = 1;
-            row.countFromOrders = 1;
-            row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+            PmsRoomPaymentSummaryRow row = createEmptyRoomSummaryRow(date);
             
             calculateAmountInOrders(row);
             calculatePaidAmount(row);
@@ -125,8 +113,25 @@ public class PmsBookingPaymentDiffer {
         return retList;
     }
 
+    private PmsRoomPaymentSummaryRow createEmptyRoomSummaryRow(String date) {
+        PmsRoomPaymentSummaryRow row = new PmsRoomPaymentSummaryRow();
+        row.date = date;
+        row.priceInBooking = 0;
+        if (!room.isDeleted() || room.nonrefundable) {
+            row.priceInBooking = room.priceMatrix.get(date) != null ? room.priceMatrix.get(date) : 0D;
+        }
+        row.cartItemIds = getCartItemsIds(roomProductIds);
+        row.isAccomocation = true;
+        row.countFromBooking = 1;
+        row.countFromOrders = 1;
+        row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+        return row;
+    }
+
     private void setProductIdsForRoom() {
-        roomProductIds = pmsManager.bookingEngine.getBookingItemTypes().stream()
+        roomProductIds = pmsManager.bookingEngine.getBookingItemTypesIds()
+                .stream()
+                .map(id -> pmsManager.bookingEngine.getBookingItemType(id))
                 .filter(type -> type.productId != null && !type.productId.isEmpty())
                 .map(type -> type.productId)
                 .collect(Collectors.toList());
@@ -258,9 +263,13 @@ public class PmsBookingPaymentDiffer {
         rowsIncludedInRoomPrice.stream()
                 .forEach(includedInRoomPriceRow -> {
                     PmsRoomPaymentSummaryRow accomodationRow = getAccomodationRow(summary, includedInRoomPriceRow.date);
-                    if (accomodationRow != null) {
-                        accomodationRow.priceInBooking -= (includedInRoomPriceRow.priceInBooking * includedInRoomPriceRow.countFromBooking);
+                    
+                    if (accomodationRow == null) {
+                        accomodationRow = createEmptyRoomSummaryRow(includedInRoomPriceRow.date);    
+                        summary.rows.add(accomodationRow);
                     }
+                    
+                    accomodationRow.priceInBooking -= (includedInRoomPriceRow.priceInBooking * includedInRoomPriceRow.countFromBooking);
                 });
     }
 

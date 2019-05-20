@@ -362,6 +362,14 @@ public class CartItem implements Serializable, Cloneable {
     public double getTotalAmount() {
         return count * getProductPrice();
     }
+    
+    public double getTotalAmountInLocalCurrency() {
+        if (product != null && product.priceLocalCurrency != null) {
+            return count * product.priceLocalCurrency;
+        }
+        
+        return count * getProductPrice();
+    }
 
     public BigDecimal getTotalExRoundedWithTwoDecimals(int precision) {
         BigDecimal priceExTaxes = TwoDecimalRounder.roundTwoDecimals(getProduct().priceExTaxes, precision);
@@ -370,6 +378,10 @@ public class CartItem implements Serializable, Cloneable {
     
     public double getTotalEx() {
         return count * getProduct().priceExTaxes;
+    }
+    
+    public double getTotalExLocalCurrency() {
+        return count * getProduct().priceExTaxesLocalCurrency;
     }
 
     public Double getPriceMatrixAmount() {

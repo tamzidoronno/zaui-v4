@@ -19,7 +19,7 @@ public interface IAccountingManager {
     @Administrator
     public List<String> createCreditorFile(boolean newOnly) throws Exception;
     @Administrator
-    public List<SavedOrderFile> getAllFiles();
+    public List<SavedOrderFile> getAllFiles(boolean showAllFiles);
     @Administrator
     public List<SavedOrderFile> getAllFilesNotTransferredToAccounting();
     @Administrator

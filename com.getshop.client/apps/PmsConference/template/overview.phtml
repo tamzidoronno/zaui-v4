@@ -110,6 +110,7 @@ if(sizeof($entries) == 0) {
                     $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
                     $confid = $hasEventId['id'];
                     if(!$hasEvent) { $hasEvent = "canaddevent"; }
+                    $text = "&nbsp;";
                     echo "<span class='dayentry $hasEvent'conferenceid='$confid' ".$hasEventId['check']." itemid='".$entry->id."' from='$from' to='$to' date='$day'>";
                      if($hasEventId['state'] == "start" || $hasEventId['state'] == "both") { echo $text; } else { echo "&nbsp;"; }
                    echo "</span>";

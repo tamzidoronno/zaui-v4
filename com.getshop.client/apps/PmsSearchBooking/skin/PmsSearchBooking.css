@@ -12,6 +12,7 @@
     border-top: solid 1px #bbb;
 }
 .PmsSearchBooking .GetShopModuleTableHeader .tablefilterinput { width: 400px; }
+.PmsSearchBooking .headercol.col_state .fa { font-size:13px !important; }
 
 .PmsSearchBooking .pmscheckoutforrooms { box-sizing: border-box; text-align:left; border: solid 1px; background-color:#fff; padding: 5px; position:relative; display:none; z-index: 2; width:100%; }
 .GetShopModuleTable .quickmenuoption {  
@@ -178,7 +179,7 @@
 .PmsSearchBooking .GetShopModuleTable .col_reg { width: 100px; }
 .PmsSearchBooking .GetShopModuleTable .col_checkout { width: 100px; }
 .PmsSearchBooking .GetShopModuleTable .col_price { width: 50px; }
-.PmsSearchBooking .GetShopModuleTable .col_state { width: 45px; }
+.PmsSearchBooking .GetShopModuleTable .col_state { width: 50px; }
 .PmsSearchBooking .GetShopModuleTable .col_totalprice { width: 55px; }
 .PmsSearchBooking .GetShopModuleTable .col_expandbutton { width: 50px; }
 .PmsSearchBooking .GetShopModuleTable .col_bookedfor { width: 144px; }

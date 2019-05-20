@@ -175,7 +175,7 @@ class ModulePage {
                     $cssFile = str_replace("{IMAGEFOLDER}", "/showApplicationImages.php?appNamespace=" . urlencode($appId) . "&image=skin/images/", $cssFile);
                     file_put_contents("cssfolder/$appId/$file", $cssFile);
 
-                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="' . "cssfolder/$appId/$file" . '">' . "\n";
+                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="' . "cssfolder/$appId/$file?". calculateCacheName() . '">' . "\n";
                 }
             }
         }
@@ -227,7 +227,7 @@ class ModulePage {
                         $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
                         $fileName = "javascripts/" . $namespace . "_" . $startupCount . "_" . $entry;
                         @file_put_contents($fileName, $filecontent);
-                        echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
+                        echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '?'. calculateCacheName().'"></script>';
                         echo "<script>";
                         echo 'if (typeof(getshop) === "undefined") { getshop = {}; }';
                         echo 'if (typeof(getshop.gs_loaded_javascripts) === "undefined") { getshop.gs_loaded_javascripts = []; }';
@@ -342,14 +342,14 @@ class ModulePage {
         $menu = new \ModulePageMenu("pms");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Bookings", "a90a9031-b67d-4d98-b034-f8c201a8f496", "gsicon-gs-booking");
-        $menu->entries[] = new ModulePageMenuItem("New", "4d89b5cf-5a00-46ea-9dcf-46ea0cde32e8", "gsicon-gs-new");
+        $menu->entries[] = new ModulePageMenuItem("New", "048e2e10-1be3-4d77-a235-4b47e3ebfaab", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Availability", "0da68de9-da08-4b60-9652-3ac456da2627", "gsicon-gs-availability");
         $menu->entries[] = new ModulePageMenuItem("Reports", "afe687b7-219e-4396-9e7b-2848f5ed034d", "gsicon-gs-reports");
         $menu->entries[] = new ModulePageMenuItem("Prices", "394bb905-8448-45c1-8910-e9a60f8aebc5", "gsicon-gs-prices");
         $menu->entries[] = new ModulePageMenuItem("Cleaning", "e03b19de-d1bf-4d1c-ac40-8c100ef53366", "gsicon-gs-cleaning");
         $menu->entries[] = new ModulePageMenuItem("CRM", "4f66aad0-08a0-466c-9b4c-71337c1e00b7", "gsicon-users");
         $menu->entries[] = new ModulePageMenuItem("Checklist", "checklist", "gsicon-list");
-//        $menu->entries[] = new ModulePageMenuItem("Conference", "conference", "fa-group");
+        $menu->entries[] = new ModulePageMenuItem("Conference", "conference", "fa-group");
         $menu->entries[] = new ModulePageMenuItem("Settings", "messages", "gsicon-gs-gears");
         $menu->entries[] = new ModulePageMenuItem("Support", "getshopsupport", "fa-support");
         return $menu;
@@ -385,7 +385,7 @@ class ModulePage {
     }
 
     public function getTopMenuApac() {
-       $menu = new \ModulePageMenu("apac");
+        $menu = new \ModulePageMenu("apac");
         $menu->entries[] = new ModulePageMenuItem("Access List", "home", "gsicon-gs-user");
         $menu->entries[] = new ModulePageMenuItem("New Access", "newaccess", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Doors", "doors", "fa fa-history");
@@ -417,6 +417,7 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Customers", "customers", "gsicon-factory");
         $menu->entries[] = new ModulePageMenuItem("Inbox", "inbox", "fa-inbox");
         $menu->entries[] = new ModulePageMenuItem("Suppliers", "suppliers", "fa-truck");
+        $menu->entries[] = new ModulePageMenuItem("IotDevices", "iotdevices", "fa-server");
         $menu->entries[] = new ModulePageMenuItem("Inventory", "inventory", "gsicon-calculator");
         $menu->entries[] = new ModulePageMenuItem("Support", "inventory", "fa-support");
         $menu->entries[] = new ModulePageMenuItem("Invoicing", "invoicing", "fa-dollar");

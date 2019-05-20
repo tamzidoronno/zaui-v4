@@ -18,11 +18,34 @@ $title = "Avoid autodelete disabled";
 if($pmsBooking->avoidAutoDelete) {
     $title = "Avoid autodelete done";
 }
+$channelList = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
+$formater = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
+$channelNames = $formater->getChannels();
+
 ?>
 <div class='col_box_width_2'>
     <div class="row odd">
         <div class="col col1" title="<?php echo $title; ?>"><? echo $this->__f("GetShop booking id"); ?></div>
-        <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?></div>
+        <?php
+        $disabled = stristr($pmsBooking->channel, "wubook_") ? "DISABLED" :"";
+        $style = $disabled ? "color:gray;background-image:none;" : "";
+        ?>
+        <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
+            <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >
+                <?php
+                echo "<option value=''>No source</option>";
+                foreach($channelList as $idx => $channel) {
+                    $name = $channelNames[$idx] ? $channelNames[$idx] : $channel;
+                    $selected = $idx == $pmsBooking->channel ? "SELECTED" : "";
+                    if(stristr($idx, "wubook_")) {
+                        continue;
+                    }
+                    echo "<option value='$idx' $selected>$name</option>";
+                }
+                echo "<option value='getshop_new_source'>Add a new source</option>";
+                ?>
+            </select>
+        </div>
     </div>
     <div class="row odd">
         <div class="col col1"><? echo $this->__f("Discount code / segment"); ?></div>

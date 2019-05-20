@@ -38,6 +38,14 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String shortDescription;
     public String mainImage = "";
     public double price;
+    
+    /**
+     * This price is in taxes and used when the 
+     * order is sold in a foreign currency
+     */
+    public Double priceLocalCurrency;
+    
+    public Integer percentagePrice = 0;
     public Double priceBeforeTaxChange;
     public TaxGroup taxGroupBeforeTaxChange;
     
@@ -152,6 +160,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     @Transient
     public double priceExTaxes;
+    
+    @Transient
+    public double priceExTaxesLocalCurrency;
     
     public Map<String, String> variationCombinations;
 
@@ -275,11 +286,18 @@ public class Product extends DataCommon implements Comparable<Product>  {
         }
         if(taxGroupObject != null && taxGroupObject.taxRate != null && divident != 0.0 && price != 0.0) {
             priceExTaxes = price / divident;
+            if (priceLocalCurrency != null) {
+                priceExTaxesLocalCurrency = priceLocalCurrency / divident;
+            }
         } else {
             priceExTaxes = price;
+            if (priceLocalCurrency != null) {
+                priceExTaxesLocalCurrency = priceLocalCurrency;
+            }
         }
         if(Double.isNaN(priceExTaxes)) {
             priceExTaxes = 0.0;
+            priceExTaxesLocalCurrency = 0.0;
         }
         
         createEmptyAccountingInformationObjects();
@@ -303,13 +321,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
         }
         
         if (group != null) {
-            taxGroupBeforeTaxChange = taxGroupObject;
-            priceBeforeTaxChange = price;
-            double multiple = group.getTaxRate()+1;
-            BigDecimal newPrice = getPriceExTaxesWithTwoDecimals(2);
-            price = newPrice.multiply(new BigDecimal(multiple)).doubleValue();
-            this.taxGroupObject = group;
-            doFinalize();
+            changeToTaxGroup(group);
         }
     }
     
@@ -428,5 +440,16 @@ public class Product extends DataCommon implements Comparable<Product>  {
 
     public void setAccountingAccount(String account) {
         accountingAccount = account;
+    }
+
+    public void changeToTaxGroup(TaxGroup group) {
+        taxGroupBeforeTaxChange = taxGroupObject;
+        priceBeforeTaxChange = price;
+        double multiple = group.getTaxRate()+1;
+        BigDecimal newPrice = getPriceExTaxesWithTwoDecimals(2);
+        price = newPrice.multiply(new BigDecimal(multiple)).doubleValue();
+        this.taxGroupObject = group;
+        taxgroup = group.groupNumber;
+        doFinalize();
     }
 }

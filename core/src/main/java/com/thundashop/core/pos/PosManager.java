@@ -1079,6 +1079,8 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(o -> o.segmentId == null || o.segmentId.isEmpty())
                 .filter(o -> !o.isDeleted)
                 .filter(o -> o.isCompletedBooking())
+                .filter(o -> o.confirmed)
+                .filter(o -> o.rooms.size() > 0)
                 .map(o -> o.id)
                 .collect(Collectors.toList());
         

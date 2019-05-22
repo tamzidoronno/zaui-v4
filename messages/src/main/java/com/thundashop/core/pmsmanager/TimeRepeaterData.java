@@ -50,5 +50,7 @@ public class TimeRepeaterData implements Serializable {
     boolean repeatAtDayOfWeek = false;
     
     boolean avoidFirstEvent = false;
+    
+    Date createdDate = new Date();
 
 }

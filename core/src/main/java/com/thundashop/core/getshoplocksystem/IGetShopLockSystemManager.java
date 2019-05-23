@@ -129,6 +129,9 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public FilteredData getAllAccessUsers(FilterOptions options);
+
+    @Administrator
+    public List<AccessGroupUserAccess> getAllAccessUsersFlat();
     
     @Administrator
     public AccessGroupUserAccess getAccess(String userId);

@@ -960,5 +960,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
     }
 
+    @Override
+    public void deleteLock(String serverId, String lockId) {
+        LockServer server = getLockServer(serverId);
+        if (server != null) {
+            server.deleteLock(lockId);
+            server.save();
+        }
+    }
+
     
 }

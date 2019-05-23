@@ -425,5 +425,10 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         return hostname;
     }
 
+    @Override
+    public void deleteLock(String lockId) {
+        locks.remove(lockId);
+    }
+
 
 }

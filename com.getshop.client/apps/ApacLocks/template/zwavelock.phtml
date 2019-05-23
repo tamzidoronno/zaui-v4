@@ -19,6 +19,7 @@ $lock = $this->getLock();
     <?
     }
     ?>
+    <div class="shop_button" gsclick="deleteLock" serverid="<? echo $this->getServer()->id; ?>" lockid="<? echo $lock->id; ?>" gs_confirm="Are you sure you want to remove this lock?">Delete lock</div>
 </div>
 
 

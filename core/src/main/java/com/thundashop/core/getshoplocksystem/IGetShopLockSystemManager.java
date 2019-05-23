@@ -187,4 +187,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void closeLock(String lockId);
+    
+    @Administrator
+    public void deleteLock(String serverId, String lockId);
 }

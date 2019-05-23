@@ -18,6 +18,8 @@ if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a
     exit(0);
 }
 
+$versionnumber = "";
+
 // Add apps if not already added
 $_SESSION['firstloadpage'] = true;
 

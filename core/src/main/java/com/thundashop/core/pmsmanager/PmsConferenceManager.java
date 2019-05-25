@@ -130,6 +130,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         HashMap<String, PmsConferenceEventEntry> eventlog = new HashMap(conferenceEventEntries);
         
         for(PmsConferenceEventEntry evntlog : eventlog.values()) {
+            if(!evntlog.pmsEventId.equals(id)) {
+                continue;
+            }
             deleteEventEntry(evntlog.id);
         }
     }

@@ -12,6 +12,12 @@
     padding: 5px;
     display:none;
 }
+.PmsBookingRoomView .previewarea {
+    border: solid 1px #bbb;
+    margin-top: 20px;
+    padding: 20px;
+    display:none;
+}
 
 .PmsBookingRoomView .countrylanguagebox { display:inline-block; width: 45%; }
 .PmsBookingRoomView .countrylanguagebox .gsniceselect1 { border: solid 0px; border-bottom: solid 1px #DDD; cursor:pointer;text-transform: uppercase; }

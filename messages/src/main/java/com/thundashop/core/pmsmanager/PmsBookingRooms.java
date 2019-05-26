@@ -874,11 +874,12 @@ public class PmsBookingRooms implements Serializable {
             }
             if(item.percentagePrice > 0) {
                 cal.setTime(item.date);
-                System.out.println("Is percentage price: " + item.percentagePrice);
                 String dateOffset = PmsBookingRooms.convertOffsetToString(item.date);
                 Double dailyPrice = priceMatrix.get(dateOffset);
-                double dayprice = dailyPrice * ((double)item.percentagePrice / 100);
-                item.price = dayprice;
+                if(dailyPrice != null) {
+                    double dayprice = dailyPrice * ((double)item.percentagePrice / 100);
+                    item.price = dayprice;
+                }
             }
         }
     }

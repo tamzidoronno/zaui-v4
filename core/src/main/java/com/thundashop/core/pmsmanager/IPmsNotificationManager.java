@@ -24,12 +24,16 @@ public interface IPmsNotificationManager {
     @Administrator
     public PmsNotificationMessage getMessage(String messageId);
     @Administrator
+    public void sendEmail(PmsNotificationMessage msg, String email, String bookingId, String roomId);
+    @Administrator
     public void deleteMessage(String messageId);
     @Administrator
     public List<String> getLanguagesForMessage(String key, String type);
     @Administrator
     public List<String> getPrefixesForMessage(String key, String type);
-    
+    @Administrator
+    public PmsNotificationMessage doFormationOnMessage(PmsNotificationMessage msg, String bookingId, String pmsBookingRoomId);
+
     @Administrator
     public PmsNotificationMessage getSpecificMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix);
 }

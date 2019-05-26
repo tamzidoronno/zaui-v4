@@ -47,16 +47,61 @@ app.PmsBookingRoomView = {
         $(document).on('click', '.PmsBookingRoomView .markaspaidwindow .innner_area .closebutton', this.hideMarkAsPaidWindow)
         $(document).on('click', '.PmsBookingRoomView .ordermenu .showmarkorderaspaid', this.showPaymentWindow)
         $(document).on('click', '.PmsBookingRoomView .collapsable_shadowbox .colheader', this.toggleCollapse)
+        $(document).on('click', '.PmsBookingRoomView .displaypreview', this.displayConfirmationPreview)
         $(document).on('change', '.PmsBookingRoomView .filterbymonth', this.filterOrdersByMonth)
         $(document).on('change', '.PmsBookingRoomView .changechannel', this.changeChannel)
+        $(document).on('change', '.PmsBookingRoomView .emailRecipient', this.changeEmailRecipent)
+        $(document).on('change', '.PmsBookingRoomView .confirmationEmailTemplate', this.changeEmailTemplate)
         $(document).on('click', '.PmsBookingRoomView .showOrderSummary', this.showOrderSummary);
         $(document).on('click', '.PmsBookingRoomView .connectGuestToConference', this.showAddConferencePanel);
         $(document).on('click','.PmsBookingRoomView .attachguesttoevent', app.PmsBookingRoomView.attachGuestToConference);
         $(document).on('click','.PmsBookingRoomView .removeConferenceFromGuest', app.PmsBookingRoomView.removeGuestToConference);
         $(document).on('click','.PmsBookingRoomView .autocreateonzreport', app.PmsBookingRoomView.autoCreateOnZReport);
+        $(document).on('click','.PmsBookingRoomView .sendconfirmationbutton', app.PmsBookingRoomView.sendConfirmation);
     },
-    
-
+    sendConfirmation: function() {
+        var event = thundashop.Ajax.createEvent('','sendConfirmation',$(this), {
+            content : $('[gsname="confirmationemailcontent"]').val(),
+            title : $('[gsname="confirmationemailtitle"]').val(),
+            email : $('.emailRecipient').val(),
+            msgid : $('.confirmationEmailTemplate').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            alert('Confirmation sent');
+            $('.menuentry[tab="messages"]').click();
+        });
+    },
+    displayConfirmationPreview : function() {
+        var event = thundashop.Ajax.createEvent('','loadConfirmationPreview',$(this), {
+            content : $('[gsname="confirmationemailcontent"]').val(),
+            title : $('[gsname="confirmationemailtitle"]').val(),
+            msgid : $('.confirmationEmailTemplate').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.previewarea').html(res);
+            $('.previewarea').fadeIn();
+            $(window).scrollTop($(window).scrollTop()+50);
+        });
+    },
+    changeEmailRecipent : function() {
+        var email = $(this).val();
+        if(email === "defined") {
+            email = prompt("Type email");
+        }
+        $(this).prepend("<option value='" + email +"'>" + email + "</option>");
+        $(this).val(email);
+    },
+    changeEmailTemplate : function() {
+        var id = $(this).val();
+        var event = thundashop.Ajax.createEvent('','getContentOnConfirmationTemplateMessage', $(this), {
+           "id" : id 
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            res = JSON.parse(res);
+            $('[gsname="confirmationemailtitle"]').val(res.title);
+            $('[gsname="confirmationemailcontent"]').val(res.content);
+        });
+    },
     changeChannel : function() {
         var val = $(this).val();
         if(val === "getshop_new_source") {

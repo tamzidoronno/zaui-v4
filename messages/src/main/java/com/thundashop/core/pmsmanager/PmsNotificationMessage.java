@@ -22,6 +22,7 @@ public class PmsNotificationMessage extends DataCommon {
     public List<String> roomTypes = new ArrayList();
     public String key;
     public boolean isDefault = false;
+    public boolean isManual = false;
 
     boolean containsLanguage(String language) {
         if(languages.isEmpty()) {

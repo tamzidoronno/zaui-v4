@@ -1,0 +1,42 @@
+<?php
+/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$booking = $this->getPmsBooking();
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$emails = array();
+$emails[] = $user->emailAddress;
+$msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
+$confirmationmessages = array();
+foreach($msgs as $msg) {
+    if($msg->key == "booking_completed") {
+        $confirmationmessages[] = $msg;
+    }
+}
+foreach($booking->rooms as $room) {
+    foreach($room->guests as $guest) {
+        $emails[] = $guest->email;
+    }
+}
+echo "<select class='gsniceselect1 emailRecipient' style='width:100%;'>";
+foreach($emails as $email) {
+    echo "<option value='$email'>$email</option>";
+}
+echo "<option value='defined'>Type email</option>";
+echo "</select>";
+echo "<select class='gsniceselect1 confirmationEmailTemplate' style='width:100%;'>";
+$selected = null;
+foreach($confirmationmessages as $conf) {
+    $sel = "";
+    if($conf->isDefault) { $selected = $conf; $sel = "SELECTED"; }
+    echo "<option value='".$conf->id."' $sel>".$conf->title."</option>";
+    if(!$selected) {$selected=$conf;}
+}
+echo "</select>";
+?>
+<br>
+<input type='text' class='gsniceinput1' gsname='confirmationemailtitle' value='<?php echo $selected->title; ?>' style='width:100%;margin-top: 20px; margin-bottom: 4px;box-sizing: border-box;'>
+<textarea style="width:100%; box-sizing: border-box;height: 300px;margin-bottom:3px;" gsname='confirmationemailcontent'><?php echo $selected->content; ?></textarea>
+<span class='shop_button displaypreview' style='background-color:orange;'>Display preview</span>
+<span class="shop_button sendconfirmationbutton" style='float:right;'>Send confirmation <i class='fa fa-arrow-right'></i></span>
+
+
+<div class='previewarea'></div>

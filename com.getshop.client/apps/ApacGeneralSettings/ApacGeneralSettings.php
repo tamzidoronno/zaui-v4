@@ -74,8 +74,8 @@ class ApacGeneralSettings extends \MarketingApplication implements \Application 
         foreach ($lockservers as $server) {
             $allLocks[$server->serverSource] = $this->getApi()->getGetShopLockManager()->getAllLocks($domainName, $server->serverSource);
         }
-
-        $newMasterGroup = $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup("Master Codes", 5);
+        $codeSize = $this->getApi()->getGetShopLockSystemManager()->getCodeSize();
+        $newMasterGroup = $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup("Master Codes", 5, $codeSize);
         
         foreach ($items as $item) {
             $lock = null;
@@ -86,7 +86,7 @@ class ApacGeneralSettings extends \MarketingApplication implements \Application 
             if (!$lock)
                 continue;
             
-            $lockGroup = $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup($item->bookingItemName, 15);
+            $lockGroup = $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup($item->bookingItemName, 15, $codeSize);
             
             $matchingLock = $this->getMatchingLock($lock, $lockServer, $newLockServers); 
             $setGroup = array();

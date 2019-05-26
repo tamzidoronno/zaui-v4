@@ -6,9 +6,10 @@ $guests = $room->guests;
 $booking = $this->getPmsBooking();
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 ?>
-<table>
+<table width="100%">
     <tr>
         <td width='100%' valign='top'>
+            <span class="shop_button" style="float:right;" onclick="$('.sendconfirmationmenuentry').click()">Send booking confirmation</span>
             <div gstype='form' method='sendMessage'>
                 <?php
                 echo "<h3>Select the guests you want to send a message to</h3>";

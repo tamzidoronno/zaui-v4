@@ -10,6 +10,11 @@ class PmsConference extends \WebshopApplication implements \Application {
         return "PmsConference";
     }
     
+    public function deleteEntry() {
+        $id = $_POST['data']['id'];
+        $this->getApi()->getPmsConferenceManager()->deleteEventEntry($id);
+    }
+    
     public function deleteEventEntry() {
         $id = $_POST['data']['entryid'];
         $this->getApi()->getPmsConferenceManager()->deleteEventEntry($id);

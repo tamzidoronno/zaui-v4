@@ -26,6 +26,7 @@
     background-color: #fff;
     border: solid 1px #bbb;
     padding: 10px;
+    z-index: 3;
 }
 .PmsConference .addeventbox { width: 50px; border: solid 1px; display:inline-block; padding: 3px;background-color:#ddd; border: #bbb; position:absolute; z-index: 2; display:none;  }
 .PmsConference .loadcalendar input { width: 90px; }

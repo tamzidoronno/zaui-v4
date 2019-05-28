@@ -23,5 +23,7 @@ $codesize = $this->getApi()->getGetShopLockSystemManager()->getCodeSize();
 </div>
 
 <script>
-    $('#nameofgroup').focus();
+    <?php if($numberofslots) { ?>
+        $('#nameofgroup').focus();
+    <?php } ?>
 </script>

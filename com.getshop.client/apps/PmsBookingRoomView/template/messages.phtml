@@ -6,25 +6,10 @@ $guests = $room->guests;
 $booking = $this->getPmsBooking();
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 ?>
-
-<br>
-<div class="isnotactive">
-    <div class="kaipal infobox">
-        <div class="image talking"></div>
-        <div class="textbox">
-            <div class="text">
-                <?
-                echo $this->__f("Do you want me to inform the guests about something? Check the guest you would like to send a message to, enter the message you want me to send and press send as sms / email or both.");
-                ?>    
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<table>
+<table width="100%">
     <tr>
-        <td width='50%' valign='top'>
+        <td width='100%' valign='top'>
+            <span class="shop_button" style="float:right;" onclick="$('.sendconfirmationmenuentry').click()">Send booking confirmation</span>
             <div gstype='form' method='sendMessage'>
                 <?php
                 echo "<h3>Select the guests you want to send a message to</h3>";
@@ -47,20 +32,6 @@ $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
                 <span class="shop_button" gstype='submit' gsvalue='sendassms'>Send as sms</span>
                 <span class="shop_button" gstype='submit' gsvalue='sendasemail'>Send as email</span>
                 <span class="shop_button" gstype='submit' gsvalue='sendasboth'>Send as both</span>
-            </div>
-        </td>
-        <td width='50%' valign='top' class='otheroptionstd'>
-            <h3>Other options</h3>
-            <div gstype='form' method='resendConfirmation'>
-                <select class='gsniceselect1' gsname='email' style='width:100%; box-sizing: border-box;'>
-                    <?php
-                    echo "<option value='".$user->emailAddress."'>$user->emailAddress</option>";
-                    foreach($guests as $guest) {
-                        echo "<option value='".$guest->email."'>$guest->email</option>";
-                    }
-                    ?>
-                </select>
-                <span class='shop_button' gstype='submit' style='float:right; margin-top: 5px;'>Send booking confirmation</span>
             </div>
         </td>
     </tr>

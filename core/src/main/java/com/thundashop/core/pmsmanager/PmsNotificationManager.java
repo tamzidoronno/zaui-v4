@@ -286,6 +286,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         List<String> roomTypes = booking.rooms.stream().map(e->e.bookingItemTypeId).collect(Collectors.toList());
         
         for(PmsNotificationMessage msg : messages.values()) {
+            if(msg.isManual) { continue; }
             if(!msg.type.equals(type)) {
                 continue;
             }
@@ -315,6 +316,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
         
         for(PmsNotificationMessage msg : messages.values()) {
+            if(msg.isManual) { continue; }
             if(!msg.type.equals(type)) {
                 continue;
             }
@@ -337,6 +339,18 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         return null;
     }
 
+    @Override
+    public PmsNotificationMessage doFormationOnMessage(PmsNotificationMessage msg, String bookingId, String pmsBookingRoomId) {
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        PmsBookingRooms room = null;
+        if(pmsBookingRoomId != null) {
+            room = booking.getRoom(pmsBookingRoomId);
+        }
+        msg.content = formatMessage(msg.content, booking, room, msg.key, msg.type);
+        msg.title = formatMessage(msg.title, booking, room, msg.key, msg.type);
+        return msg;
+    }
+    
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, String key, String type) {
         if (message != null) {
             message = message.trim();
@@ -775,5 +789,16 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         this.emailSubject = subject;
     }
 
-    
+    @Override
+    public void sendEmail(PmsNotificationMessage msg, String email, String bookingId, String roomId) {
+        msg.content = wrapContentOnMessage(msg.content);
+        messageManager.sendMail(email, email, msg.title, msg.content, email, email);
+
+
+        String logText = msg.content + "<div>Sent to: ";
+        logText += email;
+        logText += "</div>";
+        pmsManager.logEntry(logText, bookingId, null, roomId, msg.key + "_email");
+    }
+
 }

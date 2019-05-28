@@ -13,6 +13,7 @@ if(sizeof($entries) == 0) {
     echo "No activites created yet";
 } else {
     ?>
+<span class='activityheadings' style='width:33px;'></span>
 <span class='activityheadings' style='width:63px;'>From</span>
 <span class='activityheadings' style='width:61px;'>To</span>
 <span class='activityheadings' style='width:192px;'>Text</span>
@@ -26,6 +27,8 @@ if(sizeof($entries) == 0) {
         if($evententry->to) { $totime = date("H:i", strtotime($evententry->to)); }
         ?>
         <div class='evententryrow' entryid='<?php echo $evententry->id; ?>'>
+            <span class='shop_button removeEntry' entryid='<?php echo $evententry->id; ?>'
+                  style='float:left;border-bottom: solid 1px #fff;box-sizing: border-box; line-height: 35px;padding-top:10px;'><i class='fa fa-trash-o'></i></span>
             <input type='hidden' gsname='eventid' gsname='id' value='<?php echo $evententry->id; ?>'>
             <input type='text' class='gsniceinput1 updatevententryrow' style='width:40px;text-align: center;' gsname='starttime' value='<?php echo $fromtime; ?>'>
             <input type='text' class='gsniceinput1 updatevententryrow' style='width:40px;text-align: center;' gsname='endtime' value='<?php echo $totime; ?>'>

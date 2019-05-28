@@ -4,21 +4,35 @@
 <br>
 
 <?php
+/* @var $this ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
+$msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
+$keys = array();
+foreach($msgs as $msg) {
+    $keys[$msg->key] = 1;
+}
+
+
+$notifications = $this->getNotifications("", true, true);
 $paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedMultilevelDomainName());
 echo "<h1>Payment link adress (web adress)</h1>";
 ?>
+<select class='gsniceselect1 filterbykeytype' style='float:right;'>
+    <option value=''>Filter by message type</option>
+    <?php
+    foreach($keys as $k => $val) {
+        echo "<option value='$k'>".$notifications[$k."_"]."</option>";
+    }
+    ?>
+</select>
 <div gstype='form' method='savepaymentlinksetup'>
     <input class='webadressclass gsniceinput1' type='text' gsname='webadress' value='<?php echo $paymentProductConfig->webAdress; ?>' class=''>
     <span class="shop_button" gstype='submit' gs_callback='alert("saved");'>Save</span>
 </div>
 <br>
 <?php
-/* @var $this ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration */
-$msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
-$notifications = $this->getNotifications("", true, true);
 
 foreach($msgs as $msg) {
-    echo "<div class='messageboxnew'>";
+    echo "<div class='messageboxnew' key='".$msg->key."'>";
     if($msg->type == "email") {
         echo "<div class='title'>" . $msg->title  . "</div>";
     }
@@ -35,7 +49,11 @@ foreach($msgs as $msg) {
             $this->printPrefixesSelected($msg);
         }
     } else {
-        echo "Default message.<br>";
+        if(!$msg->isManual) {
+            echo "<b>Automated message</b>, ";
+        } else {
+            echo "<b>Manual message</b>, ";
+        }
         echo "This message is being used if no match on other criterias.<br>";
     }
     echo "</div>";
@@ -43,7 +61,6 @@ foreach($msgs as $msg) {
     echo "<i class='fa fa-trash-o' msgid='".$msg->id."'></i>";
     echo "</div>";
     echo "</div>";
-    echo "<br>";
 }
 
 ?>
@@ -56,3 +73,11 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
 <div style='text-align:right;'>
     <span class="shop_button" gstype='submit'>Update email template</span>
 </div>
+<script>
+    var hash = window.location.hash;
+    if(hash.startsWith("#filter=")) {
+        var key = hash.replace("#filter=", "");
+        app.PmsSendMessagesConfiguration.filterBySpecifiedKey(key);
+        $('.filterbykeytype').val(key);
+    }
+</script>

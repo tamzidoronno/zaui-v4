@@ -1446,4 +1446,10 @@ keepAlive = function() {
 }
 
 
+function getshop_loadDatePicker(target) {
+    $(target).datepicker({
+        dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay: 1,
+    });
+};
+
 keepAlive();

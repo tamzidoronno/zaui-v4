@@ -1079,6 +1079,8 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(o -> o.segmentId == null || o.segmentId.isEmpty())
                 .filter(o -> !o.isDeleted)
                 .filter(o -> o.isCompletedBooking())
+                .filter(o -> o.confirmed)
+                .filter(o -> o.rooms.size() > 0)
                 .map(o -> o.id)
                 .collect(Collectors.toList());
         
@@ -1086,5 +1088,63 @@ public class PosManager extends ManagerBase implements IPosManager {
             canClose.canClose = false;
             canClose.bookingsWithNoneSegments = bookingsWithNoneSegments;
         }
+    }
+
+    @Override
+    public SalesPosResult getSalesReport(SalesReportFilter filter) {
+        List<Order> orders = orderManager.getAllOrders();
+        Calendar day = Calendar.getInstance();
+        Calendar checker = Calendar.getInstance();
+        day.setTime(filter.start);
+        SalesPosResult toReturn = new SalesPosResult();
+        List<CartItem> itemsToIncludeInReport = new ArrayList();
+        while(true) {
+            for(Order ord : orders) {
+                if(ord.status != Order.Status.PAYMENT_COMPLETED) {
+                    continue;
+                }
+                checker.setTime(ord.rowCreatedDate);
+                if(checker.get(Calendar.YEAR) != day.get(Calendar.YEAR) || checker.get(Calendar.DAY_OF_YEAR) != day.get(Calendar.DAY_OF_YEAR)) {
+                    continue;
+                }
+                itemsToIncludeInReport.addAll(ord.getCartItems());
+            }
+            day.add(Calendar.DAY_OF_YEAR, +1);
+            if(day.getTime().after(filter.end)) {
+                break;
+            }
+        }
+        SalesPosReportEntry entry = createEntries(day, itemsToIncludeInReport);
+        toReturn.entries.add(entry);
+        
+        return toReturn;
+    }
+
+    private SalesPosReportEntry createEntries(Calendar day, List<CartItem> itemsToIncludeInReport) {
+        SalesPosReportEntry result = new SalesPosReportEntry();
+        result.day = day.getTime();
+        for(CartItem item : itemsToIncludeInReport) {
+            String productId = item.getProduct().id;
+            if(!result.productCounter.containsKey(productId)) {
+                result.productCounter.put(productId, 0);
+                result.productTaxes.put(productId, 0.0);
+                result.productValue.put(productId, 0.0);
+            }
+            
+            Integer curCounter = result.productCounter.get(productId);
+            Double curTaxes = result.productTaxes.get(productId);
+            Double curValue = result.productValue.get(productId);
+
+            curCounter += item.getCount();
+            curTaxes += (item.getTotalAmount() - item.getTotalEx());
+            curValue += item.getTotalAmount();
+            
+            
+            result.productCounter.put(productId, curCounter);
+            result.productTaxes.put(productId, curTaxes);
+            result.productValue.put(productId, curValue);
+        }
+        
+        return result;
     }
 }

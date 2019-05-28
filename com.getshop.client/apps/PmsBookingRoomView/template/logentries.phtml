@@ -49,8 +49,7 @@ foreach($logs as $log) {
     $text = $log->logText;
     $text = str_replace("<br>", "", $text);
     echo "<div class='messagelogentry'>";
-    echo "<div class='messagelogtext'>";
-    echo $text . "</div>";
+    echo "<div class='messagelogtext'>" . $text ."</div>";
     echo "<div class='messagelogfooter'>";
     echo "<span style='float:left;'><i class='fa fa-expand expandmessage' style='cursor:pointer;'></i> " . date("d.m.Y H:i:s", strtotime($log->rowCreatedDate));
     echo " by ";

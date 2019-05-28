@@ -22,6 +22,10 @@ class SalesPointCashPoints extends \MarketingApplication implements \Application
         $this->includefile("configcashpoint");
     }
     
+    public function updateNameOnCashPoint() {
+        echo "TEST";
+    }
+    
     public function saveConfig() {
         $cashPoint = $this->getApi()->getPosManager()->getCashPoint($_POST['data']['id']);
         $cashPoint->productListIds = $_POST['data']['productlistsids'];
@@ -29,6 +33,7 @@ class SalesPointCashPoints extends \MarketingApplication implements \Application
         $cashPoint->kitchenPrinterGdsDeviceId = $_POST['data']['kitchenprinter'];
         $cashPoint->departmentId = $_POST['data']['departmentId'];
         $cashPoint->isMaster = $_POST['data']['isMaster'];
+        $cashPoint->cashPointName = $_POST['data']['cashPointName'];
         
         $this->getApi()->getPosManager()->saveCashPoint($cashPoint);
     }

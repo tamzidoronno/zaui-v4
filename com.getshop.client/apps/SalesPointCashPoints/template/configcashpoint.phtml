@@ -7,7 +7,7 @@ $departments = $this->getApi()->getDepartmentManager()->getAllDepartments();
 <div class='config_sales_point' cashpointid='<? echo $_POST['data']['id']; ?>'>
 <?
     $cashPoint = $this->getApi()->getPosManager()->getCashPoint($_POST['data']['id']);
-    echo "<h2>".$cashPoint->cashPointName."</h2>";
+    echo "<input type='text' gsname='cashPointName' class='gsniceinput1' value='".$cashPoint->cashPointName."'>";
     $productLists = $this->getApi()->getProductManager()->getProductLists();
     foreach ($productLists as $list) {
         $selected = in_array($list->id, $cashPoint->productListIds) ? "checked='true'" : "";

@@ -32,17 +32,18 @@ foreach($events as $event) {
         $currentDate = $date;
         echo "<div class='dateheader'>$currentDate</div>";
     }
-    
-    echo "<div class='eventheader'>";
-    echo "<span class='from'>$from</span>";
-    echo "<span class='to'>$to</span>";
-    echo "<span class='roomname'>$item</span>";
-    echo "<span class='conference'>$title</span>";
-    echo "<span class='status'>$status</span>";
-    echo "</div>";
-    echo "<div class='eventdetails'>";
-    $eventEntries = (array)$this->getApi()->getPmsConferenceManager()->getEventEntries($event->id);
-    echo "<table cellspacing='0' cellpadding='0' class='evententries'>";
+    ?>
+    <div class='eventheader'>
+    <span class='from'><?php echo $from; ?></span>
+    <span class='to'><?php echo $to; ?></span>
+    <span class='roomname'><?php echo $item; ?></span>
+    <span class='conference'><?php echo $title; ?></span>
+    <span class='status'><?php echo $status; ?></span>
+    </div>
+    <div class='eventdetails'>
+    <?php $eventEntries = (array)$this->getApi()->getPmsConferenceManager()->getEventEntries($event->id); ?>
+    <table cellspacing='0' cellpadding='0' class='evententries'>
+    <?php
     foreach($eventEntries as $eventEntry) {
         $from = "";
         if($eventEntry->from) { $from = date("H:i", strtotime($eventEntry->from)); }
@@ -62,7 +63,10 @@ foreach($events as $event) {
 
         echo "</tr>";
     }
-    echo "</div>";
+    ?>
+    </table>
+    </div>
+    <?php
 }
 
 ?>

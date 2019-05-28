@@ -3003,7 +3003,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             if (items.isEmpty()) {
                 if (!warnedAboutAutoassigning) {
-//                    messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now, roomid : " + room.pmsBookingRoomId, null);
+                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, its critical since someone will not recieve the code for the room now, roomid : " + room.pmsBookingRoomId, null);
                     warnedAboutAutoassigning = true;
                 }
                 logPrint("....");
@@ -5487,16 +5487,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Created booking from json object");
         }
         
-        if(booking.language == null || booking.language.trim().isEmpty()) {
-            String lang = getStoreSettingsApplicationKey("language");
-            if(lang == null || lang.isEmpty()) {
-                lang = "en_en";
-            }
-            booking.language = lang;
-            if(getSession().language != null && !getSession().language.isEmpty()) {
-                booking.language = getSession().language;
-            }
-        }
+        setLanguageOnBooking(booking);
         
         if (getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
             messageManager.sendErrorNotification("Booking completed.", null);
@@ -5574,6 +5565,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         logPrint("COMPLETECURRENTBOOKING : Result is : " + result);
         return null;
+    }
+
+    private void setLanguageOnBooking(PmsBooking booking) {
+        if(booking.language == null || booking.language.trim().isEmpty()) {
+            String lang = getStoreSettingsApplicationKey("language");
+            if(lang == null || lang.isEmpty()) {
+                lang = "en_en";
+            }
+            booking.language = lang;
+            if(getSession().language != null && !getSession().language.isEmpty()) {
+                booking.language = getSession().language;
+            }
+        }
     }
 
     @Override
@@ -10007,6 +10011,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (getSession() != null && getSession().currentUser != null) {
             currentBooking.bookedByUserId = getSession().currentUser.id;
         }
+        PmsSegment segment = pmsCoverageAndIncomeReportManager.getSegmentForBooking(currentBooking.id);
+        if(segment != null) {
+            currentBooking.segmentId = segment.id;
+        }
+        setLanguageOnBooking(currentBooking);
+
         addDefaultAddons(currentBooking);
         saveBooking(currentBooking);
     }

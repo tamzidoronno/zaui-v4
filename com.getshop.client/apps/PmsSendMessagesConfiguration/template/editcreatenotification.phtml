@@ -13,6 +13,7 @@ $msg->type = "email";
 if($msgid != "-1") {
     $msg = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), $msgid);
 }
+$checkedDefault = $msg->isManual ? "CHECKED" : "";
 
 $notifications = $this->getNotifications("", $hasArx, false);
 
@@ -36,6 +37,10 @@ $deliverytypes['admin'] = "Admin";
             <?php
         }
         ?>
+        <label class="container" style='float:right;'>Manual message
+          <input type="checkbox" name="ismanual">
+          <span class="checkmark"></span>
+        </label>
     </div>
     <br>
     <div>
@@ -249,4 +254,20 @@ $deliverytypes['admin'] = "Admin";
 <script>
     app.PmsSendMessagesConfiguration.updateBySelection();
     app.PmsSendMessagesConfiguration.updateRoomSpecificCodes();
+    
+    <?php
+    if($checkedDefault) {
+    ?>
+        $('input[name="ismanual"]').click();
+    <?php
+    }?>
+    
+    var hash = window.location.hash;
+    if(hash.startsWith("#filter=")) {
+        var key = hash.replace("#filter=", "");
+        app.PmsSendMessagesConfiguration.filterBySpecifiedKey(key);
+        $('select[name="typeofmessage"]').val(key);
+    }
+
+    
 </script>

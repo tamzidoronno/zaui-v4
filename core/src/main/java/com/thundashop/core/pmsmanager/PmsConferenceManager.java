@@ -130,6 +130,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         HashMap<String, PmsConferenceEventEntry> eventlog = new HashMap(conferenceEventEntries);
         
         for(PmsConferenceEventEntry evntlog : eventlog.values()) {
+            if(!evntlog.pmsEventId.equals(id)) {
+                continue;
+            }
             deleteEventEntry(evntlog.id);
         }
     }
@@ -166,6 +169,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         List<PmsConferenceEventEntry> result = new ArrayList();
         for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
             if(entry.pmsEventId.equals(eventId)) {
+                if(entry.from == null) {
+                    entry.from = new Date();
+                }
                 result.add(entry);
             }
         }

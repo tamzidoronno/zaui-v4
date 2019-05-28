@@ -240,7 +240,9 @@ class ModulePageMenu {
 
     public function printHorizantalMenu($user) {
         $menuEntries = $this->getEntries();
-        $useraccess = (array)$user->pmsPageAccess;
+        if ($this->moduleName == "pms") {
+            $useraccess = (array)$user->pmsPageAccess;
+        }
         
         if ($this->moduleName == "salespoint") {
             $useraccess = (array)$user->salesPointPageAccess;

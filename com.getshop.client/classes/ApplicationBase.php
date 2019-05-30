@@ -9,6 +9,8 @@ class ApplicationBase extends FactoryBase {
     private $wrappedAppes;
     private $parentWrappedApp;
     private $wrapAppRefernce;
+    private $modulePageId;
+    
     
     /** @var core_common_AppConfiguration */
     public $configuration;
@@ -22,6 +24,12 @@ class ApplicationBase extends FactoryBase {
     
     public function sortGetShopTable() {
         
+    }
+    
+    public function getPageIdModule() {
+        if(isset($this->page) && $this->page->getId()) {
+            return $this->page->getId();
+        }
     }
     
     public function clearSessionOnIdentifierForTable() {

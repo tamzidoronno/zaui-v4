@@ -26,6 +26,7 @@ input.gsniceinput1.focus {
   box-shadow: 0 0 5px 1px #969696;
 }
 
+.ellipsis {white-space: nowrap; overflow: hidden;text-overflow: ellipsis; } 
 select.gsniceselect1 {
     font-size: 15px;
     border: 1px solid lightblue;

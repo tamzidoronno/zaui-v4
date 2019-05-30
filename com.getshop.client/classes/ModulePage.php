@@ -64,6 +64,10 @@ class ModulePage {
             return $this->getTopMenuInvoicing();
         }
         
+        if ($this->module == "pmsconference") {
+            return $this->getTopMenuConference();
+        }
+        
         if ($this->module == "settings") {
             return $this->getSettingsMenu();
         }
@@ -427,6 +431,14 @@ class ModulePage {
 
     public function renderBottom() {
         $this->getMenu()->renderNumPad();
+    }
+
+    public function getTopMenuConference() {
+        $menu = new \ModulePageMenu("pmsconference");
+        $menu->entries[] = new ModulePageMenuItem("Conference", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Event report", "eventreport", "fa-pie-chart");
+        $menu->entries[] = new ModulePageMenuItem("Report", "report", "fa-line-chart");
+        return $menu;
     }
 
 }

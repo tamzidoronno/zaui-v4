@@ -8,7 +8,7 @@ $user = $this->getApi()->getUserManager()->getUserById($conference->forUser);
 $item = $confmanager->getItem($event->pmsConferenceItemId);
 ?>
 <i class='fa fa-close' style='cursor:pointer; float:right;' onclick='window.location.reload();'></i>
-<span class='shop_button openevent' eventid='<?php echo $cureventid; ?>'>Reload</span>
+<!--<span class='shop_button openevent' eventid='<?php echo $cureventid; ?>'>Reload</span>-->
 <?php
 echo "<div>" . $item->name . " - " . date("d.m.Y H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to)) . "</div>";
 echo "<div>" . "Registered to: " . $user->fullName . "</div>";

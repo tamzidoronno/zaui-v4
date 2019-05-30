@@ -22,6 +22,7 @@ public class GetShopModules {
         addModule("pms", "PMS", true, 2, "0f70b6b0-97a6-4cd1-9b22-cc30332054b5", "icon-bed"); //GetShopThemePms
         addModule("cms", "CMS", false, 1, "", "icon-document-file-html");
         addModule("salespoint", "Salespoint", true, 3, "83d6098e-43b1-4b52-a0d1-665525c67e80", "icon-cashier"); // SalespointModuleTheme
+        addModule("pmsconference", "Conference", true, 3, "4a3c18b2-4437-4d41-9fd1-d4eae9c5553b", " fa-group"); // Conference module theme
         addModule("ecommerce", "Ecommerce", true, 4, "f599c0a6-6f76-49af-ba15-7d496dd4387b", "icon-basket"); // EcommerceModuleTheme
         addModule("crm", "CRM", true, 5, "14d46706-d524-4d3c-abde-7fb1a56ca2b9", "icon-users");   
         addModule("apac", "APAC", true, 6, "affd0624-7311-480c-93bc-06b72459b45d", "icon-key"); // GetShopModuleApacTheme

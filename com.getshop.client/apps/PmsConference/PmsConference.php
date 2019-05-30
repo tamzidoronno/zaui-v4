@@ -103,21 +103,49 @@ class PmsConference extends \WebshopApplication implements \Application {
             echo "We are not sure at what point we will open this feature publically.<br>";
             return;
         }
+        
+        $pageId = $this->getPageIdModule();
+        
         echo "<div class='conferenceoverview'></div>";
         echo "<div class='eventoverview'></div>";
-        echo "<div class='conferencesystem'>";
-        $this->includefile("header");
-        $this->includefile("overview");
-        echo "</div>";
+        if($pageId == "home") {
+            echo "<div class='conferencesystem'>";
+            $this->includefile("header");
+            $this->includefile("overview");
+            echo "</div>";
+        } else {
+            $this->printReport();
+        }
     }
+    
+    
     
     public function deleteItem() {
         $this->getApi()->getPmsConferenceManager()->deleteItem($_POST['data']['itemid']);
     }
     
+    public function deleteItemsFilter() {
+        unset($_SESSION['pmsconferencecurrentitems']);
+    }
+    
     public function updateDateRange() {
         $_SESSION['pmsconferencecurrentstart'] = $_POST['data']['start'];
         $_SESSION['pmsconferencecurrentend'] = $_POST['data']['end'];
+        
+        $itemsfilter = array();
+        foreach($_POST['data'] as $idx => $val) {
+            if($val == "true" && strpos($idx, "itemsfilter_") === 0) {
+                $itemsfilter[] = str_replace("itemsfilter_", "", $idx);
+            }
+        }
+        $_SESSION['pmsconferencecurrentitems'] = serialize($itemsfilter);
+    }
+
+    public function getItemsFilterArray() {
+        if(isset($_SESSION['pmsconferencecurrentitems'])) {
+            return unserialize($_SESSION['pmsconferencecurrentitems']);
+        }
+        return array();
     }
     
     public function getCurrentStart() {
@@ -341,15 +369,11 @@ class PmsConference extends \WebshopApplication implements \Application {
     }
 
     public function printReport() {
-        if(isset($_GET['conferenceid'])) {
-            $this->includefile("conferencereport");
-        }
-        if(isset($_GET['type']) && $_GET['type'] == "event") {
-            $this->includefile("eventreport");
-        }
-        if(isset($_GET['type']) && $_GET['type'] == "all") {
-            $this->includefile("allreport");
-        }
+        $id = $this->getPageIdModule();
+        
+        if(isset($_GET['conferenceid'])) { $this->includefile("conferencereport"); }
+        if($id == "eventreport") { $this->includefile("eventreport"); }
+        if($id == "report") { $this->includefile("allreport"); }
     }
 
     public function getStatuses() {

@@ -137,6 +137,13 @@ class ApplicationModulePool {
         salespoint.description = "GetShop Module.";
         modules.put(salespoint.id, salespoint);
         
+        ApplicationModule pmsconference = new ApplicationModule();
+        pmsconference.moduleName = "GetShop Module - Conference";
+        pmsconference.id = "pmsconference";
+        pmsconference.faIcon = "fa-group";
+        pmsconference.description = "GetShop Module.";
+        modules.put(pmsconference.id, pmsconference);
+        
         ApplicationModule ecommerce = new ApplicationModule();
         ecommerce.moduleName = "GetShop Module - ECOMMERCE";
         ecommerce.id = "ecommerce";

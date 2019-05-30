@@ -1,24 +1,21 @@
 <?php
 /* @var $this ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
 $loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
-$start = $this->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
-$end = $this->convertToJavaDate(strtotime($_GET['end'] . " 23:59"));
+$start = $this->convertToJavaDate(strtotime($this->getCurrentStart() . " 00:00"));
+$end = $this->convertToJavaDate(strtotime($this->getCurrentEnd() . " 23:59"));
 
 $filter = new core_pmsmanager_PmsConferenceEventFilter();
 $filter->start = $start;
 $filter->end = $end;
+$filter->itemIds = $this->getItemsFilterArray();
 $statuses = $this->getStatuses();
-$events = $this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($start, $end);
+$events = $this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
 $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
 $items = $this->indexList($items);
 $currentDate= null;
 
-?>
-<div class='header'>
-    Printed <?php echo date("d.m.Y H:i", time()); ?> by <?php echo $loggedOnUser->fullName; ?> for by events date : <?php echo $_GET['start'] . " 00:00" . " - " . $_GET['end'] . " 23:59"; ?>
-</div>
-
-<?php
+echo "<div class='eventreportarea'>";
+$this->includefile("reportheader");
 foreach($events as $event) {
     $from = "";
     if($event->from) { $from = date("H:i", strtotime($event->from)); }
@@ -37,7 +34,7 @@ foreach($events as $event) {
     <span class='from'><?php echo $from; ?></span>
     <span class='to'><?php echo $to; ?></span>
     <span class='roomname'><?php echo $item; ?></span>
-    <span class='conference'><?php echo $title; ?></span>
+    <span class='conference openconference' conferenceid='<?php echo $event->pmsConferenceId; ?>'><?php echo $title; ?></span>
     <span class='status'><?php echo $status; ?></span>
     </div>
     <div class='eventdetails'>
@@ -56,7 +53,7 @@ foreach($events as $event) {
 
         echo "<td class='from' valign='top'>$from</td>";
         echo "<td class='to' valign='top'>$to</td>";
-        echo "<td class='text' valign='top'>$count x $text</td>";
+        echo "<td class='text openevent' valign='top' class='' eventid='".$eventEntry->pmsEventId."'>$count x $text</td>";
         echo "<td class='extendedtext' valign='top'>";
         echo nl2br($extendedText);
         echo "</td>";
@@ -68,7 +65,7 @@ foreach($events as $event) {
     </div>
     <?php
 }
-
+echo "</div>";
 ?>
 
 <style>

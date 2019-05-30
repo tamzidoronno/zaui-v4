@@ -9,6 +9,12 @@ $start = date("d.m.Y");
 $end = date("d.m.Y", time()+86400);
 ?>
 <div class='header'>
+    <span gstype='form' method='updateDateRange' class="reportfilter" style='float:left;'>
+        <input class='gsniceinput1 startdate' value='<?php echo $this->getCurrentStart(); ?>' style='width:80px;' gsname='start'>
+        <input class='gsniceinput1 enddate' value='<?php echo $this->getCurrentEnd(); ?>' style='width:80px;' gsname='end'>
+        <span class='shop_button' gstype='submit'>Load report</span>
+    </span>    
+    
     <span style='position:relative'>
         <span class='shop_button' gsclick="loadConferences" gs_callback='app.PmsConference.allConferencesLoaded' synchron='true'>List all conferences</span>
         <div class='conferencelist'></div>

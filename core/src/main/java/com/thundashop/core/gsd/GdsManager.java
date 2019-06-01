@@ -11,8 +11,6 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.UserQueueMessage;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
-import com.thundashop.core.getshoplocksystem.LockServer;
 import com.thundashop.core.pos.PrinterMessageGenerator;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,8 +20,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,9 +52,6 @@ public class GdsManager extends ManagerBase implements IGdsManager {
             }
             if (common instanceof DeviceMessageQueue) {
                 messages.put(common.id, (DeviceMessageQueue)common);
-            }
-            if (common instanceof UserMessageQueue) {
-                userMessageQueue.put(common.id, (UserMessageQueue)common);
             }
         }
     }
@@ -218,8 +211,6 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         
         queue.clear();
         
-        saveObject(queue);
-        
         return retMessages;
     }
 
@@ -235,7 +226,6 @@ public class GdsManager extends ManagerBase implements IGdsManager {
     private UserMessageQueue createQueueForUser(String userId) {
         UserMessageQueue queue = new UserMessageQueue();
         queue.userId = userId;
-        saveObject(queue);
         userMessageQueue.put(queue.id, queue);
         return queue;
     }
